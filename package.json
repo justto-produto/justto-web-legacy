@@ -12,16 +12,19 @@
     "styleguide:build": "vue-styleguidist build"
   },
   "dependencies": {
+    "element-ui": "^2.4.6",
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.17",
+    "vue-i18n": "^8.0.0",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@kazupon/vue-i18n-loader": "^0.3.0",
     "@vue/cli-plugin-babel": "^3.0.0",
     "@vue/cli-plugin-e2e-cypress": "^3.0.0",
     "@vue/cli-plugin-eslint": "^3.0.0",
-    "@vue/cli-plugin-pwa": "^3.0.0",
+    "@vue/cli-plugin-pwa": "^3.0.1",
     "@vue/cli-plugin-unit-jest": "^3.0.0",
     "@vue/cli-service": "^3.0.0",
     "@vue/eslint-config-standard": "^3.0.1",
@@ -32,6 +35,7 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "vue-cli-plugin-axios": "0.0.4",
+    "vue-cli-plugin-i18n": "^0.5.0",
     "vue-cli-plugin-styleguidist": "^0.1.0",
     "vue-template-compiler": "^2.5.17"
   },
