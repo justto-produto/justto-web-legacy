@@ -8,10 +8,17 @@ export default {
 }
 </script>
 
+<style media="screen">
+
+</style>
+
 <i18n>
 {
   "en": {
     "hello": "Hello i18n in SFC!"
+  },
+  "pt-BR": {
+    "hello": "Olá i18n in SFC!"
   }
 }
 </i18n>
