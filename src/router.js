@@ -18,6 +18,16 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: () => import(/* webpackChunkName: "login" */ './views/external/Login.vue')
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import(/* webpackChunkName: "login" */ './views/external/Register.vue')
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: () => import(/* webpackChunkName: "login" */ './views/external/ForgotPassword.vue')
     }
     // {
     //   path: '/about',

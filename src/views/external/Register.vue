@@ -1,5 +1,5 @@
 <template>
-  <div class="external-login">
+  <div class="external-register">
     <el-row>
       <el-col :span="12">
         <external-sidenav></external-sidenav>
@@ -7,25 +7,27 @@
       <el-col :span="12">
         <el-row type="flex" justify="center" align="middle">
           <el-form label-position="top" :model="formLabelAlign">
-            <h1>Login</h1>
+            <h1>Cadastre-se</h1>
             <external-social-button type="facebook"></external-social-button>
             <external-social-button type="google"></external-social-button>
             <el-row type="flex" justify="center" style="margin: 32px 0 8px;">
               ou
             </el-row>
+            <el-form-item label="Nome">
+              <el-input v-model="formLabelAlign.name"></el-input>
+            </el-form-item>
             <el-form-item label="Email">
               <el-input v-model="formLabelAlign.region"></el-input>
             </el-form-item>
             <el-form-item label="Senha">
               <el-input v-model="formLabelAlign.type"></el-input>
-              <el-button @click="$router.push('forgot-password')" type="text" class="forgot-password">Esqueceu sua senha?</el-button>
             </el-form-item>
             <el-button type="primary">Entrar</el-button>
-            <el-row class="login-info">
+            <el-row class="register-info">
               Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
             </el-row>
-            <el-row class="login-info register">
-              Não possui conta? <a href="#/register"> Cadastre-se agora mesmo.</a>
+            <el-row class="register-info register">
+              Já possui conta? <a href="#/login"> Acesse agora mesmo.</a>
             </el-row>
           </el-form>
         </el-row>
@@ -39,7 +41,7 @@ import ExternalSidenav from '@/components/layouts/ExternalSidenav'
 import ExternalSocialButton from '@/components/buttons/ExternalSocialButton'
 
 export default {
-  name: 'Login',
+  name: 'Register',
   components: {
     ExternalSidenav,
     ExternalSocialButton
@@ -57,7 +59,7 @@ export default {
 </script>
 
 <style lang="scss">
-.external-login{
+.external-register{
   height: 100%;
   color: #adadad;
   >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {
@@ -71,12 +73,6 @@ export default {
       line-height: 30px;
       padding: 0;
     }
-    .forgot-password{
-      font-size: 10px;
-      position: absolute;
-      top: 2px;
-      right: 8px;
-    }
     .el-button--primary{
       width: 100%;
     }
@@ -86,7 +82,7 @@ export default {
     font-size: 30px;
     margin-bottom: 40px;
   }
-  .login-info{
+  .register-info{
     font-size: 10px;
     text-align: center;
     margin-top: 20px;
