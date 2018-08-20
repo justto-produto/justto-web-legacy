@@ -33,7 +33,7 @@ Acesse:
 
 `http://localhost:8080/`
 
-### Para builds via prompt
+### Via prompt
 
 Para subir servidor de desenvolvimento:
 
