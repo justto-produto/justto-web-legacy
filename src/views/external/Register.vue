@@ -6,23 +6,18 @@
       </el-col>
       <el-col :span="12">
         <el-row type="flex" justify="center" align="middle">
-          <el-form label-position="top" :model="formLabelAlign">
+          <el-form label-position="top" ref="registerForm" :model="registerForm" :rules="rules">
             <h1>Cadastre-se</h1>
-            <external-social-button type="facebook"></external-social-button>
-            <external-social-button type="google"></external-social-button>
-            <el-row type="flex" justify="center" style="margin: 32px 0 8px;">
-              ou
-            </el-row>
-            <el-form-item label="Nome">
-              <el-input v-model="formLabelAlign.name"></el-input>
+            <el-form-item label="Nome" prop="name">
+              <el-input v-model="registerForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="Email">
-              <el-input v-model="formLabelAlign.region"></el-input>
+            <el-form-item label="Email" prop="email">
+              <el-input v-model="registerForm.email"></el-input>
             </el-form-item>
-            <el-form-item label="Senha">
-              <el-input v-model="formLabelAlign.type"></el-input>
+            <el-form-item label="Senha" prop="password" type="password">
+              <el-input v-model="registerForm.password"></el-input>
             </el-form-item>
-            <el-button type="primary">Entrar</el-button>
+            <el-button type="primary" @click="submitForm()">Cadastrar</el-button>
             <el-row class="register-info">
               Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
             </el-row>
@@ -38,21 +33,41 @@
 
 <script>
 import ExternalSidenav from '@/components/layouts/ExternalSidenav'
-import ExternalSocialButton from '@/components/buttons/ExternalSocialButton'
 
 export default {
   name: 'Register',
   components: {
-    ExternalSidenav,
-    ExternalSocialButton
+    ExternalSidenav
   },
   data () {
     return {
-      formLabelAlign: {
+      registerForm: {
         name: '',
-        region: '',
-        type: ''
+        email: '',
+        password: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: 'Este campo é obrigatório', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: 'Este campo é obrigatório', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: 'Este campo é obrigatório', trigger: 'blur' }
+        ]
       }
+    }
+  },
+  methods: {
+    submitForm () {
+      this.$refs['registerForm'].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          return false
+        }
+      })
     }
   }
 }
@@ -83,7 +98,7 @@ export default {
     margin-bottom: 40px;
   }
   .register-info{
-    font-size: 10px;
+    font-size: 12px;
     text-align: center;
     margin-top: 20px;
   }

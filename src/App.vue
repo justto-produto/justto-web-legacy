@@ -7,7 +7,12 @@
 </template>
 
 <style>
-@import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+html{
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #424242;
+}
 body, html, #app{
   height: 100%;
   margin: 0;
@@ -17,5 +22,10 @@ body, html, #app{
 }
 .fade-enter, .fade-leave-to {
     opacity: 0
+}
+.el-form-item__error{
+  right: 0;
+  top: -25px !important;
+  left: unset !important;
 }
 </style>

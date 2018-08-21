@@ -6,6 +6,9 @@
       </el-col>
       <el-col :span="12">
         <el-row type="flex" justify="center" align="middle">
+          <div class="back-button" @click="$router.push('login')">
+            <img src="@/assets/icons/ic-back.svg"> Voltar
+          </div>
           <el-form label-position="top" :model="formLabelAlign">
             <h1>Recuperar senha</h1>
             <el-form-item label="Email">
@@ -52,7 +55,19 @@ export default {
   >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {
     height: 100%
   }
+  .back-button{
+    position: absolute;
+    top: 36px;
+    left: 36px;
+    color: initial;
+    cursor: pointer;
+    img{
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+  }
   form{
+    margin: auto;
     width: 400px;
     .el-form-item__label{
       color: #adadad;
@@ -61,7 +76,7 @@ export default {
       padding: 0;
     }
     .forgot-password{
-      font-size: 10px;
+      font-size: 12px;
       position: absolute;
       top: 2px;
       right: 8px;
@@ -76,7 +91,7 @@ export default {
     margin-bottom: 40px;
   }
   .login-info{
-    font-size: 10px;
+    font-size: 12px;
     text-align: center;
     margin-top: 20px;
   }

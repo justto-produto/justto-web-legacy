@@ -1,26 +1,21 @@
 <template>
   <div class="external-login">
     <el-row>
-      <el-col :span="12">
+      <el-col :md="12" class="hidden-sm-and-down">
         <external-sidenav></external-sidenav>
       </el-col>
-      <el-col :span="12">
+      <el-col :md="12">
         <el-row type="flex" justify="center" align="middle">
-          <el-form label-position="top" :model="formLabelAlign">
+          <el-form label-position="top" ref="loginForm" :model="loginForm" :rules="rules">
             <h1>Login</h1>
-            <external-social-button type="facebook"></external-social-button>
-            <external-social-button type="google"></external-social-button>
-            <el-row type="flex" justify="center" style="margin: 32px 0 8px;">
-              ou
-            </el-row>
-            <el-form-item label="Email">
-              <el-input v-model="formLabelAlign.region"></el-input>
+            <el-form-item label="Email" prop="email">
+              <el-input v-model="loginForm.email"></el-input>
             </el-form-item>
-            <el-form-item label="Senha">
-              <el-input v-model="formLabelAlign.type"></el-input>
+            <el-form-item label="Senha" prop="password">
+              <el-input v-model="loginForm.password" type="password"></el-input>
               <el-button @click="$router.push('forgot-password')" type="text" class="forgot-password">Esqueceu sua senha?</el-button>
             </el-form-item>
-            <el-button type="primary">Entrar</el-button>
+            <el-button type="primary" @click="submitForm()">Entrar</el-button>
             <el-row class="login-info">
               Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
             </el-row>
@@ -36,21 +31,37 @@
 
 <script>
 import ExternalSidenav from '@/components/layouts/ExternalSidenav'
-import ExternalSocialButton from '@/components/buttons/ExternalSocialButton'
 
 export default {
   name: 'Login',
   components: {
-    ExternalSidenav,
-    ExternalSocialButton
+    ExternalSidenav
   },
   data () {
     return {
-      formLabelAlign: {
-        name: '',
-        region: '',
-        type: ''
+      loginForm: {
+        email: '',
+        password: ''
+      },
+      rules: {
+        email: [
+          { required: true, message: 'Este campo é obrigatório', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: 'Este campo é obrigatório', trigger: 'blur' }
+        ]
       }
+    }
+  },
+  methods: {
+    submitForm () {
+      this.$refs['loginForm'].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          return false
+        }
+      })
     }
   }
 }
@@ -72,7 +83,7 @@ export default {
       padding: 0;
     }
     .forgot-password{
-      font-size: 10px;
+      font-size: 12px;
       position: absolute;
       top: 2px;
       right: 8px;
@@ -87,7 +98,7 @@ export default {
     margin-bottom: 40px;
   }
   .login-info{
-    font-size: 10px;
+    font-size: 12px;
     text-align: center;
     margin-top: 20px;
   }
