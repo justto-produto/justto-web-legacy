@@ -11,16 +11,16 @@
               <div>
                 <h1>Bem-vinda, Mariana!</h1>
                 <p>
-                  Para compeltar o seu cadastro precisamos de algumas informações
+                  Para completar o seu cadastro precisamos de algumas informações
                 </p>
                 <el-button type="primary" @click="nextStep()">Beleza! Vamos começar</el-button>
               </div>
             </swiper-slide>
             <swiper-slide>
-              <div class="">
+              <div>
                 <h2>Para começar, qual a sua OAB?</h2>
-                <el-form label-position="top" ref="oabForm" :model="oabForm">
-                  <el-form-item label="oab" prop="oab" :rules="{ required: true, message: 'Este campo é obrigatório', trigger: 'blur' }">
+                <el-form label-position="top" ref="oabForm" :model="oabForm" :rules="rules">
+                  <el-form-item label="OAB" prop="oab">
                     <el-input v-model="oabForm.oab"></el-input>
                   </el-form-item>
                 </el-form>
@@ -29,18 +29,39 @@
               </div>
             </swiper-slide>
             <swiper-slide>
-              <div class="">
-                <h2>Para começar, qual a sua OAB?</h2>
-                <el-form label-position="top" ref="oabForm" :model="oabForm">
-                  <el-form-item label="oab" prop="oab" :rules="{ required: true, message: 'Este campo é obrigatório', trigger: 'blur' }">
-                    <el-input v-model="oabForm.oab"></el-input>
-                  </el-form-item>
-                </el-form>
-                <el-button type="primary" @click="submitForm('oabForm')">Próximo</el-button>
+              <div>
+                <h2>Deseja sincronizar o seu e-mail com a plataforma?</h2>
+                <p>
+                  Ao clicar no botão, você concorda em liberar o acesso de leitura dos emails de sua caixa de entrada para que a plataforma Justto realize leitura dos emails relacionados às negociações em processo na plataforma. Se desejar, você pode configurar isso depois.
+                </p>
+                <el-radio v-model="sync" label="1" border>
+                  <div class="sync-service">
+                    <div>
+                      <img src="https://cdn2.iconfinder.com/data/icons/capsocial-square-flat-3/500/Outlook-512.png" alt="">
+                    </div>
+                    <div>
+                      <strong>Microsoft</strong>
+                      <p>Suas informações estão protegidas e nunca serão compartilhadas com terceiros.</p>
+                    </div>
+                  </div>
+                </el-radio>
+                <el-radio v-model="sync" label="2" border>
+                  <div class="sync-service">
+                    <div>
+                      <img src="https://cdn.iconscout.com/icon/free/png-512/inbox-348-722710.png">
+                    </div>
+                    <div>
+                      <strong>Microsoft</strong>
+                      <p>Suas informações estão protegidas e nunca serão compartilhadas com terceiros.</p>
+                    </div>
+                  </div>
+                </el-radio>
+                <el-button type="primary" @click="nextStep()">Sincronizar</el-button>
                 <el-button type="text" @click="nextStep()">Pular</el-button>
               </div>
             </swiper-slide>
           </swiper>
+          <el-button :disabled="firstStep" class="previous-step" type="primary" icon="el-icon-arrow-up" @click="previousStep()"></el-button>
         </el-row>
       </el-col>
     </el-row>
@@ -59,18 +80,23 @@ export default {
   },
   data () {
     return {
+      firstStep: true,
       left: 12,
       right: 0,
+      sync: '',
       oabForm: {
         oab: ''
+      },
+      rules: {
+        oab: [
+          { required: true, message: 'Este campo é obrigatório', trigger: 'blur' },
+          { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
+        ]
       },
       swiperOption: {
         direction: 'vertical',
         autoHeight: true,
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true
-        }
+        allowTouchMove: false
       }
     }
   },
@@ -86,9 +112,17 @@ export default {
     },
     nextStep () {
       this.$refs['swiper'].swiper.slideNext(800)
+      this.verifyFirstStep()
+    },
+    previousStep () {
+      this.$refs['swiper'].swiper.slidePrev(800)
+      this.verifyFirstStep()
+    },
+    verifyFirstStep () {
+      this.firstStep = this.$refs['swiper'].swiper.activeIndex === 0
     }
   },
-  mounted: function () {
+  created: function () {
     setTimeout(function () {
       this.left = 6
     }.bind(this), 200)
@@ -125,6 +159,50 @@ export default {
   .swiper-slide{
     display: flex;
     align-items: center;
+    > div{
+      max-width: 580px;
+      .sync-service{
+        display: flex;
+        div{
+          margin-left: 20px;
+          &+div{
+            margin-left: 30px;
+          }
+        }
+      }
+    }
+  }
+
+  .el-radio{
+    display: flex;
+    padding: 20px 20px 20px 10px;
+    margin: 0 0 20px !important;
+    .el-radio__input{
+      margin: auto;
+    }
+    img{
+      width: 108px;
+    }
+    strong{
+      font-size: 16px;
+    }
+    p{
+      white-space: normal;
+      color: #adadad;
+      font-size: 12px;
+      font-weight: normal;
+    }
+  }
+  .previous-step{
+    border-radius: 6px;
+    padding: 12px;
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    i{
+      font-weight: bold;
+      font-size: 20px;
+    }
   }
 }
 </style>
