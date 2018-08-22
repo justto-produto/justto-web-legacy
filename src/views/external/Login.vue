@@ -1,5 +1,5 @@
 <template>
-  <div class="external-login">
+  <div class="external-login-view">
     <el-row>
       <el-col :md="12" class="hidden-sm-and-down">
         <external-sidenav></external-sidenav>
@@ -68,7 +68,7 @@ export default {
 </script>
 
 <style lang="scss">
-.external-login{
+.external-login-view{
   height: 100%;
   color: #adadad;
   >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {

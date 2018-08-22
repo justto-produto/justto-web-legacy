@@ -28,6 +28,11 @@ const router = new Router({
       path: '/forgot-password',
       name: 'forgot-password',
       component: () => import(/* webpackChunkName: "login" */ './views/external/ForgotPassword.vue')
+    },
+    {
+      path: '/onboard',
+      name: 'onboard',
+      component: () => import(/* webpackChunkName: "login" */ './views/onboard/Onboard.vue')
     }
     // {
     //   path: '/about',

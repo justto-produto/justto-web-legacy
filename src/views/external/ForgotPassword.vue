@@ -1,5 +1,5 @@
 <template>
-  <div class="forgot-password">
+  <div class="forgot-password-view">
     <el-row>
       <el-col :span="12">
         <external-sidenav></external-sidenav>
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style lang="scss">
-.forgot-password{
+.forgot-password-view{
   height: 100%;
   color: #adadad;
   >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {

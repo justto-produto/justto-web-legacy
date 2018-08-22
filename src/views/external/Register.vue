@@ -1,5 +1,5 @@
 <template>
-  <div class="external-register">
+  <div class="external-register-view">
     <el-row>
       <el-col :span="12">
         <external-sidenav></external-sidenav>
@@ -74,7 +74,7 @@ export default {
 </script>
 
 <style lang="scss">
-.external-register{
+.external-register-view{
   height: 100%;
   color: #adadad;
   >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {

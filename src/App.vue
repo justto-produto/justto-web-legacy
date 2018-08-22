@@ -17,12 +17,6 @@ body, html, #app{
   height: 100%;
   margin: 0;
 }
-.fade-enter-active, .fade-leave-active {
-    transition: opacity .3s
-}
-.fade-enter, .fade-leave-to {
-    opacity: 0
-}
 .el-form-item__error{
   right: 0;
   top: -25px !important;
