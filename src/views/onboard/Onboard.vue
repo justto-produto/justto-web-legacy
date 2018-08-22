@@ -170,27 +170,26 @@ export default {
           }
         }
       }
+      p{
+        white-space: normal;
+        color: #adadad;
+      }
+      strong{
+        font-size: 16px;
+      }
     }
   }
 
   .el-radio{
-    display: flex;
+    display: inline-table;
     padding: 20px 20px 20px 10px;
     margin: 0 0 20px !important;
     .el-radio__input{
-      margin: auto;
+      display: table-cell;
+      padding-left: 8px;
     }
     img{
-      width: 108px;
-    }
-    strong{
-      font-size: 16px;
-    }
-    p{
-      white-space: normal;
-      color: #adadad;
-      font-size: 12px;
-      font-weight: normal;
+      width: 80px;
     }
   }
   .previous-step{
