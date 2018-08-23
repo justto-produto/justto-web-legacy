@@ -7,9 +7,16 @@
       <el-col :md="right" v-if="right > 0">
         <el-row type="flex" align="middle">
           <swiper ref="swiper" :options="swiperOption">
-            <!-- <swiper-slide>
+            <swiper-slide>
               <div>
-                <h1>Bem-vinda, Mariana!</h1>
+                <company-logo-image src="nestle.jpg"></company-logo-image>
+                <h1>Junte-se à equipe da Nestlé</h1>
+                <el-button type="primary" @click="nextStep()">Entrar na equipe</el-button>
+              </div>
+            </swiper-slide>
+            <swiper-slide>
+              <div>
+                <h1>Bem-vinda, Mariana</h1>
                 <p>
                   Para completar o seu cadastro precisamos de algumas informações
                 </p>
@@ -19,7 +26,7 @@
             <swiper-slide>
               <div>
                 <h2>Para começar, qual a sua OAB?</h2>
-                <el-form @submit.native.prevent="submitForm('teamForm')" label-position="top" ref="oabForm" :model="oabForm" :rules="rules">
+                <el-form @submit.native.prevent="submitForm('oabForm')" label-position="top" ref="oabForm" :model="oabForm" :rules="rules">
                   <el-form-item label="OAB" prop="oab">
                     <el-input v-model="oabForm.oab"></el-input>
                   </el-form-item>
@@ -101,13 +108,12 @@
                 <p>Você pode colocar o nome do seu escritório, por exemplo.</p>
                 <el-form @submit.native.prevent="submitForm('teamNameForm')" label-position="top" ref="teamNameForm" :model="teamNameForm" :rules="rules">
                   <el-form-item label="Time" prop="teamName">
-                    <el-input v-model="teamForm.teamName"></el-input>
+                    <el-input v-model="teamNameForm.teamName"></el-input>
                   </el-form-item>
                 </el-form>
-                <el-button type="primary" @click="submitForm('teamForm')">Próximo</el-button>
+                <el-button type="primary" @click="submitForm('teamNameForm')">Próximo</el-button>
               </div>
-            </swiper-slide> -->
-
+            </swiper-slide>
             <swiper-slide style="height: 100vh;">
               <div>
                 <h2>Convide pessoas para o seu time</h2>
@@ -129,6 +135,12 @@
                 <el-button type="text" @click="nextStep()">Pular</el-button>
               </div>
             </swiper-slide>
+            <swiper-slide>
+              <div>
+                <h1>Tudo pronto, <br>Mariana!</h1>
+                <el-button type="primary" @click="nextStep()">Vamos começar</el-button>
+              </div>
+            </swiper-slide>
           </swiper>
           <el-button :disabled="firstStep" class="previous-step" type="primary" icon="el-icon-arrow-up" @click="previousStep()"></el-button>
         </el-row>
@@ -139,13 +151,13 @@
 
 <script>
 import ExternalSidenav from '@/components/layouts/ExternalSidenav'
-import OnboardForm from '@/components/layouts/OnboardForm'
+import CompanyLogoImage from '@/components/images/CompanyLogoImage'
 
 export default {
   name: 'Onboard',
   components: {
     ExternalSidenav,
-    OnboardForm
+    CompanyLogoImage
   },
   data () {
     return {
@@ -187,7 +199,6 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.$refs['swiper'].swiper.slideNext(800)
-          alert()
         } else {
           return false
         }
@@ -239,29 +250,26 @@ export default {
   >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {
     height: 100%
   }
-  form{
-    width: 400px;
-    .el-button--primary{
-      width: 100%;
-    }
-  }
-  p{
-    max-width: 400px;
-  }
-  .el-button--text{
-    margin-left: 30px;
-  }
-  h1{
-    color: #343c4b;
-    font-size: 30px;
-    margin-bottom: 40px;
-  }
   .swiper-slide{
     display: flex;
     align-items: center;
     > div{
       max-width: 580px;
     }
+  }
+  form{
+    width: 400px;
+    .el-button--primary{
+      width: 100%;
+    }
+  }
+  .el-button--text{
+    margin-left: 30px;
+  }
+  h1{
+    color: #343c4b;
+    font-size: 40px;
+    margin-bottom: 40px;
   }
   .radio-group{
     margin-top: 40px;
@@ -275,7 +283,7 @@ export default {
     }
     &.vertical{
       display: flex;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       .el-radio{
         padding: 20px;
         flex-direction: column;
@@ -303,6 +311,9 @@ export default {
         padding: 20px;
         padding-right: 20px;
         margin: 0 0 20px !important;
+        &:last-of-type{
+          margin-bottom: 40px !important;
+        }
         .sync-service{
           display: flex;
           div{
