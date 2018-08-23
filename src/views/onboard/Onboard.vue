@@ -328,6 +328,7 @@ export default {
     padding: 0;
     margin: 10px 0 20px;
     li{
+      margin-top: 10px;
       list-style-type: none;
       img{
         &:first-of-type{
