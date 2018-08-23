@@ -22,17 +22,17 @@ const router = new Router({
     {
       path: '/register',
       name: 'register',
-      component: () => import(/* webpackChunkName: "login" */ './views/external/Register.vue')
+      component: () => import(/* webpackChunkName: "register" */ './views/external/Register.vue')
     },
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import(/* webpackChunkName: "login" */ './views/external/ForgotPassword.vue')
+      component: () => import(/* webpackChunkName: "forgot-password" */ './views/external/ForgotPassword.vue')
     },
     {
       path: '/onboard',
       name: 'onboard',
-      component: () => import(/* webpackChunkName: "login" */ './views/onboard/Onboard.vue')
+      component: () => import(/* webpackChunkName: "onboard" */ './views/onboard/Onboard.vue')
     }
     // {
     //   path: '/about',

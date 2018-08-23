@@ -69,12 +69,6 @@ export default {
   form{
     margin: auto;
     width: 400px;
-    .el-form-item__label{
-      color: #adadad;
-      font-size: 12px;
-      line-height: 30px;
-      padding: 0;
-    }
     .forgot-password{
       font-size: 12px;
       position: absolute;

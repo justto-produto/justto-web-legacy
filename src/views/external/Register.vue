@@ -82,12 +82,6 @@ export default {
   }
   form{
     width: 400px;
-    .el-form-item__label{
-      color: #adadad;
-      font-size: 12px;
-      line-height: 30px;
-      padding: 0;
-    }
     .el-button--primary{
       width: 100%;
     }
