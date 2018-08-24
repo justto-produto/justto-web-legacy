@@ -59,7 +59,7 @@
                         <img src="https://cdn.iconscout.com/icon/free/png-512/inbox-348-722710.png">
                       </div>
                       <div>
-                        <strong>Microsoft</strong>
+                        <strong>Gmail</strong>
                         <p>Suas informações estão protegidas e nunca serão compartilhadas com terceiros.</p>
                       </div>
                     </div>
@@ -261,7 +261,6 @@ export default {
     }
   }
   form{
-    width: 400px;
     .el-button--primary{
       width: 100%;
     }
@@ -320,6 +319,7 @@ export default {
         .sync-service{
           display: flex;
           div{
+            margin: auto;
             margin-left: 10px;
             &+div{
               margin-left: 30px;
@@ -367,5 +367,35 @@ export default {
       font-size: 20px;
     }
   }
+  @media (max-width: 991px) {
+    .swiper-slide{
+      > div{
+        padding: 40px 0;
+        margin: auto 40px;
+        text-align: center;
+      }
+    }
+    .el-form-item {
+      text-align: left;
+    }
+    .radio-group{
+      &.vertical {
+        flex-direction: column;
+        label{
+          margin: 10px !important;
+        }
+      }
+    }
+    ul{
+      text-align: left;
+    }
+    .previous-step{
+      padding: 10px;
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+    }
+  }
 }
+
 </style>
