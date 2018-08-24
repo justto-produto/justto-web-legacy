@@ -1,10 +1,10 @@
 <template>
-  <div class="forgot-password-view">
+  <div class="external-view">
     <el-row>
-      <el-col :span="12">
+      <el-col :md="12" class="hidden-sm-and-down">
         <external-sidenav></external-sidenav>
       </el-col>
-      <el-col :span="12">
+      <el-col :md="12">
         <el-row type="flex" justify="center" align="middle">
           <div class="back-button" @click="$router.push('login')">
             <img src="@/assets/icons/ic-back.svg"> Voltar
@@ -15,10 +15,9 @@
               <el-input v-model="formLabelAlign.region"></el-input>
             </el-form-item>
             <el-button type="primary">Recuperar</el-button>
-            <el-row class="login-info">
+            <el-row class="info">
               Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
-            </el-row>
-            <el-row class="login-info register">
+              <br><br>
               Não possui conta? <a href="#/register"> Cadastre-se agora mesmo.</a>
             </el-row>
           </el-form>
@@ -47,47 +46,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.forgot-password-view{
-  height: 100%;
-  color: #adadad;
-  >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {
-    height: 100%
-  }
-  .back-button{
-    position: absolute;
-    top: 36px;
-    left: 36px;
-    color: initial;
-    cursor: pointer;
-    img{
-      vertical-align: middle;
-      margin-right: 4px;
-    }
-  }
-  form{
-    margin: auto;
-    width: 400px;
-    .forgot-password{
-      font-size: 12px;
-      position: absolute;
-      top: 2px;
-      right: 8px;
-    }
-    .el-button--primary{
-      width: 100%;
-    }
-  }
-  h1{
-    color: #343c4b;
-    font-size: 30px;
-    margin-bottom: 40px;
-  }
-  .login-info{
-    font-size: 12px;
-    text-align: center;
-    margin-top: 20px;
-  }
-}
-</style>

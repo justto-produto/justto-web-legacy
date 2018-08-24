@@ -1,10 +1,10 @@
 <template>
-  <div class="external-register-view">
+  <div class="external-view">
     <el-row>
-      <el-col :span="12">
+      <el-col :md="12" class="hidden-sm-and-down">
         <external-sidenav></external-sidenav>
       </el-col>
-      <el-col :span="12">
+      <el-col :md="12">
         <el-row type="flex" justify="center" align="middle">
           <el-form label-position="top" ref="registerForm" :model="registerForm" :rules="rules">
             <h1>Cadastre-se</h1>
@@ -18,10 +18,9 @@
               <el-input v-model="registerForm.password"></el-input>
             </el-form-item>
             <el-button type="primary" @click="submitForm()">Cadastrar</el-button>
-            <el-row class="register-info">
+            <el-row class="info">
               Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
-            </el-row>
-            <el-row class="register-info register">
+              <br><br>
               Já possui conta? <a href="#/login"> Acesse agora mesmo.</a>
             </el-row>
           </el-form>
@@ -72,29 +71,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.external-register-view{
-  height: 100%;
-  color: #adadad;
-  >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {
-    height: 100%
-  }
-  form{
-    width: 400px;
-    .el-button--primary{
-      width: 100%;
-    }
-  }
-  h1{
-    color: #343c4b;
-    font-size: 30px;
-    margin-bottom: 40px;
-  }
-  .register-info{
-    font-size: 12px;
-    text-align: center;
-    margin-top: 20px;
-  }
-}
-</style>

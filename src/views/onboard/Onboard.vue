@@ -114,7 +114,7 @@
                 <el-button type="primary" @click="submitForm('teamNameForm')">Próximo</el-button>
               </div>
             </swiper-slide>
-            <swiper-slide style="height: 100vh;">
+            <swiper-slide>
               <div>
                 <h2>Convide pessoas para o seu time</h2>
                 <p>Os usuários convidados por você irão receber um e-mail para acessar a plataforma.</p>
@@ -209,8 +209,8 @@ export default {
         if (valid) {
           if (!this.teamMembersForm.teamMembers.includes(this.teamMembersForm.teamMember)) {
             this.teamMembersForm.teamMembers.push(this.teamMembersForm.teamMember)
-            this.$refs[form].resetFields()
           }
+          this.$refs[form].resetFields()
         } else {
           return false
         }
@@ -253,8 +253,11 @@ export default {
   .swiper-slide{
     display: flex;
     align-items: center;
+    overflow: scroll;
+    max-height: 100vh;
     > div{
-      max-width: 580px;
+      padding: 120px 0;
+      margin: auto 150px;
     }
   }
   form{
@@ -353,6 +356,7 @@ export default {
     }
   }
   .previous-step{
+    z-index: 9;
     border-radius: 6px;
     padding: 12px;
     position: absolute;
