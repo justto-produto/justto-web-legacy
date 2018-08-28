@@ -253,7 +253,7 @@ export default {
   .swiper-slide{
     display: flex;
     align-items: center;
-    overflow: scroll;
+    overflow: auto;
     max-height: 100vh;
     > div{
       padding: 120px 0;
