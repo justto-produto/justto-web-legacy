@@ -1,20 +1,23 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import i18n from './i18n'
+import App from '@/App.vue'
+import router from '@/router'
+import store from '@/store'
+import i18n from '@/i18n'
 
 // plugin
-import './plugins/registerServiceWorker'
-import './plugins/axios'
-import './plugins/element'
-import './plugins/scrollTo'
-import './plugins/awesomeSwiper'
+import '@/plugins/registerServiceWorker'
+import '@/plugins/axios'
+import '@/plugins/element'
+import '@/plugins/scrollTo'
+import '@/plugins/awesomeSwiper'
 
 // css
-import './styles/transitions.scss'
-import './styles/external.scss'
-import './styles/helpers.scss'
+import '@/styles/reset.scss'
+import '@/styles/override.scss'
+import '@/styles/transitions.scss'
+import '@/styles/helpers.scss'
+import '@/styles/views/external.scss'
+import '@/styles/views/onboarding.scss'
 
 Vue.config.productionTip = false
 

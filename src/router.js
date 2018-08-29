@@ -30,9 +30,9 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "forgot-password" */ './views/external/ForgotPassword.vue')
     },
     {
-      path: '/onboard',
-      name: 'onboard',
-      component: () => import(/* webpackChunkName: "onboard" */ './views/onboard/Onboard.vue')
+      path: '/onboarding',
+      name: 'onboarding',
+      component: () => import(/* webpackChunkName: "onboard" */ './views/onboarding/Onboarding.vue')
     }
     // {
     //   path: '/about',
