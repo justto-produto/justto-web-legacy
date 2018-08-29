@@ -13,7 +13,7 @@ html{
   font-size: 14px;
   color: #424242;
 }
-body, html, #app{
+body, html, #app, section{
   height: 100%;
   margin: 0;
 }

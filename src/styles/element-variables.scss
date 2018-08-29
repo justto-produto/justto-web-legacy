@@ -40,10 +40,10 @@ $--color-primary-light-9: mix($--color-white, $--color-primary, 90%) !default; /
 // $--color-danger-lighter: mix($--color-white, $--color-danger, 90%) !default;
 // $--color-info-lighter: mix($--color-white, $--color-info, 90%) !default;
 //
-// $--color-text-primary: #303133 !default;
-// $--color-text-regular: #606266 !default;
-// $--color-text-secondary: #909399 !default;
-// $--color-text-placeholder: #c0c4cc !default;
+$--color-text-primary: #323c47 !default;
+$--color-text-regular: #606266 !default;
+$--color-text-secondary: #909399 !default;
+$--color-text-placeholder: #c0c4cc !default;
 //
 // /* Link
 // -------------------------- */
@@ -88,12 +88,12 @@ $--border-radius-base: 2px !default;
 // /* Font
 // -------------------------- */
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
-// $--font-size-base: 14px !default;
-// $--font-size-small: 13px !default;
-// $--font-size-large: 18px !default;
-// $--font-color-disabled-base: #bbb !default;
+$--font-size-base: 14px !default;
+$--font-size-small: 13px !default;
+$--font-size-large: 18px !default;
+$--font-color-disabled-base: #bbb !default;
 $--font-weight-primary: normal !default;
-// $--font-line-height-primary: 24px !default;
+$--font-line-height-primary: 24px !default;
 //
 // /* Size
 // -------------------------- */
@@ -602,12 +602,12 @@ $--font-weight-primary: normal !default;
 // $--steps-border-radius: 4px !default;
 // $--steps-padding: 20px !default;
 //
-// /* Menu
-// --------------------------*/
-// $--menu-item-font-size: $--font-size-base !default;
-// $--menu-item-color: $--color-text-primary !default;
-// $--menu-item-fill: $--color-white !default;
-// $--menu-item-hover-fill: $--color-primary-light-9 !default;
+/* Menu
+--------------------------*/
+$--menu-item-font-size: $--font-size-base !default;
+$--menu-item-color: $--color-text-primary !default;
+$--menu-item-fill: $--color-white !default;
+$--menu-item-hover-fill: $--color-primary-light-9 !default;
 //
 // /* Rate
 // --------------------------*/

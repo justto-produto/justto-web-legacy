@@ -11,7 +11,7 @@ const router = new Router({
       name: 'Main',
       component: Main,
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     {
