@@ -1,5 +1,5 @@
 <template>
-  <div class="onboard-view">
+  <div class="onboarding-view">
     <el-row>
       <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 0.8s;">
         <external-sidenav></external-sidenav>
@@ -9,7 +9,7 @@
           <swiper ref="swiper" :options="swiperOption">
             <swiper-slide>
               <div>
-                <company-logo-image src="nestle.jpg"></company-logo-image>
+                <company-logo src="nestle.jpg"></company-logo>
                 <h1>Junte-se à equipe da Nestlé</h1>
                 <el-button type="primary" @click="nextStep()">Entrar na equipe</el-button>
               </div>
@@ -151,13 +151,13 @@
 
 <script>
 import ExternalSidenav from '@/components/layouts/ExternalSidenav'
-import CompanyLogoImage from '@/components/images/CompanyLogoImage'
+import CompanyLogo from '@/components/images/CompanyLogo'
 
 export default {
   name: 'Onboard',
   components: {
     ExternalSidenav,
-    CompanyLogoImage
+    CompanyLogo
   },
   data () {
     return {

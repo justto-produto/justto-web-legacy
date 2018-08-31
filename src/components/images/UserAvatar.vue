@@ -18,11 +18,11 @@ export default {
   },
   computed: {
     imagePath: function () {
-      try {
-        return require('@/assets/')
-      } catch (e) {
-        return 'https://scontent.fsjk2-1.fna.fbcdn.net/v/t1.0-9/481007_648847808475657_1507104068_n.jpg?_nc_cat=0&oh=0a9fe7a268b035222eabcd12f524dce5&oe=5BF42104'
-      }
+      // try {
+      // return require('@/assets/')
+      // } catch (e) {
+      return 'https://scontent.fsjk2-1.fna.fbcdn.net/v/t1.0-9/481007_648847808475657_1507104068_n.jpg?_nc_cat=0&oh=0a9fe7a268b035222eabcd12f524dce5&oe=5BF42104'
+      // }
     }
   }
 }

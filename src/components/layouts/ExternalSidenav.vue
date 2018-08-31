@@ -1,14 +1,14 @@
 <template>
-  <div class="layouts-sidenav-layout">
-    <img src="@/assets/logo.svg">
+  <div class="external-sidenav">
+    <img class="external-sidenav__logo" src="@/assets/logo.svg">
   </div>
 </template>
 
 <style lang="scss">
-.layouts-sidenav-layout{
+.external-sidenav{
   background-color: #fafafa;
   height: 100%;
-  img{
+  .external-sidenav__logo{
     margin: 40px;
   }
 }

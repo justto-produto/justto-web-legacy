@@ -2,23 +2,23 @@
   <el-container class="main">
     <el-aside>
       <img class="logo" src="@/assets/logo.svg"/>
-      <el-menu default-active="1" class="menu-vertical main-menu" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-        <el-menu-item index="1" class="dashboard-item">
+      <el-menu :router="true" :default-active="$route.path" class="menu-vertical main-menu" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+        <el-menu-item index="1" class="dashboard-item" route="/">
           <jus-icon icon="dashboard-active" is-active class="menu-icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
         <li class="menu-title">
           GERENCIAMENTO
         </li>
-        <el-menu-item index="2">
+        <el-menu-item index="2" route="import">
           <jus-icon icon="import" is-active class="menu-icon"></jus-icon>
           <span slot="title">Importação</span>
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="3" route="negotiation">
           <jus-icon icon="negotiation" is-active class="menu-icon"></jus-icon>
           <span slot="title">Negociação</span>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="4" route="settings">
           <jus-icon icon="settings" is-active class="menu-icon"></jus-icon>
           <span slot="title">Configurações</span>
         </el-menu-item>
@@ -28,17 +28,17 @@
           TIME BONK E RIZZO
           <i class="el-icon-plus" style="float: right; font-size: 16px"></i>
         </li>
-        <el-menu-item index="2">
+        <el-menu-item index="1">
           <img class="image-icon no-image">
           <span slot="title">Mariana Rondino</span>
           <span class="counter">0</span>
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="2">
           <img class="image-icon no-image">
           <span slot="title">Henrique Liberato</span>
           <span class="counter">12</span>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="3">
           <img class="image-icon no-image">
           <span slot="title">Michelle Morcos</span>
           <span class="counter">3</span>
@@ -80,7 +80,9 @@
         </div>
       </el-header>
       <el-main>
-        <div style="pointer-events: none;width:100%;height:0;padding-bottom:100%;position:relative;"><iframe src="https://giphy.com/embed/PoImGf3Takz1BtpNSG" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
+        <transition name="fade">
+          <router-view/>
+        </transition>
       </el-main>
     </el-container>
   </el-container>
