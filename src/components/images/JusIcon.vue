@@ -6,7 +6,7 @@
 export default {
   name: 'JusIcon',
   props: [
-    'active',
+    'isActive',
     'icon'
   ],
   computed: {
@@ -14,8 +14,8 @@ export default {
       return require(
         '@/assets/icons/ic-' +
         this.icon +
+        (this.isActive ? '-active' : '') +
         '.svg'
-
       )
     }
   }

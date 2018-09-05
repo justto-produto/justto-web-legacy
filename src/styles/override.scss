@@ -1,9 +1,11 @@
+@import './variables';
+
 .el-form-item__error {
   right: 0 !important;
   top: -25px !important;
   left: unset !important;
 }
-.el-radio.is-bordered.is-checked{
+.el-radio.is-bordered.is-checked {
   background-color: #f5f7fa;
 }
 .el-form--label-top .el-form-item__label {
@@ -13,6 +15,46 @@
   padding: 0 !important;
 }
 
-.el-main--flex{
-  display: flex !important;
+.el-menu-item {
+  height: 64px;
+  line-height: 64px;
+  &.is-active {
+    border-left: 3px solid #7c4cf3 !important;
+    padding-left: 17px !important;
+    color: #323c47 !important;
+    font-weight: 500 !important;
+    background-color: #fafafa !important;
+  }
+  &:hover {
+    background-color: #fafafa !important;
+  }
+}
+
+.el-menu__avatar {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: $--color-info-light;
+}
+
+.el-menu__counter {
+  float: right;
+}
+
+.el-menu__icon {
+  margin-right: 16px;
+}
+
+.el-menu__title {
+  margin: 58px 20px 20px;
+  font-size: 12px;
+  i{
+    float: right; font-size: 16px
+  }
+}
+
+.el-menu-item:focus{
+  background-color: #00000000 !important;
 }

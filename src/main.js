@@ -16,8 +16,13 @@ import '@/styles/reset.scss'
 import '@/styles/override.scss'
 import '@/styles/transitions.scss'
 import '@/styles/helpers.scss'
+import '@/styles/views/container.scss'
 import '@/styles/views/external.scss'
 import '@/styles/views/onboarding.scss'
+
+// icons
+import JusIcon from '@/components/images/JusIcon'
+Vue.component('jus-icon', JusIcon)
 
 Vue.config.productionTip = false
 

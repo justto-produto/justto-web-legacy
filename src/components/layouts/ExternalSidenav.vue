@@ -1,6 +1,8 @@
 <template>
   <div class="external-sidenav">
-    <img class="external-sidenav__logo" src="@/assets/logo.svg">
+    <a href="#" @click="$router.push('/')">
+      <img class="external-sidenav__logo" src="@/assets/logo.svg">
+    </a>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    teste
+    IMPORT
   </div>
 </template>
 

@@ -1,29 +1,25 @@
 <template>
   <div class="external-view">
-    <el-row>
-      <el-col :md="12" class="hidden-sm-and-down">
+    <el-container>
+      <el-aside width="50%" class="hidden-sm-and-down">
         <external-sidenav></external-sidenav>
-      </el-col>
-      <el-col :md="12">
-        <el-row type="flex" justify="center" align="middle">
-          <div class="back-button" @click="$router.push('login')">
-            <img src="@/assets/icons/ic-back.svg"> Voltar
-          </div>
-          <el-form label-position="top" :model="formLabelAlign">
-            <h1>Recuperar senha</h1>
-            <el-form-item label="Email">
-              <el-input v-model="formLabelAlign.region"></el-input>
-            </el-form-item>
-            <el-button type="primary">Recuperar</el-button>
-            <el-row class="info">
-              Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
-              <br><br>
-              Não possui conta? <a href="#/register"> Cadastre-se agora mesmo.</a>
-            </el-row>
-          </el-form>
-        </el-row>
-      </el-col>
-    </el-row>
+      </el-aside>
+      <el-main class="display-flex position-relative">
+        <div class="external-view--back-button" @click="$router.push('login')">
+          <jus-icon icon="back"/> Voltar
+        </div>
+        <el-form class="external-view__form" label-position="top" ref="forgotForm" :model="forgotForm" :rules="rules">
+          <h1 class="external-view__title">Recuperar senha</h1>
+          <el-form-item label="Email" prop="email">
+            <el-input v-model="forgotForm.email"></el-input>
+          </el-form-item>
+          <el-button class="external-view__submit" type="primary">Recuperar</el-button>
+          <el-row class="external-view__info">
+            Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
+          </el-row>
+        </el-form>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -37,11 +33,10 @@ export default {
   },
   data () {
     return {
-      formLabelAlign: {
-        name: '',
-        region: '',
-        type: ''
-      }
+      forgotForm: {
+        email: ''
+      },
+      rules: {}
     }
   }
 }

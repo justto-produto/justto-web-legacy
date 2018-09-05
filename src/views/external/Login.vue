@@ -4,7 +4,7 @@
       <el-aside width="50%" class="hidden-sm-and-down">
         <external-sidenav></external-sidenav>
       </el-aside>
-      <el-main class="el-main--flex">
+      <el-main class="display-flex">
         <el-form class="external-view__form" label-position="top" ref="loginForm" :model="loginForm" :rules="rules">
           <h1 class="external-view__title">Login</h1>
           <el-form-item label="Email" prop="email">

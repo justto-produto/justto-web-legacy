@@ -1,66 +1,66 @@
 <template>
-  <el-container class="main">
-    <el-aside>
-      <img class="logo" src="@/assets/logo.svg"/>
-      <el-menu :router="true" :default-active="$route.path" class="menu-vertical main-menu" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-        <el-menu-item index="1" class="dashboard-item" route="/">
-          <jus-icon icon="dashboard-active" is-active class="menu-icon"/>
+  <el-container>
+    <el-aside class="container-aside">
+      <img class="container-aside__logo" src="@/assets/logo.svg"/>
+      <el-menu :router="true" :default-active="$route.path" class="el-menu--main-menu" :collapse="isCollapse">
+        <el-menu-item ref="dashboard" index="/" class="border-top-bottom">
+          <jus-icon icon="dashboard" :is-active="true" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
-        <li class="menu-title">
+        <li class="el-menu__title">
           GERENCIAMENTO
         </li>
-        <el-menu-item index="2" route="import">
-          <jus-icon icon="import" is-active class="menu-icon"></jus-icon>
+        <el-menu-item index="/import">
+          <jus-icon icon="import" is-active class="el-menu__icon"></jus-icon>
           <span slot="title">Importação</span>
         </el-menu-item>
-        <el-menu-item index="3" route="negotiation">
-          <jus-icon icon="negotiation" is-active class="menu-icon"></jus-icon>
+        <el-menu-item index="/negotiation">
+          <jus-icon icon="negotiation" is-active class="el-menu__icon"></jus-icon>
           <span slot="title">Negociação</span>
         </el-menu-item>
-        <el-menu-item index="4" route="settings">
-          <jus-icon icon="settings" is-active class="menu-icon"></jus-icon>
+        <el-menu-item index="/settings">
+          <jus-icon icon="settings" is-active class="el-menu__icon"></jus-icon>
           <span slot="title">Configurações</span>
         </el-menu-item>
       </el-menu>
-      <el-menu class="menu-vertical team-menu" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-        <li class="menu-title">
+      <el-menu class="el-menu--team-menu" :collapse="isCollapse">
+        <li class="el-menu__title">
           TIME BONK E RIZZO
-          <i class="el-icon-plus" style="float: right; font-size: 16px"></i>
+          <i class="el-icon-plus"></i>
         </li>
         <el-menu-item index="1">
-          <img class="image-icon no-image">
+          <img src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg" class="el-menu__avatar">
           <span slot="title">Mariana Rondino</span>
-          <span class="counter">0</span>
+          <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="2">
-          <img class="image-icon no-image">
+          <img src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" class="el-menu__avatar">
           <span slot="title">Henrique Liberato</span>
-          <span class="counter">12</span>
+          <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="3">
-          <img class="image-icon no-image">
+          <img src="http://3.bp.blogspot.com/-XHJdhVNa_Ok/Ww6-vSfNzuI/AAAAAAAASiU/WjSucjgrNp8tLP0nQPvSHK6SfQrn86MzACK4BGAYYCw/s1600/Muppet%2BThought%2Bof%2Bthe%2BWeek-Animal.jpg" class="el-menu__avatar">
           <span slot="title">Michelle Morcos</span>
-          <span class="counter">3</span>
+          <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="4">
-          <img class="image-icon no-image">
+          <img src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" class="el-menu__avatar">
           <span slot="title">Bruno Moreno</span>
-          <span class="counter">22</span>
+          <span class="el-menu__counter">0</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
-      <el-header>
-        <div class="search">
-          <jus-icon icon="search" is-active class="menu-icon"/>
+      <el-header class="container-header">
+        <div class="container-search">
+          <jus-icon icon="search" is-active class="el-menu__icon"/>
           <input type="text" name="" value="" placeholder="Buscar">
         </div>
-        <div class="user-info">
-          <div class="">
+        <div class="container-info">
+          <div class="container-info__avatar">
             <user-avatar></user-avatar>
           </div>
-          <div class="info">
+          <div class="container-info__name">
             <div>
               Mariana rondino
             </div>
@@ -89,13 +89,11 @@
 </template>
 
 <script>
-import JusIcon from '@/components/images/JusIcon'
 import UserAvatar from '@/components/images/UserAvatar'
 
 export default {
   name: 'Main',
   components: {
-    JusIcon,
     UserAvatar
   },
   data () {
@@ -104,116 +102,11 @@ export default {
     }
   },
   methods: {
-    handleOpen (key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleClose (key, keyPath) {
-      console.log(key, keyPath)
-    }
+  },
+  mounted: function () {
+    this.$nextTick(function () {
+      // console.log(this.$refs['dashboard'].active = true)
+    })
   }
 }
 </script>
-
-<style lang="scss">
-.main{
-  img{
-    &.logo{
-      margin: 40px 20px;
-    }
-    &.menu-icon{
-      margin-right: 16px;
-    }
-    &.image-icon{
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-      &.no-image{
-        background-color: #c4c4c4;
-        border-radius: 50%;
-      }
-    }
-  }
-  .menu-vertical{
-    height: 2px;
-    border-top: solid 1px #eeeeee;
-    height: 2px;
-    display: unset;
-    &.main-menu{
-      li:first-of-type{
-        border-top: solid 1px #eeeeee;
-      }
-      .menu-title{
-        margin: 58px 20px 10px;
-        font-size: 12px;
-      }
-    }
-    &.team-menu{
-      .menu-title{
-        margin: 48px 20px 10px;
-        font-size: 12px;
-      }
-      .counter{
-        float: right;
-      }
-    }
-  }
-  .dashboard-item{
-    border-bottom: solid 1px #eeeeee;
-  }
-  .el-menu-item{
-    height: 64px;
-    line-height: 64px;
-    &.is-active{
-      border-left: 3px solid #7c4cf3;
-      padding-left: 17px !important;
-      color: #323c47;
-      font-weight: 500;
-      background-color: #fafafa;
-    }
-    &:hover{
-      background-color: #fafafa;
-    }
-  }
-  .el-aside{
-    background-color: #ffffff;
-    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
-    z-index: 2;
-  }
-  .el-header{
-    background-color: #ffffff;
-    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
-    z-index: 1;
-    display: flex;
-    .search{
-      display: flex;
-      width: 100%;
-      input{
-        border: 0;
-        outline: 0;
-        height: 58px;
-        font-size: 16px;
-        opacity: .75;
-        width: 98%;
-      }
-    }
-    .user-info{
-      display: flex;
-      align-items: center;
-      .info{
-        margin: 0 10px;
-        div{
-          white-space: nowrap;
-          font-weight: 600;
-        }
-        span{
-          font-size: 12px;
-          color: #666666;
-        }
-      }
-    }
-  }
-  .el-main{
-    background-color: #f9fafc;
-  }
-}
-</style>
