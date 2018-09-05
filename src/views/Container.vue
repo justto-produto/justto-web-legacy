@@ -1,32 +1,47 @@
 <template>
   <el-container>
-    <el-aside class="container-aside">
-      <img class="container-aside__logo" src="@/assets/logo.svg"/>
-      <el-menu :router="true" :default-active="$route.path" class="el-menu--main-menu" :collapse="isCollapse">
+    <el-aside class="container-aside" width="auto">
+      <div class="aside-logo" :class="{'aside-logo--colapsed': isCollapse}">
+        <transition name="fade-absolute">
+          <img class="aside-logo__logo" v-if="!isCollapse" src="@/assets/logo.svg"/>
+        </transition>
+        <img class="aside-logo__logo" v-if="isCollapse" src="@/assets/logo-small.svg"/>
+        <a href="" class="aside-logo__icon" v-if="isCollapse" @click.prevent="isCollapse = !isCollapse">
+          <jus-icon v-if="isCollapse" icon="expand-menu"/>
+        </a>
+        <a href="" class="aside-logo__icon" v-if="!isCollapse" @click.prevent="isCollapse = !isCollapse">
+          <jus-icon icon="colapse-menu"/>
+        </a>
+      </div>
+      <el-menu :collapse-transition="false" :router="true" :default-active="$route.path" class="el-menu--main-menu" :collapse="isCollapse">
         <el-menu-item ref="dashboard" index="/" class="border-top-bottom">
-          <jus-icon icon="dashboard" :is-active="true" class="el-menu__icon"/>
+          <jus-icon icon="dashboard" :is-active="$route.path === '/'" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
-        <li class="el-menu__title">
-          GERENCIAMENTO
-        </li>
+        <transition name="fade-absolute">
+          <li v-if="!isCollapse" class="el-menu__title">
+            <span>GERENCIAMENTO</span>
+          </li>
+        </transition>
         <el-menu-item index="/import">
-          <jus-icon icon="import" is-active class="el-menu__icon"></jus-icon>
+          <jus-icon icon="import" :is-active="$route.path === '/import'" class="el-menu__icon"></jus-icon>
           <span slot="title">Importação</span>
         </el-menu-item>
         <el-menu-item index="/negotiation">
-          <jus-icon icon="negotiation" is-active class="el-menu__icon"></jus-icon>
+          <jus-icon icon="negotiation" :is-active="$route.path === '/negotiation'" class="el-menu__icon"></jus-icon>
           <span slot="title">Negociação</span>
         </el-menu-item>
         <el-menu-item index="/settings">
-          <jus-icon icon="settings" is-active class="el-menu__icon"></jus-icon>
+          <jus-icon icon="settings" :is-active="$route.path === '/settings'" class="el-menu__icon"></jus-icon>
           <span slot="title">Configurações</span>
         </el-menu-item>
       </el-menu>
-      <el-menu class="el-menu--team-menu" :collapse="isCollapse">
+      <el-menu :collapse-transition="false" class="el-menu--team-menu" :collapse="isCollapse">
         <li class="el-menu__title">
-          TIME BONK E RIZZO
-          <i class="el-icon-plus"></i>
+          <span v-if="!isCollapse">
+            TIME BONK E RIZZO
+            <i class="el-icon-plus"></i>
+          </span>
         </li>
         <el-menu-item index="1">
           <img src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg" class="el-menu__avatar">
