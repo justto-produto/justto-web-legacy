@@ -72,17 +72,17 @@
           <input type="text" name="" value="" placeholder="Buscar">
         </div>
         <div class="container-info">
-          <div class="container-info__avatar">
-            <user-avatar></user-avatar>
-          </div>
-          <div class="container-info__name">
-            <div>
-              Mariana rondino
-            </div>
-            <span>UX Designer</span>
-          </div>
-          <el-dropdown trigger="click" placement="bottom">
+          <el-dropdown trigger="click" placement="bottom-start">
             <span class="el-dropdown-link">
+              <div class="container-info__avatar">
+                <user-avatar></user-avatar>
+              </div>
+              <div class="container-info__name">
+                <div>
+                  Mariana rondino
+                </div>
+                <span>UX Designer</span>
+              </div>
               <jus-icon icon="expand-dropdown"/>
             </span>
             <el-dropdown-menu slot="dropdown">
