@@ -7,8 +7,21 @@ html {
   color: #424242;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body, html, #app, section {
   height: 100%;
   margin: 0;
   background-color: $--background-color-base;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: normal;
+}
+
+h3 {
+  line-height: 1;
 }

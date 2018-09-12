@@ -14,20 +14,13 @@ const router = new Router({
       children: [
         {
           path: '/',
-          component: () => import(/* webpackChunkName: "login" */ '@/views/dashboard/Dashboard.vue')
+          component: () => import(/* webpackChunkName: "login" */ '@/views/content/Dashboard.vue')
         },
         {
           path: 'import',
-          component: () => import(/* webpackChunkName: "login" */ '@/views/import/Import.vue')
+          component: () => import(/* webpackChunkName: "login" */ '@/views/content/Import.vue')
         }
       ]
-    },
-    {
-      path: '/import',
-      component: () => import(/* webpackChunkName: "login" */ '@/views/import/Import.vue'),
-      meta: {
-        requiresAuth: false
-      }
     },
     {
       path: '/login',

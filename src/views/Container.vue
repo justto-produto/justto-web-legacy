@@ -79,7 +79,7 @@
               </div>
               <div class="container-info__name">
                 <div>
-                  Mariana rondino
+                  Mariana Rondino
                 </div>
                 <span>UX Designer</span>
               </div>
@@ -95,7 +95,7 @@
         </div>
       </el-header>
       <el-main>
-        <transition name="fade">
+        <transition name="fade-absolute">
           <router-view/>
         </transition>
       </el-main>
