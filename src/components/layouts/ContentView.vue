@@ -6,7 +6,7 @@
         <slot name="content-left"></slot>
       </el-card>
     </el-main>
-    <el-aside width="300px" class="content-view__right">
+    <el-aside v-if="this.$slots['content-right']" width="300px" class="content-view__right">
       <slot name="content-right"></slot>
     </el-aside>
   </el-container>
@@ -20,7 +20,7 @@ export default {
 <style lang="scss">
 .content-view {
   .content-view__left {
-    margin: 0 0 40px 20px;
+    margin: 0 20px 40px 20px;
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -29,7 +29,7 @@ export default {
     height: 100%;
   }
   .content-view__right {
-    padding: 125px 30px 40px;
+    padding: 125px 20px 40px;
     margin: auto;
   }
 }

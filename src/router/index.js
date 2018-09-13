@@ -19,6 +19,14 @@ const router = new Router({
         {
           path: 'import',
           component: () => import(/* webpackChunkName: "login" */ '@/views/content/Import.vue')
+        },
+        {
+          path: 'negotiation',
+          component: () => import(/* webpackChunkName: "login" */ '@/views/content/Negotiation.vue')
+        },
+        {
+          path: 'settings',
+          component: () => import(/* webpackChunkName: "login" */ '@/views/content/Settings.vue')
         }
       ]
     },

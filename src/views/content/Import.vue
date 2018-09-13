@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <el-button @click="notify">Próximo</el-button>
+        <el-button @click="confirm">Próximo</el-button>
       </div>
     </template>
     <template slot="content-right">
@@ -61,10 +61,26 @@ export default {
       this.$notify({
         title: 'Ops!',
         message: 'Para prosseguir você deve adicionar um arquivo',
-        // type: 'error',
         position: 'bottom-right',
         duration: 0,
         customClass: 'success'
+      })
+    },
+    confirm () {
+      this.$confirm(`Um arquivo ainda está carregando. Ao sair da tela, este arquivo não será importado.
+        Você tem certeza de que quer abandonar o carregamento?`, 'Atenção!', {
+        confirmButtonText: 'Parar importação',
+        cancelButtonText: 'Cancelar'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: 'Delete completed'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled'
+        })
       })
     }
   }

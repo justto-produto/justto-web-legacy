@@ -267,12 +267,12 @@ $--alert-icon-large-size: 28px !default;
 /* Message Box
 -------------------------- */
 $--msgbox-width: 420px !default;
-$--msgbox-border-radius: 4px !default;
+$--msgbox-border-radius: 6px !default;
 $--msgbox-font-size: $--font-size-large !default;
 $--msgbox-content-font-size: $--font-size-base !default;
 $--msgbox-content-color: $--color-text-regular !default;
-$--msgbox-error-font-size: 12px !default;
-$--msgbox-padding-primary: 15px !default;
+$--msgbox-error-font-size: 14px !default;
+$--msgbox-padding-primary: 20px !default;
 
 $--msgbox-success-color: $--color-success !default;
 $--msgbox-info-color: $--color-info !default;
