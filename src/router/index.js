@@ -7,26 +7,47 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "login" */ '@/views/Container.vue'),
+      component: () => import(/* webpackChunkName: "contentContainer" */ '@/views/content/ContentContainer.vue'),
       meta: {
         requiresAuth: false
       },
       children: [
         {
           path: '/',
-          component: () => import(/* webpackChunkName: "login" */ '@/views/content/Dashboard.vue')
+          component: () => import(/* webpackChunkName: "dashboard" */ '@/views/content/Dashboard.vue')
         },
         {
           path: 'import',
-          component: () => import(/* webpackChunkName: "login" */ '@/views/content/Import.vue')
+          component: () => import(/* webpackChunkName: "import" */ '@/views/content/Import.vue')
         },
         {
           path: 'negotiation',
-          component: () => import(/* webpackChunkName: "login" */ '@/views/content/Negotiation.vue')
+          component: () => import(/* webpackChunkName: "negotiation" */ '@/views/content/Negotiation.vue')
         },
         {
           path: 'settings',
-          component: () => import(/* webpackChunkName: "login" */ '@/views/content/Settings.vue')
+          component: () => import(/* webpackChunkName: "settings" */ '@/views/content/Settings.vue')
+        }
+      ]
+    },
+    {
+      path: '/user',
+      component: () => import(/* webpackChunkName: "userContainer" */ '@/views/user/UserContainer.vue'),
+      meta: {
+        requiresAuth: false
+      },
+      children: [
+        {
+          path: '/',
+          component: () => import(/* webpackChunkName: "profile" */ '@/views/user/Profile.vue')
+        },
+        {
+          path: 'change-password',
+          component: () => import(/* webpackChunkName: "Password" */ '@/views/user/ChangePassword.vue')
+        },
+        {
+          path: 'notifications',
+          component: () => import(/* webpackChunkName: "notifications" */ '@/views/user/Notifications.vue')
         }
       ]
     },
@@ -40,11 +61,11 @@ const router = new Router({
     },
     {
       path: '/forgot-password',
-      component: () => import(/* webpackChunkName: "forgot-password" */ '@/views/external/ForgotPassword.vue')
+      component: () => import(/* webpackChunkName: "forgotPassword" */ '@/views/external/ForgotPassword.vue')
     },
     {
       path: '/onboarding',
-      component: () => import(/* webpackChunkName: "onboard" */ '@/views/onboarding/Onboarding.vue')
+      component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/Onboarding.vue')
     },
     {
       path: '*',

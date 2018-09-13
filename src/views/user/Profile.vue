@@ -1,7 +1,7 @@
 <template>
   <content-view>
     <template slot="content-title">
-      <h1>Profile</h1>
+      <h1>Perfil</h1>
     </template>
     <template slot="content-left">
     </template>

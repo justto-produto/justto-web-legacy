@@ -65,35 +65,8 @@
         </el-menu-item>
       </el-menu>
     </el-aside>
-    <el-container>
-      <el-header class="container-header">
-        <div class="container-search">
-          <jus-icon icon="search" is-active class="el-menu__icon"/>
-          <input type="text" name="" value="" placeholder="Buscar">
-        </div>
-        <div class="container-info">
-          <el-dropdown trigger="click" placement="bottom-start">
-            <span class="el-dropdown-link">
-              <div class="container-info__avatar">
-                <user-avatar></user-avatar>
-              </div>
-              <div class="container-info__name">
-                <div>
-                  Mariana Rondino
-                </div>
-                <span>UX Designer</span>
-              </div>
-              <jus-icon icon="expand-dropdown"/>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>Times</el-dropdown-item>
-              <el-dropdown-item>Informações</el-dropdown-item>
-              <el-dropdown-item>Ajuda</el-dropdown-item>
-              <el-dropdown-item divided>Sair</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </el-header>
+    <el-container direction="vertical">
+      <content-header/>
       <el-main>
         <transition name="fade-absolute">
           <router-view/>
@@ -104,24 +77,17 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/images/UserAvatar'
+import ContentHeader from '@/components/layouts/ContentHeader'
 
 export default {
-  name: 'Main',
+  name: 'ContentContainer',
   components: {
-    UserAvatar
+    ContentHeader
   },
   data () {
     return {
       isCollapse: false
     }
-  },
-  methods: {
-  },
-  mounted: function () {
-    this.$nextTick(function () {
-      // console.log(this.$refs['dashboard'].active = true)
-    })
   }
 }
 </script>
