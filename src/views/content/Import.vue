@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <el-button @click="next">Próximo</el-button>
+        <el-button @click="notify">Próximo</el-button>
       </div>
     </template>
     <template slot="content-right">
@@ -56,6 +56,16 @@ export default {
   methods: {
     next () {
       if (this.active++ > 3) this.active = 1
+    },
+    notify () {
+      this.$notify({
+        title: 'Ops!',
+        message: 'Para prosseguir você deve adicionar um arquivo',
+        // type: 'error',
+        position: 'bottom-right',
+        duration: 0,
+        customClass: 'success'
+      })
     }
   }
 }

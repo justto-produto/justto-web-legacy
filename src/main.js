@@ -13,12 +13,13 @@ import '@/plugins/awesomeSwiper'
 
 // css
 import '@/styles/reset.scss'
-import '@/styles/override.scss'
 import '@/styles/transitions.scss'
 import '@/styles/helpers.scss'
 import '@/styles/views/container.scss'
 import '@/styles/views/external.scss'
 import '@/styles/views/onboarding.scss'
+import '@/styles/overrides/override.scss'
+import '@/styles/overrides/notification.scss'
 
 // icons
 import JusIcon from '@/components/images/JusIcon'

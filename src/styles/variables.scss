@@ -25,10 +25,10 @@ $--color-primary-light-7: mix($--color-white, $--color-primary, 70%) !default; /
 $--color-primary-light-8: mix($--color-white, $--color-primary, 80%) !default; /* d9ecff */
 $--color-primary-light-9: mix($--color-white, $--color-primary, 90%) !default; /* ecf5ff */
 
-$--color-success: #67c23a !default;
-$--color-warning: #e6a23c !default;
-$--color-danger: #f56c6c !default;
-$--color-info: #909399 !default;
+$--color-success: #46E986 !default;
+$--color-warning: #FFC900 !default;
+$--color-danger: #FF4B54 !default;
+$--color-info: #ADADAD !default;
 
 $--color-success-light: mix($--color-white, $--color-success, 80%) !default;
 $--color-warning-light: mix($--color-white, $--color-warning, 80%) !default;
@@ -298,9 +298,9 @@ $--message-danger-color: $--color-danger !default;
 /* Notification
 -------------------------- */
 $--notification-width: 330px !default;
-$--notification-padding: 14px 26px 14px 13px !default;
-$--notification-radius: 8px !default;
-$--notification-shadow: $--box-shadow-light !default;
+$--notification-padding: 28px 20px !default;
+$--notification-radius: 6px !default;
+$--notification-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.24) !default;
 $--notification-border-color: $--border-color-lighter !default;
 $--notification-icon-size: 24px !default;
 $--notification-close-font-size: $--message-close-size !default;
