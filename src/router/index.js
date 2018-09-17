@@ -31,23 +31,23 @@ const router = new Router({
       ]
     },
     {
-      path: '/user',
-      component: () => import(/* webpackChunkName: "userContainer" */ '@/views/user/UserContainer.vue'),
+      path: '/profile',
+      component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer.vue'),
       meta: {
         requiresAuth: false
       },
       children: [
         {
           path: '/',
-          component: () => import(/* webpackChunkName: "profile" */ '@/views/user/Profile.vue')
-        },
-        {
-          path: 'change-password',
-          component: () => import(/* webpackChunkName: "Password" */ '@/views/user/ChangePassword.vue')
+          component: () => import(/* webpackChunkName: "profile" */ '@/views/profile/Profile.vue')
         },
         {
           path: 'notifications',
-          component: () => import(/* webpackChunkName: "notifications" */ '@/views/user/Notifications.vue')
+          component: () => import(/* webpackChunkName: "notifications" */ '@/views/profile/Notifications.vue')
+        },
+        {
+          path: 'activities',
+          component: () => import(/* webpackChunkName: "activities" */ '@/views/profile/Activities.vue')
         }
       ]
     },

@@ -1,36 +1,45 @@
 <template lang="html">
-  <el-container class="content-view">
-    <el-main class="content-view__left">
-      <slot name="content-title"></slot>
-      <el-card class="content-view__card">
-        <slot name="content-left"></slot>
+  <div class="content-view">
+    <h1><slot name="title"></slot></h1>
+    <div class="display-flex">
+      <el-card class="content-view__main-card">
+        <slot name="main"></slot>
       </el-card>
-    </el-main>
-    <el-aside v-if="this.$slots['content-right']" width="300px" class="content-view__right">
-      <slot name="content-right"></slot>
-    </el-aside>
-  </el-container>
+      <div v-if="this.$slots['aside']">
+        <el-card v-if="sideCard" class="content-view__card">
+          <slot name="aside"></slot>
+        </el-card>
+        <div v-else class="content-view__card content-view__card--transparent">
+          <slot name="aside"></slot>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
+  props: {
+    sideCard: Boolean
+  }
 }
 </script>
 
 <style lang="scss">
 .content-view {
-  .content-view__left {
-    margin: 0 20px 40px 20px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
+  margin: 10px 20px 0;
+  .content-view__main-card {
+    width: 100%
   }
   .content-view__card {
-    height: 100%;
-  }
-  .content-view__right {
-    padding: 125px 20px 40px;
-    margin: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 260px;
+    position: sticky;
+    top: 40px;
+    &.content-view__card--transparent{
+      padding:  0 20px;
+    }
   }
 }
 </style>

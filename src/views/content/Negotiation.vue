@@ -1,9 +1,9 @@
 <template>
   <content-view>
-    <template slot="content-title">
+    <template slot="title">
       <h1>Profile</h1>
     </template>
-    <template slot="content-left">
+    <template slot="main">
     </template>
     <!-- <template slot="content-right">
       <jus-icon icon="best-practices"/>
@@ -18,13 +18,8 @@
 </template>
 
 <script>
-import ContentView from '@/components/layouts/ContentView'
-
 export default {
-  name: 'Profile',
-  components: {
-    ContentView
-  }
+  name: 'Profile'
 }
 </script>
 

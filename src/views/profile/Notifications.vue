@@ -1,9 +1,10 @@
 <template>
   <content-view>
-    <template slot="content-title">
-      <h1>Alterar senha</h1>
+    <template slot="title">
+      <h1>Notificações</h1>
     </template>
-    <template slot="content-left">
+    <template slot="main">
+      a
     </template>
     <!-- <template slot="content-right">
       <jus-icon icon="best-practices"/>
@@ -18,15 +19,7 @@
 </template>
 
 <script>
-import ContentView from '@/components/layouts/ContentView'
-
 export default {
-  name: 'ChangePassword',
-  components: {
-    ContentView
-  }
+  name: 'Notifications'
 }
 </script>
-
-<style lang="scss">
-</style>

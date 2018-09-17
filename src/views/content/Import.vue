@@ -1,9 +1,9 @@
 <template>
   <content-view class="view-import">
-    <template slot="content-title">
+    <template slot="title">
       <h1>Importação</h1>
     </template>
-    <template slot="content-left">
+    <template slot="main">
       <el-steps :active="active" finish-status="finish">
         <el-step></el-step>
         <el-step></el-step>
@@ -25,10 +25,10 @@
           </div>
         </div>
 
-        <el-button @click="confirm">Próximo</el-button>
+        <el-button @click="notify">Próximo</el-button>
       </div>
     </template>
-    <template slot="content-right">
+    <template slot="aside">
       <jus-icon icon="best-practices"/>
       <h3>
         Melhores práticas para importar casos
@@ -41,13 +41,8 @@
 </template>
 
 <script>
-import ContentView from '@/components/layouts/ContentView'
-
 export default {
   name: 'Import',
-  components: {
-    ContentView
-  },
   data () {
     return {
       active: 1

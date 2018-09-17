@@ -20,11 +20,15 @@ import '@/styles/views/external.scss'
 import '@/styles/views/onboarding.scss'
 import '@/styles/overrides/override.scss'
 import '@/styles/overrides/notification.scss'
+import '@/styles/overrides/message.scss'
 
 import JusIcon from '@/components/images/JusIcon'
 import UserAvatar from '@/components/images/UserAvatar'
+import ContentView from '@/components/layouts/ContentView'
+
 Vue.component('jus-icon', JusIcon)
 Vue.component('user-avatar', UserAvatar)
+Vue.component('content-view', ContentView)
 
 Vue.config.productionTip = false
 

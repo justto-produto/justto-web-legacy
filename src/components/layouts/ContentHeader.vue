@@ -20,15 +20,19 @@
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <span @click="$router.push('/user')">Perfil</span>
+            <a @click="$router.push('/profile')">Perfil</a>
           </el-dropdown-item>
           <el-dropdown-item>
-            <span @click="$router.push('/user/change-password')">Trocar senha</span>
+            <a @click="$router.push('/profile/notifications')">Notificações</a>
             </el-dropdown-item>
           <el-dropdown-item>
-            <span @click="$router.push('/user/notifications')">Notificações</span>
+            <a @click="$router.push('/profile/activities')">Minhas atividades</a>
           </el-dropdown-item>
-          <el-dropdown-item>Ajuda</el-dropdown-item>
+          <el-dropdown-item>
+            <a href="http://ajuda.justto.com.br/" target="_blank">
+              Central de ajuda
+            </a>
+          </el-dropdown-item>
           <el-dropdown-item divided>Sair</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

@@ -12,17 +12,17 @@
         <li class="el-menu__title">
           <span>PERFIL</span>
         </li>
-        <el-menu-item index="/user">
-          <jus-icon icon="settings" :is-active="$route.path === '/user'" class="el-menu__icon"></jus-icon>
-          <span slot="title">Meus dados</span>
+        <el-menu-item index="/profile">
+          <jus-icon icon="profile" :is-active="$route.path === '/profile'" class="el-menu__icon"></jus-icon>
+          <span slot="title">Configurações</span>
         </el-menu-item>
-        <el-menu-item index="/user/change-password">
-          <jus-icon icon="import" :is-active="$route.path === '/user/change-password'" class="el-menu__icon"></jus-icon>
-          <span slot="title">Alterar senha</span>
-        </el-menu-item>
-        <el-menu-item index="/user/notifications">
-          <jus-icon icon="negotiation" :is-active="$route.path === '/user/notifications'" class="el-menu__icon"></jus-icon>
+        <el-menu-item index="/profile/notifications">
+          <jus-icon icon="notification" :is-active="$route.path === '/profile/notifications'" class="el-menu__icon"></jus-icon>
           <span slot="title">Notificações</span>
+        </el-menu-item>
+        <el-menu-item index="/profile/activities">
+          <jus-icon icon="my-activities" :is-active="$route.path === '/profile/activities'" class="el-menu__icon"></jus-icon>
+          <span slot="title">Minhas atividades</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -41,7 +41,7 @@
 import ContentHeader from '@/components/layouts/ContentHeader'
 
 export default {
-  name: 'UserContainer',
+  name: 'ProfileContainer',
   components: {
     ContentHeader
   }
