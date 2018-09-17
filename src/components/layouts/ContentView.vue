@@ -29,7 +29,8 @@ export default {
 .content-view {
   margin: 10px 20px 0;
   .content-view__main-card {
-    width: 100%
+    width: 100%;
+    min-height: calc( 100vh - 180px );
   }
   .content-view__card {
     margin-left: 20px;
@@ -37,7 +38,7 @@ export default {
     width: 260px;
     position: sticky;
     top: 40px;
-    &.content-view__card--transparent{
+    &.content-view__card--transparent {
       padding:  0 20px;
     }
   }
