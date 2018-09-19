@@ -21,6 +21,7 @@ import '@/styles/views/onboarding.scss'
 import '@/styles/overrides/override.scss'
 import '@/styles/overrides/notification.scss'
 import '@/styles/overrides/message.scss'
+import '@/styles/views/profile.scss'
 
 import JusIcon from '@/components/images/JusIcon'
 import UserAvatar from '@/components/images/UserAvatar'

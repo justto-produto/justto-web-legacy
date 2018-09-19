@@ -1,8 +1,8 @@
 <template>
-  <div class="user-avatar-image" :class="'user-avatar-image--'+size">
+  <span class="user-avatar-image" v-bind:class="objectClass">
     <img :src="imagePath">
     <span v-if="notifications > 0 && size === 'sm'">{{notifications}}</span>
-  </div>
+  </span>
 </template>
 
 <script>
@@ -11,15 +11,29 @@ export default {
   props: {
     src: String,
     notifications: Number,
-    size: String
+    size: String,
+    rounded: Boolean,
+    nameInitials: String
   },
   computed: {
     imagePath: function () {
       // try {
       // return require('@/assets/')
       // } catch (e) {
-      return 'https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg'
+      if (this.src) {
+        return this.src
+      }
+      return 'https://via.placeholder.com/200/ff9300/ffffff?text='+this.nameInitials
       // }
+    },
+    objectClass: function () {
+      return {
+        'user-avatar-image--xs': this.size === 'xs',
+        'user-avatar-image--sm': this.size === 'sm',
+        'user-avatar-image--md': this.size === 'md',
+        'user-avatar-image--lg': this.size === 'lg',
+        'user-avatar-image--rounded': this.rounded
+      }
     }
   }
 }
@@ -50,6 +64,11 @@ export default {
     img {
       width: 8.5rem;
       height: 8.5rem;
+    }
+  }
+  &.user-avatar-image--rounded {
+    img {
+      border-radius: 50%;
     }
   }
   img {

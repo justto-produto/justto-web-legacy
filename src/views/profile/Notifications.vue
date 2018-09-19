@@ -4,7 +4,13 @@
       <h1>Notificações</h1>
     </template>
     <template slot="main">
-      a
+      <user-avatar size="xs" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
+      <br><br>
+      <user-avatar size="sm" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
+      <br><br>
+      <user-avatar size="md" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
+      <br><br>
+      <user-avatar size="lg" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
     </template>
     <!-- <template slot="content-right">
       <jus-icon icon="best-practices"/>

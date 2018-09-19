@@ -35,11 +35,12 @@ export default {
   .content-view__card {
     margin-left: 20px;
     margin-right: 20px;
-    width: 260px;
+    width: 300px;
     position: sticky;
     top: 40px;
     &.content-view__card--transparent {
       padding:  0 20px;
+      width: 260px;
     }
   }
 }

@@ -2,54 +2,33 @@
   <content-view side-card>
     <template slot="title">Configurações do perfil</template>
     <template slot="main">
-      <user-avatar size="lg"></user-avatar>
 
-      <el-form ref="form" :model="form" label-position="top">
-        <el-form-item label="Activity name">
-          <el-input v-model="form.name"></el-input>
+      <el-form class="profile-form" ref="profileForm" :model="profileForm" label-position="top">
+        <user-avatar size="lg" class="profile-form__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
+        <span class="profile-form__edit-photo">
+          Alterar foto
+          <br>
+          Remover foto
+        </span>
+        <el-form-item label="Nome">
+          <el-input v-model="profileForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="Activity zone">
-          <el-select v-model="form.region" placeholder="please select your zone">
-            <el-option label="Zone one" value="shanghai"></el-option>
-            <el-option label="Zone two" value="beijing"></el-option>
-          </el-select>
+        <el-form-item label="E-mail">
+          <el-input v-model="profileForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="Activity time">
-          <el-col :span="11">
-            <el-date-picker type="date" placeholder="Pick a date" v-model="form.date1" style="width: 100%;"></el-date-picker>
-          </el-col>
-          <el-col class="line" :span="2">-</el-col>
-          <el-col :span="11">
-            <el-time-picker type="fixed-time" placeholder="Pick a time" v-model="form.date2" style="width: 100%;"></el-time-picker>
-          </el-col>
+        <el-form-item label="Alterar senha">
+          <el-input v-model="profileForm.password"></el-input>
         </el-form-item>
-        <el-form-item label="Instant delivery">
-          <el-switch v-model="form.delivery"></el-switch>
-        </el-form-item>
-        <el-form-item label="Activity type">
-          <el-checkbox-group v-model="form.type">
-            <el-checkbox label="Online activities" name="type"></el-checkbox>
-            <el-checkbox label="Promotion activities" name="type"></el-checkbox>
-            <el-checkbox label="Offline activities" name="type"></el-checkbox>
-            <el-checkbox label="Simple brand exposure" name="type"></el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="Resources">
-          <el-radio-group v-model="form.resource">
-            <el-radio label="Sponsor"></el-radio>
-            <el-radio label="Venue"></el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="Activity form">
-          <el-input type="textarea" v-model="form.desc"></el-input>
+        <el-form-item label="Clientes">
+          <user-avatar size="sm" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
+          <user-avatar size="sm"></user-avatar>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">Create</el-button>
-          <el-button>Cancel</el-button>
+          <el-button type="primary" class="w100" @click="onSubmit">Salvar</el-button>
         </el-form-item>
       </el-form>
 
-      <br><br><br><br><br><br><br>
+      <!-- <br><br><br><br><br><br><br>
       Role para baixo
       <br><br><br><br><br><br><br>
       <i class="el-icon-arrow-down"></i>
@@ -70,7 +49,7 @@
       <br><br><br><br><br><br><br>
       <i class="el-icon-arrow-down"></i>
       <br><br><br><br><br><br><br>
-      <i class="el-icon-arrow-down"></i>
+      <i class="el-icon-arrow-down"></i> -->
     </template>
     <template slot="aside">
       <jus-icon icon="best-practices"/>
@@ -89,15 +68,10 @@ export default {
   name: 'Profile',
   data () {
     return {
-      form: {
+      profileForm: {
         name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        email: '',
+        password: ''
       }
     }
   },
@@ -110,4 +84,5 @@ export default {
 </script>
 
 <style lang="scss">
+
 </style>

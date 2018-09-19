@@ -7,7 +7,7 @@
     <div class="container-info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
-          <user-avatar size="sm" notifications="1"></user-avatar>
+          <user-avatar size="sm" :notifications="1" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
           <div class="container-info__name">
             <div>
               Mariana Rondino
