@@ -43,6 +43,3 @@ export default {
   name: 'ContentHeader'
 }
 </script>
-
-<style lang="css">
-</style>

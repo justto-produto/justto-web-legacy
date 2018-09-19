@@ -20,11 +20,13 @@ export default {
       // try {
       // return require('@/assets/')
       // } catch (e) {
+      // }
       if (this.src) {
         return this.src
+      } else if (this.nameInitials) {
+        return 'https://via.placeholder.com/200/ff9300/ffffff?text=' + this.nameInitials
       }
-      return 'https://via.placeholder.com/200/ff9300/ffffff?text='+this.nameInitials
-      // }
+      return 'https://via.placeholder.com/200/e2e2e2/ffffff?text=+'
     },
     objectClass: function () {
       return {
