@@ -7,9 +7,7 @@
     <div class="container-info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
-          <div class="container-info__avatar">
-            <user-avatar></user-avatar>
-          </div>
+          <user-avatar size="sm" notifications="1"></user-avatar>
           <div class="container-info__name">
             <div>
               Mariana Rondino

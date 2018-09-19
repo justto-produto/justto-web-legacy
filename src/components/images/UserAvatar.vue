@@ -1,20 +1,17 @@
 <template>
-  <div class="user-avatar-image">
+  <div class="user-avatar-image" :class="'user-avatar-image--'+size">
     <img :src="imagePath">
-    <span>{{notifications}}</span>
+    <span v-if="notifications > 0 && size === 'sm'">{{notifications}}</span>
   </div>
 </template>
 
 <script>
 export default {
   name: 'UserAvatar',
-  props: [
-    'src'
-  ],
-  data () {
-    return {
-      notifications: '1'
-    }
+  props: {
+    src: String,
+    notifications: Number,
+    size: String
   },
   computed: {
     imagePath: function () {
@@ -29,16 +26,38 @@ export default {
 </script>
 
 <style lang="scss">
-.user-avatar-image{
+.user-avatar-image {
   position: relative;
-  img{
+  &.user-avatar-image--xs {
+    img {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+  }
+  &.user-avatar-image--sm {
+    img {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+  &.user-avatar-image--md {
+    img {
+      width: 5.75rem;
+      height: 5.75rem;
+    }
+  }
+  &.user-avatar-image--lg {
+    img {
+      width: 8.5rem;
+      height: 8.5rem;
+    }
+  }
+  img {
     object-fit: cover;
-    width: 40px;
-    height: 40px;
     border-radius: 6px;
     background-color: #f2f2f2;
   }
-  span{
+  span {
     min-width: 15px;
     min-height: 15px;
     line-height: 15px;
@@ -49,7 +68,7 @@ export default {
     color: #fff;
     border-radius: 4px;
     text-align: center;
-    top: 11px;
+    top: 12px;
     left: -9px;
   }
 }
