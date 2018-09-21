@@ -31,6 +31,7 @@ export default {
   .content-view__main-card {
     width: 100%;
     min-height: calc( 100vh - 180px );
+    margin-bottom: 20px;
   }
   .content-view__card {
     margin-left: 20px;

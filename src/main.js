@@ -23,6 +23,8 @@ import '@/styles/overrides/notification.scss'
 import '@/styles/overrides/message.scss'
 import '@/styles/overrides/carousel.scss'
 import '@/styles/views/profile.scss'
+import '@/styles/overrides/form.scss'
+import '@/styles/overrides/button.scss'
 
 import JusIcon from '@/components/images/JusIcon'
 import UserAvatar from '@/components/images/UserAvatar'

@@ -12,7 +12,7 @@
           </el-form-item>
           <el-form-item label="Senha" prop="password">
             <el-input v-model="loginForm.password" type="password"></el-input>
-            <el-button @click="$router.push('forgot-password')" type="text" class="external-view__forgot">Esqueceu sua senha?</el-button>
+            <el-button @click="$router.push('forgot-password')" type="text" class="el-button--input-float">Esqueceu sua senha?</el-button>
           </el-form-item>
           <el-button class="external-view__submit" type="primary" @click="submitForm()">Entrar</el-button>
           <el-row class="external-view__info">
