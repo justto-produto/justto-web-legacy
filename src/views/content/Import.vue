@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <el-button @click="notify">Próximo</el-button>
+        <el-button @click="confirm">Próximo</el-button>
       </div>
     </template>
     <template slot="aside">

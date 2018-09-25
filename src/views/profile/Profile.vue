@@ -2,7 +2,6 @@
   <content-view side-card>
     <template slot="title">Configurações do perfil</template>
     <template slot="main">
-
       <el-form class="profile-form" ref="profileForm" :model="profileForm" label-position="top">
         <user-avatar size="lg" class="profile-form__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
         <span class="profile-form__edit-photo">
@@ -18,7 +17,26 @@
         </el-form-item>
         <el-form-item label="Senha">
           <el-input v-model="profileForm.password"></el-input>
-          <el-button @click="$router.push('forgot-password')" type="text" class="el-button--input-float">Alterar senha</el-button>
+          <el-button @click="changePasswordDialog" type="text" class="el-button--input-float">Alterar senha</el-button>
+          <el-dialog
+            title="Alterar senha"
+            :visible.sync="dialogVisible"
+            width="30%">
+            <el-form class="external-view__form" label-position="top" ref="loginForm" :model="loginForm">
+              <el-form-item label="Nova senha" prop="newPassword">
+                <el-input v-model="loginForm.newPassword" type="password"></el-input>
+              </el-form-item>
+              <el-form-item label="Confirme a nova senha" prop="newPasswordConfirm">
+                <el-input v-model="loginForm.newPasswordConfirm" type="password"></el-input>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible = false">Cancelar</el-button>
+              <el-button type="primary" :loading="loadingChangePassword" @click="success">
+                {{ loadingChangePassword ? 'Salvando alterações' : 'Salvar alterações' }}
+              </el-button>
+            </span>
+          </el-dialog>
         </el-form-item>
         <el-form-item label="Clientes">
           <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
@@ -30,7 +48,7 @@
             title="Nestlé"
             width="300"
             trigger="hover"
-            content="Chocolates, chocolates, panetones, larvas e processos.">
+            content="Chocolates, panetones, larvas e processos.">
             <el-button slot="reference" class="el-button--icon">
               <jus-icon icon="more-info-grey"></jus-icon>
             </el-button>
@@ -72,7 +90,7 @@
       <el-carousel-item v-for="item in 3" :key="item">
         <div class="el-carousel__item-content">
           <h2>25</h2>
-          <span>Metas cumpridas <br>no mês</span>
+          <span>Metas cumpridas<br>no mês</span>
         </div>
       </el-carousel-item>
     </el-carousel>
@@ -166,7 +184,10 @@ export default {
         legend: {
           display: false
         }
-      }
+      },
+      dialogVisible: false,
+      loginForm: {},
+      loadingChangePassword: false
     }
   },
   components: {
@@ -176,6 +197,23 @@ export default {
   methods: {
     onSubmit () {
       console.log('submit!')
+    },
+    changePasswordDialog () {
+      this.dialogVisible = true
+    },
+    success () {
+      this.loadingChangePassword = true
+      setTimeout(() => {
+        this.dialogVisible = false
+        this.$notify({
+          title: 'Yay!',
+          message: 'Sua senha foi alterada com sucesso!',
+          position: 'bottom-right',
+          duration: 2000,
+          customClass: 'success'
+        }, 2000)
+        this.loadingChangePassword = false
+      }, 2000)
     }
   }
 }

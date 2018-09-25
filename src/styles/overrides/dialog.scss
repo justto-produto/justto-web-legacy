@@ -1,0 +1,26 @@
+.el-dialog {
+  border-radius: 6px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+}
+
+.el-dialog__header {
+  padding: 40px 30px 10px;
+}
+
+.el-dialog__headerbtn {
+  top: 30px;
+  right: 30px;
+}
+
+.el-dialog__title {
+  font-weight: bold;
+}
+
+.el-dialog__body {
+  padding: 10px 30px;
+}
+
+.el-dialog__footer {
+  padding: 30px;
+}
