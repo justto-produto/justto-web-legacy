@@ -30,6 +30,8 @@ import '@/styles/overrides/button.scss'
 import '@/styles/overrides/dialog.scss'
 import '@/styles/overrides/tabs.scss'
 import '@/styles/overrides/dropdown.scss'
+import '@/styles/overrides/tag.scss'
+import '@/styles/overrides/collapse.scss'
 
 import JusIcon from '@/components/images/JusIcon'
 import UserAvatar from '@/components/images/UserAvatar'

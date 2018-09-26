@@ -1,0 +1,13 @@
+@import "../variables.scss";
+
+.el-collapse-item {
+  padding: 10px 10px 0;
+  border: 1px solid #fff;
+  &.is-active {
+    border: 1px solid $--color-primary;
+    border-radius: 4px;
+  }
+}
+.el-collapse, .el-collapse-item__header, .el-collapse-item__wrap {
+  border: 0;
+}
