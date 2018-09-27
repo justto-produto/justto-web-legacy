@@ -1,13 +1,28 @@
 @import "../variables.scss";
 
-.el-collapse-item {
-  padding: 10px 10px 0;
-  border: 1px solid #fff;
-  &.is-active {
-    border: 1px solid $--color-primary;
-    border-radius: 4px;
+.el-collapse-drag {
+  &.el-collapse {
+    width: 100%;
+    border: 0;
   }
-}
-.el-collapse, .el-collapse-item__header, .el-collapse-item__wrap {
-  border: 0;
+  .el-collapse-item {
+    padding: 0 10px;
+    border: solid 1px #eeeeee;
+    transition: border ease 0.3s;
+    &.is-active {
+      border: 1px solid $--color-primary;
+      border-radius: 4px;
+    }
+  }
+  .el-collapse-item__header, .el-collapse-item__wrap {
+    border: 0;
+  }
+  .el-collapse-item__header {
+    color: $--color-primary;
+    height: 40px;
+    line-height: 40px;
+  }
+  .el-collapse-item__content {
+    padding-bottom: 0px;
+  }
 }

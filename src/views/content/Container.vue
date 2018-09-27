@@ -78,7 +78,7 @@
     <el-container direction="vertical">
       <content-header/>
       <el-main>
-        <transition name="fade-absolute">
+        <transition name="fade">
           <router-view/>
         </transition>
       </el-main>
@@ -101,3 +101,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .settings-container{
+    margin: 10px 20px 20px;
+  }
+</style>

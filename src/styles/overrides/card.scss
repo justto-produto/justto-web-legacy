@@ -1,0 +1,19 @@
+@import "../variables.scss";
+
+.el-card--bordered {
+  background-color: $--color-white;
+  border: solid 1px $--color-cloudy-blue;
+  margin-bottom: 20px;
+  &.el-card--success:hover {
+    border: solid 1px $--color-success;
+  }
+  &.el-card--danger:hover {
+    border: solid 1px $--color-danger;
+  }
+}
+
+.el-card--dashed {
+  margin: auto;
+  background-color: $--color-white;
+  border: dashed 1px $--color-cloudy-blue;
+}

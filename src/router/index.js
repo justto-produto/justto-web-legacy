@@ -7,47 +7,65 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "contentContainer" */ '@/views/content/ContentContainer.vue'),
+      component: () => import(/* webpackChunkName: "contentContainer" */ '@/views/content/Container'),
       meta: {
         requiresAuth: false
       },
       children: [
         {
           path: '/',
-          component: () => import(/* webpackChunkName: "dashboard" */ '@/views/content/Dashboard.vue')
+          component: () => import(/* webpackChunkName: "dashboard" */ '@/views/content/dashboard/Dashboard')
         },
         {
           path: 'import',
-          component: () => import(/* webpackChunkName: "import" */ '@/views/content/Import.vue')
+          component: () => import(/* webpackChunkName: "importContainer" */ '@/views/content/import/Container'),
+          children: [
+            {
+              path: '/',
+              component: () => import(/* webpackChunkName: "import" */ '@/views/content/import/Import')
+            },
+            {
+              path: 'new',
+              component: () => import(/* webpackChunkName: "importUpload" */ '@/views/content/import/Upload')
+            },
+            {
+              path: 'new/2',
+              component: () => import(/* webpackChunkName: "importUpload" */ '@/views/content/import/Columns')
+            },
+            {
+              path: 'new/3',
+              component: () => import(/* webpackChunkName: "importEnrichment" */ '@/views/content/import/Enrichment')
+            }
+          ]
         },
         {
           path: 'negotiation',
-          component: () => import(/* webpackChunkName: "negotiation" */ '@/views/content/Negotiation.vue')
+          component: () => import(/* webpackChunkName: "negotiation" */ '@/views/content/negotiation/Negotiation')
         },
         {
           path: 'settings',
-          component: () => import(/* webpackChunkName: "settings" */ '@/views/content/Settings.vue')
+          component: () => import(/* webpackChunkName: "settings" */ '@/views/content/settings/Settings')
         }
       ]
     },
     {
       path: '/profile',
-      component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer.vue'),
+      component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/Container'),
       meta: {
         requiresAuth: false
       },
       children: [
         {
           path: '/',
-          component: () => import(/* webpackChunkName: "profile" */ '@/views/profile/Profile.vue')
+          component: () => import(/* webpackChunkName: "profile" */ '@/views/profile/Profile')
         },
         {
           path: 'notifications',
-          component: () => import(/* webpackChunkName: "notifications" */ '@/views/profile/Notifications.vue')
+          component: () => import(/* webpackChunkName: "notifications" */ '@/views/profile/Notifications')
         },
         {
           path: 'activities',
-          component: () => import(/* webpackChunkName: "activities" */ '@/views/profile/Activities.vue')
+          component: () => import(/* webpackChunkName: "activities" */ '@/views/profile/Activities')
         }
       ]
     },

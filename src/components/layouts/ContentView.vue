@@ -27,11 +27,10 @@ export default {
 
 <style lang="scss">
 .content-view {
-  margin: 10px 20px 0;
+  position: relative;
   .content-view__main-card {
     width: 100%;
     min-height: calc( 100vh - 180px );
-    margin-bottom: 20px;
   }
   .content-view__card {
     margin-left: 20px;

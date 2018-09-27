@@ -5,9 +5,7 @@
         <external-sidenav></external-sidenav>
       </el-aside>
       <el-main class="display-flex position-relative">
-        <div class="external-view--back-button" @click="$router.push('login')">
-          <jus-icon icon="back"/> Voltar
-        </div>
+        <back-button to="login"></back-button>
         <el-form class="external-view__form" label-position="top" ref="forgotForm" :model="forgotForm" :rules="rules">
           <h1 class="external-view__title">Recuperar senha</h1>
           <el-form-item label="Email" prop="email">

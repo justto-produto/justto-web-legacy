@@ -1,7 +1,7 @@
 <template>
-  <content-view>
+  <content-view class="negotiation-container">
     <template slot="title">
-      <h1>Configurações</h1>
+      <h1>Negociação</h1>
     </template>
     <template slot="main">
     </template>
@@ -19,9 +19,12 @@
 
 <script>
 export default {
-  name: 'Negotiation'
+  name: 'Profile'
 }
 </script>
 
 <style lang="scss">
+  .negotiation-container{
+    margin: 10px 20px 20px;
+  }
 </style>

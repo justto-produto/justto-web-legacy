@@ -1,5 +1,5 @@
 <template>
-  <content-view>
+  <content-view class="dashboard-container">
     <template slot="title">
       <h1>Dashboard</h1>
     </template>
@@ -42,3 +42,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .dashboard-container{
+    margin: 10px 20px 20px;
+  }
+</style>

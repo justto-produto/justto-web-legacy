@@ -1,7 +1,7 @@
 <template>
-  <content-view>
+  <content-view class="settings-container">
     <template slot="title">
-      <h1>Profile</h1>
+      <h1>Configurações</h1>
     </template>
     <template slot="main">
     </template>
@@ -19,9 +19,12 @@
 
 <script>
 export default {
-  name: 'Profile'
+  name: 'Negotiation'
 }
 </script>
 
 <style lang="scss">
+  .dashboard-container{
+    margin: 10px 20px 20px;
+  }
 </style>

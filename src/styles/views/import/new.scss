@@ -1,0 +1,30 @@
+.step-content {
+  margin-top: 60px;
+  h2, p {
+    text-align: center;
+  }
+  button{
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    display: block;
+  }
+  .upload-box{
+    display: flex;
+    justify-content: center;
+    margin: 40px;
+    > div {
+      border: 2px dashed #d1dbe2;
+      width: 240px;
+      height: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+    div + div {
+      margin-left: 20px;
+    }
+  }
+}

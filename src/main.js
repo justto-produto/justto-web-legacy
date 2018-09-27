@@ -20,6 +20,8 @@ import '@/styles/views/container.scss'
 import '@/styles/views/external.scss'
 import '@/styles/views/onboarding.scss'
 import '@/styles/views/profile.scss'
+import '@/styles/views/import/import.scss'
+import '@/styles/views/import/new.scss'
 
 import '@/styles/overrides/override.scss'
 import '@/styles/overrides/notification.scss'
@@ -32,14 +34,18 @@ import '@/styles/overrides/tabs.scss'
 import '@/styles/overrides/dropdown.scss'
 import '@/styles/overrides/tag.scss'
 import '@/styles/overrides/collapse.scss'
+import '@/styles/overrides/card.scss'
+import '@/styles/overrides/steps.scss'
 
 import JusIcon from '@/components/images/JusIcon'
 import UserAvatar from '@/components/images/UserAvatar'
 import ContentView from '@/components/layouts/ContentView'
+import BackButton from '@/components/buttons/BackButton'
 
 Vue.component('jus-icon', JusIcon)
 Vue.component('user-avatar', UserAvatar)
 Vue.component('content-view', ContentView)
+Vue.component('back-button', BackButton)
 
 Vue.config.productionTip = false
 

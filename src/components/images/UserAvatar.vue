@@ -1,8 +1,8 @@
 <template>
-  <span class="user-avatar-image" v-bind:class="objectClass">
+  <div class="user-avatar-image" v-bind:class="objectClass">
     <img :src="imagePath">
     <span v-if="notifications > 0 && size === 'sm'">{{notifications}}</span>
-  </span>
+  </div>
 </template>
 
 <script>
@@ -44,6 +44,7 @@ export default {
 <style lang="scss">
 .user-avatar-image {
   position: relative;
+  display: inline;
   &.user-avatar-image--xs {
     img {
       width: 1.75rem;

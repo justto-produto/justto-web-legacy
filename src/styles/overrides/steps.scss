@@ -1,0 +1,16 @@
+.el-steps--wizard {
+  width: 30%;
+  margin: auto;
+  margin-top: 20px;
+  .el-step__icon.is-text {
+    padding: 14px;
+  }
+  .el-step__line {
+    background-color: #fff;
+    top: 16px;
+  }
+  .el-step__head.is-process, .el-step__head.is-wait {
+    color: #adadad !important;
+    border-color: white !important;
+  }
+}
