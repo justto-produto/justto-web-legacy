@@ -1,7 +1,7 @@
 <template>
   <div class="onboarding-view">
     <el-row>
-      <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 0.8s;">
+      <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 1s;">
         <external-sidenav></external-sidenav>
       </el-col>
       <el-col :md="right" v-if="right > 0">
@@ -239,7 +239,7 @@ export default {
     }.bind(this), 200)
     setTimeout(function () {
       this.right = 18
-    }.bind(this), 1000)
+    }.bind(this), 1200)
   }
 }
 </script>

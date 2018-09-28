@@ -9,6 +9,7 @@
 <style lang="scss">
 .external-sidenav{
   height: 100%;
+  background-color: #f7f7f7;
   .external-sidenav__logo{
     margin: 40px;
   }
