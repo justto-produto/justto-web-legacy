@@ -2,14 +2,14 @@
   <div class="onboarding-view">
     <el-row>
       <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 1s;">
-        <external-sidenav></external-sidenav>
+        <JusSidenavExternal/>
       </el-col>
       <el-col :md="right" v-if="right > 0">
         <el-row type="flex" align="middle">
           <swiper ref="swiper" :options="swiperOption">
             <swiper-slide>
               <div>
-                <company-logo src="nestle.jpg"></company-logo>
+                <JusLogoCompany src="nestle.jpg"/>
                 <h1>Junte-se à equipe da Nestlé</h1>
                 <el-button type="primary" @click="nextStep()">Entrar na equipe</el-button>
               </div>
@@ -150,14 +150,14 @@
 </template>
 
 <script>
-import ExternalSidenav from '@/components/layouts/ExternalSidenav'
-import CompanyLogo from '@/components/images/CompanyLogo'
+import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
+import JusLogoCompany from '@/components/images/JusLogoCompany'
 
 export default {
   name: 'Onboard',
   components: {
-    ExternalSidenav,
-    CompanyLogo
+    JusSidenavExternal,
+    JusLogoCompany
   },
   data () {
     return {

@@ -1,18 +1,23 @@
 <template lang="html">
-  <div class="back-button" @click="$router.push(to)">
-    <jus-icon icon="back"/> Voltar
+  <div class="jus-button-back" @click="$router.push(to)">
+    <JusIcon icon="back"/> Voltar
   </div>
 </template>
 
 <script>
 export default {
-  name: 'BackButton',
-  props: ['to']
+  name: 'JusButtonBack',
+  props: {
+    to: {
+      default: '',
+      type: String
+    }
+  }
 }
 </script>
 
 <style lang="scss">
-.back-button {
+.jus-button-back {
   position: absolute;
   top: 36px;
   left: 36px;

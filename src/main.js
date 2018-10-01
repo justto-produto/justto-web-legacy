@@ -2,9 +2,9 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from './router'
 import store from './store'
-import i18n from './vueI18n'
 
 // plugin
+import i18n from '@/plugins/vueI18n'
 import '@/plugins/registerServiceWorker'
 import '@/plugins/axios'
 import '@/plugins/element'
@@ -16,12 +16,11 @@ import '@/styles/reset.scss'
 import '@/styles/transitions.scss'
 import '@/styles/helpers.scss'
 
-import '@/styles/views/container.scss'
-import '@/styles/views/external.scss'
-import '@/styles/views/onboarding.scss'
-import '@/styles/views/profile.scss'
-import '@/styles/views/import/import.scss'
-import '@/styles/views/import/new.scss'
+// import '@/styles/views/container.scss'
+// import '@/styles/views/external.scss'
+// import '@/styles/views/onboarding.scss'
+// import '@/styles/views/profile.scss'
+// import '@/styles/views/import/new.scss'
 
 import '@/styles/overrides/override.scss'
 import '@/styles/overrides/notification.scss'
@@ -38,14 +37,14 @@ import '@/styles/overrides/card.scss'
 import '@/styles/overrides/steps.scss'
 
 import JusIcon from '@/components/images/JusIcon'
-import UserAvatar from '@/components/images/UserAvatar'
-import ContentView from '@/components/layouts/ContentView'
-import BackButton from '@/components/buttons/BackButton'
+import JusAvatarUser from '@/components/images/JusAvatarUser'
+import JusViewMain from '@/components/layouts/JusViewMain'
+import JusButtonBack from '@/components/buttons/JusButtonBack'
 
-Vue.component('jus-icon', JusIcon)
-Vue.component('user-avatar', UserAvatar)
-Vue.component('content-view', ContentView)
-Vue.component('back-button', BackButton)
+Vue.component('JusIcon', JusIcon)
+Vue.component('JusAvatarUser', JusAvatarUser)
+Vue.component('JusViewMain', JusViewMain)
+Vue.component('JusButtonBack', JusButtonBack)
 
 Vue.config.productionTip = false
 

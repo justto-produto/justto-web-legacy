@@ -1,16 +1,16 @@
 <template>
-  <div class="external-sidenav">
+  <div class="jus-sidenav-external">
     <a href="#" @click="$router.push('/')">
-      <img class="external-sidenav__logo" src="@/assets/logo.svg">
+      <img class="jus-sidenav-externa__logo" src="@/assets/logo.svg">
     </a>
   </div>
 </template>
 
 <style lang="scss">
-.external-sidenav{
+.jus-sidenav-externa{
   height: 100%;
   background-color: #f7f7f7;
-  .external-sidenav__logo{
+  .jus-sidenav-externa__logo{
     margin: 40px;
   }
 }

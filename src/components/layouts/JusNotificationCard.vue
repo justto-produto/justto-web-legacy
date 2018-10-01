@@ -2,12 +2,12 @@
   <div class="notification-card">
     <i class="el-icon-error"></i>
     <div class="notification-card__header">
-      <user-avatar size="sm"></user-avatar>
+      <JusAvatarUser size="sm"/>
       <span class="notification-card__title">{{title}}</span>
       <span class="notification-card__date">{{date}}</span>
     </div>
-    <div class="notification-card__content">
-      {{content}}
+    <div class="notification-card__main">
+      {{main}}
     </div>
     <div class="notification-card__complement">
       {{complement}}
@@ -18,13 +18,13 @@
 
 <script>
 export default {
-  name: 'NotificationCard',
-  props: [
-    'title',
-    'content',
-    'date',
-    'complement'
-  ]
+  name: 'JusNotificationCard',
+  props: {
+    title: String,
+    main: String,
+    date: String,
+    complement: String
+  }
 }
 </script>
 
@@ -62,7 +62,7 @@ export default {
     width: 100%;
     padding: 0 20px;
   }
-  .notification-card__content {
+  .notification-card__main {
     margin: 10px 0 4px;
   }
   .notification-card__complement {

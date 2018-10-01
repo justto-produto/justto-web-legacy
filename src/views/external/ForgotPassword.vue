@@ -2,10 +2,10 @@
   <div class="external-view">
     <el-container>
       <el-aside width="50%" class="hidden-sm-and-down">
-        <external-sidenav></external-sidenav>
+        <JusSidenavExternal/>
       </el-aside>
       <el-main class="display-flex position-relative">
-        <back-button to="login"></back-button>
+        <JusButtonBack to="login"/>
         <el-form class="external-view__form" label-position="top" ref="forgotForm" :model="forgotForm" :rules="rules">
           <h1 class="external-view__title">Recuperar senha</h1>
           <el-form-item label="Email" prop="email">
@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import ExternalSidenav from '@/components/layouts/ExternalSidenav'
+import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
 
 export default {
   name: 'ForgotPassword',
   components: {
-    ExternalSidenav
+    JusSidenavExternal
   },
   data () {
     return {

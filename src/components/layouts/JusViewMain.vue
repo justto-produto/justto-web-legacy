@@ -1,16 +1,16 @@
 <template lang="html">
-  <div class="content-view">
-    <h1><slot name="title"></slot></h1>
+  <div class="main-view">
+    <h1><slot name="title"/></h1>
     <div class="display-flex">
-      <el-card class="content-view__main-card">
-        <slot name="main"></slot>
+      <el-card class="main-view__main-card">
+        <slot name="main"/>
       </el-card>
       <div v-if="this.$slots['aside']">
-        <el-card v-if="sideCard" class="content-view__card">
-          <slot name="aside"></slot>
+        <el-card v-if="sideCard" class="main-view__card">
+          <slot name="aside"/>
         </el-card>
-        <div v-else class="content-view__card content-view__card--transparent">
-          <slot name="aside"></slot>
+        <div v-else class="main-view__card main-view__card--transparent">
+          <slot name="aside"/>
         </div>
       </div>
     </div>
@@ -19,26 +19,30 @@
 
 <script>
 export default {
+  name: 'JusViewMain',
   props: {
-    sideCard: Boolean
+    sideCard: {
+      default: false,
+      type: Boolean
+    }
   }
 }
 </script>
 
 <style lang="scss">
-.content-view {
+.main-view {
   position: relative;
-  .content-view__main-card {
+  .main-view__main-card {
     width: 100%;
     min-height: calc( 100vh - 180px );
   }
-  .content-view__card {
+  .main-view__card {
     margin-left: 20px;
     margin-right: 20px;
     width: 300px;
     position: sticky;
     top: 40px;
-    &.content-view__card--transparent {
+    &.main-view__card--transparent {
       padding:  0 20px;
       width: 260px;
     }

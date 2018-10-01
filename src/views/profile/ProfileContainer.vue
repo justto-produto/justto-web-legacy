@@ -6,28 +6,28 @@
       </div>
       <el-menu :router="true" :default-active="$route.path" class="el-menu--main-menu">
         <el-menu-item ref="dashboard" index="/" class="border-top-bottom">
-          <jus-icon icon="back"/>
+          <JusIcon icon="back"/>
           <span slot="title"> Voltar</span>
         </el-menu-item>
         <li class="el-menu__title">
           <span>PERFIL</span>
         </li>
         <el-menu-item index="/profile">
-          <jus-icon icon="profile" :is-active="$route.path === '/profile'" class="el-menu__icon"></jus-icon>
+          <JusIcon icon="profile" :is-active="$route.path === '/profile'" class="el-menu__icon"/>
           <span slot="title">Configurações</span>
         </el-menu-item>
         <el-menu-item index="/profile/notifications">
-          <jus-icon icon="notification" :is-active="$route.path === '/profile/notifications'" class="el-menu__icon"></jus-icon>
+          <JusIcon icon="notification" :is-active="$route.path === '/profile/notifications'" class="el-menu__icon"/>
           <span slot="title">Notificações</span>
         </el-menu-item>
         <el-menu-item index="/profile/activities">
-          <jus-icon icon="my-activities" :is-active="$route.path === '/profile/activities'" class="el-menu__icon"></jus-icon>
+          <JusIcon icon="my-activities" :is-active="$route.path === '/profile/activities'" class="el-menu__icon"/>
           <span slot="title">Minhas atividades</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container direction="vertical">
-      <content-header/>
+      <JusHeaderMain/>
       <el-main>
         <transition name="fade-absolute">
           <router-view/>
@@ -38,12 +38,12 @@
 </template>
 
 <script>
-import ContentHeader from '@/components/layouts/ContentHeader'
+import JusHeaderMain from '@/components/layouts/JusHeaderMain'
 
 export default {
   name: 'ProfileContainer',
   components: {
-    ContentHeader
+    JusHeaderMain
   }
 }
 </script>

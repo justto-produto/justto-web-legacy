@@ -1,5 +1,5 @@
-<template class="external-social-button">
-  <el-button type="info" class="social-button"
+<template class="jus-button-external-social">
+  <el-button type="info" class="jus-button-external-social__social-button"
   :class="{'facebook-button': type==='facebook', 'google-button': type==='google'}">
     <img v-if="type === 'facebook'" src="@/assets/icons/ic-facebook.svg">
     <img v-if="type === 'google'" src="@/assets/icons/ic-googleplus.svg">
@@ -11,16 +11,16 @@
 
 <script>
 export default {
-  name: 'ExternalSocialButton',
-  props: [
-    'type'
-  ]
+  name: 'JusButtonExternalSocial',
+  props: {
+    type: String
+  }
 }
 </script>
 
 <style lang="scss">
-.external-social-button{
-  .social-button{
+.jus-button-external-social{
+  .jus-button-external-social__social-button{
     padding: 0;
     width: 195px;
     img{

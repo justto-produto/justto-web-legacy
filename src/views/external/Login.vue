@@ -2,7 +2,7 @@
   <div class="external-view">
     <el-container>
       <el-aside width="50%" class="hidden-sm-and-down">
-        <external-sidenav></external-sidenav>
+        <JusSidenavExternal/>
       </el-aside>
       <el-main class="display-flex">
         <el-form class="external-view__form" label-position="top" ref="loginForm" :model="loginForm" :rules="rules">
@@ -27,12 +27,12 @@
 </template>
 
 <script>
-import ExternalSidenav from '@/components/layouts/ExternalSidenav'
+import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
 
 export default {
   name: 'Login',
   components: {
-    ExternalSidenav
+    JusSidenavExternal
   },
   data () {
     return {

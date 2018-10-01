@@ -1,5 +1,5 @@
 <template>
-  <div class="user-avatar-image" v-bind:class="objectClass">
+  <div class="jus-avatar-user" v-bind:class="objectClass">
     <img :src="imagePath">
     <span v-if="notifications > 0 && size === 'sm'">{{notifications}}</span>
   </div>
@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'UserAvatar',
+  name: 'JusAvatarUser',
   props: {
     src: String,
     notifications: Number,
@@ -30,11 +30,11 @@ export default {
     },
     objectClass: function () {
       return {
-        'user-avatar-image--xs': this.size === 'xs',
-        'user-avatar-image--sm': this.size === 'sm',
-        'user-avatar-image--md': this.size === 'md',
-        'user-avatar-image--lg': this.size === 'lg',
-        'user-avatar-image--rounded': this.rounded
+        'jus-avatar-user--xs': this.size === 'xs',
+        'jus-avatar-user--sm': this.size === 'sm',
+        'jus-avatar-user--md': this.size === 'md',
+        'jus-avatar-user--lg': this.size === 'lg',
+        'jus-avatar-user--rounded': this.rounded
       }
     }
   }
@@ -42,34 +42,34 @@ export default {
 </script>
 
 <style lang="scss">
-.user-avatar-image {
+.jus-avatar-user {
   position: relative;
   display: inline;
-  &.user-avatar-image--xs {
+  &.jus-avatar-user--xs {
     img {
       width: 1.75rem;
       height: 1.75rem;
     }
   }
-  &.user-avatar-image--sm {
+  &.jus-avatar-user--sm {
     img {
       width: 3rem;
       height: 3rem;
     }
   }
-  &.user-avatar-image--md {
+  &.jus-avatar-user--md {
     img {
       width: 5.75rem;
       height: 5.75rem;
     }
   }
-  &.user-avatar-image--lg {
+  &.jus-avatar-user--lg {
     img {
       width: 8.5rem;
       height: 8.5rem;
     }
   }
-  &.user-avatar-image--rounded {
+  &.jus-avatar-user--rounded {
     img {
       border-radius: 50%;
     }

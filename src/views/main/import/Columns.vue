@@ -1,5 +1,5 @@
 <template>
-  <content-view>
+  <JusViewMain>
     <template slot="main">
       <el-steps class="el-steps--wizard" :active="active" finish-status="finish">
         <el-step></el-step>
@@ -7,8 +7,8 @@
         <el-step></el-step>
         <el-step></el-step>
       </el-steps>
-      <div class="step-content">
-        <back-button to="/import/new"></back-button>
+      <div class="step-main">
+        <JusButtonBack to="/import/new"/>
         <h2>Colunas da planilha</h2>
         <br>
         <el-row :gutter="28">
@@ -114,7 +114,7 @@
       </div>
     </template>
     <template slot="aside">
-      <jus-icon icon="best-practices"/>
+      <JusIcon icon="best-practices"/>
       <h3>
         Melhores práticas para importar casos
       </h3>
@@ -122,7 +122,7 @@
       <p>Ao escolher uma opção para importação, certifique-se de que os dados estão inseridos corretamente. Dessa forma, o sistema irá reconhecer mais rapidamente os dados, e além disso, enriquecer com informações complementares colhidas diretamente do TJ.<br><br> Não se esqueça de preencher os dados mínimos da planilha <br><br> • Número do processo<br> • Empresa<br> • Alçadas da negociação <br> • Nome e CPF das partes
       </p>
     </template>
-  </content-view>
+  </JusViewMain>
 </template>
 
 <script>

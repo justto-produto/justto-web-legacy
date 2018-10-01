@@ -1,5 +1,5 @@
 <template>
-  <content-view class="view-import">
+  <JusViewMain class="view-import">
     <template slot="main">
       <div class="view-import__header">
         <div>
@@ -13,10 +13,10 @@
       <hr>
       <br>
       <h3>Histórico de importação</h3>
-      <el-row gutter="20">
+      <el-row :gutter="20">
         <el-col :span="12">
           <el-card class="el-card--bordered el-card--success">
-            <jus-icon icon="spreadsheet-xlsx"/>
+            <JusIcon icon="spreadsheet-xlsx"/>
             <div>
               <h4>
                 Nome do arquivo 1
@@ -32,7 +32,7 @@
         </el-col>
         <el-col :span="12">
           <el-card class="el-card--bordered el-card--danger">
-            <jus-icon icon="spreadsheet-xlsx"/>
+            <JusIcon icon="spreadsheet-xlsx"/>
             <div>
               <h4>
                 Nome do arquivo 2
@@ -48,7 +48,7 @@
         </el-col>
         <el-col :span="12">
           <el-card class="el-card--bordered">
-            <jus-icon icon="spreadsheet-xlsx"/>
+            <JusIcon icon="spreadsheet-xlsx"/>
             <div>
               <h4>
                 Nome do arquivo 3
@@ -64,7 +64,7 @@
         </el-col>
         <el-col :span="12">
           <el-card class="el-card--bordered">
-            <jus-icon icon="spreadsheet-xlsx"/>
+            <JusIcon icon="spreadsheet-xlsx"/>
             <div>
               <h4>
                 Nome do arquivo 4
@@ -80,7 +80,7 @@
         </el-col>
         <el-col :span="12">
           <el-card class="el-card--bordered">
-            <jus-icon icon="spreadsheet-xlsx"/>
+            <JusIcon icon="spreadsheet-xlsx"/>
             <div>
               <h4>
                 Nome do arquivo 5
@@ -97,7 +97,7 @@
       </el-row>
     </template>
     <template slot="aside">
-      <jus-icon icon="best-practices"/>
+      <JusIcon icon="best-practices"/>
       <h3>
         Melhores práticas para importar casos
       </h3>
@@ -105,10 +105,11 @@
       <p>Ao escolher uma opção para importação, certifique-se de que os dados estão inseridos corretamente. Dessa forma, o sistema irá reconhecer mais rapidamente os dados, e além disso, enriquecer com informações complementares colhidas diretamente do TJ.<br><br> Não se esqueça de preencher os dados mínimos da planilha <br><br> • Número do processo<br> • Empresa<br> • Alçadas da negociação <br> • Nome e CPF das partes
       </p>
     </template>
-  </content-view>
+  </JusViewMain>
 </template>
 
 <script>
+// import './import.scss'
 
 export default {
   name: 'Import'

@@ -1,9 +1,9 @@
 <template>
-  <content-view side-card>
+  <JusViewMain side-card>
     <template slot="title">Configurações do perfil</template>
     <template slot="main">
       <el-form class="profile-form" ref="profileForm" :model="profileForm" label-position="top">
-        <user-avatar size="lg" class="profile-form__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
+        <JusAvatarUser size="lg" class="profile-form__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
         <span class="profile-form__edit-photo">
           Alterar foto
           <br>
@@ -40,7 +40,7 @@
         </el-form-item>
         <el-form-item label="Clientes">
           <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-            <user-avatar size="sm"></user-avatar>
+            <JusAvatarUser size="sm"/>
             <span style="margin-left: 20px;">Nestlé</span>
             <el-popover
             style="margin-left: auto;"
@@ -50,34 +50,34 @@
             trigger="hover"
             content="Chocolates, panetones, larvas e processos.">
             <el-button slot="reference" class="el-button--icon">
-              <jus-icon icon="more-info-grey"></jus-icon>
+              <JusIcon icon="more-info-grey"/>
             </el-button>
           </el-popover>
         </div>
         <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-          <user-avatar size="sm"></user-avatar>
+          <JusAvatarUser size="sm"/>
           <span style="margin-left: 20px;">Embraer</span>
-          <jus-icon icon="more-info-grey" style="margin-left: auto;"></jus-icon>
+          <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
         </div>
         <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-          <user-avatar size="sm"></user-avatar>
+          <JusAvatarUser size="sm"/>
           <span style="margin-left: 20px;">Embraer</span>
-          <jus-icon icon="more-info-grey" style="margin-left: auto;"></jus-icon>
+          <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
         </div>
         <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-          <user-avatar size="sm"></user-avatar>
+          <JusAvatarUser size="sm"/>
           <span style="margin-left: 20px;">Embraer</span>
-          <jus-icon icon="more-info-grey" style="margin-left: auto;"></jus-icon>
+          <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
         </div>
         <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-          <user-avatar size="sm"></user-avatar>
+          <JusAvatarUser size="sm"/>
           <span style="margin-left: 20px;">Embraer</span>
-          <jus-icon icon="more-info-grey" style="margin-left: auto;"></jus-icon>
+          <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
         </div>
         <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-          <user-avatar size="sm"></user-avatar>
+          <JusAvatarUser size="sm"/>
           <span style="margin-left: 20px;">Embraer</span>
-          <jus-icon icon="more-info-grey" style="margin-left: auto;"></jus-icon>
+          <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
         </div>
       </el-form-item>
       <el-form-item>
@@ -88,7 +88,7 @@
   <template slot="aside">
     <el-carousel :interval="5000" arrow="always" height="107px" :autoplay="false" trigger="click" class="el-carousel__container--profile">
       <el-carousel-item v-for="item in 3" :key="item">
-        <div class="el-carousel__item-content">
+        <div class="el-carousel__item-main">
           <h2>25</h2>
           <span>Metas cumpridas<br>no mês</span>
         </div>
@@ -108,7 +108,7 @@
     <br>
     <el-row>
       <el-col :span="8" v-for="data in dataSets" :key="data.id">
-        <doughnut-chart :data="data" title="JUL" :width="75" :height="130"></doughnut-chart>
+        <JusChartDoughnut :data="data" title="JUL" :width="75" :height="130"/>
       </el-col>
     </el-row>
     <h4>Interação dos usuários</h4>
@@ -123,14 +123,14 @@
       </el-col>
     </el-row>
     <br>
-    <line-chart :data="data2" :options="options" :width="300" :height="130"></line-chart>
+    <JusChartLine :data="data2" :options="options" :width="300" :height="130"/>
   </template>
-</content-view>
+</JusViewMain>
 </template>
 
 <script>
-import DoughnutChart from '@/components/charts/DoughnutChart'
-import LineChart from '@/components/charts/LineChart'
+import JusChartDoughnut from '@/components/charts/JusChartDoughnut'
+import JusChartLine from '@/components/charts/JusChartLine'
 
 export default {
   name: 'Profile',
@@ -191,8 +191,8 @@ export default {
     }
   },
   components: {
-    DoughnutChart,
-    LineChart
+    JusChartDoughnut,
+    JusChartLine
   },
   methods: {
     onSubmit () {

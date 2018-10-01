@@ -7,50 +7,50 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "contentContainer" */ '@/views/content/Container'),
+      component: () => import(/* webpackChunkName: "mainContainer" */ '@/views/main/MainContainer'),
       meta: {
         requiresAuth: false
       },
       children: [
         {
           path: '/',
-          component: () => import(/* webpackChunkName: "dashboard" */ '@/views/content/dashboard/Dashboard')
+          component: () => import(/* webpackChunkName: "dashboard" */ '@/views/main/dashboard/Dashboard')
         },
         {
           path: 'import',
-          component: () => import(/* webpackChunkName: "importContainer" */ '@/views/content/import/Container'),
+          component: () => import(/* webpackChunkName: "importContainer" */ '@/views/main/import/ImportContainer'),
           children: [
             {
               path: '/',
-              component: () => import(/* webpackChunkName: "import" */ '@/views/content/import/Import')
+              component: () => import(/* webpackChunkName: "import" */ '@/views/main/import')
             },
             {
               path: 'new',
-              component: () => import(/* webpackChunkName: "importUpload" */ '@/views/content/import/Upload')
+              component: () => import(/* webpackChunkName: "importUpload" */ '@/views/main/import/Upload')
             },
             {
               path: 'new/2',
-              component: () => import(/* webpackChunkName: "importUpload" */ '@/views/content/import/Columns')
+              component: () => import(/* webpackChunkName: "importUpload" */ '@/views/main/import/Columns')
             },
             {
               path: 'new/3',
-              component: () => import(/* webpackChunkName: "importEnrichment" */ '@/views/content/import/Enrichment')
+              component: () => import(/* webpackChunkName: "importEnrichment" */ '@/views/main/import/Enrichment')
             }
           ]
         },
         {
           path: 'negotiation',
-          component: () => import(/* webpackChunkName: "negotiation" */ '@/views/content/negotiation/Negotiation')
+          component: () => import(/* webpackChunkName: "negotiation" */ '@/views/main/negotiation/Negotiation')
         },
         {
           path: 'settings',
-          component: () => import(/* webpackChunkName: "settings" */ '@/views/content/settings/Settings')
+          component: () => import(/* webpackChunkName: "settings" */ '@/views/main/settings/Settings')
         }
       ]
     },
     {
       path: '/profile',
-      component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/Container'),
+      component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer'),
       meta: {
         requiresAuth: false
       },

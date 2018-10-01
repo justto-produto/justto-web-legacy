@@ -5,10 +5,10 @@
 <script>
 export default {
   name: 'JusIcon',
-  props: [
-    'isActive',
-    'icon'
-  ],
+  props: {
+    isActive: Boolean,
+    icon: String
+  },
   computed: {
     iconPath: function () {
       return require(

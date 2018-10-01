@@ -1,16 +1,17 @@
 <template>
-  <content-view class="dashboard-container">
+  <JusViewMain class="dashboard-container">
     <template slot="title">
       <h1>Dashboard</h1>
     </template>
     <template slot="main">
-      <line-chart :data="data" :options="options"></line-chart>
+      <JusChartLine :data="data" :options="options"/>
+      {{ $t('hello') }}
     </template>
-  </content-view>
+  </JusViewMain>
 </template>
 
 <script>
-import LineChart from '@/components/charts/LineChart'
+import JusChartLine from '@/components/charts/JusChartLine'
 
 export default {
   name: 'Dashboard',
@@ -38,7 +39,7 @@ export default {
     }
   },
   components: {
-    LineChart
+    JusChartLine
   }
 }
 </script>
@@ -48,3 +49,14 @@ export default {
     margin: 10px 20px 20px;
   }
 </style>
+
+<i18n>
+{
+  "en": {
+    "hello": "Hello i18n in SFC!"
+  },
+  "pt-BR": {
+    "hello": "Olá i18n in SFC!"
+  }
+}
+</i18n>

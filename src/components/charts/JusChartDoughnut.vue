@@ -2,9 +2,18 @@
 import { Doughnut } from 'vue-chartjs'
 
 export default {
-  name: 'DoughnutChart',
+  name: 'JusChartDoughnut',
   extends: Doughnut,
-  props: ['title', 'data'],
+  props: {
+    title: {
+      type: String,
+      default: ''
+    },
+    data: {
+      type: Object,
+      default: undefined
+    }
+  },
   mounted () {
     let labels = this.data.slice()
     this.renderChart(
@@ -65,7 +74,7 @@ export default {
 }
 </script>
 
-<style media="screen">
+<style>
 canvas{
   margin: auto;
 }

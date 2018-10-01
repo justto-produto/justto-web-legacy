@@ -7,15 +7,15 @@
         </transition>
         <img class="aside-logo__logo" v-if="isCollapse" src="@/assets/logo-small.svg"/>
         <a href="" class="aside-logo__icon" v-if="isCollapse" @click.prevent="isCollapse = !isCollapse">
-          <jus-icon v-if="isCollapse" icon="expand-menu"/>
+          <JusIcon v-if="isCollapse" icon="expand-menu"/>
         </a>
         <a href="" class="aside-logo__icon" v-if="!isCollapse" @click.prevent="isCollapse = !isCollapse">
-          <jus-icon icon="colapse-menu"/>
+          <JusIcon icon="colapse-menu"/>
         </a>
       </div>
       <el-menu :collapse-transition="false" :router="true" :default-active="$route.path" class="el-menu--main-menu" :collapse="isCollapse">
         <el-menu-item ref="dashboard" index="/" class="border-top-bottom">
-          <jus-icon icon="dashboard" :is-active="$route.path === '/'" class="el-menu__icon"/>
+          <JusIcon icon="dashboard" :is-active="$route.path === '/'" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
         <transition name="fade-absolute">
@@ -24,15 +24,15 @@
           </li>
         </transition>
         <el-menu-item index="/import">
-          <jus-icon icon="import" :is-active="$route.path === '/import'" class="el-menu__icon"></jus-icon>
+          <JusIcon icon="import" :is-active="$route.path === '/import'" class="el-menu__icon"/>
           <span slot="title">Importação</span>
         </el-menu-item>
         <el-menu-item index="/negotiation">
-          <jus-icon icon="negotiation" :is-active="$route.path === '/negotiation'" class="el-menu__icon"></jus-icon>
+          <JusIcon icon="negotiation" :is-active="$route.path === '/negotiation'" class="el-menu__icon"/>
           <span slot="title">Negociação</span>
         </el-menu-item>
         <el-menu-item index="/settings">
-          <jus-icon icon="settings" :is-active="$route.path === '/settings'" class="el-menu__icon"></jus-icon>
+          <JusIcon icon="settings" :is-active="$route.path === '/settings'" class="el-menu__icon"/>
           <span slot="title">Configurações</span>
         </el-menu-item>
       </el-menu>
@@ -44,39 +44,39 @@
           </span>
         </li>
         <el-menu-item index="1">
-          <user-avatar size="sm" rounded class="el-menu__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"></user-avatar>
+          <JusAvatarUser size="sm" rounded class="el-menu__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
           <span slot="title">Mariana Rondino</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="2">
-          <user-avatar size="sm" rounded class="el-menu__avatar" src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg"></user-avatar>
+          <JusAvatarUser size="sm" rounded class="el-menu__avatar" src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg"/>
           <span slot="title">Henrique Liberato</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="3">
-          <user-avatar size="sm" rounded class="el-menu__avatar" nameInitials="M S"></user-avatar>
+          <JusAvatarUser size="sm" rounded class="el-menu__avatar" nameInitials="M S"/>
           <span slot="title">Mateus Santos </span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="4">
-          <user-avatar size="sm" rounded class="el-menu__avatar" src="http://3.bp.blogspot.com/-XHJdhVNa_Ok/Ww6-vSfNzuI/AAAAAAAASiU/WjSucjgrNp8tLP0nQPvSHK6SfQrn86MzACK4BGAYYCw/s1600/Muppet%2BThought%2Bof%2Bthe%2BWeek-Animal.jpg"></user-avatar>
+          <JusAvatarUser size="sm" rounded class="el-menu__avatar" src="http://3.bp.blogspot.com/-XHJdhVNa_Ok/Ww6-vSfNzuI/AAAAAAAASiU/WjSucjgrNp8tLP0nQPvSHK6SfQrn86MzACK4BGAYYCw/s1600/Muppet%2BThought%2Bof%2Bthe%2BWeek-Animal.jpg"/>
           <span slot="title">Michelle Morcos</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="5">
-          <user-avatar size="sm" rounded class="el-menu__avatar" nameInitials="A B"></user-avatar>
+          <JusAvatarUser size="sm" rounded class="el-menu__avatar" nameInitials="A B"/>
           <span slot="title">Ana Beatriz</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="6">
-          <user-avatar size="sm" rounded class="el-menu__avatar" src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135"></user-avatar>
+          <JusAvatarUser size="sm" rounded class="el-menu__avatar" src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135"/>
           <span slot="title">Bruno Moreno</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container direction="vertical">
-      <content-header/>
+      <JusHeaderMain/>
       <el-main>
         <transition name="fade">
           <router-view/>
@@ -87,12 +87,12 @@
 </template>
 
 <script>
-import ContentHeader from '@/components/layouts/ContentHeader'
+import JusHeaderMain from '@/components/layouts/JusHeaderMain'
 
 export default {
-  name: 'ContentContainer',
+  name: 'MainContainer',
   components: {
-    ContentHeader
+    JusHeaderMain
   },
   data () {
     return {

@@ -2,9 +2,12 @@
 import { Line } from 'vue-chartjs'
 
 export default {
-  name: 'LineChart',
+  name: 'JusChartLine',
   extends: Line,
-  props: ['data', 'options'],
+  props: {
+    data: Object,
+    options: Object
+  },
   mounted () {
     this.renderChart(this.data, this.options)
   }
