@@ -1,10 +1,9 @@
 <template>
-  <JusViewMain class="negotiation-container">
+  <JusViewMain class="settings-container">
     <template slot="title">
-      <h1>Negociação</h1>
+      <h1>Configurações</h1>
     </template>
-    <template slot="main">
-    </template>
+    <template slot="main"/>
     <!-- <template slot="main-right">
       <JusIcon icon="best-practices"/>
       <h3>
@@ -19,12 +18,12 @@
 
 <script>
 export default {
-  name: 'Profile'
+  name: 'Negotiation'
 }
 </script>
 
 <style lang="scss">
-  .negotiation-container{
+  .dashboard-container{
     margin: 10px 20px 20px;
   }
 </style>

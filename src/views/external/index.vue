@@ -5,14 +5,14 @@
         <JusSidenavExternal/>
       </el-aside>
       <el-main class="display-flex">
-        <el-form class="external-view__form" label-position="top" ref="loginForm" :model="loginForm" :rules="rules">
+        <el-form ref="loginForm" :model="loginForm" :rules="rules" label-position="top" class="external-view__form">
           <h1 class="external-view__title">Login</h1>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="loginForm.email"></el-input>
+            <el-input v-model="loginForm.email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
-            <el-input v-model="loginForm.password" type="password"></el-input>
-            <el-button @click="$router.push('forgot-password')" type="text" class="el-button--input-float">Esqueceu sua senha?</el-button>
+            <el-input v-model="loginForm.password" type="password"/>
+            <el-button type="text" class="el-button--input-float" @click="$router.push('forgot-password')">Esqueceu sua senha?</el-button>
           </el-form-item>
           <el-button class="external-view__submit" type="primary" @click="submitForm()">Entrar</el-button>
           <el-row class="external-view__info">
@@ -64,3 +64,37 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+
+.external-view {
+
+  height: 100%;
+  main{
+    background-color: #fff !important;
+  }
+
+  .external-view__title {
+    font-size: 2rem;
+    margin-bottom: 40px;
+  }
+
+  .external-view__form {
+    margin: auto;
+    width: 400px;
+    padding: 20px;
+  }
+
+  .external-view__submit {
+    width: 100%;
+  }
+
+  .external-view__info {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+}
+
+</style>

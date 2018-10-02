@@ -10,7 +10,7 @@ export default {
       default: ''
     },
     data: {
-      type: Object,
+      type: Array,
       default: undefined
     }
   },

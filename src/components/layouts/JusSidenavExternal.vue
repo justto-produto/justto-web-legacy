@@ -6,8 +6,15 @@
   </div>
 </template>
 
+<script>
+
+export default {
+  name: 'JusSidenavexternal'
+}
+</script>
+
 <style lang="scss">
-.jus-sidenav-externa{
+.jus-sidenav-external{
   height: 100%;
   background-color: #f7f7f7;
   .jus-sidenav-externa__logo{

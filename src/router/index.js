@@ -14,7 +14,7 @@ const router = new Router({
       children: [
         {
           path: '/',
-          component: () => import(/* webpackChunkName: "dashboard" */ '@/views/main/dashboard/Dashboard')
+          component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard')
         },
         {
           path: 'import',
@@ -22,7 +22,7 @@ const router = new Router({
           children: [
             {
               path: '/',
-              component: () => import(/* webpackChunkName: "import" */ '@/views/main/import')
+              component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import')
             },
             {
               path: 'new',
@@ -30,7 +30,7 @@ const router = new Router({
             },
             {
               path: 'new/2',
-              component: () => import(/* webpackChunkName: "importUpload" */ '@/views/main/import/Columns')
+              component: () => import(/* webpackChunkName: "importColumns" */ '@/views/main/import/Columns')
             },
             {
               path: 'new/3',
@@ -40,11 +40,11 @@ const router = new Router({
         },
         {
           path: 'negotiation',
-          component: () => import(/* webpackChunkName: "negotiation" */ '@/views/main/negotiation/Negotiation')
+          component: () => import(/* webpackChunkName: "negotiationIndex" */ '@/views/main/negotiation')
         },
         {
           path: 'settings',
-          component: () => import(/* webpackChunkName: "settings" */ '@/views/main/settings/Settings')
+          component: () => import(/* webpackChunkName: "settingsIndex" */ '@/views/main/settings')
         }
       ]
     },
@@ -57,21 +57,21 @@ const router = new Router({
       children: [
         {
           path: '/',
-          component: () => import(/* webpackChunkName: "profile" */ '@/views/profile/Profile')
+          component: () => import(/* webpackChunkName: "profileIndex" */ '@/views/profile')
         },
         {
           path: 'notifications',
-          component: () => import(/* webpackChunkName: "notifications" */ '@/views/profile/Notifications')
+          component: () => import(/* webpackChunkName: "notificationsIndex" */ '@/views/profile/Notifications')
         },
         {
           path: 'activities',
-          component: () => import(/* webpackChunkName: "activities" */ '@/views/profile/Activities')
+          component: () => import(/* webpackChunkName: "activitiesIndex" */ '@/views/profile/Activities')
         }
       ]
     },
     {
       path: '/login',
-      component: () => import(/* webpackChunkName: "login" */ '@/views/external/Login.vue')
+      component: () => import(/* webpackChunkName: "externalIndex" */ '@/views/external')
     },
     {
       path: '/register',
@@ -83,7 +83,7 @@ const router = new Router({
     },
     {
       path: '/onboarding',
-      component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/Onboarding.vue')
+      component: () => import(/* webpackChunkName: "onboardingIndex" */ '@/views/onboarding/')
     },
     {
       path: '*',

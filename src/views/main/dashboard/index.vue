@@ -15,6 +15,9 @@ import JusChartLine from '@/components/charts/JusChartLine'
 
 export default {
   name: 'Dashboard',
+  components: {
+    JusChartLine
+  },
   data () {
     return {
       data: {
@@ -37,9 +40,6 @@ export default {
       },
       options: {responsive: true, maintainAspectRatio: false}
     }
-  },
-  components: {
-    JusChartLine
   }
 }
 </script>

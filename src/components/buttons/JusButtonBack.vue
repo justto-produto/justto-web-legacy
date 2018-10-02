@@ -5,6 +5,10 @@
 </template>
 
 <script>
+
+/**
+ * The only true button.
+ */
 export default {
   name: 'JusButtonBack',
   props: {

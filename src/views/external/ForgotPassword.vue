@@ -6,10 +6,10 @@
       </el-aside>
       <el-main class="display-flex position-relative">
         <JusButtonBack to="login"/>
-        <el-form class="external-view__form" label-position="top" ref="forgotForm" :model="forgotForm" :rules="rules">
+        <el-form ref="forgotForm" :model="forgotForm" :rules="rules" class="external-view__form" label-position="top">
           <h1 class="external-view__title">Recuperar senha</h1>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="forgotForm.email"></el-input>
+            <el-input v-model="forgotForm.email"/>
           </el-form-item>
           <el-button class="external-view__submit" type="primary">Recuperar</el-button>
           <el-row class="external-view__info">

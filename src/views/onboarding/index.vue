@@ -4,7 +4,7 @@
       <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 1s;">
         <JusSidenavExternal/>
       </el-col>
-      <el-col :md="right" v-if="right > 0">
+      <el-col v-if="right > 0" :md="right">
         <el-row type="flex" align="middle">
           <swiper ref="swiper" :options="swiperOption">
             <swiper-slide>
@@ -26,9 +26,9 @@
             <swiper-slide>
               <div>
                 <h2>Para começar, qual a sua OAB?</h2>
-                <el-form @submit.native.prevent="submitForm('oabForm')" label-position="top" ref="oabForm" :model="oabForm" :rules="rules">
+                <el-form ref="oabForm" :model="oabForm" :rules="rules" label-position="top" @submit.native.prevent="submitForm('oabForm')">
                   <el-form-item label="OAB" prop="oab">
-                    <el-input v-model="oabForm.oab"></el-input>
+                    <el-input v-model="oabForm.oab"/>
                   </el-form-item>
                 </el-form>
                 <el-button type="primary" @click="submitForm('oabForm')">Próximo</el-button>
@@ -106,9 +106,9 @@
               <div>
                 <h2>Qual o nome do seu time?</h2>
                 <p>Você pode colocar o nome do seu escritório, por exemplo.</p>
-                <el-form @submit.native.prevent="submitForm('teamNameForm')" label-position="top" ref="teamNameForm" :model="teamNameForm" :rules="rules">
+                <el-form ref="teamNameForm" :model="teamNameForm" :rules="rules" label-position="top" @submit.native.prevent="submitForm('teamNameForm')">
                   <el-form-item label="Time" prop="teamName">
-                    <el-input v-model="teamNameForm.teamName"></el-input>
+                    <el-input v-model="teamNameForm.teamName"/>
                   </el-form-item>
                 </el-form>
                 <el-button type="primary" @click="submitForm('teamNameForm')">Próximo</el-button>
@@ -118,20 +118,19 @@
               <div>
                 <h2>Convide pessoas para o seu time</h2>
                 <p>Os usuários convidados por você irão receber um e-mail para acessar a plataforma.</p>
-                <el-form @submit.native.prevent="addTeamMember('teamMembersForm')" label-position="top" ref="teamMembersForm" :model="teamMembersForm" :rules="rules">
+                <el-form ref="teamMembersForm" :model="teamMembersForm" :rules="rules" label-position="top" @submit.native.prevent="addTeamMember('teamMembersForm')">
                   <el-form-item label="E-mail" prop="teamMember">
-                    <el-input v-model="teamMembersForm.teamMember">
-                    </el-input>
+                    <el-input v-model="teamMembersForm.teamMember"/>
                   </el-form-item>
                   <ul>
-                    <li :key="member" v-for="member in teamMembersForm.teamMembers">
+                    <li v-for="member in teamMembersForm.teamMembers" :key="member">
                       <img src="@/assets/icons/ic-check.svg">
-                      {{member}}
-                      <img @click="removeTeamMember(member)" src="@/assets/icons/ic-error.svg">
+                      {{ member }}
+                      <img src="@/assets/icons/ic-error.svg" @click="removeTeamMember(member)">
                     </li>
                   </ul>
                 </el-form>
-                <el-button type="primary" :disabled="teamMembersForm.teamMembers.length === 0" @click="nextStep()">Próximo</el-button>
+                <el-button :disabled="teamMembersForm.teamMembers.length === 0" type="primary" @click="nextStep()">Próximo</el-button>
                 <el-button type="text" @click="nextStep()">Pular</el-button>
               </div>
             </swiper-slide>
@@ -142,7 +141,7 @@
               </div>
             </swiper-slide>
           </swiper>
-          <el-button :disabled="firstStep" class="previous-step" type="primary" icon="el-icon-arrow-up" @click="previousStep()"></el-button>
+          <el-button :disabled="firstStep" class="previous-step" type="primary" icon="el-icon-arrow-up" @click="previousStep()"/>
         </el-row>
       </el-col>
     </el-row>
@@ -194,6 +193,14 @@ export default {
       }
     }
   },
+  created: function () {
+    setTimeout(function () {
+      this.left = 6
+    }.bind(this), 200)
+    setTimeout(function () {
+      this.right = 18
+    }.bind(this), 1200)
+  },
   methods: {
     submitForm (form) {
       this.$refs[form].validate((valid) => {
@@ -232,14 +239,162 @@ export default {
     verifyFirstStep () {
       this.firstStep = this.$refs['swiper'].swiper.activeIndex === 0
     }
-  },
-  created: function () {
-    setTimeout(function () {
-      this.left = 6
-    }.bind(this), 200)
-    setTimeout(function () {
-      this.right = 18
-    }.bind(this), 1200)
   }
 }
 </script>
+
+<style lang="scss">
+.onboarding-view{
+  height: 100%;
+  background-color: #fff;
+  >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {
+    height: 100%
+  }
+  .swiper-slide{
+    display: flex;
+    align-items: center;
+    overflow: auto;
+    max-height: 100vh;
+    > div{
+      padding: 120px 0;
+      margin: auto 150px;
+    }
+  }
+  form{
+    .el-button--primary{
+      width: 100%;
+    }
+  }
+  .el-button--text{
+    margin-left: 30px;
+  }
+  h1{
+    color: #343c4b;
+    font-size: 40px;
+    margin-bottom: 40px;
+  }
+  .radio-group{
+    margin-top: 40px;
+    p{
+      white-space: normal;
+      color: #adadad;
+      font-size: 12px;
+    }
+    strong{
+      font-size: 16px;
+    }
+    &.vertical{
+      display: flex;
+      margin-bottom: 40px;
+      .el-radio{
+        padding: 20px;
+        flex-direction: column;
+      }
+      .sync-app{
+        div{
+          position: relative;
+          width: 80px;
+          height: 50px;
+          text-align: center;
+          margin: 20px 0;
+          img{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+          }
+        }
+      }
+    }
+    &.horizontal{
+      .el-radio{
+        padding: 20px;
+        padding-right: 20px;
+        margin: 0 0 20px !important;
+        &:last-of-type{
+          margin-bottom: 40px !important;
+        }
+        .sync-service{
+          display: flex;
+          div{
+            margin: auto;
+            margin-left: 10px;
+            &+div{
+              margin-left: 30px;
+            }
+          }
+        }
+      }
+    }
+    .el-radio{
+      display: flex;
+      align-items: center;
+      height: auto;
+      img{
+        max-height: 50px;
+        max-width: 80px;
+      }
+    }
+  }
+  ul{
+    padding: 0;
+    margin: 10px 0 20px;
+    li{
+      margin-top: 10px;
+      list-style-type: none;
+      img{
+        &:first-of-type{
+          margin-right: 20px;
+        }
+        &:last-of-type{
+          cursor: pointer;
+          float: right;
+        }
+      }
+    }
+  }
+  .previous-step{
+    z-index: 9;
+    border-radius: 6px;
+    padding: 12px;
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    i{
+      font-weight: bold;
+      font-size: 20px;
+    }
+  }
+  @media (max-width: 991px) {
+    .swiper-slide{
+      > div{
+        padding: 40px 0;
+        margin: auto 40px;
+        text-align: center;
+      }
+    }
+    .el-form-item {
+      text-align: left;
+    }
+    .radio-group{
+      &.vertical {
+        flex-direction: column;
+        label{
+          margin: 10px !important;
+        }
+      }
+    }
+    ul{
+      text-align: left;
+    }
+    .previous-step{
+      padding: 10px;
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+    }
+  }
+}
+</style>

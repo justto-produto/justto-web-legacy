@@ -24,7 +24,7 @@
               </h4>
               <p>
                 Importação realizada com sucesso
-                <span class="el-card__status el-card__status--success"></span>
+                <span class="el-card__status el-card__status--success"/>
               </p>
               <p>Total de casos: 1002</p>
             </div>
@@ -40,7 +40,7 @@
               </h4>
               <p>
                 Erro durante a importação
-                <span class="el-card__status el-card__status--danger"></span>
+                <span class="el-card__status el-card__status--danger"/>
               </p>
               <p>Total de casos: 1002</p>
             </div>
@@ -56,7 +56,7 @@
               </h4>
               <p>
                 Importação cancelada
-                <span class="el-card__status"></span>
+                <span class="el-card__status"/>
               </p>
               <p>Total de casos: 1002</p>
             </div>
@@ -72,7 +72,7 @@
               </h4>
               <p>
                 Importação cancelada
-                <span class="el-card__status"></span>
+                <span class="el-card__status"/>
               </p>
               <p>Total de casos: 1002</p>
             </div>
@@ -88,7 +88,7 @@
               </h4>
               <p>
                 Importação cancelada
-                <span class="el-card__status"></span>
+                <span class="el-card__status"/>
               </p>
               <p>Total de casos: 1002</p>
             </div>
@@ -109,9 +109,93 @@
 </template>
 
 <script>
-// import './import.scss'
 
 export default {
   name: 'Import'
 }
 </script>
+
+<style lang="scss">
+.view-import {
+  .el-card--bordered .el-card__body {
+    display: flex;
+    align-items: flex-start;
+    div {
+      width: 100%;
+    }
+    img {
+      margin-right: 20px;
+    }
+    h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    p, span {
+      font-size: 12px;
+      margin-top: 0px;
+      margin-bottom: 10px;
+      font-weight: normal;
+    }
+    h4 > span {
+      float: right;
+    }
+    p+p {
+      margin-bottom: 0;
+    }
+  }
+
+  .el-card__status {
+    width: 6px;
+    height: 6px;
+    background-color: #d7e0e6;
+    float: right;
+    border-radius: 50%;
+    margin-top: 5px;
+    &.el-card__status--danger {
+      background-color: #FF4B54;
+    }
+    &.el-card__status--success {
+      background-color: #46E986;
+    }
+  }
+
+  .view-import__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .step-main {
+    margin-top: 60px;
+    h2, p {
+      text-align: center;
+    }
+    button{
+      width: 100%;
+      max-width: 400px;
+      margin: auto;
+      display: block;
+    }
+    .upload-box{
+      display: flex;
+      justify-content: center;
+      margin: 40px;
+      > div {
+        border: 2px dashed #d1dbe2;
+        width: 240px;
+        height: 240px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+      }
+      div + div {
+        margin-left: 20px;
+      }
+    }
+  }
+}
+</style>

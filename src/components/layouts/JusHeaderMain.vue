@@ -7,7 +7,7 @@
     <div class="main-info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
-          <JusAvatarUser size="sm" :notifications="1" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
+          <JusAvatarUser :notifications="1" size="sm" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
           <div class="main-info__name">
             <div>
               Mariana Rondino
@@ -22,7 +22,7 @@
           </el-dropdown-item>
           <el-dropdown-item>
             <a @click="$router.push('/profile/notifications')">Notificações</a>
-            </el-dropdown-item>
+          </el-dropdown-item>
           <el-dropdown-item>
             <a @click="$router.push('/profile/activities')">Minhas atividades</a>
           </el-dropdown-item>
