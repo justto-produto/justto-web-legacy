@@ -7,7 +7,7 @@
   }
   .el-step__line {
     background-color: #fff;
-    top: 16px;
+    top: 16px !important;
   }
   .el-step__head.is-process, .el-step__head.is-wait {
     color: #adadad !important;

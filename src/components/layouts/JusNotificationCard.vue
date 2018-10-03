@@ -1,16 +1,16 @@
 <template lang="html">
   <div class="notification-card">
-    <i class="el-icon-error"></i>
+    <i class="el-icon-error"/>
     <div class="notification-card__header">
       <JusAvatarUser size="sm"/>
-      <span class="notification-card__title">{{title}}</span>
-      <span class="notification-card__date">{{date}}</span>
+      <span class="notification-card__title">{{ title }}</span>
+      <span class="notification-card__date">{{ date }}</span>
     </div>
     <div class="notification-card__main">
-      {{main}}
+      {{ main }}
     </div>
     <div class="notification-card__complement">
-      {{complement}}
+      {{ complement }}
     </div>
   </div>
 
@@ -20,10 +20,22 @@
 export default {
   name: 'JusNotificationCard',
   props: {
-    title: String,
-    main: String,
-    date: String,
-    complement: String
+    title: {
+      type: String,
+      default: ''
+    },
+    main: {
+      type: String,
+      default: ''
+    },
+    date: {
+      type: String,
+      default: ''
+    },
+    complement: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>

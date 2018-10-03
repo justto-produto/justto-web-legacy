@@ -1,8 +1,10 @@
 # Justto Web 2.0
 
-Novo sistema web da Justto, criado e administrado com Vue UI.
+Novo sistema web da Justto, criado e administrado com Vue UI. :heart:
 
-## Dev stack
+[:point_right: Leia a documentação antes de programar!! :point_left:](https://gitlab.com/Justto/justto-web/wikis/)
+
+## Dev stack :wrench:
 - Vue.js
 - Webpack
 - Lint on save and build
@@ -13,7 +15,7 @@ Novo sistema web da Justto, criado e administrado com Vue UI.
 - Element.ui
 - JS Standard Pattern
 
-### Como rodar
+### Como rodar :running:
 
 Instale o Vue UI:
 
@@ -33,7 +35,7 @@ Acesse:
 
 `http://localhost:8080/`
 
-### Via prompt
+### Via prompt  :shipit:
 
 Para subir servidor de desenvolvimento:
 

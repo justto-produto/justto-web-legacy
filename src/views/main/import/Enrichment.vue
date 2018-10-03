@@ -1,24 +1,22 @@
 <template>
   <JusViewMain class="import-enrichment-view">
     <template slot="main">
-      <el-steps class="el-steps--wizard" :active="active" finish-status="finish">
-        <el-step></el-step>
-        <el-step></el-step>
-        <el-step></el-step>
-        <el-step></el-step>
+      <el-steps :active="active" class="el-steps--wizard" finish-status="finish">
+        <el-step/>
+        <el-step/>
+        <el-step/>
+        <el-step/>
       </el-steps>
       <div class="step-main">
-        <JusButtonBack to="/import/new"/>
         <h2>Enriquecimento</h2>
         <br>
         <el-card class="el-card--dashed">
           <div class="el-loading-spinner">
             <svg viewBox="25 25 50 50" class="circular">
-              <circle cx="50" cy="50" r="20" fill="none" class="path">
-              </circle>
+              <circle cx="50" cy="50" r="20" fill="none" class="path"/>
             </svg>
           </div>
-          <h3>Nosso sistema irá coletar informações das seguintes entidades:</h3>
+          <h3>Nosso sistema está coletando informações das seguintes entidades:</h3>
           <ul>
             <li>
               <el-checkbox v-model="checked1">Tribunal de justiça</el-checkbox>
@@ -27,21 +25,23 @@
               <el-checkbox v-model="checked2">Cadastro de advogados</el-checkbox>
             </li>
           </ul>
+          <br>
+          <p>Ao término desta operação você será redirecionado automaticamente.</p>
         </el-card>
-        <br>
-        <div class="buttons-test">
-          <el-button @click="$router.push('/import/new/3')">Pular enriquecimento</el-button>
-          <el-button type="primary" @click="$router.push('/import/new/3')">Enriquecer</el-button>
-        </div>
       </div>
     </template>
     <template slot="aside">
-      <JusIcon icon="best-practices"/>
+      <JusIcon icon="enrichment"/>
       <h3>
-        Melhores práticas para importar casos
+        Quanto mais informação, melhor
       </h3>
       <br>
-      <p>Ao escolher uma opção para importação, certifique-se de que os dados estão inseridos corretamente. Dessa forma, o sistema irá reconhecer mais rapidamente os dados, e além disso, enriquecer com informações complementares colhidas diretamente do TJ.<br><br> Não se esqueça de preencher os dados mínimos da planilha <br><br> • Número do processo<br> • Empresa<br> • Alçadas da negociação <br> • Nome e CPF das partes
+      <p>
+        Além dos dados inseridos, buscamos outras informações sobre as partes envolvidas através do TJ e outras entidades.
+        <br><br>
+        Isso permite que o robô entenda mais sobre os usuários e seus comportamentos, além de entregar mensalmente um relatório completo sobre o perfil das pessoas com quem você está lidando.
+        <br><br>
+        Dessa forma, a negociação poderá ser mais acertiva.
       </p>
     </template>
   </JusViewMain>
@@ -117,13 +117,6 @@ export default {
       .path {
         stroke-width: 4px;
       }
-    }
-  }
-  .buttons-test {
-    text-align: center;
-    button{
-      display: inline-block;
-      max-width: 195px;
     }
   }
 }

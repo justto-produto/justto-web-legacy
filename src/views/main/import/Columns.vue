@@ -1,14 +1,14 @@
 <template>
   <JusViewMain>
     <template slot="main">
-      <el-steps class="el-steps--wizard" :active="active" finish-status="finish">
-        <el-step></el-step>
-        <el-step></el-step>
-        <el-step></el-step>
-        <el-step></el-step>
+      <el-steps :active="active" class="el-steps--wizard" finish-status="finish">
+        <el-step/>
+        <el-step/>
+        <el-step/>
+        <el-step/>
       </el-steps>
       <div class="step-main">
-        <JusButtonBack to="/import/new"/>
+        <JusButtonBack to="/import/upload"/>
         <h2>Colunas da planilha</h2>
         <br>
         <el-row :gutter="28">
@@ -24,31 +24,31 @@
             <div class="file-column">
               Empresa
               <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                {{'Arraste e solte a tag aqui'}}
+                Arraste e solte a tag aqui
               </el-tag>
             </div>
             <div class="file-column">
               Alçada para acordo
               <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                {{'Arraste e solte a tag aqui'}}
+                Arraste e solte a tag aqui
               </el-tag>
             </div>
             <div class="file-column">
               Alçada mínima
               <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                {{'Arraste e solte a tag aqui'}}
+                Arraste e solte a tag aqui
               </el-tag>
             </div>
             <div class="file-column">
               Réu
               <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                {{'Arraste e solte a tag aqui'}}
+                Arraste e solte a tag aqui
               </el-tag>
             </div>
             <div class="file-column">
               Valor original da causa
               <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                {{'Arraste e solte a tag aqui'}}
+                Arraste e solte a tag aqui
               </el-tag>
             </div>
           </el-col>
@@ -65,7 +65,7 @@
             <br>
             <h3>
               Partes contrárias
-              <i class="el-icon-plus right"></i>
+              <i class="el-icon-plus right"/>
             </h3>
             <div class="drag-group">
               <el-collapse class="el-collapse-drag">
@@ -76,7 +76,7 @@
                   <el-tag class="el-tag--drag" draggable="true">+ Adicionar tag</el-tag>
                 </el-collapse-item>
               </el-collapse>
-              <i class="el-icon-delete"></i>
+              <i class="el-icon-delete"/>
             </div>
             <div class="drag-group">
               <el-collapse class="el-collapse-drag">
@@ -87,12 +87,12 @@
                   <el-tag class="el-tag--drag" draggable="true">+ Adicionar tag</el-tag>
                 </el-collapse-item>
               </el-collapse>
-              <i class="el-icon-delete"></i>
+              <i class="el-icon-delete"/>
             </div>
             <br>
             <h3>
               Advogados
-              <i class="el-icon-plus right"></i>
+              <i class="el-icon-plus right"/>
             </h3>
             <div class="drag-group">
               <el-collapse class="el-collapse-drag">
@@ -103,23 +103,24 @@
                   <el-tag class="el-tag--drag" draggable="true">+ Adicionar tag</el-tag>
                 </el-collapse-item>
               </el-collapse>
-              <i class="el-icon-delete"></i>
+              <i class="el-icon-delete"/>
             </div>
-
           </el-col>
         </el-row>
-
         <br>
-        <el-button @click="$router.push('/import/new/3')">Próximo</el-button>
+        <el-button type="primary" plain @click="$router.push('/import/enrichment')">Próximo</el-button>
       </div>
     </template>
     <template slot="aside">
-      <JusIcon icon="best-practices"/>
+      <JusIcon icon="conecting-columns"/>
       <h3>
-        Melhores práticas para importar casos
+        Conectando as colunas da sua planilha
       </h3>
       <br>
-      <p>Ao escolher uma opção para importação, certifique-se de que os dados estão inseridos corretamente. Dessa forma, o sistema irá reconhecer mais rapidamente os dados, e além disso, enriquecer com informações complementares colhidas diretamente do TJ.<br><br> Não se esqueça de preencher os dados mínimos da planilha <br><br> • Número do processo<br> • Empresa<br> • Alçadas da negociação <br> • Nome e CPF das partes
+      <p>
+        Para que o sistema entenda melhor os dados dos casos inseridos, precisamos que você indique ao lado as tags correspondentes às colunas da planilha que você inseriu.
+        <br><br>
+        Para isso, basta arrastar as tags às colunas correspondentes.
       </p>
     </template>
   </JusViewMain>

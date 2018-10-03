@@ -15,7 +15,7 @@
             <span>Adicionar arquivo do Google Drive</span>
           </div>
         </div>
-        <el-button @click="$router.push('/import/new/2')">Próximo</el-button>
+        <el-button type="primary" plain @click="$router.push('/import/columns')">Próximo</el-button>
       </div>
     </template>
     <template slot="aside">
@@ -74,3 +74,28 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.upload-box{
+  display: flex;
+  justify-content: center;
+  margin: 40px;
+  > div {
+    border: 2px dashed #d1dbe2;
+    width: 240px;
+    height: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    img+span {
+      margin-top: 20px;
+      text-align: center;
+    }
+  }
+  div + div {
+    margin-left: 20px;
+  }
+}
+</style>

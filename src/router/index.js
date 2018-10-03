@@ -25,16 +25,20 @@ const router = new Router({
               component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import')
             },
             {
-              path: 'new',
+              path: 'upload',
               component: () => import(/* webpackChunkName: "importUpload" */ '@/views/main/import/Upload')
             },
             {
-              path: 'new/2',
+              path: 'columns',
               component: () => import(/* webpackChunkName: "importColumns" */ '@/views/main/import/Columns')
             },
             {
-              path: 'new/3',
+              path: 'enrichment',
               component: () => import(/* webpackChunkName: "importEnrichment" */ '@/views/main/import/Enrichment')
+            },
+            {
+              path: 'feedback',
+              component: () => import(/* webpackChunkName: "importFeedback" */ '@/views/main/import/Feedback')
             }
           ]
         },
