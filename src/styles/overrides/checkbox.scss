@@ -1,0 +1,29 @@
+.el-checkbox--content {
+  height: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  margin-top: 20px;
+  margin-left: 0 !important;
+  .el-checkbox__label {
+    display: flex !important;
+    align-items: center !important;
+    padding: 10px 20px;
+  }
+  .el-checkbox__content {
+    display: inline-block;
+    margin-left: 20px;
+    h3 {
+      margin-top: 0;
+      font-weight: normal;
+    }
+    p {
+      white-space: normal;
+      color: #adadad;
+      font-size: 12px;
+      margin-bottom: 0;
+    }
+  }
+  .el-checkbox__input {
+    padding-left: 10px;
+  }
+}

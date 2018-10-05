@@ -1,196 +1,56 @@
-<template>
-  <div class="onboarding-view">
-    <el-row>
-      <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 1s;">
-        <JusSidenavExternal/>
-      </el-col>
+<template lang="html">
+  <el-row class="onboarding-view">
+    <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 1s;">
+      <JusSidenavExternal/>
+    </el-col>
+    <transition name="fade">
       <el-col v-if="right > 0" :md="right">
-        <el-row type="flex" align="middle">
-          <swiper ref="swiper" :options="swiperOption">
-            <swiper-slide>
-              <div>
-                <JusLogoCompany src="nestle.jpg"/>
-                <h1>Junte-se à equipe da Nestlé</h1>
-                <el-button type="primary" @click="nextStep()">Entrar na equipe</el-button>
-              </div>
-            </swiper-slide>
-            <swiper-slide>
-              <div>
-                <h1>Bem-vinda, Mariana</h1>
-                <p>
-                  Para completar o seu cadastro precisamos de algumas informações
-                </p>
-                <el-button type="primary" @click="nextStep()">Beleza! Vamos começar</el-button>
-              </div>
-            </swiper-slide>
-            <swiper-slide>
-              <div>
-                <h2>Para começar, qual a sua OAB?</h2>
-                <el-form ref="oabForm" :model="oabForm" :rules="rules" label-position="top" @submit.native.prevent="submitForm('oabForm')">
-                  <el-form-item label="OAB" prop="oab">
-                    <el-input v-model="oabForm.oab"/>
-                  </el-form-item>
-                </el-form>
-                <el-button type="primary" @click="submitForm('oabForm')">Próximo</el-button>
-                <el-button type="text" @click="nextStep()">Pular</el-button>
-              </div>
-            </swiper-slide>
-            <swiper-slide>
-              <div>
-                <h2>Deseja sincronizar o seu e-mail com a plataforma?</h2>
-                <p>
-                  Ao clicar no botão, você concorda em liberar o acesso de leitura dos emails de sua caixa de entrada para que a plataforma Justto realize leitura dos emails relacionados às negociações em processo na plataforma. Se desejar, você pode configurar isso depois.
-                </p>
-                <div class="radio-group horizontal">
-                  <el-radio v-model="syncService" label="1" border>
-                    <div class="sync-service">
-                      <div>
-                        <img src="https://cdn2.iconfinder.com/data/icons/capsocial-square-flat-3/500/Outlook-512.png" alt="">
-                      </div>
-                      <div>
-                        <strong>Microsoft</strong>
-                        <p>Suas informações estão protegidas e nunca serão compartilhadas com terceiros.</p>
-                      </div>
-                    </div>
-                  </el-radio>
-                  <el-radio v-model="syncService" label="2" border>
-                    <div class="sync-service">
-                      <div>
-                        <img src="https://cdn.iconscout.com/icon/free/png-512/inbox-348-722710.png">
-                      </div>
-                      <div>
-                        <strong>Gmail</strong>
-                        <p>Suas informações estão protegidas e nunca serão compartilhadas com terceiros.</p>
-                      </div>
-                    </div>
-                  </el-radio>
-                </div>
-                <el-button type="primary" @click="nextStep()">Sincronizar</el-button>
-                <el-button type="text" @click="nextStep()">Pular</el-button>
-              </div>
-            </swiper-slide>
-            <swiper-slide>
-              <div>
-                <h2>Você gostaria de adicionar integrações?</h2>
-                <div class="radio-group vertical">
-                  <el-radio v-model="syncApp" label="1" border>
-                    <div class="sync-app">
-                      <div>
-                        <img src="@/assets/logo-zapier.png">
-                      </div>
-                      <strong>Zapier</strong>
-                    </div>
-                  </el-radio>
-                  <el-radio v-model="syncApp" label="2" border>
-                    <div class="sync-app">
-                      <div>
-                        <img src="@/assets/logo-ifttt.png">
-                      </div>
-                      <strong>IFTTT</strong>
-                    </div>
-                  </el-radio>
-                  <el-radio v-model="syncApp" label="3" border>
-                    <div class="sync-app">
-                      <div>
-                        <img src="@/assets/logo-msflow.png">
-                      </div>
-                      <strong>MSFlow</strong>
-                    </div>
-                  </el-radio>
-                </div>
-                <el-button type="primary" @click="nextStep()">Adicionar</el-button>
-                <el-button type="text" @click="nextStep()">Pular</el-button>
-              </div>
-            </swiper-slide>
-            <swiper-slide>
-              <div>
-                <h2>Qual o nome do seu time?</h2>
-                <p>Você pode colocar o nome do seu escritório, por exemplo.</p>
-                <el-form ref="teamNameForm" :model="teamNameForm" :rules="rules" label-position="top" @submit.native.prevent="submitForm('teamNameForm')">
-                  <el-form-item label="Time" prop="teamName">
-                    <el-input v-model="teamNameForm.teamName"/>
-                  </el-form-item>
-                </el-form>
-                <el-button type="primary" @click="submitForm('teamNameForm')">Próximo</el-button>
-              </div>
-            </swiper-slide>
-            <swiper-slide>
-              <div>
-                <h2>Convide pessoas para o seu time</h2>
-                <p>Os usuários convidados por você irão receber um e-mail para acessar a plataforma.</p>
-                <el-form ref="teamMembersForm" :model="teamMembersForm" :rules="rules" label-position="top" @submit.native.prevent="addTeamMember('teamMembersForm')">
-                  <el-form-item label="E-mail" prop="teamMember">
-                    <el-input v-model="teamMembersForm.teamMember"/>
-                  </el-form-item>
-                  <ul>
-                    <li v-for="member in teamMembersForm.teamMembers" :key="member">
-                      <img src="@/assets/icons/ic-check.svg">
-                      {{ member }}
-                      <img src="@/assets/icons/ic-error.svg" @click="removeTeamMember(member)">
-                    </li>
-                  </ul>
-                </el-form>
-                <el-button :disabled="teamMembersForm.teamMembers.length === 0" type="primary" @click="nextStep()">Próximo</el-button>
-                <el-button type="text" @click="nextStep()">Pular</el-button>
-              </div>
-            </swiper-slide>
-            <swiper-slide>
-              <div>
-                <h1>Tudo pronto, <br>Mariana!</h1>
-                <el-button type="primary" @click="nextStep()">Vamos começar</el-button>
-              </div>
-            </swiper-slide>
-          </swiper>
-          <el-button :disabled="firstStep" class="previous-step" type="primary" icon="el-icon-arrow-up" @click="previousStep()"/>
-        </el-row>
+        <swiper ref="swiper" :options="swiperOption" class="swiper-box">
+          <swiper-slide>
+            <WelcomeStep :is-guest="isGuest" @onboarding:step:next="nextStep"/>
+          </swiper-slide>
+          <swiper-slide>
+            <OabStep @onboarding:step:next="nextStep"/>
+          </swiper-slide>
+          <swiper-slide>
+            <EmailStep @onboarding:step:next="nextStep"/>
+          </swiper-slide>
+        </swiper>
       </el-col>
-    </el-row>
-  </div>
+    </transition>
+    <el-button :disabled="currentStep === 0" class="el-button--previous-step" type="primary" icon="el-icon-arrow-up" @click="previousStep"/>
+  </el-row>
 </template>
 
 <script>
 import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
-import JusLogoCompany from '@/components/images/JusLogoCompany'
+import WelcomeStep from './steps/WelcomeStep'
+import OabStep from './steps/OabStep'
+import EmailStep from './steps/EmailStep'
 
 export default {
-  name: 'Onboard',
+  name: 'Onboarding',
   components: {
     JusSidenavExternal,
-    JusLogoCompany
+    WelcomeStep,
+    OabStep,
+    EmailStep
   },
   data () {
     return {
-      firstStep: true,
       left: 12,
       right: 0,
-      syncService: '',
-      syncApp: '',
-      oabForm: {
-        oab: ''
-      },
-      teamNameForm: {
-        teamName: ''
-      },
-      teamMembersForm: {
-        teamMember: '',
-        teamMembers: []
-      },
-      rules: {
-        oab: [
-          { required: true, message: 'Este campo é obrigatório', trigger: 'submit' }
-        ],
-        teamName: [
-          { required: true, message: 'Este campo é obrigatório', trigger: 'submit' }
-        ],
-        teamMember: [
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
-        ]
-      },
+      currentStep: 0,
       swiperOption: {
         direction: 'vertical',
-        autoHeight: true,
+        slidesPerView: 1,
         allowTouchMove: false
       }
+    }
+  },
+  computed: {
+    isGuest: function () {
+      return !!this.$route.query.invitedBy
     }
   },
   created: function () {
@@ -202,198 +62,58 @@ export default {
     }.bind(this), 1200)
   },
   methods: {
-    submitForm (form) {
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          this.$refs['swiper'].swiper.slideNext(800)
-        } else {
-          return false
-        }
-      })
-    },
-    addTeamMember (form) {
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          if (!this.teamMembersForm.teamMembers.includes(this.teamMembersForm.teamMember)) {
-            this.teamMembersForm.teamMembers.push(this.teamMembersForm.teamMember)
-          }
-          this.$refs[form].resetFields()
-        } else {
-          return false
-        }
-      })
-    },
-    removeTeamMember (member) {
-      this.teamMembersForm.teamMembers.splice(
-        this.teamMembersForm.teamMembers.indexOf(member), 1
-      )
-    },
     nextStep () {
       this.$refs['swiper'].swiper.slideNext(800)
-      this.verifyFirstStep()
+      this.updateCurrentStep()
     },
     previousStep () {
       this.$refs['swiper'].swiper.slidePrev(800)
-      this.verifyFirstStep()
+      this.updateCurrentStep()
     },
-    verifyFirstStep () {
-      this.firstStep = this.$refs['swiper'].swiper.activeIndex === 0
+    updateCurrentStep () {
+      this.currentStep = this.$refs['swiper'].swiper.activeIndex
     }
   }
 }
 </script>
 
 <style lang="scss">
-.onboarding-view{
+.onboarding-view {
   height: 100%;
   background-color: #fff;
-  >.el-row, >.el-row>.el-col, >.el-row>.el-col>.el-row {
+  >.el-col {
     height: 100%
+  }
+  .swiper-box {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
   }
   .swiper-slide{
     display: flex;
     align-items: center;
-    overflow: auto;
-    max-height: 100vh;
-    > div{
-      padding: 120px 0;
-      margin: auto 150px;
-    }
-  }
-  form{
-    .el-button--primary{
+    padding: 120px;
+    >div {
       width: 100%;
     }
-  }
-  .el-button--text{
-    margin-left: 30px;
+    .el-button--primary, .el-select, .el-form {
+      width: 100%;
+      max-width: 400px;
+    }
+    .el-button--text {
+      margin-left: 40px;
+    }
   }
   h1{
-    color: #343c4b;
     font-size: 40px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
+    font-weight: bold;
   }
-  .radio-group{
-    margin-top: 40px;
-    p{
-      white-space: normal;
-      color: #adadad;
-      font-size: 12px;
-    }
-    strong{
-      font-size: 16px;
-    }
-    &.vertical{
-      display: flex;
-      margin-bottom: 40px;
-      .el-radio{
-        padding: 20px;
-        flex-direction: column;
-      }
-      .sync-app{
-        div{
-          position: relative;
-          width: 80px;
-          height: 50px;
-          text-align: center;
-          margin: 20px 0;
-          img{
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            margin: auto;
-          }
-        }
-      }
-    }
-    &.horizontal{
-      .el-radio{
-        padding: 20px;
-        padding-right: 20px;
-        margin: 0 0 20px !important;
-        &:last-of-type{
-          margin-bottom: 40px !important;
-        }
-        .sync-service{
-          display: flex;
-          div{
-            margin: auto;
-            margin-left: 10px;
-            &+div{
-              margin-left: 30px;
-            }
-          }
-        }
-      }
-    }
-    .el-radio{
-      display: flex;
-      align-items: center;
-      height: auto;
-      img{
-        max-height: 50px;
-        max-width: 80px;
-      }
-    }
-  }
-  ul{
-    padding: 0;
-    margin: 10px 0 20px;
-    li{
-      margin-top: 10px;
-      list-style-type: none;
-      img{
-        &:first-of-type{
-          margin-right: 20px;
-        }
-        &:last-of-type{
-          cursor: pointer;
-          float: right;
-        }
-      }
-    }
-  }
-  .previous-step{
-    z-index: 9;
-    border-radius: 6px;
-    padding: 12px;
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
-    i{
-      font-weight: bold;
-      font-size: 20px;
-    }
-  }
-  @media (max-width: 991px) {
-    .swiper-slide{
-      > div{
-        padding: 40px 0;
-        margin: auto 40px;
-        text-align: center;
-      }
-    }
-    .el-form-item {
-      text-align: left;
-    }
-    .radio-group{
-      &.vertical {
-        flex-direction: column;
-        label{
-          margin: 10px !important;
-        }
-      }
-    }
-    ul{
-      text-align: left;
-    }
-    .previous-step{
-      padding: 10px;
-      position: absolute;
-      bottom: 30px;
-      right: 30px;
+  .onboarding-step-content {
+    width: 100%;
+    max-width: 586px;
+    .el-button--primary {
+      margin-top: 40px;
     }
   }
 }

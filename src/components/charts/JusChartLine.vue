@@ -5,8 +5,14 @@ export default {
   name: 'JusChartLine',
   extends: Line,
   props: {
-    data: Object,
-    options: Object
+    data: {
+      type: Object,
+      default: undefined
+    },
+    options: {
+      type: Object,
+      default: undefined
+    }
   },
   mounted () {
     this.renderChart(this.data, this.options)

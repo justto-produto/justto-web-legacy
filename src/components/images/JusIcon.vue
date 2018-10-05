@@ -6,8 +6,14 @@
 export default {
   name: 'JusIcon',
   props: {
-    isActive: Boolean,
-    icon: String
+    isActive: {
+      type: Boolean,
+      default: false
+    },
+    icon: {
+      type: String,
+      default: ''
+    }
   },
   computed: {
     iconPath: function () {

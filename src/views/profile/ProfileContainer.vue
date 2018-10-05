@@ -2,7 +2,7 @@
   <el-container>
     <el-aside class="container-aside" width="auto">
       <div class="aside-logo">
-        <img class="aside-logo__logo" src="@/assets/logo.svg"/>
+        <img class="aside-logo__logo" src="@/assets/logo.svg">
       </div>
       <el-menu :router="true" :default-active="$route.path" class="el-menu--main-menu">
         <el-menu-item ref="dashboard" index="/" class="border-top-bottom">
@@ -13,15 +13,15 @@
           <span>PERFIL</span>
         </li>
         <el-menu-item index="/profile">
-          <JusIcon icon="profile" :is-active="$route.path === '/profile'" class="el-menu__icon"/>
+          <JusIcon :is-active="$route.path === '/profile'" icon="profile" class="el-menu__icon"/>
           <span slot="title">Configurações</span>
         </el-menu-item>
         <el-menu-item index="/profile/notifications">
-          <JusIcon icon="notification" :is-active="$route.path === '/profile/notifications'" class="el-menu__icon"/>
+          <JusIcon :is-active="$route.path === '/profile/notifications'" icon="notification" class="el-menu__icon"/>
           <span slot="title">Notificações</span>
         </el-menu-item>
         <el-menu-item index="/profile/activities">
-          <JusIcon icon="my-activities" :is-active="$route.path === '/profile/activities'" class="el-menu__icon"/>
+          <JusIcon :is-active="$route.path === '/profile/activities'" icon="my-activities" class="el-menu__icon"/>
           <span slot="title">Minhas atividades</span>
         </el-menu-item>
       </el-menu>

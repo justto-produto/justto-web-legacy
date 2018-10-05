@@ -86,8 +86,8 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "forgotPassword" */ '@/views/external/ForgotPassword.vue')
     },
     {
-      path: '/onboarding',
-      component: () => import(/* webpackChunkName: "onboardingIndex" */ '@/views/onboarding/')
+      path: '/onboarding/',
+      component: () => import(/* webpackChunkName: "onboardingIndex" */ '@/views/onboarding')
     },
     {
       path: '*',

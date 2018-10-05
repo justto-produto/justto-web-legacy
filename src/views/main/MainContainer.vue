@@ -44,32 +44,32 @@
           </span>
         </li>
         <el-menu-item index="1">
-          <JusAvatarUser size="sm" rounded class="el-menu__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
+          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
           <span slot="title">Mariana Rondino</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="2">
-          <JusAvatarUser size="sm" rounded class="el-menu__avatar" src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg"/>
+          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg"/>
           <span slot="title">Henrique Liberato</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="3">
-          <JusAvatarUser size="sm" rounded class="el-menu__avatar" name-initials="M S"/>
+          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" name-initials="M S"/>
           <span slot="title">Mateus Santos </span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="4">
-          <JusAvatarUser size="sm" rounded class="el-menu__avatar" src="http://3.bp.blogspot.com/-XHJdhVNa_Ok/Ww6-vSfNzuI/AAAAAAAASiU/WjSucjgrNp8tLP0nQPvSHK6SfQrn86MzACK4BGAYYCw/s1600/Muppet%2BThought%2Bof%2Bthe%2BWeek-Animal.jpg"/>
+          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" src="http://3.bp.blogspot.com/-XHJdhVNa_Ok/Ww6-vSfNzuI/AAAAAAAASiU/WjSucjgrNp8tLP0nQPvSHK6SfQrn86MzACK4BGAYYCw/s1600/Muppet%2BThought%2Bof%2Bthe%2BWeek-Animal.jpg"/>
           <span slot="title">Michelle Morcos</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="5">
-          <JusAvatarUser size="sm" rounded class="el-menu__avatar" name-initials="A B"/>
+          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" name-initials="A B"/>
           <span slot="title">Ana Beatriz</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="6">
-          <JusAvatarUser size="sm" rounded class="el-menu__avatar" src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135"/>
+          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135"/>
           <span slot="title">Bruno Moreno</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>

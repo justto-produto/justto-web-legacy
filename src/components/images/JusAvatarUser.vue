@@ -1,7 +1,7 @@
 <template>
-  <div class="jus-avatar-user" v-bind:class="objectClass">
+  <div :class="sizeClass + ' ' + shapeClass" class="jus-avatar-user">
     <img :src="imagePath">
-    <span v-if="notifications > 0 && size === 'sm'">{{notifications}}</span>
+    <span v-if="notifications > 0 && size === 'sm'">{{ notifications }}</span>
   </div>
 </template>
 
@@ -9,11 +9,27 @@
 export default {
   name: 'JusAvatarUser',
   props: {
-    src: String,
-    notifications: Number,
-    size: String,
-    rounded: Boolean,
-    nameInitials: String
+
+    src: {
+      type: String,
+      default: ''
+    },
+    notifications: {
+      type: Number,
+      default: undefined
+    },
+    size: {
+      type: String,
+      default: 'md'
+    },
+    shape: {
+      type: String,
+      default: 'square'
+    },
+    nameInitials: {
+      type: String,
+      default: ''
+    }
   },
   computed: {
     imagePath: function () {
@@ -28,14 +44,11 @@ export default {
       }
       return 'https://via.placeholder.com/200/e2e2e2/ffffff?text=+'
     },
-    objectClass: function () {
-      return {
-        'jus-avatar-user--xs': this.size === 'xs',
-        'jus-avatar-user--sm': this.size === 'sm',
-        'jus-avatar-user--md': this.size === 'md',
-        'jus-avatar-user--lg': this.size === 'lg',
-        'jus-avatar-user--rounded': this.rounded
-      }
+    shapeClass () {
+      return 'jus-avatar-user--' + this.shape
+    },
+    sizeClass () {
+      return 'jus-avatar-user--' + this.size
     }
   }
 }
@@ -69,7 +82,12 @@ export default {
       height: 8.5rem;
     }
   }
-  &.jus-avatar-user--rounded {
+  &.jus-avatar-user--square {
+    img {
+      border-radius: 4px;
+    }
+  }
+  &.jus-avatar-user--circle {
     img {
       border-radius: 50%;
     }

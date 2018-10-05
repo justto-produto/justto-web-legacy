@@ -16,45 +16,45 @@
             </el-row>
             <el-row>
               <el-col :span="12">Receber mensagem das partes ou dos advogados das partes</el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
             </el-row>
             <el-row>
               <el-col :span="12">Receber contraproposta</el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
             </el-row>
             <el-row>
               <el-col :span="12">Integrante do time fechar um acordo</el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
             </el-row>
             <el-row>
               <el-col :span="12">Uma estretégia utilizada por você for modificada</el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
             </el-row>
             <el-row>
               <el-col :span="12">Se algum dado for acrescentado em conflitos que você acompanha</el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
             </el-row>
             <el-row>
               <el-col :span="12">Status do conflito mudar</el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
             </el-row>
             <el-row>
               <el-col :span="12">Feedback de desempenho semanal</el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
-              <el-col :span="4"><el-checkbox></el-checkbox></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
+              <el-col :span="4"><el-checkbox/></el-col>
             </el-row>
           </el-dropdown-menu>
         </el-dropdown>
