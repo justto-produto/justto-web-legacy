@@ -14,6 +14,14 @@
         </li>
         <el-menu-item index="/profile">
           <JusIcon :is-active="$route.path === '/profile'" icon="profile" class="el-menu__icon"/>
+          <span slot="title">Informações</span>
+        </el-menu-item>
+        <el-menu-item index="/profile/setup">
+          <JusIcon :is-active="$route.path === '/profile/setup'" icon="profile" class="el-menu__icon"/>
+          <span slot="title">Configurações</span>
+        </el-menu-item>
+        <el-menu-item index="/profile/users">
+          <JusIcon :is-active="$route.path === '/profile/users'" icon="profile" class="el-menu__icon"/>
           <span slot="title">Configurações</span>
         </el-menu-item>
         <el-menu-item index="/profile/notifications">

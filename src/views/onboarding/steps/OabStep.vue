@@ -1,18 +1,16 @@
 <template lang="html">
   <div>
     <div class="onboarding-step-content">
-      <h2>Para começar, qual a sua OAB?</h2>
+      <div class="onboarding-step-content__title">
+        <h2>Para começar, qual a sua OAB?</h2>
+      </div>
       <el-form ref="oabForm" :model="oabForm" :rules="oabFormRules" label-position="top" @submit.native.prevent="submitForm">
         <el-form-item label="OAB" prop="oab">
           <el-input v-model="oabForm.oab"/>
         </el-form-item>
         <el-form-item label="UF" prop="uf">
           <el-select v-model="oabForm.uf" placeholder="">
-            <el-option
-            v-for="uf in $store.state.ufList"
-            :key="uf"
-            :label="uf"
-            :value="uf"/>
+            <el-option v-for="uf in $store.state.ufList" :key="uf" :label="uf" :value="uf"/>
           </el-select>
         </el-form-item>
       </el-form>

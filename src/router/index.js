@@ -68,8 +68,16 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "notificationsIndex" */ '@/views/profile/Notifications')
         },
         {
+          path: 'setup',
+          component: () => import(/* webpackChunkName: "setupIndex" */ '@/views/profile/Setup')
+        },
+        {
           path: 'activities',
           component: () => import(/* webpackChunkName: "activitiesIndex" */ '@/views/profile/Activities')
+        },
+        {
+          path: 'users',
+          component: () => import(/* webpackChunkName: "usersIndex" */ '@/views/profile/Users')
         }
       ]
     },

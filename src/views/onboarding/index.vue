@@ -6,7 +6,7 @@
     <transition name="fade">
       <el-col v-if="right > 0" :md="right">
         <swiper ref="swiper" :options="swiperOption" class="swiper-box">
-          <swiper-slide>
+          <!-- <swiper-slide>
             <WelcomeStep :is-guest="isGuest" @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
@@ -14,6 +14,15 @@
           </swiper-slide>
           <swiper-slide>
             <EmailStep @onboarding:step:next="nextStep"/>
+          </swiper-slide>
+          <swiper-slide>
+            <WhatsappStep @onboarding:step:next="nextStep"/>
+          </swiper-slide>
+          <swiper-slide>
+            <NameStep @onboarding:step:next="nextStep"/>
+          </swiper-slide>-->
+          <swiper-slide>
+            <LogoStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
         </swiper>
       </el-col>
@@ -27,14 +36,14 @@ import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
 import WelcomeStep from './steps/WelcomeStep'
 import OabStep from './steps/OabStep'
 import EmailStep from './steps/EmailStep'
+import WhatsappStep from './steps/WhatsappStep'
+import NameStep from './steps/NameStep'
+import LogoStep from './steps/LogoStep'
 
 export default {
   name: 'Onboarding',
   components: {
-    JusSidenavExternal,
-    WelcomeStep,
-    OabStep,
-    EmailStep
+    JusSidenavExternal, WelcomeStep, OabStep, EmailStep, WhatsappStep, NameStep, LogoStep
   },
   data () {
     return {
@@ -114,6 +123,9 @@ export default {
     max-width: 586px;
     .el-button--primary {
       margin-top: 40px;
+    }
+    .onboarding-step-content__title {
+      margin-bottom: 40px;
     }
   }
 }

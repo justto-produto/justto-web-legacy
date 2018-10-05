@@ -1,6 +1,5 @@
 <template>
   <img :src="require('@/assets/'+src)" :class="sizeClass + ' ' + shapeClass" class="jus-logo-company">
-
 </template>
 
 <script>
