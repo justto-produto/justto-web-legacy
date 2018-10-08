@@ -1,14 +1,21 @@
-.el-checkbox--content {
+.el-checkbox--active {
   height: auto !important;
   display: flex !important;
-  align-items: center !important;
+  align-items: center;
+  flex-direction: row-reverse;
   margin-top: 20px;
   margin-left: 0 !important;
+
+  &.is-checked {
+    background-color: #f7f7f7;
+  }
+
   .el-checkbox__label {
-    display: flex !important;
-    align-items: center !important;
+    display: flex;
+    align-items: center;
     padding: 10px 20px;
   }
+
   .el-checkbox__content {
     display: inline-block;
     margin-left: 20px;
@@ -23,7 +30,19 @@
       margin-bottom: 0;
     }
   }
+
   .el-checkbox__input {
     padding-left: 10px;
   }
+
+  .el-checkbox__inner {
+    background-color: #ffffff00 !important;
+    border-color: #ffffff00 !important;
+    &::after {
+      border-color: #9461f7;
+      width: 4px;
+      height: 12px;
+    }
+  }
+
 }

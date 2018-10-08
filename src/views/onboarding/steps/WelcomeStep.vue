@@ -1,14 +1,14 @@
 <template lang="html">
   <div class="onboarding-step-content">
-    <JusLogoCompany v-if="isGuest" src="shostners.jpg" shape="circle"/>
+    <JusLogoCompany v-if="isGuest" src="shostners.jpg" shadow shape="circle" size="xl"/>
     <h1>
-      Bem-vindo(a), Mariana.<br>
+      Bem-vindo(a), Mariana!<br>
       <span v-if="isGuest">
         Junte-se ao escritório Shostners & Shostners
       </span>
     </h1>
     <p>
-      Para compeltar o seu cadastro precisamos de algumas informações
+      Para compeltar o seu cadastro precisamos de algumas informações.
     </p>
     <el-button type="primary" @click="$emit('onboarding:step:next')">Vamos começar</el-button>
   </div>

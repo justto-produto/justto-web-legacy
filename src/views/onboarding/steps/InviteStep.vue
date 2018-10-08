@@ -1,0 +1,94 @@
+<template lang="html">
+  <div class="onboarding-invite-step">
+    <div class="onboarding-step-content">
+      <div class="onboarding-step-content__title">
+        <h2>Convide pessoas para a plataforma</h2>
+        <p>
+          Adicione todos os usuários que irão trabalhar com você.
+          Todos que forem convidados por você irão receber um e-mail para acessar a plataforma.
+        </p>
+      </div>
+      <el-form ref="teamMembersForm" :model="teamMembersForm" :rules="teamMembersFormRules" label-position="top" @submit.native.prevent="addTeamMember('teamMembersForm')">
+        <el-form-item label="E-mail" prop="teamMember">
+          <el-input v-model="teamMembersForm.teamMember">
+            <el-button slot="append" icon="el-icon-plus" native-type="submit"/>
+          </el-input>
+        </el-form-item>
+        <ul>
+          <li v-for="member in teamMembersForm.teamMembers" :key="member">
+            <img src="@/assets/icons/ic-check.svg">
+            {{ member }}
+            <img src="@/assets/icons/ic-error.svg" @click="removeTeamMember(member)">
+          </li>
+        </ul>
+      </el-form>
+    </div>
+    <el-button :disabled="teamMembersForm.teamMembers.length === 0" type="primary" @click="$emit('onboarding:step:next')">Convidar</el-button>
+    <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    isGuest: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      teamMembersForm: {
+        teamMember: '',
+        teamMembers: []
+      },
+      teamMembersFormRules: {
+        teamMember: [
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+        ]
+      }
+    }
+  },
+  methods: {
+    addTeamMember (form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          if (!this.teamMembersForm.teamMembers.includes(this.teamMembersForm.teamMember)) {
+            this.teamMembersForm.teamMembers.push(this.teamMembersForm.teamMember)
+          }
+          this.$refs[form].resetFields()
+        } else {
+          return false
+        }
+      })
+    },
+    removeTeamMember (member) {
+      this.teamMembersForm.teamMembers.splice(
+        this.teamMembersForm.teamMembers.indexOf(member), 1
+      )
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.onboarding-invite-step {
+  ul{
+    padding: 0;
+    margin: 10px 21px 40px;
+    li{
+      margin-top: 10px;
+      list-style-type: none;
+      img{
+        &:first-of-type{
+          margin-right: 20px;
+        }
+        &:last-of-type{
+          cursor: pointer;
+          float: right;
+        }
+      }
+    }
+  }
+}
+</style>

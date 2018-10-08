@@ -45,13 +45,13 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: 'Este campo é obrigatório', trigger: 'blur' }
+          { required: true, message: 'Campo obrigatório', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: 'Este campo é obrigatório', trigger: 'blur' }
+          { required: true, message: 'Campo obrigatório', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: 'Este campo é obrigatório', trigger: 'blur' }
+          { required: true, message: 'Campo obrigatório', trigger: 'blur' }
         ]
       }
     }

@@ -4,7 +4,7 @@
       <div class="onboarding-step-content__title">
         <h2>Para começar, qual a sua OAB?</h2>
       </div>
-      <el-form ref="oabForm" :model="oabForm" :rules="oabFormRules" label-position="top" @submit.native.prevent="submitForm">
+      <el-form ref="oabForm" :inline="true" :model="oabForm" :rules="oabFormRules" label-position="top" @submit.native.prevent="submitForm">
         <el-form-item label="OAB" prop="oab">
           <el-input v-model="oabForm.oab"/>
         </el-form-item>
@@ -16,7 +16,7 @@
       </el-form>
     </div>
     <el-button type="primary" @click="submitForm">Próximo</el-button>
-    <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
+    <el-button type="text" @click="skip">Pular</el-button>
   </div>
 </template>
 
@@ -36,10 +36,10 @@ export default {
       },
       oabFormRules: {
         oab: [
-          { required: true, message: 'Este campo é obrigatório', trigger: 'submit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         uf: [
-          { required: true, message: 'Este campo é obrigatório', trigger: 'submit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ]
       }
     }
@@ -53,6 +53,10 @@ export default {
           return false
         }
       })
+    },
+    skip () {
+      this.$emit('onboarding:step:next')
+      this.$refs['oabForm'].resetFields()
     }
   }
 }

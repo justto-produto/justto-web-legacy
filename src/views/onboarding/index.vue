@@ -6,11 +6,20 @@
     <transition name="fade">
       <el-col v-if="right > 0" :md="right">
         <swiper ref="swiper" :options="swiperOption" class="swiper-box">
-          <!-- <swiper-slide>
+          <swiper-slide>
             <WelcomeStep :is-guest="isGuest" @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
             <OabStep @onboarding:step:next="nextStep"/>
+          </swiper-slide>
+          <swiper-slide v-if="!isGuest">
+            <NameStep @onboarding:step:next="nextStep"/>
+          </swiper-slide>
+          <swiper-slide v-if="!isGuest">
+            <LogoStep @onboarding:step:next="nextStep"/>
+          </swiper-slide>
+          <swiper-slide v-if="!isGuest">
+            <InviteStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
             <EmailStep @onboarding:step:next="nextStep"/>
@@ -19,10 +28,7 @@
             <WhatsappStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
-            <NameStep @onboarding:step:next="nextStep"/>
-          </swiper-slide>-->
-          <swiper-slide>
-            <LogoStep @onboarding:step:next="nextStep"/>
+            <DoneStep :is-guest="isGuest" @onboarding:step:next="nextStep"/>
           </swiper-slide>
         </swiper>
       </el-col>
@@ -39,11 +45,13 @@ import EmailStep from './steps/EmailStep'
 import WhatsappStep from './steps/WhatsappStep'
 import NameStep from './steps/NameStep'
 import LogoStep from './steps/LogoStep'
+import InviteStep from './steps/InviteStep'
+import DoneStep from './steps/DoneStep'
 
 export default {
   name: 'Onboarding',
   components: {
-    JusSidenavExternal, WelcomeStep, OabStep, EmailStep, WhatsappStep, NameStep, LogoStep
+    JusSidenavExternal, WelcomeStep, OabStep, EmailStep, WhatsappStep, NameStep, LogoStep, InviteStep, DoneStep
   },
   data () {
     return {

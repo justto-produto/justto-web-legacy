@@ -42,11 +42,11 @@ export default {
       },
       rules: {
         email: [
-          { required: true, message: 'Este campo é obrigatório', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
         ],
         password: [
-          { required: true, message: 'Este campo é obrigatório', trigger: 'submit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ]
       }
     }

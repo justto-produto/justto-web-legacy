@@ -29,7 +29,7 @@ export default {
         name: ''
       },
       nameFormRules: {
-        name: [{ required: true, message: 'Este campo é obrigatório', trigger: 'submit' }]
+        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
     }
   },

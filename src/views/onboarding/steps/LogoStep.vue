@@ -2,14 +2,17 @@
   <div class="onboarding-logo-step">
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
-        <h2>Insira o logo do seu Escritório</h2>
+        <h2>Insira o logo do seu escritório</h2>
         <p>Os formatos aceitos são: PNG, JPG e SVG.</p>
       </div>
       <el-upload
         ref="upload"
-        :show-file-list="false"
+        :show-file-list="true"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload"
+        :before-remove="remove"
+        :class="{ 'el-upload--empty': imageUrl === '' }"
+        :limit="1"
         action="http://localhost:3000/images"
         drag
         class="el-upload--logo">
@@ -20,8 +23,8 @@
         </div>
       </el-upload>
     </div>
-    <el-button type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
-    <el-button type="text" @click="remove">Pular</el-button>
+    <el-button :disabled="imageUrl === ''" type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
+    <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
   </div>
 </template>
 
@@ -46,15 +49,15 @@ export default {
       this.imageUrl = URL.createObjectURL(file.raw)
     },
     beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
+      const isValid = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/svg+xml'
       // const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isJPG) {
-        this.$message.error('Avatar picture must be JPG format!')
+      if (!isValid) {
+        this.$message.error('Formato inválido. Os formatos aceitos são: PNG, JPG e SVG.')
       }
       // if (!isLt2M) {
       //   this.$message.error('Avatar picture size can not exceed 2MB!')
       // }
-      return isJPG // && isLt2M
+      return isValid // && isLt2M
     }
   }
 }
@@ -63,10 +66,11 @@ export default {
 <style lang="scss">
 .onboarding-logo-step {
   .uploaded-logo {
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 6px;
     width: 100%;
     height: 100%;
+    padding: 10px;
   }
 }
 </style>

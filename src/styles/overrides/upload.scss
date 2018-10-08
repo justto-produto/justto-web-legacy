@@ -1,13 +1,28 @@
 .el-upload--logo {
+  margin-bottom: 20px;
+  .el-upload {
+    pointer-events: none;
+  }
   .el-upload-dragger {
     width: 160px;
     height: 160px;
-    padding: 20px 10px;
+  }
+  &.el-upload--empty {
+    .el-upload {
+      pointer-events: all;
+    }
+    .el-upload-dragger {
+      padding: 20px 10px;
+    }
   }
   .el-upload__text {
     font-size: 12px !important;
   }
   .el-icon-upload {
     margin: 0 0 15px !important;
+  }
+  .el-upload-list {
+    width: 100%;
+    max-width: 160px;
   }
 }

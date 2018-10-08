@@ -1,5 +1,5 @@
 <template>
-  <img :src="require('@/assets/'+src)" :class="sizeClass + ' ' + shapeClass" class="jus-logo-company">
+  <img :src="require('@/assets/'+src)" :class="sizeClass + ' ' + shapeClass + ' ' + shadowClass" class="jus-logo-company">
 </template>
 
 <script>
@@ -17,6 +17,10 @@ export default {
     size: {
       type: String,
       default: 'md'
+    },
+    shadow: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -25,6 +29,12 @@ export default {
     },
     sizeClass () {
       return 'jus-logo-company--' + this.size
+    },
+    shadowClass () {
+      if (this.shadow) {
+        return 'jus-logo-company--shadow'
+      }
+      return ''
     }
   }
 }
@@ -33,7 +43,6 @@ export default {
 <style lang="scss">
 .jus-logo-company{
   object-fit: cover;
-  box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   &.jus-logo-company--square{
     border-radius: 3px;
   }
@@ -55,6 +64,13 @@ export default {
   &.jus-logo-company--lg {
     width: 8.5rem;
     height: 8.5rem;
+  }
+  &.jus-logo-company--xl {
+    width: 12rem;
+    height: 12rem;
+  }
+  &.jus-logo-company--shadow {
+    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.15);
   }
 }
 </style>
