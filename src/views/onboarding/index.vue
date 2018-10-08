@@ -6,7 +6,7 @@
     <transition name="fade">
       <el-col v-if="right > 0" :md="right">
         <swiper ref="swiper" :options="swiperOption" class="swiper-box">
-          <swiper-slide>
+          <!-- <swiper-slide>
             <WelcomeStep :is-guest="isGuest" @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
@@ -14,13 +14,13 @@
           </swiper-slide>
           <swiper-slide v-if="!isGuest">
             <NameStep @onboarding:step:next="nextStep"/>
-          </swiper-slide>
-          <swiper-slide v-if="!isGuest">
+          </swiper-slide> -->
+          <!-- <swiper-slide v-if="!isGuest">
             <LogoStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide v-if="!isGuest">
             <InviteStep @onboarding:step:next="nextStep"/>
-          </swiper-slide>
+          </swiper-slide> -->
           <swiper-slide>
             <EmailStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
@@ -126,14 +126,27 @@ export default {
     margin-bottom: 10px;
     font-weight: bold;
   }
+  .el-button--primary:not(.el-button--previous-step) {
+    margin-top: 20px;
+  }
   .onboarding-step-content {
     width: 100%;
     max-width: 586px;
-    .el-button--primary {
-      margin-top: 40px;
-    }
     .onboarding-step-content__title {
       margin-bottom: 40px;
+    }
+  }
+  @media (max-width: 991px) {
+    .swiper-slide {
+      padding: 40px;
+    }
+    .el-form-item {
+      width: 100%;
+      margin-right: 0;
+    }
+    .el-button--text {
+      width: 100%;
+      margin: 10px 0 0 0 !important;
     }
   }
 }

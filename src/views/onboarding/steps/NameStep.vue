@@ -2,7 +2,7 @@
   <div>
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
-        <h2>Qual o nome do seu Escritório?</h2>
+        <h2>Qual o nome do seu escritório?</h2>
         <p>Você pode colocar o nome do seu escritório, por exemplo.</p>
       </div>
       <el-form ref="nameForm" :model="nameForm" :rules="nameFormRules" label-position="top" @submit.native.prevent="submitForm">

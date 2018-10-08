@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div class="onboarding-oab-step">
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
         <h2>Para começar, qual a sua OAB?</h2>
@@ -61,3 +61,22 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .onboarding-oab-step {
+    @media (min-width: 992px) {
+      form {
+        display: flex;
+      }
+      .el-form-item:first-child {
+        width: 100%;
+      }
+      .el-form-item:last-child {
+        width: 120px;
+        margin-right: 0;
+      }
+    }
+    @media (max-width: 991px) {
+    }
+  }
+</style>

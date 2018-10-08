@@ -7,10 +7,12 @@
       </div>
       <el-upload
         ref="upload"
+        v-loading="loading"
         :show-file-list="true"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload"
         :before-remove="remove"
+        :on-progress="loadingProgress"
         :class="{ 'el-upload--empty': imageUrl === '' }"
         :limit="1"
         action="http://localhost:3000/images"
@@ -38,15 +40,21 @@ export default {
   },
   data () {
     return {
-      imageUrl: ''
+      imageUrl: '',
+      loading: false
     }
   },
   methods: {
     remove () {
       this.imageUrl = ''
     },
+    loadingProgress (event, file, fileList) {
+      console.log('progress')
+      this.loading = true
+    },
     handleAvatarSuccess (res, file) {
       this.imageUrl = URL.createObjectURL(file.raw)
+      this.loading = false
     },
     beforeAvatarUpload (file) {
       const isValid = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/svg+xml'
@@ -71,6 +79,20 @@ export default {
     width: 100%;
     height: 100%;
     padding: 10px;
+  }
+  @media (max-width: 991px) {
+    .el-upload--logo {
+      text-align: center;
+      .el-upload {
+        width: 100%;
+      }
+      .el-upload-list {
+        margin: auto;
+      }
+      .el-upload-dragger {
+        margin: auto;
+      }
+    }
   }
 }
 </style>

@@ -18,8 +18,17 @@
   position: absolute;
   bottom: 40px;
   right: 40px;
-  i{
+  i {
     font-weight: bold;
     font-size: 20px;
+  }
+}
+
+@media (max-width: 991px) {
+  .el-button--previous-step {
+    padding: 8px !important;
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
   }
 }

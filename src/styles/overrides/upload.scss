@@ -25,4 +25,13 @@
     width: 100%;
     max-width: 160px;
   }
+  .el-icon-upload-success {
+    &:before {
+      content: "\E60F";
+      color: #343c4b;
+    }
+  }
+  .el-upload-list__item-name {
+    pointer-events: none;
+  }
 }

@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="onboarding-step-content">
+  <div class="onboarding-step-content onboarding-email-step">
     <div class="onboarding-step-content__title">
-      <h2>Deseja sincronizar o seu e-mail com a plataforma?</h2>
+      <h2>Deseja sincronizar o seu e-mail com nossa plataforma?</h2>
       <p>
         Ao clicar no botão, você concorda em liberar o acesso de leitura dos emails de sua caixa de entrada para que a plataforma Justto realize leitura dos emails relacionados às negociações em processo na plataforma. Se desejar, você pode configurar isso depois.
       </p>
@@ -42,4 +42,18 @@ export default {
 </script>
 
 <style lang="scss">
+.onboarding-email-step {
+  @media (max-width: 991px) {
+    p {
+      display: none;
+    }
+    .el-checkbox__label {
+      width: 100%;
+    }
+    img {
+      width: 4rem !important;
+      height: 4rem !important;
+    }
+  }
+}
 </style>
