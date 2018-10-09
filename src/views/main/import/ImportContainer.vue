@@ -16,7 +16,9 @@ export default {
 
 <style lang="scss">
   .import-container {
-    margin: 10px 20px 20px;
+    >h1 {
+      margin-left: 20px;
+    }
     .view-import__header {
       display: flex;
       justify-content: space-between;

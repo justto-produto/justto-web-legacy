@@ -37,7 +37,7 @@
     <el-container direction="vertical">
       <JusHeaderMain/>
       <el-main>
-        <transition name="fade-absolute">
+        <transition name="fade">
           <router-view/>
         </transition>
       </el-main>

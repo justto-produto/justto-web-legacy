@@ -32,13 +32,13 @@ export default {
 <style lang="scss">
 .main-view {
   position: relative;
+  margin: 0 20px 20px;
   .main-view__main-card {
     width: 100%;
     min-height: calc( 100vh - 180px );
   }
   .main-view__card {
     margin-left: 20px;
-    margin-right: 20px;
     width: 300px;
     position: sticky;
     top: 40px;

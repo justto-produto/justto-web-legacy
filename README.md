@@ -15,7 +15,7 @@ Novo sistema web da Justto, criado e administrado com Vue UI. :heart:
 - Element.ui
 - JS Standard Pattern
 
-### Como rodar :running:
+### Como rodar
 
 Instale o Vue UI:
 
