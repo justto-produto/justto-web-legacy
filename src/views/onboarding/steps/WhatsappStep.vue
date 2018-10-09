@@ -16,9 +16,9 @@
         </p>
       </transition>
     </div>
-    <div>
+    <div class="whatsapp-step--status">
       Status:
-      <strong style="margin: 0 10px">{{ message }}</strong>
+      <strong>{{ message }}</strong>
       <JusStatusDot :type="type"/>
     </div>
     <el-button :disabled="!scan" type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
@@ -57,8 +57,27 @@ export default {
 
 <style lang="scss">
 .onboarding-whatsapp-step {
+  .whatsapp-step--status {
+    strong {
+      margin: 0 10px;
+    }
+  }
   .whatsapp-step--status-info {
     margin: 20px;
+  }
+  @media (max-width: 991px) {
+    .whatsapp-step--status {
+      text-align: center;
+      strong {
+        margin: 0 5px;
+      }
+    }
+    .whatsapp-step--status-info {
+      display: none;
+    }
+    .display-flex {
+      justify-content: center;
+    }
   }
 }
 </style>

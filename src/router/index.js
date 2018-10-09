@@ -82,18 +82,22 @@ const router = new Router({
       ]
     },
     {
+      name: 'login',
       path: '/login',
       component: () => import(/* webpackChunkName: "externalIndex" */ '@/views/external')
     },
     {
+      name: 'register',
       path: '/register',
       component: () => import(/* webpackChunkName: "register" */ '@/views/external/Register.vue')
     },
     {
+      name: 'forgot-password',
       path: '/forgot-password',
       component: () => import(/* webpackChunkName: "forgotPassword" */ '@/views/external/ForgotPassword.vue')
     },
     {
+      name: 'onboarding',
       path: '/onboarding/',
       component: () => import(/* webpackChunkName: "onboardingIndex" */ '@/views/onboarding')
     },
@@ -101,20 +105,20 @@ const router = new Router({
       path: '*',
       redirect: '/'
     }
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (about.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    // }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) next('login')
   else next()
+})
+
+router.afterEach((to, from) => {
+  if (to.name === 'onboarding' || to.name === 'login' || to.name === 'register' || to.name === 'forgot-password') {
+    document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width,initial-scale=1.0')
+  } else {
+    document.querySelector('meta[name="viewport"]').setAttribute('content', '')
+  }
 })
 
 export default router

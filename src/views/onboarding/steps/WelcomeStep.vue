@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="onboarding-step-content">
+  <div class="onboarding-step-content onboarding-welcome-step">
     <JusLogoCompany v-if="isGuest" src="shostners.jpg" shadow shape="circle" size="xl"/>
     <h1>
       Bem-vindo(a), Mariana!<br>
@@ -29,3 +29,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.onboarding-welcome-step {
+  @media (max-width: 991px) {
+    text-align: center;
+  }
+}
+</style>

@@ -6,7 +6,7 @@
     <transition name="fade">
       <el-col v-if="right > 0" :md="right">
         <swiper ref="swiper" :options="swiperOption" class="swiper-box">
-          <!-- <swiper-slide>
+          <swiper-slide>
             <WelcomeStep :is-guest="isGuest" @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
@@ -14,13 +14,13 @@
           </swiper-slide>
           <swiper-slide v-if="!isGuest">
             <NameStep @onboarding:step:next="nextStep"/>
-          </swiper-slide> -->
-          <!-- <swiper-slide v-if="!isGuest">
+          </swiper-slide>
+          <swiper-slide v-if="!isGuest">
             <LogoStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide v-if="!isGuest">
             <InviteStep @onboarding:step:next="nextStep"/>
-          </swiper-slide> -->
+          </swiper-slide>
           <swiper-slide>
             <EmailStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
@@ -122,7 +122,6 @@ export default {
     }
   }
   h1{
-    font-size: 40px;
     margin-bottom: 10px;
     font-weight: bold;
   }
@@ -148,6 +147,17 @@ export default {
       width: 100%;
       margin: 10px 0 0 0 !important;
     }
+  }
+}
+
+@media (max-width: 991px) {
+  html, body{
+    font-size: 13px !important;
+  }
+}
+@media (max-width: 320px) {
+  html, body{
+    font-size: 12px !important;
   }
 }
 </style>
