@@ -87,6 +87,12 @@
     "not ie <= 8"
   ],
   "jest": {
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "**/*.{js,vue}",
+      "!**/node_modules/**"
+    ],
+    "coverageReporters": ["html", "text-summary"],
     "moduleFileExtensions": [
       "js",
       "jsx",

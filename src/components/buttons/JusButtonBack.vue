@@ -7,7 +7,7 @@
 <script>
 
 /**
- * The only true button.
+ * Botão flutuante com ícone de voltar.
  */
 export default {
   name: 'JusButtonBack',

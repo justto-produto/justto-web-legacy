@@ -25,7 +25,7 @@
         </transition>
         <el-menu-item index="/import">
           <JusIcon :is-active="$route.path === '/import'" icon="import" class="el-menu__icon"/>
-          <span slot="title">Importação</span>
+          <span slot="title">Novos casos</span>
         </el-menu-item>
         <el-menu-item index="/negotiation">
           <JusIcon :is-active="$route.path === '/negotiation'" icon="negotiation" class="el-menu__icon"/>

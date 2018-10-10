@@ -1,6 +1,6 @@
 <template>
   <div class="import-container">
-    <h1>Importação</h1>
+    <h1>Novos casos</h1>
     <transition name="fade">
       <router-view/>
     </transition>
