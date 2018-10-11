@@ -6,8 +6,8 @@
         <p>Os formatos aceitos são: PNG, JPG e SVG.</p>
       </div>
       <el-upload
-        ref="upload"
         v-loading="loading"
+        ref="upload"
         :show-file-list="true"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload"

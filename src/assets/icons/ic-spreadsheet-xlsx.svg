@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 30 40">
+<svg xmlns="http://www.w3.org/2000/svg" width="45" height="60" viewBox="0 0 45 60">
     <g fill="none" fill-rule="evenodd">
-        <path d="M-5 0h40v40H-5z"/>
+        <path d="M-7 0h60v60H-7z"/>
         <g stroke="#424242">
-            <path d="M22.19.85v6.666h6.667"/>
-            <path d="M28.857 37.85c0 .727-.59 1.333-1.319 1.333H1.836c-.728 0-1.312-.606-1.312-1.333V2.192c0-.727.584-1.343 1.312-1.343h20.355c.346 0 .506.15.752.392l5.521 5.448c.25.247.393.475.393.827V37.85z"/>
+            <path d="M33.786 1.274v10h10"/>
+            <path d="M43.786 56.775c0 1.091-.885 2-1.979 2H3.254c-1.091 0-1.968-.909-1.968-2V3.288c0-1.09.877-2.014 1.968-2.014h30.532c.519 0 .76.224 1.129.587l8.281 8.172c.376.371.59.713.59 1.241v45.5z"/>
         </g>
-        <text fill="#424242" font-family="Montserrat-Bold, Montserrat" font-size="6" font-weight="bold" transform="translate(-5)">
-            <tspan x="11.99" y="35.333">XLSX</tspan>
+        <text fill="#424242" font-family="Montserrat-Bold, Montserrat" font-size="10" font-weight="bold" transform="translate(-7)">
+            <tspan x="16.65" y="48">XLSX</tspan>
         </text>
     </g>
 </svg>

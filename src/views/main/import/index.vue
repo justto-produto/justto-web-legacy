@@ -7,7 +7,7 @@
           <p>Formatos suportados: XLSX, CSV, XLS, ODT e Google Sheets.</p>
         </div>
         <div>
-          <el-button plain @click="$router.push('/import/upload')">Importar planilha</el-button>
+          <el-button type="primary" @click="$router.push('/import/upload')">Importar planilha</el-button>
         </div>
       </div>
       <hr>

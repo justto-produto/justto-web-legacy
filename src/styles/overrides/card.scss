@@ -20,36 +20,7 @@
   }
 }
 
-.el-card__body {
-  // display: flex;
-  // align-items: center;
-  // div {
-  //   // width: 100%;
-  // }
-  // img {
-  //   margin-right: 20px;
-  // }
-  // h4 {
-  //   margin-top: 0;
-  //   margin-bottom: 10px;
-  //   font-weight: bold;
-  // }
-  // p, span {
-  //   font-size: 12px;
-  //   margin-top: 0px;
-  //   margin-bottom: 10px;
-  //   font-weight: normal;
-  // }
-  // h4 > span {
-  //   float: right;
-  // }
-  // p+p {
-  //   margin-bottom: 0;
-  // }
-}
-
 .el-card--dashed {
-  margin: auto;
   background-color: $--color-white;
   border: dashed 1px $--color-cloudy-blue;
 }
@@ -65,4 +36,24 @@
     white-space: nowrap;
     overflow: hidden;
   }
+}
+
+.el-card--vertical-content {
+  .el-card__body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.el-card--upload-progress {
+  min-width: 400px !important;
+}
+
+.el-card--background {
+  border-radius: 8px !important;
+  background: url('../../assets/backgrounds/bg-purple.svg') no-repeat center center fixed;
+  background-size: cover;
 }

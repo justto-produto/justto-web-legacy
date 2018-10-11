@@ -4,14 +4,14 @@
   background-color: #fafafa;
   border: 0;
   border-left-style: solid;
-  border-left-width: 4px;
+  border-left-width: 4px !important;
   &.success{
     border-left-color: $--color-success;
   }
   &.warning{
     border-left-color: $--color-warning;
   }
-  &.error{
+  &.danger{
     border-left-color: $--color-danger;
   }
   &.info{
