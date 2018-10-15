@@ -25,28 +25,11 @@
                 </span>
               </div>
             </div>
-
-            <!-- <el-row v-if="file">
-              <el-col :span="5">
-                <JusIcon icon="spreadsheet-xlsx"/>
-              </el-col>
-              <el-col :span="19">
-                <strong>planilha-casos.xlsx</strong>
-                <el-progress :stroke-width="4" :percentage="progress" :status="uploadStatus"/>
-                <p v-show="inProgress && progress === 100">
-                  Processando...
-                  <i class="el-icon-loading"/>
-                </p>
-                <p v-show="processSuccess">
-                  Documento carregado com sucesso.
-                </p>
-              </el-col>
-            </el-row> -->
             <div v-if="processSuccess" class="view-import__progress-success">
               <hr>
               <el-card class="el-card--background">
-                <span>1.000</span>
-                casos importados
+                <h2>1.000</h2>
+                <span>casos importados</span>
               </el-card>
               <div class="view-import__success-info">
                 Caso a importação não tenha o número de casos que estão no arquivo,
@@ -160,11 +143,12 @@ export default {
   &+.view-import__method {
     margin-left: 20px;
   }
-  .el-card__body {
+  >.el-card__body {
     padding: 40px 20px;
   }
   a {
     text-align: center;
+    margin-top: 20px;
   }
   hr {
     width: 100%;
@@ -173,6 +157,11 @@ export default {
   img {
     max-width: 80px;
   }
+}
+
+.view-import__method--uploading {
+  margin: auto;
+  display: grid;
 }
 
 .view-import__progress{
@@ -192,10 +181,12 @@ export default {
 .view-import__progress-success{
   .el-card {
     color: #fff;
-    font-size: 12px;
     font-weight: normal;
     width: 150px;
     margin: auto;
+    h4 {
+
+    }
     span {
       margin-bottom: 4px;
       font-size: 20px;
@@ -203,6 +194,22 @@ export default {
   }
   .view-import__success-info{
     margin-top: 20px;
+  }
+  .el-card__body {
+    text-align: center;
+  }
+  .el-card--background {
+    .el-card__body {
+      padding: 12px 10px;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+    span {
+      font-size: 12px;
+      margin: 0;
+    }
   }
 }
 </style>

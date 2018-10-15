@@ -1,12 +1,12 @@
 .view-import {
   .main-view__main-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
   }
 }
 .view-import__container {
-  margin: 40px 0;
+  margin-top: 40px;
 }
 .view-import__title {
   text-align: center;
@@ -20,8 +20,9 @@
 .view-import__actions {
   display: flex;
   justify-content: center;
+  max-width: 400px;
+  margin: auto;
   button {
     width: 100%;
-    max-width: 400px;
   }
 }

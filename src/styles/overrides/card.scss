@@ -53,7 +53,8 @@
 }
 
 .el-card--background {
-  border-radius: 8px !important;
-  background: url('../../assets/backgrounds/bg-purple.svg') no-repeat center center fixed;
-  background-size: cover;
+  .el-card__body {
+    border-radius: 8px !important;
+    background: url('../../assets/backgrounds/bg-purple.svg') no-repeat center;
+  }
 }
