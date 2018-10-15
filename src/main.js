@@ -15,6 +15,9 @@ import '@/plugins/awesomeSwiper'
 import '@/styles/core.scss'
 import '@/styles/transitions.scss'
 
+import '@/styles/views/external.scss'
+import '@/styles/views/main/import.scss'
+
 import '@/styles/overrides/badge.scss'
 import '@/styles/overrides/button.scss'
 import '@/styles/overrides/card.scss'

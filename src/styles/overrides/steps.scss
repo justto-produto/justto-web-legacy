@@ -1,5 +1,5 @@
 .el-steps--wizard {
-  width: 30%;
+  width: 20%;
   margin: auto;
   margin-top: 20px;
   .el-step__icon.is-text {
@@ -12,5 +12,8 @@
   .el-step__head.is-process, .el-step__head.is-wait {
     color: #adadad !important;
     border-color: white !important;
+  }
+  .el-step__icon {
+    z-index: 0;
   }
 }

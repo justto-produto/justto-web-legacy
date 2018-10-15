@@ -1,7 +1,7 @@
 <template>
   <JusViewMain>
     <template slot="main">
-      <div class="view-import__header">
+      <div>
         <div>
           <h2>Insira a sua planilha</h2>
           <p>Formatos suportados: XLSX, CSV, XLS, ODT e Google Sheets.</p>
@@ -96,7 +96,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'Import'
 }

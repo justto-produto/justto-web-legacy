@@ -5,7 +5,6 @@
         <el-step/>
         <el-step/>
         <el-step/>
-        <el-step/>
       </el-steps>
       <div class="step-main">
         <JusButtonBack to="/import/upload"/>
@@ -108,7 +107,9 @@
           </el-col>
         </el-row>
         <br>
-        <el-button type="primary" plain @click="$router.push('/import/enrichment')">Próximo</el-button>
+        <br>
+        <el-button type="primary" @click="$router.push('/import/enrichment')">Próximo</el-button>
+        <br>
       </div>
     </template>
     <template slot="aside">

@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="main-view">
-    <h1><slot name="title"/></h1>
+    <h1 v-if="this.$slots['title']"><slot name="title"/></h1>
     <div class="display-flex">
       <el-card class="main-view__main-card">
         <slot name="main"/>
@@ -46,6 +46,9 @@ export default {
       padding:  0 20px;
       width: 260px;
     }
+  }
+  button {
+    width: 100%;
   }
 }
 </style>

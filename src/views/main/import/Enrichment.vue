@@ -5,12 +5,12 @@
         <el-step/>
         <el-step/>
         <el-step/>
-        <el-step/>
       </el-steps>
       <div class="step-main">
+        <JusButtonBack to="/import/columns"/>
         <h2>Enriquecimento</h2>
         <br>
-        <el-card class="el-card--dashed">
+        <el-card shadow="never" class="el-card--dashed">
           <div class="el-loading-spinner">
             <svg viewBox="25 25 50 50" class="circular">
               <circle cx="50" cy="50" r="20" fill="none" class="path"/>
@@ -28,6 +28,10 @@
           <br>
           <p>Ao término desta operação você será redirecionado automaticamente.</p>
         </el-card>
+        <div class="display-flex">
+          <el-button plain>Pular enriquecimento</el-button>
+          <el-button type="primary">Enriquecer</el-button>
+        </div>
       </div>
     </template>
     <template slot="aside">
@@ -98,6 +102,7 @@ export default {
 <style lang="scss">
 .import-enrichment-view {
   .el-card--dashed {
+    margin: auto;
     margin-bottom: 20px;
     max-width: 400px;
     padding: 40px 15px 20px;
@@ -118,6 +123,9 @@ export default {
         stroke-width: 4px;
       }
     }
+  }
+  .el-button {
+    width: 190px !important;
   }
 }
 </style>

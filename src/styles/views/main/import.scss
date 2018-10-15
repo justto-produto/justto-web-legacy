@@ -1,0 +1,27 @@
+.view-import {
+  .main-view__main-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.view-import__container {
+  margin: 40px 0;
+}
+.view-import__title {
+  text-align: center;
+  h2 {
+    margin-bottom: 0;
+  }
+}
+.view-import__content {
+  margin: 40px 0;
+}
+.view-import__actions {
+  display: flex;
+  justify-content: center;
+  button {
+    width: 100%;
+    max-width: 400px;
+  }
+}
