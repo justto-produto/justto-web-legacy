@@ -23,13 +23,13 @@ export default {
 <style lang="scss">
 .jus-button-back {
   position: absolute;
-  top: 36px;
-  left: 36px;
+  top: 40px;
+  left: 20px;
   color: initial;
   cursor: pointer;
   img{
     vertical-align: middle;
-    margin-right: 4px;
+    margin-right: 10px;
   }
 }
 </style>

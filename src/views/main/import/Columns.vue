@@ -129,7 +129,7 @@
 <script>
 
 export default {
-  name: 'Import',
+  name: 'ImportColumns',
   data () {
     return {
       active: 1
@@ -138,9 +138,6 @@ export default {
   methods: {
     drop (event) {
       console.log(event)
-    },
-    next () {
-      if (this.active++ > 3) this.active = 1
     },
     notify () {
       this.$notify({

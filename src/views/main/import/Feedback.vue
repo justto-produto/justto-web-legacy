@@ -152,6 +152,7 @@
 
 <script>
 export default {
+  name: 'ImportFeedback',
   data () {
     return {
       checked1: false

@@ -44,5 +44,30 @@
       height: 12px;
     }
   }
+}
 
+.el-checkbox--status {
+  &.is-checked {
+    .el-checkbox__label {
+      color: inherit !important;
+    }
+  }
+  &:not(.is-checked) {
+    .el-checkbox__inner {
+      display: none;
+    }
+    .el-checkbox__label {
+      padding: 0;
+    }
+  }
+  .el-checkbox__inner {
+    background-color: #ffffff00 !important;
+    border-color: #ffffff00 !important;
+    &::after {
+      border-color: #9461f7;
+      width: 4px;
+      height: 12px;
+      top: -2px;
+    }
+  }
 }

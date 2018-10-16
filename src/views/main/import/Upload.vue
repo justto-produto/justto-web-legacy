@@ -3,15 +3,17 @@
     <template slot="main">
       <JusButtonBack to="/import"/>
       <div class="view-import__container">
-        <div v-show="!file" class="view-import__title">
-          <h2>Insira a sua planilha</h2>
-          <p>Formatos aceitos: XLSX, CSV, XLS, ODT e Google Sheets.</p>
+        <div class="view-import__title">
+          <h2 v-show="!file">Insira a sua planilha</h2>
+          <h2 v-show="file && processSuccess">Planilha carregada</h2>
+          <h2 v-show="file && !processSuccess">Processando planilha</h2>
+          <p v-show="!file">Formatos aceitos: XLSX, CSV, XLS, ODT e Google Sheets.</p>
         </div>
         <div class="view-import__content view-import__content---methods">
           <el-card :class="{'el-card--upload-progress': file, 'view-import__method--uploading': file}" shadow="never" class="view-import__method el-card--dashed el-card--vertical-content">
-            <JusIcon v-if="!file" icon="upload-file" class="upload-icon"/>
-            <a v-if="!file" href="#" @click.prevent="uploadMoockFile">Adicionar arquivo do computador</a>
-            <div v-if="file" class="view-import__progress">
+            <JusIcon v-show="!file" icon="upload-file" class="upload-icon"/>
+            <a v-show="!file" href="#" @click.prevent="uploadMoockFile">Adicionar arquivo do computador</a>
+            <div v-show="file" class="view-import__progress">
               <JusIcon icon="spreadsheet-xlsx"/>
               <div class="view-import__progress-info">
                 <strong>planilha-casos.xlsx</strong>
@@ -25,10 +27,10 @@
                 </span>
               </div>
             </div>
-            <div v-if="processSuccess" class="view-import__progress-success">
+            <div v-show="processSuccess" class="view-import__progress-success">
               <hr>
               <el-card class="el-card--background">
-                <h2>1.000</h2>
+                <h2>1.285</h2>
                 <span>casos importados</span>
               </el-card>
               <div class="view-import__success-info">
@@ -47,7 +49,7 @@
           </el-card>
         </div>
         <div class="view-import__actions">
-          <el-button v-if="processSuccess" plain @click="file = false">Voltar</el-button>
+          <el-button v-show="processSuccess" plain @click="file = false">Voltar</el-button>
           <el-button :disabled="inProgress" type="primary" @click="nextStep">Próximo</el-button>
         </div>
       </div>
@@ -72,7 +74,7 @@
 
 <script>
 export default {
-  name: 'Import',
+  name: 'ImportUpload',
   data () {
     return {
       file: false,

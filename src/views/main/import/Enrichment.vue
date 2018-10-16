@@ -1,36 +1,50 @@
 <template>
-  <JusViewMain class="import-enrichment-view">
+  <JusViewMain class="view-import view-import--enrichment">
     <template slot="main">
+      <JusButtonBack to="/import/columns"/>
       <el-steps :active="active" class="el-steps--wizard" finish-status="finish">
         <el-step/>
         <el-step/>
         <el-step/>
       </el-steps>
-      <div class="step-main">
-        <JusButtonBack to="/import/columns"/>
-        <h2>Enriquecimento</h2>
-        <br>
-        <el-card shadow="never" class="el-card--dashed">
-          <div class="el-loading-spinner">
-            <svg viewBox="25 25 50 50" class="circular">
-              <circle cx="50" cy="50" r="20" fill="none" class="path"/>
-            </svg>
-          </div>
-          <h3>Nosso sistema está coletando informações das seguintes entidades:</h3>
-          <ul>
-            <li>
-              <el-checkbox v-model="checked1">Tribunal de justiça</el-checkbox>
-            </li>
-            <li>
-              <el-checkbox v-model="checked2">Cadastro de advogados</el-checkbox>
-            </li>
-          </ul>
-          <br>
-          <p>Ao término desta operação você será redirecionado automaticamente.</p>
-        </el-card>
-        <div class="display-flex">
-          <el-button plain>Pular enriquecimento</el-button>
-          <el-button type="primary">Enriquecer</el-button>
+      <div class="view-import__container">
+        <div class="view-import__title">
+          <h2>Enriquecimento</h2>
+        </div>
+        <div class="view-import__content">
+          <el-card shadow="never" class="el-card--dashed">
+            <div v-show="loading && !enriched" class="el-loading-spinner">
+              <svg viewBox="25 25 50 50" class="circular">
+                <circle cx="50" cy="50" r="20" fill="none" class="path"/>
+              </svg>
+            </div>
+            <h3 v-show="!enriched && !loading">Nosso sistema irá coletar informações das seguintes entidades:</h3>
+            <h3 v-show="!enriched && loading">Nosso sistema está coletando informações...</h3>
+            <h3 v-show="enriched">Os dados foram enriquecidos
+              <span v-show="enriched && revision">, mas nós detectamos alguns casos com informações que necessitam da sua revisão</span>
+            </h3>
+            <p v-show="enriched && revision">
+              Mas não se preocupe. Os casos que não necessitam de revisão irão iniciar as etapas de negociação,
+              e você poderá revisar os casos pendentes mais tarde.
+              <br><br><br>
+            </p>
+            <ul>
+              <li>
+                <el-checkbox v-model="checked1" class="el-checkbox--status">Cadastro das partes</el-checkbox>
+              </li>
+              <li>
+                <el-checkbox v-model="checked2" class="el-checkbox--status">Cadastro de Advogados (CNA)</el-checkbox>
+              </li>
+            </ul>
+          </el-card>
+          <p>
+            <i v-show="!enriched">Ao término desta operação você será redirecionado automaticamente.</i>
+          </p>
+        </div>
+        <div class="view-import__actions">
+          <el-button v-if="!enriched" :disabled="loading" plain @click="startEnrichment">Pular enriquecimento</el-button>
+          <el-button v-if="!enriched" :disabled="loading" type="primary" @click="startEnrichment">Enriquecer</el-button>
+          <el-button v-if="enriched" type="primary" @click="$router.push('/import/feedback')">Próximo</el-button>
         </div>
       </div>
     </template>
@@ -54,78 +68,70 @@
 <script>
 
 export default {
-  name: 'Import',
+  name: 'ImportEnrichment',
   data () {
     return {
       active: 2,
-      checked1: true,
-      checked2: false
+      loading: false,
+      checked1: false,
+      checked2: false,
+      revision: true
+    }
+  },
+  computed: {
+    enriched () {
+      return this.checked1 && this.checked2
     }
   },
   methods: {
-    drop (event) {
-      console.log(event)
-    },
-    next () {
-      if (this.active++ > 3) this.active = 1
-    },
-    notify () {
-      this.$notify({
-        title: 'Ops!',
-        message: 'Para prosseguir você deve adicionar um arquivo',
-        position: 'bottom-right',
-        duration: 0,
-        customClass: 'success'
-      })
-    },
-    confirm () {
-      this.$confirm(`Um arquivo ainda está carregando. Ao sair da tela, este arquivo não será importado.
-        Você tem certeza de que quer abandonar o carregamento?`, 'Atenção!', {
-        confirmButtonText: 'Parar importação',
-        cancelButtonText: 'Cancelar'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: 'Delete completed'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: 'Delete canceled'
-        })
-      })
+    startEnrichment () {
+      this.checked1 = false
+      this.checked2 = false
+      this.loading = true
+      let self = this
+      setTimeout(function () {
+        self.checked1 = true
+      }, 1000)
+      setTimeout(function () {
+        self.checked2 = true
+      }, 1000)
     }
   }
 }
 </script>
 
 <style lang="scss">
-.import-enrichment-view {
+.view-import--enrichment {
+  .view-import__content {
+    text-align: center;
+  }
+  p, .el-card--dashed {
+    max-width: 400px;
+    margin: auto;
+  }
   .el-card--dashed {
     margin: auto;
     margin-bottom: 20px;
-    max-width: 400px;
-    padding: 40px 15px 20px;
+    padding: 20px 10px;
     h3 {
+      margin-top: 0;
       margin-bottom: 40px;
     }
     ul {
+      margin: 0;
+      padding: 0;
       list-style: none;
-      text-align: center;
       li {
         margin-bottom: 10px;
       }
     }
     .el-loading-spinner {
-      text-align: center;
       position: static;
+      margin: 10px 0 20px;
       .path {
         stroke-width: 4px;
       }
     }
-  }
-  .el-button {
-    width: 190px !important;
   }
 }
 </style>
