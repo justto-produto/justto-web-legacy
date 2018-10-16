@@ -1,21 +1,30 @@
-@import "../variables.scss";
+@import '../variables/colors';
 
 .el-tag--dropzone {
   float: right;
-  max-width: 210px;
+  max-width: 58%;
   width: 100%;
   color: $--color-text-secondary !important;
   background-color: #fff !important;
   border: dashed 1px $--color-text-secondary !important;
   font-size: 11px !important;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
 }
 
 .el-tag--dropzone-active {
   background-color: $--color-primary !important;
   border: solid 1px $--color-primary !important;
   color: #fff !important;
+  padding-right: 30px !important;
   .el-tag__close {
     color: #fff !important;
+    top: 8px !important;
+    right: 8px !important;
+    position: absolute !important;
     &:hover {
       background-color: $--color-primary-light-3 !important;
       color: #fff !important;
@@ -30,7 +39,16 @@
   background-color: #f7f7f7 !important;
   border: solid 1px #eeeeee !important;
   margin-right: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.el-tag--drag-add {
+  @extend .el-tag--drag;
+  cursor: pointer;
 }
 
 .el-tag--drag-active {

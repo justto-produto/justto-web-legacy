@@ -13,53 +13,26 @@
         </div>
         <div class="view-import__content">
           <el-row :gutter="28">
-            <el-col :span="13">
+            <el-col :span="12">
               <h3>Colunas do arquivo</h3>
-              <div class="file-column" @drop="drop($event)" @dragover.prevent>
-                <span>Nº do processo</span>
-                <el-tag :closable="true" :disable-transitions="false" class="el-tag--dropzone el-tag--dropzone-active">
-                  Data de vencimento do débito
-                </el-tag>
-              </div>
-              <div class="file-column">
-                Empresa
-                <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                  Arraste e solte a tag aqui
-                </el-tag>
-              </div>
-              <div class="file-column">
-                Alçada para acordo
-                <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                  Arraste e solte a tag aqui
-                </el-tag>
-              </div>
-              <div class="file-column">
-                Alçada mínima
-                <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                  Arraste e solte a tag aqui
-                </el-tag>
-              </div>
-              <div class="file-column">
-                Réu
-                <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                  Arraste e solte a tag aqui
-                </el-tag>
-              </div>
-              <div class="file-column">
-                Valor original da causa
-                <el-tag :closable="false" :disable-transitions="false" class="el-tag--dropzone">
-                  Arraste e solte a tag aqui
+              <div v-for="column in columns" :key="column.key" class="file-column" @drop="drop($event, column)" @dragover.prevent>
+                <span>{{ column.label }}</span>
+                <el-tag :closable="column.tag !== ''" :class="{'el-tag--dropzone-active': column.tag !== ''}" class="el-tag--dropzone" @close="removeTag(column)">
+                  <span v-if="column.tag !== ''">{{ column.tag }}</span>
+                  <span v-else>Arraste e solte a tag aqui</span>
                 </el-tag>
               </div>
             </el-col>
-            <el-col :span="11">
+            <el-col :span="12">
               <h3>Dados do sistema</h3>
               <el-collapse value="1" class="el-collapse-drag">
                 <el-collapse-item title="Dados do conflito" name="1">
-                  <el-tag class="el-tag--drag el-tag--drag-active" draggable="true">Data de vencimento do débito</el-tag>
-                  <el-tag class="el-tag--drag" draggable="true">Nº máximo de parcelas</el-tag>
-                  <el-tag class="el-tag--drag" draggable="true">Obrigações de fazer</el-tag>
-                  <el-tag class="el-tag--drag" draggable="true">+ Adicionar tag</el-tag>
+                  <span v-for="tag in tags" :key="tag.label" draggable="true" @dragstart.self="drag($event, tag.label)">
+                    <el-tag :class="{'el-tag--drag-active': tag.columnKey !== ''}" class="el-tag--drag">
+                      {{ tag.label }}
+                    </el-tag>
+                  </span>
+                  <el-tag class="el-tag--drag-add">+ Adicionar tag</el-tag>
                 </el-collapse-item>
               </el-collapse>
               <h3>
@@ -69,10 +42,10 @@
               <div class="drag-group">
                 <el-collapse class="el-collapse-drag">
                   <el-collapse-item title="Parte Contrária 1" name="1">
-                    <el-tag class="el-tag--drag el-tag--drag-active" draggable="true">Data de vencimento do débito</el-tag>
-                    <el-tag class="el-tag--drag" draggable="true">Nº máximo de parcelas</el-tag>
-                    <el-tag class="el-tag--drag" draggable="true">Obrigações de fazer</el-tag>
-                    <el-tag class="el-tag--drag" draggable="true">+ Adicionar tag</el-tag>
+                    <el-tag class="el-tag--drag el-tag--drag-active">Data de vencimento do débito</el-tag>
+                    <el-tag class="el-tag--drag">Nº máximo de parcelas</el-tag>
+                    <el-tag class="el-tag--drag">Obrigações de fazer</el-tag>
+                    <el-tag class="el-tag--drag">+ Adicionar tag</el-tag>
                   </el-collapse-item>
                 </el-collapse>
                 <i class="el-icon-delete"/>
@@ -80,10 +53,10 @@
               <div class="drag-group">
                 <el-collapse class="el-collapse-drag">
                   <el-collapse-item title="Parte Contrária 1" name="1">
-                    <el-tag class="el-tag--drag el-tag--drag-active" draggable="true">Data de vencimento do débito</el-tag>
-                    <el-tag class="el-tag--drag" draggable="true">Nº máximo de parcelas</el-tag>
-                    <el-tag class="el-tag--drag" draggable="true">Obrigações de fazer</el-tag>
-                    <el-tag class="el-tag--drag" draggable="true">+ Adicionar tag</el-tag>
+                    <el-tag class="el-tag--drag el-tag--drag-active">Data de vencimento do débito</el-tag>
+                    <el-tag class="el-tag--drag">Nº máximo de parcelas</el-tag>
+                    <el-tag class="el-tag--drag">Obrigações de fazer</el-tag>
+                    <el-tag class="el-tag--drag">+ Adicionar tag</el-tag>
                   </el-collapse-item>
                 </el-collapse>
                 <i class="el-icon-delete"/>
@@ -95,10 +68,10 @@
               <div class="drag-group">
                 <el-collapse class="el-collapse-drag">
                   <el-collapse-item title="Advogado 1" name="1">
-                    <el-tag class="el-tag--drag el-tag--drag-active" draggable="true">Data de vencimento do débito</el-tag>
-                    <el-tag class="el-tag--drag" draggable="true">Nº máximo de parcelas</el-tag>
-                    <el-tag class="el-tag--drag" draggable="true">Obrigações de fazer</el-tag>
-                    <el-tag class="el-tag--drag" draggable="true">+ Adicionar tag</el-tag>
+                    <el-tag class="el-tag--drag el-tag--drag-active">Data de vencimento do débito</el-tag>
+                    <el-tag class="el-tag--drag">Nº máximo de parcelas</el-tag>
+                    <el-tag class="el-tag--drag">Obrigações de fazer</el-tag>
+                    <el-tag class="el-tag--drag">+ Adicionar tag</el-tag>
                   </el-collapse-item>
                 </el-collapse>
                 <i class="el-icon-delete"/>
@@ -132,37 +105,50 @@ export default {
   name: 'ImportColumns',
   data () {
     return {
-      active: 1
+      active: 1,
+      columns: [
+        { key: 'number', label: 'Nº do processo', tag: '' },
+        { key: 'company', label: 'Empresa', tag: '' },
+        { key: 'max', label: 'Alçada para acordo', tag: '' },
+        { key: 'min', label: 'Alçada mínima', tag: '' },
+        { key: 'defendant', label: 'Réu', tag: '' },
+        { key: 'value', label: 'Valor original da causa', tag: '' }
+      ],
+      tags: [
+        { label: 'Data de vencimento do débito', columnKey: '' },
+        { label: 'Nº máximo de parcelas', columnKey: '' },
+        { label: 'Obrigações de fazer', columnKey: '' }
+      ]
     }
   },
   methods: {
-    drop (event) {
-      console.log(event)
+    drag (event, tag) {
+      event.dataTransfer.setData('tag', tag)
     },
-    notify () {
-      this.$notify({
-        title: 'Ops!',
-        message: 'Para prosseguir você deve adicionar um arquivo',
-        position: 'bottom-right',
-        duration: 0,
-        customClass: 'success'
+    drop (event, column) {
+      var tag = event.dataTransfer.getData('tag')
+      this.columns.find((element) => {
+        if (column.key === element.key) {
+          element.tag = tag
+          var columnKey = element.key
+          this.tags.find((tagElement) => {
+            if (tagElement.label === element.tag) {
+              tagElement.columnKey = columnKey
+            }
+          })
+        }
       })
     },
-    confirm () {
-      this.$confirm(`Um arquivo ainda está carregando. Ao sair da tela, este arquivo não será importado.
-        Você tem certeza de que quer abandonar o carregamento?`, 'Atenção!', {
-        confirmButtonText: 'Parar importação',
-        cancelButtonText: 'Cancelar'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: 'Delete completed'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: 'Delete canceled'
-        })
+    removeTag (column) {
+      this.columns.find((element) => {
+        if (element === column) {
+          element.tag = ''
+        }
+      })
+      this.tags.find((element) => {
+        if (element.columnKey === column.key) {
+          element.columnKey = ''
+        }
       })
     }
   }
@@ -171,8 +157,16 @@ export default {
 
 <style lang="scss">
 .view-import--columns {
-  .el-card__body {
-    width: 100%;
+  .view-import__container {
+    h3 {
+      font-weight: 600;
+    }
+  }
+  .el-collapse-drag + h3 {
+    margin-top: 40px;
+  }
+  .drag-group + h3 {
+    margin-top: 30px;
   }
 }
 

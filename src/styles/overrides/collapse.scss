@@ -1,4 +1,4 @@
-@import "../variables.scss";
+@import '../variables/colors';
 
 .el-collapse-drag {
   &.el-collapse {
@@ -24,5 +24,11 @@
   }
   .el-collapse-item__main {
     padding-bottom: 0px;
+  }
+  .el-collapse-item__wrap {
+    overflow: initial !important;
+  }
+  .el-collapse-item__content {
+    padding-bottom: 0 !important;
   }
 }
