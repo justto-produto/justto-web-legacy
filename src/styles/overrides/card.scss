@@ -18,6 +18,10 @@
   &.el-card--danger {
     border-left: solid 4px $--color-danger;
   }
+
+  &.el-card--info {
+    border-left: solid 4px $--color-info;
+  }
 }
 
 .el-card--dashed {

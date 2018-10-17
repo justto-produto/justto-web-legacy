@@ -27,12 +27,12 @@
   }
   th:first-child, td:first-child {
     .cell{
-      padding-left: 0;
+      // padding-left: 0;
     }
   }
   th:last-child, td:last-child {
     .cell{
-      padding-right: 0;
+      // padding-right: 0;
     }
   }
   .el-table__row:hover {
