@@ -11,10 +11,10 @@
         </div>
         <div class="view-import__content view-import__content---methods">
           <el-card :class="{'el-card--upload-progress': file, 'view-import__method--uploading': file}" shadow="never" class="view-import__method el-card--dashed el-card--vertical-content">
-            <JusIcon v-show="!file" icon="upload-file" class="upload-icon"/>
+            <jus-icon v-show="!file" icon="upload-file" class="upload-icon"/>
             <a v-show="!file" href="#" @click.prevent="uploadMoockFile">Adicionar arquivo do computador</a>
             <div v-show="file" class="view-import__progress">
-              <JusIcon icon="spreadsheet-xlsx"/>
+              <jus-icon icon="spreadsheet-xlsx"/>
               <div class="view-import__progress-info">
                 <strong>planilha-casos.xlsx</strong>
                 <el-progress :stroke-width="4" :percentage="progress" :status="uploadStatus"/>
@@ -44,7 +44,7 @@
             <a href="#" @click.prevent="uploadMoockFile">Adicionar arquivo do Google Drive</a>
           </el-card>
           <el-card v-show="!file" class="view-import__method el-card--dashed el-card--vertical-content" shadow="never">
-            <JusIcon icon="pencil" is-active/>
+            <jus-icon icon="pencil" is-active/>
             <a href="#" @click.prevent="uploadMoockFile">Adicionar caso manualmente</a>
           </el-card>
         </div>
@@ -55,7 +55,7 @@
       </div>
     </template>
     <template slot="aside">
-      <JusIcon icon="best-practices"/>
+      <jus-icon icon="best-practices"/>
       <h3>
         Melhores práticas para importar casos
       </h3>
@@ -104,7 +104,7 @@ export default {
           title: 'Ops!',
           message: 'Para prosseguir você deve adicionar um arquivo.',
           position: 'bottom-right',
-          duration: 2000,
+          duration: 3000,
           customClass: 'danger'
         })
       }
@@ -119,7 +119,7 @@ export default {
       if (this.progress < 100) {
         this.progress = this.progress + 1
         let self = this
-        setTimeout(self.uploadCounter, 1)
+        setTimeout(self.uploadCounter, 80)
       } else {
         this.processFile()
       }
@@ -128,7 +128,7 @@ export default {
       let self = this
       setTimeout(function () {
         self.inProgress = false
-      }, 1000)
+      }, 3000)
     }
   }
 }
@@ -137,6 +137,7 @@ export default {
 <style lang="scss">
 .view-import__content---methods {
   display: flex;
+  justify-content: center;
 }
 
 .view-import__method {

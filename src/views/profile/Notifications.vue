@@ -5,7 +5,7 @@
         Notificações
         <el-dropdown trigger="click" placement="bottom-start" style="margin-left: 10px">
           <span class="el-dropdown-link">
-            <JusIcon icon="settings-grey"/>
+            <jus-icon icon="settings-grey"/>
           </span>
           <el-dropdown-menu slot="dropdown" class="el-dropdown-menu--notifications">
             <el-row class="el-dropdown-menu__header">

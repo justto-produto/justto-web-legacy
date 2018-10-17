@@ -9,7 +9,6 @@
 export default {
   name: 'JusAvatarUser',
   props: {
-
     src: {
       type: String,
       default: ''

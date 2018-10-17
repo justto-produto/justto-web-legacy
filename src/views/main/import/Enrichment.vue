@@ -49,7 +49,7 @@
       </div>
     </template>
     <template slot="aside">
-      <JusIcon icon="enrichment"/>
+      <jus-icon icon="enrichment"/>
       <h3>
         Quanto mais informação, melhor
       </h3>
@@ -91,10 +91,10 @@ export default {
       let self = this
       setTimeout(function () {
         self.checked1 = true
-      }, 1000)
+      }, 2000)
       setTimeout(function () {
         self.checked2 = true
-      }, 1000)
+      }, 3000)
     }
   }
 }

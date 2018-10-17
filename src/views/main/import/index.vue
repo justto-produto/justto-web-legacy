@@ -14,7 +14,7 @@
       <br>
       <h3>Histórico de importação</h3>
       <el-card class="el-card--bordered el-card--success">
-        <JusIcon icon="spreadsheet-xlsx"/>
+        <jus-icon icon="spreadsheet-xlsx"/>
         <div>
           <h4>
             Nome do arquivo 1
@@ -27,7 +27,7 @@
         </div>
       </el-card>
       <el-card class="el-card--bordered el-card--danger">
-        <JusIcon icon="spreadsheet-xlsx"/>
+        <jus-icon icon="spreadsheet-xlsx"/>
         <div>
           <h4>
             Nome do arquivo 2
@@ -40,7 +40,7 @@
         </div>
       </el-card>
       <el-card class="el-card--bordered">
-        <JusIcon icon="spreadsheet-xlsx"/>
+        <jus-icon icon="spreadsheet-xlsx"/>
         <div>
           <h4>
             Nome do arquivo 3
@@ -53,7 +53,7 @@
         </div>
       </el-card>
       <el-card class="el-card--bordered">
-        <JusIcon icon="spreadsheet-xlsx"/>
+        <jus-icon icon="spreadsheet-xlsx"/>
         <div>
           <h4>
             Nome do arquivo 4
@@ -66,7 +66,7 @@
         </div>
       </el-card>
       <el-card class="el-card--bordered">
-        <JusIcon icon="spreadsheet-xlsx"/>
+        <jus-icon icon="spreadsheet-xlsx"/>
         <div>
           <h4>
             Nome do arquivo 5
@@ -84,7 +84,7 @@
       </div>
     </template>
     <template slot="aside">
-      <JusIcon icon="best-practices"/>
+      <jus-icon icon="best-practices"/>
       <h3>
         Melhores práticas para importar casos
       </h3>

@@ -85,7 +85,7 @@
       </div>
     </template>
     <template slot="aside">
-      <JusIcon icon="conecting-columns"/>
+      <jus-icon icon="conecting-columns"/>
       <h3>
         Conectando as colunas da sua planilha
       </h3>

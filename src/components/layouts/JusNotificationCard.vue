@@ -2,7 +2,7 @@
   <div class="notification-card">
     <i class="el-icon-error"/>
     <div class="notification-card__header">
-      <JusAvatarUser size="sm"/>
+      <jus-avatar-user size="sm"/>
       <span class="notification-card__title">{{ title }}</span>
       <span class="notification-card__date">{{ date }}</span>
     </div>

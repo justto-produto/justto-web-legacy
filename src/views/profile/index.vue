@@ -3,7 +3,7 @@
     <template slot="title">Configurações do perfil</template>
     <template slot="main">
       <el-form ref="profileForm" :model="profileForm" class="profile-form" label-position="top">
-        <JusAvatarUser size="lg" class="profile-form__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
+        <jus-avatar-user size="lg" class="profile-form__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
         <span class="profile-form__edit-photo">
           Alterar foto
           <br>
@@ -37,38 +37,38 @@
         </el-form-item>
         <el-form-item label="Clientes">
           <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-            <JusAvatarUser size="sm"/>
+            <jus-avatar-user size="sm"/>
             <span style="margin-left: 20px;">Nestlé</span>
             <el-popover style="margin-left: auto;" placement="top" title="Nestlé" width="300" trigger="hover" content="Chocolates, panetones, larvas e processos.">
               <el-button slot="reference" class="el-button--icon">
-                <JusIcon icon="more-info-grey"/>
+                <jus-icon icon="more-info-grey"/>
               </el-button>
             </el-popover>
           </div>
           <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-            <JusAvatarUser size="sm"/>
+            <jus-avatar-user size="sm"/>
             <span style="margin-left: 20px;">Embraer</span>
-            <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
+            <jus-icon icon="more-info-grey" style="margin-left: auto;"/>
           </div>
           <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-            <JusAvatarUser size="sm"/>
+            <jus-avatar-user size="sm"/>
             <span style="margin-left: 20px;">Embraer</span>
-            <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
+            <jus-icon icon="more-info-grey" style="margin-left: auto;"/>
           </div>
           <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-            <JusAvatarUser size="sm"/>
+            <jus-avatar-user size="sm"/>
             <span style="margin-left: 20px;">Embraer</span>
-            <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
+            <jus-icon icon="more-info-grey" style="margin-left: auto;"/>
           </div>
           <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-            <JusAvatarUser size="sm"/>
+            <jus-avatar-user size="sm"/>
             <span style="margin-left: 20px;">Embraer</span>
-            <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
+            <jus-icon icon="more-info-grey" style="margin-left: auto;"/>
           </div>
           <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
-            <JusAvatarUser size="sm"/>
+            <jus-avatar-user size="sm"/>
             <span style="margin-left: 20px;">Embraer</span>
-            <JusIcon icon="more-info-grey" style="margin-left: auto;"/>
+            <jus-icon icon="more-info-grey" style="margin-left: auto;"/>
           </div>
         </el-form-item>
         <el-form-item>

@@ -43,8 +43,8 @@ const router = new Router({
           ]
         },
         {
-          path: 'negotiation',
-          component: () => import(/* webpackChunkName: "negotiationIndex" */ '@/views/main/negotiation')
+          path: 'management',
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management')
         },
         {
           path: 'settings',

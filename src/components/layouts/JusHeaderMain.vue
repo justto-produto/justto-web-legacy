@@ -1,20 +1,20 @@
 <template lang="html">
   <el-header class="main-header">
     <div class="main-search">
-      <JusIcon icon="search" class="el-menu__icon"/>
+      <jus-icon icon="search" class="el-menu__icon"/>
       <input type="text" name="" value="" placeholder="Buscar">
     </div>
     <div class="main-info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
-          <JusAvatarUser :notifications="1" size="sm" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
+          <jus-avatar-user :notifications="1" size="sm" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
           <div class="main-info__name">
             <div>
               Mariana Rondino
             </div>
             <span>UX Designer</span>
           </div>
-          <JusIcon icon="expand-dropdown"/>
+          <jus-icon icon="expand-dropdown"/>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>

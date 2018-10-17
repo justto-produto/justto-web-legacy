@@ -1,0 +1,43 @@
+@import '../variables/colors';
+
+.el-table--feedback-card {
+  .el-table__header {
+    th {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .cell {
+      color: $--color-text-secondary;
+      font-weight: normal !important;
+    }
+  }
+  .el-table__body {
+    td {
+      padding: 0;
+      &:first-child {
+        font-weight: 600;
+      }
+    }
+  }
+  * {
+    border: 0 !important;
+  }
+  &::before {
+    content: initial !important;
+  }
+  th:first-child, td:first-child {
+    .cell{
+      padding-left: 0;
+    }
+  }
+  th:last-child, td:last-child {
+    .cell{
+      padding-right: 0;
+    }
+  }
+  .el-table__row:hover {
+    > td {
+      background-color: #fff !important;
+    }
+  }
+}

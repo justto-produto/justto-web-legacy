@@ -7,15 +7,15 @@
         </transition>
         <img v-if="isCollapse" class="aside-logo__logo" src="@/assets/logo-small.svg">
         <a v-if="isCollapse" href="" class="aside-logo__icon" @click.prevent="isCollapse = !isCollapse">
-          <JusIcon v-if="isCollapse" icon="expand-menu"/>
+          <jus-icon v-if="isCollapse" icon="expand-menu"/>
         </a>
         <a v-if="!isCollapse" href="" class="aside-logo__icon" @click.prevent="isCollapse = !isCollapse">
-          <JusIcon icon="colapse-menu"/>
+          <jus-icon icon="colapse-menu"/>
         </a>
       </div>
       <el-menu :collapse-transition="false" :router="true" :default-active="$route.path" :collapse="isCollapse" class="el-menu--main-menu">
         <el-menu-item ref="dashboard" index="/" class="border-top-bottom">
-          <JusIcon :is-active="$route.path === '/'" icon="dashboard" class="el-menu__icon"/>
+          <jus-icon :is-active="$route.path === '/'" icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
         <transition name="fade-absolute">
@@ -24,15 +24,15 @@
           </li>
         </transition>
         <el-menu-item index="/import">
-          <JusIcon :is-active="$route.path === '/import'" icon="import" class="el-menu__icon"/>
+          <jus-icon :is-active="$route.path === '/import'" icon="import" class="el-menu__icon"/>
           <span slot="title">Novos casos</span>
         </el-menu-item>
-        <el-menu-item index="/negotiation">
-          <JusIcon :is-active="$route.path === '/negotiation'" icon="negotiation" class="el-menu__icon"/>
-          <span slot="title">Negociação</span>
+        <el-menu-item index="/management">
+          <jus-icon :is-active="$route.path === '/management'" icon="negotiation" class="el-menu__icon"/>
+          <span slot="title">Gerenciamento</span>
         </el-menu-item>
         <el-menu-item index="/settings">
-          <JusIcon :is-active="$route.path === '/settings'" icon="settings" class="el-menu__icon"/>
+          <jus-icon :is-active="$route.path === '/settings'" icon="settings" class="el-menu__icon"/>
           <span slot="title">Configurações</span>
         </el-menu-item>
       </el-menu>
@@ -44,32 +44,32 @@
           </span>
         </li>
         <el-menu-item index="1">
-          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
+          <jus-avatar-user size="sm" shape="circle" class="el-menu__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
           <span slot="title">Mariana Rondino</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="2">
-          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg"/>
+          <jus-avatar-user size="sm" shape="circle" class="el-menu__avatar" src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg"/>
           <span slot="title">Henrique Liberato</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="3">
-          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" name-initials="M S"/>
+          <jus-avatar-user size="sm" shape="circle" class="el-menu__avatar" name-initials="M S"/>
           <span slot="title">Mateus Santos </span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="4">
-          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" src="http://3.bp.blogspot.com/-XHJdhVNa_Ok/Ww6-vSfNzuI/AAAAAAAASiU/WjSucjgrNp8tLP0nQPvSHK6SfQrn86MzACK4BGAYYCw/s1600/Muppet%2BThought%2Bof%2Bthe%2BWeek-Animal.jpg"/>
+          <jus-avatar-user size="sm" shape="circle" class="el-menu__avatar" src="http://3.bp.blogspot.com/-XHJdhVNa_Ok/Ww6-vSfNzuI/AAAAAAAASiU/WjSucjgrNp8tLP0nQPvSHK6SfQrn86MzACK4BGAYYCw/s1600/Muppet%2BThought%2Bof%2Bthe%2BWeek-Animal.jpg"/>
           <span slot="title">Michelle Morcos</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="5">
-          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" name-initials="A B"/>
+          <jus-avatar-user size="sm" shape="circle" class="el-menu__avatar" name-initials="A B"/>
           <span slot="title">Ana Beatriz</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
         <el-menu-item index="6">
-          <JusAvatarUser size="sm" shape="circle" class="el-menu__avatar" src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135"/>
+          <jus-avatar-user size="sm" shape="circle" class="el-menu__avatar" src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135"/>
           <span slot="title">Bruno Moreno</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>

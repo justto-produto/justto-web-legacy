@@ -5,7 +5,7 @@
     </template>
     <template slot="main"/>
     <!-- <template slot="main-right">
-      <JusIcon icon="best-practices"/>
+      <jus-icon icon="best-practices"/>
       <h3>
         Melhores práticas para importar casos
       </h3>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'Negotiation'
+  name: 'Management'
 }
 </script>
 

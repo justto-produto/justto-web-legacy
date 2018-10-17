@@ -1,11 +1,11 @@
 <template>
-  <JusViewMain side-card class="negotiation-container">
+  <JusViewMain side-card class="management-container">
     <template slot="title">
-      <h1>Negociação</h1>
+      <h1>Gerenciamento</h1>
     </template>
     <template slot="main"/>
     <template slot="aside">
-      <JusIcon icon="best-practices"/>
+      <jus-icon icon="best-practices"/>
       <h3>
         Melhores práticas para importar casos
       </h3>

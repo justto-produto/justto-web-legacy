@@ -7,7 +7,7 @@
       a
     </template>
     <!-- <template slot="main-right">
-      <JusIcon icon="best-practices"/>
+      <jus-icon icon="best-practices"/>
       <h3>
         Melhores práticas para importar casos
       </h3>
