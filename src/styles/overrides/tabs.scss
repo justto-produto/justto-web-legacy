@@ -26,3 +26,11 @@
     justify-content: center;
   }
 }
+
+.el-tabs--hide-prev .el-tabs__nav-prev {
+  display: none;
+}
+
+.el-tabs--hide-next .el-tabs__nav-next {
+  display: none;
+}

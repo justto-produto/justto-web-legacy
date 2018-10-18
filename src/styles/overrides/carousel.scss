@@ -11,9 +11,10 @@
     flex-direction: column;
     justify-content: center;
     height: 74%;
-    h2{
+    h2 {
       margin: 0;
-    }span{
+    }
+    span {
       font-size: 12px;
       font-weight: 300;
     }
@@ -27,11 +28,11 @@
   .el-carousel__arrow--left {
     left: 0;
   }
-  .el-carousel__arrow--right{
+  .el-carousel__arrow--right {
     right: 0;
   }
 
-  .el-carousel__item{
+  .el-carousel__item {
     background: url('../../assets/backgrounds/bg-purple.svg') no-repeat center bottom;
   }
 

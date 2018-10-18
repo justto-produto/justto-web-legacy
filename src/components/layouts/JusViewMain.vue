@@ -47,8 +47,5 @@ export default {
       width: 260px;
     }
   }
-  button {
-    width: 100%;
-  }
 }
 </style>
