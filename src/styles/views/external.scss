@@ -12,7 +12,7 @@
 
   .external-view__form {
     margin: auto;
-    width: 400px;
+    width: 440px;
     padding: 20px;
   }
 
@@ -24,6 +24,17 @@
     font-size: 12px;
     text-align: center;
     margin-top: 20px;
+  }
+
+  .external-view__show-password {
+    vertical-align: text-bottom;
+    margin-right: 6px;
+    cursor: pointer;
+    &+button {
+      border-left: 1px solid #dcdfe6;
+      padding: 3px 0px;
+      padding-left: 6px;
+    }
   }
 
 }

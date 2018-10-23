@@ -13,14 +13,17 @@
           <el-form-item label="Email" prop="email">
             <el-input v-model="registerForm.email"/>
           </el-form-item>
-          <el-form-item label="Senha" prop="password" type="password">
-            <el-input v-model="registerForm.password"/>
+          <el-form-item label="Senha" prop="password">
+            <el-input v-model="registerForm.password" :type="passwordType"/>
+            <div class="el-button--input-float">
+              <jus-icon icon="eye" class="external-view__show-password" @click.native="switchShowPassword"/>
+            </div>
           </el-form-item>
           <el-button class="external-view__submit" type="primary" @click="submitForm()">Cadastrar</el-button>
           <el-row class="external-view__info">
             Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
             <br><br>
-            Já possui conta? <a href="#/login"> Acesse agora mesmo.</a>
+            Já possui conta? <a href="#/login"> Clique aqui para acessar.</a>
           </el-row>
         </el-form>
       </el-main>
@@ -38,6 +41,7 @@ export default {
   },
   data () {
     return {
+      showPassword: false,
       registerForm: {
         name: '',
         email: '',
@@ -56,6 +60,11 @@ export default {
       }
     }
   },
+  computed: {
+    passwordType () {
+      return this.showPassword ? 'text' : 'password'
+    }
+  },
   methods: {
     submitForm () {
       this.$refs['registerForm'].validate((valid) => {
@@ -65,6 +74,9 @@ export default {
           return false
         }
       })
+    },
+    switchShowPassword () {
+      this.showPassword = !this.showPassword
     }
   }
 }

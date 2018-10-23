@@ -231,7 +231,8 @@ export default {
   }
 }
 .view-management__container {
-  margin: 30px 8px 20px;
+  margin: 3
+  0px 8px 20px;
   .el-table {
     td:last-child {
       text-align: right;
