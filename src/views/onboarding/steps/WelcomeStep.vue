@@ -8,7 +8,7 @@
       </span>
     </h1>
     <p>
-      Para compeltar o seu cadastro precisamos de algumas informações.
+      Para completar o seu cadastro precisamos de algumas informações.
     </p>
     <el-button type="primary" @click="$emit('onboarding:step:next')">Vamos começar</el-button>
   </div>

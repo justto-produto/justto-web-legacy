@@ -72,7 +72,7 @@ export default {
         width: 100%;
       }
       .el-form-item:last-child {
-        width: 120px;
+        width: 240px;
         margin-right: 0;
       }
     }

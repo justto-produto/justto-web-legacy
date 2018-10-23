@@ -73,6 +73,9 @@ export default {
 
 <style lang="scss">
 .onboarding-logo-step {
+  .el-upload--logo {
+    width: 160px;
+  }
   .uploaded-logo {
     object-fit: contain;
     border-radius: 6px;

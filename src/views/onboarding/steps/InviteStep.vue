@@ -4,7 +4,7 @@
       <div class="onboarding-step-content__title">
         <h2>Convide pessoas para a plataforma</h2>
         <p>
-          Adicione todos os usuários que irão trabalhar com você.
+          Adicione todos os os usuários que farão parte da sua equipe.
           Todos que forem convidados por você irão receber um e-mail para acessar a plataforma.
         </p>
       </div>

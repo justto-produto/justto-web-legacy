@@ -2,8 +2,8 @@
   <div>
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
-        <h2>Qual o nome do seu escritório?</h2>
-        <p>Você pode colocar o nome do seu escritório, por exemplo.</p>
+        <h2>Qual o nome da sua equipe?</h2>
+        <p>Você pode colocar o nome do seu escritório ou empresa, por exemplo.</p>
       </div>
       <el-form ref="nameForm" :model="nameForm" :rules="nameFormRules" label-position="top" @submit.native.prevent="submitForm">
         <el-form-item label="Nome" prop="name">
