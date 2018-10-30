@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/store'
 
 Vue.use(Router)
 
@@ -22,7 +23,14 @@ const router = new Router({
           children: [
             {
               path: '/',
-              component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import')
+              component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import'),
+              beforeEnter: (to, from, next) => {
+                if (store.state.importList.length === 0) {
+                  next({ path: '/import/upload' })
+                } else {
+                  next()
+                }
+              }
             },
             {
               path: 'upload',

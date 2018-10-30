@@ -97,11 +97,6 @@
 
 <script>
 export default {
-  name: 'Import',
-  created () {
-    if (this.$store.state.importList.length === 0) {
-      this.$router.push('import/upload')
-    }
-  }
+  name: 'Import'
 }
 </script>

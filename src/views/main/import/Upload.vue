@@ -83,7 +83,7 @@
         • Nomes dos Advogados (se for judicial)
       </p>
       <br><br>
-      <el-button type="primary" class="download-template">Download planilha modelo</el-button>
+      <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button>
     </template>
   </JusViewMain>
 </template>

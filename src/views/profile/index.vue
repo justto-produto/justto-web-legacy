@@ -114,7 +114,7 @@
         </el-col>
       </el-row>
       <br>
-      <JusChartLine :data="data2" :options="options" :width="300" :height="130"/>
+      <jus-chart-line :data="data2" :options="options" :width="300" :height="130"/>
     </template>
   </JusViewMain>
 </template>

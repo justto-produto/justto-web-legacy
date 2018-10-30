@@ -46,7 +46,7 @@ export default {
       padding:  0 20px;
       width: 260px;
     }
-    button {
+    .main-view__aside-action {
       min-width: 100%;
     }
   }

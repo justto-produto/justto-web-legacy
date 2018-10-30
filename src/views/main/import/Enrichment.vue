@@ -59,7 +59,7 @@
       <p>
         Além dos dados de contato que você inseriu em sua tabela, buscamos outras informações sobre as partes
         envolvidas. Isso permite que a chance de resolver suas disputas aumentem.
-         <br><br>
+        <br><br>
         A inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, apreende cada vez
         mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada para encontrar as
         pessoas e chegar uma solução adequada.

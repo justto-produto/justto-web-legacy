@@ -11,10 +11,10 @@
         <div class="view-import__title">
           <h2>Mapeamento de Colunas da Planilha</h2>
           <p>
-          Arraste os campos do seletor do lado direito para as caixas da esquerda que correspondem aos seus dados.
-          As colunas não mapeadas não serão importadas para o sistema. Você pode criar novos campos, caso não existam
-          ainda no sistema.
-        </p>
+            Arraste os campos do seletor do lado direito para as caixas da esquerda que correspondem aos seus dados.
+            As colunas não mapeadas não serão importadas para o sistema. Você pode criar novos campos, caso não existam
+            ainda no sistema.
+          </p>
         </div>
         <div class="view-import__content">
           <el-row :gutter="28">

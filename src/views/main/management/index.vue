@@ -15,16 +15,17 @@
         </el-button-group>
         <i class="el-icon-close" @click="checkList = []"/>
       </div>
-      <el-tabs ref="management-tabs" :class="handleArrows" @tab-click="handleTabClick">
+      <el-tabs ref="management-tabs" :class="handleArrows" :stretch="true" @tab-click="handleTabClick">
         <el-tab-pane label="Pendentes">
           <div class="view-management__header">
-            <span>
-              Filtrar por:
+            <el-checkbox/>
+            <div>
+              Ordenar por:
               <el-select v-model="companyFilter" size="small" placeholder="Empresa">
                 <el-option v-for="company in ['Nestlé', 'Cacau Show']" :key="company" :label="company" :value="company"/>
               </el-select>
-            </span>
-            <el-button type="primary">Exportar casos</el-button>
+              <el-button type="primary" size="small">Exportar casos</el-button>
+            </div>
           </div>
           <div class="view-management__container">
             <el-checkbox-group v-model="checkList">
@@ -158,22 +159,57 @@
     </template>
     <template slot="aside">
       <jus-carousel-info :items="caruoselItems"/>
+      <h4>
+        Desempenho
+        <el-select v-model="month" size="mini" style="width: 110px; float: right; margin-top: -5px;">
+          <el-option v-for="item in ['Setembro', 'Agosto', 'Julho']" :key="item" :value="item">
+            {{ item }}
+          </el-option>
+        </el-select>
+      </h4>
+      <jus-chart-line :data="data2" :options="options" :width="300" :height="130"/>
+      <br>
+      <hr>
+      <h4>Conversas recentes</h4>
+      <div class="view-management__recent-chats">
+        <ul>
+          <li>
+            <jus-avatar-user name-initials="" size="sm"/>
+            Luiz Guilherme
+            <jus-status-dot/>
+          </li>
+          <li>
+            <jus-avatar-user name-initials="" size="sm"/>
+            Giovana Santos
+            <jus-status-dot/>
+          </li>
+          <li>
+            <jus-avatar-user name-initials="" size="sm"/>
+            Fernanda Almeida
+            <jus-status-dot/>
+          </li>
+        </ul>
+      </div>
     </template>
   </JusViewMain>
 </template>
 
 <script>
 import JusCarouselInfo from '@/components/layouts/JusCarouselInfo'
+import JusChartLine from '@/components/charts/JusChartLine'
+
 export default {
   name: 'Management',
   components: {
-    JusCarouselInfo
+    JusCarouselInfo,
+    JusChartLine
   },
   data () {
     return {
       companyFilter: '',
       checkList: [],
       tabIndex: '0',
+      month: 'Setembro',
       tableData: [
         {
           id: '14567',
@@ -184,7 +220,40 @@ export default {
       caruoselItems: [
         { title: '25', subtitle: 'Metas cumpridas no mês' },
         { title: '999', subtitle: 'Metas cumpridas no mês' }
-      ]
+      ],
+      data2: {
+        labels: ['Set 01', '', 'Set 10', '', 'Set 20', '', 'Set 23'],
+        datasets: [
+          {
+            label: 'Respondem',
+            backgroundColor: '#eF930066',
+            borderColor: '#eF9300',
+            pointBackgroundColor: '#eF9300',
+            pointBorderColor: '#eF9300',
+            data: [8, 4, 12, 9, 14, 13, 16, 16]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }],
+          yAxes: [{
+            display: false,
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        },
+        legend: {
+          display: false
+        }
+      }
     }
   },
   computed: {
@@ -210,7 +279,7 @@ export default {
 
 <style lang="scss">
 .view-management {
-  .el-card__body {
+  >.display-flex >.el-card .el-card__body {
     position: relative;
     padding: 20px 12px;
   }
@@ -222,17 +291,18 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 30px 8px 20px 42px;
+  margin: 40px 10px 20px 10px;
   button {
     max-width: 200px;
+    vertical-align: bottom;
   }
-  .el-input {
-    margin-left: 10px;
+  .el-select {
+    padding-left: 10px;
+    margin-right: 20px;
   }
 }
 .view-management__container {
-  margin: 3
-  0px 8px 20px;
+  margin-left: 10px;
   .el-table {
     td:last-child {
       text-align: right;
@@ -249,9 +319,10 @@ export default {
     }
     .el-checkbox__label {
       width: 100%;
+      margin-right: 10px;
     }
     .el-checkbox__input {
-      margin-right: 20px;
+      margin-right: 10px;
     }
   }
   hr {
@@ -267,7 +338,7 @@ export default {
   padding: 0 20px;
   transition: all 0.5s ease;
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
-  border: solid 1px #e4e8ea;
+  border-bottom: solid 1px #e4e8ea;
   border-radius: 6px 6px 0 0;
   display: flex;
   justify-content:space-between;
@@ -293,6 +364,26 @@ export default {
     padding: 8px 20px;
     border: 0;
     border-radius: 0;
+  }
+}
+.view-management__recent-chats {
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    &+li {
+      margin-top: 10px;
+    }
+  }
+  .jus-avatar-user {
+    margin-right: 10px;
+  }
+  .jus-status-dot {
+    margin-left: auto;
   }
 }
 </style>
