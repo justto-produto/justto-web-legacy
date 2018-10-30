@@ -9,7 +9,12 @@
       </el-steps>
       <div class="view-import__container">
         <div class="view-import__title">
-          <h2>Colunas da planilha</h2>
+          <h2>Mapeamento de Colunas da Planilha</h2>
+          <p>
+          Arraste os campos do seletor do lado direito para as caixas da esquerda que correspondem aos seus dados.
+          As colunas não mapeadas não serão importadas para o sistema. Você pode criar novos campos, caso não existam
+          ainda no sistema.
+        </p>
         </div>
         <div class="view-import__content">
           <el-row :gutter="28">
@@ -91,9 +96,11 @@
       </h3>
       <br>
       <p>
-        Para que o sistema entenda melhor os dados dos casos inseridos, precisamos que você indique ao lado as tags correspondentes às colunas da planilha que você inseriu.
+        Para que o sistema entenda os dados dos casos inseridos, precisamos que você indique os campos correspondentes
+        às colunas da planilha que você inseriu.
         <br><br>
-        Para isso, basta arrastar as tags às colunas correspondentes.
+        Para isso, basta arrastar os campos da da direita para às colunas correspondentes. Se o sistema não tiver previamente
+        um campo e você queira adicionar, clique em “+Adicionar campo” quantas vezes for necessário
       </p>
     </template>
   </JusViewMain>

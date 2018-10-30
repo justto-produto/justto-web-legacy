@@ -46,6 +46,9 @@ export default {
       padding:  0 20px;
       width: 260px;
     }
+    button {
+      min-width: 100%;
+    }
   }
 }
 </style>

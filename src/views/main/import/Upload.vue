@@ -1,18 +1,18 @@
 <template>
   <JusViewMain class="view-import view-import--upload">
     <template slot="main">
-      <JusButtonBack to="/import"/>
+      <JusButtonBack v-if="$store.state.importList.length !== 0" to="/import"/>
       <div class="view-import__container">
         <div class="view-import__title">
-          <h2 v-show="!file">Insira a sua planilha</h2>
+          <h2 v-show="!file">Adicione novos casos</h2>
           <h2 v-show="file && processSuccess">Planilha carregada</h2>
           <h2 v-show="file && !processSuccess">Processando planilha</h2>
-          <p v-show="!file">Formatos aceitos: XLSX, CSV, XLS, ODT e Google Sheets.</p>
+          <p v-show="!file">Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo a forma de inclusão de novos casos em sua conta.</p>
         </div>
         <div class="view-import__content view-import__content---methods">
           <el-card :class="{'el-card--upload-progress': file, 'view-import__method--uploading': file}" shadow="never" class="view-import__method el-card--dashed el-card--vertical-content">
             <jus-icon v-show="!file" icon="upload-file" class="upload-icon"/>
-            <a v-show="!file" href="#" @click.prevent="uploadMoockFile">Adicionar arquivo do computador</a>
+            <span v-show="!file" @click.prevent="uploadMoockFile">Planilha nos formatos XLSX, CSV, XLS ou ODT</span>
             <div v-show="file" class="view-import__progress">
               <jus-icon icon="spreadsheet-xlsx"/>
               <div class="view-import__progress-info">
@@ -34,18 +34,21 @@
                 <span>casos importados</span>
               </el-card>
               <div class="view-import__success-info">
-                Caso a importação não tenha o número de casos que estão no arquivo,
-                verifique se algum filtro está aplicado, e desative-o.
+                Se sua planilha tinha mais linhas do que o número acima, a negociação irá iniciar com o número de casos
+                indicados acima e você poderá analisar posteriormente porque os outros casos não foram importados no
+                sistema e corrigir eventuais problemas.
+                <br><br>
+                Se foram importados mais casos do que você tinha planejado, verifique se foi aplicado algum filtro na sua planilha. Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
               </div>
             </div>
           </el-card>
           <el-card v-show="!file" class="view-import__method el-card--dashed el-card--vertical-content" shadow="never">
             <img src="@/assets/drive.png" class="upload-icon">
-            <a href="#" @click.prevent="uploadMoockFile">Adicionar arquivo do Google Drive</a>
+            <span @click.prevent="uploadMoockFile">Adicionar arquivo do Google Drive</span>
           </el-card>
           <el-card v-show="!file" class="view-import__method el-card--dashed el-card--vertical-content" shadow="never">
-            <jus-icon icon="pencil" is-active/>
-            <a href="#" @click.prevent="uploadMoockFile">Adicionar caso manualmente</a>
+            <jus-icon icon="insert" is-active/>
+            <span @click.prevent="uploadMoockFile">Adicionar caso manualmente</span>
           </el-card>
         </div>
         <div class="view-import__actions">
@@ -57,14 +60,27 @@
     <template slot="aside">
       <jus-icon icon="best-practices"/>
       <h3>
-        Melhores práticas para importar casos
+        Melhores práticas para importar uma planilha
       </h3>
       <br>
       <p>
-        Ao escolher uma opção para importação, certifique-se de que os dados estão inseridos corretamente.
-        Dessa forma, o sistema irá reconhecer mais rapidamente os dados, e além disso, enriquecer com informações
-        complementares colhidas diretamente do TJ.<br><br> Não se esqueça de preencher os dados mínimos da planilha
-        <br><br> • Número do processo<br> • Empresa<br> • Alçadas da negociação <br> • Nome e CPF das partes
+        Ao inserir novos casos através de uma planilha, certifique-se de que os dados estão inseridos corretamente em
+        cada coluna. Dessa forma, o sistema irá reconhecer mais rapidamente os dados, e além disso, enriquecer com
+        informações das partes e advogados (se houver).
+        <br><br>
+        Os dados mínimos para inserir casos de uma planilha são (em colunas separadas):
+        <br><br>
+        • Número do processo (se for judicial)
+        <br>
+        • Nome da Empresa (seu cliente)
+        <br>
+        • Alçadas máximas para negociação
+        <br>
+        • Nome das partes
+        <br>
+        • CPF das partes
+        <br>
+        • Nomes dos Advogados (se for judicial)
       </p>
       <br><br>
       <el-button type="primary" class="download-template">Download planilha modelo</el-button>
@@ -102,7 +118,7 @@ export default {
         this.$notify.closeAll()
         this.$notify({
           title: 'Ops!',
-          message: 'Para prosseguir você deve adicionar um arquivo.',
+          message: 'Para prosseguir você deve escolher uma das opções de importação de novos casos.',
           position: 'bottom-right',
           duration: 3000,
           customClass: 'danger'
@@ -119,7 +135,7 @@ export default {
       if (this.progress < 100) {
         this.progress = this.progress + 1
         let self = this
-        setTimeout(self.uploadCounter, 80)
+        setTimeout(self.uploadCounter, 8)
       } else {
         this.processFile()
       }
@@ -128,7 +144,7 @@ export default {
       let self = this
       setTimeout(function () {
         self.inProgress = false
-      }, 3000)
+      }, 300)
     }
   }
 }
@@ -142,23 +158,24 @@ export default {
 
 .view-import__method {
   min-height: 240px;
-  max-width: 400px;
+  max-width: 240px;
   &+.view-import__method {
     margin-left: 20px;
   }
   >.el-card__body {
     padding: 40px 20px;
-  }
-  a {
-    text-align: center;
-    margin-top: 20px;
+    >span {
+      text-align: center;
+      margin-top: 20px;
+      cursor: pointer;
+    }
   }
   hr {
     width: 100%;
     margin: 40px 0;
   }
   img {
-    max-width: 80px;
+    height: 70px;
   }
 }
 
@@ -196,7 +213,7 @@ export default {
     }
   }
   .view-import__success-info{
-    margin-top: 20px;
+    margin-top: 30px;
   }
   .el-card__body {
     text-align: center;

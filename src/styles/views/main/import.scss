@@ -6,10 +6,11 @@
   }
 }
 .view-import__container {
-  margin: 40px 20px 0;
+  margin: 50px 20px 0;
 }
 .view-import__title {
   text-align: center;
+  margin: auto;
   h2 {
     margin: 0;
   }
@@ -25,6 +26,7 @@
   justify-content: center;
   max-width: 400px;
   margin: auto;
+  margin-bottom: 20px;
   button {
     width: 100%;
   }

@@ -6,7 +6,7 @@
         Essa sincronização é para facilitar a sua rotina como negociador, essa ação permite que a Justto tenha acesso
         aos e-mails recebidos, em sua conta, relacionados às negociações em processo na plataforma. Mas, lembre-se,
         ao clicar no botão, você concorda que nosso robô tenha acesso a leitura desses e-mails. Se desejar, você pode
-         configurar essa fase posteriormente.  
+        configurar essa fase posteriormente.
       </p>
     </div>
     <el-checkbox v-model="checked1" border class="el-checkbox--active">

@@ -18,7 +18,9 @@
                 <circle cx="50" cy="50" r="20" fill="none" class="path"/>
               </svg>
             </div>
-            <h3 v-show="!enriched && !loading">Nosso sistema irá coletar informações das seguintes entidades:</h3>
+            <h3 v-show="!enriched && !loading">
+              Caso exista em nosso banco de dados informações adicionais, iremos enriquecer as seguintes entidades:
+            </h3>
             <h3 v-show="!enriched && loading">Nosso sistema está coletando informações...</h3>
             <h3 v-show="enriched">Os dados foram enriquecidos
               <span v-show="enriched && revision">, mas nós detectamos alguns casos com informações que necessitam da sua revisão</span>
@@ -30,10 +32,10 @@
             </p>
             <ul>
               <li>
-                <el-checkbox v-model="checked1" class="el-checkbox--status">Cadastro das partes</el-checkbox>
+                <el-checkbox v-model="checked1" class="el-checkbox--status">Dados de Contato das Partes</el-checkbox>
               </li>
               <li>
-                <el-checkbox v-model="checked2" class="el-checkbox--status">Cadastro de Advogados (CNA)</el-checkbox>
+                <el-checkbox v-model="checked2" class="el-checkbox--status">Dados de Contato dos Advogados</el-checkbox>
               </li>
             </ul>
           </el-card>
@@ -55,11 +57,14 @@
       </h3>
       <br>
       <p>
-        Além dos dados inseridos, buscamos outras informações sobre as partes envolvidas através do TJ e outras entidades.
+        Além dos dados de contato que você inseriu em sua tabela, buscamos outras informações sobre as partes
+        envolvidas. Isso permite que a chance de resolver suas disputas aumentem.
+         <br><br>
+        A inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, apreende cada vez
+        mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada para encontrar as
+        pessoas e chegar uma solução adequada.
         <br><br>
-        Isso permite que o robô entenda mais sobre os usuários e seus comportamentos, além de entregar mensalmente um relatório completo sobre o perfil das pessoas com quem você está lidando.
-        <br><br>
-        Dessa forma, a negociação poderá ser mais acertiva.
+        O maior número de dados de contato, ajudam que esta estratégia fique mais completa e assertiva
       </p>
     </template>
   </JusViewMain>

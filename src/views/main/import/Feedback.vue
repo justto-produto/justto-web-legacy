@@ -10,10 +10,11 @@
       </el-steps>
       <div class="view-import__container">
         <div class="view-import__title">
-          <h2>Visão geral da importação</h2>
+          <h2>Resumo dos novos casos</h2>
           <p>
-            Para cada grupo de casos, nós selecionamos a estratégia com mais chances de fechar acordos.
-            Você pode editá-las se preferir, clicando na estretégia.
+            Agrupamos seus casos por empresas. Nomeie abaixo cada um destes grupos, informe o tipo de negociação e a
+            data limite para encerrar a negociação. Posteriormente, você poderá editar ou criar novos conjuntos de
+            casos da forma que preferir, para que seja mais fácil identificar as suas campanhas de negociação.
           </p>
         </div>
         <div class="view-import__content">
@@ -21,20 +22,10 @@
           <JusImportFeedbackCard :responsibles="responsibles" company="Cacau Show" color="#ff7a72"/>
         </div>
         <div class="view-import__actions">
-          <el-button type="primary" @click="$router.push('/import/enrichment')">Próximo</el-button>
+          <el-button type="primary" @click="$router.push('/management')">Próximo</el-button>
         </div>
       </div>
     </template>
-    <!-- <template slot="aside">
-      <el-carousel :interval="5000" :autoplay="false" arrow="always" height="107px" trigger="click" class="el-carousel__container--profile">
-        <el-carousel-item v-for="item in 3" :key="item">
-          <div class="el-carousel__item-main">
-            <h2>1.000</h2>
-            <span>casos importados</span>
-          </div>
-        </el-carousel-item>
-      </el-carousel>
-    </template> -->
   </JusViewMain>
 </template>
 
