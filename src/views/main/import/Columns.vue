@@ -17,79 +17,78 @@
           </p>
         </div>
         <div class="view-import__content">
-          <el-row :gutter="28">
-            <el-col :span="12">
-              <h3>Colunas do arquivo</h3>
-              <div v-for="column in columns" :key="column.key" class="file-column" @drop="drop($event, column)" @dragover.prevent>
-                <span>{{ column.label }}</span>
-                <el-tag :closable="column.tag !== ''" :class="{'el-tag--dropzone-active': column.tag !== ''}" class="el-tag--dropzone" @close="removeTag(column)">
-                  <span v-if="column.tag !== ''">{{ column.tag }}</span>
-                  <span v-else>Arraste e solte a tag aqui</span>
-                </el-tag>
-              </div>
-            </el-col>
-            <el-col :span="12">
-              <h3>Dados do sistema</h3>
-              <el-collapse value="1" class="el-collapse-drag">
-                <el-collapse-item title="Dados do conflito" name="1">
-                  <span v-for="tag in tags" :key="tag.label" draggable="true" @dragstart.self="drag($event, tag.label)">
-                    <el-tag :class="{'el-tag--drag-active': tag.columnKey !== ''}" class="el-tag--drag">
-                      {{ tag.label }}
-                    </el-tag>
-                  </span>
-                  <el-tag class="el-tag--drag-add">+ Adicionar tag</el-tag>
+          <div class="">
+            <h3>Colunas do arquivo</h3>
+            <div v-for="column in columns" :key="column.key" class="file-column" @drop="drop($event, column)" @dragover.prevent>
+              <span>{{ column.label }}</span>
+              <el-tag :closable="column.tag !== ''" :class="{'el-tag--dropzone-active': column.tag !== ''}" class="el-tag--dropzone" @close="removeTag(column)">
+                <span v-if="column.tag !== ''">{{ column.tag }}</span>
+                <span v-else>Arraste e solte a tag aqui</span>
+              </el-tag>
+            </div>
+          </div>
+          <div class="">
+            <h3>Dados do sistema</h3>
+            <el-collapse value="1" class="el-collapse-drag">
+              <el-collapse-item title="Dados do conflito" name="1">
+                <span v-for="tag in tags" :key="tag.label" draggable="true" @dragstart.self="drag($event, tag.label)">
+                  <el-tag :class="{'el-tag--drag-active': tag.columnKey !== ''}" class="el-tag--drag">
+                    {{ tag.label }}
+                  </el-tag>
+                </span>
+                <el-tag class="el-tag--drag-add">+ Adicionar tag</el-tag>
+              </el-collapse-item>
+            </el-collapse>
+            <h3>
+              Partes contrárias
+              <i class="el-icon-plus right"/>
+            </h3>
+            <div class="drag-group">
+              <el-collapse class="el-collapse-drag">
+                <el-collapse-item title="Parte Contrária 1" name="1">
+                  <el-tag class="el-tag--drag el-tag--drag-active">Data de vencimento do débito</el-tag>
+                  <el-tag class="el-tag--drag">Nº máximo de parcelas</el-tag>
+                  <el-tag class="el-tag--drag">Obrigações de fazer</el-tag>
+                  <el-tag class="el-tag--drag">+ Adicionar tag</el-tag>
                 </el-collapse-item>
               </el-collapse>
-              <h3>
-                Partes contrárias
-                <i class="el-icon-plus right"/>
-              </h3>
-              <div class="drag-group">
-                <el-collapse class="el-collapse-drag">
-                  <el-collapse-item title="Parte Contrária 1" name="1">
-                    <el-tag class="el-tag--drag el-tag--drag-active">Data de vencimento do débito</el-tag>
-                    <el-tag class="el-tag--drag">Nº máximo de parcelas</el-tag>
-                    <el-tag class="el-tag--drag">Obrigações de fazer</el-tag>
-                    <el-tag class="el-tag--drag">+ Adicionar tag</el-tag>
-                  </el-collapse-item>
-                </el-collapse>
-                <i class="el-icon-delete"/>
-              </div>
-              <div class="drag-group">
-                <el-collapse class="el-collapse-drag">
-                  <el-collapse-item title="Parte Contrária 1" name="1">
-                    <el-tag class="el-tag--drag el-tag--drag-active">Data de vencimento do débito</el-tag>
-                    <el-tag class="el-tag--drag">Nº máximo de parcelas</el-tag>
-                    <el-tag class="el-tag--drag">Obrigações de fazer</el-tag>
-                    <el-tag class="el-tag--drag">+ Adicionar tag</el-tag>
-                  </el-collapse-item>
-                </el-collapse>
-                <i class="el-icon-delete"/>
-              </div>
-              <h3>
-                Advogados
-                <i class="el-icon-plus right"/>
-              </h3>
-              <div class="drag-group">
-                <el-collapse class="el-collapse-drag">
-                  <el-collapse-item title="Advogado 1" name="1">
-                    <el-tag class="el-tag--drag el-tag--drag-active">Data de vencimento do débito</el-tag>
-                    <el-tag class="el-tag--drag">Nº máximo de parcelas</el-tag>
-                    <el-tag class="el-tag--drag">Obrigações de fazer</el-tag>
-                    <el-tag class="el-tag--drag">+ Adicionar tag</el-tag>
-                  </el-collapse-item>
-                </el-collapse>
-                <i class="el-icon-delete"/>
-              </div>
-            </el-col>
-          </el-row>
+              <i class="el-icon-delete"/>
+            </div>
+            <div class="drag-group">
+              <el-collapse class="el-collapse-drag">
+                <el-collapse-item title="Parte Contrária 1" name="1">
+                  <el-tag class="el-tag--drag el-tag--drag-active">Data de vencimento do débito</el-tag>
+                  <el-tag class="el-tag--drag">Nº máximo de parcelas</el-tag>
+                  <el-tag class="el-tag--drag">Obrigações de fazer</el-tag>
+                  <el-tag class="el-tag--drag">+ Adicionar tag</el-tag>
+                </el-collapse-item>
+              </el-collapse>
+              <i class="el-icon-delete"/>
+            </div>
+            <h3>
+              Advogados
+              <i class="el-icon-plus right"/>
+            </h3>
+            <div class="drag-group">
+              <el-collapse class="el-collapse-drag">
+                <el-collapse-item title="Advogado 1" name="1">
+                  <el-tag class="el-tag--drag el-tag--drag-active">Data de vencimento do débito</el-tag>
+                  <el-tag class="el-tag--drag">Nº máximo de parcelas</el-tag>
+                  <el-tag class="el-tag--drag">Obrigações de fazer</el-tag>
+                  <el-tag class="el-tag--drag">+ Adicionar tag</el-tag>
+                </el-collapse-item>
+              </el-collapse>
+              <i class="el-icon-delete"/>
+            </div>
+          </div>
+
         </div>
         <div class="view-import__actions">
           <el-button type="primary" @click="$router.push('/import/enrichment')">Próximo</el-button>
         </div>
       </div>
     </template>
-    <template slot="aside">
+    <!-- <template slot="aside">
       <jus-icon icon="conecting-columns"/>
       <h3>
         Conectando as colunas da sua planilha
@@ -102,7 +101,7 @@
         Para isso, basta arrastar os campos da da direita para às colunas correspondentes. Se o sistema não tiver previamente
         um campo e você queira adicionar, clique em “+Adicionar campo” quantas vezes for necessário
       </p>
-    </template>
+    </template> -->
   </JusViewMain>
 </template>
 
@@ -168,6 +167,17 @@ export default {
     h3 {
       font-weight: 600;
     }
+    .view-import__content {
+      display: flex;
+      justify-content: space-evenly;
+      > div {
+        width: 100%;
+        max-width: 400px;
+        &+div {
+            margin-left: 40px;
+        }
+      }
+    }
   }
   .el-collapse-drag + h3 {
     margin-top: 40px;
@@ -175,23 +185,23 @@ export default {
   .drag-group + h3 {
     margin-top: 30px;
   }
+  .file-column {
+    margin-bottom: 20px;
+    height: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .drag-group {
+    display: flex;
+    align-items: center;
+    i {
+      margin-left: 10px;
+    }
+    .el-collapse-item.is-active {
+      margin-bottom: 10px;
+    }
+  }
 }
 
-.file-column {
-  margin-bottom: 20px;
-  height: 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.drag-group {
-  display: flex;
-  align-items: center;
-  i {
-    margin-left: 10px;
-  }
-  .el-collapse-item.is-active {
-    margin-bottom: 10px;
-  }
-}
 </style>
