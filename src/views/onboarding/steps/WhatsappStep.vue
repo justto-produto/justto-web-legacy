@@ -3,7 +3,7 @@
     <div class="onboarding-step-content__title">
       <h2>Whatsapp</h2>
       <p>
-        Cadastre o número que o seu escritório utiliza para fazer contato com as partes, utilizando o QR CODE abaixo:
+        Cadastre o número que a sua equipe utiliza para fazer contato com as partes, utilizando o QR CODE abaixo.
       </p>
     </div>
     <div class="display-flex">
@@ -12,7 +12,8 @@
       </div>
       <transition name="fade">
         <p v-show="scan" class="whatsapp-step--status-info">
-          Número +55 12 91234 - 5678 cadastrado com sucesso. Esse será o número que o seu escritório vai conversar com as partes dos seus casos.
+          Número +55 12 91234 - 5678 cadastrado com sucesso. Esse será o número que o seu escritório vai conversar com
+          as partes dos seus casos. Não se esqueça de verificar se o serviço está ativo diariamente.
         </p>
       </transition>
     </div>
@@ -36,7 +37,7 @@ export default {
   },
   computed: {
     message () {
-      return this.scan ? 'CONEXÃO ATIVA' : 'AGUARDANDO ESCANEAMENTO'
+      return this.scan ? 'ATIVO' : 'AGUARDANDO ESCANEAMENTO'
     },
     type () {
       return this.scan ? 'success' : 'warning'
@@ -63,7 +64,7 @@ export default {
     }
   }
   .whatsapp-step--status-info {
-    margin: 20px;
+    margin: 20px 40px;
   }
   @media (max-width: 991px) {
     .whatsapp-step--status {

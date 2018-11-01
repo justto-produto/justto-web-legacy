@@ -2,10 +2,10 @@
   <div class="onboarding-invite-step">
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
-        <h2>Convide pessoas para a plataforma</h2>
+        <h2>Adicione pessoas à sua equipe</h2>
         <p>
-          Adicione todos os os usuários que farão parte da sua equipe.
-          Todos que forem convidados por você irão receber um e-mail para acessar a plataforma.
+          Adicione todos os usuários que farão parte da sua equipe (você poderá adicionar pessoas posteriormente).
+          Os convidados irão receber um e-mail para juntar-se à equipe Shostners & Shostners no sistema da Justto.
         </p>
       </div>
       <el-form ref="teamMembersForm" :model="teamMembersForm" :rules="teamMembersFormRules" label-position="top" @submit.native.prevent="addTeamMember('teamMembersForm')">

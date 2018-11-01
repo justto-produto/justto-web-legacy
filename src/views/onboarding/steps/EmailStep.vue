@@ -1,12 +1,11 @@
 <template lang="html">
   <div class="onboarding-step-content onboarding-email-step">
     <div class="onboarding-step-content__title">
-      <h2>Deseja sincronizar o seu e-mail com nossa plataforma?</h2>
+      <h2>Deseja sincronizar o seu e-mail com a plataforma?</h2>
       <p>
-        Essa sincronização é para facilitar a sua rotina como negociador, essa ação permite que a Justto tenha acesso
-        aos e-mails recebidos, em sua conta, relacionados às negociações em processo na plataforma. Mas, lembre-se,
-        ao clicar no botão, você concorda que nosso robô tenha acesso a leitura desses e-mails. Se desejar, você pode
-        configurar essa fase posteriormente.
+        Ao clicar no botão, você concorda em liberar o acesso de leitura dos emails de sua caixa de entrada para que
+        a plataforma Justto realize leitura dos emails relacionados às negociações em processo na plataforma. Se
+        desejar, você pode configurar isso depois.
       </p>
     </div>
     <el-checkbox v-model="checked1" border class="el-checkbox--active">
