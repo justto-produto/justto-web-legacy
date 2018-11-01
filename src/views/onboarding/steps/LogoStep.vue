@@ -2,7 +2,7 @@
   <div class="onboarding-logo-step">
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
-        <h2>Insira o logo do seu escritório</h2>
+        <h2>Insira o logo da sua equipe</h2>
         <p>Os formatos aceitos são: PNG, JPG e SVG.</p>
       </div>
       <el-upload

@@ -6,7 +6,7 @@
         <p>Você pode colocar o nome do seu escritório ou empresa, por exemplo.</p>
       </div>
       <el-form ref="nameForm" :model="nameForm" :rules="nameFormRules" label-position="top" @submit.native.prevent="submitForm">
-        <el-form-item label="Nome" prop="name">
+        <el-form-item label="Equipe" prop="name">
           <el-input v-model="nameForm.name"/>
         </el-form-item>
       </el-form>
