@@ -52,7 +52,8 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: 'Campo obrigatório', trigger: 'blur' }
+          { required: true, message: 'Campo obrigatório', trigger: 'blur' },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
         ],
         password: [
           { required: true, message: 'Campo obrigatório', trigger: 'blur' }
@@ -69,7 +70,7 @@ export default {
     submitForm () {
       this.$refs['registerForm'].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          this.$router.push('onboarding')
         } else {
           return false
         }

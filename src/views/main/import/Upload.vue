@@ -29,10 +29,7 @@
             </div>
             <div v-show="processSuccess" class="view-import__progress-success">
               <hr>
-              <el-card class="el-card--background">
-                <h2>1.285</h2>
-                <span>casos importados</span>
-              </el-card>
+              <h3>Total de casos importados: 100</h3>
               <div class="view-import__success-info">
                 Se sua planilha tinha mais linhas do que o número acima, a negociação irá iniciar com o número de casos
                 indicados acima e você poderá analisar posteriormente porque os outros casos não foram importados no
@@ -82,8 +79,8 @@
         <br>
         • Nomes dos Advogados (se for judicial)
       </p>
-      <br><br>
-      <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button>
+      <!-- <br><br> -->
+      <!-- <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button> -->
     </template>
   </JusViewMain>
 </template>
@@ -175,7 +172,7 @@ export default {
     margin: 40px 0;
   }
   img {
-    height: 70px;
+    height: 60px;
   }
 }
 
@@ -199,6 +196,7 @@ export default {
 }
 
 .view-import__progress-success{
+  text-align: center;
   .el-card {
     color: #fff;
     font-weight: normal;

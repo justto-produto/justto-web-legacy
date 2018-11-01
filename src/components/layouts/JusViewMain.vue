@@ -38,6 +38,7 @@ export default {
     min-height: calc( 100vh - 180px );
   }
   .main-view__card {
+    font-size: 13px;
     margin-left: 20px;
     width: 300px;
     position: sticky;
