@@ -370,7 +370,7 @@ export default {
   ul {
     list-style: none;
     padding: 0;
-    margin: 20px 0;
+    margin: 20px 0 0;
   }
   li {
     display: flex;

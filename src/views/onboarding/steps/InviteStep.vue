@@ -43,20 +43,20 @@ export default {
       teamMembersForm: {
         teamMember: '',
         teamMembers: [
-          'wojciech@msn.com',
-          'stern@mac.com',
-          'frederic@live.com',
-          'jbryan@att.net',
-          'quantamanmmm@sbcglobal.net',
-          'marioph@live.com',
-          'msusa@yahoo.ca',
-          'mirod@gmail.com',
-          'slanglois@verizon.net',
-          'choset@me.co',
-          'hikoza@hotmail.com',
-          'fwitness@mac.com',
-          'mkearl@verizon.net',
-          'rupak@live.com'
+          // 'wojciech@msn.com',
+          // 'stern@mac.com',
+          // 'frederic@live.com',
+          // 'jbryan@att.net',
+          // 'quantamanmmm@sbcglobal.net',
+          // 'marioph@live.com',
+          // 'msusa@yahoo.ca',
+          // 'mirod@gmail.com',
+          // 'slanglois@verizon.net',
+          // 'choset@me.co',
+          // 'hikoza@hotmail.com',
+          // 'fwitness@mac.com',
+          // 'mkearl@verizon.net',
+          // 'rupak@live.com'
         ]
       },
       teamMembersFormRules: {
