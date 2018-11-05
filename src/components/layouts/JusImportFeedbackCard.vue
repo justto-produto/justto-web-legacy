@@ -14,17 +14,11 @@
         </el-form-item>
         <el-form-item label="Tipo" prop="number" style="width: 40%">
           <el-select v-model="form.value" placeholder="Select">
-            <el-option
-              v-for="item in ['Indenizatório', 'Cobrança']" :key="item" :label="item" :value="item">
-            </el-option>
+            <el-option v-for="item in ['Indenizatório', 'Cobrança']" :key="item" :label="item" :value="item"/>
           </el-select>
         </el-form-item>
         <el-form-item label="Data limite da negociação" prop="number" style="margin: 0; width: 57%">
-          <el-date-picker
-            v-model="form.date"
-            type="date"
-            placeholder="Selecione uma data">
-          </el-date-picker>
+          <el-date-picker v-model="form.date" type="date" placeholder="Selecione uma data"/>
         </el-form-item>
         <el-form-item label="Responsáveis pela campanha" prop="number">
           <span v-if="responsibles.length !== 0" class="responsibles-box">
