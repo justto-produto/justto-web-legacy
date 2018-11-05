@@ -97,6 +97,11 @@
 
 <script>
 export default {
-  name: 'Import'
+  name: 'Import',
+  mounted () {
+    if (this.$store.state.importList.length === 0) {
+      this.$router.push({ path: '/import/upload' })
+    }
+  }
 }
 </script>

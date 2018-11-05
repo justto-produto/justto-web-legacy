@@ -56,6 +56,18 @@ Vue.component('JusStatusDot', JusStatusDot)
 
 Vue.config.productionTip = false
 
+// import VueAuthenticate from 'vue-authenticate'
+// Vue.use(VueAuthenticate, {
+//   baseUrl: 'http://localhost:3000', // Your API domain
+//
+//   providers: {
+//     github: {
+//       clientId: '',
+//       redirectUri: 'http://localhost:8080/auth/callback' // Your client app URL
+//     }
+//   }
+// })
+
 new Vue({
   router,
   store,
