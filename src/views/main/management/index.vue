@@ -29,7 +29,7 @@
           </div>
           <div class="view-management__container">
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2,3]" :key="item" label="check1" class="view-management__item">
+              <el-checkbox v-for="item in [1,2,3]" :key="item" :label="'check'+item" class="view-management__item">
                 <el-card class="el-card--bordered el-card--info">
                   <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
                     <el-table-column label="Nº do caso">
@@ -85,7 +85,7 @@
           </div>
           <div class="view-management__container">
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2]" :key="item" label="check1" class="view-management__item">
+              <el-checkbox v-for="item in [1,2]" :key="item" :label="'check'+item" class="view-management__item">
                 <el-card class="el-card--bordered el-card--info">
                   <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
                     <el-table-column label="Nº do caso">
@@ -128,7 +128,7 @@
             </el-checkbox-group>
             <hr>
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2]" :key="item" label="check1" class="view-management__item">
+              <el-checkbox v-for="item in [1,2]" :key="item" :label="'check'+item" class="view-management__item">
                 <el-card class="el-card--bordered el-card--danger">
                   <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
                     <el-table-column label="Nº do caso">
@@ -184,7 +184,7 @@
           </div>
           <div class="view-management__container">
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2,3]" :key="item" label="check1" class="view-management__item">
+              <el-checkbox v-for="item in [1,2,3]" :key="item" :label="'check'+item" class="view-management__item">
                 <el-card class="el-card--bordered el-card--info">
                   <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
                     <el-table-column label="Nº do caso">
@@ -245,7 +245,7 @@
           </div>
           <div class="view-management__container">
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2,3]" :key="item" label="check1" class="view-management__item">
+              <el-checkbox v-for="item in [1,2,3]" :key="item" :label="'check'+item" class="view-management__item">
                 <el-card class="el-card--bordered el-card--info">
                   <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
                     <el-table-column label="Nº do caso">
@@ -422,6 +422,7 @@ export default {
     handleTabClick () {
       if (this.$refs['management-tabs']) {
         this.tabIndex = this.$refs['management-tabs'].currentName
+        this.checkList = []
       }
     }
   }
