@@ -2,9 +2,37 @@
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--company-tag">{{ company }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-form ref="form" :model="form" label-position="top">
-        <el-form-item label="Email" prop="email">
-          <el-input v-model="form.number"/>
+      <el-form ref="form" :inline="true" :model="form" label-position="top">
+        <el-form-item label="Nº de casos" prop="number">
+          <el-input v-model="form.number" readonly/>
+        </el-form-item>
+        <el-form-item label="Enriquecimento" prop="number">
+          <el-input v-model="form.enrichment" readonly/>
+        </el-form-item>
+        <el-form-item label="Nome da campanha" prop="number">
+          <el-input v-model="form.name" placeholder="Digite o nome da sua campanha"/>
+        </el-form-item>
+        <el-form-item label="Tipo" prop="number">
+          <el-select v-model="form.value" placeholder="Select">
+            <el-option
+              v-for="item in ['Indenizatório', 'Cobrança']" :key="item" :label="item" :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Data limite da negociação" prop="number">
+          <el-date-picker
+            v-model="form.date"
+            type="date"
+            placeholder="Selecione uma data">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="Responsáveis pela campanha" prop="number">
+          <span v-if="responsibles.length !== 0" class="responsibles-box">
+            <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
+            <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
+            <jus-avatar-user name-initials="MS" size="xs" shape="circle"/>
+          </span>
+          <jus-icon icon="add-purple"/>
         </el-form-item>
       </el-form>
       <!-- <el-table :data="tableData" class="el-table--feedback-card" size="mini">
@@ -72,7 +100,11 @@ export default {
   data () {
     return {
       form: {
-        number: ''
+        number: '500',
+        value: 'Indenizatório',
+        date: '',
+        name: '',
+        enrichment: '93 dados enriquecidos'
       }
     }
   }
@@ -81,15 +113,14 @@ export default {
 
 <style lang="scss">
 .jus-import-feedback-card {
+  width: 100%;
+  max-width: 400px;
   &+.jus-import-feedback-card {
-    margin-top: 20px;
+    margin-left: 40px;
   }
   .el-tag {
     margin-bottom: 10px;
     text-align: center;
-  }
-  .el-input__inner {
-    padding-left: 0;
   }
   .el-date-editor {
     max-width: 100%;

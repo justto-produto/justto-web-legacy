@@ -51,6 +51,7 @@ export default {
 .view-import--feedback {
   .view-import__content {
     display: flex;
+    justify-content: center;
   }
 }
 </style>
