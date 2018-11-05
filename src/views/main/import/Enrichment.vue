@@ -39,9 +39,6 @@
               </li>
             </ul>
           </el-card>
-          <p>
-            <i v-show="!enriched">Ao término desta operação você será redirecionado automaticamente.</i>
-          </p>
         </div>
         <div class="view-import__actions">
           <el-button v-if="!enriched" :disabled="loading" plain @click="startEnrichment">Pular enriquecimento</el-button>

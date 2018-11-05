@@ -10,11 +10,12 @@
       </el-steps>
       <div class="view-import__container">
         <div class="view-import__title">
-          <h2>Resumo dos novos casos</h2>
+          <h2>Campanhas</h2>
           <p>
-            Agrupamos seus casos por empresas. Nomeie abaixo cada um destes grupos, informe o tipo de negociação e a
-            data limite para encerrar a negociação. Posteriormente, você poderá editar ou criar novos conjuntos de
-            casos da forma que preferir, para que seja mais fácil identificar as suas campanhas de negociação.
+            Agrupamos seus casos por empresas. Cada empresa terá a sua campanha, tipo, data limite para negociação e
+            os responsáveis pela mesma. Para configurar suas campanhas, preencha os campos abaixo. Você poderá editar
+            ou criar novos conjuntos de casos da forma que preferir, para que seja mais fácil identificar as suas
+            campanhas de negociação.
           </p>
         </div>
         <div class="view-import__content">
@@ -47,4 +48,9 @@ export default {
 </script>
 
 <style lang="scss">
+.view-import--feedback {
+  .view-import__content {
+    display: flex;
+  }
+}
 </style>

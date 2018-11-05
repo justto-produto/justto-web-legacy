@@ -2,7 +2,12 @@
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--company-tag">{{ company }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-table :data="tableData" class="el-table--feedback-card" size="mini">
+      <el-form ref="form" :model="form" label-position="top">
+        <el-form-item label="Email" prop="email">
+          <el-input v-model="form.number"/>
+        </el-form-item>
+      </el-form>
+      <!-- <el-table :data="tableData" class="el-table--feedback-card" size="mini">
         <el-table-column label="Nº de casos" min-width="80">
           <template slot-scope="scope">
             {{ scope.row.cases }}
@@ -40,7 +45,7 @@
             <jus-icon icon="add-purple"/>
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> -->
     </el-card>
   </div>
 </template>
@@ -66,14 +71,9 @@ export default {
   },
   data () {
     return {
-      tableData: [{
-        cases: '500',
-        enrichment: '93 dados enriquecidos',
-        type: 'Indenizatória',
-        campaign: 'NESTLÉ-NATAL',
-        limit: new Date()
-      }],
-      types: ['Indenizatória', 'Cobrança']
+      form: {
+        number: ''
+      }
     }
   }
 }
