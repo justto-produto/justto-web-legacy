@@ -233,7 +233,65 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="Com interação">
-          <div class="view-management__container"><h1>Em construção</h1></div>
+          <div class="view-management__header">
+            <el-checkbox/>
+            <div>
+              Ordenar por:
+              <el-select v-model="filter" size="small" placeholder="Selecione uma opção">
+                <el-option v-for="filter in ['Termômetro de interação (tempo da negociação)', 'Probabilidade de fechar o acordo', 'Campanha', 'Empresa', 'ID do caso', 'Responsável']" :key="filter" :label="filter" :value="filter"/>
+              </el-select>
+              <el-button type="primary" size="small">Exportar casos</el-button>
+            </div>
+          </div>
+          <div class="view-management__container">
+            <el-checkbox-group v-model="checkList">
+              <el-checkbox v-for="item in [1,2,3]" :key="item" label="check1" class="view-management__item">
+                <el-card class="el-card--bordered el-card--info">
+                  <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
+                    <el-table-column label="Nº do caso">
+                      <template slot-scope="scope">
+                        {{ scope.row.id }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Empresa">
+                      <template slot-scope="scope">
+                        {{ scope.row.company }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Campanha" min-width="110px">
+                      <template slot-scope="scope">
+                        {{ scope.row.campaign }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Chances de acordo" min-width="140px">
+                      <template slot-scope="scope">
+                        {{ scope.row.chance }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Data limite" min-width="90px">
+                      <template slot-scope="scope">
+                        {{ scope.row.limit }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Responsáveis" min-width="100">
+                      <template slot-scope="scope">
+                        <span class="responsibles-box">
+                          <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
+                          <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
+                          <jus-avatar-user name-initials="MS" size="xs" shape="circle"/>
+                        </span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column>
+                      <template slot-scope="scope" style="text-align: right;">
+                        • • •
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </el-card>
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="Ganhos">
           <div class="view-management__container"><h1>Em construção</h1></div>
