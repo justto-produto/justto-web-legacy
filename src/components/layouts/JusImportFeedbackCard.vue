@@ -3,23 +3,23 @@
     <el-tag :color="color" class="el-tag--company-tag">{{ company }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
       <el-form ref="form" :inline="true" :model="form" label-position="top">
-        <el-form-item label="Nº de casos" prop="number">
+        <el-form-item label="Nº de casos" prop="number" style="width: 40%">
           <el-input v-model="form.number" readonly/>
         </el-form-item>
-        <el-form-item label="Enriquecimento" prop="number">
+        <el-form-item label="Enriquecimento" prop="number" style="margin: 0; width: 57%">
           <el-input v-model="form.enrichment" readonly/>
         </el-form-item>
-        <el-form-item label="Nome da campanha" prop="number">
+        <el-form-item label="Nome da campanha" prop="number" style="width: 100%">
           <el-input v-model="form.name" placeholder="Digite o nome da sua campanha"/>
         </el-form-item>
-        <el-form-item label="Tipo" prop="number">
+        <el-form-item label="Tipo" prop="number" style="width: 40%">
           <el-select v-model="form.value" placeholder="Select">
             <el-option
               v-for="item in ['Indenizatório', 'Cobrança']" :key="item" :label="item" :value="item">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="Data limite da negociação" prop="number">
+        <el-form-item label="Data limite da negociação" prop="number" style="margin: 0; width: 57%">
           <el-date-picker
             v-model="form.date"
             type="date"
