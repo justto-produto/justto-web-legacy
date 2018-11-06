@@ -10,7 +10,7 @@
       </el-steps>
       <div class="view-import__container">
         <div class="view-import__title">
-          <h2>Confugurar campanhas</h2>
+          <h2>Configurar campanhas</h2>
           <p>
             Agrupamos seus casos por empresas. Cada empresa terá a sua campanha, tipo, data limite para negociação e
             os responsáveis pela mesma. Para configurar suas campanhas, preencha os campos abaixo. Você poderá editar
