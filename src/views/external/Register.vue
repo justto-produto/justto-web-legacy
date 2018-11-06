@@ -77,9 +77,9 @@ export default {
       this.$refs['registerForm'].validate((valid) => {
         self.showError = false
         self.showSuccess = false
-        self.showLoading = true
         if (valid) {
-          // this.$router.push('onboarding')
+          self.showLoading = true
+          this.$router.push('onboarding')
           // eslint-disable-next-line
           axios.post('/accounts/register', this.registerForm).then(function (/* response */) {
             self.showSuccess = true
