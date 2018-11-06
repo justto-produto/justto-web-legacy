@@ -1,14 +1,11 @@
 @import '../variables/colors';
 
 .el-tag--dropzone {
-  float: right;
-  max-width: 58%;
   width: 100%;
   color: $--color-text-secondary !important;
   background-color: #fff !important;
   border: dashed 1px $--color-text-secondary !important;
   font-size: 11px !important;
-  text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -54,6 +51,7 @@
 .el-tag--drag-active {
   border: solid 1px $--color-primary !important;
   text-decoration: line-through;
+  pointer-events: none;
 }
 
 .el-tag--company-tag {

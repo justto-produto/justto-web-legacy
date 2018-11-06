@@ -10,17 +10,16 @@
       </el-steps>
       <div class="view-import__container">
         <div class="view-import__title">
-          <h2>Campanhas</h2>
+          <h2>Confugurar campanhas</h2>
           <p>
             Agrupamos seus casos por empresas. Cada empresa terá a sua campanha, tipo, data limite para negociação e
             os responsáveis pela mesma. Para configurar suas campanhas, preencha os campos abaixo. Você poderá editar
-            ou criar novos conjuntos de casos da forma que preferir, para que seja mais fácil identificar as suas
-            campanhas de negociação.
+            ou criar novas campanhas depois.
           </p>
         </div>
         <div class="view-import__content">
-          <JusImportFeedbackCard company="Nestlé" color="#72cbff"/>
-          <JusImportFeedbackCard :responsibles="responsibles" company="Cacau Show" color="#ff7a72"/>
+          <jus-import-feedback-card company="Nestlé" color="#72cbff"/>
+          <jus-import-feedback-card :responsibles="responsibles" company="Cacau Show" color="#ff7a72"/>
         </div>
         <div class="view-import__actions">
           <el-button type="primary" @click="$router.push('/management')">Próximo</el-button>

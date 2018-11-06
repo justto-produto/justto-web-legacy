@@ -23,7 +23,7 @@
           <el-row class="external-view__info">
             Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
             <br><br>
-            Não possui conta? <a href="#/register"> Cadastre-se agora mesmo.</a>
+            Não possui conta? <a href="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
       </el-main>

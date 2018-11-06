@@ -41,7 +41,7 @@
           </el-card>
         </div>
         <div class="view-import__actions">
-          <el-button v-if="!enriched" :disabled="loading" plain @click="startEnrichment">Pular enriquecimento</el-button>
+          <el-button v-if="!enriched" :disabled="loading" plain @click="$router.push('/import/feedback')">Pular enriquecimento</el-button>
           <el-button v-if="!enriched" :disabled="loading" type="primary" @click="startEnrichment">Enriquecer</el-button>
           <el-button v-if="enriched" type="primary" @click="$router.push('/import/feedback')">Próximo</el-button>
         </div>

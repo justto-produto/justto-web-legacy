@@ -4,10 +4,10 @@
     <el-card :style="'border-left: solid 4px ' + color">
       <el-form ref="form" :inline="true" :model="form" label-position="top">
         <el-form-item label="Nº de casos" prop="number" style="width: 40%">
-          <el-input v-model="form.number" readonly/>
+          <el-input v-model="form.number" readonly class="el-input--no-border"/>
         </el-form-item>
         <el-form-item label="Enriquecimento" prop="number" style="margin: 0; width: 57%">
-          <el-input v-model="form.enrichment" readonly/>
+          <el-input v-model="form.enrichment" readonly class="el-input--no-border"/>
         </el-form-item>
         <el-form-item label="Nome da campanha" prop="number" style="width: 100%">
           <el-input v-model="form.name" placeholder="Digite o nome da sua campanha"/>

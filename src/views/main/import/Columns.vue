@@ -17,17 +17,20 @@
           </p>
         </div>
         <div class="view-import__content">
-          <div class="">
+          <div>
             <h3>Colunas do arquivo</h3>
             <div v-for="column in columns" :key="column.key" class="file-column" @drop="drop($event, column)" @dragover.prevent>
-              <span>{{ column.label }}</span>
+              <div class="file-column__label">
+                <span class="file-column__title">{{ column.label }}</span>
+                <span class="file-column__example">{{ column.example }}</span>
+              </div>
               <el-tag :closable="column.tag !== ''" :class="{'el-tag--dropzone-active': column.tag !== ''}" class="el-tag--dropzone" @close="removeTag(column)">
                 <span v-if="column.tag !== ''">{{ column.tag }}</span>
-                <span v-else>Arraste e solte a tag aqui</span>
+                <span v-else>Arraste a coluna aqui</span>
               </el-tag>
             </div>
           </div>
-          <div class="">
+          <div>
             <h3>Dados do sistema</h3>
             <el-collapse value="1" class="el-collapse-drag">
               <el-collapse-item title="Dados do conflito" name="1">
@@ -88,20 +91,6 @@
         </div>
       </div>
     </template>
-    <!-- <template slot="aside">
-      <jus-icon icon="conecting-columns"/>
-      <h3>
-        Conectando as colunas da sua planilha
-      </h3>
-      <br>
-      <p>
-        Para que o sistema entenda os dados dos casos inseridos, precisamos que você indique os campos correspondentes
-        às colunas da planilha que você inseriu.
-        <br><br>
-        Para isso, basta arrastar os campos da da direita para às colunas correspondentes. Se o sistema não tiver previamente
-        um campo e você queira adicionar, clique em “+Adicionar campo” quantas vezes for necessário
-      </p>
-    </template> -->
   </JusViewMain>
 </template>
 
@@ -113,12 +102,12 @@ export default {
     return {
       active: 1,
       columns: [
-        { key: 'number', label: 'Nº do processo', tag: '' },
-        { key: 'company', label: 'Empresa', tag: '' },
-        { key: 'max', label: 'Alçada para acordo', tag: '' },
-        { key: 'min', label: 'Alçada mínima', tag: '' },
-        { key: 'defendant', label: 'Réu', tag: '' },
-        { key: 'value', label: 'Valor original da causa', tag: '' }
+        { key: 'number', label: 'Nº do processo', example: '7272739', tag: '' },
+        { key: 'company', label: 'Nome da empresa', example: 'Shostners & Shostners', tag: '' },
+        { key: 'max', label: 'Alçada máxima', example: 'R$ 7.000', tag: '' },
+        { key: 'name', label: 'Nome das partes', example: 'Edinalva Pereira da Silva', tag: '' },
+        { key: 'cpf', label: 'CPF das partes', example: '123.456.789-0', tag: '' },
+        { key: 'defendant', label: 'Nome dos Advogados', example: 'Alessandra Marcondes', tag: '' }
       ],
       tags: [
         { label: 'Data de vencimento do débito', columnKey: '' },
@@ -166,6 +155,7 @@ export default {
   .view-import__container {
     h3 {
       font-weight: 600;
+      margin-bottom: 40px;
     }
     .view-import__content {
       display: flex;
@@ -179,18 +169,31 @@ export default {
       }
     }
   }
+  .file-column {
+    margin-bottom: 20px;
+    .el-tag {
+      width: 100%;
+      display: block;
+    }
+  }
+  .file-column__label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .file-column__title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #adadad;
+  }
+  .file-column__example {
+    color: #9461f7;
+  }
   .el-collapse-drag + h3 {
     margin-top: 40px;
   }
   .drag-group + h3 {
     margin-top: 30px;
-  }
-  .file-column {
-    margin-bottom: 20px;
-    height: 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
   .drag-group {
     display: flex;

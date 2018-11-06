@@ -1,0 +1,6 @@
+.el-input--no-border {
+  .el-input__inner[readonly="readonly"] {
+    border: none;
+    padding: 0;
+  }
+}

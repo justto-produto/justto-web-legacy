@@ -11,7 +11,7 @@
         </div>
         <div class="view-import__content view-import__content---methods">
           <el-card :class="{'el-card--upload-progress': file, 'view-import__method--uploading': file}" shadow="never" class="view-import__method el-card--dashed el-card--vertical-content">
-            <jus-icon v-show="!file" icon="upload-file" class="upload-icon"/>
+            <jus-icon v-show="!file" icon="upload-file" class="upload-icon" />
             <span v-show="!file" @click.prevent="uploadMoockFile">Planilha nos formatos XLSX, CSV, XLS ou ODT</span>
             <div v-show="file" class="view-import__progress">
               <jus-icon icon="spreadsheet-xlsx"/>
@@ -19,7 +19,8 @@
                 <strong>planilha-casos.xlsx</strong>
                 <el-progress :stroke-width="4" :percentage="progress" :status="uploadStatus"/>
                 <span v-show="!processSuccess">
-                  Processando...
+                  <span v-if="progress !== 100">Carregando...</span>
+                  <span v-else>Processando...</span>
                   <i class="el-icon-loading"/>
                 </span>
                 <span v-show="processSuccess">
@@ -31,11 +32,8 @@
               <hr>
               <h3>Total de casos importados: 100</h3>
               <div class="view-import__success-info">
-                Se sua planilha tinha mais linhas do que o número acima, a negociação irá iniciar com o número de casos
-                indicados acima e você poderá analisar posteriormente porque os outros casos não foram importados no
-                sistema e corrigir eventuais problemas.
-                <br><br>
-                Se foram importados mais casos do que você tinha planejado, verifique se foi aplicado algum filtro na sua planilha. Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
+                Caso haja, na sua importação, mais casos do que você tinha planejado, verifique se foi aplicado algum
+                filtro na sua planilha. Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
               </div>
             </div>
           </el-card>
@@ -54,7 +52,7 @@
         </div>
       </div>
     </template>
-    <template slot="aside">
+    <template v-if="!file" slot="aside">
       <jus-icon icon="best-practices"/>
       <h3>
         Melhores práticas para importar uma planilha
@@ -62,8 +60,7 @@
       <br>
       <p>
         Ao inserir novos casos através de uma planilha, certifique-se de que os dados estão inseridos corretamente em
-        cada coluna. Dessa forma, o sistema irá reconhecer mais rapidamente os dados, e além disso, enriquecer com
-        informações das partes e advogados (se houver).
+        cada coluna. Dessa forma, o sistema irá reconhecer mais rapidamente as informações inseridas na plataforma.
         <br><br>
         Os dados mínimos para inserir casos de uma planilha são (em colunas separadas):
         <br><br>
@@ -79,8 +76,8 @@
         <br>
         • Nomes dos Advogados (se for judicial)
       </p>
-      <!-- <br><br> -->
-      <!-- <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button> -->
+      <br><br>
+      <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button>
     </template>
   </JusViewMain>
 </template>
@@ -132,7 +129,7 @@ export default {
       if (this.progress < 100) {
         this.progress = this.progress + 1
         let self = this
-        setTimeout(self.uploadCounter, 8)
+        setTimeout(self.uploadCounter, 80)
       } else {
         this.processFile()
       }
@@ -141,7 +138,7 @@ export default {
       let self = this
       setTimeout(function () {
         self.inProgress = false
-      }, 300)
+      }, 4000)
     }
   }
 }

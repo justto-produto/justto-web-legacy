@@ -9,8 +9,11 @@ import axios from 'axios'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  // baseURL: process.env.baseURL || process.env.apiUrl || ""
-  // timeout: 60 * 1000, // Timeout
+  baseURL: process.env.baseURL || process.env.apiUrl || 'http://144.22.86.100:8100/api',
+  timeout: 60 * 1000, // Timeout
+  headers: {
+    'Access-Control-Allow-Origin': '*'
+  }
   // withCredentials: true, // Check cross-site Access-Control
 }
 
