@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import Store from '@/store'
 Vue.use(Router)
 
 const router = new Router({
@@ -10,7 +10,7 @@ const router = new Router({
       path: '/',
       component: () => import(/* webpackChunkName: "mainContainer" */ '@/views/main/MainContainer'),
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       },
       children: [
         {
@@ -57,7 +57,7 @@ const router = new Router({
       path: '/profile',
       component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer'),
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       },
       children: [
         {
@@ -85,22 +85,30 @@ const router = new Router({
     {
       name: 'login',
       path: '/login',
-      component: () => import(/* webpackChunkName: "externalIndex" */ '@/views/external')
+      component: () => import(/* webpackChunkName: "externalIndex" */ '@/views/external/Login')
     },
     {
       name: 'register',
       path: '/register',
-      component: () => import(/* webpackChunkName: "register" */ '@/views/external/Register.vue')
+      component: () => import(/* webpackChunkName: "register" */ '@/views/external/Register')
     },
     {
       name: 'forgot-password',
       path: '/forgot-password',
-      component: () => import(/* webpackChunkName: "forgotPassword" */ '@/views/external/ForgotPassword.vue')
+      component: () => import(/* webpackChunkName: "forgotPassword" */ '@/views/external/ForgotPassword')
+    },
+    {
+      name: 'new-password',
+      path: '/new-password',
+      component: () => import(/* webpackChunkName: "newPassword" */ '@/views/external/NewPassword')
     },
     {
       name: 'onboarding',
       path: '/onboarding/',
-      component: () => import(/* webpackChunkName: "onboardingIndex" */ '@/views/onboarding')
+      component: () => import(/* webpackChunkName: "onboardingIndex" */ '@/views/onboarding'),
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '*',
@@ -110,8 +118,13 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) next('login')
-  else next()
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (Store.getters.isLoggedIn) {
+      next()
+      return
+    }
+    next('/login')
+  } else next()
 })
 
 router.afterEach((to, from) => {

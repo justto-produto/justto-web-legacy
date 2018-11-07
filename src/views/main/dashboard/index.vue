@@ -5,7 +5,7 @@
     </template>
     <template slot="main">
       <JusChartLine :data="data" :options="options"/>
-      {{ $t('hello') }}
+      <!-- {{ $t('hello') }} -->
     </template>
   </JusViewMain>
 </template>

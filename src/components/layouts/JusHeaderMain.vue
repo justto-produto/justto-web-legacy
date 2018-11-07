@@ -31,7 +31,11 @@
               Central de ajuda
             </a>
           </el-dropdown-item>
-          <el-dropdown-item divided>Sair</el-dropdown-item>
+          <el-dropdown-item divided>
+            <a @click="logout">
+              Sair
+            </a>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -40,7 +44,15 @@
 
 <script>
 export default {
-  name: 'JusHeaderMain'
+  name: 'JusHeaderMain',
+  methods: {
+    logout () {
+      this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/login')
+        })
+    }
+  }
 }
 </script>
 
