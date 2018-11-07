@@ -62,6 +62,13 @@ export default {
     JusSidenavExternal
   },
   data () {
+    var validatePassword = (rule, value, callback) => {
+      if (value !== this.newPasswordForm.password) {
+        callback(new Error('Campos não correspondem'))
+      } else {
+        callback()
+      }
+    }
     return {
       showSuccess: false,
       showError: false,
@@ -76,7 +83,8 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         confirmPassword: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validatePassword, trigger: 'submit' }
         ]
       }
     }
@@ -96,7 +104,7 @@ export default {
           this.showLoading = true
           this.showSuccess = false
           this.showError = false
-          this.$store.dispatch('resetPassword', {token: this.token, password: this.newPasswordForm.password})
+          this.$store.dispatch('resetPassword', { token: this.token, password: this.newPasswordForm.password })
             .then(() => {
               this.showSuccess = true
               this.showLoading = false
