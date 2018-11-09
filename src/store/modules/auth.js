@@ -1,7 +1,7 @@
 const auth = {
   state: {
     status: '',
-    token: localStorage.getItem('token') || '',
+    token: localStorage.getItem('justoken') || '',
     user: {}
   },
   mutations: {
@@ -28,8 +28,8 @@ const auth = {
         axios.post('/accounts/register', loginForm)
           .then(response => {
             resolve(response)
-          }).catch(err => {
-            reject(err)
+          }).catch(error => {
+            reject(error)
           })
       })
     },
@@ -40,8 +40,8 @@ const auth = {
           .then(response => {
             resolve(response)
           })
-          .catch(err => {
-            reject(err)
+          .catch(error => {
+            reject(error)
           })
       })
     },
@@ -53,23 +53,24 @@ const auth = {
           .then(response => {
             const token = response.data.token
             const user = response.data.user
-            localStorage.setItem('token', token)
+            localStorage.setItem('justoken', token)
             // eslint-disable-next-line
             axios.defaults.headers.common['Authorization'] = token
             commit('auth_success', token, user)
             resolve(response)
           })
-          .catch(err => {
+          .catch(error => {
+            console.log(error)
             commit('auth_error')
-            localStorage.removeItem('token')
-            reject(err)
+            localStorage.removeItem('justoken')
+            reject(error)
           })
       })
     },
     logout ({ commit }) {
       return new Promise((resolve, reject) => {
         commit('logout')
-        localStorage.removeItem('token')
+        localStorage.removeItem('justoken')
         // eslint-disable-next-line
         delete axios.defaults.headers.common['Authorization']
         resolve()
@@ -82,8 +83,8 @@ const auth = {
           .then(response => {
             resolve(response)
           })
-          .catch(err => {
-            reject(err)
+          .catch(error => {
+            reject(error)
           })
       })
     },
@@ -94,8 +95,8 @@ const auth = {
           .then(response => {
             resolve(response)
           })
-          .catch(err => {
-            reject(err)
+          .catch(error => {
+            reject(error)
           })
       })
     }

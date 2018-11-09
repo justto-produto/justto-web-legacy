@@ -2,12 +2,15 @@
   <el-header class="main-header">
     <div class="main-search">
       <jus-icon icon="search" class="el-menu__icon"/>
-      <input type="text" name="" value="" placeholder="Buscar">
+      <input type="text" placeholder="Buscar">
     </div>
     <div class="main-info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
-          <jus-avatar-user :notifications="1" size="sm" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
+          <jus-avatar-user
+            :notifications="1"
+            size="sm"
+            src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
           <div class="main-info__name">
             <div>
               Mariana Rondino

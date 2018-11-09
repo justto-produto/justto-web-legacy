@@ -16,6 +16,7 @@ import '@/styles/core.scss'
 import '@/styles/transitions.scss'
 
 import '@/styles/views/external.scss'
+import '@/styles/views/container.scss'
 import '@/styles/views/main/import.scss'
 
 import '@/styles/overrides/alert.scss'

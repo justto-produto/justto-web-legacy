@@ -3,6 +3,11 @@
     <template slot="title">Configurações do perfil</template>
     <template slot="main">
       whatsapp
+      <select v-model="$i18n.locale">
+        <option v-for="(lang, i) in ['pt-br', 'en']" :key="`Lang${i}`" :value="lang">{{ lang }}</option>
+      </select>
+      <br><br>
+      {{ $t('message') }}
     </template>
     <template slot="aside">
       Teste
