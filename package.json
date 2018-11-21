@@ -61,7 +61,9 @@
       "@vue/standard"
     ],
     "rules": {
-      "vue/max-attributes-per-line": [2,{
+      "vue/max-attributes-per-line": [
+        2,
+        {
           "singleline": 3,
           "multiline": {
             "max": 3,

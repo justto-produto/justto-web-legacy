@@ -10,7 +10,7 @@ const router = new Router({
       path: '/',
       component: () => import(/* webpackChunkName: "mainContainer" */ '@/views/main/MainContainer'),
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       },
       children: [
         {
@@ -57,7 +57,7 @@ const router = new Router({
       path: '/profile',
       component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer'),
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       },
       children: [
         {
