@@ -6,14 +6,33 @@
       </el-aside>
       <el-main class="display-flex position-relative">
         <JusButtonBack to="login"/>
-        <el-form ref="forgotForm" :model="forgotForm" :rules="rules" class="external-view__form" label-position="top">
+        <el-form
+          v-loading="showLoading"
+          ref="forgotForm"
+          :model="forgotForm"
+          :rules="rules"
+          class="external-view__form"
+          label-position="top"
+          @submit.native.prevent="submitForm">
           <h1 class="external-view__title">Recuperar senha</h1>
+          <el-alert
+            v-show="showSuccess"
+            title="Requisição de recuperação enviada com sucesso! Acesse seu email para prosseguir."
+            type="success"
+            @close="showSuccess = false"/>
           <el-form-item label="Email" prop="email">
             <el-input v-model="forgotForm.email"/>
           </el-form-item>
-          <el-button class="external-view__submit" type="primary">Recuperar</el-button>
+          <el-button
+            native-type="submit"
+            class="external-view__submit"
+            type="primary">
+            Recuperar
+          </el-button>
           <el-row class="external-view__info">
-            Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
+            Ao clicar no botão, eu concordo com os
+            <a href="#">Termos de Uso</a> e
+            <a href="#">Política de Privacidade.</a>
           </el-row>
         </el-form>
       </el-main>
@@ -31,10 +50,41 @@ export default {
   },
   data () {
     return {
+      showSuccess: false,
+      showLoading: false,
       forgotForm: {
         email: ''
       },
-      rules: {}
+      rules: {
+        email: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+        ]
+      }
+    }
+  },
+  methods: {
+    submitForm () {
+      this.$refs['forgotForm'].validate((valid) => {
+        if (valid) {
+          this.showSuccess = false
+          this.showLoading = true
+          this.$store.dispatch('forgotPassword', this.forgotForm.email)
+            .then(() => {
+              this.showSuccess = true
+              this.forgotForm.email = ''
+              this.showLoading = false
+            })
+            .catch(error => {
+              this.showSuccess = true
+              this.forgotForm.email = ''
+              this.showLoading = false
+              console.log(error)
+            })
+        } else {
+          return false
+        }
+      })
     }
   }
 }

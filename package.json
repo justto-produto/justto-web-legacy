@@ -64,10 +64,10 @@
       "vue/max-attributes-per-line": [
         2,
         {
-          "singleline": 99,
+          "singleline": 3,
           "multiline": {
-            "max": 99,
-            "allowFirstLine": true
+            "max": 3,
+            "allowFirstLine": false
           }
         }
       ]

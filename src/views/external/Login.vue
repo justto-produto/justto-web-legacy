@@ -7,13 +7,13 @@
       <el-main class="display-flex">
         <el-form
           v-loading="showLoading"
-          ref="registerForm"
-          :model="registerForm"
+          ref="loginForm"
+          :model="loginForm"
           :rules="rules"
-          class="external-view__form"
           label-position="top"
+          class="external-view__form"
           @submit.native.prevent="submitForm">
-          <h1 class="external-view__title">Cadastre-se</h1>
+          <h1 class="external-view__title">Login</h1>
           <el-alert
             v-show="showError"
             :title="errorMessage"
@@ -21,34 +21,37 @@
             @close="showError = false"/>
           <el-alert
             v-show="showSuccess"
-            title="Cadastro realizado com sucesso! Acesse seu email para prosseguir."
+            title="Cadastro ativado com sucesso!"
             type="success"
             @close="showSuccess = false"/>
-          <el-form-item label="Nome" prop="name">
-            <el-input v-model="registerForm.name"/>
-          </el-form-item>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="registerForm.email"/>
+            <el-input v-model="loginForm.email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
-            <el-input v-model="registerForm.password" :type="passwordType"/>
+            <el-input v-model="loginForm.password" :type="passwordType"/>
             <div class="el-button--input-float">
               <jus-icon
                 icon="eye"
                 class="external-view__show-password"
                 @click.native="switchShowPassword"/>
+              <el-button type="text" @click="$router.push('forgot-password')">
+                Esqueceu sua senha?
+              </el-button>
             </div>
           </el-form-item>
           <el-button
             native-type="submit"
             class="external-view__submit"
             type="primary">
-            Cadastrar
+            Entrar
           </el-button>
           <el-row class="external-view__info">
-            Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
+            Ao clicar no botão, eu concordo com os
+            <a href="#"> Termos de Uso</a> e
+            <a href="#">Política de Privacidade.</a>
             <br><br>
-            Já possui conta? <a href="login" @click.prevent="$router.push('login')"> Clique aqui para acessar.</a>
+            Não possui conta?
+            <a href="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
       </el-main>
@@ -60,7 +63,7 @@
 import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
 
 export default {
-  name: 'Register',
+  name: 'Login',
   components: {
     JusSidenavExternal
   },
@@ -71,18 +74,14 @@ export default {
       showSuccess: false,
       showLoading: false,
       errorMessage: '',
-      registerForm: {
-        name: '',
+      loginForm: {
         email: '',
         password: ''
       },
       rules: {
-        name: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-        ],
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'submit' }
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
         ],
         password: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
@@ -95,28 +94,35 @@ export default {
       return this.showPassword ? 'text' : 'password'
     }
   },
+  created () {
+    if (this.$route.query.token) {
+      this.$store.dispatch('activate', this.$route.query.token)
+        .then(() => {
+          this.showSuccess = true
+          this.$router.push('login')
+        })
+        .catch(error => {
+          console.log(error)
+          this.$router.push('login')
+        })
+    }
+  },
   methods: {
     submitForm () {
-      let self = this
-      this.$refs['registerForm'].validate((valid) => {
-        self.showError = false
-        self.showSuccess = false
+      this.$refs['loginForm'].validate((valid) => {
         if (valid) {
-          self.showLoading = true
-          this.$store.dispatch('register', this.registerForm)
+          this.showError = false
+          this.showLoading = true
+          this.$store.dispatch('login', this.loginForm)
             .then(() => {
-              self.showSuccess = true
-              self.registerForm.name = ''
-              self.registerForm.email = ''
-              self.registerForm.password = ''
-              self.showLoading = false
+              this.$router.push('/')
             })
             .catch(error => {
-              if (error.response && error.response.data.errorCode === 'ALREADY_EXISTS') {
-                this.errorMessage = 'Já existe um usuário cadastrado com este e-mail.'
+              if (error.response && error.response.data.errorCode === 'INVALID_CREDENTIALS') {
+                this.errorMessage = 'E-mail não cadastrado ou senha incorreta.'
               } else {
                 this.errorMessage = `Houve uma falha com a conexão com o servidor.
-                Tente novamente ou entre em contato com o administrador do sistema.`
+                Tente novamente ou entre em contato com o administrador do sistema`
               }
               this.showError = true
               this.showLoading = false

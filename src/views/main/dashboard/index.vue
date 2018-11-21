@@ -5,7 +5,7 @@
     </template>
     <template slot="main">
       <JusChartLine :data="data" :options="options"/>
-      {{ $t('hello') }}
+      {{ $t('message') }}
     </template>
   </JusViewMain>
 </template>
@@ -49,14 +49,3 @@ export default {
     margin: 10px 20px 20px;
   }
 </style>
-
-<i18n>
-{
-  "en": {
-    "hello": "Hello i18n in SFC!"
-  },
-  "pt-BR": {
-    "hello": "Olá i18n in SFC!"
-  }
-}
-</i18n>

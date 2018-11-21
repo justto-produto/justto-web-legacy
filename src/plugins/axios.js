@@ -5,11 +5,14 @@ import axios from 'axios'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+const AUTH_TOKEN = localStorage.token
+if (AUTH_TOKEN) {
+  axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
+}
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || 'http://144.22.86.100:8100/api',
+  baseURL: process.env.baseURL || process.env.apiUrl || 'https://dev-env.acordo.pro/account/api',
   timeout: 60 * 1000, // Timeout
   headers: {
     'Access-Control-Allow-Origin': '*'
