@@ -7,7 +7,7 @@ context('Actions', () => {
 
   // Acessando página de Login do justto-web
 
-  it('Acessando Página de Login', () => {
+  it('Acessando Página de Login ', () => {
     // https://on.cypress.io/type
     cy.get('[class=el-input__inner]').then($els => $els.get(0))
       .type('fake@email.com')
