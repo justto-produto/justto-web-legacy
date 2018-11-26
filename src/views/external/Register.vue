@@ -34,7 +34,7 @@
             <el-input v-model="registerForm.password" :type="passwordType" name="register-password"/>
             <div class="el-button--input-float">
               <jus-icon
-                icon="eye"
+                :icon="showPassword ? 'hide' : 'eye'"
                 class="external-view__show-password"
                 @click.native="switchShowPassword"/>
             </div>

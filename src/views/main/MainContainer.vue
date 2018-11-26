@@ -2,24 +2,7 @@
   <el-container>
     <el-aside class="container-aside" width="auto">
       <div :class="{'aside-logo--colapsed': isCollapse}" class="aside-logo">
-        <transition name="fade-absolute">
-          <img v-if="!isCollapse" src="@/assets/logo.svg" class="aside-logo__logo">
-        </transition>
-        <img v-if="isCollapse" class="aside-logo__logo" src="@/assets/logo-small.svg">
-        <a
-          v-if="isCollapse"
-          href=""
-          class="aside-logo__icon"
-          @click.prevent="isCollapse = !isCollapse">
-          <jus-icon v-if="isCollapse" icon="expand-menu"/>
-        </a>
-        <a
-          v-if="!isCollapse"
-          href=""
-          class="aside-logo__icon"
-          @click.prevent="isCollapse = !isCollapse">
-          <jus-icon icon="colapse-menu"/>
-        </a>
+        <img class="aside-logo__logo" src="@/assets/logo-small.svg">
       </div>
       <el-menu
         :collapse-transition="false"
@@ -51,10 +34,7 @@
       </el-menu>
       <el-menu :collapse-transition="false" :collapse="isCollapse" class="el-menu--team-menu">
         <li class="el-menu__title">
-          <span v-if="!isCollapse">
-            TIME BONK E RIZZO
-            <i class="el-icon-plus"/>
-          </span>
+          <span>TIME</span>
         </li>
         <el-menu-item index="1">
           <jus-avatar-user
@@ -132,7 +112,7 @@ export default {
   },
   data () {
     return {
-      isCollapse: false
+      isCollapse: true
     }
   }
 }

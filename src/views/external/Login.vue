@@ -31,7 +31,7 @@
             <el-input v-model="loginForm.password" :type="passwordType" name="login-password"/>
             <div class="el-button--input-float">
               <jus-icon
-                icon="eye"
+                :icon="showPassword ? 'hide' : 'eye'"
                 class="external-view__show-password"
                 @click.native="switchShowPassword"/>
               <el-button type="text" @click="$router.push('forgot-password')">

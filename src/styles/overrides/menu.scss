@@ -19,11 +19,11 @@
 .el-menu--team-menu {
   .el-menu-item {
     .el-tooltip {
-      padding: 0 13px !important;
+      padding: 0 11px !important;
     }
     &.is-active {
       .el-tooltip {
-        padding: 0 10px !important;
+        padding: 0 8px !important;
       }
     }
   }
@@ -31,10 +31,6 @@
 
 .el-menu{
   border: none !important;
-}
-
-.el-menu__avatar {
-  margin-right: 10px;
 }
 
 .el-menu__counter {
@@ -46,11 +42,9 @@
 }
 
 .el-menu__title {
-  margin: 58px 16.5px 20px 20px;
+  margin: 40px 0 10px;
   font-size: 12px;
-  i{
-    float: right; font-size: 16px
-  }
+  text-align: center;
 }
 
 .el-menu-item:focus {
