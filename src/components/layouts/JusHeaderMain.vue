@@ -13,7 +13,7 @@
             src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
           <div class="main-info__name">
             <div>
-              Mariana Rondino
+              {{$store.state.auth.user.name}}
             </div>
             <span>UX Designer</span>
           </div>
@@ -95,6 +95,7 @@ export default {
   span {
     font-size: 12px;
     color: #666666;
+    white-space: nowrap;
   }
 }
 </style>

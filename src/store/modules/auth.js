@@ -5,23 +5,38 @@ const auth = {
     user: {}
   },
   mutations: {
-    auth_request (state) {
+    authRequest (state) {
       state.status = 'loading'
     },
-    auth_success (state, token, user) {
+    authSuccess (state, response) {
       state.status = 'success'
-      state.token = token
-      state.user = user
+      if (response.token) state.token = response.token
+      if (response.user) state.user = response.user
     },
-    auth_error (state) {
+    authError (state) {
       state.status = 'error'
     },
     logout (state) {
       state.status = ''
       state.token = ''
+      state.user = {}
     }
   },
   actions: {
+    my ({ commit }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('/accounts/my', {headers: { 'Authorization': localStorage.getItem('justoken')}})
+          .then(response => {
+            commit('authSuccess', { user: response.data })
+            resolve(response)
+          })
+          .catch(error => {
+            commit('authError')
+            reject(error)
+          })
+      })
+    },
     register ({ commit }, loginForm) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -45,23 +60,30 @@ const auth = {
           })
       })
     },
-    login ({ commit }, user) {
+    login ({ commit }, credentials) {
       return new Promise((resolve, reject) => {
-        commit('auth_request')
+        commit('authRequest')
         // eslint-disable-next-line
-        axios.post('/accounts/token', user)
+        axios.post('/accounts/token', credentials)
           .then(response => {
             const token = response.data.token
-            const user = response.data.user
             localStorage.setItem('justoken', token)
             // eslint-disable-next-line
             axios.defaults.headers.common['Authorization'] = token
-            commit('auth_success', token, user)
-            resolve(response)
+            // eslint-disable-next-line
+            axios.get('/accounts/my')
+              .then(response => {
+                commit('authSuccess', { token: token, user: response.data })
+                resolve(response)
+              })
+              .catch(error => {
+                commit('authError')
+                localStorage.removeItem('justoken')
+                reject(error)
+              })
           })
           .catch(error => {
-            console.log(error)
-            commit('auth_error')
+            commit('authError')
             localStorage.removeItem('justoken')
             reject(error)
           })

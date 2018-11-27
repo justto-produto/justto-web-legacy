@@ -112,7 +112,7 @@ export default {
               self.showLoading = false
             })
             .catch(error => {
-              if (error.response && error.response.data.errorCode === 'ALREADY_EXISTS') {
+              if (error.response && error.response.data.code === 'ALREADY_EXISTS') {
                 this.errorMessage = 'Já existe um usuário cadastrado com este e-mail.'
               } else {
                 this.errorMessage = `Houve uma falha com a conexão com o servidor.

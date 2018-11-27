@@ -18,22 +18,24 @@
           <el-alert
             v-show="showSuccess"
             type="success"
+            show-icon
             title=""
             @close="showSuccess = false">
-            <template slot="title">
-              Senha alterada com sucesso!
-              <a href="#" @click.prevent="$router.push('login')"> Clique aqui para acessar.</a>
-            </template>
+            <template slot="title"/>
+            Senha alterada com sucesso!
+            <br>
+            <a href="#" @click.prevent="$router.push('login')"> Clique aqui para acessar.</a>
           </el-alert>
           <el-alert
             v-show="showError"
             type="error"
+            show-icon
             title=""
             @close="showError = false">
-            <template slot="title">
-              Não foi possível identificar sua requisição de alteração de senha.
-              <a href="#" @click.prevent="$router.push('forgot-password')"> Clique aqui para tentar novamente.</a>
-            </template>
+            <template slot="title"/>
+            Não foi possível identificar sua requisição de alteração de senha.
+            <br>
+            <a href="#" @click.prevent="$router.push('forgot-password')"> Clique aqui para tentar novamente.</a>
           </el-alert>
           <el-form-item label="Senha" prop="password">
             <el-input v-model="newPasswordForm.password" type="password"/>

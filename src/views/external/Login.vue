@@ -94,6 +94,9 @@ export default {
       return this.showPassword ? 'text' : 'password'
     }
   },
+  beforeCreate () {
+    this.$store.dispatch('logout')
+  },
   created () {
     if (this.$route.query.token) {
       this.$store.dispatch('activate', this.$route.query.token)
@@ -118,7 +121,7 @@ export default {
               this.$router.push('/')
             })
             .catch(error => {
-              if (error.response && error.response.data.errorCode === 'INVALID_CREDENTIALS') {
+              if (error.response && error.response.data.code === 'INVALID_CREDENTIALS') {
                 this.errorMessage = 'E-mail não cadastrado ou senha incorreta.'
               } else {
                 this.errorMessage = `Houve uma falha com a conexão com o servidor.
