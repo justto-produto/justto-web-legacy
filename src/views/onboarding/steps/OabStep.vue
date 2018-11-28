@@ -2,7 +2,7 @@
   <div class="onboarding-oab-step">
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
-        <h2>Para começar, qual a sua OAB?</h2>
+        <h2>Qual a sua OAB?</h2>
       </div>
       <el-form ref="oabForm" :inline="true" :model="oabForm" :rules="oabFormRules" label-position="top" @submit.native.prevent="submitForm">
         <el-form-item label="OAB" prop="oab">

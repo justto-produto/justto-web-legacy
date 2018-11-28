@@ -16,11 +16,23 @@
         </el-form-item>
         <ul>
           <li v-for="member in teamMembersForm.teamMembers" :key="member">
-            <img src="@/assets/icons/ic-check.svg">
-            <span>
-              {{ member }}
-            </span>
-            <img src="@/assets/icons/ic-error.svg" @click="removeTeamMember(member)">
+            <div>
+              <img src="@/assets/icons/ic-check.svg">
+              <span class="member-email">
+                {{ member.email }}
+              </span>
+            </div>
+            <div>
+              <el-select v-model="member.type" size="mini">
+                <el-option
+                v-for="item in ['Administrador', 'Negociador']"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            <img class="remove-member" src="@/assets/icons/ic-error.svg" @click="removeTeamMember(member)">
+            </div>
           </li>
         </ul>
       </el-form>
@@ -42,21 +54,20 @@ export default {
     return {
       teamMembersForm: {
         teamMember: '',
+        teamMemberType: '',
         teamMembers: [
-          // 'wojciech@msn.com',
-          // 'stern@mac.com',
-          // 'frederic@live.com',
-          // 'jbryan@att.net',
-          // 'quantamanmmm@sbcglobal.net',
-          // 'marioph@live.com',
-          // 'msusa@yahoo.ca',
-          // 'mirod@gmail.com',
-          // 'slanglois@verizon.net',
-          // 'choset@me.co',
-          // 'hikoza@hotmail.com',
-          // 'fwitness@mac.com',
-          // 'mkearl@verizon.net',
-          // 'rupak@live.com'
+          {
+            email: 'choset@me.co',
+            type: 'Administrador'
+          },
+          {
+            email: 'hikoza@hotmail.com',
+            type: 'Negociador'
+          },
+          {
+            email: 'mkearl@verizon.net',
+            type: 'Administrador'
+          }
         ]
       },
       teamMembersFormRules: {
@@ -71,7 +82,12 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           if (!this.teamMembersForm.teamMembers.includes(this.teamMembersForm.teamMember)) {
-            this.teamMembersForm.teamMembers.push(this.teamMembersForm.teamMember)
+            this.teamMembersForm.teamMembers.push(
+              {
+                email: this.teamMembersForm.teamMember,
+                type: 'Negociador'
+              }
+            )
           }
           this.$refs[form].resetFields()
         } else {
@@ -90,20 +106,28 @@ export default {
 
 <style lang="scss">
 .onboarding-invite-step {
+  form {
+    max-width: 475px !important;
+    .el-select {
+      max-width: 128px !important;
+    }
+  }
   ul{
     padding: 0;
     margin: 10px 4px 40px;
     li{
+      height: 28px;
       margin-top: 10px;
       list-style-type: none;
-      img{
-        &:first-of-type{
-          margin-right: 20px;
-        }
-        &:last-of-type{
-          cursor: pointer;
-          float: right;
-        }
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .member-email{
+        margin-left: 20px;
+      }
+      .remove-member{
+        cursor: pointer;
+        margin-left: 20px;
       }
     }
   }

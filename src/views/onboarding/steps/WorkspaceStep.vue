@@ -2,12 +2,15 @@
   <div>
     <div class="onboarding-step-content onboarding-workspace-step">
       <div class="onboarding-step-content__title">
-        <h2>Crie o seu espaço de trabalho</h2>
-        <p>Para acessar a plataforma, você e sua equipe utilizarão o link cadastrado abaixo. Você pode cadastrar o nome do seu escritório, por exemplo.</p>
+        <h2>Crie o seu espaço de trabalho na Justto</h2>
+        <p>Abaixo você irá configurar o seu link de acesso ao sistema da Justto. Escolha um nome que seja fácil lembrar
+           para você e sua equipe. Recomendamos o nome do seu escritório ou empresa.
+           <br><br>
+           Observação: Não é permitido usar acentuação ou caracteres especiais.
+         </p>
       </div>
       <el-form ref="workspaceForm" :model="workspaceForm" :rules="workspaceFormRules" label-position="top" @submit.native.prevent="submitForm">
-        <span>http://</span>
-        <el-form-item label="" prop="workspace">
+        <el-form-item label="Espaço de trabalho" prop="workspace">
           <el-input v-model="workspaceForm.workspace"/>
         </el-form-item>
         <span>.acordo.pro</span>
@@ -26,12 +29,21 @@ export default {
     }
   },
   data () {
+    var validateWorkspace = (rule, value, callback) => {
+      if (/[^A-Z0-9]/gi.test(value)) {
+        callback(new Error('Formato inválido'))
+      } else {
+        callback()
+      }
+    }
     return {
       workspaceForm: {
         workspace: ''
       },
       workspaceFormRules: {
-        workspace: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        workspace: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validateWorkspace, trigger: 'change' }]
       }
     }
   },

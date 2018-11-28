@@ -9,18 +9,18 @@
           <swiper-slide>
             <WelcomeStep :is-guest="isGuest" @onboarding:step:next="nextStep"/>
           </swiper-slide>
-          <swiper-slide>
-            <OabStep @onboarding:step:next="nextStep"/>
-          </swiper-slide>
           <swiper-slide v-if="!isGuest">
-            <NameStep @onboarding:step:next="nextStep"/>
+            <TeamNameStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide v-if="!isGuest">
             <workspace-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
-          <swiper-slide v-if="!isGuest">
-            <LogoStep @onboarding:step:next="nextStep"/>
+          <swiper-slide>
+            <OabStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
+          <!-- <swiper-slide v-if="!isGuest">
+            <LogoStep @onboarding:step:next="nextStep"/>
+          </swiper-slide> -->
           <swiper-slide v-if="!isGuest">
             <InviteStep @onboarding:step:next="nextStep"/>
           </swiper-slide>
@@ -46,7 +46,7 @@ import WelcomeStep from './steps/WelcomeStep'
 import OabStep from './steps/OabStep'
 import EmailStep from './steps/EmailStep'
 import WhatsappStep from './steps/WhatsappStep'
-import NameStep from './steps/NameStep'
+import TeamNameStep from './steps/TeamNameStep'
 import WorkspaceStep from './steps/WorkspaceStep'
 import LogoStep from './steps/LogoStep'
 import InviteStep from './steps/InviteStep'
@@ -55,7 +55,7 @@ import DoneStep from './steps/DoneStep'
 export default {
   name: 'Onboarding',
   components: {
-    JusSidenavExternal, WelcomeStep, OabStep, EmailStep, WhatsappStep, NameStep, LogoStep, InviteStep, DoneStep, WorkspaceStep
+    JusSidenavExternal, WelcomeStep, OabStep, EmailStep, WhatsappStep, TeamNameStep, LogoStep, InviteStep, DoneStep, WorkspaceStep
   },
   data () {
     return {
