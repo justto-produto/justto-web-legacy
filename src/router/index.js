@@ -104,8 +104,8 @@ const router = new Router({
     },
     {
       name: 'onboarding',
-      path: '/onboarding/',
-      component: () => import(/* webpackChunkName: "onboardingIndex" */ '@/views/onboarding'),
+      path: '/onboarding',
+      component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding'),
       meta: {
         requiresAuth: true
       }
@@ -120,10 +120,12 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
-      next()
-      return
-    }
-    next('/login')
+      if (to.name !== 'onboarding') {
+        if (Store.getters.hasWorkspace) {
+          next()
+        } else next('onboarding')
+      } else next()
+    } else next('login')
   } else next()
 })
 

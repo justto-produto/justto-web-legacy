@@ -12,7 +12,7 @@ if (AUTH_TOKEN) {
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || 'https://dev-env.acordo.pro/account/api',
+  baseURL: process.env.baseURL || process.env.apiUrl || 'https://dev-env.acordo.pro/api',
   timeout: 60 * 1000, // Timeout
   headers: {
     'Access-Control-Allow-Origin': '*'

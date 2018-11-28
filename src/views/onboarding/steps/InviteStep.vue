@@ -8,14 +8,19 @@
           Os convidados irão receber um e-mail para juntar-se à equipe Shostners & Shostners no sistema da Justto.
         </p>
       </div>
-      <el-form ref="teamMembersForm" :model="teamMembersForm" :rules="teamMembersFormRules" label-position="top" @submit.native.prevent="addTeamMember('teamMembersForm')">
+      <el-form
+        ref="teamMembersForm"
+        :model="teamMembersForm"
+        :rules="teamMembersFormRules"
+        label-position="top"
+        @submit.native.prevent="addTeamMember('teamMembersForm')">
         <el-form-item label="E-mail" prop="teamMember">
           <el-input v-model="teamMembersForm.teamMember">
             <el-button slot="append" icon="el-icon-plus" native-type="submit"/>
           </el-input>
         </el-form-item>
         <ul>
-          <li v-for="member in teamMembersForm.teamMembers" :key="member">
+          <li v-for="member in teamMembersForm.teamMembers" :key="member.$index">
             <div>
               <img src="@/assets/icons/ic-check.svg">
               <span class="member-email">
@@ -25,13 +30,12 @@
             <div>
               <el-select v-model="member.type" size="mini">
                 <el-option
-                v-for="item in ['Administrador', 'Negociador']"
-                :key="item"
-                :label="item"
-                :value="item">
-              </el-option>
-            </el-select>
-            <img class="remove-member" src="@/assets/icons/ic-error.svg" @click="removeTeamMember(member)">
+                  v-for="type in types"
+                  :key="type.$index"
+                  :label="type.label"
+                  :value="type.value"/>
+              </el-select>
+              <img class="remove-member" src="@/assets/icons/ic-error.svg" @click="removeTeamMember(member)">
             </div>
           </li>
         </ul>
@@ -52,6 +56,16 @@ export default {
   },
   data () {
     return {
+      types: [
+        {
+          label: 'Administrador',
+          value: 1
+        },
+        {
+          label: 'Negociador',
+          value: 2
+        }
+      ],
       teamMembersForm: {
         teamMember: '',
         teamMemberType: '',

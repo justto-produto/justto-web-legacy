@@ -36,7 +36,12 @@
         </swiper>
       </el-col>
     </transition>
-    <el-button :disabled="currentStep === 0" class="el-button--previous-step" type="primary" icon="el-icon-arrow-up" @click="previousStep"/>
+    <el-button
+      :disabled="currentStep === 0"
+      class="el-button--previous-step"
+      type="primary"
+      icon="el-icon-arrow-up"
+      @click="previousStep"/>
   </el-row>
 </template>
 

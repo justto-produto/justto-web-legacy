@@ -8,8 +8,14 @@
 
 <script>
 export default {
-  mounted () {
-    this.$store.dispatch('my')
+  beforeCreate () {
+    if (this.$store.getters.isLoggedIn) {
+      this.$store.dispatch('my').then(response => {
+        // if (!this.$store.getters.hasWorkspace) {
+        //   this.$router.push('/onboarding')
+        // }
+      })
+    }
   }
 }
 </script>

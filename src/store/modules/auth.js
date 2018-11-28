@@ -2,7 +2,8 @@ const auth = {
   state: {
     status: '',
     token: localStorage.getItem('justoken') || '',
-    user: {}
+    user: {},
+    workspace: []
   },
   mutations: {
     authRequest (state) {
@@ -12,6 +13,7 @@ const auth = {
       state.status = 'success'
       if (response.token) state.token = response.token
       if (response.user) state.user = response.user
+      if (response.workspace) state.workspace = response.workspace
     },
     authError (state) {
       state.status = 'error'
@@ -20,6 +22,7 @@ const auth = {
       state.status = ''
       state.token = ''
       state.user = {}
+      state.workspace = []
     }
   },
   actions: {
@@ -27,9 +30,20 @@ const auth = {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('/accounts/my', {headers: { 'Authorization': localStorage.getItem('justoken')}})
-          .then(response => {
-            commit('authSuccess', { user: response.data })
-            resolve(response)
+          .then(accountsResponse => {
+            // eslint-disable-next-line
+            axios.get('/workspaces/my', { headers: { 'Authorization': localStorage.getItem('justoken') } })
+              .then(workspacesResponse => {
+                commit('authSuccess', {
+                  user: accountsResponse.data,
+                  workspace: workspacesResponse.data
+                })
+                resolve({ accountsResponse, workspacesResponse })
+              })
+              .catch(error => {
+                commit('authError')
+                reject(error)
+              })
           })
           .catch(error => {
             commit('authError')
@@ -125,7 +139,8 @@ const auth = {
   },
   getters: {
     isLoggedIn: state => !!state.token,
-    authStatus: state => state.status
+    authStatus: state => state.status,
+    hasWorkspace: state => !state.workspace
   }
 }
 

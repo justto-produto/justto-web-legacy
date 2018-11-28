@@ -25,7 +25,7 @@
             type="success"
             @close="showSuccess = false"/>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="loginForm.email" name="login-email"/>
+            <el-input v-model="loginForm.email" type="email" name="login-email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
             <el-input v-model="loginForm.password" :type="passwordType" name="login-password"/>
