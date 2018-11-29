@@ -1,8 +1,13 @@
 <template lang="html">
   <div class="onboarding-step-content onboarding-welcome-step">
-    <JusLogoCompany v-if="isGuest" src="shostners.jpg" shadow shape="circle" size="xl"/>
+    <JusLogoCompany
+      v-if="isGuest"
+      src="shostners.jpg"
+      shadow
+      shape="circle"
+      size="xl"/>
     <h1>
-      Mariana, bem-vindo(a) à Justto<br>
+      {{ name }}, bem-vindo(a) à Justto<br>
       <span v-if="isGuest">
         Junte-se ao escritório Shostners & Shostners
       </span>
@@ -27,6 +32,11 @@ export default {
     isGuest: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    name () {
+      return this.$store.state.auth.user.name
     }
   }
 }

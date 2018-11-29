@@ -5,43 +5,47 @@
     </el-col>
     <transition name="fade">
       <el-col v-if="right > 0" :md="right">
-        <swiper ref="swiper" :options="swiperOption" class="swiper-box">
+        <swiper
+          v-loading="loading"
+          ref="swiper"
+          :options="swiperOption"
+          class="swiper-box">
           <swiper-slide>
-            <WelcomeStep :is-guest="isGuest" @onboarding:step:next="nextStep"/>
+            <welcome-step :is-guest="isGuest" @onboarding:step:next="nextStep"/>
           </swiper-slide>
-          <swiper-slide v-if="!isGuest">
-            <TeamNameStep @onboarding:step:next="nextStep"/>
+          <swiper-slide v-if="!isGuest && !secondFase">
+            <team-name-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
-          <swiper-slide v-if="!isGuest">
-            <workspace-step @onboarding:step:next="nextStep"/>
+          <swiper-slide v-if="!isGuest && !secondFase">
+            <subdomain-step @onboarding:step:next="createSubdomain"/>
           </swiper-slide>
           <swiper-slide>
-            <OabStep @onboarding:step:next="nextStep"/>
+            <oab-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <!-- <swiper-slide v-if="!isGuest">
             <LogoStep @onboarding:step:next="nextStep"/>
           </swiper-slide> -->
           <swiper-slide v-if="!isGuest">
-            <InviteStep @onboarding:step:next="nextStep"/>
+            <invite-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
-            <EmailStep @onboarding:step:next="nextStep"/>
+            <email-sync-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
-            <WhatsappStep @onboarding:step:next="nextStep"/>
+            <whatsapp-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
-            <DoneStep :is-guest="isGuest" @onboarding:step:next="nextStep"/>
+            <done-step :is-guest="isGuest" @onboarding:step:finish="finalStep"/>
           </swiper-slide>
         </swiper>
       </el-col>
     </transition>
-    <el-button
+    <!-- <el-button
       :disabled="currentStep === 0"
       class="el-button--previous-step"
       type="primary"
       icon="el-icon-arrow-up"
-      @click="previousStep"/>
+      @click="previousStep"/> -->
   </el-row>
 </template>
 
@@ -49,10 +53,10 @@
 import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
 import WelcomeStep from './steps/WelcomeStep'
 import OabStep from './steps/OabStep'
-import EmailStep from './steps/EmailStep'
+import EmailSyncStep from './steps/EmailSyncStep'
 import WhatsappStep from './steps/WhatsappStep'
 import TeamNameStep from './steps/TeamNameStep'
-import WorkspaceStep from './steps/WorkspaceStep'
+import SubdomainStep from './steps/SubdomainStep'
 import LogoStep from './steps/LogoStep'
 import InviteStep from './steps/InviteStep'
 import DoneStep from './steps/DoneStep'
@@ -60,10 +64,21 @@ import DoneStep from './steps/DoneStep'
 export default {
   name: 'Onboarding',
   components: {
-    JusSidenavExternal, WelcomeStep, OabStep, EmailStep, WhatsappStep, TeamNameStep, LogoStep, InviteStep, DoneStep, WorkspaceStep
+    JusSidenavExternal,
+    WelcomeStep,
+    OabStep,
+    EmailSyncStep,
+    WhatsappStep,
+    TeamNameStep,
+    LogoStep,
+    InviteStep,
+    DoneStep,
+    SubdomainStep
   },
   data () {
     return {
+      loading: false,
+      responses: {},
       left: 12,
       right: 0,
       currentStep: 0,
@@ -77,6 +92,12 @@ export default {
   computed: {
     isGuest: function () {
       return !!this.$route.query.invitedBy
+    },
+    secondFase: function () {
+      if (this.$store.state.auth.workspace.status === 'CREATING') {
+        return true
+      }
+      return false
     }
   },
   created: function () {
@@ -88,7 +109,8 @@ export default {
     }.bind(this), 1200)
   },
   methods: {
-    nextStep () {
+    nextStep (responseObj) {
+      Object.assign(this.responses, responseObj)
       this.$refs['swiper'].swiper.slideNext(800)
       this.updateCurrentStep()
     },
@@ -98,6 +120,34 @@ export default {
     },
     updateCurrentStep () {
       this.currentStep = this.$refs['swiper'].swiper.activeIndex
+    },
+    createSubdomain (responseObj) {
+      this.loading = true
+      Object.assign(this.responses, responseObj)
+      this.$store.dispatch('createWorkpace', {
+        name: this.responses.team,
+        subDomain: this.responses.subDomain
+      }).then(() => {
+        this.$refs['swiper'].swiper.slideNext(800)
+      }).catch(error => {
+        console.log(error)
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+    finalStep (responseObj) {
+      this.loading = true
+      Object.assign(this.responses, responseObj)
+      this.responses.workspace = this.$store.state.auth.workspace.subDomain
+      this.$store.dispatch('finishWorkspace', this.responses)
+        .then(() => {
+          this.loading = false
+          // this.$router.push('/')
+        }).catch(error => {
+          console.log(error)
+        }).finally(() => {
+          this.loading = false
+        })
     }
   }
 }

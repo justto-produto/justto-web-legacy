@@ -95,6 +95,9 @@ export default {
       return this.showPassword ? 'text' : 'password'
     }
   },
+  beforeCreate () {
+    this.$store.dispatch('logout')
+  },
   methods: {
     submitForm () {
       let self = this

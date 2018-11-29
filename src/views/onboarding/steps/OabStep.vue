@@ -4,13 +4,23 @@
       <div class="onboarding-step-content__title">
         <h2>Qual a sua OAB?</h2>
       </div>
-      <el-form ref="oabForm" :inline="true" :model="oabForm" :rules="oabFormRules" label-position="top" @submit.native.prevent="submitForm">
+      <el-form
+        ref="oabForm"
+        :inline="true"
+        :model="oabForm"
+        :rules="oabFormRules"
+        label-position="top"
+        @submit.native.prevent="submitForm">
         <el-form-item label="OAB" prop="oab">
           <el-input v-model="oabForm.oab"/>
         </el-form-item>
-        <el-form-item label="UF" prop="uf">
-          <el-select v-model="oabForm.uf" placeholder="">
-            <el-option v-for="uf in $store.state.ufList" :key="uf" :label="uf" :value="uf"/>
+        <el-form-item label="UF" prop="state">
+          <el-select v-model="oabForm.state" placeholder="">
+            <el-option
+              v-for="state in $store.state.stateList"
+              :key="state"
+              :label="state"
+              :value="state"/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -32,13 +42,13 @@ export default {
     return {
       oabForm: {
         oab: '',
-        uf: ''
+        state: ''
       },
       oabFormRules: {
         oab: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
-        uf: [
+        state: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ]
       }
@@ -48,7 +58,7 @@ export default {
     submitForm () {
       this.$refs['oabForm'].validate((valid) => {
         if (valid) {
-          this.$emit('onboarding:step:next')
+          this.$emit('onboarding:step:next', this.oabForm)
         } else {
           return false
         }

@@ -41,7 +41,7 @@
         </ul>
       </el-form>
     </div>
-    <el-button :disabled="teamMembersForm.teamMembers.length === 0" type="primary" @click="$emit('onboarding:step:next')">Convidar</el-button>
+    <el-button :disabled="teamMembersForm.teamMembers.length === 0" type="primary" @click="submitForm">Convidar</el-button>
     <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
   </div>
 </template>
@@ -113,6 +113,9 @@ export default {
       this.teamMembersForm.teamMembers.splice(
         this.teamMembersForm.teamMembers.indexOf(member), 1
       )
+    },
+    submitForm () {
+      this.$emit('onboarding:step:next', { teammates: this.teamMembersForm.teamMembers })
     }
   }
 }

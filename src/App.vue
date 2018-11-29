@@ -10,10 +10,10 @@
 export default {
   beforeCreate () {
     if (this.$store.getters.isLoggedIn) {
-      this.$store.dispatch('my').then(response => {
-        // if (!this.$store.getters.hasWorkspace) {
-        //   this.$router.push('/onboarding')
-        // }
+      this.$store.dispatch('my').then((response) => {
+        if (!this.$store.getters.hasWorkspace) {
+          this.$router.push('onboarding')
+        }
       })
     }
   }

@@ -3,7 +3,7 @@ const auth = {
     status: '',
     token: localStorage.getItem('justoken') || '',
     user: {},
-    workspace: []
+    workspace: {}
   },
   mutations: {
     authRequest (state) {
@@ -22,21 +22,21 @@ const auth = {
       state.status = ''
       state.token = ''
       state.user = {}
-      state.workspace = []
+      state.workspace = {}
     }
   },
   actions: {
     my ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/accounts/my', {headers: { 'Authorization': localStorage.getItem('justoken')}})
+        axios.get('/accounts/my')
           .then(accountsResponse => {
             // eslint-disable-next-line
-            axios.get('/workspaces/my', { headers: { 'Authorization': localStorage.getItem('justoken') } })
+            axios.get('/workspaces/my')
               .then(workspacesResponse => {
                 commit('authSuccess', {
                   user: accountsResponse.data,
-                  workspace: workspacesResponse.data
+                  workspace: workspacesResponse.data[0]
                 })
                 resolve({ accountsResponse, workspacesResponse })
               })
@@ -86,9 +86,21 @@ const auth = {
             axios.defaults.headers.common['Authorization'] = token
             // eslint-disable-next-line
             axios.get('/accounts/my')
-              .then(response => {
-                commit('authSuccess', { token: token, user: response.data })
-                resolve(response)
+              .then(accountsResponse => {
+                // eslint-disable-next-line
+                axios.get('/workspaces/my')
+                  .then(workspacesResponse => {
+                    commit('authSuccess', {
+                      user: accountsResponse.data,
+                      workspace: workspacesResponse.data[0]
+                    })
+                    commit('authSuccess', { token: token, user: accountsResponse.data })
+                    resolve({ accountsResponse, workspacesResponse })
+                  })
+                  .catch(error => {
+                    commit('authError')
+                    reject(error)
+                  })
               })
               .catch(error => {
                 commit('authError')
@@ -140,7 +152,9 @@ const auth = {
   getters: {
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
-    hasWorkspace: state => !state.workspace
+    hasWorkspace: state => {
+      return !state.workspace && state.workspace.status !== 'CREATING'
+    }
   }
 }
 

@@ -123,7 +123,9 @@ router.beforeEach((to, from, next) => {
       if (to.name !== 'onboarding') {
         if (Store.getters.hasWorkspace) {
           next()
-        } else next('onboarding')
+        } else {
+          next('onboarding')
+        }
       } else next()
     } else next('login')
   } else next()

@@ -5,7 +5,7 @@ import axios from 'axios'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
-const AUTH_TOKEN = localStorage.token
+const AUTH_TOKEN = localStorage.justoken
 if (AUTH_TOKEN) {
   axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
 }

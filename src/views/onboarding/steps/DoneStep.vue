@@ -7,7 +7,7 @@
       Você tem 15 dias gratuitos para experimentar a nossa plataforma.
       Faça upgrade do seu plano para ter livre acesso após esse período.
     </p>
-    <el-button type="primary" @click="$router.push('/import/upload')">Vamos começar</el-button>
+    <el-button type="primary" @click="$emit('onboarding:step:finish')">Vamos começar</el-button>
   </div>
 </template>
 
