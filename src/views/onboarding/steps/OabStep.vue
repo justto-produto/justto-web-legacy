@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="onboarding-oab-step">
-    <div class="onboarding-step-content">
+    <div class="onboarding-step-content" v-loading="$store.state.loading">
       <div class="onboarding-step-content__title">
         <h2>Qual a sua OAB?</h2>
       </div>
@@ -58,7 +58,14 @@ export default {
     submitForm () {
       this.$refs['oabForm'].validate((valid) => {
         if (valid) {
-          this.$emit('onboarding:step:next', this.oabForm)
+          this.$store.dispatch('updateOab', oabForm)
+            .then(() => {
+
+              this.$emit('onboarding:step:next', this.oabForm)
+            })
+            .catch((error) => {
+              console.log(error)
+            })
         } else {
           return false
         }

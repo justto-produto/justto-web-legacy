@@ -1,8 +1,4 @@
 const workspace = {
-  state: {
-  },
-  mutations: {
-  },
   actions: {
     verifyAvailability ({ commit }, subdomain) {
       return new Promise((resolve, reject) => {
@@ -29,14 +25,7 @@ const workspace = {
     finishWorkspace ({ commit }, responses) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/accounts/oab', { number: responses.oab, state: responses.state})
-          .then(response => {
-            resolve(response.data)
-          }).catch(error => {
-            reject(error)
-          })
-        //eslint-disable-next-line
-        axios.post('/invite-teammates/'+responses.workspace, responses.teammates)
+        axios.post('/workspace/invite-teammates/'+responses.workspace, responses.teammates)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -44,8 +33,6 @@ const workspace = {
           })
       })
     }
-  },
-  getters: {
   }
 }
 

@@ -28,12 +28,12 @@
               </span>
             </div>
             <div>
-              <el-select v-model="member.type" size="mini">
+              <el-select v-model="member.profile" size="mini">
                 <el-option
-                  v-for="type in types"
-                  :key="type.$index"
-                  :label="type.label"
-                  :value="type.value"/>
+                  v-for="profile in profiles"
+                  :key="profile.$index"
+                  :label="profile"
+                  :value="profile"/>
               </el-select>
               <img class="remove-member" src="@/assets/icons/ic-error.svg" @click="removeTeamMember(member)">
             </div>
@@ -56,31 +56,22 @@ export default {
   },
   data () {
     return {
-      types: [
-        {
-          label: 'Administrador',
-          value: 1
-        },
-        {
-          label: 'Negociador',
-          value: 2
-        }
-      ],
+      profiles: ['Administrador', 'Negociador'],
       teamMembersForm: {
         teamMember: '',
         teamMemberType: '',
         teamMembers: [
           {
             email: 'choset@me.co',
-            type: 'Administrador'
+            profile: 'Administrador'
           },
           {
             email: 'hikoza@hotmail.com',
-            type: 'Negociador'
+            profile: 'Negociador'
           },
           {
             email: 'mkearl@verizon.net',
-            type: 'Administrador'
+            profile: 'Administrador'
           }
         ]
       },
