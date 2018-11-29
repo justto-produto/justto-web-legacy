@@ -14,11 +14,14 @@
       :rules="syncFormRules"
       label-position="top"
       @submit.native.prevent="submitForm">
-      <el-form-item label="E-mail de trabalho" prop="email">
+      <el-form-item label="E-mail de trabalho" prop="email" type="text">
         <el-input v-model="syncForm.email"/>
       </el-form-item>
       <el-form-item label="Senha do e-mail" prop="password">
         <el-input v-model="syncForm.password" type="password"/>
+      </el-form-item>
+      <el-form-item label="Servidor IMAP" prop="imap">
+        <el-input v-model="syncForm.imap" type="text"/>
       </el-form-item>
     </el-form>
     <!-- <el-checkbox v-model="checked1" border class="el-checkbox--active">
@@ -46,7 +49,7 @@
     <el-button v-if="!synced" type="primary" @click="syncEmail">
       Sincronizar
     </el-button>
-    <el-button v-if="synced" type="primary" @click="nextStep">
+    <el-button v-if="synced" type="primary" @click="$emit('onboarding:step:next')">
       Próximo
     </el-button>
     <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
@@ -88,15 +91,21 @@ export default {
       this.$refs['syncForm'].validate((valid) => {
         if (valid) {
           this.loading = true
+          this.$store.dispatch('syncInbox', this.syncForm)
+            .then((response) => {
+              this.showSuccess = true
+              this.synced = true
+            }).catch((error) => {
+              this.showError = true
+              console.log(error)
+            }).finally(() => {
+              this.loading = false
+            })
+          // setTimeout(function () {
+          // }.bind(this), 1500)
           // setTimeout(function () {
           //   this.loading = false
-          //   this.showSuccess = true
-          //   this.synced = true
-          // }.bind(this), 1500)
-          setTimeout(function () {
-            this.loading = false
-            this.showError = true
-          }.bind(this), 1500);
+          // }.bind(this), 1500);
         } else {
           return false
         }
