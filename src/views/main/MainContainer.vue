@@ -2,7 +2,7 @@
   <el-container>
     <el-aside class="container-aside" width="auto">
       <div :class="{'aside-logo--colapsed': isCollapse}" class="aside-logo">
-        <img class="aside-logo__logo" src="@/assets/logo-small.svg">
+        <img class="aside-logo__logo" src="@/assets/logo.svg">
       </div>
       <el-menu
         :collapse-transition="false"
@@ -32,7 +32,7 @@
           <span slot="title">Configurações</span>
         </el-menu-item>
       </el-menu>
-      <el-menu :collapse-transition="false" :collapse="isCollapse" class="el-menu--team-menu">
+      <!-- <el-menu :collapse-transition="false" :collapse="isCollapse" class="el-menu--team-menu">
         <li class="el-menu__title">
           <span>TIME</span>
         </li>
@@ -89,7 +89,7 @@
           <span slot="title">Bruno Moreno</span>
           <span class="el-menu__counter">0</span>
         </el-menu-item>
-      </el-menu>
+      </el-menu> -->
     </el-aside>
     <el-container direction="vertical">
       <JusHeaderMain/>

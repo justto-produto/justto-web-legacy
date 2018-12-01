@@ -10,7 +10,7 @@ const router = new Router({
       path: '/',
       component: () => import(/* webpackChunkName: "mainContainer" */ '@/views/main/MainContainer'),
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       },
       children: [
         {

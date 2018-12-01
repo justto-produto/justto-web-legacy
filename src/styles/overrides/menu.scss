@@ -1,5 +1,8 @@
 .el-menu--main-menu, .el-menu--team-menu {
-  width: 280px;
+  height: calc(100% - 120px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   .el-menu-item {
     height: 64px;
     line-height: 64px;
@@ -39,6 +42,11 @@
 
 .el-menu__icon {
   margin-right: 16px;
+}
+
+.el-menu__icon-search {
+  margin-right: 10px;
+  width: 16px;
 }
 
 .el-menu__title {
