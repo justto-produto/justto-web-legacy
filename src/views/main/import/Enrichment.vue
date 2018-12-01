@@ -15,7 +15,9 @@
           <el-card shadow="never" class="el-card--dashed">
             <div v-show="loading && !enriched" class="el-loading-spinner">
               <svg viewBox="25 25 50 50" class="circular">
-                <circle cx="50" cy="50" r="20" fill="none" class="path"/>
+                <circle
+                  cx="50" cy="50" r="20"
+                  fill="none" class="path"/>
               </svg>
             </div>
             <h3 v-show="!enriched && !loading">
@@ -41,8 +43,12 @@
           </el-card>
         </div>
         <div class="view-import__actions">
-          <el-button v-if="!enriched" :disabled="loading" plain @click="$router.push('/import/feedback')">Pular enriquecimento</el-button>
-          <el-button v-if="!enriched" :disabled="loading" type="primary" @click="startEnrichment">Enriquecer</el-button>
+          <el-button
+            v-if="!enriched" :disabled="loading" plain
+            @click="$router.push('/import/feedback')">Pular enriquecimento</el-button>
+          <el-button
+            v-if="!enriched" :disabled="loading" type="primary"
+            @click="startEnrichment">Enriquecer</el-button>
           <el-button v-if="enriched" type="primary" @click="$router.push('/import/feedback')">Próximo</el-button>
         </div>
       </div>

@@ -19,12 +19,16 @@
         <div class="view-import__content">
           <div>
             <h3>Colunas do arquivo</h3>
-            <div v-for="column in columns" :key="column.key" class="file-column" @drop="drop($event, column)" @dragover.prevent>
+            <div
+              v-for="column in columns" :key="column.key" class="file-column"
+              @drop="drop($event, column)" @dragover.prevent>
               <div class="file-column__label">
                 <span class="file-column__title">{{ column.label }}</span>
                 <span class="file-column__example">{{ column.example }}</span>
               </div>
-              <el-tag :closable="column.tag !== ''" :class="{'el-tag--dropzone-active': column.tag !== ''}" class="el-tag--dropzone" @close="removeTag(column)">
+              <el-tag
+                :closable="column.tag !== ''" :class="{'el-tag--dropzone-active': column.tag !== ''}" class="el-tag--dropzone"
+                @close="removeTag(column)">
                 <span v-if="column.tag !== ''">{{ column.tag }}</span>
                 <span v-else>Arraste a coluna aqui</span>
               </el-tag>
@@ -34,7 +38,9 @@
             <h3>Dados do sistema</h3>
             <el-collapse value="1" class="el-collapse-drag">
               <el-collapse-item title="Dados do conflito" name="1">
-                <span v-for="tag in tags" :key="tag.label" draggable="true" @dragstart.self="drag($event, tag.label)">
+                <span
+                  v-for="tag in tags" :key="tag.label" draggable="true"
+                  @dragstart.self="drag($event, tag.label)">
                   <el-tag :class="{'el-tag--drag-active': tag.columnKey !== ''}" class="el-tag--drag">
                     {{ tag.label }}
                   </el-tag>

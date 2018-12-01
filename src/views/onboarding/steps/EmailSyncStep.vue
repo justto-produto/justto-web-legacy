@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="onboarding-step-content onboarding-email-step" v-loading="loading">
+  <div v-loading="loading" class="onboarding-step-content onboarding-email-step">
     <div class="onboarding-step-content__title">
       <h2>Deseja sincronizar o seu e-mail com a plataforma?</h2>
       <p>
@@ -112,7 +112,7 @@ export default {
       })
     },
     nextStep () {
-      $emit('onboarding:step:next')
+      this.$emit('onboarding:step:next')
     }
   }
 }

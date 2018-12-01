@@ -13,7 +13,7 @@
             src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
           <div class="main-info__name">
             <div>
-              {{$store.state.auth.user.name}}
+              {{ $store.state.auth.user.name }}
             </div>
             <span>UX Designer</span>
           </div>

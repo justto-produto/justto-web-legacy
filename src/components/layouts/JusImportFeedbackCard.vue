@@ -2,7 +2,9 @@
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--company-tag">{{ company }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-form ref="form" :inline="true" :model="form" label-position="top">
+      <el-form
+        ref="form" :inline="true" :model="form"
+        label-position="top">
         <el-form-item label="Nº de casos" prop="number" style="width: 40%">
           <el-input v-model="form.number" readonly class="el-input--no-border"/>
         </el-form-item>
@@ -14,7 +16,9 @@
         </el-form-item>
         <el-form-item label="Tipo" prop="number" style="width: 40%">
           <el-select v-model="form.value" placeholder="Select">
-            <el-option v-for="item in ['Indenizatório', 'Cobrança']" :key="item" :label="item" :value="item"/>
+            <el-option
+              v-for="item in ['Indenizatório', 'Cobrança']" :key="item" :label="item"
+              :value="item"/>
           </el-select>
         </el-form-item>
         <el-form-item label="Data limite da negociação" prop="number" style="margin: 0; width: 57%">

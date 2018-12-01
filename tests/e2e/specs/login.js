@@ -15,7 +15,7 @@ context('Actions', () => {
     cy.get('[name=login-password]')
       .type('password')
     // Press 'Enter' buttom
-    //cy.contains('Entrar').click()
+    // cy.contains('Entrar').click()
   })
 
   // it('Cadastrar usuário', () => {

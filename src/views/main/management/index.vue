@@ -5,7 +5,9 @@
     </template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
-        <el-checkbox v-show="multiActive" :checked="true" class="el-checkbox--status" disabled>
+        <el-checkbox
+          v-show="multiActive" :checked="true" class="el-checkbox--status"
+          disabled>
           {{ checkList.length }} casos selecionados
         </el-checkbox>
         <el-button-group>
@@ -15,23 +17,31 @@
         </el-button-group>
         <i class="el-icon-close" @click="checkList = []"/>
       </div>
-      <el-tabs ref="management-tabs" :class="handleArrows" :stretch="true" @tab-click="handleTabClick">
+      <el-tabs
+        ref="management-tabs" :class="handleArrows" :stretch="true"
+        @tab-click="handleTabClick">
         <el-tab-pane label="Pendentes">
           <div class="view-management__header">
             <el-checkbox/>
             <div>
               Ordenar por:
               <el-select v-model="filter" size="small" placeholder="Selecione uma opção">
-                <el-option v-for="filter in ['Campanha', 'Empresa', 'ID do caso', 'Responsável', 'Dado incorreto']" :key="filter" :label="filter" :value="filter"/>
+                <el-option
+                  v-for="filter in ['Campanha', 'Empresa', 'ID do caso', 'Responsável', 'Dado incorreto']" :key="filter" :label="filter"
+                  :value="filter"/>
               </el-select>
               <el-button type="primary" size="small">Exportar casos</el-button>
             </div>
           </div>
           <div class="view-management__container">
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2,3]" :key="item" :label="'check'+item" class="view-management__item">
+              <el-checkbox
+                v-for="item in [1,2,3]" :key="item" :label="'check'+item"
+                class="view-management__item">
                 <el-card class="el-card--bordered el-card--info">
-                  <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
+                  <el-table
+                    :data="tableData" class="el-table--feedback-card" size="mini"
+                    max-height="100%">
                     <el-table-column label="Nº do caso">
                       <template slot-scope="scope">
                         {{ scope.row.id }}
@@ -78,16 +88,22 @@
             <div>
               Ordenar por:
               <el-select v-model="filter" size="small" placeholder="Selecione uma opção">
-                <el-option v-for="filter in ['Campanha', 'Empresa', 'ID do caso', 'Responsável', 'Status']" :key="filter" :label="filter" :value="filter"/>
+                <el-option
+                  v-for="filter in ['Campanha', 'Empresa', 'ID do caso', 'Responsável', 'Status']" :key="filter" :label="filter"
+                  :value="filter"/>
               </el-select>
               <el-button type="primary" size="small">Exportar casos</el-button>
             </div>
           </div>
           <div class="view-management__container">
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2]" :key="item" :label="'check'+item" class="view-management__item">
+              <el-checkbox
+                v-for="item in [1,2]" :key="item" :label="'check'+item"
+                class="view-management__item">
                 <el-card class="el-card--bordered el-card--info">
-                  <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
+                  <el-table
+                    :data="tableData" class="el-table--feedback-card" size="mini"
+                    max-height="100%">
                     <el-table-column label="Nº do caso">
                       <template slot-scope="scope">
                         {{ scope.row.id }}
@@ -128,9 +144,13 @@
             </el-checkbox-group>
             <hr>
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2]" :key="item" :label="'check'+item" class="view-management__item">
+              <el-checkbox
+                v-for="item in [1,2]" :key="item" :label="'check'+item"
+                class="view-management__item">
                 <el-card class="el-card--bordered el-card--danger">
-                  <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
+                  <el-table
+                    :data="tableData" class="el-table--feedback-card" size="mini"
+                    max-height="100%">
                     <el-table-column label="Nº do caso">
                       <template slot-scope="scope">
                         {{ scope.row.id }}
@@ -177,16 +197,22 @@
             <div>
               Ordenar por:
               <el-select v-model="filter" size="small" placeholder="Selecione uma opção">
-                <el-option v-for="filter in ['Termômetro de interação (tempo da negociação) - contagem regressiva','Probabilidade de fechar o acordo','Campanha','Empresa','ID do caso','Responsável']" :key="filter" :label="filter" :value="filter"/>
+                <el-option
+                  v-for="filter in ['Termômetro de interação (tempo da negociação) - contagem regressiva','Probabilidade de fechar o acordo','Campanha','Empresa','ID do caso','Responsável']" :key="filter" :label="filter"
+                  :value="filter"/>
               </el-select>
               <el-button type="primary" size="small">Exportar casos</el-button>
             </div>
           </div>
           <div class="view-management__container">
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2,3]" :key="item" :label="'check'+item" class="view-management__item">
+              <el-checkbox
+                v-for="item in [1,2,3]" :key="item" :label="'check'+item"
+                class="view-management__item">
                 <el-card class="el-card--bordered el-card--info">
-                  <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
+                  <el-table
+                    :data="tableData" class="el-table--feedback-card" size="mini"
+                    max-height="100%">
                     <el-table-column label="Nº do caso">
                       <template slot-scope="scope">
                         {{ scope.row.id }}
@@ -238,16 +264,22 @@
             <div>
               Ordenar por:
               <el-select v-model="filter" size="small" placeholder="Selecione uma opção">
-                <el-option v-for="filter in ['Termômetro de interação (tempo da negociação)', 'Probabilidade de fechar o acordo', 'Campanha', 'Empresa', 'ID do caso', 'Responsável']" :key="filter" :label="filter" :value="filter"/>
+                <el-option
+                  v-for="filter in ['Termômetro de interação (tempo da negociação)', 'Probabilidade de fechar o acordo', 'Campanha', 'Empresa', 'ID do caso', 'Responsável']" :key="filter" :label="filter"
+                  :value="filter"/>
               </el-select>
               <el-button type="primary" size="small">Exportar casos</el-button>
             </div>
           </div>
           <div class="view-management__container">
             <el-checkbox-group v-model="checkList">
-              <el-checkbox v-for="item in [1,2,3]" :key="item" :label="'check'+item" class="view-management__item">
+              <el-checkbox
+                v-for="item in [1,2,3]" :key="item" :label="'check'+item"
+                class="view-management__item">
                 <el-card class="el-card--bordered el-card--info">
-                  <el-table :data="tableData" class="el-table--feedback-card" size="mini" max-height="100%">
+                  <el-table
+                    :data="tableData" class="el-table--feedback-card" size="mini"
+                    max-height="100%">
                     <el-table-column label="Nº do caso">
                       <template slot-scope="scope">
                         {{ scope.row.id }}
@@ -314,7 +346,9 @@
           </el-option>
         </el-select>
       </h4>
-      <jus-chart-line :data="data2" :options="options" :width="300" :height="130"/>
+      <jus-chart-line
+        :data="data2" :options="options" :width="300"
+        :height="130"/>
       <br>
       <hr>
       <h4>Conversas recentes</h4>

@@ -5,7 +5,7 @@ import JusIcon from '@/components/images/JusIcon.vue'
 describe('JusButtonBack.vue', () => {
   it('renders props.msg when passed', () => {
     const wrapper = shallowMount(JusButtonBack, {
-      stubs: { 
+      stubs: {
         JusIcon
       }
     })

@@ -15,10 +15,10 @@ export default new Vuex.Store({
   getters: {
   },
   mutations: {
-    showLoading () {
+    showLoading (state) {
       state.loading = true
     },
-    hideLoading () {
+    hideLoading (state) {
       state.loading = false
     }
   },

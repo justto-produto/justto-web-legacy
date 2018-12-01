@@ -15,7 +15,7 @@ context('Actions', () => {
     cy.get('[class=el-input__inner]').then($els => $els.get(1))
       .type('password')
     // Press 'Enter' buttom
-    //cy.contains('Entrar').click()
+    // cy.contains('Entrar').click()
   })
 
   it('Cadastrar usuário', () => {
@@ -23,16 +23,15 @@ context('Actions', () => {
     cy.contains('Cadastre').click()
 
     // Fills 'Nome' field
-      cy.get('[class=el-input__inner]').then($els => $els.get(2))
-        .type('nome')
+    cy.get('[class=el-input__inner]').then($els => $els.get(2))
+      .type('nome')
     // Fills 'Email' field
-      cy.get('[class=el-input__inner]').then($els => $els.get(1))
-        .type('e@mail.com')
+    cy.get('[class=el-input__inner]').then($els => $els.get(1))
+      .type('e@mail.com')
     // Fills 'Senha' field
-      cy.get('[class=el-input__inner]').then($els => $els.get(2))
-        .type('password')
+    cy.get('[class=el-input__inner]').then($els => $els.get(2))
+      .type('password')
 
-  cy.contains('Cadastrar').click()
-    
+    cy.contains('Cadastrar').click()
   })
 })

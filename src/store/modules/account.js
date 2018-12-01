@@ -1,7 +1,7 @@
 const account = {
   actions: {
     updateOab ({ commit }, oamForm) {
-      return new Promisse((resolve,reject) => {
+      return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.put('/accounts/oab', { number: responses.oab, state: responses.state})
           .then(response => {

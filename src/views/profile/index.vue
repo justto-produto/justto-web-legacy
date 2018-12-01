@@ -2,7 +2,9 @@
   <JusViewMain side-card>
     <template slot="title">Configurações do perfil</template>
     <template slot="main">
-      <el-form ref="profileForm" :model="profileForm" class="profile-form" label-position="top">
+      <el-form
+        ref="profileForm" :model="profileForm" class="profile-form"
+        label-position="top">
         <jus-avatar-user size="lg" class="profile-form__avatar" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
         <span class="profile-form__edit-photo">
           Alterar foto
@@ -19,7 +21,9 @@
           <el-input v-model="profileForm.password"/>
           <el-button type="text" class="el-button--input-float" @click="changePasswordDialog">Alterar senha</el-button>
           <el-dialog :visible.sync="dialogVisible" title="Alterar senha" width="30%">
-            <el-form ref="loginForm" :model="loginForm" class="external-view__form" label-position="top">
+            <el-form
+              ref="loginForm" :model="loginForm" class="external-view__form"
+              label-position="top">
               <el-form-item label="Nova senha" prop="newPassword">
                 <el-input v-model="loginForm.newPassword" type="password"/>
               </el-form-item>
@@ -39,7 +43,9 @@
           <div class="display-flex align-center" style="margin-top: 10px; line-height: 0;">
             <jus-avatar-user size="sm"/>
             <span style="margin-left: 20px;">Nestlé</span>
-            <el-popover style="margin-left: auto;" placement="top" title="Nestlé" width="300" trigger="hover" content="Chocolates, panetones, larvas e processos.">
+            <el-popover
+              style="margin-left: auto;" placement="top" title="Nestlé"
+              width="300" trigger="hover" content="Chocolates, panetones, larvas e processos.">
               <el-button slot="reference" class="el-button--icon">
                 <jus-icon icon="more-info-grey"/>
               </el-button>
@@ -77,7 +83,9 @@
       </el-form>
     </template>
     <template slot="aside">
-      <el-carousel :interval="5000" :autoplay="false" arrow="always" height="107px" trigger="click" class="el-carousel__container--profile">
+      <el-carousel
+        :interval="5000" :autoplay="false" arrow="always"
+        height="107px" trigger="click" class="el-carousel__container--profile">
         <el-carousel-item v-for="item in 3" :key="item">
           <div class="el-carousel__item-main">
             <h2>25</h2>
@@ -99,7 +107,9 @@
       <br>
       <el-row>
         <el-col v-for="data in dataSets" :span="8" :key="data.id">
-          <JusChartDoughnut :data="data" :width="75" :height="130" title="JUL" />
+          <JusChartDoughnut
+            :data="data" :width="75" :height="130"
+            title="JUL" />
         </el-col>
       </el-row>
       <h4>Interação dos usuários</h4>
@@ -114,7 +124,9 @@
         </el-col>
       </el-row>
       <br>
-      <jus-chart-line :data="data2" :options="options" :width="300" :height="130"/>
+      <jus-chart-line
+        :data="data2" :options="options" :width="300"
+        :height="130"/>
     </template>
   </JusViewMain>
 </template>
