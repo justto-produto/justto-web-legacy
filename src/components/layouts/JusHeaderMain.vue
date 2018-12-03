@@ -1,10 +1,13 @@
 <template lang="html">
   <el-header class="main-header">
-    <div class="main-search">
+    <div class="main-header__search">
       <jus-icon icon="search" class="el-menu__icon-search"/>
       <input type="text" placeholder="Busque aqui os seus casos">
     </div>
-    <div class="main-info">
+    <div class="main-header__notification">
+      <jus-icon icon="notification"/>
+    </div>
+    <div class="main-header__info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
           <jus-avatar-user
@@ -65,7 +68,7 @@ export default {
   z-index: 1;
   display: flex;
 }
-.main-search {
+.main-header__search {
   display: flex;
   width: 100%;
   input {
@@ -77,7 +80,11 @@ export default {
     width: 98%;
   }
 }
-.main-info {
+.main-header__notification {
+  margin: auto;
+  margin-right: 32px;
+}
+.main-header__info {
   .el-dropdown-link {
     display: flex;
     align-items: center;

@@ -10,7 +10,7 @@
         :default-active="$route.path"
         :collapse="isCollapse"
         class="el-menu--main-menu">
-        <el-menu-item ref="dashboard" index="/" class="border-top-bottom">
+        <el-menu-item ref="dashboard" index="/">
           <jus-icon :is-active="$route.path === '/'" icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
