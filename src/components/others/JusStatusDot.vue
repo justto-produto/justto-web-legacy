@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <span :class="typeClass" class="jus-status-dot"/>
 </template>
 

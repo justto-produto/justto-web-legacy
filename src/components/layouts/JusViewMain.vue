@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="main-view">
     <h1 v-if="this.$slots['title']"><slot name="title"/></h1>
     <div class="display-flex">

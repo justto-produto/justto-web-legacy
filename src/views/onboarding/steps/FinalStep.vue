@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="onboarding-step-content">
     <h1>
       Tudo pronto, {{ name }}!
@@ -10,7 +10,7 @@
       Durante seu período de teste de 15 dias, você e sua equipe poderão inserir até 20 casos para negociação.
       Para inserir mais casos você pode fazer o upgrade do seu plano a qualquer momento.
     </p>
-    <el-button type="primary" @click="$emit('onboarding:step:finish')">Inserir primeiros casos</el-button>
+    <el-button type="primary" @click="$emit('onboarding:step:next')">Inserir primeiros casos</el-button>
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.state.auth.user.name
+      return this.$store.state.account.name
     }
   }
 }

@@ -120,13 +120,15 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
-      if (to.name !== 'onboarding') {
-        if (Store.getters.hasWorkspace) {
+      if (Store.getters.hasWorkspace) {
+        if (to.name === 'onboarding') {
+          next('/')
+        } else next()
+      } else {
+        if (to.name === 'onboarding') {
           next()
-        } else {
-          next('onboarding')
-        }
-      } else next()
+        } else next('onboarding')
+      }
     } else next('login')
   } else next()
 })

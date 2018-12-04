@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="onboarding-step-content onboarding-welcome-step">
     <JusLogoCompany
       v-if="isGuest"
@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.state.auth.user.name
+      return this.$store.state.account.name
     }
   }
 }

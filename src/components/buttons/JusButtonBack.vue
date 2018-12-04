@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="jus-button-back" @click="$router.push(to)">
     <jus-icon icon="back"/> Voltar
   </div>

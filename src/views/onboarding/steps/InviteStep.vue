@@ -1,5 +1,5 @@
-<template lang="html">
-  <div class="onboarding-invite-step">
+<template>
+  <div v-loading="$store.state.loading" class="onboarding-invite-step">
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
         <h2>Adicione pessoas à sua equipe</h2>
@@ -32,8 +32,8 @@
                 <el-option
                   v-for="profile in profiles"
                   :key="profile.$index"
-                  :label="profile"
-                  :value="profile"/>
+                  :label="profile.label"
+                  :value="profile.value"/>
               </el-select>
               <img class="remove-member" src="@/assets/icons/ic-error.svg" @click="removeTeamMember(member)">
             </div>
@@ -56,22 +56,25 @@ export default {
   },
   data () {
     return {
-      profiles: ['Administrador', 'Negociador'],
+      profiles: [
+        { label: 'Administrador', value: 'ADMINISTRATOR' },
+        { label: 'Negociador', value: 'NEGOTIATOR' }
+      ],
       teamMembersForm: {
         teamMember: '',
         teamMemberType: '',
         teamMembers: [
           {
             email: 'choset@me.co',
-            profile: 'Administrador'
+            profile: 'ADMINISTRATOR'
           },
           {
             email: 'hikoza@hotmail.com',
-            profile: 'Negociador'
+            profile: 'NEGOTIATOR'
           },
           {
             email: 'mkearl@verizon.net',
-            profile: 'Administrador'
+            profile: 'ADMINISTRATOR'
           }
         ]
       },
@@ -90,7 +93,7 @@ export default {
             this.teamMembersForm.teamMembers.push(
               {
                 email: this.teamMembersForm.teamMember,
-                type: 'Negociador'
+                profile: 'NEGOTIATOR'
               }
             )
           }
@@ -106,7 +109,16 @@ export default {
       )
     },
     submitForm () {
-      this.$emit('onboarding:step:next', { teammates: this.teamMembersForm.teamMembers })
+      this.$store.dispatch('showLoading')
+      this.$store.dispatch('inviteTeammates', this.teamMembersForm.teamMembers)
+        .then(() => {
+          this.$emit('onboarding:step:next')
+        })
+        .catch((error) => {
+          console.log(error)
+        }).finally(() => {
+          this.$store.dispatch('hideLoading')
+        })
     }
   }
 }

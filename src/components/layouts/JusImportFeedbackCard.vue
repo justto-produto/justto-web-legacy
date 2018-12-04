@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--company-tag">{{ company }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">

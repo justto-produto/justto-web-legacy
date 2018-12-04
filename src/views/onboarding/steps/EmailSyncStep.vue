@@ -1,5 +1,5 @@
-<template lang="html">
-  <div v-loading="loading" class="onboarding-step-content onboarding-email-step">
+<template>
+  <div v-loading="$store.state.loading" class="onboarding-step-content onboarding-email-step">
     <div class="onboarding-step-content__title">
       <h2>Deseja sincronizar o seu e-mail com a plataforma?</h2>
       <p>
@@ -65,7 +65,6 @@ export default {
   },
   data () {
     return {
-      loading: false,
       synced: false,
       showSuccess: false,
       showError: false,
@@ -90,7 +89,7 @@ export default {
       this.showError = false
       this.$refs['syncForm'].validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.$store.dispatch('showLoading')
           this.$store.dispatch('syncInbox', this.syncForm)
             .then((response) => {
               this.showSuccess = true
@@ -99,7 +98,7 @@ export default {
               this.showError = true
               console.log(error)
             }).finally(() => {
-              this.loading = false
+              this.$store.dispatch('hideLoading')
             })
           // setTimeout(function () {
           // }.bind(this), 1500)

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="notification-card">
     <i class="el-icon-error"/>
     <div class="notification-card__header">

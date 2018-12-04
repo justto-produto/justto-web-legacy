@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="onboarding-step-content onboarding-whatsapp-step">
     <div class="onboarding-step-content__title">
       <h2>Whatsapp</h2>

@@ -10,7 +10,7 @@
 export default {
   beforeCreate () {
     if (this.$store.getters.isLoggedIn) {
-      this.$store.dispatch('my').then((response) => {
+      Promise.all([this.$store.dispatch('myAccount'), this.$store.dispatch('myWorkspace')]).then(() => {
         if (!this.$store.getters.hasWorkspace) {
           this.$router.push('onboarding')
         }

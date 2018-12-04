@@ -1,19 +1,15 @@
 const auth = {
   state: {
     status: '',
-    token: localStorage.getItem('justoken') || '',
-    user: {},
-    workspace: {}
+    token: localStorage.getItem('justoken') || ''
   },
   mutations: {
     authRequest (state) {
       state.status = 'loading'
     },
-    authSuccess (state, response) {
+    authSuccess (state, token) {
       state.status = 'success'
-      if (response.token) state.token = response.token
-      if (response.user) state.user = response.user
-      if (response.workspace) state.workspace = response.workspace
+      if (token) state.token = token
     },
     authError (state) {
       state.status = 'error'
@@ -21,36 +17,9 @@ const auth = {
     logout (state) {
       state.status = ''
       state.token = ''
-      state.user = {}
-      state.workspace = {}
     }
   },
   actions: {
-    my ({ commit }) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.get('/accounts/my')
-          .then(accountsResponse => {
-            // eslint-disable-next-line
-            axios.get('/workspaces/my')
-              .then(workspacesResponse => {
-                commit('authSuccess', {
-                  user: accountsResponse.data,
-                  workspace: workspacesResponse.data[0]
-                })
-                resolve({ accountsResponse, workspacesResponse })
-              })
-              .catch(error => {
-                commit('authError')
-                reject(error)
-              })
-          })
-          .catch(error => {
-            commit('authError')
-            reject(error)
-          })
-      })
-    },
     register ({ commit }, loginForm) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -81,32 +50,11 @@ const auth = {
         axios.post('/accounts/token', credentials)
           .then(response => {
             const token = response.data.token
-            localStorage.setItem('justoken', token)
             // eslint-disable-next-line
             axios.defaults.headers.common['Authorization'] = token
-            // eslint-disable-next-line
-            axios.get('/accounts/my')
-              .then(accountsResponse => {
-                // eslint-disable-next-line
-                axios.get('/workspaces/my')
-                  .then(workspacesResponse => {
-                    commit('authSuccess', {
-                      user: accountsResponse.data,
-                      workspace: workspacesResponse.data[0]
-                    })
-                    commit('authSuccess', { token: token, user: accountsResponse.data })
-                    resolve({ accountsResponse, workspacesResponse })
-                  })
-                  .catch(error => {
-                    commit('authError')
-                    reject(error)
-                  })
-              })
-              .catch(error => {
-                commit('authError')
-                localStorage.removeItem('justoken')
-                reject(error)
-              })
+            localStorage.setItem('justoken', token)
+            commit('authSuccess', token)
+            resolve(response)
           })
           .catch(error => {
             commit('authError')
@@ -151,10 +99,7 @@ const auth = {
   },
   getters: {
     isLoggedIn: state => !!state.token,
-    authStatus: state => state.status,
-    hasWorkspace: state => {
-      return !state.workspace && state.workspace.status !== 'CREATING'
-    }
+    authStatus: state => state.status
   }
 }
 

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <el-carousel
     :interval="5000" :autoplay="false" arrow="always"
     height="107px" trigger="click" class="el-carousel__container--profile">

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <el-header class="main-header">
     <div class="main-header__search">
       <jus-icon icon="search" class="el-menu__icon-search"/>

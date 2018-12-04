@@ -23,6 +23,12 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    showLoading ({ commit }) {
+      commit('showLoading')
+    },
+    hideLoading ({ commit }) {
+      commit('hideLoading')
+    }
   },
   modules: {
     auth,

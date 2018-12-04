@@ -2,7 +2,7 @@
   <el-container>
     <el-aside class="container-aside" width="auto">
       <div :class="{'aside-logo--colapsed': isCollapse}" class="aside-logo">
-        <img class="aside-logo__logo" src="@/assets/logo.svg">
+        <img class="aside-logo__logo" src="@/assets/logo-small.svg">
       </div>
       <el-menu
         :collapse-transition="false"

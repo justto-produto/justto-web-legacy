@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <JusViewMain side-card class="view-import view-import--feedback">
 
     <template slot="main">

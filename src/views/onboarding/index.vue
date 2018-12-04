@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <el-row class="onboarding-view">
     <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 1s;">
       <JusSidenavExternal/>
@@ -6,7 +6,6 @@
     <transition name="fade">
       <el-col v-if="right > 0" :md="right">
         <swiper
-          v-loading="loading"
           ref="swiper"
           :options="swiperOption"
           class="swiper-box">
@@ -32,10 +31,10 @@
             <email-sync-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
-            <whatsapp-step @onboarding:step:next="nextStep"/>
+            <whatsapp-step @onboarding:step:subd="nextStep"/>
           </swiper-slide>
           <swiper-slide>
-            <done-step :is-guest="isGuest" @onboarding:step:finish="finalStep"/>
+            <final-step :is-guest="isGuest"/>
           </swiper-slide>
         </swiper>
       </el-col>
@@ -59,7 +58,7 @@ import TeamNameStep from './steps/TeamNameStep'
 import SubdomainStep from './steps/SubdomainStep'
 import LogoStep from './steps/LogoStep'
 import InviteStep from './steps/InviteStep'
-import DoneStep from './steps/DoneStep'
+import FinalStep from './steps/FinalStep'
 
 export default {
   name: 'Onboarding',
@@ -72,16 +71,16 @@ export default {
     TeamNameStep,
     LogoStep,
     InviteStep,
-    DoneStep,
+    FinalStep,
     SubdomainStep
   },
   data () {
     return {
-      loading: false,
       responses: {},
       left: 12,
       right: 0,
       currentStep: 0,
+      secondFase: false,
       swiperOption: {
         direction: 'vertical',
         slidesPerView: 1,
@@ -92,12 +91,6 @@ export default {
   computed: {
     isGuest: function () {
       return !!this.$route.query.invitedBy
-    },
-    secondFase: function () {
-      if (this.$store.state.auth.workspace.status === 'CREATING') {
-        return true
-      }
-      return false
     }
   },
   created: function () {
@@ -107,6 +100,7 @@ export default {
     setTimeout(function () {
       this.right = 18
     }.bind(this), 1200)
+    this.secondFase = this.$store.state.workspace.status === 'CREATING'
   },
   methods: {
     nextStep (responseObj) {
@@ -122,7 +116,7 @@ export default {
       this.currentStep = this.$refs['swiper'].swiper.activeIndex
     },
     createSubdomain (responseObj) {
-      this.loading = true
+      this.$store.dispatch('showLoading')
       Object.assign(this.responses, responseObj)
       this.$store.dispatch('createWorkpace', {
         name: this.responses.team,
@@ -132,22 +126,8 @@ export default {
       }).catch(error => {
         console.log(error)
       }).finally(() => {
-        this.loading = false
+        this.$store.dispatch('hideLoading')
       })
-    },
-    finalStep (responseObj) {
-      this.loading = true
-      Object.assign(this.responses, responseObj)
-      this.responses.workspace = this.$store.state.auth.workspace.subDomain
-      this.$store.dispatch('finishWorkspace', this.responses)
-        .then(() => {
-          this.loading = false
-          // this.$router.push('/')
-        }).catch(error => {
-          console.log(error)
-        }).finally(() => {
-          this.loading = false
-        })
     }
   }
 }

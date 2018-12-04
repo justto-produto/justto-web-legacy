@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div class="onboarding-logo-step">
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">

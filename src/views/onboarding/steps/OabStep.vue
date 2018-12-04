@@ -1,6 +1,6 @@
-<template lang="html">
-  <div class="onboarding-oab-step">
-    <div v-loading="$store.state.loading" class="onboarding-step-content">
+<template>
+  <div v-loading="$store.state.loading" class="onboarding-oab-step">
+    <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
         <h2>Qual a sua OAB?</h2>
       </div>
@@ -58,9 +58,11 @@ export default {
     submitForm () {
       this.$refs['oabForm'].validate((valid) => {
         if (valid) {
+          this.$store.dispatch('showLoading')
           this.$store.dispatch('updateOab', this.oabForm)
             .then(() => {
-              this.$emit('onboarding:step:next', this.oabForm)
+              this.$emit('onboarding:step:next')
+              this.$store.dispatch('hideLoading')
             })
             .catch((error) => {
               console.log(error)
@@ -80,6 +82,7 @@ export default {
 
 <style lang="scss">
   .onboarding-oab-step {
+    max-width: 586px;
     @media (min-width: 992px) {
       form {
         display: flex;
