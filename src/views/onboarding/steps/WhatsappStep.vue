@@ -3,19 +3,26 @@
     <div class="onboarding-step-content__title">
       <h2>Whatsapp</h2>
       <p>
-        Cadastre o número que a sua equipe utiliza para fazer contato com as partes, utilizando o QR CODE abaixo.
+        Mais adiante você poderá ver as mensagens que nosso sistema enviará. Contudo, é importante que você sincronize
+        o número que a sua equipe utiliza para fazer contato com as partes, para que as respostas sejam capturadas
+        pela plataforma.
       </p>
     </div>
     <div class="display-flex">
       <div v-loading="loading">
         <img src="@/assets/qrcode.svg" style="border: 1px solid #eee; margin-bottom: 20px;" @click="scanAction">
       </div>
-      <transition name="fade">
-        <p v-show="scan" class="whatsapp-step--status-info">
-          Número +55 12 91234 - 5678 cadastrado com sucesso. Esse será o número que o seu escritório vai conversar com
-          as partes dos seus casos. Não se esqueça de verificar se o serviço está ativo diariamente.
-        </p>
-      </transition>
+      <div v-show="!scan" class="whatsapp-step--status-info">
+        1. Abra o WhatsApp em seu telefone
+        <br><br>
+        2. Toque em Menu ou Configurações e selecione WhatsApp Web
+        <br><br>
+        3. Aponte seu telefone para esta tela para capturar o código
+      </div>
+      <div v-show="scan" class="whatsapp-step--status-info">
+        Clique abaixo para enviar uma mensagem de teste para o número +55 12 91234 - 5678.
+        <el-button type="primary">Testar</el-button><el-button type="">Alterar número</el-button>
+      </div>
     </div>
     <div class="whatsapp-step--status">
       Status:
@@ -65,6 +72,9 @@ export default {
   }
   .whatsapp-step--status-info {
     margin: 20px 40px;
+    .el-button {
+      width: 48% !important;
+    }
   }
   @media (max-width: 991px) {
     .whatsapp-step--status {

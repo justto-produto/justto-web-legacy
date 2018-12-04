@@ -100,7 +100,8 @@ export default {
     setTimeout(function () {
       this.right = 18
     }.bind(this), 1200)
-    this.secondFase = this.$store.state.workspace.status === 'CREATING'
+    // eslint-disable-next-line
+    this.secondFase = this.$store.state.workspace.status === 'CREATING' ? true : false
   },
   methods: {
     nextStep (responseObj) {

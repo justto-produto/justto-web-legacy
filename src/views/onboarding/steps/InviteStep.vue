@@ -15,7 +15,7 @@
         label-position="top"
         @submit.native.prevent="addTeamMember('teamMembersForm')">
         <el-form-item label="E-mail" prop="teamMember">
-          <el-input v-model="teamMembersForm.teamMember">
+          <el-input v-model="teamMembersForm.teamMember" name="teamMember">
             <el-button slot="append" icon="el-icon-plus" native-type="submit"/>
           </el-input>
         </el-form-item>

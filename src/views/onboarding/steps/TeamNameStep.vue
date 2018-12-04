@@ -11,7 +11,7 @@
       label-position="top"
       @submit.native.prevent="submitForm">
       <el-form-item label="Equipe" prop="name">
-        <el-input v-model="nameForm.name"/>
+        <el-input v-model="nameForm.name" name="name"/>
       </el-form-item>
     </el-form>
     <el-button type="primary" @click="submitForm">Próximo</el-button>

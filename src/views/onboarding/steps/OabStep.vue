@@ -12,7 +12,7 @@
         label-position="top"
         @submit.native.prevent="submitForm">
         <el-form-item label="OAB" prop="oab">
-          <el-input v-model="oabForm.oab"/>
+          <el-input v-model="oabForm.oab" name="oab"/>
         </el-form-item>
         <el-form-item label="UF" prop="state">
           <el-select v-model="oabForm.state" placeholder="">

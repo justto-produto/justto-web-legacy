@@ -15,13 +15,13 @@
       label-position="top"
       @submit.native.prevent="submitForm">
       <el-form-item label="E-mail de trabalho" prop="email" type="text">
-        <el-input v-model="syncForm.email"/>
+        <el-input v-model="syncForm.email" name="email"/>
       </el-form-item>
       <el-form-item label="Senha do e-mail" prop="password">
-        <el-input v-model="syncForm.password" type="password"/>
+        <el-input v-model="syncForm.password" type="password" name="password"/>
       </el-form-item>
       <el-form-item label="Servidor IMAP" prop="imap">
-        <el-input v-model="syncForm.imap" type="text"/>
+        <el-input v-model="syncForm.imap" type="text" name="imap"/>
       </el-form-item>
     </el-form>
     <!-- <el-checkbox v-model="checked1" border class="el-checkbox--active">
