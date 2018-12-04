@@ -31,7 +31,7 @@
             <email-sync-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
-            <whatsapp-step @onboarding:step:subd="nextStep"/>
+            <whatsapp-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
             <final-step :is-guest="isGuest"/>
