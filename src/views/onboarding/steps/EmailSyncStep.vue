@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="$store.state.loading" class="onboarding-step-content onboarding-email-step">
+  <div class="onboarding-step-content onboarding-email-step">
     <div class="onboarding-step-content__title">
       <h2>Deseja sincronizar o seu e-mail com a plataforma?</h2>
       <p>
@@ -19,9 +19,6 @@
       </el-form-item>
       <el-form-item label="Senha do e-mail" prop="password">
         <el-input v-model="syncForm.password" type="password" name="password"/>
-      </el-form-item>
-      <el-form-item label="Servidor IMAP" prop="imap">
-        <el-input v-model="syncForm.imap" type="text" name="imap"/>
       </el-form-item>
     </el-form>
     <!-- <el-checkbox v-model="checked1" border class="el-checkbox--active">

@@ -9,7 +9,7 @@
       </p>
     </div>
     <div class="display-flex">
-      <div v-loading="loading">
+      <div>
         <img src="@/assets/qrcode.svg" style="border: 1px solid #eee; margin-bottom: 20px;" @click="scanAction">
       </div>
       <div v-show="!scan" class="whatsapp-step--status-info">
@@ -38,8 +38,7 @@
 export default {
   data () {
     return {
-      scan: false,
-      loading: false
+      scan: false
     }
   },
   computed: {
@@ -53,10 +52,10 @@ export default {
   methods: {
     scanAction () {
       let self = this
-      self.loading = true
+      this.$store.dispatch('showLoading')
       setTimeout(function () {
         self.scan = !self.scan
-        self.loading = false
+        self.$store.dispatch('hideLoading')
       }, 3000)
     }
   }

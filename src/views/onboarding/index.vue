@@ -6,11 +6,12 @@
     <transition name="fade">
       <el-col v-if="right > 0" :md="right">
         <swiper
+          v-loading="$store.state.loading"
           ref="swiper"
           :options="swiperOption"
           class="swiper-box">
           <swiper-slide>
-            <welcome-step :is-guest="isGuest" @onboarding:step:next="nextStep"/>
+            <welcome-step :is-guest="isGuest" @onboarding:step:next="verifySecondStep"/>
           </swiper-slide>
           <swiper-slide v-if="!isGuest && !secondFase">
             <team-name-step @onboarding:step:next="nextStep"/>
@@ -100,8 +101,6 @@ export default {
     setTimeout(function () {
       this.right = 18
     }.bind(this), 1200)
-    // eslint-disable-next-line
-    this.secondFase = this.$store.state.workspace.status === 'CREATING' ? true : false
   },
   methods: {
     nextStep (responseObj) {
@@ -115,6 +114,10 @@ export default {
     },
     updateCurrentStep () {
       this.currentStep = this.$refs['swiper'].swiper.activeIndex
+    },
+    verifySecondStep () {
+      this.secondFase = this.$store.state.workspace.status === 'CREATING'
+      this.nextStep()
     },
     createSubdomain (responseObj) {
       this.$store.dispatch('showLoading')

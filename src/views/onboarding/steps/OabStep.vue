@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="$store.state.loading" class="onboarding-oab-step">
+  <div class="onboarding-oab-step">
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
         <h2>Qual a sua OAB?</h2>
@@ -41,8 +41,8 @@ export default {
   data () {
     return {
       oabForm: {
-        oab: '',
-        state: ''
+        oab: this.$store.state.account.oab.number,
+        state: this.$store.state.account.oab.state
       },
       oabFormRules: {
         oab: [
@@ -58,23 +58,31 @@ export default {
     submitForm () {
       this.$refs['oabForm'].validate((valid) => {
         if (valid) {
-          this.$store.dispatch('showLoading')
-          this.$store.dispatch('updateOab', this.oabForm)
-            .then(() => {
-              this.$emit('onboarding:step:next')
-              this.$store.dispatch('hideLoading')
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-        } else {
-          return false
-        }
+          if (this.hasChanges()) {
+            this.$store.dispatch('showLoading')
+            this.$store.dispatch('updateOab', this.oabForm)
+              .then(() => {
+                this.$store.dispatch('myAccount')
+                this.$emit('onboarding:step:next')
+                this.$store.dispatch('hideLoading')
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          } else this.$emit('onboarding:step:next')
+        } else return false
       })
     },
     skip () {
       this.$emit('onboarding:step:next')
       this.$refs['oabForm'].resetFields()
+    },
+    hasChanges () {
+      if (this.$store.state.account.oab.number !== this.oabForm.oab ||
+      this.$store.state.account.oab.state !== this.oabForm.state) {
+        return true
+      }
+      return false
     }
   }
 }

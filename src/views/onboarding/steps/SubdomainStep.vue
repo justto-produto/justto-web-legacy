@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="$store.state.loading" class="onboarding-step-content onboarding-subdomain-step">
+  <div class="onboarding-step-content onboarding-subdomain-step">
     <div class="onboarding-step-content__title">
       <h2>Crie o seu espaço de trabalho na Justto</h2>
       <p>

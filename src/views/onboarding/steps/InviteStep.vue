@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="$store.state.loading" class="onboarding-invite-step">
+  <div class="onboarding-invite-step">
     <div class="onboarding-step-content">
       <div class="onboarding-step-content__title">
         <h2>Adicione pessoas à sua equipe</h2>
@@ -64,18 +64,18 @@ export default {
         teamMember: '',
         teamMemberType: '',
         teamMembers: [
-          {
-            email: 'choset@me.co',
-            profile: 'ADMINISTRATOR'
-          },
-          {
-            email: 'hikoza@hotmail.com',
-            profile: 'NEGOTIATOR'
-          },
-          {
-            email: 'mkearl@verizon.net',
-            profile: 'ADMINISTRATOR'
-          }
+          // {
+          //   email: 'choset@me.co',
+          //   profile: 'ADMINISTRATOR'
+          // },
+          // {
+          //   email: 'hikoza@hotmail.com',
+          //   profile: 'NEGOTIATOR'
+          // },
+          // {
+          //   email: 'mkearl@verizon.net',
+          //   profile: 'ADMINISTRATOR'
+          // }
         ]
       },
       teamMembersFormRules: {
