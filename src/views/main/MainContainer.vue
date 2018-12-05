@@ -20,15 +20,15 @@
           </li>
         </transition>
         <el-menu-item index="/import">
-          <jus-icon :is-active="$route.path === '/import'" icon="import" class="el-menu__icon"/>
-          <span slot="title">Novos casos</span>
+          <jus-icon :is-active="$route.path.startsWith('/import')" icon="import" class="el-menu__icon"/>
+          <span slot="title">Importação de casos</span>
         </el-menu-item>
         <el-menu-item index="/management">
-          <jus-icon :is-active="$route.path === '/management'" icon="negotiation" class="el-menu__icon"/>
+          <jus-icon :is-active="$route.path.startsWith('/management')" icon="negotiation" class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
         <el-menu-item index="/settings">
-          <jus-icon :is-active="$route.path === '/settings'" icon="settings" class="el-menu__icon"/>
+          <jus-icon :is-active="$route.path.startsWith('/settings')" icon="settings" class="el-menu__icon"/>
           <span slot="title">Configurações</span>
         </el-menu-item>
       </el-menu>

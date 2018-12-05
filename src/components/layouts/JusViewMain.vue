@@ -1,15 +1,15 @@
 <template>
-  <div class="main-view">
+  <div class="jus-main-view">
     <h1 v-if="this.$slots['title']"><slot name="title"/></h1>
     <div class="display-flex">
-      <el-card class="main-view__main-card">
+      <el-card class="jus-main-view__main-card">
         <slot name="main"/>
       </el-card>
       <div v-if="this.$slots['aside']">
-        <el-card v-if="sideCard" class="main-view__card">
+        <el-card v-if="sideCard" class="jus-main-view__card">
           <slot name="aside"/>
         </el-card>
-        <div v-else class="main-view__card main-view__card--transparent">
+        <div v-else class="jus-main-view__card jus-main-view__card--transparent">
           <slot name="aside"/>
         </div>
       </div>
@@ -30,24 +30,23 @@ export default {
 </script>
 
 <style lang="scss">
-.main-view {
+.jus-main-view {
   position: relative;
   margin: 0 20px 20px;
-  .main-view__main-card {
+  .jus-main-view__main-card {
     width: 100%;
     min-height: calc( 100vh - 180px );
   }
-  .main-view__card {
-    font-size: 12px;
+  .jus-main-view__card {
     margin-left: 20px;
     width: 300px;
     position: sticky;
     top: 40px;
-    &.main-view__card--transparent {
+    &.jus-main-view__card--transparent {
       padding:  0 20px;
       width: 260px;
     }
-    .main-view__aside-action {
+    .jus-main-view__aside-action {
       min-width: 100%;
     }
   }

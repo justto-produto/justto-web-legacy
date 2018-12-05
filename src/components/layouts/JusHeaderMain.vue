@@ -1,13 +1,13 @@
 <template>
-  <el-header class="main-header">
-    <div class="main-header__search">
+  <el-header class="jus-header-main">
+    <div class="jus-header-main__search">
       <jus-icon icon="search" class="el-menu__icon-search"/>
       <input type="text" placeholder="Busque aqui os seus casos">
     </div>
-    <div class="main-header__notification">
+    <div class="jus-header-main__notification">
       <jus-icon icon="notification"/>
     </div>
-    <div class="main-header__info">
+    <div class="jus-header-main__info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
           <jus-avatar-user
@@ -15,7 +15,7 @@
             src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
           <div class="main-info__name">
             <div>
-              {{ $store.state.auth.user.name ? $store.state.auth.user.name : 'Mariana Rondino' }}
+              {{ name }}
             </div>
             <span>UX Designer</span>
           </div>
@@ -50,6 +50,11 @@
 <script>
 export default {
   name: 'JusHeaderMain',
+  computed: {
+    name () {
+      return this.$store.state.account.name ? this.$store.state.account.name : 'Mariana Rondino'
+    }
+  },
   methods: {
     logout () {
       this.$store.dispatch('logout')
@@ -62,13 +67,13 @@ export default {
 </script>
 
 <style lang="scss">
-.main-header {
+.jus-header-main {
   background-color: #fff;
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   z-index: 1;
   display: flex;
 }
-.main-header__search {
+.jus-header-main__search {
   display: flex;
   width: 100%;
   input {
@@ -80,11 +85,11 @@ export default {
     width: 98%;
   }
 }
-.main-header__notification {
+.jus-header-main__notification {
   margin: auto;
   margin-right: 32px;
 }
-.main-header__info {
+.jus-header-main__info {
   .el-dropdown-link {
     display: flex;
     align-items: center;

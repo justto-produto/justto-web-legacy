@@ -32,7 +32,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       showError: false
     }
@@ -49,7 +49,7 @@ export default {
         .then(() => {
           this.$router.push('/import')
         })
-        .catch ((error) => {
+        .catch((error) => {
           this.showError = true
           console.log(error)
         })

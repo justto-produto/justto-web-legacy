@@ -1,15 +1,15 @@
 <template>
-  <div class="notification-card">
+  <div class="jus-notification-card">
     <i class="el-icon-error"/>
-    <div class="notification-card__header">
+    <div class="jus-notification-card__header">
       <jus-avatar-user size="sm"/>
-      <span class="notification-card__title">{{ title }}</span>
-      <span class="notification-card__date">{{ date }}</span>
+      <span class="jus-notification-card__title">{{ title }}</span>
+      <span class="jus-notification-card__date">{{ date }}</span>
     </div>
-    <div class="notification-card__main">
+    <div class="jus-notification-card__main">
       {{ main }}
     </div>
-    <div class="notification-card__complement">
+    <div class="jus-notification-card__complement">
       {{ complement }}
     </div>
   </div>
@@ -41,7 +41,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .notification-card {
+  .jus-notification-card {
     border: solid 1px #ffffff;
     padding: 20px;
     margin: 0 10px;
@@ -66,22 +66,22 @@ export default {
       cursor: pointer;
     }
   }
-  .notification-card__header {
+  .jus-notification-card__header {
     display: flex;
     align-items: center;
   }
-  .notification-card__title {
+  .jus-notification-card__title {
     width: 100%;
     padding: 0 20px;
   }
-  .notification-card__main {
+  .jus-notification-card__main {
     margin: 10px 0 4px;
   }
-  .notification-card__complement {
+  .jus-notification-card__complement {
     font-size: 12px;
     color: #adadad;
   }
-  .notification-card__date {
+  .jus-notification-card__date {
     white-space: nowrap;
     text-align: right;
     font-size: 12px;

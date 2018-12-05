@@ -4,10 +4,5 @@ import VueSocketIO from 'vue-socket.io'
 
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: 'http://metinseylan.com:1992',
-  vuex: {
-    store,
-    actionPrefix: 'SOCKET_',
-    mutationPrefix: 'SOCKET_'
-  }
+  connection: 'wss://3f6a7e25.ngrok.io/workspaces/whatsapp/justto'
 }))

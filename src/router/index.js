@@ -19,29 +19,11 @@ const router = new Router({
         },
         {
           path: 'import',
-          component: () => import(/* webpackChunkName: "importContainer" */ '@/views/main/import/ImportContainer'),
-          children: [
-            {
-              path: '/',
-              component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import')
-            },
-            {
-              path: 'upload',
-              component: () => import(/* webpackChunkName: "importUpload" */ '@/views/main/import/Upload')
-            },
-            {
-              path: 'columns',
-              component: () => import(/* webpackChunkName: "importColumns" */ '@/views/main/import/Columns')
-            },
-            {
-              path: 'enrichment',
-              component: () => import(/* webpackChunkName: "importEnrichment" */ '@/views/main/import/Enrichment')
-            },
-            {
-              path: 'feedback',
-              component: () => import(/* webpackChunkName: "importFeedback" */ '@/views/main/import/Feedback')
-            }
-          ]
+          component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import')
+        },
+        {
+          path: 'import/new',
+          component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/NewImport')
         },
         {
           path: 'management',
@@ -54,7 +36,7 @@ const router = new Router({
       ]
     },
     {
-      path: '/profile',
+      path: 'profile',
       component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer'),
       meta: {
         requiresAuth: true

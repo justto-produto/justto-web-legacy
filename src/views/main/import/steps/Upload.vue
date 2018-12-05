@@ -38,10 +38,6 @@
             </div>
           </el-card>
           <el-card v-show="!file" class="view-import__method el-card--dashed el-card--vertical-content" shadow="never">
-            <img src="@/assets/drive.png" class="upload-icon">
-            <span @click.prevent="uploadMoockFile">Adicionar arquivo do Google Drive</span>
-          </el-card>
-          <el-card v-show="!file" class="view-import__method el-card--dashed el-card--vertical-content" shadow="never">
             <jus-icon icon="insert" is-active/>
             <span @click.prevent="uploadMoockFile">Adicionar caso manualmente</span>
           </el-card>

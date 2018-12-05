@@ -75,7 +75,7 @@ export default {
               .catch((error) => {
                 this.showError = true
                 console.log(error)
-              }).finally (() => {
+              }).finally(() => {
                 this.$store.dispatch('hideLoading')
               })
           } else this.$emit('onboarding:step:next')

@@ -1,3 +1,5 @@
+@import '../variables/colors';
+
 .el-steps--wizard {
   width: 140px;
   min-height: 32px;
@@ -16,5 +18,35 @@
   }
   .el-step__icon {
     z-index: 0;
+  }
+}
+
+.el-steps--circle {
+  width: 240px;
+  margin: auto;
+  .el-step__icon-inner:not(.is-status) {
+    display: none;
+  }
+  .el-step__head {
+    &.is-success {
+      color: #fff;
+      border-color: $--color-primary;
+      .el-step__icon {
+        background-color: $--color-primary;
+      }
+    }
+    &.is-process{
+      border-color: $--color-primary;
+      .el-step__icon {
+        border-width: 5px;
+      }
+    }
+    &.is-wait {
+      color: #e0e0e0;
+      border-color: #e0e0e0;
+    }
+  }
+  .el-step__line {
+    background-color: #e0e0e0;
   }
 }

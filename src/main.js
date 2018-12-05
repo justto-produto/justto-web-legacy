@@ -10,6 +10,7 @@ import '@/plugins/axios'
 import '@/plugins/element'
 import '@/plugins/scrollTo'
 import '@/plugins/awesomeSwiper'
+// import '@/plugins/socket'
 
 // css
 import '@/styles/core.scss'

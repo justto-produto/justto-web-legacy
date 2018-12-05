@@ -76,7 +76,7 @@ const workspace = {
   },
   getters: {
     hasWorkspace: state => {
-      return state.status !== '' && state.status !== 'CREATING'
+      return true // state.status !== '' && state.status !== 'CREATING'
     }
   }
 }
