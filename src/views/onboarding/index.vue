@@ -178,6 +178,9 @@ export default {
       margin-bottom: 40px;
     }
   }
+  .el-alert {
+    max-width: 400px;
+  }
   @media (max-width: 991px) {
     .swiper-slide {
       padding: 40px;

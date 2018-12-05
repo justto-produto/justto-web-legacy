@@ -41,6 +41,11 @@
         </ul>
       </el-form>
     </div>
+    <el-alert
+      v-if="showError"
+      title="Houve uma falha com a conexão com o servidor.
+      Tente novamente ou entre em contato com o administrador do sistema."
+      type="error"/>
     <el-button :disabled="teamMembersForm.teamMembers.length === 0" type="primary" @click="submitForm">Convidar</el-button>
     <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
   </div>
@@ -56,6 +61,7 @@ export default {
   },
   data () {
     return {
+      showError: false,
       profiles: [
         { label: 'Administrador', value: 'ADMINISTRATOR' },
         { label: 'Negociador', value: 'NEGOTIATOR' }
@@ -109,12 +115,14 @@ export default {
       )
     },
     submitForm () {
+      this.showError = false
       this.$store.dispatch('showLoading')
       this.$store.dispatch('inviteTeammates', this.teamMembersForm.teamMembers)
         .then(() => {
           this.$emit('onboarding:step:next')
         })
         .catch((error) => {
+          this.showError = true
           console.log(error)
         }).finally(() => {
           this.$store.dispatch('hideLoading')

@@ -10,7 +10,12 @@
       Durante seu período de teste de 15 dias, você e sua equipe poderão inserir até 20 casos para negociação.
       Para inserir mais casos você pode fazer o upgrade do seu plano a qualquer momento.
     </p>
-    <el-button type="primary" @click="$emit('onboarding:step:next')">Inserir primeiros casos</el-button>
+    <el-alert
+      v-if="showError"
+      title="Houve uma falha com a conexão com o servidor.
+      Tente novamente ou entre em contato com o administrador do sistema."
+      type="error"/>
+    <el-button type="primary" @click="readyWorkspace">Inserir primeiros casos</el-button>
   </div>
 </template>
 
@@ -27,9 +32,27 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      showError: false
+    }
+  },
   computed: {
     name () {
       return this.$store.state.account.name
+    }
+  },
+  methods: {
+    readyWorkspace: function () {
+      this.showError = false
+      this.$store.dispatch('readyWorkspace', this.$store.state.workspace.subDomain)
+        .then(() => {
+          this.$router.push('/import')
+        })
+        .catch ((error) => {
+          this.showError = true
+          console.log(error)
+        })
     }
   }
 }

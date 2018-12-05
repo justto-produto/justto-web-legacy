@@ -9,6 +9,9 @@ const workspace = {
       if (response) state.name = response.name
       if (response) state.status = response.status
       if (response) state.subDomain = response.subDomain
+    },
+    getError (state) {
+      state.status = 'error'
     }
   },
   actions: {
@@ -59,10 +62,10 @@ const workspace = {
           })
       })
     },
-    finishWorkspace ({ commit }, responses) {
+    readyWorkspace ({ commit }, workspace) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces/invite-teammates/' + responses.workspace, responses.teammates)
+        axios.post('/workspaces/ready/' + workspace)
           .then(response => {
             resolve(response.data)
           }).catch(error => {

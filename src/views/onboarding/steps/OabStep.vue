@@ -25,6 +25,11 @@
         </el-form-item>
       </el-form>
     </div>
+    <el-alert
+      v-if="showError"
+      title="Houve uma falha com a conexão com o servidor.
+      Tente novamente ou entre em contato com o administrador do sistema."
+      type="error"/>
     <el-button type="primary" @click="submitForm">Próximo</el-button>
     <el-button type="text" @click="skip">Pular</el-button>
   </div>
@@ -40,6 +45,7 @@ export default {
   },
   data () {
     return {
+      showError: false,
       oabForm: {
         oab: this.$store.state.account.oab.number,
         state: this.$store.state.account.oab.state
@@ -56,6 +62,7 @@ export default {
   },
   methods: {
     submitForm () {
+      this.showError = false
       this.$refs['oabForm'].validate((valid) => {
         if (valid) {
           if (this.hasChanges()) {
@@ -64,10 +71,12 @@ export default {
               .then(() => {
                 this.$store.dispatch('myAccount')
                 this.$emit('onboarding:step:next')
-                this.$store.dispatch('hideLoading')
               })
               .catch((error) => {
+                this.showError = true
                 console.log(error)
+              }).finally (() => {
+                this.$store.dispatch('hideLoading')
               })
           } else this.$emit('onboarding:step:next')
         } else return false
