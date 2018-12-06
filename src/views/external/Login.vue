@@ -119,7 +119,9 @@ export default {
           this.$store.dispatch('login', this.loginForm)
             .then(() => {
               this.$store.dispatch('myAccount').then(() => {
-                this.$router.push('/')
+                this.$store.dispatch('myWorkspace').then(() => {
+                  this.$router.push('/')
+                })
               }).catch(error => {
                 console.log(error)
                 this.errorMessage = `Houve uma falha com a conexão com o servidor.

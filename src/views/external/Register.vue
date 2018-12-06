@@ -96,7 +96,7 @@ export default {
     }
   },
   beforeCreate () {
-    this.$store.dispatch('logout')
+    this.$store.dispatch('logout', { redirect: false })
   },
   methods: {
     submitForm () {
