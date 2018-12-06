@@ -99,7 +99,7 @@ export default {
       return !!this.$route.query.invitedBy
     },
     progressPercentage: function () {
-      return Math.round(this.currentStep * 12.5)
+      return Math.round((this.currentStep * 12.5) * 0.2) / 0.2
     }
   },
   created: function () {

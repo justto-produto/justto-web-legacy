@@ -15,9 +15,9 @@
       label-position="top"
       @submit.native.prevent="submitForm">
       <el-form-item label="E-mail de trabalho" prop="email" type="text">
-        <el-input v-model="syncForm.email" name="email"/>
+        <el-input v-model="syncForm.email" name="email" :readonly="synced"/>
       </el-form-item>
-      <el-form-item label="Senha do e-mail" prop="password">
+      <el-form-item v-if="!synced" label="Senha do e-mail" prop="password">
         <el-input v-model="syncForm.password" type="password" name="password"/>
       </el-form-item>
     </el-form>
@@ -67,11 +67,10 @@ export default {
   },
   data () {
     return {
-      synced: false,
       showSuccess: false,
       showError: false,
       syncForm: {
-        email: '',
+        email: this.$store.state.account.emailAccount,
         password: ''
       },
       syncFormRules: {
@@ -86,6 +85,12 @@ export default {
     }
   },
   computed: {
+    synced () {
+      if (this.$store.state.account.emailAccount) {
+        return true
+      }
+      return false
+    },
     message () {
       return this.synced ? 'SINCRONIZADO' : 'AGUARDANDO SINCRONIZAÇÃO'
     },
@@ -130,7 +135,6 @@ export default {
     max-width: 400px;
   }
   .email-step--status {
-    margin-top: 30px;
     strong {
       margin: 0 8px 0 4px;
     }

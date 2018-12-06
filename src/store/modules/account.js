@@ -2,13 +2,12 @@ import router from '@/router'
 
 const account = {
   state: {
-    id: '',
     email: '',
     name: '',
-    oab: {},
     oabNumber: '',
     oabState: '',
     status: '',
+    emailAccount: {},
     token: localStorage.getItem('justoken') || ''
   },
   mutations: {
@@ -23,20 +22,21 @@ const account = {
       state.status = 'error'
     },
     logout (state) {
-      state.id = ''
       state.email = ''
       state.name = ''
-      state.oab = {}
       state.oabNumber = ''
       state.oabState = ''
       state.status = ''
+      state.emailAccount = ''
       state.token = ''
     },
-    changeUser (state, response) {
-      if (response.user.id) state.id = response.user.id
+    setUser (state, response) {
       if (response.user.email) state.email = response.user.email
       if (response.user.name) state.name = response.user.name
       if (response.user.oab) state.oab = response.user.oab
+      if (response.user.oab) state.oabNumber = response.user.oab.number
+      if (response.user.oab) state.oabState = response.user.oab.state
+      if (response.user.emailAccount) state.emailAccount = response.user.emailAccount.email
     }
   },
   actions: {
@@ -45,7 +45,7 @@ const account = {
         // eslint-disable-next-line
         axios.get('/accounts/my')
           .then(response => {
-            commit('changeUser', { user: response.data })
+            commit('setUser', { user: response.data })
             resolve(response)
           })
           .catch(error => {
