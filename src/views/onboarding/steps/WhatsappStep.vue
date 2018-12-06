@@ -77,7 +77,7 @@ export default {
 .onboarding-whatsapp-step {
   .whatsapp-step--status {
     strong {
-      margin: 0 10px;
+      margin: 0 8px 0 4px;
     }
   }
   .whatsapp-step--status-info {

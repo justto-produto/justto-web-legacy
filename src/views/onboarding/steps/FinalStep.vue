@@ -51,6 +51,10 @@ export default {
             .then(() => {
               this.$router.push('import')
             })
+            .catch((error) => {
+              this.showError = true
+              console.log(error)
+            })
         })
         .catch((error) => {
           this.showError = true

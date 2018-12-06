@@ -43,6 +43,11 @@
       v-if="showError"
       title="Não conseguimos sincronizar o seu e-mail. Verifique as credenciais e tente novamente."
       type="error"/>
+      <div class="email-step--status">
+        Status:
+        <strong>{{ message }}</strong>
+        <JusStatusDot :type="type"/>
+      </div>
     <el-button v-if="!synced" type="primary" @click="syncEmail">
       Sincronizar
     </el-button>
@@ -80,6 +85,14 @@ export default {
       }
     }
   },
+  computed: {
+    message () {
+      return this.synced ? 'SINCRONIZADO' : 'AGUARDANDO SINCRONIZAÇÃO'
+    },
+    type () {
+      return this.synced ? 'success' : 'warning'
+    }
+  },
   methods: {
     syncEmail () {
       this.showSuccess = false
@@ -91,17 +104,14 @@ export default {
             .then((response) => {
               this.showSuccess = true
               this.synced = true
+              this.syncForm.email = 'a@a.com'
+              this.$store.dispatch('myAccount')
             }).catch((error) => {
               this.showError = true
               console.log(error)
             }).finally(() => {
               this.$store.dispatch('hideLoading')
             })
-          // setTimeout(function () {
-          // }.bind(this), 1500)
-          // setTimeout(function () {
-          //   this.loading = false
-          // }.bind(this), 1500);
         } else {
           return false
         }
@@ -118,6 +128,12 @@ export default {
 .onboarding-email-step {
   .el-alert {
     max-width: 400px;
+  }
+  .email-step--status {
+    margin-top: 30px;
+    strong {
+      margin: 0 8px 0 4px;
+    }
   }
   @media (max-width: 991px) {
     p {

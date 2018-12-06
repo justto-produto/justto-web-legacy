@@ -38,6 +38,10 @@
             <final-step :is-guest="isGuest"/>
           </swiper-slide>
         </swiper>
+        <div class="onboarding-progress">
+          {{progressPercentage }}% completo
+          <el-progress class="" text-inside :width="400" :percentage="progressPercentage"/>
+        </div>
       </el-col>
     </transition>
     <el-button
@@ -93,6 +97,9 @@ export default {
   computed: {
     isGuest: function () {
       return !!this.$route.query.invitedBy
+    },
+    progressPercentage: function () {
+      return Math.round(this.currentStep * 12.5)
     }
   },
   created: function () {
@@ -189,6 +196,15 @@ export default {
     .el-button--text {
       width: 100%;
       margin: 10px 0 0 0 !important;
+    }
+  }
+  .onboarding-progress{
+    position: relative;
+    bottom: 64px;
+    width: 400px;
+    margin-left: 120px;
+    .el-progress-bar__innerText {
+      display: none;
     }
   }
 }
