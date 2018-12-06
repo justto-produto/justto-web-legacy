@@ -12,6 +12,11 @@ const workspace = {
     },
     getError (state) {
       state.status = 'error'
+    },
+    clearWorkspace (state) {
+      state.name = ''
+      state.status = ''
+      state.subDomain = ''
     }
   },
   actions: {
@@ -65,7 +70,7 @@ const workspace = {
     readyWorkspace ({ commit }, workspace) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces/ready/' + workspace)
+        axios.put('/workspaces/ready/' + workspace)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -77,6 +82,9 @@ const workspace = {
   getters: {
     hasWorkspace: state => {
       return state.status !== '' && state.status !== 'CREATING'
+    },
+    creatingWorkspace: state => {
+      return state.status === 'CREATING'
     }
   }
 }

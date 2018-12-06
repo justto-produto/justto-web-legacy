@@ -17,7 +17,7 @@
       @submit.native.prevent="submitForm">
       <span>https://</span>
       <el-form-item prop="subdomain">
-        <el-input v-model="subdomainForm.subdomain" name="subdomain"/>
+        <el-input v-model="subdomainForm.subdomain" name="subdomain" :readonly="$store.getters.creatingWorkspace"/>
       </el-form-item>
       <span>.acordo.pro</span>
     </el-form>
@@ -68,16 +68,15 @@ export default {
       }
     }
     return {
-      loading: false,
       isAvailable: true,
       subdomainForm: {
-        subdomain: ''
+        subdomain: this.$store.state.workspace.subDomain
       },
       subdomainFormRules: {
         subdomain: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateSubdomainName, trigger: 'submit' },
-          { validator: validateSubdomainAvailability, trigger: 'change' }
+          { validator: validateSubdomainAvailability, trigger: 'submit' }
         ]
       }
     }
@@ -98,14 +97,15 @@ export default {
   },
   methods: {
     submitForm () {
-      // this.loading = true
-      this.$refs['subdomainForm'].validate((valid) => {
-        if (valid) {
-          this.$emit('onboarding:step:next', { subDomain: this.subdomainForm.subdomain })
-        } else {
-          return false
-        }
-      })
+      if (!this.$store.getters.creatingWorkspace) {
+        this.$refs['subdomainForm'].validate((valid) => {
+          if (valid) {
+            this.$emit('onboarding:createSubdomain', { subDomain: this.subdomainForm.subdomain })
+          } else {
+            return false
+          }
+        })
+      } else this.$emit('onboarding:step:next')
     }
   }
 }
@@ -126,6 +126,10 @@ export default {
   }
   .el-alert{
     width: fit-content;
+    text-align: center;
+  }
+  .el-alert__content {
+    width: 400px;
   }
 }
 </style>

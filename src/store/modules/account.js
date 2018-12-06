@@ -23,6 +23,12 @@ const account = {
       state.status = 'error'
     },
     logout (state) {
+      state.id = ''
+      state.email = ''
+      state.name = ''
+      state.oab = {}
+      state.oabNumber = ''
+      state.oabState = ''
       state.status = ''
       state.token = ''
     },
@@ -93,6 +99,7 @@ const account = {
     logout ({ commit }, options) {
       return new Promise((resolve, reject) => {
         commit('logout')
+        commit('clearWorkspace')
         localStorage.removeItem('justoken')
         // eslint-disable-next-line
         delete axios.defaults.headers.common['Authorization']

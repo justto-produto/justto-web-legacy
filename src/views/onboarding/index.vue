@@ -11,13 +11,13 @@
           :options="swiperOption"
           class="swiper-box">
           <swiper-slide>
-            <welcome-step :is-guest="isGuest" @onboarding:step:next="verifySecondStep"/>
+            <welcome-step :is-guest="isGuest" @onboarding:step:next="nextStep"/>
           </swiper-slide>
-          <swiper-slide v-if="!isGuest && !secondFase">
+          <swiper-slide v-if="!isGuest">
             <team-name-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
-          <swiper-slide v-if="!isGuest && !secondFase">
-            <subdomain-step @onboarding:step:next="createSubdomain"/>
+          <swiper-slide v-if="!isGuest">
+            <subdomain-step @onboarding:step:next="nextStep" @onboarding:createSubdomain="createSubdomain"/>
           </swiper-slide>
           <swiper-slide>
             <oab-step @onboarding:step:next="nextStep"/>
@@ -85,7 +85,8 @@ export default {
       swiperOption: {
         direction: 'vertical',
         slidesPerView: 1,
-        allowTouchMove: false
+        allowTouchMove: false,
+        initialSlide: 0
       }
     }
   },
@@ -114,10 +115,6 @@ export default {
     },
     updateCurrentStep () {
       this.currentStep = this.$refs['swiper'].swiper.activeIndex
-    },
-    verifySecondStep () {
-      this.secondFase = this.$store.state.workspace.status === 'CREATING'
-      this.nextStep()
     },
     createSubdomain (responseObj) {
       this.$store.dispatch('showLoading')

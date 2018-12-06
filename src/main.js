@@ -60,9 +60,23 @@ Vue.component('JusStatusDot', JusStatusDot)
 
 Vue.config.productionTip = false
 
-new Vue({
-  router,
-  store,
-  i18n,
-  render: h => h(App)
-}).$mount('#app')
+if (store.getters.isLoggedIn) {
+  store.dispatch('showLoading')
+  Promise.all([store.dispatch('myAccount'), store.dispatch('myWorkspace')])
+    .then(() => {
+      store.dispatch('hideLoading')
+      new Vue({
+        router,
+        store,
+        i18n,
+        render: h => h(App)
+      }).$mount('#app')
+    })
+} else {
+  new Vue({
+    router,
+    store,
+    i18n,
+    render: h => h(App)
+  }).$mount('#app')
+}

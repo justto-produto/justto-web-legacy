@@ -14,7 +14,7 @@ if (AUTH_TOKEN) {
 
 let config = {
   baseURL: process.env.baseURL || process.env.apiUrl || 'https://dev-env.acordo.pro/api',
-  timeout: 60 * 1000, // Timeout
+  timeout: 60 * 100000, // Timeout
   headers: {
     'Access-Control-Allow-Origin': '*'
   }
@@ -41,7 +41,6 @@ _axios.interceptors.response.use(
     return response
   },
   function (error) {
-    console.log(error.response.status)
     if (error.response.status === 401) {
       store.dispatch('logout')
     }

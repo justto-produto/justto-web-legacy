@@ -47,7 +47,10 @@ export default {
       this.showError = false
       this.$store.dispatch('readyWorkspace', this.$store.state.workspace.subDomain)
         .then(() => {
-          this.$router.push('/import')
+          this.$store.dispatch('myWorkspace')
+            .then(() => {
+              this.$router.push('import')
+            })
         })
         .catch((error) => {
           this.showError = true
