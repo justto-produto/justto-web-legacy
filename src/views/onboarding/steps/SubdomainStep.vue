@@ -17,13 +17,13 @@
       @submit.native.prevent="submitForm">
       <span>https://</span>
       <el-form-item prop="subdomain">
-        <el-input v-model="subdomainForm.subdomain" name="subdomain" :readonly="$store.getters.creatingWorkspace"/>
+        <el-input v-model="subdomainForm.subdomain" name="subdomain" :readonly="creatingWorkspace"/>
       </el-form-item>
       <span>.acordo.pro</span>
     </el-form>
     <br>
     <el-alert
-      v-show="subdomainForm.subdomain.length >= 3"
+      v-show="subdomainForm.subdomain.length >= 3 && !creatingWorkspace"
       :title="availabilityAlert.title"
       :type="availabilityAlert.type"
       :closable="false"/>
@@ -93,11 +93,14 @@ export default {
         title: 'Este subdomínio já está em uso.',
         type: 'error'
       }
+    },
+    creatingWorkspace: function () {
+      return this.$store.getters.creatingWorkspace
     }
   },
   methods: {
     submitForm () {
-      if (!this.$store.getters.creatingWorkspace) {
+      if (!this.creatingWorkspace) {
         this.$refs['subdomainForm'].validate((valid) => {
           if (valid) {
             this.$emit('onboarding:createSubdomain', { subDomain: this.subdomainForm.subdomain })
