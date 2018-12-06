@@ -5,34 +5,46 @@ context('Actions', () => {
     cy.visit('http://localhost:8080/login')
   })
 
+  it('Cadastrar usuário', () => {
+  // https://on.cypress.io/type
+    cy.contains('Cadastre').click()
+  
+    // Fills 'Nome' field
+      cy.get('[name=register-name]')
+        .type('nome')
+    // Fills 'Email' field
+      cy.get('[name=register-email]')
+        .type('e@mail.com')
+    // Fills 'Senha' field
+      cy.get('[name=register-password')
+        .type('password')
+    // Press 'Cadastrar' buttom
+      //cy.contains('Cadastrar').click()  
+  })
+
   // Acessando página de Login do justto-web
 
   it('Acessando Página de Login ', () => {
     // https://on.cypress.io/type
     cy.get('[name=login-email]')
-      .type('fakeaaaaaaa@email.com')
+      .type('graziele@justto.com.br')
 
     cy.get('[name=login-password]')
-      .type('password')
+      .type('justt0!@#')
     // Press 'Enter' buttom
-    // cy.contains('Entrar').click()
-  })
+    cy.contains('Entrar').click()
 
-  // it('Cadastrar usuário', () => {
-  // // https://on.cypress.io/type
-  //   cy.contains('Cadastre').click()
-  //
-  //   // Fills 'Nome' field
-  //     cy.get('[tracker=loginForm] [class=el-input__inner]').then($els => $els.get(2))
-  //       .type('nome')
-  //   // Fills 'Email' field
-  //     cy.get('[class=el-input__inner]').then($els => $els.get(1))
-  //       .type('e@mail.com')
-  //   // Fills 'Senha' field
-  //     cy.get('[class=el-input__inner]').then($els => $els.get(2))
-  //       .type('password')
-  //
-  // cy.contains('Cadastrar').click()
-  //
-  // })
+    // Welcome
+    cy.wait(5)
+    cy.get('.onboarding-welcome-step > button').click()
+    cy.wait(5)
+    // Team Name
+    cy.get('[name=name]').type('Team Name')
+    cy.wait(5)
+    cy.get('.onboarding-step-content > button').click()
+    cy.wait(5)
+    // Workspace Name
+    
+  })
+  
 })

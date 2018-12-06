@@ -2,7 +2,7 @@
 
 context('Actions', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:8081/login')
+    cy.visit('http://localhost:8080/login')
   })
 
   // Acessando página de Login do justto-web
@@ -23,8 +23,13 @@ context('Actions', () => {
     cy.contains('Cadastre').click()
 
     // Fills 'Nome' field
+<<<<<<< Updated upstream
     cy.get('[class=el-input__inner]').then($els => $els.get(2))
       .type('nome')
+=======
+      cy.get('[class=el-input__inner]').then($els => $els.get(0))
+        .type('nome')
+>>>>>>> Stashed changes
     // Fills 'Email' field
     cy.get('[class=el-input__inner]').then($els => $els.get(1))
       .type('e@mail.com')
