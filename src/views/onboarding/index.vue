@@ -39,8 +39,8 @@
           </swiper-slide>
         </swiper>
         <div class="onboarding-progress">
-          {{progressPercentage }}% completo
-          <el-progress class="" text-inside :width="400" :percentage="progressPercentage"/>
+          {{ progressPercentage }}% completo
+          <el-progress :width="400" :percentage="progressPercentage" text-inside/>
         </div>
       </el-col>
     </transition>

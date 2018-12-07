@@ -15,7 +15,7 @@
       label-position="top"
       @submit.native.prevent="submitForm">
       <el-form-item label="E-mail de trabalho" prop="email" type="text">
-        <el-input v-model="syncForm.email" name="email" :readonly="synced"/>
+        <el-input v-model="syncForm.email" :readonly="synced" name="email"/>
       </el-form-item>
       <el-form-item v-if="!synced" label="Senha do e-mail" prop="password">
         <el-input v-model="syncForm.password" type="password" name="password"/>
@@ -43,11 +43,11 @@
       v-if="showError"
       title="Não conseguimos sincronizar o seu e-mail. Verifique as credenciais e tente novamente."
       type="error"/>
-      <div class="email-step--status">
-        Status:
-        <strong>{{ message }}</strong>
-        <JusStatusDot :type="type"/>
-      </div>
+    <div class="email-step--status">
+      Status:
+      <strong>{{ message }}</strong>
+      <JusStatusDot :type="type"/>
+    </div>
     <el-button v-if="!synced" type="primary" @click="syncEmail">
       Sincronizar
     </el-button>

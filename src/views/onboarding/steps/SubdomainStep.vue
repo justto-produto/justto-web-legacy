@@ -17,7 +17,7 @@
       @submit.native.prevent="submitForm">
       <span>https://</span>
       <el-form-item prop="subdomain">
-        <el-input v-model="subdomainForm.subdomain" name="subdomain" :readonly="creatingWorkspace"/>
+        <el-input v-model="subdomainForm.subdomain" :readonly="creatingWorkspace" name="subdomain"/>
       </el-form-item>
       <span>.acordo.pro</span>
     </el-form>
