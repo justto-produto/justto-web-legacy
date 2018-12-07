@@ -17,8 +17,8 @@ export default {
 .jus-sidenav-external{
   height: 100%;
   background-color: #f7f7f7;
-  .jus-sidenav-externa__logo{
-    margin: 40px;
-  }
+}
+.jus-sidenav-externa__logo{
+  margin: 40px;
 }
 </style>

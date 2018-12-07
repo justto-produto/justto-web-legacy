@@ -10,7 +10,7 @@
           <p v-show="!file">Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo a forma de inclusão de novos casos em sua conta.</p>
         </div>
         <div class="view-import__content view-import__content---methods">
-          <el-card :class="{'el-card--upload-progress': file, 'view-import__method--uploading': file}" shadow="never" class="view-import__method el-card--dashed el-card--vertical-content">
+          <el-card :class="{'el-card--upload-progress': file, 'view-import__method--uploading': file}" shadow="never" class="view-import__method el-card--dashed ">
             <jus-icon v-show="!file" icon="upload-file" class="upload-icon" />
             <span v-show="!file" @click.prevent="uploadMoockFile">Planilha nos formatos XLSX, CSV, XLS ou ODT</span>
             <div v-show="file" class="view-import__progress">
@@ -37,7 +37,7 @@
               </div>
             </div>
           </el-card>
-          <el-card v-show="!file" class="view-import__method el-card--dashed el-card--vertical-content" shadow="never">
+          <el-card v-show="!file" class="view-import__method el-card--dashed " shadow="never">
             <jus-icon icon="insert" is-active/>
             <span @click.prevent="uploadMoockFile">Adicionar caso manualmente</span>
           </el-card>

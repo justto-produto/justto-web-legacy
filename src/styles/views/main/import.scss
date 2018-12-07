@@ -1,13 +1,21 @@
+@import '../../variables/colors';
+
 .view-import {
-  .main-view__main-card {
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
+}
+
+.view-import--main {
+  .jus-main-view__side-card {
+    text-align: center;
+  }
+  .jus-main-view__main-card {
+    display: flex;
+    height: 100%;
+    .el-card__body {
+      margin: auto;
+    }
   }
 }
-.view-import__container {
-  margin: 50px 20px 0;
-}
+
 .view-import__title {
   text-align: center;
   margin: auto;
@@ -18,16 +26,95 @@
     margin: 10px 0;
   }
 }
+
 .view-import__content {
-  margin: 40px 0;
+  margin: 40px 0 0;
 }
-.view-import__actions {
+
+.view-import__content---methods {
   display: flex;
   justify-content: center;
+}
+
+.view-import__method {
+  max-width: 240px;
+  transition: all ease .5s;
+  &+.view-import__method {
+    margin-left: 20px;
+  }
+  >.el-card__body {
+    padding: 40px 20px;
+  }
+}
+
+.el-card--dashed-hover:hover{
+  cursor: pointer;
+  .view-import__method-info {
+    color: $--color-primary;
+  }
+}
+
+.view-import__method-info {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.view-import__method-loading {
+  width: 400px;
   max-width: 400px;
-  margin: auto;
-  margin-bottom: 20px;
+}
+
+.view-import__actions {
+  display: flex;
+  margin-top: 40px;
   button {
     width: 100%;
   }
 }
+
+// .view-import__progress{
+//   display: flex;
+//   width: 100%;
+// }
+
+// .view-import__progress-info {
+//   width: 100%;
+//   margin-left: 20px;
+//   .el-progress {
+//     margin: 5px 0;
+//     margin-right: -20px;
+//   }
+// }
+
+// .view-import__progress-success {
+//   text-align: center;
+//   .el-card {
+//     color: #fff;
+//     font-weight: normal;
+//     width: 150px;
+//     margin: auto;
+//     span {
+//       margin-bottom: 4px;
+//       font-size: 20px;
+//     }
+//   }
+//   .view-import__success-info {
+//     margin-top: 30px;
+//   }
+//   .el-card__body {
+//     text-align: center;
+//   }
+//   .el-card--background {
+//     .el-card__body {
+//       padding: 12px 10px;
+//     }
+//     h2 {
+//       margin-top: 0;
+//       margin-bottom: 8px;
+//     }
+//     span {
+//       font-size: 12px;
+//       margin: 0;
+//     }
+//   }
+// }

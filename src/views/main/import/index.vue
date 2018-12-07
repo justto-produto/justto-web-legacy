@@ -5,49 +5,35 @@
       <template slot="main">
         <div class="view-import__container">
           <div class="view-import__title">
-            <h2 v-show="!file">Adicione novos casos</h2>
-            <h2 v-show="file && processSuccess">Planilha carregada</h2>
-            <h2 v-show="file && !processSuccess">Processando planilha</h2>
-            <p v-show="!file">Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo a forma de inclusão de novos casos em sua conta.</p>
+            <h2 v-show="!hasFile">Adicione novos casos</h2>
+            <h2 v-show="hasFile">Carregando a sua planilha</h2>
+            <p v-show="!hasFile">Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo
+              <br>
+              a forma de inclusão de novos casos em sua conta.
+            </p>
           </div>
           <div class="view-import__content view-import__content---methods">
-            <el-card :class="{'el-card--upload-progress': file, 'view-import__method--uploading': file}" shadow="never" class="view-import__method el-card--dashed el-card--vertical-content">
-              <jus-icon v-show="!file" icon="upload-file" class="upload-icon" />
-              <span v-show="!file" @click.prevent="uploadMoockFile">Planilha nos formatos XLSX, CSV, XLS ou ODT</span>
-              <div v-show="file" class="view-import__progress">
-                <jus-icon icon="spreadsheet-xlsx"/>
-                <div class="view-import__progress-info">
-                  <strong>planilha-casos.xlsx</strong>
-                  <el-progress :stroke-width="4" :percentage="progress" :status="uploadStatus"/>
-                  <span v-show="!processSuccess">
-                    <span v-if="progress !== 100">Carregando...</span>
-                    <span v-else>Processando...</span>
-                    <i class="el-icon-loading"/>
-                  </span>
-                  <span v-show="processSuccess">
-                    Documento carregado com sucesso.
-                  </span>
-                </div>
-              </div>
-              <div v-show="processSuccess" class="view-import__progress-success">
-                <hr>
-                <h3>Total de casos importados: 100</h3>
-                <div class="view-import__success-info">
-                  Caso haja, na sua importação, mais casos do que você tinha planejado, verifique se foi aplicado algum
-                  filtro na sua planilha. Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
-                </div>
-              </div>
+            <el-card :class="{'view-import__method-loading': hasFile}" class="view-import__method el-card--dashed-hover el-card--vertical-content" shadow="never">
+              <el-upload
+                ref="uploadMethod"
+                :show-file-list="true"
+                :on-success="handleSuccess"
+                :before-upload="beforeUpload"
+                :disabled="hasFile"
+                action="http://localhost:3000/import">
+                <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
+                <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV, XLS ou ODT</div>
+              </el-upload>
             </el-card>
-            <el-card v-show="!file" class="view-import__method el-card--dashed el-card--vertical-content" shadow="never">
+            <el-card v-if="!hasFile" class="view-import__method el-card--dashed-hover el-card--vertical-content" shadow="never">
               <jus-icon icon="insert" is-active/>
-              <span @click.prevent="uploadMoockFile">Adicionar caso manualmente</span>
+              <div class="view-import__method-info">Adicionar caso manualmente</div>
             </el-card>
           </div>
-          <div class="view-import__actions">
-            <el-button v-show="processSuccess" plain @click="file = false">Voltar</el-button>
-            <el-button :disabled="inProgress" type="primary" @click="nextStep">Próximo</el-button>
+          <div v-if="hasFile" class="view-import__actions">
+            <el-button plain @click="removeFile">Voltar</el-button>
+            <el-button type="primary" @click="nextStep">Próximo</el-button>
           </div>
-          <el-button type="primary" @click="$router.push('/import/new')">Próximo</el-button>
         </div>
       </template>
       <template slot="aside">
@@ -69,156 +55,36 @@ export default {
   name: 'Import',
   data () {
     return {
-      file: false,
-      progress: 0,
-      inProgress: false
-    }
-  },
-  computed: {
-    uploadStatus () {
-      return this.progress === 100 ? 'success' : ''
-    },
-    processSuccess () {
-      if (this.file && !this.inProgress && this.progress === 100) {
-        return true
-      }
-      return false
+      fileUrl: '',
+      hasFile: false
     }
   },
   methods: {
     nextStep () {
-      if (this.file) {
-        this.$notify.closeAll()
-        this.$router.push('/import/columns')
-      } else {
-        this.$notify.closeAll()
-        this.$notify({
-          title: 'Ops!',
-          message: 'Para prosseguir você deve escolher uma das opções de importação de novos casos.',
-          position: 'bottom-right',
-          duration: 3000,
-          customClass: 'danger'
-        })
+      this.$router.push('/import/new')
+    },
+    handleSuccess (res, file) {
+      this.fileUrl = URL.createObjectURL(file.raw)
+    },
+    beforeUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isJPG) {
+        this.$message.error('Avatar picture must be JPG format!')
       }
-    },
-    uploadMoockFile () {
-      this.file = true
-      this.progress = 0
-      this.uploadCounter()
-      this.inProgress = true
-    },
-    uploadCounter () {
-      if (this.progress < 100) {
-        this.progress = this.progress + 1
-        let self = this
-        setTimeout(self.uploadCounter, 80)
-      } else {
-        this.processFile()
+      if (!isLt2M) {
+        this.$message.error('Avatar picture size can not exceed 2MB!')
       }
+      if (isJPG && isLt2M) {
+        this.hasFile = true
+      }
+      return isJPG && isLt2M
     },
-    processFile () {
-      let self = this
-      setTimeout(function () {
-        self.inProgress = false
-      }, 4000)
+    removeFile () {
+      this.hasFile = false
+      this.fileUrl = ''
+      this.$refs['uploadMethod'].clearFiles()
     }
   }
 }
 </script>
-
-<style lang="scss">
-.view-import {
-  > h1 {
-    margin-left: 20px;
-  }
-}
-
-.view-import--main {
-  .jus-main-view__card {
-    text-align: center;
-  }
-}
-
-.view-import__content---methods {
-  display: flex;
-  justify-content: center;
-}
-
-.view-import__method {
-  min-height: 240px;
-  max-width: 240px;
-  &+.view-import__method {
-    margin-left: 20px;
-  }
-  >.el-card__body {
-    padding: 40px 20px;
-    >span {
-      text-align: center;
-      margin-top: 20px;
-      cursor: pointer;
-    }
-  }
-  hr {
-    width: 100%;
-    margin: 40px 0;
-  }
-  img {
-    height: 60px;
-  }
-}
-
-.view-import__method--uploading {
-  margin: auto;
-  display: grid;
-}
-
-.view-import__progress{
-  display: flex;
-  width: 100%;
-}
-
-.view-import__progress-info {
-  width: 100%;
-  margin-left: 20px;
-  .el-progress {
-    margin: 5px 0;
-    margin-right: -20px;
-  }
-}
-
-.view-import__progress-success{
-  text-align: center;
-  .el-card {
-    color: #fff;
-    font-weight: normal;
-    width: 150px;
-    margin: auto;
-    h4 {
-
-    }
-    span {
-      margin-bottom: 4px;
-      font-size: 20px;
-    }
-  }
-  .view-import__success-info{
-    margin-top: 30px;
-  }
-  .el-card__body {
-    text-align: center;
-  }
-  .el-card--background {
-    .el-card__body {
-      padding: 12px 10px;
-    }
-    h2 {
-      margin-top: 0;
-      margin-bottom: 8px;
-    }
-    span {
-      font-size: 12px;
-      margin: 0;
-    }
-  }
-}
-</style>

@@ -29,6 +29,14 @@
   border: dashed 1px $--color-cloudy-blue;
 }
 
+.el-card--dashed-hover {
+  background-color: $--color-white;
+  border: dashed 1px $--color-cloudy-blue;
+  &:hover {
+    border-color: $--color-primary;
+  }
+}
+
 .el-card--feedback {
   .el-card__title {
     font-size: 12px;
