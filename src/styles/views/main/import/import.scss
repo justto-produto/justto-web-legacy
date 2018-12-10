@@ -6,6 +6,10 @@
 .view-import--main {
   .jus-main-view__side-card {
     text-align: center;
+    .import-history .el-card__body {
+      display: flex;
+      align-items: center;
+    }
   }
   .jus-main-view__main-card {
     display: flex;

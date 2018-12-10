@@ -1,6 +1,6 @@
 <template>
   <div class="view-import view-import--main">
-    <JusViewMain side-card>
+    <JusViewMain side-card side-card-width="400">
       <template slot="title">Importação de casos</template>
       <template slot="main">
         <div class="view-import__container">
@@ -38,12 +38,41 @@
         </div>
       </template>
       <template slot="aside">
-        <h3>
+        <h2>
           Histórico de Importaçãos
-        </h3>
+        </h2>
+        <p>
+          Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
+          Abaixo você pode baixar o nosso modelo de planilha:
+        </p>
         <br>
-        Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
-        Abaixo você pode baixar o nosso modelo de planilha:
+        <el-card shadow="never" class="import-history">
+          <jus-icon icon="spreadsheet-xlsx"/>
+          <div style="margin: 0 20px;width: 100%;text-align: left;">
+            <h4 style="margin: 0;margin-bottom: 10px;">Nome do arquivo</h4>
+            Data: 23/08/2018 <br>
+            Hora: 14:30 <br>
+          </div>
+          <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
+        </el-card>
+        <el-card shadow="never" class="import-history">
+          <jus-icon icon="spreadsheet-xlsx"/>
+          <div style="margin: 0 20px;width: 100%;text-align: left;">
+            <h4 style="margin: 0;margin-bottom: 10px;">Nome do arquivo</h4>
+            Data: 23/08/2018 <br>
+            Hora: 14:30 <br>
+          </div>
+          <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
+        </el-card>
+        <el-card shadow="never" class="import-history">
+          <jus-icon icon="spreadsheet-xlsx"/>
+          <div style="margin: 0 20px;width: 100%;text-align: left;">
+            <h4 style="margin: 0;margin-bottom: 10px;">Nome do arquivo</h4>
+            Data: 23/08/2018 <br>
+            Hora: 14:30 <br>
+          </div>
+          <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
+        </el-card>
         <br><br>
         <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button>
       </template>

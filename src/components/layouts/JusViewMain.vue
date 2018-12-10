@@ -6,12 +6,12 @@
         <slot name="main"/>
       </el-card>
       <div v-if="this.$slots['aside']">
-        <el-card v-if="sideCard" class="jus-main-view__side-card">
+        <el-card
+          :class="{'jus-main-view__side-card--transparent': !sideCard}"
+          class="jus-main-view__side-card"
+          :style="{width: sideCardWidth + 'px'}">
           <slot name="aside"/>
         </el-card>
-        <div v-else class="jus-main-view__side-card jus-main-view__side-card--transparent">
-          <slot name="aside"/>
-        </div>
       </div>
     </div>
   </div>
@@ -24,6 +24,10 @@ export default {
     sideCard: {
       default: false,
       type: Boolean
+    },
+    sideCardWidth: {
+      default: '300',
+      type: String
     }
   }
 }
@@ -43,7 +47,6 @@ export default {
 }
 .jus-main-view__side-card {
   margin-left: 20px;
-  width: 300px;
   position: sticky;
   top: 40px;
   &.jus-main-view__side-card--transparent {
