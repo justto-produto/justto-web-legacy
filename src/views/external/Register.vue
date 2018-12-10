@@ -118,7 +118,7 @@ export default {
               if (error.response && error.response.data.code === 'ALREADY_EXISTS') {
                 this.errorMessage = 'Já existe um usuário cadastrado com este e-mail.'
               } else {
-                this.errorMessage = `Houve uma falha com a conexão com o servidor.
+                this.errorMessage = `Houve uma falha de conexão com o servidor.
                 Tente novamente ou entre em contato com o administrador do sistema.`
               }
               this.showError = true

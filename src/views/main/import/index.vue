@@ -19,6 +19,7 @@
                 :show-file-list="true"
                 :on-success="handleSuccess"
                 :before-upload="beforeUpload"
+                :on-error="handleError"
                 :disabled="hasFile"
                 action="http://localhost:3000/import">
                 <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
@@ -55,8 +56,12 @@ export default {
   name: 'Import',
   data () {
     return {
-      fileUrl: '',
-      hasFile: false
+      fileUrl: ''
+    }
+  },
+  computed: {
+    hasFile () {
+      return this.fileUrl !== ''
     }
   },
   methods: {
@@ -67,21 +72,40 @@ export default {
       this.fileUrl = URL.createObjectURL(file.raw)
     },
     beforeUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
+      this.$notify.closeAll()
+      const isValid =
+      file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+      file.type === 'application/vnd.ms-excel' ||
+      file.type === 'text/csv' ||
+      file.type === 'application/vnd.oasis.opendocument.text'
       const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isJPG) {
-        this.$message.error('Avatar picture must be JPG format!')
+      if (!isValid) {
+        this.$notify({
+          title: 'Ops!',
+          type: 'warning',
+          position: 'bottom-right',
+          message: `Arquivo em formato inválido!`,
+          duration: 0,
+          customClass: 'warning'
+        })
       }
-      if (!isLt2M) {
-        this.$message.error('Avatar picture size can not exceed 2MB!')
-      }
-      if (isJPG && isLt2M) {
-        this.hasFile = true
-      }
-      return isJPG && isLt2M
+      // if (!isLt2M) {
+      //   this.$message.error('Limite de 2M por arquivo.')
+      // }
+      return isValid //&& isLt2M
+    },
+    handleError () {
+      this.$notify({
+        title: 'Ops!',
+        type: 'error',
+        position: 'bottom-right',
+        message: `Houve uma falha de conexão com o servidor.
+        Tente novamente ou entre em contato com o administrador do sistema.`,
+        duration: 0,
+        customClass: 'danger'
+      })
     },
     removeFile () {
-      this.hasFile = false
       this.fileUrl = ''
       this.$refs['uploadMethod'].clearFiles()
     }

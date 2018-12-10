@@ -124,7 +124,7 @@ export default {
                 })
               }).catch(error => {
                 console.log(error)
-                this.errorMessage = `Houve uma falha com a conexão com o servidor.
+                this.errorMessage = `Houve uma falha de conexão com o servidor.
                 Tente novamente ou entre em contato com o administrador do sistema.`
                 this.showError = true
                 this.showLoading = false
@@ -135,7 +135,7 @@ export default {
               if (error.response && error.response.data.code === 'INVALID_CREDENTIALS') {
                 this.errorMessage = 'E-mail não cadastrado ou senha incorreta.'
               } else {
-                this.errorMessage = `Houve uma falha com a conexão com o servidor.
+                this.errorMessage = `Houve uma falha de conexão com o servidor.
                 Tente novamente ou entre em contato com o administrador do sistema.`
               }
               this.showError = true

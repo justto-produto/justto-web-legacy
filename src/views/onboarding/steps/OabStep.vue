@@ -27,7 +27,7 @@
     </div>
     <el-alert
       v-if="showError"
-      title="Houve uma falha com a conexão com o servidor.
+      title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
       type="error"/>
     <el-button type="primary" @click="submitForm">Próximo</el-button>
