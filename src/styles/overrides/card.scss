@@ -1,7 +1,13 @@
 @import '../variables/colors';
 
 .el-card {
-  &.is-always-shadow{
+  &.is-always-shadow {
+    box-shadow: 0 3px 26px 0 rgba(37, 38, 94, 0.15) !important;
+  }
+  &.is-hover-shadow:hover {
+    box-shadow: 0 3px 26px 0 rgba(37, 38, 94, 0.15) !important;
+  }
+  &.is-hover-shadow:focus {
     box-shadow: 0 3px 26px 0 rgba(37, 38, 94, 0.15) !important;
   }
 }

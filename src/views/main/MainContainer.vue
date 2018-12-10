@@ -14,7 +14,7 @@
           <jus-icon :is-active="$route.path === '/'" icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
-        <transition name="fade-absolute">
+        <transition name="fade">
           <li v-if="!isCollapse" class="el-menu__title">
             <span>GERENCIAMENTO</span>
           </li>

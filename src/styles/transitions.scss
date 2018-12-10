@@ -1,16 +1,9 @@
 .fade-enter-active, .fade-leave-active {
   transition: opacity .3s;
 }
-
+.fade-enter-active {
+  display: none;
+}
 .fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-
-.fade-absolute-enter-active, .fade-absolute-leave-active {
-  transition: opacity .3s;
-}
-
-.fade-absolute-enter, .fade-absolute-leave-to {
-  position: absolute;
   opacity: 0;
 }

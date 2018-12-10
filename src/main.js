@@ -15,10 +15,11 @@ import '@/plugins/awesomeSwiper'
 // css
 import '@/styles/core.scss'
 import '@/styles/transitions.scss'
+import '@/styles/container.scss'
 
-import '@/styles/views/external.scss'
-import '@/styles/views/container.scss'
-import '@/styles/views/main/import.scss'
+import '@/styles/views/external/index.scss'
+import '@/styles/views/main/import/import.scss'
+import '@/styles/views/main/import/new-import.scss'
 
 import '@/styles/overrides/alert.scss'
 import '@/styles/overrides/badge.scss'

@@ -1,5 +1,32 @@
 @import '../variables/colors';
 
+.el-collapse-item__header {
+  font-size: inherit !important;
+  font-weight: normal !important;
+}
+
+.el-collapse--bordered {
+  border: none !important;
+  .el-collapse-item {
+    border: 1px solid $--color-primary;
+    border-radius: 4px;
+  }
+  .el-collapse-item + .el-collapse-item {
+    margin-top: 20px;
+  }
+  .el-collapse-item__header {
+    border: none !important;
+    margin: 1px 10px;
+  }
+  .el-collapse-item__wrap {
+    border: none !important;
+    margin: 10px
+  }
+  .el-collapse-item__content {
+    padding-bottom: 0;
+  }
+}
+
 .el-collapse-drag {
   &.el-collapse {
     width: 100%;

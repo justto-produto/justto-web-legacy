@@ -4,7 +4,7 @@
       <h1>Dashboard</h1>
     </template>
     <template slot="main">
-      <div style="display: flex; justify-content: center;">
+      <!-- <div style="display: flex; justify-content: center;">
         <jus-chart-doughnut
           :data="[21, 23, 56]"
           :height="300"
@@ -15,7 +15,7 @@
           title="O" />
       </div>
       <jus-chart-line :data="data" :options="options"/>
-      {{ $t('message') }}
+      {{ $t('message') }} -->
     </template>
   </JusViewMain>
 </template>
