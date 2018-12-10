@@ -10,9 +10,8 @@
   .jus-main-view__main-card {
     display: flex;
     height: 100%;
-    .el-card__body {
+    > .el-card__body {
       margin: auto;
-      text-align: center;
     }
   }
 }
@@ -35,6 +34,16 @@
 .view-import__content---methods {
   display: flex;
   justify-content: center;
+  text-align: center;
+  .el-upload-list {
+    max-width: 210px;
+    &.is-disabled {
+      max-width: 368px;
+    }
+  }
+  .el-icon-document {
+    display: none;
+  }
 }
 
 .view-import__method {

@@ -1,12 +1,12 @@
 <template>
   <div class="view-import view-import--main">
-    <h1>Importação de casos</h1>
     <JusViewMain side-card>
+      <template slot="title">Importação de casos</template>
       <template slot="main">
         <div class="view-import__container">
           <div class="view-import__title">
             <h2 v-show="!hasFile">Adicione novos casos</h2>
-            <h2 v-show="hasFile">Carregando a sua planilha</h2>
+            <h2 v-show="hasFile">Planilha carregada com sucesso!</h2>
             <p v-show="!hasFile">Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo
               <br>
               a forma de inclusão de novos casos em sua conta.
@@ -78,7 +78,6 @@ export default {
       file.type === 'application/vnd.ms-excel' ||
       file.type === 'text/csv' ||
       file.type === 'application/vnd.oasis.opendocument.text'
-      const isLt2M = file.size / 1024 / 1024 < 2
       if (!isValid) {
         this.$notify({
           title: 'Ops!',
@@ -89,10 +88,11 @@ export default {
           customClass: 'warning'
         })
       }
+      // const isLt2M = file.size / 1024 / 1024 < 2
       // if (!isLt2M) {
       //   this.$message.error('Limite de 2M por arquivo.')
       // }
-      return isValid //&& isLt2M
+      return isValid // && isLt2M
     },
     handleError () {
       this.$notify({
