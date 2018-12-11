@@ -47,8 +47,8 @@ export default {
     return {
       showError: false,
       oabForm: {
-        oab: this.$store.state.account.oab.number,
-        state: this.$store.state.account.oab.state
+        oab: this.$store.state.account.oabNumber,
+        state: this.$store.state.account.oabState
       },
       oabFormRules: {
         oab: [
@@ -87,8 +87,8 @@ export default {
       this.$refs['oabForm'].resetFields()
     },
     hasChanges () {
-      if (this.$store.state.account.oab.number !== this.oabForm.oab ||
-      this.$store.state.account.oab.state !== this.oabForm.state) {
+      if (this.$store.state.account.oabNumber !== this.oabForm.oab ||
+      this.$store.state.account.oabState !== this.oabForm.state) {
         return true
       }
       return false

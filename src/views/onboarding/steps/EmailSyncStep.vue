@@ -70,7 +70,7 @@ export default {
       showSuccess: false,
       showError: false,
       syncForm: {
-        email: this.$store.state.account.emailAccount,
+        email: '',
         password: ''
       },
       syncFormRules: {
@@ -82,6 +82,11 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ]
       }
+    }
+  },
+  onCreate () {
+    if (this.$store.state.account.emailAccoun) {
+      this.syncForm.email = this.$store.state.account.emailAccoun
     }
   },
   computed: {
