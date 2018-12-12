@@ -77,6 +77,61 @@ const workspace = {
             reject(error)
           })
       })
+    },
+    whatsappCreate ({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('/workspaces/whatsapp/create/' + state.subDomain)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    whatsappSend ({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.post('/workspaces/whatsapp/send/' + state.subDomain)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    whatsappStart ({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('/workspaces/whatsapp/start/' + state.subDomain)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    whatsappStatus ({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('/workspaces/whatsapp/status/' + state.subDomain)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    whatsappStop ({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('/workspaces/whatsapp/stop/' + state.subDomain)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

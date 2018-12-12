@@ -32,7 +32,7 @@
             <email-sync-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
-            <whatsapp-step @onboarding:step:next="nextStep"/>
+            <whatsapp-step :active="currentStep === 6" @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
             <final-step :is-guest="isGuest"/>
@@ -90,7 +90,7 @@ export default {
         direction: 'vertical',
         slidesPerView: 1,
         allowTouchMove: false,
-        initialSlide: 0
+        initialSlide: 4
       }
     }
   },
@@ -99,7 +99,7 @@ export default {
       return !!this.$route.query.invitedBy
     },
     progressPercentage: function () {
-      return Math.round((this.currentStep * 12.5) * 0.2) / 0.2
+      return Math.round((this.currentStep * 14.2) * 0.2) / 0.2
     }
   },
   created: function () {

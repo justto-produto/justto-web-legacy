@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import workspace from './modules/workspace'
 import account from './modules/account'
+import socket from './modules/socket'
 
 Vue.use(Vuex)
 
@@ -31,6 +32,7 @@ export default new Vuex.Store({
   },
   modules: {
     account,
-    workspace
+    workspace,
+    socket
   }
 })

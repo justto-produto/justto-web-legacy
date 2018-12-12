@@ -100,6 +100,7 @@ const account = {
       return new Promise((resolve, reject) => {
         commit('logout')
         commit('clearWorkspace')
+        commit('clearSocket')
         localStorage.removeItem('justoken')
         // eslint-disable-next-line
         delete axios.defaults.headers.common['Authorization']

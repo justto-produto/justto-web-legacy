@@ -8,9 +8,9 @@
         pela plataforma.
       </p>
     </div>
-    <div class="display-flex">
-      <div>
-        <img src="@/assets/qrcode.svg" style="border: 1px solid #eee; margin-bottom: 20px;" @click="scanAction">
+    <div class="onboarding-whatsapp-step__content">
+      <div v-loading="qrCode === ''" class="onboarding-whatsapp-step__qrcode">
+        <img :src="qrCode" @click="scanAction">
       </div>
       <div v-show="!scan" class="whatsapp-step--status-info">
         1. Abra o WhatsApp em seu telefone
@@ -36,6 +36,12 @@
 
 <script>
 export default {
+  props: {
+    active: {
+      default: false,
+      type: Boolean
+    }
+  },
   data () {
     return {
       scan: false
@@ -47,6 +53,19 @@ export default {
     },
     type () {
       return this.scan ? 'success' : 'warning'
+    },
+    qrCode () {
+      return this.$store.state.socket.urlQrCode
+    }
+  },
+  watch: {
+    active () {
+      if (this.active) {
+        this.$stomp.subscribe(this.$store.state.workspace.subDomain)
+        this.$store.dispatch('whatsappStart')
+      } else {
+        this.$stomp.unsubscribe()
+      }
     }
   },
   methods: {
@@ -60,14 +79,6 @@ export default {
     },
     clickButton: function (data) {
       this.$socket.emit('emit_method', data)
-    }
-  },
-  sockets: {
-    connect: function () {
-      console.log('socket connected')
-    },
-    customEmit: function (data) {
-      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
     }
   }
 }
@@ -99,6 +110,19 @@ export default {
     .display-flex {
       justify-content: center;
     }
+  }
+}
+.onboarding-whatsapp-step__content {
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.onboarding-whatsapp-step__qrcode {
+  width: 240px;
+  height: 200px;
+  img {
+    width: 200px;
+    height: 200px;
   }
 }
 </style>
