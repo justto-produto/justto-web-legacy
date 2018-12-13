@@ -90,7 +90,7 @@ export default {
         direction: 'vertical',
         slidesPerView: 1,
         allowTouchMove: false,
-        initialSlide: 4
+        initialSlide: 0
       }
     }
   },
