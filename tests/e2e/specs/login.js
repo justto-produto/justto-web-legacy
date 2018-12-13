@@ -27,10 +27,10 @@ context('Actions', () => {
   it('Acessando Página de Login ', () => {
     // https://on.cypress.io/type
     cy.get('[name=login-email]')
-      .type('graziele@justto.com.br')
+      .type('sesum@zdfpost.net')
 
     cy.get('[name=login-password]')
-      .type('justt0!@#')
+      .type('password')
     // Press 'Enter' buttom
     cy.contains('Entrar').click()
 
@@ -41,7 +41,7 @@ context('Actions', () => {
     // Team Name
     cy.get('[name=name]').type('Team Name')
     cy.wait(5)
-    cy.get('.onboarding-step-content > button').click()
+    cy.get('.onboarding-step-content > .el-button el-button--primary').click()
     cy.wait(5)
     // Workspace Name
     
