@@ -89,10 +89,10 @@ const workspace = {
           })
       })
     },
-    whatsappSend ({ commit, state }) {
+    whatsappSend ({ commit, state }, object) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces/whatsapp/send/' + state.subDomain)
+        axios.post('/workspaces/whatsapp/send/' + state.subDomain, object)
           .then(response => {
             resolve(response.data)
           }).catch(error => {

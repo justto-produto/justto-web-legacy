@@ -31,8 +31,8 @@
           <swiper-slide>
             <email-sync-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
-          <swiper-slide>
-            <whatsapp-step :active="currentStep === 6" @onboarding:step:next="nextStep"/>
+          <swiper-slide v-if="showWhatsapp">
+            <whatsapp-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide>
             <final-step :is-guest="isGuest"/>
@@ -90,22 +90,32 @@ export default {
         direction: 'vertical',
         slidesPerView: 1,
         allowTouchMove: false,
-        initialSlide: 0
+        initialSlide: 4
       }
     }
   },
   computed: {
-    isGuest: function () {
+    isGuest () {
       return !!this.$route.query.invitedBy
     },
-    progressPercentage: function () {
-      return Math.round((this.currentStep * 14.2) * 0.2) / 0.2
+    progressPercentage () {
+      let slidesN = this.showWhatsapp ? 7 : 6
+      return Math.round((this.currentStep * (100/slidesN)) * 0.2) / 0.2
+    },
+    showWhatsapp () {
+      return !this.$store.getters.isOffline
     }
   },
-  created: function () {
+  beforeCreate () {
+    if (this.$store.state.workspace.subDomain) {
+      this.$stomp.subscribe(this.$store.state.workspace.subDomain)
+      this.$store.dispatch('whatsappStart')
+    }
+  },
+  created () {
     setTimeout(function () {
       this.left = 6
-    }.bind(this), 200)
+    }.bind(this), 400)
     setTimeout(function () {
       this.right = 18
     }.bind(this), 1200)
@@ -131,6 +141,8 @@ export default {
         subDomain: this.responses.subDomain
       }).then(() => {
         this.$refs['swiper'].swiper.slideNext(800)
+        this.$stomp.subscribe(this.$store.state.workspace.subDomain)
+        this.$store.dispatch('whatsappStart')
       }).catch(error => {
         console.log(error)
       }).finally(() => {

@@ -9,76 +9,116 @@
       </p>
     </div>
     <div class="onboarding-whatsapp-step__content">
-      <div v-loading="qrCode === ''" class="onboarding-whatsapp-step__qrcode">
-        <img :src="qrCode" @click="scanAction">
+      <div v-loading="isStarting" :class="{'is-connected' : isConnected}" class="onboarding-whatsapp-step__qrcode">
+        <img :src="urlQrCode" class="qrcode">
+        <jus-icon v-if="!isReady && !isStarting" icon="check" class="check"/>
       </div>
-      <div v-show="!scan" class="whatsapp-step--status-info">
+      <div v-show="isReady || isStarting" class="whatsapp-step--status-info">
         1. Abra o WhatsApp em seu telefone
         <br><br>
         2. Toque em Menu ou Configurações e selecione WhatsApp Web
         <br><br>
         3. Aponte seu telefone para esta tela para capturar o código
+        <br><br>
+        4. Aguarde a sincronização
       </div>
-      <div v-show="scan" class="whatsapp-step--status-info">
-        Clique abaixo para enviar uma mensagem de teste para o número +55 12 91234 - 5678.
-        <el-button type="primary">Testar</el-button><el-button type="">Alterar número</el-button>
+      <div v-show="isConnected" class="whatsapp-step--status-info">
+        <p>
+          Clique abaixo para enviar uma mensagem de teste.
+        </p>
+        <el-form
+          ref="numberForm"
+          :model="numberForm"
+          label-position="top"
+          @submit.native.prevent="sendMessage">
+          <el-form-item label="Número" prop="number">
+            <el-input
+              v-mask="['(##) ####-####', '(##) #####-####']"
+              v-model="numberForm.number"
+              name="number"/>
+          </el-form-item>
+          <div>
+            <el-button :disabled="!validNumber" type="primary" native-type="submit">Testar</el-button>
+            <el-button @click="restart">Alterar número</el-button>
+          </div>
+        </el-form>
       </div>
     </div>
     <div class="whatsapp-step--status">
       Status:
-      <strong>{{ message }}</strong>
-      <JusStatusDot :type="type"/>
+      <strong>{{ status.message }}</strong>
+      <jus-status-dot :type="status.type"/>
     </div>
-    <el-button :disabled="!scan" type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
+    <el-button :disabled="!isConnected" type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
     <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
   </div>
 </template>
 
 <script>
+import { mask } from 'vue-the-mask'
+
 export default {
-  props: {
-    active: {
-      default: false,
-      type: Boolean
-    }
-  },
+  directives: { mask },
   data () {
     return {
-      scan: false
-    }
-  },
-  computed: {
-    message () {
-      return this.scan ? 'ATIVO' : 'AGUARDANDO ESCANEAMENTO'
-    },
-    type () {
-      return this.scan ? 'success' : 'warning'
-    },
-    qrCode () {
-      return this.$store.state.socket.urlQrCode
-    }
-  },
-  watch: {
-    active () {
-      if (this.active) {
-        this.$stomp.subscribe(this.$store.state.workspace.subDomain)
-        this.$store.dispatch('whatsappStart')
-      } else {
-        this.$stomp.unsubscribe()
+      numberForm: {
+        number: ''
       }
     }
   },
-  methods: {
-    scanAction () {
-      let self = this
-      this.$store.dispatch('showLoading')
-      setTimeout(function () {
-        self.scan = !self.scan
-        self.$store.dispatch('hideLoading')
-      }, 3000)
+  computed: {
+    urlQrCode () {
+      return this.$store.state.socket.urlQrCode
     },
-    clickButton: function (data) {
-      this.$socket.emit('emit_method', data)
+    status () {
+      if (this.isStarting) {
+        return { type: 'info', message: 'ATUALIZANDO QRCODE' }
+      }
+      if (this.isReady) {
+        return { type: 'warning', message: 'AGUARDANDO ESCANEAMENTO' }
+      }
+      if (this.isConnected) {
+        return { type: 'success', message: 'ATIVO' }
+      }
+    },
+    isReady () {
+      return this.$store.getters.isReady
+    },
+    isStarting () {
+      return this.$store.getters.isStarting
+    },
+    isConnected () {
+      return this.$store.getters.isConnected
+    },
+    validNumber () {
+      if (this.rawNumber.length > 9) {
+        return true
+      }
+      return false
+    },
+    rawNumber () {
+      if (this.numberForm.number.length > 1) {
+        return this.numberForm.number.match(/\d+/g).join([])
+      }
+      return ''
+    }
+  },
+  methods: {
+    sendMessage () {
+      this.$refs['numberForm'].validate((valid) => {
+        if (this.validNumber) {
+          this.$store.dispatch('whatsappSend', {
+            number: this.rawNumber,
+            message: 'Bem vindo à Justto!'
+          })
+        }
+      })
+    },
+    restart () {
+      this.$store.commit('setMessage', { status: 'STARTING' })
+      this.$store.dispatch('whatsappStop').then(() => {
+        this.$store.dispatch('whatsappStart')
+      })
     }
   }
 }
@@ -93,6 +133,7 @@ export default {
   }
   .whatsapp-step--status-info {
     margin: 20px 40px;
+    max-width: 290px;
     .el-button {
       width: 48% !important;
     }
@@ -118,11 +159,26 @@ export default {
   align-items: center;
 }
 .onboarding-whatsapp-step__qrcode {
-  width: 240px;
+  width: 200px;
   height: 200px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+  padding: 6px;
   img {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: 100%;
+  }
+  &.is-connected {
+    position: relative;
+    img {
+      &.qrcode {
+        opacity: 0.08;
+      }
+      &.check {
+        position: absolute;
+        left: 1px;
+        padding: 40px;
+      }
+    }
   }
 }
 </style>

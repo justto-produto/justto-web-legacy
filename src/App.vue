@@ -8,9 +8,6 @@
 
 <script>
 export default {
-  name: 'App',
-  created () {
-    // this.$stomp.subscribe('teste')
-  }
+  name: 'App'
 }
 </script>
