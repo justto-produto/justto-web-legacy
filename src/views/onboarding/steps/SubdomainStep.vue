@@ -41,18 +41,18 @@ export default {
   },
   data () {
     var validateSubdomainName = (rule, value, callback) => {
-      this.isAvailable = undefined
       if (value.length < 3) {
         callback(new Error('Necessário ao menos 3 caracteres.'))
       }
       if (/[^a-z0-9]/g.test(value)) {
+        this.isValid = false
         callback(new Error('Formato inválido'))
       } else {
+        this.isValid = true
         callback()
       }
     }
     var validateSubdomainAvailability = (rule, value, callback) => {
-      this.isAvailable = undefined
       if (value.length >= 3) {
         this.$store.dispatch('verifyAvailability', value)
           .then((available) => {
@@ -67,10 +67,13 @@ export default {
           .catch(error => {
             callback(error)
           })
+      } else {
+        this.isValid = false
       }
     }
     return {
-      isAvailable: undefined,
+      isAvailable: false,
+      isValid: false,
       subdomainForm: {
         subdomain: this.$store.state.workspace.subdomain
       },
@@ -101,7 +104,7 @@ export default {
     },
     showAlert () {
       if (!this.creatingWorkspace) {
-        if (this.isAvailable !== undefined) {
+        if (this.isValid) {
           return true
         } return false
       } return false
