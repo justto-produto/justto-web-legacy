@@ -7,7 +7,7 @@ const account = {
     oabNumber: '',
     oabState: '',
     status: '',
-    emailAccount: {},
+    emailAccount: '',
     token: localStorage.getItem('justoken') || ''
   },
   mutations: {

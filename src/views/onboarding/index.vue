@@ -137,7 +137,7 @@ export default {
       Object.assign(this.responses, responseObj)
       this.$store.dispatch('createWorkpace', {
         name: this.responses.team,
-        subdomain: this.responses.subdomain
+        subDomain: this.responses.subdomain
       }).then(() => {
         this.$refs['swiper'].swiper.slideNext(800)
         this.$stomp.subscribe(this.$store.state.workspace.subdomain)
