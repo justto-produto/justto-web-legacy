@@ -3,7 +3,7 @@
     <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 1s;">
       <JusSidenavExternal/>
     </el-col>
-    <transition name="fade">
+    <transition name="swiper-fade">
       <el-col v-if="right > 0" :md="right">
         <swiper
           v-loading="$store.state.loading"
@@ -89,8 +89,7 @@ export default {
       swiperOption: {
         direction: 'vertical',
         slidesPerView: 1,
-        allowTouchMove: false,
-        initialSlide: 4
+        allowTouchMove: false
       }
     }
   },
@@ -100,15 +99,15 @@ export default {
     },
     progressPercentage () {
       let slidesN = this.showWhatsapp ? 7 : 6
-      return Math.round((this.currentStep * (100/slidesN)) * 0.2) / 0.2
+      return Math.round((this.currentStep * (100 / slidesN)) * 0.2) / 0.2
     },
     showWhatsapp () {
       return !this.$store.getters.isOffline
     }
   },
   beforeCreate () {
-    if (this.$store.state.workspace.subDomain) {
-      this.$stomp.subscribe(this.$store.state.workspace.subDomain)
+    if (this.$store.state.workspace.subdomain) {
+      this.$stomp.subscribe(this.$store.state.workspace.subdomain)
       this.$store.dispatch('whatsappStart')
     }
   },
@@ -138,10 +137,10 @@ export default {
       Object.assign(this.responses, responseObj)
       this.$store.dispatch('createWorkpace', {
         name: this.responses.team,
-        subDomain: this.responses.subDomain
+        subdomain: this.responses.subdomain
       }).then(() => {
         this.$refs['swiper'].swiper.slideNext(800)
-        this.$stomp.subscribe(this.$store.state.workspace.subDomain)
+        this.$stomp.subscribe(this.$store.state.workspace.subdomain)
         this.$store.dispatch('whatsappStart')
       }).catch(error => {
         console.log(error)

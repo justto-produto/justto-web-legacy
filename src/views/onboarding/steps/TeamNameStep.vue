@@ -11,7 +11,7 @@
       label-position="top"
       @submit.native.prevent="submitForm">
       <el-form-item label="Equipe" prop="name">
-        <el-input v-model="nameForm.name" :readonly="$store.getters.creatingWorkspace" name="name"/>
+        <el-input v-model="nameForm.name" :disabled="$store.getters.creatingWorkspace" name="name"/>
       </el-form-item>
     </el-form>
     <el-button type="primary" @click="submitForm">Próximo</el-button>

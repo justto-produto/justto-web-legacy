@@ -24,6 +24,12 @@
   }
 }
 
+.el-button {
+  svg.circular {
+    padding: 5px;
+  }
+}
+
 @media (max-width: 991px) {
   .el-button--previous-step {
     padding: 8px !important;

@@ -17,7 +17,7 @@
       quem irá operar o sistema (você e sua equipe). Se você não tiver todas as informações agora, você poderá pular
       e adicionar depois.
     </p>
-    <el-button type="primary" @click="$emit('onboarding:step:next')">Vamos começar</el-button>
+    <el-button type="primary" @click="nextStep">Vamos começar</el-button>
   </div>
 </template>
 
@@ -37,6 +37,11 @@ export default {
   computed: {
     name () {
       return this.$store.state.account.name
+    }
+  },
+  methods: {
+    nextStep () {
+      this.$emit('onboarding:step:next')
     }
   }
 }

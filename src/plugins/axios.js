@@ -23,6 +23,9 @@ let config = {
 
 const _axios = axios.create(config)
 
+_axios.CancelToken = axios.CancelToken
+_axios.isCancel = axios.isCancel
+
 _axios.interceptors.request.use(
   function (config) {
     // Do something before request is sent

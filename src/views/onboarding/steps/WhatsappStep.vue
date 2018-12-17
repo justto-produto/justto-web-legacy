@@ -9,7 +9,10 @@
       </p>
     </div>
     <div class="onboarding-whatsapp-step__content">
-      <div v-loading="isStarting" :class="{'is-connected' : isConnected}" class="onboarding-whatsapp-step__qrcode">
+      <div
+        v-loading="isStarting"
+        :class="{'is-connected' : isConnected}"
+        class="onboarding-whatsapp-step__qrcode">
         <img :src="urlQrCode" class="qrcode">
         <jus-icon v-if="!isReady && !isStarting" icon="check" class="check"/>
       </div>
@@ -38,7 +41,13 @@
               name="number"/>
           </el-form-item>
           <div>
-            <el-button :disabled="!validNumber" type="primary" native-type="submit">Testar</el-button>
+            <el-button
+              v-loading="sending"
+              :disabled="!validNumber"
+              type="primary"
+              native-type="submit">
+              Testar
+            </el-button>
             <el-button @click="restart">Alterar número</el-button>
           </div>
         </el-form>
@@ -61,6 +70,7 @@ export default {
   directives: { mask },
   data () {
     return {
+      sending: false,
       numberForm: {
         number: ''
       }
@@ -107,9 +117,27 @@ export default {
     sendMessage () {
       this.$refs['numberForm'].validate((valid) => {
         if (this.validNumber) {
+          this.sending = true
           this.$store.dispatch('whatsappSend', {
-            number: this.rawNumber,
+            number: '55' + this.rawNumber,
             message: 'Bem vindo à Justto!'
+          }).then(() => {
+            this.sending = false
+            this.$notify({
+              title: 'Mensagem enviada com sucesso!',
+              position: 'bottom-right',
+              customClass: 'success',
+              type: 'success'
+            })
+          }).catch(() => {
+            this.sending = false
+            this.$notify({
+              title: 'Ops!',
+              message: 'Houve uma falha de conexão com o servidor.',
+              position: 'bottom-right',
+              customClass: 'danger',
+              type: 'error'
+            })
           })
         }
       })

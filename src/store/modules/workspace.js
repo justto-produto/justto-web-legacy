@@ -2,13 +2,13 @@ const workspace = {
   state: {
     name: '',
     status: '',
-    subDomain: ''
+    subdomain: ''
   },
   mutations: {
-    changeWorkspace (state, response) {
+    updateWorkspace (state, response) {
       if (response) state.name = response.name
       if (response) state.status = response.status
-      if (response) state.subDomain = response.subDomain
+      if (response) state.subdomain = response.subDomain
     },
     getError (state) {
       state.status = 'error'
@@ -16,7 +16,7 @@ const workspace = {
     clearWorkspace (state) {
       state.name = ''
       state.status = ''
-      state.subDomain = ''
+      state.subdomain = ''
     }
   },
   actions: {
@@ -25,7 +25,7 @@ const workspace = {
         // eslint-disable-next-line
         axios.get('/workspaces/my')
           .then(response => {
-            commit('changeWorkspace', response.data[0])
+            commit('updateWorkspace', response.data[0])
             resolve(response)
           })
           .catch(error => {
@@ -49,7 +49,7 @@ const workspace = {
         // eslint-disable-next-line
         axios.post('/workspaces', object)
           .then(response => {
-            commit('changeWorkspace', response.data)
+            commit('updateWorkspace', response.data)
             resolve(response.data)
           }).catch(error => {
             reject(error)
@@ -59,7 +59,7 @@ const workspace = {
     inviteTeammates ({ commit, state }, teammates) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces/invite-teammates/' + state.subDomain, teammates)
+        axios.post('/workspaces/invite-teammates/' + state.subdomain, teammates)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -81,7 +81,7 @@ const workspace = {
     whatsappCreate ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces/whatsapp/create/' + state.subDomain)
+        axios.put('/workspaces/whatsapp/create/' + state.subdomain)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -92,7 +92,7 @@ const workspace = {
     whatsappSend ({ commit, state }, object) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces/whatsapp/send/' + state.subDomain, object)
+        axios.post('/workspaces/whatsapp/send/' + state.subdomain, object)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -103,7 +103,7 @@ const workspace = {
     whatsappStart ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces/whatsapp/start/' + state.subDomain)
+        axios.put('/workspaces/whatsapp/start/' + state.subdomain)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -114,7 +114,7 @@ const workspace = {
     whatsappStatus ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/workspaces/whatsapp/status/' + state.subDomain)
+        axios.get('/workspaces/whatsapp/status/' + state.subdomain)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -125,7 +125,7 @@ const workspace = {
     whatsappStop ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces/whatsapp/stop/' + state.subDomain)
+        axios.put('/workspaces/whatsapp/stop/' + state.subdomain)
           .then(response => {
             resolve(response.data)
           }).catch(error => {

@@ -45,7 +45,7 @@ export default {
   methods: {
     readyWorkspace: function () {
       this.showError = false
-      this.$store.dispatch('readyWorkspace', this.$store.state.workspace.subDomain)
+      this.$store.dispatch('readyWorkspace', this.$store.state.workspace.subdomain)
         .then(() => {
           this.$store.dispatch('myWorkspace')
             .then(() => {

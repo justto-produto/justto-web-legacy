@@ -6,7 +6,7 @@
         Abaixo você irá configurar o seu link de acesso ao sistema da Justto. Escolha um nome que seja fácil lembrar
         para você e sua equipe. Recomendamos o nome do seu escritório ou empresa.
         <br><br>
-        Observação: Não é permitido usar acentuação ou caracteres especiais.
+        Observação: Não é permitido usar letras maiúsculas, acentuação ou caracteres especiais.
       </p>
     </div>
     <el-form
@@ -17,13 +17,13 @@
       @submit.native.prevent="submitForm">
       <span>https://</span>
       <el-form-item prop="subdomain">
-        <el-input v-model="subdomainForm.subdomain" :readonly="creatingWorkspace" name="subdomain"/>
+        <el-input v-model="subdomainForm.subdomain" :disabled="creatingWorkspace" name="subdomain"/>
       </el-form-item>
       <span>.acordo.pro</span>
     </el-form>
     <br>
     <el-alert
-      v-show="subdomainForm.subdomain.length >= 3 && !creatingWorkspace"
+      v-show="showAlert"
       :title="availabilityAlert.title"
       :type="availabilityAlert.type"
       :closable="false"/>
@@ -41,16 +41,18 @@ export default {
   },
   data () {
     var validateSubdomainName = (rule, value, callback) => {
+      this.isAvailable = undefined
       if (value.length < 3) {
         callback(new Error('Necessário ao menos 3 caracteres.'))
       }
-      if (/[^A-Z0-9]/gi.test(value)) {
+      if (/[^a-z0-9]/g.test(value)) {
         callback(new Error('Formato inválido'))
       } else {
         callback()
       }
     }
     var validateSubdomainAvailability = (rule, value, callback) => {
+      this.isAvailable = undefined
       if (value.length >= 3) {
         this.$store.dispatch('verifyAvailability', value)
           .then((available) => {
@@ -68,15 +70,15 @@ export default {
       }
     }
     return {
-      isAvailable: true,
+      isAvailable: undefined,
       subdomainForm: {
-        subdomain: this.$store.state.workspace.subDomain
+        subdomain: this.$store.state.workspace.subdomain
       },
       subdomainFormRules: {
         subdomain: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateSubdomainName, trigger: 'submit' },
-          { validator: validateSubdomainAvailability, trigger: 'submit' }
+          { validator: validateSubdomainName, trigger: 'change' },
+          { validator: validateSubdomainAvailability, trigger: 'change' }
         ]
       }
     }
@@ -96,6 +98,21 @@ export default {
     },
     creatingWorkspace: function () {
       return this.$store.getters.creatingWorkspace
+    },
+    showAlert () {
+      if (!this.creatingWorkspace) {
+        if (this.isAvailable !== undefined) {
+          return true
+        } return false
+      } return false
+    }
+  },
+  watch: {
+    subdomainForm: {
+      handler (value) {
+        this.subdomainForm.subdomain = value.subdomain.toLowerCase()
+      },
+      deep: true
     }
   },
   methods: {
@@ -103,7 +120,7 @@ export default {
       if (!this.creatingWorkspace) {
         this.$refs['subdomainForm'].validate((valid) => {
           if (valid) {
-            this.$emit('onboarding:createSubdomain', { subDomain: this.subdomainForm.subdomain })
+            this.$emit('onboarding:createSubdomain', { subdomain: this.subdomainForm.subdomain })
           } else {
             return false
           }
