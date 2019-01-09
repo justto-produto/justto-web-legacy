@@ -10,8 +10,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
-    "build": "apv update build && vue-cli-service build",
-    "release": "apv update patch --tag && vue-cli-service build",
+    "build": "vue-cli-service build && apv update build",
+    "release": "vue-cli-service build && apv update patch --tag",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
