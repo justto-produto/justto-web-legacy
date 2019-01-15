@@ -44,6 +44,9 @@ export default {
   margin-left: 20px;
   position: sticky;
   top: 20px;
+  .el-card {
+    margin-bottom: 20px;
+  }
 }
 .jus-main-view__aside-action {
   min-width: 100%;

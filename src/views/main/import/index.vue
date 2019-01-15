@@ -21,15 +21,16 @@
                 :before-upload="beforeUpload"
                 :on-error="handleError"
                 :disabled="hasFile"
-                action="http://localhost:3000/import">
+                accept=".xlsx,.csv,.xls,.odt"
+                action="https://da05004f-ce2f-481a-84e2-a5efd07c8c2a.mock.pstmn.io/imports/upload">
                 <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
                 <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV, XLS ou ODT</div>
               </el-upload>
             </el-card>
-            <el-card v-if="!hasFile" class="view-import__method el-card--dashed-hover el-card--vertical-content" shadow="never">
+            <!-- <el-card v-if="!hasFile" class="view-import__method el-card--dashed-hover el-card--vertical-content" shadow="never">
               <jus-icon icon="insert" is-active/>
               <div class="view-import__method-info">Adicionar caso manualmente</div>
-            </el-card>
+            </el-card> -->
           </div>
           <div v-if="hasFile" class="view-import__actions">
             <el-button plain @click="removeFile">Voltar</el-button>
@@ -39,36 +40,22 @@
       </template>
       <template slot="aside">
         <h2>
-          Histórico de Importaçãos
+          Histórico de importaçãos
         </h2>
         <p>
           Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
           Abaixo você pode baixar o nosso modelo de planilha:
         </p>
-        <el-card shadow="never" class="import-history">
+        <el-card
+          v-for="imports in importsHistory"
+          :key="imports.id"
+          class="import-history"
+          shadow="never">
           <jus-icon icon="spreadsheet-xlsx"/>
           <div style="margin: 0 20px;width: 100%;text-align: left;">
-            <h4 style="margin: 0;margin-bottom: 10px;">Nome do arquivo</h4>
-            Data: 23/08/2018 <br>
-            Hora: 14:30 <br>
-          </div>
-          <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
-        </el-card>
-        <el-card shadow="never" class="import-history">
-          <jus-icon icon="spreadsheet-xlsx"/>
-          <div style="margin: 0 20px;width: 100%;text-align: left;">
-            <h4 style="margin: 0;margin-bottom: 10px;">Nome do arquivo</h4>
-            Data: 23/08/2018 <br>
-            Hora: 14:30 <br>
-          </div>
-          <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
-        </el-card>
-        <el-card shadow="never" class="import-history">
-          <jus-icon icon="spreadsheet-xlsx"/>
-          <div style="margin: 0 20px;width: 100%;text-align: left;">
-            <h4 style="margin: 0;margin-bottom: 10px;">Nome do arquivo</h4>
-            Data: 23/08/2018 <br>
-            Hora: 14:30 <br>
+            <h4 style="margin: 0;margin-bottom: 10px;">{{ imports.file }}</h4>
+            {{ imports.date | moment('DD/MM/YY') }} <br>
+            {{ imports.date | moment('HH:mm') }} <br>
           </div>
           <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
         </el-card>
@@ -83,21 +70,23 @@ export default {
   name: 'Import',
   data () {
     return {
+      importsHistory: [],
+      // TODO DEV RETIRAR
       fileUrl: ''
     }
   },
   computed: {
+    // TODO DEV RETIRAR
     hasFile () {
       return this.fileUrl !== ''
     }
   },
+  beforeMount () {
+    this.$store.dispatch('getImportsHistory').then((response) => {
+      this.importsHistory = response
+    })
+  },
   methods: {
-    nextStep () {
-      this.$router.push('/import/new')
-    },
-    handleSuccess (res, file) {
-      this.fileUrl = URL.createObjectURL(file.raw)
-    },
     beforeUpload (file) {
       this.$notify.closeAll()
       const isValid =
@@ -111,7 +100,7 @@ export default {
           type: 'warning',
           position: 'bottom-right',
           message: `Arquivo em formato inválido!`,
-          duration: 0,
+          duration: 5000,
           customClass: 'warning'
         })
       }
@@ -120,6 +109,13 @@ export default {
       //   this.$message.error('Limite de 2M por arquivo.')
       // }
       return isValid // && isLt2M
+    },
+    // TODO DEV RETIRAR
+    nextStep () {
+      this.$router.push('/import/new')
+    },
+    handleSuccess (res, file) {
+      this.fileUrl = URL.createObjectURL(file.raw)
     },
     handleError () {
       this.$notify({

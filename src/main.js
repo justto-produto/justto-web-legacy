@@ -11,6 +11,7 @@ import '@/plugins/element'
 import '@/plugins/scrollTo'
 import '@/plugins/awesomeSwiper'
 import '@/plugins/socket'
+import '@/plugins/moment'
 
 // css
 import '@/styles/core.scss'
