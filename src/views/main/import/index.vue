@@ -21,8 +21,8 @@
                 :before-upload="beforeUpload"
                 :on-error="handleError"
                 :disabled="hasFile"
-                accept=".xlsx,.csv,.xls,.odt"
-                action="https://da05004f-ce2f-481a-84e2-a5efd07c8c2a.mock.pstmn.io/imports/upload">
+                accept=".csv,.xlsx,.xls,.odt"
+                action="https://cc6f2346-bf26-4d00-8ad8-b0e7a6a0d4f9.mock.pstmn.io/imports/upload">
                 <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
                 <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV, XLS ou ODT</div>
               </el-upload>
@@ -94,21 +94,28 @@ export default {
       file.type === 'application/vnd.ms-excel' ||
       file.type === 'text/csv' ||
       file.type === 'application/vnd.oasis.opendocument.text'
+      const isLt20M = file.size / 1024 / 1024 < 20
       if (!isValid) {
         this.$notify({
           title: 'Ops!',
           type: 'warning',
           position: 'bottom-right',
-          message: `Arquivo em formato inválido!`,
+          message: `Arquivo em formato inválido.`,
           duration: 5000,
           customClass: 'warning'
         })
       }
-      // const isLt2M = file.size / 1024 / 1024 < 2
-      // if (!isLt2M) {
-      //   this.$message.error('Limite de 2M por arquivo.')
-      // }
-      return isValid // && isLt2M
+      if (!isLt20M) {
+        this.$notify({
+          title: 'Ops!',
+          type: 'warning',
+          position: 'bottom-right',
+          message: `Limite de 20 MB por arquivo.`,
+          duration: 5000,
+          customClass: 'warning'
+        })
+      }
+      return isValid && isLt20M
     },
     // TODO DEV RETIRAR
     nextStep () {
@@ -117,14 +124,14 @@ export default {
     handleSuccess (res, file) {
       this.fileUrl = URL.createObjectURL(file.raw)
     },
-    handleError () {
+    handleError (err) {
       this.$notify({
         title: 'Ops!',
         type: 'error',
         position: 'bottom-right',
         message: `Houve uma falha de conexão com o servidor.
         Tente novamente ou entre em contato com o administrador do sistema.`,
-        duration: 0,
+        duration: 5000,
         customClass: 'danger'
       })
     },
