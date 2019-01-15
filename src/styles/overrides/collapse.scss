@@ -35,10 +35,10 @@
   .el-collapse-item {
     padding: 0 10px;
     border: solid 1px #eeeeee;
-    transition: border ease 0.3s;
+    transition: border ease 0.5s;
+    border-radius: 4px;
     &.is-active {
       border: 1px solid $--color-primary;
-      border-radius: 4px;
     }
   }
   .el-collapse-item__header, .el-collapse-item__wrap {
@@ -46,14 +46,11 @@
   }
   .el-collapse-item__header {
     color: $--color-primary;
-    height: 40px;
-    line-height: 40px;
+    // height: 40px;
+    // line-height: 40px;
   }
   .el-collapse-item__main {
     padding-bottom: 0px;
-  }
-  .el-collapse-item__wrap {
-    overflow: initial !important;
   }
   .el-collapse-item__content {
     padding-bottom: 0 !important;

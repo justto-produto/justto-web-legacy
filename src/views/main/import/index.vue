@@ -71,7 +71,6 @@ export default {
   data () {
     return {
       importsHistory: [],
-      // TODO DEV RETIRAR
       fileUrl: ''
     }
   },
