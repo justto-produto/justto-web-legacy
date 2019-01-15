@@ -12,6 +12,7 @@
         class="el-menu--main-menu">
         <el-menu-item ref="dashboard" index="/">
           <jus-icon :is-active="$route.path === '/'" icon="dashboard" class="el-menu__icon"/>
+          <jus-tip/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
         <transition name="fade">
@@ -104,11 +105,13 @@
 
 <script>
 import JusHeaderMain from '@/components/layouts/JusHeaderMain'
+import JusTip from '@/components/others/JusTip'
 
 export default {
   name: 'MainContainer',
   components: {
-    JusHeaderMain
+    JusHeaderMain,
+    JusTip
   },
   data () {
     return {

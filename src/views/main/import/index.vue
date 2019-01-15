@@ -1,6 +1,6 @@
 <template>
   <div class="view-import view-import--main">
-    <JusViewMain side-card side-card-width="400">
+    <jus-view-main side-card-width="400">
       <template slot="title">Importação de casos</template>
       <template slot="main">
         <div class="view-import__container">
@@ -45,7 +45,6 @@
           Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
           Abaixo você pode baixar o nosso modelo de planilha:
         </p>
-        <br>
         <el-card shadow="never" class="import-history">
           <jus-icon icon="spreadsheet-xlsx"/>
           <div style="margin: 0 20px;width: 100%;text-align: left;">
@@ -73,10 +72,9 @@
           </div>
           <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
         </el-card>
-        <br><br>
         <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button>
       </template>
-    </JusViewMain>
+    </jus-view-main>
   </div>
 </template>
 

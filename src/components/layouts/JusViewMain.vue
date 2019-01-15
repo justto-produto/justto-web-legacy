@@ -7,9 +7,8 @@
       </el-card>
       <div v-if="this.$slots['aside']">
         <el-card
-          :class="{'jus-main-view__side-card--transparent': !sideCard}"
-          class="jus-main-view__side-card"
-          :style="{width: sideCardWidth + 'px'}">
+          :style="{width: sideCardWidth + 'px'}"
+          class="jus-main-view__side-card">
           <slot name="aside"/>
         </el-card>
       </div>
@@ -21,10 +20,6 @@
 export default {
   name: 'JusViewMain',
   props: {
-    sideCard: {
-      default: false,
-      type: Boolean
-    },
     sideCardWidth: {
       default: '300',
       type: String
@@ -48,13 +43,9 @@ export default {
 .jus-main-view__side-card {
   margin-left: 20px;
   position: sticky;
-  top: 40px;
-  &.jus-main-view__side-card--transparent {
-    padding:  0 20px;
-    width: 260px;
-  }
-  .jus-main-view__aside-action {
-    min-width: 100%;
-  }
+  top: 20px;
+}
+.jus-main-view__aside-action {
+  min-width: 100%;
 }
 </style>
