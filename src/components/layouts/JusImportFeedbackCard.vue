@@ -2,76 +2,42 @@
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--company-tag">{{ company }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-form
-        ref="form" :inline="true" :model="form"
-        label-position="top">
-        <el-form-item label="Nº de casos" prop="number" style="width: 40%">
-          <el-input v-model="form.number" readonly class="el-input--no-border"/>
-        </el-form-item>
-        <el-form-item label="Enriquecimento" prop="number" style="margin: 0; width: 57%">
-          <el-input v-model="form.enrichment" readonly class="el-input--no-border"/>
-        </el-form-item>
-        <el-form-item label="Nome da campanha" prop="number" style="width: 100%">
-          <el-input v-model="form.name" placeholder="Digite o nome da sua campanha"/>
-        </el-form-item>
-        <el-form-item label="Tipo" prop="number" style="width: 40%">
-          <el-select v-model="form.value" placeholder="Select">
-            <el-option
-              v-for="item in ['Indenizatório', 'Cobrança']" :key="item" :label="item"
-              :value="item"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Data limite da negociação" prop="number" style="margin: 0; width: 57%">
-          <el-date-picker v-model="form.date" type="date" placeholder="Selecione uma data"/>
-        </el-form-item>
-        <el-form-item label="Responsáveis pela campanha" prop="number">
-          <span v-if="responsibles.length !== 0" class="responsibles-box">
-            <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
-            <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
-            <jus-avatar-user name-initials="MS" size="xs" shape="circle"/>
-          </span>
-          <jus-icon icon="add-purple"/>
-        </el-form-item>
-      </el-form>
-      <!-- <el-table :data="tableData" class="el-table--feedback-card" size="mini">
-        <el-table-column label="Nº de casos" min-width="80">
-          <template slot-scope="scope">
-            {{ scope.row.cases }}
-          </template>
-        </el-table-column>
-        <el-table-column label="Enriquecimento" min-width="160px">
-          <template slot-scope="scope">
-            {{ scope.row.enrichment }}
-          </template>
-        </el-table-column>
-        <el-table-column label="Tipo" min-width="140px">
-          <template slot-scope="scope">
-            <el-select v-model="scope.row.type" placeholder="Select">
-              <el-option v-for="type in types" :key="type" :label="type" :value="type"/>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="Nome da campanha" min-width="150px">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.campaign"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="Data limite para proposta" min-width="175px">
-          <template slot-scope="scope">
-            <el-date-picker v-model="scope.row.limit" :clearable="false" type="date" format="dd-MM-yyyy" prefix-icon="none"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="Responsáveis" min-width="175">
-          <template slot-scope="scope">
-            <span v-if="responsibles.length !== 0" class="responsibles-box">
-              <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
-              <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
-              <jus-avatar-user name-initials="MS" size="xs" shape="circle"/>
-            </span>
-            <jus-icon icon="add-purple"/>
-          </template>
-        </el-table-column>
-      </el-table> -->
+
+      <el-autocomplete
+        v-model="campaignName"
+        :fetch-suggestions="querySearchAsync"
+        :trigger-on-focus="false"
+        placeholder="Dê um nome para a sua Campanha"
+        @select="handleSelect"/>
+
+      <el-select v-model="strategy" placeholder="Escolha uma estratégia">
+        <el-option
+          v-for="strategy in strategyOptions"
+          :key="strategy.value"
+          :label="strategy.label"
+          :value="strategy.value"/>
+      </el-select>
+
+      <el-date-picker
+        v-model="dueDate"
+        type="date"
+        placeholder="Defina a data limite para a negociação"/>
+
+      <el-select
+        v-model="value9"
+        :remote-method="remoteMethod"
+        :loading="loading"
+        multiple
+        filterable
+        remote
+        placeholder="Escolha os negociadores">
+        <el-option
+          v-for="item in options4"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"/>
+      </el-select>
+
     </el-card>
   </div>
 </template>
@@ -97,12 +63,88 @@ export default {
   },
   data () {
     return {
-      form: {
-        number: '500',
-        value: 'Indenizatório',
-        date: '',
-        name: '',
-        enrichment: '93 dados enriquecidos'
+      links: [
+        { 'value': 'NESTLE-Natal2017', 'link': 'https://github.com/vuejs/vue' },
+        { 'value': 'NESTLE-Natal2018', 'link': 'https://github.com/ElemeFE/element' }
+      ],
+      campaignName: '',
+      timeout: null,
+      strategyOptions: [{
+        value: 'Option1',
+        label: 'Option1'
+      }, {
+        value: 'Option2',
+        label: 'Option2'
+      }, {
+        value: 'Option3',
+        label: 'Option3'
+      }, {
+        value: 'Option4',
+        label: 'Option4'
+      }, {
+        value: 'Option5',
+        label: 'Option5'
+      }],
+      strategy: '',
+      dueDate: '',
+      options4: [],
+      value9: [],
+      loading: false,
+      states: [
+        'Henrique Liberato',
+        'Mariana Rondino'
+      ]
+    }
+  },
+  computed: {
+    list () {
+      return this.states.map(item => {
+        return { value: item, label: item }
+      })
+    }
+  },
+  methods: {
+    querySearchAsync (queryString, cb) {
+      var links = this.links
+      var results = queryString ? links.filter(this.createFilter(queryString)) : links
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        cb(results)
+      }, 3000 * Math.random())
+    },
+    querySearchAsync2 (queryString, cb) {
+      var dealers = this.dealers
+      var results = queryString ? dealers.filter(this.createFilter2(queryString)) : dealers
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        cb(results)
+      }, 300 * Math.random())
+    },
+    createFilter (queryString) {
+      return (link) => {
+        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    createFilter2 (queryString) {
+      return (dealers) => {
+        return (dealers.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    handleSelect (item) {
+      console.log(item)
+    },
+    remoteMethod (query) {
+      if (query !== '') {
+        this.loading = true
+        setTimeout(() => {
+          this.loading = false
+          this.options4 = this.list.filter(item => {
+            return item.label.toLowerCase()
+              .indexOf(query.toLowerCase()) > -1
+          })
+        }, 500)
+      } else {
+        this.options4 = []
       }
     }
   }
@@ -120,17 +162,11 @@ export default {
     margin-bottom: 10px;
     text-align: center;
   }
-  .el-date-editor {
-    max-width: 100%;
+  .el-autocomplete, .el-select, .el-input {
+    width: 100%;
   }
-  .responsibles-box {
-    margin-right: 10px;
-    > div:not(:first-child) {
-      margin-left: -5px;
-    }
-    img {
-      box-shadow: 0px 1px 1px 0px rgba(37, 38, 94, 0.25);
-    }
+  .el-input__inner {
+    border: none;
   }
 }
 </style>
