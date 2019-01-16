@@ -45,11 +45,11 @@
           Partes contrárias
           <a href="#" @click="addPerson()"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(person, index) in people" class="drag-group">
+        <div v-for="(person, index) in people" :key="`${index}-${person.index}`" class="drag-group">
           <el-collapse class="el-collapse-drag">
             <el-collapse-item :title="'Parte Contrária ' + person.index" :name="person.index">
               <span
-                v-for="tag in person.tags" :key="tag.label" draggable="true"
+                v-for="(tag, index) in person.tags" :key="`${index}-${tag.index}`" draggable="true"
                 @dragstart.self="drag($event, JSON.stringify(tag))">
                 <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
                   {{ tag.label }}
@@ -60,13 +60,13 @@
           <a v-if="index != 0 && (index + 1) == people.length" href="#" @click="removePerson()">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="width: 25px;"></span>
+          <span v-else style="width: 25px;"/>
         </div>
         <h3>
           Advogados
           <a href="#" @click="addLawyer()"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(lawyer, index) in lawyers" class="drag-group">
+        <div v-for="(lawyer, index) in lawyers" :key="lawyer.index" class="drag-group">
           <el-collapse class="el-collapse-drag">
             <el-collapse-item :title="'Advogado ' + lawyer.index" :name="lawyer.index">
               <span
@@ -81,7 +81,7 @@
           <a v-if="index != 0 && (index + 1) == lawyers.length" href="#" @click="removeLawyer()">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="width: 25px;"></span>
+          <span v-else style="width: 25px;"/>
         </div>
       </el-col>
     </el-row>
@@ -156,26 +156,41 @@ export default {
       return t
     },
     addPerson () {
-      let prefix = this.people.slice(-1)[0]
-      prefix = prefix.index + 1
+      let lastPerson = this.people.slice(-1)[0]
+      let prefix = lastPerson.index + 1
       this.people.push({
         index: prefix,
         tags: this.setTagPrefix(this.tags.personInfo, prefix, true)
       })
     },
-    removePerson () {
-      this.people.splice(-1,1)
-    },
     addLawyer () {
-      let prefix = this.lawyers.slice(-1)[0]
-      prefix = prefix.index + 1
+      let lastLawyer = this.lawyers.slice(-1)[0]
+      let prefix = lastLawyer.index + 1
       this.lawyers.push({
         index: prefix,
         tags: this.setTagPrefix(this.tags.personInfo, prefix, false)
       })
     },
+    removePerson () {
+      this.removeLink(this.people)
+      this.people.splice(-1, 1)
+    },
     removeLawyer () {
-      this.lawyers.splice(-1,1)
+      this.removeLink(this.lawyers)
+      this.lawyers.splice(-1, 1)
+    },
+    removeLink (array) {
+      let toRemove = array.slice(-1)[0]
+      var tags = toRemove.tags
+      for (var i = 0; i < tags.length; i++) {
+        for (var x = 0; x < this.columns.length; x++) {
+          if (this.columns[x].tag) {
+            if (tags[i].label === this.columns[x].tag.label) {
+              this.columns[x].tag = null
+            }
+          }
+        }
+      }
     }
   }
 }
