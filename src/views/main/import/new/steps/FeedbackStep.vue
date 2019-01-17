@@ -40,9 +40,6 @@ export default {
     max-width: 600px;
     margin: auto;
   }
-  // width: 100%;
-  // max-width: 400px;
-  // margin: auto;
 }
 .feedback-step {
   .view-import__content {

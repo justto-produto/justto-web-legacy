@@ -1,0 +1,7 @@
+@import '../variables/colors';
+
+.el-input__icon {
+  &.el-input__icon--success {
+    color: $--color-primary;
+  }
+}

@@ -33,6 +33,7 @@ import '@/styles/overrides/container.scss'
 import '@/styles/overrides/dialog.scss'
 import '@/styles/overrides/dropdown.scss'
 import '@/styles/overrides/form.scss'
+import '@/styles/overrides/icon.scss'
 import '@/styles/overrides/input.scss'
 import '@/styles/overrides/menu.scss'
 import '@/styles/overrides/message-box.scss'
@@ -61,8 +62,6 @@ Vue.component('JusButtonBack', JusButtonBack)
 Vue.component('JusStatusDot', JusStatusDot)
 
 Vue.config.productionTip = false
-
-
 
 if (store.getters.isLoggedIn) {
   store.dispatch('showLoading')

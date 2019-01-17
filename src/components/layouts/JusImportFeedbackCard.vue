@@ -7,35 +7,59 @@
         v-model="campaignName"
         :fetch-suggestions="querySearchAsync"
         :trigger-on-focus="false"
+        clearable
         placeholder="Dê um nome para a sua Campanha"
-        @select="handleSelect"/>
-
-      <el-select v-model="strategy" placeholder="Escolha uma estratégia">
+        @select="handleSelect">
+        <i
+          slot="prefix"
+          class="el-input__icon el-icon-circle-check"
+          :class="{'el-input__icon--success': campaignName !== ''}"
+        />
+      </el-autocomplete>
+      <el-select v-model="strategy" clearable placeholder="Escolha uma estratégia">
+        <i
+          slot="prefix"
+          class="el-input__icon el-icon-circle-check"
+          :class="{'el-input__icon--success': strategy !== ''}"
+        />
         <el-option
           v-for="strategy in strategyOptions"
           :key="strategy.value"
           :label="strategy.label"
-          :value="strategy.value"/>
+          :value="strategy.value"
+        />
       </el-select>
 
       <el-date-picker
         v-model="dueDate"
         type="date"
-        placeholder="Defina a data limite para a negociação"/>
+        :prefix-icon="dueDate === null ? 'el-icon-circle-check' : 'el-icon-circle-check el-input__icon--success'"
+        placeholder="Defina a data limite para a negociação">
+      </el-date-picker>
 
       <el-select
         v-model="value9"
         :remote-method="remoteMethod"
         :loading="loading"
+        size="large"
+        placeholder="Escolha os negociadores"
         multiple
         filterable
-        remote
-        placeholder="Escolha os negociadores">
+        remote>
+
+        <i
+          slot="prefix"
+          class="el-input__icon el-icon-circle-check"
+          :class="{'el-input__icon--success': value9.length !== 0}"
+        />
         <el-option
           v-for="item in options4"
           :key="item.value"
           :label="item.label"
-          :value="item.value"/>
+          :value="item.value">
+          <jus-avatar-user shape="circle" size="xs" :src="item.value"/>
+          <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.label }}</span>
+        </el-option>
       </el-select>
 
     </el-card>
@@ -86,21 +110,18 @@ export default {
         label: 'Option5'
       }],
       strategy: '',
-      dueDate: '',
+      dueDate: null,
       options4: [],
       value9: [],
       loading: false,
-      states: [
-        'Henrique Liberato',
-        'Mariana Rondino'
-      ]
-    }
-  },
-  computed: {
-    list () {
-      return this.states.map(item => {
-        return { value: item, label: item }
-      })
+      list: [{
+        value: 'http://www.abc.net.au/reslib/201011/r679209_5007178.jpg',
+        label: 'Henrique Liberato'
+      },
+      {
+        value: 'https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg',
+        label: 'Mariana Rondino'
+      }]
     }
   },
   methods: {
@@ -158,7 +179,7 @@ export default {
   &+.jus-import-feedback-card {
     margin-left: 40px;
   }
-  .el-tag {
+  .el-tag--company-tag {
     margin-bottom: 10px;
     text-align: center;
   }
@@ -166,7 +187,22 @@ export default {
     width: 100%;
   }
   .el-input__inner {
-    border: none;
+    border-bottom: 1px solid #dcdfe6 !important;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  .el-card__body {
+    padding: 0;
+    .el-select:last-of-type {
+      .el-input__inner {
+        border-bottom: 0;
+      }
+    }
+  }
+  // TODO: verificar se dá pra tirar
+  .el-select__tags {
+    margin-left: 25px;
   }
 }
 </style>

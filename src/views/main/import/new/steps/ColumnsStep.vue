@@ -72,7 +72,6 @@
           <a v-if="index != 0 && (index + 1) == people.length" href="#" @click="removePerson()">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="width: 25px;"/>
         </div>
         <h3 v-show="!loadingTags">
           Advogados
@@ -93,7 +92,6 @@
           <a v-if="index != 0 && (index + 1) == lawyers.length" href="#" @click="removeLawyer()">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="width: 25px;"/>
         </div>
       </el-col>
     </el-row>
