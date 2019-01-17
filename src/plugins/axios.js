@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
+import router from '@/router'
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -44,10 +45,11 @@ _axios.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.response.status === 401) {
+    if (error.message === 'Network Error') {
+      router.push('error')
+    } else if (error.response.status === 401) {
       store.dispatch('logout')
     }
-    // Do something with response error
     return Promise.reject(error)
   }
 )
