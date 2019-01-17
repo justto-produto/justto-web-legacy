@@ -92,6 +92,11 @@ const router = new Router({
       }
     },
     {
+      name: 'error',
+      path: '/error',
+      component: () => import(/* webpackChunkName: "jusError" */ '@/components/layouts/JusError')
+    },
+    {
       path: '*',
       redirect: '/'
     }

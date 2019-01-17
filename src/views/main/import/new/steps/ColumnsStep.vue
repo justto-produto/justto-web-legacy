@@ -9,6 +9,7 @@
           coluna correspondente.
         </p>
         <div
+          v-show="!loadingColumns"
           v-for="column in columns" :key="column.key" class="file-column"
           @drop="drop($event, column)" @dragover.prevent>
           <div class="file-column__label">
@@ -22,6 +23,17 @@
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
         </div>
+        <div v-loading="true" v-show="loadingColumns">
+          <div v-for="item in [1,2,3,4,5]" class="file-column">
+            <div class="file-column__label">
+              <span class="file-column__title">coluna</span>
+              <span class="file-column__example">exemplo</span>
+            </div>
+            <el-tag class="el-tag--dropzone">
+              <span>Arraste a coluna aqui</span>
+            </el-tag>
+          </div>
+        </div>
       </el-col>
       <el-col :span="12">
         <h3>Colunas do sistema</h3>
@@ -29,7 +41,8 @@
           Estas são as colunas do sistema. Para mapeá-las, você deve arrastar os campos abaixo para a coluna
           correspondente.
         </p>
-        <el-collapse value="1" class="el-collapse-drag">
+        <h3>Dados do conflito</h3>
+        <el-collapse value="1" class="el-collapse-drag" v-loading="loadingTags">
           <el-collapse-item title="Dados do conflito" name="1">
             <span
               v-for="tag in tags.disputeInfo" :key="tag.label" draggable="true"
@@ -38,14 +51,13 @@
                 {{ tag.label }}
               </el-tag>
             </span>
-            <!-- <el-tag class="el-tag--drag-add">+ Adicionar tag</el-tag> -->
           </el-collapse-item>
         </el-collapse>
-        <h3>
+        <h3 v-show="!loadingTags">
           Partes contrárias
           <a href="#" @click="addPerson()"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(person, index) in people" :key="`${index}-${person.index}`" class="drag-group">
+        <div v-loading="" v-for="(person, index) in people" :key="`${index}-${person.index}`" class="drag-group">
           <el-collapse class="el-collapse-drag">
             <el-collapse-item :title="'Parte Contrária ' + person.index" :name="person.index">
               <span
@@ -62,7 +74,7 @@
           </a>
           <span v-else style="width: 25px;"/>
         </div>
-        <h3>
+        <h3 v-show="!loadingTags">
           Advogados
           <a href="#" @click="addLawyer()"><i class="el-icon-plus right"/></a>
         </h3>
@@ -96,15 +108,20 @@ export default {
       columns: [],
       tags: [],
       people: [],
-      lawyers: []
+      lawyers: [],
+      loadingColumns: true,
+      loadingTags: true
+
     }
   },
   beforeMount () {
     this.$store.dispatch('getImportsColumns').then((response) => {
       this.columns = response
+      this.loadingColumns = false
     })
     this.$store.dispatch('getImportsTags').then((response) => {
       this.tags = response
+      this.loadingTags = false
       this.people.push({
         index: 1,
         tags: this.setTagPrefix(response.personInfo, 1, true)

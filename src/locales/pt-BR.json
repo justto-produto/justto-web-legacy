@@ -1,4 +1,9 @@
 {
   "message": "Oláaa",
-  "test": "teste"
+  "test": "teste",
+  "el": {
+    "datepicker": {
+      "year": "Ano"
+    }
+  }
 }
