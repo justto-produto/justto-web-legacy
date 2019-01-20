@@ -40,11 +40,19 @@ export default {
     max-width: 600px;
     margin: auto;
   }
-}
-.feedback-step {
   .view-import__content {
     display: flex;
     justify-content: center;
+  }
+  .el-input__prefix {
+    font-size: 1.3rem;
+    left: 10px;
+  }
+  .el-input--prefix .el-input__inner {
+    padding-left: 40px;
+  }
+  .el-input--suffix .el-input__inner {
+    padding-right: 40px;
   }
 }
 </style>

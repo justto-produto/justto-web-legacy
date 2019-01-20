@@ -9,8 +9,10 @@
           coluna correspondente.
         </p>
         <div
+          v-for="column in columns"
           v-show="!loadingColumns"
-          v-for="column in columns" :key="column.id" class="file-column"
+          :key="column.id"
+          class="file-column"
           @drop="drop($event, column)" @dragover.prevent>
           <div class="file-column__name">
             <span class="file-column__title">{{ column.name }}</span>
@@ -24,8 +26,8 @@
           </el-tag>
         </div>
         <div v-loading="true" v-show="loadingColumns">
-          <div v-for="item in [1,2,3,4,5]" class="file-column">
-            <div class="file-column__name">
+          <div v-for="item in [1,2,3,4,5]" :key="item" class="file-column">
+            <div :item="item" class="file-column__name">
               <span class="file-column__title">coluna</span>
               <span class="file-column__example">exemplo</span>
             </div>
@@ -42,7 +44,7 @@
           correspondente.
         </p>
         <h3>Dados do conflito</h3>
-        <el-collapse value="1" class="el-collapse-drag" v-loading="loadingTags">
+        <el-collapse v-loading="loadingTags" value="1" class="el-collapse-drag">
           <el-collapse-item title="Dados do conflito" name="1">
             <span
               v-for="tag in tags.Dispute" :key="tag.id" draggable="true"
@@ -57,7 +59,10 @@
           Partes contrárias
           <a href="#" @click="addPerson()"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-loading="" v-for="(person, index) in people" :key="`${index}-${person.index}`" class="drag-group">
+        <div
+          v-for="(person, index) in people"
+          :key="`${index}-${person.index}`"
+          class="drag-group">
           <el-collapse class="el-collapse-drag">
             <el-collapse-item :title="'Parte Contrária ' + person.index" :name="person.index">
               <span
@@ -176,9 +181,9 @@ export default {
       var isAvailable = true
       this.columns.find((element) => {
         if (element.tag) {
-          let elKey = element.tag.id + element.tag.name
-          let tagKey = tag.id + tag.name
-          if (elKey == tagKey) {
+          let elKey = element.tag.id
+          let tagKey = tag.id
+          if (elKey === tagKey) {
             isAvailable = false
           }
         }
