@@ -10,8 +10,8 @@
     <div class="view-import__container">
       <div class="view-import__content">
         <jus-import-feedback-card company="Nestlé" color="#72cbff"/>
-        <jus-import-feedback-card :responsibles="responsibles" company="Cacau Show" color="#ff7a72"/>
-        <jus-import-feedback-card :responsibles="responsibles" company="Cacau Show" color="#ff7a72"/>
+        <jus-import-feedback-card company="Cacau Show" color="#ff7a72"/>
+        <jus-import-feedback-card company="Cacau Show" color="#ff7a72"/>
       </div>
     </div>
   </div>
@@ -31,22 +31,8 @@ export default {
     }
   },
   beforeMount () {
-    // this.$store.dispatch('showLoading')
-    // this.$store.dispatch('getCompaniesMap').then(map => {
-    //   this.map = map
-    // }).catch(() => {
-    //   this.$notify.closeAll()
-    //   this.$notify({
-    //     title: 'Ops!',
-    //     message: 'Houve uma falha de conexão com o servidor.',
-    //     position: 'bottom-right',
-    //     customClass: 'danger',
-    //     type: 'error',
-    //     duration: 5000
-    //   })
-    // }).finally(() => {
-    //   this.$store.dispatch('hideLoading')
-    // })
+    this.$store.dispatch('getCampaigns', 'oi')
+    this.$store.dispatch('getStrategies')
   }
 }
 </script>

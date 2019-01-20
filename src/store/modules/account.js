@@ -31,12 +31,12 @@ const account = {
       state.token = ''
     },
     setUser (state, response) {
-      if (response.user.email) state.email = response.user.email
-      if (response.user.name) state.name = response.user.name
-      if (response.user.oab) state.oab = response.user.oab
-      if (response.user.oab) state.oabNumber = response.user.oab.number
-      if (response.user.oab) state.oabState = response.user.oab.state
-      if (response.user.emailAccount) state.emailAccount = response.user.emailAccount.email
+      if (response.email) state.email = response.email
+      if (response.name) state.name = response.name
+      if (response.oab) state.oab = response.oab
+      if (response.oab) state.oabNumber = response.oab.number
+      if (response.oab) state.oabState = response.oab.state
+      if (response.emailAccount) state.emailAccount = response.emailAccount.email
     }
   },
   actions: {
@@ -45,8 +45,8 @@ const account = {
         // eslint-disable-next-line
         axios.get('/accounts/my')
           .then(response => {
-            commit('setUser', { user: response.data })
             resolve(response)
+            commit('setUser', response.data)
           })
           .catch(error => {
             reject(error)
