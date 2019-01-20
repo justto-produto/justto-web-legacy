@@ -1,6 +1,6 @@
 <template>
   <div class="jus-import-feedback-card">
-    <el-tag :color="color" class="el-tag--company-tag">{{ company }}</el-tag>
+    <el-tag :color="color" class="el-tag--company-tag">{{ company.name }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
       <el-autocomplete
         v-model="campaignName"
@@ -32,7 +32,9 @@
       <el-date-picker
         v-model="dueDate"
         :prefix-icon="dueDate === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+        :picker-options="datePickerOptions"
         type="date"
+        format="dd-MM-yyyy"
         placeholder="Defina a data limite para a negociação"
       />
       <el-select
@@ -43,7 +45,8 @@
         placeholder="Escolha os negociadores"
         multiple
         filterable
-        remote>
+        remote
+        class="select-dealer">
         <i
           slot="prefix"
           :class="dealers.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -53,8 +56,7 @@
           v-for="item in filteredDealers"
           :key="item.value"
           :label="item.label"
-          :value="item.value"
-          class="select-dealer">
+          :value="item.value">
           <jus-avatar-user :src="item.value" shape="circle" size="xs"/>
           <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.label }}</span>
         </el-option>
@@ -68,8 +70,8 @@ export default {
   name: 'JusImportFeedbackCard',
   props: {
     company: {
-      type: String,
-      default: ''
+      type: Object,
+      default: undefined
     },
     color: {
       type: String,
@@ -82,6 +84,11 @@ export default {
       campaignTimeout: null,
       strategy: '',
       dueDate: null,
+      datePickerOptions: {
+        disabledDate (date) {
+          return date < new Date()
+        }
+      },
       dealers: [],
       filteredDealers: [],
       loading: false

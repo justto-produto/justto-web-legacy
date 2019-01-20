@@ -14,7 +14,7 @@
             <check-lines-step v-if="activeStep === 0" key="0"/>
             <columns-step v-if="activeStep === 1" key="1"/>
             <enrichment-step v-if="activeStep === 2" key="2" @import:step:next="nextStep"/>
-            <feedback-step v-if="activeStep === 3" key="3"/>
+            <feedback-step v-if="activeStep === 3" key="3" :companies="companies"/>
           </transition>
         </div>
         <div class="view-import-new__actions">
@@ -44,11 +44,17 @@ export default {
   },
   data () {
     return {
-      activeStep: 3
+      activeStep: 0,
+      companies: []
     }
   },
   methods: {
     nextStep () {
+      if (this.activeStep === 1) {
+        this.$store.dispatch('mapImportColumns').then(response => {
+          this.companies = response
+        })
+      }
       this.activeStep += 1
     },
     previousStep () {

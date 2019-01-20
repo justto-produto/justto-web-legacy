@@ -11,7 +11,7 @@
         <div
           v-for="column in columns"
           v-show="!loadingColumns"
-          :key="column.id"
+          :key="`${column.id}-${column.name}`"
           class="file-column"
           @drop="drop($event, column)" @dragover.prevent>
           <div class="file-column__name">
@@ -47,7 +47,9 @@
         <el-collapse v-loading="loadingTags" value="1" class="el-collapse-drag">
           <el-collapse-item title="Dados do conflito" name="1">
             <span
-              v-for="tag in tags.Dispute" :key="tag.id" draggable="true"
+              v-for="tag in tags.Dispute"
+              :key="`${tag.id}-${tag.name}`"
+              draggable="true"
               @dragstart.self="drag($event, JSON.stringify(tag))">
               <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
                 {{ tag.name }}
@@ -61,12 +63,12 @@
         </h3>
         <div
           v-for="(person, index) in people"
-          :key="`${index}-${person.index}`"
+          :key="`${index}-${person}`"
           class="drag-group">
           <el-collapse class="el-collapse-drag">
             <el-collapse-item :title="'Parte Contrária ' + person.index" :name="person.index">
               <span
-                v-for="(tag, index) in person.tags" :key="`${index}-${tag.index}`" draggable="true"
+                v-for="tag in person.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
                 @dragstart.self="drag($event, JSON.stringify(tag))">
                 <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
                   {{ tag.name }}
@@ -83,11 +85,11 @@
           Advogados
           <a href="#" @click="addLawyer()"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(lawyer, index) in lawyers" :key="lawyer.index" class="drag-group">
+        <div v-for="(lawyer, index) in lawyers" :key="`${lawyer.id}-${lawyer.name}`" class="drag-group">
           <el-collapse class="el-collapse-drag">
             <el-collapse-item :title="'Advogado ' + lawyer.index" :name="lawyer.index">
               <span
-                v-for="tag in lawyer.tags" :key="tag.name" draggable="true"
+                v-for="tag in lawyer.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
                 @dragstart.self="drag($event, JSON.stringify(tag))">
                 <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
                   {{ tag.name }}

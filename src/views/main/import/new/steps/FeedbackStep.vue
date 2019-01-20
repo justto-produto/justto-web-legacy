@@ -9,9 +9,12 @@
     </p>
     <div class="view-import__container">
       <div class="view-import__content">
-        <jus-import-feedback-card company="Nestlé" color="#72cbff"/>
-        <jus-import-feedback-card company="Cacau Show" color="#ff7a72"/>
-        <jus-import-feedback-card company="Cacau Show" color="#ff7a72"/>
+        <jus-import-feedback-card
+          v-for="(company, index) in companies"
+          :company="company"
+          :key="`${company.name}-${company.indexes}`"
+          :color="colors[index]"
+        />
       </div>
     </div>
   </div>
@@ -25,13 +28,25 @@ export default {
   components: {
     JusImportFeedbackCard
   },
+  props: {
+    companies: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    }
+  },
   data () {
     return {
-      // map: []
+      colors: [
+        '#ff7a72',
+        '#72cbff',
+        '#88ff59'
+      ]
     }
   },
   beforeMount () {
-    this.$store.dispatch('getCampaigns', 'oi')
+    this.$store.dispatch('getCampaigns')
     this.$store.dispatch('getStrategies')
   }
 }
