@@ -11,6 +11,7 @@
       <div class="view-import__content">
         <jus-import-feedback-card company="Nestlé" color="#72cbff"/>
         <jus-import-feedback-card :responsibles="responsibles" company="Cacau Show" color="#ff7a72"/>
+        <jus-import-feedback-card :responsibles="responsibles" company="Cacau Show" color="#ff7a72"/>
       </div>
     </div>
   </div>
@@ -42,7 +43,8 @@ export default {
   }
   .view-import__content {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
   .el-input__prefix {
     font-size: 1.3rem;

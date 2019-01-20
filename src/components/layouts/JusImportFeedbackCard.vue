@@ -12,15 +12,15 @@
         @select="handleSelect">
         <i
           slot="prefix"
-          class="el-input__icon el-icon-circle-check"
-          :class="{'el-input__icon--success': campaignName !== ''}"
+          class="el-input__icon"
+          :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         />
       </el-autocomplete>
       <el-select v-model="strategy" clearable placeholder="Escolha uma estratégia">
         <i
           slot="prefix"
-          class="el-input__icon el-icon-circle-check"
-          :class="{'el-input__icon--success': strategy !== ''}"
+          class="el-input__icon"
+          :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         />
         <el-option
           v-for="strategy in strategyOptions"
@@ -33,7 +33,7 @@
       <el-date-picker
         v-model="dueDate"
         type="date"
-        :prefix-icon="dueDate === null ? 'el-icon-circle-check' : 'el-icon-circle-check el-input__icon--success'"
+        :prefix-icon="dueDate === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         placeholder="Defina a data limite para a negociação">
       </el-date-picker>
 
@@ -46,17 +46,17 @@
         multiple
         filterable
         remote>
-
         <i
           slot="prefix"
-          class="el-input__icon el-icon-circle-check"
-          :class="{'el-input__icon--success': value9.length !== 0}"
+          class="el-input__icon"
+          :class="value9.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         />
         <el-option
           v-for="item in options4"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
+          :value="item.value"
+          class="select-dealer">
           <jus-avatar-user shape="circle" size="xs" :src="item.value"/>
           <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.label }}</span>
         </el-option>
@@ -177,7 +177,7 @@ export default {
   width: 100%;
   max-width: 400px;
   &+.jus-import-feedback-card {
-    margin-left: 40px;
+    margin-top: 30px;
   }
   .el-tag--company-tag {
     margin-bottom: 10px;
@@ -200,9 +200,16 @@ export default {
       }
     }
   }
-  // TODO: verificar se dá pra tirar
   .el-select__tags {
-    margin-left: 25px;
+    margin-left: 35px;
+  }
+  .el-icon-circle-check-outline {
+    color: #d1dbe2;
+  }
+  .select-dealer {
+    .el-select__input {
+      margin-left: 5px;
+    }
   }
 }
 </style>

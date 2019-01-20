@@ -38,12 +38,15 @@ export default {
 }
 .jus-main-view__main-card {
   width: 100%;
-  min-height: calc( 100vh - 180px );
+  height: calc( 100vh - 180px );
+  overflow-y: auto;
 }
 .jus-main-view__side-card {
   margin-left: 20px;
-  position: sticky;
+  // position: sticky;
   top: 20px;
+  height: calc( 100vh - 180px );
+  overflow-y: auto;
   .el-card {
     margin-bottom: 20px;
   }

@@ -3,7 +3,7 @@
     <JusViewMain>
       <template slot="title">Nova importação de casos</template>
       <template slot="main">
-        <el-steps :active="activeStep" class="el-steps--circle" finish-status="success">
+        <el-steps :active="activeStep" class="view-import-new__steps el-steps--circle" finish-status="success">
           <el-step/>
           <el-step/>
           <el-step/>
@@ -16,12 +16,12 @@
             <enrichment-step v-if="activeStep === 2" key="2" @import:step:next="nextStep"/>
             <feedback-step v-if="activeStep === 3" key="3"/>
           </transition>
-          <div class="view-import__actions">
-            <el-button plain @click="previousStep">Voltar</el-button>
-            <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button>
-            <el-button v-else-if="activeStep === 3" type="primary" @click="finalStep">Iniciar negociação</el-button>
-            <el-button v-else type="primary" @click="nextStep">Próximo</el-button>
-          </div>
+        </div>
+        <div class="view-import-new__actions">
+          <el-button plain @click="previousStep">Voltar</el-button>
+          <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button>
+          <el-button v-else-if="activeStep === 3" type="primary" @click="finalStep">Iniciar negociação</el-button>
+          <el-button v-else type="primary" @click="nextStep">Próximo</el-button>
         </div>
       </template>
     </JusViewMain>

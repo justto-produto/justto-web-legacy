@@ -13,9 +13,9 @@
   }
   .jus-main-view__main-card {
     display: flex;
-    height: 100%;
     > .el-card__body {
       margin: auto;
+      padding: 40px 20px;
     }
   }
 }
