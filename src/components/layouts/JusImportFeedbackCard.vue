@@ -12,15 +12,15 @@
         @select="handleSelect">
         <i
           slot="prefix"
-          class="el-input__icon"
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+          class="el-input__icon"
         />
       </el-autocomplete>
       <el-select v-model="strategy" clearable placeholder="Escolha uma estratégia">
         <i
           slot="prefix"
-          class="el-input__icon"
           :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+          class="el-input__icon"
         />
         <el-option
           v-for="strategy in strategyOptions"
@@ -32,10 +32,10 @@
 
       <el-date-picker
         v-model="dueDate"
-        type="date"
         :prefix-icon="dueDate === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-        placeholder="Defina a data limite para a negociação">
-      </el-date-picker>
+        type="date"
+        placeholder="Defina a data limite para a negociação"
+      />
 
       <el-select
         v-model="value9"
@@ -48,8 +48,8 @@
         remote>
         <i
           slot="prefix"
-          class="el-input__icon"
           :class="value9.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+          class="el-input__icon"
         />
         <el-option
           v-for="item in options4"
@@ -57,7 +57,7 @@
           :label="item.label"
           :value="item.value"
           class="select-dealer">
-          <jus-avatar-user shape="circle" size="xs" :src="item.value"/>
+          <jus-avatar-user :src="item.value" shape="circle" size="xs"/>
           <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.label }}</span>
         </el-option>
       </el-select>
@@ -175,7 +175,6 @@ export default {
 <style lang="scss">
 .jus-import-feedback-card {
   width: 100%;
-  max-width: 400px;
   &+.jus-import-feedback-card {
     margin-top: 30px;
   }

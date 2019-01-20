@@ -1,26 +1,6 @@
 <template>
   <div class="check-lines-step">
     <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
-    <h2>Número de casos</h2>
     <el-card class="el-card--dashed" shadow="never">
       <h4>Casos prontos para importação: 100</h4>
       <el-collapse accordion class="el-collapse--bordered">
@@ -54,9 +34,4 @@ export default {
 </script>
 
 <style lang="scss">
-.check-lines-step {
-  width: 100%;
-  max-width: 400px;
-  margin: auto;
-}
 </style>

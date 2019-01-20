@@ -27,9 +27,26 @@ export default {
   },
   data () {
     return {
-      active: 3,
-      responsibles: ['HL', 'MR']
+      // map: []
     }
+  },
+  beforeMount () {
+    // this.$store.dispatch('showLoading')
+    // this.$store.dispatch('getCompaniesMap').then(map => {
+    //   this.map = map
+    // }).catch(() => {
+    //   this.$notify.closeAll()
+    //   this.$notify({
+    //     title: 'Ops!',
+    //     message: 'Houve uma falha de conexão com o servidor.',
+    //     position: 'bottom-right',
+    //     customClass: 'danger',
+    //     type: 'error',
+    //     duration: 5000
+    //   })
+    // }).finally(() => {
+    //   this.$store.dispatch('hideLoading')
+    // })
   }
 }
 </script>
