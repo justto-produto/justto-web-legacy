@@ -10,22 +10,22 @@
         </p>
         <div
           v-show="!loadingColumns"
-          v-for="column in columns" :key="column.key" class="file-column"
+          v-for="column in columns" :key="column.id" class="file-column"
           @drop="drop($event, column)" @dragover.prevent>
-          <div class="file-column__label">
-            <span class="file-column__title">{{ column.key }}</span>
+          <div class="file-column__name">
+            <span class="file-column__title">{{ column.name }}</span>
             <span class="file-column__example">{{ column.example }}</span>
           </div>
           <el-tag
             :closable="column.tag != null" :class="{'el-tag--dropzone-active': column.tag}" class="el-tag--dropzone"
             @close="removeTag(column)">
-            <span v-if="column.tag">{{ column.tag.label }}</span>
+            <span v-if="column.tag">{{ column.tag.name }}</span>
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
         </div>
         <div v-loading="true" v-show="loadingColumns">
           <div v-for="item in [1,2,3,4,5]" class="file-column">
-            <div class="file-column__label">
+            <div class="file-column__name">
               <span class="file-column__title">coluna</span>
               <span class="file-column__example">exemplo</span>
             </div>
@@ -45,10 +45,10 @@
         <el-collapse value="1" class="el-collapse-drag" v-loading="loadingTags">
           <el-collapse-item title="Dados do conflito" name="1">
             <span
-              v-for="tag in tags.disputeInfo" :key="tag.label" draggable="true"
+              v-for="tag in tags.Dispute" :key="tag.id" draggable="true"
               @dragstart.self="drag($event, JSON.stringify(tag))">
               <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
-                {{ tag.label }}
+                {{ tag.name }}
               </el-tag>
             </span>
           </el-collapse-item>
@@ -64,7 +64,7 @@
                 v-for="(tag, index) in person.tags" :key="`${index}-${tag.index}`" draggable="true"
                 @dragstart.self="drag($event, JSON.stringify(tag))">
                 <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
-                  {{ tag.label }}
+                  {{ tag.name }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -72,6 +72,7 @@
           <a v-if="index != 0 && (index + 1) == people.length" href="#" @click="removePerson()">
             <i class="el-icon-delete"/>
           </a>
+          <span v-else style="margin-left: 20px;"/>
         </div>
         <h3 v-show="!loadingTags">
           Advogados
@@ -81,10 +82,10 @@
           <el-collapse class="el-collapse-drag">
             <el-collapse-item :title="'Advogado ' + lawyer.index" :name="lawyer.index">
               <span
-                v-for="tag in lawyer.tags" :key="tag.label" draggable="true"
+                v-for="tag in lawyer.tags" :key="tag.name" draggable="true"
                 @dragstart.self="drag($event, JSON.stringify(tag))">
                 <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
-                  {{ tag.label }}
+                  {{ tag.name }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -92,6 +93,7 @@
           <a v-if="index != 0 && (index + 1) == lawyers.length" href="#" @click="removeLawyer()">
             <i class="el-icon-delete"/>
           </a>
+          <span v-else style="margin-left: 20px;"/>
         </div>
       </el-col>
     </el-row>
@@ -108,25 +110,46 @@ export default {
       people: [],
       lawyers: [],
       loadingColumns: true,
-      loadingTags: true
-
+      loadingTags: true,
+      errorColumns: false,
+      errorTags: false
     }
   },
   beforeMount () {
-    this.$store.dispatch('getImportsColumns').then((response) => {
-      this.columns = response
+    this.$store.dispatch('getImportsColumns').then(columns => {
+      this.columns = columns
       this.loadingColumns = false
+    }).catch(() => {
+      this.$notify.closeAll()
+      this.$notify({
+        title: 'Ops!',
+        message: 'Houve uma falha de conexão com o servidor.',
+        position: 'bottom-right',
+        customClass: 'danger',
+        type: 'error',
+        duration: 5000
+      })
     })
-    this.$store.dispatch('getImportsTags').then((response) => {
-      this.tags = response
+    this.$store.dispatch('getImportsTags').then(tags => {
+      this.tags = tags
       this.loadingTags = false
       this.people.push({
         index: 1,
-        tags: this.setTagPrefix(response.personInfo, 1, true)
+        tags: this.setTagPrefix(tags.Person, 1, true)
       })
       this.lawyers.push({
         index: 1,
-        tags: this.setTagPrefix(response.personInfo, 1, false)
+        tags: this.setTagPrefix(tags.Person, 1, false)
+      })
+    }).catch(() => {
+      this.$notify.closeAll()
+      this.$notify({
+        title: 'Ops!',
+        message: 'Houve uma falha de conexão com o servidor.',
+        position: 'bottom-right',
+        customClass: 'danger',
+        type: 'error',
+        duration: 5000
       })
     })
   },
@@ -137,7 +160,7 @@ export default {
     drop (event, column) {
       var tag = JSON.parse(event.dataTransfer.getData('tag'))
       this.columns.find((element) => {
-        if (column.key === element.key) {
+        if (column.id === element.id) {
           element.tag = tag
         }
       })
@@ -152,30 +175,22 @@ export default {
     isAvailable (tag) {
       var isAvailable = true
       this.columns.find((element) => {
-        if (element.tag && element.tag.label === tag.label) {
-          isAvailable = false
+        if (element.tag) {
+          let elKey = element.tag.id + element.tag.name
+          let tagKey = tag.id + tag.name
+          if (elKey == tagKey) {
+            isAvailable = false
+          }
         }
       })
       return isAvailable
-    },
-    setTagPrefix (tags, prefix, isPerson) {
-      let t = JSON.parse(JSON.stringify(tags))
-      for (var i = 0; i < t.length; i++) {
-        if (isPerson) {
-          t[i].label = 'Parte contrária ' + prefix + ' - ' + t[i].label
-        } else {
-          t[i].label = 'Advogado(a) ' + prefix + ' - ' + t[i].label
-        }
-        t[i].index = prefix
-      }
-      return t
     },
     addPerson () {
       let lastPerson = this.people.slice(-1)[0]
       let prefix = lastPerson.index + 1
       this.people.push({
         index: prefix,
-        tags: this.setTagPrefix(this.tags.personInfo, prefix, true)
+        tags: this.setTagPrefix(this.tags.Person, prefix, true)
       })
     },
     addLawyer () {
@@ -183,7 +198,7 @@ export default {
       let prefix = lastLawyer.index + 1
       this.lawyers.push({
         index: prefix,
-        tags: this.setTagPrefix(this.tags.personInfo, prefix, false)
+        tags: this.setTagPrefix(this.tags.Person, prefix, false)
       })
     },
     removePerson () {
@@ -194,13 +209,25 @@ export default {
       this.removeLink(this.lawyers)
       this.lawyers.splice(-1, 1)
     },
+    setTagPrefix (tags, prefix, isPerson) {
+      let t = JSON.parse(JSON.stringify(tags))
+      for (var i = 0; i < t.length; i++) {
+        if (isPerson) {
+          t[i].name = 'Parte contrária ' + prefix + ' - ' + t[i].name
+        } else {
+          t[i].name = 'Advogado(a) ' + prefix + ' - ' + t[i].name
+        }
+        t[i].index = prefix
+      }
+      return t
+    },
     removeLink (array) {
       let toRemove = array.slice(-1)[0]
       var tags = toRemove.tags
       for (var i = 0; i < tags.length; i++) {
         for (var x = 0; x < this.columns.length; x++) {
           if (this.columns[x].tag) {
-            if (tags[i].label === this.columns[x].tag.label) {
+            if (tags[i].name === this.columns[x].tag.name) {
               this.columns[x].tag = null
             }
           }
@@ -224,7 +251,7 @@ export default {
       display: block;
     }
   }
-  .file-column__label {
+  .file-column__name {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;

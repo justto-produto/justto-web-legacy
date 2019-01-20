@@ -22,7 +22,7 @@
                 :on-error="handleError"
                 :disabled="hasFile"
                 accept=".csv,.xlsx,.xls,.odt"
-                action="https://cc6f2346-bf26-4d00-8ad8-b0e7a6a0d4f9.mock.pstmn.io/imports/upload">
+                action="https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/upload">
                 <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
                 <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV, XLS ou ODT</div>
               </el-upload>
@@ -81,7 +81,7 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('getImportsHistory').then((response) => {
+    this.$store.dispatch('getImportsHistory').then(response => {
       this.importsHistory = response
     })
   },
@@ -123,7 +123,7 @@ export default {
     handleSuccess (res, file) {
       this.fileUrl = URL.createObjectURL(file.raw)
     },
-    handleError (err) {
+    handleError () {
       this.$notify({
         title: 'Ops!',
         type: 'error',

@@ -7,7 +7,7 @@ const imports = {
     getImportsHistory ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://cc6f2346-bf26-4d00-8ad8-b0e7a6a0d4f9.mock.pstmn.io/imports/history')
+        axios.get('https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/history')
           .then(response => {
             resolve(response.data)
           })
@@ -19,7 +19,7 @@ const imports = {
     getImportsColumns ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://cc6f2346-bf26-4d00-8ad8-b0e7a6a0d4f9.mock.pstmn.io/imports/columns')
+        axios.get('https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/columns')
           .then(response => {
             resolve(response.data)
           })
@@ -31,7 +31,7 @@ const imports = {
     getImportsTags ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://cc6f2346-bf26-4d00-8ad8-b0e7a6a0d4f9.mock.pstmn.io/imports/tags')
+        axios.get('https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/tags')
           .then(response => {
             resolve(response.data)
           })

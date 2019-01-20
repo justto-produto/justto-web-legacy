@@ -111,7 +111,7 @@ export default {
         if (valid) {
           this.$store.dispatch('showLoading')
           this.$store.dispatch('syncInbox', this.syncForm)
-            .then((response) => {
+            .then(response => {
               this.showSuccess = true
               this.synced = true
               this.syncForm.email = 'a@a.com'

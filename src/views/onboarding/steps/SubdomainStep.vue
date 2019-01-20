@@ -55,7 +55,7 @@ export default {
     var validateSubdomainAvailability = (rule, value, callback) => {
       if (value.length >= 3) {
         this.$store.dispatch('verifyAvailability', value)
-          .then((available) => {
+          .then(available => {
             if (available) {
               this.isAvailable = true
               callback()

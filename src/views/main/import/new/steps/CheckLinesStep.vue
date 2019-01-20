@@ -18,8 +18,8 @@
             Sua planilha tinha <strong>menos</strong> linhas do que o número acima?
           </template>
           <div>
-            Caso hajam mais casos do que você tinha planejado, verifique se foi aplicado algum filtro na sua
-            planilha. Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
+            Verifique se foi aplicado algum filtro na sua planilha.
+            Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
           </div>
         </el-collapse-item>
       </el-collapse>
