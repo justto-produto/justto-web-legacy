@@ -19,10 +19,7 @@
 }
 .view-import-new__content {
   margin-top: 40px;
-  h2 {
-    margin-bottom: 40px;
-  }
-  h2, >p, h4 {
+  >p, h4 {
     text-align: center;
   }
   .enrichment-step .el-card {
@@ -37,6 +34,10 @@
     line-height: 20px;
     margin: 0;
   }
+}
+.view-import-new__title {
+  margin-bottom: 40px;
+  text-align: center;
 }
 .view-import-new__actions {
   display: flex;

@@ -1,9 +1,9 @@
 <template>
   <div class="check-lines-step">
-    <h2>Número de casos</h2>
+    <h2 class="view-import-new__title">Número de casos</h2>
     <el-card class="el-card--dashed" shadow="never">
       <h4>Casos prontos para importação: 100</h4>
-      <el-collapse accordion class="el-collapse--bordered">
+      <el-collapse accordion class="el-collapse--bordered el-collapse--active">
         <el-collapse-item name="1">
           <template slot="title">
             Sua planilha tinha <strong>mais</strong> linhas do que o número acima?

@@ -1,6 +1,6 @@
 <template>
   <div class="columns-step">
-    <h2>Mapeamento de colunas</h2>
+    <h2 class="view-import-new__title">Mapeamento de colunas</h2>
     <el-row :gutter="60">
       <el-col :span="12">
         <h3>Colunas do arquivo</h3>
@@ -44,7 +44,7 @@
           correspondente.
         </p>
         <h3>Dados do conflito</h3>
-        <el-collapse v-loading="loadingTags" value="1" class="el-collapse-drag">
+        <el-collapse v-loading="loadingTags" value="1" class="el-collapse--drag">
           <el-collapse-item title="Dados do conflito" name="1">
             <span
               v-for="tag in tags.Dispute"
@@ -65,7 +65,7 @@
           v-for="(person, index) in people"
           :key="`${index}-${person}`"
           class="drag-group">
-          <el-collapse class="el-collapse-drag">
+          <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Parte Contrária ' + person.index" :name="person.index">
               <span
                 v-for="tag in person.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
@@ -86,7 +86,7 @@
           <a href="#" @click="addLawyer()"><i class="el-icon-plus right"/></a>
         </h3>
         <div v-for="(lawyer, index) in lawyers" :key="`${lawyer.id}-${lawyer.name}`" class="drag-group">
-          <el-collapse class="el-collapse-drag">
+          <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Advogado ' + lawyer.index" :name="lawyer.index">
               <span
                 v-for="tag in lawyer.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
@@ -271,7 +271,7 @@ export default {
   .file-column__example {
     color: #9461f7;
   }
-  .el-collapse-drag + h3 {
+  .el-collapse--drag + h3 {
     margin-top: 40px;
   }
   .drag-group + h3 {

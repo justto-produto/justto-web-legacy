@@ -16,7 +16,11 @@
           class="el-input__icon"
         />
       </el-autocomplete>
-      <el-select v-model="strategy" clearable placeholder="Escolha uma estratégia">
+      <el-select
+        v-model="strategy"
+        clearable class="select-strategy"
+        placeholder="Escolha uma estratégia"
+      >
         <i
           slot="prefix"
           :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -29,6 +33,9 @@
           :value="strategy.id"
         />
       </el-select>
+      <div class="select-strategy__messages">
+        <a v-show="strategy !== ''" @click="showStrategyMessages">Ver estratégia de engajamento das partes</a>
+      </div>
       <el-date-picker
         v-model="dueDate"
         :prefix-icon="dueDate === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -62,12 +69,59 @@
         </el-option>
       </el-select>
     </el-card>
+    <jus-modal v-if="showStrategyModal" @close="showStrategyModal = false">
+      <h2 slot="header">Estretégia de engajamento das partes</h2>
+      <div slot="body">
+        <p>
+          Abaixo você encontra as mensagens enviadas para às partes dos casos contidos nesta Campanha. Através da
+          inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, aprende cada
+          vez mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada para
+          encontrar as pessoas e chegar uma solução adequada.
+        </p>
+        <el-collapse class="el-collapse--bordered">
+          <el-collapse-item>
+            <template slot="title">
+              <jus-icon icon="sms"/> SMS
+            </template>
+            <div>Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to;</div>
+            <div>Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of elements, etc.</div>
+          </el-collapse-item>
+          <el-collapse-item>
+            <template slot="title">
+              <jus-icon icon="email"/> E-MAIL - Não espere para fechar o seu acordo com a Ne…
+            </template>
+            <div>Operation feedback: enable the users to clearly perceive their operations by style updates and interactive effects;</div>
+            <div>Visual feedback: reflect current state by updating or rearranging elements of the page.</div>
+          </el-collapse-item>
+          <el-collapse-item>
+            <template slot="title">
+              <jus-icon icon="sms"/> WHATSAPP
+            </template>
+            <div>Simplify the process: keep operating process simple and intuitive;</div>
+            <div>Definite and clear: enunciate your intentions clearly so that the users can quickly understand and make decisions;</div>
+            <div>Easy to identify: the interface should be straightforward, which helps the users to identify and frees them from memorizing and recalling.</div>
+          </el-collapse-item>
+          <el-collapse-item>
+            <template slot="title">
+              <jus-icon icon="sms"/> CNA - O que você ganha ao fechar acordos?
+            </template>
+            <div>Decision making: giving advices about operations is acceptable, but do not make decisions for the users;</div>
+            <div>Controlled consequences: users should be granted the freedom to operate, including canceling, aborting or terminating current operation.</div>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
+    </jus-modal>
   </div>
 </template>
 
 <script>
+import JusModal from '@/components/layouts/JusModal'
+
 export default {
   name: 'JusImportFeedbackCard',
+  components: {
+    JusModal
+  },
   props: {
     company: {
       type: Object,
@@ -83,6 +137,7 @@ export default {
       campaignName: '',
       campaignTimeout: null,
       strategy: '',
+      showStrategyModal: false,
       dueDate: null,
       datePickerOptions: {
         disabledDate (date) {
@@ -142,6 +197,9 @@ export default {
       } else {
         this.filteredDealers = []
       }
+    },
+    showStrategyMessages () {
+      this.showStrategyModal = true
     }
   }
 }
@@ -157,7 +215,7 @@ export default {
     margin-bottom: 10px;
     text-align: center;
   }
-  .el-autocomplete, .el-select, .el-input {
+  .el-autocomplete, .el-select, .el-input, .select-strategy__messages {
     width: 100%;
   }
   .el-input__inner {
@@ -179,6 +237,18 @@ export default {
   }
   .el-icon-circle-check-outline {
     color: #d1dbe2;
+  }
+  .select-strategy {
+    .el-input__inner {
+      border: 0 !important;
+    }
+  }
+  .select-strategy__messages {
+    border-bottom: 1px solid #dcdfe6;
+    a {
+      display: block;
+      padding: 0px 0px 10px 16px;
+    }
   }
   .select-dealer {
     .el-select__input {

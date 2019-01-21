@@ -1,6 +1,6 @@
 <template>
   <div class="feedback-step">
-    <h2>Resumo</h2>
+    <h2 class="view-import-new__title">Resumo</h2>
     <p>
       Agrupamos seus casos por empresas. Cada empresa possui a sua Campanha, que você poderá, posteriormente, editar
       as existentes ou criar novas Campanhas.
@@ -54,7 +54,7 @@ export default {
 
 <style lang="scss">
 .feedback-step {
-  p {
+  >p {
     text-align: center;
     max-width: 600px;
     margin: auto;
