@@ -29,7 +29,7 @@ export default {
   data () {
     return {
       nameForm: {
-        name: this.$store.state.workspace.name
+        name: this.$store.state.workspaceModule.name
       },
       nameFormRules: {
         name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]

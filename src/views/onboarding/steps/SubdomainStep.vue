@@ -75,7 +75,7 @@ export default {
       isAvailable: false,
       isValid: false,
       subdomainForm: {
-        subdomain: this.$store.state.workspace.subdomain
+        subdomain: this.$store.state.workspaceModule.subdomain
       },
       subdomainFormRules: {
         subdomain: [

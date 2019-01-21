@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     urlQrCode () {
-      return this.$store.state.socket.urlQrCode
+      return this.$store.state.socketModule.urlQrCode
     },
     status () {
       if (this.isStarting) {

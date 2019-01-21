@@ -106,8 +106,8 @@ export default {
     }
   },
   beforeCreate () {
-    if (this.$store.state.workspace.subdomain) {
-      this.$stomp.subscribe(this.$store.state.workspace.subdomain)
+    if (this.$store.state.workspaceModule.subdomain) {
+      this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
       this.$store.dispatch('whatsappStart')
     }
   },
@@ -140,7 +140,7 @@ export default {
         subDomain: this.responses.subdomain
       }).then(() => {
         this.$refs['swiper'].swiper.slideNext(800)
-        this.$stomp.subscribe(this.$store.state.workspace.subdomain)
+        this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
         this.$store.dispatch('whatsappStart')
       }).catch(error => {
         console.log(error)

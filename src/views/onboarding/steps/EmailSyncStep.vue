@@ -85,13 +85,13 @@ export default {
     }
   },
   onCreate () {
-    if (this.$store.state.account.emailAccount) {
-      this.syncForm.email = this.$store.state.account.emailAccount
+    if (this.$store.state.accountModule.emailAccount) {
+      this.syncForm.email = this.$store.state.accountModule.emailAccount
     }
   },
   computed: {
     synced () {
-      if (this.$store.state.account.emailAccount) {
+      if (this.$store.state.accountModule.emailAccount) {
         return true
       }
       return false
