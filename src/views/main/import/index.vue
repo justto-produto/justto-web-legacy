@@ -46,7 +46,7 @@
           Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
           Abaixo você pode baixar o nosso modelo de planilha:
         </p>
-        <el-card
+        <!-- <el-card
           v-for="imports in importsHistory"
           :key="imports.id"
           class="import-history"
@@ -58,7 +58,7 @@
             {{ imports.date | moment('HH:mm') }} <br>
           </div>
           <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
-        </el-card>
+        </el-card> -->
         <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button>
       </template>
     </jus-view-main>

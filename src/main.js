@@ -48,6 +48,8 @@ import '@/styles/overrides/tabs.scss'
 import '@/styles/overrides/tag.scss'
 import '@/styles/overrides/upload.scss'
 
+import '@/styles/perfect-scroll.scss'
+
 // Global components
 import JusIcon from '@/components/images/JusIcon'
 import JusAvatarUser from '@/components/images/JusAvatarUser'

@@ -42,11 +42,15 @@ export default {
   overflow-y: auto;
 }
 .jus-main-view__side-card {
+  display: flex;
   margin-left: 20px;
   // position: sticky;
   top: 20px;
   height: calc( 100vh - 180px );
   overflow-y: auto;
+  > .el-card__body {
+    margin: auto;
+  }
   .el-card {
     margin-bottom: 20px;
   }
