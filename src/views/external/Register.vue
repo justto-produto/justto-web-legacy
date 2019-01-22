@@ -135,3 +135,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  @import 'external.scss';
+</style>

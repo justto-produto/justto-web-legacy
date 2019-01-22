@@ -95,7 +95,7 @@
           </el-collapse-item>
           <el-collapse-item>
             <template slot="title">
-              <jus-icon icon="sms"/> WHATSAPP
+              <jus-icon icon="whatsapp"/> WHATSAPP
             </template>
             <div>Simplify the process: keep operating process simple and intuitive;</div>
             <div>Definite and clear: enunciate your intentions clearly so that the users can quickly understand and make decisions;</div>
@@ -103,7 +103,7 @@
           </el-collapse-item>
           <el-collapse-item>
             <template slot="title">
-              <jus-icon icon="sms"/> CNA - O que você ganha ao fechar acordos?
+              <jus-icon icon="cna"/> CNA - O que você ganha ao fechar acordos?
             </template>
             <div>Decision making: giving advices about operations is acceptable, but do not make decisions for the users;</div>
             <div>Controlled consequences: users should be granted the freedom to operate, including canceling, aborting or terminating current operation.</div>

@@ -46,7 +46,7 @@
           Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
           Abaixo você pode baixar o nosso modelo de planilha:
         </p>
-        <!-- <el-card
+        <el-card
           v-for="imports in importsHistory"
           :key="imports.id"
           class="import-history"
@@ -58,7 +58,7 @@
             {{ imports.date | moment('HH:mm') }} <br>
           </div>
           <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
-        </el-card> -->
+        </el-card>
         <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button>
       </template>
     </jus-view-main>
@@ -141,3 +141,140 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+@import '@/styles/colors.scss';
+
+.view-import {
+}
+
+.view-import--main {
+  .jus-main-view__side-card {
+    text-align: center;
+    .import-history .el-card__body {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .jus-main-view__main-card {
+    display: flex;
+    > .el-card__body {
+      margin: auto;
+      padding: 40px 20px;
+    }
+  }
+}
+
+.view-import__title {
+  text-align: center;
+  margin: auto;
+  h2 {
+    margin: 0;
+  }
+  p{
+    margin: 10px 0;
+  }
+}
+
+.view-import__content {
+  margin: 40px 0 0;
+}
+
+.view-import__content---methods {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  .el-upload-list {
+    max-width: 210px;
+    &.is-disabled {
+      max-width: 368px;
+    }
+  }
+  .el-icon-document {
+    display: none;
+  }
+}
+
+.view-import__method {
+  max-width: 240px;
+  transition: all ease .5s;
+  &+.view-import__method {
+    margin-left: 20px;
+  }
+  >.el-card__body {
+    padding: 40px 20px;
+  }
+}
+
+.el-card--dashed-hover:hover{
+  cursor: pointer;
+  .view-import__method-info {
+    color: $--color-primary;
+  }
+}
+
+.view-import__method-info {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.view-import__method-loading {
+  width: 400px;
+  max-width: 400px;
+}
+
+.view-import__actions {
+  display: flex;
+  margin-top: 40px;
+  button {
+    width: 100%;
+  }
+}
+
+// .view-import__progress{
+//   display: flex;
+//   width: 100%;
+// }
+
+// .view-import__progress-info {
+//   width: 100%;
+//   margin-left: 20px;
+//   .el-progress {
+//     margin: 5px 0;
+//     margin-right: -20px;
+//   }
+// }
+
+// .view-import__progress-success {
+//   text-align: center;
+//   .el-card {
+//     color: #fff;
+//     font-weight: normal;
+//     width: 150px;
+//     margin: auto;
+//     span {
+//       margin-bottom: 4px;
+//       font-size: 20px;
+//     }
+//   }
+//   .view-import__success-info {
+//     margin-top: 30px;
+//   }
+//   .el-card__body {
+//     text-align: center;
+//   }
+//   .el-card--background {
+//     .el-card__body {
+//       padding: 12px 10px;
+//     }
+//     h2 {
+//       margin-top: 0;
+//       margin-bottom: 8px;
+//     }
+//     span {
+//       font-size: 12px;
+//       margin: 0;
+//     }
+//   }
+// }
+</style>

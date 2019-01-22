@@ -38,7 +38,7 @@ export default {
 }
 .jus-main-view__main-card {
   width: 100%;
-  height: calc( 100vh - 180px );
+  min-height: calc( 100vh - 180px );
   overflow-y: auto;
 }
 .jus-main-view__side-card {

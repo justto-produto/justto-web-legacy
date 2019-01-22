@@ -70,3 +70,54 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.view-import-new .jus-main-view__main-card .el-card__body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  min-height: min-content;
+}
+.view-import-new__steps, .view-import-new__actions {
+  width: 500px;
+}
+.view-import-new__content {
+  >*:not(.columns-step) {
+    width: 500px;
+  }
+}
+.view-import-new__steps {
+  margin-top: 20px;
+}
+.view-import-new__content {
+  margin-top: 40px;
+  >p, h4 {
+    text-align: center;
+  }
+  .enrichment-step .el-card {
+    margin-top: 40px;
+  }
+  .el-collapse-item__header {
+    height: 100%;
+    line-height: inherit;
+    padding: 10px 0;
+  }
+  .el-collapse-item__arrow {
+    line-height: 20px;
+    margin: 0;
+  }
+}
+.view-import-new__title {
+  margin-bottom: 40px;
+  text-align: center;
+}
+.view-import-new__actions {
+  display: flex;
+  margin: 40px 0 20px;
+  button {
+    width: 100%;
+  }
+}
+</style>

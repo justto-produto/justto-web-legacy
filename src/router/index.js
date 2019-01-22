@@ -18,11 +18,11 @@ const router = new Router({
         },
         {
           path: 'import',
-          component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import')
+          component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import/Import')
         },
         {
           path: 'import/new',
-          component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/new')
+          component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/new/NewImport')
         },
         {
           path: 'management',
