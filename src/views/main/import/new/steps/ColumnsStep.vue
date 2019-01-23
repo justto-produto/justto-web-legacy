@@ -181,6 +181,11 @@ export default {
       })
     })
   },
+  computed: {
+    columns () {
+      return this.$store.state.importModule.map
+    }
+  },
   methods: {
     dragTag (event, tag) {
       event.dataTransfer.setData('tag', tag)

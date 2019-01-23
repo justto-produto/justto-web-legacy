@@ -42,7 +42,7 @@ _axios.interceptors.response.use(
       response.config.__isRetryRequest = true
       setTimeout(function () {
         return axios(response.config)
-      }, 4000)
+      }, 1000)
     }
     return response
   },
