@@ -22,7 +22,7 @@
                 :on-error="handleError"
                 :disabled="hasFile"
                 accept=".csv,.xlsx,.xls"
-                action="https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/upload">
+                action="http://homol.justto.com.br/api/imports/upload">
                 <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
                 <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
               </el-upload>

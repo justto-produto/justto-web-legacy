@@ -70,23 +70,25 @@
       </el-select>
     </el-card>
     <jus-modal v-if="showStrategyModal" @close="showStrategyModal = false">
-      <h2 slot="header">Estretégia de engajamento das partes</h2>
-      <div slot="body">
+      <div slot="header">
+        <h2>Estretégia de engajamento das partes</h2>
         <p>
           Abaixo você encontra as mensagens enviadas para às partes dos casos contidos nesta Campanha. Através da
           inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, aprende cada
           vez mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada para
           encontrar as pessoas e chegar uma solução adequada.
         </p>
-        <el-collapse class="el-collapse--bordered">
-          <el-collapse-item>
+      </div>
+      <div slot="body">
+        <el-collapse v-loading="$store.state.loading" class="jus-import-feedback-card__engagement el-collapse--bordered">
+          <el-collapse-item v-for="(step, key) in strategyEngagements" :key="step + key">
             <template slot="title">
-              <jus-icon icon="sms"/> SMS
+              <jus-icon icon="sms"/> {{ step.name | capitalize }}
             </template>
-            <div>Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to;</div>
-            <div>Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of elements, etc.</div>
+            <!-- {{ step.template.subject }}
+            {{ step.template.message }} -->
           </el-collapse-item>
-          <el-collapse-item>
+          <!-- <el-collapse-item>
             <template slot="title">
               <jus-icon icon="email"/> E-MAIL - Não espere para fechar o seu acordo com a Ne…
             </template>
@@ -107,7 +109,7 @@
             </template>
             <div>Decision making: giving advices about operations is acceptable, but do not make decisions for the users;</div>
             <div>Controlled consequences: users should be granted the freedom to operate, including canceling, aborting or terminating current operation.</div>
-          </el-collapse-item>
+          </el-collapse-item> -->
         </el-collapse>
       </div>
     </jus-modal>
@@ -137,6 +139,7 @@ export default {
       campaignName: '',
       campaignTimeout: null,
       strategy: '',
+      strategyEngagements: [],
       showStrategyModal: false,
       dueDate: null,
       datePickerOptions: {
@@ -200,6 +203,14 @@ export default {
     },
     showStrategyMessages () {
       this.showStrategyModal = true
+      this.$store.dispatch('showLoading')
+      this.$store.dispatch('getStrategyEngagement', 1).then(response => {
+        this.strategyEngagements = response[0].steps
+      }).catch(error => {
+        console.error(error)
+      }).finally(() => {
+        this.$store.dispatch('hideLoading')
+      })
     }
   }
 }
@@ -255,5 +266,8 @@ export default {
       margin-left: 5px;
     }
   }
+}
+.jus-import-feedback-card__engagement {
+  min-height: 100px;
 }
 </style>
