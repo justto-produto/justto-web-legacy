@@ -1,6 +1,7 @@
 const imports = {
   state: {
-    file: undefined
+    file: undefined,
+    map: []
   },
   mutations: {
     setImportsFile (state, file) {
@@ -8,6 +9,12 @@ const imports = {
     },
     removeImportsFile (state) {
       state.file = undefined
+    },
+    setImportsMap (state, map) {
+      state.map = map
+    },
+    removeImportsMap (map) {
+      state.map = []
     }
   },
   actions: {
@@ -28,6 +35,7 @@ const imports = {
         // eslint-disable-next-line
         axios.get('http://homol.justto.com.br/api/imports/' + state.file.id + '/columns')
           .then(response => {
+            commit('setImportsMap', response.data)
             resolve(response.data)
           })
           .catch(error => {
@@ -35,10 +43,10 @@ const imports = {
           })
       })
     },
-    getImportsTags () {
+    getImportsTags ({ state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('http://homol.justto.com.br/api/imports/tags')
+        axios.get('http://homol.justto.com.br/api/imports/' + state.file.id + '/tags')
           .then(response => {
             resolve(response.data)
           })
@@ -47,10 +55,10 @@ const imports = {
           })
       })
     },
-    mapImportColumns () {
+    mapImportColumns ({ state }, map) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('http://homol.justto.com.br/api/imports/map/42')
+        axios.put('http://homol.justto.com.br/api/imports/'+ state.file.id + '/map', map)
           .then(response => {
             resolve(response.data)
           })
