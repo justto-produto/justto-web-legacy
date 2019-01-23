@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     submitForm () {
-      this.$refs['newPasswordForm'].validate((valid) => {
+      this.$refs['newPasswordForm'].validate(valid => {
         if (valid) {
           this.showLoading = true
           this.showSuccess = false

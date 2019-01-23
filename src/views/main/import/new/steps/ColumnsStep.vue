@@ -13,7 +13,7 @@
           v-show="!loadingColumns"
           :key="`${column.id}-${column.name}`"
           class="file-column"
-          @drop="drop($event, column)" @dragover.prevent>
+          @drop="dropTag($event, column)" @dragover.prevent>
           <div class="file-column__name">
             <span class="file-column__title">{{ column.name }}</span>
             <span class="file-column__example">{{ column.example }}</span>
@@ -47,10 +47,10 @@
         <el-collapse v-loading="loadingTags" value="1" class="el-collapse--drag">
           <el-collapse-item title="Dados do conflito" name="1">
             <span
-              v-for="tag in tags.Dispute"
+              v-for="tag in disputeTags"
               :key="`${tag.id}-${tag.name}`"
               draggable="true"
-              @dragstart.self="drag($event, JSON.stringify(tag))">
+              @dragstart.self="dragTag($event, JSON.stringify(tag))">
               <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
                 {{ tag.name }}
               </el-tag>
@@ -59,48 +59,66 @@
         </el-collapse>
         <h3 v-show="!loadingTags">
           Partes contrárias
-          <a href="#" @click="addPerson()"><i class="el-icon-plus right"/></a>
+          <a href="#" @click="addTagList(claimantParties)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div
-          v-for="(person, index) in people"
-          :key="`${index}-${person}`"
-          class="drag-group">
+        <div v-for="claimantPartyIndex in claimantParties" :key="'claimantParty' + claimantPartyIndex" class="drag-group">
           <el-collapse class="el-collapse--drag">
-            <el-collapse-item :title="'Parte Contrária ' + person.index" :name="person.index">
+            <el-collapse-item :title="'Parte Contrária ' + claimantPartyIndex">
               <span
-                v-for="tag in person.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
-                @dragstart.self="drag($event, JSON.stringify(tag))">
+                v-for="tag in tags.claimantParty.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
+                @dragstart.self="dragTag($event, JSON.stringify(tag))">
                 <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
-                  {{ tag.name }}
+                  Parte contrária {{ claimantPartyIndex + ' - ' + tag.name }}
                 </el-tag>
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="index != 0 && (index + 1) == people.length" href="#" @click="removePerson()">
+          <a v-if="claimantPartyIndex > 1" href="#" @click="removeTagList(claimantParties)">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="margin-left: 20px;"/>
+          <span v-else style="margin-left: 24px;"/>
         </div>
         <h3 v-show="!loadingTags">
           Advogados
-          <a href="#" @click="addLawyer()"><i class="el-icon-plus right"/></a>
+          <a href="#" @click="addTagList(claimantLawyers)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(lawyer, index) in lawyers" :key="`${lawyer.id}-${lawyer.name}`" class="drag-group">
+        <div v-for="claimantLawyerIndex in claimantLawyers" :key="'claimantLawyer' + claimantLawyerIndex" class="drag-group">
           <el-collapse class="el-collapse--drag">
-            <el-collapse-item :title="'Advogado ' + lawyer.index" :name="lawyer.index">
+            <el-collapse-item :title="'Advogado ' + claimantLawyerIndex">
               <span
-                v-for="tag in lawyer.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
-                @dragstart.self="drag($event, JSON.stringify(tag))">
+                v-for="tag in tags.claimantLawyer.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
+                @dragstart.self="dragTag($event, JSON.stringify(tag))">
                 <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
-                  {{ tag.name }}
+                  Advogado {{ claimantLawyerIndex + ' - ' + tag.name }}
                 </el-tag>
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="index != 0 && (index + 1) == lawyers.length" href="#" @click="removeLawyer()">
+          <a v-if="claimantLawyerIndex > 1" href="#" @click="removeTagList(claimantLawyers)">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="margin-left: 20px;"/>
+          <span v-else style="margin-left: 24px;"/>
+        </div>
+        <h3 v-show="!loadingTags">
+          Réus
+          <a href="#" @click="addTagList(respondentParties)"><i class="el-icon-plus right"/></a>
+        </h3>
+        <div v-for="respondentPartyIndex in respondentParties" :key="respondentPartyIndex" class="drag-group">
+          <el-collapse class="el-collapse--drag">
+            <el-collapse-item :title="'Réu ' + respondentPartyIndex">
+              <span
+                v-for="tag in tags.claimantLawyer.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
+                @dragstart.self="dragTag($event, JSON.stringify(tag))">
+                <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
+                  Réu {{ respondentPartyIndex + ' - ' + tag.name }}
+                </el-tag>
+              </span>
+            </el-collapse-item>
+          </el-collapse>
+          <a v-if="respondentPartyIndex > 1" href="#" @click="removeTagList(respondentParties)">
+            <i class="el-icon-delete"/>
+          </a>
+          <span v-else style="margin-left: 24px;"/>
         </div>
       </el-col>
     </el-row>
@@ -113,9 +131,11 @@ export default {
   data () {
     return {
       columns: [],
-      tags: [],
-      people: [],
-      lawyers: [],
+      tags: {},
+      disputeTags: [],
+      claimantParties: [],
+      claimantLawyers: [],
+      respondentParties: [],
       loadingColumns: true,
       loadingTags: true,
       errorColumns: false,
@@ -126,7 +146,8 @@ export default {
     this.$store.dispatch('getImportsColumns').then(columns => {
       this.columns = columns
       this.loadingColumns = false
-    }).catch(() => {
+    }).catch(error => {
+      console.error(error)
       this.$notify.closeAll()
       this.$notify({
         title: 'Ops!',
@@ -138,18 +159,15 @@ export default {
       })
     })
     this.$store.dispatch('getImportsTags').then(tags => {
-      this.tags = tags
       this.loadingTags = false
-      this.people.push({
-        index: 1,
-        tags: this.setTagPrefix(tags.Person, 1, true)
-      })
-      this.lawyers.push({
-        index: 1,
-        tags: this.setTagPrefix(tags.Person, 1, false)
-      })
-    }).catch(() => {
+      this.tags = tags
+      this.disputeTags = tags.dispute.tags
+      this.claimantParties = Array.from({ length: tags.claimantParty.rows }, (v, k) => k + 1)
+      this.claimantLawyers = Array.from({ length: tags.claimantLawyer.rows }, (v, k) => k + 1)
+      this.respondentParties = Array.from({ length: tags.respondentParty.rows }, (v, k) => k + 1)
+    }).catch(error => {
       this.$notify.closeAll()
+      console.error(error)
       this.$notify({
         title: 'Ops!',
         message: 'Houve uma falha de conexão com o servidor.',
@@ -161,19 +179,19 @@ export default {
     })
   },
   methods: {
-    drag (event, tag) {
+    dragTag (event, tag) {
       event.dataTransfer.setData('tag', tag)
     },
-    drop (event, column) {
+    dropTag (event, column) {
       var tag = JSON.parse(event.dataTransfer.getData('tag'))
-      this.columns.find((element) => {
+      this.columns.find(element => {
         if (column.id === element.id) {
           element.tag = tag
         }
       })
     },
     removeTag (column) {
-      this.columns.find((element) => {
+      this.columns.find(element => {
         if (element === column) {
           element.tag = null
         }
@@ -181,7 +199,7 @@ export default {
     },
     isAvailable (tag) {
       var isAvailable = true
-      this.columns.find((element) => {
+      this.columns.find(element => {
         if (element.tag) {
           let elKey = element.tag.id
           let tagKey = tag.id
@@ -192,41 +210,13 @@ export default {
       })
       return isAvailable
     },
-    addPerson () {
-      let lastPerson = this.people.slice(-1)[0]
-      let prefix = lastPerson.index + 1
-      this.people.push({
-        index: prefix,
-        tags: this.setTagPrefix(this.tags.Person, prefix, true)
-      })
+    addTagList (list) {
+      let lastIndex = list.slice(-1)[0]
+      list.push(lastIndex + 1)
     },
-    addLawyer () {
-      let lastLawyer = this.lawyers.slice(-1)[0]
-      let prefix = lastLawyer.index + 1
-      this.lawyers.push({
-        index: prefix,
-        tags: this.setTagPrefix(this.tags.Person, prefix, false)
-      })
-    },
-    removePerson () {
-      this.removeLink(this.people)
-      this.people.splice(-1, 1)
-    },
-    removeLawyer () {
-      this.removeLink(this.lawyers)
-      this.lawyers.splice(-1, 1)
-    },
-    setTagPrefix (tags, prefix, isPerson) {
-      let t = JSON.parse(JSON.stringify(tags))
-      for (var i = 0; i < t.length; i++) {
-        if (isPerson) {
-          t[i].name = 'Parte contrária ' + prefix + ' - ' + t[i].name
-        } else {
-          t[i].name = 'Advogado(a) ' + prefix + ' - ' + t[i].name
-        }
-        t[i].index = prefix
-      }
-      return t
+    removeTagList (list) {
+      // this.removeLink(this.claimantParties)
+      list.splice(-1, 1)
     },
     removeLink (array) {
       let toRemove = array.slice(-1)[0]

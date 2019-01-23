@@ -121,7 +121,7 @@ export default {
   methods: {
     submitForm () {
       if (!this.creatingWorkspace) {
-        this.$refs['subdomainForm'].validate((valid) => {
+        this.$refs['subdomainForm'].validate(valid => {
           if (valid) {
             this.$emit('onboarding:createSubdomain', { subdomain: this.subdomainForm.subdomain })
           } else {

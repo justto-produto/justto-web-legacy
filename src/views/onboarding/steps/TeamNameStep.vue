@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     submitForm () {
-      this.$refs['nameForm'].validate((valid) => {
+      this.$refs['nameForm'].validate(valid => {
         if (valid) {
           this.$emit('onboarding:step:next', { team: this.nameForm.name })
         } else {

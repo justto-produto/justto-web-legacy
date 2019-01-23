@@ -116,7 +116,7 @@ export default {
               this.synced = true
               this.syncForm.email = 'a@a.com'
               this.$store.dispatch('myAccount')
-            }).catch((error) => {
+            }).catch(error => {
               this.showError = true
               console.log(error)
             }).finally(() => {
