@@ -86,7 +86,7 @@ const router = new Router({
     {
       name: 'onboarding',
       path: '/onboarding',
-      component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding'),
+      component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/Onboarding'),
       meta: {
         requiresAuth: true
       }

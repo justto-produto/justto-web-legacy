@@ -21,8 +21,10 @@
                 :before-upload="beforeUpload"
                 :on-error="handleError"
                 :disabled="hasFile"
+                :headers="uploadHeaders"
                 accept=".csv,.xlsx,.xls"
                 action="http://homol.justto.com.br/api/imports/upload">
+                <!-- :action="axios.defaults.baseURL"> -->
                 <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
                 <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
               </el-upload>
@@ -34,7 +36,7 @@
           </div>
           <div v-if="hasFile" class="view-import__actions">
             <el-button plain @click="removeFile">Voltar</el-button>
-            <el-button type="primary" @click="nextStep">Próximo</el-button>
+            <el-button type="primary" @click="startImport">Próximo</el-button>
           </div>
         </div>
       </template>
@@ -75,15 +77,23 @@ export default {
     }
   },
   computed: {
-    // TODO DEV RETIRAR
     hasFile () {
       return this.fileUrl !== ''
+    },
+    uploadHeaders () {
+      return {
+        'Authorization': this.$store.state.accountModule.token,
+        'Workspace': this.$store.state.workspaceModule.subdomain
+      }
     }
   },
   beforeMount () {
     this.$store.dispatch('getImportsHistory').then(response => {
       this.importsHistory = response
     })
+  },
+  beforeCreate () {
+    this.$store.commit('removeImportsFile')
   },
   methods: {
     beforeUpload (file) {
@@ -116,11 +126,11 @@ export default {
       }
       return isValid && isLt20M
     },
-    // TODO DEV RETIRAR
-    nextStep () {
+    startImport () {
       this.$router.push('/import/new')
     },
     handleSuccess (res, file) {
+      this.$store.commit('setImportsFile', res)
       this.fileUrl = URL.createObjectURL(file.raw)
     },
     handleError () {
@@ -136,6 +146,7 @@ export default {
     },
     removeFile () {
       this.fileUrl = ''
+      this.$store.commit('removeImportsFile')
       this.$refs['uploadMethod'].clearFiles()
     }
   }

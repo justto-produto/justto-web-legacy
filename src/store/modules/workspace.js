@@ -1,4 +1,4 @@
-const workspace = {
+const workspaceModule = {
   state: {
     name: '',
     status: '',
@@ -6,6 +6,7 @@ const workspace = {
   },
   mutations: {
     updateWorkspace (state, response) {
+      axios.defaults.headers.common['Workspace'] = response.subDomain
       if (response) state.name = response.name
       if (response) state.status = response.status
       if (response) state.subdomain = response.subDomain
@@ -144,4 +145,4 @@ const workspace = {
   }
 }
 
-export default workspace
+export default workspaceModule
