@@ -1,4 +1,15 @@
 const imports = {
+  state: {
+    file: undefined
+  },
+  mutations: {
+    setImportsFile (state, file) {
+      state.file = file
+    },
+    removeImportsFile (state) {
+      state.file = undefined
+    }
+  },
   actions: {
     getImportsHistory () {
       return new Promise((resolve, reject) => {
@@ -12,10 +23,10 @@ const imports = {
           })
       })
     },
-    getImportsColumns () {
+    getImportsColumns ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('http://homol.justto.com.br/api/imports/columns')
+        axios.get('http://homol.justto.com.br/api/imports/' + state.file.id + '/columns')
           .then(response => {
             resolve(response.data)
           })
@@ -47,6 +58,11 @@ const imports = {
             reject(error)
           })
       })
+    }
+  },
+  getters: {
+    hasImportsFile: state => {
+      return state.file !== undefined
     }
   }
 }

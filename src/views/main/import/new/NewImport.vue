@@ -44,8 +44,14 @@ export default {
   },
   data () {
     return {
-      activeStep: 3,
+      uploadId: undefined,
+      activeStep: 0,
       companies: []
+    }
+  },
+  beforeCreate() {
+    if (!this.$store.getters.hasImportsFile) {
+      this.$router.push('/import')
     }
   },
   methods: {
