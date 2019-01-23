@@ -73,7 +73,7 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="claimantPartyIndex > 1" href="#" @click="removeTagList(claimantParties)">
+          <a v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex" href="#" @click="removeTagList(claimantParties)">
             <i class="el-icon-delete"/>
           </a>
           <span v-else style="margin-left: 24px;"/>
@@ -94,7 +94,7 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="claimantLawyerIndex > 1" href="#" @click="removeTagList(claimantLawyers)">
+          <a v-if="claimantLawyerIndex !== 1 && claimantLawyers.length === claimantLawyerIndex" href="#" @click="removeTagList(claimantLawyers)">
             <i class="el-icon-delete"/>
           </a>
           <span v-else style="margin-left: 24px;"/>
@@ -107,7 +107,7 @@
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Réu ' + respondentPartyIndex">
               <span
-                v-for="tag in tags.claimantLawyer.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
+                v-for="tag in tags.respondentParty.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify(tag))">
                 <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
                   Réu {{ respondentPartyIndex + ' - ' + tag.name }}
@@ -115,7 +115,7 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="respondentPartyIndex > 1" href="#" @click="removeTagList(respondentParties)">
+          <a v-if="respondentPartyIndex !== 1 && respondentParties.length === respondentPartyIndex" href="#" @click="removeTagList(respondentParties)">
             <i class="el-icon-delete"/>
           </a>
           <span v-else style="margin-left: 24px;"/>
@@ -215,7 +215,7 @@ export default {
       list.push(lastIndex + 1)
     },
     removeTagList (list) {
-      // this.removeLink(this.claimantParties)
+      this.removeLink(list)
       list.splice(-1, 1)
     },
     removeLink (array) {

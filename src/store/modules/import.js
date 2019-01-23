@@ -3,7 +3,7 @@ const imports = {
     getImportsHistory () {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/history')
+        axios.get('http://homol.justto.com.br/api/imports/history')
           .then(response => {
             resolve(response.data)
           })
@@ -15,7 +15,7 @@ const imports = {
     getImportsColumns () {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/columns')
+        axios.get('http://homol.justto.com.br/api/imports/columns')
           .then(response => {
             resolve(response.data)
           })
@@ -27,7 +27,7 @@ const imports = {
     getImportsTags () {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/tags')
+        axios.get('http://homol.justto.com.br/api/imports/tags')
           .then(response => {
             resolve(response.data)
           })
@@ -39,7 +39,7 @@ const imports = {
     mapImportColumns () {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/map/42')
+        axios.put('http://homol.justto.com.br/api/imports/map/42')
           .then(response => {
             resolve(response.data)
           })

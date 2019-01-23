@@ -2,7 +2,7 @@
   <transition name="modal">
     <div class="jus-modal__mask">
       <div class="jus-modal__wrapper">
-        <div class="jus-modal__container">
+        <el-card class="jus-modal__container">
           <div class="jus-modal__header">
             <slot name="header"/>
           </div>
@@ -12,7 +12,7 @@
           <div class="jus-modal__footer">
             <slot name="footer"/>
           </div>
-        </div>
+        </el-card>
       </div>
     </div>
   </transition>
@@ -50,12 +50,13 @@ export default {
   transition: all .3s ease;
 }
 .jus-modal__header {
-
+  width: 100%;
 }
 .jus-modal__body {
   margin: 20px 0;
+  width: 100%;
 }
 .jus-modal__footer {
-
+  width: 100%;
 }
 </style>
