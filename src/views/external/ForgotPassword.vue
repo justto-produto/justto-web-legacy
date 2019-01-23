@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     submitForm () {
-      this.$refs['forgotForm'].validate((valid) => {
+      this.$refs['forgotForm'].validate(valid => {
         if (valid) {
           this.showSuccess = false
           this.showLoading = true
@@ -89,3 +89,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  @import 'external.scss';
+</style>

@@ -52,7 +52,7 @@ export default {
   name: 'JusHeaderMain',
   computed: {
     name () {
-      return this.$store.state.account.name ? this.$store.state.account.name : 'Mariana Rondino'
+      return this.$store.state.accountModule.name ? this.$store.state.accountModule.name : 'Mariana Rondino'
     }
   },
   methods: {

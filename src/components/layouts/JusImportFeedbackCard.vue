@@ -1,109 +1,205 @@
 <template>
   <div class="jus-import-feedback-card">
-    <el-tag :color="color" class="el-tag--company-tag">{{ company }}</el-tag>
+    <el-tag :color="color" class="el-tag--company-tag">{{ company.name }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-form
-        ref="form" :inline="true" :model="form"
-        label-position="top">
-        <el-form-item label="Nº de casos" prop="number" style="width: 40%">
-          <el-input v-model="form.number" readonly class="el-input--no-border"/>
-        </el-form-item>
-        <el-form-item label="Enriquecimento" prop="number" style="margin: 0; width: 57%">
-          <el-input v-model="form.enrichment" readonly class="el-input--no-border"/>
-        </el-form-item>
-        <el-form-item label="Nome da campanha" prop="number" style="width: 100%">
-          <el-input v-model="form.name" placeholder="Digite o nome da sua campanha"/>
-        </el-form-item>
-        <el-form-item label="Tipo" prop="number" style="width: 40%">
-          <el-select v-model="form.value" placeholder="Select">
-            <el-option
-              v-for="item in ['Indenizatório', 'Cobrança']" :key="item" :label="item"
-              :value="item"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Data limite da negociação" prop="number" style="margin: 0; width: 57%">
-          <el-date-picker v-model="form.date" type="date" placeholder="Selecione uma data"/>
-        </el-form-item>
-        <el-form-item label="Responsáveis pela campanha" prop="number">
-          <span v-if="responsibles.length !== 0" class="responsibles-box">
-            <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
-            <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
-            <jus-avatar-user name-initials="MS" size="xs" shape="circle"/>
-          </span>
-          <jus-icon icon="add-purple"/>
-        </el-form-item>
-      </el-form>
-      <!-- <el-table :data="tableData" class="el-table--feedback-card" size="mini">
-        <el-table-column label="Nº de casos" min-width="80">
-          <template slot-scope="scope">
-            {{ scope.row.cases }}
-          </template>
-        </el-table-column>
-        <el-table-column label="Enriquecimento" min-width="160px">
-          <template slot-scope="scope">
-            {{ scope.row.enrichment }}
-          </template>
-        </el-table-column>
-        <el-table-column label="Tipo" min-width="140px">
-          <template slot-scope="scope">
-            <el-select v-model="scope.row.type" placeholder="Select">
-              <el-option v-for="type in types" :key="type" :label="type" :value="type"/>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="Nome da campanha" min-width="150px">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.campaign"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="Data limite para proposta" min-width="175px">
-          <template slot-scope="scope">
-            <el-date-picker v-model="scope.row.limit" :clearable="false" type="date" format="dd-MM-yyyy" prefix-icon="none"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="Responsáveis" min-width="175">
-          <template slot-scope="scope">
-            <span v-if="responsibles.length !== 0" class="responsibles-box">
-              <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
-              <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
-              <jus-avatar-user name-initials="MS" size="xs" shape="circle"/>
-            </span>
-            <jus-icon icon="add-purple"/>
-          </template>
-        </el-table-column>
-      </el-table> -->
+      <el-autocomplete
+        v-model="campaignName"
+        :fetch-suggestions="querySearchCampaign"
+        :trigger-on-focus="false"
+        value-key="name"
+        clearable
+        placeholder="Dê um nome para a sua Campanha"
+        @select="handleSelectCampaign">
+        <i
+          slot="prefix"
+          :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+          class="el-input__icon"
+        />
+      </el-autocomplete>
+      <el-select
+        v-model="strategy"
+        clearable class="select-strategy"
+        placeholder="Escolha uma estratégia"
+      >
+        <i
+          slot="prefix"
+          :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+          class="el-input__icon"
+        />
+        <el-option
+          v-for="strategy in strategies"
+          :key="strategy.id"
+          :label="strategy.name"
+          :value="strategy.id"
+        />
+      </el-select>
+      <div class="select-strategy__messages">
+        <a v-show="strategy !== ''" @click="showStrategyMessages">Ver estratégia de engajamento das partes</a>
+      </div>
+      <el-date-picker
+        v-model="dueDate"
+        :prefix-icon="dueDate === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+        :picker-options="datePickerOptions"
+        type="date"
+        format="dd-MM-yyyy"
+        placeholder="Defina a data limite para a negociação"
+      />
+      <el-select
+        v-model="dealers"
+        :remote-method="searchDealers"
+        :loading="loading"
+        size="large"
+        placeholder="Escolha os negociadores"
+        multiple
+        filterable
+        remote
+        class="select-dealer">
+        <i
+          slot="prefix"
+          :class="dealers.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+          class="el-input__icon"
+        />
+        <el-option
+          v-for="item in filteredDealers"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+          <jus-avatar-user :src="item.value" shape="circle" size="xs"/>
+          <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.label }}</span>
+        </el-option>
+      </el-select>
     </el-card>
+    <jus-modal v-if="showStrategyModal" @close="showStrategyModal = false">
+      <h2 slot="header">Estretégia de engajamento das partes</h2>
+      <div slot="body">
+        <p>
+          Abaixo você encontra as mensagens enviadas para às partes dos casos contidos nesta Campanha. Através da
+          inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, aprende cada
+          vez mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada para
+          encontrar as pessoas e chegar uma solução adequada.
+        </p>
+        <el-collapse class="el-collapse--bordered">
+          <el-collapse-item>
+            <template slot="title">
+              <jus-icon icon="sms"/> SMS
+            </template>
+            <div>Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to;</div>
+            <div>Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of elements, etc.</div>
+          </el-collapse-item>
+          <el-collapse-item>
+            <template slot="title">
+              <jus-icon icon="email"/> E-MAIL - Não espere para fechar o seu acordo com a Ne…
+            </template>
+            <div>Operation feedback: enable the users to clearly perceive their operations by style updates and interactive effects;</div>
+            <div>Visual feedback: reflect current state by updating or rearranging elements of the page.</div>
+          </el-collapse-item>
+          <el-collapse-item>
+            <template slot="title">
+              <jus-icon icon="whatsapp"/> WHATSAPP
+            </template>
+            <div>Simplify the process: keep operating process simple and intuitive;</div>
+            <div>Definite and clear: enunciate your intentions clearly so that the users can quickly understand and make decisions;</div>
+            <div>Easy to identify: the interface should be straightforward, which helps the users to identify and frees them from memorizing and recalling.</div>
+          </el-collapse-item>
+          <el-collapse-item>
+            <template slot="title">
+              <jus-icon icon="cna"/> CNA - O que você ganha ao fechar acordos?
+            </template>
+            <div>Decision making: giving advices about operations is acceptable, but do not make decisions for the users;</div>
+            <div>Controlled consequences: users should be granted the freedom to operate, including canceling, aborting or terminating current operation.</div>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
+    </jus-modal>
   </div>
 </template>
 
 <script>
+import JusModal from '@/components/layouts/JusModal'
+
 export default {
   name: 'JusImportFeedbackCard',
+  components: {
+    JusModal
+  },
   props: {
     company: {
-      type: String,
-      default: ''
+      type: Object,
+      default: undefined
     },
     color: {
       type: String,
       default: ''
-    },
-    responsibles: {
-      type: Array,
-      default: () => {
-        return []
-      }
     }
   },
   data () {
     return {
-      form: {
-        number: '500',
-        value: 'Indenizatório',
-        date: '',
-        name: '',
-        enrichment: '93 dados enriquecidos'
+      campaignName: '',
+      campaignTimeout: null,
+      strategy: '',
+      showStrategyModal: false,
+      dueDate: null,
+      datePickerOptions: {
+        disabledDate (date) {
+          return date < new Date()
+        }
+      },
+      dealers: [],
+      filteredDealers: [],
+      loading: false
+    }
+  },
+  computed: {
+    strategies () {
+      return this.$store.state.strategyModule.list
+    },
+    campaigns () {
+      return this.$store.state.campaignModule.list
+    },
+    dealersList () {
+      return [{
+        value: 'http://www.abc.net.au/reslib/201011/r679209_5007178.jpg',
+        label: 'Henrique Liberato'
+      },
+      {
+        value: 'https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg',
+        label: 'Mariana Rondino'
+      }]
+    }
+  },
+  methods: {
+    querySearchCampaign (queryString, callback) {
+      var campaigns = this.campaigns
+      var results = queryString ? campaigns.filter(this.createCampaignFilter(queryString)) : campaigns
+      clearTimeout(this.campaignTimeout)
+      this.campaignTimeout = setTimeout(() => {
+        callback(results)
+      }, 1000 * Math.random())
+    },
+    createCampaignFilter (queryString) {
+      return (campaigns) => {
+        return (campaigns.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
       }
+    },
+    handleSelectCampaign (item) {
+      console.log(item)
+    },
+    searchDealers (query) {
+      if (query !== '') {
+        this.loading = true
+        setTimeout(() => {
+          this.loading = false
+          this.filteredDealers = this.dealersList.filter(item => {
+            return item.label.toLowerCase()
+              .indexOf(query.toLowerCase()) > -1
+          })
+        }, 1000)
+      } else {
+        this.filteredDealers = []
+      }
+    },
+    showStrategyMessages () {
+      this.showStrategyModal = true
     }
   }
 }
@@ -112,24 +208,51 @@ export default {
 <style lang="scss">
 .jus-import-feedback-card {
   width: 100%;
-  max-width: 400px;
   &+.jus-import-feedback-card {
-    margin-left: 40px;
+    margin-top: 30px;
   }
-  .el-tag {
+  .el-tag--company-tag {
     margin-bottom: 10px;
     text-align: center;
   }
-  .el-date-editor {
-    max-width: 100%;
+  .el-autocomplete, .el-select, .el-input, .select-strategy__messages {
+    width: 100%;
   }
-  .responsibles-box {
-    margin-right: 10px;
-    > div:not(:first-child) {
-      margin-left: -5px;
+  .el-input__inner {
+    border-bottom: 1px solid #dcdfe6 !important;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  .el-card__body {
+    padding: 0;
+    .el-select:last-of-type {
+      .el-input__inner {
+        border-bottom: 0;
+      }
     }
-    img {
-      box-shadow: 0px 1px 1px 0px rgba(37, 38, 94, 0.25);
+  }
+  .el-select__tags {
+    margin-left: 35px;
+  }
+  .el-icon-circle-check-outline {
+    color: #d1dbe2;
+  }
+  .select-strategy {
+    .el-input__inner {
+      border: 0 !important;
+    }
+  }
+  .select-strategy__messages {
+    border-bottom: 1px solid #dcdfe6;
+    a {
+      display: block;
+      padding: 0px 0px 10px 16px;
+    }
+  }
+  .select-dealer {
+    .el-select__input {
+      margin-left: 5px;
     }
   }
 }

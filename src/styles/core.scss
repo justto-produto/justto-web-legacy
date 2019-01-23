@@ -4,14 +4,14 @@
 html {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
-  color: #424242;
+  color: $--color-text-regular;
 }
 
 * {
   box-sizing: border-box;
 }
 
-body, html, #app, section {
+body, html, #app, section:not(.ps-container) {
   height: 100%;
   margin: 0;
   background-color: $--background-color-base;
@@ -32,6 +32,10 @@ h3 {
 
 hr {
   border: solid 0.6px #eeeeee;
+}
+
+a {
+  cursor: pointer;
 }
 
 .overflow-hidden {
@@ -73,4 +77,9 @@ hr {
 
 .right {
   float: right;
+}
+
+::placeholder {
+  color: $--color-text-primary !important;
+  font-weight: normal !important;
 }

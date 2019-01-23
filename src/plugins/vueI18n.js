@@ -7,7 +7,6 @@ Vue.use(VueI18n)
 
 function loadLocaleMessages () {
   const locales = require.context('../locales', true, /[A-Za-z0-9-_,\s]+\.json$/i)
-
   const messages = {}
   locales.keys().forEach(key => {
     const matched = key.match(/([a-z-9]+)\./i)
@@ -16,20 +15,17 @@ function loadLocaleMessages () {
       messages[locale] = locales(key)
     }
   })
-
-  // Adiciona manualmente as traduções do Element
   if (messages.hasOwnProperty('en')) {
     messages['en'].el = enLocale.el
   }
   if (messages.hasOwnProperty('pt-br')) {
     messages['pt-br'].el = brlocale.el
   }
-
   return messages
 }
 
 export default new VueI18n({
-  locale: process.env.VUE_APP_I18N_LOCALE || 'en',
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
+  locale: process.env.VUE_APP_I18N_LOCALE || 'pt-br',
+  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'pt-br',
   messages: loadLocaleMessages()
 })

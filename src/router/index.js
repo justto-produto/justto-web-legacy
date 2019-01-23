@@ -4,7 +4,6 @@ import Store from '@/store'
 Vue.use(Router)
 
 const router = new Router({
-  mode: 'history',
   routes: [
     {
       path: '/',
@@ -19,11 +18,11 @@ const router = new Router({
         },
         {
           path: 'import',
-          component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import')
+          component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import/Import')
         },
         {
           path: 'import/new',
-          component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/new')
+          component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/new/NewImport')
         },
         {
           path: 'management',
@@ -91,6 +90,11 @@ const router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      name: 'error',
+      path: '/error',
+      component: () => import(/* webpackChunkName: "jusError" */ '@/components/layouts/JusError')
     },
     {
       path: '*',

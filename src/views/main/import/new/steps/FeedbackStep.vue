@@ -1,6 +1,6 @@
 <template>
   <div class="feedback-step">
-    <h2>Resumo</h2>
+    <h2 class="view-import-new__title">Resumo</h2>
     <p>
       Agrupamos seus casos por empresas. Cada empresa possui a sua Campanha, que você poderá, posteriormente, editar
       as existentes ou criar novas Campanhas.
@@ -9,8 +9,12 @@
     </p>
     <div class="view-import__container">
       <div class="view-import__content">
-        <jus-import-feedback-card company="Nestlé" color="#72cbff"/>
-        <jus-import-feedback-card :responsibles="responsibles" company="Cacau Show" color="#ff7a72"/>
+        <jus-import-feedback-card
+          v-for="(company, index) in companies"
+          :company="company"
+          :key="`${company.name}-${company.indexes}`"
+          :color="colors[index]"
+        />
       </div>
     </div>
   </div>
@@ -24,30 +28,51 @@ export default {
   components: {
     JusImportFeedbackCard
   },
+  props: {
+    companies: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    }
+  },
   data () {
     return {
-      active: 3,
-      responsibles: ['HL', 'MR']
+      colors: [
+        '#ff7a72',
+        '#72cbff',
+        '#88ff59'
+      ]
     }
+  },
+  beforeMount () {
+    this.$store.dispatch('getCampaigns')
+    this.$store.dispatch('getStrategies')
   }
 }
 </script>
 
 <style lang="scss">
 .feedback-step {
-  p {
+  >p {
     text-align: center;
     max-width: 600px;
     margin: auto;
   }
-  // width: 100%;
-  // max-width: 400px;
-  // margin: auto;
-}
-.feedback-step {
   .view-import__content {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  .el-input__prefix {
+    font-size: 1.3rem;
+    left: 10px;
+  }
+  .el-input--prefix .el-input__inner {
+    padding-left: 40px;
+  }
+  .el-input--suffix .el-input__inner {
+    padding-right: 40px;
   }
 }
 </style>

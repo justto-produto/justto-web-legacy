@@ -101,7 +101,7 @@ export default {
   methods: {
     submitForm () {
       let self = this
-      this.$refs['registerForm'].validate((valid) => {
+      this.$refs['registerForm'].validate(valid => {
         self.showError = false
         self.showSuccess = false
         if (valid) {
@@ -135,3 +135,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  @import 'external.scss';
+</style>

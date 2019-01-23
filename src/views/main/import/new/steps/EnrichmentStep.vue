@@ -1,19 +1,20 @@
 <template>
   <div class="enrichment-step">
-    <h2>Enriquecimento</h2>
+    <h2 class="view-import-new__title">Enriquecimento</h2>
     <p>
       A inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, aprende
       cada vez mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada
       para encontrar as pessoas e chegar uma solução adequada.
     </p>
     <el-card shadow="never" class="el-card--dashed">
-      <div v-show="loading && !enriched" class="el-loading-spinner">
+      <div v-if="loading && !enriched" class="el-loading-spinner">
         <svg viewBox="25 25 50 50" class="circular">
           <circle
             cx="50" cy="50" r="20"
             fill="none" class="path"/>
         </svg>
       </div>
+      <span v-else><i class="el-icon-loading"/> Redirecionando...</span>
       <h3 v-show="!enriched && !loading">
         Caso exista em nosso banco de dados informações adicionais, iremos enriquecer as seguintes entidades:
       </h3>
@@ -88,12 +89,7 @@ export default {
 <style lang="scss">
 .enrichment-step {
   width: 100%;
-  max-width: 400px;
-  margin: auto;
   text-align: center;
-  > p {
-    margin: 0 -80px;
-  }
   .el-card--dashed {
     ul {
       margin: 0;

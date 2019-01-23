@@ -39,24 +39,24 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.state.account.name
+      return this.$store.state.accountModule.name
     }
   },
   methods: {
     readyWorkspace: function () {
       this.showError = false
-      this.$store.dispatch('readyWorkspace', this.$store.state.workspace.subdomain)
+      this.$store.dispatch('readyWorkspace', this.$store.state.workspaceModule.subdomain)
         .then(() => {
           this.$store.dispatch('myWorkspace')
             .then(() => {
               this.$router.push('import')
             })
-            .catch((error) => {
+            .catch(error => {
               this.showError = true
               console.log(error)
             })
         })
-        .catch((error) => {
+        .catch(error => {
           this.showError = true
           console.log(error)
         })

@@ -1,4 +1,4 @@
-@import '../variables/colors';
+@import '../colors';
 
 .el-steps--wizard {
   width: 140px;
@@ -22,8 +22,6 @@
 }
 
 .el-steps--circle {
-  width: 400px;
-  margin: auto;
   .el-step__icon-inner:not(.is-status) {
     display: none;
   }

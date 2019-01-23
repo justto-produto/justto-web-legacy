@@ -112,7 +112,7 @@ export default {
   },
   methods: {
     submitForm () {
-      this.$refs['loginForm'].validate((valid) => {
+      this.$refs['loginForm'].validate(valid => {
         if (valid) {
           this.showError = false
           this.showLoading = true
@@ -152,3 +152,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  @import 'external.scss';
+</style>

@@ -11,15 +11,12 @@ import '@/plugins/element'
 import '@/plugins/scrollTo'
 import '@/plugins/awesomeSwiper'
 import '@/plugins/socket'
+import '@/plugins/moment'
 
 // css
 import '@/styles/core.scss'
 import '@/styles/transitions.scss'
 import '@/styles/container.scss'
-
-import '@/styles/views/external/index.scss'
-import '@/styles/views/main/import/import.scss'
-import '@/styles/views/main/import/new-import.scss'
 
 import '@/styles/overrides/alert.scss'
 import '@/styles/overrides/badge.scss'
@@ -32,6 +29,7 @@ import '@/styles/overrides/container.scss'
 import '@/styles/overrides/dialog.scss'
 import '@/styles/overrides/dropdown.scss'
 import '@/styles/overrides/form.scss'
+import '@/styles/overrides/icon.scss'
 import '@/styles/overrides/input.scss'
 import '@/styles/overrides/menu.scss'
 import '@/styles/overrides/message-box.scss'
@@ -45,6 +43,8 @@ import '@/styles/overrides/steps.scss'
 import '@/styles/overrides/tabs.scss'
 import '@/styles/overrides/tag.scss'
 import '@/styles/overrides/upload.scss'
+
+import '@/styles/perfect-scroll.scss'
 
 // Global components
 import JusIcon from '@/components/images/JusIcon'
@@ -66,14 +66,13 @@ if (store.getters.isLoggedIn) {
   Promise.all([store.dispatch('myAccount'), store.dispatch('myWorkspace')])
     .then(() => {
       store.dispatch('hideLoading')
-      new Vue({
-        router,
-        store,
-        i18n,
-        render: h => h(App)
-      }).$mount('#app')
+      initVue()
     })
 } else {
+  initVue()
+}
+
+function initVue () {
   new Vue({
     router,
     store,

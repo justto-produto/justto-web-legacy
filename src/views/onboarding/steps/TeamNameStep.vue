@@ -29,7 +29,7 @@ export default {
   data () {
     return {
       nameForm: {
-        name: this.$store.state.workspace.name
+        name: this.$store.state.workspaceModule.name
       },
       nameFormRules: {
         name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     submitForm () {
-      this.$refs['nameForm'].validate((valid) => {
+      this.$refs['nameForm'].validate(valid => {
         if (valid) {
           this.$emit('onboarding:step:next', { team: this.nameForm.name })
         } else {

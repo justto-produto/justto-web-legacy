@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     urlQrCode () {
-      return this.$store.state.socket.urlQrCode
+      return this.$store.state.socketModule.urlQrCode
     },
     status () {
       if (this.isStarting) {
@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     sendMessage () {
-      this.$refs['numberForm'].validate((valid) => {
+      this.$refs['numberForm'].validate(valid => {
         if (this.validNumber) {
           this.sending = true
           this.$store.dispatch('whatsappSend', {

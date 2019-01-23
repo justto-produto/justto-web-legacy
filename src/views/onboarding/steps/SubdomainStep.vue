@@ -55,7 +55,7 @@ export default {
     var validateSubdomainAvailability = (rule, value, callback) => {
       if (value.length >= 3) {
         this.$store.dispatch('verifyAvailability', value)
-          .then((available) => {
+          .then(available => {
             if (available) {
               this.isAvailable = true
               callback()
@@ -75,7 +75,7 @@ export default {
       isAvailable: false,
       isValid: false,
       subdomainForm: {
-        subdomain: this.$store.state.workspace.subdomain
+        subdomain: this.$store.state.workspaceModule.subdomain
       },
       subdomainFormRules: {
         subdomain: [
@@ -121,7 +121,7 @@ export default {
   methods: {
     submitForm () {
       if (!this.creatingWorkspace) {
-        this.$refs['subdomainForm'].validate((valid) => {
+        this.$refs['subdomainForm'].validate(valid => {
           if (valid) {
             this.$emit('onboarding:createSubdomain', { subdomain: this.subdomainForm.subdomain })
           } else {

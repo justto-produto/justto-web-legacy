@@ -13,15 +13,12 @@ export default {
 </script>
 
 <style lang="scss">
-
 .jus-tip {
-  .jus-tip {
-    visibility: visible;
-    top: 0px;
-    right: -4px;
-    position: absolute;
-    z-index: 998;
-  }
+  visibility: visible;
+  top: 0px;
+  right: -4px;
+  position: absolute;
+  z-index: 998;
   .jus-tip__trigger {
     align-items: center;
     display: flex;

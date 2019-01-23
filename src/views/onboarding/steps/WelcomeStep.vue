@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.state.account.name
+      return this.$store.state.accountModule.name
     }
   },
   methods: {

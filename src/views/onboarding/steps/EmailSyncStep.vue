@@ -85,13 +85,13 @@ export default {
     }
   },
   onCreate () {
-    if (this.$store.state.account.emailAccount) {
-      this.syncForm.email = this.$store.state.account.emailAccount
+    if (this.$store.state.accountModule.emailAccount) {
+      this.syncForm.email = this.$store.state.accountModule.emailAccount
     }
   },
   computed: {
     synced () {
-      if (this.$store.state.account.emailAccount) {
+      if (this.$store.state.accountModule.emailAccount) {
         return true
       }
       return false
@@ -111,12 +111,12 @@ export default {
         if (valid) {
           this.$store.dispatch('showLoading')
           this.$store.dispatch('syncInbox', this.syncForm)
-            .then((response) => {
+            .then(response => {
               this.showSuccess = true
               this.synced = true
               this.syncForm.email = 'a@a.com'
               this.$store.dispatch('myAccount')
-            }).catch((error) => {
+            }).catch(error => {
               this.showError = true
               console.log(error)
             }).finally(() => {

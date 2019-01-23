@@ -21,7 +21,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/variables/colors.scss';
+@import '@/styles/colors.scss';
 
 .jus-status-dot {
   width: 10px;

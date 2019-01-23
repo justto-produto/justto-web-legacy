@@ -1,4 +1,4 @@
-@import '../variables/colors';
+@import '../colors';
 
 .el-collapse-item__header {
   font-size: inherit !important;
@@ -8,8 +8,8 @@
 .el-collapse--bordered {
   border: none !important;
   .el-collapse-item {
-    border: 1px solid $--color-primary;
     border-radius: 4px;
+    border: solid 1px #eeeeee;
   }
   .el-collapse-item + .el-collapse-item {
     margin-top: 20px;
@@ -25,9 +25,21 @@
   .el-collapse-item__content {
     padding-bottom: 0;
   }
+  .el-collapse-item__header {
+    font-weight: 500 !important;
+    img {
+      vertical-align: bottom;
+    }
+ }
 }
 
-.el-collapse-drag {
+.el-collapse--active {
+  .el-collapse-item {
+    border: 1px solid $--color-primary;
+  }
+}
+
+.el-collapse--drag {
   &.el-collapse {
     width: 100%;
     border: 0;
@@ -35,10 +47,10 @@
   .el-collapse-item {
     padding: 0 10px;
     border: solid 1px #eeeeee;
-    transition: border ease 0.3s;
+    transition: border ease 0.5s;
+    border-radius: 4px;
     &.is-active {
       border: 1px solid $--color-primary;
-      border-radius: 4px;
     }
   }
   .el-collapse-item__header, .el-collapse-item__wrap {
@@ -46,14 +58,11 @@
   }
   .el-collapse-item__header {
     color: $--color-primary;
-    height: 40px;
-    line-height: 40px;
+    // height: 40px;
+    // line-height: 40px;
   }
   .el-collapse-item__main {
     padding-bottom: 0px;
-  }
-  .el-collapse-item__wrap {
-    overflow: initial !important;
   }
   .el-collapse-item__content {
     padding-bottom: 0 !important;

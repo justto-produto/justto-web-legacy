@@ -1,4 +1,4 @@
-@import '../variables/colors';
+@import '../colors';
 
 .el-tag--dropzone {
   width: 100%;
@@ -58,4 +58,6 @@
   color: $--color-white !important;
   border: 0 !important;
   min-width: 200px;
+  height: 36px;
+  line-height: 36px;
 }
