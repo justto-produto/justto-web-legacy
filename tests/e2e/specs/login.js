@@ -5,41 +5,31 @@ context('Actions', () => {
     cy.visit('http://localhost:8080/login')
   })
 
+  it('Cadastrar usuário', () => {
+  // https://on.cypress.io/type
+    cy.contains('Cadastre').click()
+  
+    // Fills 'Nome' field
+      cy.get('[name=register-name]')
+        .type('nome')
+    // Fills 'Email' field
+      cy.get('[name=register-email]')
+        .type('e@mail.com')
+    // Fills 'Senha' field
+      cy.get('[name=register-password')
+        .type('password')
+    // Press 'Cadastrar' buttom
+      //cy.contains('Cadastrar').click()  
+  })
+
   // Acessando página de Login do justto-web
-  it('Primeiro Acesso - Onboarding', () => {
+
+  it('Acessando Página de Login ', () => {
     // https://on.cypress.io/type
     cy.get('[name=login-email]')
-      .type('jodupeda@nando1.com')
+      .type('sesum@zdfpost.net')
+
     cy.get('[name=login-password]')
       .type('password')
     // Press 'Enter' buttom
     cy.contains('Entrar').click()
-
-  // Welcome - Onboarding
-    cy.contains('Vamos começar').click()
-    // Team Name
-    cy.get('[name=name]').type('Nome Equipe')
-      cy.contains('Próximo').then($els => $els.get(0))
-        .click()
-    // Workspace Name
-    cy.get('[name=subdomain]').type('subdomain')
-      cy.get('.onboarding-step-content.onboarding-subdomain-step > .el-button.el-button--primary')
-        .click()
-    // OAB
-      cy.contains('Pular').then($els => $els.get(1))
-        .click()
-    // Adicionar Pessoas
-      cy.get('[name=teamMember]').type('justice@forall.com')
-        cy.get('[class=el-icon-plus]').click()
-      cy.contains('Convidar').then($els => $els.get(1))
-        .click()
-    // Sinc E-mail
-      cy.contains('Pular').then($els => $els.get(3))
-        .click()
-    // Sinc WhatsApp
-      cy.contains('Pular').then($els => $els.get(4))
-        .click()
-    // Concluir
-      cy.contains('Inserir primeiros casos').click()
-  })
-})
