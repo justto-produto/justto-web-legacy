@@ -116,7 +116,8 @@ router.beforeEach((to, from, next) => {
         } else next('onboarding')
       }
     } else next('login')
-  } else next()
+  } else if( from.query.token ) next(false)
+  else next()
 })
 
 router.afterEach((to, from) => {
