@@ -49,7 +49,7 @@ export default {
       companies: []
     }
   },
-  beforeCreate() {
+  beforeCreate () {
     if (!this.$store.getters.hasImportsFile) {
       this.$router.push('/import')
     }
@@ -57,7 +57,7 @@ export default {
   methods: {
     nextStep () {
       if (this.activeStep === 1) {
-        this.$store.dispatch('mapImportColumns').then(response => {
+        this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
           this.companies = response
         })
       }

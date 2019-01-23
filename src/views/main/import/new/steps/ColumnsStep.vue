@@ -130,7 +130,6 @@ export default {
   name: 'ColumnsStep',
   data () {
     return {
-      columns: [],
       tags: {},
       disputeTags: [],
       claimantParties: [],
@@ -144,7 +143,7 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('getImportsColumns').then(columns => {
-      this.columns = columns
+      // this.columns = columns
       this.loadingColumns = false
     }).catch(error => {
       console.error(error)
@@ -177,6 +176,11 @@ export default {
         duration: 5000
       })
     })
+  },
+  computed: {
+    columns () {
+      return this.$store.state.importModule.map
+    }
   },
   methods: {
     dragTag (event, tag) {
