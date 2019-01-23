@@ -21,10 +21,10 @@
                 :before-upload="beforeUpload"
                 :on-error="handleError"
                 :disabled="hasFile"
-                accept=".csv,.xlsx,.xls,.odt"
+                accept=".csv,.xlsx,.xls"
                 action="https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/upload">
                 <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
-                <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV, XLS ou ODT</div>
+                <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
               </el-upload>
             </el-card>
             <!-- <el-card v-if="!hasFile" class="view-import__method el-card--dashed-hover el-card--vertical-content" shadow="never">
@@ -91,8 +91,8 @@ export default {
       const isValid =
       file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
       file.type === 'application/vnd.ms-excel' ||
-      file.type === 'text/csv' ||
-      file.type === 'application/vnd.oasis.opendocument.text'
+      file.type === 'text/csv'
+      // file.type === 'application/vnd.oasis.opendocument.text'
       const isLt20M = file.size / 1024 / 1024 < 20
       if (!isValid) {
         this.$notify({
