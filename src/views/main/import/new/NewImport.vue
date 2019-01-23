@@ -87,6 +87,9 @@ export default {
   >*:not(.columns-step) {
     width: 500px;
   }
+  .el-collapse--bordered {
+    min-width: 100%;
+  }
 }
 .view-import-new__steps {
   margin-top: 20px;
