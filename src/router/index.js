@@ -86,7 +86,7 @@ const router = new Router({
     {
       name: 'onboarding',
       path: '/onboarding',
-      component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding'),
+      component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/Onboarding'),
       meta: {
         requiresAuth: true
       }
@@ -116,7 +116,8 @@ router.beforeEach((to, from, next) => {
         } else next('onboarding')
       }
     } else next('login')
-  } else next()
+  } else if (from.query.token) next(false)
+  else next()
 })
 
 router.afterEach((to, from) => {

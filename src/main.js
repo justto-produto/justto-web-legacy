@@ -13,6 +13,9 @@ import '@/plugins/awesomeSwiper'
 import '@/plugins/socket'
 import '@/plugins/moment'
 
+// filters
+import '@/filters/capitalize'
+
 // css
 import '@/styles/core.scss'
 import '@/styles/transitions.scss'

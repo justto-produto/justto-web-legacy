@@ -44,14 +44,20 @@ export default {
   },
   data () {
     return {
+      uploadId: undefined,
       activeStep: 0,
       companies: []
+    }
+  },
+  beforeCreate () {
+    if (!this.$store.getters.hasImportsFile) {
+      this.$router.push('/import')
     }
   },
   methods: {
     nextStep () {
       if (this.activeStep === 1) {
-        this.$store.dispatch('mapImportColumns').then(response => {
+        this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
           this.companies = response
         })
       }
@@ -86,6 +92,9 @@ export default {
 .view-import-new__content {
   >*:not(.columns-step) {
     width: 500px;
+  }
+  .el-collapse--bordered {
+    min-width: 100%;
   }
 }
 .view-import-new__steps {

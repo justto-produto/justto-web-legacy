@@ -21,10 +21,12 @@
                 :before-upload="beforeUpload"
                 :on-error="handleError"
                 :disabled="hasFile"
-                accept=".csv,.xlsx,.xls,.odt"
-                action="https://64bd150f-5317-4c5d-abc9-b8271f00f3c4.mock.pstmn.io/imports/upload">
+                :headers="uploadHeaders"
+                accept=".csv,.xlsx,.xls"
+                action="http://homol.justto.com.br/api/imports/upload">
+                <!-- :action="axios.defaults.baseURL"> -->
                 <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
-                <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV, XLS ou ODT</div>
+                <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
               </el-upload>
             </el-card>
             <!-- <el-card v-if="!hasFile" class="view-import__method el-card--dashed-hover el-card--vertical-content" shadow="never">
@@ -34,7 +36,7 @@
           </div>
           <div v-if="hasFile" class="view-import__actions">
             <el-button plain @click="removeFile">Voltar</el-button>
-            <el-button type="primary" @click="nextStep">Próximo</el-button>
+            <el-button type="primary" @click="startImport">Próximo</el-button>
           </div>
         </div>
       </template>
@@ -75,9 +77,14 @@ export default {
     }
   },
   computed: {
-    // TODO DEV RETIRAR
     hasFile () {
       return this.fileUrl !== ''
+    },
+    uploadHeaders () {
+      return {
+        'Authorization': this.$store.state.accountModule.token,
+        'Workspace': this.$store.state.workspaceModule.subdomain
+      }
     }
   },
   beforeMount () {
@@ -85,14 +92,17 @@ export default {
       this.importsHistory = response
     })
   },
+  beforeCreate () {
+    this.$store.commit('removeImportsFile')
+  },
   methods: {
     beforeUpload (file) {
       this.$notify.closeAll()
       const isValid =
       file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
       file.type === 'application/vnd.ms-excel' ||
-      file.type === 'text/csv' ||
-      file.type === 'application/vnd.oasis.opendocument.text'
+      file.type === 'text/csv'
+      // file.type === 'application/vnd.oasis.opendocument.text'
       const isLt20M = file.size / 1024 / 1024 < 20
       if (!isValid) {
         this.$notify({
@@ -116,11 +126,11 @@ export default {
       }
       return isValid && isLt20M
     },
-    // TODO DEV RETIRAR
-    nextStep () {
+    startImport () {
       this.$router.push('/import/new')
     },
     handleSuccess (res, file) {
+      this.$store.commit('setImportsFile', res)
       this.fileUrl = URL.createObjectURL(file.raw)
     },
     handleError () {
@@ -136,6 +146,7 @@ export default {
     },
     removeFile () {
       this.fileUrl = ''
+      this.$store.commit('removeImportsFile')
       this.$refs['uploadMethod'].clearFiles()
     }
   }
