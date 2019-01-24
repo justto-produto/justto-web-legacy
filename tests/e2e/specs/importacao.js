@@ -35,6 +35,10 @@ context('Actions', () => {
         cy.get('[name=import-menu-icon]')
             .click()
         cy.wait(2000)
+        // Select 'Importação de Casos' on menu
+        cy.get('[name=import-menu-icon]')
+            .click()
+        cy.wait(2000)
 
         cy.contains('você não possui importações')
         cy.screenshot('testevidence/import/CT2-2')
@@ -42,9 +46,21 @@ context('Actions', () => {
     })
 
     it('CT2.3 - Importaçao de Casos: Sucesso', () => {
-        const fileName = 'planilha.xlsx';
-        const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        const fileInput = 'input[type=file]';
+        // Login
+        cy.get('[name=login-email]')
+            .type('henriquebmx@gmail.com')
+        cy.get('[name=login-password]')
+            .type('123456')
+        cy.contains('Entrar').click()
+        cy.wait(2000)
+        // Select 'Importação de Casos' on menu
+        cy.get('[name=import-menu-icon]')
+            .click()
+        cy.wait(2000)
+        // Upload
+        const fileName = ('planilha.xlsx')
+        const fileType = ('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        const fileInput = ('input[type=file]')
 
         cy.upload_file(fileName, fileType, fileInput);
         cy.get('[class=el-upload el-upload--text]')
@@ -53,12 +69,20 @@ context('Actions', () => {
     })
 
     it('CT2.4 - Importaçao de Casos: Falha', () => {
-        const fileName = 'planilha.xlsx';
-        const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        const fileInput = 'input[type=file]';
+        // Login
+        cy.get('[name=login-email]')
+            .type('henriquebmx@gmail.com')
+        cy.get('[name=login-password]')
+            .type('123456')
+        cy.contains('Entrar').click()
+        cy.wait(2000)
+        // Upload
+        const fileName = ('planilha.xlsx')
+        const fileType = ('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        const fileInput = ('input[type=file]')
 
-        cy.upload_file(fileName, fileType, fileInput);
-        cy.get('[class=el-upload el-upload--text]')
+        cy.upload_file(fileName, fileType, fileInput)
+        cy.get('[class=el-upload__input]')
             .type('el-upload__input')
         cy.wait(4000)
     })
