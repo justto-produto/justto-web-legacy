@@ -147,8 +147,7 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('getImportsColumns').then(columns => {
-      // this.columns = columns
+    this.$store.dispatch('getImportsColumns').then(() => {
       this.loadingColumns = false
     }).catch(error => {
       console.error(error)
