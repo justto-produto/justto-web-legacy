@@ -13,7 +13,7 @@ const imports = {
     setImportsMap (state, map) {
       state.map = map
     },
-    removeImportsMap (map) {
+    removeImportsMap (state, map) {
       state.map = []
     }
   },

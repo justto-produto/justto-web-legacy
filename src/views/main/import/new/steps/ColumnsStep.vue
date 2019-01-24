@@ -141,6 +141,11 @@ export default {
       errorTags: false
     }
   },
+  computed: {
+    columns () {
+      return this.$store.state.importModule.map
+    }
+  },
   beforeMount () {
     this.$store.dispatch('getImportsColumns').then(columns => {
       // this.columns = columns
@@ -176,11 +181,6 @@ export default {
         duration: 5000
       })
     })
-  },
-  computed: {
-    columns () {
-      return this.$store.state.importModule.map
-    }
   },
   methods: {
     dragTag (event, tag) {
