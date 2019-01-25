@@ -26,7 +26,7 @@ const router = new Router({
         },
         {
           path: 'management',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management')
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management')
         },
         {
           path: 'settings',

@@ -1,5 +1,42 @@
 @import '../colors';
 
+.el-table--card {
+  th {
+    font-weight: 500;
+  }
+  thead {
+    color: $--color-text-regular;
+  }
+  th.is-leaf, td {
+    border: 0;
+  }
+  &::before {
+    height: 0px;
+  }
+  .el-table__header {
+    width: auto !important;
+    padding: 0 20px;
+    .el-table-column--selection {
+      padding-left: 4px;
+    }
+  }
+  .el-table__body {
+    padding: 0 20px;
+    border-spacing: 0px 20px;
+    width: auto !important;
+  }
+  .el-table__row {
+    border-radius: 4px;
+    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
+    background-color: #ffffff;
+    height: 56px;
+    .el-table-column--selection {
+      border-left: 4px solid #72cbff;
+      border-radius: 4px;
+    }
+  }
+}
+
 .el-table--feedback-card {
   .el-table__header {
     th {
