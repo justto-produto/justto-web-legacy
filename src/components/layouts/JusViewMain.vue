@@ -1,6 +1,6 @@
 <template>
   <div class="jus-main-view">
-    <h1 v-if="this.$slots['title']"><slot name="title"/></h1>
+    <div v-if="this.$slots['title']"><slot name="title"/></div>
     <div class="jus-main-view__horizontal">
       <el-card class="jus-main-view__main-card">
         <slot name="main"/>

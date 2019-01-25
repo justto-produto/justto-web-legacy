@@ -218,7 +218,7 @@ export default {
       list.push(lastIndex + 1)
     },
     removeTagList (list) {
-      this.removeLink(list)
+      // this.removeLink(list)
       list.splice(-1, 1)
     },
     removeLink (array) {
