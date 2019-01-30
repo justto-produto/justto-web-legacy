@@ -229,9 +229,11 @@ export default {
   >:last-child {
     width: 20%;
   }
-  margin-top: -150px;
+  margin-top: -44px;
+  transform: translateY(-100%);
   &.active {
     margin-top: -20px;
+    transform: translateY(0%);
   }
   i {
     cursor: pointer;

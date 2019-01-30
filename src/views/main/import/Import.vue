@@ -1,7 +1,9 @@
 <template>
   <div class="view-import view-import--main">
     <jus-view-main side-card-width="400">
-      <template slot="title">Importação de casos</template>
+      <template slot="title">
+        <h1>Importação de casos</h1>
+      </template>
       <template slot="main">
         <div class="view-import__container">
           <div class="view-import__title">
@@ -227,6 +229,7 @@ export default {
 .view-import__method-info {
   margin-top: 10px;
   text-align: center;
+  transition: all ease .5s;
 }
 
 .view-import__method-loading {
