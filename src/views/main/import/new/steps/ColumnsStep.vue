@@ -147,7 +147,12 @@ export default {
     }
   },
   beforeMount () {
+<<<<<<< HEAD
     this.$store.dispatch('getImportsColumns').then(() => {
+=======
+    this.$store.dispatch('getImportsColumns').then(columns => {
+      // this.columns = columns
+>>>>>>> feature/MIS-10
       this.loadingColumns = false
     }).catch(error => {
       console.error(error)
@@ -180,6 +185,11 @@ export default {
         duration: 5000
       })
     })
+  },
+  computed: {
+    columns () {
+      return this.$store.state.importModule.map
+    }
   },
   methods: {
     dragTag (event, tag) {

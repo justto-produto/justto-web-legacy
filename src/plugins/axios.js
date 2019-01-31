@@ -38,7 +38,12 @@ _axios.interceptors.request.use(
 // Add a response interceptor
 _axios.interceptors.response.use(
   function (response) {
-    // Do something with response data
+    if (response.status === 204 && response.config && !response.config.__isRetryRequest) {
+      response.config.__isRetryRequest = true
+      setTimeout(function () {
+        return axios(response.config)
+      }, 1000)
+    }
     return response
   },
   function (error) {
