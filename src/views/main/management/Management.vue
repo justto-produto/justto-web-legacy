@@ -78,7 +78,37 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="Com interação" name="2">
-          <div class="view-management__container"><h1>Em construção</h1></div>
+          <el-table
+            ref="engagementTable"
+            :data="cases"
+            class="el-table--card"
+            @selection-change="handleSelectionChange">
+            <el-table-column type="selection" />
+            <el-table-column label="Campanha">
+              <template slot-scope="scope">{{ scope.row.campaign }}</template>
+            </el-table-column>
+            <el-table-column label="Parte contrária">
+              <template slot-scope="scope">{{ scope.row.claimantParty }}</template>
+            </el-table-column>
+            <el-table-column label="Advogado da parte">
+              <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
+            </el-table-column>
+            <el-table-column label="Alçada máxima">
+              <template slot-scope="scope">{{ scope.row.max }}</template>
+            </el-table-column>
+            <el-table-column label="Contraproposta">
+              <template slot-scope="scope">{{ scope.row.contraProposal }}</template>
+            </el-table-column>
+            <el-table-column label="Fim da negociação">
+              <template slot-scope="scope">{{ scope.row.deadline }}</template>
+            </el-table-column>
+            <el-table-column label="Última Interação">
+              <template slot-scope="scope">{{ scope.row.lastInteraction }}</template>
+            </el-table-column>
+            <el-table-column label="" width="40">
+              <template slot-scope="scope"><i class="el-icon-more" style="font-size: 18px"/></template>
+            </el-table-column>
+          </el-table>
         </el-tab-pane>
         <el-tab-pane label="Novos Acordos" name="3">
           <div class="view-management__container"><h1>Em construção</h1></div>
@@ -102,7 +132,10 @@ export default {
         claimantLawyer: 'Cleiton Pereira da Silva',
         max: 'R$10.000',
         proposalValue: 'R$3.000',
+        contraProposal: 'R$3.000',
         deadline: '28/11/2020',
+        lastInteraction: '28/11/2019',
+        call: 'whatsapp',
         responsibles: ''
       }, {
         campaign: 'NATAL - Nestlé',
@@ -110,7 +143,10 @@ export default {
         claimantLawyer: 'Cleiton Pereira da Silva',
         max: 'R$10.000',
         proposalValue: 'R$3.000',
+        contraProposal: 'R$3.000',
         deadline: '28/11/2020',
+        lastInteraction: '28/11/2019',
+        call: 'sms',
         responsibles: ''
       }, {
         campaign: 'NATAL - Nestlé',
@@ -118,7 +154,10 @@ export default {
         claimantLawyer: 'Cleiton Pereira da Silva',
         max: 'R$10.000',
         proposalValue: 'R$3.000',
+        contraProposal: 'R$3.000',
         deadline: '28/11/2020',
+        lastInteraction: '28/11/2019',
+        call: 'email',
         responsibles: ''
       }],
       multipleSelection: []
