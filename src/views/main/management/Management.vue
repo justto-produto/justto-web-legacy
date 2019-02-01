@@ -3,25 +3,29 @@
     <template slot="title">
       <h1>Gerenciamento</h1>
 
-        <div class="view-management__carousel">
-          <carousel :items="2" :dots="false" :nav="false" :loop="true">
-            <template slot="prev"><i class="el-icon-arrow-left" /></template>
-            <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
-              10% das suas contrapropostas foram aceitas
-              <el-button type="transparent">Ver casos</el-button>
-            </el-card>
-            <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
-              Você possui casos que precisam da sua revisão
-              <el-button type="transparent">Resolver</el-button>
-            </el-card>
-            <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
-              Você possui casos que precisam da sua revisão
-              <el-button type="transparent">Resolver</el-button>
-            </el-card>
-            <template slot="next"><i class="el-icon-arrow-right" /></template>
-          </carousel>
-        </div>
-
+      <div class="view-management__carousel">
+        <carousel
+          :items="2"
+          :dots="false"
+          :nav="false"
+          :loop="true"
+        >
+          <template slot="prev"><i class="el-icon-arrow-left" /></template>
+          <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
+            10% das suas contrapropostas foram aceitas
+            <el-button type="transparent">Ver casos</el-button>
+          </el-card>
+          <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
+            Você possui casos que precisam da sua revisão
+            <el-button type="transparent">Resolver</el-button>
+          </el-card>
+          <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
+            Você possui casos que precisam da sua revisão
+            <el-button type="transparent">Resolver</el-button>
+          </el-card>
+          <template slot="next"><i class="el-icon-arrow-right" /></template>
+        </carousel>
+      </div>
 
       <!-- <el-carousel
         :autoplay="false"
