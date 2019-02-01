@@ -1,8 +1,6 @@
 <template>
   <div class="jus-sidenav-external">
-    <a href="#" @click="$router.push('/')">
-      <img class="jus-sidenav-externa__logo" src="@/assets/logo.svg">
-    </a>
+    <img class="jus-sidenav-externa__logo" src="@/assets/logo.svg">
   </div>
 </template>
 

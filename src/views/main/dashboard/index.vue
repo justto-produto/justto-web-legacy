@@ -1,7 +1,7 @@
 <template>
   <JusViewMain class="dashboard-container">
     <template slot="title">
-      <h1>Dashboard</h1>
+      Dashboard
     </template>
     <template slot="main">
       <!-- <div style="display: flex; justify-content: center;">
