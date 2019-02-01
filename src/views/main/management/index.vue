@@ -63,7 +63,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column label="Responsáveis" min-width="80">
-                      <template slot-scope="scope">
+                      <template>
                         <span class="responsibles-box">
                           <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
                           <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
@@ -72,7 +72,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column>
-                      <template slot-scope="scope" style="text-align: right;">
+                      <template style="text-align: right;">
                         • • •
                       </template>
                     </el-table-column>
@@ -125,7 +125,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column label="Responsáveis" min-width="80">
-                      <template slot-scope="scope">
+                      <template>
                         <span class="responsibles-box">
                           <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
                           <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
@@ -134,7 +134,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column>
-                      <template slot-scope="scope" style="text-align: right;">
+                      <template style="text-align: right;">
                         • • •
                       </template>
                     </el-table-column>
@@ -172,7 +172,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column label="Responsáveis" min-width="80">
-                      <template slot-scope="scope">
+                      <template>
                         <span class="responsibles-box">
                           <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
                           <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
@@ -181,7 +181,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column>
-                      <template slot-scope="scope" style="text-align: right;">
+                      <template style="text-align: right;">
                         • • •
                       </template>
                     </el-table-column>
@@ -239,7 +239,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column label="Responsáveis" min-width="100">
-                      <template slot-scope="scope">
+                      <template>
                         <span class="responsibles-box">
                           <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
                           <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
@@ -248,7 +248,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column>
-                      <template slot-scope="scope" style="text-align: right;">
+                      <template style="text-align: right;">
                         • • •
                       </template>
                     </el-table-column>
@@ -306,7 +306,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column label="Responsáveis" min-width="100">
-                      <template slot-scope="scope">
+                      <template>
                         <span class="responsibles-box">
                           <jus-avatar-user src="http://www.abc.net.au/reslib/201011/r679209_5007178.jpg" size="xs" shape="circle"/>
                           <jus-avatar-user src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" size="xs" shape="circle"/>
@@ -315,7 +315,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column>
-                      <template slot-scope="scope" style="text-align: right;">
+                      <template style="text-align: right;">
                         • • •
                       </template>
                     </el-table-column>
