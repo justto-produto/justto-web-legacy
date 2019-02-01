@@ -155,6 +155,7 @@ export default {
 <style lang="scss">
 .onboarding-whatsapp-step {
   .whatsapp-step--status {
+    margin-bottom: 20px;
     strong {
       margin: 0 8px 0 4px;
     }

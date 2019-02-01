@@ -1,8 +1,8 @@
 <template>
   <div class="onboarding-step-content">
     <div class="onboarding-step-content__title">
-      <h2>Para começar, qual o nome da sua equipe?</h2>
-      <p>Você pode colocar o nome do seu escritório ou empresa, por exemplo.</p>
+      <h2>Qual o nome da sua equipe?</h2>
+      <p>Você pode colocar o nome do seu escritório ou empresa. Por exemplo, Dias e Ramos Advogados Associados.</p>
     </div>
     <el-form
       ref="nameForm"

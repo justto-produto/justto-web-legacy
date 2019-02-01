@@ -140,6 +140,7 @@ export default {
     max-width: 400px;
   }
   .email-step--status {
+    margin-bottom: 20px;
     strong {
       margin: 0 8px 0 4px;
     }

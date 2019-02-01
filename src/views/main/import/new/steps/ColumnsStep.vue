@@ -147,12 +147,7 @@ export default {
     }
   },
   beforeMount () {
-<<<<<<< HEAD
     this.$store.dispatch('getImportsColumns').then(() => {
-=======
-    this.$store.dispatch('getImportsColumns').then(columns => {
-      // this.columns = columns
->>>>>>> feature/MIS-10
       this.loadingColumns = false
     }).catch(error => {
       console.error(error)
