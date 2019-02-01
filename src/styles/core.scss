@@ -19,16 +19,27 @@ body, html, #app, section:not(.ps-container) {
 }
 
 h1 {
-  font-size: 2.2rem;
-  font-weight: normal;
+  font-size: 30px;
+  font-weight: 500;
 }
 
 h2 {
-  font-size: 1.45rem;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 h3 {
+  font-size: 16px;
+  font-weight: normal;
   line-height: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 20px;
 }
 
 hr {

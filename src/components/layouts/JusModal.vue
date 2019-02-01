@@ -4,6 +4,9 @@
       <div class="jus-modal__wrapper">
         <el-card class="jus-modal__container">
           <div class="jus-modal__header">
+            <button class="jus-modal__close" @click="$emit('modal:close')">
+              <i class="el-icon-close" />
+            </button>
             <slot name="header"/>
           </div>
           <div class="jus-modal__body">
@@ -25,38 +28,52 @@ export default {
 </script>
 
 <style lang="scss">
-.jus-modal__mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0, 0.5);
-  display: table;
-  transition: opacity .3s ease;
-}
-.jus-modal__wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-.jus-modal__container {
-  width: 600px;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
-}
-.jus-modal__header {
-  width: 100%;
-}
-.jus-modal__body {
-  margin: 20px 0;
-  width: 100%;
-}
-.jus-modal__footer {
-  width: 100%;
+.jus-modal {
+  &__mask {
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, 0.5);
+    display: table;
+    transition: opacity .3s ease;
+  }
+  &__wrapper {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  &__container {
+    width: 600px;
+    margin: 0px auto;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+  }
+  &__header {
+    position: relative;
+    width: 100%;
+  }
+  &__body {
+    padding-top: 20px;
+    width: 100%;
+  }
+  &__footer {
+    text-align: right;
+    padding-top: 20px;
+  }
+  &__close {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+  }
 }
 </style>
