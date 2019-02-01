@@ -2,11 +2,30 @@
   <JusViewMain side-card class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <el-carousel
+
+
+        <carousel :autoplay="false" :items="2">
+          <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
+            10% das suas contrapropostas foram aceitas
+            <el-button type="transparent">Ver casos</el-button>
+          </el-card>
+          <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
+            Você possui casos que precisam da sua revisão
+            <el-button type="transparent">Resolver</el-button>
+          </el-card>
+          <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
+            Você possui casos que precisam da sua revisão
+            <el-button type="transparent">Resolver</el-button>
+          </el-card>
+        </carousel>
+
+
+      <!-- <el-carousel
         :autoplay="false"
         arrow="always"
         indicator-position="none"
-        height="70px">
+        height="70px"
+      >
         <el-carousel-item>
           <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
             10% das suas contrapropostas foram aceitas
@@ -22,7 +41,7 @@
             Você possui casos que precisam da sua revisão
           </el-card>
         </el-carousel-item>
-      </el-carousel>
+      </el-carousel> -->
     </template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
@@ -176,8 +195,13 @@
 </template>
 
 <script>
+import carousel from 'vue-owl-carousel'
+
 export default {
   name: 'Management',
+  components: {
+    carousel
+  },
   data () {
     return {
       cases: [{
