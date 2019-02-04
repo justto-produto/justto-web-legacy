@@ -3,14 +3,17 @@
     <template slot="title">
       <h1>Gerenciamento</h1>
 
-      <div class="view-management__carousel">
+      <div class="view-management__carousel-container">
+        <span @click="prevSlide"><i class="el-icon-arrow-left" /></span>
         <carousel
           :items="2"
-          :dots="false"
           :nav="false"
-          :loop="true"
+          :dots="false"
+          :loop="false"
+          :rewind="true"
+          :margin="20"
+          class="view-management__carousel-slider"
         >
-          <template slot="prev"><i class="el-icon-arrow-left" /></template>
           <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
             10% das suas contrapropostas foram aceitas
             <el-button type="transparent">Ver casos</el-button>
@@ -23,8 +26,8 @@
             Você possui casos que precisam da sua revisão
             <el-button type="transparent">Resolver</el-button>
           </el-card>
-          <template slot="next"><i class="el-icon-arrow-right" /></template>
         </carousel>
+        <span @click="nextSlide"><i class="el-icon-arrow-right" /></span>
       </div>
 
       <!-- <el-carousel
@@ -283,6 +286,15 @@ export default {
       //   this.tabIndex = this.$refs['management-tabs'].currentName
       //   this.checkList = []
       // }
+    },
+    nextSlide () {
+      $('.owl-carousel').owlCarousel();
+      $('.owl-carousel').trigger('next.owl.carousel')
+    },
+    prevSlide () {
+      var owl = $('.owl-carousel');
+      owl.owlCarousel();
+      owl.trigger('prev.owl.carousel')
     }
   }
 }
@@ -290,8 +302,23 @@ export default {
 
 <style lang="scss">
 .view-management {
-  &__carousel{
-    width: 65%;
+  &__carousel-container{
+    width: 67%;
+    display: flex;
+    align-items: center;
+    > span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+      width: 20px;
+      font-size: 1.4rem;
+      color: #adadad;
+    }
+  }
+  &__carousel-slider {
+    width: calc(100% - 60px);
+    margin: 0 10px;
   }
   &__call-icon {
     margin-right: 10px;
