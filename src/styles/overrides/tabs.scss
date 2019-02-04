@@ -1,3 +1,8 @@
+.el-tabs__item {
+  height: 36px;
+  line-height: 36px;
+}
+
 .el-tabs--card {
   & > .el-tabs__header {
     border: 0;
@@ -27,10 +32,10 @@
   }
 }
 
-.el-tabs--hide-prev .el-tabs__nav-prev {
-  display: none;
-}
-
-.el-tabs--hide-next .el-tabs__nav-next {
-  display: none;
-}
+// .el-tabs--hide-prev .el-tabs__nav-prev {
+//   display: none;
+// }
+//
+// .el-tabs--hide-next .el-tabs__nav-next {
+//   display: none;
+// }

@@ -76,3 +76,14 @@
     background: url('../../assets/backgrounds/bg-purple.svg') no-repeat center;
   }
 }
+
+.el-card--bg{
+  &-primary .el-card__body{
+    background-image: linear-gradient(to right, $--color-primary-light-1, #4e00e6);
+    color: $--color-white;
+  }
+  &-secondary .el-card__body{
+    background-image: linear-gradient(to right, #ff813f, $--color-secondary);
+    color: $--color-white;
+  }
+}

@@ -1,3 +1,26 @@
+@import '../colors';
+
+.el-button--secondary {
+  color: #fff;
+  background-color: $--color-secondary;
+  border-color: $--color-secondary;
+  &:hover {
+    background: $--color-secondary-light-2;
+    border-color: $--color-secondary-light-2;
+    color: #fff;
+  }
+}
+
+.el-button--transparent {
+  background-color: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.6);
+  &:hover {
+    color: $--color-text-regular;
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+}
+
 .el-button--input-float {
   font-size: 12px;
   position: absolute;

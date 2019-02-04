@@ -12,6 +12,7 @@ import '@/plugins/scrollTo'
 import '@/plugins/awesomeSwiper'
 import '@/plugins/socket'
 import '@/plugins/moment'
+import '@/plugins/chatScroll'
 
 // filters
 import '@/filters/capitalize'
@@ -55,12 +56,14 @@ import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
 import JusStatusDot from '@/components/others/JusStatusDot'
+import JusModal from '@/components/layouts/JusModal'
 
 Vue.component('JusIcon', JusIcon)
 Vue.component('JusAvatarUser', JusAvatarUser)
 Vue.component('JusViewMain', JusViewMain)
 Vue.component('JusButtonBack', JusButtonBack)
 Vue.component('JusStatusDot', JusStatusDot)
+Vue.component('JusModal', JusModal)
 
 Vue.config.productionTip = false
 

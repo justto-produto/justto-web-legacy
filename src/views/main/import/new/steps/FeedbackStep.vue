@@ -1,14 +1,14 @@
 <template>
   <div class="feedback-step">
-    <h2 class="view-import-new__title">Resumo</h2>
+    <h2 class="new-import-view__title">Resumo</h2>
     <p>
       Agrupamos seus casos por empresas. Cada empresa possui a sua Campanha, que você poderá, posteriormente, editar
       as existentes ou criar novas Campanhas.
       <br><br>
       <a href="#">Entenda o que são, e como funcionam as Campanhas.</a>
     </p>
-    <div class="view-import__container">
-      <div class="view-import__content">
+    <div class="import-view__container">
+      <div class="import-view__content">
         <jus-import-feedback-card
           v-for="(company, index) in companies"
           :company="company"
@@ -59,7 +59,7 @@ export default {
     max-width: 600px;
     margin: auto;
   }
-  .view-import__content {
+  .import-view__content {
     display: flex;
     flex-direction: column;
     align-items: center;

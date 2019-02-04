@@ -83,7 +83,7 @@
         <el-collapse v-loading="$store.state.loading" class="jus-import-feedback-card__engagement el-collapse--bordered">
           <el-collapse-item v-for="(step, key) in strategyEngagements" :key="step + key">
             <template slot="title">
-              <jus-icon icon="sms"/> {{ step.name | capitalize }}
+              <jus-icon icon="message"/> {{ step.name | capitalize }}
             </template>
             <!-- {{ step.template.subject }}
             {{ step.template.message }} -->

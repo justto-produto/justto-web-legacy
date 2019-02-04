@@ -30,24 +30,6 @@ const imports = {
           })
       })
     },
-    // pollingImportsColumns ({ state, dispatch }) {
-    //   return new Promise((resolve, reject) => {
-    //     // eslint-disable-next-line
-    //     axios.get('http://homol.justto.com.br/api/imports/' + state.file.id + '/columns')
-    //       .then(response => {
-    //         if (response.status === 204) {
-    //           setTimeout(function () {
-    //             dispatch.('pollingImportsColumns')
-    //           }, 1000);
-    //         } else {
-    //           resolve(response.data)
-    //           commit('setImportsMap', response.data)
-    //         }
-    //       })
-    //       .catch(error => {
-    //       })
-    //   })
-    // },
     getImportsColumns ({ commit, state, dispatch }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -58,8 +40,8 @@ const imports = {
                 resolve(dispatch('getImportsColumns'))
               }, 1000)
             } else {
-              commit('setImportsMap')
-              resolve(response.data)
+              commit('setImportsMap', response.data)
+              resolve()
             }
           })
           .catch(error => {
