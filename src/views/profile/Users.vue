@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain side-card>
+  <JusViewMain>
     <template slot="title">Gerenciamento de usuários</template>
     <template slot="main">
       usuários

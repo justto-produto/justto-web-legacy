@@ -1,6 +1,6 @@
 <template>
   <div class="enrichment-step">
-    <h2 class="view-import-new__title">Enriquecimento</h2>
+    <h2 class="new-import-view__title">Enriquecimento</h2>
     <p>
       A inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, aprende
       cada vez mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada

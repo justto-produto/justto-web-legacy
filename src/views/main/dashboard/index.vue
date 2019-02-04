@@ -1,10 +1,13 @@
 <template>
-  <JusViewMain class="dashboard-container">
+  <JusViewMain class="dashboard-view">
     <template slot="title">
-      Dashboard
+      <h1>
+        Dashboard
+      </h1>
     </template>
     <template slot="main">
-      <!-- <div style="display: flex; justify-content: center;">
+      <jus-chart-line :data="data" :options="options"/>
+      <div style="display: flex; justify-content: center;">
         <jus-chart-doughnut
           :data="[21, 23, 56]"
           :height="300"
@@ -13,9 +16,12 @@
           :data="[12, 32, 65]"
           :height="300"
           title="O" />
+        <jus-chart-doughnut
+          :data="[12, 32, 65]"
+          :height="300"
+          title="O" />
       </div>
-      <jus-chart-line :data="data" :options="options"/>
-      {{ $t('message') }} -->
+      <!-- {{ $t('message') }} -->
     </template>
   </JusViewMain>
 </template>
@@ -57,7 +63,4 @@ export default {
 </script>
 
 <style lang="scss">
-  .dashboard-container{
-    margin: 10px 20px 20px;
-  }
 </style>
