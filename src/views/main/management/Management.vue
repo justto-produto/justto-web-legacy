@@ -1,19 +1,17 @@
-<template>
+g<template>
   <JusViewMain class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-
       <div class="view-management__carousel-container">
-        <span @click="prevSlide"><i class="el-icon-arrow-left" /></span>
-        <carousel
+        <owl-carousel
           :items="2"
-          :nav="false"
+          :nav="true"
           :dots="false"
-          :loop="false"
-          :rewind="true"
+          :loop="true"
+          :rewind="false"
           :margin="20"
-          class="view-management__carousel-slider"
-        >
+          :nav-text="carouselIcons()"
+          class="view-management__carousel-slider">
           <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
             10% das suas contrapropostas foram aceitas
             <el-button type="transparent">Ver casos</el-button>
@@ -26,32 +24,8 @@
             Você possui casos que precisam da sua revisão
             <el-button type="transparent">Resolver</el-button>
           </el-card>
-        </carousel>
-        <span @click="nextSlide"><i class="el-icon-arrow-right" /></span>
+        </owl-carousel>
       </div>
-
-      <!-- <el-carousel
-        :autoplay="false"
-        arrow="always"
-        indicator-position="none"
-        height="70px"
-      >
-        <el-carousel-item>
-          <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
-            10% das suas contrapropostas foram aceitas
-            <el-button type="transparent">Ver casos</el-button>
-          </el-card>
-          <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
-            Você possui casos que precisam da sua revisão
-            <el-button type="transparent">Resolver</el-button>
-          </el-card>
-        </el-carousel-item>
-        <el-carousel-item>
-          <el-card class="view-management__info-card" shadow="never">
-            Você possui casos que precisam da sua revisão
-          </el-card>
-        </el-carousel-item>
-      </el-carousel> -->
     </template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
@@ -71,8 +45,7 @@
         ref="management-tabs"
         :fit="false"
         value="1"
-        class="view-management__tabs"
-        @tab-click="handleTabClick">
+        class="view-management__tabs">
         <el-tab-pane label="Engajamento" name="1">
           <el-table
             ref="engagementTable"
@@ -132,7 +105,7 @@
               <template slot-scope="scope">{{ scope.row.deadline }}</template>
             </el-table-column>
             <el-table-column label="Última Interação">
-              <template slot-scope="scope" class="view-management__flex"><jus-icon :icon="scope.row.call" is-active class="view-management__call-icon" />{{ scope.row.lastInteraction }}</template>
+              <template slot-scope="scope" class="view-management__flex"><jus-icon :icon="scope.row.call" class="view-management__call-icon" />{{ scope.row.lastInteraction }}</template>
             </el-table-column>
             <el-table-column label="" width="40">
               <template><i class="el-icon-more" style="font-size: 18px"/></template>
@@ -200,20 +173,31 @@
           </el-table>
         </el-tab-pane>
       </el-tabs>
+      <!-- <el-dialog
+        :visible.sync="dialogVisible"
+        title="Tips"
+        width="30%">
+        <span>This is a message</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+        </span>
+      </el-dialog> -->
     </template>
   </JusViewMain>
 </template>
 
 <script>
-import carousel from 'vue-owl-carousel'
+import OwlCarousel from 'vue-owl-carousel'
 
 export default {
   name: 'Management',
   components: {
-    carousel
+    OwlCarousel
   },
   data () {
     return {
+      dialogVisible: true,
       cases: [{
         number: '102983',
         campaign: 'NATAL - Nestlé',
@@ -281,20 +265,10 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    handleTabClick () {
-      // if (this.$refs['management-tabs']) {
-      //   this.tabIndex = this.$refs['management-tabs'].currentName
-      //   this.checkList = []
-      // }
-    },
-    nextSlide () {
-      $('.owl-carousel').owlCarousel();
-      $('.owl-carousel').trigger('next.owl.carousel')
-    },
-    prevSlide () {
-      var owl = $('.owl-carousel');
-      owl.owlCarousel();
-      owl.trigger('prev.owl.carousel')
+    carouselIcons () {
+      let prevIcon = require('@/assets/icons/ic-left.svg')
+      let nextIcon = require('@/assets/icons/ic-right.svg')
+      return ['<img src="' + prevIcon + '">', '<img src="' + nextIcon + '">']
     }
   }
 }
@@ -315,9 +289,27 @@ export default {
       font-size: 1.4rem;
       color: #adadad;
     }
+    .owl-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0px -31px 0 -41px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .owl-stage-outer {
+      border-radius: 5px;
+      z-index: 1;
+    }
+    .owl-prev, .owl-next {
+      background: transparent !important;
+    }
   }
   &__carousel-slider {
-    width: calc(100% - 60px);
+    width: calc(100% - 40px);
     margin: 0 10px;
   }
   &__call-icon {
