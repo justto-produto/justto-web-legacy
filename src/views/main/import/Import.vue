@@ -1,72 +1,70 @@
 <template>
-  <div class="view-import view-import--main">
-    <jus-view-main side-card-width="400">
-      <template slot="title">
-        <h1>Importação de casos</h1>
-      </template>
-      <template slot="main">
-        <div class="view-import__container">
-          <div class="view-import__title">
-            <h2 v-show="!hasFile">Adicione novos casos</h2>
-            <h2 v-show="hasFile">Planilha carregada com sucesso!</h2>
-            <p v-show="!hasFile">Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo
-              <br>
-              a forma de inclusão de novos casos em sua conta.
-            </p>
-          </div>
-          <div class="view-import__content view-import__content---methods">
-            <el-card :class="{'view-import__method-loading': hasFile}" class="view-import__method el-card--dashed-hover el-card--vertical-content" shadow="never">
-              <el-upload
-                ref="uploadMethod"
-                :show-file-list="true"
-                :on-success="handleSuccess"
-                :before-upload="beforeUpload"
-                :on-error="handleError"
-                :disabled="hasFile"
-                :headers="uploadHeaders"
-                accept=".csv,.xlsx,.xls"
-                action="http://homol.justto.com.br/api/imports/upload">
-                <!-- :action="axios.defaults.baseURL"> -->
-                <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
-                <div v-if="!hasFile" class="view-import__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
-              </el-upload>
-            </el-card>
-            <!-- <el-card v-if="!hasFile" class="view-import__method el-card--dashed-hover el-card--vertical-content" shadow="never">
-              <jus-icon icon="insert" is-active/>
-              <div class="view-import__method-info">Adicionar caso manualmente</div>
-            </el-card> -->
-          </div>
-          <div v-if="hasFile" class="view-import__actions">
-            <el-button plain @click="removeFile">Voltar</el-button>
-            <el-button type="primary" @click="startImport">Próximo</el-button>
-          </div>
+  <jus-view-main right-card-width="400" class="import-view">
+    <template slot="title">
+      <h1>Importação de casos</h1>
+    </template>
+    <template slot="main">
+      <div class="import-view__container">
+        <div class="import-view__title">
+          <h2 v-show="!hasFile">Adicione novos casos</h2>
+          <h2 v-show="hasFile">Planilha carregada com sucesso!</h2>
+          <p v-show="!hasFile">Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo
+            <br>
+            a forma de inclusão de novos casos em sua conta.
+          </p>
         </div>
-      </template>
-      <template slot="aside">
-        <h2>
-          Histórico de importaçãos
-        </h2>
-        <p>
-          Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
-          Abaixo você pode baixar o nosso modelo de planilha:
-        </p>
-        <el-card
-          v-for="imports in importsHistory"
-          :key="imports.id"
-          class="import-history"
-          shadow="never">
-          <jus-icon icon="spreadsheet-xlsx"/>
-          <div style="margin: 0 20px;width: 100%;text-align: left;">
-            <h4 style="margin: 0;margin-bottom: 10px;">{{ imports.file }}</h4>
-            {{ imports.date | moment('DD/MM/YY') }} <br>
-            {{ imports.date | moment('HH:mm') }} <br>
-          </div>
-          <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
-        </el-card>
-        <el-button type="primary" class="main-view__aside-action">Download planilha modelo</el-button>
-      </template>
-    </jus-view-main>
-  </div>
+        <div class="import-view__content import-view__content---methods">
+          <el-card :class="{'import-view__method-loading': hasFile}" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
+            <el-upload
+              ref="uploadMethod"
+              :show-file-list="true"
+              :on-success="handleSuccess"
+              :before-upload="beforeUpload"
+              :on-error="handleError"
+              :disabled="hasFile"
+              :headers="uploadHeaders"
+              accept=".csv,.xlsx,.xls"
+              action="http://homol.justto.com.br/api/imports/upload">
+              <!-- :action="axios.defaults.baseURL"> -->
+              <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
+              <div v-if="!hasFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
+            </el-upload>
+          </el-card>
+          <!-- <el-card v-if="!hasFile" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
+            <jus-icon icon="insert" is-active/>
+            <div class="import-view__method-info">Adicionar caso manualmente</div>
+          </el-card> -->
+        </div>
+        <div v-if="hasFile" class="import-view__actions">
+          <el-button plain @click="removeFile">Voltar</el-button>
+          <el-button type="primary" @click="startImport">Próximo</el-button>
+        </div>
+      </div>
+    </template>
+    <template slot="right-card">
+      <h2>
+        Histórico de importaçãos
+      </h2>
+      <p>
+        Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
+        Abaixo você pode baixar o nosso modelo de planilha:
+      </p>
+      <el-card
+        v-for="imports in importsHistory"
+        :key="imports.id"
+        class="import-history"
+        shadow="never">
+        <jus-icon icon="spreadsheet-xlsx"/>
+        <div style="margin: 0 20px;width: 100%;text-align: left;">
+          <h4 style="margin: 0;margin-bottom: 10px;">{{ imports.file }}</h4>
+          {{ imports.date | moment('DD/MM/YY') }} <br>
+          {{ imports.date | moment('HH:mm') }} <br>
+        </div>
+        <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
+      </el-card>
+      <el-button type="primary" style="min-width: 100%;">Download planilha modelo</el-button>
+    </template>
+  </jus-view-main>
 </template>
 
 <script>
@@ -158,11 +156,8 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.view-import {
-}
-
-.view-import--main {
-  .jus-main-view__side-card {
+.import-view {
+  .jus-main-view__right-card {
     text-align: center;
     .import-history .el-card__body {
       display: flex;
@@ -177,8 +172,7 @@ export default {
     }
   }
 }
-
-.view-import__title {
+.import-view__title {
   text-align: center;
   margin: auto;
   h2 {
@@ -188,12 +182,10 @@ export default {
     margin: 10px 0;
   }
 }
-
-.view-import__content {
+.import-view__content {
   margin: 40px 0 0;
 }
-
-.view-import__content---methods {
+.import-view__content---methods {
   display: flex;
   justify-content: center;
   text-align: center;
@@ -207,88 +199,36 @@ export default {
     display: none;
   }
 }
-
-.view-import__method {
+.import-view__method {
   max-width: 240px;
   transition: all ease .5s;
-  &+.view-import__method {
+  &+.import-view__method {
     margin-left: 20px;
   }
   >.el-card__body {
     padding: 40px 20px;
   }
 }
-
 .el-card--dashed-hover:hover{
   cursor: pointer;
-  .view-import__method-info {
+  .import-view__method-info {
     color: $--color-primary;
   }
 }
-
-.view-import__method-info {
+.import-view__method-info {
   margin-top: 10px;
   text-align: center;
   transition: all ease .5s;
 }
-
-.view-import__method-loading {
+.import-view__method-loading {
   width: 400px;
   max-width: 400px;
 }
-
-.view-import__actions {
+.import-view__actions {
   display: flex;
   margin-top: 40px;
   button {
     width: 100%;
   }
 }
-
-// .view-import__progress{
-//   display: flex;
-//   width: 100%;
-// }
-
-// .view-import__progress-info {
-//   width: 100%;
-//   margin-left: 20px;
-//   .el-progress {
-//     margin: 5px 0;
-//     margin-right: -20px;
-//   }
-// }
-
-// .view-import__progress-success {
-//   text-align: center;
-//   .el-card {
-//     color: #fff;
-//     font-weight: normal;
-//     width: 150px;
-//     margin: auto;
-//     span {
-//       margin-bottom: 4px;
-//       font-size: 20px;
-//     }
-//   }
-//   .view-import__success-info {
-//     margin-top: 30px;
-//   }
-//   .el-card__body {
-//     text-align: center;
-//   }
-//   .el-card--background {
-//     .el-card__body {
-//       padding: 12px 10px;
-//     }
-//     h2 {
-//       margin-top: 0;
-//       margin-bottom: 8px;
-//     }
-//     span {
-//       font-size: 12px;
-//       margin: 0;
-//     }
-//   }
-// }
 </style>

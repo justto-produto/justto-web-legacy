@@ -1,31 +1,33 @@
 <template>
-  <div class="view-import-new">
-    <JusViewMain>
-      <template slot="title">Nova importação de casos</template>
-      <template slot="main">
-        <el-steps :active="activeStep" class="view-import-new__steps el-steps--circle" finish-status="success">
-          <el-step/>
-          <el-step/>
-          <el-step/>
-          <el-step/>
-        </el-steps>
-        <div class="view-import-new__content">
-          <transition name="fade">
-            <check-lines-step v-if="activeStep === 0" key="0"/>
-            <columns-step v-if="activeStep === 1" key="1"/>
-            <enrichment-step v-if="activeStep === 2" key="2" @import:step:next="nextStep"/>
-            <feedback-step v-if="activeStep === 3" key="3" :companies="companies"/>
-          </transition>
-        </div>
-        <div class="view-import-new__actions">
-          <el-button plain @click="previousStep">Voltar</el-button>
-          <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button>
-          <el-button v-else-if="activeStep === 3" type="primary" @click="finalStep">Iniciar negociação</el-button>
-          <el-button v-else type="primary" @click="nextStep">Próximo</el-button>
-        </div>
-      </template>
-    </JusViewMain>
-  </div>
+  <JusViewMain class="new-import-view">
+    <template slot="title">
+      <h1>
+        Nova importação de casos
+      </h1>
+    </template>
+    <template slot="main">
+      <el-steps :active="activeStep" class="new-import-view__steps el-steps--circle" finish-status="success">
+        <el-step/>
+        <el-step/>
+        <el-step/>
+        <el-step/>
+      </el-steps>
+      <div class="new-import-view__content">
+        <transition name="fade">
+          <check-lines-step v-if="activeStep === 0" key="0"/>
+          <columns-step v-if="activeStep === 1" key="1"/>
+          <enrichment-step v-if="activeStep === 2" key="2" @import:step:next="nextStep"/>
+          <feedback-step v-if="activeStep === 3" key="3" :companies="companies"/>
+        </transition>
+      </div>
+      <div class="new-import-view__actions">
+        <el-button plain @click="previousStep">Voltar</el-button>
+        <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button>
+        <el-button v-else-if="activeStep === 3" type="primary" @click="finalStep">Iniciar negociação</el-button>
+        <el-button v-else type="primary" @click="nextStep">Próximo</el-button>
+      </div>
+    </template>
+  </JusViewMain>
 </template>
 
 <script>
@@ -78,7 +80,7 @@ export default {
 </script>
 
 <style lang="scss">
-.view-import-new .jus-main-view__main-card .el-card__body {
+.new-import-view .jus-main-view__main-card .el-card__body {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -86,10 +88,10 @@ export default {
   align-items: center;
   min-height: min-content;
 }
-.view-import-new__steps, .view-import-new__actions {
+.new-import-view__steps, .new-import-view__actions {
   width: 500px;
 }
-.view-import-new__content {
+.new-import-view__content {
   >*:not(.columns-step) {
     width: 500px;
   }
@@ -97,10 +99,10 @@ export default {
     min-width: 100%;
   }
 }
-.view-import-new__steps {
+.new-import-view__steps {
   margin-top: 20px;
 }
-.view-import-new__content {
+.new-import-view__content {
   margin-top: 40px;
   >p, h4 {
     text-align: center;
@@ -118,11 +120,11 @@ export default {
     margin: 0;
   }
 }
-.view-import-new__title {
+.new-import-view__title {
   margin-bottom: 40px;
   text-align: center;
 }
-.view-import-new__actions {
+.new-import-view__actions {
   display: flex;
   margin: 40px 0 20px;
   button {
