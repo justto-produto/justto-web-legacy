@@ -1,15 +1,28 @@
 <template>
   <div class="jus-main-view">
-    <div v-if="this.$slots['title']"><slot name="title"/></div>
-    <div class="jus-main-view__horizontal">
+    <!-- TITLE SLOT -->
+    <div v-if="this.$slots['title']">
+      <slot name="title"/>
+    </div>
+    <div class="jus-main-view__container">
+      <!-- LEFT CARD SLOT -->
+      <div v-if="this.$slots['left-card']">
+        <el-card
+          :style="{width: leftCardWidth + 'px'}"
+          class="jus-main-view__left-card">
+          <slot name="left-card"/>
+        </el-card>
+      </div>
+      <!-- MAIN CARD SLOT -->
       <el-card class="jus-main-view__main-card">
         <slot name="main"/>
       </el-card>
-      <div v-if="this.$slots['aside']">
+      <!-- RIGHT CARD SLOT -->
+      <div v-if="this.$slots['right-card']">
         <el-card
-          :style="{width: sideCardWidth + 'px'}"
-          class="jus-main-view__side-card">
-          <slot name="aside"/>
+          :style="{width: rightCardWidth + 'px'}"
+          class="jus-main-view__right-card">
+          <slot name="right-card"/>
         </el-card>
       </div>
     </div>
@@ -20,7 +33,11 @@
 export default {
   name: 'JusViewMain',
   props: {
-    sideCardWidth: {
+    rightCardWidth: {
+      default: '300',
+      type: String
+    },
+    leftCardWidth: {
       default: '300',
       type: String
     }
@@ -30,32 +47,30 @@ export default {
 
 <style lang="scss">
 .jus-main-view {
-  position: relative;
-  margin: 0 20px 20px;
-}
-.jus-main-view__horizontal {
-  display: flex;
-}
-.jus-main-view__main-card {
-  width: 100%;
-  min-height: calc( 100vh - 180px );
-  overflow-y: auto;
-}
-.jus-main-view__side-card {
-  display: flex;
-  margin-left: 20px;
-  // position: sticky;
-  top: 20px;
-  height: calc( 100vh - 180px );
-  overflow-y: auto;
-  > .el-card__body {
-    margin: auto;
+  height: calc(100% - 20px);
+  &__container {
+    padding-top: 20px;
+    display: flex;
+    height: calc(100% - 57px);
   }
-  .el-card {
-    margin-bottom: 20px;
+  &__main-card {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
   }
-}
-.jus-main-view__aside-action {
-  min-width: 100%;
+  &__left-card {
+    margin-right: 20px;
+  }
+  &__right-card {
+    margin-left: 20px;
+  }
+  &__left-card, &__right-card {
+    display: flex;
+    max-height: 100%;
+    overflow-y: auto;
+    .el-card__body {
+      width: 100%;
+    }
+  }
 }
 </style>

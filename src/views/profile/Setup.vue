@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain side-card>
+  <JusViewMain>
     <template slot="title">Configurações do perfil</template>
     <template slot="main">
       whatsapp

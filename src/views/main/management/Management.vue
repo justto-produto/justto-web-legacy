@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain side-card class="view-management">
+  <JusViewMain class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
       <el-carousel

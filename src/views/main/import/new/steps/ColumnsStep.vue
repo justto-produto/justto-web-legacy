@@ -1,6 +1,6 @@
 <template>
   <div class="columns-step">
-    <h2 class="view-import-new__title">Mapeamento de colunas</h2>
+    <h2 class="new-import-view__title">Mapeamento de colunas</h2>
     <el-row :gutter="60">
       <el-col :span="12">
         <h3>Colunas do arquivo</h3>
