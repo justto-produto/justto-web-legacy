@@ -63,7 +63,7 @@ g<template>
               <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.max }}</template>
+              <template slot-scope="scope">{{ scope.row.maxHeight }}</template>
             </el-table-column>
             <el-table-column label="Valor proposto">
               <template slot-scope="scope">{{ scope.row.proposalValue }}</template>
@@ -96,7 +96,7 @@ g<template>
               <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.max }}</template>
+              <template slot-scope="scope">{{ scope.row.maxHeight }}</template>
             </el-table-column>
             <el-table-column label="Contraproposta">
               <template slot-scope="scope">{{ scope.row.contraProposal }}</template>
@@ -105,7 +105,7 @@ g<template>
               <template slot-scope="scope">{{ scope.row.deadline }}</template>
             </el-table-column>
             <el-table-column label="Última Interação">
-              <template slot-scope="scope" class="view-management__flex"><jus-icon :icon="scope.row.call" class="view-management__call-icon" />{{ scope.row.lastInteraction }}</template>
+              <template slot-scope="scope"><jus-icon :icon="scope.row.interactionType" class="view-management__interactionType-icon" />{{ scope.row.lastInteraction }}</template>
             </el-table-column>
             <el-table-column label="" width="40">
               <template><i class="el-icon-more" style="font-size: 18px"/></template>
@@ -129,7 +129,7 @@ g<template>
               <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.max }}</template>
+              <template slot-scope="scope">{{ scope.row.maxHeight }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
               <template slot-scope="scope">{{ scope.row.accordValue }}</template>
@@ -203,13 +203,13 @@ export default {
         campaign: 'NATAL - Nestlé',
         claimantParty: 'Edinalva Pereira',
         claimantLawyer: 'Cleiton Pereira da Silva',
-        max: 'R$10.000',
+        maxHeight: 'R$10.000',
         accordValue: 'R$3.000',
         proposalValue: 'R$3.000',
         contraProposal: 'R$3.000',
         deadline: '28/11/2020',
         lastInteraction: '28/11/2019',
-        call: 'whatsapp',
+        interactionType: 'whatsapp',
         strategy: 'R$10.000',
         status: 'Engajamento',
         responsibles: ''
@@ -218,13 +218,13 @@ export default {
         campaign: 'NATAL - Nestlé',
         claimantParty: 'Edinalva Pereira',
         claimantLawyer: 'Cleiton Pereira da Silva',
-        max: 'R$10.000',
+        maxHeight: 'R$10.000',
         accordValue: 'R$3.000',
         proposalValue: 'R$3.000',
         contraProposal: 'R$3.000',
         deadline: '28/11/2020',
         lastInteraction: '28/11/2019',
-        call: 'sms',
+        interactionType: 'sms',
         strategy: 'R$10.000',
         status: 'Com Interação',
         responsibles: ''
@@ -233,13 +233,13 @@ export default {
         campaign: 'NATAL - Nestlé',
         claimantParty: 'Edinalva Pereira',
         claimantLawyer: 'Cleiton Pereira da Silva',
-        max: 'R$10.000',
+        maxHeight: 'R$10.000',
         accordValue: 'R$3.000',
         proposalValue: 'R$3.000',
         contraProposal: 'R$3.000',
         deadline: '28/11/2020',
         lastInteraction: '28/11/2019',
-        call: 'email',
+        interactionType: 'email',
         strategy: 'R$10.000',
         status: 'Ganho',
         responsibles: ''
@@ -312,10 +312,13 @@ export default {
     width: calc(100% - 40px);
     margin: 0 10px;
   }
-  &__call-icon {
+  &__interactionType-icon {
     margin-right: 10px;
   }
   &__tabs {
+    .cell {
+      display: flex !important;
+    }
     .el-tabs__header {
       width: fit-content;
       padding: 0 20px;
