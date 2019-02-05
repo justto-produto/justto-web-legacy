@@ -2,7 +2,7 @@
 
 context('Actions', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:8082/')
+        cy.visit('http://localhost:8080/')
     })
 
     it('CT2.1 - Listagem de Histórico de Importação: Possui Importações', () => {
