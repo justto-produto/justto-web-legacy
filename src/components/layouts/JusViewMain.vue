@@ -1,7 +1,7 @@
 <template>
   <div class="jus-main-view">
     <!-- TITLE SLOT -->
-    <div v-if="this.$slots['title']">
+    <div v-if="this.$slots['title']" class="jus-main-view__title">
       <slot name="title"/>
     </div>
     <div class="jus-main-view__container">
@@ -48,6 +48,11 @@ export default {
 <style lang="scss">
 .jus-main-view {
   height: calc(100% - 20px);
+  &__title {
+    h1 {
+      font-weight: 500;
+    }
+  }
   &__container {
     padding-top: 20px;
     display: flex;

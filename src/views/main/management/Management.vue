@@ -2,12 +2,16 @@
   <JusViewMain class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <el-carousel
-        :autoplay="false"
-        arrow="always"
-        indicator-position="none"
-        height="70px">
-        <el-carousel-item>
+      <div class="view-management__carousel-container">
+        <owl-carousel
+          :items="2"
+          :nav="true"
+          :dots="false"
+          :loop="true"
+          :rewind="false"
+          :margin="20"
+          :nav-text="carouselIcons()"
+          class="view-management__carousel-slider">
           <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
             10% das suas contrapropostas foram aceitas
             <el-button type="transparent">Ver casos</el-button>
@@ -16,21 +20,20 @@
             Você possui casos que precisam da sua revisão
             <el-button type="transparent">Resolver</el-button>
           </el-card>
-        </el-carousel-item>
-        <el-carousel-item>
-          <el-card class="view-management__info-card" shadow="never">
+          <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
             Você possui casos que precisam da sua revisão
+            <el-button type="transparent">Resolver</el-button>
           </el-card>
-        </el-carousel-item>
-      </el-carousel>
+        </owl-carousel>
+      </div>
     </template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         <img src="http://ap.imagensbrasil.org/images/2017/02/24/SERGIO-MALLANDRO.jpg" class="malandro">
-        <i class="el-icon-close" @click="multipleSelection = []"/>
+        <i class="el-icon-close" @click="clearSelection()"/>
       </div>
       <div class="view-management__actions">
-        <el-button plain>
+        <el-button plain @click="showFilters = true">
           <jus-icon icon="filter" />
           Filtrar
         </el-button>
@@ -40,10 +43,9 @@
       </div>
       <el-tabs
         ref="management-tabs"
-        :fit="false"
+        :before-leave="handleChangeTab"
         value="1"
-        class="view-management__tabs"
-        @tab-click="handleTabClick">
+        class="view-management__tabs">
         <el-tab-pane label="Engajamento" name="1">
           <el-table
             ref="engagementTable"
@@ -61,7 +63,7 @@
               <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.max }}</template>
+              <template slot-scope="scope">{{ scope.row.maxHeight }}</template>
             </el-table-column>
             <el-table-column label="Valor proposto">
               <template slot-scope="scope">{{ scope.row.proposalValue }}</template>
@@ -94,7 +96,7 @@
               <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.max }}</template>
+              <template slot-scope="scope">{{ scope.row.maxHeight }}</template>
             </el-table-column>
             <el-table-column label="Contraproposta">
               <template slot-scope="scope">{{ scope.row.contraProposal }}</template>
@@ -103,7 +105,10 @@
               <template slot-scope="scope">{{ scope.row.deadline }}</template>
             </el-table-column>
             <el-table-column label="Última Interação">
-              <template slot-scope="scope" class="view-management__flex"><jus-icon :icon="scope.row.call" is-active class="view-management__call-icon" />{{ scope.row.lastInteraction }}</template>
+              <template slot-scope="scope">
+                <jus-icon :icon="scope.row.interactionType" />
+                {{ scope.row.lastInteraction }}
+              </template>
             </el-table-column>
             <el-table-column label="" width="40">
               <template><i class="el-icon-more" style="font-size: 18px"/></template>
@@ -112,7 +117,7 @@
         </el-tab-pane>
         <el-tab-pane label="Novos Acordos" name="3">
           <el-table
-            ref="newAccordsTable"
+            ref="newAgreementsTable"
             :data="cases"
             class="el-table--card"
             @selection-change="handleSelectionChange">
@@ -127,7 +132,7 @@
               <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.max }}</template>
+              <template slot-scope="scope">{{ scope.row.maxHeight }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
               <template slot-scope="scope">{{ scope.row.accordValue }}</template>
@@ -171,27 +176,45 @@
           </el-table>
         </el-tab-pane>
       </el-tabs>
+      <el-dialog :visible.sync="showFilters">
+        <template slot="title">
+          <h2>Filtrar {{ activeTab.label }}</h2>
+        </template>
+        <jus-management-filters />
+        <span slot="footer">
+          <el-button plain>Limpar filtro</el-button>
+          <el-button type="primary">Aplicar filtro</el-button>
+        </span>
+      </el-dialog>
     </template>
   </JusViewMain>
 </template>
 
 <script>
+import OwlCarousel from 'vue-owl-carousel'
+import JusManagementFilters from '@/components/others/JusManagementFilters'
+
 export default {
   name: 'Management',
+  components: {
+    OwlCarousel,
+    JusManagementFilters
+  },
   data () {
     return {
+      showFilters: false,
       cases: [{
         number: '102983',
         campaign: 'NATAL - Nestlé',
         claimantParty: 'Edinalva Pereira',
         claimantLawyer: 'Cleiton Pereira da Silva',
-        max: 'R$10.000',
+        maxHeight: 'R$10.000',
         accordValue: 'R$3.000',
         proposalValue: 'R$3.000',
         contraProposal: 'R$3.000',
         deadline: '28/11/2020',
         lastInteraction: '28/11/2019',
-        call: 'whatsapp',
+        interactionType: 'whatsapp',
         strategy: 'R$10.000',
         status: 'Engajamento',
         responsibles: ''
@@ -200,13 +223,13 @@ export default {
         campaign: 'NATAL - Nestlé',
         claimantParty: 'Edinalva Pereira',
         claimantLawyer: 'Cleiton Pereira da Silva',
-        max: 'R$10.000',
+        maxHeight: 'R$10.000',
         accordValue: 'R$3.000',
         proposalValue: 'R$3.000',
         contraProposal: 'R$3.000',
         deadline: '28/11/2020',
         lastInteraction: '28/11/2019',
-        call: 'sms',
+        interactionType: 'sms',
         strategy: 'R$10.000',
         status: 'Com Interação',
         responsibles: ''
@@ -215,18 +238,19 @@ export default {
         campaign: 'NATAL - Nestlé',
         claimantParty: 'Edinalva Pereira',
         claimantLawyer: 'Cleiton Pereira da Silva',
-        max: 'R$10.000',
+        maxHeight: 'R$10.000',
         accordValue: 'R$3.000',
         proposalValue: 'R$3.000',
         contraProposal: 'R$3.000',
         deadline: '28/11/2020',
         lastInteraction: '28/11/2019',
-        call: 'email',
+        interactionType: 'email',
         strategy: 'R$10.000',
         status: 'Ganho',
         responsibles: ''
       }],
-      multipleSelection: []
+      multipleSelection: [],
+      activeTab: { index: '1', label: 'Engajamento' }
     }
   },
   computed: {
@@ -235,23 +259,41 @@ export default {
     }
   },
   methods: {
-    toggleSelection (rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
-      }
+    clearSelection () {
+      this.$refs.engagementTable.clearSelection()
+      this.$refs.interationTable.clearSelection()
+      this.$refs.newAgreementsTable.clearSelection()
+      this.$refs.allTable.clearSelection()
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    handleTabClick () {
-      // if (this.$refs['management-tabs']) {
-      //   this.tabIndex = this.$refs['management-tabs'].currentName
-      //   this.checkList = []
-      // }
+    carouselIcons () {
+      let prevIcon = require('@/assets/icons/ic-left.svg')
+      let nextIcon = require('@/assets/icons/ic-right.svg')
+      return ['<img src="' + prevIcon + '">', '<img src="' + nextIcon + '">']
+    },
+    setActiveTabLabel (newTab) {
+      var newActive
+      switch (newTab) {
+        case '1':
+          newActive = { index: '1', label: 'Engajamento' }
+          break
+        case '2':
+          newActive = { index: '2', label: 'Com interação' }
+          break
+        case '3':
+          newActive = { index: '3', label: 'Novos acordos' }
+          break
+        case '4':
+          newActive = { index: '4', label: 'Todos' }
+          break
+      }
+      this.activeTab = newActive
+    },
+    handleChangeTab (newTab, oldTab) {
+      this.setActiveTabLabel(newTab)
+      this.clearSelection()
     }
   }
 }
@@ -259,10 +301,49 @@ export default {
 
 <style lang="scss">
 .view-management {
-  &__call-icon {
+  &__carousel-container{
+    width: 67%;
+    display: flex;
+    align-items: center;
+    > span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+      width: 20px;
+      font-size: 1.4rem;
+      color: #adadad;
+    }
+    .owl-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0px -31px 0 -41px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .owl-stage-outer {
+      border-radius: 5px;
+      z-index: 1;
+    }
+    .owl-prev, .owl-next {
+      background: transparent !important;
+    }
+  }
+  &__carousel-slider {
+    width: calc(100% - 40px);
+    margin: 0 10px;
+  }
+  &__interactionType-icon {
     margin-right: 10px;
   }
   &__tabs {
+    .cell {
+      display: flex !important;
+    }
     .el-tabs__header {
       width: fit-content;
       padding: 0 20px;
@@ -293,9 +374,11 @@ export default {
       padding: 16px;
       height: 100%;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .el-button {
-      margin-left: 10px;
+      margin-left: 20px;
     }
   }
   .jus-main-view__main-card > .el-card__body {
@@ -331,12 +414,6 @@ export default {
   display: flex;
   justify-content:space-between;
   align-items: center;
-  >:first-child {
-    width: 20%;
-  }
-  >:last-child {
-    width: 20%;
-  }
   margin-top: -44px;
   transform: translateY(-100%);
   &.active {
