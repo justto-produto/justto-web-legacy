@@ -1,4 +1,4 @@
-g<template>
+<template>
   <JusViewMain class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
@@ -30,10 +30,10 @@ g<template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         <img src="http://ap.imagensbrasil.org/images/2017/02/24/SERGIO-MALLANDRO.jpg" class="malandro">
-        <i class="el-icon-close" @click="multipleSelection = []"/>
+        <i class="el-icon-close" @click="clearSelection()"/>
       </div>
       <div class="view-management__actions">
-        <el-button plain>
+        <el-button plain @click="showFilters = true">
           <jus-icon icon="filter" />
           Filtrar
         </el-button>
@@ -43,7 +43,7 @@ g<template>
       </div>
       <el-tabs
         ref="management-tabs"
-        :fit="false"
+        :before-leave="handleChangeTab"
         value="1"
         class="view-management__tabs">
         <el-tab-pane label="Engajamento" name="1">
@@ -105,7 +105,10 @@ g<template>
               <template slot-scope="scope">{{ scope.row.deadline }}</template>
             </el-table-column>
             <el-table-column label="Última Interação">
-              <template slot-scope="scope"><jus-icon :icon="scope.row.interactionType" class="view-management__interactionType-icon" />{{ scope.row.lastInteraction }}</template>
+              <template slot-scope="scope">
+                <jus-icon :icon="scope.row.interactionType" />
+                {{ scope.row.lastInteraction }}
+              </template>
             </el-table-column>
             <el-table-column label="" width="40">
               <template><i class="el-icon-more" style="font-size: 18px"/></template>
@@ -114,7 +117,7 @@ g<template>
         </el-tab-pane>
         <el-tab-pane label="Novos Acordos" name="3">
           <el-table
-            ref="newAccordsTable"
+            ref="newAgreementsTable"
             :data="cases"
             class="el-table--card"
             @selection-change="handleSelectionChange">
@@ -173,31 +176,33 @@ g<template>
           </el-table>
         </el-tab-pane>
       </el-tabs>
-      <!-- <el-dialog
-        :visible.sync="dialogVisible"
-        title="Tips"
-        width="30%">
-        <span>This is a message</span>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+      <el-dialog :visible.sync="showFilters">
+        <template slot="title">
+          <h2>Filtrar {{ activeTab.label }}</h2>
+        </template>
+        <jus-management-filters />
+        <span slot="footer">
+          <el-button plain>Limpar filtro</el-button>
+          <el-button type="primary">Aplicar filtro</el-button>
         </span>
-      </el-dialog> -->
+      </el-dialog>
     </template>
   </JusViewMain>
 </template>
 
 <script>
 import OwlCarousel from 'vue-owl-carousel'
+import JusManagementFilters from '@/components/others/JusManagementFilters'
 
 export default {
   name: 'Management',
   components: {
-    OwlCarousel
+    OwlCarousel,
+    JusManagementFilters
   },
   data () {
     return {
-      dialogVisible: true,
+      showFilters: false,
       cases: [{
         number: '102983',
         campaign: 'NATAL - Nestlé',
@@ -244,7 +249,8 @@ export default {
         status: 'Ganho',
         responsibles: ''
       }],
-      multipleSelection: []
+      multipleSelection: [],
+      activeTab: { index: '1', label: 'Engajamento' }
     }
   },
   computed: {
@@ -253,14 +259,11 @@ export default {
     }
   },
   methods: {
-    toggleSelection (rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
-      }
+    clearSelection () {
+      this.$refs.engagementTable.clearSelection()
+      this.$refs.interationTable.clearSelection()
+      this.$refs.newAgreementsTable.clearSelection()
+      this.$refs.allTable.clearSelection()
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
@@ -269,6 +272,28 @@ export default {
       let prevIcon = require('@/assets/icons/ic-left.svg')
       let nextIcon = require('@/assets/icons/ic-right.svg')
       return ['<img src="' + prevIcon + '">', '<img src="' + nextIcon + '">']
+    },
+    setActiveTabLabel (newTab) {
+      var newActive
+      switch (newTab) {
+        case '1':
+          newActive = { index: '1', label: 'Engajamento' }
+          break
+        case '2':
+          newActive = { index: '2', label: 'Com interação' }
+          break
+        case '3':
+          newActive = { index: '3', label: 'Novos acordos' }
+          break
+        case '4':
+          newActive = { index: '4', label: 'Todos' }
+          break
+      }
+      this.activeTab = newActive
+    },
+    handleChangeTab (newTab, oldTab) {
+      this.setActiveTabLabel(newTab)
+      this.clearSelection()
     }
   }
 }
@@ -349,9 +374,11 @@ export default {
       padding: 16px;
       height: 100%;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .el-button {
-      margin-left: 10px;
+      margin-left: 20px;
     }
   }
   .jus-main-view__main-card > .el-card__body {
@@ -387,12 +414,6 @@ export default {
   display: flex;
   justify-content:space-between;
   align-items: center;
-  >:first-child {
-    width: 20%;
-  }
-  >:last-child {
-    width: 20%;
-  }
   margin-top: -44px;
   transform: translateY(-100%);
   &.active {
