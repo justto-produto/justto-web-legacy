@@ -21,7 +21,7 @@
           <el-tag
             :closable="column.tag != null" :class="{'el-tag--dropzone-active': column.tag}" class="el-tag--dropzone"
             @close="removeTag(column)">
-            <span v-if="column.tag">{{ column.tag.name }}</span>
+            <span v-if="column.tag">{{ $t(column.tag.name) }}</span>
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
         </div>
@@ -47,10 +47,10 @@
         <el-collapse v-loading="loadingTags" value="1" class="el-collapse--drag">
           <el-collapse-item title="Dados do conflito" name="1">
             <span
-              v-for="tag in disputeTags"
+              v-for="(tag, index) in disputeTags"
               :key="`${tag.id}-${tag.name}`"
               draggable="true"
-              @dragstart.self="dragTag($event, JSON.stringify(tag))">
+              @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
               <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
                 {{ tag.name }}
               </el-tag>
@@ -61,13 +61,13 @@
           Partes contrárias
           <a href="#" @click="addTagList(claimantParties)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="claimantPartyIndex in claimantParties" :key="'claimantParty' + claimantPartyIndex" class="drag-group">
+        <div v-for="(claimantPartyIndex, index) in claimantParties" :key="'claimantParty' + claimantPartyIndex" class="drag-group">
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Parte Contrária ' + claimantPartyIndex">
               <span
                 v-for="tag in tags.claimantParty.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify(tag))">
-                <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
+                <el-tag :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}" class="el-tag--drag">
                   Parte contrária {{ claimantPartyIndex + ' - ' + tag.name }}
                 </el-tag>
               </span>
@@ -82,13 +82,13 @@
           Advogados
           <a href="#" @click="addTagList(claimantLawyers)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="claimantLawyerIndex in claimantLawyers" :key="'claimantLawyer' + claimantLawyerIndex" class="drag-group">
+        <div v-for="(claimantLawyerIndex, index) in claimantLawyers" :key="'claimantLawyer' + claimantLawyerIndex" class="drag-group">
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Advogado ' + claimantLawyerIndex">
               <span
                 v-for="tag in tags.claimantLawyer.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify(tag))">
-                <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
+                <el-tag :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}" class="el-tag--drag">
                   Advogado {{ claimantLawyerIndex + ' - ' + tag.name }}
                 </el-tag>
               </span>
@@ -103,13 +103,13 @@
           Réus
           <a href="#" @click="addTagList(respondentParties)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="respondentPartyIndex in respondentParties" :key="respondentPartyIndex" class="drag-group">
+        <div v-for="(respondentPartyIndex, index) in respondentParties" :key="respondentPartyIndex" class="drag-group">
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Réu ' + respondentPartyIndex">
               <span
                 v-for="tag in tags.respondentParty.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify(tag))">
-                <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
+                <el-tag :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}" class="el-tag--drag">
                   Réu {{ respondentPartyIndex + ' - ' + tag.name }}
                 </el-tag>
               </span>
@@ -181,20 +181,16 @@ export default {
       })
     })
   },
-  computed: {
-    columns () {
-      return this.$store.state.importModule.map
-    }
-  },
   methods: {
-    dragTag (event, tag) {
-      event.dataTransfer.setData('tag', tag)
+    dragTag (event, data) {
+      event.dataTransfer.setData('data', data)
     },
-    dropTag (event, column) {
-      var tag = JSON.parse(event.dataTransfer.getData('tag'))
+    dropTag (event, column, index) {
+      var data = JSON.parse(event.dataTransfer.getData('data'))
       this.columns.find(element => {
         if (column.id === element.id) {
-          element.tag = tag
+          element.tag = data.tag
+          element.index = data.index
         }
       })
     },
@@ -202,6 +198,7 @@ export default {
       this.columns.find(element => {
         if (element === column) {
           element.tag = null
+          element.index = 0
         }
       })
     },
@@ -212,6 +209,20 @@ export default {
           let elKey = element.tag.id
           let tagKey = tag.id
           if (elKey === tagKey) {
+            isAvailable = false
+          }
+        }
+      })
+      return isAvailable
+    },
+    isMultipleAvailable (tag, index) {
+      var isAvailable = true
+      this.columns.find(element => {
+        if (element.tag) {
+          let elIndex = element.index ? element.index : 0
+          let elKey = element.tag.id
+          let tagKey = tag.id
+          if (elKey === tagKey && elIndex === index) {
             isAvailable = false
           }
         }

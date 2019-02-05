@@ -16,6 +16,7 @@
         <div class="import-view__content import-view__content---methods">
           <el-card :class="{'import-view__method-loading': hasFile}" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
             <el-upload
+              v-loading="processingFile"
               ref="uploadMethod"
               :show-file-list="true"
               :on-success="handleSuccess"
@@ -25,10 +26,12 @@
               :headers="uploadHeaders"
               accept=".csv,.xlsx,.xls"
               action="http://homol.justto.com.br/api/imports/upload">
-              <!-- :action="axios.defaults.baseURL"> -->
               <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
-              <div v-if="!hasFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
+              <div v-if="!hasFile && !processingFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
             </el-upload>
+            <div v-if="processingFile" style="margin-top: 20px; margin-bottom: -20px;">
+              Carregando...
+            </div>
           </el-card>
           <!-- <el-card v-if="!hasFile" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
             <jus-icon icon="insert" is-active/>
@@ -73,7 +76,8 @@ export default {
   data () {
     return {
       importsHistory: [],
-      fileUrl: ''
+      fileUrl: '',
+      processingFile: false
     }
   },
   computed: {
@@ -98,6 +102,7 @@ export default {
   methods: {
     beforeUpload (file) {
       this.$notify.closeAll()
+      this.processingFile = true
       const isValid =
       file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
       file.type === 'application/vnd.ms-excel' ||
@@ -130,10 +135,12 @@ export default {
       this.$router.push('/import/new')
     },
     handleSuccess (res, file) {
+      this.processingFile = false
       this.$store.commit('setImportsFile', res)
       this.fileUrl = URL.createObjectURL(file.raw)
     },
     handleError () {
+      this.processingFile = false
       this.$notify({
         title: 'Ops!',
         type: 'error',

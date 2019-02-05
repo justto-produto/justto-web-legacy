@@ -6,11 +6,15 @@
 
 .el-collapse-item {
   &__header {
-    font-size: 16px !important;
+    font-size: 16px;
     border: 0;
   }
   &__wrap {
     border: 0;
+    border-radius: 4px;
+  }
+  &__content {
+    font-size: inherit;
   }
 }
 
