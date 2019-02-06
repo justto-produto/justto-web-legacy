@@ -45,10 +45,10 @@
       </div>
     </template>
     <template slot="right-card">
-      <h2>
+      <h2 class="import-view__history-title">
         Histórico de importaçãos
       </h2>
-      <p>
+      <p v-if="importsHistory.length === 0">
         Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
         Abaixo você pode baixar o nosso modelo de planilha:
       </p>
@@ -65,7 +65,7 @@
         </div>
         <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
       </el-card>
-      <el-button type="primary" style="min-width: 100%;">Download planilha modelo</el-button>
+      <el-button type="primary" class="import-view__download-example">Download planilha modelo</el-button>
     </template>
   </jus-view-main>
 </template>
@@ -93,7 +93,7 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('getImportsHistory').then(response => {
-      this.importsHistory = response
+      // this.importsHistory = response
     })
   },
   beforeCreate () {
@@ -164,11 +164,21 @@ export default {
 @import '@/styles/colors.scss';
 
 .import-view {
+  &__history-title {
+      margin-bottom: 40px;
+  }
+  &__download-example {
+    min-width: 100%;
+    margin: 20px 0;
+  }
   .jus-main-view__right-card {
     text-align: center;
-    .import-history .el-card__body {
-      display: flex;
-      align-items: center;
+    .import-history{
+      margin-bottom: 20px;
+      .el-card__body {
+        display: flex;
+        align-items: center;
+      }
     }
   }
   .jus-main-view__main-card {

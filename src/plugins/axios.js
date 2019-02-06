@@ -11,7 +11,7 @@ if (AUTH_TOKEN) {
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || 'https://dev-env.acordo.pro/api',
+  baseURL: process.env.baseURL || process.env.apiUrl || 'http://homol.justto.com.br/api',
   timeout: 60 * 100000, // Timeout
   headers: {
     'Access-Control-Allow-Origin': '*'

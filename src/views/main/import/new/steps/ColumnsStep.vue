@@ -73,7 +73,7 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex" href="#" @click="removeTagList(claimantParties)">
+          <a v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex" href="#" @click="removeTagList(claimantParties, tags.claimantParty.tags)">
             <i class="el-icon-delete"/>
           </a>
           <span v-else style="margin-left: 24px;"/>
@@ -142,8 +142,13 @@ export default {
     }
   },
   computed: {
-    columns () {
-      return this.$store.state.importModule.map
+    columns: {
+      get () {
+        return this.$store.state.importModule.map
+      },
+      set (value) {
+        this.$store.commit('setImportsMap', value)
+      }
     }
   },
   beforeMount () {
@@ -193,6 +198,7 @@ export default {
           element.index = data.index
         }
       })
+      this.columns = this.columns
     },
     removeTag (column) {
       this.columns.find(element => {
@@ -233,22 +239,29 @@ export default {
       let lastIndex = list.slice(-1)[0]
       list.push(lastIndex + 1)
     },
-    removeTagList (list) {
-      // this.removeLink(list)
+    removeTagList (list, tags) {
+      this.removeLink(list, tags)
       list.splice(-1, 1)
     },
-    removeLink (array) {
-      let toRemove = array.slice(-1)[0]
-      var tags = toRemove.tags
-      for (var i = 0; i < tags.length; i++) {
-        for (var x = 0; x < this.columns.length; x++) {
-          if (this.columns[x].tag) {
-            if (tags[i].name === this.columns[x].tag.name) {
-              this.columns[x].tag = null
-            }
+    removeLink (array, tags) {
+      let indexToRemove = array.length - 1
+      this.columns.find(column => {
+        if (column.index && column.index === indexToRemove) {
+          if (this.matchTagId(column.tag.id, tags)) {
+            column.tag = null
           }
         }
-      }
+      })
+      this.columns = this.columns
+    },
+    matchTagId (id, tags) {
+      var match = false
+      tags.find(tag => {
+        if (id === tag.id) {
+          match = true
+        }
+      })
+      return match
     }
   }
 }
