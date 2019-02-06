@@ -27,4 +27,4 @@ const VueStompJs = {
   }
 }
 
-Vue.use(VueStompJs, { brokerURL: 'ws://dev-env.acordo.pro/workspace/websocket' })
+Vue.use(VueStompJs, { brokerURL: 'ws://homol.justto.com.br/workspace/websocket' })
