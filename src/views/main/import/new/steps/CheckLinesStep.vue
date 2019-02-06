@@ -1,25 +1,22 @@
 <template>
   <div class="check-lines-step">
-    <h2 class="new-import-view__title">Número de casos</h2>
+    <div class="new-import-view__title">
+      <h2>Número de casos</h2>
+      <p>
+        Caso hajam mais casos do que você tinha planejado, verifique se foi aplicado algum filtro na sua planilha.
+        Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
+      </p>
+    </div>
     <el-card class="el-card--dashed" shadow="never">
-      <h4>Casos prontos para importação: 100</h4>
+      <h4>Casos prontos para importação: {{ $store.state.importModule.file.rows }}</h4>
       <el-collapse accordion class="el-collapse--bordered el-collapse--active">
         <el-collapse-item name="1">
           <template slot="title">
-            Sua planilha tinha <strong>mais</strong> linhas do que o número acima?
+            <strong>Sua planilha tinha mais linhas do que o número acima?</strong>
           </template>
           <div>
             Caso hajam mais casos do que você tinha planejado, verifique se foi aplicado algum filtro na sua
             planilha. Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
-          </div>
-        </el-collapse-item>
-        <el-collapse-item name="2">
-          <template slot="title">
-            Sua planilha tinha <strong>menos</strong> linhas do que o número acima?
-          </template>
-          <div>
-            Verifique se foi aplicado algum filtro na sua planilha.
-            Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -34,4 +31,9 @@ export default {
 </script>
 
 <style lang="scss">
+.check-lines-step {
+  h4 {
+    margin-bottom: 30px;
+  }
+}
 </style>

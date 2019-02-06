@@ -44,9 +44,9 @@
       <el-tabs
         ref="management-tabs"
         :before-leave="handleChangeTab"
-        value="1"
+        :value="0"
         class="view-management__tabs">
-        <el-tab-pane label="Engajamento" name="1">
+        <el-tab-pane label="Engajamento" :name="0">
           <el-table
             ref="engagementTable"
             :data="cases"
@@ -79,7 +79,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="Com interação" name="2">
+        <el-tab-pane label="Com interação" :name="1">
           <el-table
             ref="interationTable"
             :data="cases"
@@ -115,7 +115,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="Novos Acordos" name="3">
+        <el-tab-pane label="Novos Acordos" :name="2">
           <el-table
             ref="newAgreementsTable"
             :data="cases"
@@ -145,7 +145,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="Todos" name="4">
+        <el-tab-pane label="Todos" :name="3">
           <el-table
             ref="allTable"
             :data="cases"
@@ -180,7 +180,7 @@
         <template slot="title">
           <h2>Filtrar {{ activeTab.label }}</h2>
         </template>
-        <jus-management-filters />
+        <jus-management-filters :tab-index="activeTab.index"/>
         <span slot="footer">
           <el-button plain>Limpar filtro</el-button>
           <el-button type="primary">Aplicar filtro</el-button>
@@ -250,7 +250,7 @@ export default {
         responsibles: ''
       }],
       multipleSelection: [],
-      activeTab: { index: '1', label: 'Engajamento' }
+      activeTab: { index: 0, label: 'Engajamento' }
     }
   },
   computed: {
@@ -276,17 +276,17 @@ export default {
     setActiveTabLabel (newTab) {
       var newActive
       switch (newTab) {
-        case '1':
-          newActive = { index: '1', label: 'Engajamento' }
+        case 0:
+          newActive = { index: 0, label: 'Engajamento' }
           break
-        case '2':
-          newActive = { index: '2', label: 'Com interação' }
+        case 1:
+          newActive = { index: 1, label: 'Com interação' }
           break
-        case '3':
-          newActive = { index: '3', label: 'Novos acordos' }
+        case 2:
+          newActive = { index: 2, label: 'Novos acordos' }
           break
-        case '4':
-          newActive = { index: '4', label: 'Todos' }
+        case 3:
+          newActive = { index: 3, label: 'Todos' }
           break
       }
       this.activeTab = newActive

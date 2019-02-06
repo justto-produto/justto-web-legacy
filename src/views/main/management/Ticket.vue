@@ -397,10 +397,6 @@ export default {
   &__steps {
     padding-top: 10px;
   }
-  ::placeholder {
-    color: #adadad !important;
-    font-weight: 300 !important;
-  }
   .jus-main-view__main-card {
     height: 100%;
     > .el-card__body {

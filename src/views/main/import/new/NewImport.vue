@@ -114,6 +114,7 @@ export default {
     height: 100%;
     line-height: inherit;
     padding: 10px 0;
+    font-size: 14px;
   }
   .el-collapse-item__arrow {
     line-height: 20px;
