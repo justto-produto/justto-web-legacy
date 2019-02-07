@@ -13,7 +13,7 @@ const strategy = {
         // eslint-disable-next-line
         axios.get('http://homol.justto.com.br/api/strategies')
           .then(response => {
-            commit('setStrategies', response.data)
+            commit('setStrategies', response.data.content)
             resolve(response.data)
           })
           .catch(error => {

@@ -24,7 +24,12 @@
         <el-button plain @click="previousStep">Voltar</el-button>
         <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button>
         <el-button v-else-if="activeStep === 3" type="primary" @click="finalStep">Iniciar negociação</el-button>
-        <el-button v-else :disabled="$store.state.loading" type="primary" @click="nextStep">Próximo</el-button>
+        <el-button
+          v-else :disabled="$store.state.loading"
+          type="primary"
+          @click="nextStep">
+          Próximo
+        </el-button>
       </div>
     </template>
   </JusViewMain>

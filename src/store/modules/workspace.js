@@ -142,19 +142,21 @@ const workspaceModule = {
     getWorkspaceNegotiators ({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        // axios.get('/workspaces/negotiators')
-          // .then(response => {
-          var negotiatorsList = []
-          for (let id of [1, 2, 3]) {
-            dispatch('getPerson', id).then(response => {
-              negotiatorsList.push(response)
-            })
-          }
-            commit('setWorkspaceNegotiators', response.data)
-            resolve(/*response.data*/)
-          // }).catch(error => {
-            // reject(error)
-          // })
+        axios.get('/workspaces/negotiators', {data: {}})
+          .then(response => {
+            var negotiators = []
+            for (let id of response.data) {
+              dispatch('getPerson', id).then(response2 => {
+                negotiators.push(response2.data)
+                if (id === response.data.slice(-1)[0]) {
+                  commit('setWorkspaceNegotiators', negotiators)
+                  resolve(response.data)
+                }
+              })
+            }
+          }).catch(error => {
+            reject(error)
+          })
       })
     }
   },

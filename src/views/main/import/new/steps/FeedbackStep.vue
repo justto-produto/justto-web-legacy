@@ -1,5 +1,5 @@
 <template>
-  <div class="feedback-step">
+  <div v-loading="$store.state.loading" class="feedback-step">
     <h2 class="new-import-view__title">Resumo</h2>
     <p>
       Agrupamos seus casos por empresas. Cada empresa possui a sua Campanha, que você poderá, posteriormente, editar
@@ -46,9 +46,14 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('getCampaigns')
-    this.$store.dispatch('getStrategies')
-    this.$store.dispatch('getWorkspaceNegotiators')
+    this.$store.dispatch('showLoading')
+    Promise.all([
+      this.$store.dispatch('getCampaigns'),
+      this.$store.dispatch('getStrategies'),
+      this.$store.dispatch('getWorkspaceNegotiators')
+    ]).then(() => {
+      this.$store.dispatch('hideLoading')
+    })
   }
 }
 </script>
