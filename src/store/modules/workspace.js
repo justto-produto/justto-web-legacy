@@ -2,7 +2,8 @@ const workspaceModule = {
   state: {
     name: '',
     status: '',
-    subdomain: ''
+    subdomain: '',
+    negotiators: []
   },
   mutations: {
     updateWorkspace (state, response) {
@@ -19,6 +20,9 @@ const workspaceModule = {
       state.name = ''
       state.status = ''
       state.subdomain = ''
+    },
+    setWorkspaceNegotiators (state, response) {
+      state.negotiators = response
     }
   },
   actions: {
@@ -133,6 +137,24 @@ const workspaceModule = {
           }).catch(error => {
             reject(error)
           })
+      })
+    },
+    getWorkspaceNegotiators ({ commit, dispatch }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        // axios.get('/workspaces/negotiators')
+          // .then(response => {
+          var negotiatorsList = []
+          for (let id of [1, 2, 3]) {
+            dispatch('getPerson', id).then(response => {
+              negotiatorsList.push(response)
+            })
+          }
+            commit('setWorkspaceNegotiators', response.data)
+            resolve(/*response.data*/)
+          // }).catch(error => {
+            // reject(error)
+          // })
       })
     }
   },

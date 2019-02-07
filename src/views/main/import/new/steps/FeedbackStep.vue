@@ -48,6 +48,7 @@ export default {
   beforeMount () {
     this.$store.dispatch('getCampaigns')
     this.$store.dispatch('getStrategies')
+    this.$store.dispatch('getWorkspaceNegotiators')
   }
 }
 </script>

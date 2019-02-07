@@ -8,7 +8,7 @@
       </p>
     </div>
     <el-card class="el-card--dashed" shadow="never">
-      <h4>Casos prontos para importação: {{ $store.state.importModule.file.rows }}</h4>
+      <h4>Casos prontos para importação: {{ lines }}</h4>
       <el-collapse accordion class="el-collapse--bordered el-collapse--active">
         <el-collapse-item name="1">
           <template slot="title">
@@ -26,7 +26,14 @@
 
 <script>
 export default {
-  name: 'CheckLinesStep'
+  name: 'CheckLinesStep',
+  computed: {
+    lines () {
+      if (this.$store.state.importModule.file) {
+        return this.$store.state.importModule.file.rows
+      } else return 0
+    }
+  }
 }
 </script>
 

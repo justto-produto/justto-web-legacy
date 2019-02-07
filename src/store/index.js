@@ -6,6 +6,7 @@ import socketModule from './modules/socket'
 import importModule from './modules/import'
 import campaignModule from './modules/campaign'
 import strategyModule from './modules/strategy'
+import personModule from './modules/person'
 
 Vue.use(Vuex)
 
@@ -39,6 +40,7 @@ export default new Vuex.Store({
     socketModule,
     importModule,
     campaignModule,
-    strategyModule
+    strategyModule,
+    personModule
   }
 })

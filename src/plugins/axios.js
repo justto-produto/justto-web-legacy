@@ -14,7 +14,7 @@ let config = {
   baseURL: process.env.baseURL || process.env.apiUrl || 'http://homol.justto.com.br/api',
   timeout: 60 * 100000, // Timeout
   headers: {
-    'Access-Control-Allow-Origin': 'http://localhost:8080'
+    'Access-Control-Allow-Origin': '*'
   }
   // withCredentials: true, // Check cross-site Access-Control
 }
