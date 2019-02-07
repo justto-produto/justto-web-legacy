@@ -17,7 +17,7 @@
           <check-lines-step v-if="activeStep === 0" key="0"/>
           <columns-step v-if="activeStep === 1" key="1"/>
           <enrichment-step v-if="activeStep === 2" key="2" @import:step:next="nextStep"/>
-          <feedback-step v-if="activeStep === 3" key="3" :companies="companies"/>
+          <feedback-step v-if="activeStep === 3" key="3" :mapped-campaigns="mappedCampaigns"/>
         </transition>
       </div>
       <div class="new-import-view__actions">
@@ -53,7 +53,7 @@ export default {
     return {
       uploadId: undefined,
       activeStep: 0,
-      companies: []
+      mappedCampaigns: []
     }
   },
   beforeCreate () {
@@ -65,7 +65,7 @@ export default {
     nextStep () {
       if (this.activeStep === 1) {
         this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
-          this.companies = response
+          this.mappedCampaigns = response
         })
       }
       this.activeStep += 1
@@ -79,7 +79,13 @@ export default {
       }
     },
     finalStep () {
-      this.$router.push('/management')
+      var promises = []
+      for (let campaign of this.mappedCampaigns) {
+        promises.push(this.$store.dispatch('createCampaign', campaign))
+      }
+      Promise.all(promises).then(() => {
+        this.$router.push('/management')
+      })
     }
   }
 }

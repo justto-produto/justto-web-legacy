@@ -1,6 +1,6 @@
 <template>
   <div class="jus-import-feedback-card">
-    <el-tag :color="color" class="el-tag--company-tag">{{ company.name }}</el-tag>
+    <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ mappedCampaign.name }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
       <el-autocomplete
         v-model="campaignName"
@@ -13,25 +13,23 @@
         <i
           slot="prefix"
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon"
-        />
+          class="el-input__icon" />
       </el-autocomplete>
       <el-select
+        ref="strategySelect"
         v-model="strategy"
+        :default-first-option="false"
         clearable class="select-strategy"
-        placeholder="Escolha uma estratégia"
-      >
+        placeholder="Escolha uma estratégia">
         <i
           slot="prefix"
           :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon"
-        />
+          class="el-input__icon" />
         <el-option
           v-for="strategy in strategies"
           :key="strategy.id"
           :label="strategy.name"
-          :value="strategy.id"
-        />
+          :value="strategy" />
       </el-select>
       <div class="select-strategy__messages">
         <a v-show="strategy !== ''" @click="showStrategyMessages()">Ver estratégia de engajamento das partes</a>
@@ -42,12 +40,12 @@
         :picker-options="datePickerOptions"
         type="date"
         format="dd-MM-yyyy"
-        placeholder="Defina a data limite para a negociação"
-      />
+        placeholder="Defina a data limite para a negociação" />
       <el-select
         v-model="negotiators"
         :remote-method="searchNegotiators"
         :loading="loading"
+        value-key="name"
         size="large"
         placeholder="Escolha os negociadores"
         multiple
@@ -57,15 +55,14 @@
         <i
           slot="prefix"
           :class="negotiators.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon"
-        />
+          class="el-input__icon" />
         <el-option
           v-for="item in filteredNegotiators"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-          <jus-avatar-user :src="item.value" shape="circle" size="xs"/>
-          <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.label }}</span>
+          :key="item.id"
+          :label="item.name"
+          :value="item">
+          <jus-avatar-user name-initials="AA" shape="circle" size="xs" />
+          <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.name }}</span>
         </el-option>
       </el-select>
     </el-card>
@@ -98,9 +95,11 @@
 export default {
   name: 'JusImportFeedbackCard',
   props: {
-    company: {
+    mappedCampaign: {
       type: Object,
-      default: undefined
+      default: function () {
+        return {}
+      }
     },
     color: {
       type: String,
@@ -115,14 +114,14 @@ export default {
       strategyEngagements: [],
       dialogVisible: false,
       dueDate: null,
+      negotiators: [],
+      filteredNegotiators: [],
+      loading: false,
       datePickerOptions: {
         disabledDate (date) {
           return date < new Date()
         }
-      },
-      negotiators: [],
-      filteredNegotiators: [],
-      loading: false
+      }
     }
   },
   computed: {
@@ -135,6 +134,27 @@ export default {
     negotiatorsList () {
       return this.$store.state.workspaceModule.negotiators
     }
+  },
+  watch: {
+    campaignName (value) {
+      if (value === '') {
+        this.mappedCampaign.campaign = {}
+      } else {
+        this.mappedCampaign.campaign.name = value
+      }
+    },
+    strategy (value) {
+      this.mappedCampaign.strategy = value
+    },
+    dueDate (value) {
+      this.mappedCampaign.deadline = value
+    },
+    negotiators (value) {
+      this.mappedCampaign.negotiators = value
+    }
+  },
+  beforeMount () {
+    this.mappedCampaign.campaign = {}
   },
   methods: {
     querySearchCampaign (queryString, callback) {
@@ -151,7 +171,13 @@ export default {
       }
     },
     handleSelectCampaign (item) {
-      console.log(item)
+      this.mappedCampaign.campaign = {
+        name: item.name,
+        cluster: item.cluster,
+        deadline: item.deadline,
+        protocolDeadLine: item.protocolDeadline,
+        paymentDeadLine: item.paymentDeadline
+      }
     },
     searchNegotiators (query) {
       if (query !== '') {
@@ -159,10 +185,10 @@ export default {
         setTimeout(() => {
           this.loading = false
           this.filteredNegotiators = this.negotiatorsList.filter(item => {
-            return item.label.toLowerCase()
+            return item.name.toLowerCase()
               .indexOf(query.toLowerCase()) > -1
           })
-        }, 1000)
+        }, 1000 * Math.random())
       } else {
         this.filteredNegotiators = []
       }
@@ -202,9 +228,10 @@ export default {
   &+.jus-import-feedback-card {
     margin-top: 30px;
   }
-  .el-tag--company-tag {
+  .el-tag--mapped-campaign-tag {
     margin-bottom: 10px;
     text-align: center;
+    color: #ffffff;
   }
   .el-autocomplete, .el-select, .el-input, .select-strategy__messages {
     width: 100%;

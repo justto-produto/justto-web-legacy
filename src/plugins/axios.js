@@ -47,7 +47,7 @@ _axios.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.response.status === 401 || error.response.status === 502) {
+    if (error.response.status === 401) {
       store.dispatch('logout')
     }
     return Promise.reject(error)

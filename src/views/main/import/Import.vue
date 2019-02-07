@@ -133,6 +133,7 @@ export default {
     },
     startImport () {
       this.$router.push('/import/new')
+      this.$store.dispatch('hideLoading')
     },
     handleSuccess (res, file) {
       this.processingFile = false

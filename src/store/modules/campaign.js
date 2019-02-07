@@ -20,6 +20,18 @@ const campaign = {
             reject(error)
           })
       })
+    },
+    createCampaign ({ commit }, campaign) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.post('http://homol.justto.com.br/api/campaigns', campaign)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

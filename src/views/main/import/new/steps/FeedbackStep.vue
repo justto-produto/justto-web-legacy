@@ -10,11 +10,10 @@
     <div class="import-view__container">
       <div class="import-view__content">
         <jus-import-feedback-card
-          v-for="(company, index) in companies"
-          :company="company"
-          :key="`${company.name}-${company.indexes}`"
-          :color="colors[index]"
-        />
+          v-for="(mappedCampaign, index) in mappedCampaigns"
+          :mapped-campaign.sync="mappedCampaign"
+          :key="mappedCampaign.cluster"
+          :color="colors[index]"/>
       </div>
     </div>
   </div>
@@ -29,7 +28,7 @@ export default {
     JusImportFeedbackCard
   },
   props: {
-    companies: {
+    mappedCampaigns: {
       type: Array,
       default: function () {
         return []
