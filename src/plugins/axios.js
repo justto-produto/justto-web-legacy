@@ -14,7 +14,7 @@ let config = {
   baseURL: process.env.baseURL || process.env.apiUrl || 'http://homol.justto.com.br/api',
   timeout: 60 * 100000, // Timeout
   headers: {
-    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Origin': 'http://localhost:8080'
   }
   // withCredentials: true, // Check cross-site Access-Control
 }
@@ -47,7 +47,7 @@ _axios.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.response.status === 401) {
+    if (error.response.status === 401 || error.response.status === 502) {
       store.dispatch('logout')
     }
     return Promise.reject(error)

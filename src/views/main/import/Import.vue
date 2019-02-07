@@ -8,8 +8,8 @@
         <div class="import-view__title">
           <h2 v-show="!hasFile">Adicione novos casos</h2>
           <h2 v-show="hasFile">Planilha carregada com sucesso!</h2>
-          <p v-show="!hasFile">Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo
-            <br>
+          <p v-show="!hasFile">
+            Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo
             a forma de inclusão de novos casos em sua conta.
           </p>
         </div>

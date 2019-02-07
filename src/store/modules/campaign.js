@@ -13,7 +13,7 @@ const campaign = {
         // eslint-disable-next-line
         axios.get('http://homol.justto.com.br/api/campaigns')
           .then(response => {
-            commit('setCampaign', response.data)
+            commit('setCampaign', response.data.content)
             resolve(response)
           })
           .catch(error => {

@@ -46,7 +46,7 @@
         :before-leave="handleChangeTab"
         :value="0"
         class="view-management__tabs">
-        <el-tab-pane label="Engajamento" :name="0">
+        <el-tab-pane :name="0" label="Engajamento">
           <el-table
             ref="engagementTable"
             :data="cases"
@@ -79,7 +79,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="Com interação" :name="1">
+        <el-tab-pane :name="1" label="Com interação">
           <el-table
             ref="interationTable"
             :data="cases"
@@ -115,7 +115,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="Novos Acordos" :name="2">
+        <el-tab-pane :name="2" label="Novos Acordos">
           <el-table
             ref="newAgreementsTable"
             :data="cases"
@@ -145,7 +145,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="Todos" :name="3">
+        <el-tab-pane :name="3" label="Todos">
           <el-table
             ref="allTable"
             :data="cases"

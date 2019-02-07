@@ -11,19 +11,18 @@
           </el-form-item>
         </el-col>
         <!-- STATUS -->
-        <el-col :span="12" v-if="isEngagement">
+        <el-col v-if="isEngagement" :span="12">
           <el-form-item label="Status">
             <el-radio-group v-model="filtersForm.status">
-             <el-radio-button label="paused">Pausados</el-radio-button>
-             <el-radio-button label="active">Ativos</el-radio-button>
-           </el-radio-group>
+              <el-radio-button label="paused">Pausados</el-radio-button>
+              <el-radio-button label="active">Ativos</el-radio-button>
+            </el-radio-group>
           </el-form-item>
         </el-col>
         <!-- FIM DA NEGOCIAÇÃO -->
         <el-col :span="12">
           <el-form-item label="Fim da negociação">
-            <el-date-picker v-model="filtersForm.dueDate" placeholder="Selecione uma data">
-            </el-date-picker>
+            <el-date-picker v-model="filtersForm.dueDate" placeholder="Selecione uma data" />
           </el-form-item>
         </el-col>
         <!-- ESTRATÉGIA -->
