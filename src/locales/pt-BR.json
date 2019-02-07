@@ -1,5 +1,43 @@
 {
   "message": "Oláaa",
   "test": "teste",
-  "name": "nome"
+  "dispute": {
+    "code": "código",
+    "expirationDate": "Data de expiração",
+    "description": "descrição"
+  },
+  "disputeClassification": {
+    "name": "aguardando tradução"
+  },
+  "disputeSubClassification": {
+    "name": "aguardando tradução"
+  },
+  "disputeOrg": {
+    "name": "aguardando tradução",
+    "state": "aguardando tradução",
+    "city": "aguardando tradução",
+    "enum": "aguardando tradução"
+  },
+  "disputeObjectAttribute": {
+    "value": ""
+  },
+  "email": {
+    "address": "aguardando tradução"
+  },
+  "phone": {
+    "mobileNumber": "aguardando tradução",
+    "landLineNumber": "aguardando tradução"
+  },
+  "oab": {
+    "stateNumber": "aguardando tradução"
+  },
+  "person": {
+    "name": "aguardando tradução",
+    "alias": "aguardando tradução",
+    "naturalDocumentNumber": "aguardando tradução",
+    "legalDocumentNumber": "aguardando tradução"
+  },
+  "attributeBoundary": {
+    "boundary": "aguardando tradução"
+  }
 }

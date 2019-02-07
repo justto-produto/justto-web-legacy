@@ -93,7 +93,7 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('getImportsHistory').then(response => {
-      // this.importsHistory = response
+      this.importsHistory = response
     })
   },
   beforeCreate () {

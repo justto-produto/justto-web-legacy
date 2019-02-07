@@ -38,7 +38,7 @@ const imports = {
             if (response.status === 204) {
               setTimeout(function () {
                 resolve(dispatch('getImportsColumns'))
-              }, 1000)
+              }, 3000)
             } else {
               commit('setImportsMap', response.data)
               resolve()

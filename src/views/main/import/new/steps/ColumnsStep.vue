@@ -10,7 +10,7 @@
         </p>
         <div
           v-for="column in columns"
-          v-show="!loadingColumns"
+          v-show="!$store.state.loading"
           :key="`${column.id}-${column.name}`"
           class="file-column"
           @drop="dropTag($event, column)" @dragover.prevent>
@@ -21,11 +21,11 @@
           <el-tag
             :closable="column.tag != null" :class="{'el-tag--dropzone-active': column.tag}" class="el-tag--dropzone"
             @close="removeTag(column)">
-            <span v-if="column.tag">{{ $t(column.tag.name) }}</span>
+            <span v-if="column.tag">{{ $t(column.tag.key) }}</span>
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
         </div>
-        <div v-loading="true" v-show="loadingColumns">
+        <div v-loading="true" v-show="$store.state.loading">
           <div v-for="item in [1,2,3,4,5]" :key="item" class="file-column">
             <div :item="item" class="file-column__name">
               <span class="file-column__title">coluna</span>
@@ -52,7 +52,7 @@
               draggable="true"
               @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
               <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
-                {{ tag.name }}
+                {{ $t(tag.key) }}
               </el-tag>
             </span>
           </el-collapse-item>
@@ -68,7 +68,7 @@
                 v-for="tag in tags.claimantParty.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
                 <el-tag :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}" class="el-tag--drag">
-                  Parte contrária {{ claimantPartyIndex + ' - ' + tag.name }}
+                  Parte contrária {{ claimantPartyIndex + ' - ' + $t(tag.key) }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -89,7 +89,7 @@
                 v-for="tag in tags.claimantLawyer.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
                 <el-tag :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}" class="el-tag--drag">
-                  Advogado {{ claimantLawyerIndex + ' - ' + tag.name }}
+                  Advogado {{ claimantLawyerIndex + ' - ' + $t(tag.key) }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -110,7 +110,7 @@
                 v-for="tag in tags.respondentParty.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
                 <el-tag :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}" class="el-tag--drag">
-                  Réu {{ respondentPartyIndex + ' - ' + tag.name }}
+                  Réu {{ respondentPartyIndex + ' - ' + $t(tag.key) }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -135,7 +135,6 @@ export default {
       claimantParties: [],
       claimantLawyers: [],
       respondentParties: [],
-      loadingColumns: true,
       loadingTags: true,
       errorColumns: false,
       errorTags: false
@@ -152,8 +151,9 @@ export default {
     }
   },
   beforeMount () {
+    this.$store.dispatch('showLoading')
     this.$store.dispatch('getImportsColumns').then(() => {
-      this.loadingColumns = false
+      this.$store.dispatch('hideLoading')
     }).catch(error => {
       console.error(error)
       this.$notify.closeAll()
