@@ -60,7 +60,7 @@
           v-for="item in filteredNegotiators"
           :key="item.id"
           :label="item.name"
-          :value="item">
+          :value="item.id">
           <jus-avatar-user name-initials="AA" shape="circle" size="xs" />
           <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.name }}</span>
         </el-option>
@@ -196,7 +196,7 @@ export default {
     showStrategyMessages () {
       this.dialogVisible = true
       this.$store.dispatch('showLoading')
-      this.$store.dispatch('getStrategyEngagement', this.strategy).then(response => {
+      this.$store.dispatch('getStrategyEngagement', this.strategy.id).then(response => {
         this.strategyEngagements = response.steps
         this.$store.dispatch('hideLoading')
       }).catch(error => {
@@ -213,7 +213,7 @@ export default {
         case 'EMAIL_CNA':
           return 'cna'
         case 'DELAY':
-          return 'delay'
+          return 'clock'
         default:
           return 'sms'
       }
