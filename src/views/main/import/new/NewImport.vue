@@ -81,10 +81,13 @@ export default {
     finalStep () {
       var promises = []
       for (let campaign of this.mappedCampaigns) {
+
         promises.push(this.$store.dispatch('createCampaign', campaign))
       }
       Promise.all(promises).then(() => {
         this.$router.push('/management')
+      }).catch(error => {
+        this.$notify(this.$errorMessage)
       })
     }
   }
