@@ -11,7 +11,7 @@ const campaign = {
     getCampaigns ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('http://homol.justto.com.br/api/campaigns')
+        axios.get('campaigns')
           .then(response => {
             commit('setCampaign', response.data.content)
             resolve(response)
@@ -24,7 +24,7 @@ const campaign = {
     createCampaign ({ commit }, campaign) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('http://homol.justto.com.br/api/campaigns', campaign)
+        axios.post('campaigns', campaign)
           .then(response => {
             resolve(response)
           })

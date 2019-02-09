@@ -175,7 +175,7 @@
         </el-collapse-item>
       </el-collapse>
       <hr>
-      <el-collapse value="1" accordion class="el-collapse--bordered">
+      <el-collapse accordion class="el-collapse--bordered">
         <el-collapse-item title="Contraparte 1" name="1">
           <div class="ticket-view__info-line">
             <span>Status:</span>
@@ -222,6 +222,9 @@ export default {
       }],
       newMessage: ''
     }
+  },
+  beforeMount () {
+    this.$store.dispatch('getDispute', 7)
   },
   computed: {
   },

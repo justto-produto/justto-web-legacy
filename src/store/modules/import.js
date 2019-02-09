@@ -21,7 +21,7 @@ const imports = {
     getImportsHistory () {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('http://homol.justto.com.br/api/imports/history')
+        axios.get('imports/history')
           .then(response => {
             resolve(response.data)
           })
@@ -33,7 +33,7 @@ const imports = {
     getImportsColumns ({ commit, state, dispatch }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('http://homol.justto.com.br/api/imports/' + state.file.id + '/columns')
+        axios.get('imports/' + state.file.id + '/columns')
           .then(response => {
             if (response.status === 204) {
               setTimeout(function () {
@@ -52,7 +52,7 @@ const imports = {
     getImportsTags ({ state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('http://homol.justto.com.br/api/imports/' + state.file.id + '/tags')
+        axios.get('imports/' + state.file.id + '/tags')
           .then(response => {
             resolve(response.data)
           })
@@ -64,7 +64,7 @@ const imports = {
     mapImportColumns ({ state }, map) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('http://homol.justto.com.br/api/imports/'+ state.file.id + '/map', map)
+        axios.put('imports/'+ state.file.id + '/map', map)
           .then(response => {
             resolve(response.data)
           })
