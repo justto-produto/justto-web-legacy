@@ -25,11 +25,18 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/new/NewImport')
         },
         {
-          path: 'management',
+          name: 'management',
+          path: '/management',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management')
         },
         {
-          path: 'management/ticket',
+          path: 'management/ticket/',
+          redirect: {
+            name: 'management'
+          }
+        },
+        {
+          path: 'management/ticket/:id',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Ticket')
         },
         {

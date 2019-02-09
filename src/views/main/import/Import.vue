@@ -110,24 +110,10 @@ export default {
       // file.type === 'application/vnd.oasis.opendocument.text'
       const isLt20M = file.size / 1024 / 1024 < 20
       if (!isValid) {
-        this.$notify({
-          title: 'Ops!',
-          type: 'warning',
-          position: 'bottom-right',
-          message: `Arquivo em formato inválido.`,
-          duration: 5000,
-          customClass: 'warning'
-        })
+        this.$notify(this.$notificationMessage('invalidFileFormat'))
       }
       if (!isLt20M) {
-        this.$notify({
-          title: 'Ops!',
-          type: 'warning',
-          position: 'bottom-right',
-          message: `Limite de 20 MB por arquivo.`,
-          duration: 5000,
-          customClass: 'warning'
-        })
+        this.$notify(this.$notificationMessage('fileLimit'))
       }
       return isValid && isLt20M
     },
@@ -142,15 +128,7 @@ export default {
     },
     handleError () {
       this.processingFile = false
-      this.$notify({
-        title: 'Ops!',
-        type: 'error',
-        position: 'bottom-right',
-        message: `Houve uma falha de conexão com o servidor.
-        Tente novamente ou entre em contato com o administrador do sistema.`,
-        duration: 5000,
-        customClass: 'danger'
-      })
+      this.$notify(this.$notificationMessage('connectionError'))
     },
     removeFile () {
       this.fileUrl = ''

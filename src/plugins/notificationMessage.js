@@ -2,6 +2,8 @@ import Vue from 'vue'
 
 const CONNECTION_ERROR = 'connectionError'
 const INVALID_FILE_FORMAT = 'invalidFileFormat'
+const FILE_LIMIT = 'fileLimit'
+const MESSAGE_SUCCESS = 'messageSuccess'
 
 const NotificationMessage = {
   install (Vue, options) {
@@ -21,6 +23,15 @@ const NotificationMessage = {
           type = 'warning'
           customClass = 'warning'
           break
+        case FILE_LIMIT:
+          message = 'Limite de 20 MB por arquivo.'
+          type = 'warning'
+          customClass = 'warning'
+          break
+        case MESSAGE_SUCCESS:
+          message = 'Mensagem enviada com sucesso!'
+          type = 'success'
+          customClass = 'success'
       }
       return {
         title,

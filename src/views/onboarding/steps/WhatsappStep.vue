@@ -123,21 +123,10 @@ export default {
             message: 'Bem vindo à Justto!'
           }).then(() => {
             this.sending = false
-            this.$notify({
-              title: 'Mensagem enviada com sucesso!',
-              position: 'bottom-right',
-              customClass: 'success',
-              type: 'success'
-            })
+            this.$notify(this.$notificationMessage('messageSuccess'))
           }).catch(() => {
             this.sending = false
-            this.$notify({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor.',
-              position: 'bottom-right',
-              customClass: 'danger',
-              type: 'error'
-            })
+            this.$notify(this.$notificationMessage('connectionError'))
           })
         }
       })

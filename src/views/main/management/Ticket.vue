@@ -224,7 +224,14 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('getDispute', 7)
+    this.$store.dispatch('getDispute', this.$route.params.id)
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.error(error)
+        this.$notify(this.$notificationMessage('connectionError'))
+      })
   },
   computed: {
   },

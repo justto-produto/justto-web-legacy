@@ -144,13 +144,7 @@ export default {
         this.$store.dispatch('whatsappStart')
       }).catch(error => {
         console.error(error)
-        this.$notify({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor.',
-          position: 'bottom-right',
-          customClass: 'danger',
-          type: 'error'
-        })
+        this.$notify(this.$notificationMessage('connectionError'))
       }).finally(() => {
         this.$store.dispatch('hideLoading')
       })

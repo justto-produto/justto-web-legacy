@@ -91,7 +91,7 @@ export default {
       Promise.all(promises).then(() => {
         this.$router.push('/management')
       }).catch(error => {
-        this.$notify(this.$errorMessage)
+        this.$notify(this.$notificationMessage('connectionError'))
         console.error(error)
       })
     }

@@ -158,7 +158,7 @@ export default {
       }).catch(error => {
         this.$notify.closeAll()
         console.error(error)
-        this.$notify(this.$errorMessage)
+        this.$notify(this.$notificationMessage('connectionError'))
       })
     }
     this.$store.dispatch('getImportsTags').then(tags => {
@@ -171,7 +171,7 @@ export default {
     }).catch(error => {
       this.$notify.closeAll()
       console.error(error)
-      this.$notify(this.$errorMessage)
+      this.$notify(this.$notificationMessage('connectionError'))
     })
   },
   methods: {
