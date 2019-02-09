@@ -49,6 +49,12 @@ _axios.interceptors.response.use(
   function (error) {
     if (error.response.status === 401) {
       store.dispatch('logout')
+    } else if (
+      error.response &&
+      error.response.data &&
+      error.response.data.fields &&
+      error.response.data.fields['AuthorizationContext Account id '] === 'Invalid credential ') {
+      store.dispatch('logout')
     }
     return Promise.reject(error)
   }
