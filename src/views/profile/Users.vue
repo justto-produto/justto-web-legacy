@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     onSubmit () {
-      console.log('submit!')
+      // console.log('submit!')
     },
     changePasswordDialog () {
       this.dialogVisible = true

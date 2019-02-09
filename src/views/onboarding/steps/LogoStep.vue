@@ -48,7 +48,6 @@ export default {
       this.imageUrl = ''
     },
     loadingProgress (event, file, fileList) {
-      console.log('progress')
       this.loading = true
     },
     handleAvatarSuccess (res, file) {

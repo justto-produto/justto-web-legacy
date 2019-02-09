@@ -105,7 +105,7 @@ export default {
           this.$router.push('login')
         })
         .catch(error => {
-          console.log(error)
+          console.error(error)
           this.$router.push('login')
         })
     }
@@ -123,7 +123,7 @@ export default {
                   this.$router.push('/')
                 })
               }).catch(error => {
-                console.log(error)
+                console.error(error)
                 this.errorMessage = `Houve uma falha de conexão com o servidor.
                 Tente novamente ou entre em contato com o administrador do sistema.`
                 this.showError = true
@@ -131,7 +131,7 @@ export default {
               })
             })
             .catch(error => {
-              console.log(error)
+              console.error(error)
               if (error.response && error.response.data.code === 'INVALID_CREDENTIALS') {
                 this.errorMessage = 'E-mail não cadastrado ou senha incorreta.'
               } else {

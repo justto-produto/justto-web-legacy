@@ -3,7 +3,7 @@ const workspaceModule = {
     name: '',
     status: '',
     subdomain: '',
-    negotiators: []
+    negotiatorIds: []
   },
   mutations: {
     updateWorkspace (state, response) {
@@ -22,7 +22,7 @@ const workspaceModule = {
       state.subdomain = ''
     },
     setWorkspaceNegotiators (state, response) {
-      state.negotiators = response
+      state.negotiatorIds = response
     }
   },
   actions: {

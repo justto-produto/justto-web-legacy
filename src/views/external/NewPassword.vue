@@ -116,7 +116,7 @@ export default {
             .catch(error => {
               this.showError = true
               this.showLoading = false
-              console.log(error)
+              console.error(error)
             })
         } else {
           return false

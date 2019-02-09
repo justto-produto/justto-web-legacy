@@ -79,7 +79,7 @@ export default {
               this.showSuccess = true
               this.forgotForm.email = ''
               this.showLoading = false
-              console.log(error)
+              console.error(error)
             })
         } else {
           return false

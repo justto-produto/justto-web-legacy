@@ -143,7 +143,7 @@ export default {
         this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
         this.$store.dispatch('whatsappStart')
       }).catch(error => {
-        console.log(error)
+        console.error(error)
         this.$notify({
           title: 'Ops!',
           message: 'Houve uma falha de conexão com o servidor.',

@@ -53,12 +53,12 @@ export default {
             })
             .catch(error => {
               this.showError = true
-              console.log(error)
+              console.error(error)
             })
         })
         .catch(error => {
           this.showError = true
-          console.log(error)
+          console.error(error)
         })
     }
   }

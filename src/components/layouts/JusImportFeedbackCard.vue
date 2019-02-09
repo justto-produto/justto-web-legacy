@@ -1,6 +1,6 @@
 <template>
   <div class="jus-import-feedback-card">
-    <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ mappedCampaign.name }}</el-tag>
+    <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ mappedName }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
       <el-autocomplete
         v-model="campaignName"
@@ -19,6 +19,7 @@
         ref="strategySelect"
         v-model="strategy"
         :default-first-option="false"
+        value-key="name"
         clearable class="select-strategy"
         placeholder="Escolha uma estratégia">
         <i
@@ -34,6 +35,34 @@
       <div class="select-strategy__messages">
         <a v-show="strategy !== ''" @click="showStrategyMessages()">Ver estratégia de engajamento das partes</a>
       </div>
+      <div v-if="strategy.id === 1" class="jus-import-feedback-card__number">
+        <div>
+          <i class="el-icon-circle-check-outline" />Data do pagamento
+        </div>
+        <div>
+          <el-input-number
+            v-model="paymentDeadLine"
+            :min="1"
+            :max="9999"
+            name="payment-deadline"
+            controls-position="right" />
+          dia(s) após acordo
+        </div>
+      </div>
+      <div class="jus-import-feedback-card__number">
+        <div>
+          <i class="el-icon-circle-check-outline" />Data do protocolo
+        </div>
+        <div>
+          <el-input-number
+            v-model="protocolDeadLine"
+            :min="1"
+            :max="9999"
+            name="protocol-deadline"
+            controls-position="right" />
+          dia(s) após acordo
+        </div>
+      </div>
       <el-date-picker
         v-model="dueDate"
         :prefix-icon="dueDate === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -42,7 +71,7 @@
         format="dd-MM-yyyy"
         placeholder="Defina a data limite para a negociação" />
       <el-select
-        v-model="negotiators"
+        v-model="negotiatorIds"
         :remote-method="searchNegotiators"
         :loading="loading"
         value-key="name"
@@ -54,7 +83,7 @@
         class="select-negotiator">
         <i
           slot="prefix"
-          :class="negotiators.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+          :class="negotiatorIds.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
         <el-option
           v-for="item in filteredNegotiators"
@@ -108,13 +137,16 @@ export default {
   },
   data () {
     return {
+      mappedName: 'Campanha',
+      protocolDeadLine: 1,
+      paymentDeadLine: 1,
       campaignName: '',
       campaignTimeout: null,
       strategy: '',
       strategyEngagements: [],
       dialogVisible: false,
       dueDate: null,
-      negotiators: [],
+      negotiatorIds: [],
       filteredNegotiators: [],
       loading: false,
       datePickerOptions: {
@@ -132,15 +164,15 @@ export default {
       return this.$store.state.campaignModule.list
     },
     negotiatorsList () {
-      return this.$store.state.workspaceModule.negotiators
+      return this.$store.state.workspaceModule.negotiatorIds
     }
   },
   watch: {
     campaignName (value) {
       if (value === '') {
-        this.mappedCampaign.campaign = {}
+        this.mappedCampaign.name = ''
       } else {
-        this.mappedCampaign.campaign.name = value
+        this.mappedCampaign.name = value
       }
     },
     strategy (value) {
@@ -149,12 +181,21 @@ export default {
     dueDate (value) {
       this.mappedCampaign.deadline = value
     },
-    negotiators (value) {
-      this.mappedCampaign.negotiators = value
+    negotiatorIds (value) {
+      this.mappedCampaign.negotiatorIds = value
+    },
+    protocolDeadLine (value) {
+      this.mappedCampaign.protocolDeadLine = value
+    },
+    paymentDeadLine (value) {
+      this.mappedCampaign.paymentDeadLine = value
     }
   },
   beforeMount () {
+    this.mappedName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
+    this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
+    this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
   },
   methods: {
     querySearchCampaign (queryString, callback) {
@@ -236,11 +277,36 @@ export default {
   .el-autocomplete, .el-select, .el-input, .select-strategy__messages {
     width: 100%;
   }
+  .select-strategy{
+    .el-input__inner {
+      border: 0 !important;
+    }
+  }
+  .jus-import-feedback-card__number {
+    .el-input__inner {
+      border-left: 1px solid #dcdfe6 !important;
+      border-right: 1px solid #dcdfe6 !important;
+      border-top: 0 !important;
+      border-bottom: 0 !important;
+    }
+  }
   .el-input__inner {
     border-bottom: 1px solid #dcdfe6 !important;
     border-top: 0;
     border-left: 0;
     border-right: 0;
+  }
+
+  .el-input__inner {
+    border-color: #dcdfe6 !important;
+  }
+  .el-input-number {
+    margin: 0 8px;
+    width: 100px;
+    .el-input__inner {
+      border-top: 0;
+      border-bottom: 0;
+    }
   }
   .el-card__body {
     padding: 0;
@@ -256,11 +322,6 @@ export default {
   .el-icon-circle-check-outline {
     color: #d1dbe2;
   }
-  .select-strategy {
-    .el-input__inner {
-      border: 0 !important;
-    }
-  }
   .select-strategy__messages {
     border-bottom: 1px solid #dcdfe6;
     a {
@@ -271,6 +332,18 @@ export default {
   .select-negotiator {
     .el-select__input {
       margin-left: 5px;
+    }
+  }
+  &__number {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 13px;
+    width: 100%;
+    border-bottom: 1px solid #dcdfe6;
+    .el-icon-circle-check-outline {
+      font-size: 1.3rem;
+      margin-right: 5px;
     }
   }
 }
@@ -290,8 +363,6 @@ export default {
     padding-left: 10px;
   }
   .el-collapse-item__content {
-    // margin: 10px 20px 0;
-    // padding: 20px 0;
     border-top: 1px solid #eeeeee;
   }
 }

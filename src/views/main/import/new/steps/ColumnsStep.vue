@@ -151,21 +151,16 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('showLoading')
-    this.$store.dispatch('getImportsColumns').then(() => {
-      this.$store.dispatch('hideLoading')
-    }).catch(error => {
-      console.error(error)
-      this.$notify.closeAll()
-      this.$notify({
-        title: 'Ops!',
-        message: 'Houve uma falha de conexão com o servidor.',
-        position: 'bottom-right',
-        customClass: 'danger',
-        type: 'error',
-        duration: 5000
+    if (!this.$store.state.importModule.map.length) {
+      this.$store.dispatch('showLoading')
+      this.$store.dispatch('getImportsColumns').then(() => {
+        this.$store.dispatch('hideLoading')
+      }).catch(error => {
+        this.$notify.closeAll()
+        console.error(error)
+        this.$notify(this.$errorMessage)
       })
-    })
+    }
     this.$store.dispatch('getImportsTags').then(tags => {
       this.loadingTags = false
       this.tags = tags
@@ -176,14 +171,7 @@ export default {
     }).catch(error => {
       this.$notify.closeAll()
       console.error(error)
-      this.$notify({
-        title: 'Ops!',
-        message: 'Houve uma falha de conexão com o servidor.',
-        position: 'bottom-right',
-        customClass: 'danger',
-        type: 'error',
-        duration: 5000
-      })
+      this.$notify(this.$errorMessage)
     })
   },
   methods: {

@@ -118,7 +118,7 @@ export default {
               this.$store.dispatch('myAccount')
             }).catch(error => {
               this.showError = true
-              console.log(error)
+              console.error(error)
             }).finally(() => {
               this.$store.dispatch('hideLoading')
             })

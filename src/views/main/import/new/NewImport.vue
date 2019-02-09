@@ -57,6 +57,7 @@ export default {
     }
   },
   beforeCreate () {
+    this.$store.commit('removeImportsMap')
     if (!this.$store.getters.hasImportsFile) {
       this.$router.push('/import')
     }
@@ -81,13 +82,17 @@ export default {
     finalStep () {
       var promises = []
       for (let campaign of this.mappedCampaigns) {
-
+        delete campaign.campaign
+        delete campaign.rows
+        campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
+        campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
         promises.push(this.$store.dispatch('createCampaign', campaign))
       }
       Promise.all(promises).then(() => {
         this.$router.push('/management')
       }).catch(error => {
         this.$notify(this.$errorMessage)
+        console.error(error)
       })
     }
   }
