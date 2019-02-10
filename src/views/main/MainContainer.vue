@@ -5,12 +5,13 @@
         <img class="aside-logo__logo" src="@/assets/logo-small.svg">
       </div>
       <el-menu
+        ref="sideMenu"
         :collapse-transition="false"
-        :default-active="$route.path"
         :collapse="isCollapse"
+        default-active="0"
         router
         class="el-menu--main-menu">
-        <el-menu-item ref="dashboard" index="/">
+        <el-menu-item :route="{name:'dashboard'}" index="0">
           <jus-icon :is-active="$route.path === '/'" icon="dashboard" class="el-menu__icon"/>
           <jus-tip/>
           <span slot="title">Dashboard</span>
@@ -20,15 +21,15 @@
             <span>GERENCIAMENTO</span>
           </li>
         </transition>
-        <el-menu-item index="/import">
+        <el-menu-item :route="{name:'import'}" index="1">
           <jus-icon :is-active="$route.path.startsWith('/import')" icon="import" class="el-menu__icon"/>
           <span slot="title">Importação de casos</span>
         </el-menu-item>
-        <el-menu-item index="/management">
+        <el-menu-item :route="{name:'management'}" index="2">
           <jus-icon :is-active="$route.path.startsWith('/management')" icon="negotiation" class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
-        <el-menu-item index="/settings">
+        <el-menu-item :route="{name:'settings'}" index="3">
           <jus-icon :is-active="$route.path.startsWith('/settings')" icon="settings" class="el-menu__icon"/>
           <span slot="title">Configurações</span>
         </el-menu-item>
@@ -89,14 +90,6 @@
             <span slot="title">Bruno Moreno</span>
             <span class="el-menu__counter">0</span>
           </el-menu-item>
-          <!-- <el-menu-item v-for="index in [7,8,9,10,11,12]" :index="index">
-            <jus-avatar-user
-              size="sm" shape="circle"
-              class="el-menu__avatar"
-              src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135"/>
-            <span slot="title">Bruno Moreno</span>
-            <span class="el-menu__counter">0</span>
-          </el-menu-item> -->
         </el-menu>
       </vue-perfect-scrollbar>
     </el-aside>
@@ -126,6 +119,16 @@ export default {
   data () {
     return {
       isCollapse: true
+    }
+  },
+  computed: {
+    menuIndex () {
+      return this.$store.state.menuIndex
+    }
+  },
+  watch: {
+    menuIndex (index) {
+      this.$refs.sideMenu.activeIndex = index
     }
   }
 }

@@ -226,6 +226,9 @@ export default {
       console.error(error)
       this.$notify(this.$notificationMessage('connectionError'))
     })
+  },
+  mounted () {
+    this.$store.state.menuIndex = '2'
   }
 }
 </script>

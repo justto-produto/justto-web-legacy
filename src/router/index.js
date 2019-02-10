@@ -13,10 +13,12 @@ const router = new Router({
       },
       children: [
         {
+          name: 'dashboard',
           path: '/',
           component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard')
         },
         {
+          name: 'import',
           path: 'import',
           component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import/Import')
         },

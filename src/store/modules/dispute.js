@@ -19,7 +19,7 @@ const dispute = {
     getDisputeSummary ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://8437b866-7dc1-41ab-8817-10f750c38d97.mock.pstmn.io/disputes/' + id + '/summary')
+        axios.get('https://c04e5875-40fe-4541-89a9-ce86905b94ec.mock.pstmn.io/disputes/' + id + '/summary')
           .then(response => {
             resolve(response.data)
           })
@@ -31,7 +31,7 @@ const dispute = {
     getDisputeSubscribe ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://8437b866-7dc1-41ab-8817-10f750c38d97.mock.pstmn.io/disputes/' + id + '/subscribe')
+        axios.get('https://c04e5875-40fe-4541-89a9-ce86905b94ec.mock.pstmn.io/disputes/' + id + '/subscribe')
           .then(response => {
             resolve(response.data)
           })
@@ -43,7 +43,7 @@ const dispute = {
     getDisputeOccurrences ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://8437b866-7dc1-41ab-8817-10f750c38d97.mock.pstmn.io/disputes/' + id + '/occurrences')
+        axios.get('https://c04e5875-40fe-4541-89a9-ce86905b94ec.mock.pstmn.io/disputes/' + id + '/occurrences')
           .then(response => {
             resolve(response.data)
           })
