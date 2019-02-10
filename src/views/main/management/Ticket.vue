@@ -13,29 +13,16 @@
       </div>
       <div class="ticket-view__side-content">
         <el-steps
-          :active="4"
+          :active="disputeOccurrences.length"
           direction="vertical"
           process-status="wait"
           class="ticket-view__steps el-steps--dots">
-          <el-step>
-            <template slot="title">Enriquecimento</template>
-            <template slot="description">E-mail, Telefone</template>
-          </el-step>
-          <el-step>
-            <template slot="title">Engajamento</template>
-            <template slot="description">E-mail, Telefone</template>
-          </el-step>
-          <el-step>
-            <template slot="title">Interação</template>
-            <template slot="description">E-mail, Telefone</template>
-          </el-step>
-          <el-step>
-            <template slot="title">Contraproposta</template>
-            <template slot="description">E-mail, Telefone</template>
+          <el-step v-for="ocurrence in disputeOccurrences" :key="ocurrence.id">
+            <template slot="title">{{ ocurrence.type }}</template>
+            <template slot="description">{{ ocurrence.description }}</template>
           </el-step>
           <el-step>
             <template slot="title">Acordo</template>
-            <template slot="description">E-mail, Telefone</template>
           </el-step>
         </el-steps>
       </div>
@@ -211,6 +198,9 @@ export default {
   name: 'Ticket',
   data () {
     return {
+      dispute: {},
+      disputeSumarry: {},
+      disputeOccurrences: {},
       messages: [{
         message: 'Jo what’s a nice chilled movie I can go watch with my mom?',
         sender: 'company',
@@ -224,18 +214,18 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('getDispute', this.$route.params.id)
-      .then(response => {
-        console.log(response)
-      })
-      .catch(error => {
-        console.error(error)
-        this.$notify(this.$notificationMessage('connectionError'))
-      })
-  },
-  computed: {
-  },
-  methods: {
+    Promise.all([
+      this.$store.dispatch('getDispute', this.$route.params.id),
+      this.$store.dispatch('getDisputeSummary', this.$route.params.id),
+      this.$store.dispatch('getDisputeOccurrences', this.$route.params.id)
+    ]).then(responses => {
+      this.dispute = responses[0]
+      this.disputeSumarry = responses[1]
+      this.disputeOccurrences = responses[2]
+    }).catch(error => {
+      console.error(error)
+      this.$notify(this.$notificationMessage('connectionError'))
+    })
   }
 }
 </script>
