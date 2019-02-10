@@ -86,7 +86,7 @@
           </el-button>
         </el-tooltip>
       </div>
-      <div class="ticket-view__chat">
+      <div class="ticket-view__chat" v-loading="true">
         <ul v-chat-scroll="{always: false, smooth: true}" class="ticket-view__messages">
           <li v-for="(message, index) in messages" :key="message+index" :class="{'ticket-view__user' : message.sender === 'user'}">
             <div class="ticket-view__photo">
@@ -140,7 +140,7 @@
         <el-button plain>Exportar caso</el-button>
       </div>
       <el-collapse value="1">
-        <el-collapse-item title="Informações gerais" name="1">
+        <el-collapse-item title="Informações gerais" name="1" v-loading="loadingDisputeSumarry">
           <div class="ticket-view__info-line">
             <span>Nº do Processo:</span>
             <span>-</span>
@@ -172,7 +172,7 @@
         </el-collapse-item>
       </el-collapse>
       <hr>
-      <el-collapse accordion class="el-collapse--bordered">
+      <el-collapse accordion class="el-collapse--bordered" v-loading="true">
         <el-collapse-item title="Contraparte 1" name="1">
           <div class="ticket-view__info-line">
             <span>Status:</span>
@@ -211,6 +211,8 @@ export default {
       dispute: {},
       disputeSumarry: {},
       disputeOccurrences: {},
+      loadingDispute: false,
+      loadingDisputeSumarry: false,
       loadingDisputeOccurrences: false,
       messages: [{
         message: 'Jo what’s a nice chilled movie I can go watch with my mom?',
@@ -225,6 +227,8 @@ export default {
     }
   },
   beforeMount () {
+    this.loadingDispute = true
+    this.loadingDisputeSumarry = true
     this.loadingDisputeOccurrences = true
     Promise.all([
       this.$store.dispatch('getDispute', this.$route.params.id),
@@ -234,6 +238,8 @@ export default {
       this.dispute = responses[0]
       this.disputeSumarry = responses[1]
       this.disputeOccurrences = responses[2]
+      this.loadingDispute = false
+      this.loadingDisputeSumarry = false
       this.loadingDisputeOccurrences = false
     }).catch(error => {
       console.error(error)
@@ -432,7 +438,7 @@ export default {
     }
   }
   hr {
-    margin: 0 -20px 20px;;
+    margin: 1px -20px 20px;
   }
   .el-collapse--bordered {
     .el-collapse-item {
