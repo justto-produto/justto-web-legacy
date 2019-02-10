@@ -15,7 +15,7 @@ const router = new Router({
         {
           name: 'dashboard',
           path: '/',
-          component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard')
+          component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard')
         },
         {
           name: 'import',
@@ -42,14 +42,14 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Ticket')
         },
         {
-          name: 'name',
+          name: 'settings',
           path: 'settings',
-          component: () => import(/* webpackChunkName: "settingsIndex" */ '@/views/main/settings')
+          component: () => import(/* webpackChunkName: "settingsIndex" */ '@/views/main/settings/Settings')
         }
       ]
     },
     {
-      path: 'profile',
+      path: '/profile',
       component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer'),
       meta: {
         requiresAuth: true

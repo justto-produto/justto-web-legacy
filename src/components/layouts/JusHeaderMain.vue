@@ -5,7 +5,17 @@
       <input type="text" placeholder="Busque aqui os seus casos">
     </div>
     <div class="jus-header-main__notification">
-      <jus-icon icon="notification"/>
+      <el-dropdown trigger="click" placement="bottom">
+        <jus-icon icon="notification"/>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="e">Notificação importante 1</el-dropdown-item>
+          <el-dropdown-item command="e">Notificação importante 2</el-dropdown-item>
+          <el-dropdown-item command="e">Notificação importante 3</el-dropdown-item>
+          <el-dropdown-item command="e">Notificação importante 4</el-dropdown-item>
+          <el-dropdown-item command="e">Notificação importante 5</el-dropdown-item>
+          <el-dropdown-item command="e">Notificação importante 6</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
     <div class="jus-header-main__info">
       <el-dropdown trigger="click" placement="bottom-start">
@@ -85,6 +95,7 @@ export default {
 .jus-header-main__notification {
   margin: auto;
   margin-right: 32px;
+  cursor: pointer;
 }
 .jus-header-main__info {
   .el-dropdown-link {

@@ -1,6 +1,9 @@
 <template>
   <JusViewMain>
-    <template slot="title">Configurações do perfil</template>
+    <template slot="title">
+      <h1>TELA QUEBRADA ABAIXO :)</h1>
+    </template>
+    <!-- <template slot="title">Configurações do perfil</template> -->
     <template slot="main">
       <el-form
         ref="profileForm" :model="profileForm" class="profile-form"
