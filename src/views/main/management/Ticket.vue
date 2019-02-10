@@ -13,16 +13,26 @@
       </div>
       <div class="ticket-view__side-content">
         <el-steps
-          :active="disputeOccurrences.length"
+          v-if="!loadingDisputeOccurrences"
+          :active="disputeOccurrences.length - 1"
           direction="vertical"
           process-status="wait"
           class="ticket-view__steps el-steps--dots">
           <el-step v-for="ocurrence in disputeOccurrences" :key="ocurrence.id">
-            <template slot="title">{{ ocurrence.type }}</template>
+            <template slot="title">{{ $t('ocurrence.type.' + ocurrence.type) }}</template>
             <template slot="description">{{ ocurrence.description }}</template>
           </el-step>
-          <el-step>
-            <template slot="title">Acordo</template>
+        </el-steps>
+        <el-steps
+          v-loading="true"
+          v-else
+          :active="4"
+          direction="vertical"
+          process-status="wait"
+          class="ticket-view__steps el-steps--dots">
+          <el-step v-for="ocurrence in 5" :key="ocurrence">
+            <template slot="title">Ocorrência</template>
+            <template slot="description">Descrição</template>
           </el-step>
         </el-steps>
       </div>
@@ -201,6 +211,7 @@ export default {
       dispute: {},
       disputeSumarry: {},
       disputeOccurrences: {},
+      loadingDisputeOccurrences: false,
       messages: [{
         message: 'Jo what’s a nice chilled movie I can go watch with my mom?',
         sender: 'company',
@@ -214,6 +225,7 @@ export default {
     }
   },
   beforeMount () {
+    this.loadingDisputeOccurrences = true
     Promise.all([
       this.$store.dispatch('getDispute', this.$route.params.id),
       this.$store.dispatch('getDisputeSummary', this.$route.params.id),
@@ -222,6 +234,7 @@ export default {
       this.dispute = responses[0]
       this.disputeSumarry = responses[1]
       this.disputeOccurrences = responses[2]
+      this.loadingDisputeOccurrences = false
     }).catch(error => {
       console.error(error)
       this.$notify(this.$notificationMessage('connectionError'))
@@ -382,7 +395,16 @@ export default {
     }
   }
   &__side-content {
-    margin-top: 20px;
+    margin: 20px 0;
+    .el-step__title {
+      text-transform: capitalize;
+    }
+    .el-step__description {
+      min-width: 270px;
+    }
+    .el-step__head {
+      overflow: hidden;
+    }
   }
   &__actions {
     text-align: center;

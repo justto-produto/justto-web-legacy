@@ -46,7 +46,7 @@
         :before-leave="handleChangeTab"
         :value="0"
         class="view-management__tabs">
-        <el-tab-pane :name="0" label="Engajamento">
+        <el-tab-pane name="0" label="Engajamento">
           <el-table
             ref="engagementTable"
             :data="cases"
@@ -79,7 +79,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane :name="1" label="Com interação">
+        <el-tab-pane name="1" label="Com interação">
           <el-table
             ref="interationTable"
             :data="cases"
@@ -115,7 +115,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane :name="2" label="Novos Acordos">
+        <el-tab-pane name="2" label="Novos Acordos">
           <el-table
             ref="newAgreementsTable"
             :data="cases"
@@ -145,7 +145,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane :name="3" label="Todos">
+        <el-tab-pane name="3" label="Todos">
           <el-table
             ref="allTable"
             :data="cases"
@@ -260,10 +260,10 @@ export default {
   },
   methods: {
     clearSelection () {
-      this.$refs.engagementTable.clearSelection()
-      this.$refs.interationTable.clearSelection()
-      this.$refs.newAgreementsTable.clearSelection()
-      this.$refs.allTable.clearSelection()
+      if (this.$refs.engagementTable) this.$refs.engagementTable.clearSelection()
+      if (this.$refs.interationTable) this.$refs.interationTable.clearSelection()
+      if (this.$refs.newAgreementsTable) this.$refs.newAgreementsTable.clearSelection()
+      if (this.$refs.allTable) this.$refs.allTable.clearSelection()
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
@@ -276,24 +276,26 @@ export default {
     setActiveTabLabel (newTab) {
       var newActive
       switch (newTab) {
-        case 0:
+        case '0':
           newActive = { index: 0, label: 'Engajamento' }
           break
-        case 1:
+        case '1':
           newActive = { index: 1, label: 'Com interação' }
           break
-        case 2:
+        case '2':
           newActive = { index: 2, label: 'Novos acordos' }
           break
-        case 3:
+        case '3':
           newActive = { index: 3, label: 'Todos' }
           break
+        default:
+          newActive = { index: 0, label: 'Engajamento' }
       }
       this.activeTab = newActive
     },
     handleChangeTab (newTab, oldTab) {
-      this.setActiveTabLabel(newTab)
       this.clearSelection()
+      this.setActiveTabLabel(newTab)
     }
   }
 }
