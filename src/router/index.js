@@ -42,6 +42,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Ticket')
         },
         {
+          name: 'name',
           path: 'settings',
           component: () => import(/* webpackChunkName: "settingsIndex" */ '@/views/main/settings')
         }

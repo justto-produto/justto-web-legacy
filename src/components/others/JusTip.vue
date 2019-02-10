@@ -1,32 +1,36 @@
 <template>
   <div class="jus-tip">
-    <a class="jus-tip__trigger">
-      <span class="jus-tip__throbber"/>
-    </a>
+    <span class="jus-tip__throbber" @click="open"/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'JusTip'
+  name: 'JusTip',
+  methods: {
+    open () {
+      this.$confirm('Essa é uma dica pra você ficar esperto ;)', 'Dica!', {
+        type: 'info',
+        distinguishCancelAndClose: true,
+        confirmButtonText: 'Beleza',
+        cancelButtonText: 'Não exibir mais dicas'
+      }).catch(() => {
+        this.$message({
+          message: 'AZAR O SEU MANÉ!',
+          type: 'warning'
+        })
+      })
+    }
+  }
 }
 </script>
 
 <style lang="scss">
 .jus-tip {
   visibility: visible;
-  top: 0px;
-  right: -4px;
+  top: 12px;
+  right: 8px;
   position: absolute;
-  z-index: 998;
-  .jus-tip__trigger {
-    align-items: center;
-    display: flex;
-    height: 50px;
-    justify-content: center;
-    position: relative;
-    width: 50px;
-  }
   .jus-tip__throbber {
     background: #ff8e00;
     border-radius: 100%;

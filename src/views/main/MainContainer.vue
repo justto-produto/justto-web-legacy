@@ -12,8 +12,8 @@
         router
         class="el-menu--main-menu">
         <el-menu-item :route="{name:'dashboard'}" index="0">
+          <jus-tip />
           <jus-icon :is-active="$route.path === '/'" icon="dashboard" class="el-menu__icon"/>
-          <jus-tip/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
         <transition name="fade">
