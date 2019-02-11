@@ -60,42 +60,42 @@
           </el-button>
         </el-tooltip>
         <el-tooltip content="move-case">
-          <el-button plain>
+          <el-button plain @click="doAction('move')">
             <jus-icon icon="move-case" />
           </el-button>
         </el-tooltip>
         <el-tooltip content="delegate">
-          <el-button plain>
+          <el-button plain @click="doAction('move')">
             <jus-icon icon="delegate" />
           </el-button>
         </el-tooltip>
         <el-tooltip content="lose">
-          <el-button plain>
+          <el-button plain @click="doAction('move')">
             <jus-icon icon="lose" />
           </el-button>
         </el-tooltip>
         <el-tooltip content="win">
-          <el-button plain>
+          <el-button plain @click="doAction('move')">
             <jus-icon icon="win" />
           </el-button>
         </el-tooltip>
         <el-tooltip content="pause">
-          <el-button plain>
+          <el-button plain @click="doAction('move')">
             <jus-icon icon="pause" />
           </el-button>
         </el-tooltip>
         <el-tooltip content="start-again">
-          <el-button plain>
+          <el-button plain @click="doAction('move')">
             <jus-icon icon="start-again" />
           </el-button>
         </el-tooltip>
         <el-tooltip content="snooze">
-          <el-button plain>
+          <el-button plain @click="doAction('move')">
             <jus-icon icon="snooze" />
           </el-button>
         </el-tooltip>
         <el-tooltip content="star">
-          <el-button plain>
+          <el-button plain @click="doAction('move')">
             <jus-icon icon="star" />
           </el-button>
         </el-tooltip>
@@ -141,17 +141,23 @@
                 <div class="ticket-view__send-message-actions">
                   <div class="">
                     <el-tooltip content="Enviar mensagem">
-                      <jus-icon icon="message" is-active />
+                      <a href="#" @click="setMessageType('message')">
+                        <jus-icon :is-active="messageType === 'message'" icon="message"/>
+                      </a>
                     </el-tooltip>
                     <el-tooltip content="Enviar email">
-                      <jus-icon icon="email" />
+                      <a href="#" @click="setMessageType('email')">
+                        <jus-icon :is-active="messageType === 'email'" icon="email"/>
+                      </a>
                     </el-tooltip>
                     <el-tooltip content="Enviar Whatsapp">
-                      <jus-icon icon="whatsapp" />
+                      <a href="#" @click="setMessageType('whatsapp')">
+                        <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
+                      </a>
                     </el-tooltip>
-                    <!-- <jus-icon icon="sms" /> -->
-                    <!-- <jus-icon icon="attachment" /> -->
-                    <!-- <jus-icon icon="emoji" /> -->
+                  <!-- <jus-icon icon="sms" /> -->
+                  <!-- <jus-icon icon="attachment" /> -->
+                  <!-- <jus-icon icon="emoji" /> -->
                   </div>
                   <el-button type="primary">
                     Enviar
@@ -259,7 +265,8 @@ export default {
       loadingdisputeSummary: false,
       loadingDisputeOccurrences: false,
       showSearch: false,
-      searchTerm: ''
+      searchTerm: '',
+      messageType: 'message'
     }
   },
   watch: {
@@ -276,13 +283,13 @@ export default {
     }
   },
   created () {
-    this.fetch()
+    this.fetchData()
   },
   beforeDestroy () {
     this.$store.commit('changeMenuIndex', null)
   },
   methods: {
-    fetch () {
+    fetchData () {
       this.$store.commit('changeMenuIndex', '2')
       this.loadingDispute = true
       this.loadingdisputeSummary = true
@@ -291,6 +298,7 @@ export default {
         this.$store.dispatch('getDispute', this.$route.params.id),
         this.$store.dispatch('getDisputeSummary', this.$route.params.id),
         this.$store.dispatch('getDisputeOccurrences', this.$route.params.id)
+        // this.$store.dispatch('getDisputeRoles', this.$route.params.id)
       ]).then(responses => {
         this.dispute = responses[0]
         this.disputeSummary = responses[1]
@@ -328,6 +336,18 @@ export default {
       return (occurrence) => {
         return (occurrence.description.toLowerCase().indexOf(term.toLowerCase()) === 0)
       }
+    },
+    setMessageType (type) {
+      this.messageType = type
+    },
+    doAction (action) {
+      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.$notify(this.$notificationMessage({ title: 'Pronto!', message: 'Ação realizada com sucesso.' }))
+      })
     }
   }
 }
