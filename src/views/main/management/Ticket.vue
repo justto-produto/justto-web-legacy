@@ -3,7 +3,7 @@
     <template slot="title">
       <h1 class="ticket-view__title">
         <jus-icon icon="back" class="ticket-view__back"/>
-        Caso #128774
+        Caso #{{ dispute.id }}
       </h1>
     </template>
     <!-- RESUMO DO CASO -->
@@ -13,14 +13,26 @@
       </div>
       <div class="ticket-view__side-content">
         <el-steps
-          v-if="!loadingDisputeOccurrences"
-          :active="disputeOccurrences.length - 1"
+          v-if="!loadingdisputeSummary"
+          :active="disputeSummary.occurencies.length - 1"
           direction="vertical"
           process-status="wait"
           class="ticket-view__steps el-steps--dots">
-          <el-step v-for="ocurrence in disputeOccurrences" :key="ocurrence.id">
-            <template slot="title">{{ $t('ocurrence.type.' + ocurrence.type) }}</template>
-            <template slot="description">{{ ocurrence.description }}</template>
+          <el-step v-for="occurrence in disputeSummary.occurencies" :key="occurrence.id">
+            <template slot="title">{{ $t('occurrence.type.' + occurrence.name) }}</template>
+            <template slot="description">
+              <el-popover
+                placement="bottom"
+                width="200"
+                trigger="hover">
+                <ul>
+                  <li v-for="(occurrences, item) in occurrence.items" :key="occurrences + item">
+                    {{ item }}: {{ occurrences }}
+                  </li>
+                </ul>
+                <el-button slot="reference" type="text">Ver detalhes</el-button>
+              </el-popover>
+            </template>
           </el-step>
         </el-steps>
         <el-steps
@@ -30,9 +42,9 @@
           direction="vertical"
           process-status="wait"
           class="ticket-view__steps el-steps--dots">
-          <el-step v-for="ocurrence in 5" :key="ocurrence">
+          <el-step v-for="occurrence in 4" :key="occurrence">
             <template slot="title">Ocorrência</template>
-            <template slot="description">Descrição</template>
+            <template slot="description">Ver detalhes</template>
           </el-step>
         </el-steps>
       </div>
@@ -86,39 +98,48 @@
           </el-button>
         </el-tooltip>
       </div>
-      <div v-loading="true" class="ticket-view__chat">
+      <div v-loading="false" class="ticket-view__chat">
         <ul v-chat-scroll="{always: false, smooth: true}" class="ticket-view__messages">
-          <li v-for="(message, index) in messages" :key="message+index" :class="{'ticket-view__user' : message.sender === 'user'}">
+          <li
+            v-for="(message, index) in disputeOccurrences"
+            :key="message + index"
+            :class="[messageClass(message.type), clientMessageClass(message.source.personId)]"
+            class="ticket-view__message">
             <div class="ticket-view__photo">
-              <img v-if="message.sender === 'company'" src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg" alt="">
-              <img v-else src="https://vignette.wikia.nocookie.net/parody/images/8/8c/Kermit-2011.png/revision/latest?cb=20150530035135" alt="">
-              <div class="ticket-view__time">
-                {{ message.time | moment('HH:mm') }}
-              </div>
+              <jus-avatar-user
+                size="sm"
+                class="el-menu__avatar"
+                name-initials="MS"/>
             </div>
             <div class="ticket-view__content">
               <el-card>
-                {{ message.message }}
+                {{ message.description }}. {{ message.source.executionDateTime | moment('DD/MM/YYYY') }}
               </el-card>
+              <div class="ticket-view__content-info">
+                {{ message.source.executionDateTime | moment('HH:mm') }} •
+                <jus-icon icon="email" /> •
+                Visualido •
+                Nome do Sujeito
+              </div>
             </div>
           </li>
         </ul>
-        <div class="ticket-view__message">
+        <div class="ticket-view__send-message">
           <el-tabs value="1">
             <el-tab-pane label="Mensagem" name="1">
-              <el-card shadow="always" class="ticket-view__message-box">
+              <el-card shadow="always" class="ticket-view__send-message-box">
                 <el-input
                   :rows="2"
                   type="textarea"
                   placeholder="Escreva alguma coisa" />
-                <div class="ticket-view__message-actions">
+                <div class="ticket-view__send-message-actions">
                   <div class="">
-                    <jus-icon icon="email" is-active/>
+                    <jus-icon icon="message" is-active />
+                    <jus-icon icon="email" />
                     <jus-icon icon="whatsapp" />
-                    <jus-icon icon="sms" />
-                    <jus-icon icon="message" />
-                    <jus-icon icon="attachment" />
-                    <jus-icon icon="emoji" />
+                    <!-- <jus-icon icon="sms" /> -->
+                    <!-- <jus-icon icon="attachment" /> -->
+                    <!-- <jus-icon icon="emoji" /> -->
                   </div>
                   <el-button type="primary">
                     Enviar
@@ -140,10 +161,10 @@
         <el-button plain>Exportar caso</el-button>
       </div>
       <el-collapse value="1">
-        <el-collapse-item v-loading="loadingDisputeSumarry" title="Informações gerais" name="1">
+        <el-collapse-item v-loading="loadingdisputeSummary" title="Informações gerais" name="1">
           <div class="ticket-view__info-line">
             <span>Nº do Processo:</span>
-            <span>-</span>
+            <span>{{ dispute.code }}</span>
           </div>
           <div class="ticket-view__info-line">
             <span>Campanha:</span>
@@ -155,15 +176,15 @@
           </div>
           <div class="ticket-view__info-line">
             <span>Alçada máxima:</span>
-            <span>R$ 7.000</span>
+            <span>R$ {{ disputeSummary.boundary }}</span>
           </div>
           <div class="ticket-view__info-line">
             <span>Contraproposta:</span>
-            <span>R$ 6.000</span>
+            <span>R$ {{ disputeSummary.lastProposal }}</span>
           </div>
           <div class="ticket-view__info-line">
             <span>Valor do acordo:</span>
-            <span>R$ 6.000</span>
+            <span>R$</span>
           </div>
           <div class="ticket-view__info-line">
             <span>Fim da negociação:</span>
@@ -209,26 +230,19 @@ export default {
   data () {
     return {
       dispute: {},
-      disputeSumarry: {},
+      disputeSummary: {},
       disputeOccurrences: {},
       loadingDispute: false,
-      loadingDisputeSumarry: false,
-      loadingDisputeOccurrences: false,
-      messages: [{
-        message: 'Jo what’s a nice chilled movie I can go watch with my mom?',
-        sender: 'company',
-        time: new Date()
-      }, {
-        message: 'Well there’s a few showing at the moment. Do you mind a science fiction drama?',
-        sender: 'user',
-        time: new Date()
-      }],
-      newMessage: ''
+      loadingdisputeSummary: false,
+      loadingDisputeOccurrences: false
     }
+  },
+  mounted () {
+    this.$store.state.menuIndex = '2'
   },
   beforeMount () {
     this.loadingDispute = true
-    this.loadingDisputeSumarry = true
+    this.loadingdisputeSummary = true
     this.loadingDisputeOccurrences = true
     Promise.all([
       this.$store.dispatch('getDispute', this.$route.params.id),
@@ -236,18 +250,27 @@ export default {
       this.$store.dispatch('getDisputeOccurrences', this.$route.params.id)
     ]).then(responses => {
       this.dispute = responses[0]
-      this.disputeSumarry = responses[1]
+      this.disputeSummary = responses[1]
       this.disputeOccurrences = responses[2]
       this.loadingDispute = false
-      this.loadingDisputeSumarry = false
+      this.loadingdisputeSummary = false
       this.loadingDisputeOccurrences = false
     }).catch(error => {
       console.error(error)
       this.$notify(this.$notificationMessage('connectionError'))
     })
   },
-  mounted () {
-    this.$store.state.menuIndex = '2'
+  methods: {
+    messageClass (type) {
+      return 'ticket-view__message--' + type.toLowerCase()
+    },
+    clientMessageClass (personId) {
+      if (personId) {
+        if (this.$store.getters.negotiatorIds.includes(personId)) {
+          return 'ticket-view__message--negotiator'
+        } else return 'ticket-view__message--client'
+      } else return ''
+    }
   }
 }
 </script>
@@ -264,11 +287,34 @@ export default {
     height: 100%;
     padding: 10px 20px 0;
     margin: 0;
-    li {
-      display: flex;
-      list-style: none;
-      margin: 10px 0;
-      &.ticket-view__user {
+  }
+  &__message {
+    display: flex;
+    list-style: none;
+    margin: 30px 0;
+    &.ticket-view__message--enrichment, &.ticket-view__message--log, &.ticket-view__message--interaction {
+      text-align: center;
+      .ticket-view__content {
+        width: 100%;
+      }
+      .el-card {
+        color: #adadad;
+        box-shadow: none !important;
+        border: none !important;
+        background-color: transparent;
+        &__body {
+          padding: 10px 0;
+        }
+      }
+      .ticket-view__content-info {
+        display: none;
+      }
+    }
+    &--communication {
+      .ticket-view__photo {
+        display: block;
+      }
+      &.ticket-view__message--negotiator {
         flex-direction: row-reverse;
         .ticket-view__content {
           margin-left: 0;
@@ -293,15 +339,22 @@ export default {
         .el-card {
           background-color: #e4e8ea;
         }
+        .ticket-view__content-info {
+          text-align: right;
+        }
       }
     }
+  }
+  &__photo {
+    display: none;
+    margin-top: 1px;
   }
   &__info-line {
     margin-bottom: 10px;
     span:last-child {
       font-weight: 500;
       float: right;
-      max-width: 175px;
+      max-width: 185px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -327,21 +380,13 @@ export default {
       margin-top: 10px;
     }
   }
-  &__photo {
+  &__content-info {
+    margin-top: 10px;
     img {
-      width: 40px;
-      height: 40px;
-      object-fit: cover;
-      border-radius: 4px;
-      box-shadow: 0 3px 26px 0 rgba(37, 38, 94, 0.15);
+      width: 16px;
     }
   }
-  &__time {
-    margin-top: 4px;
-    font-size: 12px;
-    text-align: center;
-  }
-  &__message {
+  &__send-message {
     border-top: 1px solid #eeeeee;
     .el-tabs__header {
       width: fit-content;
@@ -355,7 +400,7 @@ export default {
       background-color: transparent;
     }
   }
-  &__message-box {
+  &__send-message-box {
     margin: 20px;
     border: 0;
     .el-textarea {
@@ -369,7 +414,7 @@ export default {
       }
     }
   }
-  &__message-actions {
+  &__send-message-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -401,7 +446,7 @@ export default {
     }
   }
   &__side-content {
-    margin: 20px 0;
+    margin: 20px 0 0;
     .el-step__title {
       text-transform: capitalize;
     }
@@ -427,6 +472,9 @@ export default {
   }
   &__steps {
     padding-top: 10px;
+    .el-button--text {
+      padding-top: 0;
+    }
   }
   .jus-main-view__main-card {
     height: 100%;

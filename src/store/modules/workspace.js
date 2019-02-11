@@ -3,7 +3,7 @@ const workspaceModule = {
     name: '',
     status: '',
     subdomain: '',
-    negotiatorIds: []
+    negotiators: []
   },
   mutations: {
     updateWorkspace (state, response) {
@@ -22,7 +22,7 @@ const workspaceModule = {
       state.subdomain = ''
     },
     setWorkspaceNegotiators (state, response) {
-      state.negotiatorIds = response
+      state.negotiators = response
     }
   },
   actions: {
@@ -166,6 +166,14 @@ const workspaceModule = {
     },
     creatingWorkspace: state => {
       return state.status === 'CREATING'
+    },
+    negotiatorIds: state => {
+      // TODO: remover id 2
+      let negotiatorIds = [2]
+      for (let negotiator of state.negotiators) {
+        negotiatorIds.push(negotiator.id)
+      }
+      return negotiatorIds
     }
   }
 }

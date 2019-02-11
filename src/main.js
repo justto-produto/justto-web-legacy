@@ -71,6 +71,7 @@ if (store.getters.isLoggedIn) {
   Promise.all([store.dispatch('myAccount'), store.dispatch('myWorkspace')])
     .then(() => {
       store.dispatch('hideLoading')
+      store.dispatch('getWorkspaceNegotiators')
       initVue()
     })
 } else {

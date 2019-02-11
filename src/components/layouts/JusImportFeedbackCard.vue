@@ -164,7 +164,7 @@ export default {
       return this.$store.state.campaignModule.list
     },
     negotiatorsList () {
-      return this.$store.state.workspaceModule.negotiatorIds
+      return this.$store.state.workspaceModule.negotiators
     }
   },
   watch: {

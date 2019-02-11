@@ -7,45 +7,47 @@
     "description": "descrição"
   },
   "disputeClassification": {
-    "name": "aguardando tradução"
+    "name": "classificação"
   },
   "disputeSubClassification": {
-    "name": "aguardando tradução"
+    "name": "subclassificação"
   },
   "disputeOrg": {
-    "name": "aguardando tradução",
-    "state": "aguardando tradução",
-    "city": "aguardando tradução",
-    "enum": "aguardando tradução"
+    "name": "nome da organização",
+    "state": "estado",
+    "city": "cidade",
+    "enum": "organização"
   },
   "disputeObjectAttribute": {
-    "value": "aguardando tradução"
+    "value": "valor da ação"
   },
   "email": {
-    "address": "aguardando tradução"
+    "address": "email"
   },
   "phone": {
-    "mobileNumber": "aguardando tradução",
-    "landLineNumber": "aguardando tradução"
+    "mobileNumber": "celular",
+    "landLineNumber": "telefone"
   },
   "oab": {
-    "stateNumber": "aguardando tradução"
+    "stateNumber": "oab"
   },
   "person": {
-    "name": "aguardando tradução",
-    "alias": "aguardando tradução",
-    "naturalDocumentNumber": "aguardando tradução",
-    "legalDocumentNumber": "aguardando tradução"
+    "name": "nome",
+    "alias": "nome fantasia",
+    "naturalDocumentNumber": "cpf",
+    "legalDocumentNumber": "cnpj"
   },
   "attributeBoundary": {
-    "boundary": "aguardando tradução"
+    "boundary": "alçada máxima"
   },
-  "ocurrence": {
+  "occurrence": {
     "type": {
       "ENRICHMENT": "enriquecimento",
       "COMMUNICATION": "comunicação",
       "LOG": "registro",
-      "INTERACTION": "interação"
+      "INTERACTION": "interação",
+      "ENGAGEMENT": "engajamento",
+      "INTERACTIONS": "interações"
     }
   }
 }
