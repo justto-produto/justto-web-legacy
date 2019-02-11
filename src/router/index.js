@@ -32,14 +32,14 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management')
         },
         {
-          path: 'management/ticket/',
+          path: 'management/case/',
           redirect: {
             name: 'management'
           }
         },
         {
-          path: 'management/ticket/:id',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Ticket')
+          path: 'management/case/:id',
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Case/Case')
         },
         {
           name: 'settings',

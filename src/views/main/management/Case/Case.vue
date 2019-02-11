@@ -2,7 +2,9 @@
   <JusViewMain left-card-width="350" right-card-width="350" class="ticket-view">
     <template slot="title">
       <h1 class="ticket-view__title">
-        <jus-icon icon="back" class="ticket-view__back"/>
+        <router-link to="/management">
+          <jus-icon icon="back" class="ticket-view__back"/>
+        </router-link>
         Caso #{{ dispute.id }}
       </h1>
     </template>
@@ -52,56 +54,61 @@
     <!-- CHAT -->
     <template slot="main">
       <div class="ticket-view__actions">
-        <el-tooltip content="search" placement="top">
-          <el-button plain>
+        <el-tooltip content="Buscar">
+          <el-button plain @click="showSearch = !showSearch">
             <jus-icon icon="search2" />
           </el-button>
         </el-tooltip>
-        <el-tooltip content="move-case" placement="top">
+        <el-tooltip content="move-case">
           <el-button plain>
             <jus-icon icon="move-case" />
           </el-button>
         </el-tooltip>
-        <el-tooltip content="delegate" placement="top">
+        <el-tooltip content="delegate">
           <el-button plain>
             <jus-icon icon="delegate" />
           </el-button>
         </el-tooltip>
-        <el-tooltip content="lose" placement="top">
+        <el-tooltip content="lose">
           <el-button plain>
             <jus-icon icon="lose" />
           </el-button>
         </el-tooltip>
-        <el-tooltip content="win" placement="top">
+        <el-tooltip content="win">
           <el-button plain>
             <jus-icon icon="win" />
           </el-button>
         </el-tooltip>
-        <el-tooltip content="pause" placement="top">
+        <el-tooltip content="pause">
           <el-button plain>
             <jus-icon icon="pause" />
           </el-button>
         </el-tooltip>
-        <el-tooltip content="start-again" placement="top">
+        <el-tooltip content="start-again">
           <el-button plain>
             <jus-icon icon="start-again" />
           </el-button>
         </el-tooltip>
-        <el-tooltip content="snooze" placement="top">
+        <el-tooltip content="snooze">
           <el-button plain>
             <jus-icon icon="snooze" />
           </el-button>
         </el-tooltip>
-        <el-tooltip content="star" placement="top">
+        <el-tooltip content="star">
           <el-button plain>
             <jus-icon icon="star" />
           </el-button>
         </el-tooltip>
+        <div :class="{isVisible: showSearch}" class="ticket-view__search">
+          <el-input v-model="searchTerm" autofocus>
+            <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
+          </el-input>
+        </div>
       </div>
       <div v-loading="loadingDisputeOccurrences" class="ticket-view__chat">
         <ul v-chat-scroll="{always: false, smooth: true}" class="ticket-view__messages">
           <li
-            v-for="(message, index) in disputeOccurrences"
+            v-for="(message, index) in filteredDisputeOccurrences"
             :key="message + index"
             :class="[messageClass(message.type), clientMessageClass(message.source.personId)]"
             class="ticket-view__message">
@@ -117,7 +124,7 @@
               <div class="ticket-view__content-info">
                 {{ message.source.executionDateTime | moment('HH:mm') }} •
                 <jus-icon icon="email" /> •
-                Visualido •
+                Visualizado •
                 Nome do Sujeito
               </div>
             </div>
@@ -133,9 +140,15 @@
                   placeholder="Escreva alguma coisa" />
                 <div class="ticket-view__send-message-actions">
                   <div class="">
-                    <jus-icon icon="message" is-active />
-                    <jus-icon icon="email" />
-                    <jus-icon icon="whatsapp" />
+                    <el-tooltip content="Enviar mensagem">
+                      <jus-icon icon="message" is-active />
+                    </el-tooltip>
+                    <el-tooltip content="Enviar email">
+                      <jus-icon icon="email" />
+                    </el-tooltip>
+                    <el-tooltip content="Enviar Whatsapp">
+                      <jus-icon icon="whatsapp" />
+                    </el-tooltip>
                     <!-- <jus-icon icon="sms" /> -->
                     <!-- <jus-icon icon="attachment" /> -->
                     <!-- <jus-icon icon="emoji" /> -->
@@ -147,7 +160,17 @@
               </el-card>
             </el-tab-pane>
             <el-tab-pane label="Nota" name="2">
-              opa
+              <el-card shadow="always" class="ticket-view__send-message-box">
+                <el-input
+                  :rows="2"
+                  type="textarea"
+                  placeholder="Escreva alguma coisa" />
+                <div class="ticket-view__send-message-actions">
+                  <el-button type="primary">
+                    Enviar
+                  </el-button>
+                </div>
+              </el-card>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -183,7 +206,7 @@
           </div>
           <div class="ticket-view__info-line">
             <span>Valor do acordo:</span>
-            <span>R$</span>
+            <span>R$ {{ disputeSummary.dealValue }}</span>
           </div>
           <div class="ticket-view__info-line">
             <span>Fim da negociação:</span>
@@ -230,37 +253,58 @@ export default {
     return {
       dispute: {},
       disputeSummary: {},
-      disputeOccurrences: {},
+      disputeOccurrences: [],
+      filteredDisputeOccurrences: [],
       loadingDispute: false,
       loadingdisputeSummary: false,
-      loadingDisputeOccurrences: false
+      loadingDisputeOccurrences: false,
+      showSearch: false,
+      searchTerm: ''
     }
   },
-  beforeMount () {
-    this.$store.commit('changeMenuIndex', '2')
-    this.loadingDispute = true
-    this.loadingdisputeSummary = true
-    this.loadingDisputeOccurrences = true
-    Promise.all([
-      this.$store.dispatch('getDispute', this.$route.params.id),
-      this.$store.dispatch('getDisputeSummary', this.$route.params.id),
-      this.$store.dispatch('getDisputeOccurrences', this.$route.params.id)
-    ]).then(responses => {
-      this.dispute = responses[0]
-      this.disputeSummary = responses[1]
-      this.disputeOccurrences = responses[2]
-      this.loadingDispute = false
-      this.loadingdisputeSummary = false
-      this.loadingDisputeOccurrences = false
-    }).catch(error => {
-      console.error(error)
-      this.$notify(this.$notificationMessage('connectionError'))
-    })
+  watch: {
+    '$route.params.id': function (id) {
+      this.fetch()
+    },
+    showSearch (value) {
+      if (!value) {
+        this.searchTerm = ''
+      }
+    },
+    searchTerm (term) {
+      this.filterDisputeOccurrences(term)
+    }
+  },
+  created () {
+    this.fetch()
   },
   beforeDestroy () {
     this.$store.commit('changeMenuIndex', null)
   },
   methods: {
+    fetch () {
+      this.$store.commit('changeMenuIndex', '2')
+      this.loadingDispute = true
+      this.loadingdisputeSummary = true
+      this.loadingDisputeOccurrences = true
+      Promise.all([
+        this.$store.dispatch('getDispute', this.$route.params.id),
+        this.$store.dispatch('getDisputeSummary', this.$route.params.id),
+        this.$store.dispatch('getDisputeOccurrences', this.$route.params.id)
+      ]).then(responses => {
+        this.dispute = responses[0]
+        this.disputeSummary = responses[1]
+        this.disputeOccurrences = responses[2]
+        this.filteredDisputeOccurrences = this.disputeOccurrences.slice(0)
+        this.filteredMessages =
+        this.loadingDispute = false
+        this.loadingdisputeSummary = false
+        this.loadingDisputeOccurrences = false
+      }).catch(error => {
+        console.error(error)
+        this.$notify(this.$notificationMessage('connectionError'))
+      })
+    },
     messageClass (type) {
       return 'ticket-view__message--' + type.toLowerCase()
     },
@@ -270,6 +314,20 @@ export default {
           return 'ticket-view__message--negotiator'
         } else return 'ticket-view__message--client'
       } else return ''
+    },
+    filterDisputeOccurrences (term) {
+      var occurrences = this.disputeOccurrences.slice(0)
+      if (term) {
+        var results = occurrences.filter(this.createDisputeFilter(term))
+        this.filteredDisputeOccurrences = results
+      } else {
+        this.filteredDisputeOccurrences = occurrences
+      }
+    },
+    createDisputeFilter (term) {
+      return (occurrence) => {
+        return (occurrence.description.toLowerCase().indexOf(term.toLowerCase()) === 0)
+      }
     }
   }
 }
@@ -423,9 +481,14 @@ export default {
   &__send-message-actions {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     img {
       margin-right: 10px;
+      height: 20px;
+      &:nth-child(2) {
+        height: 19px;
+        margin-right: 11px;
+      }
     }
     .el-button {
       padding: 8px 20px;
@@ -503,6 +566,27 @@ export default {
       }
     }
 
+  }
+  &__search {
+    margin: 0 5px;
+    visibility: hidden;
+    transition: 0.3s ease all;
+    height: 0px;
+    .el-input__suffix {
+      cursor: pointer;
+    }
+    .el-input {
+      display: none;
+    }
+    &.isVisible {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      visibility: visible;
+      height: auto;
+      .el-input {
+        display: inline-block;
+      }
+    }
   }
 }
 </style>

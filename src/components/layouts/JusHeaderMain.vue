@@ -33,13 +33,13 @@
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <a @click="$router.push('/profile')">Perfil</a>
+            <router-link to="/profile">Perfil</router-link>
           </el-dropdown-item>
           <el-dropdown-item>
-            <a @click="$router.push('/profile/notifications')">Notificações</a>
+            <router-link to="/profile/notifications">Notificações</router-link>
           </el-dropdown-item>
           <el-dropdown-item>
-            <a @click="$router.push('/profile/activities')">Minhas atividades</a>
+            <router-link to="/profile/activities">Minhas atividades</router-link>
           </el-dropdown-item>
           <el-dropdown-item>
             <a href="http://ajuda.justto.com.br/" target="_blank">
@@ -47,9 +47,7 @@
             </a>
           </el-dropdown-item>
           <el-dropdown-item divided>
-            <a @click="logout">
-              Sair
-            </a>
+            <router-link to="/logout">Sair</router-link>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
