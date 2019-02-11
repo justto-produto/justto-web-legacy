@@ -128,7 +128,9 @@ export default {
   },
   watch: {
     menuIndex (index) {
-      this.$refs.sideMenu.activeIndex = index
+      if (index) {
+        this.$refs.sideMenu.activeIndex = index
+      }
     }
   }
 }

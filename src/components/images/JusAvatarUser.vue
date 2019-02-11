@@ -1,7 +1,12 @@
 <template>
   <div :class="sizeClass + ' ' + shapeClass" class="jus-avatar-user">
-    <img :src="imagePath">
-    <span v-if="notifications > 0 && size === 'sm'">{{ notifications }}</span>
+    <img v-if="avatarSrc" :src="avatarSrc">
+    <span v-else>
+      {{ nameInitials.toUpperCase() }}
+    </span>
+    <span v-if="notifications > 0 && size === 'sm'" class="jus-avatar-user__notifications">
+      {{ notifications }}
+    </span>
   </div>
 </template>
 
@@ -31,17 +36,12 @@ export default {
     }
   },
   computed: {
-    imagePath: function () {
-      // try {
-      // return require('@/assets/')
-      // } catch (e) {
-      // }
+    avatarSrc () {
       if (this.src) {
         return this.src
-      } else if (this.nameInitials) {
-        return 'https://via.placeholder.com/200/ff9300/ffffff?text=' + this.nameInitials
-      }
-      return 'https://via.placeholder.com/200/e2e2e2/ffffff?text=+'
+      } else if (!this.nameInitials) {
+        return require('@/assets/icons/ic-user.svg')
+      } else return ''
     },
     shapeClass () {
       return 'jus-avatar-user--' + this.shape
@@ -56,38 +56,40 @@ export default {
 <style lang="scss">
 .jus-avatar-user {
   position: relative;
-  display: inline;
+  // display: inline;
   &.jus-avatar-user--xs {
-    img {
+    img, span {
       width: 1.75rem;
       height: 1.75rem;
     }
   }
   &.jus-avatar-user--sm {
-    img {
-      width: 3rem;
-      height: 3rem;
+    width: 3rem;
+    height: 3rem;
+    img, span {
+      width: 100%;
+      height: 100%
     }
   }
   &.jus-avatar-user--md {
-    img {
+    img, span {
       width: 5.75rem;
       height: 5.75rem;
     }
   }
   &.jus-avatar-user--lg {
-    img {
+    img, span {
       width: 8.5rem;
       height: 8.5rem;
     }
   }
   &.jus-avatar-user--square {
-    img {
+    img, span {
       border-radius: 4px;
     }
   }
   &.jus-avatar-user--circle {
-    img {
+    img, span {
       border-radius: 50%;
     }
   }
@@ -97,6 +99,15 @@ export default {
     background-color: #f2f2f2;
   }
   span {
+    visibility: visible !important;
+    background-color: #ff9300;
+    color: white;
+    display: inline-flex !important;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400;
+  }
+  &__notifications {
     min-width: 15px;
     min-height: 15px;
     line-height: 15px;

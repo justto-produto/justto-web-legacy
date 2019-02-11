@@ -98,7 +98,7 @@
           </el-button>
         </el-tooltip>
       </div>
-      <div v-loading="false" class="ticket-view__chat">
+      <div v-loading="loadingDisputeOccurrences" class="ticket-view__chat">
         <ul v-chat-scroll="{always: false, smooth: true}" class="ticket-view__messages">
           <li
             v-for="(message, index) in disputeOccurrences"
@@ -108,8 +108,7 @@
             <div class="ticket-view__photo">
               <jus-avatar-user
                 size="sm"
-                class="el-menu__avatar"
-                name-initials="MS"/>
+                class="el-menu__avatar" />
             </div>
             <div class="ticket-view__content">
               <el-card>
@@ -237,10 +236,8 @@ export default {
       loadingDisputeOccurrences: false
     }
   },
-  mounted () {
-    this.$store.state.menuIndex = '2'
-  },
   beforeMount () {
+    this.$store.commit('changeMenuIndex', '2')
     this.loadingDispute = true
     this.loadingdisputeSummary = true
     this.loadingDisputeOccurrences = true
@@ -259,6 +256,9 @@ export default {
       console.error(error)
       this.$notify(this.$notificationMessage('connectionError'))
     })
+  },
+  beforeDestroy () {
+    this.$store.commit('changeMenuIndex', null)
   },
   methods: {
     messageClass (type) {
@@ -343,6 +343,12 @@ export default {
           text-align: right;
         }
       }
+    }
+    &:first-child {
+      margin-top: 20px;
+    }
+    &:last-child {
+      margin-bottom: 20px;
     }
   }
   &__photo {
@@ -461,6 +467,7 @@ export default {
     text-align: center;
     padding: 11px 20px;
     box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+    z-index: 1;
     button {
       border-radius: 5px;
       padding: 11px;
