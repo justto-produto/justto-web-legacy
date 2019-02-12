@@ -9,7 +9,7 @@ const personModule = {
         // eslint-disable-next-line
         axios.get('/persons/' + id)
           .then(response => {
-            resolve(response)
+            resolve(response.data)
           })
           .catch(error => {
             reject(error)

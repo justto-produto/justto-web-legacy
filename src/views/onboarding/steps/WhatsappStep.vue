@@ -123,10 +123,18 @@ export default {
             message: 'Bem vindo à Justto!'
           }).then(() => {
             this.sending = false
-            this.$notify(this.$notificationMessage('messageSuccess'))
+            this.$jusNotification({
+              title: 'Pronto!',
+              message: 'Mensagem enviada com sucesso.',
+              type: 'error'
+            })
           }).catch(() => {
             this.sending = false
-            this.$notify(this.$notificationMessage('connectionError'))
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+              type: 'error'
+            })
           })
         }
       })

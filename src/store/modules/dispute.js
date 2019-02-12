@@ -55,7 +55,7 @@ const dispute = {
     getDisputeRoles ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('https://c04e5875-40fe-4541-89a9-ce86905b94ec.mock.pstmn.io/disputes/' + id + '/roles')
+        axios.get('disputes/' + id + '/dispute-roles')
           .then(response => {
             resolve(response.data)
           })

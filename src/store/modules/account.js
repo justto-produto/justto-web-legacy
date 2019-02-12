@@ -147,7 +147,7 @@ const account = {
     syncInbox ({ commit }, object) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/accounts/sync-inbox', object)
+        axios.post('/accounts/inboxes', object)
           .then(response => {
             resolve(response)
           }).catch(error => {

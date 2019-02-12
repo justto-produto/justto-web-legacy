@@ -158,7 +158,11 @@ export default {
       }).catch(error => {
         this.$notify.closeAll()
         console.error(error)
-        this.$notify(this.$notificationMessage('connectionError'))
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
       })
     }
     this.$store.dispatch('getImportsTags').then(tags => {
@@ -171,7 +175,11 @@ export default {
     }).catch(error => {
       this.$notify.closeAll()
       console.error(error)
-      this.$notify(this.$notificationMessage('connectionError'))
+      this.$jusNotification({
+        title: 'Ops!',
+        message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+        type: 'error'
+      })
     })
   },
   methods: {

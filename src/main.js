@@ -13,7 +13,7 @@ import '@/plugins/awesomeSwiper'
 import '@/plugins/socket'
 import '@/plugins/moment'
 import '@/plugins/chatScroll'
-import '@/plugins/notificationMessage'
+import '@/plugins/jusNotification'
 
 // filters
 import '@/filters/capitalize'

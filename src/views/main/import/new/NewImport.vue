@@ -91,7 +91,11 @@ export default {
       Promise.all(promises).then(() => {
         this.$router.push('/management')
       }).catch(error => {
-        this.$notify(this.$notificationMessage('connectionError'))
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
         console.error(error)
       })
     }

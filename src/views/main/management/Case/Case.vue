@@ -13,43 +13,7 @@
       <div class="ticket-view__section-title">
         <h2>Resumo do caso</h2>
       </div>
-      <div class="ticket-view__side-content">
-        <el-steps
-          v-if="!loadingdisputeSummary"
-          :active="disputeSummary.occurencies.length - 1"
-          direction="vertical"
-          process-status="wait"
-          class="ticket-view__steps el-steps--dots">
-          <el-step v-for="occurrence in disputeSummary.occurencies" :key="occurrence.id">
-            <template slot="title">{{ $t('occurrence.type.' + occurrence.name) }}</template>
-            <template slot="description">
-              <el-popover
-                placement="bottom"
-                width="200"
-                trigger="hover">
-                <ul>
-                  <li v-for="(occurrences, item) in occurrence.items" :key="occurrences + item">
-                    {{ item }}: {{ occurrences }}
-                  </li>
-                </ul>
-                <el-button slot="reference" type="text">Ver detalhes</el-button>
-              </el-popover>
-            </template>
-          </el-step>
-        </el-steps>
-        <el-steps
-          v-loading="true"
-          v-else
-          :active="4"
-          direction="vertical"
-          process-status="wait"
-          class="ticket-view__steps el-steps--dots">
-          <el-step v-for="occurrence in 4" :key="occurrence">
-            <template slot="title">Ocorrência</template>
-            <template slot="description">Ver detalhes</template>
-          </el-step>
-        </el-steps>
-      </div>
+      <case-summary :loading="loadingDisputeSummary" :occurencies="disputeSummary.occurencies"/>
     </template>
     <!-- CHAT -->
     <template slot="main">
@@ -188,81 +152,33 @@
         <h2>Dados do caso</h2>
         <el-button plain>Exportar caso</el-button>
       </div>
-      <el-collapse value="1">
-        <el-collapse-item v-loading="loadingdisputeSummary" title="Informações gerais" name="1">
-          <div class="ticket-view__info-line">
-            <span>Nº do Processo:</span>
-            <span>{{ dispute.code }}</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>Campanha:</span>
-            <span>NESTLÉ - NATAL2018</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>Estratégia:</span>
-            <span>Indenizatório</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>Alçada máxima:</span>
-            <span>R$ {{ disputeSummary.boundary }}</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>Contraproposta:</span>
-            <span>R$ {{ disputeSummary.lastProposal }}</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>Valor do acordo:</span>
-            <span>R$ {{ disputeSummary.dealValue }}</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>Fim da negociação:</span>
-            <span>28/10/2020</span>
-          </div>
-        </el-collapse-item>
-      </el-collapse>
-      <hr>
-      <el-collapse v-loading="true" accordion class="el-collapse--bordered">
-        <el-collapse-item title="Contraparte 1" name="1">
-          <div class="ticket-view__info-line">
-            <span>Status:</span>
-            <span>Online</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>Nome:</span>
-            <span>Edineide Pereira da Silva</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>E-mail:</span>
-            <span>edineide.htinha@aol.com</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>Telefone:</span>
-            <span>(12) 91234-5678</span>
-          </div>
-          <div class="ticket-view__info-line">
-            <span>CPF:</span>
-            <span>123.456.789-0</span>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item title="Advogado 1 da contraparte" name="2">
-          opa
-        </el-collapse-item>
-      </el-collapse>
+      <case-data
+        :loading="loadingDisputeSummary"
+        :dispute="dispute"
+        :dispute-summary="disputeSummary"
+        :dispute-roles="disputeRoles" />
     </template>
   </JusViewMain>
 </template>
 
 <script>
+import CaseSummary from './partials/CaseSummary'
+import CaseData from './partials/CaseData'
+
 export default {
   name: 'Ticket',
+  components: {
+    CaseSummary, CaseData
+  },
   data () {
     return {
       dispute: {},
       disputeSummary: {},
       disputeOccurrences: [],
       filteredDisputeOccurrences: [],
+      disputeRoles: {},
       loadingDispute: false,
-      loadingdisputeSummary: false,
+      loadingDisputeSummary: false,
       loadingDisputeOccurrences: false,
       showSearch: false,
       searchTerm: '',
@@ -271,7 +187,7 @@ export default {
   },
   watch: {
     '$route.params.id': function (id) {
-      this.fetch()
+      this.fetchData()
     },
     showSearch (value) {
       if (!value) {
@@ -292,25 +208,31 @@ export default {
     fetchData () {
       this.$store.commit('changeMenuIndex', '2')
       this.loadingDispute = true
-      this.loadingdisputeSummary = true
+      this.loadingDisputeSummary = true
       this.loadingDisputeOccurrences = true
-      Promise.all([
-        this.$store.dispatch('getDispute', this.$route.params.id),
-        this.$store.dispatch('getDisputeSummary', this.$route.params.id),
-        this.$store.dispatch('getDisputeOccurrences', this.$route.params.id)
-        // this.$store.dispatch('getDisputeRoles', this.$route.params.id)
-      ]).then(responses => {
-        this.dispute = responses[0]
-        this.disputeSummary = responses[1]
-        this.disputeOccurrences = responses[2]
-        this.filteredDisputeOccurrences = this.disputeOccurrences.slice(0)
-        this.filteredMessages =
+      this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
+        this.dispute = responses
         this.loadingDispute = false
-        this.loadingdisputeSummary = false
+      }).catch(error => this.showError(error))
+      this.$store.dispatch('getDisputeSummary', this.$route.params.id).then((responses) => {
+        this.disputeSummary = responses
+        this.loadingDisputeSummary = false
+      }).catch(error => this.showError(error))
+      this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then((responses) => {
+        this.disputeOccurrences = responses
+        this.filteredDisputeOccurrences = this.disputeOccurrences.slice(0)
         this.loadingDisputeOccurrences = false
-      }).catch(error => {
-        console.error(error)
-        this.$notify(this.$notificationMessage('connectionError'))
+      }).catch(error => this.showError(error))
+      this.$store.dispatch('getDisputeRoles', this.$route.params.id).then((responses) => {
+        this.disputeRoles = responses
+      }).catch(error => this.showError(error))
+    },
+    showError (error) {
+      console.error(error)
+      this.$jusNotification({
+        title: 'Ops!',
+        message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+        type: 'error'
       })
     },
     messageClass (type) {
@@ -346,7 +268,11 @@ export default {
         cancelButtonText: 'Cancelar',
         type: 'warning'
       }).then(() => {
-        this.$notify(this.$notificationMessage({ title: 'Pronto!', message: 'Ação realizada com sucesso.' }))
+        this.$jusNotification({
+          title: 'Pronto!',
+          message: 'Ação realizada com sucesso.',
+          type: 'success'
+        })
       })
     }
   }
