@@ -129,28 +129,6 @@ const account = {
             reject(error)
           })
       })
-    },
-    updateOab ({ commit }, oamForm) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.put('/accounts/oab', { number: oamForm.oab, state: oamForm.state})
-          .then(response => {
-            resolve(response.data)
-          }).catch(error => {
-            reject(error)
-          })
-      })
-    },
-    syncInbox ({ commit }, object) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.post('/accounts/inboxes', object)
-          .then(response => {
-            resolve(response)
-          }).catch(error => {
-            reject(error)
-          })
-      })
     }
   },
   getters: {
