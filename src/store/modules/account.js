@@ -4,10 +4,7 @@ const account = {
   state: {
     email: '',
     name: '',
-    oabNumber: '',
-    oabState: '',
     status: '',
-    emailAccount: '',
     token: localStorage.getItem('justoken') || ''
   },
   mutations: {

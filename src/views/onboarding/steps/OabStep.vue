@@ -47,8 +47,8 @@ export default {
     return {
       showError: false,
       oabForm: {
-        oab: this.$store.state.accountModule.oabNumber,
-        state: this.$store.state.accountModule.oabState
+        oab: this.$store.state.workspaceModule.oabNumber,
+        state: this.$store.state.workspaceModule.oabState
       },
       oabFormRules: {
         oab: [
