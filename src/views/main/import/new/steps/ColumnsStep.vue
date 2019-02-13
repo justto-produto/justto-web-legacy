@@ -49,9 +49,10 @@
             <span
               v-for="(tag, index) in disputeTags"
               :key="`${tag.id}-${tag.name}`"
+              :class="{'el-tag--drag-active': !isAvailable(tag)}"
               draggable="true"
               @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
-              <el-tag :class="{'el-tag--drag-active': !isAvailable(tag)}" class="el-tag--drag">
+              <el-tag class="el-tag--drag">
                 {{ $t(tag.key) }}
               </el-tag>
             </span>
@@ -65,9 +66,12 @@
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Parte Contrária ' + claimantPartyIndex">
               <span
-                v-for="tag in tags.claimantParty.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
+                v-for="tag in tags.claimantParty.tags"
+                :key="`${tag.id}-${tag.name}`"
+                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
-                <el-tag :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}" class="el-tag--drag">
+                <el-tag class="el-tag--drag">
                   Parte contrária {{ claimantPartyIndex + ' - ' + $t(tag.key) }}
                 </el-tag>
               </span>
@@ -86,9 +90,12 @@
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Advogado ' + claimantLawyerIndex">
               <span
-                v-for="tag in tags.claimantLawyer.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
+                v-for="tag in tags.claimantLawyer.tags"
+                :key="`${tag.id}-${tag.name}`"
+                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
-                <el-tag :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}" class="el-tag--drag">
+                <el-tag class="el-tag--drag">
                   Advogado {{ claimantLawyerIndex + ' - ' + $t(tag.key) }}
                 </el-tag>
               </span>
@@ -107,9 +114,12 @@
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Réu ' + respondentPartyIndex">
               <span
-                v-for="tag in tags.respondentParty.tags" :key="`${tag.id}-${tag.name}`" draggable="true"
+                v-for="tag in tags.respondentParty.tags"
+                :key="`${tag.id}-${tag.name}`"
+                :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
-                <el-tag :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}" class="el-tag--drag">
+                <el-tag class="el-tag--drag">
                   Réu {{ respondentPartyIndex + ' - ' + $t(tag.key) }}
                 </el-tag>
               </span>
