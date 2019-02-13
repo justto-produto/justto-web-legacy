@@ -54,28 +54,33 @@
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
             <el-table-column label="Campanha">
-              <template slot-scope="scope">{{ scope.row.campaign }}</template>
+              <template slot-scope="scope">{{ scope.row._source.campaign_name }}</template>
             </el-table-column>
-            <el-table-column label="Parte contrária">
-              <template slot-scope="scope">{{ scope.row.claimantParty }}</template>
+            <el-table-column label="Parte(s) contrária(s)">
+              <template slot-scope="scope">
+                <div v-for="claimant in scope.row._source.claiment">
+                  {{ claimant.f1 }}
+                </div>
+              </template>
             </el-table-column>
-            <el-table-column label="Advogado da parte">
-              <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
+            <el-table-column label="Advogado(s) da parte">
+              <template slot-scope="scope">
+                <div v-for="lawyer in scope.row._source.claiment_lawyer">
+                  {{ lawyer.f1 }}
+                </div>
+              </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.maxHeight }}</template>
+              <template slot-scope="scope">R$ {{ scope.row._source.boundary }}</template>
             </el-table-column>
             <el-table-column label="Valor proposto">
-              <template slot-scope="scope">{{ scope.row.proposalValue }}</template>
+              <template slot-scope="scope">R$ {{ scope.row._source.lastoffer }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
-              <template slot-scope="scope">{{ scope.row.deadline }}</template>
+              <template slot-scope="scope">{{ scope.row._source.dealdate | moment('DD/MM/YY') }}</template>
             </el-table-column>
-            <el-table-column label="Responsáveis (3)">
-              <template slot-scope="scope">{{ scope.row.responsibles }}</template>
-            </el-table-column>
-            <el-table-column label="" width="40">
-              <template><i class="el-icon-more" style="font-size: 18px"/></template>
+            <el-table-column label="Mensagens enviadas">
+              <template slot-scope="scope">teste</template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -87,31 +92,36 @@
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
             <el-table-column label="Campanha">
-              <template slot-scope="scope">{{ scope.row.campaign }}</template>
+              <template slot-scope="scope">{{ scope.row._source.campaign_name }}</template>
             </el-table-column>
-            <el-table-column label="Parte contrária">
-              <template slot-scope="scope">{{ scope.row.claimantParty }}</template>
+            <el-table-column label="Parte(s) contrária(s)">
+              <template slot-scope="scope">
+                <div v-for="claimant in scope.row._source.claiment">
+                  {{ claimant.f1 }}
+                </div>
+              </template>
             </el-table-column>
-            <el-table-column label="Advogado da parte">
-              <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
+            <el-table-column label="Advogado(s) da parte">
+              <template slot-scope="scope">
+                <div v-for="lawyer in scope.row._source.claiment_lawyer">
+                  {{ lawyer.f1 }}
+                </div>
+              </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.maxHeight }}</template>
+              <template slot-scope="scope">R$ {{ scope.row._source.boundary }}</template>
             </el-table-column>
             <el-table-column label="Contraproposta">
               <template slot-scope="scope">{{ scope.row.contraProposal }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
-              <template slot-scope="scope">{{ scope.row.deadline }}</template>
+              <template slot-scope="scope">{{ scope.row._source.dealdate | moment('DD/MM/YY') }}</template>
             </el-table-column>
             <el-table-column label="Última Interação">
               <template slot-scope="scope">
-                <jus-icon :icon="scope.row.interactionType" />
+                <!-- <jus-icon :icon="scope.row.interactionType" /> -->
                 {{ scope.row.lastInteraction }}
               </template>
-            </el-table-column>
-            <el-table-column label="" width="40">
-              <template><i class="el-icon-more" style="font-size: 18px"/></template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -123,25 +133,30 @@
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
             <el-table-column label="Campanha">
-              <template slot-scope="scope">{{ scope.row.campaign }}</template>
+              <template slot-scope="scope">{{ scope.row._source.campaign_name }}</template>
             </el-table-column>
-            <el-table-column label="Parte contrária">
-              <template slot-scope="scope">{{ scope.row.claimantParty }}</template>
+            <el-table-column label="Parte(s) contrária(s)">
+              <template slot-scope="scope">
+                <div v-for="claimant in scope.row._source.claiment">
+                  {{ claimant.f1 }}
+                </div>
+              </template>
             </el-table-column>
-            <el-table-column label="Advogado da parte">
-              <template slot-scope="scope">{{ scope.row.claimantLawyer }}</template>
+            <el-table-column label="Advogado(s) da parte">
+              <template slot-scope="scope">
+                <div v-for="lawyer in scope.row._source.claiment_lawyer">
+                  {{ lawyer.f1 }}
+                </div>
+              </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.maxHeight }}</template>
+              <template slot-scope="scope">R$ {{ scope.row._source.boundary }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
               <template slot-scope="scope">{{ scope.row.accordValue }}</template>
             </el-table-column>
             <el-table-column label="Responsáveis (3)">
               <template slot-scope="scope">{{ scope.row.responsibles }}</template>
-            </el-table-column>
-            <el-table-column label="" width="40">
-              <template><i class="el-icon-more" style="font-size: 18px"/></template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -153,10 +168,14 @@
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
             <el-table-column label="Campanha">
-              <template slot-scope="scope">{{ scope.row.campaign }}</template>
+              <template slot-scope="scope">{{ scope.row._source.campaign_name }}</template>
             </el-table-column>
-            <el-table-column label="Parte contrária">
-              <template slot-scope="scope">{{ scope.row.claimantParty }}</template>
+            <el-table-column label="Parte(s) contrária(s)">
+              <template slot-scope="scope">
+                <div v-for="claimant in scope.row._source.claiment">
+                  {{ claimant.f1 }}
+                </div>
+              </template>
             </el-table-column>
             <el-table-column label="Nº do caso">
               <template slot-scope="scope">{{ scope.row.number }}</template>
@@ -203,54 +222,9 @@ export default {
   data () {
     return {
       showFilters: false,
-      cases: [{
-        number: '102983',
-        campaign: 'NATAL - Nestlé',
-        claimantParty: 'Edinalva Pereira',
-        claimantLawyer: 'Cleiton Pereira da Silva',
-        maxHeight: 'R$10.000',
-        accordValue: 'R$3.000',
-        proposalValue: 'R$3.000',
-        contraProposal: 'R$3.000',
-        deadline: '28/11/2020',
-        lastInteraction: '28/11/2019',
-        interactionType: 'whatsapp',
-        strategy: 'R$10.000',
-        status: 'Engajamento',
-        responsibles: ''
-      }, {
-        number: '102983',
-        campaign: 'NATAL - Nestlé',
-        claimantParty: 'Edinalva Pereira',
-        claimantLawyer: 'Cleiton Pereira da Silva',
-        maxHeight: 'R$10.000',
-        accordValue: 'R$3.000',
-        proposalValue: 'R$3.000',
-        contraProposal: 'R$3.000',
-        deadline: '28/11/2020',
-        lastInteraction: '28/11/2019',
-        interactionType: 'sms',
-        strategy: 'R$10.000',
-        status: 'Com Interação',
-        responsibles: ''
-      }, {
-        number: '102983',
-        campaign: 'NATAL - Nestlé',
-        claimantParty: 'Edinalva Pereira',
-        claimantLawyer: 'Cleiton Pereira da Silva',
-        maxHeight: 'R$10.000',
-        accordValue: 'R$3.000',
-        proposalValue: 'R$3.000',
-        contraProposal: 'R$3.000',
-        deadline: '28/11/2020',
-        lastInteraction: '28/11/2019',
-        interactionType: 'email',
-        strategy: 'R$10.000',
-        status: 'Ganho',
-        responsibles: ''
-      }],
+      cases: [],
       multipleSelection: [],
-      activeTab: { index: 0, label: 'Engajamento' }
+      activeTab: { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' }
     }
   },
   computed: {
@@ -259,6 +233,11 @@ export default {
     }
   },
   methods: {
+    getCases (status) {
+      this.$store.dispatch('getDisputes', status).then(response => {
+        this.cases = response.hits.hits
+      })
+    },
     clearSelection () {
       if (this.$refs.engagementTable) this.$refs.engagementTable.clearSelection()
       if (this.$refs.interationTable) this.$refs.interationTable.clearSelection()
@@ -277,25 +256,26 @@ export default {
       var newActive
       switch (newTab) {
         case '0':
-          newActive = { index: 0, label: 'Engajamento' }
+          newActive = { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' }
           break
         case '1':
-          newActive = { index: 1, label: 'Com interação' }
+          newActive = { index: 1, label: 'Com interação', q: 'PENDING' }
           break
         case '2':
-          newActive = { index: 2, label: 'Novos acordos' }
+          newActive = { index: 2, label: 'Novos acordos', q: 'IMPORTED' }
           break
         case '3':
-          newActive = { index: 3, label: 'Todos' }
+          newActive = { index: 3, label: 'Todos', q: '' }
           break
         default:
-          newActive = { index: 0, label: 'Engajamento' }
+          newActive = { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' }
       }
       this.activeTab = newActive
     },
     handleChangeTab (newTab, oldTab) {
       this.clearSelection()
       this.setActiveTabLabel(newTab)
+      this.getCases(this.activeTab.q)
     }
   }
 }
@@ -345,6 +325,7 @@ export default {
   &__tabs {
     .cell {
       display: flex !important;
+      flex-direction: column;
     }
     .el-tabs__header {
       width: fit-content;

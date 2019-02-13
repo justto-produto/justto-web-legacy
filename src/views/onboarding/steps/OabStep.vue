@@ -67,7 +67,7 @@ export default {
         if (valid) {
           if (this.hasChanges()) {
             this.$store.dispatch('showLoading')
-            this.$store.dispatch('insertOab', this.oabForm)
+            this.$store.dispatch('updateOab', this.oabForm)
               .then(() => {
                 this.$store.dispatch('myAccount')
                 this.$emit('onboarding:step:next')

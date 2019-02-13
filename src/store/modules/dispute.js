@@ -16,6 +16,19 @@ const dispute = {
           })
       })
     },
+    getDisputes ({ commit }, query) {
+      return new Promise ((resolve, reject) => {
+        if (query) query = '?q=' + query
+        // eslint-disable-next-line
+        axios.get('http://homol.justto.com.br:9200/disputes/_search' + query)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
     getDisputeSummary ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
