@@ -2,8 +2,8 @@ import router from '@/router'
 
 const account = {
   state: {
-    email: '',
     name: '',
+    email: '',
     status: '',
     token: localStorage.getItem('justoken') || ''
   },
@@ -21,19 +21,12 @@ const account = {
     logout (state) {
       state.email = ''
       state.name = ''
-      state.oabNumber = ''
-      state.oabState = ''
       state.status = ''
-      state.emailAccount = ''
       state.token = ''
     },
     setUser (state, response) {
       if (response.email) state.email = response.email
       if (response.name) state.name = response.name
-      if (response.oab) state.oab = response.oab
-      if (response.oab) state.oabNumber = response.oab.number
-      if (response.oab) state.oabState = response.oab.state
-      if (response.emailAccount) state.emailAccount = response.emailAccount.email
     }
   },
   actions: {

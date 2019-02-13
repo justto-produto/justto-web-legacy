@@ -3,10 +3,7 @@ const workspaceModule = {
     name: '',
     status: '',
     subdomain: '',
-    negotiators: [],
-    oabNumber: '',
-    oabState: '',
-    emailAccount: ''
+    negotiators: []
   },
   mutations: {
     updateWorkspace (state, response) {
@@ -154,17 +151,6 @@ const workspaceModule = {
                 commit('addWorkspaceNegotiators', response2)
               })
             }
-          }).catch(error => {
-            reject(error)
-          })
-      })
-    },
-    updateOab ({ commit }, oamForm) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.post('/workspaces/me/oab', { number: oamForm.oab, state: oamForm.state})
-          .then(response => {
-            resolve(response.data)
           }).catch(error => {
             reject(error)
           })
