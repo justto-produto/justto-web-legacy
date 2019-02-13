@@ -48,8 +48,7 @@ export default {
     this.$store.dispatch('showLoading')
     Promise.all([
       this.$store.dispatch('getCampaigns'),
-      this.$store.dispatch('getStrategies'),
-      this.$store.dispatch('getWorkspaceNegotiators')
+      this.$store.dispatch('getStrategies')
     ]).then(() => {
       this.$store.dispatch('hideLoading')
     })

@@ -2,7 +2,13 @@
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ mappedName }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-autocomplete
+      <el-input v-model="campaignName" placeholder="Dê um nome para a sua Campanha">
+        <i
+          slot="prefix"
+          :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+          class="el-input__icon" />
+      </el-input>
+      <!-- <el-autocomplete
         v-model="campaignName"
         :fetch-suggestions="querySearchCampaign"
         :trigger-on-focus="false"
@@ -14,7 +20,7 @@
           slot="prefix"
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
-      </el-autocomplete>
+      </el-autocomplete> -->
       <el-select
         ref="strategySelect"
         v-model="strategy"
@@ -37,7 +43,7 @@
       </div>
       <div v-if="strategy.id === 1" class="jus-import-feedback-card__number">
         <div>
-          <i class="el-icon-circle-check-outline" />Data do pagamento
+          <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
         </div>
         <div>
           <el-input-number
@@ -51,7 +57,7 @@
       </div>
       <div class="jus-import-feedback-card__number">
         <div>
-          <i class="el-icon-circle-check-outline" />Data do protocolo
+          <i class="el-icon-circle-check el-input__icon--success" />Data do protocolo
         </div>
         <div>
           <el-input-number
@@ -90,7 +96,7 @@
           :key="item.id"
           :label="item.name"
           :value="item.id">
-          <jus-avatar-user name-initials="AA" shape="circle" size="xs" />
+          <jus-avatar-user shape="circle" size="xs" />
           <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.name }}</span>
         </el-option>
       </el-select>
@@ -137,7 +143,7 @@ export default {
   },
   data () {
     return {
-      mappedName: 'Campanha',
+      mappedName: '',
       protocolDeadLine: 1,
       paymentDeadLine: 1,
       campaignName: '',
@@ -170,9 +176,9 @@ export default {
   watch: {
     campaignName (value) {
       if (value === '') {
-        this.mappedCampaign.name = ''
+        this.mappedCampaign.newName = ''
       } else {
-        this.mappedCampaign.name = value
+        this.mappedCampaign.newName = value
       }
     },
     strategy (value) {
@@ -198,28 +204,28 @@ export default {
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
   },
   methods: {
-    querySearchCampaign (queryString, callback) {
-      var campaigns = this.campaigns
-      var results = queryString ? campaigns.filter(this.createCampaignFilter(queryString)) : campaigns
-      clearTimeout(this.campaignTimeout)
-      this.campaignTimeout = setTimeout(() => {
-        callback(results)
-      }, 1000 * Math.random())
-    },
-    createCampaignFilter (queryString) {
-      return (campaigns) => {
-        return (campaigns.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-      }
-    },
-    handleSelectCampaign (item) {
-      this.mappedCampaign.campaign = {
-        name: item.name,
-        cluster: item.cluster,
-        deadline: item.deadline,
-        protocolDeadLine: item.protocolDeadline,
-        paymentDeadLine: item.paymentDeadline
-      }
-    },
+    // querySearchCampaign (queryString, callback) {
+    //   var campaigns = this.campaigns
+    //   var results = queryString ? campaigns.filter(this.createCampaignFilter(queryString)) : campaigns
+    //   clearTimeout(this.campaignTimeout)
+    //   this.campaignTimeout = setTimeout(() => {
+    //     callback(results)
+    //   }, 1000 * Math.random())
+    // },
+    // createCampaignFilter (queryString) {
+    //   return (campaigns) => {
+    //     return (campaigns.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+    //   }
+    // },
+    // handleSelectCampaign (item) {
+    //   this.mappedCampaign.campaign = {
+    //     name: item.name,
+    //     cluster: item.cluster,
+    //     deadline: item.deadline,
+    //     protocolDeadLine: item.protocolDeadline,
+    //     paymentDeadLine: item.paymentDeadline
+    //   }
+    // },
     searchNegotiators (query) {
       if (query !== '') {
         this.loading = true
@@ -341,7 +347,7 @@ export default {
     padding: 0 13px;
     width: 100%;
     border-bottom: 1px solid #dcdfe6;
-    .el-icon-circle-check-outline {
+    .el-icon-circle-check-outline, .el-icon-circle-check {
       font-size: 1.3rem;
       margin-right: 5px;
     }

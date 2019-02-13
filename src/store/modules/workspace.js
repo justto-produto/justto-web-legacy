@@ -26,8 +26,8 @@ const workspaceModule = {
       state.status = ''
       state.subdomain = ''
     },
-    setWorkspaceNegotiators (state, response) {
-      state.negotiators = response
+    addWorkspaceNegotiators (state, response) {
+      state.negotiators.push(response)
     }
   },
   actions: {
@@ -149,14 +149,9 @@ const workspaceModule = {
         // eslint-disable-next-line
         axios.get('/workspaces/negotiators', {data: {}})
           .then(response => {
-            var negotiators = []
             for (let id of response.data) {
               dispatch('getPerson', id).then(response2 => {
-                negotiators.push(response2.data)
-                if (id === response.data.slice(-1)[0]) {
-                  commit('setWorkspaceNegotiators', negotiators)
-                  resolve(response.data)
-                }
+                commit('addWorkspaceNegotiators', response2)
               })
             }
           }).catch(error => {
@@ -193,14 +188,6 @@ const workspaceModule = {
     },
     creatingWorkspace: state => {
       return state.status === 'CREATING'
-    },
-    negotiatorIds: state => {
-      // TODO: remover id 2
-      let negotiatorIds = [2]
-      for (let negotiator of state.negotiators) {
-        negotiatorIds.push(negotiator.id)
-      }
-      return negotiatorIds
     }
   }
 }

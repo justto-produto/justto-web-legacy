@@ -80,24 +80,60 @@ export default {
       }
     },
     finalStep () {
+      var allValid = true
       var promises = []
       for (let campaign of this.mappedCampaigns) {
-        delete campaign.campaign
-        delete campaign.rows
-        campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
-        campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
-        promises.push(this.$store.dispatch('createCampaign', campaign))
+        if (this.checkValidCampaign(campaign)) {
+          campaign.name = campaign.newName
+          campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
+          campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
+          campaign.strategyId = campaign.strategy.id
+          delete campaign.campaign
+          delete campaign.rows
+          delete campaign.createdAt
+          delete campaign.createdBy
+          delete campaign.id
+          delete campaign.updatedAt
+          delete campaign.updatedBy
+          delete campaign.newName
+          delete campaign.strategy
+          promises.push(this.$store.dispatch('createCampaign', campaign))
+        } else {
+          allValid = false
+        }
       }
-      Promise.all(promises).then(() => {
-        this.$router.push('/management')
-      }).catch(error => {
+      if (allValid) {
+        Promise.all(promises).then(() => {
+          this.$router.push('/management')
+        }).catch(error => {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
+          console.error(error)
+        })
+      } else {
         this.$jusNotification({
           title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
+          message: 'Para prosseguir você deve configurar todas as campanhas',
+          type: 'warning'
         })
-        console.error(error)
-      })
+      }
+    },
+    checkValidCampaign (campaign) {
+      console.log(campaign)
+      if (
+        campaign.hasOwnProperty('name') &&
+        campaign.hasOwnProperty('cluster') &&
+        campaign.hasOwnProperty('deadline') &&
+        campaign.hasOwnProperty('protocolDeadLine') &&
+        campaign.hasOwnProperty('paymentDeadLine') &&
+        campaign.hasOwnProperty('negotiatorIds') &&
+        campaign.hasOwnProperty('strategy')
+      ) {
+        return true
+      } else return false
     }
   }
 }

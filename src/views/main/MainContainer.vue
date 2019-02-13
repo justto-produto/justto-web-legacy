@@ -8,10 +8,10 @@
         ref="sideMenu"
         :collapse-transition="false"
         :collapse="isCollapse"
-        default-active="0"
+        :default-active="$route.path"
         router
         class="el-menu--main-menu">
-        <el-menu-item :route="{name:'dashboard'}" index="0">
+        <el-menu-item index="/">
           <jus-tip />
           <jus-icon :is-active="$route.path === '/'" icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
@@ -21,15 +21,15 @@
             <span>GERENCIAMENTO</span>
           </li>
         </transition>
-        <el-menu-item :route="{name:'import'}" index="1">
+        <el-menu-item index="/import">
           <jus-icon :is-active="$route.path.startsWith('/import')" icon="import" class="el-menu__icon"/>
           <span slot="title">Importação de casos</span>
         </el-menu-item>
-        <el-menu-item :route="{name:'management'}" index="2">
+        <el-menu-item index="/management">
           <jus-icon :is-active="$route.path.startsWith('/management')" icon="negotiation" class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
-        <el-menu-item :route="{name:'settings'}" index="3">
+        <el-menu-item index="/settings">
           <jus-icon :is-active="$route.path.startsWith('/settings')" icon="settings" class="el-menu__icon"/>
           <span slot="title">Configurações</span>
         </el-menu-item>
@@ -119,18 +119,6 @@ export default {
   data () {
     return {
       isCollapse: true
-    }
-  },
-  computed: {
-    menuIndex () {
-      return this.$store.state.menuIndex
-    }
-  },
-  watch: {
-    menuIndex (index) {
-      if (index) {
-        this.$refs.sideMenu.activeIndex = index
-      }
     }
   }
 }

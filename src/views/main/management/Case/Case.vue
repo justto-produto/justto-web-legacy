@@ -208,12 +208,8 @@ export default {
   created () {
     this.fetchData()
   },
-  beforeDestroy () {
-    this.$store.commit('changeMenuIndex', null)
-  },
   methods: {
     fetchData () {
-      this.$store.commit('changeMenuIndex', '2')
       this.loadingDispute = true
       this.loadingDisputeSummary = true
       this.loadingDisputeOccurrences = true

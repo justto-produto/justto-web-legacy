@@ -56,7 +56,7 @@ export default {
 <style lang="scss">
 .jus-avatar-user {
   position: relative;
-  // display: inline;
+  display: inline-block;
   &.jus-avatar-user--xs {
     img, span {
       width: 1.75rem;
