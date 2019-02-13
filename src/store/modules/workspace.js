@@ -10,11 +10,10 @@ const workspaceModule = {
   },
   mutations: {
     updateWorkspace (state, response) {
-      if( response && response.subDomain ) {
+      if (response && response.subDomain) {
         // eslint-disable-next-line
         axios.defaults.headers.common['Workspace'] = response.subDomain
       }
-
       if (response) state.name = response.name
       if (response) state.status = response.status
       if (response) state.subdomain = response.subDomain

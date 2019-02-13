@@ -38,7 +38,7 @@
         v-for="person in people"
         :key="person.id"
         title="Contraparte 1"
-        name="1">
+        :name="person.id">
         <div class="ticket-view__info-line">
           <span>Status:</span>
           <span>Online</span>
@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     fetchData () {
-      if (this.disputeRoles) {
+      if (this.disputeRoles.content) {
         for (let role of this.disputeRoles.content) {
           this.$store.dispatch('getPerson', role.personId).then(response => {
             this.people.push(response)

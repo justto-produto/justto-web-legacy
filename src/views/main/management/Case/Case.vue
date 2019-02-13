@@ -100,6 +100,7 @@
               <el-card shadow="always" class="ticket-view__send-message-box">
                 <el-input
                   :rows="2"
+                  v-model="newMessage"
                   type="textarea"
                   placeholder="Escreva alguma coisa" />
                 <div class="ticket-view__send-message-actions">
@@ -114,16 +115,21 @@
                         <jus-icon :is-active="messageType === 'email'" icon="email"/>
                       </a>
                     </el-tooltip>
-                    <el-tooltip content="Enviar Whatsapp">
+                    <el-tooltip content="Enviar whatsapp">
                       <a href="#" @click="setMessageType('whatsapp')">
                         <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
+                      </a>
+                    </el-tooltip>
+                    <el-tooltip content="Enviar CNA">
+                      <a href="#" @click="setMessageType('cna')">
+                        <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
                       </a>
                     </el-tooltip>
                   <!-- <jus-icon icon="sms" /> -->
                   <!-- <jus-icon icon="attachment" /> -->
                   <!-- <jus-icon icon="emoji" /> -->
                   </div>
-                  <el-button type="primary">
+                  <el-button type="primary" @click="sendMessage()">
                     Enviar
                   </el-button>
                 </div>
@@ -182,7 +188,8 @@ export default {
       loadingDisputeOccurrences: false,
       showSearch: false,
       searchTerm: '',
-      messageType: 'message'
+      messageType: 'message',
+      newMessage: ''
     }
   },
   watch: {
@@ -274,6 +281,20 @@ export default {
           type: 'success'
         })
       })
+    },
+    sendMessage () {
+      if (this.newMessage) {
+        if (this.messageType === 'message') {
+          alert()
+        } else {
+          this.$store.dispatch('send' + this.messageType, {
+            to: [1, 2, 3],
+            message: this.newMessage,
+            subject: 'Teste whatsapp',
+            disputeId: this.dispute.id
+          })
+        }
+      }
     }
   }
 }
@@ -514,7 +535,6 @@ export default {
 
   }
   &__search {
-    margin: 0 5px;
     visibility: hidden;
     transition: 0.3s ease all;
     height: 0px;

@@ -48,10 +48,16 @@
   cursor: pointer;
 }
 
+span[draggable="true"] {
+  cursor: move;
+}
+
 .el-tag--drag-active {
-  border: solid 1px $--color-primary !important;
-  text-decoration: line-through;
   pointer-events: none;
+  .el-tag {
+    border: solid 1px $--color-primary !important;
+    text-decoration: line-through;
+  }
 }
 
 .el-tag--company-tag {

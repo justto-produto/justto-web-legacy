@@ -47,7 +47,7 @@
             </a>
           </el-dropdown-item>
           <el-dropdown-item divided>
-            <router-link to="/logout">Sair</router-link>
+            <a href="#" @click="logout()">Sair</a>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

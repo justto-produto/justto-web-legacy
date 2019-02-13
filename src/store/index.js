@@ -8,6 +8,7 @@ import campaignModule from './modules/campaign'
 import strategyModule from './modules/strategy'
 import personModule from './modules/person'
 import disputeModule from './modules/dispute'
+import messageModule from './modules/message'
 
 Vue.use(Vuex)
 
@@ -46,6 +47,7 @@ export default new Vuex.Store({
     campaignModule,
     strategyModule,
     personModule,
-    disputeModule
+    disputeModule,
+    messageModule
   }
 })
