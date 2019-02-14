@@ -23,8 +23,8 @@ const workspaceModule = {
       state.status = ''
       state.subdomain = ''
     },
-    addWorkspaceNegotiators (state, response) {
-      state.negotiators.push(response)
+    updateWorkspaceNegotiators (state, response) {
+      state.negotiators = response
     }
   },
   actions: {
@@ -148,7 +148,7 @@ const workspaceModule = {
           .then(response => {
             for (let id of response.data) {
               dispatch('getPerson', id).then(response2 => {
-                commit('addWorkspaceNegotiators', response2)
+                commit('updateWorkspaceNegotiators', response2)
               })
             }
           }).catch(error => {

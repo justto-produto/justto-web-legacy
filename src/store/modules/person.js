@@ -16,10 +16,10 @@ const personModule = {
           })
       })
     },
-    updateOab ({ commit }, oamForm) {
+    addOab ({ commit }, oamForm) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces/my/oab', { number: oamForm.oab, state: oamForm.state})
+        axios.post('/persons/my/oabs', { number: oamForm.oab, state: oamForm.state })
           .then(response => {
             resolve(response.data)
           }).catch(error => {
