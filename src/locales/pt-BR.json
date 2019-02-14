@@ -47,7 +47,10 @@
       "LOG": "registro",
       "INTERACTION": "interação",
       "ENGAGEMENT": "engajamento",
-      "INTERACTIONS": "interações"
+      "INTERACTIONS": "interações",
+      "PENDING": "pendente",
+      "IMPORTED": "importado",
+      "ACCEPTED": "aceito"
     }
   }
 }

@@ -68,7 +68,7 @@ const dispute = {
     getDisputeRoles ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('disputes/' + id + '/dispute-roles')
+        axios.get('disputes/' + id + '/dispute-roles/list')
           .then(response => {
             resolve(response.data)
           })

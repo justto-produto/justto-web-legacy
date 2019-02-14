@@ -17,8 +17,10 @@
     width: auto !important;
     padding-left: 6px;
     padding-right: 20px;
-    .el-table-column--selection {
-      // padding-left: 4px;
+    th {
+      &:nth-child(2) {
+        padding-left: 10px;
+      }
     }
   }
   .el-table__body {

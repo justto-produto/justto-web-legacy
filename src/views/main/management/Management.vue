@@ -50,6 +50,7 @@
           <el-table
             ref="engagementTable"
             :data="cases"
+            size="small"
             class="el-table--card"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
@@ -83,7 +84,7 @@
             </el-table-column>
             <el-table-column label="Mensagens enviadas" width="180">
               <template slot-scope="scope">
-                <span v-if="false">
+                <span v-if="!scope.row._source.communicationmsgtotalsent && !scope.row._source.communicationmsgtotalschedulled">
                   Enriquecendo
                 </span>
                 <span v-else>
@@ -92,14 +93,16 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column width="90" class-name="view-management__row-actions">
+            <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
               <template slot-scope="scope">
                 <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                   <jus-icon icon="delegate" />
                 </router-link>
-                <el-popover placement="right">
+                <el-popover placement="right" trigger="hover">
                   <div class="">
-                    Teste
+                    <strong>Responsáveis</strong><br>
+                    <strong>Estratégia</strong><br>
+                    {{ scope.row._source.strategyname }}
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
@@ -111,16 +114,17 @@
           <el-table
             ref="interationTable"
             :data="cases"
+            size="small"
             class="el-table--card"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
             <el-table-column label="Campanha">
-              <template slot-scope="scope">{{ scope.row._source.campaign_name }}</template>
+              <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
             </el-table-column>
             <el-table-column label="Parte(s) contrária(s)">
               <template slot-scope="scope">
                 <div class="">
-                  <span v-for="(claimant, index) in scope.row._source.claiment" :key="claimant + index">
+                  <span v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
                     {{ claimant.f1 }}
                   </span>
                 </div>
@@ -128,24 +132,38 @@
             </el-table-column>
             <el-table-column label="Advogado(s) da parte">
               <template slot-scope="scope">
-                <div v-for="(lawyer, index) in scope.row._source.claiment_lawyer" :key="lawyer + index">
+                <div v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
                   {{ lawyer.f1 }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row._source.boundary }}</template>
+              <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
             </el-table-column>
             <el-table-column label="Contraproposta">
-              <template slot-scope="scope">{{ scope.row.contraProposal }}</template>
+              <template slot-scope="scope">R$ {{ scope.row._source.lastoffervalue }}</template>
+            </el-table-column>
+            <el-table-column label="Última interação">
+              <template slot-scope="scope">{{ scope.row._source.lastinteractiondate | moment('DD/MM/YY') }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
-              <template slot-scope="scope">{{ scope.row._source.dealdate | moment('DD/MM/YY') }}</template>
-            </el-table-column>
-            <el-table-column label="Última Interação">
               <template slot-scope="scope">
-                <!-- <jus-icon :icon="scope.row.interactionType" /> -->
-                {{ scope.row.lastInteraction }}
+                {{ scope.row._source.disputedealdate | moment('DD/MM/YY') }}
+              </template>
+            </el-table-column>
+            <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
+              <template slot-scope="scope">
+                <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                  <jus-icon icon="delegate" />
+                </router-link>
+                <el-popover placement="right" trigger="hover">
+                  <div class="">
+                    <strong>Responsáveis</strong><br>
+                    <strong>Estratégia</strong><br>
+                    {{ scope.row._source.strategyname }}
+                  </div>
+                  <jus-icon slot="reference" icon="more-info" />
+                </el-popover>
               </template>
             </el-table-column>
           </el-table>
@@ -154,6 +172,7 @@
           <el-table
             ref="newAgreementsTable"
             :data="cases"
+            size="small"
             class="el-table--card"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
@@ -175,13 +194,25 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row._source.boundary }}</template>
+              <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
               <template slot-scope="scope">{{ scope.row.accordValue }}</template>
             </el-table-column>
-            <el-table-column label="Responsáveis (3)">
-              <template slot-scope="scope">{{ scope.row.responsibles }}</template>
+            <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
+              <template slot-scope="scope">
+                <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                  <jus-icon icon="delegate" />
+                </router-link>
+                <el-popover placement="right" trigger="hover">
+                  <div class="">
+                    <strong>Responsáveis</strong><br>
+                    <strong>Estratégia</strong><br>
+                    {{ scope.row._source.strategyname }}
+                  </div>
+                  <jus-icon slot="reference" icon="more-info" />
+                </el-popover>
+              </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -189,33 +220,45 @@
           <el-table
             ref="allTable"
             :data="cases"
+            size="small"
             class="el-table--card"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
             <el-table-column label="Campanha">
-              <template slot-scope="scope">{{ scope.row._source.campaign_name }}</template>
+              <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
             </el-table-column>
             <el-table-column label="Parte(s) contrária(s)">
               <template slot-scope="scope">
-                <div v-for="(claimant, index) in scope.row._source.claiment" :key="claimant + index">
+                <div v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
                   {{ claimant.f1 }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="Nº do caso">
-              <template slot-scope="scope">{{ scope.row.number }}</template>
+              <template slot-scope="scope">{{ scope.row._source.disputecode }}</template>
             </el-table-column>
             <el-table-column label="Estratégia">
-              <template slot-scope="scope">{{ scope.row.strategy }}</template>
+              <template slot-scope="scope">{{ scope.row._source.strategyname }}</template>
             </el-table-column>
             <el-table-column label="Status">
-              <template slot-scope="scope">{{ scope.row.status }}</template>
+              <template v-if="scope.row._source.disputestatus" slot-scope="scope">
+                {{ $t('occurrence.type.' + scope.row._source.disputestatus) }}
+              </template>
             </el-table-column>
-            <el-table-column label="Responsáveis (3)">
-              <template slot-scope="scope">{{ scope.row.responsibles }}</template>
-            </el-table-column>
-            <el-table-column label="" width="40">
-              <template><i class="el-icon-more" style="font-size: 18px"/></template>
+            <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
+              <template slot-scope="scope">
+                <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                  <jus-icon icon="delegate" />
+                </router-link>
+                <el-popover placement="right" trigger="hover">
+                  <div class="">
+                    <strong>Responsáveis</strong><br>
+                    <strong>Estratégia</strong><br>
+                    {{ scope.row._source.strategyname }}
+                  </div>
+                  <jus-icon slot="reference" icon="more-info" />
+                </el-popover>
+              </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -284,7 +327,7 @@ export default {
           newActive = { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' }
           break
         case '1':
-          newActive = { index: 1, label: 'Com interação', q: 'ENGAGEMENT' }
+          newActive = { index: 1, label: 'Com interação', q: '(disputestatus:ENGAGEMENT)AND(disputehasinteractions:true)' }
           break
         case '2':
           newActive = { index: 2, label: 'Novos acordos', q: 'ACCEPTED' }
