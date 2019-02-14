@@ -13,7 +13,7 @@
         class="el-menu--main-menu">
         <el-menu-item index="/">
           <jus-tip />
-          <jus-icon :is-active="$route.path === '/'" icon="dashboard" class="el-menu__icon"/>
+          <jus-icon icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
         <transition name="fade">
@@ -22,16 +22,12 @@
           </li>
         </transition>
         <el-menu-item index="/import">
-          <jus-icon :is-active="$route.path.startsWith('/import')" icon="import" class="el-menu__icon"/>
+          <jus-icon icon="import" class="el-menu__icon"/>
           <span slot="title">Importação de casos</span>
         </el-menu-item>
         <el-menu-item index="/management">
-          <jus-icon :is-active="$route.path.startsWith('/management')" icon="negotiation" class="el-menu__icon"/>
+          <jus-icon icon="management" class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
-        </el-menu-item>
-        <el-menu-item index="/settings">
-          <jus-icon :is-active="$route.path.startsWith('/settings')" icon="settings" class="el-menu__icon"/>
-          <span slot="title">Configurações</span>
         </el-menu-item>
       </el-menu>
       <span class="el-menu__title">TIME</span>

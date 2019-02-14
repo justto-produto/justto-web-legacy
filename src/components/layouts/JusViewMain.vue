@@ -56,7 +56,7 @@ export default {
   &__container {
     padding-top: 20px;
     display: flex;
-    height: calc(100% - 57px);
+    height: calc(100% - 43px);
   }
   &__main-card {
     width: 100%;

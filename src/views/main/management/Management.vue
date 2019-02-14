@@ -97,10 +97,12 @@
             </el-table-column>
             <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
               <template slot-scope="scope">
-                <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
-                  <jus-icon icon="delegate" />
-                </router-link>
-                <el-popover placement="right" trigger="hover">
+                <el-tooltip content="Visualizar caso">
+                  <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                    <jus-icon icon="best-practices" />
+                  </router-link>
+                </el-tooltip>
+                <el-popover trigger="hover">
                   <div class="">
                     <strong>Responsáveis</strong><br>
                     <strong>Estratégia</strong><br>
@@ -155,10 +157,12 @@
             </el-table-column>
             <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
               <template slot-scope="scope">
-                <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
-                  <jus-icon icon="delegate" />
-                </router-link>
-                <el-popover placement="right" trigger="hover">
+                <el-tooltip content="Visualizar caso">
+                  <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                    <jus-icon icon="best-practices" />
+                  </router-link>
+                </el-tooltip>
+                <el-popover trigger="hover">
                   <div class="">
                     <strong>Responsáveis</strong><br>
                     <strong>Estratégia</strong><br>
@@ -179,18 +183,18 @@
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
             <el-table-column label="Campanha">
-              <template slot-scope="scope">{{ scope.row._source.campaign_name }}</template>
+              <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
             </el-table-column>
             <el-table-column label="Parte(s) contrária(s)">
               <template slot-scope="scope">
-                <div v-for="(claimant, index) in scope.row._source.claiment" :key="claimant + index">
+                <div v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
                   {{ claimant.f1 }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="Advogado(s) da parte">
               <template slot-scope="scope">
-                <div v-for="(lawyer, index) in scope.row._source.claiment_lawyer" :key="lawyer + index">
+                <div v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
                   {{ lawyer.f1 }}
                 </div>
               </template>
@@ -199,14 +203,16 @@
               <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
-              <template slot-scope="scope">{{ scope.row.accordValue }}</template>
+              <template slot-scope="scope">{{ scope.row._source.disputedealvalue }}</template>
             </el-table-column>
             <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
               <template slot-scope="scope">
-                <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
-                  <jus-icon icon="delegate" />
-                </router-link>
-                <el-popover placement="right" trigger="hover">
+                <el-tooltip content="Visualizar caso">
+                  <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                    <jus-icon icon="best-practices" />
+                  </router-link>
+                </el-tooltip>
+                <el-popover trigger="hover">
                   <div class="">
                     <strong>Responsáveis</strong><br>
                     <strong>Estratégia</strong><br>
@@ -249,10 +255,12 @@
             </el-table-column>
             <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
               <template slot-scope="scope">
-                <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
-                  <jus-icon icon="delegate" />
-                </router-link>
-                <el-popover placement="right" trigger="hover">
+                <el-tooltip content="Visualizar caso">
+                  <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                    <jus-icon icon="best-practices" />
+                  </router-link>
+                </el-tooltip>
+                <el-popover trigger="hover">
                   <div class="">
                     <strong>Responsáveis</strong><br>
                     <strong>Estratégia</strong><br>
@@ -269,7 +277,7 @@
         <template slot="title">
           <h2>Filtrar {{ activeTab.label }}</h2>
         </template>
-        <jus-management-filters :tab-index="activeTab.index"/>
+        <jus-management-filters :tab-index="activeTab.index" :filters.sync="filters"/>
         <span slot="footer">
           <el-button plain>Limpar filtro</el-button>
           <el-button type="primary">Aplicar filtro</el-button>
@@ -294,7 +302,8 @@ export default {
       showFilters: false,
       cases: [],
       multipleSelection: [],
-      activeTab: { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' }
+      activeTab: { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' },
+      filters: {}
     }
   },
   computed: {
@@ -396,13 +405,15 @@ export default {
     margin-right: 10px;
   }
   &__tabs {
-    .cell {
+    .el-table__body .cell {
+      text-transform: capitalize;
       // display: flex !important;
       // flex-direction: column;
     }
     .el-tabs__header {
       width: fit-content;
       padding: 0 20px;
+      margin: 0 0 35px;
     }
   }
   &__actions {
@@ -494,7 +505,8 @@ export default {
   &__row-actions {
     text-align: center;
     img {
-      width: 23px;
+      width: 20px;
+      vertical-align: middle;
     }
     a + span {
       margin-left: 8px;

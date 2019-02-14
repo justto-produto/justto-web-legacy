@@ -1,11 +1,11 @@
 <template>
   <div class="jus-management-filters">
-    <el-form :model="filtersForm" label-position="top">
+    <el-form :model="filters" label-position="top">
       <el-row :gutter="20">
         <!--  CAMPANHA -->
         <el-col :span="24">
           <el-form-item label="Campanha">
-            <el-select v-model="filtersForm.campaign" placeholder="Selecione uma opção" clearable>
+            <el-select v-model="filters.campaign" placeholder="Selecione uma opção" clearable>
               <el-option v-for="campaign in ['Campanha 1', 'Campanha 2', 'Campanha 3']" :key="campaign" :value="campaign"/>
             </el-select>
           </el-form-item>
@@ -13,7 +13,7 @@
         <!-- STATUS -->
         <el-col v-if="isEngagement" :span="12">
           <el-form-item label="Status">
-            <el-radio-group v-model="filtersForm.status">
+            <el-radio-group v-model="filters.status">
               <el-radio-button label="paused">Pausados</el-radio-button>
               <el-radio-button label="active">Ativos</el-radio-button>
             </el-radio-group>
@@ -22,13 +22,13 @@
         <!-- FIM DA NEGOCIAÇÃO -->
         <el-col :span="12">
           <el-form-item label="Fim da negociação">
-            <el-date-picker v-model="filtersForm.dueDate" placeholder="Selecione uma data" />
+            <el-date-picker v-model="filters.dueDate" placeholder="Selecione uma data" />
           </el-form-item>
         </el-col>
         <!-- ESTRATÉGIA -->
         <el-col :span="12">
           <el-form-item label="Estratégia">
-            <el-select v-model="filtersForm.strategy" placeholder="Selecione uma opção" clearable>
+            <el-select v-model="filters.strategy" placeholder="Selecione uma opção" clearable>
               <el-option v-for="strategy in ['Estratégia 1', 'Estratégia 2', 'Estratégia 3']" :key="strategy" :value="strategy"/>
             </el-select>
           </el-form-item>
@@ -40,14 +40,14 @@
               <div>
                 <jus-icon icon="golden-star" /> Casos favoritos
               </div>
-              <el-switch v-model="filtersForm.favorites" />
+              <el-switch v-model="filters.favorites" />
             </div>
           </el-form-item>
         </el-col>
         <!-- ESTADO -->
         <el-col :span="12">
           <el-form-item label="Estado">
-            <el-select v-model="filtersForm.state" placeholder="Selecione uma opção" clearable>
+            <el-select v-model="filters.state" placeholder="Selecione uma opção" clearable>
               <el-option v-for="state in ['Estado 1', 'Estado 2', 'Estado 3']" :key="state" :value="state"/>
             </el-select>
           </el-form-item>
@@ -55,7 +55,7 @@
         <!-- COMARCA -->
         <el-col :span="12">
           <el-form-item label="Comarca">
-            <el-select v-model="filtersForm.city" placeholder="Selecione uma opção" clearable>
+            <el-select v-model="filters.city" placeholder="Selecione uma opção" clearable>
               <el-option v-for="city in ['Comarca 1', 'Comarca 2', 'Comarca 3']" :key="city" :value="city"/>
             </el-select>
           </el-form-item>
@@ -72,20 +72,20 @@ export default {
     tabIndex: {
       type: Number,
       default: 0
+    },
+    filters: {
+      type: Object,
+      default: () => {}
     }
   },
-  data () {
-    return {
-      filtersForm: {
-        campaign: '',
-        strategy: '',
-        state: '',
-        city: '',
-        favoritesFilter: false,
-        status: '',
-        dueDate: ''
-      }
-    }
+  beforeMount () {
+    this.$store.dispatch('showLoading')
+    Promise.all([
+      // this.$store.dispatch('getCampaigns'),
+      this.$store.dispatch('getStrategies')
+    ]).then(() => {
+      this.$store.dispatch('hideLoading')
+    })
   },
   computed: {
     isEngagement () {
