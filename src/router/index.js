@@ -38,6 +38,7 @@ const router = new Router({
           }
         },
         {
+          name: 'case',
           path: 'management/case/:id',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Case/Case')
         },

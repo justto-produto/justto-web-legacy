@@ -54,33 +54,56 @@
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
             <el-table-column label="Campanha">
-              <template slot-scope="scope">{{ scope.row._source.campaign_name }}</template>
+              <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
             </el-table-column>
             <el-table-column label="Parte(s) contrária(s)">
               <template slot-scope="scope">
-                <div v-for="claimant in scope.row._source.claiment">
-                  {{ claimant.f1 }}
+                <div class="">
+                  <span v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                    {{ claimant.f1 }}
+                  </span>
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="Advogado(s) da parte">
               <template slot-scope="scope">
-                <div v-for="lawyer in scope.row._source.claiment_lawyer">
+                <div v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
                   {{ lawyer.f1 }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row._source.boundary }}</template>
+            <el-table-column label="Alçada máxima" width="140">
+              <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
             </el-table-column>
-            <el-table-column label="Valor proposto">
-              <template slot-scope="scope">R$ {{ scope.row._source.lastoffer }}</template>
+            <el-table-column label="Valor proposto" width="140">
+              <template slot-scope="scope">R$ {{ scope.row._source.disputedealvalue }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
-              <template slot-scope="scope">{{ scope.row._source.dealdate | moment('DD/MM/YY') }}</template>
+              <template slot-scope="scope">{{ scope.row._source.disputedealdate | moment('DD/MM/YY') }}</template>
             </el-table-column>
-            <el-table-column label="Mensagens enviadas">
-              <template slot-scope="scope">teste</template>
+            <el-table-column label="Mensagens enviadas" width="180">
+              <template slot-scope="scope">
+                <span v-if="false">
+                  Enriquecendo
+                </span>
+                <span v-else>
+                  {{ scope.row._source.communicationmsgtotalsent }} /
+                  {{ scope.row._source.communicationmsgtotalschedulled }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column width="90" class-name="view-management__row-actions">
+              <template slot-scope="scope">
+                <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                  <jus-icon icon="delegate" />
+                </router-link>
+                <el-popover placement="right">
+                  <div class="">
+                    Teste
+                  </div>
+                  <jus-icon slot="reference" icon="more-info" />
+                </el-popover>
+              </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -96,14 +119,16 @@
             </el-table-column>
             <el-table-column label="Parte(s) contrária(s)">
               <template slot-scope="scope">
-                <div v-for="claimant in scope.row._source.claiment">
-                  {{ claimant.f1 }}
+                <div class="">
+                  <span v-for="(claimant, index) in scope.row._source.claiment" :key="claimant + index">
+                    {{ claimant.f1 }}
+                  </span>
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="Advogado(s) da parte">
               <template slot-scope="scope">
-                <div v-for="lawyer in scope.row._source.claiment_lawyer">
+                <div v-for="(lawyer, index) in scope.row._source.claiment_lawyer" :key="lawyer + index">
                   {{ lawyer.f1 }}
                 </div>
               </template>
@@ -137,14 +162,14 @@
             </el-table-column>
             <el-table-column label="Parte(s) contrária(s)">
               <template slot-scope="scope">
-                <div v-for="claimant in scope.row._source.claiment">
+                <div v-for="(claimant, index) in scope.row._source.claiment" :key="claimant + index">
                   {{ claimant.f1 }}
                 </div>
               </template>
             </el-table-column>
             <el-table-column label="Advogado(s) da parte">
               <template slot-scope="scope">
-                <div v-for="lawyer in scope.row._source.claiment_lawyer">
+                <div v-for="(lawyer, index) in scope.row._source.claiment_lawyer" :key="lawyer + index">
                   {{ lawyer.f1 }}
                 </div>
               </template>
@@ -172,7 +197,7 @@
             </el-table-column>
             <el-table-column label="Parte(s) contrária(s)">
               <template slot-scope="scope">
-                <div v-for="claimant in scope.row._source.claiment">
+                <div v-for="(claimant, index) in scope.row._source.claiment" :key="claimant + index">
                   {{ claimant.f1 }}
                 </div>
               </template>
@@ -259,10 +284,10 @@ export default {
           newActive = { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' }
           break
         case '1':
-          newActive = { index: 1, label: 'Com interação', q: 'PENDING' }
+          newActive = { index: 1, label: 'Com interação', q: 'ENGAGEMENT' }
           break
         case '2':
-          newActive = { index: 2, label: 'Novos acordos', q: 'IMPORTED' }
+          newActive = { index: 2, label: 'Novos acordos', q: 'ACCEPTED' }
           break
         case '3':
           newActive = { index: 3, label: 'Todos', q: '' }
@@ -324,8 +349,8 @@ export default {
   }
   &__tabs {
     .cell {
-      display: flex !important;
-      flex-direction: column;
+      // display: flex !important;
+      // flex-direction: column;
     }
     .el-tabs__header {
       width: fit-content;
@@ -383,37 +408,49 @@ export default {
   .el-tabs__active-bar {
     width: 97px;
   }
-}
-.view-management__multi-actions {
-  min-height: 115px;
-  position: absolute;
-  background-color: #fff;
-  width: 100%;
-  z-index: 3;
-  padding: 0 40px;
-  transition: all 0.5s ease;
-  box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
-  border-bottom: solid 1px #e4e8ea;
-  display: flex;
-  justify-content:space-between;
-  align-items: center;
-  margin-top: -44px;
-  transform: translateY(-100%);
-  &.active {
-    margin-top: -20px;
-    transform: translateY(0%);
+  &__multi-actions {
+    min-height: 115px;
+    position: absolute;
+    background-color: #fff;
+    width: 100%;
+    z-index: 3;
+    padding: 0 40px;
+    transition: all 0.5s ease;
+    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
+    border-bottom: solid 1px #e4e8ea;
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    margin-top: -44px;
+    transform: translateY(-100%);
+    &.active {
+      margin-top: -20px;
+      transform: translateY(0%);
+    }
+    i {
+      cursor: pointer;
+      text-align: right;
+    }
+    button {
+      width: 33.33%;
+      border-radius: 6px;
+      height: 68px;
+      padding: 8px 20px;
+      border: 0;
+      border-radius: 0;
+    }
   }
-  i {
-    cursor: pointer;
-    text-align: right;
+  .el-table--enable-row-hover .el-table__body tr:hover > td {
+    background-color: #fff;
   }
-  button {
-    width: 33.33%;
-    border-radius: 6px;
-    height: 68px;
-    padding: 8px 20px;
-    border: 0;
-    border-radius: 0;
+  &__row-actions {
+    text-align: center;
+    img {
+      width: 23px;
+    }
+    a + span {
+      margin-left: 8px;
+    }
   }
 }
 .malandro {
