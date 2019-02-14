@@ -28,8 +28,8 @@
         <!-- ESTRATÉGIA -->
         <el-col :span="12">
           <el-form-item label="Estratégia">
-            <el-select v-model="filters.strategy" placeholder="Selecione uma opção" clearable>
-              <el-option v-for="strategy in ['Estratégia 1', 'Estratégia 2', 'Estratégia 3']" :key="strategy" :value="strategy"/>
+            <el-select v-model="filters.strategyid" placeholder="Selecione uma opção" clearable>
+              <el-option v-for="strategy in strategies" :key="strategy.id" :value="strategy.id" :label="strategy.name"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -99,6 +99,9 @@ export default {
     },
     isAll () {
       return this.tabIndex === 3
+    },
+    strategies () {
+      return this.$store.state.strategyModule.list
     }
   }
 }

@@ -277,10 +277,12 @@
         <template slot="title">
           <h2>Filtrar {{ activeTab.label }}</h2>
         </template>
-        <jus-management-filters :tab-index="activeTab.index" :filters.sync="filters"/>
+        <jus-management-filters
+          :tab-index="activeTab.index"
+          :filters.sync="filters" />
         <span slot="footer">
-          <el-button plain>Limpar filtro</el-button>
-          <el-button type="primary">Aplicar filtro</el-button>
+          <el-button plain @click="clearFilters()">Limpar filtro</el-button>
+          <el-button type="primary" @click="getCases()">Aplicar filtro</el-button>
         </span>
       </el-dialog>
     </template>
@@ -312,10 +314,17 @@ export default {
     }
   },
   methods: {
-    getCases (status) {
+    getCases () {
       this.$store.dispatch('showLoading')
       this.cases = []
-      this.$store.dispatch('getDisputes', status).then(response => {
+      var query = this.activeTab.q
+      Object.keys(this.filters).forEach(filter => {
+        if (query) {
+          query = 'AND'
+        }
+        query = query + '(' + filter + ':' + this.filters[filter] + ')'
+      })
+      this.$store.dispatch('getDisputes', query).then(response => {
         this.$store.dispatch('hideLoading')
         this.cases = response.hits.hits
       })
@@ -338,26 +347,30 @@ export default {
       var newActive
       switch (newTab) {
         case '0':
-          newActive = { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' }
+          newActive = { index: 0, label: 'Engajamento', q: '(disputestatus:ENGAGEMENT)' }
           break
         case '1':
           newActive = { index: 1, label: 'Com interação', q: '(disputestatus:ENGAGEMENT)AND(disputehasinteractions:true)' }
           break
         case '2':
-          newActive = { index: 2, label: 'Novos acordos', q: 'ACCEPTED' }
+          newActive = { index: 2, label: 'Novos acordos', q: '(disputestatus:ACCEPTED)' }
           break
         case '3':
           newActive = { index: 3, label: 'Todos', q: '' }
           break
         default:
-          newActive = { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' }
+          newActive = { index: 0, label: 'Engajamento', q: '(disputestatus:ENGAGEMENT)' }
       }
       this.activeTab = newActive
     },
     handleChangeTab (newTab, oldTab) {
       this.clearSelection()
       this.setActiveTabLabel(newTab)
-      this.getCases(this.activeTab.q)
+      this.getCases()
+    },
+    clearFilters () {
+      this.showFilters = false
+      this.filters = {}
     }
   }
 }
