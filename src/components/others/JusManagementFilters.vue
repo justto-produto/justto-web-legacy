@@ -6,7 +6,11 @@
         <el-col :span="24">
           <el-form-item label="Campanha">
             <el-select v-model="filters.campaign" placeholder="Selecione uma opção" clearable>
-              <el-option v-for="campaign in ['Campanha 1', 'Campanha 2', 'Campanha 3']" :key="campaign" :value="campaign"/>
+              <el-option
+                v-for="campaign in campaigns"
+                :key="campaign.id"
+                :value="campaign.id"
+                :label="campaign.name"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -29,7 +33,11 @@
         <el-col :span="12">
           <el-form-item label="Estratégia">
             <el-select v-model="filters.strategyid" placeholder="Selecione uma opção" clearable>
-              <el-option v-for="strategy in strategies" :key="strategy.id" :value="strategy.id" :label="strategy.name"/>
+              <el-option
+                v-for="strategy in strategies"
+                :key="strategy.id"
+                :value="strategy.id"
+                :label="strategy.name"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -78,15 +86,6 @@ export default {
       default: () => {}
     }
   },
-  beforeMount () {
-    this.$store.dispatch('showLoading')
-    Promise.all([
-      // this.$store.dispatch('getCampaigns'),
-      this.$store.dispatch('getStrategies')
-    ]).then(() => {
-      this.$store.dispatch('hideLoading')
-    })
-  },
   computed: {
     isEngagement () {
       return this.tabIndex === 0
@@ -102,7 +101,23 @@ export default {
     },
     strategies () {
       return this.$store.state.strategyModule.list
+    },
+    campaigns () {
+      return this.$store.state.campaignModule.list
     }
+  },
+  beforeMount () {
+    this.$store.dispatch('showLoading')
+    var promise = []
+    if (this.$store.state.campaignModule.list.length === 0) {
+      promise.push(this.$store.dispatch('getCampaigns'))
+    }
+    if (this.$store.state.strategyModule.list.length === 0) {
+      promise.push(this.$store.dispatch('getStrategies'))
+    }
+    Promise.all(promise).finally(() => {
+      this.$store.dispatch('hideLoading')
+    })
   }
 }
 </script>

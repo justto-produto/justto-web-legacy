@@ -10,6 +10,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isWhite: {
+      type: Boolean,
+      default: false
+    },
     icon: {
       type: String,
       default: ''
@@ -21,6 +25,7 @@ export default {
         '@/assets/icons/ic-' +
         this.icon +
         (this.isActive ? '-active' : '') +
+        (this.isWhite ? '-white' : '') +
         '.svg'
       )
     }

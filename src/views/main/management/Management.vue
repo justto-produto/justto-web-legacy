@@ -33,8 +33,11 @@
         <i class="el-icon-close" @click="clearSelection()"/>
       </div>
       <div class="view-management__actions">
-        <el-button plain @click="showFilters = true">
-          <jus-icon icon="filter" />
+        <el-button
+          :plain="!Object.keys(filters).length"
+          :type="Object.keys(filters).length ? 'primary' : ''"
+          @click="showFilters = true">
+          <jus-icon :is-white="Object.keys(filters).length !== 0" icon="filter" />
           Filtrar
         </el-button>
         <el-button plain>
@@ -99,7 +102,7 @@
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
-                    <jus-icon icon="best-practices" />
+                    <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
                 <el-popover trigger="hover">
@@ -273,16 +276,21 @@
           </el-table>
         </el-tab-pane>
       </el-tabs>
-      <el-dialog :visible.sync="showFilters">
+      <el-dialog :visible.sync="showFilters" @open="restoreFilters()">
         <template slot="title">
           <h2>Filtrar {{ activeTab.label }}</h2>
         </template>
         <jus-management-filters
           :tab-index="activeTab.index"
-          :filters.sync="filters" />
+          :filters.sync="activeFilters"/>
         <span slot="footer">
           <el-button plain @click="clearFilters()">Limpar filtro</el-button>
-          <el-button type="primary" @click="getCases()">Aplicar filtro</el-button>
+          <el-button
+            :disabled="validateFilter"
+            type="primary"
+            @click="applyFilters()">
+            Aplicar filtro
+          </el-button>
         </span>
       </el-dialog>
     </template>
@@ -304,30 +312,53 @@ export default {
       showFilters: false,
       cases: [],
       multipleSelection: [],
-      activeTab: { index: 0, label: 'Engajamento', q: 'ENGAGEMENT' },
-      filters: {}
+      activeTab: {},
+      filters: {},
+      activeFilters: {}
     }
   },
   computed: {
     multiActive () {
       return this.multipleSelection.length > 1
+    },
+    validateFilter () {
+      let valid = true
+      Object.values(this.activeFilters).forEach(value => {
+        if (value) {
+          valid = false
+        }
+      })
+      return valid
     }
   },
   methods: {
     getCases () {
       this.$store.dispatch('showLoading')
       this.cases = []
-      var query = this.activeTab.q
-      Object.keys(this.filters).forEach(filter => {
-        if (query) {
-          query = 'AND'
-        }
-        query = query + '(' + filter + ':' + this.filters[filter] + ')'
-      })
-      this.$store.dispatch('getDisputes', query).then(response => {
+      this.$store.dispatch('getDisputes', this.buildQuery()).then(response => {
         this.$store.dispatch('hideLoading')
         this.cases = response.hits.hits
       })
+    },
+    buildQuery () {
+      let query = { query: { dis_max: { queries: [] } } }
+      for (let match of this.activeTab.match) {
+        query.query.dis_max.queries.push(
+          { match: match }
+        )
+      }
+      Object.keys(this.filters).forEach(filter => {
+
+      })
+      return query.query.dis_max.queries.length > 0 ? query : null
+    },
+    applyFilters () {
+      this.showFilters = false
+      this.filters = JSON.parse(JSON.stringify(this.activeFilters))
+      this.getCases()
+    },
+    restoreFilters () {
+      this.activeFilters = JSON.parse(JSON.stringify(this.filters))
     },
     clearSelection () {
       if (this.$refs.engagementTable) this.$refs.engagementTable.clearSelection()
@@ -347,19 +378,19 @@ export default {
       var newActive
       switch (newTab) {
         case '0':
-          newActive = { index: 0, label: 'Engajamento', q: '(disputestatus:ENGAGEMENT)' }
+          newActive = { index: 0, label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
           break
         case '1':
-          newActive = { index: 1, label: 'Com interação', q: '(disputestatus:ENGAGEMENT)AND(disputehasinteractions:true)' }
+          newActive = { index: 1, label: 'Com interação', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: true }] }
           break
         case '2':
-          newActive = { index: 2, label: 'Novos acordos', q: '(disputestatus:ACCEPTED)' }
+          newActive = { index: 2, label: 'Novos acordos', match: [{ disputestatus: 'ACCEPTED' }] }
           break
         case '3':
-          newActive = { index: 3, label: 'Todos', q: '' }
+          newActive = { index: 3, label: 'Todos' }
           break
         default:
-          newActive = { index: 0, label: 'Engajamento', q: '(disputestatus:ENGAGEMENT)' }
+          newActive = { index: 0, label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
       }
       this.activeTab = newActive
     },
@@ -367,10 +398,12 @@ export default {
       this.clearSelection()
       this.setActiveTabLabel(newTab)
       this.getCases()
+      this.filters = {}
     },
     clearFilters () {
       this.showFilters = false
       this.filters = {}
+      this.getCases()
     }
   }
 }
@@ -459,6 +492,7 @@ export default {
     }
     .el-button {
       margin-left: 20px;
+      max-width: 100px;
     }
   }
   .jus-main-view__main-card > .el-card__body {
