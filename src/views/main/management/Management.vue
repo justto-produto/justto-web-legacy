@@ -42,10 +42,12 @@
         </el-button>
       </div>
       <el-tabs
+        v-loading="$store.state.loading"
         ref="management-tabs"
         :before-leave="handleChangeTab"
         :value="0"
-        class="view-management__tabs">
+        class="view-management__tabs"
+        style="min-height: 100%;">
         <el-tab-pane name="0" label="Engajamento">
           <el-table
             ref="engagementTable"
@@ -302,7 +304,10 @@ export default {
   },
   methods: {
     getCases (status) {
+      this.$store.dispatch('showLoading')
+      this.cases = []
       this.$store.dispatch('getDisputes', status).then(response => {
+        this.$store.dispatch('hideLoading')
         this.cases = response.hits.hits
       })
     },
