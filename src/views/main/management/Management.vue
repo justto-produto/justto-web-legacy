@@ -52,6 +52,7 @@
         class="view-management__tabs"
         style="min-height: 100%;">
         <el-tab-pane name="0" label="Engajamento">
+          <!-- TABELA DE ENGAJAMENTO -->
           <el-table
             ref="engagementTable"
             :data="cases"
@@ -59,21 +60,51 @@
             class="el-table--card"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
-            <el-table-column label="Campanha">
+            <el-table-column
+              label="Campanha"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
             </el-table-column>
-            <el-table-column label="Parte(s) contrária(s)">
+            <el-table-column
+              label="Parte(s) contrária(s)"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">
-                <span v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
-                  {{ claimant.f1 }}
-                </span>
+                <el-popover
+                  title="Partes contrárias"
+                  trigger="hover">
+                  <span v-for="(claimant, index) in scope.row._source.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.f1 }}
+                  </span>
+                  <ul>
+                    <li v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                      {{ claimant.f1 }}
+                    </li>
+                  </ul>
+                </el-popover>
               </template>
             </el-table-column>
-            <el-table-column label="Advogado(s) da parte">
+            <el-table-column
+              label="Advogado(s) da parte"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">
-                <span v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
-                  {{ lawyer.f1 }}
-                </span>
+                <el-popover
+                  title="Advogados da parte"
+                  trigger="hover">
+                  <span v-for="(lawyer, index) in scope.row._source.claimentslawyer" slot="reference" :key="lawyer + index">
+                    {{ lawyer.f1 }}
+                  </span>
+                  <ul>
+                    <li v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
+                      {{ lawyer.f1 }}
+                    </li>
+                  </ul>
+                </el-popover>
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
@@ -85,7 +116,7 @@
             <el-table-column label="Fim da negociação">
               <template slot-scope="scope">{{ scope.row._source.disputedealdate | moment('DD/MM/YY') }}</template>
             </el-table-column>
-            <el-table-column label="Mensagens enviadas">
+            <el-table-column label="Msgs enviadas">
               <template slot-scope="scope">
                 <span v-if="!scope.row._source.communicationmsgtotalsent && !scope.row._source.communicationmsgtotalschedulled">
                   Enriquecendo
@@ -96,7 +127,11 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="Ações" class-name="view-management__row-actions">
+            <el-table-column
+              label="Ações"
+              class-name="view-management__row-actions"
+              width="90px"
+              align="center">
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
@@ -119,6 +154,7 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane name="1" label="Com interação">
+          <!-- TABELA COM INTERAÇÃO -->
           <el-table
             ref="interationTable"
             :data="cases"
@@ -126,23 +162,51 @@
             class="el-table--card"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
-            <el-table-column label="Campanha">
+            <el-table-column
+              label="Campanha"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
             </el-table-column>
-            <el-table-column label="Parte(s) contrária(s)">
+            <el-table-column
+              label="Parte(s) contrária(s)"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">
-                <div class="">
-                  <span v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                <el-popover
+                  title="Partes contrárias"
+                  trigger="hover">
+                  <span v-for="(claimant, index) in scope.row._source.claiments" slot="reference" :key="claimant + index">
                     {{ claimant.f1 }}
                   </span>
-                </div>
+                  <ul>
+                    <li v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                      {{ claimant.f1 }}
+                    </li>
+                  </ul>
+                </el-popover>
               </template>
             </el-table-column>
-            <el-table-column label="Advogado(s) da parte">
+            <el-table-column
+              label="Advogado(s) da parte"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">
-                <div v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
-                  {{ lawyer.f1 }}
-                </div>
+                <el-popover
+                  title="Advogados da parte"
+                  trigger="hover">
+                  <span v-for="(lawyer, index) in scope.row._source.claimentslawyer" slot="reference" :key="lawyer + index">
+                    {{ lawyer.f1 }}
+                  </span>
+                  <ul>
+                    <li v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
+                      {{ lawyer.f1 }}
+                    </li>
+                  </ul>
+                </el-popover>
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
@@ -159,7 +223,11 @@
                 {{ scope.row._source.disputedealdate | moment('DD/MM/YY') }}
               </template>
             </el-table-column>
-            <el-table-column label="Ações" class-name="view-management__row-actions">
+            <el-table-column
+              label="Ações"
+              class-name="view-management__row-actions"
+              width="90px"
+              align="center">
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
@@ -176,9 +244,13 @@
                 </el-popover>
               </template>
             </el-table-column>
+            <template slot="empty">
+              teste
+            </template>
           </el-table>
         </el-tab-pane>
         <el-tab-pane name="2" label="Novos Acordos">
+          <!-- NOVOS ACORDOS -->
           <el-table
             ref="newAgreementsTable"
             :data="cases"
@@ -186,21 +258,51 @@
             class="el-table--card"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
-            <el-table-column label="Campanha">
+            <el-table-column
+              label="Campanha"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
             </el-table-column>
-            <el-table-column label="Parte(s) contrária(s)">
+            <el-table-column
+              label="Parte(s) contrária(s)"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">
-                <div v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
-                  {{ claimant.f1 }}
-                </div>
+                <el-popover
+                  title="Partes contrárias"
+                  trigger="hover">
+                  <span v-for="(claimant, index) in scope.row._source.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.f1 }}
+                  </span>
+                  <ul>
+                    <li v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                      {{ claimant.f1 }}
+                    </li>
+                  </ul>
+                </el-popover>
               </template>
             </el-table-column>
-            <el-table-column label="Advogado(s) da parte">
+            <el-table-column
+              label="Advogado(s) da parte"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">
-                <div v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
-                  {{ lawyer.f1 }}
-                </div>
+                <el-popover
+                  title="Advogados da parte"
+                  trigger="hover">
+                  <span v-for="(lawyer, index) in scope.row._source.claimentslawyer" slot="reference" :key="lawyer + index">
+                    {{ lawyer.f1 }}
+                  </span>
+                  <ul>
+                    <li v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
+                      {{ lawyer.f1 }}
+                    </li>
+                  </ul>
+                </el-popover>
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
@@ -209,7 +311,11 @@
             <el-table-column label="Valor do acordo">
               <template slot-scope="scope">{{ scope.row._source.disputedealvalue }}</template>
             </el-table-column>
-            <el-table-column label="Ações" class-name="view-management__row-actions">
+            <el-table-column
+              label="Ações"
+              class-name="view-management__row-actions"
+              width="90px"
+              align="center">
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
@@ -226,6 +332,9 @@
                 </el-popover>
               </template>
             </el-table-column>
+            <template slot="empty">
+              teste
+            </template>
           </el-table>
         </el-tab-pane>
         <el-tab-pane name="3" label="Todos">
@@ -236,14 +345,31 @@
             class="el-table--card"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
-            <el-table-column label="Campanha">
+            <el-table-column
+              label="Campanha"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
             </el-table-column>
-            <el-table-column label="Parte(s) contrária(s)">
+            <el-table-column
+              label="Parte(s) contrária(s)"
+              width="175px"
+              class-name="fixed-width"
+              label-class-name="fixed-width">
               <template slot-scope="scope">
-                <div v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
-                  {{ claimant.f1 }}
-                </div>
+                <el-popover
+                  title="Partes contrárias"
+                  trigger="hover">
+                  <span v-for="(claimant, index) in scope.row._source.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.f1 }}
+                  </span>
+                  <ul>
+                    <li v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                      {{ claimant.f1 }}
+                    </li>
+                  </ul>
+                </el-popover>
               </template>
             </el-table-column>
             <el-table-column label="Nº do caso">
@@ -257,7 +383,11 @@
                 {{ $t('occurrence.type.' + scope.row._source.disputestatus) }}
               </template>
             </el-table-column>
-            <el-table-column label="Ações" class-name="view-management__row-actions">
+            <el-table-column
+              label="Ações"
+              class-name="view-management__row-actions"
+              width="90px"
+              align="center">
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
@@ -274,6 +404,9 @@
                 </el-popover>
               </template>
             </el-table-column>
+            <template slot="empty">
+              teste
+            </template>
           </el-table>
         </el-tab-pane>
       </el-tabs>
@@ -448,10 +581,26 @@ export default {
     margin-right: 10px;
   }
   &__tabs {
-    .el-table__body .cell {
-      text-transform: capitalize;
-      max-width: 168px;
-      white-space: nowrap;
+    .el-table__header {
+      .fixed-width {
+        .cell {
+          width: 175px;
+        }
+      }
+    }
+    .el-table__body {
+      .fixed-width {
+        .cell {
+          width: 175px;
+          white-space: nowrap;
+        }
+      }
+      .cell {
+        text-transform: capitalize;
+        &.names {
+          max-width: 158px;
+        }
+      }
     }
     .el-tabs__header {
       width: fit-content;
@@ -547,7 +696,6 @@ export default {
     background-color: #fff;
   }
   &__row-actions {
-    text-align: center;
     img {
       width: 20px;
       vertical-align: middle;
@@ -560,8 +708,5 @@ export default {
 .malandro {
   transform: rotate(180deg);
   width: 148px;
-}
-.el-table th > .cell {
-  white-space: nowrap;
 }
 </style>

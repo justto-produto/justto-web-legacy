@@ -14,7 +14,8 @@
     height: 0px;
   }
   .el-table__header {
-    // width: auto !important;
+    // table-layout: auto;
+    width: auto !important;
     padding-left: 6px;
     padding-right: 20px;
     th {
@@ -34,9 +35,6 @@
     td {
       &:nth-child(2) {
         padding-left: 10px;
-      }
-      &:last-child {
-        padding-right: 10px;
       }
       &:not(:first-child) {
         border-radius: 4px;
