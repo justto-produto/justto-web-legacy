@@ -11,7 +11,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build && apv update build",
-    "release": "vue-cli-service build && apv update patch --tag",
+    "release": "vue-cli-service build && apv update patch",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
