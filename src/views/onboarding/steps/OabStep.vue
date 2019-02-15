@@ -17,7 +17,7 @@
         <el-form-item label="UF" prop="state">
           <el-select v-model="oabForm.state" placeholder="">
             <el-option
-              v-for="state in $store.state.stateList"
+              v-for="state in $store.state.statesList"
               :key="state"
               :label="state"
               :value="state"/>

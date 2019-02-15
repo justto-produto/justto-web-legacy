@@ -3,9 +3,13 @@
     <el-form :model="filters" label-position="top">
       <el-row :gutter="20">
         <!--  CAMPANHA -->
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="Campanha">
-            <el-select v-model="filters.campaign" placeholder="Selecione uma opção" clearable>
+            <el-select
+              v-model="filters.campaignid"
+              placeholder="Selecione uma opção"
+              clearable
+              @clear="clearCampaign">
               <el-option
                 v-for="campaign in campaigns"
                 :key="campaign.id"
@@ -14,25 +18,25 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <!-- STATUS -->
-        <el-col v-if="isEngagement" :span="12">
-          <el-form-item label="Status">
-            <el-radio-group v-model="filters.status">
-              <el-radio-button label="paused">Pausados</el-radio-button>
-              <el-radio-button label="active">Ativos</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-        <!-- FIM DA NEGOCIAÇÃO -->
-        <el-col :span="12">
-          <el-form-item label="Fim da negociação">
-            <el-date-picker v-model="filters.dueDate" placeholder="Selecione uma data" />
+        <!-- ÚLTIMA INTERAÇÃO -->
+        <el-col v-if="isInteration" :span="12">
+          <el-form-item label="Última interação">
+            <el-date-picker
+              v-model="lastinteractiondate"
+              format="dd/MM/yyyy"
+              placeholder="Selecione uma data"
+              value-format="yyyy-MM-dd'T'HH:mm:ss"
+              @change="clearLastinteractiondate" />
           </el-form-item>
         </el-col>
         <!-- ESTRATÉGIA -->
         <el-col :span="12">
           <el-form-item label="Estratégia">
-            <el-select v-model="filters.strategyid" placeholder="Selecione uma opção" clearable>
+            <el-select
+              v-model="filters.strategyid"
+              placeholder="Selecione uma opção"
+              clearable
+              @clear="clearStrategy">
               <el-option
                 v-for="strategy in strategies"
                 :key="strategy.id"
@@ -41,9 +45,40 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <!-- FAVORITOS -->
+        <!-- MEIO DE INTERAÇÃO -->
         <el-col :span="12">
-          <el-form-item label="Ordenar por:" class="jus-management-filters__favorite">
+          <el-form-item v-if="isInteration" label="Meio de interação">
+            <el-select
+              v-model="interaction"
+              placeholder="Selecione uma opção"
+              clearable
+              @change="setInteraction">
+              <el-option
+                v-for="interaction in interactions"
+                :key="interaction.key"
+                :value="interaction.key"
+                :label="interaction.value"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+        <!-- STATUS -->
+        <!-- <el-col v-if="isEngagement" :span="12">
+          <el-form-item label="Status" class="jus-management-filters__switch">
+            <div>
+              <div>Pausados</div>
+              <el-switch v-model="filters.disputestatus" active-value="PAUSED" :inactive-value="false"/>
+            </div>
+            <el-radio-group v-model="filters.status">
+              <el-radio-button label="paused">Pausados</el-radio-button>
+              <el-radio-button label="active">Ativos</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </el-col> -->
+
+        <!-- FAVORITOS -->
+        <!-- <el-col :span="12">
+          <el-form-item label="Ordenar por:" class="jus-management-filters__switch">
             <div>
               <div>
                 <jus-icon icon="golden-star" /> Casos favoritos
@@ -51,20 +86,28 @@
               <el-switch v-model="filters.favorites" />
             </div>
           </el-form-item>
+        </el-col> -->
+
+        <!-- FIM DA NEGOCIAÇÃO -->
+        <el-col v-if="isEngagement || isInteration" :span="12">
+          <el-form-item label="Fim da negociação">
+            <el-date-picker
+              v-model="disputedealdate"
+              format="dd/MM/yyyy"
+              placeholder="Selecione uma data"
+              value-format="yyyy-MM-dd'T'HH:mm:ss"
+              @change="clearDisputedealdate"/>
+          </el-form-item>
         </el-col>
         <!-- ESTADO -->
         <el-col :span="12">
           <el-form-item label="Estado">
-            <el-select v-model="filters.state" placeholder="Selecione uma opção" clearable>
-              <el-option v-for="state in ['Estado 1', 'Estado 2', 'Estado 3']" :key="state" :value="state"/>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <!-- COMARCA -->
-        <el-col :span="12">
-          <el-form-item label="Comarca">
-            <el-select v-model="filters.city" placeholder="Selecione uma opção" clearable>
-              <el-option v-for="city in ['Comarca 1', 'Comarca 2', 'Comarca 3']" :key="city" :value="city"/>
+            <el-select
+              v-model="filters.disputestate"
+              placeholder="Selecione uma opção"
+              clearable
+              @clear="clearDisputestate">
+              <el-option v-for="state in $store.state.statesList" :key="state" :value="state"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -86,6 +129,13 @@ export default {
       default: () => {}
     }
   },
+  data () {
+    return {
+      interaction: '',
+      disputedealdate: '',
+      lastinteractiondate: ''
+    }
+  },
   computed: {
     isEngagement () {
       return this.tabIndex === 0
@@ -104,6 +154,18 @@ export default {
     },
     campaigns () {
       return this.$store.state.campaignModule.list
+    },
+    interactions () {
+      return [{
+        key: 'haswhatsappinteration',
+        value: 'Whatsapp'
+      }, {
+        key: 'hasemailinteraction',
+        value: 'Email'
+      }, {
+        key: 'hascnainteraction',
+        value: 'CNA'
+      }]
     }
   },
   beforeMount () {
@@ -118,6 +180,37 @@ export default {
     Promise.all(promise).finally(() => {
       this.$store.dispatch('hideLoading')
     })
+  },
+  methods: {
+    setInteraction (value) {
+      delete this.filters['whatsappinterations']
+      delete this.filters['emailinteractions']
+      delete this.filters['cnainteractions']
+      if (value) this.filters[value] = true
+    },
+    clearStrategy () {
+      delete this.filters.strategyid
+    },
+    clearCampaign () {
+      delete this.filters.campaignid
+    },
+    clearDisputestate () {
+      delete this.filters.disputestate
+    },
+    clearDisputedealdate (value) {
+      if (value) {
+        this.filters.disputedealdate = value
+      } else {
+        delete this.filters.disputedealdate
+      }
+    },
+    clearLastinteractiondate (value) {
+      if (value) {
+        this.filters.lastinteractiondate = value
+      } else {
+        delete this.filters.lastinteractiondate
+      }
+    }
   }
 }
 </script>
@@ -130,7 +223,7 @@ export default {
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
   }
-  &__favorite {
+  &__switch {
     .el-form-item__content > div {
       display: flex;
       justify-content: space-between;

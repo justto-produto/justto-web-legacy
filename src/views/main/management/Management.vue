@@ -162,7 +162,7 @@
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
-                    <jus-icon icon="best-practices" />
+                    <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
                 <el-popover trigger="hover">
@@ -212,7 +212,7 @@
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
-                    <jus-icon icon="best-practices" />
+                    <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
                 <el-popover trigger="hover">
@@ -260,7 +260,7 @@
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
-                    <jus-icon icon="best-practices" />
+                    <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
                 <el-popover trigger="hover">
@@ -284,12 +284,11 @@
           :tab-index="activeTab.index"
           :filters.sync="activeFilters"/>
         <span slot="footer">
-          <el-button plain @click="clearFilters()">Limpar filtro</el-button>
+          <el-button plain @click="clearFilters()">Limpar filtros</el-button>
           <el-button
-            :disabled="validateFilter"
             type="primary"
             @click="applyFilters()">
-            Aplicar filtro
+            Aplicar filtros
           </el-button>
         </span>
       </el-dialog>
@@ -320,15 +319,6 @@ export default {
   computed: {
     multiActive () {
       return this.multipleSelection.length > 1
-    },
-    validateFilter () {
-      let valid = true
-      Object.values(this.activeFilters).forEach(value => {
-        if (value) {
-          valid = false
-        }
-      })
-      return valid
     }
   },
   methods: {
@@ -341,16 +331,22 @@ export default {
       })
     },
     buildQuery () {
-      let query = { query: { dis_max: { queries: [] } } }
-      for (let match of this.activeTab.match) {
-        query.query.dis_max.queries.push(
-          { match: match }
-        )
+      let query = { query: { bool: { must: [] } } }
+      if (this.activeTab.match) {
+        for (let match of this.activeTab.match) {
+          query.query.bool.must.push(
+            { match: match }
+          )
+        }
       }
-      Object.keys(this.filters).forEach(filter => {
-
+      Object.keys(this.filters).forEach(key => {
+        let match = {}
+        if (this.filters[key]) {
+          match[key] = this.filters[key]
+          query.query.bool.must.push({ match: match })
+        }
       })
-      return query.query.dis_max.queries.length > 0 ? query : null
+      return query.query.bool.must.length > 0 ? query : null
     },
     applyFilters () {
       this.showFilters = false

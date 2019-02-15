@@ -50,7 +50,8 @@
       "INTERACTIONS": "interações",
       "PENDING": "pendente",
       "IMPORTED": "importado",
-      "ACCEPTED": "aceito"
+      "ACCEPTED": "aceito",
+      "PAUSED": "pausado"
     }
   }
 }
