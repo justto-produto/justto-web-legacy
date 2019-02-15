@@ -75,6 +75,18 @@ const dispute = {
             reject(error)
           })
       })
+    },
+    sendBatchAction ({ commit }, body) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('disputes/batch', body)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

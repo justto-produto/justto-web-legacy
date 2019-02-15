@@ -29,7 +29,17 @@
     </template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
-        <img src="http://ap.imagensbrasil.org/images/2017/02/24/SERGIO-MALLANDRO.jpg" class="malandro">
+        Casos selecionados: {{ selectedIds.length }}
+        <div>
+          <el-button plain @click="sendBatchAction('PAUSED')">Parar</el-button>
+          <el-button plain @click="sendBatchAction('PAUSED')">Reiniciar</el-button>
+          <el-button plain @click="sendBatchAction('PAUSED')">Ganhar</el-button>
+          <el-button plain @click="sendBatchAction('PAUSED')">Perder</el-button>
+          <!-- <el-button plain @click="sendBatchAction('PAUSED')">Alterar responsável</el-button> -->
+          <el-button plain @click="sendBatchAction('PAUSED')">Excluir</el-button>
+          <el-button plain @click="sendBatchAction('PAUSED')">Reiniciar engajamento</el-button>
+          <!-- <el-button plain @click="sendBatchAction('PAUSED')">Alterar campanha</el-button> -->
+        </div>
         <i class="el-icon-close" @click="clearSelection()"/>
       </div>
       <div class="view-management__actions">
@@ -445,7 +455,7 @@ export default {
     return {
       showFilters: false,
       cases: [],
-      multipleSelection: [],
+      selectedIds: [],
       activeTab: {},
       filters: {},
       activeFilters: {}
@@ -453,7 +463,7 @@ export default {
   },
   computed: {
     multiActive () {
-      return this.multipleSelection.length > 1
+      return this.selectedIds.length > 1
     }
   },
   methods: {
@@ -497,8 +507,13 @@ export default {
       if (this.$refs.newAgreementsTable) this.$refs.newAgreementsTable.clearSelection()
       if (this.$refs.allTable) this.$refs.allTable.clearSelection()
     },
-    handleSelectionChange (val) {
-      this.multipleSelection = val
+    handleSelectionChange (selected) {
+      this.selectedIds = []
+      for (let dispute of selected) {
+        if (dispute._source && dispute._source.disputeid) {
+          this.selectedIds.push(dispute._source.disputeid)
+        }
+      }
     },
     carouselIcons () {
       let prevIcon = require('@/assets/icons/ic-left.svg')
@@ -535,6 +550,23 @@ export default {
       this.showFilters = false
       this.filters = {}
       this.getCases()
+    },
+    sendBatchAction (action) {
+      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('sendBatchAction', {
+          type: action, disputeIds: this.selectedIds
+        }).then(response => {
+          this.$jusNotification({
+            title: 'Pronto!',
+            message: 'Ação realizada com sucesso.',
+            type: 'success'
+          })
+        })
+      })
     }
   }
 }
@@ -662,12 +694,11 @@ export default {
     width: 97px;
   }
   &__multi-actions {
-    min-height: 115px;
     position: absolute;
     background-color: #fff;
     width: 100%;
     z-index: 3;
-    padding: 0 40px;
+    padding: 0 20px;
     transition: all 0.5s ease;
     box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
     border-bottom: solid 1px #e4e8ea;
@@ -676,6 +707,9 @@ export default {
     align-items: center;
     margin-top: -44px;
     transform: translateY(-100%);
+    div {
+      display: flex;
+    }
     &.active {
       margin-top: -20px;
       transform: translateY(0%);
@@ -685,12 +719,13 @@ export default {
       text-align: right;
     }
     button {
-      width: 33.33%;
-      border-radius: 6px;
       height: 68px;
       padding: 8px 20px;
       border: 0;
       border-radius: 0;
+      &:hover {
+        background-color: #fafafa !important;
+      }
     }
   }
   .el-table--enable-row-hover .el-table__body tr:hover > td {
@@ -709,9 +744,5 @@ export default {
     margin-top: 40px;
     width: 60px;
   }
-}
-.malandro {
-  transform: rotate(180deg);
-  width: 148px;
 }
 </style>
