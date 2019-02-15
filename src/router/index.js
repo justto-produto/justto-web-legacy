@@ -118,22 +118,22 @@ const router = new Router({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     if (Store.getters.isLoggedIn) {
-//       if (Store.getters.hasWorkspace) {
-//         if (to.name === 'onboarding') {
-//           next('/')
-//         } else next()
-//       } else {
-//         if (to.name === 'onboarding') {
-//           next()
-//         } else next('onboarding')
-//       }
-//     } else next('login')
-//   } else if (from.query.token) next(false)
-//   else next()
-// })
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (Store.getters.isLoggedIn) {
+      if (Store.getters.hasWorkspace) {
+        if (to.name === 'onboarding') {
+          next('/')
+        } else next()
+      } else {
+        if (to.name === 'onboarding') {
+          next()
+        } else next('onboarding')
+      }
+    } else next('login')
+  } else if (from.query.token) next(false)
+  else next()
+})
 
 router.afterEach((to, from) => {
   if (to.name === 'onboarding' || to.name === 'login' || to.name === 'register' || to.name === 'forgot-password') {

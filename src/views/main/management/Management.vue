@@ -149,7 +149,8 @@
               </template>
             </el-table-column>
             <template slot="empty">
-              teste
+              <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
+              <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
             </template>
           </el-table>
         </el-tab-pane>
@@ -703,6 +704,10 @@ export default {
     a + span {
       margin-left: 8px;
     }
+  }
+  &__empty-table {
+    margin-top: 40px;
+    width: 60px;
   }
 }
 .malandro {
