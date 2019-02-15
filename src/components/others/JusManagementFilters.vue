@@ -18,17 +18,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <!-- ÚLTIMA INTERAÇÃO -->
-        <el-col v-if="isInteration" :span="12">
-          <el-form-item label="Última interação">
-            <el-date-picker
-              v-model="lastinteractiondate"
-              format="dd/MM/yyyy"
-              placeholder="Selecione uma data"
-              value-format="yyyy-MM-dd'T'HH:mm:ss"
-              @change="clearLastinteractiondate" />
-          </el-form-item>
-        </el-col>
         <!-- ESTRATÉGIA -->
         <el-col :span="12">
           <el-form-item label="Estratégia">
@@ -43,6 +32,28 @@
                 :value="strategy.id"
                 :label="strategy.name"/>
             </el-select>
+          </el-form-item>
+        </el-col>
+        <!-- DATA DO ACORDO -->
+        <el-col v-if="isNewAgreements" :span="12">
+          <el-form-item label="Data do acordo">
+            <el-date-picker
+              v-model="disputedealdate"
+              format="dd/MM/yyyy"
+              placeholder="Selecione uma data"
+              value-format="yyyy-MM-dd'T'HH:mm:ss"
+              @change="clearDisputedealdate"/>
+          </el-form-item>
+        </el-col>
+        <!-- ÚLTIMA INTERAÇÃO -->
+        <el-col v-if="isInteration" :span="12">
+          <el-form-item label="Última interação">
+            <el-date-picker
+              v-model="lastinteractiondate"
+              format="dd/MM/yyyy"
+              placeholder="Selecione uma data"
+              value-format="yyyy-MM-dd'T'HH:mm:ss"
+              @change="clearLastinteractiondate" />
           </el-form-item>
         </el-col>
         <!-- MEIO DE INTERAÇÃO -->
@@ -89,14 +100,29 @@
         </el-col> -->
 
         <!-- FIM DA NEGOCIAÇÃO -->
-        <el-col v-if="isEngagement || isInteration" :span="12">
+        <el-col v-if="isEngagement || isInteration || isNewAgreements" :span="12">
           <el-form-item label="Fim da negociação">
             <el-date-picker
-              v-model="disputedealdate"
+              v-model="disputeexpirationdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd'T'HH:mm:ss"
-              @change="clearDisputedealdate"/>
+              @change="clearDisputeexpirationdate"/>
+          </el-form-item>
+        </el-col>
+        <!-- STATUS -->
+        <el-col v-if="isAll" :span="24">
+          <el-form-item label="Status">
+            <el-radio-group v-model="filters.disputestatus">
+              <el-radio-button label="Engajamento" value="ENGAGEMENT" />
+              <el-radio-button label="Com interação" value="INTERACTIONS" />
+              <el-radio-button label="Novos" value="NEWS" />
+              <el-radio-button label="Perdidos" value="LOSTS" />
+              <el-radio-button label="Expirados" value="aaaaa" />
+              <el-radio-button label="Ganhos" value="aaaaa" />
+              <el-radio-button label="Pausados" value="aaaaa" />
+              <el-radio-button label="Ativos" value="aaaaa" />
+            </el-radio-group>
           </el-form-item>
         </el-col>
         <!-- ESTADO -->
@@ -111,14 +137,35 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <!-- VALOR INICIAL DO ACORDO -->
+        <el-col v-if="isNewAgreements" :span="12">
+          <el-form-item label="Valor inicial do acordo">
+            <div class="el-input">
+              <money v-model="filters.disputedealvalue" v-bind="money" class="el-input__inner" />
+            </div>
+          </el-form-item>
+        </el-col>
+        <!-- VALOR FINAL DO ACORDO -->
+        <!-- <el-col v-if="isNewAgreements" :span="24">
+          <el-form-item label="Valor final do acordo">
+            <el-slider
+              v-model="filters.value9"
+              range
+              :max="10000">
+            </el-slider>
+          </el-form-item>
+        </el-col> -->
       </el-row>
     </el-form>
   </div>
 </template>
 
 <script>
+import { Money } from 'v-money'
+
 export default {
   name: 'JusManagementFilters',
+  components: { Money },
   props: {
     tabIndex: {
       type: Number,
@@ -133,7 +180,15 @@ export default {
     return {
       interaction: '',
       disputedealdate: '',
-      lastinteractiondate: ''
+      lastinteractiondate: '',
+      disputeexpirationdate: '',
+      test: '',
+      money: {
+        decimal: ',',
+        thousands: '.',
+        prefix: 'R$ ',
+        precision: 0
+      }
     }
   },
   computed: {
@@ -210,6 +265,13 @@ export default {
       } else {
         delete this.filters.lastinteractiondate
       }
+    },
+    clearDisputeexpirationdate (value) {
+      if (value) {
+        this.filters.disputeexpirationdate = value
+      } else {
+        delete this.filters.disputeexpirationdate
+      }
     }
   }
 }
@@ -218,7 +280,7 @@ export default {
 <style lang="scss">
 .jus-management-filters {
   .el-form-item__content {
-    max-height: 40px;
+    // max-height: 40px;
   }
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
@@ -232,6 +294,11 @@ export default {
         vertical-align: text-top;
       }
     }
+  }
+  .el-radio-button__inner {
+    margin: 0 10px 10px 0;
+    border: 1px solid #dcdfe6;
+    border-radius: 2px;
   }
 }
 </style>
