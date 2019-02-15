@@ -3,7 +3,7 @@
     <template slot="title">
       <h1 class="ticket-view__title">
         <router-link to="/management">
-          <jus-icon icon="back" class="ticket-view__back"/>
+          <jus-icon icon="back" />
         </router-link>
         Caso #{{ dispute.id }}
       </h1>

@@ -64,30 +64,28 @@
             </el-table-column>
             <el-table-column label="Parte(s) contrária(s)">
               <template slot-scope="scope">
-                <div class="">
-                  <span v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
-                    {{ claimant.f1 }}
-                  </span>
-                </div>
+                <span v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                  {{ claimant.f1 }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column label="Advogado(s) da parte">
               <template slot-scope="scope">
-                <div v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
+                <span v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
                   {{ lawyer.f1 }}
-                </div>
+                </span>
               </template>
             </el-table-column>
-            <el-table-column label="Alçada máxima" width="140">
+            <el-table-column label="Alçada máxima">
               <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
             </el-table-column>
-            <el-table-column label="Valor proposto" width="140">
+            <el-table-column label="Valor proposto">
               <template slot-scope="scope">R$ {{ scope.row._source.disputedealvalue }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
               <template slot-scope="scope">{{ scope.row._source.disputedealdate | moment('DD/MM/YY') }}</template>
             </el-table-column>
-            <el-table-column label="Mensagens enviadas" width="180">
+            <el-table-column label="Mensagens enviadas">
               <template slot-scope="scope">
                 <span v-if="!scope.row._source.communicationmsgtotalsent && !scope.row._source.communicationmsgtotalschedulled">
                   Enriquecendo
@@ -98,7 +96,7 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
+            <el-table-column label="Ações" class-name="view-management__row-actions">
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
@@ -115,6 +113,9 @@
                 </el-popover>
               </template>
             </el-table-column>
+            <template slot="empty">
+              teste
+            </template>
           </el-table>
         </el-tab-pane>
         <el-tab-pane name="1" label="Com interação">
@@ -158,7 +159,7 @@
                 {{ scope.row._source.disputedealdate | moment('DD/MM/YY') }}
               </template>
             </el-table-column>
-            <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
+            <el-table-column label="Ações" class-name="view-management__row-actions">
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
@@ -208,7 +209,7 @@
             <el-table-column label="Valor do acordo">
               <template slot-scope="scope">{{ scope.row._source.disputedealvalue }}</template>
             </el-table-column>
-            <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
+            <el-table-column label="Ações" class-name="view-management__row-actions">
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
@@ -256,7 +257,7 @@
                 {{ $t('occurrence.type.' + scope.row._source.disputestatus) }}
               </template>
             </el-table-column>
-            <el-table-column label="Ações" width="90" class-name="view-management__row-actions">
+            <el-table-column label="Ações" class-name="view-management__row-actions">
               <template slot-scope="scope">
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
@@ -449,8 +450,8 @@ export default {
   &__tabs {
     .el-table__body .cell {
       text-transform: capitalize;
-      // display: flex !important;
-      // flex-direction: column;
+      max-width: 168px;
+      white-space: nowrap;
     }
     .el-tabs__header {
       width: fit-content;
@@ -559,5 +560,8 @@ export default {
 .malandro {
   transform: rotate(180deg);
   width: 148px;
+}
+.el-table th > .cell {
+  white-space: nowrap;
 }
 </style>

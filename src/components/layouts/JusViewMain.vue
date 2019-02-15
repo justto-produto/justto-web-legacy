@@ -51,6 +51,9 @@ export default {
   &__title {
     h1 {
       font-weight: 500;
+      img {
+        margin: 0 10px 2px 0;
+      }
     }
   }
   &__container {

@@ -116,12 +116,10 @@
             <el-radio-group v-model="filters.disputestatus">
               <el-radio-button label="Engajamento" value="ENGAGEMENT" />
               <el-radio-button label="Com interação" value="INTERACTIONS" />
-              <el-radio-button label="Novos" value="NEWS" />
-              <el-radio-button label="Perdidos" value="LOSTS" />
-              <el-radio-button label="Expirados" value="aaaaa" />
-              <el-radio-button label="Ganhos" value="aaaaa" />
-              <el-radio-button label="Pausados" value="aaaaa" />
-              <el-radio-button label="Ativos" value="aaaaa" />
+              <el-radio-button label="Novos acordos" value="ACCEPTED" />
+              <el-radio-button label="Perdidos" value="LOST" />
+              <el-radio-button label="Expirados" value="EXPIRED" />
+              <el-radio-button label="Pausados" value="PAUSED" />
             </el-radio-group>
           </el-form-item>
         </el-col>
