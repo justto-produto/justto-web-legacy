@@ -129,7 +129,7 @@ export default {
         campaign.hasOwnProperty('deadline') &&
         campaign.hasOwnProperty('protocolDeadLine') &&
         campaign.hasOwnProperty('paymentDeadLine') &&
-        campaign.hasOwnProperty('negotiatorIds') &&
+        // campaign.hasOwnProperty('negotiatorIds') &&
         campaign.hasOwnProperty('strategy')
       ) {
         return true
