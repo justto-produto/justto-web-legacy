@@ -97,7 +97,8 @@ export default {
           delete campaign.updatedBy
           delete campaign.newName
           delete campaign.strategy
-          promises.push(this.$store.dispatch('createCampaign', campaign, this.uploadId ))
+          campaign.importId = this.$store.state.importModule.file.id
+          promises.push(this.$store.dispatch('createCampaign', campaign ))
         } else {
           allValid = false
         }
@@ -122,7 +123,6 @@ export default {
       }
     },
     checkValidCampaign (campaign) {
-      console.log(campaign)
       if (
         campaign.hasOwnProperty('name') &&
         campaign.hasOwnProperty('cluster') &&
