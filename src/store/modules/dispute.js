@@ -19,7 +19,7 @@ const dispute = {
     getDisputes ({ commit }, query) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('http://homol.justto.com.br:9200/disputes/_search', query)
+        axios.post('http://homol.justto.com.br/disputes/_search', query)
           .then(response => {
             resolve(response.data)
           })
