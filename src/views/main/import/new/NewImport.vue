@@ -97,7 +97,7 @@ export default {
           delete campaign.updatedBy
           delete campaign.newName
           delete campaign.strategy
-          promises.push(this.$store.dispatch('createCampaign', campaign))
+          promises.push(this.$store.dispatch('createCampaign', campaign, this.uploadId ))
         } else {
           allValid = false
         }
