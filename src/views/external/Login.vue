@@ -118,10 +118,11 @@ export default {
           this.showLoading = true
           this.$store.dispatch('login', this.loginForm)
             .then(() => {
-              this.$store.dispatch('myAccount').then(() => {
-                this.$store.dispatch('myWorkspace').then(() => {
-                  this.$router.push('/')
-                })
+              Promise.all([
+                this.$store.dispatch('myAccount'),
+                this.$store.dispatch('myWorkspace')
+              ]).then(() => {
+                this.$router.push('/')
               }).catch(error => {
                 console.error(error)
                 this.errorMessage = `Houve uma falha de conexão com o servidor.

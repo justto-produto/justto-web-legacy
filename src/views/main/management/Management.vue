@@ -143,19 +143,25 @@
               width="90px"
               align="center">
               <template slot-scope="scope">
+                <el-popover trigger="hover">
+                  <div>
+                    <strong>Responsáveis:</strong><br>
+                    <span v-for="(negotiator, index) in scope.row._source.negotiators" :key="negotiator.f1 + index">
+                      {{ negotiator.f1 }}
+                    </span>
+                  </div>
+                  <br>
+                  <div>
+                    <strong>Estratégia:</strong><br>
+                    {{ scope.row._source.strategyname }}
+                  </div>
+                  <jus-icon slot="reference" icon="more-info" />
+                </el-popover>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
-                <el-popover trigger="hover">
-                  <div class="">
-                    <strong>Responsáveis</strong><br>
-                    <strong>Estratégia</strong><br>
-                    {{ scope.row._source.strategyname }}
-                  </div>
-                  <jus-icon slot="reference" icon="more-info" />
-                </el-popover>
               </template>
             </el-table-column>
             <template slot="empty">
@@ -240,23 +246,30 @@
               width="90px"
               align="center">
               <template slot-scope="scope">
+                <el-popover trigger="hover">
+                  <div>
+                    <strong>Responsáveis:</strong><br>
+                    <span v-for="(negotiator, index) in scope.row._source.negotiators" :key="negotiator.f1 + index">
+                      {{ negotiator.f1 }}
+                    </span>
+                  </div>
+                  <br>
+                  <div>
+                    <strong>Estratégia:</strong><br>
+                    {{ scope.row._source.strategyname }}
+                  </div>
+                  <jus-icon slot="reference" icon="more-info" />
+                </el-popover>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
-                <el-popover trigger="hover">
-                  <div class="">
-                    <strong>Responsáveis</strong><br>
-                    <strong>Estratégia</strong><br>
-                    {{ scope.row._source.strategyname }}
-                  </div>
-                  <jus-icon slot="reference" icon="more-info" />
-                </el-popover>
               </template>
             </el-table-column>
             <template slot="empty">
-              teste
+              <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
+              <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
             </template>
           </el-table>
         </el-tab-pane>
@@ -328,23 +341,30 @@
               width="90px"
               align="center">
               <template slot-scope="scope">
+                <el-popover trigger="hover">
+                  <div>
+                    <strong>Responsáveis:</strong><br>
+                    <span v-for="(negotiator, index) in scope.row._source.negotiators" :key="negotiator.f1 + index">
+                      {{ negotiator.f1 }}
+                    </span>
+                  </div>
+                  <br>
+                  <div>
+                    <strong>Estratégia:</strong><br>
+                    {{ scope.row._source.strategyname }}
+                  </div>
+                  <jus-icon slot="reference" icon="more-info" />
+                </el-popover>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
-                <el-popover trigger="hover">
-                  <div class="">
-                    <strong>Responsáveis</strong><br>
-                    <strong>Estratégia</strong><br>
-                    {{ scope.row._source.strategyname }}
-                  </div>
-                  <jus-icon slot="reference" icon="more-info" />
-                </el-popover>
               </template>
             </el-table-column>
             <template slot="empty">
-              teste
+              <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
+              <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
             </template>
           </el-table>
         </el-tab-pane>
@@ -400,23 +420,30 @@
               width="90px"
               align="center">
               <template slot-scope="scope">
+                <el-popover trigger="hover">
+                  <div>
+                    <strong>Responsáveis:</strong><br>
+                    <span v-for="(negotiator, index) in scope.row._source.negotiators" :key="negotiator.f1 + index">
+                      {{ negotiator.f1 }}
+                    </span>
+                  </div>
+                  <br>
+                  <div>
+                    <strong>Estratégia:</strong><br>
+                    {{ scope.row._source.strategyname }}
+                  </div>
+                  <jus-icon slot="reference" icon="more-info" />
+                </el-popover>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
-                <el-popover trigger="hover">
-                  <div class="">
-                    <strong>Responsáveis</strong><br>
-                    <strong>Estratégia</strong><br>
-                    {{ scope.row._source.strategyname }}
-                  </div>
-                  <jus-icon slot="reference" icon="more-info" />
-                </el-popover>
               </template>
             </el-table-column>
             <template slot="empty">
-              teste
+              <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
+              <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
             </template>
           </el-table>
         </el-tab-pane>
@@ -739,7 +766,7 @@ export default {
       width: 20px;
       vertical-align: middle;
     }
-    a + span {
+    span + a {
       margin-left: 8px;
     }
   }
