@@ -21,13 +21,14 @@ const campaign = {
           })
       })
     },
-    createCampaign ({ commit }, campaign ) {
+    createCampaign ({ commit }, campaign) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('campaigns', campaign)
           .then(response => {
-            if( campaign.importId ) {
-              axios.post( 'genese/' + campaign.importId + '/start' )
+            if (campaign.importId) {
+              // eslint-disable-next-line
+              axios.post('genese/' + campaign.importId + '/start')
             }
             resolve(response)
           })

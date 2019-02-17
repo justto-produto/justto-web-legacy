@@ -98,7 +98,7 @@ export default {
           delete campaign.newName
           delete campaign.strategy
           campaign.importId = this.$store.state.importModule.file.id
-          promises.push(this.$store.dispatch('createCampaign', campaign ))
+          promises.push(this.$store.dispatch('createCampaign', campaign))
         } else {
           allValid = false
         }

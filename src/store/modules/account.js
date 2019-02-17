@@ -67,7 +67,9 @@ const account = {
       })
     },
     login ({ commit }, credentials) {
+      // eslint-disable-next-line
       delete axios.defaults.headers.common['Authorization']
+      // eslint-disable-next-line
       delete axios.defaults.headers.common['Workspace']
       return new Promise((resolve, reject) => {
         commit('authRequest')

@@ -4,8 +4,8 @@
 //   it('Visits the app root url', () => {
 //     cy.visit('/')
 //     cy.contains('h1', 'Welcome to Your Vue.js App')
-    
-//   }) 
+
+//   })
 // })
 
 // /// <reference types="Cypress" />
@@ -52,15 +52,13 @@
 // })
 
 // Novo jeito de utilizar os elementos
-    // // Welcome
-    // cy.wait(5)
-    // cy.get('.onboarding-welcome-step > button').click()
-    // cy.wait(5)
-    // // Team Name
-    // cy.get('[name=name]').type('Team Name')
-    // cy.wait(5)
-    // cy.get('.onboarding-step-content > .el-button el-button--primary').click()
-    // cy.wait(5)
-    // // Workspace Name
-
-
+// // Welcome
+// cy.wait(5)
+// cy.get('.onboarding-welcome-step > button').click()
+// cy.wait(5)
+// // Team Name
+// cy.get('[name=name]').type('Team Name')
+// cy.wait(5)
+// cy.get('.onboarding-step-content > .el-button el-button--primary').click()
+// cy.wait(5)
+// // Workspace Name

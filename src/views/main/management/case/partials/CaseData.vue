@@ -37,8 +37,8 @@
       <el-collapse-item
         v-for="person in people"
         :key="person.id"
-        title="Contraparte 1"
-        :name="person.id">
+        :name="person.id"
+        title="Contraparte 1">
         <div class="ticket-view__info-line">
           <span>Status:</span>
           <span>Online</span>

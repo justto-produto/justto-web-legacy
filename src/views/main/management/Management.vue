@@ -477,6 +477,9 @@ export default {
     },
     buildQuery () {
       let query = { query: { bool: { must: [] } } }
+      query.query.bool.must.push(
+        { match: { workspaceid: this.$store.state.workspaceModule.id } }
+      )
       if (this.activeTab.match) {
         for (let match of this.activeTab.match) {
           query.query.bool.must.push(
