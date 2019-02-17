@@ -18,11 +18,11 @@
               </h4>
               <div>Estratégia: {{ item._source.strategyname }}</div>
               <div>Status: <span>{{ $t('occurrence.type.' + item._source.disputestatus) }}</span></div>
-              <div v-for="claiment in item._source.claiments">
-                Parte contrária: {{claiment.f1}}
+              <div v-for="(claiment, index) in item._source.claiments" :key="claiment.f1 + index">
+                Parte contrária: {{ claiment.f1 }}
               </div>
-              <div v-for="lawyer in item._source.claimentslawyer">
-                Advogado: {{lawyer.f1}}
+              <div v-for="(lawyer, index) in item._source.claimentslawyer" :key="lawyer.f1 + index">
+                Advogado: {{ lawyer.f1 }}
               </div>
             </div>
           </router-link>
@@ -103,28 +103,36 @@ export default {
       var query = ''
       for (let word of terms) {
         let w = '*' + word + '*'
-        if (terms[terms.length-1] !== word) {
+        if (terms[terms.length - 1] !== word) {
           w = w + ' AND '
         }
         query = query + w
       }
-      '*aaa* OR *bbb*'
-      this.$store.dispatch('getDisputes',
-        { query: { query_string: {
-          fields: [
-            'disputecode',
-            'disputeid',
-            'campaignname',
-            'claiments.f1',
-            'claiments.f2',
-            'claimentslawyer.f1',
-            'claimentslawyer.f2',
-            'strategyname'
-          ],
-          query: query
-        } } }
-      ).then(response => {
-        console.log(response)
+      this.$store.dispatch('getDisputes', {
+        query: {
+          bool: {
+            must: [{
+              query_string: {
+                fields: [
+                  'disputecode',
+                  'disputeid',
+                  'campaignname',
+                  'claiments.f1',
+                  'claiments.f2',
+                  'claimentslawyer.f1',
+                  'claimentslawyer.f2',
+                  'strategyname'
+                ],
+                query: query
+              }
+            }, {
+              match: {
+                workspaceid: this.$store.state.workspaceModule.id
+              }
+            }]
+          }
+        }
+      }).then(response => {
         cb(response.hits.hits)
       })
     }
@@ -144,6 +152,7 @@ export default {
     h4 {
       color: #9461f7;
       margin: 0;
+      margin-bottom: 5px;
     }
     color: #adadad;
     span {
