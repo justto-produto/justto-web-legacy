@@ -1,7 +1,7 @@
 <template>
-  <JusViewMain left-card-width="350" right-card-width="350" class="ticket-view">
+  <JusViewMain left-card-width="350" right-card-width="350" class="case-view">
     <template slot="title">
-      <h1 class="ticket-view__title">
+      <h1 class="case-view__title">
         <router-link to="/management">
           <jus-icon icon="back" />
         </router-link>
@@ -10,14 +10,14 @@
     </template>
     <!-- RESUMO DO CASO -->
     <template slot="left-card">
-      <div class="ticket-view__section-title">
+      <div class="case-view__section-title">
         <h2>Resumo do caso</h2>
       </div>
       <case-summary :loading="loadingDisputeSummary" :occurencies="disputeSummary.occurencies"/>
     </template>
     <!-- CHAT -->
     <template slot="main">
-      <div class="ticket-view__actions">
+      <div class="case-view__actions">
         <el-tooltip content="Buscar">
           <el-button plain @click="showSearch = !showSearch">
             <jus-icon icon="search2" />
@@ -63,29 +63,29 @@
             <jus-icon icon="star" />
           </el-button>
         </el-tooltip>
-        <div :class="{isVisible: showSearch}" class="ticket-view__search">
+        <div :class="{isVisible: showSearch}" class="case-view__search">
           <el-input v-model="searchTerm" autofocus>
             <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
           </el-input>
         </div>
       </div>
-      <div v-loading="loadingDisputeOccurrences" class="ticket-view__chat">
-        <ul v-chat-scroll="{always: false, smooth: true}" class="ticket-view__messages">
+      <div v-loading="loadingDisputeOccurrences" class="case-view__chat">
+        <ul v-chat-scroll="{always: false, smooth: true}" class="case-view__messages">
           <li
             v-for="(message, index) in filteredDisputeOccurrences"
             :key="message + index"
             :class="[messageClass(message.type), clientMessageClass(message.source.personId)]"
-            class="ticket-view__message">
-            <div class="ticket-view__photo">
+            class="case-view__message">
+            <div class="case-view__photo">
               <jus-avatar-user
                 size="sm"
                 class="el-menu__avatar" />
             </div>
-            <div class="ticket-view__content">
+            <div class="case-view__content">
               <el-card>
                 {{ message.description }}. {{ message.source.executionDateTime | moment('DD/MM/YYYY') }}
               </el-card>
-              <div class="ticket-view__content-info">
+              <div class="case-view__content-info">
                 {{ message.source.executionDateTime | moment('HH:mm') }} •
                 <jus-icon icon="email" /> •
                 Visualizado •
@@ -94,16 +94,16 @@
             </div>
           </li>
         </ul>
-        <div class="ticket-view__send-message">
+        <div class="case-view__send-message">
           <el-tabs value="1">
             <el-tab-pane label="Mensagem" name="1">
-              <el-card shadow="always" class="ticket-view__send-message-box">
+              <el-card shadow="always" class="case-view__send-message-box">
                 <el-input
                   :rows="2"
                   v-model="newMessage"
                   type="textarea"
                   placeholder="Escreva alguma coisa" />
-                <div class="ticket-view__send-message-actions">
+                <div class="case-view__send-message-actions">
                   <div class="">
                     <el-tooltip content="Enviar mensagem">
                       <a href="#" @click="setMessageType('message')">
@@ -136,12 +136,12 @@
               </el-card>
             </el-tab-pane>
             <el-tab-pane label="Nota" name="2">
-              <el-card shadow="always" class="ticket-view__send-message-box">
+              <el-card shadow="always" class="case-view__send-message-box">
                 <el-input
                   :rows="2"
                   type="textarea"
                   placeholder="Escreva alguma coisa" />
-                <div class="ticket-view__send-message-actions">
+                <div class="case-view__send-message-actions">
                   <el-button type="primary">
                     Enviar
                   </el-button>
@@ -154,7 +154,7 @@
     </template>
     <!-- DADOS DO CASO -->
     <template slot="right-card">
-      <div class="ticket-view__section-title">
+      <div class="case-view__section-title">
         <h2>Dados do caso</h2>
         <el-button plain>Exportar caso</el-button>
       </div>
@@ -172,7 +172,7 @@ import CaseSummary from './partials/CaseSummary'
 import CaseData from './partials/CaseData'
 
 export default {
-  name: 'Ticket',
+  name: 'Case',
   components: {
     CaseSummary, CaseData
   },
@@ -217,6 +217,7 @@ export default {
         this.dispute = responses
         this.loadingDispute = false
       }).catch(error => this.showError(error))
+      // this.$store.dispatch('getDisputes', {query:{bool:{must:[{match:{disputeid: this.$route.params.id}}]}}} ).then((responses) => {
       this.$store.dispatch('getDisputeSummary', this.$route.params.id).then((responses) => {
         this.disputeSummary = responses
         this.loadingDisputeSummary = false
@@ -239,13 +240,13 @@ export default {
       })
     },
     messageClass (type) {
-      return 'ticket-view__message--' + type.toLowerCase()
+      return 'case-view__message--' + type.toLowerCase()
     },
     clientMessageClass (personId) {
       if (personId) {
         if (this.$store.getters.negotiatorIds.includes(personId)) {
-          return 'ticket-view__message--negotiator'
-        } else return 'ticket-view__message--client'
+          return 'case-view__message--negotiator'
+        } else return 'case-view__message--client'
       } else return ''
     },
     filterDisputeOccurrences (term) {
@@ -297,7 +298,7 @@ export default {
 </script>
 
 <style lang="scss">
-.ticket-view {
+.case-view {
   &__chat {
     display: flex;
     flex-direction: column;
@@ -313,9 +314,9 @@ export default {
     display: flex;
     list-style: none;
     margin: 30px 0;
-    &.ticket-view__message--enrichment, &.ticket-view__message--log, &.ticket-view__message--interaction {
+    &.case-view__message--enrichment, &.case-view__message--log, &.case-view__message--interaction {
       text-align: center;
-      .ticket-view__content {
+      .case-view__content {
         width: 100%;
       }
       .el-card {
@@ -327,17 +328,17 @@ export default {
           padding: 10px 0;
         }
       }
-      .ticket-view__content-info {
+      .case-view__content-info {
         display: none;
       }
     }
     &--communication {
-      .ticket-view__photo {
+      .case-view__photo {
         display: block;
       }
-      &.ticket-view__message--negotiator {
+      &.case-view__message--negotiator {
         flex-direction: row-reverse;
-        .ticket-view__content {
+        .case-view__content {
           margin-left: 0;
           margin-right: 20px;
           &:after {
@@ -360,7 +361,7 @@ export default {
         .el-card {
           background-color: #e4e8ea;
         }
-        .ticket-view__content-info {
+        .case-view__content-info {
           text-align: right;
         }
       }

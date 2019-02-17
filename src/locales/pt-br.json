@@ -51,7 +51,8 @@
       "PENDING": "pendente",
       "IMPORTED": "importado",
       "ACCEPTED": "aceito",
-      "PAUSED": "pausado"
+      "PAUSED": "pausado",
+      "ENRICHED": "enriquecido"
     }
   }
 }

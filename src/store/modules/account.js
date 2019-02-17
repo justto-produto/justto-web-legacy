@@ -99,7 +99,7 @@ const account = {
         // eslint-disable-next-line
         delete axios.defaults.headers.common['Authorization']
         if (options && options.redirect === false) {
-        } else router.push('login')
+        } else router.push('/login')
         resolve()
       })
     },
