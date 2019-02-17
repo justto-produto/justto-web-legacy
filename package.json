@@ -1,7 +1,7 @@
 {
   "name": "justto-web",
   "version": "1.0.4",
-  "homepage": "https://acordo.pro",
+  "homepage": "https://app.justto.com",
   "author": "Henrique Liberato",
   "engines": {
     "node": "^8.11.4",

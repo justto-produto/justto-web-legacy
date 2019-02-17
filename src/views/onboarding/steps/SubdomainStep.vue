@@ -19,7 +19,7 @@
       <el-form-item prop="subdomain">
         <el-input v-model="subdomainForm.subdomain" :disabled="creatingWorkspace" name="subdomain"/>
       </el-form-item>
-      <span>.acordo.pro</span>
+      <span>.justto.app</span>
     </el-form>
     <br>
     <el-alert
