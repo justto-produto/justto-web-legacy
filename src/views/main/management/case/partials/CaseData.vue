@@ -1,63 +1,63 @@
 <template lang="html">
-  <div>
+  <div class="case-data-view">
     <el-collapse value="1">
       <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>Nº do Processo:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>Campanha:</span>
           <span>NESTLÉ - NATAL2018</span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>Estratégia:</span>
           <span>Indenizatório</span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>Alçada máxima:</span>
           <span>R$ {{ disputeSummary.boundary }}</span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>Contraproposta:</span>
           <span>R$ {{ disputeSummary.lastProposal }}</span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>Valor do acordo:</span>
           <span>R$ {{ disputeSummary.dealValue }}</span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>Fim da negociação:</span>
           <span>28/10/2020</span>
         </div>
       </el-collapse-item>
     </el-collapse>
     <hr>
-    <el-collapse v-loading="loadingRoles" accordion class="el-collapse--bordered">
+    <el-collapse v-loading="loading" accordion class="el-collapse--bordered">
       <el-collapse-item
-        v-for="person in people"
-        :key="person.id"
-        :name="person.id"
-        title="Contraparte 1">
-        <div class="ticket-view__info-line">
+        v-for="role in disputeRolesSort"
+        :key="role.id"
+        :name="role.id"
+        :title="buildTitle(role)">
+        <div class="case-view__info-line">
           <span>Status:</span>
-          <span>Online</span>
+          <span>Online <jus-status-dot type="success"/></span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>Nome:</span>
-          <span>{{ person.name }}</span>
+          <span>{{ role.person.name }}</span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>E-mail:</span>
-          <span>edineide.htinha@aol.com</span>
+          <span>{{ role.person.emailIds[0] }}</span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>Telefone:</span>
-          <span>(12) 91234-5678</span>
+          <span>{{ role.person.phoneIds[0] }}</span>
         </div>
-        <div class="ticket-view__info-line">
+        <div class="case-view__info-line">
           <span>CPF:</span>
-          <span>{{ person.documentNumber }}</span>
+          <span>{{ role.person.documentNumber }}</span>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -66,7 +66,7 @@
 
 <script>
 export default {
-  name: 'CaseSummary',
+  name: 'CaseData',
   props: {
     loading: {
       default: false,
@@ -81,39 +81,31 @@ export default {
       type: Object
     },
     disputeRoles: {
-      default: () => {},
-      type: Object
+      default: () => [],
+      type: Array
     }
   },
-  data () {
-    return {
-      people: [],
-      loadingRoles: false
+  computed: {
+    disputeRolesSort () {
+      return this.disputeRoles.sort((a, b) => {
+        if (a.party == b.party) {
+          return (a.roles[0] > b.roles[0]) ? -1 : (a.roles[0] < b.roles[0]) ? 1 : 0
+        } else {
+          return (a.party < b.party) ? -1 : 1
+        }
+      })
     }
-  },
-  watch: {
-    disputeRoles () {
-      this.fetchData()
-    }
-  },
-  created () {
-    this.fetchData()
   },
   methods: {
-    fetchData () {
-      if (this.disputeRoles.content) {
-        for (let role of this.disputeRoles.content) {
-          this.$store.dispatch('getPerson', role.personId).then(response => {
-            this.people.push(response)
-          }).catch(error => {
-            console.error(error)
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
-          })
-        }
+    buildTitle (role) {
+      if (role.party === 'CLAIMANT') {
+        if (role.roles[0] === 'PARTY') {
+          return 'Parte contrária'
+        } else return 'Advogado da parte'
+      } else {
+        if (role.roles[0] === 'PARTY') {
+          return 'Réu'
+        } else return 'Advogado do réu'
       }
     }
   }
@@ -121,4 +113,9 @@ export default {
 </script>
 
 <style lang="scss">
+.case-data-view {
+  .jus-status-dot {
+    float: initial !important;
+  }
+}
 </style>

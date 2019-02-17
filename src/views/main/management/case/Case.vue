@@ -159,7 +159,7 @@
         <el-button plain>Exportar caso</el-button>
       </div>
       <case-data
-        :loading="loadingDisputeSummary"
+        :loading="loadingDisputeSummary && loadingDisputeRoles"
         :dispute="dispute"
         :dispute-summary="disputeSummary"
         :dispute-roles="disputeRoles" />
@@ -182,10 +182,11 @@ export default {
       disputeSummary: {},
       disputeOccurrences: [],
       filteredDisputeOccurrences: [],
-      disputeRoles: {},
+      disputeRoles: [],
       loadingDispute: false,
       loadingDisputeSummary: false,
       loadingDisputeOccurrences: false,
+      loadingDisputeRoles: false,
       showSearch: false,
       searchTerm: '',
       messageType: 'message',
@@ -213,6 +214,7 @@ export default {
       this.loadingDispute = true
       this.loadingDisputeSummary = true
       this.loadingDisputeOccurrences = true
+      this.loadingDisputeRoles = true
       this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
         this.dispute = responses
         this.loadingDispute = false
@@ -229,6 +231,7 @@ export default {
       }).catch(error => this.showError(error))
       this.$store.dispatch('getDisputeRoles', this.$route.params.id).then((responses) => {
         this.disputeRoles = responses
+        this.loadingDisputeRoles = false
       }).catch(error => this.showError(error))
     },
     showError (error) {
@@ -527,6 +530,9 @@ export default {
       box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
       &.is-active {
         border: 2px solid #9461f7;
+      }
+      &:last-child {
+        margin-bottom: 20px;
       }
     }
 

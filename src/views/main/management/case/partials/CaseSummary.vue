@@ -1,11 +1,11 @@
 <template lang="html">
-  <div class="ticket-view__side-content">
+  <div class="case-view__side-content">
     <el-steps
       v-if="!loading"
       :active="occurencies.length - 1"
       direction="vertical"
       process-status="wait"
-      class="ticket-view__steps el-steps--dots">
+      class="case-view__steps el-steps--dots">
       <el-step v-for="occurrence in occurencies" :key="occurrence.id">
         <template slot="title">{{ $t('occurrence.type.' + occurrence.name) }}</template>
         <template slot="description">
@@ -29,7 +29,7 @@
       :active="4"
       direction="vertical"
       process-status="wait"
-      class="ticket-view__steps el-steps--dots">
+      class="case-view__steps el-steps--dots">
       <el-step v-for="occurrence in 4" :key="occurrence">
         <template slot="title">Ocorrência</template>
         <template slot="description">Ver detalhes</template>

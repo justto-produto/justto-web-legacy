@@ -25,9 +25,10 @@ const workspaceModule = {
       state.name = ''
       state.status = ''
       state.subdomain = ''
+      state.negotiators = []
     },
     updateWorkspaceNegotiators (state, response) {
-      state.negotiators = response
+      state.negotiators.push(response)
     }
   },
   actions: {
@@ -177,6 +178,13 @@ const workspaceModule = {
     },
     creatingWorkspace: state => {
       return state.status === 'CREATING'
+    },
+    negotiatorIds: state => {
+      let negotiatorIds = []
+      for (let negotiator of state.negotiators) {
+        negotiatorIds.push(negotiator.id)
+      }
+      return negotiatorIds
     }
   }
 }
