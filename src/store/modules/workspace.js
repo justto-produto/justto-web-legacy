@@ -8,14 +8,16 @@ const workspaceModule = {
   },
   mutations: {
     updateWorkspace (state, response) {
-      if (response.subDomain) {
-        // eslint-disable-next-line
-        axios.defaults.headers.common['Workspace'] = response.subDomain
+      if (response) {
+        if (response.subDomain) {
+          // eslint-disable-next-line
+          axios.defaults.headers.common['Workspace'] = response.subDomain
+        }
+        if (response.name) state.name = response.name
+        if (response.status) state.status = response.status
+        if (response.subDomain) state.subdomain = response.subDomain
+        if (response.id) state.id = response.id
       }
-      if (response.name) state.name = response.name
-      if (response.status) state.status = response.status
-      if (response.subDomain) state.subdomain = response.subDomain
-      if (response.id) state.id = response.id
     },
     getError (state) {
       state.status = 'error'
