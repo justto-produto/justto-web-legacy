@@ -23,7 +23,8 @@
           </template>
         </el-table-column>
         <el-table-column label="Indetificação">
-          <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
+          <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}
+          <jus-icon icon="alert" /></template>
         </el-table-column>
         <el-table-column label="Alçada máxima">
           <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
@@ -32,7 +33,8 @@
           <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
         </el-table-column>
         <el-table-column label="Nome">
-          <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
+          <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}
+          <jus-icon icon="alert" /></template>
         </el-table-column>
       </el-table>
     </template>
@@ -81,6 +83,9 @@ export default {
     position: relative;
     height: 100%;
     padding: 20px 0;
+  }
+  .el-table--enable-row-hover .el-table__body tr:hover > td {
+    background-color: #fff;
   }
 }
 </style>
