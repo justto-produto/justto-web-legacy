@@ -6,22 +6,22 @@
       </h1>
     </template>
     <template slot="main">
-      <jus-chart-line :data="data" :options="options"/>
-      <div style="display: flex; justify-content: center;">
-        <jus-chart-doughnut
-          :data="[21, 23, 56]"
-          :height="300"
-          title="O" />
-        <jus-chart-doughnut
-          :data="[12, 32, 65]"
-          :height="300"
-          title="O" />
-        <jus-chart-doughnut
-          :data="[12, 32, 65]"
-          :height="300"
-          title="O" />
-      </div>
-      <!-- {{ $t('message') }} -->
+      <el-row gutter="80">
+        <el-col :span="8">
+          <jus-chart-doughnut
+            :data="[211, 323]"
+            :height="280"
+            title="Casos importados com sucesso" />
+          <jus-chart-doughnut
+            :data="[21, 23, 56]"
+            :height="280"
+            title="Acordos fechados" />
+        </el-col>
+        <el-col :span="15">
+          <br>
+          <jus-chart-line :data="data" :options="options" :height="280"/>
+        </el-col>
+      </el-row>
     </template>
   </JusViewMain>
 </template>
@@ -39,24 +39,43 @@ export default {
   data () {
     return {
       data: {
-        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
+        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
         datasets: [
           {
             label: 'Casos importados',
             backgroundColor: '#eF930066',
             borderColor: '#eF9300',
-            data: [40, 55, 35, 55, 40]
+            data: [
+              this.getRandomInt(),
+              this.getRandomInt(),
+              this.getRandomInt(),
+              this.getRandomInt(),
+              this.getRandomInt(),
+              this.getRandomInt()]
           },
           {
             label: 'Acordos fechados',
             backgroundColor: '#9461f766',
             borderColor: '#9461f766',
-
-            data: [40, 22, 7, 22, 40]
+            data: [
+              this.getRandomInt(),
+              this.getRandomInt(),
+              this.getRandomInt(),
+              this.getRandomInt(),
+              this.getRandomInt(),
+              this.getRandomInt()]
           }
         ]
       },
-      options: { responsive: true, maintainAspectRatio: false }
+      options: {
+        // responsive: true,
+        // maintainAspectRatio: false
+      }
+    }
+  },
+  methods: {
+    getRandomInt () {
+      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
     }
   }
 }

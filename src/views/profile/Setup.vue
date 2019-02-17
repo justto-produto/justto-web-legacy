@@ -1,6 +1,10 @@
 <template>
   <JusViewMain>
-    <template slot="title">Configurações do perfil</template>
+    <template slot="title">
+      <h1>
+        Configurações do perfil
+      </h1>
+    </template>
     <template slot="main">
       whatsapp
       <select v-model="$i18n.locale">

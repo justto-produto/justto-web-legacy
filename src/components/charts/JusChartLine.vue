@@ -7,11 +7,11 @@ export default {
   props: {
     data: {
       type: Object,
-      default: undefined
+      default: () => {}
     },
     options: {
       type: Object,
-      default: undefined
+      default: () => {}
     }
   },
   mounted () {

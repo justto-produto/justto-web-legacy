@@ -1,7 +1,7 @@
 <template>
   <JusViewMain>
     <template slot="title">
-      <h1>TELA QUEBRADA ABAIXO :)</h1>
+      <h1>Perfil</h1>
     </template>
     <!-- <template slot="title">Configurações do perfil</template> -->
     <template slot="main">
