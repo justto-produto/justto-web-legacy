@@ -40,7 +40,7 @@ const workspaceModule = {
         axios.get('/workspaces/my')
           .then(response => {
             commit('updateWorkspace', response.data[0])
-            resolve(response)
+            resolve(response.data)
           })
           .catch(error => {
             reject(error)
