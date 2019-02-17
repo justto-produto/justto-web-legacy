@@ -87,8 +87,9 @@ export default {
   },
   computed: {
     disputeRolesSort () {
-      return this.disputeRoles.sort((a, b) => {
-        if (a.party == b.party) {
+      let sortedArray = this.disputeRoles.slice(0)
+      return sortedArray.sort((a, b) => {
+        if (a.party === b.party) {
           return (a.roles[0] > b.roles[0]) ? -1 : (a.roles[0] < b.roles[0]) ? 1 : 0
         } else {
           return (a.party < b.party) ? -1 : 1
