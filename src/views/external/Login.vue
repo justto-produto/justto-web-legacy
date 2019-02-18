@@ -132,8 +132,8 @@ export default {
               })
             })
             .catch(error => {
-              console.error(error)
-              if (error.response && error.response.data.code === 'INVALID_CREDENTIALS') {
+              console.error(error.response)
+              if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
                 this.errorMessage = 'E-mail não cadastrado ou senha incorreta.'
               } else {
                 this.errorMessage = `Houve uma falha de conexão com o servidor.
