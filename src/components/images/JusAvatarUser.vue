@@ -30,7 +30,7 @@ export default {
       type: String,
       default: 'square'
     },
-    nameInitials: {
+    name: {
       type: String,
       default: ''
     }
@@ -39,7 +39,7 @@ export default {
     avatarSrc () {
       if (this.src) {
         return this.src
-      } else if (!this.nameInitials) {
+      } else if (!this.name) {
         return require('@/assets/icons/ic-user.svg')
       } else return ''
     },
@@ -48,6 +48,13 @@ export default {
     },
     sizeClass () {
       return 'jus-avatar-user--' + this.size
+    },
+    nameInitials () {
+      var split = this.name.split(' ')
+      split = split.filter(Boolean)
+      if (split.length > 1) {
+        return split[0].substring(0, 1) + split[split.length - 1].substring(0, 1)
+      } return split[0].substring(0, 2)
     }
   }
 }

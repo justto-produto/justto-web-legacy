@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="case-view__side-content">
     <el-steps
-      v-if="!loading"
+      v-if="false"
       :active="occurencies.length - 1"
       direction="vertical"
       process-status="wait"
@@ -42,14 +42,20 @@
 export default {
   name: 'CaseSummary',
   props: {
-    loading: {
-      default: false,
-      type: Boolean
-    },
-    occurencies: {
-      default: () => [],
-      type: Array
+    id: {
+      default: null,
+      type: Number
     }
+  },
+  data () {
+    return {
+      response: ''
+    }
+  },
+  beforeMount() {
+    // this.$store.dispatch('getDisputes').then(response => {
+    //   this.response = response.hits.hits[0]._source
+    // })
   }
 }
 </script>

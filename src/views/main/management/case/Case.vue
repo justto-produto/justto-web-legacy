@@ -13,7 +13,7 @@
       <div class="case-view__section-title">
         <h2>Resumo do caso</h2>
       </div>
-      <case-summary :loading="loadingDisputeSummary" :occurencies="disputeSummary.occurencies"/>
+      <case-summary :case-id="dispute.id"/>
     </template>
     <!-- CHAT -->
     <template slot="main">
@@ -69,10 +69,10 @@
           </el-input>
         </div>
       </div>
-      <div v-loading="loadingDisputeOccurrences" class="case-view__chat">
-        <ul v-chat-scroll="{always: false, smooth: true}" class="case-view__messages">
+      <div v-loading="loadingDisputeMessages" class="case-view__chat">
+        <!-- <ul v-chat-scroll="{always: false, smooth: true}" class="case-view__messages">
           <li
-            v-for="(message, index) in filteredDisputeOccurrences"
+            v-for="(message, index) in filteredDisputeMessages"
             :key="message + index"
             :class="[messageClass(message.type), clientMessageClass(message.source.personId)]"
             class="case-view__message">
@@ -93,7 +93,7 @@
               </div>
             </div>
           </li>
-        </ul>
+        </ul> -->
         <div class="case-view__send-message">
           <el-tabs value="1">
             <el-tab-pane label="Mensagem" name="1">
@@ -125,9 +125,6 @@
                         <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
                       </a>
                     </el-tooltip>
-                  <!-- <jus-icon icon="sms" /> -->
-                  <!-- <jus-icon icon="attachment" /> -->
-                  <!-- <jus-icon icon="emoji" /> -->
                   </div>
                   <el-button type="primary" @click="sendMessage()">
                     Enviar
@@ -153,40 +150,34 @@
       </div>
     </template>
     <!-- DADOS DO CASO -->
-    <template slot="right-card">
+    <template slot="right-card" class="teste">
       <div class="case-view__section-title">
         <h2>Dados do caso</h2>
         <el-button plain>Exportar caso</el-button>
       </div>
-      <case-data
-        :loading="loadingDisputeSummary || loadingDisputeRoles"
-        :dispute="dispute"
-        :dispute-summary="disputeSummary"
-        :dispute-roles="disputeRoles" />
+      <case-overview
+        :loading="loadingDispute"
+        :dispute="dispute" />
     </template>
   </JusViewMain>
 </template>
 
 <script>
 import CaseSummary from './partials/CaseSummary'
-import CaseData from './partials/CaseData'
+import CaseOverview from './partials/CaseOverview'
 
 export default {
   name: 'Case',
   components: {
-    CaseSummary, CaseData
+    CaseSummary, CaseOverview
   },
   data () {
     return {
       dispute: {},
-      disputeSummary: {},
-      disputeOccurrences: [],
-      filteredDisputeOccurrences: [],
-      disputeRoles: [],
       loadingDispute: false,
-      loadingDisputeSummary: false,
-      loadingDisputeOccurrences: false,
-      loadingDisputeRoles: false,
+      disputeMessages: [],
+      filteredDisputeMessages: [],
+      loadingDisputeMessages: false,
       showSearch: false,
       searchTerm: '',
       messageType: 'message',
@@ -203,7 +194,7 @@ export default {
       }
     },
     searchTerm (term) {
-      this.filterDisputeOccurrences(term)
+      this.filterDisputeMessages(term)
     }
   },
   created () {
@@ -212,26 +203,15 @@ export default {
   methods: {
     fetchData () {
       this.loadingDispute = true
-      this.loadingDisputeSummary = true
-      this.loadingDisputeOccurrences = true
-      this.loadingDisputeRoles = true
+      // this.loadingDisputeMessages = true
       this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
         this.dispute = responses
         this.loadingDispute = false
       }).catch(error => this.showError(error))
-      // this.$store.dispatch('getDisputes', {query:{bool:{must:[{match:{disputeid: this.$route.params.id}}]}}} ).then((responses) => {
-      this.$store.dispatch('getDisputeSummary', this.$route.params.id).then((responses) => {
-        this.disputeSummary = responses
-        this.loadingDisputeSummary = false
-      }).catch(error => this.showError(error))
-      this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then((responses) => {
-        this.disputeOccurrences = responses
-        this.filteredDisputeOccurrences = this.disputeOccurrences.slice(0)
-        this.loadingDisputeOccurrences = false
-      }).catch(error => this.showError(error))
-      this.$store.dispatch('getDisputeRoles', this.$route.params.id).then((responses) => {
-        this.disputeRoles = responses
-        this.loadingDisputeRoles = false
+      this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
+        this.disputeMessages = responses
+        this.filteredDisputeMessages = this.disputeMessages.slice(0)
+        this.loadingDisputeMessages = false
       }).catch(error => this.showError(error))
     },
     showError (error) {
@@ -253,13 +233,13 @@ export default {
         } else return 'case-view__message--client'
       } else return ''
     },
-    filterDisputeOccurrences (term) {
-      var occurrences = this.disputeOccurrences.slice(0)
+    filterDisputeMessages (term) {
+      var messages = this.disputeMessages.slice(0)
       if (term) {
-        var results = occurrences.filter(this.createDisputeFilter(term))
-        this.filteredDisputeOccurrences = results
+        var results = messages.filter(this.createDisputeFilter(term))
+        this.filteredDisputeMessages = results
       } else {
-        this.filteredDisputeOccurrences = occurrences
+        this.filteredDisputeMessages = messages
       }
     },
     createDisputeFilter (term) {

@@ -47,7 +47,7 @@ _axios.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.response.status === 401) {
+    if (error.response.status === 401 && error.response.data.code !== 'ALREADY_EXISTS') {
       store.dispatch('logout')
     } else if (
       error.response &&

@@ -92,13 +92,13 @@ export default {
       }
     },
     isReady () {
-      return this.$store.getters.isReady
+      return false
     },
     isStarting () {
-      return this.$store.getters.isStarting
+      return false
     },
     isConnected () {
-      return this.$store.getters.isConnected
+      return true
     },
     validNumber () {
       if (this.rawNumber.length > 9) {
@@ -126,7 +126,7 @@ export default {
             this.$jusNotification({
               title: 'Pronto!',
               message: 'Mensagem enviada com sucesso.',
-              type: 'error'
+              type: 'success'
             })
           }).catch(() => {
             this.sending = false

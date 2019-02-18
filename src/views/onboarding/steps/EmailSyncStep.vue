@@ -21,20 +21,6 @@
         <el-input v-model="syncForm.password" type="password" name="password"/>
       </el-form-item>
     </el-form>
-    <!-- <el-checkbox v-model="checked1" border class="el-checkbox--active">
-      <JusLogoCompany src="outlook.png" shape="square"/>
-      <div class="el-checkbox__content">
-        <h3>Microsoft</h3>
-        <p>Suas informações estão protegidas e nunca serão compartilhadas com terceiros.</p>
-      </div>
-    </el-checkbox>
-    <el-checkbox v-model="checked2" border class="el-checkbox--active">
-      <JusLogoCompany src="inbox.png" shape="square"/>
-      <div class="el-checkbox__content">
-        <h3>Inbox</h3>
-        <p>Suas informações estão protegidas e nunca serão compartilhadas com terceiros.</p>
-      </div>
-    </el-checkbox> -->
     <el-alert
       v-if="showSuccess"
       title="E-mail sincronizado com sucesso!"
@@ -69,6 +55,7 @@ export default {
     return {
       showSuccess: false,
       showError: false,
+      synced: false,
       syncForm: {
         email: '',
         password: ''
@@ -90,12 +77,6 @@ export default {
     }
   },
   computed: {
-    synced () {
-      if (this.$store.state.workspaceModule.emailAccount) {
-        return true
-      }
-      return false
-    },
     message () {
       return this.synced ? 'SINCRONIZADO' : 'AGUARDANDO SINCRONIZAÇÃO'
     },
@@ -114,7 +95,6 @@ export default {
             .then(response => {
               this.showSuccess = true
               this.synced = true
-              this.syncForm.email = 'a@a.com'
               this.$store.dispatch('myAccount')
             }).catch(error => {
               this.showError = true
@@ -138,6 +118,7 @@ export default {
 .onboarding-email-step {
   .el-alert {
     max-width: 400px;
+    margin-bottom: 20px;
   }
   .email-step--status {
     margin-bottom: 20px;

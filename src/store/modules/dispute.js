@@ -7,7 +7,7 @@ const dispute = {
     getDispute ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('disputes/' + id)
+        axios.get('disputes/' + id + '/overview')
           .then(response => {
             resolve(response.data)
           })
@@ -28,46 +28,34 @@ const dispute = {
           })
       })
     },
-    getDisputeSummary ({ commit }, id) {
+    // getDisputeSummary ({ commit }, id) {
+    //   return new Promise((resolve, reject) => {
+    //     // eslint-disable-next-line
+    //     axios.get('disputes/' + id + '/summary')
+    //       .then(response => {
+    //         resolve(response.data)
+    //       })
+    //       .catch(error => {
+    //         reject(error)
+    //       })
+    //   })
+    // },
+    // getDisputeSubscribe ({ commit }, id) {
+    //   return new Promise((resolve, reject) => {
+    //     // eslint-disable-next-line
+    //     axios.get('disputes/' + id + '/subscribe')
+    //       .then(response => {
+    //         resolve(response.data)
+    //       })
+    //       .catch(error => {
+    //         reject(error)
+    //       })
+    //   })
+    // },
+    getDisputeMessages ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('disputes/' + id + '/summary')
-          .then(response => {
-            resolve(response.data)
-          })
-          .catch(error => {
-            reject(error)
-          })
-      })
-    },
-    getDisputeSubscribe ({ commit }, id) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.get('disputes/' + id + '/subscribe')
-          .then(response => {
-            resolve(response.data)
-          })
-          .catch(error => {
-            reject(error)
-          })
-      })
-    },
-    getDisputeOccurrences ({ commit }, id) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.get('disputes/' + id + '/occurences')
-          .then(response => {
-            resolve(response.data)
-          })
-          .catch(error => {
-            reject(error)
-          })
-      })
-    },
-    getDisputeRoles ({ commit }, id) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.get('disputes/' + id + '/dispute-roles/list')
+        axios.get('disputes/' + id + '/messages')
           .then(response => {
             resolve(response.data)
           })

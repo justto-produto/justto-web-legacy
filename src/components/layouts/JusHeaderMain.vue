@@ -46,8 +46,8 @@
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
           <jus-avatar-user
-            size="sm"
-            name-initials="BM"/>
+            :name="name"
+            size="sm"/>
           <div class="main-info__name">
             <div style="text-transform: capitalize;">
               {{ name }}
