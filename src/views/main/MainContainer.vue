@@ -32,7 +32,7 @@
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
       </el-menu>
-      <span class="el-menu__title">TIME</span>
+      <!-- <span class="el-menu__title">TIME</span>
       <vue-perfect-scrollbar>
         <el-menu :collapse-transition="false" :collapse="isCollapse" class="el-menu--team-menu">
           <el-menu-item index="1">
@@ -89,7 +89,7 @@
             <span class="el-menu__counter">0</span>
           </el-menu-item>
         </el-menu>
-      </vue-perfect-scrollbar>
+      </vue-perfect-scrollbar> -->
     </el-aside>
     <el-container direction="vertical">
       <JusHeaderMain/>

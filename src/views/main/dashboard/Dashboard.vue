@@ -6,7 +6,7 @@
       </h1>
     </template>
     <template slot="main">
-      <el-row gutter="80">
+      <el-row :gutter="80">
         <el-col :span="8">
           <jus-chart-doughnut
             :data="[211, 323]"

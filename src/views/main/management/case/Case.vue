@@ -159,7 +159,7 @@
         <el-button plain>Exportar caso</el-button>
       </div>
       <case-data
-        :loading="loadingDisputeSummary && loadingDisputeRoles"
+        :loading="loadingDisputeSummary || loadingDisputeRoles"
         :dispute="dispute"
         :dispute-summary="disputeSummary"
         :dispute-roles="disputeRoles" />
@@ -236,6 +236,7 @@ export default {
     },
     showError (error) {
       console.error(error)
+      this.$notify.closeAll()
       this.$jusNotification({
         title: 'Ops!',
         message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
@@ -556,6 +557,9 @@ export default {
         display: inline-block;
       }
     }
+  }
+  .el-collapse-item__content {
+    padding-bottom: 5px;
   }
 }
 </style>

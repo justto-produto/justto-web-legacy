@@ -47,33 +47,41 @@
         <span class="el-dropdown-link">
           <jus-avatar-user
             size="sm"
-            src="https://i.ytimg.com/vi/7s6YIIZjfrQ/maxresdefault.jpg"/>
+            name-initials="BM"/>
           <div class="main-info__name">
-            <div>
+            <div style="text-transform: capitalize;">
               {{ name }}
             </div>
-            <span>UX Designer</span>
+            <span>{{ workspace }}</span>
           </div>
           <jus-icon icon="expand-dropdown"/>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>
-            <router-link to="/profile">Perfil</router-link>
-          </el-dropdown-item>
-          <el-dropdown-item>
-            <router-link to="/profile/notifications">Notificações</router-link>
-          </el-dropdown-item>
-          <el-dropdown-item>
-            <router-link to="/profile/activities">Minhas atividades</router-link>
-          </el-dropdown-item>
-          <el-dropdown-item>
-            <a href="http://ajuda.justto.com.br/" target="_blank">
+          <router-link to="/profile">
+            <el-dropdown-item>
+              Perfil
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/profile/notifications">
+            <el-dropdown-item>
+              Notificações
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/profile/activities">
+            <el-dropdown-item>
+              Minhas atividades
+            </el-dropdown-item>
+          </router-link>
+          <a href="http://ajuda.justto.com.br/" target="_blank">
+            <el-dropdown-item>
               Central de ajuda
-            </a>
-          </el-dropdown-item>
-          <el-dropdown-item divided>
-            <a href="#" @click="logout()">Sair</a>
-          </el-dropdown-item>
+            </el-dropdown-item>
+          </a>
+          <a href="#" @click="logout()">
+            <el-dropdown-item divided>
+              Sair
+            </el-dropdown-item>
+          </a>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -90,7 +98,10 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.state.accountModule.name ? this.$store.state.accountModule.name : 'Mariana Rondino'
+      return this.$store.state.accountModule.name
+    },
+    workspace () {
+      return this.$store.state.workspaceModule.name
     }
   },
   methods: {
@@ -176,7 +187,7 @@ export default {
 }
 .jus-header-main__notification {
   margin: auto;
-  margin-right: 32px;
+  margin-right: 20px;
   cursor: pointer;
 }
 .jus-header-main__info {
@@ -188,7 +199,7 @@ export default {
   }
 }
 .main-info__name {
-  margin: 0 10px;
+  margin: 0 20px 0 10px;
   div {
     white-space: nowrap;
     font-weight: 600;
