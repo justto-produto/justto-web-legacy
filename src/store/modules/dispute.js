@@ -75,6 +75,18 @@ const dispute = {
             reject(error)
           })
       })
+    },
+    sendDisputeNote ({ commit }, body) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.post('disputes/' + body.disputeId + '/note', body)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

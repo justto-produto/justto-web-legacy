@@ -76,35 +76,35 @@
             <el-tab-pane label="Mensagem" name="1">
               <el-card shadow="always" class="case-view__send-message-box">
                 <el-input
-                  :rows="2"
+                  :rows="3"
                   v-model="newMessage"
                   type="textarea"
                   placeholder="Escreva alguma coisa" />
                 <div class="case-view__send-message-actions">
                   <div class="">
-                    <el-tooltip content="Enviar mensagem">
+                    <!-- <el-tooltip content="Enviar mensagem">
                       <a href="#" @click="setMessageType('message')">
                         <jus-icon :is-active="messageType === 'message'" icon="message"/>
                       </a>
-                    </el-tooltip>
+                    </el-tooltip> -->
                     <el-tooltip content="Enviar email">
-                      <a href="#" @click="setMessageType('email')">
+                      <a href="" @click.prevent="setMessageType('email')">
                         <jus-icon :is-active="messageType === 'email'" icon="email"/>
                       </a>
                     </el-tooltip>
                     <el-tooltip content="Enviar whatsapp">
-                      <a href="#" @click="setMessageType('whatsapp')">
+                      <a href="#" @click.prevent="setMessageType('whatsapp')">
                         <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
                       </a>
                     </el-tooltip>
                     <el-tooltip content="Enviar CNA">
-                      <a href="#" @click="setMessageType('cna')">
+                      <a href="#" @click.prevent="setMessageType('cna')">
                         <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
                       </a>
                     </el-tooltip>
                   </div>
                   <el-button type="primary" @click="sendMessage()">
-                    Enviar
+                    Enviar mensagem
                   </el-button>
                 </div>
               </el-card>
@@ -112,12 +112,13 @@
             <el-tab-pane label="Nota" name="2">
               <el-card shadow="always" class="case-view__send-message-box">
                 <el-input
-                  :rows="2"
+                  :rows="3"
+                  v-model="newNote"
                   type="textarea"
                   placeholder="Escreva alguma coisa" />
-                <div class="case-view__send-message-actions">
-                  <el-button type="primary">
-                    Enviar
+                <div class="case-view__send-message-actions note">
+                  <el-button type="primary" @click="sendNote()">
+                    Enviar nota
                   </el-button>
                 </div>
               </el-card>
@@ -158,8 +159,9 @@ export default {
       loadingDisputeMessages: false,
       showSearch: false,
       searchTerm: '',
-      messageType: 'message',
-      newMessage: ''
+      messageType: 'email',
+      newMessage: '',
+      newNote: ''
     }
   },
   watch: {
@@ -179,13 +181,15 @@ export default {
     this.fetchData()
   },
   methods: {
-    fetchData () {
-      this.loadingDispute = true
+    fetchData (onlyMessages) {
       this.loadingDisputeMessages = true
-      this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
-        this.dispute = responses
-        this.loadingDispute = false
-      }).catch(error => this.showError(error))
+      if (!onlyMessages) {
+        this.loadingDispute = true
+        this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
+          this.dispute = responses
+          this.loadingDispute = false
+        }).catch(error => this.showError(error))
+      }
       this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
         this.disputeMessages = responses
         this.filteredDisputeMessages = this.disputeMessages.slice(0)
@@ -212,7 +216,7 @@ export default {
     },
     createDisputeFilter (term) {
       return (occurrence) => {
-        return (occurrence.description.toLowerCase().indexOf(term.toLowerCase()) === 0)
+        return (occurrence.description.toLowerCase().includes(term.toLowerCase()))
       }
     },
     setMessageType (type) {
@@ -225,7 +229,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$jusNotification({
-          title: 'Pronto!',
+          title: 'Yay!',
           message: 'Ação realizada com sucesso.',
           type: 'success'
         })
@@ -233,16 +237,45 @@ export default {
     },
     sendMessage () {
       if (this.newMessage) {
-        if (this.messageType === 'message') {
-          alert()
-        } else {
-          this.$store.dispatch('send' + this.messageType, {
-            to: [1, 2, 3],
-            message: this.newMessage,
-            subject: 'Teste whatsapp',
-            disputeId: this.dispute.id
+        this.$store.dispatch('send' + this.messageType, {
+          to: [99],
+          message: this.newMessage,
+          disputeId: this.dispute.id
+        }).then(() => {
+          this.newMessage = ''
+          this.$jusNotification({
+            title: 'Yay!',
+            message: this.messageType + ' enviado com sucesso.',
+            type: 'success'
           })
-        }
+          this.filteredDisputeMessages = []
+          this.loadingDisputeMessages = true
+          var self = this
+          setTimeout(function () {
+            self.fetchData(true)
+          }, 1000)
+        }).catch(error => this.showError(error))
+      }
+    },
+    sendNote () {
+      if (this.newNote) {
+        this.$store.dispatch('sendDisputeNote', {
+          note: this.newNote,
+          disputeId: this.dispute.id
+        }).then(() => {
+          this.newNote = ''
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Nota enviada com sucesso.',
+            type: 'success'
+          })
+          this.filteredDisputeMessages = []
+          this.loadingDisputeMessages = true
+          var self = this
+          setTimeout(function () {
+            self.fetchData(true)
+          }, 1000)
+        }).catch(error => this.showError(error))
       }
     }
   }
@@ -335,6 +368,9 @@ export default {
     }
     .el-button {
       padding: 8px 20px;
+    }
+    &.note {
+      justify-content: flex-end;
     }
   }
   &__back {

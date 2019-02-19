@@ -4,7 +4,7 @@ const message = {
   mutations: {
   },
   actions: {
-    sendWhatsapp ({ commit }, body) {
+    sendwhatsapp ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('/messages/send/whatsapp', body)
@@ -16,7 +16,7 @@ const message = {
           })
       })
     },
-    sendEmail ({ commit }, body) {
+    sendemail ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('/messages/send/email', body)
@@ -28,7 +28,7 @@ const message = {
           })
       })
     },
-    sendCna ({ commit }, body) {
+    sendcna ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('/messages/send/cna', body)

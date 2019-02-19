@@ -124,7 +124,7 @@ export default {
           }).then(() => {
             this.sending = false
             this.$jusNotification({
-              title: 'Pronto!',
+              title: 'Yay!',
               message: 'Mensagem enviada com sucesso.',
               type: 'success'
             })

@@ -23,3 +23,7 @@
 .el-notification__group{
   margin: 0;
 }
+
+.el-notification__content p::first-letter {
+  text-transform: capitalize;
+}

@@ -591,7 +591,7 @@ export default {
           type: action, disputeIds: this.selectedIds
         }).then(response => {
           this.$jusNotification({
-            title: 'Pronto!',
+            title: 'Yay!',
             message: 'Ação realizada com sucesso.',
             type: 'success'
           })

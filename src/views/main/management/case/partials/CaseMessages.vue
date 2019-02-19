@@ -10,6 +10,10 @@
             <div>{{ message.description }}</div>
             <el-button v-if="message.message.type === 'EMAIL'" type="text" @click="showMessageDialog(message.message.content)">Visualizar email</el-button>
             <span v-else>{{ message.message.content }}</span>
+            <i v-if="directionClass(message) === 'note'">
+              <br>
+              <jus-icon icon="eye" style="vertical-align: middle;"/> Esta mensagem é visível somente aos negociadores.
+            </i>
           </div>
           <div class="case-view-messages__message-time">
             {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
@@ -56,7 +60,7 @@ export default {
   },
   methods: {
     showAsCard (type) {
-      if (type === 'INTERACTION' || type === 'COMMUNICATION') {
+      if (type === 'INTERACTION' || type === 'COMMUNICATION' || type === 'NOTE') {
         return true
       } return false
     },
@@ -67,6 +71,8 @@ export default {
     directionClass (message) {
       if (message.message && message.message.direction === 'INBOUND') {
         return 'inbound'
+      } else if (message.message.type === 'NOTE') {
+        return 'note'
       } else return 'outbound'
     }
   }
@@ -123,6 +129,12 @@ export default {
         border: 17px solid transparent;
         border-right-color: #fff;
         border-left: 0;
+      }
+    }
+    &.note {
+      background-color: #ffeba1;
+      &:after {
+        border-left-color: #ffeba1;
       }
     }
     div {
