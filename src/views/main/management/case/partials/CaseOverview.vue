@@ -12,7 +12,7 @@
         </div>
         <div class="case-view__info-line">
           <span>Estratégia:</span>
-          <span v-if="Object.keys(dispute).length">{{ dispute.campaign.strategyId }}</span>
+          <span v-if="Object.keys(dispute).length">{{ dispute.strategy.name }}</span>
         </div>
         <div class="case-view__info-line">
           <span>Alçada máxima:</span>
@@ -41,21 +41,26 @@
         :title="buildTitle(role)">
         <div class="case-view__info-line">
           <span>Status:</span>
-          <span>Online <jus-status-dot type="success"/></span>
+          <span v-if="true">Offline <jus-status-dot type="danger"/></span>
+          <span v-else>Online <jus-status-dot type="success"/></span>
         </div>
         <div class="case-view__info-line">
           <span>Nome:</span>
           <span>{{ role.person.name }}</span>
         </div>
-        <div class="case-view__info-line" v-for="email in role.person.emails">
+        <div v-for="email in role.person.emails" :key="email.id" class="case-view__info-line">
           <span>E-mail:</span>
           <span>{{ email.address }}</span>
         </div>
-        <div class="case-view__info-line" v-for="phone in role.person.phones">
+        <div v-for="phone in role.person.phones" :key="phone.id" class="case-view__info-line">
           <span>Telefone:</span>
           <span>{{ phone.number }}</span>
         </div>
-        <div class="case-view__info-line">
+        <div v-for="oab in role.person.oabs" :key="oab.id" class="case-view__info-line">
+          <span>OAB:</span>
+          <span>{{ oab.number }}</span>
+        </div>
+        <div v-show="role.person.documentNumber" class="case-view__info-line">
           <span>CPF:</span>
           <span>{{ role.person.documentNumber }}</span>
         </div>

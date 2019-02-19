@@ -689,10 +689,12 @@ export default {
   .view-management__info-card {
     width: 100%;
     font-weight: 300;
+    height: 74px;
     + .view-management__info-card {
       margin-left: 20px;
     }
     .el-card__body {
+      padding: 0px 20px;
       padding: 16px;
       height: 100%;
       display: flex;

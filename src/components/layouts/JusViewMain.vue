@@ -57,6 +57,7 @@ export default {
     }
   }
   &__container {
+    overflow-x: auto;
     padding-top: 20px;
     display: flex;
     height: calc(100% - 54px);

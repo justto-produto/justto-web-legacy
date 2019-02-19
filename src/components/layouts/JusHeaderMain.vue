@@ -189,6 +189,16 @@ export default {
   margin: auto;
   margin-right: 20px;
   cursor: pointer;
+  .el-dropdown:after {
+    content: ' ';
+    min-width: 10px;
+    min-height: 10px;
+    background-color: #9f6cf8;
+    position: absolute;
+    border-radius: 50%;
+    bottom: 21px;
+    right: -1px;
+  }
 }
 .jus-header-main__info {
   .el-dropdown-link {

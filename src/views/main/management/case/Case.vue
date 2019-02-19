@@ -17,83 +17,60 @@
     </template>
     <!-- CHAT -->
     <template slot="main">
-      <div class="case-view__actions">
-        <el-tooltip content="Buscar">
-          <el-button plain @click="showSearch = !showSearch">
-            <jus-icon icon="search2" />
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="move-case">
-          <el-button plain @click="doAction('move')">
-            <jus-icon icon="move-case" />
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="delegate">
-          <el-button plain @click="doAction('move')">
-            <jus-icon icon="delegate" />
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="lose">
-          <el-button plain @click="doAction('move')">
-            <jus-icon icon="lose" />
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="win">
-          <el-button plain @click="doAction('move')">
-            <jus-icon icon="win" />
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="pause">
-          <el-button plain @click="doAction('move')">
-            <jus-icon icon="pause" />
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="start-again">
-          <el-button plain @click="doAction('move')">
-            <jus-icon icon="start-again" />
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="snooze">
-          <el-button plain @click="doAction('move')">
-            <jus-icon icon="snooze" />
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="star">
-          <el-button plain @click="doAction('move')">
-            <jus-icon icon="star" />
-          </el-button>
-        </el-tooltip>
-        <div :class="{isVisible: showSearch}" class="case-view__search">
-          <el-input v-model="searchTerm" autofocus>
-            <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
-          </el-input>
+      <div class="case-view__section-messages">
+        <div class="case-view__actions">
+          <el-tooltip content="Buscar">
+            <el-button plain @click="showSearch = !showSearch">
+              <jus-icon icon="search2" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="move-case">
+            <el-button plain @click="doAction('move')">
+              <jus-icon icon="move-case" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="delegate">
+            <el-button plain @click="doAction('move')">
+              <jus-icon icon="delegate" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="lose">
+            <el-button plain @click="doAction('move')">
+              <jus-icon icon="lose" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="win">
+            <el-button plain @click="doAction('move')">
+              <jus-icon icon="win" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="pause">
+            <el-button plain @click="doAction('move')">
+              <jus-icon icon="pause" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="start-again">
+            <el-button plain @click="doAction('move')">
+              <jus-icon icon="start-again" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="snooze">
+            <el-button plain @click="doAction('move')">
+              <jus-icon icon="snooze" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="star">
+            <el-button plain @click="doAction('move')">
+              <jus-icon icon="star" />
+            </el-button>
+          </el-tooltip>
+          <div :class="{isVisible: showSearch}" class="case-view__search">
+            <el-input v-model="searchTerm" autofocus>
+              <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
+            </el-input>
+          </div>
         </div>
-      </div>
-      <div v-loading="loadingDisputeMessages" class="case-view__chat">
-        <!-- <ul v-chat-scroll="{always: false, smooth: true}" class="case-view__messages">
-          <li
-            v-for="(message, index) in filteredDisputeMessages"
-            :key="message + index"
-            :class="[messageClass(message.type), clientMessageClass(message.source.personId)]"
-            class="case-view__message">
-            <div class="case-view__photo">
-              <jus-avatar-user
-                size="sm"
-                class="el-menu__avatar" />
-            </div>
-            <div class="case-view__content">
-              <el-card>
-                {{ message.description }}. {{ message.source.executionDateTime | moment('DD/MM/YYYY') }}
-              </el-card>
-              <div class="case-view__content-info">
-                {{ message.source.executionDateTime | moment('HH:mm') }} •
-                <jus-icon icon="email" /> •
-                Visualizado •
-                Nome do Sujeito
-              </div>
-            </div>
-          </li>
-        </ul> -->
+        <case-messages :messages="filteredDisputeMessages" :loading="loadingDisputeMessages" />
         <div class="case-view__send-message">
           <el-tabs value="1">
             <el-tab-pane label="Mensagem" name="1">
@@ -164,12 +141,13 @@
 
 <script>
 import CaseSummary from './partials/CaseSummary'
+import CaseMessages from './partials/CaseMessages'
 import CaseOverview from './partials/CaseOverview'
 
 export default {
   name: 'Case',
   components: {
-    CaseSummary, CaseOverview
+    CaseSummary, CaseMessages, CaseOverview
   },
   data () {
     return {
@@ -203,7 +181,7 @@ export default {
   methods: {
     fetchData () {
       this.loadingDispute = true
-      // this.loadingDisputeMessages = true
+      this.loadingDisputeMessages = true
       this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
         this.dispute = responses
         this.loadingDispute = false
@@ -222,16 +200,6 @@ export default {
         message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
         type: 'error'
       })
-    },
-    messageClass (type) {
-      return 'case-view__message--' + type.toLowerCase()
-    },
-    clientMessageClass (personId) {
-      if (personId) {
-        if (this.$store.getters.negotiatorIds.includes(personId)) {
-          return 'case-view__message--negotiator'
-        } else return 'case-view__message--client'
-      } else return ''
     },
     filterDisputeMessages (term) {
       var messages = this.disputeMessages.slice(0)
@@ -283,83 +251,10 @@ export default {
 
 <style lang="scss">
 .case-view {
-  &__chat {
+  &__section-messages {
     display: flex;
     flex-direction: column;
     height: 100%;
-  }
-  &__messages {
-    overflow-x: auto;
-    height: 100%;
-    padding: 10px 20px 0;
-    margin: 0;
-  }
-  &__message {
-    display: flex;
-    list-style: none;
-    margin: 30px 0;
-    &.case-view__message--enrichment, &.case-view__message--log, &.case-view__message--interaction {
-      text-align: center;
-      .case-view__content {
-        width: 100%;
-      }
-      .el-card {
-        color: #adadad;
-        box-shadow: none !important;
-        border: none !important;
-        background-color: transparent;
-        &__body {
-          padding: 10px 0;
-        }
-      }
-      .case-view__content-info {
-        display: none;
-      }
-    }
-    &--communication {
-      .case-view__photo {
-        display: block;
-      }
-      &.case-view__message--negotiator {
-        flex-direction: row-reverse;
-        .case-view__content {
-          margin-left: 0;
-          margin-right: 20px;
-          &:after {
-            content: '';
-            position: absolute;
-            right: 10px;
-            top: 20px;
-            width: 0;
-            height: 0;
-            border: 17px solid transparent;
-            border-left-color: #e4e8ea;
-            border-right: 0;
-            margin-top: -17px;
-            margin-right: -17px;
-          }
-          &:before {
-            content: none;
-          }
-        }
-        .el-card {
-          background-color: #e4e8ea;
-        }
-        .case-view__content-info {
-          text-align: right;
-        }
-      }
-    }
-    &:first-child {
-      margin-top: 20px;
-    }
-    &:last-child {
-      margin-bottom: 20px;
-    }
-  }
-  &__photo {
-    display: none;
-    margin-top: 1px;
   }
   &__info-line {
     margin-bottom: 10px;
@@ -496,6 +391,7 @@ export default {
   }
   .jus-main-view__main-card {
     height: 100%;
+    min-width: 485px;
     > .el-card__body {
       height: 100%;
       display: flex;

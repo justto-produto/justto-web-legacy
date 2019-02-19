@@ -1,5 +1,5 @@
 <template>
-  <div :class="sizeClass + ' ' + shapeClass" class="jus-avatar-user">
+  <div :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass" class="jus-avatar-user">
     <img v-if="avatarSrc" :src="avatarSrc">
     <span v-else>
       {{ nameInitials.toUpperCase() }}
@@ -33,6 +33,10 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    purple: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -48,6 +52,9 @@ export default {
     },
     sizeClass () {
       return 'jus-avatar-user--' + this.size
+    },
+    purpleClass () {
+      return this.purple ? 'jus-avatar-user--purple' : ''
     },
     nameInitials () {
       var split = this.name.split(' ')
@@ -100,14 +107,17 @@ export default {
       border-radius: 50%;
     }
   }
+  &.jus-avatar-user--purple span {
+    background-color: #9f6cf8;
+  }
   img {
     object-fit: cover;
     border-radius: 6px;
     background-color: #f2f2f2;
   }
   span {
-    visibility: visible !important;
     background-color: #ff9300;
+    visibility: visible !important;
     color: white;
     display: inline-flex !important;
     justify-content: center;
