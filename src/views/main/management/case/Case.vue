@@ -13,7 +13,7 @@
       <div class="case-view__section-title">
         <h2>Resumo do caso</h2>
       </div>
-      <case-summary :case-id="dispute.id"/>
+      <case-summary :id="dispute.id"/>
     </template>
     <!-- CHAT -->
     <template slot="main">

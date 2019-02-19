@@ -97,10 +97,24 @@ export default {
       set (val) { return val }
     }
   },
-  beforeMount () {
-    this.$store.dispatch('getDisputes').then(response => {
-      this.summary = response.hits.hits[0]._source
-    })
+  watch: {
+    id (val) {
+      if (val) {
+        this.$store.dispatch('getDisputes', {
+          query: {
+            bool: {
+              must: [{
+                match: {
+                  disputeid: this.id
+                }
+              }]
+            }
+          }
+        }).then(response => {
+          this.summary = response.hits.hits[0]._source
+        })
+      }
+    }
   }
 }
 </script>
