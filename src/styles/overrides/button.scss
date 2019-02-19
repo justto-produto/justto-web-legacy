@@ -1,5 +1,8 @@
 @import '../colors';
 
+.el-button {
+  font-family: 'Montserrat', sans-serif !important;
+}
 .el-button--secondary {
   color: #fff;
   background-color: $--color-secondary;

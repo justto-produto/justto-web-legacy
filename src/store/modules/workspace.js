@@ -30,7 +30,7 @@ const workspaceModule = {
       state.negotiators = []
     },
     updateWorkspaceNegotiators (state, response) {
-      state.negotiators.push(response)
+      state.negotiators = response
     }
   },
   actions: {

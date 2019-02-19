@@ -7,7 +7,7 @@
         <span>dias de teste<br>gratuito</span>
       </div>
       <div>
-        Máximo de <br>100 casos
+        máximo de <br>100 casos
       </div>
     </div>
     <div v-if="showPlans" class="jus-sidenav-external__divider">

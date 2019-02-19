@@ -2,7 +2,7 @@
   <div class="external-view">
     <el-container>
       <el-aside width="50%" class="hidden-sm-and-down">
-        <JusSidenavExternal show-plans/>
+        <JusSidenavExternal />
       </el-aside>
       <el-main class="display-flex position-relative">
         <JusButtonBack to="login"/>
