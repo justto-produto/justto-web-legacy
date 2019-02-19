@@ -1,38 +1,53 @@
 <template lang="html">
   <div class="case-view__side-content">
     <el-steps
-      v-if="false"
-      :active="occurencies.length - 1"
+      :active="0"
       direction="vertical"
       process-status="wait"
       class="case-view__steps el-steps--dots">
-      <el-step v-for="occurrence in occurencies" :key="occurrence.id">
-        <template slot="title">{{ $t('occurrence.type.' + occurrence.name) }}</template>
+      <el-step>
+        <template slot="title">Enriquecimento</template>
         <template slot="description">
-          <el-popover
-            placement="bottom"
-            width="200"
-            trigger="hover">
-            <ul>
-              <li v-for="(occurrences, item) in occurrence.items" :key="occurrences + item">
-                {{ item }}: {{ occurrences }}
-              </li>
-            </ul>
-            <el-button slot="reference" type="text">Ver detalhes</el-button>
-          </el-popover>
+          <ul>
+            <li v-if="parseInt(enriched.email)">
+              Emails: {{ enriched.email }}
+            </li>
+            <li v-if="parseInt(enriched.phone)">
+              Telefones: {{ enriched.phone }}
+            </li>
+          </ul>
         </template>
       </el-step>
-    </el-steps>
-    <el-steps
-      v-loading="true"
-      v-else
-      :active="4"
-      direction="vertical"
-      process-status="wait"
-      class="case-view__steps el-steps--dots">
-      <el-step v-for="occurrence in 4" :key="occurrence">
-        <template slot="title">Ocorrência</template>
-        <template slot="description">Ver detalhes</template>
+      <el-step>
+        <template slot="title">Interação</template>
+        <template slot="description">
+          <ul>
+            <li v-if="parseInt(interactions.email)">
+              Emails: {{ interactions.email }}
+            </li>
+            <li v-if="parseInt(interactions.cna)">
+              CNA: {{ interactions.cna }}
+            </li>
+            <li v-if="parseInt(interactions.whatsapp)">
+              Whatsapp: {{ interactions.whatsapp }}
+            </li>
+          </ul>
+        </template>
+      </el-step>
+      <el-step>
+        <template slot="title">Contraproposta</template>
+        <template slot="description">
+          <div :style="'left: calc(' + sliderProposal + '% - 27px)'" class="case-view__last-offer">
+            R$ {{ lastoffer }}
+          </div>
+          <el-slider v-model="sliderProposal" :show-tooltip="false" />
+        </template>
+      </el-step>
+      <el-step>
+        <template slot="title">Acordo</template>
+        <template slot="description">
+          R$ {{ deal }}
+        </template>
       </el-step>
     </el-steps>
   </div>
@@ -49,16 +64,62 @@ export default {
   },
   data () {
     return {
-      response: ''
+      summary: ''
     }
   },
-  beforeMount() {
-    // this.$store.dispatch('getDisputes').then(response => {
-    //   this.response = response.hits.hits[0]._source
-    // })
+  computed: {
+    enriched () {
+      return {
+        email: this.summary.enrichedemails,
+        phone: this.summary.enrichedphones
+      }
+    },
+    interactions () {
+      return {
+        email: this.summary.emailinteractions,
+        whatsapp: this.summary.whatsappinterations,
+        cna: this.summary.cnainteractions
+      }
+    },
+    boundary () {
+      return parseInt(this.summary.disputeobjectboundary)
+    },
+    deal () {
+      return parseInt(this.summary.disputedealvalue)
+    },
+    lastoffer () {
+      return this.summary.lastoffervalue
+    },
+    sliderProposal: {
+      get () {
+        return (this.lastoffer * 100) / this.boundary
+      },
+      set (val) { return val }
+    }
+  },
+  beforeMount () {
+    this.$store.dispatch('getDisputes').then(response => {
+      this.summary = response.hits.hits[0]._source
+    })
   }
 }
 </script>
 
 <style lang="scss">
+.case-view__side-content {
+  .el-step__description {
+    padding: 0;
+    margin-right: 20px;
+    position: relative;
+  }
+  .el-slider {
+    margin-top: 20px;
+    pointer-events: none;
+  }
+}
+.case-view__last-offer {
+  position: absolute;
+  top: -14px;
+  white-space: nowrap;
+}
 </style>

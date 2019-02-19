@@ -398,9 +398,6 @@ export default {
     .el-step__title {
       text-transform: capitalize;
     }
-    .el-step__description {
-      min-width: 270px;
-    }
     .el-step__head {
       overflow: hidden;
     }
