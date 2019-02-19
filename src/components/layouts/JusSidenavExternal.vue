@@ -173,8 +173,13 @@ export default {
   .el-collapse {
     margin: 20px 0;
   }
-  .el-dialog .el-button {
-    min-width: 128px;
+  .el-dialog {
+    &__header {
+      padding-top: 40px;
+    }
+    .el-button {
+      min-width: 128px;
+    }
   }
 }
 </style>
