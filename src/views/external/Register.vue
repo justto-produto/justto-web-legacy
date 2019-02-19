@@ -2,7 +2,7 @@
   <div class="external-view">
     <el-container>
       <el-aside width="50%" class="hidden-sm-and-down">
-        <JusSidenavExternal/>
+        <JusSidenavExternal show-plans/>
       </el-aside>
       <el-main class="display-flex">
         <el-form
