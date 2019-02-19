@@ -14,7 +14,7 @@
         router
         class="el-menu--main-menu">
         <el-menu-item index="/">
-          <jus-tip />
+          <!-- <jus-tip /> -->
           <jus-icon icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
@@ -30,6 +30,9 @@
         <el-menu-item index="/management">
           <jus-icon icon="management" class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
+        </el-menu-item>
+        <el-menu-item index="/profile" style="display: none">
+          <span slot="title">Perfil</span>
         </el-menu-item>
       </el-menu>
       <!-- <span class="el-menu__title">TIME</span>

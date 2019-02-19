@@ -33,12 +33,12 @@
       <el-dropdown trigger="click" placement="bottom">
         <jus-icon icon="notification"/>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="e">Notificação importante 1</el-dropdown-item>
-          <el-dropdown-item command="e">Notificação importante 2</el-dropdown-item>
+          <el-dropdown-item command="e">Sem novas notificações</el-dropdown-item>
+          <!-- <el-dropdown-item command="e">Notificação importante 2</el-dropdown-item>
           <el-dropdown-item command="e">Notificação importante 3</el-dropdown-item>
           <el-dropdown-item command="e">Notificação importante 4</el-dropdown-item>
           <el-dropdown-item command="e">Notificação importante 5</el-dropdown-item>
-          <el-dropdown-item command="e">Notificação importante 6</el-dropdown-item>
+          <el-dropdown-item command="e">Notificação importante 6</el-dropdown-item> -->
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -62,7 +62,7 @@
               Perfil
             </el-dropdown-item>
           </router-link>
-          <router-link to="/profile/notifications">
+          <!-- <router-link to="/profile/notifications">
             <el-dropdown-item>
               Notificações
             </el-dropdown-item>
@@ -71,7 +71,7 @@
             <el-dropdown-item>
               Minhas atividades
             </el-dropdown-item>
-          </router-link>
+          </router-link> -->
           <a href="http://ajuda.justto.com.br/" target="_blank">
             <el-dropdown-item>
               Central de ajuda
@@ -98,7 +98,7 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.state.accountModule.name
+      return this.$store.state.personModule.person.name
     },
     workspace () {
       return this.$store.state.workspaceModule.name
@@ -190,14 +190,14 @@ export default {
   margin-right: 20px;
   cursor: pointer;
   .el-dropdown:after {
-    content: ' ';
-    min-width: 10px;
-    min-height: 10px;
-    background-color: #9f6cf8;
-    position: absolute;
-    border-radius: 50%;
-    bottom: 21px;
-    right: -1px;
+    // content: ' ';
+    // min-width: 10px;
+    // min-height: 10px;
+    // background-color: #9f6cf8;
+    // position: absolute;
+    // border-radius: 50%;
+    // bottom: 21px;
+    // right: -1px;
   }
 }
 .jus-header-main__info {

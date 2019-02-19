@@ -1,6 +1,6 @@
 <template>
   <div v-loading="$store.state.loading" class="feedback-step">
-    <h2 class="new-import-view__title">Resumo</h2>
+    <h2 class="new-import-view__title">Configuração de campanhas</h2>
     <p>
       Agrupamos seus casos por empresas. Cada empresa possui a sua Campanha, que você poderá, posteriormente, editar
       as existentes ou criar novas Campanhas.

@@ -29,8 +29,11 @@ const workspaceModule = {
       state.subdomain = ''
       state.negotiators = []
     },
-    updateWorkspaceNegotiators (state, response) {
-      state.negotiators = response
+    addWorkspaceNegotiator (state, response) {
+      state.negotiators.push(response)
+    },
+    clearWorkspaceNegotiators (state) {
+      state.negotiators = []
     }
   },
   actions: {
@@ -152,9 +155,10 @@ const workspaceModule = {
         // eslint-disable-next-line
         axios.get('/workspaces/negotiators', {data: {}})
           .then(response => {
+            commit('clearWorkspaceNegotiators')
             for (let id of response.data) {
               dispatch('getPerson', id).then(response2 => {
-                commit('updateWorkspaceNegotiators', response2)
+                commit('addWorkspaceNegotiator', response2)
               })
             }
           }).catch(error => {
@@ -166,6 +170,28 @@ const workspaceModule = {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('/workspaces/inboxes', object)
+          .then(response => {
+            resolve(response)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    getInbox ({ commit }, object) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('/workspaces/inboxes')
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    removeInbox ({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.delete('/workspaces/inboxes/' + id)
           .then(response => {
             resolve(response)
           }).catch(error => {

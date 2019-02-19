@@ -72,6 +72,7 @@ if (store.getters.isLoggedIn) {
     .then(() => {
       store.dispatch('hideLoading')
       store.dispatch('getWorkspaceNegotiators')
+      store.dispatch('myPerson')
       initVue()
     })
 } else {

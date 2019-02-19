@@ -126,6 +126,18 @@ const account = {
             reject(error)
           })
       })
+    },
+    updatePassword ({ commit }, form) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('/accounts/my/update-password', form)
+          .then(response => {
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

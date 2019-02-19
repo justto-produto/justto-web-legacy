@@ -46,38 +46,43 @@ const router = new Router({
           name: 'review',
           path: 'management/review/',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/review/Review')
+        },
+        {
+          name: 'profile',
+          path: 'profile',
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/profile/Profile')
         }
       ]
     },
-    {
-      path: '/profile',
-      component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer'),
-      meta: {
-        requiresAuth: true
-      },
-      children: [
-        {
-          path: '/',
-          component: () => import(/* webpackChunkName: "profileIndex" */ '@/views/profile')
-        },
-        {
-          path: 'notifications',
-          component: () => import(/* webpackChunkName: "notificationsIndex" */ '@/views/profile/Notifications')
-        },
-        {
-          path: 'setup',
-          component: () => import(/* webpackChunkName: "setupIndex" */ '@/views/profile/Setup')
-        },
-        {
-          path: 'activities',
-          component: () => import(/* webpackChunkName: "activitiesIndex" */ '@/views/profile/Activities')
-        },
-        {
-          path: 'users',
-          component: () => import(/* webpackChunkName: "usersIndex" */ '@/views/profile/Users')
-        }
-      ]
-    },
+    // {
+    //   path: '/profile',
+    //   component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer'),
+    //   meta: {
+    //     requiresAuth: true
+    //   },
+    //   children: [
+    //     {
+    //       path: '/',
+    //       component: () => import(/* webpackChunkName: "profileIndex" */ '@/views/profile')
+    //     },
+    //     {
+    //       path: 'notifications',
+    //       component: () => import(/* webpackChunkName: "notificationsIndex" */ '@/views/profile/Notifications')
+    //     },
+    //     {
+    //       path: 'setup',
+    //       component: () => import(/* webpackChunkName: "setupIndex" */ '@/views/profile/Setup')
+    //     },
+    //     {
+    //       path: 'activities',
+    //       component: () => import(/* webpackChunkName: "activitiesIndex" */ '@/views/profile/Activities')
+    //     },
+    //     {
+    //       path: 'users',
+    //       component: () => import(/* webpackChunkName: "usersIndex" */ '@/views/profile/Users')
+    //     }
+    //   ]
+    // },
     {
       name: 'login',
       path: '/login',

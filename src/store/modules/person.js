@@ -1,14 +1,31 @@
 const personModule = {
   state: {
+    person: {}
   },
   mutations: {
+    setPerson (state, person) {
+      if (person) state.person = person
+    }
   },
   actions: {
-    getPerson ({ commit }, id) {
+    getPerson ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/persons/' + id)
+        axios.get('/persons/')
           .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    myPerson ({ commit }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('/persons/my')
+          .then(response => {
+            commit('setPerson', response.data)
             resolve(response.data)
           })
           .catch(error => {
@@ -21,6 +38,18 @@ const personModule = {
         // eslint-disable-next-line
         axios.post('/persons/my/oabs', { number: oamForm.oab, state: oamForm.state })
           .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    setPerson ({ commit }, person) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('/persons', person)
+          .then(response => {
+            commit('setPerson', response.data)
             resolve(response.data)
           }).catch(error => {
             reject(error)
