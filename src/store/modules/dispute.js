@@ -88,7 +88,7 @@ const dispute = {
           })
       })
     },
-    sendDisputeAction ({ commit }, body){
+    sendDisputeAction ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.put('disputes/' + body.disputeId + '/' + body.action)

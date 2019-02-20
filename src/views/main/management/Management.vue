@@ -12,14 +12,14 @@
           :margin="20"
           :nav-text="carouselIcons()"
           class="view-management__carousel-slider">
-          <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
+          <!-- <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
             10% das suas contrapropostas foram aceitas
             <el-button type="transparent">Ver casos</el-button>
           </el-card>
           <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
             Você possui casos que precisam da sua revisão
             <el-button type="transparent" @click="$router.push('management/review')">Resolver</el-button>
-          </el-card>
+          </el-card> -->
           <!-- <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
             Você possui casos que precisam da sua revisão
             <el-button type="transparent">Resolver</el-button>

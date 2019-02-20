@@ -188,7 +188,11 @@ export default {
         this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
           this.dispute = responses
           this.loadingDispute = false
-        }).catch(error => this.showError(error))
+        }).catch(error => {
+          if (error.response.status === 404) {
+            this.$router.push('/management')
+          } else this.showError(error)
+        })
       }
       this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
         this.disputeMessages = responses
