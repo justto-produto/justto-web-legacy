@@ -16,15 +16,19 @@
         </div>
         <div class="case-view__info-line">
           <span>Alçada máxima:</span>
-          <span>R$ {{ dispute.boundary }}</span>
+          <span>R$ {{ (dispute.upperRange.boundary ? dispute.upperRange.boundary : '-') }}</span>
         </div>
         <div class="case-view__info-line">
           <span>Contraproposta:</span>
-          <span>R$ {{ dispute.lastProposal }}</span>
+          <span>R$ {{ (dispute.lastOffer ? dispute.lastOffer : '-') }}</span>
         </div>
         <div class="case-view__info-line">
           <span>Valor do acordo:</span>
-          <span>R$ {{ dispute.dealValue }}</span>
+          <span>R$ {{ (dispute.lastOffer ? dispute.lastOffer : '-') }}</span>
+        </div>
+        <div class="case-view__info-line">
+          <span>Valor da causa:</span>
+          <span>R$ {{ (dispute.valueOfClaim.value ? dispute.valueOfClaim.value : '-') }}</span>
         </div>
         <div class="case-view__info-line">
           <span>Fim da negociação:</span>
