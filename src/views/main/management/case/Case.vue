@@ -169,7 +169,7 @@ export default {
       if (this.dispute.disputeRoles) {
         return this.dispute.disputeRoles.filter(role => {
           return role.party === 'CLAIMANT'
-        }).map(role => role.id)
+        }).map(role => role.person.id)
       } return null
     }
   },
