@@ -9,7 +9,7 @@
           <div :class="directionClass(message)" class="case-view-messages__message-content">
             <div>{{ message.description }}</div>
             <el-button v-if="message.message.type === 'EMAIL'" type="text" @click="showMessageDialog(message.message.content)">Visualizar email</el-button>
-            <span v-else>{{ message.message.content }}</span>
+            <span v-else v-html="message.message.content" />
             <i v-if="directionClass(message) === 'note'">
               <br>
               <jus-icon icon="eye" style="vertical-align: middle;"/> Esta mensagem é visível somente aos negociadores.
