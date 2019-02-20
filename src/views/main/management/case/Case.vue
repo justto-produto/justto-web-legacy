@@ -223,7 +223,7 @@ export default {
       this.messageType = type
     },
     doAction (action) {
-      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção', {
+      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção!', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         type: 'warning'

@@ -93,7 +93,9 @@
           :key="item.id"
           :label="item.name"
           :value="item.id">
-          <jus-avatar-user :name="item.name" shape="circle" size="xs" style="vertical-align: middle" />
+          <jus-avatar-user
+            :name="item.name" shape="circle"
+            size="xs" style="vertical-align: middle" />
           <span style="vertical-align: middle;margin-left: 10px;">{{ item.name }}</span>
         </el-option>
       </el-select>

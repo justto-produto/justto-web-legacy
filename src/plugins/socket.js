@@ -6,9 +6,9 @@ const VueStompJs = {
   install (Vue, options) {
     const client = new Client()
     client.brokerURL = options.brokerURL
-    client.onConnect = function (frame) {
-      console.info('Connected at ' + client.brokerURL)
-    }
+    // client.onConnect = function (frame) {
+    //   console.info('Connected at ' + client.brokerURL)
+    // }
     client.onStompError = function (frame) {
       console.error('Broker reported error: ' + frame.headers['message'])
       console.error('Additional details: ' + frame.body)
@@ -16,9 +16,8 @@ const VueStompJs = {
     client.activate()
     Vue.prototype.$stomp = {
       subscribe (workspace) {
-        console.log(workspace)
         client.subscribe('/whatsapp/refresh/' + workspace, function (message) {
-          console.log('mensagem:' + message)
+          // console.log('mensagem:' + message)
           store.commit('setWhatsappSocketMessage', JSON.parse(message.body))
         })
       },

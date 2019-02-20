@@ -54,5 +54,9 @@
       "PAUSED": "pausado",
       "ENRICHED": "enriquecido"
     }
+  },
+  "profile": {
+    "NEGOTIATOR": "negociador",
+    "ADMINISTRATOR": "administrador"
   }
 }
