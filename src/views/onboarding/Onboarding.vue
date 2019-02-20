@@ -89,7 +89,8 @@ export default {
       swiperOption: {
         direction: 'vertical',
         slidesPerView: 1,
-        allowTouchMove: false
+        allowTouchMove: false,
+        initialSlide: 0
       }
     }
   },
@@ -102,13 +103,14 @@ export default {
       return Math.round((this.currentStep * (100 / slidesN)) * 0.2) / 0.2
     },
     showWhatsapp () {
-      return !this.$store.getters.isOffline
+      return  !this.$store.getters.isWhatsappOffline
     }
   },
   beforeCreate () {
     if (this.$store.state.workspaceModule.subdomain) {
-      this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
-      this.$store.dispatch('whatsappStart')
+      this.$store.dispatch('whatsappStart').then(() => {
+        this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
+      })
     }
   },
   created () {
@@ -138,10 +140,6 @@ export default {
       this.$store.dispatch('createWorkpace', {
         name: this.responses.team,
         subDomain: this.responses.subdomain
-      }).then(() => {
-        this.$refs['swiper'].swiper.slideNext(800)
-        this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
-        this.$store.dispatch('whatsappStart')
       }).catch(error => {
         console.error(error)
         this.$jusNotification({
@@ -151,7 +149,7 @@ export default {
         })
       }).finally(() => {
         this.$store.dispatch('myWorkspace').then(response => {
-          if (response.length && response[0].subDomain === this.responses.subdomain) {
+          if (response.length && response[response.length-1].subDomain === this.responses.subdomain) {
             this.$refs['swiper'].swiper.slideNext(800)
             this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
             this.$store.dispatch('whatsappStart')

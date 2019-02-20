@@ -1,11 +1,12 @@
-const socket = {
+const whatsappModule = {
   state: {
     urlQrCode: '',
-    status: 'STARTING',
+    status: 'OFFLINE',
     number: ''
   },
   mutations: {
-    setMessage (state, message) {
+    setWhatsappSocketMessage (state, message) {
+      console.log(message)
       if (message.urlQrCode) state.urlQrCode = message.urlQrCode
       if (message.status) state.status = message.status
       if (message.number) state.number = message.number
@@ -17,19 +18,19 @@ const socket = {
   actions: {
   },
   getters: {
-    isOffline: state => {
+    isWhatsappOffline: state => {
       return state.status === 'OFFLINE'
     },
-    isReady: state => {
+    isWhatsappReady: state => {
       return state.status === 'READY'
     },
-    isStarting: state => {
+    isWhatsappStarting: state => {
       return state.status === 'STARTING'
     },
-    isConnected: state => {
+    isWhatsappConnected: state => {
       return state.status === 'CONNECTED'
     }
   }
 }
 
-export default socket
+export default whatsappModule

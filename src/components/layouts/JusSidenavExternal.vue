@@ -79,7 +79,7 @@ export default {
 
 <style lang="scss">
 .jus-sidenav-external {
-  margin: 0 40px;
+  padding: 0 40px;
   height: 100%;
   background-color: #f7f7f7;
   display: flex;

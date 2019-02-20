@@ -51,7 +51,7 @@
         </el-form>
         <el-collapse v-loading="$store.state.loading">
           <el-collapse-item title="Lista de emails sincronizados">
-            <div v-for="(email, index) in syncedEmails" class="profile-view__synced-email">
+            <div v-for="email in syncedEmails" :key="email.id" class="profile-view__synced-email">
               {{ email.email }}
               <a href="#" @click.prevent="removeEmail(email.id)">
                 <jus-icon icon="trash" />
@@ -82,14 +82,19 @@
       </el-dialog>
     </template>
     <template slot="right-card">
-      s
+      <jus-whatsapp />
     </template>
   </jus-view-main>
 </template>
 
 <script>
+import JusWhatsapp from '@/components/layouts/JusWhatsapp'
+
 export default {
   name: 'Profile',
+  components: {
+    JusWhatsapp
+  },
   data () {
     return {
       dialogPassword: false,
@@ -203,32 +208,32 @@ export default {
     },
     removeEmail (id) {
       this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Remover email', {
-          confirmButtonText: 'Sim, remover',
-          cancelButtonText: 'Cancelar',
-          type: 'warning'
-        }).then(() => {
-          this.$store.commit('showLoading')
-          this.$store.dispatch('removeInbox', id).then(() => {
-            this.$jusNotification({
-              title: 'Yay!',
-              message: 'Email removido com sucesso.',
-              type: 'success'
-            })
-            var self = this
-            setTimeout(function () {
-              self.$store.commit('hideLoading')
-              self.getSyncedEmails()
-            }, 1000)
-          }).catch(error => {
-            console.error(error)
-            this.$store.commit('hideLoading')
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
+        confirmButtonText: 'Sim, remover',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('showLoading')
+        this.$store.dispatch('removeInbox', id).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Email removido com sucesso.',
+            type: 'success'
+          })
+          var self = this
+          setTimeout(function () {
+            self.$store.commit('hideLoading')
+            self.getSyncedEmails()
+          }, 1000)
+        }).catch(error => {
+          console.error(error)
+          this.$store.commit('hideLoading')
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
           })
         })
+      })
     },
     syncNewEmail () {
       this.$refs['syncForm'].validate((valid) => {

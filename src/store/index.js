@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import workspaceModule from './modules/workspace'
 import accountModule from './modules/account'
-import socketModule from './modules/socket'
+import whatsappModule from './modules/whatsapp'
 import importModule from './modules/import'
 import campaignModule from './modules/campaign'
 import strategyModule from './modules/strategy'
@@ -38,7 +38,7 @@ export default new Vuex.Store({
   modules: {
     accountModule,
     workspaceModule,
-    socketModule,
+    whatsappModule,
     importModule,
     campaignModule,
     strategyModule,

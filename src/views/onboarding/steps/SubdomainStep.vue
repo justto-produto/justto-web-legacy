@@ -87,7 +87,7 @@ export default {
     }
   },
   computed: {
-    availabilityAlert: function () {
+    availabilityAlert () {
       if (this.isAvailable) {
         return {
           title: 'Subdomínio disponível.',
@@ -99,7 +99,7 @@ export default {
         type: 'error'
       }
     },
-    creatingWorkspace: function () {
+    creatingWorkspace () {
       return this.$store.getters.creatingWorkspace
     },
     showAlert () {
