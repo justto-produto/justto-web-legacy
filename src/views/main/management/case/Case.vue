@@ -164,6 +164,15 @@ export default {
       newNote: ''
     }
   },
+  computed: {
+    claimantsIds () {
+      if (this.dispute.disputeRoles) {
+        return this.dispute.disputeRoles.filter(role => {
+          return role.party === 'CLAIMANT'
+        }).map(role => role.id)
+      } return null
+    }
+  },
   watch: {
     '$route.params.id': function (id) {
       this.fetchData()
@@ -246,7 +255,7 @@ export default {
     sendMessage () {
       if (this.newMessage) {
         this.$store.dispatch('send' + this.messageType, {
-          to: [99],
+          to: this.claimantsIds,
           message: this.newMessage,
           disputeId: this.dispute.id
         }).then(() => {
