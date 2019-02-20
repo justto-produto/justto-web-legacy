@@ -131,7 +131,7 @@
     <template slot="right-card" class="teste">
       <div class="case-view__section-title">
         <h2>Dados do caso</h2>
-        <el-button plain>Exportar caso</el-button>
+        <!-- <el-button plain>Exportar caso</el-button> -->
       </div>
       <case-overview
         :loading="loadingDispute"
