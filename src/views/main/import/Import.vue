@@ -65,7 +65,7 @@
         </div>
         <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
       </el-card>
-      <el-button type="primary" class="import-view__download-example">Download planilha modelo</el-button>
+      <el-button type="primary" class="import-view__download-example" @click="downloadModel()">Download planilha modelo</el-button>
     </template>
   </jus-view-main>
 </template>
@@ -146,6 +146,9 @@ export default {
       this.fileUrl = ''
       this.$store.commit('removeImportsFile')
       this.$refs['uploadMethod'].clearFiles()
+    },
+    downloadModel () {
+      window.open('planilha-modelo.xlsx', '_blank')
     }
   }
 }
