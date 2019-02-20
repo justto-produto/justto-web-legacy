@@ -78,26 +78,23 @@
         placeholder="Defina a data limite para a negociação" />
       <el-select
         v-model="negotiatorIds"
-        :remote-method="searchNegotiators"
         :loading="loading"
         value-key="name"
         size="large"
-        placeholder="Escolha os negociadores"
         multiple
-        filterable
-        remote
+        placeholder="Escolha os negociadores"
         class="select-negotiator">
         <i
           slot="prefix"
           :class="negotiatorIds.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
         <el-option
-          v-for="item in filteredNegotiators"
+          v-for="item in negotiatorsList"
           :key="item.id"
           :label="item.name"
           :value="item.id">
-          <jus-avatar-user shape="circle" size="xs" />
-          <span style="vertical-align: text-bottom;margin-left: 10px;">{{ item.name }}</span>
+          <jus-avatar-user :name="item.name" shape="circle" size="xs" style="vertical-align: middle" />
+          <span style="vertical-align: middle;margin-left: 10px;">{{ item.name }}</span>
         </el-option>
       </el-select>
     </el-card>
@@ -153,7 +150,7 @@ export default {
       dialogVisible: false,
       dueDate: null,
       negotiatorIds: [],
-      filteredNegotiators: [],
+      // filteredNegotiators: [],
       loading: false,
       datePickerOptions: {
         disabledDate (date) {
@@ -227,20 +224,20 @@ export default {
     //     paymentDeadLine: item.paymentDeadline
     //   }
     // },
-    searchNegotiators (query) {
-      if (query !== '') {
-        this.loading = true
-        setTimeout(() => {
-          this.loading = false
-          this.filteredNegotiators = this.negotiatorsList.filter(item => {
-            return item.name.toLowerCase()
-              .indexOf(query.toLowerCase()) > -1
-          })
-        }, 1000 * Math.random())
-      } else {
-        this.filteredNegotiators = []
-      }
-    },
+    // searchNegotiators (query) {
+    //   if (query !== '') {
+    //     this.loading = true
+    //     setTimeout(() => {
+    //       this.loading = false
+    //       this.filteredNegotiators = this.negotiatorsList.filter(item => {
+    //         return item.name.toLowerCase()
+    //           .indexOf(query.toLowerCase()) > -1
+    //       })
+    //     }, 1000 * Math.random())
+    //   } else {
+    //     this.filteredNegotiators = []
+    //   }
+    // },
     showStrategyMessages () {
       this.dialogVisible = true
       this.$store.dispatch('showLoading')
@@ -351,6 +348,14 @@ export default {
     .el-icon-circle-check-outline, .el-icon-circle-check {
       font-size: 1.3rem;
       margin-right: 5px;
+    }
+  }
+  .el-select {
+    .el-select__tags-text {
+      color: #424242;
+    }
+    .el-tag__close.el-icon-close {
+      background-color: #adadad;
     }
   }
 }

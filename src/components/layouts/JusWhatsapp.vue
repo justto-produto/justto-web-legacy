@@ -32,7 +32,7 @@
               v-model="numberForm.number"
               name="number"/>
           </el-form-item>
-          <div>
+          <div class="jus-whatsapp__actions">
             <el-button
               v-loading="sending"
               :disabled="!validNumber"
@@ -40,7 +40,7 @@
               native-type="submit">
               Testar
             </el-button>
-            <el-button @click="restart">Alterar número</el-button>
+            <el-button @click="restart" plain>Alterar número</el-button>
           </div>
         </el-form>
       </div>
@@ -89,7 +89,7 @@ export default {
       return this.$store.getters.isWhatsappStarting
     },
     isWhatsappConnected () {
-      return this.$store.getters.isWhatsappConnected
+      return true//this.$store.getters.isWhatsappConnected
     },
     validNumber () {
       if (this.rawNumber.length > 9) {
@@ -144,11 +144,12 @@ export default {
 .jus-whatsapp {
   &__container {
     display: flex;
-    margin-bottom: 20px;
+    justify-content: center;
     align-items: center;
   }
   &__qrcode {
     width: 200px;
+    min-width: 200px;
     height: 200px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     padding: 6px;
@@ -171,16 +172,19 @@ export default {
     }
   }
   &__status-info {
-    margin: 20px 40px;
-    max-width: 290px;
-    .el-button {
-      width: 48% !important;
-    }
+    margin-left: 20px;
+    width: 100%;
   }
   &__status {
-    margin-bottom: 20px;
+    margin-top: 20px;
     strong {
       margin: 0 8px 0 4px;
+    }
+  }
+  &__actions {
+    display: flex;
+    .el-button {
+      width: 100%;
     }
   }
 }

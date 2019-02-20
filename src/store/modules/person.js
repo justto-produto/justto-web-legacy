@@ -8,10 +8,10 @@ const personModule = {
     }
   },
   actions: {
-    getPerson ({ commit }) {
+    getPerson ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/persons/')
+        axios.get('/persons/' + id)
           .then(response => {
             resolve(response.data)
           })

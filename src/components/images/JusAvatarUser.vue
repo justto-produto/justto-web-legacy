@@ -72,6 +72,7 @@ export default {
   position: relative;
   display: inline-flex;
   &.jus-avatar-user--xs {
+    font-size: 8px;
     img, span {
       width: 1.75rem;
       height: 1.75rem;

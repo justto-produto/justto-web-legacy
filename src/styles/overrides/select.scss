@@ -1,3 +1,7 @@
 .el-select .el-tag__close.el-icon-close {
   // background-color: #adadad;
 }
+
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+  color: #424242 !important;
+}

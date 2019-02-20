@@ -1,5 +1,5 @@
 <template lang="html">
-  <jus-view-main class="profile-view" right-card-width="500">
+  <jus-view-main class="profile-view" right-card-width="550">
     <template slot="title">
       <h1>
         <router-link to="/">
@@ -10,7 +10,7 @@
     </template>
     <template slot="main">
       <div class="profile-view__container">
-        <el-form>
+        <el-form label-position="top">
           <el-form-item label="Nome">
             <el-input v-model="person.name">
               <el-button slot="append" @click="changeName">
@@ -83,6 +83,19 @@
     </template>
     <template slot="right-card">
       <jus-whatsapp />
+      <br>
+      <hr>
+      <br>
+      <el-form label-position="top">
+        <el-form-item label="Nome da equipe">
+          <el-input v-model="teamName" />
+        </el-form-item>
+      </el-form>
+      <br>
+      <hr>
+      <br>
+      <h3>Equipe</h3>
+
     </template>
   </jus-view-main>
 </template>
@@ -116,7 +129,8 @@ export default {
         ]
       },
       syncedEmails: [],
-      person: {}
+      person: {},
+      teamName: ''
     }
   },
   beforeMount () {
@@ -124,6 +138,7 @@ export default {
   },
   mounted () {
     this.person = JSON.parse(JSON.stringify(this.$store.state.personModule.person))
+    this.teamName = this.$store.state.workspaceModule.name + ''
   },
   methods: {
     getSyncedEmails () {
