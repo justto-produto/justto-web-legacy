@@ -312,13 +312,22 @@ export default {
           message: 'Senha alterada com sucesso.',
           type: 'success'
         })
+        this.dialogPassword = false
       }).catch(error => {
         console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+        if (error.response.status === 401) {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Senha atual incorreta',
+            type: 'warning'
+          })
+        } else {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
+        }
       })
     },
     removeEmail (id) {
