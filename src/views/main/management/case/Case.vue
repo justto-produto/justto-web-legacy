@@ -24,7 +24,7 @@
               <jus-icon icon="search2" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="move-case">
+          <!-- <el-tooltip content="move-case">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="move-case" />
             </el-button>
@@ -33,37 +33,37 @@
             <el-button plain @click="doAction('move')">
               <jus-icon icon="delegate" />
             </el-button>
-          </el-tooltip>
-          <el-tooltip content="lose">
-            <el-button plain @click="doAction('move')">
+          </el-tooltip> -->
+          <el-tooltip content="Perder">
+            <el-button plain @click="doAction('refused')">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="win">
-            <el-button plain @click="doAction('move')">
+          <el-tooltip content="Ganhar">
+            <el-button plain @click="doAction('accepted')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="pause">
-            <el-button plain @click="doAction('move')">
+          <el-tooltip content="Pausar">
+            <el-button plain @click="doAction('paused')">
               <jus-icon icon="pause" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="start-again">
-            <el-button plain @click="doAction('move')">
+          <el-tooltip content="Retomar">
+            <el-button plain @click="doAction('resume')">
               <jus-icon icon="start-again" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="snooze">
+          <!-- <el-tooltip content="snooze">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="snooze" />
             </el-button>
-          </el-tooltip>
-          <el-tooltip content="star">
+          </el-tooltip> -->
+          <!-- <el-tooltip content="star">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="star" />
             </el-button>
-          </el-tooltip>
+          </el-tooltip> -->
           <div :class="{isVisible: showSearch}" class="case-view__search">
             <el-input v-model="searchTerm" autofocus>
               <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
@@ -228,6 +228,10 @@ export default {
         cancelButtonText: 'Cancelar',
         type: 'warning'
       }).then(() => {
+        this.$store.dispatch('sendDisputeAction', {
+          action: action,
+          disputeId: this.dispute.id
+        })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação realizada com sucesso.',
