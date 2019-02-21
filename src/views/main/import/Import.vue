@@ -104,7 +104,6 @@ export default {
     beforeUpload (file) {
       this.$notify.closeAll()
       this.processingFile = true
-      debugger
       const isValid =
       file.name.toLowerCase().endsWith('.xlsx') ||
       file.name.toLowerCase().endsWith('.xls') ||
