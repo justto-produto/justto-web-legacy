@@ -104,11 +104,11 @@ export default {
     beforeUpload (file) {
       this.$notify.closeAll()
       this.processingFile = true
+      debugger
       const isValid =
-      file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-      file.type === 'application/vnd.ms-excel' ||
-      file.type === 'text/csv'
-      // file.type === 'application/vnd.oasis.opendocument.text'
+      file.name.toLowerCase().endsWith('.xlsx') ||
+      file.name.toLowerCase().endsWith('.xls') ||
+      file.name.toLowerCase().endsWith('.csv')
       const isLt20M = file.size / 1024 / 1024 < 20
       if (!isValid) {
         this.$jusNotification({
