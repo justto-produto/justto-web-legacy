@@ -70,8 +70,14 @@
             </el-input>
           </div>
         </div>
-        <case-messages :messages="filteredDisputeMessages" :loading="loadingDisputeMessages" />
+        <case-messages
+          :messages="filteredDisputeMessages"
+          :loading="loadingDisputeMessages"
+          :show-scheduled="showScheduled" />
         <div class="case-view__send-message">
+          <el-checkbox v-model="showScheduled" class="case-view__show-scheduled">
+            Exibir mensagens agendadas
+          </el-checkbox>
           <el-tabs value="1">
             <el-tab-pane label="Mensagem" name="1">
               <el-card shadow="always" class="case-view__send-message-box">
@@ -161,7 +167,8 @@ export default {
       searchTerm: '',
       messageType: 'email',
       newMessage: '',
-      newNote: ''
+      newNote: '',
+      showScheduled: false
     }
   },
   computed: {
@@ -344,6 +351,7 @@ export default {
     }
   }
   &__send-message {
+    position: relative;
     border-top: 1px solid #eeeeee;
     .el-tabs__header {
       width: fit-content;
@@ -356,6 +364,12 @@ export default {
     .el-tabs__nav-wrap::after {
       background-color: transparent;
     }
+  }
+  &__show-scheduled {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 1;
   }
   &__send-message-box {
     margin: 20px;
