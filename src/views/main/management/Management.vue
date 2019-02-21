@@ -31,13 +31,13 @@
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         Casos selecionados: {{ selectedIds.length }}
         <div>
+          <el-button plain @click="sendBatchAction('ACCEPTED')">Ganhar</el-button>
+          <el-button plain @click="sendBatchAction('REFUSED')">Perder</el-button>
           <el-button plain @click="sendBatchAction('PAUSED')">Parar</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Reiniciar</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Ganhar</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Perder</el-button>
+          <el-button plain @click="sendBatchAction('RESUME')">Reiniciar</el-button>
           <!-- <el-button plain @click="sendBatchAction('PAUSED')">Alterar responsável</el-button> -->
-          <el-button plain @click="sendBatchAction('PAUSED')">Excluir</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Reiniciar engajamento</el-button>
+          <el-button plain @click="sendBatchAction('DELETE')">Excluir</el-button>
+          <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">Reiniciar engajamento</el-button>
           <!-- <el-button plain @click="sendBatchAction('PAUSED')">Alterar campanha</el-button> -->
         </div>
         <i class="el-icon-close" @click="clearSelection()"/>
