@@ -44,12 +44,14 @@
         </div>
       </el-col>
     </transition>
-    <el-button
-      :disabled="currentStep === 0"
-      class="el-button--previous-step"
-      type="primary"
-      icon="el-icon-arrow-up"
-      @click="previousStep"/>
+    <el-tooltip :open-delay="800" placement="left" content="Voltar">
+      <el-button
+        :disabled="currentStep === 0"
+        class="el-button--previous-step"
+        type="primary"
+        icon="el-icon-arrow-up"
+        @click="previousStep"/>
+    </el-tooltip>
   </el-row>
 </template>
 
@@ -103,7 +105,7 @@ export default {
       return Math.round((this.currentStep * (100 / slidesN)) * 0.2) / 0.2
     },
     showWhatsapp () {
-      return  !this.$store.getters.isWhatsappOffline
+      return !this.$store.getters.isWhatsappOffline
     }
   },
   beforeCreate () {
@@ -149,7 +151,7 @@ export default {
         })
       }).finally(() => {
         this.$store.dispatch('myWorkspace').then(response => {
-          if (response.length && response[response.length-1].subDomain === this.responses.subdomain) {
+          if (response.length && response[response.length - 1].subDomain === this.responses.subdomain) {
             this.$refs['swiper'].swiper.slideNext(800)
             this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
             this.$store.dispatch('whatsappStart')
