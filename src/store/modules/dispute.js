@@ -19,7 +19,7 @@ const dispute = {
     getDisputes ({ commit }, query) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('http://homol.justto.com.br/disputes/_search', query)
+        axios.post('https://justto.app/disputes/_search', query)
           .then(response => {
             resolve(response.data)
           })
@@ -28,30 +28,6 @@ const dispute = {
           })
       })
     },
-    // getDisputeSummary ({ commit }, id) {
-    //   return new Promise((resolve, reject) => {
-    //     // eslint-disable-next-line
-    //     axios.get('disputes/' + id + '/summary')
-    //       .then(response => {
-    //         resolve(response.data)
-    //       })
-    //       .catch(error => {
-    //         reject(error)
-    //       })
-    //   })
-    // },
-    // getDisputeSubscribe ({ commit }, id) {
-    //   return new Promise((resolve, reject) => {
-    //     // eslint-disable-next-line
-    //     axios.get('disputes/' + id + '/subscribe')
-    //       .then(response => {
-    //         resolve(response.data)
-    //       })
-    //       .catch(error => {
-    //         reject(error)
-    //       })
-    //   })
-    // },
     getDisputeMessages ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line

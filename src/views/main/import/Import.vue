@@ -25,7 +25,7 @@
               :disabled="hasFile"
               :headers="uploadHeaders"
               accept=".csv,.xlsx,.xls"
-              action="http://homol.justto.com.br/api/imports/upload">
+              action="/api/imports/upload">
               <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
               <div v-if="!hasFile && !processingFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
             </el-upload>
