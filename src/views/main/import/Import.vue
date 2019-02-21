@@ -55,15 +55,16 @@
       <el-card
         v-for="imports in importsHistory"
         :key="imports.id"
-        class="import-history"
-        shadow="never">
-        <jus-icon icon="spreadsheet-xlsx"/>
-        <div style="margin: 0 20px;width: 100%;text-align: left;">
-          <h4 style="margin: 0;margin-bottom: 10px;">{{ imports.file }}</h4>
-          {{ imports.date | moment('DD/MM/YY') }} <br>
-          {{ imports.date | moment('HH:mm') }} <br>
+        class="import-history">
+        <div>
+          <jus-icon icon="spreadsheet-xlsx"/>
         </div>
-        <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
+        <div class="import-history__content">
+          <h4>{{ imports.file_name }}</h4>
+          <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
+          <p>Linhas: {{ imports.rows }}</p>
+        </div>
+        <!-- <a href="#" style="text-align: right;white-space: pre;">Ver casos</a> -->
       </el-card>
       <el-button type="primary" class="import-view__download-example" @click="downloadModel()">Download planilha modelo</el-button>
     </template>
@@ -169,9 +170,21 @@ export default {
     text-align: center;
     .import-history{
       margin-bottom: 20px;
+      border-color: #eee;
       .el-card__body {
         display: flex;
         align-items: center;
+      }
+      &__content {
+        margin-left: 20px;
+        text-align: left;
+        h4 {
+          word-break: break-all;
+          margin: 0;
+        }
+        p {
+          margin: 3px 0 0;
+        }
       }
     }
   }
