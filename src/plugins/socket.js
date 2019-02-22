@@ -28,4 +28,4 @@ const VueStompJs = {
   }
 }
 
-Vue.use(VueStompJs, { brokerURL: 'wss://justto.app/workspace/websocket' })
+Vue.use(VueStompJs, { brokerURL: 'wss://justto.app/websocket/workspace' })
