@@ -10,7 +10,7 @@ if (AUTH_TOKEN) {
 }
 // axios.defaults.headers.post['Content-Type'] = 'application/json'
 let config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || 'https://justto.app/api',
+  baseURL: process.env.baseURL || process.env.apiUrl || '/api',
   timeout: 60 * 100000, // Timeout
   headers: {
     // 'Access-Control-Allow-Origin': 'http://localhost:8080',
@@ -42,20 +42,21 @@ _axios.interceptors.response.use(
       response.config.__isRetryRequest = true
       setTimeout(function () {
         return axios(response.config)
-      }, 1000)
+      }, 2000)
     }
     return response
   },
   function (error) {
-    if (error.response.status === 401 && error.response.data.code !== 'ALREADY_EXISTS') {
-      store.dispatch('logout')
-    } else if (
-      error.response &&
-      error.response.data &&
-      error.response.data.fields &&
-      error.response.data.fields['AuthorizationContext Account id '] === 'Invalid credential ') {
-      store.dispatch('logout')
-    }
+    // if (error.response.status === 401 && error.response.data.code !== 'ALREADY_EXISTS' &&
+    //     !error.request.responseURL.endsWith('update-password')) {
+    //   store.dispatch('logout')
+    // } else if (
+    //   error.response &&
+    //   error.response.data &&
+    //   error.response.data.fields &&
+    //   error.response.data.fields['AuthorizationContext Account id '] === 'Invalid credential ') {
+    //   store.dispatch('logout')
+    // }
     return Promise.reject(error)
   }
 )

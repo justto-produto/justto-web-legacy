@@ -47,8 +47,9 @@ export default {
 
 <style lang="scss">
 .jus-main-view {
-  height: calc(100% - 20px);
+  height: calc(100% - 60px);
   &__title {
+    margin: 40px 20px 20px;
     h1 {
       font-weight: 500;
       img {
@@ -58,9 +59,9 @@ export default {
   }
   &__container {
     overflow-x: auto;
-    padding-top: 20px;
+    padding: 20px;
     display: flex;
-    height: calc(100% - 54px);
+    height: calc(100% - 37px);
   }
   &__main-card {
     width: 100%;

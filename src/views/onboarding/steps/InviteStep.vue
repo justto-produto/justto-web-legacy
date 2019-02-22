@@ -70,18 +70,6 @@ export default {
         teamMember: '',
         teamMemberType: '',
         teamMembers: [
-          // {
-          //   email: 'choset@me.co',
-          //   profile: 'ADMINISTRATOR'
-          // },
-          // {
-          //   email: 'hikoza@hotmail.com',
-          //   profile: 'NEGOTIATOR'
-          // },
-          // {
-          //   email: 'mkearl@verizon.net',
-          //   profile: 'ADMINISTRATOR'
-          // }
         ]
       },
       teamMembersFormRules: {

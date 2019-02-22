@@ -2,17 +2,24 @@
   <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true}" class="case-view-messages">
     <li
       v-for="message in messages"
+      v-show="checkShowScheduled(message)"
       :key="message.id"
       class="case-view-messages__message">
       <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="case-view-messages__message-box">
         <div>
-          <div :class="directionClass(message)" class="case-view-messages__message-content">
+          <div :class="directionClass(message) + waitingClass(message)" class="case-view-messages__message-content">
             <div>{{ message.description }}</div>
             <el-button v-if="message.message.type === 'EMAIL'" type="text" @click="showMessageDialog(message.message.content)">Visualizar email</el-button>
             <span v-else v-html="message.message.content" />
             <i v-if="directionClass(message) === 'note'">
               <br>
-              <jus-icon icon="eye" style="vertical-align: middle;"/> Esta mensagem é visível somente aos negociadores.
+              <jus-icon icon="eye" style="vertical-align: sub;"/>
+              Esta mensagem é visível somente aos negociadores.
+            </i>
+            <i v-show="message.message.status === 'WAITING'">
+              <br><br>
+              <jus-icon icon="clock" is-active style="vertical-align: sub;"/>
+              Esta é uma mensagem agendada que ainda não foi entregue.
             </i>
           </div>
           <div class="case-view-messages__message-time">
@@ -50,6 +57,10 @@ export default {
     loading: {
       type: Boolean,
       default: true
+    },
+    showScheduled: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -74,6 +85,21 @@ export default {
       } else if (message.message.type === 'NOTE') {
         return 'note'
       } else return 'outbound'
+    },
+    waitingClass (message) {
+      if (message.message && message.message.status === 'WAITING') {
+        return ' waiting'
+      }
+      return ''
+    },
+    checkShowScheduled (message) {
+      if (!this.showScheduled) {
+        if (message.message) {
+          if (message.message.status === 'WAITING') {
+            return false
+          } else return true
+        } else return true
+      } else return true
     }
   }
 }
@@ -130,6 +156,9 @@ export default {
         border-right-color: #fff;
         border-left: 0;
       }
+    }
+    &.waiting {
+      border: 1px dashed #9461f7;
     }
     &.note {
       background-color: #ffeba1;

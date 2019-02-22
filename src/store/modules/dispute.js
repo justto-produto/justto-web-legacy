@@ -28,30 +28,6 @@ const dispute = {
           })
       })
     },
-    // getDisputeSummary ({ commit }, id) {
-    //   return new Promise((resolve, reject) => {
-    //     // eslint-disable-next-line
-    //     axios.get('disputes/' + id + '/summary')
-    //       .then(response => {
-    //         resolve(response.data)
-    //       })
-    //       .catch(error => {
-    //         reject(error)
-    //       })
-    //   })
-    // },
-    // getDisputeSubscribe ({ commit }, id) {
-    //   return new Promise((resolve, reject) => {
-    //     // eslint-disable-next-line
-    //     axios.get('disputes/' + id + '/subscribe')
-    //       .then(response => {
-    //         resolve(response.data)
-    //       })
-    //       .catch(error => {
-    //         reject(error)
-    //       })
-    //   })
-    // },
     getDisputeMessages ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -80,6 +56,18 @@ const dispute = {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('disputes/' + body.disputeId + '/note', body)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    sendDisputeAction ({ commit }, body) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('disputes/' + body.disputeId + '/' + body.action)
           .then(response => {
             resolve(response.data)
           })

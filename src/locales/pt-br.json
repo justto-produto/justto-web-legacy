@@ -54,5 +54,19 @@
       "PAUSED": "pausado",
       "ENRICHED": "enriquecido"
     }
+  },
+  "profile": {
+    "NEGOTIATOR": "negociador",
+    "ADMINISTRATOR": "administrador"
+  },
+  "action":{
+    "RESTART_ENGAGEMENT": "reiniciar engajamento",
+    "ACCEPTED": "ganhar",
+    "REFUSED": "perder",
+    "DELETE": "excluir",
+    "PAUSED": "parar",
+    "RESUME": "reiniciar",
+    "CHANGE_NEGOTIATOR": "altera negociador",
+    "CHANGE_CAMPAIGN": "alterar campanha"
   }
 }

@@ -93,14 +93,16 @@
           :key="item.id"
           :label="item.name"
           :value="item.id">
-          <jus-avatar-user :name="item.name" shape="circle" size="xs" style="vertical-align: middle" />
+          <jus-avatar-user
+            :name="item.name" shape="circle"
+            size="xs" style="vertical-align: middle" />
           <span style="vertical-align: middle;margin-left: 10px;">{{ item.name }}</span>
         </el-option>
       </el-select>
     </el-card>
     <el-dialog :visible.sync="dialogVisible">
       <template slot="title">
-        <h2>Estretégia de engajamento das partes</h2>
+        <h2>Estratégia de engajamento das partes</h2>
         <p>
           Abaixo você encontra as mensagens enviadas para às partes dos casos contidos nesta Campanha. Através da
           inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, aprende cada

@@ -25,7 +25,7 @@
               :disabled="hasFile"
               :headers="uploadHeaders"
               accept=".csv,.xlsx,.xls"
-              action="https://justto.app/api/imports/upload">
+              action="/api/imports/upload">
               <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon"/>
               <div v-if="!hasFile && !processingFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
             </el-upload>
@@ -55,17 +55,18 @@
       <el-card
         v-for="imports in importsHistory"
         :key="imports.id"
-        class="import-history"
-        shadow="never">
-        <jus-icon icon="spreadsheet-xlsx"/>
-        <div style="margin: 0 20px;width: 100%;text-align: left;">
-          <h4 style="margin: 0;margin-bottom: 10px;">{{ imports.file }}</h4>
-          {{ imports.date | moment('DD/MM/YY') }} <br>
-          {{ imports.date | moment('HH:mm') }} <br>
+        class="import-history">
+        <div>
+          <jus-icon icon="spreadsheet-xlsx"/>
         </div>
-        <a href="#" style="text-align: right;white-space: pre;">Ver casos</a>
+        <div class="import-history__content">
+          <h4>{{ imports.file_name }}</h4>
+          <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
+          <p>Linhas: {{ imports.rows }}</p>
+        </div>
+        <!-- <a href="#" style="text-align: right;white-space: pre;">Ver casos</a> -->
       </el-card>
-      <el-button type="primary" class="import-view__download-example">Download planilha modelo</el-button>
+      <el-button type="primary" class="import-view__download-example" @click="downloadModel()">Download planilha modelo</el-button>
     </template>
   </jus-view-main>
 </template>
@@ -104,10 +105,9 @@ export default {
       this.$notify.closeAll()
       this.processingFile = true
       const isValid =
-      file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-      file.type === 'application/vnd.ms-excel' ||
-      file.type === 'text/csv'
-      // file.type === 'application/vnd.oasis.opendocument.text'
+      file.name.toLowerCase().endsWith('.xlsx') ||
+      file.name.toLowerCase().endsWith('.xls') ||
+      file.name.toLowerCase().endsWith('.csv')
       const isLt20M = file.size / 1024 / 1024 < 20
       if (!isValid) {
         this.$jusNotification({
@@ -146,6 +146,9 @@ export default {
       this.fileUrl = ''
       this.$store.commit('removeImportsFile')
       this.$refs['uploadMethod'].clearFiles()
+    },
+    downloadModel () {
+      window.open('planilha-modelo.xlsx', '_blank')
     }
   }
 }
@@ -166,9 +169,21 @@ export default {
     text-align: center;
     .import-history{
       margin-bottom: 20px;
+      border-color: #eee;
       .el-card__body {
         display: flex;
         align-items: center;
+      }
+      &__content {
+        margin-left: 20px;
+        text-align: left;
+        h4 {
+          word-break: break-all;
+          margin: 0;
+        }
+        p {
+          margin: 3px 0 0;
+        }
       }
     }
   }

@@ -16,7 +16,6 @@ const VueStompJs = {
     client.activate()
     Vue.prototype.$stomp = {
       subscribe (workspace) {
-        console.log(workspace)
         client.subscribe('/whatsapp/refresh/' + workspace, function (message) {
           console.log('mensagem:' + message)
           store.commit('setWhatsappSocketMessage', JSON.parse(message.body))
@@ -29,4 +28,4 @@ const VueStompJs = {
   }
 }
 
-Vue.use(VueStompJs, { brokerURL: 'ws://justto.app/workspace/websocket' })
+Vue.use(VueStompJs, { brokerURL: 'wss://justto.app/workspace/websocket' })

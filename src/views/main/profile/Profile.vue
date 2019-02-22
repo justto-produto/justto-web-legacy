@@ -14,7 +14,7 @@
           <el-form-item label="Nome">
             <el-input v-model="person.name">
               <el-button slot="append" @click="changeName">
-                Salvar
+                Alterar
               </el-button>
             </el-input>
           </el-form-item>
@@ -23,7 +23,7 @@
           </el-form-item>
           <el-form-item label="Nova senha">
             <el-input v-model="profileForm.newPassword" type="password">
-              <el-button slot="append" @click="passwordModal">Alterar senha</el-button>
+              <el-button slot="append" @click="passwordModal">Alterar</el-button>
             </el-input>
           </el-form-item>
         </el-form>
@@ -60,12 +60,76 @@
           </el-collapse-item>
         </el-collapse>
       </div>
+    </template>
+    <template slot="right-card">
+      <jus-whatsapp v-if="!$store.getters.isWhatsappOffline" />
+      <div v-else>
+        <h2>Desculpe :(</h2>
+        <p>
+          Nosso servidor Whatsapp encontra-se instável neste momento.<br>
+          Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
+        </p>
+      </div>
+      <br>
+      <hr>
+      <br>
+      <el-form label-position="top">
+        <el-form-item label="Nome da equipe">
+          <el-input v-model="teamName">
+            <el-button slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <br>
+      <hr>
+      <br>
+      <div class="profile-view__team">
+        <h3>
+          Equipe
+          <a href="#" @click.prevent="dialogInvite = true">
+            <jus-icon icon="add" />
+          </a>
+        </h3>
+        <div v-for="member in teamMembers" :key="member.id">
+          <div class="profile-view__members-list">
+            <div class="member">
+              <strong>{{ member.person.name }}: </strong>
+              <span> {{ $t('profile.' + member.profile) }}</span>
+            </div>
+            <div class="actions">
+              <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
+              <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <el-dialog
+        v-if="currentEditMember.person"
+        :title="currentEditMember.person.name"
+        :visible.sync="dialogMember"
+        width="400px">
+        <el-form label-position="top">
+          <el-form-item label="Perfil">
+            <el-select v-model="currentEditMember.profile">
+              <el-option
+                v-for="role in roles"
+                :key="role.key"
+                :label="role.value"
+                :value="role.key" />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogMember = false">Cancelar</el-button>
+          <el-button type="primary" @click="editMember">Salvar alterações</el-button>
+        </span>
+      </el-dialog>
       <el-dialog
         :visible.sync="dialogPassword"
         :before-close="cancelChangePassword"
         title="Alterar senha"
         width="30%">
-        <el-form>
+        <el-form label-position="top">
           <el-form-item label="Nova senha">
             <el-input v-model="profileForm.newPassword" type="password" disabled />
           </el-form-item>
@@ -80,22 +144,34 @@
           </el-button>
         </span>
       </el-dialog>
-    </template>
-    <template slot="right-card">
-      <jus-whatsapp />
-      <br>
-      <hr>
-      <br>
-      <el-form label-position="top">
-        <el-form-item label="Nome da equipe">
-          <el-input v-model="teamName" />
-        </el-form-item>
-      </el-form>
-      <br>
-      <hr>
-      <br>
-      <h3>Equipe</h3>
-
+      <el-dialog
+        :visible.sync="dialogInvite"
+        class="profile-view__invite-dialog"
+        title="Convide pessoas à sua equipe"
+        width="600px">
+        <el-form
+          ref="inviteForm"
+          :model="inviteForm"
+          :rules="inviteFormRules"
+          label-position="top"
+          @submit.native.prevent="inviteTeammate">
+          <el-form-item label="Email" prop="email">
+            <el-input v-model="inviteForm.email" />
+          </el-form-item>
+          <el-form-item label="Perfil" prop="profile">
+            <el-select v-model="inviteForm.profile">
+              <el-option
+                v-for="role in roles"
+                :key="role.key"
+                :label="role.value"
+                :value="role.key" />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" native-type="submit">Convidar</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </template>
   </jus-view-main>
 </template>
@@ -111,6 +187,9 @@ export default {
   data () {
     return {
       dialogPassword: false,
+      dialogMember: false,
+      dialogInvite: false,
+      roles: [{ key: 'NEGOTIATOR', value: 'Negociador' }, { key: 'ADMINISTRATOR', value: 'Administrador' }],
       profileForm: {
         newPassword: '',
         password: ''
@@ -128,19 +207,40 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'change' }
         ]
       },
+      inviteForm: {
+        email: '',
+        profile: 'NEGOTIATOR'
+      },
+      inviteFormRules: {
+        email: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+        ]
+      },
       syncedEmails: [],
       person: {},
-      teamName: ''
+      teamName: '',
+      teamMembers: [],
+      currentEditMember: {}
     }
   },
   beforeMount () {
     this.getSyncedEmails()
   },
   mounted () {
+    this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.state.personModule.person))
     this.teamName = this.$store.state.workspaceModule.name + ''
+    this.$store.dispatch('whatsappStart').then(() => {
+      this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
+    })
   },
   methods: {
+    getMembers () {
+      this.$store.dispatch('getWorkspaceMembers').then(response => {
+        this.teamMembers = response
+      })
+    },
     getSyncedEmails () {
       this.$store.dispatch('getInbox').then(response => {
         this.syncedEmails = response.content
@@ -212,13 +312,22 @@ export default {
           message: 'Senha alterada com sucesso.',
           type: 'success'
         })
+        this.dialogPassword = false
       }).catch(error => {
         console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+        if (error.response.status === 401) {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Senha atual incorreta',
+            type: 'warning'
+          })
+        } else {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
+        }
       })
     },
     removeEmail (id) {
@@ -275,6 +384,91 @@ export default {
           return false
         }
       })
+    },
+    removeMember (id, name) {
+      this.$confirm('Tem certeza que deseja remover ' + name + ' da equipe?', 'Atenção!', {
+        confirmButtonText: 'Remover',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('removeWorkspaceMember', id).then(() => {
+          this.getMembers()
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Usuário removido com sucesso.',
+            type: 'success'
+          })
+        })
+      })
+    },
+    showEditMember (member) {
+      this.currentEditMember = JSON.parse(JSON.stringify(member))
+      this.dialogMember = true
+    },
+    editMember () {
+      delete this.currentEditMember.person
+      this.$store.dispatch('editWorkspaceMember', this.currentEditMember).then(() => {
+        this.getMembers()
+        this.dialogMember = false
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Usuário editado com sucesso.',
+          type: 'success'
+        })
+      }).catch(error => {
+        console.error(error)
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      })
+    },
+    changeWorkspaceName () {
+      if (this.teamName) {
+        this.$store.dispatch('editWorkpace', { name: this.teamName }).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Nome da equipe editada com sucesso.',
+            type: 'success'
+          })
+        })
+      } else {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Nome não pode ficar em branco.',
+          type: 'warning'
+        })
+      }
+    },
+    inviteTeammate () {
+      this.$refs['inviteForm'].validate((valid) => {
+        if (valid) {
+          this.$store.dispatch('inviteTeammates', [{
+            email: this.inviteForm.email,
+            profile: 'NEGOTIATOR'
+          }]).then(response => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Convite enviado com sucesso.',
+              type: 'success'
+            })
+            this.dialogInvite = false
+            this.inviteForm.email = ''
+            this.inviteForm.profile = 'NEGOTIATOR'
+            this.getMembers()
+          }).catch(error => {
+            console.error(error)
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+              type: 'error'
+            })
+          })
+        } else {
+          return false
+        }
+      })
     }
   }
 }
@@ -282,6 +476,13 @@ export default {
 
 <style lang="scss">
 .profile-view {
+  &__invite-dialog {
+    .el-button {
+      float: right;
+      margin-top: 10px;
+      margin-bottom: 40px;
+    }
+  }
   &__sync-form {
     .el-button {
       width: 100%;
@@ -301,8 +502,27 @@ export default {
       background-color: #eeeeee;
     }
   }
+  &__team {
+    h3 a {
+      float: right;
+    }
+  }
+  &__members-list {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    a + a {
+      margin-left: 10px;
+    }
+    .member {
+      span {
+        text-transform: capitalize;
+      }
+    }
+  }
   .el-card__body {
     position: relative;
+    height: fit-content;
   }
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
@@ -326,6 +546,11 @@ export default {
     width: 120px;
     height: 120px;
     display: block;
+  }
+  .el-dialog {
+    .el-select {
+      width: 100%;
+    }
   }
 }
 </style>

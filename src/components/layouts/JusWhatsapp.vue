@@ -40,7 +40,7 @@
               native-type="submit">
               Testar
             </el-button>
-            <el-button @click="restart" plain>Alterar número</el-button>
+            <el-button plain @click="restart">Alterar número</el-button>
           </div>
         </el-form>
       </div>
@@ -89,7 +89,7 @@ export default {
       return this.$store.getters.isWhatsappStarting
     },
     isWhatsappConnected () {
-      return true//this.$store.getters.isWhatsappConnected
+      return this.$store.getters.isWhatsappConnected
     },
     validNumber () {
       if (this.rawNumber.length > 9) {

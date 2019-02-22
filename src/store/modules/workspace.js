@@ -73,6 +73,18 @@ const workspaceModule = {
           })
       })
     },
+    editWorkpace ({ commit }, nameOjb) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('/workspaces', nameOjb)
+          .then(response => {
+            commit('updateWorkspace', response.data)
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
     inviteTeammates ({ commit, state }, teammates) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -161,6 +173,49 @@ const workspaceModule = {
                 commit('addWorkspaceNegotiator', response2)
               })
             }
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    getWorkspaceMembers ({ commit, dispatch }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('/workspaces/members')
+          .then(response => {
+            var promises = []
+            for (let member of response.data.content) {
+              promises.push(dispatch('getPerson', member.personId))
+            }
+            Promise.all(promises).then(responses => {
+              for (var i = 0; i < response.data.content.length; i++) {
+                response.data.content[i].person = responses[i]
+              }
+              resolve(response.data.content)
+            })
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    removeWorkspaceMember ({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.delete('/workspaces/members/' + id)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    editWorkspaceMember ({ commit }, member) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('/workspaces/members/', member)
+          .then(response => {
+            resolve(response.data)
           }).catch(error => {
             reject(error)
           })

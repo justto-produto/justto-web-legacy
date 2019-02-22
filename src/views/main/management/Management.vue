@@ -2,7 +2,7 @@
   <JusViewMain class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <div class="view-management__carousel-container">
+      <!-- <div class="view-management__carousel-container">
         <owl-carousel
           :items="2"
           :nav="true"
@@ -20,25 +20,25 @@
             Você possui casos que precisam da sua revisão
             <el-button type="transparent" @click="$router.push('management/review')">Resolver</el-button>
           </el-card>
-          <!-- <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
+          <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
             Você possui casos que precisam da sua revisão
             <el-button type="transparent">Resolver</el-button>
-          </el-card> -->
+          </el-card>
         </owl-carousel>
-      </div>
+      </div> -->
     </template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         Casos selecionados: {{ selectedIds.length }}
         <div>
+          <el-button plain @click="sendBatchAction('ACCEPTED')">Ganhar</el-button>
+          <el-button plain @click="sendBatchAction('REFUSED')">Perder</el-button>
           <el-button plain @click="sendBatchAction('PAUSED')">Parar</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Reiniciar</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Ganhar</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Perder</el-button>
-          <!-- <el-button plain @click="sendBatchAction('PAUSED')">Alterar responsável</el-button> -->
-          <el-button plain @click="sendBatchAction('PAUSED')">Excluir</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Reiniciar engajamento</el-button>
-          <!-- <el-button plain @click="sendBatchAction('PAUSED')">Alterar campanha</el-button> -->
+          <el-button plain @click="sendBatchAction('RESUME')">Reiniciar</el-button>
+          <el-button plain @click="sendBatchAction('DELETE')">Excluir</el-button>
+          <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">Reiniciar engajamento</el-button>
+          <!-- <el-button plain @click="sendBatchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
+          <!-- <el-button plain @click="sendBatchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
         </div>
         <i class="el-icon-close" @click="clearSelection()"/>
       </div>
@@ -582,7 +582,7 @@ export default {
       this.getCases()
     },
     sendBatchAction (action) {
-      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção', {
+      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção!', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         type: 'warning'
@@ -592,7 +592,7 @@ export default {
         }).then(response => {
           this.$jusNotification({
             title: 'Yay!',
-            message: 'Ação realizada com sucesso.',
+            message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
             type: 'success'
           })
         })
@@ -718,9 +718,9 @@ export default {
     display: flex;
   }
   > div:first-child {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    // display: flex;
+    // align-items: center;
+    // justify-content: space-between;
   }
   .el-tabs__active-bar {
     width: 97px;

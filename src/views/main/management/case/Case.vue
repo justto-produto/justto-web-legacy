@@ -24,7 +24,7 @@
               <jus-icon icon="search2" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="move-case">
+          <!-- <el-tooltip content="move-case">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="move-case" />
             </el-button>
@@ -33,45 +33,51 @@
             <el-button plain @click="doAction('move')">
               <jus-icon icon="delegate" />
             </el-button>
-          </el-tooltip>
-          <el-tooltip content="lose">
-            <el-button plain @click="doAction('move')">
+          </el-tooltip> -->
+          <el-tooltip content="Perder">
+            <el-button plain @click="doAction('refused')">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="win">
-            <el-button plain @click="doAction('move')">
+          <el-tooltip content="Ganhar">
+            <el-button plain @click="doAction('accepted')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="pause">
-            <el-button plain @click="doAction('move')">
+          <el-tooltip content="Pausar">
+            <el-button plain @click="doAction('paused')">
               <jus-icon icon="pause" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="start-again">
-            <el-button plain @click="doAction('move')">
+          <el-tooltip content="Retomar">
+            <el-button plain @click="doAction('resume')">
               <jus-icon icon="start-again" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="snooze">
+          <!-- <el-tooltip content="snooze">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="snooze" />
             </el-button>
-          </el-tooltip>
-          <el-tooltip content="star">
+          </el-tooltip> -->
+          <!-- <el-tooltip content="star">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="star" />
             </el-button>
-          </el-tooltip>
+          </el-tooltip> -->
           <div :class="{isVisible: showSearch}" class="case-view__search">
             <el-input v-model="searchTerm" autofocus>
               <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
             </el-input>
           </div>
         </div>
-        <case-messages :messages="filteredDisputeMessages" :loading="loadingDisputeMessages" />
+        <case-messages
+          :messages="filteredDisputeMessages"
+          :loading="loadingDisputeMessages"
+          :show-scheduled="showScheduled" />
         <div class="case-view__send-message">
+          <el-checkbox v-model="showScheduled" class="case-view__show-scheduled">
+            Exibir mensagens agendadas
+          </el-checkbox>
           <el-tabs value="1">
             <el-tab-pane label="Mensagem" name="1">
               <el-card shadow="always" class="case-view__send-message-box">
@@ -131,7 +137,7 @@
     <template slot="right-card" class="teste">
       <div class="case-view__section-title">
         <h2>Dados do caso</h2>
-        <el-button plain>Exportar caso</el-button>
+        <!-- <el-button plain>Exportar caso</el-button> -->
       </div>
       <case-overview
         :loading="loadingDispute"
@@ -161,7 +167,17 @@ export default {
       searchTerm: '',
       messageType: 'email',
       newMessage: '',
-      newNote: ''
+      newNote: '',
+      showScheduled: false
+    }
+  },
+  computed: {
+    claimantsIds () {
+      if (this.dispute.disputeRoles) {
+        return this.dispute.disputeRoles.filter(role => {
+          return role.party === 'CLAIMANT'
+        }).map(role => role.person.id)
+      } return null
     }
   },
   watch: {
@@ -188,7 +204,11 @@ export default {
         this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
           this.dispute = responses
           this.loadingDispute = false
-        }).catch(error => this.showError(error))
+        }).catch(error => {
+          if (error.response.status === 404) {
+            this.$router.push('/management')
+          } else this.showError(error)
+        })
       }
       this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
         this.disputeMessages = responses
@@ -223,11 +243,15 @@ export default {
       this.messageType = type
     },
     doAction (action) {
-      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção', {
+      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção!', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         type: 'warning'
       }).then(() => {
+        this.$store.dispatch('sendDisputeAction', {
+          action: action,
+          disputeId: this.dispute.id
+        })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação realizada com sucesso.',
@@ -238,7 +262,7 @@ export default {
     sendMessage () {
       if (this.newMessage) {
         this.$store.dispatch('send' + this.messageType, {
-          to: [99],
+          to: this.claimantsIds,
           message: this.newMessage,
           disputeId: this.dispute.id
         }).then(() => {
@@ -327,6 +351,7 @@ export default {
     }
   }
   &__send-message {
+    position: relative;
     border-top: 1px solid #eeeeee;
     .el-tabs__header {
       width: fit-content;
@@ -339,6 +364,12 @@ export default {
     .el-tabs__nav-wrap::after {
       background-color: transparent;
     }
+  }
+  &__show-scheduled {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 1;
   }
   &__send-message-box {
     margin: 20px;
