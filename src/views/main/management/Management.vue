@@ -24,8 +24,8 @@
             Você possui casos que precisam da sua revisão
             <el-button type="transparent">Resolver</el-button>
           </el-card>
-        </owl-carousel> -->
-      </div>
+        </owl-carousel>
+      </div> -->
     </template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
@@ -592,7 +592,7 @@ export default {
         }).then(response => {
           this.$jusNotification({
             title: 'Yay!',
-            message: 'Ação '+ this.$t('action.'+action) +' realizada com sucesso.',
+            message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
             type: 'success'
           })
         })

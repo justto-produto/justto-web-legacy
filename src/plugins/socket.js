@@ -29,8 +29,3 @@ const VueStompJs = {
 }
 
 Vue.use(VueStompJs, { brokerURL: 'wss://justto.app/workspace/websocket' })
-
-// let hostname = window.location.hostname
-// let protocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
-// Vue.use(VueStompJs, { brokerURL: 'ws://homol.justto.com.br/workspace/websocket' })
-// Vue.use(VueStompJs, { brokerURL: protocol + hostname + '/workspace/websocket' })
