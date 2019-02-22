@@ -44,6 +44,10 @@
       </div>
       <div class="view-management__actions">
         <el-button
+          icon="el-icon-refresh"
+          plain
+          @click="refresh"/>
+        <el-button
           :plain="!Object.keys(filters).length"
           :type="Object.keys(filters).length ? 'primary' : ''"
           @click="showFilters = true">
@@ -164,7 +168,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <template slot="empty">
+            <template v-if="!$store.state.loading" slot="empty">
               <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
               <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
             </template>
@@ -267,7 +271,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <template slot="empty">
+            <template v-if="!$store.state.loading" slot="empty">
               <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
               <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
             </template>
@@ -362,7 +366,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <template slot="empty">
+            <template v-if="!$store.state.loading" slot="empty">
               <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
               <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
             </template>
@@ -441,7 +445,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <template slot="empty">
+            <template v-if="!$store.state.loading" slot="empty">
               <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
               <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
             </template>
@@ -503,7 +507,7 @@ export default {
       })
     },
     buildQuery () {
-      let query = { query: { bool: { must: [] } }, from: 0, size : 3000 }
+      let query = { query: { bool: { must: [] } }, from: 0, size: 3000 }
       query.query.bool.must.push(
         { match: { workspaceid: this.$store.state.workspaceModule.id } }
       )
@@ -597,6 +601,9 @@ export default {
           })
         })
       })
+    },
+    refresh () {
+      this.getCases()
     }
   }
 }

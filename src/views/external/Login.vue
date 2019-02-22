@@ -120,7 +120,7 @@ export default {
             .then(() => {
               Promise.all([
                 this.$store.dispatch('myAccount'),
-                this.$store.dispatch('myWorkspace'),
+                this.$store.dispatch('myWorkspace')
               ]).then(() => {
                 this.$router.push('/')
                 this.$store.dispatch('myPerson')
