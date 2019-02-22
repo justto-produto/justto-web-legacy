@@ -2,7 +2,6 @@
   <el-header class="jus-header-main">
     <div class="jus-header-main__search">
       <jus-icon icon="search" class="el-menu__icon-search"/>
-      <!-- <input type="text" placeholder="Busque aqui os seus casos"> -->
       <el-autocomplete
         v-model="disputeId"
         :trigger-on-focus="false"

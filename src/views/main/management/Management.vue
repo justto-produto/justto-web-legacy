@@ -503,7 +503,7 @@ export default {
       })
     },
     buildQuery () {
-      let query = { query: { bool: { must: [] } } }
+      let query = { query: { bool: { must: [] } }, from: 0, size : 3000 }
       query.query.bool.must.push(
         { match: { workspaceid: this.$store.state.workspaceModule.id } }
       )
