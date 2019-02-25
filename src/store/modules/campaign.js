@@ -11,7 +11,7 @@ const campaign = {
     getCampaigns ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('campaigns')
+        axios.get('api/campaigns')
           .then(response => {
             commit('setCampaign', response.data.content)
             resolve(response)
@@ -28,7 +28,7 @@ const campaign = {
           .then(response => {
             if (campaign.importId) {
               // eslint-disable-next-line
-              axios.post('genese/' + campaign.importId + '/start')
+              axios.post('api/genese/' + campaign.importId + '/start')
             }
             resolve(response)
           })

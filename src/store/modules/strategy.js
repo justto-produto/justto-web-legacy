@@ -11,7 +11,7 @@ const strategy = {
     getStrategies ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('strategies/list')
+        axios.get('api/strategies/list')
           .then(response => {
             commit('setStrategies', response.data)
             resolve(response.data)
@@ -24,7 +24,7 @@ const strategy = {
     getStrategyEngagement ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('strategies/' + id + '/engagement')
+        axios.get('api/strategies/' + id + '/engagement')
           .then(response => {
             resolve(response.data)
           })

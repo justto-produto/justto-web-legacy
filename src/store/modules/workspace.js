@@ -40,7 +40,7 @@ const workspaceModule = {
     myWorkspace ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/workspaces/my')
+        axios.get('api/workspaces/my')
           .then(response => {
             commit('updateWorkspace', response.data[0])
             resolve(response.data)
@@ -53,7 +53,7 @@ const workspaceModule = {
     verifyAvailability ({ commit }, subdomain) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces/sub-domain-availability', {subDomain: subdomain})
+        axios.put('api/workspaces/sub-domain-availability', {subDomain: subdomain})
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -64,7 +64,7 @@ const workspaceModule = {
     createWorkpace ({ commit }, object) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces', object)
+        axios.post('api/workspaces', object)
           .then(response => {
             commit('updateWorkspace', response.data)
             resolve(response.data)
@@ -76,7 +76,7 @@ const workspaceModule = {
     editWorkpace ({ commit }, nameOjb) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces', nameOjb)
+        axios.put('api/workspaces', nameOjb)
           .then(response => {
             commit('updateWorkspace', response.data)
             resolve(response.data)
@@ -88,7 +88,7 @@ const workspaceModule = {
     inviteTeammates ({ commit, state }, teammates) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces/invite-teammates/' + state.subdomain, teammates)
+        axios.post('api/workspaces/invite-teammates/' + state.subdomain, teammates)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -99,7 +99,7 @@ const workspaceModule = {
     readyWorkspace ({ commit }, workspace) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces/ready/' + workspace)
+        axios.put('api/workspaces/ready/' + workspace)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -110,7 +110,7 @@ const workspaceModule = {
     whatsappCreate ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces/whatsapp/create/' + state.subdomain)
+        axios.put('api/workspaces/whatsapp/create/' + state.subdomain)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -121,7 +121,7 @@ const workspaceModule = {
     whatsappSend ({ commit, state }, object) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces/whatsapp/send/' + state.subdomain, object)
+        axios.post('api/workspaces/whatsapp/send/' + state.subdomain, object)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -132,7 +132,7 @@ const workspaceModule = {
     whatsappStart ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces/whatsapp/start/' + state.subdomain)
+        axios.put('api/workspaces/whatsapp/start/' + state.subdomain)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -143,7 +143,7 @@ const workspaceModule = {
     whatsappStatus ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/workspaces/whatsapp/status/' + state.subdomain)
+        axios.get('api/workspaces/whatsapp/status/' + state.subdomain)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -154,7 +154,7 @@ const workspaceModule = {
     whatsappStop ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces/whatsapp/stop/' + state.subdomain)
+        axios.put('api/workspaces/whatsapp/stop/' + state.subdomain)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -165,7 +165,7 @@ const workspaceModule = {
     getWorkspaceNegotiators ({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/workspaces/negotiators', {data: {}})
+        axios.get('api/workspaces/negotiators', {data: {}})
           .then(response => {
             commit('clearWorkspaceNegotiators')
             for (let id of response.data) {
@@ -182,7 +182,7 @@ const workspaceModule = {
     getWorkspaceMembers ({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/workspaces/members')
+        axios.get('api/workspaces/members')
           .then(response => {
             var promises = []
             for (let member of response.data.content) {
@@ -202,7 +202,7 @@ const workspaceModule = {
     removeWorkspaceMember ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.delete('/workspaces/members/' + id)
+        axios.delete('api/workspaces/members/' + id)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -213,7 +213,7 @@ const workspaceModule = {
     editWorkspaceMember ({ commit }, member) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/workspaces/members/', member)
+        axios.put('api/workspaces/members/', member)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -224,7 +224,7 @@ const workspaceModule = {
     syncInbox ({ commit }, object) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/workspaces/inboxes', object)
+        axios.post('api/workspaces/inboxes', object)
           .then(response => {
             resolve(response)
           }).catch(error => {
@@ -235,7 +235,7 @@ const workspaceModule = {
     getInbox ({ commit }, object) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/workspaces/inboxes')
+        axios.get('api/workspaces/inboxes')
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -246,7 +246,7 @@ const workspaceModule = {
     removeInbox ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.delete('/workspaces/inboxes/' + id)
+        axios.delete('api/workspaces/inboxes/' + id)
           .then(response => {
             resolve(response)
           }).catch(error => {

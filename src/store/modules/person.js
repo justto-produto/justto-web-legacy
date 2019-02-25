@@ -11,7 +11,7 @@ const personModule = {
     getPerson ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/persons/' + id)
+        axios.get('api/persons/' + id)
           .then(response => {
             resolve(response.data)
           })
@@ -23,7 +23,7 @@ const personModule = {
     myPerson ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/persons/my')
+        axios.get('api/persons/my')
           .then(response => {
             commit('setPerson', response.data)
             resolve(response.data)
@@ -36,7 +36,7 @@ const personModule = {
     addOab ({ commit }, oamForm) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/persons/my/oabs', { number: oamForm.oab, state: oamForm.state })
+        axios.post('api/persons/my/oabs', { number: oamForm.oab, state: oamForm.state })
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -47,7 +47,7 @@ const personModule = {
     setPerson ({ commit }, person) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/persons', person)
+        axios.put('api/persons', person)
           .then(response => {
             commit('setPerson', response.data)
             resolve(response.data)

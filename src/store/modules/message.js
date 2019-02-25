@@ -7,7 +7,7 @@ const message = {
     sendwhatsapp ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/messages/send/whatsapp', body)
+        axios.post('api/messages/send/whatsapp', body)
           .then(response => {
             resolve(response.data)
           })
@@ -19,7 +19,7 @@ const message = {
     sendemail ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/messages/send/email', body)
+        axios.post('api/messages/send/email', body)
           .then(response => {
             resolve(response.data)
           })
@@ -31,7 +31,7 @@ const message = {
     sendcna ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/messages/send/cna', body)
+        axios.post('api/messages/send/cna', body)
           .then(response => {
             resolve(response.data)
           })

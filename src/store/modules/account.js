@@ -33,7 +33,7 @@ const account = {
     myAccount ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('/accounts/my')
+        axios.get('api/accounts/my')
           .then(response => {
             resolve(response)
             commit('setUser', response.data)
@@ -46,7 +46,7 @@ const account = {
     register ({ commit }, loginForm) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/accounts/register', loginForm)
+        axios.post('api/accounts/register', loginForm)
           .then(response => {
             resolve(response)
           }).catch(error => {
@@ -57,7 +57,7 @@ const account = {
     activate ({ commit }, token) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/accounts/activate/' + token)
+        axios.put('api/accounts/activate/' + token)
           .then(response => {
             resolve(response)
           })
@@ -74,7 +74,7 @@ const account = {
       return new Promise((resolve, reject) => {
         commit('authRequest')
         // eslint-disable-next-line
-        axios.post('/accounts/token', credentials)
+        axios.post('api/accounts/token', credentials)
           .then(response => {
             const token = response.data.token
             // eslint-disable-next-line
@@ -106,7 +106,7 @@ const account = {
     forgotPassword ({ commit }, email) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/accounts/reset-password?email=' + email)
+        axios.put('api/accounts/reset-password?email=' + email)
           .then(response => {
             resolve(response)
           })
@@ -118,7 +118,7 @@ const account = {
     resetPassword ({ commit }, data) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('/accounts/new-password/' + data.token, { password: data.password })
+        axios.put('api/accounts/new-password/' + data.token, { password: data.password })
           .then(response => {
             resolve(response)
           })
@@ -130,7 +130,7 @@ const account = {
     updatePassword ({ commit }, form) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('/accounts/my/update-password', form)
+        axios.post('api/accounts/my/update-password', form)
           .then(response => {
             resolve(response)
           })

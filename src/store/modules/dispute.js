@@ -7,7 +7,7 @@ const dispute = {
     getDispute ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('disputes/' + id + '/overview')
+        axios.get('api/disputes/' + id + '/overview')
           .then(response => {
             resolve(response.data)
           })
@@ -19,7 +19,7 @@ const dispute = {
     getDisputes ({ commit }, query) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('https://justto.app/disputes/_search', query)
+        axios.post('disputes/_search', query)
           .then(response => {
             resolve(response.data)
           })
@@ -31,7 +31,7 @@ const dispute = {
     getDisputeMessages ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('disputes/' + id + '/messages')
+        axios.get('api/disputes/' + id + '/messages')
           .then(response => {
             resolve(response.data)
           })
@@ -43,7 +43,7 @@ const dispute = {
     sendBatchAction ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('disputes/batch', body)
+        axios.put('api/disputes/batch', body)
           .then(response => {
             resolve(response.data)
           })
@@ -55,7 +55,7 @@ const dispute = {
     sendDisputeNote ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('disputes/' + body.disputeId + '/note', body)
+        axios.post('api/disputes/' + body.disputeId + '/note', body)
           .then(response => {
             resolve(response.data)
           })
@@ -67,7 +67,7 @@ const dispute = {
     sendDisputeAction ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('disputes/' + body.disputeId + '/' + body.action)
+        axios.put('api/disputes/' + body.disputeId + '/' + body.action)
           .then(response => {
             resolve(response.data)
           })
