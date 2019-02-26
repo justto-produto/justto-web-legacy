@@ -2,8 +2,8 @@
   "message": "Oláaa",
   "test": "teste",
   "dispute": {
-    "code": "código",
-    "expirationDate": "Data de expiração",
+    "code": "Nº do Processo",
+    "expirationDate": "Fim da Negociação",
     "description": "descrição"
   },
   "disputeClassification": {
@@ -13,10 +13,10 @@
     "name": "subclassificação"
   },
   "disputeOrg": {
-    "name": "nome da organização",
+    "name": "Comarca / Subseção",
     "state": "estado",
     "city": "cidade",
-    "enum": "organização"
+    "enum": "Órgão (TJ, Procon etc.)"
   },
   "disputeObjectAttribute": {
     "value": "valor da ação"
@@ -52,7 +52,11 @@
       "IMPORTED": "importado",
       "ACCEPTED": "aceito",
       "PAUSED": "pausado",
-      "ENRICHED": "enriquecido"
+      "ENRICHED": "enriquecido",
+      "CHECKOUT": "fechamento",
+      "REFUSED": "recusado",
+      "RUNNING": "engajamento",
+      "ARCHIVED": "arquivado"
     }
   },
   "profile": {
