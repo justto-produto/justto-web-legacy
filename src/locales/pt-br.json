@@ -1,9 +1,9 @@
 {
-  "message": "Oláaa",
+  "message": "oláaa",
   "test": "teste",
   "dispute": {
-    "code": "Nº do Processo",
-    "expirationDate": "Fim da Negociação",
+    "code": "nº do processo",
+    "expirationDate": "fim da negociação",
     "description": "descrição"
   },
   "disputeClassification": {
@@ -13,10 +13,10 @@
     "name": "subclassificação"
   },
   "disputeOrg": {
-    "name": "Comarca / Subseção",
+    "name": "comarca / subseção",
     "state": "estado",
     "city": "cidade",
-    "enum": "Órgão (TJ, Procon etc.)"
+    "enum": "órgão (tj, procon etc.)"
   },
   "disputeObjectAttribute": {
     "value": "valor da ação"
