@@ -123,7 +123,7 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <!-- ESTADO -->
+        <!-- ESTADO 
         <el-col :span="12">
           <el-form-item label="Estado">
             <el-select
@@ -134,7 +134,7 @@
               <el-option v-for="state in $store.state.statesList" :key="state" :value="state"/>
             </el-select>
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <!-- VALOR INICIAL DO ACORDO -->
         <el-col v-if="isNewAgreements" :span="12">
           <el-form-item label="Valor inicial do acordo">
