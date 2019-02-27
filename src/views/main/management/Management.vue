@@ -494,7 +494,7 @@ export default {
   },
   computed: {
     multiActive () {
-      return this.selectedIds.length > 1
+      return this.selectedIds.length >= 1
     }
   },
   methods: {
