@@ -59,11 +59,11 @@
               <jus-icon icon="snooze" />
             </el-button>
           </el-tooltip> -->
-          <!-- <el-tooltip content="star">
-            <el-button plain @click="doAction('move')">
+          <el-tooltip content="star">
+            <el-button plain @click="doAction(dispute.favorite ? 'favorite' : 'disfavor')">
               <jus-icon icon="star" />
             </el-button>
-          </el-tooltip> -->
+          </el-tooltip>
           <div :class="{isVisible: showSearch}" class="case-view__search">
             <el-input v-model="searchTerm" autofocus>
               <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
