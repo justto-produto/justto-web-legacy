@@ -7,8 +7,8 @@ if (AUTH_TOKEN) {
   axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
 }
 let config = {
-  // baseURL: process.env.baseURL || process.env.apiUrl || '/',
-  baseURL: process.env.baseURL || process.env.apiUrl || 'http://homol.justto.com.br/',
+  baseURL: process.env.baseURL || process.env.apiUrl || '/',
+  // baseURL: process.env.baseURL || process.env.apiUrl || 'http://homol.justto.com.br/',
   timeout: 60 * 100000,
   headers: {
   }
