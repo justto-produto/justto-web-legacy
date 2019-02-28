@@ -9,27 +9,40 @@ const router = new Router({
       path: '/',
       component: () => import(/* webpackChunkName: "mainContainer" */ '@/views/main/MainContainer'),
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresTrack: false
       },
       children: [
         {
           name: 'dashboard',
           path: '/',
-          component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard')
+          component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard'),
+          meta: {
+            requiresTrack: true
+          }
         },
         {
           name: 'import',
           path: 'import',
-          component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import/Import')
+          component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import/Import'),
+          meta: {
+            requiresTrack: true
+          }
         },
         {
           path: 'import/new',
-          component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/new/NewImport')
+          component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/new/NewImport'),
+          meta: {
+            requiresTrack: true
+          }
         },
         {
           name: 'management',
           path: '/management',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management')
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
+          meta: {
+            requiresTrack: true
+          }
         },
         {
           path: 'management/case/',
@@ -40,7 +53,10 @@ const router = new Router({
         {
           name: 'case',
           path: 'management/case/:id',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/case/Case')
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/case/Case'),
+          meta: {
+            requiresTrack: true
+          }
         },
         // {
         //   name: 'review',
@@ -50,7 +66,10 @@ const router = new Router({
         {
           name: 'profile',
           path: 'profile',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/profile/Profile')
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/profile/Profile'),
+          meta: {
+            requiresTrack: true
+          }
         }
       ]
     },
@@ -86,35 +105,51 @@ const router = new Router({
     {
       name: 'login',
       path: '/login',
-      component: () => import(/* webpackChunkName: "externalIndex" */ '@/views/external/Login')
+      component: () => import(/* webpackChunkName: "externalIndex" */ '@/views/external/Login'),
+      meta: {
+        requiresTrack: true
+      }
     },
     {
       name: 'register',
       path: '/register',
-      component: () => import(/* webpackChunkName: "register" */ '@/views/external/Register')
+      component: () => import(/* webpackChunkName: "register" */ '@/views/external/Register'),
+      meta: {
+        requiresTrack: true
+      }
     },
     {
       name: 'forgot-password',
       path: '/forgot-password',
-      component: () => import(/* webpackChunkName: "forgotPassword" */ '@/views/external/ForgotPassword')
+      component: () => import(/* webpackChunkName: "forgotPassword" */ '@/views/external/ForgotPassword'),
+      meta: {
+        requiresTrack: true
+      }
     },
     {
       name: 'new-password',
       path: '/new-password',
-      component: () => import(/* webpackChunkName: "newPassword" */ '@/views/external/NewPassword')
+      component: () => import(/* webpackChunkName: "newPassword" */ '@/views/external/NewPassword'),
+      meta: {
+        requiresTrack: true
+      }
     },
     {
       name: 'onboarding',
       path: '/onboarding',
       component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/Onboarding'),
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresTrack: true
       }
     },
     {
       name: 'error',
       path: '/error',
-      component: () => import(/* webpackChunkName: "jusError" */ '@/components/layouts/JusError')
+      component: () => import(/* webpackChunkName: "jusError" */ '@/components/layouts/JusError'),
+      meta: {
+        requiresTrack: false
+      }
     },
     {
       path: '*',
@@ -141,6 +176,9 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
+  if (to.matched.some(record => record.meta.requiresTrack)) {
+    window.analytics.page(to.name)
+  }
   if (to.name === 'onboarding' || to.name === 'login' || to.name === 'register' || to.name === 'forgot-password') {
     document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width,initial-scale=1.0')
   } else {

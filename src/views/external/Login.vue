@@ -124,6 +124,7 @@ export default {
               ]).then(() => {
                 this.$router.push('/')
                 this.$store.dispatch('myPerson')
+                window.analytics.identify(this.loginForm.email)
               }).catch(error => {
                 console.error(error)
                 this.errorMessage = `Houve uma falha de conexão com o servidor.

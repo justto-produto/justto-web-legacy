@@ -123,7 +123,7 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <!-- ESTADO 
+        <!-- ESTADO
         <el-col :span="12">
           <el-form-item label="Estado">
             <el-select

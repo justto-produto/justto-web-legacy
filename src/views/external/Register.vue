@@ -108,6 +108,10 @@ export default {
           self.showLoading = true
           this.$store.dispatch('register', this.registerForm)
             .then(() => {
+              window.analytics.identify(this.registerForm.email, {
+                name: this.registerForm.name,
+                email: this.registerForm.email
+              })
               self.showSuccess = true
               self.registerForm.name = ''
               self.registerForm.email = ''
