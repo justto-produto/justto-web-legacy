@@ -20,11 +20,11 @@
         </div>
         <div class="case-view__info-line">
           <span>Contraproposta:</span>
-          <span>R$ {{ (dispute.lastOffer ? dispute.lastOffer : '-') }}</span>
+          <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
         </div>
         <div class="case-view__info-line">
           <span>Valor do acordo:</span>
-          <span>R$ {{ (dispute.lastOffer ? dispute.lastOffer : '-') }}</span>
+          <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
         </div>
         <div class="case-view__info-line">
           <span>Valor da causa:</span>

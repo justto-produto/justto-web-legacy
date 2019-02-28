@@ -90,13 +90,13 @@
           class="el-input__icon" />
         <el-option
           v-for="item in negotiatorsList"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id">
+          :key="item.person.id"
+          :label="item.person.name"
+          :value="item.person.id">
           <jus-avatar-user
-            :name="item.name" shape="circle"
+            :name="item.person.name" shape="circle"
             size="xs" style="vertical-align: middle" />
-          <span style="vertical-align: middle;margin-left: 10px;">{{ item.name }}</span>
+          <span style="vertical-align: middle;margin-left: 10px;">{{ item.person.name }}</span>
         </el-option>
       </el-select>
     </el-card>
@@ -169,7 +169,7 @@ export default {
       return this.$store.state.campaignModule.list
     },
     negotiatorsList () {
-      return this.$store.state.workspaceModule.negotiators
+      return this.$store.state.workspaceModule.members
     }
   },
   watch: {

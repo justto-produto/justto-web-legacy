@@ -124,6 +124,7 @@ export default {
               ]).then(() => {
                 this.$router.push('/')
                 this.$store.dispatch('myPerson')
+                this.$store.dispatch('getWorkspaceMembers')
               }).catch(error => {
                 console.error(error)
                 this.errorMessage = `Houve uma falha de conexão com o servidor.

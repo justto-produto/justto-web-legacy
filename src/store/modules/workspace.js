@@ -4,7 +4,7 @@ const workspaceModule = {
     name: '',
     status: '',
     subdomain: '',
-    negotiators: []
+    members: []
   },
   mutations: {
     updateWorkspace (state, response) {
@@ -27,13 +27,10 @@ const workspaceModule = {
       state.name = ''
       state.status = ''
       state.subdomain = ''
-      state.negotiators = []
+      state.members = []
     },
-    addWorkspaceNegotiator (state, response) {
-      state.negotiators.push(response)
-    },
-    clearWorkspaceNegotiators (state) {
-      state.negotiators = []
+    setWorkspaceMembers (state, members) {
+      state.members = members
     }
   },
   actions: {
@@ -162,23 +159,6 @@ const workspaceModule = {
           })
       })
     },
-    getWorkspaceNegotiators ({ commit, dispatch }) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.get('api/workspaces/negotiators', {data: {}})
-          .then(response => {
-            commit('clearWorkspaceNegotiators')
-            for (let id of response.data) {
-              dispatch('getPerson', id).then(response2 => {
-                commit('addWorkspaceNegotiator', response2)
-              })
-            }
-            resolve(response.data)
-          }).catch(error => {
-            reject(error)
-          })
-      })
-    },
     getWorkspaceMembers ({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -193,6 +173,7 @@ const workspaceModule = {
                 response.data.content[i].person = responses[i]
               }
               resolve(response.data.content)
+              commit('setWorkspaceMembers', response.data.content)
             })
           }).catch(error => {
             reject(error)
@@ -261,13 +242,6 @@ const workspaceModule = {
     },
     creatingWorkspace: state => {
       return state.status === 'CREATING'
-    },
-    negotiatorIds: state => {
-      let negotiatorIds = []
-      for (let negotiator of state.negotiators) {
-        negotiatorIds.push(negotiator.id)
-      }
-      return negotiatorIds
     }
   }
 }
