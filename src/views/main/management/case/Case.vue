@@ -59,9 +59,9 @@
               <jus-icon icon="snooze" />
             </el-button>
           </el-tooltip> -->
-          <el-tooltip content="star">
-            <el-button plain @click="doAction(dispute.favorite ? 'favorite' : 'disfavor')">
-              <jus-icon icon="star" />
+          <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+            <el-button plain class="favorite" @click="doAction(isFavorite ? 'disfavor' : 'favorite')">
+              <jus-icon :icon="isFavorite ? 'golden-star' : 'star'" />
             </el-button>
           </el-tooltip>
           <div :class="{isVisible: showSearch}" class="case-view__search">
@@ -178,6 +178,11 @@ export default {
       activePersonId: null
     }
   },
+  computed: {
+    isFavorite () {
+      return this.dispute.favorite
+    }
+  },
   watch: {
     '$route.params.id': function (id) {
       this.fetchData({ fetchDispute: true, fetchMessages: true })
@@ -257,6 +262,10 @@ export default {
           message: 'Ação realizada com sucesso.',
           type: 'success'
         })
+        var self = this
+        setTimeout(function () {
+          self.fetchData({ fetchDispute: true })
+        }, 1000)
       })
     },
     sendMessage () {
@@ -423,13 +432,15 @@ export default {
     }
   }
   &__actions {
-    text-align: center;
     padding: 11px 20px;
     box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
     z-index: 1;
-    button {
+    .el-button {
       border-radius: 5px;
       padding: 11px;
+    }
+    .favorite {
+      float: right;
     }
     img {
       width: 16px;
