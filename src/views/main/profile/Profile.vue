@@ -446,7 +446,8 @@ export default {
         if (valid) {
           this.$store.dispatch('inviteTeammates', [{
             email: this.inviteForm.email,
-            profile: 'NEGOTIATOR'
+            profile: this.inviteForm.profile
+            // profile: 'NEGOTIATOR'
           }]).then(response => {
             this.$jusNotification({
               title: 'Yay!',
