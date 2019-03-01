@@ -197,7 +197,6 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('getWorkspaceNegotiators')
     this.mappedName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
     this.mappedCampaign.protocolDeadLine = this.protocolDeadLine

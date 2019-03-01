@@ -1,5 +1,5 @@
 <template>
-  <div :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass" class="jus-avatar-user">
+  <div :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass + ' ' + activeClass" class="jus-avatar-user">
     <img v-if="avatarSrc" :src="avatarSrc">
     <span v-else>
       {{ nameInitials.toUpperCase() }}
@@ -37,6 +37,10 @@ export default {
     purple: {
       type: Boolean,
       default: false
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -56,6 +60,9 @@ export default {
     purpleClass () {
       return this.purple ? 'jus-avatar-user--purple' : ''
     },
+    activeClass () {
+      return this.active ? 'jus-avatar-user--active' : ''
+    },
     nameInitials () {
       var split = this.name.split(' ')
       split = split.filter(Boolean)
@@ -71,6 +78,7 @@ export default {
 .jus-avatar-user {
   position: relative;
   display: inline-flex;
+
   &.jus-avatar-user--xs {
     font-size: 8px;
     img, span {
@@ -99,11 +107,13 @@ export default {
     }
   }
   &.jus-avatar-user--square {
+    border-radius: 4px;
     img, span {
       border-radius: 4px;
     }
   }
   &.jus-avatar-user--circle {
+    border-radius: 50%;
     img, span {
       border-radius: 50%;
     }
@@ -138,6 +148,10 @@ export default {
     text-align: center;
     top: 12px;
     left: -9px;
+  }
+  &--active {
+    border: 2px solid #9f6cf8;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
   }
 }
 </style>

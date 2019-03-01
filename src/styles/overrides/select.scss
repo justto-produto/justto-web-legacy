@@ -1,7 +1,18 @@
-.el-select .el-tag__close.el-icon-close {
-  // background-color: #adadad;
+.el-select {
+  .el-tag__close.el-icon-close {
+    background-color: #f2f4f6;
+    color: #424242;
+    &:hover {
+      background-color: #adadad;
+      color: #f2f4f6;
+    }
+  }
+  .el-tag--info {
+    color: #424242;
+  }
 }
 
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
   color: #424242 !important;
+  font-weight: 600;
 }

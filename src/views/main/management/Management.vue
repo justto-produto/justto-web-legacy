@@ -46,7 +46,9 @@
         <el-button
           icon="el-icon-refresh"
           plain
-          @click="refresh"/>
+          @click="refresh">
+          Atualizar
+        </el-button>
         <el-button
           :plain="!Object.keys(filters).length"
           :type="Object.keys(filters).length ? 'primary' : ''"
@@ -54,7 +56,7 @@
           <jus-icon :is-white="Object.keys(filters).length !== 0" icon="filter" />
           Filtrar
         </el-button>
-        <el-button plain>
+        <el-button plain icon="el-icon-download">
           Exportar casos
         </el-button>
       </div>
@@ -486,9 +488,9 @@ export default {
     return {
       showFilters: false,
       cases: [],
+      filters: [],
       selectedIds: [],
       activeTab: {},
-      filters: {},
       activeFilters: {}
     }
   },
@@ -502,8 +504,15 @@ export default {
       this.$store.dispatch('showLoading')
       this.cases = []
       this.$store.dispatch('getDisputes', this.buildQuery()).then(response => {
-        this.$store.dispatch('hideLoading')
         this.cases = response.hits.hits
+      }).catch(error => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      }).finally(error => {
+        this.$store.dispatch('hideLoading')
       })
     },
     buildQuery () {
@@ -523,6 +532,9 @@ export default {
         if (this.filters[key]) {
           match[key] = this.filters[key]
           query.query.bool.must.push({ match: match })
+          // if (Array.isArray(match[key])) {
+          //   if (match[key].length) query.query.bool.must.push({ match: match })
+          // } else query.query.bool.must.push({ match: match })
         }
       })
       return query.query.bool.must.length > 0 ? query : null

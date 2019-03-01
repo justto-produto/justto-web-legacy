@@ -38,7 +38,7 @@
         <el-col v-if="isNewAgreements" :span="12">
           <el-form-item label="Data do acordo">
             <el-date-picker
-              v-model="disputedealdate"
+              v-model="filters.disputedealdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd'T'HH:mm:ss"
@@ -49,7 +49,7 @@
         <el-col v-if="isInteration" :span="12">
           <el-form-item label="Última interação">
             <el-date-picker
-              v-model="lastinteractiondate"
+              v-model="filters.lastinteractiondate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd'T'HH:mm:ss"
@@ -60,7 +60,7 @@
         <el-col :span="12">
           <el-form-item v-if="isInteration" label="Meio de interação">
             <el-select
-              v-model="interaction"
+              v-model="filters.interaction"
               placeholder="Selecione uma opção"
               clearable
               @change="setInteraction">
@@ -72,7 +72,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-
         <!-- STATUS -->
         <!-- <el-col v-if="isEngagement" :span="12">
           <el-form-item label="Status" class="jus-management-filters__switch">
@@ -86,41 +85,26 @@
             </el-radio-group>
           </el-form-item>
         </el-col> -->
-
         <!-- FAVORITOS -->
-        <!-- <el-col :span="12">
+        <el-col :span="12">
           <el-form-item label="Ordenar por:" class="jus-management-filters__switch">
             <div>
               <div>
                 <jus-icon icon="golden-star" /> Casos favoritos
               </div>
-              <el-switch v-model="filters.favorites" />
+              <el-switch v-model="filters.favorite" />
             </div>
           </el-form-item>
-        </el-col> -->
-
+        </el-col>
         <!-- FIM DA NEGOCIAÇÃO -->
         <el-col v-if="isEngagement || isInteration || isNewAgreements" :span="12">
           <el-form-item label="Fim da negociação">
             <el-date-picker
-              v-model="disputeexpirationdate"
+              v-model="filters.disputeexpirationdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd'T'HH:mm:ss"
               @change="clearDisputeexpirationdate"/>
-          </el-form-item>
-        </el-col>
-        <!-- STATUS -->
-        <el-col v-if="isAll" :span="24">
-          <el-form-item label="Status">
-            <el-radio-group v-model="filters.disputestatus">
-              <el-radio-button label="Engajamento" value="ENGAGEMENT" />
-              <el-radio-button label="Com interação" value="INTERACTIONS" />
-              <el-radio-button label="Novos acordos" value="ACCEPTED" />
-              <el-radio-button label="Perdidos" value="LOST" />
-              <el-radio-button label="Expirados" value="EXPIRED" />
-              <el-radio-button label="Pausados" value="PAUSED" />
-            </el-radio-group>
           </el-form-item>
         </el-col>
         <!-- ESTADO -->
@@ -153,6 +137,40 @@
             </el-slider>
           </el-form-item>
         </el-col> -->
+        <!-- STATUS -->
+        <el-col v-if="isAll" :span="24">
+          <el-form-item label="Status">
+            <el-radio-group v-model="filters.disputestatus">
+              <el-radio-button label="Engajamento" value="ENGAGEMENT" />
+              <el-radio-button label="Com interação" value="INTERACTIONS" />
+              <el-radio-button label="Novos acordos" value="ACCEPTED" />
+              <el-radio-button label="Perdidos" value="LOST" />
+              <el-radio-button label="Expirados" value="EXPIRED" />
+              <el-radio-button label="Pausados" value="PAUSED" />
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <!-- NEGOCIADORES -->
+        <el-col :span="24">
+          <el-form-item label="Negociadores">
+            <el-select
+              v-model="filters['negotiators.f2']"
+              value-key="name"
+              size="large"
+              placeholder="Escolha os negociadores">
+              <el-option
+                v-for="item in negotiatorsList"
+                :key="item.person.id"
+                :label="item.person.name"
+                :value="item.person.id">
+                <jus-avatar-user
+                  :name="item.person.name" shape="circle"
+                  size="xs" style="vertical-align: middle" />
+                <span style="vertical-align: middle;margin-left: 10px;">{{ item.person.name }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
   </div>
@@ -176,11 +194,6 @@ export default {
   },
   data () {
     return {
-      interaction: '',
-      disputedealdate: '',
-      lastinteractiondate: '',
-      disputeexpirationdate: '',
-      test: '',
       money: {
         decimal: ',',
         thousands: '.',
@@ -219,6 +232,9 @@ export default {
         key: 'hascnainteraction',
         value: 'CNA'
       }]
+    },
+    negotiatorsList () {
+      return this.$store.state.workspaceModule.members
     }
   },
   beforeMount () {
@@ -292,6 +308,10 @@ export default {
         vertical-align: text-top;
       }
     }
+  }
+  &__member {
+    display: inline-block;
+    margin: 10px 10px 0 0;
   }
   .el-radio-button__inner {
     margin: 0 10px 10px 0;
