@@ -146,7 +146,7 @@
             <el-table-column
               label="Ações"
               class-name="view-management__row-actions"
-              width="90px"
+              width="110px"
               align="center">
               <template slot-scope="scope">
                 <el-popover trigger="hover">
@@ -163,8 +163,16 @@
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
+                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                  <el-button
+                    type="text"
+                    class="favorite"
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                  </el-button>
+                </el-tooltip>
                 <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                  <router-link :to="{ name: 'case', params: { id: scope.row._source.disputeid } }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
@@ -249,7 +257,7 @@
             <el-table-column
               label="Ações"
               class-name="view-management__row-actions"
-              width="90px"
+              width="110px"
               align="center">
               <template slot-scope="scope">
                 <el-popover trigger="hover">
@@ -266,6 +274,14 @@
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
+                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                  <el-button
+                    type="text"
+                    class="favorite"
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                  </el-button>
+                </el-tooltip>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
@@ -344,7 +360,7 @@
             <el-table-column
               label="Ações"
               class-name="view-management__row-actions"
-              width="90px"
+              width="110px"
               align="center">
               <template slot-scope="scope">
                 <el-popover trigger="hover">
@@ -361,6 +377,14 @@
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
+                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                  <el-button
+                    type="text"
+                    class="favorite"
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                  </el-button>
+                </el-tooltip>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
@@ -423,7 +447,7 @@
             <el-table-column
               label="Ações"
               class-name="view-management__row-actions"
-              width="90px"
+              width="110px"
               align="center">
               <template slot-scope="scope">
                 <el-popover trigger="hover">
@@ -440,6 +464,14 @@
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
+                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                  <el-button
+                    type="text"
+                    class="favorite"
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                  </el-button>
+                </el-tooltip>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
@@ -629,6 +661,30 @@ export default {
     },
     refresh () {
       this.getCases()
+    },
+    setFavorite (action, id) {
+      let label = action === 'favorite' ? 'favoritado' : 'removido de favoritos'
+      this.$store.dispatch('sendDisputeAction', {
+        action: action,
+        disputeId: id
+      }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Caso ' + label + ' com sucesso.',
+          type: 'success'
+        })
+        var self = this
+        setTimeout(function () {
+          self.getCases()
+        }, 1500)
+      }).catch(error => {
+        console.error(error)
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      })
     }
   }
 }
@@ -800,8 +856,8 @@ export default {
       width: 20px;
       vertical-align: middle;
     }
-    span + a {
-      margin-left: 8px;
+    span + button, button + a {
+      margin-left: 6px;
     }
   }
   &__empty-table {
