@@ -594,10 +594,22 @@ export default {
         this.$store.dispatch('sendBatchAction', {
           type: action, disputeIds: this.selectedIds
         }).then(response => {
+          var self = this
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
-            type: 'success'
+            type: 'success',
+            onClose () {
+              setTimeout(function () {
+                self.$jusNotification({
+                  title: 'Fique atento!',
+                  message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
+                  Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
+                  type: 'info',
+                  duration: 0
+                })
+              }, 300)
+            }
           })
         })
       })

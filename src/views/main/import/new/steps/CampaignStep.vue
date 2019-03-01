@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="$store.state.loading" class="feedback-step">
+  <div v-loading="$store.state.loading" class="campaign-step">
     <h2 class="new-import-view__title">Configuração de campanhas</h2>
     <p>
       Agrupamos seus casos por empresas. Cada empresa possui a sua Campanha, que você poderá, posteriormente, editar
@@ -23,7 +23,7 @@
 import JusImportFeedbackCard from '@/components/layouts/JusImportFeedbackCard'
 
 export default {
-  name: 'FeedbackStep',
+  name: 'CampaignStep',
   components: {
     JusImportFeedbackCard
   },
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style lang="scss">
-.feedback-step {
+.campaign-step {
   >p {
     text-align: center;
     max-width: 600px;

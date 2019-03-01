@@ -6,27 +6,27 @@
           <span>Nº do Processo:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div class="case-view__info-line">
+        <div v-if="dispute.campaign" class="case-view__info-line">
           <span>Campanha:</span>
-          <span v-if="Object.keys(dispute).length">{{ dispute.campaign.name }}</span>
+          <span>{{ dispute.campaign.name }}</span>
         </div>
-        <div class="case-view__info-line">
+        <div v-if="dispute.strategy" class="case-view__info-line">
           <span>Estratégia:</span>
-          <span v-if="Object.keys(dispute).length">{{ dispute.strategy.name }}</span>
+          <span>{{ dispute.strategy.name }}</span>
         </div>
-        <div class="case-view__info-line">
+        <div v-if="dispute.upperRange" class="case-view__info-line">
           <span>Alçada máxima:</span>
           <span>R$ {{ (dispute.upperRange.boundary ? dispute.upperRange.boundary : '-') }}</span>
         </div>
-        <div class="case-view__info-line">
+        <div v-if="dispute.lastOffer" class="case-view__info-line">
           <span>Contraproposta:</span>
-          <span>R$ {{ (dispute.lastOffer ? dispute.lastOffer : '-') }}</span>
+          <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
         </div>
-        <div class="case-view__info-line">
+        <div v-if="dispute.lastOffer" class="case-view__info-line">
           <span>Valor do acordo:</span>
-          <span>R$ {{ (dispute.lastOffer ? dispute.lastOffer : '-') }}</span>
+          <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
         </div>
-        <div class="case-view__info-line">
+        <div v-if="dispute.valueOfClaim" class="case-view__info-line">
           <span>Valor da causa:</span>
           <span>R$ {{ (dispute.valueOfClaim.value ? dispute.valueOfClaim.value : '-') }}</span>
         </div>
@@ -37,11 +37,14 @@
       </el-collapse-item>
     </el-collapse>
     <hr>
-    <el-collapse v-loading="loading" accordion class="el-collapse--bordered">
+    <el-collapse
+      v-loading="loading" accordion
+      class="el-collapse--bordered"
+      @change="handleChange">
       <el-collapse-item
         v-for="role in disputeRolesSort"
-        :key="role.id"
-        :name="role.id"
+        :key="role.person.id"
+        :name="role.person.id"
         :title="buildTitle(role)">
         <div class="case-view__info-line">
           <span>Status:</span>
@@ -84,6 +87,15 @@ export default {
     dispute: {
       default: () => {},
       type: Object
+    },
+    activePersonId: {
+      default: null,
+      type: Number
+    }
+  },
+  data () {
+    return {
+      active: this.activePersonId
     }
   },
   computed: {
@@ -120,6 +132,14 @@ export default {
           return role.person.name
         }
       }
+    },
+    handleChange (val) {
+      if (val) {
+        this.active = val
+      } else {
+        this.active = null
+      }
+      this.$emit('update:activePersonId', this.active)
     }
   }
 }

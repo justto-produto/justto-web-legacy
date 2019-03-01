@@ -17,7 +17,7 @@
           <check-lines-step v-if="activeStep === 0" key="0"/>
           <columns-step v-if="activeStep === 1" key="1"/>
           <enrichment-step v-if="activeStep === 2" key="2" @import:step:next="nextStep"/>
-          <feedback-step v-if="activeStep === 3" key="3" :mapped-campaigns="mappedCampaigns"/>
+          <campaign-step v-if="activeStep === 3" key="3" :mapped-campaigns="mappedCampaigns"/>
         </transition>
       </div>
       <div class="new-import-view__actions">
@@ -39,7 +39,7 @@
 import CheckLinesStep from './steps/CheckLinesStep'
 import ColumnsStep from './steps/ColumnsStep'
 import EnrichmentStep from './steps/EnrichmentStep'
-import FeedbackStep from './steps/FeedbackStep'
+import CampaignStep from './steps/CampaignStep'
 
 export default {
   name: 'NewImport',
@@ -47,7 +47,7 @@ export default {
     CheckLinesStep,
     ColumnsStep,
     EnrichmentStep,
-    FeedbackStep
+    CampaignStep
   },
   data () {
     return {

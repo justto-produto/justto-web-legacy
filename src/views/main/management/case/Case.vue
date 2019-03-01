@@ -93,12 +93,12 @@
                         <jus-icon :is-active="messageType === 'message'" icon="message"/>
                       </a>
                     </el-tooltip> -->
-                    <el-tooltip content="Enviar email">
+                    <el-tooltip content="Enviar e-mail">
                       <a href="" @click.prevent="setMessageType('email')">
                         <jus-icon :is-active="messageType === 'email'" icon="email"/>
                       </a>
                     </el-tooltip>
-                    <el-tooltip content="Enviar whatsapp">
+                    <el-tooltip content="Enviar Whatsapp">
                       <a href="#" @click.prevent="setMessageType('whatsapp')">
                         <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
                       </a>
@@ -109,9 +109,13 @@
                       </a>
                     </el-tooltip>
                   </div>
-                  <el-button type="primary" @click="sendMessage()">
-                    Enviar mensagem
-                  </el-button>
+                  <el-tooltip :disabled="activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
+                    <div>
+                      <el-button :disabled="!activePersonId" type="primary" @click="sendMessage()">
+                        Enviar mensagem
+                      </el-button>
+                    </div>
+                  </el-tooltip>
                 </div>
               </el-card>
             </el-tab-pane>
@@ -141,7 +145,8 @@
       </div>
       <case-overview
         :loading="loadingDispute"
-        :dispute="dispute" />
+        :dispute="dispute"
+        :active-person-id.sync="activePersonId" />
     </template>
   </JusViewMain>
 </template>
@@ -168,16 +173,8 @@ export default {
       messageType: 'email',
       newMessage: '',
       newNote: '',
-      showScheduled: false
-    }
-  },
-  computed: {
-    claimantsIds () {
-      if (this.dispute.disputeRoles) {
-        return this.dispute.disputeRoles.filter(role => {
-          return role.party === 'CLAIMANT'
-        }).map(role => role.person.id)
-      } return null
+      showScheduled: false,
+      activePersonId: null
     }
   },
   watch: {
@@ -198,7 +195,6 @@ export default {
   },
   methods: {
     fetchData (onlyMessages) {
-      this.loadingDisputeMessages = true
       if (!onlyMessages) {
         this.loadingDispute = true
         this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
@@ -210,6 +206,7 @@ export default {
           } else this.showError(error)
         })
       }
+      this.loadingDisputeMessages = true
       this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
         this.disputeMessages = responses
         this.filteredDisputeMessages = this.disputeMessages.slice(0)
@@ -262,7 +259,7 @@ export default {
     sendMessage () {
       if (this.newMessage) {
         this.$store.dispatch('send' + this.messageType, {
-          to: this.claimantsIds,
+          to: [this.activePersonId],
           message: this.newMessage,
           disputeId: this.dispute.id
         }).then(() => {

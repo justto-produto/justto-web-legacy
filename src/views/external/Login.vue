@@ -122,9 +122,10 @@ export default {
                 this.$store.dispatch('myAccount'),
                 this.$store.dispatch('myWorkspace')
               ]).then(() => {
+                window.analytics.identify(this.loginForm.email)
                 this.$router.push('/')
                 this.$store.dispatch('myPerson')
-                window.analytics.identify(this.loginForm.email)
+                this.$store.dispatch('getWorkspaceMembers')
               }).catch(error => {
                 console.error(error)
                 this.errorMessage = `Houve uma falha de conexão com o servidor.

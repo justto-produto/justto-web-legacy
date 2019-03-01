@@ -9,14 +9,14 @@
         <div>
           <div :class="directionClass(message) + waitingClass(message)" class="case-view-messages__message-content">
             <div>{{ message.description }}</div>
-            <el-button v-if="message.message.type === 'EMAIL'" type="text" @click="showMessageDialog(message.message.content)">Visualizar email</el-button>
-            <span v-else v-html="message.message.content" />
+            <el-button v-if="message.message && message.message.type === 'EMAIL'" type="text" @click="showMessageDialog(message.message.content)">Visualizar email</el-button>
+            <span v-else v-html="message.message && message.message.content" />
             <i v-if="directionClass(message) === 'note'">
               <br>
               <jus-icon icon="eye" style="vertical-align: sub;"/>
               Esta mensagem é visível somente aos negociadores.
             </i>
-            <i v-show="message.message.status === 'WAITING'">
+            <i v-show="message.message && message.message.status === 'WAITING'">
               <br><br>
               <jus-icon icon="clock" is-active style="vertical-align: sub;"/>
               Esta é uma mensagem agendada que ainda não foi entregue.
@@ -27,7 +27,7 @@
           </div>
         </div>
         <jus-avatar-user
-          :name="message.message.senderName"
+          :name="message.message && message.message.senderName"
           :purple="directionClass(message) === 'inbound'"
           size="sm" />
       </div>
@@ -82,7 +82,7 @@ export default {
     directionClass (message) {
       if (message.message && message.message.direction === 'INBOUND') {
         return 'inbound'
-      } else if (message.message.type === 'NOTE') {
+      } else if (message.message && message.message.type === 'NOTE') {
         return 'note'
       } else return 'outbound'
     },
@@ -94,10 +94,8 @@ export default {
     },
     checkShowScheduled (message) {
       if (!this.showScheduled) {
-        if (message.message) {
-          if (message.message.status === 'WAITING') {
-            return false
-          } else return true
+        if (message.message && message.message.status === 'WAITING') {
+          return false
         } else return true
       } else return true
     }

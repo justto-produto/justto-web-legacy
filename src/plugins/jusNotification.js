@@ -6,7 +6,10 @@ const NotificationMessage = {
     Vue.prototype.$jusNotification = (config) => {
       config.customClass = config.type
       config.position = 'bottom-right'
-      config.duration = '5000'
+      config.offset = 84
+      if (config.duration === undefined) {
+        config.duration = 5000
+      }
       Notification(config)
     }
   }
