@@ -40,6 +40,7 @@ export default {
     submitForm () {
       this.$refs['nameForm'].validate(valid => {
         if (valid) {
+          window.analytics.track('Equipe nomeada', { team: this.nameForm.name })
           this.$emit('onboarding:step:next', { team: this.nameForm.name })
         } else {
           return false
