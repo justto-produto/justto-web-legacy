@@ -109,7 +109,7 @@
                       </a>
                     </el-tooltip>
                   </div>
-                  <el-tooltip :disabled="activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
+                  <el-tooltip :disabled="!!activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
                     <div>
                       <el-button :disabled="!activePersonId" type="primary" @click="sendMessage()">
                         Enviar mensagem
@@ -146,7 +146,8 @@
       <case-overview
         :loading="loadingDispute"
         :dispute="dispute"
-        :active-person-id.sync="activePersonId" />
+        :active-person-id.sync="activePersonId"
+        @case:refresh="fetchData({ fetchDispute: true })" />
     </template>
   </JusViewMain>
 </template>
@@ -179,7 +180,7 @@ export default {
   },
   watch: {
     '$route.params.id': function (id) {
-      this.fetchData()
+      this.fetchData({ fetchDispute: true, fetchMessages: true })
     },
     showSearch (value) {
       if (!value) {
@@ -191,11 +192,11 @@ export default {
     }
   },
   created () {
-    this.fetchData()
+    this.fetchData({ fetchDispute: true, fetchMessages: true })
   },
   methods: {
-    fetchData (onlyMessages) {
-      if (!onlyMessages) {
+    fetchData (options) {
+      if (options.fetchDispute) {
         this.loadingDispute = true
         this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
           this.dispute = responses
@@ -206,12 +207,14 @@ export default {
           } else this.showError(error)
         })
       }
-      this.loadingDisputeMessages = true
-      this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
-        this.disputeMessages = responses
-        this.filteredDisputeMessages = this.disputeMessages.slice(0)
-        this.loadingDisputeMessages = false
-      }).catch(error => this.showError(error))
+      if (options.fetchMessages) {
+        this.loadingDisputeMessages = true
+        this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
+          this.disputeMessages = responses
+          this.filteredDisputeMessages = this.disputeMessages.slice(0)
+          this.loadingDisputeMessages = false
+        }).catch(error => this.showError(error))
+      }
     },
     showError (error) {
       console.error(error)
@@ -273,7 +276,7 @@ export default {
           this.loadingDisputeMessages = true
           var self = this
           setTimeout(function () {
-            self.fetchData(true)
+            self.fetchData({ fetchMessages: true })
           }, 1000)
         }).catch(error => this.showError(error))
       }
@@ -294,7 +297,7 @@ export default {
           this.loadingDisputeMessages = true
           var self = this
           setTimeout(function () {
-            self.fetchData(true)
+            self.fetchData({ fetchMessages: true })
           }, 1000)
         }).catch(error => this.showError(error))
       }
@@ -309,17 +312,6 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-  }
-  &__info-line {
-    margin-bottom: 10px;
-    span:last-child {
-      font-weight: 500;
-      float: right;
-      max-width: 185px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
   &__content {
     margin-left: 20px;
@@ -494,9 +486,6 @@ export default {
         display: inline-block;
       }
     }
-  }
-  .el-collapse-item__content {
-    padding-bottom: 5px;
   }
 }
 </style>

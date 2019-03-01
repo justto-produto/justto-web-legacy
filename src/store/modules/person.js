@@ -8,7 +8,7 @@ const personModule = {
     }
   },
   actions: {
-    getPerson ({ commit }, id) {
+    getPerson (id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/persons/' + id)
@@ -33,7 +33,7 @@ const personModule = {
           })
       })
     },
-    addOab ({ commit }, oamForm) {
+    addOab (oamForm) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('api/persons/my/oabs', { number: oamForm.oab, state: oamForm.state })
@@ -50,6 +50,28 @@ const personModule = {
         axios.put('api/persons', person)
           .then(response => {
             commit('setPerson', response.data)
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    createEmail (newEmailBody) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/person/' + newEmailBody.personId + '/emails', {address: newEmailBody.address})
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    createPhone (newPhoneBody) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/person/' + newPhoneBody.personId + '/phones', {number: newPhoneBody.number})
+          .then(response => {
             resolve(response.data)
           }).catch(error => {
             reject(error)

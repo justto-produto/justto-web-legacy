@@ -2,36 +2,36 @@
   <div class="case-overview-view">
     <el-collapse value="1">
       <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
-        <div class="case-view__info-line">
-          <span>Nº do Processo:</span>
+        <div class="case-overview-view__info-line">
+          <span class="title">Nº do Processo:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div v-if="dispute.campaign" class="case-view__info-line">
-          <span>Campanha:</span>
+        <div v-if="dispute.campaign" class="case-overview-view__info-line">
+          <span class="title">Campanha:</span>
           <span>{{ dispute.campaign.name }}</span>
         </div>
-        <div v-if="dispute.strategy" class="case-view__info-line">
-          <span>Estratégia:</span>
+        <div v-if="dispute.strategy" class="case-overview-view__info-line">
+          <span class="title">Estratégia:</span>
           <span>{{ dispute.strategy.name }}</span>
         </div>
-        <div v-if="dispute.upperRange" class="case-view__info-line">
-          <span>Alçada máxima:</span>
+        <div v-if="dispute.upperRange" class="case-overview-view__info-line">
+          <span class="title">Alçada máxima:</span>
           <span>R$ {{ (dispute.upperRange.boundary ? dispute.upperRange.boundary : '-') }}</span>
         </div>
-        <div v-if="dispute.lastOffer" class="case-view__info-line">
-          <span>Contraproposta:</span>
+        <div v-if="dispute.lastOffer" class="case-overview-view__info-line">
+          <span class="title">Contraproposta:</span>
           <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
         </div>
-        <div v-if="dispute.lastOffer" class="case-view__info-line">
-          <span>Valor do acordo:</span>
+        <div v-if="dispute.lastOffer" class="case-overview-view__info-line">
+          <span class="title">Valor do acordo:</span>
           <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
         </div>
-        <div v-if="dispute.valueOfClaim" class="case-view__info-line">
-          <span>Valor da causa:</span>
+        <div v-if="dispute.valueOfClaim" class="case-overview-view__info-line">
+          <span class="title">Valor da causa:</span>
           <span>R$ {{ (dispute.valueOfClaim.value ? dispute.valueOfClaim.value : '-') }}</span>
         </div>
-        <div class="case-view__info-line">
-          <span>Fim da negociação:</span>
+        <div class="case-overview-view__info-line">
+          <span class="title">Fim da negociação:</span>
           <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
         </div>
       </el-collapse-item>
@@ -46,39 +46,93 @@
         :key="role.person.id"
         :name="role.person.id"
         :title="buildTitle(role)">
-        <div class="case-view__info-line">
+        <div class="case-overview-view__info-line">
           <span>Status:</span>
           <span v-if="true">Offline <jus-status-dot type="danger"/></span>
           <span v-else>Online <jus-status-dot type="success"/></span>
         </div>
-        <div class="case-view__info-line">
-          <span>Nome:</span>
+        <div class="case-overview-view__info-line">
+          <span class="title">Nome:</span>
           <span>{{ role.person.name }}</span>
         </div>
-        <div v-for="email in role.person.emails" :key="email.id" class="case-view__info-line">
-          <span>E-mail:</span>
+        <div class="case-overview-view__info-line">
+          <span>E-mails:</span>
+          <a href="" @click.prevent="openEmailDialog(role.person.id)">
+            <jus-icon icon="add" />
+          </a>
+        </div>
+        <div v-for="email in role.person.emails" :key="email.id" class="case-overview-view__info-line">
           <span>{{ email.address }}</span>
         </div>
-        <div v-for="phone in role.person.phones" :key="phone.id" class="case-view__info-line">
+        <div class="case-overview-view__info-line">
           <span>Telefone:</span>
+          <a href="" @click.prevent="openPhoneDialog(role.person.id)">
+            <jus-icon icon="add" />
+          </a>
+        </div>
+        <div v-for="phone in role.person.phones" :key="phone.id" class="case-overview-view__info-line">
           <span>{{ phone.number }}</span>
         </div>
-        <div v-for="oab in role.person.oabs" :key="oab.id" class="case-view__info-line">
-          <span>OAB:</span>
+        <div v-for="oab in role.person.oabs" :key="oab.id" class="case-overview-view__info-line">
+          <span class="title">OAB:</span>
           <span>{{ oab.number }}</span>
         </div>
-        <div v-show="role.person.documentNumber" class="case-view__info-line">
-          <span>CPF:</span>
+        <div v-show="role.person.documentNumber" class="case-overview-view__info-line">
+          <span class="title">CPF:</span>
           <span>{{ role.person.documentNumber }}</span>
         </div>
       </el-collapse-item>
     </el-collapse>
+    <el-dialog
+      :visible.sync="emailDialogVisible"
+      title="Adicionar e-mail"
+      width="30%">
+      <el-form
+        ref="newEmail"
+        :model="newEmailBody"
+        :rules="newEmailRules"
+        label-position="top"
+        @submit.native.prevent="addEmail">
+        <el-form-item label="Email" prop="address">
+          <el-input v-model="newEmailBody.address" type="email" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="emailDialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="addEmail">Confirm</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      :visible.sync="phoneDialogVisible"
+      title="Adicionar telefone"
+      width="30%">
+      <el-form
+        ref="newPhone"
+        :model="newPhoneBody"
+        :rules="newPhoneRules"
+        label-position="top"
+        @submit.native.prevent="addPhone">
+        <el-form-item label="Telefone" prop="number">
+          <el-input
+            v-mask="['(##) ####-####', '(##) #####-####']"
+            v-model="newPhoneBody.number"
+            name="number"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="phoneDialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="addPhone">Confirm</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { mask } from 'vue-the-mask'
+
 export default {
   name: 'CaseOverview',
+  directives: { mask },
   props: {
     loading: {
       default: false,
@@ -94,8 +148,25 @@ export default {
     }
   },
   data () {
+    var validatePhone = (rule, value, callback) => {
+      if (value && value.length > 13) {
+        callback()
+      } else callback(new Error('Insira um telefone válido'))
+    }
     return {
-      active: this.activePersonId
+      active: this.activePersonId,
+      newEmailBody: {},
+      newEmailRules: { address: [
+        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'submit' }
+      ] },
+      newPhoneBody: {},
+      newPhoneRules: { number: [
+        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+        { validator: validatePhone, trigger: 'submit' }
+      ] },
+      emailDialogVisible: false,
+      phoneDialogVisible: false
     }
   },
   computed: {
@@ -140,6 +211,65 @@ export default {
         this.active = null
       }
       this.$emit('update:activePersonId', this.active)
+    },
+    openEmailDialog (personId) {
+      this.newEmailBody = {}
+      this.newEmailBody.personId = personId
+      this.emailDialogVisible = true
+    },
+    addEmail () {
+      this.$refs['newEmail'].validate(valid => {
+        if (valid) {
+          this.$store.dispatch('createEmail', this.newEmailBody).then(response => {
+            this.emailDialogVisible = false
+            setTimeout(function () {
+              this.$emit('case:refresh')
+            }, 1000)
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Email adicionado com sucesso.',
+              type: 'success'
+            })
+          }).catch(erro => {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+              type: 'error'
+            })
+          })
+        }
+      })
+    },
+    openPhoneDialog (personId) {
+      this.newPhoneBody = {}
+      this.newPhoneBody.personId = personId
+      this.phoneDialogVisible = true
+    },
+    addPhone () {
+      this.$refs['newPhone'].validate(valid => {
+        if (valid) {
+          this.$store.dispatch('createPhone', {
+            personId: this.newPhoneBody.personId,
+            number: this.newPhoneBody.number.match(/\d+/g).join([])
+          }).then(response => {
+            this.phoneDialogVisible = false
+            setTimeout(function () {
+              this.$emit('case:refresh')
+            }, 1000)
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Telefone adicionado com sucesso.',
+              type: 'success'
+            })
+          }).catch(erro => {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+              type: 'error'
+            })
+          })
+        }
+      })
     }
   }
 }
@@ -149,6 +279,29 @@ export default {
 .case-overview-view {
   .jus-status-dot {
     float: initial !important;
+  }
+  .el-collapse-item__content {
+    padding-bottom: 15px;
+  }
+  &__info-line {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title {
+      white-space: nowrap;
+      margin-right: 10px;
+    }
+    *:last-child {
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-left: auto;
+    }
+    a {
+      line-height: 15px;
+    }
   }
 }
 </style>
