@@ -520,7 +520,7 @@ export default {
     return {
       showFilters: false,
       cases: [],
-      filters: [],
+      filters: {},
       selectedIds: [],
       activeTab: {},
       activeFilters: {}
@@ -530,6 +530,14 @@ export default {
     multiActive () {
       return this.selectedIds.length >= 1
     }
+  },
+  mounted () {
+    const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
+    if (savedFilters && savedFilters.accountId === this.$store.getters.accountId) {
+      this.activeFilters = savedFilters.filters
+      this.filters = savedFilters.filters
+    }
+    this.getCases()
   },
   methods: {
     getCases () {
@@ -573,6 +581,11 @@ export default {
       return query.query.bool.must.length > 0 ? query : null
     },
     applyFilters () {
+      var stringfilters = JSON.stringify({
+        accountId: this.$store.getters.accountId,
+        filters: this.activeFilters
+      })
+      localStorage.setItem('jusfilters', stringfilters)
       this.showFilters = false
       this.filters = JSON.parse(JSON.stringify(this.activeFilters))
       this.getCases()
@@ -620,12 +633,15 @@ export default {
       this.activeTab = newActive
     },
     handleChangeTab (newTab, oldTab) {
-      this.clearSelection()
-      this.setActiveTabLabel(newTab)
-      this.getCases()
-      this.filters = {}
+      if (oldTab !== undefined) {
+        this.clearSelection()
+        this.setActiveTabLabel(newTab)
+        this.getCases()
+        this.filters = {}
+      }
     },
     clearFilters () {
+      localStorage.removeItem('jusfilters')
       this.showFilters = false
       this.filters = {}
       this.getCases()
