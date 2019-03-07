@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     nextStep () {
+      window.analytics.track('Onboarding concluido')
       this.$emit('onboarding:step:next')
     }
   }

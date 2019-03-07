@@ -8,9 +8,9 @@
         pela plataforma.
       </p>
     </div>
-    <jus-whatsapp />
+    <jus-whatsapp :number.sync="number" />
     <el-button :disabled="!$store.getters.isWhatsappConnected" type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
-    <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
+    <el-button type="text" @click="nextStep()">Pular</el-button>
   </div>
 </template>
 
@@ -20,6 +20,20 @@ import JusWhatsapp from '@/components/layouts/JusWhatsapp'
 export default {
   components: {
     JusWhatsapp
+  },
+  data () {
+    return {
+      number: ''
+    }
+  },
+  methods: {
+    syncWhats () {
+      window.analytics.track('WhatsApp sincronizado', { number: this.$store.state.whatsappModule.number })
+    },
+    nextStep () {
+      window.analytics.track('Pulada a sincronização de WhatsApp')
+      $emit('onboarding:step:next')
+    }
   }
 }
 </script>

@@ -64,6 +64,16 @@ export default {
   },
   methods: {
     nextStep () {
+      // switch (this.activeStep){
+      //   case 0: window.analytics.track('Planilha importada', {
+      //     lines: this.$store.state.importModule.file.rows
+      //   })
+      //   case 1: window.analytics.track('Mapeamento concluido')
+      //   case 2: window.analytics.track('Enriquecimento concluido')
+      //   case 3: window.analytics.track('Configuralão de campanha concluida', {
+      //     strategy: "a"
+      //   })
+      // }
       if (this.activeStep === 1) {
         this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
           this.mappedCampaigns = response

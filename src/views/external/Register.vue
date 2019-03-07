@@ -109,6 +109,7 @@ export default {
           this.$store.dispatch('register', this.registerForm)
             .then(() => {
               window.analytics.identify(this.registerForm.email, {
+                action: 'REGISTER',
                 name: this.registerForm.name,
                 email: this.registerForm.email
               })
