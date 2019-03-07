@@ -2,6 +2,7 @@ import router from '@/router'
 
 const account = {
   state: {
+    id: '',
     name: '',
     email: '',
     status: '',
@@ -19,14 +20,16 @@ const account = {
       state.status = 'error'
     },
     logout (state) {
-      state.email = ''
+      state.id = ''
       state.name = ''
+      state.email = ''
       state.status = ''
       state.token = ''
     },
     setUser (state, response) {
-      if (response.email) state.email = response.email
+      if (response.id) state.id = response.id
       if (response.name) state.name = response.name
+      if (response.email) state.email = response.email
     }
   },
   actions: {
@@ -142,7 +145,8 @@ const account = {
   },
   getters: {
     isLoggedIn: state => !!state.token,
-    authStatus: state => state.status
+    authStatus: state => state.status,
+    accountId: state => state.id
   }
 }
 

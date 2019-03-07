@@ -46,7 +46,9 @@
         <el-button
           icon="el-icon-refresh"
           plain
-          @click="refresh"/>
+          @click="refresh">
+          Atualizar
+        </el-button>
         <el-button
           :plain="!Object.keys(filters).length"
           :type="Object.keys(filters).length ? 'primary' : ''"
@@ -54,7 +56,7 @@
           <jus-icon :is-white="Object.keys(filters).length !== 0" icon="filter" />
           Filtrar
         </el-button>
-        <el-button plain>
+        <el-button plain icon="el-icon-download">
           Exportar casos
         </el-button>
       </div>
@@ -144,7 +146,7 @@
             <el-table-column
               label="Ações"
               class-name="view-management__row-actions"
-              width="90px"
+              width="110px"
               align="center">
               <template slot-scope="scope">
                 <el-popover trigger="hover">
@@ -161,8 +163,16 @@
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
+                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                  <el-button
+                    type="text"
+                    class="favorite"
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                  </el-button>
+                </el-tooltip>
                 <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                  <router-link :to="{ name: 'case', params: { id: scope.row._source.disputeid } }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
@@ -247,7 +257,7 @@
             <el-table-column
               label="Ações"
               class-name="view-management__row-actions"
-              width="90px"
+              width="110px"
               align="center">
               <template slot-scope="scope">
                 <el-popover trigger="hover">
@@ -264,6 +274,14 @@
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
+                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                  <el-button
+                    type="text"
+                    class="favorite"
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                  </el-button>
+                </el-tooltip>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
@@ -342,7 +360,7 @@
             <el-table-column
               label="Ações"
               class-name="view-management__row-actions"
-              width="90px"
+              width="110px"
               align="center">
               <template slot-scope="scope">
                 <el-popover trigger="hover">
@@ -359,6 +377,14 @@
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
+                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                  <el-button
+                    type="text"
+                    class="favorite"
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                  </el-button>
+                </el-tooltip>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
@@ -421,7 +447,7 @@
             <el-table-column
               label="Ações"
               class-name="view-management__row-actions"
-              width="90px"
+              width="110px"
               align="center">
               <template slot-scope="scope">
                 <el-popover trigger="hover">
@@ -438,6 +464,14 @@
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
+                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                  <el-button
+                    type="text"
+                    class="favorite"
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                  </el-button>
+                </el-tooltip>
                 <el-tooltip content="Visualizar caso">
                   <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
                     <jus-icon icon="open-case" />
@@ -486,9 +520,9 @@ export default {
     return {
       showFilters: false,
       cases: [],
+      filters: {},
       selectedIds: [],
       activeTab: {},
-      filters: {},
       activeFilters: {}
     }
   },
@@ -497,13 +531,29 @@ export default {
       return this.selectedIds.length >= 1
     }
   },
+  mounted () {
+    const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
+    if (savedFilters && savedFilters.accountId === this.$store.getters.accountId) {
+      this.activeFilters = savedFilters.filters
+      this.filters = savedFilters.filters
+    }
+    this.getCases()
+  },
   methods: {
     getCases () {
       this.$store.dispatch('showLoading')
       this.cases = []
       this.$store.dispatch('getDisputes', this.buildQuery()).then(response => {
-        this.$store.dispatch('hideLoading')
         this.cases = response.hits.hits
+      }).catch(error => {
+        console.error(error)
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      }).finally(() => {
+        this.$store.dispatch('hideLoading')
       })
     },
     buildQuery () {
@@ -523,11 +573,19 @@ export default {
         if (this.filters[key]) {
           match[key] = this.filters[key]
           query.query.bool.must.push({ match: match })
+          // if (Array.isArray(match[key])) {
+          //   if (match[key].length) query.query.bool.must.push({ match: match })
+          // } else query.query.bool.must.push({ match: match })
         }
       })
       return query.query.bool.must.length > 0 ? query : null
     },
     applyFilters () {
+      var stringfilters = JSON.stringify({
+        accountId: this.$store.getters.accountId,
+        filters: this.activeFilters
+      })
+      localStorage.setItem('jusfilters', stringfilters)
       this.showFilters = false
       this.filters = JSON.parse(JSON.stringify(this.activeFilters))
       this.getCases()
@@ -575,12 +633,15 @@ export default {
       this.activeTab = newActive
     },
     handleChangeTab (newTab, oldTab) {
-      this.clearSelection()
-      this.setActiveTabLabel(newTab)
-      this.getCases()
-      this.filters = {}
+      if (oldTab !== undefined) {
+        this.clearSelection()
+        this.setActiveTabLabel(newTab)
+        this.getCases()
+        this.filters = {}
+      }
     },
     clearFilters () {
+      localStorage.removeItem('jusfilters')
       this.showFilters = false
       this.filters = {}
       this.getCases()
@@ -616,6 +677,30 @@ export default {
     },
     refresh () {
       this.getCases()
+    },
+    setFavorite (action, id) {
+      let label = action === 'favorite' ? 'favoritado' : 'removido de favoritos'
+      this.$store.dispatch('sendDisputeAction', {
+        action: action,
+        disputeId: id
+      }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Caso ' + label + ' com sucesso.',
+          type: 'success'
+        })
+        var self = this
+        setTimeout(function () {
+          self.getCases()
+        }, 1500)
+      }).catch(error => {
+        console.error(error)
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      })
     }
   }
 }
@@ -787,8 +872,8 @@ export default {
       width: 20px;
       vertical-align: middle;
     }
-    span + a {
-      margin-left: 8px;
+    span + button, button + a {
+      margin-left: 6px;
     }
   }
   &__empty-table {

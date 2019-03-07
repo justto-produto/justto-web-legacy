@@ -59,9 +59,9 @@
               <jus-icon icon="snooze" />
             </el-button>
           </el-tooltip> -->
-          <el-tooltip content="star">
-            <el-button plain @click="doAction(dispute.favorite ? 'favorite' : 'disfavor')">
-              <jus-icon icon="star" />
+          <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+            <el-button plain class="favorite" @click="doAction(isFavorite ? 'disfavor' : 'favorite')">
+              <jus-icon :icon="isFavorite ? 'golden-star' : 'star'" />
             </el-button>
           </el-tooltip>
           <div :class="{isVisible: showSearch}" class="case-view__search">
@@ -109,7 +109,7 @@
                       </a>
                     </el-tooltip>
                   </div>
-                  <el-tooltip :disabled="activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
+                  <el-tooltip :disabled="!!activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
                     <div>
                       <el-button :disabled="!activePersonId" type="primary" @click="sendMessage()">
                         Enviar mensagem
@@ -146,7 +146,8 @@
       <case-overview
         :loading="loadingDispute"
         :dispute="dispute"
-        :active-person-id.sync="activePersonId" />
+        :active-person-id.sync="activePersonId"
+        @case:refresh="fetchData({ fetchDispute: true })" />
     </template>
   </JusViewMain>
 </template>
@@ -177,9 +178,14 @@ export default {
       activePersonId: null
     }
   },
+  computed: {
+    isFavorite () {
+      return this.dispute.favorite
+    }
+  },
   watch: {
     '$route.params.id': function (id) {
-      this.fetchData()
+      this.fetchData({ fetchDispute: true, fetchMessages: true })
     },
     showSearch (value) {
       if (!value) {
@@ -191,11 +197,11 @@ export default {
     }
   },
   created () {
-    this.fetchData()
+    this.fetchData({ fetchDispute: true, fetchMessages: true })
   },
   methods: {
-    fetchData (onlyMessages) {
-      if (!onlyMessages) {
+    fetchData (options) {
+      if (options.fetchDispute) {
         this.loadingDispute = true
         this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
           this.dispute = responses
@@ -206,12 +212,14 @@ export default {
           } else this.showError(error)
         })
       }
-      this.loadingDisputeMessages = true
-      this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
-        this.disputeMessages = responses
-        this.filteredDisputeMessages = this.disputeMessages.slice(0)
-        this.loadingDisputeMessages = false
-      }).catch(error => this.showError(error))
+      if (options.fetchMessages) {
+        this.loadingDisputeMessages = true
+        this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
+          this.disputeMessages = responses
+          this.filteredDisputeMessages = this.disputeMessages.slice(0)
+          this.loadingDisputeMessages = false
+        }).catch(error => this.showError(error))
+      }
     },
     showError (error) {
       console.error(error)
@@ -254,6 +262,10 @@ export default {
           message: 'Ação realizada com sucesso.',
           type: 'success'
         })
+        var self = this
+        setTimeout(function () {
+          self.fetchData({ fetchDispute: true })
+        }, 1000)
       })
     },
     sendMessage () {
@@ -273,7 +285,7 @@ export default {
           this.loadingDisputeMessages = true
           var self = this
           setTimeout(function () {
-            self.fetchData(true)
+            self.fetchData({ fetchMessages: true })
           }, 1000)
         }).catch(error => this.showError(error))
       }
@@ -294,7 +306,7 @@ export default {
           this.loadingDisputeMessages = true
           var self = this
           setTimeout(function () {
-            self.fetchData(true)
+            self.fetchData({ fetchMessages: true })
           }, 1000)
         }).catch(error => this.showError(error))
       }
@@ -309,17 +321,6 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-  }
-  &__info-line {
-    margin-bottom: 10px;
-    span:last-child {
-      font-weight: 500;
-      float: right;
-      max-width: 185px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
   &__content {
     margin-left: 20px;
@@ -431,13 +432,15 @@ export default {
     }
   }
   &__actions {
-    text-align: center;
     padding: 11px 20px;
     box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
     z-index: 1;
-    button {
+    .el-button {
       border-radius: 5px;
       padding: 11px;
+    }
+    .favorite {
+      float: right;
     }
     img {
       width: 16px;
@@ -494,9 +497,6 @@ export default {
         display: inline-block;
       }
     }
-  }
-  .el-collapse-item__content {
-    padding-bottom: 5px;
   }
 }
 </style>

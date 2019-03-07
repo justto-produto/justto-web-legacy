@@ -55,6 +55,28 @@ const personModule = {
             reject(error)
           })
       })
+    },
+    createEmail ({ commit }, newEmailBody) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/person/' + newEmailBody.personId + '/emails', {address: newEmailBody.address})
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    createPhone ({ commit }, newPhoneBody) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/person/' + newPhoneBody.personId + '/phones', {number: newPhoneBody.number})
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

@@ -85,7 +85,9 @@ export default {
       return parseInt(this.summary.disputeobjectboundary)
     },
     deal () {
-      return parseInt(this.summary.disputedealvalue)
+      if (this.summary.disputedealvalue) {
+        return parseInt(this.summary.disputedealvalue)
+      } return '-'
     },
     lastoffer () {
       return this.summary.lastoffervalue
