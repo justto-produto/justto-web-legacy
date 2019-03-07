@@ -14,7 +14,6 @@
   </div>
 </template>
 
-
 <script>
 import JusWhatsapp from '@/components/layouts/JusWhatsapp'
 

@@ -148,6 +148,7 @@ export default {
       this.$refs['uploadMethod'].clearFiles()
     },
     downloadModel () {
+      window.analytics.track('Planilha modelo baixada')
       window.open('planilha-modelo.xlsx', '_blank')
     }
   }

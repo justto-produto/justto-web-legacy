@@ -231,8 +231,14 @@ export default {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.state.personModule.person))
     this.teamName = this.$store.state.workspaceModule.name + ''
-    this.$store.dispatch('whatsappStart').then(() => {
-      this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
+    this.$store.dispatch('whatsappStatus').then((whatsapp) => {
+      if (whatsapp.status == 'OFFLINE') {
+        this.$store.dispatch('whatsappStart').then(() =>{
+          this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
+        })
+      } else {
+        store.commit('setWhatsappSocketMessage', JSON.parse(whatsapp))
+      }
     })
   },
   methods: {
@@ -251,6 +257,7 @@ export default {
         if (this.person.name.length > 2) {
           this.$store.dispatch('setPerson', this.person)
             .then(response => {
+              window.analytics.track('Nome alterado')
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Nome alterado com sucesso.',
@@ -307,6 +314,7 @@ export default {
         password: this.profileForm.newPassword,
         oldPassword: this.profileForm.password
       }).then(() => {
+        window.analytics.track('Senha alterada')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Senha alterada com sucesso.',
@@ -338,6 +346,7 @@ export default {
       }).then(() => {
         this.$store.commit('showLoading')
         this.$store.dispatch('removeInbox', id).then(() => {
+          window.analytics.track('Email removido')
           this.$jusNotification({
             title: 'Yay!',
             message: 'Email removido com sucesso.',
@@ -365,6 +374,7 @@ export default {
           this.$store.dispatch('showLoading')
           this.$store.dispatch('syncInbox', this.syncForm)
             .then(response => {
+              window.analytics.track('Sincroniza novo e-mail')
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Email sincronizado com sucesso.',
@@ -392,6 +402,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
+          window.analytics.track('Membro removido')
           this.getMembers()
           this.$jusNotification({
             title: 'Yay!',
@@ -427,6 +438,7 @@ export default {
     changeWorkspaceName () {
       if (this.teamName) {
         this.$store.dispatch('editWorkpace', { name: this.teamName }).then(() => {
+          window.analytics.track('Nome da equipe alterado')
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nome da equipe editada com sucesso.',
@@ -448,6 +460,7 @@ export default {
             email: this.inviteForm.email,
             profile: 'NEGOTIATOR'
           }]).then(response => {
+            window.analytics.track('Novo usuário convidado')
             this.$jusNotification({
               title: 'Yay!',
               message: 'Convite enviado com sucesso.',

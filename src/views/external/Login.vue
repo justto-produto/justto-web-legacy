@@ -123,7 +123,8 @@ export default {
                 this.$store.dispatch('myWorkspace')
               ]).then(() => {
                 window.analytics.identify(this.loginForm.email, {
-                  action: 'LOGIN'
+                  action: 'LOGIN',
+                  email: this.loginForm.email
                 })
                 this.$router.push('/')
                 this.$store.dispatch('myPerson')
