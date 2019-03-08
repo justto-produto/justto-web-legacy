@@ -87,15 +87,17 @@ export default {
       }
     },
     finalStep () {
+      var campaignsTrack = []
       var allValid = true
       var promises = []
       for (let campaign of this.mappedCampaigns) {
+        let campaignIndex = {
+          name: campaign.name,
+          newName: campaign.newName,
+          strategy: campaign.strategy.name
+        }
+        campaignsTrack.push(campaignIndex)
         if (this.checkValidCampaign(campaign)) {
-          window.analytics.track('Configuralão de campanha concluida', {
-            name: this.mappedCampaigns[0].name,
-            newName: this.mappedCampaigns[0].newName,
-            strategy: this.mappedCampaigns[0].strategy.name
-          })
           campaign.name = campaign.newName
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
@@ -117,6 +119,9 @@ export default {
       }
       if (allValid) {
         Promise.all(promises).then(() => {
+          window.analytics.track('Configuração de campanha concluida', {
+            campaign: campaignsTrack
+          })
           this.$router.push('/management')
         }).catch(error => {
           this.$jusNotification({

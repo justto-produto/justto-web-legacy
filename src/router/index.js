@@ -30,6 +30,7 @@ const router = new Router({
           }
         },
         {
+          name: 'importNew',
           path: 'import/new',
           component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/new/NewImport'),
           meta: {
@@ -178,6 +179,9 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   if (to.matched.some(record => record.meta.requiresTrack)) {
     window.analytics.page(to.name)
+  } 
+  if (from.name === 'importNew') {
+    window.analytics.track('Importação interrompida')
   }
   if (to.name === 'onboarding' || to.name === 'login' || to.name === 'register' || to.name === 'forgot-password') {
     document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width,initial-scale=1.0')
