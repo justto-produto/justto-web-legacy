@@ -32,7 +32,7 @@ export default {
     },
     nextStep () {
       window.analytics.track('Pulada a sincronização de WhatsApp')
-      $emit('onboarding:step:next')
+      this.$emit('onboarding:step:next')
     }
   }
 }

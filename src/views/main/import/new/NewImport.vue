@@ -64,20 +64,17 @@ export default {
   },
   methods: {
     nextStep () {
-      // switch (this.activeStep){
-      //   case 0: window.analytics.track('Planilha importada', {
-      //     lines: this.$store.state.importModule.file.rows
-      //   })
-      //   case 1: window.analytics.track('Mapeamento concluido')
-      //   case 2: window.analytics.track('Enriquecimento concluido')
-      //   case 3: window.analytics.track('Configuralão de campanha concluida', {
-      //     strategy: "a"
-      //   })
-      // }
       if (this.activeStep === 1) {
         this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
+          window.analytics.track('Mapeamento concluido')
           this.mappedCampaigns = response
         })
+      } else if (this.activeStep === 0) {
+        window.analytics.track('Planilha importada', {
+          lines: this.$store.state.importModule.file.rows
+        })
+      } else if (this.activeStep === 2) {
+        window.analytics.track('Enriquecimento concluido')
       }
       this.activeStep += 1
     },
@@ -90,9 +87,16 @@ export default {
       }
     },
     finalStep () {
+      var campaignsTrack = []
       var allValid = true
       var promises = []
       for (let campaign of this.mappedCampaigns) {
+        let campaignIndex = {
+          name: campaign.name,
+          newName: campaign.newName,
+          strategy: campaign.strategy.name
+        }
+        campaignsTrack.push(campaignIndex)
         if (this.checkValidCampaign(campaign)) {
           campaign.name = campaign.newName
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
@@ -115,6 +119,9 @@ export default {
       }
       if (allValid) {
         Promise.all(promises).then(() => {
+          window.analytics.track('Configuração de campanha concluida', {
+            campaign: campaignsTrack
+          })
           this.$router.push('/management')
         }).catch(error => {
           this.$jusNotification({

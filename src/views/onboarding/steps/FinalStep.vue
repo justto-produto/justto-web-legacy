@@ -49,6 +49,7 @@ export default {
         .then(() => {
           this.$store.dispatch('myWorkspace')
             .then(() => {
+              window.analytics.track('Onboarding concluido')
               this.$router.push('import')
             })
             .catch(error => {
