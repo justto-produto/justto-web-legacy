@@ -232,12 +232,12 @@ export default {
     this.person = JSON.parse(JSON.stringify(this.$store.state.personModule.person))
     this.teamName = this.$store.state.workspaceModule.name + ''
     this.$store.dispatch('whatsappStatus').then((whatsapp) => {
-      if (whatsapp.status == 'OFFLINE') {
-        this.$store.dispatch('whatsappStart').then(() =>{
+      if (whatsapp.status === 'OFFLINE') {
+        this.$store.dispatch('whatsappStart').then(() => {
           this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
         })
       } else {
-        store.commit('setWhatsappSocketMessage', JSON.parse(whatsapp))
+        this.$store.commit('setWhatsappSocketMessage', whatsapp)
       }
     })
   },
