@@ -1,17 +1,17 @@
 const whatsappModule = {
   state: {
-    urlQrCode: '',
+    qrCode: '',
     status: 'STARTING',
     number: ''
   },
   mutations: {
     setWhatsappSocketMessage (state, message) {
-      if (message.urlQrCode) state.urlQrCode = message.urlQrCode
+      if (message.qrCode) state.qrCode = message.qrCode
       if (message.status) state.status = message.status
       if (message.number) state.number = message.number
     },
     clearSocket (state) {
-      state.urlQrCode = ''
+      state.qrCode = ''
     }
   },
   actions: {

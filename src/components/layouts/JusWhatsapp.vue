@@ -5,7 +5,7 @@
         v-loading="isWhatsappStarting"
         :class="{'is-connected' : isWhatsappConnected}"
         class="jus-whatsapp__qrcode">
-        <img :src="urlQrCode" class="qrcode">
+        <img :src="qrCode" class="qrcode">
         <jus-icon v-if="!isWhatsappReady && !isWhatsappStarting" icon="check" class="check"/>
       </div>
       <div v-show="isWhatsappReady || isWhatsappStarting" class="jus-whatsapp__status-info">
@@ -68,8 +68,8 @@ export default {
     }
   },
   computed: {
-    urlQrCode () {
-      return this.$store.state.whatsappModule.urlQrCode
+    qrCode () {
+      return this.$store.state.whatsappModule.qrCode
     },
     status () {
       if (this.isWhatsappStarting) {
