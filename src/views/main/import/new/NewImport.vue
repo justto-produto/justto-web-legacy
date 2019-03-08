@@ -64,17 +64,17 @@ export default {
   },
   methods: {
     nextStep () {
-      switch (this.activeStep) {
-        case 0: window.analytics.track('Planilha importada', {
-          lines: this.$store.state.importModule.file.rows
-        })
-        case 1: window.analytics.track('Mapeamento concluido')
-        case 2: window.analytics.track('Enriquecimento pulado')
-      }
       if (this.activeStep === 1) {
         this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
+          window.analytics.track('Mapeamento concluido')
           this.mappedCampaigns = response
         })
+      } else if (this.activeStep === 0) {
+        window.analytics.track('Planilha importada', {
+          lines: this.$store.state.importModule.file.rows
+        })
+      } else if (this.activeStep === 2) {
+        window.analytics.track('Enriquecimento concluido')
       }
       this.activeStep += 1
     },
@@ -92,7 +92,9 @@ export default {
       for (let campaign of this.mappedCampaigns) {
         if (this.checkValidCampaign(campaign)) {
           window.analytics.track('Configuralão de campanha concluida', {
-            strategy: this.mappedCampaigns.strategy
+            name: this.mappedCampaigns[0].name,
+            newName: this.mappedCampaigns[0].newName,
+            strategy: this.mappedCampaigns[0].strategy.name
           })
           campaign.name = campaign.newName
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
