@@ -24,7 +24,7 @@ const campaign = {
     createCampaign ({ commit }, campaign) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('campaigns', campaign)
+        axios.post('api/campaigns', campaign)
           .then(response => {
             if (campaign.importId) {
               // eslint-disable-next-line
