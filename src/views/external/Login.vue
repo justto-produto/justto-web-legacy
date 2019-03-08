@@ -126,9 +126,11 @@ export default {
                   action: 'LOGIN',
                   email: this.loginForm.email
                 })
+                if (this.$store.state.workspaceModule.subDomain) {
+                  this.$store.dispatch('myPerson')
+                  this.$store.dispatch('getWorkspaceMembers')
+                }
                 this.$router.push('/')
-                this.$store.dispatch('myPerson')
-                this.$store.dispatch('getWorkspaceMembers')
               }).catch(error => {
                 console.error(error)
                 this.errorMessage = `Houve uma falha de conexão com o servidor.
