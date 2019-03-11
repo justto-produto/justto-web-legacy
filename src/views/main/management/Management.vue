@@ -590,6 +590,10 @@ export default {
       this.showFilters = false
       this.filters = JSON.parse(JSON.stringify(this.activeFilters))
       this.getCases()
+      window.analytics.track('Filtro aplicado', {
+        filters: this.filters,
+        tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento'
+      })
     },
     restoreFilters () {
       this.activeFilters = JSON.parse(JSON.stringify(this.filters))
@@ -657,6 +661,11 @@ export default {
           type: action,
           disputeIds: this.selectedIds
         }).then(response => {
+          window.analytics.track('Ação em massa realizada', {
+            action: action,
+            tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
+            selecteds: this.selectedIds.length
+          })
           var self = this
           this.$jusNotification({
             title: 'Yay!',

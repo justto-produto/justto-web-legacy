@@ -253,6 +253,9 @@ export default {
         cancelButtonText: 'Cancelar',
         type: 'warning'
       }).then(() => {
+        window.analytics.track('Status modificado', {
+          action: action
+        })
         this.$store.dispatch('sendDisputeAction', {
           action: action,
           disputeId: this.dispute.id
@@ -275,6 +278,7 @@ export default {
           message: this.newMessage,
           disputeId: this.dispute.id
         }).then(() => {
+          window.analytics.track('Enviou mensagem via ' + this.messageType)
           this.newMessage = ''
           this.$jusNotification({
             title: 'Yay!',
@@ -296,6 +300,7 @@ export default {
           note: this.newNote,
           disputeId: this.dispute.id
         }).then(() => {
+          window.analytics.track('Nova nota criada')
           this.newNote = ''
           this.$jusNotification({
             title: 'Yay!',
