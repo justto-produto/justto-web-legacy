@@ -59,6 +59,7 @@
         <el-button plain icon="el-icon-download">
           Exportar casos
         </el-button>
+
       </div>
       <el-tabs
         v-loading="$store.state.loading"
@@ -167,7 +168,7 @@
                   <el-button
                     type="text"
                     class="favorite"
-                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid, 'ENGAJAMENTO')">
                     <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
                   </el-button>
                 </el-tooltip>
@@ -278,7 +279,7 @@
                   <el-button
                     type="text"
                     class="favorite"
-                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid, 'COM INTERAÇÃO')">
                     <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
                   </el-button>
                 </el-tooltip>
@@ -381,7 +382,7 @@
                   <el-button
                     type="text"
                     class="favorite"
-                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid, 'NOVOS ACORDOS')">
                     <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
                   </el-button>
                 </el-tooltip>
@@ -468,7 +469,7 @@
                   <el-button
                     type="text"
                     class="favorite"
-                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid)">
+                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid, 'TODOS')">
                     <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
                   </el-button>
                 </el-tooltip>
@@ -589,6 +590,10 @@ export default {
       this.showFilters = false
       this.filters = JSON.parse(JSON.stringify(this.activeFilters))
       this.getCases()
+      window.analytics.track('Filtro aplicado', {
+        filters: this.filters,
+        tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento'
+      })
     },
     restoreFilters () {
       this.activeFilters = JSON.parse(JSON.stringify(this.filters))
@@ -653,8 +658,14 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('sendBatchAction', {
-          type: action, disputeIds: this.selectedIds
+          type: action,
+          disputeIds: this.selectedIds
         }).then(response => {
+          window.analytics.track('Ação em massa realizada', {
+            action: action,
+            tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
+            selecteds: this.selectedIds.length
+          })
           var self = this
           this.$jusNotification({
             title: 'Yay!',
@@ -678,12 +689,16 @@ export default {
     refresh () {
       this.getCases()
     },
-    setFavorite (action, id) {
+    setFavorite (action, id, aba) {
       let label = action === 'favorite' ? 'favoritado' : 'removido de favoritos'
       this.$store.dispatch('sendDisputeAction', {
         action: action,
         disputeId: id
       }).then(() => {
+        window.analytics.track('Caso em "' + aba + '" ' + label, {
+          aba: aba,
+          action: label
+        })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Caso ' + label + ' com sucesso.',
