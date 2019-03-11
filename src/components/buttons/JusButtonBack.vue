@@ -1,5 +1,5 @@
 <template>
-  <div class="jus-button-back" @click="$router.push(to)">
+  <div class="jus-button-back" @click="goTo">
     <jus-icon icon="back"/> Voltar
   </div>
 </template>
@@ -15,6 +15,17 @@ export default {
     to: {
       default: '',
       type: String
+    },
+    src: {
+      default: '',
+      type: String
+    }
+  },
+  methods: {
+    goTo () {
+      if (this.src) {
+        window.location = this.src
+      } else this.$router.push(this.to)
     }
   }
 }

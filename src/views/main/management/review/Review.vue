@@ -60,7 +60,7 @@ export default {
     this.cases = []
     this.$store.dispatch('getDisputes').then(response => {
       this.$store.dispatch('hideLoading')
-      this.cases = response.hits.hits
+      this.cases = response
     })
   },
   methods: {

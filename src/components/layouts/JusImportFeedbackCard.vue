@@ -2,6 +2,12 @@
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ mappedName }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
+      <el-input v-model="respondent" placeholder="Dê um nome para o seu Réu">
+        <i
+          slot="prefix"
+          :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+          class="el-input__icon" />
+      </el-input>
       <el-input v-model="campaignName" placeholder="Dê um nome para a sua Campanha">
         <i
           slot="prefix"
@@ -41,20 +47,6 @@
       <div class="select-strategy__messages">
         <a v-show="strategy !== ''" @click="showStrategyMessages()">Ver estratégia de engajamento das partes</a>
       </div>
-      <div v-if="strategy.id === 1" class="jus-import-feedback-card__number">
-        <div>
-          <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
-        </div>
-        <div>
-          <el-input-number
-            v-model="paymentDeadLine"
-            :min="1"
-            :max="9999"
-            name="payment-deadline"
-            controls-position="right" />
-          dia(s) após acordo
-        </div>
-      </div>
       <div class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do protocolo
@@ -66,7 +58,25 @@
             :max="9999"
             name="protocol-deadline"
             controls-position="right" />
-          dia(s) após acordo
+          <span class="jus-import-feedback-card__sufix">
+            dia(s) após acordo
+          </span>
+        </div>
+      </div>
+      <div v-if="strategy.id === 1" class="jus-import-feedback-card__number">
+        <div>
+          <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
+        </div>
+        <div>
+          <el-input-number
+            v-model="paymentDeadLine"
+            :min="1"
+            :max="9999"
+            name="payment-deadline"
+            controls-position="right" />
+          <span class="jus-import-feedback-card__sufix">
+            dia(s) após o protocolo
+          </span>
         </div>
       </div>
       <el-date-picker
@@ -104,14 +114,11 @@
       <template slot="title">
         <h2>Estratégia de engajamento das partes</h2>
         <p>
-          Abaixo você encontra as mensagens enviadas para às partes dos casos contidos nesta Campanha. Através da
-          inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, aprende cada
-          vez mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada para
-          encontrar as pessoas e chegar uma solução adequada.
+          Abaixo, você encontra as mensagens a serem enviadas para às partes dos casos contidos nesta Campanha. Com os dados do seu caso, nosso sistema escolhe a melhor estratégia de engajamento para os seus casos.
         </p>
       </template>
       <el-collapse v-loading="$store.state.loading" class="jus-import-feedback-card__engagement el-collapse--bordered">
-        <el-collapse-item v-for="step in strategyEngagements" :key="step.id">
+        <el-collapse-item v-for="step in strategyEngagements" :key="step.id" >
           <template slot="title">
             <jus-icon :icon="getIcon(step.channel)" is-active/> {{ step.name | capitalize }}
           </template>
@@ -143,6 +150,7 @@ export default {
   data () {
     return {
       mappedName: '',
+      respondent: '',
       protocolDeadLine: 1,
       paymentDeadLine: 1,
       campaignName: '',
@@ -173,6 +181,11 @@ export default {
     }
   },
   watch: {
+    respondent (value) {
+      this.mappedCampaign.respondent = value
+      this.mappedCampaign.newName = value
+      this.campaignName = value
+    },
     campaignName (value) {
       if (value === '') {
         this.mappedCampaign.newName = ''
@@ -287,14 +300,6 @@ export default {
       border: 0 !important;
     }
   }
-  .jus-import-feedback-card__number {
-    .el-input__inner {
-      border-left: 1px solid #dcdfe6 !important;
-      border-right: 1px solid #dcdfe6 !important;
-      border-top: 0 !important;
-      border-bottom: 0 !important;
-    }
-  }
   .el-input__inner {
     border-bottom: 1px solid #dcdfe6 !important;
     border-top: 0;
@@ -339,6 +344,10 @@ export default {
       margin-left: 5px;
     }
   }
+  &__sufix {
+    width: 161px;
+    display: inline-block;
+  }
   &__number {
     display: flex;
     justify-content: space-between;
@@ -349,6 +358,12 @@ export default {
     .el-icon-circle-check-outline, .el-icon-circle-check {
       font-size: 1.3rem;
       margin-right: 5px;
+    }
+    .el-input__inner {
+      border-left: 1px solid #dcdfe6 !important;
+      border-right: 1px solid #dcdfe6 !important;
+      border-top: 0 !important;
+      border-bottom: 0 !important;
     }
   }
   .el-select {

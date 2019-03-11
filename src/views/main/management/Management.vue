@@ -545,7 +545,7 @@ export default {
       this.$store.dispatch('showLoading')
       this.cases = []
       this.$store.dispatch('getDisputes', this.buildQuery()).then(response => {
-        this.cases = response.hits.hits
+        this.cases = response
       }).catch(error => {
         console.error(error)
         this.$jusNotification({

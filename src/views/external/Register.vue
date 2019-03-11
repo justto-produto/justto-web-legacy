@@ -4,7 +4,8 @@
       <el-aside width="50%" class="hidden-sm-and-down">
         <JusSidenavExternal show-plans/>
       </el-aside>
-      <el-main class="display-flex">
+      <el-main class="display-flex position-relative">
+        <jus-button-back src="http://justto.com.br" />
         <el-form
           v-loading="showLoading"
           ref="registerForm"
@@ -58,11 +59,13 @@
 
 <script>
 import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
+import JusButtonBack from '@/components/buttons/JusButtonBack'
 
 export default {
   name: 'Register',
   components: {
-    JusSidenavExternal
+    JusSidenavExternal,
+    JusButtonBack
   },
   data () {
     return {

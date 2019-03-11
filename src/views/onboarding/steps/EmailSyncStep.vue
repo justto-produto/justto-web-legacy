@@ -40,7 +40,7 @@
     <el-button v-if="synced" type="primary" @click="$emit('onboarding:step:next')">
       Próximo
     </el-button>
-    <el-button type="text" @click="nextStep()">Pular</el-button>
+    <el-button v-if="!synced" type="text" @click="nextStep()">Pular</el-button>
   </div>
 </template>
 

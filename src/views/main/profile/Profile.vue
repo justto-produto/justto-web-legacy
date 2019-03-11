@@ -234,11 +234,11 @@ export default {
     this.$store.dispatch('whatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
         this.$store.dispatch('whatsappStart').then(() => {
-          this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
         })
       } else {
         this.$store.commit('setWhatsappSocketMessage', whatsapp)
       }
+      this.$jusSocket.subscribeWhatsapp()
     })
   },
   methods: {

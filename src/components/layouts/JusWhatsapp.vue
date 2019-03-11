@@ -15,7 +15,7 @@
         <br><br>
         3. Aponte seu telefone para esta tela para capturar o código
         <br><br>
-        4. Aguarde a sincronização
+        4. Aguarde a sincronização, esse processo pode levar alguns minutos
       </div>
       <div v-show="isWhatsappConnected" class="jus-whatsapp__status-info">
         <p>
@@ -131,7 +131,7 @@ export default {
       })
     },
     restart () {
-      this.$store.commit('setMessage', { status: 'STARTING' })
+      this.$store.commit('setWhatsappSocketMessage', { status: 'STARTING' })
       this.$store.dispatch('whatsappStop').then(() => {
         this.$store.dispatch('whatsappStart')
       })

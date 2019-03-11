@@ -38,9 +38,9 @@
         </div>
       </el-col>
       <el-col :span="12">
-        <h3>Colunas do sistema</h3>
+        <h3>Campos do Sistema</h3>
         <p>
-          Estas são as colunas do sistema. Para mapeá-las, você deve arrastar os campos abaixo para a coluna
+          Estes são os campos do sistema. Para mapeá-los, você deve arrastar os campos abaixo para a coluna
           correspondente.
         </p>
         <h3>Dados do conflito</h3>

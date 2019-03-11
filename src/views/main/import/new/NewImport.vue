@@ -10,20 +10,19 @@
         <el-step/>
         <el-step/>
         <el-step/>
-        <el-step/>
       </el-steps>
       <div class="new-import-view__content">
         <transition name="fade">
           <check-lines-step v-if="activeStep === 0" key="0"/>
           <columns-step v-if="activeStep === 1" key="1"/>
-          <enrichment-step v-if="activeStep === 2" key="2" @import:step:next="nextStep"/>
-          <campaign-step v-if="activeStep === 3" key="3" :mapped-campaigns="mappedCampaigns"/>
+          <!-- <enrichment-step v-if="activeStep === 2" key="2" @import:step:next="nextStep"/> -->
+          <campaign-step v-if="activeStep === 2" key="2" :mapped-campaigns="mappedCampaigns"/>
         </transition>
       </div>
       <div class="new-import-view__actions">
         <el-button plain @click="previousStep">Voltar</el-button>
-        <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button>
-        <el-button v-else-if="activeStep === 3" type="primary" @click="finalStep">Iniciar negociação</el-button>
+        <!-- <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button> -->
+        <el-button v-if="activeStep === 2" type="primary" @click="finalStep">Iniciar negociação</el-button>
         <el-button
           v-else :disabled="$store.state.loading"
           type="primary"
@@ -38,7 +37,7 @@
 <script>
 import CheckLinesStep from './steps/CheckLinesStep'
 import ColumnsStep from './steps/ColumnsStep'
-import EnrichmentStep from './steps/EnrichmentStep'
+// import EnrichmentStep from './steps/EnrichmentStep'
 import CampaignStep from './steps/CampaignStep'
 
 export default {
@@ -46,7 +45,7 @@ export default {
   components: {
     CheckLinesStep,
     ColumnsStep,
-    EnrichmentStep,
+    // EnrichmentStep,
     CampaignStep
   },
   data () {
@@ -73,8 +72,6 @@ export default {
         window.analytics.track('Planilha importada', {
           lines: this.$store.state.importModule.file.rows
         })
-      } else if (this.activeStep === 2) {
-        window.analytics.track('Enriquecimento concluido')
       }
       this.activeStep += 1
     },
@@ -91,17 +88,16 @@ export default {
       var allValid = true
       var promises = []
       for (let campaign of this.mappedCampaigns) {
-        let campaignIndex = {
-          name: campaign.name,
-          newName: campaign.newName,
-          strategy: campaign.strategy.name
-        }
-        campaignsTrack.push(campaignIndex)
         if (this.checkValidCampaign(campaign)) {
           campaign.name = campaign.newName
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
           campaign.strategyId = campaign.strategy.id
+          campaignsTrack.push({
+            name: campaign.name,
+            newName: campaign.newName,
+            strategy: campaign.strategy.name
+          })
           delete campaign.campaign
           delete campaign.rows
           delete campaign.createdAt
@@ -141,7 +137,8 @@ export default {
     },
     checkValidCampaign (campaign) {
       if (
-        campaign.hasOwnProperty('name') &&
+        campaign.hasOwnProperty('newName') &&
+        campaign.hasOwnProperty('respondent') &&
         campaign.hasOwnProperty('cluster') &&
         campaign.hasOwnProperty('deadline') &&
         campaign.hasOwnProperty('protocolDeadLine') &&

@@ -179,7 +179,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   if (to.matched.some(record => record.meta.requiresTrack)) {
     window.analytics.page(to.name)
-  } 
+  }
   if (from.name === 'importNew') {
     window.analytics.track('Importação interrompida')
   }
