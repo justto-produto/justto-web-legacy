@@ -8,7 +8,6 @@
         ref="oabForm"
         :inline="true"
         :model="oabForm"
-        :rules="oabFormRules"
         label-position="top"
         @submit.native.prevent="submitForm">
         <el-form-item label="OAB" prop="oab">
@@ -30,7 +29,7 @@
       title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
       type="error"/>
-    <el-button type="primary" @click="submitForm">Próximo</el-button>
+    <el-button type="primary" @click="submitForm" :disabled="!oabForm.oab || !oabForm.state">Próximo</el-button>
     <el-button type="text" @click="skip">Pular</el-button>
   </div>
 </template>
@@ -47,16 +46,8 @@ export default {
     return {
       showError: false,
       oabForm: {
-        oab: this.$store.state.workspaceModule.oabNumber,
-        state: this.$store.state.workspaceModule.oabState
-      },
-      oabFormRules: {
-        oab: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-        ],
-        state: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-        ]
+        oab: this.$store.state.workspaceModule.oabNumber ? this.$store.state.workspaceModule.oabNumber : '',
+        state: this.$store.state.workspaceModule.oabState ? this.$store.state.workspaceModule.oabState : ''
       }
     }
   },

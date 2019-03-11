@@ -52,7 +52,7 @@
             :max="9999"
             name="payment-deadline"
             controls-position="right" />
-          dia(s) após acordo
+          dia(s) após o protocolo
         </div>
       </div>
       <div class="jus-import-feedback-card__number">
@@ -104,14 +104,11 @@
       <template slot="title">
         <h2>Estratégia de engajamento das partes</h2>
         <p>
-          Abaixo você encontra as mensagens enviadas para às partes dos casos contidos nesta Campanha. Através da
-          inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, aprende cada
-          vez mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada para
-          encontrar as pessoas e chegar uma solução adequada.
+          Abaixo, você encontra as mensagens a serem enviadas para às partes dos casos contidos nesta Campanha. Com os dados do seu caso, nosso sistema escolhe a melhor estratégia de engajamento para os seus casos. 
         </p>
       </template>
       <el-collapse v-loading="$store.state.loading" class="jus-import-feedback-card__engagement el-collapse--bordered">
-        <el-collapse-item v-for="step in strategyEngagements" :key="step.id">
+        <el-collapse-item v-for="step in strategyEngagements" :key="step.id" >
           <template slot="title">
             <jus-icon :icon="getIcon(step.channel)" is-active/> {{ step.name | capitalize }}
           </template>

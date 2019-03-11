@@ -2,12 +2,12 @@
 @import './variables';
 
 html {
-  font-family: 'Montserrat', sans-serif !important;
   font-size: 14px;
   color: $--color-text-regular;
 }
 
 * {
+  font-family: 'Montserrat', sans-serif !important;
   box-sizing: border-box;
   outline: none;
 }

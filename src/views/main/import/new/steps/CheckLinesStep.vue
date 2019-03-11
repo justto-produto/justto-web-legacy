@@ -2,6 +2,7 @@
   <div class="check-lines-step">
     <div class="new-import-view__title">
       <h2>Número de casos</h2>
+      <p>Verifique abaixo se sua planilha possui o número correto de casos</p>
     </div>
     <el-card class="el-card--dashed" shadow="never">
       <h4>Casos prontos para importação: {{ lines }}</h4>
@@ -11,7 +12,7 @@
             <strong>Sua planilha tinha mais linhas do que o número acima?</strong>
           </template>
           <div>
-            Caso hajam mais casos do que você tinha planejado, verifique se foi aplicado algum filtro na sua
+            Caso existam mais casos do que você tinha planejado, verifique se foi aplicado algum filtro na sua
             planilha. Clique em voltar, retire as linhas indesejadas e importe a planilha novamente.
           </div>
         </el-collapse-item>

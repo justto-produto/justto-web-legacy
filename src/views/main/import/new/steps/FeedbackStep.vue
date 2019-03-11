@@ -1,12 +1,11 @@
 <template>
-  <div v-loading="$store.state.loading" class="campaign-step">
+  <div v-loading="$store.state.loading" class="feedback-step">
     <h2 class="new-import-view__title">Configuração de campanhas</h2>
     <p>
-      O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de 
-      casos dentro da mesma importação com um réu em comum. Por isso, ao importar, 
-      o sistema automaticamente divide seus casos em campanhas para que você possa 
-      configurá-las separadamente.
+      Agrupamos seus casos por empresas. Cada empresa possui a sua Campanha, que você poderá, posteriormente, editar
+      as existentes ou criar novas Campanhas.
       <br><br>
+      <a href="#">Entenda o que são, e como funcionam as Campanhas.</a>
     </p>
     <div class="import-view__container">
       <div class="import-view__content">
@@ -24,7 +23,7 @@
 import JusImportFeedbackCard from '@/components/layouts/JusImportFeedbackCard'
 
 export default {
-  name: 'CampaignStep',
+  name: 'FeedbackStep',
   components: {
     JusImportFeedbackCard
   },
@@ -58,7 +57,7 @@ export default {
 </script>
 
 <style lang="scss">
-.campaign-step {
+.feedback-step {
   >p {
     text-align: center;
     max-width: 600px;
