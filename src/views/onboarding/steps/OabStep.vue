@@ -29,7 +29,7 @@
       title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
       type="error"/>
-    <el-button type="primary" @click="submitForm" :disabled="!oabForm.oab || !oabForm.state">Próximo</el-button>
+    <el-button :disabled="!oabForm.oab || !oabForm.state" type="primary" @click="submitForm">Próximo</el-button>
     <el-button type="text" @click="skip">Pular</el-button>
   </div>
 </template>

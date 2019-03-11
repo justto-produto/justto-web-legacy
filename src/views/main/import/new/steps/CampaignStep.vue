@@ -2,9 +2,9 @@
   <div v-loading="$store.state.loading" class="campaign-step">
     <h2 class="new-import-view__title">Configuração de campanhas</h2>
     <p>
-      O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de 
-      casos dentro da mesma importação com um réu em comum. Por isso, ao importar, 
-      o sistema automaticamente divide seus casos em campanhas para que você possa 
+      O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de
+      casos dentro da mesma importação com um réu em comum. Por isso, ao importar,
+      o sistema automaticamente divide seus casos em campanhas para que você possa
       configurá-las separadamente.
       <br><br>
     </p>

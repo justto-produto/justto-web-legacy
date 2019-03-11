@@ -20,11 +20,11 @@ const whatsappModule = {
     isWhatsappOffline: state => {
       return state.status === 'OFFLINE'
     },
-    isWhatsappReady: state => {
-      return state.status === 'READY'
-    },
     isWhatsappStarting: state => {
       return state.status === 'STARTING'
+    },
+    isWhatsappReady: state => {
+      return state.status === 'READY'
     },
     isWhatsappConnected: state => {
       return state.status === 'CONNECTED'

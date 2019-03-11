@@ -105,7 +105,7 @@ export default {
         this.$store.dispatch('getDisputes', {
           query: { bool: { must: [{ match: { disputeid: this.id } }] } }
         }).then(response => {
-          if (response.hits.hits.length) {
+          if (response.length) {
             this.summary = response.hits.hits[0]._source
           }
         })
