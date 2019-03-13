@@ -121,7 +121,7 @@
       </template>
       <el-collapse v-loading="$store.state.loading" class="jus-import-feedback-card__engagement el-collapse--bordered">
         <div v-for="step in strategyEngagements" :key="step.id">
-          <div v-if="step.channel != 'DELAY'" class="jus-import-feedback-card__step">{{ send }}º envio</div>
+          <div v-if="step.channel != 'DELAY'" class="jus-import-feedback-card__step">{{ sendNumber }}º envio</div>
           <el-collapse-item v-if="step.channel != 'DELAY'">
             <template slot="title">
               <jus-icon :icon="getIcon(step.channel)" is-active/> {{ step.name | capitalize }}
@@ -148,7 +148,7 @@ export default {
       type: Object,
       default: function () {
         return {}
-      }
+      },
     },
     color: {
       type: String,
@@ -165,6 +165,7 @@ export default {
       campaignTimeout: null,
       strategy: '',
       strategyEngagements: [],
+      sendNumber: 1,
       dialogVisible: false,
       dueDate: null,
       negotiatorIds: [],
@@ -224,6 +225,13 @@ export default {
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
   },
   methods: {
+    // sendNumber (step) {
+    //   if (step.channel != 'DELAY') {
+    //     let i = 0
+    //     sendNumber = i++
+    //   }
+    // },
+
     // querySearchCampaign (queryString, callback) {
     //   var campaigns = this.campaigns
     //   var results = queryString ? campaigns.filter(this.createCampaignFilter(queryString)) : campaigns
