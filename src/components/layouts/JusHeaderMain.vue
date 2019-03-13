@@ -112,7 +112,7 @@ export default {
       terms = [...new Set(terms)]
       var query = ''
       for (let word of terms) {
-        let w = '*' + word + '*'
+        let w = '*' + word + '* or' + word
         if (terms[terms.length - 1] !== word) {
           w = w + ' AND '
         }
