@@ -106,7 +106,7 @@ export default {
           query: { bool: { must: [{ match: { disputeid: this.id } }] } }
         }).then(response => {
           if (response.length) {
-            this.summary = response.hits.hits[0]._source
+            this.summary = response
           }
         })
       }

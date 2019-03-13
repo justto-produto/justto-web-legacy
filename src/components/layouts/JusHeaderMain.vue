@@ -8,19 +8,19 @@
         :fetch-suggestions="search"
         placeholder="Busque aqui os seus casos">
         <template slot-scope="{ item }">
-          <router-link :to="'/management/case/' + item._source.disputeid">
+          <router-link :to="'/management/case/' + item.disputeid">
             <div class="jus-header-main__result">
               <h4>
-                Caso #{{ item._source.disputeid }} |
-                Campanha: {{ item._source.campaignname }} |
-                Processo: {{ item._source.disputecode }}
+                Caso #{{ item.disputeid }} |
+                Campanha: {{ item.campaignname }} |
+                Processo: {{ item.disputecode }}
               </h4>
-              <div>Estratégia: {{ item._source.strategyname }}</div>
-              <div>Status: <span>{{ $t('occurrence.type.' + item._source.disputestatus) }}</span></div>
-              <div v-for="(claiment, index) in item._source.claiments" :key="claiment.f1 + index">
+              <div>Estratégia: {{ item.strategyname }}</div>
+              <div>Status: <span>{{ $t('occurrence.type.' + item.disputestatus) }}</span></div>
+              <div v-for="(claiment, index) in item.claiments" :key="claiment.f1 + index">
                 Parte contrária: {{ claiment.f1 }}
               </div>
-              <div v-for="(lawyer, index) in item._source.claimentslawyer" :key="lawyer.f1 + index">
+              <div v-for="(lawyer, index) in item.claimentslawyer" :key="lawyer.f1 + index">
                 Advogado: {{ lawyer.f1 }}
               </div>
             </div>
@@ -143,7 +143,7 @@ export default {
           }
         }
       }).then(response => {
-        cb(response.hits.hits)
+        cb(response)
       })
     }
   }
