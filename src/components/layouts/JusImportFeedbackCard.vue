@@ -114,19 +114,27 @@
       <template slot="title">
         <h2>Estratégia de engajamento das partes</h2>
         <p>
-          Abaixo, você encontra as mensagens a serem enviadas para às partes dos casos contidos nesta Campanha. Com os dados do seu caso, nosso sistema escolhe a melhor estratégia de engajamento para os seus casos.
+          Abaixo, você encontra as mensagens a serem enviadas para às partes dos casos contidos 
+          nesta Campanha. Com os dados do seu caso, nosso sistema escolhe a melhor estratégia de 
+          engajamento para os seus casos.
         </p>
       </template>
       <el-collapse v-loading="$store.state.loading" class="jus-import-feedback-card__engagement el-collapse--bordered">
-        <el-collapse-item v-for="step in strategyEngagements" :key="step.id" >
-          <template slot="title">
-            <jus-icon :icon="getIcon(step.channel)" is-active/> {{ step.name | capitalize }}
-          </template>
-          <div v-if="step.template">
-            <h3>{{ step.template.title }}</h3>
-            <span v-html="step.template.body" />
+        <div v-for="step in strategyEngagements" :key="step.id">
+          <div v-if="step.channel != 'DELAY'" class="jus-import-feedback-card__step">{{ send }}º envio</div>
+          <el-collapse-item v-if="step.channel != 'DELAY'">
+            <template slot="title">
+              <jus-icon :icon="getIcon(step.channel)" is-active/> {{ step.name | capitalize }}
+            </template>
+            <div v-if="step.template">
+              <h3>{{ step.template.title }}</h3>
+              <span v-html="step.template.body" />
+            </div>
+          </el-collapse-item>
+          <div v-else class="jus-import-feedback-card__wait">
+            <jus-icon :icon="getIcon(step.channel)"/> {{ step.name }}
           </div>
-        </el-collapse-item>
+        </div>
       </el-collapse>
     </el-dialog>
   </div>
@@ -347,6 +355,22 @@ export default {
   &__sufix {
     width: 161px;
     display: inline-block;
+  }
+  &__wait {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    :first-child {
+      margin-right: 10px;
+    }
+  }
+  &__step {
+    color: #dcdfe6;
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
   &__number {
     display: flex;

@@ -34,15 +34,28 @@
       :visible.sync="modal"
       width="600px">
       <span>
-        Nós da JUSTTO queremos fazer a diferença na sua frente de acordos. Portanto, você pode inserir quantos casos
-        quiser na plataforma e só cobraremos por aqueles casos em que houver interação.
+        Nós da JUSTTO queremos fazer a diferença na sua frente de acordos. Portanto, 
+        você pode inserir quantos casos quiser na plataforma e só cobraremos por aqueles 
+        casos em que houver interação.
       </span>
       <el-collapse class="el-collapse--bordered">
         <el-collapse-item title="O que consideramos como interação?">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          <b>WhatsApp:</b> Qualquer resposta ou clique em Link <br>
+          <b>E-mail e CNA:</b> Qualquer resposta ou clique em Link <br>
+          <b>Aplicativos Mobile JUSTTO:</b> Download ou Acesso ao Caso <br>
+          <b>Aplicativo Web JUSTTO:</b> Acesso ao Caso <br>
+          <b>Ações do Cliente / Negociador:</b> Mudança de Status do Ticket para "Em 
+          Engajamento", "Novos Acordos" ou "Ganho"
         </el-collapse-item>
-        <el-collapse-item v-if="modalType" title="Como posso estimar quanto vou pagar?">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <el-collapse-item title="Como posso estimar quanto vou pagar?">
+          Quanto exatamente você vai pagar depende do perfil da sua carteira, mas 
+          temos uma média de mercado para te dar uma ideia: <br><br>
+          <span v-if="modalType">
+            100 casos importados &rarr; 60 casos com interação &rarr; 40 acordos fechados
+          </span>
+          <span v-else>
+            100 casos importados &rarr; 15 casos com interação &rarr; 10 acordos fechados
+          </span>
         </el-collapse-item>
       </el-collapse>
       <span slot="footer" class="dialog-footer">

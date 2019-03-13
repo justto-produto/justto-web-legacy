@@ -14,7 +14,7 @@
           <el-input v-model="oabForm.oab" name="oab"/>
         </el-form-item>
         <el-form-item label="UF" prop="state">
-          <el-select v-model="oabForm.state" placeholder="">
+          <el-select v-model="oabForm.state" filterable placeholder="">
             <el-option
               v-for="state in $store.state.statesList"
               :key="state"
