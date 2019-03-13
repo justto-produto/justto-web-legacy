@@ -132,7 +132,7 @@
             </div>
           </el-collapse-item>
           <div v-else class="jus-import-feedback-card__wait">
-            <jus-icon :icon="getIcon(step.channel)"/> {{ step.name }}
+            <jus-icon :icon="getIcon(step.channel)" is-active/> {{ step.name }}
           </div>
         </div>
       </el-collapse>
@@ -225,12 +225,12 @@ export default {
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
   },
   methods: {
-    // sendNumber (step) {
-    //   if (step.channel != 'DELAY') {
-    //     let i = 0
-    //     sendNumber = i++
-    //   }
-    // },
+    sendNumber (step) {
+      if (step.channel != 'DELAY') {
+        let i = 0
+        this.sendNumber = i++
+      }
+    },
 
     // querySearchCampaign (queryString, callback) {
     //   var campaigns = this.campaigns
@@ -298,6 +298,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .jus-import-feedback-card {
   width: 100%;
   &+.jus-import-feedback-card {
@@ -346,7 +348,7 @@ export default {
     margin-left: 35px;
   }
   .el-icon-circle-check-outline {
-    color: #d1dbe2;
+    color: $--color-cloudy-blue;
   }
   .select-strategy__messages {
     border-bottom: 1px solid #dcdfe6;
@@ -369,6 +371,7 @@ export default {
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+    color: $--color-primary;
     :first-child {
       margin-right: 10px;
     }
@@ -400,10 +403,10 @@ export default {
   }
   .el-select {
     .el-select__tags-text {
-      color: #424242;
+      color: $--color-text-regular;
     }
     .el-tag__close.el-icon-close {
-      background-color: #adadad;
+      background-color: $--color-text-secondary;
     }
   }
 }
