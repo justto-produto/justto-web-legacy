@@ -19,7 +19,7 @@ const dispute = {
     getDisputes ({ commit, rootState }, query) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('api/search/zombo/' + rootState.workspaceModule.id + '/t_el_disputes/', query)
+        axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/', query)
           .then(response => {
             resolve(response.data)
           })
