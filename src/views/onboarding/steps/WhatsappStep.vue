@@ -27,9 +27,6 @@ export default {
     }
   },
   methods: {
-    syncWhats () {
-      window.analytics.track('WhatsApp sincronizado', { number: this.$store.state.whatsappModule.number })
-    },
     nextStep () {
       window.analytics.track('Pulada a sincronização de WhatsApp')
       this.$emit('onboarding:step:next')

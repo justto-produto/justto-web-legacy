@@ -56,7 +56,12 @@
           <jus-icon :is-white="Object.keys(filters).length !== 0" icon="filter" />
           Filtrar
         </el-button>
-        <el-button plain icon="el-icon-download">
+        <el-button
+          :loading="loadingExport"
+          :disabled="cases.length === 0"
+          plain
+          icon="el-icon-download"
+          @click="exportDisputes">
           Exportar casos
         </el-button>
 
@@ -82,7 +87,7 @@
               width="175px"
               class-name="fixed-width"
               label-class-name="fixed-width">
-              <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
+              <template slot-scope="scope">{{ scope.row.campaignname }}</template>
             </el-table-column>
             <el-table-column
               label="Parte(s) contrária(s)"
@@ -93,11 +98,11 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row._source.claiments" slot="reference" :key="claimant + index">
+                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
                     {{ claimant.f1 }}
                   </span>
                   <ul>
-                    <li v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                    <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
                       {{ claimant.f1 }}
                     </li>
                   </ul>
@@ -113,11 +118,11 @@
                 <el-popover
                   title="Advogados da parte"
                   trigger="hover">
-                  <span v-for="(lawyer, index) in scope.row._source.claimentslawyer" slot="reference" :key="lawyer + index">
+                  <span v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
                     {{ lawyer.f1 }}
                   </span>
                   <ul>
-                    <li v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
+                    <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
                       {{ lawyer.f1 }}
                     </li>
                   </ul>
@@ -125,22 +130,22 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
             </el-table-column>
             <el-table-column label="Valor proposto">
-              <template slot-scope="scope">R$ {{ scope.row._source.disputedealvalue }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputedealvalue }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
-              <template slot-scope="scope">{{ scope.row._source.disputedealdate | moment('DD/MM/YY') }}</template>
+              <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
             </el-table-column>
             <el-table-column label="Msgs enviadas">
               <template slot-scope="scope">
-                <span v-if="!scope.row._source.communicationmsgtotalsent && !scope.row._source.communicationmsgtotalschedulled">
+                <span v-if="!scope.row.communicationmsgtotalsent && !scope.row.communicationmsgtotalschedulled">
                   Enriquecendo
                 </span>
                 <span v-else>
-                  {{ scope.row._source.communicationmsgtotalsent }} /
-                  {{ scope.row._source.communicationmsgtotalschedulled }}
+                  {{ scope.row.communicationmsgtotalsent }} /
+                  {{ scope.row.communicationmsgtotalschedulled }}
                 </span>
               </template>
             </el-table-column>
@@ -153,27 +158,27 @@
                 <el-popover trigger="hover">
                   <div>
                     <strong>Responsáveis:</strong><br>
-                    <span v-for="(negotiator, index) in scope.row._source.negotiators" :key="negotiator.f1 + index">
+                    <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
                       {{ negotiator.f1 }}
                     </span>
                   </div>
                   <br>
                   <div>
                     <strong>Estratégia:</strong><br>
-                    {{ scope.row._source.strategyname }}
+                    {{ scope.row.strategyname }}
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
-                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
                   <el-button
                     type="text"
                     class="favorite"
-                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid, 'ENGAJAMENTO')">
-                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                    @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'ENGAJAMENTO')">
+                    <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
                   </el-button>
                 </el-tooltip>
                 <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: { id: scope.row._source.disputeid } }">
+                  <router-link :to="{ name: 'case', params: { id: scope.row.disputeid } }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
@@ -199,7 +204,7 @@
               width="175px"
               class-name="fixed-width"
               label-class-name="fixed-width">
-              <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
+              <template slot-scope="scope">{{ scope.row.campaignname }}</template>
             </el-table-column>
             <el-table-column
               label="Parte(s) contrária(s)"
@@ -210,11 +215,11 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row._source.claiments" slot="reference" :key="claimant + index">
+                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
                     {{ claimant.f1 }}
                   </span>
                   <ul>
-                    <li v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                    <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
                       {{ claimant.f1 }}
                     </li>
                   </ul>
@@ -230,11 +235,11 @@
                 <el-popover
                   title="Advogados da parte"
                   trigger="hover">
-                  <span v-for="(lawyer, index) in scope.row._source.claimentslawyer" slot="reference" :key="lawyer + index">
+                  <span v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
                     {{ lawyer.f1 }}
                   </span>
                   <ul>
-                    <li v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
+                    <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
                       {{ lawyer.f1 }}
                     </li>
                   </ul>
@@ -242,17 +247,17 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
             </el-table-column>
             <el-table-column label="Contraproposta">
-              <template slot-scope="scope">R$ {{ scope.row._source.lastoffervalue }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.lastoffervalue }}</template>
             </el-table-column>
             <el-table-column label="Última interação">
-              <template slot-scope="scope">{{ scope.row._source.lastinteractiondate | moment('DD/MM/YY') }}</template>
+              <template slot-scope="scope">{{ scope.row.lastinteractiondate | moment('DD/MM/YY') }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
               <template slot-scope="scope">
-                {{ scope.row._source.disputedealdate | moment('DD/MM/YY') }}
+                {{ scope.row.disputedealdate | moment('DD/MM/YY') }}
               </template>
             </el-table-column>
             <el-table-column
@@ -264,27 +269,27 @@
                 <el-popover trigger="hover">
                   <div>
                     <strong>Responsáveis:</strong><br>
-                    <span v-for="(negotiator, index) in scope.row._source.negotiators" :key="negotiator.f1 + index">
+                    <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
                       {{ negotiator.f1 }}
                     </span>
                   </div>
                   <br>
                   <div>
                     <strong>Estratégia:</strong><br>
-                    {{ scope.row._source.strategyname }}
+                    {{ scope.row.strategyname }}
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
-                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
                   <el-button
                     type="text"
                     class="favorite"
-                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid, 'COM INTERAÇÃO')">
-                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                    @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'COM INTERAÇÃO')">
+                    <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
                   </el-button>
                 </el-tooltip>
                 <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                  <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
@@ -310,7 +315,7 @@
               width="175px"
               class-name="fixed-width"
               label-class-name="fixed-width">
-              <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
+              <template slot-scope="scope">{{ scope.row.campaignname }}</template>
             </el-table-column>
             <el-table-column
               label="Parte(s) contrária(s)"
@@ -321,11 +326,11 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row._source.claiments" slot="reference" :key="claimant + index">
+                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
                     {{ claimant.f1 }}
                   </span>
                   <ul>
-                    <li v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                    <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
                       {{ claimant.f1 }}
                     </li>
                   </ul>
@@ -341,11 +346,11 @@
                 <el-popover
                   title="Advogados da parte"
                   trigger="hover">
-                  <span v-for="(lawyer, index) in scope.row._source.claimentslawyer" slot="reference" :key="lawyer + index">
+                  <span v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
                     {{ lawyer.f1 }}
                   </span>
                   <ul>
-                    <li v-for="(lawyer, index) in scope.row._source.claimentslawyer" :key="lawyer + index">
+                    <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
                       {{ lawyer.f1 }}
                     </li>
                   </ul>
@@ -353,10 +358,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
-              <template slot-scope="scope">{{ scope.row._source.disputedealvalue }}</template>
+              <template slot-scope="scope">{{ scope.row.disputedealvalue }}</template>
             </el-table-column>
             <el-table-column
               label="Ações"
@@ -367,27 +372,27 @@
                 <el-popover trigger="hover">
                   <div>
                     <strong>Responsáveis:</strong><br>
-                    <span v-for="(negotiator, index) in scope.row._source.negotiators" :key="negotiator.f1 + index">
+                    <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
                       {{ negotiator.f1 }}
                     </span>
                   </div>
                   <br>
                   <div>
                     <strong>Estratégia:</strong><br>
-                    {{ scope.row._source.strategyname }}
+                    {{ scope.row.strategyname }}
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
-                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
                   <el-button
                     type="text"
                     class="favorite"
-                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid, 'NOVOS ACORDOS')">
-                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                    @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'NOVOS ACORDOS')">
+                    <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
                   </el-button>
                 </el-tooltip>
                 <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                  <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
@@ -412,7 +417,7 @@
               width="175px"
               class-name="fixed-width"
               label-class-name="fixed-width">
-              <template slot-scope="scope">{{ scope.row._source.campaignname }}</template>
+              <template slot-scope="scope">{{ scope.row.campaignname }}</template>
             </el-table-column>
             <el-table-column
               label="Parte(s) contrária(s)"
@@ -423,11 +428,11 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row._source.claiments" slot="reference" :key="claimant + index">
+                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
                     {{ claimant.f1 }}
                   </span>
                   <ul>
-                    <li v-for="(claimant, index) in scope.row._source.claiments" :key="claimant + index">
+                    <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
                       {{ claimant.f1 }}
                     </li>
                   </ul>
@@ -435,14 +440,14 @@
               </template>
             </el-table-column>
             <el-table-column label="Nº do caso">
-              <template slot-scope="scope">{{ scope.row._source.disputecode }}</template>
+              <template slot-scope="scope">{{ scope.row.disputecode }}</template>
             </el-table-column>
             <el-table-column label="Estratégia">
-              <template slot-scope="scope">{{ scope.row._source.strategyname }}</template>
+              <template slot-scope="scope">{{ scope.row.strategyname }}</template>
             </el-table-column>
             <el-table-column label="Status">
-              <template v-if="scope.row._source.disputestatus" slot-scope="scope">
-                {{ $t('occurrence.type.' + scope.row._source.disputestatus) }}
+              <template v-if="scope.row.disputestatus" slot-scope="scope">
+                {{ $t('occurrence.type.' + scope.row.disputestatus) }}
               </template>
             </el-table-column>
             <el-table-column
@@ -454,27 +459,27 @@
                 <el-popover trigger="hover">
                   <div>
                     <strong>Responsáveis:</strong><br>
-                    <span v-for="(negotiator, index) in scope.row._source.negotiators" :key="negotiator.f1 + index">
+                    <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
                       {{ negotiator.f1 }}
                     </span>
                   </div>
                   <br>
                   <div>
                     <strong>Estratégia:</strong><br>
-                    {{ scope.row._source.strategyname }}
+                    {{ scope.row.strategyname }}
                   </div>
                   <jus-icon slot="reference" icon="more-info" />
                 </el-popover>
-                <el-tooltip :content="scope.row._source.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+                <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
                   <el-button
                     type="text"
                     class="favorite"
-                    @click="setFavorite(scope.row._source.favorite ? 'disfavor' : 'favorite', scope.row._source.disputeid, 'TODOS')">
-                    <jus-icon :icon="scope.row._source.favorite ? 'golden-star' : 'star'" />
+                    @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'TODOS')">
+                    <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
                   </el-button>
                 </el-tooltip>
                 <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: {id: scope.row._source.disputeid} }">
+                  <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
                     <jus-icon icon="open-case" />
                   </router-link>
                 </el-tooltip>
@@ -524,7 +529,9 @@ export default {
       filters: {},
       selectedIds: [],
       activeTab: {},
-      activeFilters: {}
+      activeFilters: {},
+      currentQuery: '',
+      loadingExport: false
     }
   },
   computed: {
@@ -538,13 +545,15 @@ export default {
       this.activeFilters = savedFilters.filters
       this.filters = savedFilters.filters
     }
+    this.setActiveTabLabel('0')
     this.getCases()
   },
   methods: {
     getCases () {
       this.$store.dispatch('showLoading')
       this.cases = []
-      this.$store.dispatch('getDisputes', this.buildQuery()).then(response => {
+      this.currentQuery = this.buildQuery()
+      this.$store.dispatch('getDisputes', this.currentQuery).then(response => {
         this.cases = response
       }).catch(error => {
         console.error(error)
@@ -607,8 +616,8 @@ export default {
     handleSelectionChange (selected) {
       this.selectedIds = []
       for (let dispute of selected) {
-        if (dispute._source && dispute._source.disputeid) {
-          this.selectedIds.push(dispute._source.disputeid)
+        if (dispute && dispute.disputeid) {
+          this.selectedIds.push(dispute.disputeid)
         }
       }
     },
@@ -715,6 +724,16 @@ export default {
           message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
           type: 'error'
         })
+      })
+    },
+    exportDisputes () {
+      this.loadingExport = true
+      this.$store.dispatch('exportDisputes', this.currentQuery).then(response => {
+        // eslint-disable-next-line
+        window.open(axios.defaults.baseURL + '/api/export/' + response)
+        window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
+      }).finally(() => {
+        this.loadingExport = false
       })
     }
   }

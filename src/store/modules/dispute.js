@@ -16,10 +16,22 @@ const dispute = {
           })
       })
     },
-    getDisputes ({ commit, rootState }, query) {
+    getDisputes ({ rootState }, query) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('api/search/zombo/' + rootState.workspaceModule.id + '/t_el_disputes/', query)
+        axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/', query)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    exportDisputes ({ rootState }, query) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/export', query)
           .then(response => {
             resolve(response.data)
           })

@@ -18,22 +18,22 @@
         <el-table-column type="selection" />
         <el-table-column label="Campanha">
           <template slot-scope="scope">
-            {{ scope.row._source.campaignname }}
+            {{ scope.row.campaignname }}
             <jus-icon icon="alert" />
           </template>
         </el-table-column>
         <el-table-column label="Indetificação">
-          <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}
+          <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}
           <jus-icon icon="alert" /></template>
         </el-table-column>
         <el-table-column label="Alçada máxima">
-          <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
+          <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
         </el-table-column>
         <el-table-column label="CPF/CNPJ/OAB">
-          <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}</template>
+          <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
         </el-table-column>
         <el-table-column label="Nome">
-          <template slot-scope="scope">R$ {{ scope.row._source.disputeobjectboundary }}
+          <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}
           <jus-icon icon="alert" /></template>
         </el-table-column>
       </el-table>
