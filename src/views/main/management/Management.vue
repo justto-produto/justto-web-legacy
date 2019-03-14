@@ -545,6 +545,7 @@ export default {
       this.activeFilters = savedFilters.filters
       this.filters = savedFilters.filters
     }
+    this.setActiveTabLabel('0')
     this.getCases()
   },
   methods: {
