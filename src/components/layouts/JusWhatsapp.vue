@@ -67,6 +67,13 @@ export default {
       }
     }
   },
+  watch: {
+    '$store.state.whatsappModule.status': function () {
+      if (this.$store.state.whatsappModule.status === 'CONNECTED') {
+        window.analytics.track('Whatsapp sincronizado')
+      }
+    }
+  },
   computed: {
     qrCode () {
       return this.$store.state.whatsappModule.qrCode
