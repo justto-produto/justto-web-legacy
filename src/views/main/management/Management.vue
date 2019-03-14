@@ -627,7 +627,7 @@ export default {
           newActive = { index: 1, label: 'Com interação', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: true }] }
           break
         case '2':
-          newActive = { index: 2, label: 'Novos acordos', match: [{ disputestatus: 'ACCEPTED' }] }
+          newActive = { index: 2, label: 'Novos acordos', match: [{ disputestatus: ['ACCEPTED', 'CHECKOUT'] }] }
           break
         case '3':
           newActive = { index: 3, label: 'Todos' }
