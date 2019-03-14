@@ -578,6 +578,15 @@ export default {
           )
         }
       }
+
+      if (this.activeTab.terms) {
+        for (let terms of this.activeTab.terms) {
+          query.query.bool.must.push(
+            { terms: terms }
+          )
+        }
+      }
+      
       Object.keys(this.filters).forEach(key => {
         let match = {}
         if (this.filters[key]) {
@@ -636,7 +645,7 @@ export default {
           newActive = { index: 1, label: 'Com interação', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: true }] }
           break
         case '2':
-          newActive = { index: 2, label: 'Novos acordos', match: [{ disputestatus: ['ACCEPTED', 'CHECKOUT'] }] }
+          newActive = { index: 2, label: 'Novos acordos', terms: [{ disputestatus: ['ACCEPTED', 'CHECKOUT'] }] }
           break
         case '3':
           newActive = { index: 3, label: 'Todos' }
