@@ -130,13 +130,13 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange }}</template>
             </el-table-column>
             <el-table-column label="Valor proposto">
-              <template slot-scope="scope">R$ {{ scope.row.disputedealvalue }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputelastrespondentoffer }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
-              <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
+              <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
             </el-table-column>
             <el-table-column label="Msgs enviadas">
               <template slot-scope="scope">
@@ -247,7 +247,7 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange }}</template>
             </el-table-column>
             <el-table-column label="Contraproposta">
               <template slot-scope="scope">R$ {{ scope.row.lastoffervalue }}</template>
@@ -358,7 +358,7 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
               <template slot-scope="scope">{{ scope.row.disputedealvalue }}</template>
