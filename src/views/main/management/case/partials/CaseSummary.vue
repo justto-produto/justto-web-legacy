@@ -9,12 +9,8 @@
         <template slot="title">Enriquecimento</template>
         <template slot="description">
           <ul>
-            <li v-if="parseInt(enriched.email)">
-              Emails: {{ enriched.email }}
-            </li>
-            <li v-if="parseInt(enriched.phone)">
-              Telefones: {{ enriched.phone }}
-            </li>
+            <li>Emails: {{ enriched.email }}</li>
+            <li>Telefones: {{ enriched.phone }}</li>
           </ul>
         </template>
       </el-step>
@@ -22,31 +18,30 @@
         <template slot="title">Interação</template>
         <template slot="description">
           <ul>
-            <li v-if="parseInt(interactions.email)">
-              Emails: {{ interactions.email }}
-            </li>
-            <li v-if="parseInt(interactions.cna)">
-              CNA: {{ interactions.cna }}
-            </li>
-            <li v-if="parseInt(interactions.whatsapp)">
-              Whatsapp: {{ interactions.whatsapp }}
-            </li>
+            <li>Emails: {{ interactions.email }}</li>
+            <li>CNA: {{ interactions.cna }}</li>
+            <li>Whatsapp: {{ interactions.whatsapp }}</li>
           </ul>
         </template>
       </el-step>
       <el-step>
         <template slot="title">Contraproposta</template>
         <template slot="description">
-          <div :style="'left: calc(' + sliderProposal + '% - 27px)'" class="case-view__last-offer">
-            R$ {{ lastoffer }}
+          <div v-if="sliderProposal">
+            <div :style="'left: calc(' + sliderProposal + '% - 27px)'" class="case-view__last-offer">
+              R$ {{ lastoffer }}
+            </div>
+            <el-slider v-model="sliderProposal" :show-tooltip="false" />
           </div>
-          <el-slider v-model="sliderProposal" :show-tooltip="false" />
+          <div v-else>
+            Sem valor de contraproposta
+          </div>
         </template>
       </el-step>
       <el-step>
         <template slot="title">Acordo</template>
         <template slot="description">
-          R$ {{ deal }}
+          {{ deal }}
         </template>
       </el-step>
     </el-steps>
@@ -70,27 +65,27 @@ export default {
   computed: {
     enriched () {
       return {
-        email: this.summary.enrichedemails,
-        phone: this.summary.enrichedphones
+        email: this.summary.enrichedemails ? this.summary.enrichedemails : 0,
+        phone: this.summary.enrichedphones ? this.summary.enrichedphones : 0
       }
     },
     interactions () {
       return {
-        email: this.summary.emailinteractions,
-        whatsapp: this.summary.whatsappinterations,
-        cna: this.summary.cnainteractions
+        email: this.summary.emailinteractions ? this.summary.emailinteractions : 0,
+        whatsapp: this.summary.whatsappinterations ? this.summary.whatsappinterations : 0,
+        cna: this.summary.cnainteractions ? this.summary.cnainteractions : 0
       }
     },
     boundary () {
-      return parseInt(this.summary.disputeobjectboundary)
+      return parseInt(this.summary.disputeobjectboundary ? this.summary.disputeobjectboundary : 0)
     },
     deal () {
       if (this.summary.disputedealvalue) {
-        return parseInt(this.summary.disputedealvalue)
-      } return '-'
+        return 'R$' + this.summary.disputedealvalue
+      } return 'Sem valor de acordo'
     },
     lastoffer () {
-      return this.summary.lastoffervalue
+      return this.summary.lastoffervalue ? this.summary.lastoffervalue : 0
     },
     sliderProposal: {
       get () {
@@ -106,7 +101,7 @@ export default {
           query: { bool: { must: [{ match: { disputeid: this.id } }] } }
         }).then(response => {
           if (response.length) {
-            this.summary = response
+            this.summary = response[0]
           }
         })
       }

@@ -128,7 +128,7 @@
                   placeholder="Escreva alguma coisa" />
                 <div class="case-view__send-message-actions note">
                   <el-button type="primary" @click="sendNote()">
-                    Enviar nota
+                    Gravar nota
                   </el-button>
                 </div>
               </el-card>
@@ -213,11 +213,19 @@ export default {
         })
       }
       if (options.fetchMessages) {
-        this.loadingDisputeMessages = true
         this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
-          this.disputeMessages = responses
-          this.filteredDisputeMessages = this.disputeMessages.slice(0)
-          this.loadingDisputeMessages = false
+          if (!this.disputeMessages.length) {
+            this.disputeMessages = responses
+            this.filteredDisputeMessages = this.disputeMessages.slice(0)
+          } else {
+            let newMessages = responses.filter((i) => {
+              return this.disputeMessages.map((e) => {
+                return JSON.stringify(e)
+              }).indexOf(JSON.stringify(i)) < 0
+            })
+            this.disputeMessages.push(...newMessages)
+            this.filteredDisputeMessages.push(...newMessages)
+          }
         }).catch(error => this.showError(error))
       }
     },
@@ -285,8 +293,6 @@ export default {
             message: this.messageType + ' enviado com sucesso.',
             type: 'success'
           })
-          this.filteredDisputeMessages = []
-          this.loadingDisputeMessages = true
           var self = this
           setTimeout(function () {
             self.fetchData({ fetchMessages: true })
@@ -300,19 +306,14 @@ export default {
           note: this.newNote,
           disputeId: this.dispute.id
         }).then(() => {
-          window.analytics.track('Nova nota criada')
+          window.analytics.track('Nova nota gravada')
           this.newNote = ''
           this.$jusNotification({
             title: 'Yay!',
-            message: 'Nota enviada com sucesso.',
+            message: 'Nota gravada com sucesso.',
             type: 'success'
           })
-          this.filteredDisputeMessages = []
-          this.loadingDisputeMessages = true
-          var self = this
-          setTimeout(function () {
-            self.fetchData({ fetchMessages: true })
-          }, 1000)
+          this.fetchData({ fetchMessages: true })
         }).catch(error => this.showError(error))
       }
     }

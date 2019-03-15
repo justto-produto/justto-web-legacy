@@ -120,14 +120,14 @@ export default {
             .then(() => {
               Promise.all([
                 this.$store.dispatch('myAccount'),
-                this.$store.dispatch('myWorkspace')
+                this.$store.dispatch('myWorkspace'),
+                this.$store.dispatch('myPerson')
               ]).then(() => {
                 window.analytics.identify(this.loginForm.email, {
                   action: 'LOGIN',
                   email: this.loginForm.email
                 })
                 if (this.$store.state.workspaceModule.subDomain) {
-                  this.$store.dispatch('myPerson')
                   this.$store.dispatch('getWorkspaceMembers')
                 }
                 this.$router.push('/')
