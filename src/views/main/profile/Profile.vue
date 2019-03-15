@@ -238,7 +238,7 @@ export default {
       } else {
         this.$store.commit('setWhatsappSocketMessage', whatsapp)
       }
-      this.$jusSocket.subscribeWhatsapp()
+      this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
     })
   },
   methods: {

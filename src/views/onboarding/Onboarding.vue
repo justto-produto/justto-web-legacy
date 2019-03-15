@@ -111,7 +111,7 @@ export default {
   beforeCreate () {
     if (this.$store.state.workspaceModule.subdomain) {
       this.$store.dispatch('whatsappStart').then(() => {
-        this.$jusSocket.subscribeWhatsapp()
+        this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
       })
     }
   },
@@ -153,7 +153,7 @@ export default {
         this.$store.dispatch('myWorkspace').then(response => {
           if (response.length && response[response.length - 1].subDomain === this.responses.subdomain) {
             this.$refs['swiper'].swiper.slideNext(800)
-            this.$jusSocket.subscribeWhatsapp()
+            this.$stomp.subscribe(this.$store.state.workspaceModule.subdomain)
             this.$store.dispatch('whatsappStart')
           } else {
             this.$jusNotification({
