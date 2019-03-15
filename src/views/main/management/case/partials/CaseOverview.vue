@@ -98,8 +98,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="emailDialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="addEmail">Confirm</el-button>
+        <el-button @click="emailDialogVisible = false">Cancelar</el-button>
+        <el-button type="primary" @click="addEmail">Alterar</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -120,8 +120,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="phoneDialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="addPhone">Confirm</el-button>
+        <el-button @click="phoneDialogVisible = false">Cancelar</el-button>
+        <el-button type="primary" @click="addPhone">Alterar</el-button>
       </span>
     </el-dialog>
   </div>

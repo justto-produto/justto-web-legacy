@@ -17,10 +17,10 @@
               </h4>
               <div>Estratégia: {{ item.strategyname }}</div>
               <div>Status: <span>{{ $t('occurrence.type.' + item.disputestatus) }}</span></div>
-              <div v-for="(claiment, index) in item.claiments" :key="claiment.f1 + index">
+              <div v-for="(claiment, index) in item.claiments" :key="item.disputeid + claiment.f1 + index + 'claimant'">
                 Parte contrária: {{ claiment.f1 }}
               </div>
-              <div v-for="(lawyer, index) in item.claimentslawyer" :key="lawyer.f1 + index">
+              <div v-for="(lawyer, index) in item.claimentslawyer" :key="item.disputeid + lawyer.f1 + index + 'lawyer'">
                 Advogado: {{ lawyer.f1 }}
               </div>
             </div>
@@ -104,36 +104,44 @@ export default {
     }
   },
   methods: {
+    getFields(term) {
+      let fields = [
+        'disputecode',
+        'campaignname',
+        'claiments.f1',
+        'claiments.f2',
+        'claimentslawyer.f1',
+        'claimentslawyer.f2',
+        'strategyname'
+      ]
+
+      if(!isNaN(term))
+          fields.push('disputeid')
+
+      return fields;
+    },
     logout () {
       this.$store.dispatch('logout')
     },
     search (term, cb) {
-      var terms = term.split(' ')
-      terms = [...new Set(terms)]
-      var query = ''
-      for (let word of terms) {
-        let w = '*' + word + '* OR ' + word
-        if (terms[terms.length - 1] !== word) {
-          w = w + ' AND '
-        }
-        query = query + w
-      }
+      // var terms = term.split(' ')
+      // terms = [...new Set(terms)]
+      // var query = ''
+      // for (let word of terms) {
+      //   let w = '*' + word + '* OR ' + word
+      //   if (terms[terms.length - 1] !== word) {
+      //     w = w + ' AND '
+      //   }
+      //   query = query + w
+      // }
+      let query = term ? '*' + term + '* OR ' + term : '*'
 
       this.$store.dispatch('getDisputes', {
         query: {
           bool: {
             must: [{
               query_string: {
-                fields: [
-                  'disputecode',
-                  'disputeid',
-                  'campaignname',
-                  'claiments.f1',
-                  'claiments.f2',
-                  'claimentslawyer.f1',
-                  'claimentslawyer.f2',
-                  'strategyname'
-                ],
+                fields: this.getFields(term),
                 query: query
               }
             }, {
