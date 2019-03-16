@@ -34,7 +34,7 @@
             <el-slider v-model="sliderProposal" :show-tooltip="false" />
           </div>
           <div v-else>
-            Sem valor de contraproposta
+            Sem contraproposta
           </div>
         </template>
       </el-step>
