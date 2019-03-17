@@ -21,6 +21,7 @@
             <li>Emails: {{ interactions.email }}</li>
             <li>CNA: {{ interactions.cna }}</li>
             <li>Whatsapp: {{ interactions.whatsapp }}</li>
+            <li>Visualizações: {{ interactions.views}} </li>
           </ul>
         </template>
       </el-step>
@@ -73,7 +74,8 @@ export default {
       return {
         email: this.summary.emailinteractions ? this.summary.emailinteractions : 0,
         whatsapp: this.summary.whatsappinterations ? this.summary.whatsappinterations : 0,
-        cna: this.summary.cnainteractions ? this.summary.cnainteractions : 0
+        cna: this.summary.cnainteractions ? this.summary.cnainteractions : 0,
+        views: this.summary.disputenegotiationviews ? this.summary.disputenegotiationviews : 0
       }
     },
     boundary () {
