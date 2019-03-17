@@ -96,6 +96,7 @@ const account = {
     logout ({ commit }, options) {
       return new Promise((resolve, reject) => {
         commit('logout')
+        commit('clearPerson')
         commit('clearWorkspace')
         commit('clearSocket')
         localStorage.removeItem('justoken')

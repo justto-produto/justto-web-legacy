@@ -21,7 +21,7 @@
             <li>Emails: {{ interactions.email }}</li>
             <li>CNA: {{ interactions.cna }}</li>
             <li>Whatsapp: {{ interactions.whatsapp }}</li>
-            <li>Visualizações: {{ interactions.views}} </li>
+            <li>Visualizações: {{ interactions.views }} </li>
           </ul>
         </template>
       </el-step>

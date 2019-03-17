@@ -5,6 +5,9 @@ const personModule = {
   mutations: {
     setPerson (state, person) {
       if (person) state.person = person
+    },
+    clearPerson (state) {
+      state.person = {}
     }
   },
   actions: {

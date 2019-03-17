@@ -121,17 +121,15 @@ export default {
               Promise.all([
                 this.$store.dispatch('myAccount'),
                 this.$store.dispatch('myWorkspace')
-              ]).then(() => {
+              ]).then(responses => {
                 window.analytics.identify(this.loginForm.email, {
                   action: 'LOGIN',
                   email: this.loginForm.email
                 })
-                if (this.$store.state.workspaceModule.subDomain) {
+                if (responses[1][0] && responses[1][0]['subDomain']) {
                   this.$store.dispatch('getWorkspaceMembers')
                 }
-                this.$store.dispatch('myPerson').then(() => {
-                  this.$router.push('/')
-                })
+                this.$router.push('/')
               }).catch(error => {
                 console.error(error)
                 this.errorMessage = `Houve uma falha de conexão com o servidor.

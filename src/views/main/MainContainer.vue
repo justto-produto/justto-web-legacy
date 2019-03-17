@@ -121,6 +121,9 @@ export default {
     return {
       isCollapse: true
     }
+  },
+  beforeMount () {
+    this.$store.dispatch('myPerson')
   }
 }
 </script>

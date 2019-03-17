@@ -578,7 +578,6 @@ export default {
           )
         }
       }
-
       if (this.activeTab.terms) {
         for (let terms of this.activeTab.terms) {
           query.query.bool.must.push(
@@ -586,7 +585,6 @@ export default {
           )
         }
       }
-      
       Object.keys(this.filters).forEach(key => {
         let match = {}
         if (this.filters[key]) {

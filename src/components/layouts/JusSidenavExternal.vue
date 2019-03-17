@@ -34,8 +34,8 @@
       :visible.sync="modal"
       width="600px">
       <span>
-        Nós da JUSTTO queremos fazer a diferença na sua frente de acordos. Portanto, 
-        você pode inserir quantos casos quiser na plataforma e só cobraremos por aqueles 
+        Nós da JUSTTO queremos fazer a diferença na sua frente de acordos. Portanto,
+        você pode inserir quantos casos quiser na plataforma e só cobraremos por aqueles
         casos em que houver interação.
       </span>
       <el-collapse class="el-collapse--bordered">
@@ -44,11 +44,11 @@
           <b>E-mail e CNA:</b> Qualquer resposta ou clique em Link <br>
           <b>Aplicativos Mobile JUSTTO:</b> Download ou Acesso ao Caso <br>
           <b>Aplicativo Web JUSTTO:</b> Acesso ao Caso <br>
-          <b>Ações do Cliente / Negociador:</b> Mudança de Status do Ticket para "Em 
+          <b>Ações do Cliente / Negociador:</b> Mudança de Status do Ticket para "Em
           Engajamento", "Novos Acordos" ou "Ganho"
         </el-collapse-item>
         <el-collapse-item title="Como posso estimar quanto vou pagar?">
-          Quanto exatamente você vai pagar depende do perfil da sua carteira, mas 
+          Quanto exatamente você vai pagar depende do perfil da sua carteira, mas
           temos uma média de mercado para te dar uma ideia: <br><br>
           <span v-if="modalType">
             100 casos importados &rarr; 60 casos com interação &rarr; 40 acordos fechados

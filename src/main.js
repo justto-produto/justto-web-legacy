@@ -70,10 +70,12 @@ Vue.config.productionTip = false
 if (store.getters.isLoggedIn) {
   store.dispatch('showLoading')
   Promise.all([store.dispatch('myAccount'), store.dispatch('myWorkspace')])
-    .then(() => {
+    .then(responses => {
       store.dispatch('hideLoading')
-      store.dispatch('getWorkspaceMembers')
-      store.dispatch('myPerson')
+      if (responses[1][0]['subDomain']) {
+        store.dispatch('getWorkspaceMembers')
+        store.dispatch('myPerson')
+      }
       initVue()
     })
 } else {

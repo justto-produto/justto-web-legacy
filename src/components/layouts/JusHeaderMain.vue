@@ -104,7 +104,7 @@ export default {
     }
   },
   methods: {
-    getFields(term) {
+    getFields (term) {
       let fields = [
         'disputecode',
         'campaignname',
@@ -114,11 +114,8 @@ export default {
         'claimentslawyer.f2',
         'strategyname'
       ]
-
-      if(!isNaN(term))
-          fields.push('disputeid')
-
-      return fields;
+      if (!isNaN(term)) fields.push('disputeid')
+      return fields
     },
     logout () {
       this.$store.dispatch('logout')

@@ -114,8 +114,8 @@
       <template slot="title">
         <h2>Estratégia de engajamento das partes</h2>
         <p>
-          Abaixo, você encontra as mensagens a serem enviadas para às partes dos casos contidos 
-          nesta Campanha. Com os dados do seu caso, nosso sistema escolhe a melhor estratégia de 
+          Abaixo, você encontra as mensagens a serem enviadas para às partes dos casos contidos
+          nesta Campanha. Com os dados do seu caso, nosso sistema escolhe a melhor estratégia de
           engajamento para os seus casos.
         </p>
       </template>
@@ -148,7 +148,7 @@ export default {
       type: Object,
       default: function () {
         return {}
-      },
+      }
     },
     color: {
       type: String,
@@ -225,8 +225,9 @@ export default {
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
   },
   methods: {
+    // eslint-disable-next-line
     sendNumber (step) {
-      if (step.channel != 'DELAY') {
+      if (step.channel !== 'DELAY') {
         let i = 0
         this.sendNumber = i++
       }
