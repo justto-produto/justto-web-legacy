@@ -4,7 +4,6 @@ import store from '../store'
 
 const VueStompJs = {
   install (Vue, options) {
-
     const whatsappClient = new Client()
     const chatClient = new Client()
 
@@ -45,7 +44,7 @@ const VueStompJs = {
       },
       unsubscribeChat () {
         chatClient.unsubscribe()
-      },
+      }
     }
   }
 }
