@@ -8,8 +8,8 @@ if (AUTH_TOKEN) {
 }
 let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || '/',
-  // baseURL: process.env.baseURL || process.env.apiUrl || 'http://homol.justto.com.br/',
-  baseURL: process.env.baseURL || process.env.apiUrl || 'https://justto.app/',
+  baseURL: process.env.baseURL || process.env.apiUrl || 'http://homol.justto.com.br/',
+  // baseURL: process.env.baseURL || process.env.apiUrl || 'https://justto.app/',
   timeout: 60 * 100000,
   headers: {
   }
