@@ -63,7 +63,7 @@
           </span>
         </div>
       </div>
-      <div v-if="strategy.id === 1" class="jus-import-feedback-card__number">
+      <div v-if="strategy.id === 1 || strategy.id === 4" class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
         </div>
