@@ -238,7 +238,7 @@ export default {
       } else {
         this.$store.commit('setWhatsappSocketMessage', whatsapp)
       }
-      this.$jusSocket.subscribesubscribeWhatsapp()
+      this.$jusSocket.subscribeWhatsapp()
     })
   },
   methods: {
