@@ -30,7 +30,7 @@ const VueStompJs = {
 
     Vue.prototype.$jusSocket = {
       subscribeWhatsapp () {
-        whatsappClient.subscribe('/whatsapp/refresh/' + store.state.workspaceModule.id, function (message) {
+        whatsappClient.subscribe('/whatsapp/refresh/' + store.state.workspaceModule.subdomain, function (message) {
           store.commit('setWhatsappSocketMessage', JSON.parse(message.body))
         })
       },
