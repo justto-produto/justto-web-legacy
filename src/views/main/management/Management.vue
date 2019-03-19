@@ -64,13 +64,12 @@
           @click="exportDisputes">
           Exportar casos
         </el-button>
-
       </div>
       <el-tabs
         v-loading="$store.state.loading"
         ref="management-tabs"
         :before-leave="handleChangeTab"
-        :value="0"
+        v-model="activeTab.index"
         class="view-management__tabs"
         style="min-height: 100%;">
         <el-tab-pane name="0" label="Engajamento">
@@ -523,12 +522,14 @@ export default {
     JusManagementFilters
   },
   data () {
+    const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
+    const currentTab = savedFilters.currentTab ? savedFilters.currentTab : '0'
     return {
       showFilters: false,
       cases: [],
       filters: {},
       selectedIds: [],
-      activeTab: {},
+      activeTab: this.getActiveTabLabel(currentTab),
       activeFilters: {},
       currentQuery: '',
       loadingExport: false
@@ -540,13 +541,21 @@ export default {
     }
   },
   mounted () {
+    this.$store.dispatch('showLoading')
     const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
     if (savedFilters && savedFilters.accountId === this.$store.getters.accountId) {
-      this.activeFilters = savedFilters.filters
-      this.filters = savedFilters.filters
+      let self = this
+      setTimeout(function () {
+        console.log(savedFilters);
+        if (savedFilters.filters) {
+          self.activeFilters = savedFilters.filters
+          self.filters = savedFilters.filters
+        }
+        self.getCases()
+      }, 1000)
+    } else {
+      this.getCases()
     }
-    this.setActiveTabLabel('0')
-    this.getCases()
   },
   methods: {
     getCases () {
@@ -598,9 +607,10 @@ export default {
       return query.query.bool.must.length > 0 ? query : null
     },
     applyFilters () {
-      var stringfilters = JSON.stringify({
+      let stringfilters = JSON.stringify({
         accountId: this.$store.getters.accountId,
-        filters: this.activeFilters
+        filters: this.activeFilters,
+        currentTab: this.activeTab.index
       })
       localStorage.setItem('jusfilters', stringfilters)
       this.showFilters = false
@@ -633,36 +643,46 @@ export default {
       let nextIcon = require('@/assets/icons/ic-right.svg')
       return ['<img src="' + prevIcon + '">', '<img src="' + nextIcon + '">']
     },
-    setActiveTabLabel (newTab) {
-      var newActive
+    getActiveTabLabel (newTab) {
+      let newActive
       switch (newTab) {
         case '0':
-          newActive = { index: 0, label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
+          newActive = { index: '0', label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
           break
         case '1':
-          newActive = { index: 1, label: 'Com interação', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: true }] }
+          newActive = { index: '1', label: 'Com interação', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: true }] }
           break
         case '2':
-          newActive = { index: 2, label: 'Novos acordos', terms: [{ disputestatus: ['ACCEPTED', 'CHECKOUT'] }] }
+          newActive = { index: '2', label: 'Novos acordos', terms: [{ disputestatus: ['ACCEPTED', 'CHECKOUT'] }] }
           break
         case '3':
-          newActive = { index: 3, label: 'Todos' }
+          newActive = { index: '3', label: 'Todos' }
           break
         default:
           newActive = { index: 0, label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
       }
-      this.activeTab = newActive
+      return newActive
     },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {
-        this.clearSelection()
-        this.setActiveTabLabel(newTab)
-        this.getCases()
         this.filters = {}
+        this.activeFilters = {}
+        this.clearSelection()
+        this.activeTab = this.getActiveTabLabel(newTab)
+        this.getCases()
+        let stringfilters = JSON.stringify({
+          accountId: this.$store.getters.accountId,
+          currentTab: this.activeTab.index
+        })
+        localStorage.setItem('jusfilters', stringfilters)
       }
     },
     clearFilters () {
-      localStorage.removeItem('jusfilters')
+      var stringfilters = JSON.stringify({
+        accountId: this.$store.getters.accountId,
+        currentTab: this.activeTab.index
+      })
+      localStorage.setItem('jusfilters', stringfilters)
       this.showFilters = false
       this.filters = {}
       this.getCases()
@@ -682,7 +702,7 @@ export default {
             tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
             selecteds: this.selectedIds.length
           })
-          var self = this
+          let self = this
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
@@ -720,7 +740,7 @@ export default {
           message: 'Caso ' + label + ' com sucesso.',
           type: 'success'
         })
-        var self = this
+        let self = this
         setTimeout(function () {
           self.getCases()
         }, 1500)

@@ -184,8 +184,8 @@ export default {
   components: { Money },
   props: {
     tabIndex: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     filters: {
       type: Object,
@@ -204,16 +204,16 @@ export default {
   },
   computed: {
     isEngagement () {
-      return this.tabIndex === 0
+      return this.tabIndex === '0'
     },
     isInteration () {
-      return this.tabIndex === 1
+      return this.tabIndex === '1'
     },
     isNewAgreements () {
-      return this.tabIndex === 2
+      return this.tabIndex === '2'
     },
     isAll () {
-      return this.tabIndex === 3
+      return this.tabIndex === '3'
     },
     strategies () {
       return this.$store.state.strategyModule.list
