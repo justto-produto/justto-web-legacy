@@ -62,6 +62,7 @@
       </div>
     </template>
     <template slot="right-card">
+      <h3>WhatsApp</h3>
       <jus-whatsapp v-if="!$store.getters.isWhatsappOffline" />
       <div v-else>
         <h2>Desculpe :(</h2>
