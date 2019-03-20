@@ -124,7 +124,8 @@ export default {
               ]).then(responses => {
                 window.analytics.identify(this.loginForm.email, {
                   action: 'LOGIN',
-                  email: this.loginForm.email
+                  email: this.loginForm.email,
+                  groupId: this.$store.state.workspaceModule.subdomain
                 })
                 if (responses[1][0] && responses[1][0]['subDomain']) {
                   this.$store.dispatch('getWorkspaceMembers')
