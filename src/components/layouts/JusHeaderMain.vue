@@ -114,8 +114,7 @@ export default {
         'claimentslawyer.f2',
         'strategyname',
         'disputeupperrange',
-        'disputelastrespondentoffer',
-        'lastoffervalue'
+        'disputelastrespondentoffer'
       ]
       if (!isNaN(term)) fields.push('disputeid')
       return fields
