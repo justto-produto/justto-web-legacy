@@ -765,7 +765,7 @@ export default {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.currentQuery).then(response => {
         // eslint-disable-next-line
-        window.open(axios.defaults.baseURL + '/api/export/' + response)
+        window.open('/api/export/' + response)
         window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
       }).finally(() => {
         this.loadingExport = false
