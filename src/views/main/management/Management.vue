@@ -546,7 +546,6 @@ export default {
     if (savedFilters && savedFilters.accountId === this.$store.getters.accountId) {
       let self = this
       setTimeout(function () {
-        console.log(savedFilters);
         if (savedFilters.filters) {
           self.activeFilters = savedFilters.filters
           self.filters = savedFilters.filters
@@ -589,19 +588,25 @@ export default {
       }
       if (this.activeTab.terms) {
         for (let terms of this.activeTab.terms) {
-          query.query.bool.must.push(
-            { terms: terms }
-          )
+          query.query.bool.must.push({ terms: terms })
         }
       }
       Object.keys(this.filters).forEach(key => {
         let match = {}
+        let terms = {}
         if (this.filters[key]) {
-          match[key] = this.filters[key]
-          query.query.bool.must.push({ match: match })
-          // if (Array.isArray(match[key])) {
-          //   if (match[key].length) query.query.bool.must.push({ match: match })
-          // } else query.query.bool.must.push({ match: match })
+          if (this.filters[key] === 'INTERACTIONS') {
+            match['disputehasinteractions'] = true
+          } else if (this.filters[key] === 'ACCEPTED') {
+            terms['disputestatus'] = ['ACCEPTED', 'CHECKOUT']
+          } else if (this.filters[key] === 'PAUSED') {
+            match['paused'] = true
+          } else match[key] = this.filters[key]
+          if (Object.entries(terms).length !== 0) {
+            query.query.bool.must.push({ terms: terms })
+          } else {
+            query.query.bool.must.push({ match: match })
+          }
         }
       })
       return query.query.bool.must.length > 0 ? query : null
