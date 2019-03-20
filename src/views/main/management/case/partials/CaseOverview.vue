@@ -58,20 +58,38 @@
         <div class="case-overview-view__info-line">
           <span>E-mails:</span>
           <a href="" @click.prevent="openEmailDialog(role.person.id)">
-            <jus-icon icon="add" />
+            <el-tooltip content="Adicionar email">
+              <jus-icon icon="add" />
+            </el-tooltip>
           </a>
         </div>
-        <div v-for="email in role.person.emails" :key="email.id" class="case-overview-view__info-line">
-          <span>{{ email.address }}</span>
+        <div class="case-overview-view__info-list">
+          <div v-for="email in role.person.emails" :key="email.id">
+            {{ email.address }}
+            <a href="" @click.prevent="removeEmail({personId: role.person.id, id: email.id})">
+              <el-tooltip content="Remover email">
+                <jus-icon icon="trash" />
+              </el-tooltip>
+            </a>
+          </div>
         </div>
         <div class="case-overview-view__info-line">
           <span>Telefone:</span>
           <a href="" @click.prevent="openPhoneDialog(role.person.id)">
-            <jus-icon icon="add" />
+            <el-tooltip content="Adicionar telefone">
+              <jus-icon icon="add" />
+            </el-tooltip>
           </a>
         </div>
-        <div v-for="phone in role.person.phones" :key="phone.id" class="case-overview-view__info-line">
-          <span>{{ phone.number }}</span>
+        <div class="case-overview-view__info-list">
+          <div v-for="phone in role.person.phones" :key="phone.id">
+            {{ phone.number }}
+            <a href="" @click.prevent="removePhone({personId: role.person.id, id: phone.id})">
+              <el-tooltip content="Remover telefone">
+                <jus-icon icon="trash" />
+              </el-tooltip>
+            </a>
+          </div>
         </div>
         <div v-for="oab in role.person.oabs" :key="oab.id" class="case-overview-view__info-line">
           <span class="title">OAB:</span>
@@ -99,7 +117,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="emailDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="addEmail">Alterar</el-button>
+        <el-button type="primary" @click="addEmail">Adicionar</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -121,7 +139,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="phoneDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="addPhone">Alterar</el-button>
+        <el-button type="primary" @click="addPhone">Adicionar</el-button>
       </span>
     </el-dialog>
   </div>
@@ -222,8 +240,9 @@ export default {
         if (valid) {
           this.$store.dispatch('createEmail', this.newEmailBody).then(response => {
             this.emailDialogVisible = false
+            let self = this
             setTimeout(function () {
-              this.$emit('case:refresh')
+              self.$emit('case:refresh')
             }, 1000)
             this.$jusNotification({
               title: 'Yay!',
@@ -253,8 +272,9 @@ export default {
             number: this.newPhoneBody.number.match(/\d+/g).join([])
           }).then(response => {
             this.phoneDialogVisible = false
+            let self = this
             setTimeout(function () {
-              this.$emit('case:refresh')
+              self.$emit('case:refresh')
             }, 1000)
             this.$jusNotification({
               title: 'Yay!',
@@ -269,6 +289,44 @@ export default {
             })
           })
         }
+      })
+    },
+    removeEmail (emailBody) {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+        confirmButtonText: 'Remover',
+        cancelButtonText: 'Cancelar',
+        type: 'error'
+      }).then(() => {
+        this.$store.dispatch('removeEmail', emailBody).then(() => {
+          let self = this
+          setTimeout(function () {
+            self.$emit('case:refresh')
+          }, 1000)
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Email removido com sucesso.',
+            type: 'success'
+          })
+        })
+      })
+    },
+    removePhone (phoneBody) {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+        confirmButtonText: 'Remover',
+        cancelButtonText: 'Cancelar',
+        type: 'error'
+      }).then(() => {
+        this.$store.dispatch('removePhone', phoneBody).then(() => {
+          let self = this
+          setTimeout(function () {
+            self.$emit('case:refresh')
+          }, 1000)
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Telefone removido com sucesso.',
+            type: 'success'
+          })
+        })
       })
     }
   }
@@ -297,10 +355,17 @@ export default {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-left: auto;
     }
     a {
       line-height: 15px;
+    }
+  }
+  &__info-list {
+    margin-top: 10px;
+    font-weight: 500;
+    img {
+      float: right;
+      width: 16px;
     }
   }
 }

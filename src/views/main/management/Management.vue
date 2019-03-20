@@ -696,7 +696,7 @@ export default {
       this.getCases()
     },
     sendBatchAction (action) {
-      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         type: 'warning'
