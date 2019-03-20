@@ -129,7 +129,7 @@ export default {
                 if (responses[1][0] && responses[1][0]['subDomain']) {
                   this.$store.dispatch('getWorkspaceMembers')
                 }
-                this.$router.push('/')
+                this.$router.push('/management')
               }).catch(error => {
                 console.error(error)
                 this.errorMessage = `Houve uma falha de conexão com o servidor.
