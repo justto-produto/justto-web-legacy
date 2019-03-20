@@ -578,7 +578,7 @@ export default {
       })
     },
     buildQuery () {
-      let query = { query: { bool: { must: [] } }, from: 0, size: 3000 }
+      let query = { query: { bool: { must: [] } }, from: 0, size: 3000, order_by: 'favorite DESC' }
       query.query.bool.must.push(
         { match: { workspaceid: this.$store.state.workspaceModule.id } }
       )
