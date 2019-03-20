@@ -523,7 +523,10 @@ export default {
   },
   data () {
     const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
-    const currentTab = savedFilters.currentTab ? savedFilters.currentTab : '0'
+    let currentTab
+    if (savedFilters && savedFilters.currentTab) {
+      currentTab = savedFilters.currentTab
+    } else currentTab = '0'
     return {
       showFilters: false,
       cases: [],
