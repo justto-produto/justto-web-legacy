@@ -578,7 +578,7 @@ export default {
       })
     },
     buildQuery () {
-      let query = { query: { bool: { must: [] } }, from: 0, size: 3000 }
+      let query = { query: { bool: { must: [] } }, from: 0, size: 3000, order_by: 'favorite DESC' }
       query.query.bool.must.push(
         { match: { workspaceid: this.$store.state.workspaceModule.id } }
       )
@@ -696,7 +696,7 @@ export default {
       this.getCases()
     },
     sendBatchAction (action) {
-      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         type: 'warning'
@@ -765,7 +765,7 @@ export default {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.currentQuery).then(response => {
         // eslint-disable-next-line
-        window.open(axios.defaults.baseURL + '/api/export/' + response)
+        window.open('/api/export/' + response)
         window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
       }).finally(() => {
         this.loadingExport = false
