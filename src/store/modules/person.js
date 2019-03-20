@@ -95,7 +95,7 @@ const personModule = {
     removeEmail ({ commit }, removeEmailBody) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.delete('api/persons/' + removeEmailBody.personId + '/phones/' + removeEmailBody.id)
+        axios.delete('api/persons/' + removeEmailBody.personId + '/emails/' + removeEmailBody.id)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
