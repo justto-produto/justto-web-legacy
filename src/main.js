@@ -10,10 +10,10 @@ import '@/plugins/axios'
 import '@/plugins/element'
 import '@/plugins/scrollTo'
 import '@/plugins/awesomeSwiper'
-import '@/plugins/socket'
 import '@/plugins/moment'
 import '@/plugins/chatScroll'
 import '@/plugins/jusNotification'
+import '@/plugins/socket'
 // import '@/plugins/sentry'
 
 // filters

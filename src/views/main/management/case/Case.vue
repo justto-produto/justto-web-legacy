@@ -198,6 +198,7 @@ export default {
   },
   created () {
     this.fetchData({ fetchDispute: true, fetchMessages: true })
+    // this.$jusSocket.subscribeChat(this.$route.params.id)
   },
   methods: {
     fetchData (options) {
