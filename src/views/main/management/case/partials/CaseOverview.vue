@@ -16,19 +16,19 @@
         </div>
         <div v-if="dispute.upperRange" class="case-overview-view__info-line">
           <span class="title">Alçada máxima:</span>
-          <span>R$ {{ (dispute.upperRange.boundary ? dispute.upperRange.boundary : '-') }}</span>
+          <span>{{ dispute.upperRange.boundary | money }}</span>
         </div>
         <div v-if="dispute.lastOffer" class="case-overview-view__info-line">
           <span class="title">Contraproposta:</span>
-          <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
+          <span>{{ dispute.lastOffer.boundary | money }}</span>
         </div>
         <div v-if="dispute.lastOffer" class="case-overview-view__info-line">
           <span class="title">Valor do acordo:</span>
-          <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
+          <span>R$ {{ dispute.lastOffer | money }}</span>
         </div>
         <div v-if="dispute.valueOfClaim" class="case-overview-view__info-line">
           <span class="title">Valor da causa:</span>
-          <span>R$ {{ (dispute.valueOfClaim.value ? dispute.valueOfClaim.value : '-') }}</span>
+          <span>R$ {{ dispute.valueOfClaim.value | money }}</span>
         </div>
         <div class="case-overview-view__info-line">
           <span class="title">Fim da negociação:</span>
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="case-overview-view__info-line">
-          <span>Telefone:</span>
+          <span>Telefones:</span>
           <a href="" @click.prevent="openPhoneDialog(role.person.id)">
             <el-tooltip content="Adicionar telefone">
               <jus-icon icon="add" />

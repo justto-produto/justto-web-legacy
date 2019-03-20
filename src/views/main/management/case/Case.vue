@@ -455,7 +455,7 @@ export default {
     }
   }
   &__steps {
-    padding-top: 10px;
+    padding: 10px 0;
     .el-button--text {
       padding-top: 0;
     }
