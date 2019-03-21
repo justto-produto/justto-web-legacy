@@ -166,6 +166,7 @@ export default {
     }
     div {
       font-weight: 500;
+      word-break: break-all;
     }
     > span {
       display: block;
