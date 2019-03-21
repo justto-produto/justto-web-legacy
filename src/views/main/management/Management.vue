@@ -129,10 +129,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.disputeupperrange | money }}</template>
+              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Valor proposto">
-              <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | money }}</template>
+              <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
               <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
@@ -246,10 +246,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.disputeupperrange | money }}</template>
+              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Contraproposta">
-              <template slot-scope="scope">{{ scope.row.lastoffervalue | money }}</template>
+              <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
             </el-table-column>
             <el-table-column label="Última interação">
               <template slot-scope="scope">{{ scope.row.lastinteractiondate | moment('DD/MM/YY') }}</template>
@@ -357,10 +357,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange | money }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
-              <template slot-scope="scope">{{ scope.row.disputedealvalue | money }}</template>
+              <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
             </el-table-column>
             <el-table-column
               label="Ações"
