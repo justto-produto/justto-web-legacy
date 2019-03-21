@@ -16,7 +16,7 @@
           @submit.native.prevent="submitForm">
           <h1 class="external-view__title">Nova senha</h1>
           <el-alert
-            v-show="showSuccess"
+            v-show="true"
             type="success"
             show-icon
             title=""
@@ -24,7 +24,9 @@
             <template slot="title"/>
             Senha alterada com sucesso!
             <br>
-            <a href="#" @click.prevent="$router.push('login')"> Clique aqui para acessar.</a>
+            <router-link :to="'login'">
+              Clique aqui para acessar.
+            </router-link>
           </el-alert>
           <el-alert
             v-show="showError"
@@ -35,7 +37,9 @@
             <template slot="title"/>
             Não foi possível identificar sua requisição de alteração de senha.
             <br>
-            <a href="#" @click.prevent="$router.push('forgot-password')"> Clique aqui para tentar novamente.</a>
+            <router-link :to="'forgot-password'">
+              Clique aqui para tentar novamente.
+            </router-link>
           </el-alert>
           <el-form-item label="Senha" prop="password">
             <el-input v-model="newPasswordForm.password" type="password"/>
