@@ -24,11 +24,11 @@
         </div>
         <div v-if="dispute.lastOffer" class="case-overview-view__info-line">
           <span class="title">Valor do acordo:</span>
-          <span>R$ {{ dispute.lastOffer | money }}</span>
+          <span>{{ dispute.lastOffer | money }}</span>
         </div>
         <div v-if="dispute.valueOfClaim" class="case-overview-view__info-line">
           <span class="title">Valor da causa:</span>
-          <span>R$ {{ dispute.valueOfClaim.value | money }}</span>
+          <span>{{ dispute.valueOfClaim.value | money }}</span>
         </div>
         <div class="case-overview-view__info-line">
           <span class="title">Fim da negociação:</span>
