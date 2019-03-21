@@ -61,6 +61,7 @@ export default {
     overflow-x: auto;
     padding: 20px;
     display: flex;
+    height: calc(100% - 37px);
   }
   &__main-card {
     width: 100%;
