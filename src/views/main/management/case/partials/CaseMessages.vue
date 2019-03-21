@@ -1,5 +1,5 @@
 <template>
-  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true}" class="case-view-messages">
+  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved:true }" class="case-view-messages">
     <li
       v-for="message in messages"
       v-show="checkShowScheduled(message)"

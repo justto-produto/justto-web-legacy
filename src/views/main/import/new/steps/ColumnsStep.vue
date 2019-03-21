@@ -19,7 +19,7 @@
             <span class="file-column__example">{{ column.example }}</span>
           </div>
           <el-tag
-            :closable="column.tag != null" :class="{'el-tag--dropzone-active': column.tag}" class="el-tag--dropzone"
+            :closable="column.tag !== null" :class="{'el-tag--dropzone-active': column.tag}" class="el-tag--dropzone"
             @close="removeTag(column)">
             <span v-if="column.tag">{{ $t(column.tag.key) }}</span>
             <span v-else>Arraste a coluna aqui</span>

@@ -127,9 +127,6 @@ export default {
                   email: this.loginForm.email,
                   groupId: this.$store.state.workspaceModule.subdomain
                 })
-                if (responses[1][0] && responses[1][0]['subDomain']) {
-                  this.$store.dispatch('getWorkspaceMembers')
-                }
                 this.$router.push('/management')
               }).catch(error => {
                 console.error(error)
