@@ -435,7 +435,7 @@ export default {
       text-transform: capitalize;
     }
     .el-step__head {
-      overflow: hidden;
+      // overflow: hidden;
     }
   }
   &__actions {
@@ -455,7 +455,10 @@ export default {
     }
   }
   &__steps {
-    padding: 10px 0;
+    padding: 20px 0;
+    ul {
+      margin: 0;
+    }
     .el-button--text {
       padding-top: 0;
     }
