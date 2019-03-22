@@ -198,6 +198,7 @@ export default {
   },
   created () {
     this.fetchData({ fetchDispute: true, fetchMessages: true })
+    // this.$jusSocket.subscribeChat(this.$route.params.id)
   },
   methods: {
     fetchData (options) {
@@ -256,7 +257,7 @@ export default {
       this.messageType = type
     },
     doAction (action) {
-      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         type: 'warning'
@@ -434,7 +435,7 @@ export default {
       text-transform: capitalize;
     }
     .el-step__head {
-      overflow: hidden;
+      // overflow: hidden;
     }
   }
   &__actions {
@@ -454,7 +455,10 @@ export default {
     }
   }
   &__steps {
-    padding-top: 10px;
+    padding: 20px 0;
+    ul {
+      margin: 0;
+    }
     .el-button--text {
       padding-top: 0;
     }

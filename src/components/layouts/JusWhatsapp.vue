@@ -138,7 +138,7 @@ export default {
       })
     },
     restart () {
-      this.$store.commit('setWhatsappSocketMessage', { status: 'STARTING' })
+      this.$store.commit('SOCKET_refresh', { status: 'STARTING' })
       this.$store.dispatch('whatsappStop').then(() => {
         this.$store.dispatch('whatsappStart')
       })

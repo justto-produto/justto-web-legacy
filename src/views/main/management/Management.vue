@@ -64,13 +64,12 @@
           @click="exportDisputes">
           Exportar casos
         </el-button>
-
       </div>
       <el-tabs
         v-loading="$store.state.loading"
         ref="management-tabs"
         :before-leave="handleChangeTab"
-        :value="0"
+        v-model="activeTab.index"
         class="view-management__tabs"
         style="min-height: 100%;">
         <el-tab-pane name="0" label="Engajamento">
@@ -130,10 +129,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange }}</template>
+              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Valor proposto">
-              <template slot-scope="scope">R$ {{ scope.row.disputelastrespondentoffer }}</template>
+              <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
               <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
@@ -247,10 +246,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange }}</template>
+              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Contraproposta">
-              <template slot-scope="scope">R$ {{ scope.row.lastoffervalue }}</template>
+              <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
             </el-table-column>
             <el-table-column label="Última interação">
               <template slot-scope="scope">{{ scope.row.lastinteractiondate | moment('DD/MM/YY') }}</template>
@@ -358,10 +357,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange }}</template>
+              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
-              <template slot-scope="scope">{{ scope.row.disputedealvalue }}</template>
+              <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
             </el-table-column>
             <el-table-column
               label="Ações"
@@ -523,12 +522,17 @@ export default {
     JusManagementFilters
   },
   data () {
+    const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
+    let currentTab
+    if (savedFilters && savedFilters.currentTab && savedFilters.accountId === this.$store.getters.accountId) {
+      currentTab = savedFilters.currentTab
+    } else currentTab = '0'
     return {
       showFilters: false,
       cases: [],
       filters: {},
       selectedIds: [],
-      activeTab: {},
+      activeTab: this.getActiveTabLabel(currentTab),
       activeFilters: {},
       currentQuery: '',
       loadingExport: false
@@ -540,13 +544,20 @@ export default {
     }
   },
   mounted () {
+    this.$store.dispatch('showLoading')
     const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
     if (savedFilters && savedFilters.accountId === this.$store.getters.accountId) {
-      this.activeFilters = savedFilters.filters
-      this.filters = savedFilters.filters
+      let self = this
+      setTimeout(function () {
+        if (savedFilters.filters) {
+          self.activeFilters = savedFilters.filters
+          self.filters = savedFilters.filters
+        }
+        self.getCases()
+      }, 1000)
+    } else {
+      this.getCases()
     }
-    this.setActiveTabLabel('0')
-    this.getCases()
   },
   methods: {
     getCases () {
@@ -567,7 +578,7 @@ export default {
       })
     },
     buildQuery () {
-      let query = { query: { bool: { must: [] } }, from: 0, size: 3000 }
+      let query = { query: { bool: { must: [] } }, from: 0, size: 3000, order_by: 'favorite DESC' }
       query.query.bool.must.push(
         { match: { workspaceid: this.$store.state.workspaceModule.id } }
       )
@@ -580,27 +591,34 @@ export default {
       }
       if (this.activeTab.terms) {
         for (let terms of this.activeTab.terms) {
-          query.query.bool.must.push(
-            { terms: terms }
-          )
+          query.query.bool.must.push({ terms: terms })
         }
       }
       Object.keys(this.filters).forEach(key => {
         let match = {}
+        let terms = {}
         if (this.filters[key]) {
-          match[key] = this.filters[key]
-          query.query.bool.must.push({ match: match })
-          // if (Array.isArray(match[key])) {
-          //   if (match[key].length) query.query.bool.must.push({ match: match })
-          // } else query.query.bool.must.push({ match: match })
+          if (this.filters[key] === 'INTERACTIONS') {
+            match['disputehasinteractions'] = true
+          } else if (this.filters[key] === 'ACCEPTED') {
+            terms['disputestatus'] = ['ACCEPTED', 'CHECKOUT']
+          } else if (this.filters[key] === 'PAUSED') {
+            match['paused'] = true
+          } else match[key] = this.filters[key]
+          if (Object.entries(terms).length !== 0) {
+            query.query.bool.must.push({ terms: terms })
+          } else {
+            query.query.bool.must.push({ match: match })
+          }
         }
       })
       return query.query.bool.must.length > 0 ? query : null
     },
     applyFilters () {
-      var stringfilters = JSON.stringify({
+      let stringfilters = JSON.stringify({
         accountId: this.$store.getters.accountId,
-        filters: this.activeFilters
+        filters: this.activeFilters,
+        currentTab: this.activeTab.index
       })
       localStorage.setItem('jusfilters', stringfilters)
       this.showFilters = false
@@ -633,42 +651,52 @@ export default {
       let nextIcon = require('@/assets/icons/ic-right.svg')
       return ['<img src="' + prevIcon + '">', '<img src="' + nextIcon + '">']
     },
-    setActiveTabLabel (newTab) {
-      var newActive
+    getActiveTabLabel (newTab) {
+      let newActive
       switch (newTab) {
         case '0':
-          newActive = { index: 0, label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
+          newActive = { index: '0', label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
           break
         case '1':
-          newActive = { index: 1, label: 'Com interação', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: true }] }
+          newActive = { index: '1', label: 'Com interação', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: true }] }
           break
         case '2':
-          newActive = { index: 2, label: 'Novos acordos', terms: [{ disputestatus: ['ACCEPTED', 'CHECKOUT'] }] }
+          newActive = { index: '2', label: 'Novos acordos', terms: [{ disputestatus: ['ACCEPTED', 'CHECKOUT'] }] }
           break
         case '3':
-          newActive = { index: 3, label: 'Todos' }
+          newActive = { index: '3', label: 'Todos' }
           break
         default:
           newActive = { index: 0, label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
       }
-      this.activeTab = newActive
+      return newActive
     },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {
-        this.clearSelection()
-        this.setActiveTabLabel(newTab)
-        this.getCases()
         this.filters = {}
+        this.activeFilters = {}
+        this.clearSelection()
+        this.activeTab = this.getActiveTabLabel(newTab)
+        this.getCases()
+        let stringfilters = JSON.stringify({
+          accountId: this.$store.getters.accountId,
+          currentTab: this.activeTab.index
+        })
+        localStorage.setItem('jusfilters', stringfilters)
       }
     },
     clearFilters () {
-      localStorage.removeItem('jusfilters')
+      var stringfilters = JSON.stringify({
+        accountId: this.$store.getters.accountId,
+        currentTab: this.activeTab.index
+      })
+      localStorage.setItem('jusfilters', stringfilters)
       this.showFilters = false
       this.filters = {}
       this.getCases()
     },
     sendBatchAction (action) {
-      this.$confirm('Tem certeza que deseja realizar essa ação?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         type: 'warning'
@@ -682,7 +710,7 @@ export default {
             tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
             selecteds: this.selectedIds.length
           })
-          var self = this
+          let self = this
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
@@ -720,7 +748,7 @@ export default {
           message: 'Caso ' + label + ' com sucesso.',
           type: 'success'
         })
-        var self = this
+        let self = this
         setTimeout(function () {
           self.getCases()
         }, 1500)
@@ -737,7 +765,7 @@ export default {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.currentQuery).then(response => {
         // eslint-disable-next-line
-        window.open(axios.defaults.baseURL + '/api/export/' + response)
+        window.open('/api/export/' + response)
         window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
       }).finally(() => {
         this.loadingExport = false

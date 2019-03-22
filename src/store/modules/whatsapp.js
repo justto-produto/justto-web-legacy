@@ -12,9 +12,17 @@ const whatsappModule = {
     },
     clearSocket (state) {
       state.qrCode = ''
+    },
+    SOCKET_refresh (state, message) {
+      if (message.qrCode) state.qrCode = message.qrCode
+      if (message.status) state.status = message.status
+      if (message.number) state.number = message.number
     }
   },
   actions: {
+    SOCKET_connect () {
+      console.log('Socket connected.')
+    }
   },
   getters: {
     isWhatsappOffline: state => {

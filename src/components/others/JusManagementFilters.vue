@@ -141,12 +141,12 @@
         <el-col v-if="isAll" :span="24">
           <el-form-item label="Status">
             <el-radio-group v-model="filters.disputestatus">
-              <el-radio-button label="Engajamento" value="ENGAGEMENT" />
-              <el-radio-button label="Com interação" value="INTERACTIONS" />
-              <el-radio-button label="Novos acordos" value="ACCEPTED" />
-              <el-radio-button label="Perdidos" value="LOST" />
-              <el-radio-button label="Expirados" value="EXPIRED" />
-              <el-radio-button label="Pausados" value="PAUSED" />
+              <el-radio-button label="ENGAGEMENT">Engajamento</el-radio-button>
+              <el-radio-button label="INTERACTIONS">Com interação</el-radio-button>
+              <el-radio-button label="ACCEPTED">Novos acordos</el-radio-button>
+              <el-radio-button label="REFUSED">Perdidos</el-radio-button>
+              <el-radio-button label="EXPIRED">Expirados</el-radio-button>
+              <el-radio-button label="PAUSED">Pausados</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -184,8 +184,8 @@ export default {
   components: { Money },
   props: {
     tabIndex: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     filters: {
       type: Object,
@@ -204,16 +204,16 @@ export default {
   },
   computed: {
     isEngagement () {
-      return this.tabIndex === 0
+      return this.tabIndex === '0'
     },
     isInteration () {
-      return this.tabIndex === 1
+      return this.tabIndex === '1'
     },
     isNewAgreements () {
-      return this.tabIndex === 2
+      return this.tabIndex === '2'
     },
     isAll () {
-      return this.tabIndex === 3
+      return this.tabIndex === '3'
     },
     strategies () {
       return this.$store.state.strategyModule.list

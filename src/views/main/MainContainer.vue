@@ -124,6 +124,7 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('myPerson')
+    this.$store.dispatch('getWorkspaceMembers')
   }
 }
 </script>

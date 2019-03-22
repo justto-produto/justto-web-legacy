@@ -1,54 +1,17 @@
 import Vue from 'vue'
-import { Client } from '@stomp/stompjs'
 import store from '../store'
+import VueSocketIO from 'vue-socket.io'
 
-const VueStompJs = {
-  install (Vue, options) {
-    const whatsappClient = new Client()
-    const chatClient = new Client()
-
-    whatsappClient.brokerURL = options.brokerURL + '/workspace'
-    chatClient.brokerURL = options.brokerURL + '/dispute'
-
-    whatsappClient.onConnect = function (frame) {
-      console.info('Connected at ' + whatsappClient.brokerURL)
-    }
-    whatsappClient.onStompError = function (frame) {
-      console.error('Broker reported error: ' + frame.headers['message'])
-      console.error('Additional details: ' + frame.body)
-    }
-    chatClient.onConnect = function (frame) {
-      console.info('Connected at ' + chatClient.brokerURL)
-    }
-    chatClient.onStompError = function (frame) {
-      console.error('Broker reported error: ' + frame.headers['message'])
-      console.error('Additional details: ' + frame.body)
-    }
-
-    whatsappClient.activate()
-    chatClient.activate()
-
-    Vue.prototype.$jusSocket = {
-      subscribeWhatsapp () {
-        whatsappClient.subscribe('/whatsapp/refresh/' + store.state.workspaceModule.subdomain, function (message) {
-          store.commit('setWhatsappSocketMessage', JSON.parse(message.body))
-        })
-      },
-      unsubscribeWhatsapp () {
-        whatsappClient.unsubscribe()
-      },
-      subscribeChat (disputeId) {
-        chatClient.subscribe('/' + disputeId + '/chat', function (message) {
-          // store.commit('setWhatsappSocketMessage', JSON.parse(message.body))
-        })
-      },
-      unsubscribeChat () {
-        chatClient.unsubscribe()
-      }
-    }
-  }
-}
-
-let hostname = window.location.hostname
+let hostname = location.hostname
 let protocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
-Vue.use(VueStompJs, { brokerURL: protocol + hostname + '/websocket' })
+
+Vue.use(new VueSocketIO({
+  debug: true,
+  connection: protocol + hostname,
+  vuex: {
+    store,
+    actionPrefix: 'SOCKET_',
+    mutationPrefix: 'SOCKET_'
+  },
+  options: { path: '/websocket/whatsapp' }
+}))

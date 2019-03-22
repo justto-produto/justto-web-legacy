@@ -62,6 +62,7 @@
       </div>
     </template>
     <template slot="right-card">
+      <h3>WhatsApp</h3>
       <jus-whatsapp v-if="!$store.getters.isWhatsappOffline" />
       <div v-else>
         <h2>Desculpe :(</h2>
@@ -233,13 +234,15 @@ export default {
     this.teamName = this.$store.state.workspaceModule.name + ''
     this.$store.dispatch('whatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
-        this.$store.dispatch('whatsappStart').then(() => {
-        })
+        this.$store.dispatch('whatsappStart')
       } else {
-        this.$store.commit('setWhatsappSocketMessage', whatsapp)
+        this.$store.commit('SOCKET_refresh', whatsapp)
       }
-      this.$jusSocket.subscribeWhatsapp()
+      this.$socket.emit('subscribe', this.$store.state.workspaceModule.subdomain)
     })
+  },
+  destroyed () {
+    this.$socket.emit('unsubscribe', this.$store.state.workspaceModule.subdomain)
   },
   methods: {
     getMembers () {
