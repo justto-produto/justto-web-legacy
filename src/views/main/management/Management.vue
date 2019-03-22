@@ -545,6 +545,8 @@ export default {
   },
   mounted () {
     this.$store.dispatch('showLoading')
+    this.$store.dispatch('getCampaigns')
+    this.$store.dispatch('getStrategies')
     const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
     if (savedFilters && savedFilters.accountId === this.$store.getters.accountId) {
       let self = this

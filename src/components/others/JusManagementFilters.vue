@@ -237,19 +237,6 @@ export default {
       return this.$store.state.workspaceModule.members
     }
   },
-  beforeMount () {
-    this.$store.dispatch('showLoading')
-    var promise = []
-    if (this.$store.state.campaignModule.list.length === 0) {
-      promise.push(this.$store.dispatch('getCampaigns'))
-    }
-    if (this.$store.state.strategyModule.list.length === 0) {
-      promise.push(this.$store.dispatch('getStrategies'))
-    }
-    Promise.all(promise).finally(() => {
-      this.$store.dispatch('hideLoading')
-    })
-  },
   methods: {
     setInteraction (value) {
       delete this.filters['whatsappinterations']
