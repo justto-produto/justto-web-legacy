@@ -13,7 +13,7 @@
       </span>
     </h1>
     <p>
-      Para preparar o seu ambiente de trabalho na plataforma, vamos adicionar algumas informações básicas sobre sobre
+      Para preparar o seu ambiente de trabalho na plataforma, adicione algumas informações básicas sobre
       quem irá operar o sistema (você e sua equipe). Se você não tiver todas as informações agora, você poderá pular
       e adicionar depois.
     </p>
