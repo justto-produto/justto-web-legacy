@@ -38,6 +38,14 @@ const router = new Router({
           }
         },
         {
+          name: 'importLoading',
+          path: 'import/loading',
+          component: () => import(/* webpackChunkName: "importLoading" */ '@/views/main/import/Loading'),
+          meta: {
+            requiresTrack: true
+          }
+        },
+        {
           name: 'management',
           path: '/management',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
