@@ -2,7 +2,7 @@
   <div class="external-view">
     <el-container>
       <el-aside width="50%" class="hidden-sm-and-down">
-        <JusSidenavExternal show-plans/>
+        <jus-sidenav-external show-plans/>
       </el-aside>
       <el-main class="display-flex position-relative">
         <jus-button-back src="http://justto.com.br" />

@@ -33,7 +33,11 @@
         </div>
       </transition>
     </div>
-    <el-button type="primary" :plain="showGif < 5" :loading="showGif < 5" @click="$router.push('/management')">
+    <el-button
+      :plain="showGif < 5"
+      :loading="showGif < 5"
+      type="primary"
+      @click="$router.push('/management')">
       Continuar
     </el-button>
   </div>
