@@ -23,17 +23,17 @@
           </template>
         </el-table-column>
         <el-table-column label="Indetificação">
-          <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}
+          <template slot-scope="scope">{{ scope.row.disputeobjectboundary | currency }}
           <jus-icon icon="alert" /></template>
         </el-table-column>
         <el-table-column label="Alçada máxima">
-          <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
+          <template slot-scope="scope">{{ scope.row.disputeobjectboundary | currency }}</template>
         </el-table-column>
         <el-table-column label="CPF/CNPJ/OAB">
-          <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}</template>
+          <template slot-scope="scope">{{ scope.row.disputeobjectboundary | currency }}</template>
         </el-table-column>
         <el-table-column label="Nome">
-          <template slot-scope="scope">R$ {{ scope.row.disputeobjectboundary }}
+          <template slot-scope="scope">{{ scope.row.disputeobjectboundary | currency }}
           <jus-icon icon="alert" /></template>
         </el-table-column>
       </el-table>

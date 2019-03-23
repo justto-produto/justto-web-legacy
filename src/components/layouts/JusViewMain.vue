@@ -82,5 +82,8 @@ export default {
       width: 100%;
     }
   }
+  &--full-height {
+    height: auto;
+  }
 }
 </style>

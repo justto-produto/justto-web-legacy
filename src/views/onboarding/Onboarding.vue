@@ -1,7 +1,7 @@
 <template>
   <el-row class="onboarding-view">
     <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 1s;">
-      <JusSidenavExternal/>
+      <jus-sidenav-external/>
     </el-col>
     <transition name="swiper-fade">
       <el-col v-if="right > 0" :md="right">

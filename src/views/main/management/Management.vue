@@ -357,7 +357,7 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange | currency }}</template>
+              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
               <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>

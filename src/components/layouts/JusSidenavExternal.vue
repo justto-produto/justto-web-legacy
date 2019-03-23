@@ -7,7 +7,7 @@
         <span>dias de teste<br>gratuito</span>
       </div>
       <div>
-        máximo de <br>100 casos
+        Máximo de <br>100 casos
       </div>
     </div>
     <div v-if="showPlans" class="jus-sidenav-external__divider">
@@ -21,11 +21,11 @@
     <div v-if="showPlans" class="jus-sidenav-external__plans">
       <el-button plain @click="showModal(1)">
         <div>+ R$ 18</div>
-        por caso com interação<br>(carteira indenizatória)
+        Por caso com interação<br>(carteira indenizatória)
       </el-button>
       <el-button plain @click="showModal(0)">
         <div>+ R$ 35</div>
-        por caso com interação<br>(carteira de cobrança)
+        Por caso com interação<br>(carteira de cobrança)
       </el-button>
     </div>
     <el-dialog
