@@ -193,7 +193,6 @@ export default {
     })
   },
   mounted () {
-    console.log(document);
     document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container jus-main-view--full-height')
   },
   destroyed () {
