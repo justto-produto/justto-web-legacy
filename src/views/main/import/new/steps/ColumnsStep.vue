@@ -192,6 +192,13 @@ export default {
       })
     })
   },
+  mounted () {
+    console.log(document);
+    document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container jus-main-view--full-height')
+  },
+  destroyed () {
+    document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container')
+  },
   methods: {
     dragTag (event, data) {
       event.dataTransfer.setData('data', data)
