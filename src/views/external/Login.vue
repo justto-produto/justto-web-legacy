@@ -122,7 +122,12 @@ export default {
                 this.$store.dispatch('myAccount'),
                 this.$store.dispatch('myWorkspace')
               ]).then(responses => {
-                window.analytics.identify(this.loginForm.email, {
+                // window.analytics.identify(this.loginForm.email, {
+                //   action: 'LOGIN',
+                //   email: this.loginForm.email,
+                //   groupId: this.$store.state.workspaceModule.subdomain
+                // })
+                window.analytics.group(this.$store.state.workspaceModule.subdomain, {
                   action: 'LOGIN',
                   email: this.loginForm.email,
                   groupId: this.$store.state.workspaceModule.subdomain
