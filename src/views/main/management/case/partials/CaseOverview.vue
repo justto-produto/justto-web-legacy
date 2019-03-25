@@ -16,19 +16,22 @@
         </div>
         <div v-if="dispute.upperRange" class="case-overview-view__info-line">
           <span class="title">Alçada máxima:</span>
-          <span>R$ {{ (dispute.upperRange.boundary ? dispute.upperRange.boundary : '-') }}</span>
+          <span>{{ dispute.upperRange.boundary | currency }}</span>
         </div>
-        <div v-if="dispute.lastOffer" class="case-overview-view__info-line">
+        <div class="case-overview-view__info-line">
           <span class="title">Contraproposta:</span>
-          <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
+          <span v-if="dispute.lastOffer">{{ dispute.lastOffer.boundary | currency }}</span>
+          <span v-else>{{ 0 | currency }}</span>
         </div>
-        <div v-if="dispute.lastOffer" class="case-overview-view__info-line">
+        <div
+          v-if="dispute.lastOffer && (dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT')"
+          class="case-overview-view__info-line">
           <span class="title">Valor do acordo:</span>
-          <span>R$ {{ (dispute.lastOffer.boundary ? dispute.lastOffer.boundary : '-') }}</span>
+          <span>{{ dispute.lastOffer.boundary | currency }}</span>
         </div>
         <div v-if="dispute.valueOfClaim" class="case-overview-view__info-line">
-          <span class="title">Valor da causa:</span>
-          <span>R$ {{ (dispute.valueOfClaim.value ? dispute.valueOfClaim.value : '-') }}</span>
+          <span class="title">Valor proposto:</span>
+          <span>{{ dispute.valueOfClaim.value | currency }}</span>
         </div>
         <div class="case-overview-view__info-line">
           <span class="title">Fim da negociação:</span>
@@ -74,7 +77,7 @@
           </div>
         </div>
         <div class="case-overview-view__info-line">
-          <span>Telefone:</span>
+          <span>Telefones:</span>
           <a href="" @click.prevent="openPhoneDialog(role.person.id)">
             <el-tooltip content="Adicionar telefone">
               <jus-icon icon="add" />

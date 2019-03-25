@@ -129,10 +129,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange }}</template>
+              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Valor proposto">
-              <template slot-scope="scope">R$ {{ scope.row.disputelastrespondentoffer }}</template>
+              <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
             </el-table-column>
             <el-table-column label="Fim da negociação">
               <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
@@ -246,10 +246,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange }}</template>
+              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Contraproposta">
-              <template slot-scope="scope">R$ {{ scope.row.lastoffervalue }}</template>
+              <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
             </el-table-column>
             <el-table-column label="Última interação">
               <template slot-scope="scope">{{ scope.row.lastinteractiondate | moment('DD/MM/YY') }}</template>
@@ -357,10 +357,10 @@
               </template>
             </el-table-column>
             <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">R$ {{ scope.row.disputeupperrange }}</template>
+              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
             </el-table-column>
             <el-table-column label="Valor do acordo">
-              <template slot-scope="scope">{{ scope.row.disputedealvalue }}</template>
+              <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
             </el-table-column>
             <el-table-column
               label="Ações"
@@ -524,7 +524,7 @@ export default {
   data () {
     const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
     let currentTab
-    if (savedFilters && savedFilters.currentTab) {
+    if (savedFilters && savedFilters.currentTab && savedFilters.accountId === this.$store.getters.accountId) {
       currentTab = savedFilters.currentTab
     } else currentTab = '0'
     return {
@@ -545,6 +545,8 @@ export default {
   },
   mounted () {
     this.$store.dispatch('showLoading')
+    this.$store.dispatch('getCampaigns')
+    this.$store.dispatch('getStrategies')
     const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
     if (savedFilters && savedFilters.accountId === this.$store.getters.accountId) {
       let self = this

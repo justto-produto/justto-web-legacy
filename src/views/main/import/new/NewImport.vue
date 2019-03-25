@@ -118,7 +118,7 @@ export default {
           window.analytics.track('Configuração de campanha concluida', {
             campaign: campaignsTrack
           })
-          this.$router.push('/management')
+          this.$router.push('/import/loading')
         }).catch(error => {
           this.$jusNotification({
             title: 'Ops!',
@@ -177,7 +177,7 @@ export default {
   margin-top: 20px;
 }
 .new-import-view__content {
-  margin-top: 40px;
+  margin-top: 32px;
   >p, h4 {
     text-align: center;
   }

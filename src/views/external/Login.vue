@@ -2,7 +2,7 @@
   <div class="external-view">
     <el-container>
       <el-aside width="50%" class="hidden-sm-and-down">
-        <JusSidenavExternal />
+        <jus-sidenav-external />
       </el-aside>
       <el-main class="display-flex">
         <el-form
@@ -132,9 +132,6 @@ export default {
                   email: this.loginForm.email,
                   groupId: this.$store.state.workspaceModule.subdomain
                 })
-                if (responses[1][0] && responses[1][0]['subDomain']) {
-                  this.$store.dispatch('getWorkspaceMembers')
-                }
                 this.$router.push('/management')
               }).catch(error => {
                 console.error(error)

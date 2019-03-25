@@ -6,7 +6,7 @@
       casos dentro da mesma importação com um réu em comum. Por isso, ao importar,
       o sistema automaticamente divide seus casos em campanhas para que você possa
       configurá-las separadamente.
-      <br><br>
+      <br>
     </p>
     <div class="import-view__container">
       <div class="import-view__content">

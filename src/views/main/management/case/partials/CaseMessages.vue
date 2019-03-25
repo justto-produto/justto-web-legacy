@@ -1,7 +1,8 @@
 <template>
-  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true}" class="case-view-messages">
+  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved:true }" class="case-view-messages">
     <li
       v-for="message in messages"
+      v-if="isntCanceled(message)"
       v-show="checkShowScheduled(message)"
       :key="message.id"
       class="case-view-messages__message">
@@ -27,7 +28,8 @@
           </div>
         </div>
         <jus-avatar-user
-          :name="message.message && message.message.senderName"
+          v-if="message.message"
+          :name="message.message.senderName"
           :purple="directionClass(message) === 'inbound'"
           size="sm" />
       </div>
@@ -98,6 +100,13 @@ export default {
           return false
         } else return true
       } else return true
+    },
+    isntCanceled (message) {
+      if (message.message) {
+        if (message.message.status === 'CANCELED') {
+          return false
+        } return true
+      } return true
     }
   }
 }
@@ -166,6 +175,7 @@ export default {
     }
     div {
       font-weight: 500;
+      word-break: break-all;
     }
     > span {
       display: block;

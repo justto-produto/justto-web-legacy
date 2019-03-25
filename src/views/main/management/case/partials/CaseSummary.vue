@@ -29,10 +29,8 @@
         <template slot="title">Contraproposta</template>
         <template slot="description">
           <div v-if="sliderProposal">
-            <div :style="'left: calc(' + sliderProposal + '% - 27px)'" class="case-view__last-offer">
-              R$ {{ lastoffer }}
-            </div>
-            <el-slider v-model="sliderProposal" :show-tooltip="false" />
+            {{ lastoffer | currency }}
+            <!-- <el-slider v-model="sliderProposal" :show-tooltip="false" /> -->
           </div>
           <div v-else>
             Sem contraproposta
@@ -42,7 +40,12 @@
       <el-step>
         <template slot="title">Acordo</template>
         <template slot="description">
-          {{ deal }}
+          <div v-if="deal">
+            {{ deal | currency }}
+          </div>
+          <div v-else>
+            Sem valor de acordo
+          </div>
         </template>
       </el-step>
     </el-steps>
@@ -82,9 +85,7 @@ export default {
       return parseInt(this.summary.disputeobjectboundary ? this.summary.disputeobjectboundary : 0)
     },
     deal () {
-      if (this.summary.disputedealvalue) {
-        return 'R$' + this.summary.disputedealvalue
-      } return 'Sem valor de acordo'
+      return this.summary.disputedealvalue
     },
     lastoffer () {
       return this.summary.lastoffervalue ? this.summary.lastoffervalue : 0
@@ -123,10 +124,5 @@ export default {
     margin-top: 20px;
     pointer-events: none;
   }
-}
-.case-view__last-offer {
-  position: absolute;
-  top: -14px;
-  white-space: nowrap;
 }
 </style>
