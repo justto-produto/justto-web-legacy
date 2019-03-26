@@ -46,7 +46,7 @@
     </template>
     <template slot="right-card">
       <h2 class="import-view__history-title">
-        Histórico de importaçãos
+        Histórico de importação
       </h2>
       <p v-if="importsHistory.length === 0">
         Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
