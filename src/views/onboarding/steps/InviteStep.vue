@@ -83,7 +83,13 @@ export default {
     addTeamMember (form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
-          if (!this.teamMembersForm.teamMembers.includes(this.teamMembersForm.teamMember)) {
+          if (this.teamMembersForm.teamMember === this.$store.state.accountModule.email) {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Não é possível enviar convites a si mesmo',
+              type: 'warning'
+            })
+          } else if (!this.teamMembersForm.teamMembers.includes(this.teamMembersForm.teamMember)) {
             this.teamMembersForm.teamMembers.push(
               {
                 email: this.teamMembersForm.teamMember,
