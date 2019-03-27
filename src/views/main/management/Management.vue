@@ -543,6 +543,11 @@ export default {
       return this.selectedIds.length >= 1
     }
   },
+  watch: {
+    '$store.state.activePersonId': function (id) {
+      this.refresh()
+    }
+  },
   mounted () {
     this.$store.dispatch('showLoading')
     this.$store.dispatch('getCampaigns')
@@ -614,6 +619,11 @@ export default {
           }
         }
       })
+      if (this.$store.state.activePersonId) {
+        let match = {}
+        match['negotiators.f3'] = this.$store.state.activePersonId
+        query.query.bool.must.push({ match: match })
+      }
       return query.query.bool.must.length > 0 ? query : null
     },
     applyFilters () {

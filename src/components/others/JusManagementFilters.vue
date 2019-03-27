@@ -151,10 +151,10 @@
           </el-form-item>
         </el-col>
         <!-- NEGOCIADORES -->
-        <el-col :span="24">
+        <!-- <el-col :span="24">
           <el-form-item label="Negociadores">
             <el-select
-              v-model="filters['negotiators.f2']"
+              v-model="filters['negotiators.f3']"
               value-key="name"
               size="large"
               placeholder="Escolha os negociadores">
@@ -170,7 +170,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-        </el-col>
+        </el-col> -->
       </el-row>
     </el-form>
   </div>
