@@ -15,6 +15,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     loading: false,
+    activePersonId: 0,
     statesList: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
   },
   getters: {
@@ -25,6 +26,9 @@ export default new Vuex.Store({
     },
     hideLoading (state) {
       state.loading = false
+    },
+    setActivePersonId (state, id) {
+      state.activePersonId = id
     }
   },
   actions: {
