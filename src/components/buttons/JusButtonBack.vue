@@ -19,12 +19,18 @@ export default {
     src: {
       default: '',
       type: String
+    },
+    back: {
+      default: false,
+      type: Boolean
     }
   },
   methods: {
     goTo () {
       if (this.src) {
         window.location = this.src
+      } else if (this.back) {
+        this.$router.go(-1)
       } else this.$router.push(this.to)
     }
   }

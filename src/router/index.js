@@ -137,7 +137,7 @@ const router = new Router({
     },
     {
       name: 'new-password',
-      path: '/new-password',
+      path: '/new-password/:token',
       component: () => import(/* webpackChunkName: "newPassword" */ '@/views/external/NewPassword'),
       meta: {
         requiresTrack: true
