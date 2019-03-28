@@ -21,7 +21,7 @@
           <el-tag
             :closable="column.tag !== null" :class="{'el-tag--dropzone-active': column.tag}" class="el-tag--dropzone"
             @close="removeTag(column)">
-            <span v-if="column.tag">{{ $t(column.tag.key) }}</span>
+            <span v-if="column.tag">{{ $t(column.tag.key) | capitalize }}</span>
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
         </div>
@@ -53,7 +53,7 @@
               draggable="true"
               @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
               <el-tag class="el-tag--drag">
-                {{ $t(tag.key) }}
+                {{ $t(tag.key) | capitalize }}
               </el-tag>
             </span>
           </el-collapse-item>
@@ -72,7 +72,7 @@
                 draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
                 <el-tag class="el-tag--drag">
-                  Parte contrária {{ claimantPartyIndex + ' - ' + $t(tag.key) }}
+                  Parte contrária {{ claimantPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -96,7 +96,7 @@
                 draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
                 <el-tag class="el-tag--drag">
-                  Advogado {{ claimantLawyerIndex + ' - ' + $t(tag.key) }}
+                  Advogado {{ claimantLawyerIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
@@ -120,7 +120,7 @@
                 draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
                 <el-tag class="el-tag--drag">
-                  Réu {{ respondentPartyIndex + ' - ' + $t(tag.key) }}
+                  Réu {{ respondentPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
               </span>
             </el-collapse-item>
