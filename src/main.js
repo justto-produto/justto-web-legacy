@@ -23,7 +23,6 @@ import '@/filters/money'
 // css
 import '@/styles/core.scss'
 import '@/styles/transitions.scss'
-import '@/styles/container.scss'
 
 import '@/styles/overrides/alert.scss'
 import '@/styles/overrides/badge.scss'

@@ -1,3 +1,5 @@
+process.env.VUE_APP_VERSION = require('./package.json').version
+
 module.exports = {
   pluginOptions: {
     i18n: {
@@ -7,7 +9,6 @@ module.exports = {
       enableInSFC: true
     }
   },
-
   baseUrl: undefined,
   outputDir: undefined,
   assetsDir: undefined,
