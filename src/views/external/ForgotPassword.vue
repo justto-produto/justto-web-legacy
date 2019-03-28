@@ -5,7 +5,7 @@
         <jus-sidenav-external />
       </el-aside>
       <el-main class="display-flex position-relative">
-        <JusButtonBack to="login"/>
+        <jus-button-back to="login"/>
         <el-form
           v-loading="showLoading"
           ref="forgotForm"

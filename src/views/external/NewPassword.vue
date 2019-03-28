@@ -2,10 +2,10 @@
   <div class="external-view">
     <el-container>
       <el-aside width="50%" class="hidden-sm-and-down">
-        <JusSidenavExternal />
+        <jus-sidenav-external />
       </el-aside>
       <el-main class="display-flex position-relative">
-        <JusButtonBack to="login"/>
+        <jus-button-back to="/login"/>
         <el-form
           v-loading="showLoading"
           ref="newPasswordForm"
@@ -16,7 +16,7 @@
           @submit.native.prevent="submitForm">
           <h1 class="external-view__title">Nova senha</h1>
           <el-alert
-            v-show="true"
+            v-show="showSuccess"
             type="success"
             show-icon
             title=""
@@ -24,7 +24,7 @@
             <template slot="title"/>
             Senha alterada com sucesso!
             <br>
-            <router-link :to="'login'">
+            <router-link to="/login">
               Clique aqui para acessar.
             </router-link>
           </el-alert>
@@ -37,7 +37,7 @@
             <template slot="title"/>
             Não foi possível identificar sua requisição de alteração de senha.
             <br>
-            <router-link :to="'forgot-password'">
+            <router-link to="forgot-password">
               Clique aqui para tentar novamente.
             </router-link>
           </el-alert>
@@ -96,12 +96,12 @@ export default {
     }
   },
   beforeCreate () {
-    if (!this.$route.query.token) {
-      this.$router.push('/')
-    }
+    // if (!this.$route.query.token) {
+    //   this.$router.push('/')
+    // }
   },
   created () {
-    this.token = this.$route.query.token
+    this.token = this.$route.params.token
   },
   methods: {
     submitForm () {
