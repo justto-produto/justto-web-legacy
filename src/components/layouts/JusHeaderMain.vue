@@ -56,8 +56,11 @@
           <jus-icon icon="expand-dropdown"/>
         </span>
         <el-dropdown-menu slot="dropdown">
+          <div class="jus-header-main__version">
+            Versão {{ appVersion }}
+          </div>
           <router-link to="/profile">
-            <el-dropdown-item>
+            <el-dropdown-item divided>
               Perfil
             </el-dropdown-item>
           </router-link>
@@ -101,6 +104,9 @@ export default {
     },
     workspace () {
       return this.$store.state.workspaceModule.name
+    },
+    appVersion () {
+      return process.env.VUE_APP_VERSION
     }
   },
   methods: {
@@ -176,6 +182,11 @@ export default {
     span {
       text-transform: capitalize;
     }
+  }
+  &__version {
+    margin: 6px 20px 12px 20px;
+    color: #adadad;
+    font-size: 12px;
   }
 }
 .jus-header-main__search {
