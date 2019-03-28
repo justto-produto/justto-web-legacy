@@ -9,6 +9,13 @@ module.exports = {
       enableInSFC: true
     }
   },
+  chainWebpack: config => {
+    config.plugin('html').tap(args => {
+      args[0].hash = true
+      args[0].cache = false
+      return args
+    })
+  },
   baseUrl: undefined,
   outputDir: undefined,
   assetsDir: undefined,
