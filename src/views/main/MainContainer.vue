@@ -5,9 +5,6 @@
         <router-link to="/">
           <img class="aside-logo__logo" src="@/assets/logo-small.svg">
         </router-link>
-        <div class="container-aside__version">
-          v {{ appVersion }}
-        </div>
       </div>
       <el-menu
         ref="sideMenu"
@@ -73,11 +70,6 @@ export default {
       isCollapse: true
     }
   },
-  computed: {
-    appVersion () {
-      return process.env.VUE_APP_VERSION
-    }
-  },
   beforeMount () {
     this.$store.dispatch('myPerson')
     this.$store.dispatch('getWorkspaceMembers')
@@ -93,11 +85,6 @@ export default {
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  &__version {
-    margin-top: 10px;
-    font-size: 12px;
-    color: #adadad;
-  }
 }
 
 .aside-logo {
