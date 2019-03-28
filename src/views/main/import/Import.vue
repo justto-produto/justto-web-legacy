@@ -94,7 +94,11 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('getImportsHistory').then(response => {
-      this.importsHistory = response
+      this.importsHistory = response.sort(function (a, b) {
+        if (a.id < b.id) return 1
+        if (a.id > b.id) return -1
+        return 0
+      })
     })
   },
   beforeCreate () {
@@ -149,7 +153,7 @@ export default {
     },
     downloadModel () {
       window.analytics.track('Planilha modelo baixada')
-      window.open('planilha-modelo.xlsx', '_blank')
+      window.open('Planilha-Modelo-Justto.xlsx', '_blank')
     }
   }
 }
