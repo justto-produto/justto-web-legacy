@@ -371,5 +371,17 @@ export default {
       width: 16px;
     }
   }
+  .el-collapse--bordered {
+    .el-collapse-item {
+      box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+      &.is-active {
+        border: 2px solid #9461f7;
+      }
+      &:last-child {
+        margin-bottom: 20px;
+      }
+    }
+
+  }
 }
 </style>
