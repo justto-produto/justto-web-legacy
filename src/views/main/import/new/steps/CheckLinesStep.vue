@@ -39,5 +39,18 @@ export default {
   h4 {
     margin-bottom: 30px;
   }
+  .el-collapse-item__header {
+    height: 100%;
+    line-height: inherit;
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  .el-collapse {
+    width: 500px;
+  }
+  .el-collapse-item__arrow {
+    line-height: 20px;
+    margin: 0;
+  }
 }
 </style>
