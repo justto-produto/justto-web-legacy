@@ -13,7 +13,7 @@
       <div class="case-view__section-title">
         <h2>Resumo do caso</h2>
       </div>
-      <case-summary :id="dispute.id"/>
+      <case-summary v-if="dispute.strategy" :id="dispute.id" :strategy-id="dispute.strategy.id"/>
     </template>
     <!-- CHAT -->
     <template slot="main">
@@ -80,14 +80,18 @@
           </el-checkbox>
           <el-tabs value="1">
             <el-tab-pane label="Mensagem" name="1">
+                <el-tooltip :disabled="!!activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
               <el-card shadow="always" class="case-view__send-message-box">
-                <el-input
-                  :rows="3"
-                  v-model="newMessage"
-                  type="textarea"
-                  placeholder="Escreva alguma coisa" />
+                <el-collapse-transition>
+                  <el-input
+                    v-show="activePersonId"
+                    :rows="3"
+                    v-model="newMessage"
+                    type="textarea"
+                    placeholder="Escreva alguma coisa" />
+                </el-collapse-transition>
                 <div class="case-view__send-message-actions">
-                  <div class="">
+                  <div v-if="activePersonId">
                     <!-- <el-tooltip content="Enviar mensagem">
                       <a href="#" @click="setMessageType('message')">
                         <jus-icon :is-active="messageType === 'message'" icon="message"/>
@@ -109,15 +113,17 @@
                       </a>
                     </el-tooltip>
                   </div>
-                  <el-tooltip :disabled="!!activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
+                  <div v-else class="case-view__disabled-text">
+                    Escreva alguma coisa
+                  </div>
                     <div>
                       <el-button :disabled="!activePersonId" type="primary" @click="sendMessage()">
-                        Enviar mensagem
+                        Enviar
                       </el-button>
                     </div>
-                  </el-tooltip>
                 </div>
               </el-card>
+            </el-tooltip>
             </el-tab-pane>
             <el-tab-pane label="Nota" name="2">
               <el-card shadow="always" class="case-view__send-message-box">
@@ -128,7 +134,7 @@
                   placeholder="Escreva alguma coisa" />
                 <div class="case-view__send-message-actions note">
                   <el-button type="primary" @click="sendNote()">
-                    Gravar nota
+                    Salvar nota
                   </el-button>
                 </div>
               </el-card>
@@ -387,13 +393,15 @@ export default {
       &__inner {
         resize: none;
         border: 0;
+        padding: 5px 20px;
       }
     }
   }
   &__send-message-actions {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
+    margin: -10px 0;
     img {
       margin-right: 10px;
       height: 20px;
@@ -408,6 +416,10 @@ export default {
     &.note {
       justify-content: flex-end;
     }
+  }
+  &__disabled-text {
+    color: #adadad;
+    cursor: default;
   }
   &__back {
     margin-right: 10px;
@@ -470,23 +482,11 @@ export default {
       height: 100%;
       display: flex;
       flex-direction: column;
-      padding: 0
+      padding: 0;
     }
   }
   hr {
     margin: 1px -20px 20px;
-  }
-  .el-collapse--bordered {
-    .el-collapse-item {
-      box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
-      &.is-active {
-        border: 2px solid #9461f7;
-      }
-      &:last-child {
-        margin-bottom: 20px;
-      }
-    }
-
   }
   &__search {
     visibility: hidden;

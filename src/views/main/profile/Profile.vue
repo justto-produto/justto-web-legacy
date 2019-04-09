@@ -238,11 +238,11 @@ export default {
       } else {
         this.$store.commit('SOCKET_refresh', whatsapp)
       }
-      this.$socket.emit('subscribe', this.$store.state.workspaceModule.subdomain)
+      this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
     })
   },
   destroyed () {
-    this.$socket.emit('unsubscribe', this.$store.state.workspaceModule.subdomain)
+    this.$socket.emit('unsubscribe', '/whatsapp/' +  this.$store.state.workspaceModule.subdomain)
   },
   methods: {
     getMembers () {

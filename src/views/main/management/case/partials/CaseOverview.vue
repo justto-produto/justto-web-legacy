@@ -69,7 +69,7 @@
         <div class="case-overview-view__info-list">
           <div v-for="email in role.person.emails" :key="email.id">
             {{ email.address }}
-            <a href="" @click.prevent="removeEmail({personId: role.person.id, id: email.id})">
+            <a href="" @click.prevent="removeEmail({personId: role.person.id, id: email.id, disputeId: dispute.id})">
               <el-tooltip content="Remover email">
                 <jus-icon icon="trash" />
               </el-tooltip>
@@ -87,7 +87,7 @@
         <div class="case-overview-view__info-list">
           <div v-for="phone in role.person.phones" :key="phone.id">
             {{ phone.number }}
-            <a href="" @click.prevent="removePhone({personId: role.person.id, id: phone.id})">
+            <a href="" @click.prevent="removePhone({personId: role.person.id, id: phone.id, disputeId: dispute.id})">
               <el-tooltip content="Remover telefone">
                 <jus-icon icon="trash" />
               </el-tooltip>
@@ -370,6 +370,18 @@ export default {
       float: right;
       width: 16px;
     }
+  }
+  .el-collapse--bordered {
+    .el-collapse-item {
+      box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+      &.is-active {
+        border: 2px solid #9461f7;
+      }
+      &:last-child {
+        margin-bottom: 20px;
+      }
+    }
+
   }
 }
 </style>
