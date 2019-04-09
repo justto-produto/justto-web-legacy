@@ -13,7 +13,7 @@
       <div class="case-view__section-title">
         <h2>Resumo do caso</h2>
       </div>
-      <case-summary :id="dispute.id"/>
+      <case-summary v-if="dispute.strategy" :id="dispute.id" :strategy-id="dispute.strategy.id"/>
     </template>
     <!-- CHAT -->
     <template slot="main">
@@ -487,18 +487,6 @@ export default {
   }
   hr {
     margin: 1px -20px 20px;
-  }
-  .el-collapse--bordered {
-    .el-collapse-item {
-      box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
-      &.is-active {
-        border: 2px solid #9461f7;
-      }
-      &:last-child {
-        margin-bottom: 20px;
-      }
-    }
-
   }
   &__search {
     visibility: hidden;

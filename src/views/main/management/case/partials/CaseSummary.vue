@@ -15,6 +15,12 @@
         </template>
       </el-step>
       <el-step>
+        <template slot="title">Engajamento</template>
+        <template slot="description">
+          <a href="#" @click.prevent="dialogVisible = true">Ver mensagens agendadas</a></li>
+        </template>
+      </el-step>
+      <el-step>
         <template slot="title">Interação</template>
         <template slot="description">
           <ul>
@@ -49,21 +55,33 @@
         </template>
       </el-step>
     </el-steps>
+    <jus-engagements-dialog
+      :dialog-visible.sync="dialogVisible"
+      :strategy-id="strategyId"
+    />
   </div>
 </template>
 
 <script>
+import JusEngagementsDialog from '@/components/dialogs/JusEngagementsDialog'
+
 export default {
   name: 'CaseSummary',
+  components: { JusEngagementsDialog },
   props: {
     id: {
+      default: null,
+      type: Number
+    },
+    strategyId: {
       default: null,
       type: Number
     }
   },
   data () {
     return {
-      summary: ''
+      summary: '',
+      dialogVisible: false
     }
   },
   computed: {

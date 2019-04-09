@@ -14,6 +14,7 @@
           v-for="(mappedCampaign, index) in mappedCampaigns"
           :mapped-campaign.sync="mappedCampaign"
           :key="mappedCampaign.cluster"
+          :index="index + 1"
           :color="colors[index]"/>
       </div>
     </div>
