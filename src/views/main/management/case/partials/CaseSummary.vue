@@ -17,7 +17,7 @@
       <el-step>
         <template slot="title">Engajamento</template>
         <template slot="description">
-          <a href="#" @click.prevent="dialogVisible = true">Ver mensagens agendadas</a></li>
+          <a href="#" @click.prevent="dialogVisible = true">Ver mensagens agendadas</a>
         </template>
       </el-step>
       <el-step>
