@@ -81,50 +81,50 @@
         <div class="case-view__send-message">
           <el-tabs value="1">
             <el-tab-pane label="Mensagem" name="1">
-                <el-tooltip :disabled="!!activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
-              <el-card shadow="always" class="case-view__send-message-box">
-                <el-collapse-transition>
-                  <el-input
-                    v-show="activePersonId"
-                    :rows="3"
-                    v-model="newMessage"
-                    type="textarea"
-                    placeholder="Escreva alguma coisa" />
-                </el-collapse-transition>
-                <div class="case-view__send-message-actions">
-                  <div v-if="activePersonId">
-                    <!-- <el-tooltip content="Enviar mensagem">
-                      <a href="#" @click="setMessageType('message')">
-                        <jus-icon :is-active="messageType === 'message'" icon="message"/>
-                      </a>
-                    </el-tooltip> -->
-                    <el-tooltip content="Enviar e-mail">
-                      <a href="" @click.prevent="setMessageType('email')">
-                        <jus-icon :is-active="messageType === 'email'" icon="email"/>
-                      </a>
-                    </el-tooltip>
-                    <el-tooltip content="Enviar Whatsapp">
-                      <a href="#" @click.prevent="setMessageType('whatsapp')">
-                        <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
-                      </a>
-                    </el-tooltip>
-                    <el-tooltip content="Enviar CNA">
-                      <a href="#" @click.prevent="setMessageType('cna')">
-                        <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
-                      </a>
-                    </el-tooltip>
-                  </div>
-                  <div v-else class="case-view__disabled-text">
-                    Escreva alguma coisa
-                  </div>
+              <el-tooltip :disabled="!!activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
+                <el-card shadow="always" class="case-view__send-message-box">
+                  <el-collapse-transition>
+                    <el-input
+                      v-show="activePersonId"
+                      :rows="3"
+                      v-model="newMessage"
+                      type="textarea"
+                      placeholder="Escreva alguma coisa" />
+                  </el-collapse-transition>
+                  <div class="case-view__send-message-actions">
+                    <div v-if="activePersonId">
+                      <!-- <el-tooltip content="Enviar mensagem">
+                        <a href="#" @click="setMessageType('message')">
+                          <jus-icon :is-active="messageType === 'message'" icon="message"/>
+                        </a>
+                      </el-tooltip> -->
+                      <el-tooltip content="Enviar e-mail">
+                        <a href="" @click.prevent="setMessageType('email')">
+                          <jus-icon :is-active="messageType === 'email'" icon="email"/>
+                        </a>
+                      </el-tooltip>
+                      <el-tooltip content="Enviar Whatsapp">
+                        <a href="#" @click.prevent="setMessageType('whatsapp')">
+                          <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
+                        </a>
+                      </el-tooltip>
+                      <el-tooltip content="Enviar CNA">
+                        <a href="#" @click.prevent="setMessageType('cna')">
+                          <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
+                        </a>
+                      </el-tooltip>
+                    </div>
+                    <div v-else class="case-view__disabled-text">
+                      Escreva alguma coisa
+                    </div>
                     <div>
                       <el-button :disabled="!activePersonId" type="primary" @click="sendMessage()">
                         Enviar
                       </el-button>
                     </div>
-                </div>
-              </el-card>
-            </el-tooltip>
+                  </div>
+                </el-card>
+              </el-tooltip>
             </el-tab-pane>
             <el-tab-pane label="Nota" name="2">
               <el-card shadow="always" class="case-view__send-message-box">

@@ -92,25 +92,6 @@ export default {
       // dialogVisible: false
     }
   },
-  watch: {
-    showScheduled (value) {
-      this.scheduled = value
-    },
-    scheduled (value) {
-      this.$emit('update:showScheduled', value)
-    },
-    id (val) {
-      if (val) {
-        this.$store.dispatch('getDisputes', {
-          query: { bool: { must: [{ match: { disputeid: this.id } }] } }
-        }).then(response => {
-          if (response.length) {
-            this.summary = response[0]
-          }
-        })
-      }
-    }
-  },
   computed: {
     enriched () {
       return {
@@ -140,6 +121,25 @@ export default {
         return (this.lastoffer * 100) / this.boundary
       },
       set (val) { return val }
+    }
+  },
+  watch: {
+    showScheduled (value) {
+      this.scheduled = value
+    },
+    scheduled (value) {
+      this.$emit('update:showScheduled', value)
+    },
+    id (val) {
+      if (val) {
+        this.$store.dispatch('getDisputes', {
+          query: { bool: { must: [{ match: { disputeid: this.id } }] } }
+        }).then(response => {
+          if (response.length) {
+            this.summary = response[0]
+          }
+        })
+      }
     }
   }
 }

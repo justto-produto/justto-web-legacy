@@ -342,7 +342,7 @@ export default {
       })
     },
     removeEmail (id) {
-      this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Remover email', {
+      this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Excluir email', {
         confirmButtonText: 'Sim, remover',
         cancelButtonText: 'Cancelar',
         type: 'warning'
@@ -400,7 +400,7 @@ export default {
     },
     removeMember (id, name) {
       this.$confirm('Tem certeza que deseja remover ' + name + ' da equipe?', 'Atenção!', {
-        confirmButtonText: 'Remover',
+        confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'warning'
       }).then(() => {
