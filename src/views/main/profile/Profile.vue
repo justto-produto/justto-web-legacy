@@ -242,7 +242,7 @@ export default {
     })
   },
   destroyed () {
-    this.$socket.emit('unsubscribe', '/whatsapp/' +  this.$store.state.workspaceModule.subdomain)
+    this.$socket.emit('unsubscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
   },
   methods: {
     getMembers () {
