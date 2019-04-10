@@ -17,7 +17,10 @@
       <el-step>
         <template slot="title">Engajamento</template>
         <template slot="description">
-          <a href="#" @click.prevent="dialogVisible = true">Ver mensagens agendadas</a>
+          <el-checkbox v-model="scheduled" class="case-view__show-scheduled">
+            Exibir mensagens agendadas
+          </el-checkbox>
+          <!-- <a href="#" @click.prevent="dialogVisible = true">Ver mensagens agendadas</a> -->
         </template>
       </el-step>
       <el-step>
@@ -55,19 +58,19 @@
         </template>
       </el-step>
     </el-steps>
-    <jus-engagements-dialog
+    <!-- <jus-engagements-dialog
       :dialog-visible.sync="dialogVisible"
       :strategy-id="strategyId"
-    />
+    /> -->
   </div>
 </template>
 
 <script>
-import JusEngagementsDialog from '@/components/dialogs/JusEngagementsDialog'
+// import JusEngagementsDialog from '@/components/dialogs/JusEngagementsDialog'
 
 export default {
   name: 'CaseSummary',
-  components: { JusEngagementsDialog },
+  // components: { JusEngagementsDialog },
   props: {
     id: {
       default: null,
@@ -76,12 +79,36 @@ export default {
     strategyId: {
       default: null,
       type: Number
+    },
+    showScheduled: {
+      default: false,
+      type: Boolean
     }
   },
   data () {
     return {
       summary: '',
-      dialogVisible: false
+      scheduled: false
+      // dialogVisible: false
+    }
+  },
+  watch: {
+    showScheduled (value) {
+      this.scheduled = value
+    },
+    scheduled (value) {
+      this.$emit('update:showScheduled', value)
+    },
+    id (val) {
+      if (val) {
+        this.$store.dispatch('getDisputes', {
+          query: { bool: { must: [{ match: { disputeid: this.id } }] } }
+        }).then(response => {
+          if (response.length) {
+            this.summary = response[0]
+          }
+        })
+      }
     }
   },
   computed: {
@@ -113,19 +140,6 @@ export default {
         return (this.lastoffer * 100) / this.boundary
       },
       set (val) { return val }
-    }
-  },
-  watch: {
-    id (val) {
-      if (val) {
-        this.$store.dispatch('getDisputes', {
-          query: { bool: { must: [{ match: { disputeid: this.id } }] } }
-        }).then(response => {
-          if (response.length) {
-            this.summary = response[0]
-          }
-        })
-      }
     }
   }
 }

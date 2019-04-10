@@ -13,17 +13,16 @@
       <div class="case-view__section-title">
         <h2>Resumo do caso</h2>
       </div>
-      <case-summary v-if="dispute.strategy" :id="dispute.id" :strategy-id="dispute.strategy.id"/>
+      <case-summary
+        v-if="dispute.strategy"
+        :id="dispute.id"
+        :show-scheduled.sync="showScheduled"
+        :strategy-id="dispute.strategy.id"/>
     </template>
     <!-- CHAT -->
     <template slot="main">
       <div class="case-view__section-messages">
         <div class="case-view__actions">
-          <el-tooltip content="Buscar">
-            <el-button plain @click="showSearch = !showSearch">
-              <jus-icon icon="search2" />
-            </el-button>
-          </el-tooltip>
           <!-- <el-tooltip content="move-case">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="move-case" />
@@ -34,24 +33,24 @@
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip> -->
-          <el-tooltip content="Perder">
-            <el-button plain @click="doAction('refused')">
-              <jus-icon icon="lose" />
-            </el-button>
-          </el-tooltip>
           <el-tooltip content="Ganhar">
             <el-button plain @click="doAction('accepted')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Pausar">
-            <el-button plain @click="doAction('paused')">
-              <jus-icon icon="pause" />
+          <el-tooltip content="Perder">
+            <el-button plain @click="doAction('refused')">
+              <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Retomar">
             <el-button plain @click="doAction('resume')">
               <jus-icon icon="start-again" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="Pausar">
+            <el-button plain @click="doAction('paused')">
+              <jus-icon icon="pause" />
             </el-button>
           </el-tooltip>
           <!-- <el-tooltip content="snooze">
@@ -60,8 +59,13 @@
             </el-button>
           </el-tooltip> -->
           <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-            <el-button plain class="favorite" @click="doAction(isFavorite ? 'disfavor' : 'favorite')">
+            <el-button plain class="right" @click="doAction(isFavorite ? 'disfavor' : 'favorite')">
               <jus-icon :icon="isFavorite ? 'golden-star' : 'star'" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="Buscar">
+            <el-button plain class="right" @click="showSearch = !showSearch">
+              <jus-icon icon="search2" />
             </el-button>
           </el-tooltip>
           <div :class="{isVisible: showSearch}" class="case-view__search">
@@ -71,13 +75,10 @@
           </div>
         </div>
         <case-messages
-          :messages="filteredDisputeMessages"
+          :messages-prop="filteredDisputeMessages"
           :loading="loadingDisputeMessages"
           :show-scheduled="showScheduled" />
         <div class="case-view__send-message">
-          <el-checkbox v-model="showScheduled" class="case-view__show-scheduled">
-            Exibir mensagens agendadas
-          </el-checkbox>
           <el-tabs value="1">
             <el-tab-pane label="Mensagem" name="1">
                 <el-tooltip :disabled="!!activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
@@ -377,10 +378,7 @@ export default {
     }
   }
   &__show-scheduled {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    z-index: 1;
+    margin-top: 10px;
   }
   &__send-message-box {
     margin: 20px;
@@ -458,7 +456,7 @@ export default {
       border-radius: 5px;
       padding: 11px;
     }
-    .favorite {
+    .right {
       float: right;
     }
     img {
