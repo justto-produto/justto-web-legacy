@@ -37,6 +37,14 @@
           <span class="title">Fim da negociação:</span>
           <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
         </div>
+        <div class="case-overview-view__info-line">
+          <span class="title">Descrição:</span>
+          <span>{{ dispute.description }}</span>
+        </div>
+        <div class="case-overview-view__actions">
+          <el-button plain>Excluir</el-button>
+          <el-button type="primary" @click="editCaseDialogVisible = true">Editar</el-button>
+        </div>
       </el-collapse-item>
     </el-collapse>
     <hr>
@@ -51,8 +59,22 @@
         :title="buildTitle(role)">
         <div class="case-overview-view__info-line">
           <span>Status:</span>
-          <span v-if="true">Offline <jus-status-dot type="danger"/></span>
-          <span v-else>Online <jus-status-dot type="success"/></span>
+          <el-popover
+            placement="top-end"
+            width="220"
+            trigger="hover">
+            <div class="case-overview-view__location">
+              <span>Localização</span>
+              São José dos Campos, SP
+              <span>Aparelho</span>
+              Iphone 7
+              <span>OS</span>
+              12.0
+            </div>
+            <span slot="reference">
+              Online <jus-status-dot type="success"/>
+            </span>
+          </el-popover>
         </div>
         <div class="case-overview-view__info-line">
           <span class="title">Nome:</span>
@@ -70,7 +92,7 @@
           <div v-for="email in role.person.emails" :key="email.id">
             {{ email.address }}
             <a href="" @click.prevent="removeEmail({personId: role.person.id, id: email.id, disputeId: dispute.id})">
-              <el-tooltip content="Remover email">
+              <el-tooltip content="Excluir email">
                 <jus-icon icon="trash" />
               </el-tooltip>
             </a>
@@ -88,7 +110,7 @@
           <div v-for="phone in role.person.phones" :key="phone.id">
             {{ phone.number }}
             <a href="" @click.prevent="removePhone({personId: role.person.id, id: phone.id, disputeId: dispute.id})">
-              <el-tooltip content="Remover telefone">
+              <el-tooltip content="Excluir telefone">
                 <jus-icon icon="trash" />
               </el-tooltip>
             </a>
@@ -145,6 +167,79 @@
         <el-button type="primary" @click="addPhone">Adicionar</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :visible.sync="editCaseDialogVisible"
+      title="Editar informações gerais"
+      width="50%">
+      <el-form
+        ref="newPhone"
+        :model="caseForm"
+        :rules="caseRules"
+        label-position="top"
+        @submit.native.prevent="editCase">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="Campanha" prop="campaign">
+              <el-select
+                v-model="caseForm.campaignId"
+                placeholder="Selecione uma opção">
+                <el-option
+                  v-for="campaign in campaigns"
+                  :key="campaign.id"
+                  :value="campaign.id"
+                  :label="campaign.name"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Estratégia" prop="strategy">
+              <el-select
+                v-model="caseForm.strategyId"
+                placeholder="Selecione uma opção">
+                <el-option
+                  v-for="strategy in strategies"
+                  :key="strategy.id"
+                  :value="strategy.id"
+                  :label="strategy.name"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Alçada máxima" prop="boundary">
+              <el-input />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Fim da negociação" prop="deadline">
+              <el-date-picker
+                v-model="dispute.expirationDate"
+                :clearable="false"
+                type="date"
+                placeholder="Pick a day" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Valor do acordo" prop="deal">
+              <el-input />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Classificação" prop="classification">
+              <el-input v-model="dispute.classification" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="Estratégia" prop="strategy">
+              <el-input v-model="dispute.description" type="textarea" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editCaseDialogVisible = false">Cancelar</el-button>
+        <el-button type="primary" @click="editCase">Editar dados</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -186,8 +281,14 @@ export default {
         { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         { validator: validatePhone, trigger: 'submit' }
       ] },
+      caseForm: {
+        campaignId: 0,
+        strategyId: 0
+      },
+      caseRules: {},
       emailDialogVisible: false,
-      phoneDialogVisible: false
+      phoneDialogVisible: false,
+      editCaseDialogVisible: false
     }
   },
   computed: {
@@ -202,7 +303,25 @@ export default {
           }
         })
       } return []
+    },
+    strategies () {
+      return this.$store.state.strategyModule.list
+    },
+    campaigns () {
+      return this.$store.state.campaignModule.list
     }
+  },
+  watch: {
+    editCaseDialogVisible (value) {
+      if (value) {
+        this.caseForm.campaignId = this.dispute.campaign.id
+        this.caseForm.strategyId = this.dispute.strategy.id
+      }
+    }
+  },
+  beforeMount () {
+    this.$store.dispatch('getCampaigns')
+    this.$store.dispatch('getStrategies')
   },
   methods: {
     buildTitle (role) {
@@ -296,7 +415,7 @@ export default {
     },
     removeEmail (emailBody) {
       this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
-        confirmButtonText: 'Remover',
+        confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error'
       }).then(() => {
@@ -315,7 +434,7 @@ export default {
     },
     removePhone (phoneBody) {
       this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
-        confirmButtonText: 'Remover',
+        confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error'
       }).then(() => {
@@ -331,6 +450,9 @@ export default {
           })
         })
       })
+    },
+    editCase () {
+
     }
   }
 }
@@ -363,12 +485,29 @@ export default {
       line-height: 15px;
     }
   }
+  &__actions {
+    margin-top: 20px;
+    display: flex;
+    button {
+      width: 100%;
+    }
+  }
   &__info-list {
     margin-top: 10px;
     font-weight: 500;
     img {
       float: right;
       width: 16px;
+    }
+  }
+  &__location {
+    span {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 10px;
+    }
+    span:not(:first-child) {
+      margin-top: 20px;
     }
   }
   .el-collapse--bordered {
@@ -381,7 +520,9 @@ export default {
         margin-bottom: 20px;
       }
     }
-
+  }
+  .el-select, .el-date-editor, .el-radio-group {
+    width: 100%;
   }
 }
 </style>

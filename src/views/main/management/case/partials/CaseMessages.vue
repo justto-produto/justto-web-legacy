@@ -1,5 +1,5 @@
 <template>
-  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved:true }" class="case-view-messages">
+  <ul v-loading="messages.length === 0 && loading" v-chat-scroll="{always: false, smooth: true, scrollonremoved:true }" class="case-view-messages">
     <li
       v-for="message in messages"
       v-if="isntCanceled(message)"
@@ -24,7 +24,15 @@
             </i>
           </div>
           <div class="case-view-messages__message-time">
-            {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
+            {{ message.executionDateTime | moment('HH:mm') }} •
+            <span v-if="directionClass(message) !== 'note'">
+              <jus-icon icon="mobile" /> •
+              Visualizado •
+              Edinalva
+            </span>
+            <span v-else>
+              Nota
+            </span>
           </div>
         </div>
         <jus-avatar-user
@@ -52,7 +60,7 @@
 export default {
   name: 'CaseMessages',
   props: {
-    messages: {
+    messagesProp: {
       type: Array,
       default: () => []
     },
@@ -68,7 +76,15 @@ export default {
   data () {
     return {
       showMessage: false,
-      messageContent: ''
+      messageContent: '',
+      messages: []
+    }
+  },
+  watch: {
+    messagesProp () {
+      setTimeout(function () {
+        this.messages = this.messagesProp
+      }.bind(this), 300)
     }
   },
   methods: {
@@ -123,7 +139,7 @@ export default {
   }
   &__message-box {
     display: flex;
-    margin: 20px;
+    margin: 30px 20px;
     justify-content: flex-end;
     &.inbound {
       flex-direction: row-reverse;
@@ -192,6 +208,11 @@ export default {
     font-size: 12px;
     text-align: right;
     margin: 10px 20px 0;
+    font-weight: 500;
+    word-spacing: 5px;
+    img {
+      vertical-align: bottom;
+    }
   }
   .jus-avatar-user span, .jus-avatar-user img {
     width: 3rem;

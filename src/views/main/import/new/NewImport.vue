@@ -118,6 +118,7 @@ export default {
           window.analytics.track('Configuração de campanha concluida', {
             campaign: campaignsTrack
           })
+          this.$store.commit('removeImportsFile')
           this.$router.push('/import/loading')
         }).catch(error => {
           this.$jusNotification({
@@ -144,7 +145,8 @@ export default {
         campaign.hasOwnProperty('protocolDeadLine') &&
         campaign.hasOwnProperty('paymentDeadLine') &&
         // campaign.hasOwnProperty('negotiatorIds') &&
-        campaign.hasOwnProperty('strategy')
+        campaign.hasOwnProperty('strategy') &&
+        campaign.strategy !== ''
       ) {
         return true
       } else return false

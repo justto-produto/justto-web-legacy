@@ -238,11 +238,11 @@ export default {
       } else {
         this.$store.commit('SOCKET_refresh', whatsapp)
       }
-      this.$socket.emit('subscribe', this.$store.state.workspaceModule.subdomain)
+      this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
     })
   },
   destroyed () {
-    this.$socket.emit('unsubscribe', this.$store.state.workspaceModule.subdomain)
+    this.$socket.emit('unsubscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
   },
   methods: {
     getMembers () {
@@ -342,7 +342,7 @@ export default {
       })
     },
     removeEmail (id) {
-      this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Remover email', {
+      this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Excluir email', {
         confirmButtonText: 'Sim, remover',
         cancelButtonText: 'Cancelar',
         type: 'warning'
@@ -400,7 +400,7 @@ export default {
     },
     removeMember (id, name) {
       this.$confirm('Tem certeza que deseja remover ' + name + ' da equipe?', 'Atenção!', {
-        confirmButtonText: 'Remover',
+        confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'warning'
       }).then(() => {
