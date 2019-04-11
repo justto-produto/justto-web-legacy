@@ -73,7 +73,7 @@ export default {
   // components: { JusEngagementsDialog },
   props: {
     id: {
-      default: null,
+      default: 0,
       type: Number
     },
     strategyId: {
@@ -129,17 +129,17 @@ export default {
     },
     scheduled (value) {
       this.$emit('update:showScheduled', value)
-    },
-    id (val) {
-      if (val) {
-        this.$store.dispatch('getDisputes', {
-          query: { bool: { must: [{ match: { disputeid: this.id } }] } }
-        }).then(response => {
-          if (response.length) {
-            this.summary = response[0]
-          }
-        })
-      }
+    }
+  },
+  beforeMount () {
+    if (this.id) {
+      this.$store.dispatch('getDisputes', {
+        query: { bool: { must: [{ match: { disputeid: this.id } }] } }
+      }).then(response => {
+        if (response.length) {
+          this.summary = response[0]
+        }
+      })
     }
   }
 }
