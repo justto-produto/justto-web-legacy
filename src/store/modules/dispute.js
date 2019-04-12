@@ -109,6 +109,17 @@ const dispute = {
             reject(error)
           })
       })
+    },
+    removeOab ({ commit }, removeOabBody) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.delete('api/disputes/' + removeOabBody.disputeId + '/oabs/' + removeOabBody.id)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {
