@@ -182,9 +182,45 @@
         <el-form-item label="Nome" prop="name">
           <el-input v-model="roleForm.name" />
         </el-form-item>
-        <el-form-item label="CPF" prop="documentNumber">
+        <el-form-item v-show="partyRoles.party == true" label="CPF" prop="documentNumber">
           <the-mask v-model="roleForm.documentNumber" :mask="['###.###.###-##']" class="el-input__inner" />
         </el-form-item>
+        <el-form-item v-show="partyRoles.legal == true" label="CNPJ" prop="documentNumber">
+          <the-mask v-model="roleForm.documentNumber" :mask="['##.###.###/####-##']" class="el-input__inner" />
+        </el-form-item>
+      </el-form>
+      <el-form
+        v-show="partyRoles.lawyer == true"
+        ref="oabForm"
+        :model="oabForm"
+        :rules="oabRules"
+        label-position="top">
+        <div class="case-overview-view__oab-form">
+          <el-form-item class="oab" label="OAB">
+            <el-input v-model="oabForm.oab" />
+          </el-form-item>
+          <el-form-item class="state" label="Estado">
+            <el-select v-model="oabForm.state" placeholder="">
+              <el-option
+                v-for="state in $store.state.statesList"
+                :key="state"
+                :label="state"
+                :value="state" />
+            </el-select>
+          </el-form-item>
+          <el-button class="button" type="primary" @click="addOab(roleForm.oabs)">
+            <jus-icon icon="add-white" />
+          </el-button>
+        </div>
+        <ul class="case-overview-view__list" style="margin-top: -10px">
+          <li v-for="(oab, index) in roleForm.oabs">
+            <img src="@/assets/icons/ic-check.svg">
+            {{ oab.number }} {{ oab.state }}
+            <a href="#" @click.prevent="removeOab({disputeId: dispute.id, id: oab.id}, roleForm.oabs, index)">
+              <img src="@/assets/icons/ic-error.svg">
+            </a>
+          </li>
+        </ul>
       </el-form>
       <el-form
         ref="phoneForm"
@@ -192,9 +228,9 @@
         :rules="phoneRules"
         label-position="top">
         <el-form-item label="Telefone" prop="phone">
-          <el-input v-model="phoneForm.phone" v-mask="['(##) ####-####', '(##) #####-####']">
+          <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="phoneForm.phone">
             <el-button slot="append" @click="addPhone(roleForm.personId, roleForm.phones)">
-              <jus-icon icon="add" />
+              <jus-icon icon="add-white" />
             </el-button>
           </el-input>
         </el-form-item>
@@ -216,7 +252,7 @@
         <el-form-item label="E-mail" prop="email">
           <el-input v-model="emailForm.email">
             <el-button slot="append" @click="addEmail(roleForm.personId, roleForm.emails)">
-              <jus-icon icon="add" />
+              <jus-icon icon="add-white" />
             </el-button>
           </el-input>
         </el-form-item>
@@ -225,45 +261,6 @@
             <img src="@/assets/icons/ic-check.svg">
             {{ email.address }}
             <a href="#" @click.prevent="removeEmail({disputeId: dispute.id, id: email.id}, roleForm.emails, index)">
-              <img src="@/assets/icons/ic-error.svg">
-            </a>
-          </li>
-        </ul>
-      </el-form>
-      <el-form
-        ref="oabForm"
-        :model="oabForm"
-        :rules="oabRules"
-        label-position="top">
-        <el-row :gutter="17">
-          <el-col :span="16">
-            <el-form-item label="OAB">
-              <el-input v-model="oabForm.oab">
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="Estado">
-              <el-select v-model="oabForm.state" placeholder="">
-                <el-option
-                v-for="state in $store.state.statesList"
-                :key="state"
-                :label="state"
-                :value="state" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-button type="primary" @click="addOab(roleForm.oabs)" style="margin-top: 29px;padding: 8px 20px;">
-              <jus-icon icon="add" />
-            </el-button>
-          </el-col>
-        </el-row>
-        <ul class="case-overview-view__list" style="margin-top: -10px">
-          <li v-for="(oab, index) in roleForm.oabs">
-            <img src="@/assets/icons/ic-check.svg">
-            {{ oab.number }}
-            <a href="#" @click.prevent="removeOab({disputeId: dispute.id, id: oab.id}, roleForm.oabs, index)">
               <img src="@/assets/icons/ic-error.svg">
             </a>
           </li>
@@ -308,9 +305,14 @@ export default {
     }
     return {
       active: this.activePersonId,
-      emailForm: { email: ''},
-      phoneForm: { phone: ''},
-      oabForm: { oab: '', state: ''},
+      partyRoles: {
+        legal: false,
+        party: false,
+        lawyer: false
+      },
+      emailForm: { email: '' },
+      phoneForm: { phone: '' },
+      oabForm: { oab: '', state: '' },
       emailRules: { email: [
         { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'submit' }
@@ -319,11 +321,10 @@ export default {
         { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         { validator: validatePhone, trigger: 'submit' }
       ] },
-      oabRules: { oab: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-      ], state: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-      ] },
+      oabRules: {
+        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      },
       caseForm: {
         upperRange: ''
       },
@@ -387,7 +388,7 @@ export default {
             personId: personId,
             address: this.emailForm.email
           }).then(response => {
-            emails.push({id: response.id, address: response.address})
+            emails.push({ id: response.id, address: response.address })
             this.emailForm.email = ''
             setTimeout(function () {
               this.$emit('case:refresh')
@@ -403,7 +404,7 @@ export default {
             personId: personId,
             number: this.phoneForm.phone.match(/\d+/g).join([])
           }).then(response => {
-            phones.push({id: response.id, number: response.number})
+            phones.push({ id: response.id, number: response.number })
             this.phoneForm.phone = ''
             setTimeout(function () {
               this.$emit('case:refresh')
@@ -419,8 +420,7 @@ export default {
             oab: this.oabForm.oab,
             state: this.oabForm.state
           }).then(response => {
-            console.log(response);
-            oabs.push({id: response.id, number: response.number, state: response.state})
+            oabs.push({ id: response.id, number: response.number, state: response.state })
             this.oabForm.oab = ''
             this.oabForm.state = ''
             setTimeout(function () {
@@ -480,6 +480,8 @@ export default {
     },
     openRoleDialog (role) {
       this.editRoleDialogVisible = true
+      var roles = role.roles
+      var party = role.party
       this.roleForm.personId = role.person.id
       this.roleForm.name = role.person.name
       this.roleForm.documentNumber = role.person.documentNumber
@@ -488,9 +490,21 @@ export default {
       this.roleForm.phones = role.person.phones
       this.roleForm.oabs = role.person.oabs
       this.oabForm.state = ''
+      this.partyRoles.legal = false
+      this.partyRoles.party = false
+      this.partyRoles.lawyer = false
+      if (roles.includes('LAWYER') === true) {
+        this.partyRoles.lawyer = true
+      }
+      if ((roles.includes('NEGOTIATOR') === true) || (roles.includes('PARTY') === true && party.includes('CLAIMANT') === true)) {
+        this.partyRoles.party = true
+      }
+      if (roles.includes('PARTY') === true && party.includes('RESPONDENT') === true) {
+        this.partyRoles.legal = true
+      }
     },
     editRole () {
-
+      this.editRoleDialogVisible = false
     },
     removeRole () {
 
@@ -580,6 +594,24 @@ export default {
         vertical-align: text-top;
         float: right;
       }
+    }
+  }
+  &__oab-form {
+    display: flex;
+    width: 100%;
+    .oab {
+      flex: 1;
+    }
+    .state {
+      margin-left: 16px;
+      width: 90px;
+    }
+    .button {
+      margin-top: 30px;
+      margin-bottom: 22px;
+      margin-left: 16px;
+      padding: 8px 20px;
+      width: 62px;
     }
   }
   .el-input-group__append {
