@@ -667,7 +667,7 @@ export default {
       let newActive
       switch (newTab) {
         case '0':
-          newActive = { index: '0', label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
+          newActive = { index: '0', label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: false }] }
           break
         case '1':
           newActive = { index: '1', label: 'Com interação', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: true }] }
