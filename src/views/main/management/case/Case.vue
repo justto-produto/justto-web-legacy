@@ -269,9 +269,20 @@ export default {
         cancelButtonText: 'Cancelar',
         type: 'warning'
       }).then(() => {
-        window.analytics.track('Status modificado', {
-          action: action
-        })
+        if (action === 'refused') {
+          window.analytics.track('PERDA (Status modificado)', {
+            action: action
+          })
+        } else if (action === 'accepted') {
+          window.analytics.track('GANHO (Status modificado)', {
+            action: action
+          })
+        } else {
+          window.analytics.track('Status Modificado', {
+            action: action
+          })
+        }
+
         this.$store.dispatch('sendDisputeAction', {
           action: action,
           disputeId: this.dispute.id
