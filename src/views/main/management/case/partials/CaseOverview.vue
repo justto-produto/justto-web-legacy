@@ -125,7 +125,7 @@
     <el-dialog
       :visible.sync="editCaseDialogVisible"
       title="Editar informações gerais"
-      width="50%">
+      width="30%">
       <el-form
         ref="caseForm"
         :model="caseForm"
@@ -133,13 +133,37 @@
         label-position="top"
         @submit.native.prevent="editCase">
         <el-row :gutter="20">
+          <!-- <el-col :span="12">
+            <el-form-item label="Campanha" prop="campaign">
+              <el-select v-model="dispute.campaign.name" placeholder="Selecione">
+                 <el-option
+                   v-for="strategy in strategies"
+                   :key="strategy.id"
+                   :label="strategy.name"
+                   :value="strategy">
+                 </el-option>
+               </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
+            <el-form-item label="Estratégia" prop="strategy">
+              <el-select v-model="dispute.strategy.name" placeholder="Selecione">
+                 <el-option
+                   v-for="campaign in campaigns"
+                   :key="campaign.id"
+                   :label="campaign.name"
+                   :value="campaign">
+                 </el-option>
+               </el-select>
+            </el-form-item>
+          </el-col> -->
+          <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="boundary">
               <!-- <el-input v-model="caseForm.upperRange"/> -->
               <money v-model="caseForm.upperRange" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="Fim da negociação" prop="deadline">
               <el-date-picker
                 v-model="dispute.expirationDate"
@@ -147,19 +171,26 @@
                 type="date" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col v-if="dispute.lastOffer && (dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT')" :span="24">
             <el-form-item label="Valor do acordo" prop="deal">
-              <el-input />
+              <money v-model="dispute.lastOffer.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="Classificação" prop="classification">
-              <!-- <el-input v-model="dispute.classification.name" /> -->
+              <el-select v-model="dispute.classification.name" placeholder="Selecione">
+                 <el-option
+                   v-for="item in options"
+                   :key="item.value"
+                   :label="item.label"
+                   :value="item.value">
+                 </el-option>
+               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
-              <el-input v-model="dispute.description" type="textarea" />
+              <el-input v-model="dispute.description" type="textarea" rows="4" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -363,7 +394,13 @@ export default {
           }
         })
       } return []
-    }
+    },
+    // strategies () {
+    //   return this.$store.state.strategyModule.list
+    // },
+    // campaigns () {
+    //   return this.$store.state.campaignModule.list
+    // }
   },
   watch: {
     editCaseDialogVisible (value) {
