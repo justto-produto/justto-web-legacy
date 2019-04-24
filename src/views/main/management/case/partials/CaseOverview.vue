@@ -82,6 +82,10 @@
             </span>
           </el-popover>
         </div>
+        <div class="case-overview-view__info-line">
+          Função:
+          <span>{{ buildTitle(role) }}</span>
+        </div>
         <div v-show="role.person.phones.length" class="case-overview-view__info-line">
           <span>Telefone(s):</span>
         </div>
@@ -207,7 +211,7 @@
       <el-form
         ref="roleForm"
         :model="roleForm"
-        :rules="roleForm"
+        :rules="personRules"
         label-position="top"
         @submit.native.prevent="editRole">
         <el-form-item label="Nome" prop="name">
@@ -227,10 +231,10 @@
         :rules="oabRules"
         label-position="top">
         <div class="case-overview-view__oab-form">
-          <el-form-item class="oab" label="OAB">
+          <el-form-item class="oab" label="OAB" prop="oab">
             <el-input v-model="oabForm.oab" />
           </el-form-item>
-          <el-form-item class="state" label="Estado">
+          <el-form-item class="state" label="Estado" prop="state">
             <el-select v-model="oabForm.state" placeholder="">
               <el-option
                 v-for="state in $store.state.statesList"
@@ -239,7 +243,7 @@
                 :value="state" />
             </el-select>
           </el-form-item>
-          <el-button class="button" type="primary" @click="addOab(roleForm.oabs)">
+          <el-button class="button" type="primary" @click="addOab(roleForm.personId, roleForm.oabs)">
             <jus-icon icon="add-white" />
           </el-button>
         </div>
@@ -299,7 +303,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editRoleDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="editRole">Editar dados</el-button>
+        <el-button type="primary" @click.prevent="editRole(roleForm.personId, roleForm.name, roleForm.documentNumber)">Editar dados</el-button>
       </span>
     </el-dialog>
   </div>
@@ -345,17 +349,26 @@ export default {
       phoneForm: { phone: '' },
       oabForm: { oab: '', state: '' },
       emailRules: { email: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'submit' }
+        { required: true, message: 'Campo obrigatório', trigger: 'change' },
+        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'change' }
       ] },
       phoneRules: { phone: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        { validator: validatePhone, trigger: 'submit' }
+        { required: true, message: 'Campo obrigatório', trigger: 'change' },
+        { validator: validatePhone, trigger: 'change' }
       ] },
       oabRules: {
-        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'change' }],
+        state: [{ required: true, message: 'Campo obrigatório', trigger: 'change' }]
       },
+      // personRules: {
+      //   name: [
+      //     { required: true, message: 'Campo obrigatório', trigger: 'change' }
+      //   ],
+      //   documentNumber: [
+      //     { required: true, message: 'Campo obrigatório', trigger: 'change' },
+      //     // { validator: validadeDocument, trigger: 'change' }
+      //   ]
+      // },
       caseForm: {
         upperRange: ''
       },
@@ -410,7 +423,27 @@ export default {
     }
   },
   methods: {
-    handleChange (val) {
+    buildTitle (role) {
+      if (role.party === 'RESPONDENT') {
+        switch (role.roles[0]) {
+          case 'NEGOTIATOR':
+            return 'Negociador'
+          case 'PARTY':
+            return 'Réu'
+          case 'LAWYER':
+            return 'Advogado do réu'
+        }
+      } else { // if (role.party === ‘CLAIMANT’)
+        if (role.roles[0] === 'PARTY') {
+          return 'Parte contrária'
+        } else if (role.roles[0] === 'LAWYER') {
+          return 'Advogado da parte'
+        } else {
+          return role.person.name
+        }
+      }
+    },
+    handleChange (val) {setPerson
       if (val) {
         this.active = val
       } else {
@@ -450,12 +483,13 @@ export default {
         }
       })
     },
-    addOab (oabs) {
+    addOab (personId, oabs) {
       this.$refs['oabForm'].validate(valid => {
         if (valid) {
           this.$store.dispatch('addOab', {
             oab: this.oabForm.oab,
-            state: this.oabForm.state
+            state: this.oabForm.state,
+            personId: personId
           }).then(response => {
             oabs.push({ id: response.id, number: response.number, state: response.state })
             this.oabForm.oab = ''
@@ -504,7 +538,7 @@ export default {
         type: 'error'
       }).then(() => {
         this.$delete(list, index)
-        this.$store.dispatch('removePhone', oabBody).then(() => {
+        this.$store.dispatch('removeOab', oabBody).then(() => {
           let self = this
           setTimeout(function () {
             self.$emit('case:refresh')
@@ -540,8 +574,26 @@ export default {
         this.partyRoles.legal = true
       }
     },
-    editRole () {
-      this.editRoleDialogVisible = false
+    editRole (personId, name, documentNumber) {
+      this.$store.dispatch('editRole', {
+        personId: personId,
+        name: name,
+        documentNumber: documentNumber
+      }).then(responde => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Arquivo em formato inválido.',
+          type: 'success'
+        })
+        this.editRoleDialogVisible = false
+        this.$emit('case:refresh')
+      }).catch(error => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Arquivo em formato inválido.',
+          // type: 'dounger' (error)
+        })
+      })
     },
     removeRole () {
 
@@ -641,7 +693,7 @@ export default {
     }
     .state {
       margin-left: 16px;
-      width: 90px;
+      width: 120px;
     }
     .button {
       margin-top: 30px;

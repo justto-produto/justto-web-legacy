@@ -113,7 +113,7 @@ const dispute = {
     removeOab ({ commit }, removeOabBody) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.delete('api/disputes/' + removeOabBody.disputeId + '/oabs/' + removeOabBody.id)
+        axios.delete('api/disputes/' + removeOabBody.disputeId + '/oab/' + removeOabBody.id)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
