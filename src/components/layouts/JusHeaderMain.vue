@@ -28,19 +28,19 @@
         </template>
       </el-autocomplete>
     </div>
-    <div class="jus-header-main__notification">
+    <!-- <div class="jus-header-main__notification">
       <el-dropdown trigger="click" placement="bottom">
         <jus-icon icon="notification"/>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="e">Sem novas notificações</el-dropdown-item>
-          <!-- <el-dropdown-item command="e">Notificação importante 2</el-dropdown-item>
+          <el-dropdown-item command="e">Notificação importante 2</el-dropdown-item>
           <el-dropdown-item command="e">Notificação importante 3</el-dropdown-item>
           <el-dropdown-item command="e">Notificação importante 4</el-dropdown-item>
           <el-dropdown-item command="e">Notificação importante 5</el-dropdown-item>
-          <el-dropdown-item command="e">Notificação importante 6</el-dropdown-item> -->
+          <el-dropdown-item command="e">Notificação importante 6</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-    </div>
+    </div> -->
     <div class="jus-header-main__info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">

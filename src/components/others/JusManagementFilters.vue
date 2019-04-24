@@ -103,7 +103,7 @@
               v-model="filters.disputeexpirationdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
-              value-format="yyyy-MM-dd'T'HH:mm:ss"
+              value-format="yyyy-MM-dd'T03:00:00'"
               @change="clearDisputeexpirationdate"/>
           </el-form-item>
         </el-col>
