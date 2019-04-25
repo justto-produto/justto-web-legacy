@@ -23,6 +23,18 @@ const personModule = {
           })
       })
     },
+    removeRole ({ commit }, role) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-nex-line
+        axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
     myPerson ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -32,6 +44,17 @@ const personModule = {
             resolve(response.data)
           })
           .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    editRole ({ commit }, infoRole) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/persons', { id: infoRole.personId, name: infoRole.name, documentNumber: infoRole.documentNumber })
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
             reject(error)
           })
       })

@@ -42,7 +42,7 @@
           <span>{{ dispute.description }}</span>
         </div>
         <div class="case-overview-view__actions">
-          <el-button type="primary" @click="editCaseDialogVisible = true">Editar</el-button>
+          <el-button type="primary" @click="openCaseDialog()">Editar</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -164,20 +164,20 @@
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="boundary">
               <!-- <el-input v-model="caseForm.upperRange"/> -->
-              <money v-model="caseForm.upperRange" v-bind="money" class="el-input__inner" />
+              <money v-model="caseForm.upperRange.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="Fim da negociação" prop="deadline">
               <el-date-picker
-                v-model="dispute.expirationDate"
+                v-model="caseForm.expirationDate"
                 :clearable="false"
                 type="date" />
             </el-form-item>
           </el-col>
-          <el-col v-if="dispute.lastOffer && (dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT')" :span="24">
+          <el-col v-if="dispute.status == 'ACCEPTED' || dispute.status == 'CHECKOUT'" :span="24">
             <el-form-item label="Valor do acordo" prop="deal">
-              <money v-model="dispute.lastOffer.boundary" v-bind="money" class="el-input__inner" />
+              <money v-model="caseForm.lastOffer.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="12">
@@ -194,14 +194,14 @@
           </el-col> -->
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
-              <el-input v-model="dispute.description" type="textarea" rows="4" />
+              <el-input v-model="caseForm.description" type="textarea" rows="4" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editCaseDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="editCase">Editar dados</el-button>
+        <el-button type="primary" @click="editCase(caseForm)">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -212,8 +212,7 @@
         ref="roleForm"
         :model="roleForm"
         :rules="personRules"
-        label-position="top"
-        @submit.native.prevent="editRole">
+        label-position="top">
         <el-form-item label="Nome" prop="name">
           <el-input v-model="roleForm.name" />
         </el-form-item>
@@ -313,6 +312,7 @@
 import { TheMask } from 'vue-the-mask'
 import { Money } from 'v-money'
 import { mask } from 'vue-the-mask'
+import CPFCNPJ from 'cpf_cnpj'
 
 export default {
   name: 'CaseOverview',
@@ -333,6 +333,15 @@ export default {
     }
   },
   data () {
+    // var validateDocument = (rule, value, callback) => {
+    //   if (value) {
+    //     if ((CPFCNPJ.CPF.isValid(value)) || (CPFCNPJ.CNPJ.isValid(value)) ) {
+    //       callback()
+    //     } else callback(new Error('Insira um documento inválido'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     var validatePhone = (rule, value, callback) => {
       if (value && value.length > 13) {
         callback()
@@ -360,17 +369,21 @@ export default {
         oab: [{ required: true, message: 'Campo obrigatório', trigger: 'change' }],
         state: [{ required: true, message: 'Campo obrigatório', trigger: 'change' }]
       },
-      // personRules: {
-      //   name: [
-      //     { required: true, message: 'Campo obrigatório', trigger: 'change' }
-      //   ],
-      //   documentNumber: [
-      //     { required: true, message: 'Campo obrigatório', trigger: 'change' },
-      //     // { validator: validadeDocument, trigger: 'change' }
-      //   ]
-      // },
+      personRules: {
+        // name: [
+        //   { required: true, message: 'Campo obrigatório', trigger: 'change' }
+        // ],
+        // documentNumber: [
+        //   { required: true, message: 'Campo obrigatório', trigger: 'change' },
+        //   { validator: validateDocument, trigger: 'change' }
+        // ]
+      },
       caseForm: {
-        upperRange: ''
+        disputeId: '',
+        upperRange: { boundary: '', id: '' },
+        lastOffer: { boundary: '', id: '' },
+        expirationDate: '',
+        description: ''
       },
       caseRules: {
 
@@ -415,14 +428,41 @@ export default {
     //   return this.$store.state.campaignModule.list
     // }
   },
-  watch: {
-    editCaseDialogVisible (value) {
-      if (value) {
-        this.caseForm.upperRange = this.dispute.upperRange.boundary
-      }
-    }
-  },
   methods: {
+    openCaseDialog (caseForm) {
+      this.editCaseDialogVisible = true
+      this.caseForm.disputeId = this.dispute.id
+      this.caseForm.upperRange.boundary = this.dispute.upperRange.boundary
+      this.caseForm.upperRange.id = this.dispute.upperRange.id
+      this.caseForm.expirationDate = this.dispute.expirationDate
+      this.caseForm.description = this.dispute.description
+      this.caseForm.lastOffer.boundary = this.dispute.lastOffer.boundary
+      this.caseForm.lastOffer.id = this.dispute.lastOffer.id
+    },
+    editCase (caseForm) {
+      debugger
+      if ((caseForm.lastOffer.id === '' && caseForm.lastOffer.boundary === '') && (this.dispute.status !== 'ACCEPTED' || this.dispute.status !== 'CHECKOUT')) {
+        delete caseForm.lastOffer
+      }
+      this.$store.dispatch('editCade', caseForm)
+      .then(response => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Os dados foram alterados com sucesso.',
+          type: 'success'
+        })
+        setTimeout(function () {
+          this.$emit('case:refresh')
+        }.bind(this), 1000)
+        this.editCaseDialogVisible = false
+      }).catch(error => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      })
+    },
     buildTitle (role) {
       if (role.party === 'RESPONDENT') {
         switch (role.roles[0]) {
@@ -509,10 +549,9 @@ export default {
       }).then(() => {
         this.$delete(list, index)
         this.$store.dispatch('removeEmail', emailBody).then(() => {
-          let self = this
           setTimeout(function () {
-            self.$emit('case:refresh')
-          }, 1000)
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
         })
       })
     },
@@ -524,10 +563,9 @@ export default {
       }).then(() => {
         this.$delete(list, index)
         this.$store.dispatch('removePhone', phoneBody).then(() => {
-          let self = this
           setTimeout(function () {
-            self.$emit('case:refresh')
-          }, 1000)
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
         })
       })
     },
@@ -539,15 +577,11 @@ export default {
       }).then(() => {
         this.$delete(list, index)
         this.$store.dispatch('removeOab', oabBody).then(() => {
-          let self = this
           setTimeout(function () {
-            self.$emit('case:refresh')
-          }, 1000)
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
         })
       })
-    },
-    editCase () {
-
     },
     openRoleDialog (role) {
       this.editRoleDialogVisible = true
@@ -581,22 +615,48 @@ export default {
         documentNumber: documentNumber
       }).then(responde => {
         this.$jusNotification({
-          title: 'Ops!',
-          message: 'Arquivo em formato inválido.',
+          title: 'Yay!',
+          message: 'Os dados foram alterados com sucesso.',
           type: 'success'
         })
+        setTimeout(function () {
+          this.$emit('case:refresh')
+        }.bind(this), 1000)
         this.editRoleDialogVisible = false
-        this.$emit('case:refresh')
       }).catch(error => {
         this.$jusNotification({
           title: 'Ops!',
-          message: 'Arquivo em formato inválido.',
-          // type: 'dounger' (error)
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
         })
       })
     },
-    removeRole () {
-
+    removeRole (role) {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+        confirmButtonText: 'Excluir',
+        cancelButtonText: 'Cancelar',
+        type: 'error'
+      }).then(() => {
+        this.$store.dispatch('removeRole', {
+          disputeId: role.disputeId,
+          roleId: role.id
+        }).then(response => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Pessoa removida com sucesso.',
+            type: 'success'
+          })
+          setTimeout(function () {
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
+        }).catch(error => {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
+        })
+      })
     }
   }
 }

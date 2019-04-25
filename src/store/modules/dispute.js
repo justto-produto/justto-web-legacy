@@ -88,6 +88,22 @@ const dispute = {
           })
       })
     },
+    editCade ({ commit }, caseForm) {
+      return new Promise((resolve, reject) => {
+        axios.put('api/disputes/' + caseForm.disputeId + '/update', {
+          id: caseForm.disputeId,
+          upperRange: caseForm.upperRange,
+          expirationDate: caseForm.expirationDate,
+          lastOffer: caseForm.lastOffer,
+          description: caseForm.description
+         })
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
     removePhone ({ commit }, removePhoneBody) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
