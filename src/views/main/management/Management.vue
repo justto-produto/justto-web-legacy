@@ -31,12 +31,12 @@
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         Casos selecionados: {{ selectedIds.length }}
         <div>
-          <el-button plain @click="sendBatchAction('ACCEPTED')">Ganhar</el-button>
-          <el-button plain @click="sendBatchAction('REFUSED')">Perder</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Parar</el-button>
-          <el-button plain @click="sendBatchAction('RESUME')">Reiniciar</el-button>
-          <el-button plain @click="sendBatchAction('DELETE')">Excluir</el-button>
-          <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">Reiniciar engajamento</el-button>
+          <el-button plain @click="sendBatchAction('ACCEPTED')">{{ $t('action.ACCEPTED') }}</el-button>
+          <el-button plain @click="sendBatchAction('REFUSED')">{{ $t('action.REFUSED') }}</el-button>
+          <el-button plain @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
+          <el-button plain @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
+          <el-button plain @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
+          <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
           <!-- <el-button plain @click="sendBatchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
           <!-- <el-button plain @click="sendBatchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
         </div>
@@ -940,6 +940,7 @@ export default {
       padding: 8px 20px;
       border: 0;
       border-radius: 0;
+      text-transform: uppercase;
       &:hover {
         background-color: #fafafa !important;
       }
