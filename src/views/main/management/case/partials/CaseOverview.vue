@@ -42,7 +42,7 @@
           <span>{{ dispute.description }}</span>
         </div>
         <div class="case-overview-view__actions">
-          <el-button type="primary" @click="editCaseDialogVisible = true">Editar</el-button>
+          <el-button type="primary" @click="openCaseDialog()">Editar</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -81,6 +81,10 @@
               Offline
             </span>
           </el-popover>
+        </div>
+        <div class="case-overview-view__info-line">
+          Função:
+          <span>{{ buildTitle(role) }}</span>
         </div>
         <div v-show="role.person.phones.length" class="case-overview-view__info-line">
           <span>Telefone(s):</span>
@@ -125,7 +129,7 @@
     <el-dialog
       :visible.sync="editCaseDialogVisible"
       title="Editar informações gerais"
-      width="50%">
+      width="30%">
       <el-form
         ref="caseForm"
         :model="caseForm"
@@ -133,40 +137,71 @@
         label-position="top"
         @submit.native.prevent="editCase">
         <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="Alçada máxima" prop="boundary">
-              <!-- <el-input v-model="caseForm.upperRange"/> -->
-              <money v-model="caseForm.upperRange" v-bind="money" class="el-input__inner" />
+          <!-- <el-col :span="12">
+            <el-form-item label="Campanha" prop="campaign">
+              <el-select v-model="dispute.campaign.name" placeholder="Selecione">
+                 <el-option
+                   v-for="strategy in strategies"
+                   :key="strategy.id"
+                   :label="strategy.name"
+                   :value="strategy">
+                 </el-option>
+               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="Estratégia" prop="strategy">
+              <el-select v-model="dispute.strategy.name" placeholder="Selecione">
+                 <el-option
+                   v-for="campaign in campaigns"
+                   :key="campaign.id"
+                   :label="campaign.name"
+                   :value="campaign">
+                 </el-option>
+               </el-select>
+            </el-form-item>
+          </el-col> -->
+          <el-col :span="24">
+            <el-form-item label="Alçada máxima" prop="boundary">
+              <!-- <el-input v-model="caseForm.upperRange"/> -->
+              <money v-model="caseForm.upperRange.boundary" v-bind="money" class="el-input__inner" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
             <el-form-item label="Fim da negociação" prop="deadline">
               <el-date-picker
-                v-model="dispute.expirationDate"
+                v-model="caseForm.expirationDate"
                 :clearable="false"
                 type="date" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col v-if="dispute.status == 'ACCEPTED' || dispute.status == 'CHECKOUT'" :span="24">
             <el-form-item label="Valor do acordo" prop="deal">
-              <el-input />
+              <money v-model="caseForm.lastOffer.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="Classificação" prop="classification">
-              <!-- <el-input v-model="dispute.classification.name" /> -->
+              <el-select v-model="dispute.classification.name" placeholder="Selecione">
+                 <el-option
+                   v-for="item in options"
+                   :key="item.value"
+                   :label="item.label"
+                   :value="item.value">
+                 </el-option>
+               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
-              <el-input v-model="dispute.description" type="textarea" />
+              <el-input v-model="caseForm.description" type="textarea" rows="4" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editCaseDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="editCase">Editar dados</el-button>
+        <el-button type="primary" @click="editCase(caseForm)">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -176,15 +211,50 @@
       <el-form
         ref="roleForm"
         :model="roleForm"
-        :rules="roleForm"
-        label-position="top"
-        @submit.native.prevent="editRole">
+        :rules="personRules"
+        label-position="top">
         <el-form-item label="Nome" prop="name">
           <el-input v-model="roleForm.name" />
         </el-form-item>
-        <el-form-item label="CPF" prop="documentNumber">
+        <el-form-item v-show="partyRoles.party == true" label="CPF" prop="documentNumber">
           <the-mask v-model="roleForm.documentNumber" :mask="['###.###.###-##']" class="el-input__inner" />
         </el-form-item>
+        <el-form-item v-show="partyRoles.legal == true" label="CNPJ" prop="documentNumber">
+          <the-mask v-model="roleForm.documentNumber" :mask="['##.###.###/####-##']" class="el-input__inner" />
+        </el-form-item>
+      </el-form>
+      <el-form
+        v-show="partyRoles.lawyer == true"
+        ref="oabForm"
+        :model="oabForm"
+        :rules="oabRules"
+        label-position="top">
+        <div class="case-overview-view__oab-form">
+          <el-form-item class="oab" label="OAB" prop="oab">
+            <el-input v-model="oabForm.oab" />
+          </el-form-item>
+          <el-form-item class="state" label="Estado" prop="state">
+            <el-select v-model="oabForm.state" placeholder="">
+              <el-option
+                v-for="state in $store.state.statesList"
+                :key="state"
+                :label="state"
+                :value="state" />
+            </el-select>
+          </el-form-item>
+          <el-button class="button" type="primary" @click="addOab(roleForm.personId, roleForm.oabs)">
+            <jus-icon icon="add-white" />
+          </el-button>
+        </div>
+        <ul class="case-overview-view__list" style="margin-top: -10px">
+          <li v-for="(oab, index) in roleForm.oabs">
+            <img src="@/assets/icons/ic-check.svg">
+            {{ oab.number }} {{ oab.state }}
+            <a href="#" @click.prevent="removeOab({disputeId: dispute.id, id: oab.id}, roleForm.oabs, index)">
+              <img src="@/assets/icons/ic-error.svg">
+            </a>
+          </li>
+        </ul>
       </el-form>
       <el-form
         ref="phoneForm"
@@ -192,9 +262,9 @@
         :rules="phoneRules"
         label-position="top">
         <el-form-item label="Telefone" prop="phone">
-          <el-input v-model="phoneForm.phone" v-mask="['(##) ####-####', '(##) #####-####']">
+          <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="phoneForm.phone">
             <el-button slot="append" @click="addPhone(roleForm.personId, roleForm.phones)">
-              <jus-icon icon="add" />
+              <jus-icon icon="add-white" />
             </el-button>
           </el-input>
         </el-form-item>
@@ -216,7 +286,7 @@
         <el-form-item label="E-mail" prop="email">
           <el-input v-model="emailForm.email">
             <el-button slot="append" @click="addEmail(roleForm.personId, roleForm.emails)">
-              <jus-icon icon="add" />
+              <jus-icon icon="add-white" />
             </el-button>
           </el-input>
         </el-form-item>
@@ -230,48 +300,9 @@
           </li>
         </ul>
       </el-form>
-      <el-form
-        ref="oabForm"
-        :model="oabForm"
-        :rules="oabRules"
-        label-position="top">
-        <el-row :gutter="17">
-          <el-col :span="16">
-            <el-form-item label="OAB">
-              <el-input v-model="oabForm.oab">
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="Estado">
-              <el-select v-model="oabForm.state" placeholder="">
-                <el-option
-                v-for="state in $store.state.statesList"
-                :key="state"
-                :label="state"
-                :value="state" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-button type="primary" @click="addOab(roleForm.oabs)" style="margin-top: 29px;padding: 8px 20px;">
-              <jus-icon icon="add" />
-            </el-button>
-          </el-col>
-        </el-row>
-        <ul class="case-overview-view__list" style="margin-top: -10px">
-          <li v-for="(oab, index) in roleForm.oabs">
-            <img src="@/assets/icons/ic-check.svg">
-            {{ oab.number }}
-            <a href="#" @click.prevent="removeOab({disputeId: dispute.id, id: oab.id}, roleForm.oabs, index)">
-              <img src="@/assets/icons/ic-error.svg">
-            </a>
-          </li>
-        </ul>
-      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editRoleDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="editRole">Editar dados</el-button>
+        <el-button type="primary" @click.prevent="editRole(roleForm.personId, roleForm.name, roleForm.documentNumber)">Editar dados</el-button>
       </span>
     </el-dialog>
   </div>
@@ -301,6 +332,15 @@ export default {
     }
   },
   data () {
+    // var validateDocument = (rule, value, callback) => {
+    //   if (value) {
+    //     if ((CPFCNPJ.CPF.isValid(value)) || (CPFCNPJ.CNPJ.isValid(value)) ) {
+    //       callback()
+    //     } else callback(new Error('Insira um documento inválido'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     var validatePhone = (rule, value, callback) => {
       if (value && value.length > 13) {
         callback()
@@ -308,24 +348,41 @@ export default {
     }
     return {
       active: this.activePersonId,
-      emailForm: { email: ''},
-      phoneForm: { phone: ''},
-      oabForm: { oab: '', state: ''},
+      partyRoles: {
+        legal: false,
+        party: false,
+        lawyer: false
+      },
+      emailForm: { email: '' },
+      phoneForm: { phone: '' },
+      oabForm: { oab: '', state: '' },
       emailRules: { email: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'submit' }
+        { required: true, message: 'Campo obrigatório', trigger: 'change' },
+        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'change' }
       ] },
       phoneRules: { phone: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        { validator: validatePhone, trigger: 'submit' }
+        { required: true, message: 'Campo obrigatório', trigger: 'change' },
+        { validator: validatePhone, trigger: 'change' }
       ] },
-      oabRules: { oab: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-      ], state: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-      ] },
+      oabRules: {
+        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'change' }],
+        state: [{ required: true, message: 'Campo obrigatório', trigger: 'change' }]
+      },
+      personRules: {
+        // name: [
+        //   { required: true, message: 'Campo obrigatório', trigger: 'change' }
+        // ],
+        // documentNumber: [
+        //   { required: true, message: 'Campo obrigatório', trigger: 'change' },
+        //   { validator: validateDocument, trigger: 'change' }
+        // ]
+      },
       caseForm: {
-        upperRange: ''
+        disputeId: '',
+        upperRange: { boundary: '', id: '' },
+        lastOffer: { boundary: '', id: '' },
+        expirationDate: '',
+        description: ''
       },
       caseRules: {
 
@@ -362,17 +419,70 @@ export default {
           }
         })
       } return []
-    }
-  },
-  watch: {
-    editCaseDialogVisible (value) {
-      if (value) {
-        this.caseForm.upperRange = this.dispute.upperRange.boundary
-      }
-    }
+    },
+    // strategies () {
+    //   return this.$store.state.strategyModule.list
+    // },
+    // campaigns () {
+    //   return this.$store.state.campaignModule.list
+    // }
   },
   methods: {
-    handleChange (val) {
+    openCaseDialog (caseForm) {
+      this.editCaseDialogVisible = true
+      this.caseForm.disputeId = this.dispute.id
+      this.caseForm.upperRange.boundary = this.dispute.upperRange.boundary
+      this.caseForm.upperRange.id = this.dispute.upperRange.id
+      this.caseForm.expirationDate = this.dispute.expirationDate
+      this.caseForm.description = this.dispute.description
+      this.caseForm.lastOffer.boundary = this.dispute.lastOffer.boundary
+      this.caseForm.lastOffer.id = this.dispute.lastOffer.id
+    },
+    editCase (caseForm) {
+      debugger
+      if ((caseForm.lastOffer.id === '' && caseForm.lastOffer.boundary === '') && (this.dispute.status !== 'ACCEPTED' || this.dispute.status !== 'CHECKOUT')) {
+        delete caseForm.lastOffer
+      }
+      this.$store.dispatch('editCase', caseForm)
+      .then(response => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Os dados foram alterados com sucesso.',
+          type: 'success'
+        })
+        setTimeout(function () {
+          this.$emit('case:refresh')
+        }.bind(this), 1000)
+        this.editCaseDialogVisible = false
+      }).catch(error => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      })
+    },
+    buildTitle (role) {
+      if (role.party === 'RESPONDENT') {
+        switch (role.roles[0]) {
+          case 'NEGOTIATOR':
+            return 'Negociador'
+          case 'PARTY':
+            return 'Réu'
+          case 'LAWYER':
+            return 'Advogado do réu'
+        }
+      } else { // if (role.party === ‘CLAIMANT’)
+        if (role.roles[0] === 'PARTY') {
+          return 'Parte contrária'
+        } else if (role.roles[0] === 'LAWYER') {
+          return 'Advogado da parte'
+        } else {
+          return role.person.name
+        }
+      }
+    },
+    handleChange (val) {setPerson
       if (val) {
         this.active = val
       } else {
@@ -387,7 +497,7 @@ export default {
             personId: personId,
             address: this.emailForm.email
           }).then(response => {
-            emails.push({id: response.id, address: response.address})
+            emails.push({ id: response.id, address: response.address })
             this.emailForm.email = ''
             setTimeout(function () {
               this.$emit('case:refresh')
@@ -403,7 +513,7 @@ export default {
             personId: personId,
             number: this.phoneForm.phone.match(/\d+/g).join([])
           }).then(response => {
-            phones.push({id: response.id, number: response.number})
+            phones.push({ id: response.id, number: response.number })
             this.phoneForm.phone = ''
             setTimeout(function () {
               this.$emit('case:refresh')
@@ -412,15 +522,15 @@ export default {
         }
       })
     },
-    addOab (oabs) {
+    addOab (personId, oabs) {
       this.$refs['oabForm'].validate(valid => {
         if (valid) {
           this.$store.dispatch('addOab', {
             oab: this.oabForm.oab,
-            state: this.oabForm.state
+            state: this.oabForm.state,
+            personId: personId
           }).then(response => {
-            console.log(response);
-            oabs.push({id: response.id, number: response.number, state: response.state})
+            oabs.push({ id: response.id, number: response.number, state: response.state })
             this.oabForm.oab = ''
             this.oabForm.state = ''
             setTimeout(function () {
@@ -438,10 +548,9 @@ export default {
       }).then(() => {
         this.$delete(list, index)
         this.$store.dispatch('removeEmail', emailBody).then(() => {
-          let self = this
           setTimeout(function () {
-            self.$emit('case:refresh')
-          }, 1000)
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
         })
       })
     },
@@ -453,10 +562,9 @@ export default {
       }).then(() => {
         this.$delete(list, index)
         this.$store.dispatch('removePhone', phoneBody).then(() => {
-          let self = this
           setTimeout(function () {
-            self.$emit('case:refresh')
-          }, 1000)
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
         })
       })
     },
@@ -467,19 +575,17 @@ export default {
         type: 'error'
       }).then(() => {
         this.$delete(list, index)
-        this.$store.dispatch('removePhone', oabBody).then(() => {
-          let self = this
+        this.$store.dispatch('removeOab', oabBody).then(() => {
           setTimeout(function () {
-            self.$emit('case:refresh')
-          }, 1000)
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
         })
       })
     },
-    editCase () {
-
-    },
     openRoleDialog (role) {
       this.editRoleDialogVisible = true
+      var roles = role.roles
+      var party = role.party
       this.roleForm.personId = role.person.id
       this.roleForm.name = role.person.name
       this.roleForm.documentNumber = role.person.documentNumber
@@ -488,12 +594,68 @@ export default {
       this.roleForm.phones = role.person.phones
       this.roleForm.oabs = role.person.oabs
       this.oabForm.state = ''
+      this.partyRoles.legal = false
+      this.partyRoles.party = false
+      this.partyRoles.lawyer = false
+      if (roles.includes('LAWYER') === true) {
+        this.partyRoles.lawyer = true
+      }
+      if ((roles.includes('NEGOTIATOR') === true) || (roles.includes('PARTY') === true && party.includes('CLAIMANT') === true)) {
+        this.partyRoles.party = true
+      }
+      if (roles.includes('PARTY') === true && party.includes('RESPONDENT') === true) {
+        this.partyRoles.legal = true
+      }
     },
-    editRole () {
-
+    editRole (personId, name, documentNumber) {
+      this.$store.dispatch('editRole', {
+        personId: personId,
+        name: name,
+        documentNumber: documentNumber
+      }).then(responde => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Os dados foram alterados com sucesso.',
+          type: 'success'
+        })
+        setTimeout(function () {
+          this.$emit('case:refresh')
+        }.bind(this), 1000)
+        this.editRoleDialogVisible = false
+      }).catch(error => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      })
     },
-    removeRole () {
-
+    removeRole (role) {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+        confirmButtonText: 'Excluir',
+        cancelButtonText: 'Cancelar',
+        type: 'error'
+      }).then(() => {
+        this.$store.dispatch('removeRole', {
+          disputeId: role.disputeId,
+          roleId: role.id
+        }).then(response => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Pessoa removida com sucesso.',
+            type: 'success'
+          })
+          setTimeout(function () {
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
+        }).catch(error => {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
+        })
+      })
     }
   }
 }
@@ -580,6 +742,24 @@ export default {
         vertical-align: text-top;
         float: right;
       }
+    }
+  }
+  &__oab-form {
+    display: flex;
+    width: 100%;
+    .oab {
+      flex: 1;
+    }
+    .state {
+      margin-left: 16px;
+      width: 120px;
+    }
+    .button {
+      margin-top: 30px;
+      margin-bottom: 22px;
+      margin-left: 16px;
+      padding: 8px 20px;
+      width: 62px;
     }
   }
   .el-input-group__append {
