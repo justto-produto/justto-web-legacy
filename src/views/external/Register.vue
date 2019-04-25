@@ -111,7 +111,7 @@ export default {
           self.showLoading = true
           this.$store.dispatch('register', this.registerForm)
             .then(() => {
-              window.analytics.identify(this.registerForm.email, {
+              window.analytics.track('NOVO CADASTRO', {
                 action: 'REGISTER',
                 name: this.registerForm.name,
                 email: this.registerForm.email
