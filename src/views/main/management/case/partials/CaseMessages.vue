@@ -1,5 +1,5 @@
 <template>
-  <ul v-loading="messages.length === 0 && loading" v-chat-scroll="{always: false, smooth: true, scrollonremoved:true }" class="case-view-messages">
+  <ul v-loading="messages.length === 0 && loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="case-view-messages">
     <li
       v-for="message in messages"
       v-if="isntCanceled(message)"
@@ -24,15 +24,15 @@
             </i>
           </div>
           <div class="case-view-messages__message-time">
-            {{ message.executionDateTime | moment('HH:mm') }} •
-            <span v-if="directionClass(message) !== 'note'">
-              <jus-icon icon="mobile" /> •
+            {{ message.executionDateTime | moment('HH:mm') }}
+            <!-- <span v-if="directionClass(message) !== 'note'">
+              • <jus-icon icon="mobile" /> •
               Visualizado •
               Edinalva
             </span>
             <span v-else>
               Nota
-            </span>
+            </span> -->
           </div>
         </div>
         <jus-avatar-user
