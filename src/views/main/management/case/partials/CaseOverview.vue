@@ -419,7 +419,7 @@ export default {
           }
         })
       } return []
-    },
+    }
     // strategies () {
     //   return this.$store.state.strategyModule.list
     // },
@@ -443,23 +443,23 @@ export default {
         delete caseForm.lastOffer
       }
       this.$store.dispatch('editCase', caseForm)
-      .then(response => {
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Os dados foram alterados com sucesso.',
-          type: 'success'
+        .then(response => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Os dados foram alterados com sucesso.',
+            type: 'success'
+          })
+          setTimeout(function () {
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
+          this.editCaseDialogVisible = false
+        }).catch(error => {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
         })
-        setTimeout(function () {
-          this.$emit('case:refresh')
-        }.bind(this), 1000)
-        this.editCaseDialogVisible = false
-      }).catch(error => {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
-      })
     },
     buildTitle (role) {
       if (role.party === 'RESPONDENT') {
@@ -481,7 +481,7 @@ export default {
         }
       }
     },
-    handleChange (val) {setPerson
+    handleChange (val) {
       if (val) {
         this.active = val
       } else {

@@ -90,13 +90,14 @@ const dispute = {
     },
     editCase ({ commit }, caseForm) {
       return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
         axios.put('api/disputes/' + caseForm.disputeId + '/update', {
           id: caseForm.disputeId,
           upperRange: caseForm.upperRange,
           expirationDate: caseForm.expirationDate,
           lastOffer: caseForm.lastOffer,
           description: caseForm.description
-         })
+        })
           .then(response => {
             resolve(response.data)
           }).catch(error => {

@@ -25,7 +25,7 @@ const personModule = {
     },
     removeRole ({ commit }, role) {
       return new Promise((resolve, reject) => {
-        // eslint-disable-nex-line
+        // eslint-disable-next-line
         axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
           .then(response => {
             resolve(response.data)
