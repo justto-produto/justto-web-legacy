@@ -88,7 +88,7 @@ const dispute = {
           })
       })
     },
-    editCade ({ commit }, caseForm) {
+    editCase ({ commit }, caseForm) {
       return new Promise((resolve, reject) => {
         axios.put('api/disputes/' + caseForm.disputeId + '/update', {
           id: caseForm.disputeId,

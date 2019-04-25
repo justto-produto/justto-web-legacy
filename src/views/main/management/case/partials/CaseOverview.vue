@@ -312,7 +312,6 @@
 import { TheMask } from 'vue-the-mask'
 import { Money } from 'v-money'
 import { mask } from 'vue-the-mask'
-import CPFCNPJ from 'cpf_cnpj'
 
 export default {
   name: 'CaseOverview',
@@ -444,7 +443,7 @@ export default {
       if ((caseForm.lastOffer.id === '' && caseForm.lastOffer.boundary === '') && (this.dispute.status !== 'ACCEPTED' || this.dispute.status !== 'CHECKOUT')) {
         delete caseForm.lastOffer
       }
-      this.$store.dispatch('editCade', caseForm)
+      this.$store.dispatch('editCase', caseForm)
       .then(response => {
         this.$jusNotification({
           title: 'Yay!',
