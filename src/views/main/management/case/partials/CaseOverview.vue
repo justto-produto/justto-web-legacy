@@ -439,7 +439,6 @@ export default {
       this.caseForm.lastOffer.id = this.dispute.lastOffer.id
     },
     editCase (caseForm) {
-      debugger
       if ((caseForm.lastOffer.id === '' && caseForm.lastOffer.boundary === '') && (this.dispute.status !== 'ACCEPTED' || this.dispute.status !== 'CHECKOUT')) {
         delete caseForm.lastOffer
       }
