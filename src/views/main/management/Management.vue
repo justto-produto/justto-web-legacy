@@ -256,7 +256,7 @@
             </el-table-column>
             <el-table-column label="Fim da negociação">
               <template slot-scope="scope">
-                {{ scope.row.disputedealdate | moment('DD/MM/YY') }}
+                {{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}
               </template>
             </el-table-column>
             <el-table-column

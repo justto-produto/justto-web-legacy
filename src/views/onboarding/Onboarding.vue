@@ -19,9 +19,9 @@
           <swiper-slide v-if="!isGuest">
             <subdomain-step @onboarding:step:next="nextStep" @onboarding:createSubdomain="createSubdomain"/>
           </swiper-slide>
-          <swiper-slide>
+          <!-- <swiper-slide>
             <oab-step @onboarding:step:next="nextStep"/>
-          </swiper-slide>
+          </swiper-slide> -->
           <!-- <swiper-slide v-if="!isGuest">
             <LogoStep @onboarding:step:next="nextStep"/>
           </swiper-slide> -->
@@ -101,7 +101,7 @@ export default {
       return !!this.$route.query.invitedBy
     },
     progressPercentage () {
-      let slidesN = this.showWhatsapp ? 7 : 6
+      let slidesN = this.showWhatsapp ? 6 : 5
       return Math.round((this.currentStep * (100 / slidesN)) * 0.2) / 0.2
     },
     showWhatsapp () {
