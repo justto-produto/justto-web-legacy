@@ -439,13 +439,12 @@ export default {
       this.caseForm.upperRange.id = this.dispute.upperRange.id
       this.caseForm.expirationDate = this.dispute.expirationDate
       this.caseForm.description = this.dispute.description
-      this.caseForm.lastOffer.boundary = this.dispute.lastOffer.boundary
-      this.caseForm.lastOffer.id = this.dispute.lastOffer.id
+      if (this.dispute.lastOffer) {
+        this.caseForm.lastOffer.boundary = this.dispute.lastOffer.boundary
+        this.caseForm.lastOffer.id = this.dispute.lastOffer.id
+      }
     },
     editCase (caseForm) {
-      if ((caseForm.lastOffer.id === '' && caseForm.lastOffer.boundary === '') && (this.dispute.status !== 'ACCEPTED' || this.dispute.status !== 'CHECKOUT')) {
-        delete caseForm.lastOffer
-      }
       this.$store.dispatch('editCase', caseForm)
         .then(response => {
           this.$jusNotification({
