@@ -342,9 +342,13 @@ export default {
     //   }
     // }
     var validatePhone = (rule, value, callback) => {
-      if (value && value.length > 13) {
+      if (value) {
+        if (value && value.length > 13) {
+          callback()
+        } else callback(new Error('Insira um telefone válido'))
+      } else {
         callback()
-      } else callback(new Error('Insira um telefone válido'))
+      }
     }
     return {
       active: this.activePersonId,
@@ -357,16 +361,16 @@ export default {
       phoneForm: { phone: '' },
       oabForm: { oab: '', state: '' },
       emailRules: { email: [
-        { required: true, message: 'Campo obrigatório', trigger: 'change' },
-        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'change' }
+        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'submit' }
       ] },
       phoneRules: { phone: [
-        { required: true, message: 'Campo obrigatório', trigger: 'change' },
+        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         { validator: validatePhone, trigger: 'change' }
       ] },
       oabRules: {
-        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'change' }],
-        state: [{ required: true, message: 'Campo obrigatório', trigger: 'change' }]
+        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       personRules: {
         // name: [
