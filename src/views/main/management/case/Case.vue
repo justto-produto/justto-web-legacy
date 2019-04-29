@@ -75,6 +75,7 @@
           </div>
         </div>
         <case-messages
+          :active-person-id="activePerson.id"
           :messages-prop="filteredDisputeMessages"
           :loading="loadingDisputeMessages"
           :show-scheduled="showScheduled" />

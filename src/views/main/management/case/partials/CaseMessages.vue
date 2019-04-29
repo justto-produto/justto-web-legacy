@@ -72,6 +72,10 @@ export default {
     showScheduled: {
       type: Boolean,
       default: false
+    },
+    activePersonId: {
+      type: Number,
+      default: null
     }
   },
   data () {
@@ -90,16 +94,18 @@ export default {
       }.bind(this), 300)
     },
     typing (value) {
-      this.removeTypingMessage()
-      this.messagesProp.push({
-        id: 0,
-        description: value.sender.name + ' ' + this.$t('isTyping'),
-        type: 'TYPING'
-      })
-      clearTimeout(this.typingTimeout)
-      this.typingTimeout = setTimeout(() => {
+      if (value.sender.personId !== this.activePersonId) {
         this.removeTypingMessage()
-      }, 3000)
+        this.messagesProp.push({
+          id: 0,
+          description: value.sender.name + ' ' + this.$t('isTyping'),
+          type: 'TYPING'
+        })
+        clearTimeout(this.typingTimeout)
+        this.typingTimeout = setTimeout(() => {
+          this.removeTypingMessage()
+        }, 3000)
+      }
     }
   },
   mounted () {
@@ -109,9 +115,9 @@ export default {
   },
   methods: {
     removeTypingMessage () {
-      this.messagesProp.splice(this.messagesProp.findIndex(item => {
-        item.id === 0
-      }), 1)
+      this.messagesProp = this.messagesProp.filter(function (obj) {
+        return obj.id !== 0
+      })
     },
     showAsCard (type) {
       if (type === 'INTERACTION' || type === 'COMMUNICATION' || type === 'NOTE') {
