@@ -42,6 +42,7 @@
           <span>{{ dispute.description }}</span>
         </div>
         <div class="case-overview-view__actions">
+          <el-button plain @click="removeCase()">Excluir</el-button>
           <el-button type="primary" @click="openCaseDialog()">Editar</el-button>
         </div>
       </el-collapse-item>
@@ -464,6 +465,17 @@ export default {
             type: 'error'
           })
         })
+    },
+    removeCase() {
+      this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
+        confirmButtonText: 'Excluir',
+        cancelButtonText: 'Cancelar',
+        type: 'error'
+      }).then(() => {
+        this.$store.dispatch('removeCase', this.dispute.id).then(() => {
+          this.$router.push('/management')
+        })
+      })
     },
     buildTitle (role) {
       if (role.party === 'RESPONDENT') {
