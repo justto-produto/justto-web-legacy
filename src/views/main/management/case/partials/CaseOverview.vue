@@ -164,7 +164,7 @@
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="boundary">
               <!-- <el-input v-model="caseForm.upperRange"/> -->
-              <money v-model="caseForm.upperRange.boundary" v-bind="money" class="el-input__inner" />
+              <money v-model="caseForm.upperRange.boundary | currency" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -177,7 +177,8 @@
           </el-col>
           <el-col v-if="dispute.status == 'ACCEPTED' || dispute.status == 'CHECKOUT'" :span="24">
             <el-form-item label="Valor do acordo" prop="deal">
-              <money v-model="caseForm.lastOffer.boundary" v-bind="money" class="el-input__inner" />
+              <!-- <el-input v-model="caseForm.lastOffer"/> -->
+              <money v-model="caseForm.lastOffer.boundary | currency" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="12">
