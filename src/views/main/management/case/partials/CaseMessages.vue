@@ -96,7 +96,7 @@ export default {
     typing (value) {
       if (value.sender.personId !== this.activePersonId) {
         this.removeTypingMessage()
-        this.messagesProp.push({
+        this.messages.push({
           id: 0,
           description: value.sender.name + ' ' + this.$t('isTyping'),
           type: 'TYPING'
@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     removeTypingMessage () {
-      this.messagesProp = this.messagesProp.filter(function (obj) {
+      this.messages = this.messages.filter(function (obj) {
         return obj.id !== 0
       })
     },
