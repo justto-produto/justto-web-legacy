@@ -20,9 +20,6 @@ const whatsappModule = {
     }
   },
   actions: {
-    SOCKET_connect () {
-      console.log('Socket connected.')
-    }
   },
   getters: {
     isWhatsappOffline: state => {

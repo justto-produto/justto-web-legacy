@@ -9,6 +9,7 @@ import strategyModule from './modules/strategy'
 import personModule from './modules/person'
 import disputeModule from './modules/dispute'
 import messageModule from './modules/message'
+import chatModule from './modules/chat'
 
 Vue.use(Vuex)
 
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     hideLoading ({ commit }) {
       commit('hideLoading')
+    },
+    SOCKET_connect () {
+      console.log('Socket connected.')
     }
   },
   modules: {
@@ -48,6 +52,7 @@ export default new Vuex.Store({
     strategyModule,
     personModule,
     disputeModule,
-    messageModule
+    messageModule,
+    chatModule
   }
 })
