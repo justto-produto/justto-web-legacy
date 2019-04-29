@@ -149,6 +149,11 @@
       <div class="case-view__section-title">
         <h2>Dados do caso</h2>
         <!-- <el-button plain>Exportar caso</el-button> -->
+        <el-tooltip content="Excluir caso">
+          <el-button plain class="right" @click="removeCase()">
+            <jus-icon icon="trash" />
+          </el-button>
+        </el-tooltip>
       </div>
       <case-overview
         :loading="loadingDispute"
@@ -208,6 +213,17 @@ export default {
     // this.$jusSocket.subscribeChat(this.$route.params.id)
   },
   methods: {
+    removeCase() {
+      this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
+        confirmButtonText: 'Excluir',
+        cancelButtonText: 'Cancelar',
+        type: 'error'
+      }).then(() => {
+        this.$store.dispatch('removeCase', this.dispute.id).then(() => {
+          this.$router.push('/management')
+        })
+      })
+    },
     fetchData (options) {
       if (options.fetchDispute) {
         this.loadingDispute = true
@@ -448,6 +464,10 @@ export default {
       font-weight: 500;
       display: block;
       margin: 0;
+    }
+    .el-button {
+      border-radius: 5px;
+      padding: 11px;
     }
   }
   &__side-content {

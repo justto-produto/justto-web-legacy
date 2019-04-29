@@ -105,6 +105,16 @@ const dispute = {
           })
       })
     },
+    removeCase ({ commit }, disputeId) {
+      return new Promise((resolve, reject) => {
+        axios.delete('api/disputes/' + disputeId)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
     removePhone ({ commit }, removePhoneBody) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
