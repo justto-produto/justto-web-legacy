@@ -109,13 +109,9 @@ export default {
   },
   methods: {
     removeTypingMessage () {
-      let typingIndex = this.messagesProp.findIndex((element, index, array) => {
-        if (element.id === 0) return index
-        return false
-      })
-      if (typingIndex > 0) {
-        this.messagesProp.splice(typingIndex)
-      }
+      this.messagesProp.splice(this.messagesProp.findIndex(item => {
+        item.id === 0
+      }), 1)
     },
     showAsCard (type) {
       if (type === 'INTERACTION' || type === 'COMMUNICATION' || type === 'NOTE') {
