@@ -42,6 +42,7 @@
           <span>{{ dispute.description }}</span>
         </div>
         <div class="case-overview-view__actions">
+          <el-button plain @click="removeCase()">Excluir</el-button>
           <el-button type="primary" @click="openCaseDialog()">Editar</el-button>
         </div>
       </el-collapse-item>
@@ -164,7 +165,7 @@
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="boundary">
               <!-- <el-input v-model="caseForm.upperRange"/> -->
-              <money v-model="caseForm.upperRange.boundary" v-bind="money" class="el-input__inner" />
+              <money v-model="caseForm.upperRange.boundary | currency" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -177,7 +178,8 @@
           </el-col>
           <el-col v-if="dispute.status == 'ACCEPTED' || dispute.status == 'CHECKOUT'" :span="24">
             <el-form-item label="Valor do acordo" prop="deal">
-              <money v-model="caseForm.lastOffer.boundary" v-bind="money" class="el-input__inner" />
+              <!-- <el-input v-model="caseForm.lastOffer"/> -->
+              <money v-model="caseForm.lastOffer.boundary | currency" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="12">
@@ -463,6 +465,17 @@ export default {
             type: 'error'
           })
         })
+    },
+    removeCase() {
+      this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
+        confirmButtonText: 'Excluir',
+        cancelButtonText: 'Cancelar',
+        type: 'error'
+      }).then(() => {
+        this.$store.dispatch('removeCase', this.dispute.id).then(() => {
+          this.$router.push('/management')
+        })
+      })
     },
     buildTitle (role) {
       if (role.party === 'RESPONDENT') {
