@@ -59,7 +59,7 @@
             name="protocol-deadline"
             controls-position="right" />
           <span class="jus-import-feedback-card__sufix">
-            dia(s) após acordo
+            dia(s) corridos após acordo
           </span>
         </div>
       </div>
@@ -75,7 +75,7 @@
             name="payment-deadline"
             controls-position="right" />
           <span class="jus-import-feedback-card__sufix">
-            dia(s) após o protocolo
+            dia(s) corridos após o protocolo
           </span>
         </div>
       </div>
@@ -313,7 +313,7 @@ export default {
     }
   }
   &__sufix {
-    width: 161px;
+    width: 218px;
     display: inline-block;
   }
   &__number {

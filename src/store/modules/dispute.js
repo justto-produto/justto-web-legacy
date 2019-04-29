@@ -88,6 +88,23 @@ const dispute = {
           })
       })
     },
+    editCase ({ commit }, caseForm) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/disputes/' + caseForm.disputeId + '/update', {
+          id: caseForm.disputeId,
+          upperRange: caseForm.upperRange,
+          expirationDate: caseForm.expirationDate,
+          lastOffer: caseForm.lastOffer,
+          description: caseForm.description
+        })
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
     removePhone ({ commit }, removePhoneBody) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -103,6 +120,17 @@ const dispute = {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.delete('api/disputes/' + removeEmailBody.disputeId + '/emails/' + removeEmailBody.id)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    removeOab ({ commit }, removeOabBody) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.delete('api/disputes/' + removeOabBody.disputeId + '/oab/' + removeOabBody.id)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
