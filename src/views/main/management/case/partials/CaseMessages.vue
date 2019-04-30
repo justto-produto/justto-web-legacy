@@ -72,10 +72,6 @@ export default {
     showScheduled: {
       type: Boolean,
       default: false
-    },
-    activePersonId: {
-      type: Number,
-      default: null
     }
   },
   data () {
@@ -94,7 +90,7 @@ export default {
       }.bind(this), 300)
     },
     typing (value) {
-      if (value.sender.personId !== this.activePersonId) {
+      if (value.sender.personId !== this.$store.getters.personId) {
         this.removeTypingMessage()
         this.messages.push({
           id: 0,
@@ -111,6 +107,16 @@ export default {
   mounted () {
     this.$store.watch(state => state.chatModule.typing, typing => {
       this.typing = typing
+    })
+    this.$store.watch(state => state.chatModule.join, join => {
+      setTimeout(() => {
+        this.$emit('case:refresh')
+      }, 300)
+    })
+    this.$store.watch(state => state.chatModule.join, join => {
+      setTimeout(() => {
+        this.$emit('case:refresh')
+      }, 300)
     })
   },
   methods: {

@@ -1,19 +1,21 @@
 const chatModule = {
   state: {
-    typing: null
+    typing: null,
+    join: null,
+    leave: null
   },
   mutations: {
-    SOCKET_join (state, param) {
-      // console.log(param)
+    SOCKET_join (state, join) {
+      state.join = join
     },
-    SOCKET_type (state, param) {
-      state.typing = param
+    SOCKET_type (state, typing) {
+      state.typing = typing
     },
-    SOCKET_message (state, param) {
-      // console.log(param)
+    SOCKET_message (state, message) {
+      // console.log(message)
     },
-    SOCKET_leave (state, param) {
-      // console.log(param)
+    SOCKET_leave (state, leave) {
+      state.leave = leave
     },
     clearTyping (state) {
       state.typing = null

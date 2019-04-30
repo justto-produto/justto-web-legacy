@@ -75,10 +75,10 @@
           </div>
         </div>
         <case-messages
-          :active-person-id="activePerson.id"
           :messages-prop="filteredDisputeMessages"
           :loading="loadingDisputeMessages"
-          :show-scheduled="showScheduled" />
+          :show-scheduled="showScheduled"
+          @case:refresh="fetchData({ fetchMessages: true })" />
         <div class="case-view__send-message">
           <el-tabs ref="messageTab" value="1" @tab-click="handleTabClick">
             <el-tab-pane label="Mensagem" name="1">
@@ -228,7 +228,7 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
-    removeCase() {
+    removeCase () {
       this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
@@ -342,8 +342,8 @@ export default {
             data: {
               value: this.newMessage,
               sender: {
-                personId: this.activePerson.id,
-                name: this.activePerson.name
+                personId: this.$store.getters.id,
+                name: this.$store.getters.personName
               }
             }
           }).then(() => {
@@ -398,8 +398,8 @@ export default {
           data: {
             value: this.newMessage,
             sender: {
-              personId: this.activePerson.id,
-              name: this.activePerson.name
+              personId: this.$store.getters.personId,
+              name: this.$store.getters.personName,
             }
           }
         })
