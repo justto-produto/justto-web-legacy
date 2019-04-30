@@ -49,13 +49,15 @@
     </el-collapse>
     <hr>
     <el-collapse
-      v-loading="loading" accordion
+      v-loading="loading"
+      ref="roleCollapse"
+      accordion
       class="el-collapse--bordered"
       @change="handleChange">
       <el-collapse-item
         v-for="role in disputeRolesSort"
         :key="role.person.id"
-        :name="role.person.id">
+        :name="JSON.stringify({id: role.person.id, name: role.person.name})">
         <template slot="title">
           <div class="case-overview-view__name">
             <span>
@@ -249,7 +251,7 @@
           </el-button>
         </div>
         <ul class="case-overview-view__list" style="margin-top: -10px">
-          <li v-for="(oab, index) in roleForm.oabs">
+          <li v-for="(oab, index) in roleForm.oabs" :key="oab.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ oab.number }} {{ oab.state }}
             <a href="#" @click.prevent="removeOab({disputeId: dispute.id, id: oab.id}, roleForm.oabs, index)">
@@ -271,7 +273,7 @@
           </el-input>
         </el-form-item>
         <ul class="case-overview-view__list">
-          <li v-for="(phone, index) in roleForm.phones">
+          <li v-for="(phone, index) in roleForm.phones" :key="phone.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ phone.number }}
             <a href="#" @click.prevent="removePhone({disputeId: dispute.id, id: phone.id}, roleForm.phones, index)">
@@ -293,7 +295,7 @@
           </el-input>
         </el-form-item>
         <ul class="case-overview-view__list">
-          <li v-for="(email, index) in roleForm.emails">
+          <li v-for="(email, index) in roleForm.emails" :key="email.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ email.address }}
             <a href="#" @click.prevent="removeEmail({disputeId: dispute.id, id: email.id}, roleForm.emails, index)">
@@ -311,9 +313,8 @@
 </template>
 
 <script>
-import { TheMask } from 'vue-the-mask'
 import { Money } from 'v-money'
-import { mask } from 'vue-the-mask'
+import { mask, TheMask } from 'vue-the-mask'
 
 export default {
   name: 'CaseOverview',
@@ -328,9 +329,9 @@ export default {
       default: () => {},
       type: Object
     },
-    activePersonId: {
-      default: null,
-      type: Number
+    activePerson: {
+      default: () => {},
+      type: Object
     }
   },
   data () {
@@ -353,7 +354,7 @@ export default {
       }
     }
     return {
-      active: this.activePersonId,
+      active: this.activePerson.id,
       partyRoles: {
         legal: false,
         party: false,
@@ -426,12 +427,13 @@ export default {
         })
       } return []
     }
-    // strategies () {
-    //   return this.$store.state.strategyModule.list
-    // },
-    // campaigns () {
-    //   return this.$store.state.campaignModule.list
-    // }
+  },
+  watch: {
+    activePerson (value) {
+      if (Object.entries(value).length === 0) {
+        this.$refs.roleCollapse.activeNames = []
+      }
+    }
   },
   methods: {
     openCaseDialog (caseForm) {
@@ -458,7 +460,7 @@ export default {
             this.$emit('case:refresh')
           }.bind(this), 1000)
           this.editCaseDialogVisible = false
-        }).catch(error => {
+        }).catch(() => {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
@@ -499,11 +501,11 @@ export default {
     },
     handleChange (val) {
       if (val) {
-        this.active = val
+        this.active = JSON.parse(val)
       } else {
-        this.active = null
+        this.active = {}
       }
-      this.$emit('update:activePersonId', this.active)
+      this.$emit('update:activePerson', this.active)
     },
     addEmail (personId, emails) {
       this.$refs['emailForm'].validate(valid => {
@@ -637,7 +639,7 @@ export default {
           this.$emit('case:refresh')
         }.bind(this), 1000)
         this.editRoleDialogVisible = false
-      }).catch(error => {
+      }).catch(() => {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
@@ -663,7 +665,7 @@ export default {
           setTimeout(function () {
             this.$emit('case:refresh')
           }.bind(this), 1000)
-        }).catch(error => {
+        }).catch(() => {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',

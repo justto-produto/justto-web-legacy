@@ -1,6 +1,7 @@
 {
   "message": "mensagem",
   "test": "teste",
+  "isTyping": "está digitando",
   "dispute": {
     "code": "nº do processo",
     "expirationDate": "fim da negociação",

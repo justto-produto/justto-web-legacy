@@ -75,29 +75,32 @@
           </div>
         </div>
         <case-messages
+          :active-person-id="activePerson.id"
           :messages-prop="filteredDisputeMessages"
           :loading="loadingDisputeMessages"
           :show-scheduled="showScheduled" />
         <div class="case-view__send-message">
-          <el-tabs value="1">
+          <el-tabs ref="messageTab" value="1" @tab-click="handleTabClick">
             <el-tab-pane label="Mensagem" name="1">
-              <el-tooltip :disabled="!!activePersonId" content="Escolha um destinatário ao lado para receber sua mensagem">
+              <el-tooltip :disabled="!!activePerson.id" content="Escolha um destinatário ao lado para receber sua mensagem">
                 <el-card shadow="always" class="case-view__send-message-box">
                   <el-collapse-transition>
                     <el-input
-                      v-show="activePersonId"
+                      v-show="activePerson.id"
+                      ref="textarea"
                       :rows="3"
                       v-model="newMessage"
                       type="textarea"
-                      placeholder="Escreva alguma coisa" />
+                      placeholder="Escreva alguma coisa"
+                      @input="sendTypeEvent" />
                   </el-collapse-transition>
                   <div class="case-view__send-message-actions">
-                    <div v-if="activePersonId">
-                      <!-- <el-tooltip content="Enviar mensagem">
+                    <div v-if="activePerson.id">
+                      <el-tooltip content="Enviar mensagem">
                         <a href="#" @click="setMessageType('message')">
                           <jus-icon :is-active="messageType === 'message'" icon="message"/>
                         </a>
-                      </el-tooltip> -->
+                      </el-tooltip>
                       <el-tooltip content="Enviar e-mail">
                         <a href="" @click.prevent="setMessageType('email')">
                           <jus-icon :is-active="messageType === 'email'" icon="email"/>
@@ -118,7 +121,7 @@
                       Escreva alguma coisa
                     </div>
                     <div>
-                      <el-button :disabled="!activePersonId" type="primary" @click="sendMessage()">
+                      <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
                         Enviar
                       </el-button>
                     </div>
@@ -158,7 +161,7 @@
       <case-overview
         :loading="loadingDispute"
         :dispute="dispute"
-        :active-person-id.sync="activePersonId"
+        :active-person.sync="activePerson"
         @case:refresh="fetchData({ fetchDispute: true })" />
     </template>
   </JusViewMain>
@@ -183,11 +186,11 @@ export default {
       loadingDisputeMessages: false,
       showSearch: false,
       searchTerm: '',
-      messageType: 'email',
+      messageType: 'message',
       newMessage: '',
       newNote: '',
       showScheduled: false,
-      activePersonId: null
+      activePerson: {}
     }
   },
   computed: {
@@ -206,11 +209,23 @@ export default {
     },
     searchTerm (term) {
       this.filterDisputeMessages(term)
+    },
+    activePerson (value) {
+      this.$nextTick(() => {
+        if (value.constructor === Object && Object.entries(value).length !== 0) {
+          this.$refs.messageTab.currentName = '1'
+        }
+        setTimeout(function () {
+          this.$refs.textarea.focus()
+        }.bind(this), 100)
+      })
     }
   },
   created () {
     this.fetchData({ fetchDispute: true, fetchMessages: true })
-    // this.$jusSocket.subscribeChat(this.$route.params.id)
+  },
+  destroyed () {
+    this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
     removeCase() {
@@ -230,6 +245,7 @@ export default {
         this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
           this.dispute = responses
           this.loadingDispute = false
+          this.$socket.emit('subscribe', '/disputes/' + this.dispute.id)
         }).catch(error => {
           if (error.response.status === 404) {
             this.$router.push('/management')
@@ -251,6 +267,11 @@ export default {
             this.filteredDisputeMessages.push(...newMessages)
           }
         }).catch(error => this.showError(error))
+      }
+    },
+    handleTabClick (tab) {
+      if (tab.name === '2') {
+        this.activePerson = {}
       }
     },
     showError (error) {
@@ -298,7 +319,6 @@ export default {
             action: action
           })
         }
-
         this.$store.dispatch('sendDisputeAction', {
           action: action,
           disputeId: this.dispute.id
@@ -316,23 +336,41 @@ export default {
     },
     sendMessage () {
       if (this.newMessage) {
-        this.$store.dispatch('send' + this.messageType, {
-          to: [this.activePersonId],
-          message: this.newMessage,
-          disputeId: this.dispute.id
-        }).then(() => {
-          window.analytics.track('Enviou mensagem via ' + this.messageType)
-          this.newMessage = ''
-          this.$jusNotification({
-            title: 'Yay!',
-            message: this.messageType + ' enviado com sucesso.',
-            type: 'success'
-          })
-          var self = this
-          setTimeout(function () {
-            self.fetchData({ fetchMessages: true })
-          }, 1000)
-        }).catch(error => this.showError(error))
+        if (this.messageType === 'message') {
+          this.$store.dispatch('sendMessageEvent', {
+            id: this.dispute.id,
+            data: {
+              value: this.newMessage,
+              sender: {
+                personId: this.activePerson.id,
+                name: this.activePerson.name
+              }
+            }
+          }).then(() => {
+            setTimeout(function () {
+              this.fetchData({ fetchMessages: true })
+              this.newMessage = ''
+            }.bind(this), 500)
+          }).catch(error => this.showError(error))
+        } else {
+          this.$store.dispatch('send' + this.messageType, {
+            to: [this.activePerson.id],
+            message: this.newMessage,
+            disputeId: this.dispute.id
+          }).then(() => {
+            window.analytics.track('Enviou mensagem via ' + this.messageType)
+            this.newMessage = ''
+            this.$jusNotification({
+              title: 'Yay!',
+              message: this.messageType + ' enviado com sucesso.',
+              type: 'success'
+            })
+            setTimeout(function () {
+              this.fetchData({ fetchMessages: true })
+              this.newMessage = ''
+            }.bind(this), 500)
+          }).catch(error => this.showError(error))
+        }
       }
     },
     sendNote () {
@@ -350,6 +388,21 @@ export default {
           })
           this.fetchData({ fetchMessages: true })
         }).catch(error => this.showError(error))
+      }
+    },
+    sendTypeEvent () {
+      if (this.newMessage) {
+        this.$socket.emit('send', {
+          channel: '/disputes/' + this.dispute.id,
+          event: 'type',
+          data: {
+            value: this.newMessage,
+            sender: {
+              personId: this.activePerson.id,
+              name: this.activePerson.name
+            }
+          }
+        })
       }
     }
   }
