@@ -42,7 +42,8 @@
           size="sm" />
       </div>
       <div v-else class="case-view-messages__message-log">
-        {{ message.description }} <br> {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
+        <div :class="message.type === 'TYPING' ? 'loading' : ''">{{ message.description }}</div>
+        {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
       </div>
     </li>
     <el-dialog
@@ -71,13 +72,19 @@ export default {
     showScheduled: {
       type: Boolean,
       default: false
+    },
+    activePersonId: {
+      type: Number,
+      default: null
     }
   },
   data () {
     return {
       showMessage: false,
       messageContent: '',
-      messages: []
+      messages: [],
+      typing: '',
+      typingTimeout: 0
     }
   },
   watch: {
@@ -85,9 +92,33 @@ export default {
       setTimeout(function () {
         this.messages = this.messagesProp
       }.bind(this), 300)
+    },
+    typing (value) {
+      if (value.sender.personId !== this.activePersonId) {
+        this.removeTypingMessage()
+        this.messages.push({
+          id: 0,
+          description: value.sender.name + ' ' + this.$t('isTyping'),
+          type: 'TYPING'
+        })
+        clearTimeout(this.typingTimeout)
+        this.typingTimeout = setTimeout(() => {
+          this.removeTypingMessage()
+        }, 3000)
+      }
     }
   },
+  mounted () {
+    this.$store.watch(state => state.chatModule.typing, typing => {
+      this.typing = typing
+    })
+  },
   methods: {
+    removeTypingMessage () {
+      this.messages = this.messages.filter(function (obj) {
+        return obj.id !== 0
+      })
+    },
     showAsCard (type) {
       if (type === 'INTERACTION' || type === 'COMMUNICATION' || type === 'NOTE') {
         return true
@@ -220,6 +251,34 @@ export default {
   }
   .el-button--text {
     padding-bottom: 0;
+  }
+  .loading:after {
+    content: ' .';
+    animation: dots 1s steps(5, end) infinite;
+  }
+  @keyframes dots {
+    0%, 20% {
+      color: rgba(0,0,0,0);
+      text-shadow:
+        .25em 0 0 rgba(0,0,0,0),
+        .5em 0 0 rgba(0,0,0,0);
+    }
+    40% {
+      color: #adadad;
+      text-shadow:
+        .25em 0 0 rgba(0,0,0,0),
+        .5em 0 0 rgba(0,0,0,0);
+    }
+    60% {
+      text-shadow:
+        .25em 0 0 #adadad,
+        .5em 0 0 rgba(0,0,0,0);
+    }
+    80%, 100% {
+      text-shadow:
+        .25em 0 0 #adadad,
+        .5em 0 0 #adadad;
+    }
   }
 }
 </style>
