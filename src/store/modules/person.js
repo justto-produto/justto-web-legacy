@@ -106,6 +106,12 @@ const personModule = {
     }
   },
   getters: {
+    personName: state => {
+      return state.person.name
+    },
+    personId: state => {
+      return state.person.id
+    }
   }
 }
 
