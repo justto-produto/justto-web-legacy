@@ -53,6 +53,11 @@
               <jus-icon icon="pause" />
             </el-button>
           </el-tooltip>
+          <el-tooltip content="Alterar Negociador">
+            <el-button plain @click="editNegotiator()">
+              <jus-icon icon="delegate" />
+            </el-button>
+          </el-tooltip>
           <!-- <el-tooltip content="snooze">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="snooze" />
@@ -268,6 +273,9 @@ export default {
           }
         }).catch(error => this.showError(error))
       }
+      this.$store.dispatch('getWorkspaceMembers').then((response) => {
+        this.negotiators = response
+      }).catch(error => this.showError(error))
     },
     handleTabClick (tab) {
       if (tab.name === '2') {
