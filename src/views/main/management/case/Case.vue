@@ -58,6 +58,38 @@
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip>
+          <el-dialog
+            :visible.sync="editNegotiatorDialogVisible"
+            title="Editar negociadores do caso"
+            width="40%">
+            <el-form
+              ref="negotiatorsForm"
+              :model="negotiatorsForm"
+              :rules="negotiatorsRules"
+              label-position="top"
+              @submit.native.prevent="editNegotiator">
+              <el-form-item label="Negociador" prop="negotiator">
+                <el-input v-model="newNegotiator">
+                  <el-button slot="append" @click="editNegotiators()">
+                    <jus-icon icon="add-white" />
+                  </el-button>
+                </el-input>
+              </el-form-item>
+              <ul class="case-view__list">
+                <li v-for="negotiator in disputeNegotiators" :key="negotiator.id">
+                  <img src="@/assets/icons/ic-check.svg">
+                  {{ negotiator.person.name || negotiator.person.email }}
+                  <a href="#" @click.prevent="removeNegotiator()">
+                    <img src="@/assets/icons/ic-error.svg">
+                  </a>
+                </li>
+              </ul>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
+              <!-- <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button> -->
+            </span>
+          </el-dialog>
           <!-- <el-tooltip content="snooze">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="snooze" />
@@ -184,8 +216,11 @@ export default {
   },
   data () {
     return {
+      editNegotiatorDialogVisible: false,
+      newNegotiator: '',
       dispute: {},
       loadingDispute: false,
+      disputeNegotiators: [],
       disputeMessages: [],
       filteredDisputeMessages: [],
       loadingDisputeMessages: false,
@@ -233,6 +268,9 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
+    editNegotiator() {
+      this.editNegotiatorDialogVisible = true
+    },
     removeCase() {
       this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
@@ -274,7 +312,7 @@ export default {
         }).catch(error => this.showError(error))
       }
       this.$store.dispatch('getWorkspaceMembers').then((response) => {
-        this.negotiators = response
+        this.disputeNegotiators = response
       }).catch(error => this.showError(error))
     },
     handleTabClick (tab) {
@@ -419,6 +457,21 @@ export default {
 
 <style lang="scss">
 .case-view {
+  &__list {
+    margin: 20 0px;
+    padding-left: 2px;
+    li {
+      margin-top: 12px;
+      list-style: none;
+      :first-child {
+        margin-right: 10px;
+      }
+      :last-child {
+        vertical-align: text-top;
+        float: right;
+      }
+    }
+  }
   &__section-messages {
     display: flex;
     flex-direction: column;
@@ -596,6 +649,13 @@ export default {
       .el-input {
         display: inline-block;
       }
+    }
+  }
+  .el-input-group__append {
+    border-color: #9462f7;
+    background-color: #9462f7;
+    img {
+      margin-top: 1px;
     }
   }
 }
