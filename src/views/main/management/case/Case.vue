@@ -58,38 +58,6 @@
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip>
-          <el-dialog
-            :visible.sync="editNegotiatorDialogVisible"
-            title="Editar negociadores do caso"
-            width="40%">
-            <el-form
-              ref="negotiatorsForm"
-              :model="negotiatorsForm"
-              :rules="negotiatorsRules"
-              label-position="top"
-              @submit.native.prevent="editNegotiator">
-              <el-form-item label="Negociador" prop="negotiator">
-                <el-input v-model="newNegotiator">
-                  <el-button slot="append" @click="editNegotiators()">
-                    <jus-icon icon="add-white" />
-                  </el-button>
-                </el-input>
-              </el-form-item>
-              <ul class="case-view__list">
-                <li v-for="negotiator in disputeNegotiators" :key="negotiator.id">
-                  <img src="@/assets/icons/ic-check.svg">
-                  {{ negotiator.person.name || negotiator.person.email }}
-                  <a href="#" @click.prevent="removeNegotiator()">
-                    <img src="@/assets/icons/ic-error.svg">
-                  </a>
-                </li>
-              </ul>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
-              <!-- <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button> -->
-            </span>
-          </el-dialog>
           <!-- <el-tooltip content="snooze">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="snooze" />
@@ -111,6 +79,38 @@
             </el-input>
           </div>
         </div>
+        <el-dialog
+          :visible.sync="editNegotiatorDialogVisible"
+          title="Editar negociadores do caso"
+          width="40%">
+          <el-form
+            ref="negotiatorsForm"
+            :model="negotiatorsForm"
+            :rules="negotiatorsRules"
+            label-position="top"
+            @submit.native.prevent="editNegotiator">
+            <el-form-item label="Negociador" prop="negotiator">
+              <el-input v-model="newNegotiator">
+                <el-button slot="append" @click="editNegotiators()">
+                  <jus-icon icon="add-white" />
+                </el-button>
+              </el-input>
+            </el-form-item>
+            <ul class="case-view__list">
+              <li v-for="(negotiator, index) in disputeNegotiators" :key="negotiator.id">
+                <img src="@/assets/icons/ic-check.svg">
+                {{ negotiator.person.name || negotiator.person.email }}
+                <a href="#" @click.prevent="removeNegotiator()">
+                  <img src="@/assets/icons/ic-error.svg">
+                </a>
+              </li>
+            </ul>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
+            <!-- <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button> -->
+          </span>
+        </el-dialog>
         <case-messages
           :messages-prop="filteredDisputeMessages"
           :loading="loadingDisputeMessages"
@@ -582,6 +582,10 @@ export default {
     .el-button {
       border-radius: 5px;
       padding: 11px;
+    }
+    img {
+      width: 16px;
+      height: 16px;
     }
   }
   &__side-content {
