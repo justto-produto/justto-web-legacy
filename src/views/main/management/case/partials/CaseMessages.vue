@@ -111,12 +111,17 @@ export default {
     this.$store.watch(state => state.chatModule.join, join => {
       setTimeout(() => {
         this.$emit('case:refresh')
-      }, 300)
+      }, 1000)
     })
-    this.$store.watch(state => state.chatModule.join, join => {
+    this.$store.watch(state => state.chatModule.message, join => {
       setTimeout(() => {
         this.$emit('case:refresh')
-      }, 300)
+      }, 1000)
+    })
+    this.$store.watch(state => state.chatModule.leave, join => {
+      setTimeout(() => {
+        this.$emit('case:refresh')
+      }, 1000)
     })
   },
   methods: {

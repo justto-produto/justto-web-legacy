@@ -399,7 +399,7 @@ export default {
             value: this.newMessage,
             sender: {
               personId: this.$store.getters.personId,
-              name: this.$store.getters.personName,
+              name: this.$store.getters.personName
             }
           }
         })
