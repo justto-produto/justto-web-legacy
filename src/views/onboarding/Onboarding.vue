@@ -96,7 +96,7 @@ export default {
       return !!this.$route.query.invitedBy
     },
     progressPercentage () {
-      let slidesN = this.showWhatsapp ? 6 : 5
+      let slidesN = this.showWhatsapp ? 5 : 4
       return Math.round((this.currentStep * (100 / slidesN)) * 0.2) / 0.2
     },
     showWhatsapp () {
