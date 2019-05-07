@@ -91,8 +91,7 @@
                       :rows="3"
                       v-model="newMessage"
                       type="textarea"
-                      placeholder="Escreva alguma coisa"
-                      @input="sendTypeEvent" />
+                      placeholder="Escreva alguma coisa" />
                   </el-collapse-transition>
                   <div class="case-view__send-message-actions">
                     <div v-if="activePerson.id">
@@ -130,7 +129,8 @@
                   :rows="3"
                   v-model="newChatMessage"
                   type="textarea"
-                  placeholder="Escreva alguma coisa" />
+                  placeholder="Escreva alguma coisa"
+                  @input="sendTypeEvent" />
                 <div class="case-view__send-message-actions note">
                   <el-button type="primary" @click="sendChatMessage()">
                     Enviar
@@ -350,7 +350,7 @@ export default {
         data: {
           value: this.newChatMessage,
           sender: {
-            personId: this.$store.getters.id,
+            personId: this.$store.getters.personId,
             name: this.$store.getters.personName
           }
         }
@@ -400,12 +400,12 @@ export default {
       }
     },
     sendTypeEvent () {
-      if (this.newMessage) {
+      if (this.newChatMessage) {
         this.$socket.emit('send', {
           channel: '/disputes/' + this.dispute.id,
           event: 'type',
           data: {
-            value: this.newMessage,
+            value: this.newChatMessage,
             sender: {
               personId: this.$store.getters.personId,
               name: this.$store.getters.personName
