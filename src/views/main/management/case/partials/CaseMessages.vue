@@ -100,7 +100,7 @@ export default {
         clearTimeout(this.typingTimeout)
         this.typingTimeout = setTimeout(() => {
           this.removeTypingMessage()
-        }, 3000)
+        }, 4000)
       }
     }
   },
@@ -140,7 +140,7 @@ export default {
       this.showMessage = true
     },
     directionClass (message) {
-      if (message.message && message.message.direction === 'INBOUND') {
+      if (message.message && (message.message.direction === 'INBOUND' || message.message.senderParty === 'RESPONDENT')) {
         return 'inbound'
       } else if (message.message && message.message.type === 'NOTE') {
         return 'note'
