@@ -138,12 +138,20 @@ export default {
       this.$store.commit('setImportsFile', res)
       this.fileUrl = URL.createObjectURL(file.raw)
     },
-    handleError () {
+    handleError (error) {
+      let errorMessage = {}
+      if (error.status === 400) {
+        errorMessage.message = 'Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.'
+        errorMessage.type = 'warning'
+      } else {
+        errorMessage.message = 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
+        errorMessage.type = 'error'
+      }
       this.processingFile = false
       this.$jusNotification({
         title: 'Ops!',
-        message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-        type: 'error'
+        message: errorMessage.message,
+        type: errorMessage.type
       })
     },
     removeFile () {
