@@ -34,12 +34,12 @@
             </el-button>
           </el-tooltip> -->
           <el-tooltip content="Ganhar">
-            <el-button plain @click="doAction('accepted')">
+            <el-button plain @click="doAction('settled')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Perder">
-            <el-button plain @click="doAction('refused')">
+            <el-button plain @click="doAction('unsettled')">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
@@ -228,6 +228,18 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
+<<<<<<< Updated upstream
+=======
+    editNegotiator () {
+      // let role
+      // for (role = 0; role === this.dispute.disputeRoles.length; role++) {
+      //   if (this.dispute.disputeRoles[role].roles[0] === 'NEGOTIATOR') {
+      //     this.disputeNegotiators.push(this.dispute.disputeRoles[role])
+      //   }
+      // }
+      this.editNegotiatorDialogVisible = true
+    },
+>>>>>>> Stashed changes
     removeCase () {
       this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
@@ -268,6 +280,12 @@ export default {
           }
         }).catch(error => this.showError(error))
       }
+<<<<<<< Updated upstream
+=======
+      // this.$store.dispatch('getWorkspaceMembers').then((response) => {
+      //   this.disputeNegotiators = response
+      // }).catch(error => this.showError(error))
+>>>>>>> Stashed changes
     },
     handleTabClick (tab) {
       if (tab.name === '2') {
@@ -306,11 +324,11 @@ export default {
         cancelButtonText: 'Cancelar',
         type: 'warning'
       }).then(() => {
-        if (action === 'refused') {
+        if (action === 'unsettled') {
           window.analytics.track('PERDA (Status modificado)', {
             action: action
           })
-        } else if (action === 'accepted') {
+        } else if (action === 'settled') {
           window.analytics.track('GANHO (Status modificado)', {
             action: action
           })
@@ -399,7 +417,7 @@ export default {
             value: this.newMessage,
             sender: {
               personId: this.$store.getters.personId,
-              name: this.$store.getters.personName,
+              name: this.$store.getters.personName
             }
           }
         })
