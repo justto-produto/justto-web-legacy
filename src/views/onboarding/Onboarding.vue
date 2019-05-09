@@ -28,9 +28,6 @@
           <swiper-slide v-if="!isGuest">
             <invite-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
-          <swiper-slide>
-            <email-sync-step @onboarding:step:next="nextStep"/>
-          </swiper-slide>
           <swiper-slide v-if="showWhatsapp">
             <whatsapp-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
@@ -59,7 +56,6 @@
 import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
 import WelcomeStep from './steps/WelcomeStep'
 import OabStep from './steps/OabStep'
-import EmailSyncStep from './steps/EmailSyncStep'
 import WhatsappStep from './steps/WhatsappStep'
 import TeamNameStep from './steps/TeamNameStep'
 import SubdomainStep from './steps/SubdomainStep'
@@ -73,7 +69,6 @@ export default {
     JusSidenavExternal,
     WelcomeStep,
     OabStep,
-    EmailSyncStep,
     WhatsappStep,
     TeamNameStep,
     LogoStep,
@@ -101,7 +96,7 @@ export default {
       return !!this.$route.query.invitedBy
     },
     progressPercentage () {
-      let slidesN = this.showWhatsapp ? 6 : 5
+      let slidesN = this.showWhatsapp ? 5 : 4
       return Math.round((this.currentStep * (100 / slidesN)) * 0.2) / 0.2
     },
     showWhatsapp () {

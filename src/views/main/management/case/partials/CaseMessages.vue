@@ -100,7 +100,7 @@ export default {
         clearTimeout(this.typingTimeout)
         this.typingTimeout = setTimeout(() => {
           this.removeTypingMessage()
-        }, 3000)
+        }, 4000)
       }
     }
   },
@@ -111,12 +111,17 @@ export default {
     this.$store.watch(state => state.chatModule.join, join => {
       setTimeout(() => {
         this.$emit('case:refresh')
-      }, 300)
+      }, 1000)
     })
-    this.$store.watch(state => state.chatModule.join, join => {
+    this.$store.watch(state => state.chatModule.message, join => {
       setTimeout(() => {
         this.$emit('case:refresh')
-      }, 300)
+      }, 1000)
+    })
+    this.$store.watch(state => state.chatModule.leave, join => {
+      setTimeout(() => {
+        this.$emit('case:refresh')
+      }, 1000)
     })
   },
   methods: {
@@ -135,7 +140,7 @@ export default {
       this.showMessage = true
     },
     directionClass (message) {
-      if (message.message && message.message.direction === 'INBOUND') {
+      if (message.message && (message.message.direction === 'INBOUND' || message.message.senderParty === 'RESPONDENT')) {
         return 'inbound'
       } else if (message.message && message.message.type === 'NOTE') {
         return 'note'

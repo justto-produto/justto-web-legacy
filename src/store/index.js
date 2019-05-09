@@ -38,9 +38,6 @@ export default new Vuex.Store({
     },
     hideLoading ({ commit }) {
       commit('hideLoading')
-    },
-    SOCKET_connect () {
-      console.log('Socket connected.')
     }
   },
   modules: {

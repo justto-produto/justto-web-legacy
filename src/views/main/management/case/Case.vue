@@ -91,16 +91,10 @@
                       :rows="3"
                       v-model="newMessage"
                       type="textarea"
-                      placeholder="Escreva alguma coisa"
-                      @input="sendTypeEvent" />
+                      placeholder="Escreva alguma coisa" />
                   </el-collapse-transition>
                   <div class="case-view__send-message-actions">
                     <div v-if="activePerson.id">
-                      <el-tooltip content="Enviar mensagem">
-                        <a href="#" @click="setMessageType('message')">
-                          <jus-icon :is-active="messageType === 'message'" icon="message"/>
-                        </a>
-                      </el-tooltip>
                       <el-tooltip content="Enviar e-mail">
                         <a href="" @click.prevent="setMessageType('email')">
                           <jus-icon :is-active="messageType === 'email'" icon="email"/>
@@ -128,6 +122,21 @@
                   </div>
                 </el-card>
               </el-tooltip>
+            </el-tab-pane>
+            <el-tab-pane label="Chat" name="3">
+              <el-card shadow="always" class="case-view__send-message-box">
+                <el-input
+                  :rows="3"
+                  v-model="newChatMessage"
+                  type="textarea"
+                  placeholder="Escreva alguma coisa"
+                  @input="sendTypeEvent" />
+                <div class="case-view__send-message-actions note">
+                  <el-button type="primary" @click="sendChatMessage()">
+                    Enviar
+                  </el-button>
+                </div>
+              </el-card>
             </el-tab-pane>
             <el-tab-pane label="Nota" name="2">
               <el-card shadow="always" class="case-view__send-message-box">
@@ -186,11 +195,12 @@ export default {
       loadingDisputeMessages: false,
       showSearch: false,
       searchTerm: '',
-      messageType: 'message',
+      messageType: 'email',
       newMessage: '',
       newNote: '',
       showScheduled: false,
-      activePerson: {}
+      activePerson: {},
+      newChatMessage: ''
     }
   },
   computed: {
@@ -288,7 +298,7 @@ export default {
 >>>>>>> Stashed changes
     },
     handleTabClick (tab) {
-      if (tab.name === '2') {
+      if (tab.name === '2' || tab.name === '3') {
         this.activePerson = {}
       }
     },
@@ -352,43 +362,42 @@ export default {
         }, 1000)
       })
     },
+    sendChatMessage () {
+      this.$store.dispatch('sendMessageEvent', {
+        id: this.dispute.id,
+        data: {
+          value: this.newChatMessage,
+          sender: {
+            personId: this.$store.getters.personId,
+            name: this.$store.getters.personName
+          }
+        }
+      }).then(() => {
+        this.newChatMessage = ''
+        setTimeout(function () {
+          this.fetchData({ fetchMessages: true })
+        }.bind(this), 500)
+      }).catch(error => this.showError(error))
+    },
     sendMessage () {
       if (this.newMessage) {
-        if (this.messageType === 'message') {
-          this.$store.dispatch('sendMessageEvent', {
-            id: this.dispute.id,
-            data: {
-              value: this.newMessage,
-              sender: {
-                personId: this.$store.getters.id,
-                name: this.$store.getters.personName
-              }
-            }
-          }).then(() => {
-            setTimeout(function () {
-              this.fetchData({ fetchMessages: true })
-              this.newMessage = ''
-            }.bind(this), 500)
-          }).catch(error => this.showError(error))
-        } else {
-          this.$store.dispatch('send' + this.messageType, {
-            to: [this.activePerson.id],
-            message: this.newMessage,
-            disputeId: this.dispute.id
-          }).then(() => {
-            window.analytics.track('Enviou mensagem via ' + this.messageType)
+        this.$store.dispatch('send' + this.messageType, {
+          to: [this.activePerson.id],
+          message: this.newMessage,
+          disputeId: this.dispute.id
+        }).then(() => {
+          window.analytics.track('Enviou mensagem via ' + this.messageType)
+          this.newMessage = ''
+          this.$jusNotification({
+            title: 'Yay!',
+            message: this.messageType + ' enviado com sucesso.',
+            type: 'success'
+          })
+          setTimeout(function () {
+            this.fetchData({ fetchMessages: true })
             this.newMessage = ''
-            this.$jusNotification({
-              title: 'Yay!',
-              message: this.messageType + ' enviado com sucesso.',
-              type: 'success'
-            })
-            setTimeout(function () {
-              this.fetchData({ fetchMessages: true })
-              this.newMessage = ''
-            }.bind(this), 500)
-          }).catch(error => this.showError(error))
-        }
+          }.bind(this), 500)
+        }).catch(error => this.showError(error))
       }
     },
     sendNote () {
@@ -409,12 +418,12 @@ export default {
       }
     },
     sendTypeEvent () {
-      if (this.newMessage) {
+      if (this.newChatMessage) {
         this.$socket.emit('send', {
           channel: '/disputes/' + this.dispute.id,
           event: 'type',
           data: {
-            value: this.newMessage,
+            value: this.newChatMessage,
             sender: {
               personId: this.$store.getters.personId,
               name: this.$store.getters.personName
@@ -490,6 +499,9 @@ export default {
         resize: none;
         border: 0;
         padding: 5px 20px;
+      }
+      &::first-letter {
+        text-transform: capitalize;
       }
     }
   }

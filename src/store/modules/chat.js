@@ -2,7 +2,8 @@ const chatModule = {
   state: {
     typing: null,
     join: null,
-    leave: null
+    leave: null,
+    message: null
   },
   mutations: {
     SOCKET_join (state, join) {
@@ -12,7 +13,7 @@ const chatModule = {
       state.typing = typing
     },
     SOCKET_message (state, message) {
-      // console.log(message)
+      state.message = message
     },
     SOCKET_leave (state, leave) {
       state.leave = leave

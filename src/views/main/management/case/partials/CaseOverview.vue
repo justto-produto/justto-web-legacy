@@ -167,7 +167,7 @@
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="boundary">
               <!-- <el-input v-model="caseForm.upperRange"/> -->
-              <money v-model="caseForm.upperRange.boundary | currency" v-bind="money" class="el-input__inner" />
+              <money v-model="caseForm.upperRange.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -410,7 +410,7 @@ export default {
         decimal: ',',
         thousands: '.',
         prefix: 'R$ ',
-        precision: 0
+        precision: 2
       }
     }
   },
@@ -436,15 +436,15 @@ export default {
     }
   },
   methods: {
-    openCaseDialog (caseForm) {
+    openCaseDialog () {
       this.editCaseDialogVisible = true
       this.caseForm.disputeId = this.dispute.id
-      this.caseForm.upperRange.boundary = this.dispute.upperRange.boundary
+      this.caseForm.upperRange.boundary = parseFloat(this.dispute.upperRange.boundary)
       this.caseForm.upperRange.id = this.dispute.upperRange.id
       this.caseForm.expirationDate = this.dispute.expirationDate
       this.caseForm.description = this.dispute.description
       if (this.dispute.lastOffer) {
-        this.caseForm.lastOffer.boundary = this.dispute.lastOffer.boundary
+        this.caseForm.lastOffer.boundary = parseFloat(this.dispute.lastOffer.boundary)
         this.caseForm.lastOffer.id = this.dispute.lastOffer.id
       }
     },
