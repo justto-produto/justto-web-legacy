@@ -238,18 +238,6 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
-<<<<<<< Updated upstream
-=======
-    editNegotiator () {
-      // let role
-      // for (role = 0; role === this.dispute.disputeRoles.length; role++) {
-      //   if (this.dispute.disputeRoles[role].roles[0] === 'NEGOTIATOR') {
-      //     this.disputeNegotiators.push(this.dispute.disputeRoles[role])
-      //   }
-      // }
-      this.editNegotiatorDialogVisible = true
-    },
->>>>>>> Stashed changes
     removeCase () {
       this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
@@ -290,12 +278,6 @@ export default {
           }
         }).catch(error => this.showError(error))
       }
-<<<<<<< Updated upstream
-=======
-      // this.$store.dispatch('getWorkspaceMembers').then((response) => {
-      //   this.disputeNegotiators = response
-      // }).catch(error => this.showError(error))
->>>>>>> Stashed changes
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
