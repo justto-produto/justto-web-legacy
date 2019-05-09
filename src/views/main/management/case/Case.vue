@@ -482,6 +482,9 @@ export default {
         border: 0;
         padding: 5px 20px;
       }
+      &::first-letter {
+        text-transform: capitalize;
+      }
     }
   }
   &__send-message-actions {
