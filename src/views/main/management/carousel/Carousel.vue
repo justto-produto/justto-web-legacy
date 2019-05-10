@@ -30,6 +30,7 @@ export default {
         title: 'Casos que a negociação encerra nos próximos 3 dias',
         subtitle: 'Entre em contato',
         button: 'Ver casos',
+        to: 'review',
         color: 'orange',
         must: [ { 'match': { 'workspaceid': 12 } }, { 'range': { 'disputeexpirationdate': { 'gte': 'now/d', 'lte': 'now/d+3d' } } } ],
         shows: true
@@ -37,6 +38,7 @@ export default {
         title: 'Casos sem e-mail válido',
         subtitle: 'Atualize os dados',
         button: 'Ver casos',
+        to: 'review',
         color: 'orange',
         must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'hasvalidemail': false } } ],
         shows: true
@@ -44,6 +46,7 @@ export default {
         title: 'Casos com contraproposta até 20% acima da alçada',
         subtitle: 'Entre em contato',
         button: 'Ver casos',
+        to: 'review',
         color: 'orange',
         must: [ { 'match': { 'workspaceid': 12 } } ],
         filter: { 'range': { 'lastofferbyupperrangepercent': { 'gte': 100, 'lte': 120 } } },
@@ -52,6 +55,7 @@ export default {
         title: 'Casos com interações e sem contraproposta',
         subtitle: 'Entre em contato',
         button: 'Ver casos',
+        to: 'review',
         color: 'orange',
         must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'disputehasinteractions': true } } ],
         shows: true
@@ -59,6 +63,7 @@ export default {
         title: 'Casos sem celular válido',
         subtitle: 'Atualize os dados',
         button: 'Ver casos',
+        to: 'review',
         color: 'orange',
         must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'hasvalidphone': false } } ],
         shows: true
@@ -66,6 +71,7 @@ export default {
         title: 'Casos que nossas tentativas de engajamento encerraram',
         subtitle: 'Reinicie ou entre em contato',
         button: 'Ver casos',
+        to: 'review',
         color: 'orange',
         must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'disputestatus': 'ENGAGEMENT' } }, { 'range': { 'communicationmsgtotalschedulled': { 'lte': 0 } } } ],
         shows: true
@@ -91,6 +97,17 @@ export default {
         slide.shows = response.length > 0
       }))
     })
+    promises.push(this.$store.dispatch('whatsappStatus').then((whatsapp) => {
+      if (whatsapp.status !== 'CONNECTED') {
+        this.slides.push({
+          title: 'Sincronize seu WhatsApp para garantir que seus casos terão mais engajamento',
+          button: 'Resolver',
+          to: 'profile',
+          color: 'green',
+          shows: true
+        })
+      }
+    }))
     Promise.all(promises).finally(() => {
       setTimeout(function () {
         this.componentKey = true

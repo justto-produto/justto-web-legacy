@@ -1,7 +1,7 @@
 <template>
   <el-card :class="bgClass" class="jus-carousel-card el-card--bg-primary" shadow="never">
-    {{ slide.title }} {{ slide.subtitle }}
-    <el-button type="transparent" @click="$router.push({name: 'review', params: {slide: slide}})">
+    {{ title }} {{ subtitle }}
+    <el-button type="transparent" @click="$router.push({name: slide.to, params: {slide: slide}})">
       {{ slide.button }}
     </el-button>
   </el-card>
@@ -17,12 +17,22 @@ export default {
     }
   },
   computed: {
+    title () {
+      return this.slide.title + '.'
+    },
+    subtitle () {
+      if (this.slide.subtitle) {
+        return this.slide.subtitle + '.'
+      } return
+    },
     bgClass () {
       switch (this.slide.color) {
         case 'orange':
-        return 'el-card--bg-secondary'
+          return 'el-card--bg-secondary'
+        case 'green':
+          return 'el-card--bg-green'
         default:
-        return 'el-card--bg-primary'
+          return 'el-card--bg-primary'
       }
     }
   }
