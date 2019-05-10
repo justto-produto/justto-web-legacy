@@ -27,38 +27,7 @@
             </el-input>
           </el-form-item>
         </el-form>
-        <br>
-        <hr>
-        <br>
-        <h3>E-mails sincronizados de contato com as partes</h3>
-        <el-form
-          v-loading="$store.state.loading"
-          ref="syncForm"
-          :model="syncForm"
-          :rules="syncFormRules"
-          label-position="top"
-          class="profile-view__sync-form"
-          @submit.native.prevent="syncNewEmail">
-          <el-form-item label="Email" prop="email">
-            <el-input v-model="syncForm.email" type="text"/>
-          </el-form-item>
-          <el-form-item label="Senha" prop="password">
-            <el-input v-model="syncForm.password" type="password"/>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" native-type="submit">Sincronizar novo email</el-button>
-          </el-form-item>
-        </el-form>
-        <el-collapse v-loading="$store.state.loading">
-          <el-collapse-item title="Lista de emails sincronizados">
-            <div v-for="email in syncedEmails" :key="email.id" class="profile-view__synced-email">
-              {{ email.email }}
-              <a href="#" @click.prevent="removeEmail(email.id)">
-                <jus-icon icon="trash" />
-              </a>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
+
       </div>
     </template>
     <template slot="right-card">

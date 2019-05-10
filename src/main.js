@@ -18,7 +18,7 @@ import '@/plugins/socket'
 
 // filters
 import '@/filters/capitalize'
-import '@/filters/money'
+import '@/filters/currency'
 
 // css
 import '@/styles/core.scss'
