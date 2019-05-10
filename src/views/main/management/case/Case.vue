@@ -268,10 +268,10 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
-    editNegotiator() {
+    editNegotiator () {
       this.editNegotiatorDialogVisible = true
     },
-    removeCase() {
+    removeCase () {
       this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
