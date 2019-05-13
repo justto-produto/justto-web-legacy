@@ -90,13 +90,12 @@
             label-position="top"
             @submit.native.prevent="editNegotiator">
             <el-transfer
-              filterable
-              filter-placeholder="Negociadores"
-              :titles="['Workspace', 'Neste caso']"
+              :titles="['Workspace', 'Caso']"
               :button-texts="['Remover', 'Adcionar']"
-              v-model="workspaceNegotiators"
-              :data="data">
-            </el-transfer>
+              :data="allNegotiators"
+              v-model="thisNegotiators"
+              filterable
+              filter-placeholder="Buscar" />
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
@@ -216,7 +215,29 @@ export default {
     CaseSummary, CaseMessages, CaseOverview
   },
   data () {
+    const setWorkspaceNegotiators = _ => {
+      const allNegotiators = []
+      this.workspaceNegotiators.forEach((name, index) => {
+        allNegotiators.push({
+          label: name,
+          key: index
+        })
+      })
+      return allNegotiator
+    }
+    const setCaseNegotiators = _ => {
+      const thisNegotiators = []
+      this.disputeNegotiators.forEach((name, index) => {
+        thisNegotiators.push({
+          label: name,
+          key: index
+        })
+      })
+      return thisNegotiators
+    }
     return {
+      allNegotiators: setWorkspaceNegotiators(),
+      thisNegotiators: setCaseNegotiators(),
       editNegotiatorDialogVisible: false,
       dispute: {},
       loadingDispute: false,
