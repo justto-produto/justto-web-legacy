@@ -46,6 +46,14 @@
           </div>
         </template>
       </el-step>
+      <el-step v-if="disputeStatus">
+        <template slot="title">Status</template>
+        <template slot="description">
+          <div v-if="disputeStatus">
+            {{ $t('occurrence.type.' + disputeStatus) | capitalize }}
+          </div>
+        </template>
+      </el-step>
       <el-step>
         <template slot="title">Acordo</template>
         <template slot="description">
@@ -116,6 +124,9 @@ export default {
     lastoffer () {
       return this.summary.lastoffervalue ? this.summary.lastoffervalue : 0
     },
+    disputeStatus () {
+      return this.summary.disputestatus ? this.summary.disputestatus : null
+    },
     sliderProposal: {
       get () {
         return (this.lastoffer * 100) / this.boundary
@@ -132,15 +143,13 @@ export default {
     }
   },
   beforeMount () {
-    if (this.id) {
-      this.$store.dispatch('getDisputes', {
-        query: { bool: { must: [{ match: { disputeid: this.id } }] } }
-      }).then(response => {
-        if (response.length) {
-          this.summary = response[0]
-        }
-      })
-    }
+    this.$store.dispatch('getDisputes', {
+      query: { bool: { must: [{ match: { disputeid: this.id } }] } }
+    }).then(response => {
+      if (response.length) {
+        this.summary = response[0]
+      }
+    })
   }
 }
 </script>

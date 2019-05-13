@@ -15,9 +15,10 @@
       </div>
       <case-summary
         v-if="dispute.strategy"
+        :key="componentKey"
         :id="dispute.id"
         :show-scheduled.sync="showScheduled"
-        :strategy-id="dispute.strategy.id"/>
+        :strategy-id="dispute.strategy.id" />
     </template>
     <!-- CHAT -->
     <template slot="main">
@@ -200,7 +201,8 @@ export default {
       newNote: '',
       showScheduled: false,
       activePerson: {},
-      newChatMessage: ''
+      newChatMessage: '',
+      componentKey: 0
     }
   },
   computed: {
@@ -252,9 +254,10 @@ export default {
     fetchData (options) {
       if (options.fetchDispute) {
         this.loadingDispute = true
-        this.$store.dispatch('getDispute', this.$route.params.id).then((responses) => {
-          this.dispute = responses
+        this.$store.dispatch('getDispute', this.$route.params.id).then((response) => {
+          this.dispute = response
           this.loadingDispute = false
+          this.componentKey += 1
           this.$socket.emit('subscribe', '/disputes/' + this.dispute.id)
         }).catch(error => {
           if (error.response.status === 404) {
@@ -338,10 +341,9 @@ export default {
           message: 'Ação realizada com sucesso.',
           type: 'success'
         })
-        var self = this
         setTimeout(function () {
-          self.fetchData({ fetchDispute: true })
-        }, 1000)
+          this.fetchData({ fetchDispute: true, fetchMessages: true })
+        }.bind(this), 1000)
       })
     },
     sendChatMessage () {

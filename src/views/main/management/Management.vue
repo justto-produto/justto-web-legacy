@@ -8,8 +8,8 @@
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         Casos selecionados: {{ selectedIds.length }}
         <div>
-          <el-button plain @click="sendBatchAction('ACCEPTED')">{{ $t('action.ACCEPTED') }}</el-button>
-          <el-button plain @click="sendBatchAction('REFUSED')">{{ $t('action.REFUSED') }}</el-button>
+          <el-button plain @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
+          <el-button plain @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
           <el-button plain @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
           <el-button plain @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
           <el-button plain @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
@@ -710,6 +710,13 @@ export default {
                 })
               }, 300)
             }
+          })
+        }).catch(error => {
+          console.error(error)
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
           })
         })
       })
