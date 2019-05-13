@@ -57,7 +57,9 @@
       "CHECKOUT": "acordo sem dados bancários",
       "REFUSED": "perdido",
       "RUNNING": "engajamento",
-      "ARCHIVED": "arquivado"
+      "ARCHIVED": "arquivado",
+      "SETTLED": "ganho",
+      "UNSETTLED": "perdido"
     }
   },
   "profile": {
@@ -66,8 +68,8 @@
   },
   "action":{
     "RESTART_ENGAGEMENT": "reiniciar engajamento",
-    "ACCEPTED": "ganhar",
-    "REFUSED": "perder",
+    "SETTLED": "ganhar",
+    "UNSETTLED": "perder",
     "DELETE": "excluir",
     "PAUSED": "pausar",
     "RESUME": "retomar",

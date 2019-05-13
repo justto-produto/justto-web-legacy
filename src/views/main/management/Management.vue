@@ -2,37 +2,14 @@
   <JusViewMain class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <!-- <div class="view-management__carousel-container">
-        <owl-carousel
-          :items="2"
-          :nav="true"
-          :dots="false"
-          :loop="true"
-          :rewind="false"
-          :margin="20"
-          :nav-text="carouselIcons()"
-          class="view-management__carousel-slider">
-          <el-card class="view-management__info-card el-card--bg-secondary" shadow="never">
-            10% das suas contrapropostas foram aceitas
-            <el-button type="transparent">Ver casos</el-button>
-          </el-card>
-          <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
-            Você possui casos que precisam da sua revisão
-            <el-button type="transparent" @click="$router.push('management/review')">Resolver</el-button>
-          </el-card>
-          <el-card class="view-management__info-card el-card--bg-primary" shadow="never">
-            Você possui casos que precisam da sua revisão
-            <el-button type="transparent">Resolver</el-button>
-          </el-card>
-        </owl-carousel>
-      </div> -->
+      <carousel />
     </template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         Casos selecionados: {{ selectedIds.length }}
         <div>
-          <el-button plain @click="sendBatchAction('ACCEPTED')">{{ $t('action.ACCEPTED') }}</el-button>
-          <el-button plain @click="sendBatchAction('REFUSED')">{{ $t('action.REFUSED') }}</el-button>
+          <el-button plain @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
+          <el-button plain @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
           <el-button plain @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
           <el-button plain @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
           <el-button plain @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
@@ -97,12 +74,12 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.f1 }}
-                  </span>
+                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.name }}
+                  </div>
                   <ul>
                     <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.f1 }}
+                      {{ claimant.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -117,12 +94,12 @@
                 <el-popover
                   title="Advogados da parte"
                   trigger="hover">
-                  <span v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                    {{ lawyer.f1 }}
-                  </span>
+                  <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
+                    {{ lawyer.name }}
+                  </div>
                   <ul>
                     <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                      {{ lawyer.f1 }}
+                      {{ lawyer.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -214,12 +191,12 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.f1 }}
-                  </span>
+                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.name }}
+                  </div>
                   <ul>
                     <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.f1 }}
+                      {{ claimant.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -234,12 +211,12 @@
                 <el-popover
                   title="Advogados da parte"
                   trigger="hover">
-                  <span v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                    {{ lawyer.f1 }}
-                  </span>
+                  <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
+                    {{ lawyer.name }}
+                  </div>
                   <ul>
                     <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                      {{ lawyer.f1 }}
+                      {{ lawyer.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -325,12 +302,12 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.f1 }}
-                  </span>
+                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.name }}
+                  </div>
                   <ul>
                     <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.f1 }}
+                      {{ claimant.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -345,12 +322,12 @@
                 <el-popover
                   title="Advogados da parte"
                   trigger="hover">
-                  <span v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                    {{ lawyer.f1 }}
-                  </span>
+                  <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
+                    {{ lawyer.name }}
+                  </div>
                   <ul>
                     <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                      {{ lawyer.f1 }}
+                      {{ lawyer.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -427,12 +404,12 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.f1 }}
-                  </span>
+                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.name }}
+                  </div>
                   <ul>
                     <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.f1 }}
+                      {{ claimant.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -512,13 +489,13 @@
 </template>
 
 <script>
-import OwlCarousel from 'vue-owl-carousel'
 import JusManagementFilters from '@/components/others/JusManagementFilters'
+import Carousel from './carousel/Carousel'
 
 export default {
   name: 'Management',
   components: {
-    OwlCarousel,
+    Carousel,
     JusManagementFilters
   },
   data () {
@@ -658,11 +635,6 @@ export default {
         }
       }
     },
-    carouselIcons () {
-      let prevIcon = require('@/assets/icons/ic-left.svg')
-      let nextIcon = require('@/assets/icons/ic-right.svg')
-      return ['<img src="' + prevIcon + '">', '<img src="' + nextIcon + '">']
-    },
     getActiveTabLabel (newTab) {
       let newActive
       switch (newTab) {
@@ -739,6 +711,13 @@ export default {
               }, 300)
             }
           })
+        }).catch(error => {
+          console.error(error)
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
         })
       })
     },
@@ -789,10 +768,14 @@ export default {
 
 <style lang="scss">
 .view-management {
-  &__carousel-container{
-    width: 67%;
-    display: flex;
-    align-items: center;
+  .jus-main-view__title {
+    position: relative;
+  }
+  &__carousel-container {
+    position: absolute;
+    top: -26px;
+    right: 0;
+    width: 70%;
     > span {
       display: flex;
       align-items: center;
@@ -805,8 +788,8 @@ export default {
     .owl-nav {
       position: absolute;
       top: 0;
-      left: 0;
-      right: 0;
+      left: 4px;
+      right: -6px;
       bottom: 0;
       margin: 0px -31px 0 -41px;
       display: flex;
@@ -824,9 +807,6 @@ export default {
   &__carousel-slider {
     width: calc(100% - 40px);
     margin: 0 10px;
-  }
-  &__interactionType-icon {
-    margin-right: 10px;
   }
   &__tabs {
     .el-table__header {
@@ -869,26 +849,6 @@ export default {
     img {
       vertical-align: sub;
       width: 14px;
-    }
-  }
-  .view-management__info-card {
-    width: 100%;
-    font-weight: 300;
-    height: 74px;
-    + .view-management__info-card {
-      margin-left: 20px;
-    }
-    .el-card__body {
-      padding: 0px 20px;
-      padding: 16px;
-      height: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .el-button {
-      margin-left: 20px;
-      max-width: 100px;
     }
   }
   .jus-main-view__main-card > .el-card__body {
