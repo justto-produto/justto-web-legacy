@@ -94,7 +94,9 @@
               :titles="['Workspace', 'Caso']"
               :button-texts="['Remover', 'Adcionar']"
               :data="workspaceNegotiators"
-              v-model="disputeNegotiators" />
+              v-model="disputeNegotiators"
+              filter-placeholder="Buscar"
+              filterable />
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
@@ -214,29 +216,7 @@ export default {
     CaseSummary, CaseMessages, CaseOverview
   },
   data () {
-    // const setWorkspaceNegotiators = _ => {
-    //   const allNegotiators = []
-    //   this.workspaceNegotiators.forEach((name, index) => {
-    //     allNegotiators.push({
-    //       label: name,
-    //       key: index
-    //     })
-    //   })
-    //   return allNegotiator
-    // }
-    // const setCaseNegotiators = _ => {
-    //   const thisNegotiators = []
-    //   this.disputeNegotiators.forEach((name, index) => {
-    //     thisNegotiators.push({
-    //       label: name,
-    //       key: index
-    //     })
-    //   })
-    //   return thisNegotiators
-    // }
     return {
-      // allNegotiators: setWorkspaceNegotiators(),
-      // thisNegotiators: setCaseNegotiators(),
       editNegotiatorDialogVisible: false,
       dispute: {},
       loadingDispute: false,
@@ -301,6 +281,25 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
+    editNegotiators () {
+      this.$store.dispatch('editNegotiators', { negotiators: this.disputeNegotiators, disputeId: this.dispute.id }).then(() => {
+        // window.analytics.track('Negociadores alterados')
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Negociadores editados com sucesso.',
+          type: 'success'
+        })
+        // setTimeout(function () {
+        //   this.$emit('case:refresh')
+        // }.bind(this), 1000)
+      }).catch(() => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      })
+    },
     editNegotiator () {
       this.disputeNegotiators = this.dispute.disputeRoles.filter((negotiator) => {
         return negotiator.roles.includes('NEGOTIATOR') === true
