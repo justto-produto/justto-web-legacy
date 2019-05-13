@@ -32,7 +32,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'range': { 'disputeexpirationdate': { 'gte': 'now/d', 'lte': 'now/d+3d' } } } ],
+        must: [ { 'range': { 'disputeexpirationdate': { 'gte': 'now/d', 'lte': 'now/d+3d' } } } ],
         shows: true
       }, {
         title: 'Casos sem e-mail válido',
@@ -40,7 +40,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'hasvalidemail': false } } ],
+        must: [ { 'match': { 'hasvalidemail': false } } ],
         shows: true
       }, {
         title: 'Casos com contraproposta até 20% acima da alçada',
@@ -57,7 +57,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'disputehasinteractions': true } } ],
+        must: [ { 'match': { 'disputehasinteractions': true } } ],
         shows: true
       }, {
         title: 'Casos sem celular válido',
@@ -65,7 +65,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'hasvalidphone': false } } ],
+        must: [ { 'match': { 'hasvalidphone': false } } ],
         shows: true
       }, {
         title: 'Casos que nossas tentativas de engajamento encerraram',
@@ -73,7 +73,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'disputestatus': 'ENGAGEMENT' } }, { 'range': { 'communicationmsgtotalschedulled': { 'lte': 0 } } } ],
+        must: [ { 'match': { 'disputestatus': 'ENGAGEMENT' } }, { 'range': { 'communicationmsgtotalschedulled': { 'lte': 0 } } } ],
         shows: true
       }],
       componentKey: false
