@@ -93,10 +93,8 @@
             <el-transfer
               :titles="['Workspace', 'Caso']"
               :button-texts="['Remover', 'Adcionar']"
-              :data="allNegotiators"
-              v-model="thisNegotiators"
-              filterable
-              filter-placeholder="Buscar" />
+              :data="workspaceNegotiators"
+              v-model="disputeNegotiators" />
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
@@ -216,29 +214,29 @@ export default {
     CaseSummary, CaseMessages, CaseOverview
   },
   data () {
-    const setWorkspaceNegotiators = _ => {
-      const allNegotiators = []
-      this.workspaceNegotiators.forEach((name, index) => {
-        allNegotiators.push({
-          label: name,
-          key: index
-        })
-      })
-      return allNegotiator
-    }
-    const setCaseNegotiators = _ => {
-      const thisNegotiators = []
-      this.disputeNegotiators.forEach((name, index) => {
-        thisNegotiators.push({
-          label: name,
-          key: index
-        })
-      })
-      return thisNegotiators
-    }
+    // const setWorkspaceNegotiators = _ => {
+    //   const allNegotiators = []
+    //   this.workspaceNegotiators.forEach((name, index) => {
+    //     allNegotiators.push({
+    //       label: name,
+    //       key: index
+    //     })
+    //   })
+    //   return allNegotiator
+    // }
+    // const setCaseNegotiators = _ => {
+    //   const thisNegotiators = []
+    //   this.disputeNegotiators.forEach((name, index) => {
+    //     thisNegotiators.push({
+    //       label: name,
+    //       key: index
+    //     })
+    //   })
+    //   return thisNegotiators
+    // }
     return {
-      allNegotiators: setWorkspaceNegotiators(),
-      thisNegotiators: setCaseNegotiators(),
+      // allNegotiators: setWorkspaceNegotiators(),
+      // thisNegotiators: setCaseNegotiators(),
       editNegotiatorDialogVisible: false,
       dispute: {},
       loadingDispute: false,
@@ -253,7 +251,10 @@ export default {
       showScheduled: false,
       activePerson: {},
       newChatMessage: '',
-      componentKey: 0
+      componentKey: 0,
+      disputeNegotiators: [],
+      negotiatorsForm: {},
+      negotiatorsRules: {}
     }
   },
   computed: {
@@ -261,11 +262,12 @@ export default {
       return this.dispute.favorite
     },
     workspaceNegotiators () {
-      return this.$store.state.workspaceModule.members
-    },
-    disputeNegotiators () {
-      return this.dispute.disputeRoles.filter((negotiator) => {
-        return negotiator.roles.includes('NEGOTIATOR') === true
+      return this.$store.state.workspaceModule.members.map(member => {
+        let newMember = {}
+        newMember.key = member.person.id
+        newMember.label = member.person.name
+        newMember.value = member
+        return newMember
       })
     }
   },
@@ -300,6 +302,11 @@ export default {
   },
   methods: {
     editNegotiator () {
+      this.disputeNegotiators = this.dispute.disputeRoles.filter((negotiator) => {
+        return negotiator.roles.includes('NEGOTIATOR') === true
+      }).map(member => {
+        return member.person.id
+      })
       this.editNegotiatorDialogVisible = true
     },
     removeCase () {
