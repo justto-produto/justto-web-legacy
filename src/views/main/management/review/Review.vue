@@ -10,6 +10,82 @@
     </template>
     <template slot="main">
       <el-table
+        ref="allTable"
+        :data="cases"
+        size="small"
+        class="el-table--card">
+        <el-table-column type="selection" />
+        <el-table-column
+          label="Campanha"
+          width="175px"
+          class-name="fixed-width"
+          label-class-name="fixed-width">
+          <template slot-scope="scope">{{ scope.row.campaignname }}</template>
+        </el-table-column>
+        <el-table-column
+          label="Parte(s) contrária(s)"
+          width="175px"
+          class-name="fixed-width"
+          label-class-name="fixed-width">
+          <template slot-scope="scope">
+            <el-popover
+              title="Partes contrárias"
+              trigger="hover">
+              <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                {{ claimant.name }}
+              </div>
+              <ul>
+                <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
+                  {{ claimant.name }}
+                </li>
+              </ul>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="Nº do caso">
+          <template slot-scope="scope">{{ scope.row.disputecode }}</template>
+        </el-table-column>
+        <el-table-column label="Estratégia">
+          <template slot-scope="scope">{{ scope.row.strategyname }}</template>
+        </el-table-column>
+        <el-table-column label="Status">
+          <template v-if="scope.row.disputestatus" slot-scope="scope">
+            {{ $t('occurrence.type.' + scope.row.disputestatus) }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="Ações"
+          class-name="view-management__row-actions"
+          width="110px"
+          align="center">
+          <template slot-scope="scope">
+            <el-popover trigger="hover">
+              <div>
+                <strong>Responsáveis:</strong><br>
+                <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
+                  {{ negotiator.f1 }}
+                </span>
+              </div>
+              <br>
+              <div>
+                <strong>Estratégia:</strong><br>
+                {{ scope.row.strategyname }}
+              </div>
+              <jus-icon slot="reference" icon="more-info" />
+            </el-popover>
+            <el-tooltip content="Visualizar caso">
+              <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
+                <jus-icon icon="open-case" style="margin-left: 10px;" />
+              </router-link>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <template v-if="!$store.state.loading" slot="empty">
+          <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
+          <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
+        </template>
+      </el-table>
+      <!-- <el-table
         ref="reviewTable"
         :data="cases"
         size="small"
@@ -18,12 +94,12 @@
         <el-table-column label="Campanha">
           <template slot-scope="scope">
             {{ scope.row.campaignname }}
-            <!-- <jus-icon icon="alert" /> -->
+            <jus-icon icon="alert" />
           </template>
         </el-table-column>
         <el-table-column label="Indetificação">
           <template slot-scope="scope">{{ scope.row.disputecode }}
-            <!-- <jus-icon icon="alert" /> -->
+            <jus-icon icon="alert" />
           </template>
         </el-table-column>
         <el-table-column label="Alçada máxima">
@@ -34,7 +110,7 @@
         </el-table-column>
         <el-table-column label="CPF/CNPJ">
           <template slot-scope="scope">{{ scope.row.claiments[0].document_number }}
-            <!-- <jus-icon icon="alert" /> -->
+            <jus-icon icon="alert" />
           </template>
         </el-table-column>
         <el-table-column
@@ -47,7 +123,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> -->
     </template>
   </JusViewMain>
 </template>
