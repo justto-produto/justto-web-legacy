@@ -74,7 +74,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'disputestatus': 'ENGAGEMENT' } }, { 'range': { 'communicationmsgtotalschedulled': { 'lte': 0 } } } ],
+        must: [ { 'match': { 'disputestatus': 'ENGAGEMENT' } }, { 'match': { 'communicationmsgtotalallsented': true } } ],
         shows: true
       }],
       componentKey: false
