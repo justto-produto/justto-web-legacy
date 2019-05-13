@@ -49,7 +49,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } } ],
+        must: [],
         filter: { 'range': { 'lastofferbyupperrangepercent': { 'gte': 100, 'lte': 120 } } },
         shows: true
       }, {
