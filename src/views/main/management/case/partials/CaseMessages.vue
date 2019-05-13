@@ -25,14 +25,13 @@
           </div>
           <div class="case-view-messages__message-time">
             {{ message.executionDateTime | moment('HH:mm') }}
-            <!-- <span v-if="directionClass(message) !== 'note'">
-              • <jus-icon icon="mobile" /> •
-              Visualizado •
-              Edinalva
+            <span v-if="directionClass(message) !== 'note'">
+              • <jus-icon :icon="getMessageIcon(message.message.type)" /> •
+              {{ message.message.senderName | firstName }}
             </span>
             <span v-else>
-              Nota
-            </span> -->
+              • Nota
+            </span>
           </div>
         </div>
         <jus-avatar-user
@@ -165,6 +164,24 @@ export default {
           return false
         } return true
       } return true
+    },
+    getMessageIcon (type) {
+      switch (type) {
+        case 'CNA':
+          return 'cna'
+        case 'EMAIL':
+          return 'email'
+        case 'WHATSAPP':
+          return 'whatsapp'
+        case 'SMS':
+          return 'sms'
+        case 'TTS':
+          return 'tts'
+        case 'PUSH_NOTIFICATION':
+          return 'notification'
+        default:
+          return 'chat'
+      }
     }
   }
 }
