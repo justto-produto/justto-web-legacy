@@ -345,21 +345,23 @@ export default {
       })
     },
     sendChatMessage () {
-      this.$store.dispatch('sendMessageEvent', {
-        id: this.dispute.id,
-        data: {
-          value: this.newChatMessage,
-          sender: {
-            personId: this.$store.getters.personId,
-            name: this.$store.getters.personName
+      if (this.newChatMessage.length > 0) {
+        this.$store.dispatch('sendMessageEvent', {
+          id: this.dispute.id,
+          data: {
+            value: this.newChatMessage,
+            sender: {
+              personId: this.$store.getters.personId,
+              name: this.$store.getters.personName
+            }
           }
-        }
-      }).then(() => {
-        this.newChatMessage = ''
-        setTimeout(function () {
-          this.fetchData({ fetchMessages: true })
-        }.bind(this), 500)
-      }).catch(error => this.showError(error))
+        }).then(() => {
+          this.newChatMessage = ''
+          setTimeout(function () {
+            this.fetchData({ fetchMessages: true })
+          }.bind(this), 500)
+        }).catch(error => this.showError(error))
+      }
     },
     sendMessage () {
       if (this.newMessage) {
