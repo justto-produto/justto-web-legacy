@@ -74,12 +74,12 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.f1 }}
-                  </span>
+                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.name }}
+                  </div>
                   <ul>
                     <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.f1 }}
+                      {{ claimant.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -94,12 +94,12 @@
                 <el-popover
                   title="Advogados da parte"
                   trigger="hover">
-                  <span v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                    {{ lawyer.f1 }}
-                  </span>
+                  <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
+                    {{ lawyer.name }}
+                  </div>
                   <ul>
                     <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                      {{ lawyer.f1 }}
+                      {{ lawyer.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -191,12 +191,12 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.f1 }}
-                  </span>
+                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.name }}
+                  </div>
                   <ul>
                     <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.f1 }}
+                      {{ claimant.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -211,12 +211,12 @@
                 <el-popover
                   title="Advogados da parte"
                   trigger="hover">
-                  <span v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                    {{ lawyer.f1 }}
-                  </span>
+                  <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
+                    {{ lawyer.name }}
+                  </div>
                   <ul>
                     <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                      {{ lawyer.f1 }}
+                      {{ lawyer.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -302,12 +302,12 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.f1 }}
-                  </span>
+                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.name }}
+                  </div>
                   <ul>
                     <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.f1 }}
+                      {{ claimant.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -322,12 +322,12 @@
                 <el-popover
                   title="Advogados da parte"
                   trigger="hover">
-                  <span v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                    {{ lawyer.f1 }}
-                  </span>
+                  <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
+                    {{ lawyer.name }}
+                  </div>
                   <ul>
                     <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                      {{ lawyer.f1 }}
+                      {{ lawyer.name }}
                     </li>
                   </ul>
                 </el-popover>
@@ -404,12 +404,12 @@
                 <el-popover
                   title="Partes contrárias"
                   trigger="hover">
-                  <span v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.f1 }}
-                  </span>
+                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                    {{ claimant.name }}
+                  </div>
                   <ul>
                     <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.f1 }}
+                      {{ claimant.name }}
                     </li>
                   </ul>
                 </el-popover>

@@ -23,7 +23,7 @@ export default {
     subtitle () {
       if (this.slide.subtitle) {
         return this.slide.subtitle + '.'
-      } return
+      }
     },
     bgClass () {
       switch (this.slide.color) {

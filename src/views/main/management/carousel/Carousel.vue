@@ -11,7 +11,7 @@
       :autoplay="false"
       :nav-text="carouselIcons()"
       class="view-management__carousel-slider">
-      <div v-for="slide in filteredSlides">
+      <div v-for="slide in filteredSlides" :key="slide.title">
         <jus-carousel-card :slide="slide" />
       </div>
     </owl-carousel>
