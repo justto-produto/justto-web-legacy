@@ -1,21 +1,25 @@
 <template lang="html">
-  <div class="view-management__carousel-container">
-    <owl-carousel
-      :key="componentKey"
-      :items="2"
-      :nav="true"
-      :dots="false"
-      :loop="true"
-      :rewind="false"
-      :margin="20"
-      :autoplay="false"
-      :nav-text="carouselIcons()"
-      class="view-management__carousel-slider">
-      <div v-for="slide in filteredSlides" :key="slide.title">
-        <jus-carousel-card :slide="slide" />
-      </div>
-    </owl-carousel>
-  </div>
+  <transition name="el-fade-in">
+    <div v-show="componentKey" class="view-management__carousel-container">
+      <owl-carousel
+        :key="componentKey"
+        :items="2"
+        :nav="true"
+        :dots="false"
+        :loop="false"
+        :rewind="true"
+        :margin="20"
+        :mouse-drag="false"
+        :touch-drag="false"
+        :autoplay="false"
+        :nav-text="carouselIcons()"
+        class="view-management__carousel-slider">
+        <div v-for="slide in filteredSlides" :key="slide.title">
+          <jus-carousel-card :slide="slide" />
+        </div>
+      </owl-carousel>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -32,7 +36,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'range': { 'disputeexpirationdate': { 'gte': 'now/d', 'lte': 'now/d+3d' } } } ],
+        must: [ { 'range': { 'disputeexpirationdate': { 'gte': 'now/d', 'lte': 'now/d+3d' } } } ],
         shows: true
       }, {
         title: 'Casos sem e-mail válido',
@@ -40,7 +44,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'hasvalidemail': false } } ],
+        must: [ { 'match': { 'hasvalidemail': false } } ],
         shows: true
       }, {
         title: 'Casos com contraproposta até 20% acima da alçada',
@@ -48,7 +52,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } } ],
+        must: [],
         filter: { 'range': { 'lastofferbyupperrangepercent': { 'gte': 100, 'lte': 120 } } },
         shows: true
       }, {
@@ -57,7 +61,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'disputehasinteractions': true } } ],
+        must: [ { 'match': { 'disputehasinteractions': true } } ],
         shows: true
       }, {
         title: 'Casos sem celular válido',
@@ -65,7 +69,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'hasvalidphone': false } } ],
+        must: [ { 'match': { 'hasvalidphone': false } } ],
         shows: true
       }, {
         title: 'Casos que nossas tentativas de engajamento encerraram',
@@ -73,10 +77,10 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'workspaceid': 12 } }, { 'match': { 'disputestatus': 'ENGAGEMENT' } }, { 'range': { 'communicationmsgtotalschedulled': { 'lte': 0 } } } ],
+        must: [ { 'match': { 'disputestatus': 'ENGAGEMENT' } }, { 'match': { 'communicationmsgtotalallsented': true } } ],
         shows: true
       }],
-      componentKey: false
+      componentKey: 0
     }
   },
   computed: {
@@ -110,7 +114,7 @@ export default {
     }))
     Promise.all(promises).finally(() => {
       setTimeout(function () {
-        this.componentKey = true
+        this.componentKey = this.componentKey + 1
       }.bind(this), 1000)
     })
   },

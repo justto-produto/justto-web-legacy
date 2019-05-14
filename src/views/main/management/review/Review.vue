@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain class="view-management-review">
+  <JusViewMain class="view-management-review view-management">
     <template slot="title">
       <h1 class="ticket-view__title">
         <router-link to="/management">
@@ -9,11 +9,26 @@
       </h1>
     </template>
     <template slot="main">
+      <div :class="{'active': multiActive}" class="view-management__multi-actions">
+        Casos selecionados: {{ selectedIds.length }}
+        <div>
+          <el-button plain @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
+          <el-button plain @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
+          <el-button plain @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
+          <el-button plain @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
+          <el-button plain @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
+          <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
+          <!-- <el-button plain @click="sendBatchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
+          <!-- <el-button plain @click="sendBatchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
+        </div>
+        <i class="el-icon-close" @click="clearSelection()"/>
+      </div>
       <el-table
         ref="allTable"
         :data="cases"
         size="small"
-        class="el-table--card">
+        class="el-table--card"
+        @selection-change="handleSelectionChange">
         <el-table-column type="selection" />
         <el-table-column
           label="Campanha"
@@ -85,45 +100,6 @@
           <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
         </template>
       </el-table>
-      <!-- <el-table
-        ref="reviewTable"
-        :data="cases"
-        size="small"
-        class="el-table--card">
-        <el-table-column type="index" />
-        <el-table-column label="Campanha">
-          <template slot-scope="scope">
-            {{ scope.row.campaignname }}
-            <jus-icon icon="alert" />
-          </template>
-        </el-table-column>
-        <el-table-column label="Indetificação">
-          <template slot-scope="scope">{{ scope.row.disputecode }}
-            <jus-icon icon="alert" />
-          </template>
-        </el-table-column>
-        <el-table-column label="Alçada máxima">
-          <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
-        </el-table-column>
-        <el-table-column label="Nome">
-          <template slot-scope="scope">{{ scope.row.claiments[0].name }}</template>
-        </el-table-column>
-        <el-table-column label="CPF/CNPJ">
-          <template slot-scope="scope">{{ scope.row.claiments[0].document_number }}
-            <jus-icon icon="alert" />
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="right">
-          <template slot-scope="scope">
-            <el-tooltip content="Visualizar caso">
-              <router-link :to="{ name: 'case', params: { id: scope.row.disputeid } }">
-                <jus-icon icon="open-case" />
-              </router-link>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table> -->
     </template>
   </JusViewMain>
 </template>
@@ -133,12 +109,16 @@ export default {
   name: 'Review',
   data () {
     return {
-      cases: []
+      cases: [],
+      selectedIds: []
     }
   },
   computed: {
     slide () {
       return this.$route.params.slide
+    },
+    multiActive () {
+      return this.selectedIds.length >= 1
     }
   },
   beforeCreate () {
@@ -161,6 +141,56 @@ export default {
     }).finally(() => {
       this.$store.dispatch('hideLoading')
     })
+  },
+  methods: {
+    handleSelectionChange (selected) {
+      this.selectedIds = []
+      for (let dispute of selected) {
+        if (dispute && dispute.disputeid) {
+          this.selectedIds.push(dispute.disputeid)
+        }
+      }
+    },
+    clearSelection () {
+      if (this.$refs.allTable) this.$refs.allTable.clearSelection()
+    },
+    sendBatchAction (action) {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('sendBatchAction', {
+          type: action,
+          disputeIds: this.selectedIds
+        }).then(response => {
+          let self = this
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
+            type: 'success',
+            onClose () {
+              setTimeout(function () {
+                self.$jusNotification({
+                  title: 'Fique atento!',
+                  message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
+                  Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
+                  type: 'info',
+                  duration: 0
+                })
+              }, 300)
+            }
+          })
+        }).catch(error => {
+          console.error(error)
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
+        })
+      })
+    }
   }
 }
 </script>
