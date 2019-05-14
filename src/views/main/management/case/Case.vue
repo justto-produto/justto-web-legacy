@@ -54,6 +54,11 @@
               <jus-icon icon="pause" />
             </el-button>
           </el-tooltip>
+          <el-tooltip content="Alterar Negociador">
+            <el-button plain @click="editNegotiator()">
+              <jus-icon icon="delegate" />
+            </el-button>
+          </el-tooltip>
           <!-- <el-tooltip content="snooze">
             <el-button plain @click="doAction('move')">
               <jus-icon icon="snooze" />
@@ -75,6 +80,29 @@
             </el-input>
           </div>
         </div>
+        <el-dialog
+          :visible.sync="editNegotiatorDialogVisible"
+          title="Editar negociadores do caso"
+          width="600px">
+          <el-form
+            ref="negotiatorsForm"
+            :model="negotiatorsForm"
+            :rules="negotiatorsRules"
+            label-position="top"
+            @submit.native.prevent="editNegotiator">
+            <el-transfer
+              :titles="['Workspace', 'Caso']"
+              :button-texts="['Remover', 'Adcionar']"
+              :data="workspaceNegotiators"
+              v-model="disputeNegotiators"
+              filter-placeholder="Buscar"
+              filterable />
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
+            <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
+          </span>
+        </el-dialog>
         <case-messages
           :messages-prop="filteredDisputeMessages"
           :loading="loadingDisputeMessages"
@@ -189,6 +217,7 @@ export default {
   },
   data () {
     return {
+      editNegotiatorDialogVisible: false,
       dispute: {},
       loadingDispute: false,
       disputeMessages: [],
@@ -202,12 +231,24 @@ export default {
       showScheduled: false,
       activePerson: {},
       newChatMessage: '',
-      componentKey: 0
+      componentKey: 0,
+      disputeNegotiators: [],
+      negotiatorsForm: {},
+      negotiatorsRules: {}
     }
   },
   computed: {
     isFavorite () {
       return this.dispute.favorite
+    },
+    workspaceNegotiators () {
+      return this.$store.state.workspaceModule.members.map(member => {
+        let newMember = {}
+        newMember.key = member.person.id
+        newMember.label = member.person.name
+        newMember.value = member
+        return newMember
+      })
     }
   },
   watch: {
@@ -237,6 +278,34 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
+    editNegotiators () {
+      this.$store.dispatch('editNegotiators', { negotiators: this.disputeNegotiators, disputeId: this.dispute.id }).then(() => {
+        // window.analytics.track('Negociadores alterados')
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Negociadores editados com sucesso.',
+          type: 'success'
+        })
+        setTimeout(function () {
+          this.fetchData({ fetchDispute: true })
+        }.bind(this), 1000)
+        this.editNegotiatorDialogVisible = false
+      }).catch(() => {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      })
+    },
+    editNegotiator () {
+      this.disputeNegotiators = this.dispute.disputeRoles.filter((negotiator) => {
+        return negotiator.roles.includes('NEGOTIATOR') === true
+      }).map(member => {
+        return member.person.id
+      })
+      this.editNegotiatorDialogVisible = true
+    },
     removeCase () {
       this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
@@ -424,6 +493,21 @@ export default {
 
 <style lang="scss">
 .case-view {
+  &__list {
+    margin: 20 0px;
+    padding-left: 2px;
+    li {
+      margin-top: 12px;
+      list-style: none;
+      :first-child {
+        margin-right: 10px;
+      }
+      :last-child {
+        vertical-align: text-top;
+        float: right;
+      }
+    }
+  }
   &__section-messages {
     display: flex;
     flex-direction: column;
@@ -538,6 +622,10 @@ export default {
       border-radius: 5px;
       padding: 11px;
     }
+    img {
+      width: 16px;
+      height: 16px;
+    }
   }
   &__side-content {
     margin: 20px 0 0;
@@ -604,6 +692,13 @@ export default {
       .el-input {
         display: inline-block;
       }
+    }
+  }
+  .el-input-group__append {
+    border-color: #9462f7;
+    background-color: #9462f7;
+    img {
+      margin-top: 1px;
     }
   }
 }

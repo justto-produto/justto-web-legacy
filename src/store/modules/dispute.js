@@ -4,6 +4,18 @@ const dispute = {
   mutations: {
   },
   actions: {
+    editNegotiators ({ commit }, negotiators) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/disputes/' + negotiators.disputeId + '/negotiators', {negotiatorsId: negotiators.negotiators})
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
     getDispute ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -107,6 +119,7 @@ const dispute = {
     },
     removeCase ({ commit }, disputeId) {
       return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
         axios.delete('api/disputes/' + disputeId)
           .then(response => {
             resolve(response.data)
