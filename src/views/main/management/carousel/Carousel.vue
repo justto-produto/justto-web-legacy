@@ -6,10 +6,11 @@
         :items="2"
         :nav="true"
         :dots="false"
-        :loop="true"
-        :rewind="false"
+        :loop="false"
+        :rewind="true"
         :margin="20"
         :mouse-drag="false"
+        :touch-drag="false"
         :autoplay="false"
         :nav-text="carouselIcons()"
         class="view-management__carousel-slider">
