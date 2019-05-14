@@ -172,7 +172,7 @@ export default {
     getMessageIcon (message) {
       if (message) {
         switch (message.type) {
-          case 'CNA':
+          case 'EMAIL_CNA':
             return 'cna'
           case 'EMAIL':
             return 'email'
