@@ -34,7 +34,7 @@
               </span>
             </span>
             <span v-else>
-              • Nota
+              Nota
             </span>
           </div>
         </div>
