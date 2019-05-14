@@ -8,7 +8,7 @@
       :loop="true"
       :rewind="false"
       :margin="20"
-      :mouseDrag="false"
+      :mouse-drag="false"
       :autoplay="false"
       :nav-text="carouselIcons()"
       class="view-management__carousel-slider">

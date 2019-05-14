@@ -348,6 +348,7 @@ export default {
     },
     sendChatMessage () {
       if (this.newChatMessage.length > 0) {
+        this.newChatMessage = this.newChatMessage.charAt(0).toUpperCase() + this.newChatMessage.slice(1)
         this.$store.dispatch('sendMessageEvent', {
           id: this.dispute.id,
           data: {
@@ -366,7 +367,8 @@ export default {
       }
     },
     sendMessage () {
-      if (this.newMessage) {
+      if (this.newMessage.length > 0) {
+        this.newMessage = this.newMessage.charAt(0).toUpperCase() + this.newMessage.slice(1)
         this.$store.dispatch('send' + this.messageType, {
           to: [this.activePerson.id],
           message: this.newMessage,
