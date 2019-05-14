@@ -390,6 +390,7 @@ export default {
     },
     sendNote () {
       if (this.newNote) {
+        this.newNote = this.newNote.charAt(0).toUpperCase() + this.newNote.slice(1)
         this.$store.dispatch('sendDisputeNote', {
           note: this.newNote,
           disputeId: this.dispute.id
