@@ -1,22 +1,24 @@
 <template lang="html">
-  <div class="view-management__carousel-container">
-    <owl-carousel
-      :key="componentKey"
-      :items="2"
-      :nav="true"
-      :dots="false"
-      :loop="true"
-      :rewind="false"
-      :margin="20"
-      :mouse-drag="false"
-      :autoplay="false"
-      :nav-text="carouselIcons()"
-      class="view-management__carousel-slider">
-      <div v-for="slide in filteredSlides" :key="slide.title">
-        <jus-carousel-card :slide="slide" />
-      </div>
-    </owl-carousel>
-  </div>
+  <transition name="el-fade-in">
+    <div v-show="componentKey" class="view-management__carousel-container">
+      <owl-carousel
+        :key="componentKey"
+        :items="2"
+        :nav="true"
+        :dots="false"
+        :loop="true"
+        :rewind="false"
+        :margin="20"
+        :mouse-drag="false"
+        :autoplay="false"
+        :nav-text="carouselIcons()"
+        class="view-management__carousel-slider">
+        <div v-for="slide in filteredSlides" :key="slide.title">
+          <jus-carousel-card :slide="slide" />
+        </div>
+      </owl-carousel>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -77,7 +79,7 @@ export default {
         must: [ { 'match': { 'disputestatus': 'ENGAGEMENT' } }, { 'match': { 'communicationmsgtotalallsented': true } } ],
         shows: true
       }],
-      componentKey: false
+      componentKey: 0
     }
   },
   computed: {
@@ -111,7 +113,7 @@ export default {
     }))
     Promise.all(promises).finally(() => {
       setTimeout(function () {
-        this.componentKey = true
+        this.componentKey = this.componentKey + 1
       }.bind(this), 1000)
     })
   },
