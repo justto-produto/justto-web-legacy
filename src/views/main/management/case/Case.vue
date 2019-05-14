@@ -289,9 +289,10 @@ export default {
           message: 'Negociadores editados com sucesso.',
           type: 'success'
         })
-        // setTimeout(function () {
-        //   this.$emit('case:refresh')
-        // }.bind(this), 1000)
+        setTimeout(function () {
+          this.fetchData({ fetchDispute: true })
+        }.bind(this), 1000)
+        this.editNegotiatorDialogVisible = false
       }).catch(() => {
         this.$jusNotification({
           title: 'Ops!',

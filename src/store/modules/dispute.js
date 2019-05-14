@@ -7,10 +7,7 @@ const dispute = {
     editNegotiators ({ commit }, negotiators) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('api/disputes/' + negotiators.disputeId + '/negotiators', {
-          disputeId: negotiators.disputeId,
-          negotiatorsId: negotiators.negotiators
-        })
+        axios.put('api/disputes/' + negotiators.disputeId + '/negotiators', {negotiatorsId: negotiators.negotiators})
           .then(response => {
             resolve(response.data)
           })
