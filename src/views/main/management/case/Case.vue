@@ -111,19 +111,26 @@
         <div class="case-view__send-message">
           <el-tabs ref="messageTab" value="1" @tab-click="handleTabClick">
             <el-tab-pane label="Mensagem" name="1">
-              <el-tooltip :disabled="!!activePerson.id" content="Escolha um destinatário ao lado para receber sua mensagem">
-                <el-card shadow="always" class="case-view__send-message-box">
-                  <el-collapse-transition>
-                    <el-input
-                      v-show="activePerson.id"
-                      ref="textarea"
-                      :rows="3"
-                      v-model="newMessage"
-                      type="textarea"
-                      placeholder="Escreva alguma coisa" />
-                  </el-collapse-transition>
-                  <div class="case-view__send-message-actions">
-                    <div v-if="activePerson.id">
+              <el-card shadow="always" class="case-view__send-message-box">
+                <el-collapse-transition>
+                  <el-input
+                    v-show="activePerson.id && this.$store.state.accountModule.name"
+                    ref="textarea"
+                    :rows="3"
+                    v-model="newMessage"
+                    type="textarea"
+                    placeholder="Escreva alguma coisa" />
+                </el-collapse-transition>
+
+                <div class="case-view__send-message-actions">
+                  <el-tooltip v-if="!this.$store.state.accountModule.name" content="Atualize o nome no seu perfil para enviar mensagens">
+                    <div class="case-view__disabled-text">
+                      Configure um nome em seu perfil
+                    </div>
+                  </el-tooltip>
+
+                  <el-tooltip v-else-if="activePerson.id" content="">
+                    <div>
                       <el-tooltip content="Enviar e-mail">
                         <a href="" @click.prevent="setMessageType('email')">
                           <jus-icon :is-active="messageType === 'email'" icon="email"/>
@@ -140,17 +147,27 @@
                         </a>
                       </el-tooltip>
                     </div>
-                    <div v-else class="case-view__disabled-text">
-                      Escreva alguma coisa
-                    </div>
-                    <div>
-                      <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
-                        Enviar
-                      </el-button>
-                    </div>
+                  </el-tooltip>
+
+                  <el-tooltip v-else content="Escolha um destinatário ao lado para receber sua mensagem">
+                      <div class="case-view__disabled-text">
+                        Escolha um destinatário ao lado
+                      </div>
+                  </el-tooltip>
+
+                  <div v-if="this.$store.state.accountModule.name">
+                    <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
+                      Enviar
+                    </el-button>
                   </div>
-                </el-card>
-              </el-tooltip>
+                  <div v-else>
+                    <el-button type="primary" @click="$router.push('profile')">
+                      Configurações
+                    </el-button>
+                  </div>
+
+                </div>
+              </el-card>
             </el-tab-pane>
             <el-tab-pane label="Chat" name="3">
               <el-card shadow="always" class="case-view__send-message-box">
