@@ -227,9 +227,6 @@ export default {
         if (value.constructor === Object && Object.entries(value).length !== 0) {
           this.$refs.messageTab.currentName = '1'
         }
-        setTimeout(function () {
-          this.$refs.textarea.focus()
-        }.bind(this), 100)
       })
     }
   },

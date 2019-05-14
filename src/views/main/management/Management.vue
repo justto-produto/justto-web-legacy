@@ -694,21 +694,20 @@ export default {
             tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
             selecteds: this.selectedIds.length
           })
-          let self = this
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
             type: 'success',
             onClose () {
               setTimeout(function () {
-                self.$jusNotification({
+                this.$jusNotification({
                   title: 'Fique atento!',
                   message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
                   Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
                   type: 'info',
                   duration: 0
                 })
-              }, 300)
+              }.bind(this), 300)
             }
           })
         }).catch(error => {
