@@ -181,7 +181,7 @@
           <el-col v-if="dispute.status == 'ACCEPTED' || dispute.status == 'CHECKOUT'" :span="24">
             <el-form-item label="Valor do acordo" prop="deal">
               <!-- <el-input v-model="caseForm.lastOffer"/> -->
-              <money v-model="caseForm.lastOffer.boundary | currency" v-bind="money" class="el-input__inner" />
+              <money v-model="caseForm.lastOffer.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="12">
@@ -468,7 +468,7 @@ export default {
           })
         })
     },
-    removeCase() {
+    removeCase () {
       this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',

@@ -24,10 +24,14 @@
             </i>
           </div>
           <div class="case-view-messages__message-time">
-            {{ message.executionDateTime | moment('HH:mm') }}
+            <span v-if="message.executionDateTime">
+              {{ message.executionDateTime | moment('HH:mm') }} •
+            </span>
             <span v-if="directionClass(message) !== 'note'">
-              • <jus-icon :icon="getMessageIcon(message.message.type)" /> •
-              {{ message.message.senderName | firstName }}
+              <jus-icon :icon="getMessageIcon(message.message)" />
+              <span v-if="message.message && message.message.senderName">
+                • {{ message.message.senderName | firstName }}
+              </span>
             </span>
             <span v-else>
               • Nota
@@ -139,7 +143,7 @@ export default {
       this.showMessage = true
     },
     directionClass (message) {
-      if (message.message && (message.message.direction === 'INBOUND' || message.message.senderParty === 'RESPONDENT')) {
+      if (message.message && (message.message.direction === 'INBOUND' || message.message.senderParty === 'CLAIMANT')) {
         return 'inbound'
       } else if (message.message && message.message.type === 'NOTE') {
         return 'note'
@@ -165,22 +169,26 @@ export default {
         } return true
       } return true
     },
-    getMessageIcon (type) {
-      switch (type) {
-        case 'CNA':
-          return 'cna'
-        case 'EMAIL':
-          return 'email'
-        case 'WHATSAPP':
-          return 'whatsapp'
-        case 'SMS':
-          return 'sms'
-        case 'TTS':
-          return 'tts'
-        case 'PUSH_NOTIFICATION':
-          return 'notification'
-        default:
-          return 'chat'
+    getMessageIcon (message) {
+      if (message) {
+        switch (message.type) {
+          case 'CNA':
+            return 'cna'
+          case 'EMAIL':
+            return 'email'
+          case 'WHATSAPP':
+            return 'whatsapp'
+          case 'SMS':
+            return 'sms'
+          case 'TTS':
+            return 'tts'
+          case 'PUSH_NOTIFICATION':
+            return 'notification'
+          default:
+            return 'chat'
+        }
+      } else {
+        return 'chat'
       }
     }
   }
