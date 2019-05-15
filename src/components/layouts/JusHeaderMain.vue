@@ -126,6 +126,10 @@ export default {
       return fields
     },
     logout () {
+      window.analytics.track('Logout realizado', {
+        workspace: this.workspace,
+        username: this.name
+      })
       this.$store.dispatch('logout')
     },
     search (term, cb) {
