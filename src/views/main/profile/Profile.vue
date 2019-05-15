@@ -27,7 +27,6 @@
             </el-input>
           </el-form-item>
         </el-form>
-
       </div>
     </template>
     <template slot="right-card">
