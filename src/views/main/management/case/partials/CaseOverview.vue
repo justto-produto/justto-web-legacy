@@ -254,7 +254,7 @@
           <li v-for="(oab, index) in roleForm.oabs" :key="oab.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ oab.number }} {{ oab.state }}
-            <a href="#" @click.prevent="removeOab({disputeId: dispute.id, id: oab.id}, roleForm.oabs, index)">
+            <a href="#" @click.prevent="removeOab({ disputeId: dispute.id, id: oab.id }, roleForm.oabs, index)">
               <img src="@/assets/icons/ic-error.svg">
             </a>
           </li>
@@ -298,7 +298,7 @@
           <li v-for="(email, index) in roleForm.emails" :key="email.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ email.address }}
-            <a href="#" @click.prevent="removeEmail({disputeId: dispute.id, id: email.id}, roleForm.emails, index)">
+            <a href="#" @click.prevent="removeEmail({ disputeId: dispute.id, id: email.id }, roleForm.emails, index)">
               <img src="@/assets/icons/ic-error.svg">
             </a>
           </li>
@@ -344,11 +344,18 @@ export default {
     //     callback()
     //   }
     // }
+    var validateName = (rule, value, callback) => {
+      if (value && value.length > 2) {
+        callback()
+      } else {
+        callback(new Error('Nome precisa conter mais de 3 caracteres.'))
+      }
+    }
     var validatePhone = (rule, value, callback) => {
       if (value) {
         if (value && value.length > 13) {
           callback()
-        } else callback(new Error('Insira um telefone válido'))
+        } else callback(new Error('Insira um telefone válido.'))
       } else {
         callback()
       }
@@ -369,16 +376,17 @@ export default {
       ] },
       phoneRules: { phone: [
         { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        { validator: validatePhone, trigger: 'change' }
+        { validator: validatePhone, trigger: 'submit' }
       ] },
       oabRules: {
         oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       personRules: {
-        // name: [
-        //   { required: true, message: 'Campo obrigatório', trigger: 'change' }
-        // ],
+        name: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres.', trigger: 'change' }
+        ]
         // documentNumber: [
         //   { required: true, message: 'Campo obrigatório', trigger: 'change' },
         //   { validator: validateDocument, trigger: 'change' }
@@ -625,27 +633,35 @@ export default {
       }
     },
     editRole (personId, name, documentNumber) {
-      this.$store.dispatch('editRole', {
-        personId: personId,
-        name: name,
-        documentNumber: documentNumber
-      }).then(responde => {
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Os dados foram alterados com sucesso.',
-          type: 'success'
+      if (name && name.length > 2) {
+        this.$store.dispatch('editRole', {
+          personId: personId,
+          name: name,
+          documentNumber: documentNumber
+        }).then(responde => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Os dados foram alterados com sucesso.',
+            type: 'success'
+          })
+          setTimeout(function () {
+            this.$emit('case:refresh')
+          }.bind(this), 1000)
+          this.editRoleDialogVisible = false
+        }).catch(() => {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
         })
-        setTimeout(function () {
-          this.$emit('case:refresh')
-        }.bind(this), 1000)
-        this.editRoleDialogVisible = false
-      }).catch(() => {
+      } else {
         this.$jusNotification({
           title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
+          message: 'Nome precisa conter mais de 3 caracteres.',
+          type: 'warning'
         })
-      })
+      }
     },
     removeRole (role) {
       this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
