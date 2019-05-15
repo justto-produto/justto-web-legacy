@@ -2,7 +2,7 @@
   <JusViewMain class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <carousel />
+      <management-carousel />
     </template>
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
@@ -490,12 +490,12 @@
 
 <script>
 import JusManagementFilters from '@/components/others/JusManagementFilters'
-import Carousel from './carousel/Carousel'
+import ManagementCarousel from './carousel/ManagementCarousel'
 
 export default {
   name: 'Management',
   components: {
-    Carousel,
+    ManagementCarousel,
     JusManagementFilters
   },
   data () {

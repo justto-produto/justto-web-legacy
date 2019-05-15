@@ -27,6 +27,7 @@ import OwlCarousel from 'vue-owl-carousel'
 import JusCarouselCard from '@/components/layouts/JusCarouselCard'
 
 export default {
+  name: 'ManagementCarousel',
   components: { OwlCarousel, JusCarouselCard },
   data () {
     return {
@@ -36,41 +37,41 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'range': { 'disputeexpirationdate': { 'gte': 'now/d', 'lte': 'now/d+3d' } } } ],
-        shows: true
+        must: [ { 'termsw': { 'disputestatus': ['IMPORTED', 'PENDING', 'ENRICHED', 'ENGAGEMENT', 'RUNNING'] } }, { 'range': { 'disputeexpirationdate': { 'gte': 'now/d', 'lte': 'now/d+3d' } } } ],
+        shows: false
       }, {
         title: 'Casos sem e-mail válido',
         subtitle: 'Atualize os dados',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'hasvalidemail': false } } ],
-        shows: true
+        must: [ { 'terms': { 'disputestatus': ['IMPORTED', 'PENDING', 'ENRICHED', 'ENGAGEMENT', 'RUNNING'] } }, { 'match': { 'hasvalidemail': false } } ],
+        shows: false
       }, {
         title: 'Casos com contraproposta até 20% acima da alçada',
         subtitle: 'Entre em contato',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [],
+        must: [{ 'terms': { 'disputestatus': ['IMPORTED', 'PENDING', 'ENRICHED', 'ENGAGEMENT', 'RUNNING'] } }],
         filter: { 'range': { 'lastofferbyupperrangepercent': { 'gte': 100, 'lte': 120 } } },
-        shows: true
+        shows: false
       }, {
         title: 'Casos com interações e sem contraproposta',
         subtitle: 'Entre em contato',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'disputehasinteractions': true } } ],
-        shows: true
+        must: [ { 'terms': { 'disputestatus': ['IMPORTED', 'PENDING', 'ENRICHED', 'ENGAGEMENT', 'RUNNING'] } }, { 'match': { 'disputehasinteractions': true } } ],
+        shows: false
       }, {
         title: 'Casos sem celular válido',
         subtitle: 'Atualize os dados',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        must: [ { 'match': { 'hasvalidphone': false } } ],
-        shows: true
+        must: [ { 'terms': { 'disputestatus': ['IMPORTED', 'PENDING', 'ENRICHED', 'ENGAGEMENT', 'RUNNING'] } }, { 'match': { 'hasvalidphone': false } } ],
+        shows: false
       }, {
         title: 'Casos que nossas tentativas de engajamento encerraram',
         subtitle: 'Reinicie ou entre em contato',
@@ -78,7 +79,7 @@ export default {
         to: 'review',
         color: 'orange',
         must: [ { 'match': { 'disputestatus': 'ENGAGEMENT' } }, { 'match': { 'communicationmsgtotalallsented': true } } ],
-        shows: true
+        shows: false
       }],
       componentKey: 0
     }
