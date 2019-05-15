@@ -64,10 +64,10 @@ const dispute = {
           })
       })
     },
-    sendBatchAction ({ commit }, body) {
+    getDisputeStatuses ({ commit }, status) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('api/disputes/batch', body)
+        axios.get('api/disputes/outcome-reasons/' + status)
           .then(response => {
             resolve(response.data)
           })
@@ -76,10 +76,10 @@ const dispute = {
           })
       })
     },
-    sendDisputeNote ({ commit }, body) {
+    sendBatchAction ({ commit }, params) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('api/disputes/' + body.disputeId + '/note', body)
+        axios.put('api/disputes/batch', params)
           .then(response => {
             resolve(response.data)
           })
@@ -88,10 +88,22 @@ const dispute = {
           })
       })
     },
-    sendDisputeAction ({ commit }, body) {
+    sendDisputeNote ({ commit }, params) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('api/disputes/' + body.disputeId + '/' + body.action)
+        axios.post('api/disputes/' + params.disputeId + '/note', params)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    sendDisputeAction ({ commit }, params) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)
           .then(response => {
             resolve(response.data)
           })

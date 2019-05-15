@@ -8,17 +8,48 @@
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         Casos selecionados: {{ selectedIds.length }}
         <div>
-          <el-button plain @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
-          <el-button plain @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
-          <el-button plain @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
-          <el-button plain @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
-          <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
-          <!-- <el-button plain @click="sendBatchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
-          <!-- <el-button plain @click="sendBatchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
+          <el-button plain @click="batchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
+          <el-button plain @click="batchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
+          <el-button plain @click="batchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
+          <el-button plain @click="batchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
+          <el-button plain @click="batchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
+          <el-button plain @click="batchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
+          <!-- <el-button plain @click="batchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
+          <!-- <el-button plain @click="batchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
         </div>
         <i class="el-icon-close" @click="clearSelection()"/>
       </div>
+      <el-dialog
+        :visible.sync="chooseUnsettledDialogVisible"
+        title="Atenção!"
+        class="view-management__choose-unsettled-dialog"
+        width="460px">
+        <div class="el-message-box__content">
+          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__message"><p>
+            Tem certeza que deseja realizar esta ação?
+          </p></div>
+        </div>
+        <el-select
+          v-loading="$store.state.loading"
+          v-model="unsettledType"
+          placeholder="Escolha o motivo da perda">
+          <el-option
+            v-for="(type, index) in unsettledTypes"
+            :key="index"
+            :label="type"
+            :value="index" />
+        </el-select>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+          <el-button
+            :disabled="!unsettledType"
+            type="primary"
+            @click.prevent="sendBatchAction('UNSETTLED')">
+            Continuar
+          </el-button>
+        </span>
+      </el-dialog>
       <div class="view-management__actions">
         <el-button
           icon="el-icon-refresh"
@@ -512,7 +543,10 @@ export default {
       activeTab: this.getActiveTabLabel(currentTab),
       activeFilters: {},
       currentQuery: '',
-      loadingExport: false
+      loadingExport: false,
+      chooseUnsettledDialogVisible: false,
+      unsettledTypes: [],
+      unsettledType: null
     }
   },
   computed: {
@@ -679,46 +713,58 @@ export default {
       this.filters = {}
       this.getCases()
     },
-    sendBatchAction (action) {
-      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        type: 'warning'
-      }).then(() => {
-        this.$store.dispatch('sendBatchAction', {
-          type: action,
-          disputeIds: this.selectedIds
-        }).then(response => {
-          window.analytics.track('Ação em massa realizada', {
-            action: action,
-            tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
-            selecteds: this.selectedIds.length
-          })
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
-            type: 'success',
-            onClose () {
-              setTimeout(function () {
-                this.$jusNotification({
-                  title: 'Fique atento!',
-                  message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
-                  Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
-                  type: 'info',
-                  duration: 0
-                })
-              }.bind(this), 300)
-            }
-          })
-        }).catch(error => {
-          console.error(error)
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+    batchAction (action) {
+      if (action === 'UNSETTLED') {
+        this.chooseUnsettledDialogVisible = true
+        this.unsettledType = null
+        if (this.unsettledTypes.length === 0) {
+          this.$store.dispatch('showLoading')
+          this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
+            this.unsettledTypes = response
+          }).finally(() => this.$store.dispatch('hideLoading'))
+        }
+      } else {
+        this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning'
+        }).then(() => {
+          this.sendBatchAction(action)
         })
-      })
+      }
+    },
+    sendBatchAction (action) {
+      let params = {
+        type: action,
+        disputeIds: this.selectedIds
+      }
+      if (this.unsettledType) {
+        params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+      }
+      this.$store.dispatch('sendBatchAction', params).then(response => {
+        window.analytics.track('Ação em massa realizada', {
+          action: action,
+          tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
+          selecteds: this.selectedIds.length
+        })
+        this.chooseUnsettledDialogVisible = false
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
+          type: 'success',
+          onClose () {
+            setTimeout(function () {
+              this.$jusNotification({
+                title: 'Fique atento!',
+                message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
+                Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
+                type: 'info',
+                duration: 0
+              })
+            }.bind(this), 300)
+          }
+        })
+      }).catch(() => this.$jusNotification({ type: 'error' }))
     },
     refresh () {
       this.getCases()
@@ -920,6 +966,15 @@ export default {
   &__empty-table {
     margin-top: 40px;
     width: 60px;
+  }
+  &__choose-unsettled-dialog {
+    .el-message-box__content {
+      padding: 10px 0;
+    }
+    .el-select {
+      margin: 10px 0;
+      width: 100%;
+    }
   }
 }
 </style>
