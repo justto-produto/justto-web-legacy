@@ -121,14 +121,12 @@
                     type="textarea"
                     placeholder="Escreva alguma coisa" />
                 </el-collapse-transition>
-
                 <div class="case-view__send-message-actions">
                   <el-tooltip v-if="!this.$store.state.accountModule.name" content="Atualize o nome no seu perfil para enviar mensagens">
                     <div class="case-view__disabled-text">
                       Configure um nome em seu perfil
                     </div>
                   </el-tooltip>
-
                   <el-tooltip v-else-if="activePerson.id" content="">
                     <div>
                       <el-tooltip content="Enviar e-mail">
@@ -148,24 +146,21 @@
                       </el-tooltip>
                     </div>
                   </el-tooltip>
-
                   <el-tooltip v-else content="Escolha um destinatário ao lado para receber sua mensagem">
-                      <div class="case-view__disabled-text">
-                        Escolha um destinatário ao lado
-                      </div>
+                    <div class="case-view__disabled-text">
+                      Escolha um destinatário ao lado
+                    </div>
                   </el-tooltip>
-
                   <div v-if="this.$store.state.accountModule.name">
                     <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
                       Enviar
                     </el-button>
                   </div>
                   <div v-else>
-                    <el-button type="primary" @click="$router.push('profile')">
+                    <el-button type="primary" @click="$router.push('/profile')">
                       Configurações
                     </el-button>
                   </div>
-
                 </div>
               </el-card>
             </el-tab-pane>
