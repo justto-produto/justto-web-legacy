@@ -37,11 +37,7 @@ export default {
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-<<<<<<< HEAD:src/views/main/management/carousel/ManagementCarousel.vue
-        must: [ { 'termsw': { 'disputestatus': ['IMPORTED', 'PENDING', 'ENRICHED', 'ENGAGEMENT', 'RUNNING'] } }, { 'range': { 'disputeexpirationdate': { 'gte': 'now/d', 'lte': 'now/d+3d' } } } ],
-=======
         must: [ { 'terms': { 'disputestatus': ['IMPORTED', 'PENDING', 'ENRICHED', 'ENGAGEMENT', 'RUNNING'] } }, { 'range': { 'disputeexpirationdate': { 'gte': 'now/d', 'lte': 'now/d+3d' } } } ],
->>>>>>> DEV-46 Implementa filtro de status:src/views/main/management/carousel/ManagementCarousel.vue
         shows: false
       }, {
         title: 'Casos sem e-mail válido',
