@@ -479,6 +479,7 @@ export default {
       }
     },
     sendMessage () {
+      this.checkWhatsappStatus()
       if (this.messageType === 'whatsapp' && this.whatsappStatus === 'UNCONNECTED') {
         this.$jusNotification({
           title: 'Ops!',
