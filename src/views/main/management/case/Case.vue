@@ -111,19 +111,24 @@
         <div class="case-view__send-message">
           <el-tabs ref="messageTab" value="1" @tab-click="handleTabClick">
             <el-tab-pane label="Mensagem" name="1">
-              <el-tooltip :disabled="!!activePerson.id" content="Escolha um destinatário ao lado para receber sua mensagem">
-                <el-card shadow="always" class="case-view__send-message-box">
-                  <el-collapse-transition>
-                    <el-input
-                      v-show="activePerson.id"
-                      ref="textarea"
-                      :rows="3"
-                      v-model="newMessage"
-                      type="textarea"
-                      placeholder="Escreva alguma coisa" />
-                  </el-collapse-transition>
-                  <div class="case-view__send-message-actions">
-                    <div v-if="activePerson.id">
+              <el-card shadow="always" class="case-view__send-message-box">
+                <el-collapse-transition>
+                  <el-input
+                    v-show="activePerson.id && this.$store.state.accountModule.name"
+                    ref="textarea"
+                    :rows="3"
+                    v-model="newMessage"
+                    type="textarea"
+                    placeholder="Escreva alguma coisa" />
+                </el-collapse-transition>
+                <div class="case-view__send-message-actions">
+                  <el-tooltip v-if="!this.$store.state.accountModule.name" content="Atualize o nome no seu perfil para enviar mensagens">
+                    <div class="case-view__disabled-text">
+                      Configure um nome em seu perfil
+                    </div>
+                  </el-tooltip>
+                  <div v-else-if="activePerson.id">
+                    <div>
                       <el-tooltip content="Enviar e-mail">
                         <a href="" @click.prevent="setMessageType('email')">
                           <jus-icon :is-active="messageType === 'email'" icon="email"/>
@@ -140,17 +145,31 @@
                         </a>
                       </el-tooltip>
                     </div>
-                    <div v-else class="case-view__disabled-text">
-                      Escreva alguma coisa
+                  </div>
+                  <el-tooltip v-else content="Escolha um destinatário ao lado para receber sua mensagem">
+                    <div class="case-view__disabled-text">
+                      Escolha um destinatário ao lado
                     </div>
+                  </el-tooltip>
+                  <el-tooltip v-if="messageType === 'whatsapp' && whatsappStatus === 'UNCONNECTED'" content="Whatsapp desconectado">
                     <div>
-                      <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
+                      <el-button :disabled="true" type="primary" @click="sendMessage()">
                         Enviar
                       </el-button>
                     </div>
+                  </el-tooltip>
+                  <div v-else-if="this.$store.state.accountModule.name">
+                    <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
+                      Enviar
+                    </el-button>
                   </div>
-                </el-card>
-              </el-tooltip>
+                  <div v-else>
+                    <el-button type="primary" @click="$router.push('/profile')">
+                      Configurações
+                    </el-button>
+                  </div>
+                </div>
+              </el-card>
             </el-tab-pane>
             <el-tab-pane label="Chat" name="3">
               <el-card shadow="always" class="case-view__send-message-box">
@@ -234,7 +253,8 @@ export default {
       componentKey: 0,
       disputeNegotiators: [],
       negotiatorsForm: {},
-      negotiatorsRules: {}
+      negotiatorsRules: {},
+      whatsappStatus: ''
     }
   },
   computed: {
@@ -273,11 +293,28 @@ export default {
   },
   created () {
     this.fetchData({ fetchDispute: true, fetchMessages: true })
+    this.checkWhatsappStatus()
   },
   destroyed () {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
+    checkWhatsappStatus () {
+      this.$store.dispatch('whatsappStatus').then((whatsapp) => {
+        if (whatsapp.status === 'CONNECTED') {
+          this.whatsappStatus = 'CONNECTED'
+        } else {
+          this.whatsappStatus = 'UNCONNECTED'
+        }
+      }).catch(() => {
+        this.whatsappStatus = 'UNCONNECTED'
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+          type: 'error'
+        })
+      })
+    },
     editNegotiators () {
       this.$store.dispatch('editNegotiators', { negotiators: this.disputeNegotiators, disputeId: this.dispute.id }).then(() => {
         // window.analytics.track('Negociadores alterados')
@@ -413,45 +450,62 @@ export default {
       })
     },
     sendChatMessage () {
-      if (this.newChatMessage.length > 0) {
-        this.newChatMessage = this.newChatMessage.charAt(0).toUpperCase() + this.newChatMessage.slice(1)
-        this.$store.dispatch('sendMessageEvent', {
-          id: this.dispute.id,
-          data: {
-            value: this.newChatMessage,
-            sender: {
-              personId: this.$store.getters.personId,
-              name: this.$store.getters.personName
+      this.checkWhatsappStatus()
+      if (this.messageType === 'whatsapp' && (this.whatsappStatus === 'UNCONNECTED' || this.whatsappStatus === 'UNKNOW')) {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Seu WhatsApp não está conectado.',
+          type: 'error'
+        })
+      } else {
+        if (this.newChatMessage.length > 0) {
+          this.newChatMessage = this.newChatMessage.charAt(0).toUpperCase() + this.newChatMessage.slice(1)
+          this.$store.dispatch('sendMessageEvent', {
+            id: this.dispute.id,
+            data: {
+              value: this.newChatMessage,
+              sender: {
+                personId: this.$store.getters.personId,
+                name: this.$store.getters.personName
+              }
             }
-          }
-        }).then(() => {
-          this.newChatMessage = ''
-          setTimeout(function () {
-            this.fetchData({ fetchMessages: true })
-          }.bind(this), 500)
-        }).catch(error => this.showError(error))
+          }).then(() => {
+            this.newChatMessage = ''
+            setTimeout(function () {
+              this.fetchData({ fetchMessages: true })
+            }.bind(this), 500)
+          }).catch(error => this.showError(error))
+        }
       }
     },
     sendMessage () {
-      if (this.newMessage.length > 0) {
-        this.newMessage = this.newMessage.charAt(0).toUpperCase() + this.newMessage.slice(1)
-        this.$store.dispatch('send' + this.messageType, {
-          to: [this.activePerson.id],
-          message: this.newMessage,
-          disputeId: this.dispute.id
-        }).then(() => {
-          window.analytics.track('Enviou mensagem via ' + this.messageType)
-          this.newMessage = ''
-          this.$jusNotification({
-            title: 'Yay!',
-            message: this.messageType + ' enviado com sucesso.',
-            type: 'success'
-          })
-          setTimeout(function () {
-            this.fetchData({ fetchMessages: true })
+      if (this.messageType === 'whatsapp' && this.whatsappStatus === 'UNCONNECTED') {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Seu Whatsapp não está conectado, por favor conecte-se para enviar esta mensagem',
+          type: 'warning'
+        })
+      } else {
+        if (this.newMessage.length > 0) {
+          this.newMessage = this.newMessage.charAt(0).toUpperCase() + this.newMessage.slice(1)
+          this.$store.dispatch('send' + this.messageType, {
+            to: [this.activePerson.id],
+            message: this.newMessage,
+            disputeId: this.dispute.id
+          }).then(() => {
+            window.analytics.track('Enviou mensagem via ' + this.messageType)
             this.newMessage = ''
-          }.bind(this), 500)
-        }).catch(error => this.showError(error))
+            this.$jusNotification({
+              title: 'Yay!',
+              message: this.messageType + ' enviado com sucesso.',
+              type: 'success'
+            })
+            setTimeout(function () {
+              this.fetchData({ fetchMessages: true })
+              this.newMessage = ''
+            }.bind(this), 500)
+          }).catch(error => this.showError(error))
+        }
       }
     },
     sendNote () {
