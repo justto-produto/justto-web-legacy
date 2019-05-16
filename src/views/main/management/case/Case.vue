@@ -333,6 +333,7 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
+<<<<<<< HEAD
     checkWhatsappStatus () {
       this.$store.dispatch('whatsappStatus').then((whatsapp) => {
         if (whatsapp.status === 'CONNECTED') {
@@ -349,6 +350,8 @@ export default {
         })
       })
     },
+=======
+>>>>>>> a561b62cd945e92204e9b2a1daa3aed810349539
     canChangeStatus () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED' && this.dispute.status !== 'SETTLED'
     },

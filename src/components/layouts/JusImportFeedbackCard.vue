@@ -111,8 +111,8 @@
       </el-select>
     </el-card>
     <jus-engagements-dialog
-      :dialogVisible.sync="dialogVisible"
-      :strategyId="strategy.id"
+      :dialog-visible.sync="dialogVisible"
+      :strategy-id="strategy.id"
     />
   </div>
 </template>

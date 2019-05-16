@@ -53,6 +53,7 @@
       ref="roleCollapse"
       accordion
       class="el-collapse--bordered"
+      style="margin: 20px 0;"
       @change="handleChange">
       <el-collapse-item
         v-for="role in disputeRolesSort"
@@ -63,10 +64,10 @@
             <span>
               {{ role.person.name }}
             </span>
-            <jus-status-dot type="danger"/>
+            <!-- <jus-status-dot type="danger"/> -->
           </div>
         </template>
-        <div class="case-overview-view__info-line">
+        <!-- <div class="case-overview-view__info-line">
           <span>Status:</span>
           <el-popover
             placement="top-end"
@@ -84,6 +85,10 @@
               Offline
             </span>
           </el-popover>
+        </div> -->
+        <div v-show="role.person.documentNumber" class="case-overview-view__info-line">
+          <span class="title">CPF:</span>
+          <span>{{ role.person.documentNumber }}</span>
         </div>
         <div class="case-overview-view__info-line">
           Função:
@@ -116,12 +121,10 @@
           <ul>
             <li v-for="oab in role.person.oabs" :key="oab.id">
               {{ oab.number }}
+              <span v-if="oab.state">-</span>
+              {{ oab.state }}
             </li>
           </ul>
-        </div>
-        <div v-show="role.person.documentNumber" class="case-overview-view__info-line">
-          <span class="title">CPF:</span>
-          <span>{{ role.person.documentNumber }}</span>
         </div>
         <div class="case-overview-view__actions">
           <el-button plain @click="removeRole(role)">Excluir</el-button>
@@ -696,6 +699,7 @@ export default {
 
 <style lang="scss">
 .case-overview-view {
+  margin-bottom: -20px;
   .jus-status-dot {
     float: initial !important;
   }
@@ -758,7 +762,6 @@ export default {
       overflow: hidden;
     }
     span:last-child {
-      margin: 0 6px;
       min-width: 10px;
     }
   }
