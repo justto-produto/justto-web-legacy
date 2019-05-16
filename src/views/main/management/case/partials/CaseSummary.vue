@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="case-view__side-content">
     <el-steps
+      v-loading="loading"
       :active="0"
       direction="vertical"
       process-status="wait"
@@ -49,9 +50,18 @@
       <el-step v-if="disputeStatus">
         <template slot="title">Status</template>
         <template slot="description">
-          <div v-if="disputeStatus">
-            {{ $t('occurrence.type.' + disputeStatus) | capitalize }}
-          </div>
+          {{ $t('occurrence.type.' + disputeStatus) | capitalize }}
+          <el-select
+            v-if="summary && disputeStatus === 'UNSETTLED'"
+            v-model="unsettledType"
+            class="case-view__unsettled-types"
+            @change="changeReasonStatus">
+            <el-option
+              v-for="(type, index) in unsettledTypes"
+              :key="index"
+              :label="type"
+              :value="index" />
+          </el-select>
         </template>
       </el-step>
       <el-step>
@@ -91,12 +101,19 @@ export default {
     showScheduled: {
       default: false,
       type: Boolean
+    },
+    unsettledTypes: {
+      default: () => {},
+      type: Object
     }
   },
   data () {
     return {
+      loading: false,
       summary: '',
-      scheduled: false
+      scheduled: false,
+      unsettledType: null,
+      unsettledTypeId: null
       // dialogVisible: false
     }
   },
@@ -143,13 +160,39 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('getDisputes', {
-      query: { bool: { must: [{ match: { disputeid: this.id } }] } }
-    }).then(response => {
-      if (response.length) {
-        this.summary = response[0]
-      }
-    })
+    this.fetchData()
+  },
+  methods: {
+    fetchData () {
+      this.loading = true
+      this.$store.dispatch('getDisputes', {
+        query: { bool: { must: [{ match: { disputeid: this.id } }] } }
+      }).then(response => {
+        if (response.length) {
+          this.summary = response[0]
+          this.unsettledType = this.summary.reasons.length > 0 ? Object.keys(this.summary.reasons[0].reasons)[0] : null
+          this.unsettledTypeId = this.summary.reasons.length > 0 ? this.summary.reasons[0].id : null
+        }
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+    changeReasonStatus () {
+      this.$store.dispatch('editCaseReason', {
+        body: { [this.unsettledType]: this.unsettledTypes[this.unsettledType] },
+        disputeId: this.id,
+        reasonId: this.unsettledTypeId
+      }).then(() => {
+        setTimeout(function () {
+          this.$emit('case:refresh')
+        }.bind(this), 2000)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Motivo de perda alterado com sucesso.',
+          type: 'success'
+        })
+      }).catch(() => this.$jusNotification({ type: 'error' }))
+    }
   }
 }
 </script>
@@ -164,6 +207,10 @@ export default {
   .el-slider {
     margin-top: 20px;
     pointer-events: none;
+  }
+  .case-view__unsettled-types {
+    width: 100%;
+    margin-top: 10px;
   }
 }
 </style>
