@@ -64,6 +64,18 @@ const dispute = {
           })
       })
     },
+    getDisputeStatuses ({ commit }, status) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('api/disputes/outcome-reasons/' + status)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
     sendBatchAction ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
