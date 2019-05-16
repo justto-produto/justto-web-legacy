@@ -117,6 +117,17 @@ const dispute = {
           })
       })
     },
+    editCaseReason ({ commit }, params) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/disputes/' + params.disputeId + '/reasons/' + params.reasonId + '/update', params.body)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
     removeCase ({ commit }, disputeId) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
