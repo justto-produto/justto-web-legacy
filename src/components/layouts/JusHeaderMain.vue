@@ -17,11 +17,11 @@
               </h4>
               <div>Estratégia: {{ item.strategyname }}</div>
               <div>Status: <span>{{ $t('occurrence.type.' + item.disputestatus) }}</span></div>
-              <div v-for="(claiment, index) in item.claiments" :key="item.disputeid + claiment.f1 + index + 'claimant'">
-                Parte contrária: {{ claiment.f1 }}
+              <div v-for="(claiment, index) in item.claiments" :key="item.disputeid + claiment.name + index + 'claimant'">
+                Parte contrária: {{ claiment.name }}
               </div>
-              <div v-for="(lawyer, index) in item.claimentslawyer" :key="item.disputeid + lawyer.f1 + index + 'lawyer'">
-                Advogado: {{ lawyer.f1 }}
+              <div v-for="(lawyer, index) in item.claimentslawyer" :key="item.disputeid + lawyer.name + index + 'lawyer'">
+                Advogado: {{ lawyer.name }}
               </div>
             </div>
           </router-link>
@@ -114,10 +114,10 @@ export default {
       let fields = [
         'disputecode',
         'campaignname',
-        'claiments.f1',
-        'claiments.f2',
-        'claimentslawyer.f1',
-        'claimentslawyer.f2',
+        'claiments.name',
+        'claiments.document_number',
+        'claimentslawyer.name',
+        'claimentslawyer.document_number',
         'strategyname',
         'disputeupperrange',
         'disputelastrespondentoffer'
