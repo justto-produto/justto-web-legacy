@@ -17,8 +17,10 @@
         v-if="dispute.strategy"
         :key="componentKey"
         :id="dispute.id"
+        :unsettled-types="unsettledTypes"
         :show-scheduled.sync="showScheduled"
-        :strategy-id="dispute.strategy.id" />
+        :strategy-id="dispute.strategy.id"
+        @case:refresh="fetchData({ fetchMessages: true })" />
     </template>
     <!-- CHAT -->
     <template slot="main">
@@ -34,13 +36,13 @@
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip> -->
-          <el-tooltip v-if="canChangeStatus()" content="Ganhar">
-            <el-button plain @click="disputeAction('settled')">
+          <el-tooltip content="Ganhar">
+            <el-button :disabled="!canChangeStatus()" plain @click="disputeAction('settled')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Perder">
-            <el-button plain @click="disputeAction('unsettled')">
+            <el-button :disabled="!canChangeStatus()" plain @click="disputeAction('unsettled')">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
@@ -337,6 +339,9 @@ export default {
   created () {
     this.fetchData({ fetchDispute: true, fetchMessages: true })
     this.checkWhatsappStatus()
+    this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
+      this.unsettledTypes = response
+    }).finally(() => this.$store.dispatch('hideLoading'))
   },
   destroyed () {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
@@ -451,12 +456,6 @@ export default {
       if (action === 'unsettled') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = null
-        if (this.unsettledTypes.length === 0) {
-          this.$store.dispatch('showLoading')
-          this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
-            this.unsettledTypes = response
-          }).finally(() => this.$store.dispatch('hideLoading'))
-        }
       } else {
         this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
           confirmButtonText: 'Continuar',

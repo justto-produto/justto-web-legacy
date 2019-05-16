@@ -64,6 +64,18 @@ const dispute = {
           })
       })
     },
+    getDisputeStatuses ({ commit }, status) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('api/disputes/outcome-reasons/' + status)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
     sendBatchAction ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -88,10 +100,10 @@ const dispute = {
           })
       })
     },
-    sendDisputeAction ({ commit }, body) {
+    sendDisputeAction ({ commit }, params) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('api/disputes/' + body.disputeId + '/' + body.action)
+        axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)
           .then(response => {
             resolve(response.data)
           })
@@ -110,6 +122,17 @@ const dispute = {
           lastOffer: caseForm.lastOffer,
           description: caseForm.description
         })
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    editCaseReason ({ commit }, params) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/disputes/' + params.disputeId + '/reasons/' + params.reasonId + '/update', params.body)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
