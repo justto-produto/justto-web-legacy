@@ -34,7 +34,7 @@
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip> -->
-          <el-tooltip content="Ganhar" v-if="canChangeStatus()">
+          <el-tooltip v-if="canChangeStatus()" content="Ganhar">
             <el-button plain @click="disputeAction('settled')">
               <jus-icon icon="win" />
             </el-button>
@@ -324,9 +324,9 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
-		canChangeStatus(){
-			return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED' && this.dispute.status !== 'SETTLED'
-		},
+    canChangeStatus () {
+      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED' && this.dispute.status !== 'SETTLED'
+    },
     editNegotiators () {
       this.$store.dispatch('editNegotiators', { negotiators: this.disputeNegotiators, disputeId: this.dispute.id }).then(() => {
         // window.analytics.track('Negociadores alterados')
