@@ -147,7 +147,7 @@
               <el-card shadow="always" class="case-view__send-message-box">
                 <el-collapse-transition>
                   <el-input
-                    v-show="activePerson.id && this.$store.state.accountModule.name"
+                    v-show="activePerson.id && validName"
                     ref="textarea"
                     :rows="3"
                     v-model="newMessage"
@@ -155,7 +155,7 @@
                     placeholder="Escreva alguma coisa" />
                 </el-collapse-transition>
                 <div class="case-view__send-message-actions">
-                  <el-tooltip v-if="!this.$store.state.accountModule.name" content="Atualize o nome no seu perfil para enviar mensagens">
+                  <el-tooltip v-if="!validName" content="Atualize o nome no seu perfil para enviar mensagens">
                     <div class="case-view__disabled-text">
                       Configure um nome em seu perfil
                     </div>
@@ -191,14 +191,14 @@
                       </el-button>
                     </div>
                   </el-tooltip>
-                  <div v-else-if="this.$store.state.accountModule.name">
-                    <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
-                      Enviar
+                  <div v-else-if="!validName">
+                    <el-button type="primary" @click="$router.push('/profile')">
+                      Configurações
                     </el-button>
                   </div>
                   <div v-else>
-                    <el-button type="primary" @click="$router.push('/profile')">
-                      Configurações
+                    <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
+                      Enviar
                     </el-button>
                   </div>
                 </div>
@@ -294,6 +294,15 @@ export default {
     }
   },
   computed: {
+    validName () {
+      if (this.$store.state.personModule.person.name && this.$store.state.personModule.person.name !== this.$store.state.accountModule.email) {
+        return true
+      } else {
+        if (!this.$store.state.personModule.person.name || (this.$store.state.personModule.person.name === this.$store.state.accountModule.email)) {
+          return false
+        }
+      }
+    },
     isFavorite () {
       return this.dispute.favorite
     },
@@ -544,7 +553,13 @@ export default {
               this.fetchData({ fetchMessages: true })
               this.newMessage = ''
             }.bind(this), 500)
-          }).catch(() => this.$jusNotification({ type: 'error' }))
+          }).catch(() => {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+              type: 'error'
+            })
+          })
         }
       }
     },
@@ -563,7 +578,13 @@ export default {
             type: 'success'
           })
           this.fetchData({ fetchMessages: true })
-        }).catch(() => this.$jusNotification({ type: 'error' }))
+        }).catch(() => {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
+            type: 'error'
+          })
+        })
       }
     },
     sendTypeEvent () {
