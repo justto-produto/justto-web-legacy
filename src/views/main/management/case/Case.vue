@@ -36,8 +36,8 @@
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip> -->
-          <el-tooltip v-if="canChangeStatus()" content="Ganhar">
-            <el-button plain @click="disputeAction('settled')">
+          <el-tooltip content="Ganhar">
+            <el-button plain @click="disputeAction('settled')" :disabled="!canChangeStatus()">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
