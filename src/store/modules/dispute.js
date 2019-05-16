@@ -103,7 +103,7 @@ const dispute = {
     sendDisputeAction ({ commit }, body) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('api/disputes/' + body.disputeId + '/' + body.action)
+        axios.put('api/disputes/' + body.disputeId + '/' + body.action, body.body)
           .then(response => {
             resolve(response.data)
           })
