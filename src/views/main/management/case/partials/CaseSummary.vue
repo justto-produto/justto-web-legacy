@@ -170,10 +170,12 @@ export default {
       }).then(response => {
         if (response.length) {
           this.summary = response[0]
-          this.unsettledType = this.summary.reasons.length > 0 ? Object.keys(this.summary.reasons[0].reasons)[0] : null
-          this.unsettledTypeId = this.summary.reasons.length > 0 ? this.summary.reasons[0].id : null
+          if (this.summary.reasons) {
+            this.unsettledType = this.summary.reasons.length > 0 ? Object.keys(this.summary.reasons[0].reasons)[0] : null
+            this.unsettledTypeId = this.summary.reasons.length > 0 ? this.summary.reasons[0].id : null
+          }
         }
-      }).finally(() => {
+      }).catch(() => this.$jusNotification({ type: 'error' })).finally(() => {
         this.loading = false
       })
     },

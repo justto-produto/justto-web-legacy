@@ -37,12 +37,12 @@
             </el-button>
           </el-tooltip> -->
           <el-tooltip content="Ganhar">
-            <el-button plain @click="disputeAction('settled')" :disabled="!canChangeStatus()">
+            <el-button :disabled="!canChangeStatus()" plain @click="disputeAction('settled')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Perder">
-            <el-button plain @click="disputeAction('unsettled')" :disabled="!canChangeStatus()">
+            <el-button :disabled="!canChangeStatus()" plain @click="disputeAction('unsettled')">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
