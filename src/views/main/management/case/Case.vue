@@ -229,7 +229,7 @@
       </div>
     </template>
     <!-- DADOS DO CASO -->
-    <template slot="right-card" class="teste">
+    <template slot="right-card">
       <div class="case-view__section-title">
         <h2>Dados do caso</h2>
         <!-- <el-button plain>Exportar caso</el-button> -->
