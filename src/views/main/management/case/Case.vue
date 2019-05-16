@@ -42,7 +42,7 @@
             </el-button>
           </el-tooltip>
           <el-tooltip content="Perder">
-            <el-button plain @click="disputeAction('unsettled')">
+            <el-button plain @click="disputeAction('unsettled')" :disabled="!canChangeStatus()">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
