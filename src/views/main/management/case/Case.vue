@@ -25,32 +25,32 @@
       <div class="case-view__section-messages">
         <div class="case-view__actions">
           <!-- <el-tooltip content="move-case">
-            <el-button plain @click="doAction('move')">
+            <el-button plain @click="disputeAction('move')">
               <jus-icon icon="move-case" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="delegate">
-            <el-button plain @click="doAction('move')">
+            <el-button plain @click="disputeAction('move')">
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip> -->
-          <el-tooltip content="Ganhar">
-            <el-button plain @click="doAction('settled')">
+          <el-tooltip v-if="canChangeStatus()" content="Ganhar">
+            <el-button plain @click="disputeAction('settled')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Perder">
-            <el-button plain @click="doAction('unsettled')">
+            <el-button plain @click="disputeAction('unsettled')">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Retomar">
-            <el-button plain @click="doAction('resume')">
+            <el-button plain @click="disputeAction('resume')">
               <jus-icon icon="start-again" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Pausar">
-            <el-button plain @click="doAction('paused')">
+            <el-button plain @click="disputeAction('paused')">
               <jus-icon icon="pause" />
             </el-button>
           </el-tooltip>
@@ -60,12 +60,12 @@
             </el-button>
           </el-tooltip>
           <!-- <el-tooltip content="snooze">
-            <el-button plain @click="doAction('move')">
+            <el-button plain @click="disputeAction('move')">
               <jus-icon icon="snooze" />
             </el-button>
           </el-tooltip> -->
           <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-            <el-button plain class="right" @click="doAction(isFavorite ? 'disfavor' : 'favorite')">
+            <el-button plain class="right" @click="disputeAction(isFavorite ? 'disfavor' : 'favorite')">
               <jus-icon :icon="isFavorite ? 'golden-star' : 'star'" />
             </el-button>
           </el-tooltip>
@@ -80,6 +80,37 @@
             </el-input>
           </div>
         </div>
+        <el-dialog
+          :visible.sync="chooseUnsettledDialogVisible"
+          title="Atenção!"
+          class="case-view__choose-unsettled-dialog"
+          width="460px">
+          <div class="el-message-box__content">
+            <div class="el-message-box__status el-icon-warning"/>
+            <div class="el-message-box__message"><p>
+              Tem certeza que deseja realizar esta ação?
+            </p></div>
+          </div>
+          <el-select
+            v-loading="$store.state.loading"
+            v-model="unsettledType"
+            placeholder="Escolha o motivo da perda">
+            <el-option
+              v-for="(type, index) in unsettledTypes"
+              :key="index"
+              :label="type"
+              :value="index" />
+          </el-select>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+            <el-button
+              :disabled="!unsettledType"
+              type="primary"
+              @click.prevent="doAction('unsettled')">
+              Continuar
+            </el-button>
+          </span>
+        </el-dialog>
         <el-dialog
           :visible.sync="editNegotiatorDialogVisible"
           title="Editar negociadores do caso"
@@ -205,7 +236,7 @@
       </div>
     </template>
     <!-- DADOS DO CASO -->
-    <template slot="right-card" class="teste">
+    <template slot="right-card">
       <div class="case-view__section-title">
         <h2>Dados do caso</h2>
         <!-- <el-button plain>Exportar caso</el-button> -->
@@ -237,6 +268,7 @@ export default {
   data () {
     return {
       editNegotiatorDialogVisible: false,
+      chooseUnsettledDialogVisible: false,
       dispute: {},
       loadingDispute: false,
       disputeMessages: [],
@@ -254,6 +286,8 @@ export default {
       disputeNegotiators: [],
       negotiatorsForm: {},
       negotiatorsRules: {},
+      unsettledTypes: [],
+      unsettledType: null,
       whatsappStatus: ''
     }
   },
@@ -315,6 +349,9 @@ export default {
         })
       })
     },
+    canChangeStatus () {
+      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED' && this.dispute.status !== 'SETTLED'
+    },
     editNegotiators () {
       this.$store.dispatch('editNegotiators', { negotiators: this.disputeNegotiators, disputeId: this.dispute.id }).then(() => {
         // window.analytics.track('Negociadores alterados')
@@ -327,13 +364,7 @@ export default {
           this.fetchData({ fetchDispute: true })
         }.bind(this), 1000)
         this.editNegotiatorDialogVisible = false
-      }).catch(() => {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
-      })
+      }).catch(() => this.$jusNotification({ type: 'error' }))
     },
     editNegotiator () {
       this.disputeNegotiators = this.dispute.disputeRoles.filter((negotiator) => {
@@ -365,7 +396,7 @@ export default {
         }).catch(error => {
           if (error.response.status === 404) {
             this.$router.push('/management')
-          } else this.showError(error)
+          } else this.$jusNotification({ type: 'error' })
         })
       }
       if (options.fetchMessages) {
@@ -382,22 +413,13 @@ export default {
             this.disputeMessages.push(...newMessages)
             this.filteredDisputeMessages.push(...newMessages)
           }
-        }).catch(error => this.showError(error))
+        }).catch(() => this.$jusNotification({ type: 'error' }))
       }
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
         this.activePerson = {}
       }
-    },
-    showError (error) {
-      console.error(error)
-      this.$notify.closeAll()
-      this.$jusNotification({
-        title: 'Ops!',
-        message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-        type: 'error'
-      })
     },
     filterDisputeMessages (term) {
       var messages = this.disputeMessages.slice(0)
@@ -416,29 +438,47 @@ export default {
     setMessageType (type) {
       this.messageType = type
     },
-    doAction (action) {
-      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        type: 'warning'
-      }).then(() => {
-        if (action === 'unsettled') {
-          window.analytics.track('PERDA (Status modificado)', {
-            action: action
-          })
-        } else if (action === 'settled') {
-          window.analytics.track('GANHO (Status modificado)', {
-            action: action
-          })
-        } else {
-          window.analytics.track('Status Modificado', {
-            action: action
-          })
+    disputeAction (action) {
+      if (action === 'unsettled') {
+        this.chooseUnsettledDialogVisible = true
+        this.unsettledType = null
+        if (this.unsettledTypes.length === 0) {
+          this.$store.dispatch('showLoading')
+          this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
+            this.unsettledTypes = response
+          }).finally(() => this.$store.dispatch('hideLoading'))
         }
-        this.$store.dispatch('sendDisputeAction', {
-          action: action,
-          disputeId: this.dispute.id
+      } else {
+        this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning'
+        }).then(() => {
+          this.doAction(action)
         })
+      }
+    },
+    doAction (action) {
+      let params = {
+        action: action,
+        disputeId: this.dispute.id
+      }
+      if (this.unsettledType) {
+        params['body'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+      }
+      this.$store.dispatch('sendDisputeAction', params).then(() => {
+        let trackTitle
+        if (action === 'unsettled') {
+          trackTitle = 'PERDA (Status modificado)'
+        } else if (action === 'settled') {
+          trackTitle = 'GANHO (Status modificado)'
+        } else {
+          trackTitle = 'Status Modificado'
+        }
+        window.analytics.track(trackTitle, {
+          action: action
+        })
+        this.chooseUnsettledDialogVisible = false
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação realizada com sucesso.',
@@ -447,7 +487,7 @@ export default {
         setTimeout(function () {
           this.fetchData({ fetchDispute: true, fetchMessages: true })
         }.bind(this), 1000)
-      })
+      }).catch(() => this.$jusNotification({ type: 'error' }))
     },
     sendChatMessage () {
       this.checkWhatsappStatus()
@@ -474,7 +514,7 @@ export default {
             setTimeout(function () {
               this.fetchData({ fetchMessages: true })
             }.bind(this), 500)
-          }).catch(error => this.showError(error))
+          }).catch(() => this.$jusNotification({ type: 'error' }))
         }
       }
     },
@@ -504,7 +544,7 @@ export default {
               this.fetchData({ fetchMessages: true })
               this.newMessage = ''
             }.bind(this), 500)
-          }).catch(error => this.showError(error))
+          }).catch(() => this.$jusNotification({ type: 'error' }))
         }
       }
     },
@@ -523,7 +563,7 @@ export default {
             type: 'success'
           })
           this.fetchData({ fetchMessages: true })
-        }).catch(error => this.showError(error))
+        }).catch(() => this.$jusNotification({ type: 'error' }))
       }
     },
     sendTypeEvent () {
@@ -746,6 +786,15 @@ export default {
       .el-input {
         display: inline-block;
       }
+    }
+  }
+  &__choose-unsettled-dialog {
+    .el-message-box__content {
+      padding: 10px 0;
+    }
+    .el-select {
+      margin: 10px 0;
+      width: 100%;
     }
   }
   .el-input-group__append {
