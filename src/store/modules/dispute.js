@@ -100,10 +100,10 @@ const dispute = {
           })
       })
     },
-    sendDisputeAction ({ commit }, body) {
+    sendDisputeAction ({ commit }, params) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.put('api/disputes/' + body.disputeId + '/' + body.action, body.body)
+        axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)
           .then(response => {
             resolve(response.data)
           })
