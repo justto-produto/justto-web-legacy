@@ -37,12 +37,12 @@
             </el-button>
           </el-tooltip> -->
           <el-tooltip content="Ganhar">
-            <el-button :disabled="!canChangeStatus()" plain @click="disputeAction('settled')">
+            <el-button :disabled="!canSettled()" plain @click="disputeAction('settled')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Perder">
-            <el-button :disabled="!canChangeStatus()" plain @click="disputeAction('unsettled')">
+            <el-button :disabled="!canUnsettled()" plain @click="disputeAction('unsettled')">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
@@ -363,8 +363,11 @@ export default {
         })
       })
     },
-    canChangeStatus () {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED' && this.dispute.status !== 'SETTLED'
+    canSettled() {
+      return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
+    },
+    canUnsettled() {
+      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
     },
     editNegotiators () {
       this.$store.dispatch('editNegotiators', { negotiators: this.disputeNegotiators, disputeId: this.dispute.id }).then(() => {
