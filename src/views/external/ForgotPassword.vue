@@ -75,11 +75,10 @@ export default {
               this.forgotForm.email = ''
               this.showLoading = false
             })
-            .catch(error => {
+            .catch(() => {
               this.showSuccess = true
               this.forgotForm.email = ''
               this.showLoading = false
-              console.error(error)
             })
         } else {
           return false

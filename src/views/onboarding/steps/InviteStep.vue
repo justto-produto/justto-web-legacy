@@ -116,9 +116,8 @@ export default {
           window.analytics.track('Pessoas convidadas á equipe', { members: this.teamMembersForm.teamMembers })
           this.$emit('onboarding:step:next')
         })
-        .catch((error) => {
+        .catch(() => {
           this.showError = true
-          console.error(error)
         }).finally(() => {
           this.$store.dispatch('hideLoading')
         })
