@@ -3,7 +3,7 @@
     <div v-show="componentKey" class="view-management__carousel-container">
       <owl-carousel
         :key="componentKey"
-        :items="2"
+        :items="items"
         :nav="true"
         :dots="false"
         :loop="false"
@@ -89,6 +89,12 @@ export default {
       return this.slides.filter(slide => {
         return slide.shows
       })
+    },
+    items () {
+      if (this.filteredSlides.length === 1) {
+        return 1
+      }
+      return 2
     }
   },
   created () {
