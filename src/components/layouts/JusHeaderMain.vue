@@ -143,7 +143,7 @@ export default {
       //   }
       //   query = query + w
 			// }
-			term = term.replace(' ', '\\\\ ');
+			term = term.replace(' ', '\\ ');
       let query = term ? '*' + term + '* OR ' + term : '*'
 
       this.$store.dispatch('getDisputes', {
