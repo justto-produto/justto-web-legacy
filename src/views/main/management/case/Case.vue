@@ -356,17 +356,13 @@ export default {
         }
       }).catch(() => {
         this.whatsappStatus = 'UNCONNECTED'
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+        this.$jusNotification({ type: 'error' })
       })
     },
-    canSettled() {
+    canSettled () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
     },
-    canUnsettled() {
+    canUnsettled () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
     },
     editNegotiators () {
@@ -557,11 +553,7 @@ export default {
               this.newMessage = ''
             }.bind(this), 500)
           }).catch(() => {
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
+            this.$jusNotification({ type: 'error' })
           })
         }
       }
@@ -582,11 +574,7 @@ export default {
           })
           this.fetchData({ fetchMessages: true })
         }).catch(() => {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+          this.$jusNotification({ type: 'error' })
         })
       }
     },

@@ -52,14 +52,12 @@ export default {
               window.analytics.track('Onboarding concluido')
               this.$router.push('import')
             })
-            .catch(error => {
+            .catch(() => {
               this.showError = true
-              console.error(error)
             })
         })
-        .catch(error => {
+        .catch(() => {
           this.showError = true
-          console.error(error)
         })
     }
   }

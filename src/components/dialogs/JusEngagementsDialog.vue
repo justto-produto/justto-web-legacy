@@ -78,8 +78,8 @@ export default {
       this.$store.dispatch('getStrategyEngagement', this.strategyId).then(response => {
         this.strategyEngagements = response.steps
         this.$store.dispatch('hideLoading')
-      }).catch(error => {
-        console.error(error)
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
         this.$store.dispatch('hideLoading')
       })
     }

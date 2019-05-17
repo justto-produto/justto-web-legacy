@@ -133,17 +133,7 @@ export default {
       this.$store.dispatch('logout')
     },
     search (term, cb) {
-      // var terms = term.split(' ')
-      // terms = [...new Set(terms)]
-      // var query = ''
-      // for (let word of terms) {
-      //   let w = '*' + word + '* OR ' + word
-      //   if (terms[terms.length - 1] !== word) {
-      //     w = w + ' AND '
-      //   }
-      //   query = query + w
-			// }
-			term = term.replace(' ', '\\ ');
+      term = term.replace(' ', '\\ ')
       let query = term ? '*' + term + '* OR ' + term : '*'
 
       this.$store.dispatch('getDisputes', {

@@ -234,13 +234,8 @@ export default {
                 message: 'Nome alterado com sucesso.',
                 type: 'success'
               })
-            }).catch(error => {
-              console.error(error)
-              this.$jusNotification({
-                title: 'Ops!',
-                message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-                type: 'error'
-              })
+            }).catch(() => {
+              this.$jusNotification({ type: 'error' })
             })
         } else {
           this.$jusNotification({
@@ -293,7 +288,6 @@ export default {
         })
         this.dialogPassword = false
       }).catch(error => {
-        console.error(error)
         if (error.response.status === 401) {
           this.$jusNotification({
             title: 'Ops!',
@@ -301,11 +295,7 @@ export default {
             type: 'warning'
           })
         } else {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+          this.$jusNotification({ type: 'error' })
         }
       })
     },
@@ -328,14 +318,9 @@ export default {
             self.$store.commit('hideLoading')
             self.getSyncedEmails()
           }, 1000)
-        }).catch(error => {
-          console.error(error)
+        }).catch(() => {
           this.$store.commit('hideLoading')
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+          this.$jusNotification({ type: 'error' })
         })
       })
     },
@@ -351,13 +336,8 @@ export default {
                 message: 'Email sincronizado com sucesso.',
                 type: 'success'
               })
-            }).catch(error => {
-              console.error(error)
-              this.$jusNotification({
-                title: 'Ops!',
-                message: 'Não foi possível sincronizar seu email. Tente novamente ou entre em contato com o administrador do sistema.',
-                type: 'error'
-              })
+            }).catch(() => {
+              this.$jusNotification({ type: 'error' })
             }).finally(() => {
               this.$store.dispatch('hideLoading')
             })
@@ -397,13 +377,8 @@ export default {
           message: 'Usuário editado com sucesso.',
           type: 'success'
         })
-      }).catch(error => {
-        console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
       })
     },
     changeWorkspaceName () {
@@ -442,13 +417,8 @@ export default {
             this.inviteForm.email = ''
             this.inviteForm.profile = 'NEGOTIATOR'
             this.getMembers()
-          }).catch(error => {
-            console.error(error)
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
+          }).catch(() => {
+            this.$jusNotification({ type: 'error' })
           })
         } else {
           return false

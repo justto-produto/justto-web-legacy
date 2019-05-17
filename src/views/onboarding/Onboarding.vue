@@ -140,13 +140,8 @@ export default {
       this.$store.dispatch('createWorkpace', {
         name: this.responses.team,
         subDomain: this.responses.subdomain
-      }).catch(error => {
-        console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
       }).finally(() => {
         this.$store.dispatch('myWorkspace').then(response => {
           if (response.length && response[response.length - 1].subDomain === this.responses.subdomain) {
@@ -154,11 +149,7 @@ export default {
             this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
             this.$store.dispatch('whatsappStart')
           } else {
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
+            this.$jusNotification({ type: 'error' })
           }
         }).finally(() => {
           this.$store.dispatch('hideLoading')

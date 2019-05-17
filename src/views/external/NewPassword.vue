@@ -117,10 +117,9 @@ export default {
               this.newPasswordForm.password = ''
               this.newPasswordForm.confirmPassword = ''
             })
-            .catch(error => {
+            .catch(() => {
               this.showError = true
               this.showLoading = false
-              console.error(error)
             })
         } else {
           return false

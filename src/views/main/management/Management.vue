@@ -550,13 +550,8 @@ export default {
       this.currentQuery = this.buildQuery()
       this.$store.dispatch('getDisputes', this.currentQuery).then(response => {
         this.cases = response
-      }).catch(error => {
-        console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
       }).finally(() => {
         this.$store.dispatch('hideLoading')
       })
@@ -710,13 +705,8 @@ export default {
               }.bind(this), 300)
             }
           })
-        }).catch(error => {
-          console.error(error)
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
         })
       })
     },
@@ -742,13 +732,8 @@ export default {
         setTimeout(function () {
           self.getCases()
         }, 1500)
-      }).catch(error => {
-        console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
       })
     },
     exportDisputes () {

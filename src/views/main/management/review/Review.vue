@@ -133,11 +133,7 @@ export default {
     this.$store.dispatch('getDisputes', query).then(response => {
       this.cases = response
     }).catch(() => {
-      this.$jusNotification({
-        title: 'Ops!',
-        message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-        type: 'error'
-      })
+      this.$jusNotification({ type: 'error' })
     }).finally(() => {
       this.$store.dispatch('hideLoading')
     })
@@ -181,13 +177,8 @@ export default {
               }, 300)
             }
           })
-        }).catch(error => {
-          console.error(error)
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
         })
       })
     }

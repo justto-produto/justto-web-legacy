@@ -472,11 +472,7 @@ export default {
           }.bind(this), 1000)
           this.editCaseDialogVisible = false
         }).catch(() => {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+          this.$jusNotification({ type: 'error' })
         })
     },
     removeCase () {
@@ -652,11 +648,7 @@ export default {
           }.bind(this), 1000)
           this.editRoleDialogVisible = false
         }).catch(() => {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+          this.$jusNotification({ type: 'error' })
         })
       } else {
         this.$jusNotification({
@@ -684,13 +676,7 @@ export default {
           setTimeout(function () {
             this.$emit('case:refresh')
           }.bind(this), 1000)
-        }).catch(() => {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
-        })
+        }).catch(() => this.$jusNotification({ type: 'error' }))
       })
     }
   }
