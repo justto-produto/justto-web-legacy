@@ -13,6 +13,8 @@
           <slot name="left-card"/>
         </el-card>
       </div>
+      <!-- ACTIONS SLOT -->
+      <slot name="actions"/>
       <!-- MAIN CARD SLOT -->
       <el-card class="jus-main-view__main-card">
         <slot name="main"/>
@@ -49,9 +51,11 @@ export default {
 .jus-main-view {
   height: calc(100% - 60px);
   &__title {
-    margin: 40px 20px 20px;
+    margin: 40px 20px 0px;
+    padding-bottom: 20px;
     h1 {
       font-weight: 500;
+      margin: 20px 0 0;
       img {
         margin: 0 10px 2px 0;
       }

@@ -4,7 +4,7 @@
       <h1>Gerenciamento</h1>
       <management-carousel />
     </template>
-    <template slot="main">
+    <template slot="actions">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         Casos selecionados: {{ selectedIds.length }}
         <div>
@@ -19,6 +19,8 @@
         </div>
         <i class="el-icon-close" @click="clearSelection()"/>
       </div>
+    </template>
+    <template slot="main">
       <div class="view-management__actions">
         <el-button
           icon="el-icon-refresh"
@@ -856,23 +858,24 @@ export default {
   }
   &__multi-actions {
     position: absolute;
+    left: 0;
+    right: 0;
     background-color: #fff;
-    width: 100%;
     z-index: 3;
     padding: 0 20px;
     transition: all 0.5s ease;
-    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
-    border-bottom: solid 1px #e4e8ea;
     display: flex;
     justify-content:space-between;
     align-items: center;
-    margin-top: -44px;
+    margin: -44px 22px 0;
     transform: translateY(-100%);
+    border-radius: 5px 5px 0 0;
     div {
       display: flex;
     }
     &.active {
-      margin-top: -20px;
+      box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
+      margin: 0px 22px;
       transform: translateY(0%);
     }
     i {
@@ -905,6 +908,9 @@ export default {
   &__empty-table {
     margin-top: 40px;
     width: 60px;
+  }
+  .jus-main-view__container {
+    position: relative;
   }
 }
 </style>
