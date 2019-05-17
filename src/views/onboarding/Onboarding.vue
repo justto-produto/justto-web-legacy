@@ -149,11 +149,7 @@ export default {
             this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
             this.$store.dispatch('whatsappStart')
           } else {
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
+            this.$jusNotification({ type: 'error' })
           }
         }).finally(() => {
           this.$store.dispatch('hideLoading')
