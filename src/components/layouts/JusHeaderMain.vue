@@ -122,7 +122,7 @@ export default {
         'disputeupperrange',
         'disputelastrespondentoffer'
       ]
-      if (!isNaN(term)) fields.push('disputeid')
+      if (!isNaN(term) && term < Number.MAX_SAFE_INTEGER) fields.push('disputeid')
       return fields
     },
     logout () {
