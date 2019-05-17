@@ -8,7 +8,7 @@
         {{ slide.title }}
       </h1>
     </template>
-    <template slot="main">
+    <template slot="actions">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         Casos selecionados: {{ selectedIds.length }}
         <div>
@@ -23,83 +23,87 @@
         </div>
         <i class="el-icon-close" @click="clearSelection()"/>
       </div>
-      <el-table
-        ref="allTable"
-        :data="cases"
-        size="small"
-        class="el-table--card"
-        @selection-change="handleSelectionChange">
-        <el-table-column type="selection" />
-        <el-table-column
-          label="Campanha"
-          width="175px"
-          class-name="fixed-width"
-          label-class-name="fixed-width">
-          <template slot-scope="scope">{{ scope.row.campaignname }}</template>
-        </el-table-column>
-        <el-table-column
-          label="Parte(s) contrária(s)"
-          width="175px"
-          class-name="fixed-width"
-          label-class-name="fixed-width">
-          <template slot-scope="scope">
-            <el-popover
-              title="Partes contrárias"
-              trigger="hover">
-              <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                {{ claimant.name }}
-              </div>
-              <ul>
-                <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
+    </template>
+    <template slot="main">
+      <div :class="{'batch-active': multiActive}" class="view-management-review__cases">
+        <el-table
+          ref="allTable"
+          :data="cases"
+          size="small"
+          class="el-table--card"
+          @selection-change="handleSelectionChange">
+          <el-table-column type="selection" />
+          <el-table-column
+            label="Campanha"
+            width="175px"
+            class-name="fixed-width"
+            label-class-name="fixed-width">
+            <template slot-scope="scope">{{ scope.row.campaignname }}</template>
+          </el-table-column>
+          <el-table-column
+            label="Parte(s) contrária(s)"
+            width="175px"
+            class-name="fixed-width"
+            label-class-name="fixed-width">
+            <template slot-scope="scope">
+              <el-popover
+                title="Partes contrárias"
+                trigger="hover">
+                <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
                   {{ claimant.name }}
-                </li>
-              </ul>
-            </el-popover>
+                </div>
+                <ul>
+                  <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
+                    {{ claimant.name }}
+                  </li>
+                </ul>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column label="Nº do caso">
+            <template slot-scope="scope">{{ scope.row.disputecode }}</template>
+          </el-table-column>
+          <el-table-column label="Estratégia">
+            <template slot-scope="scope">{{ scope.row.strategyname }}</template>
+          </el-table-column>
+          <el-table-column label="Status">
+            <template v-if="scope.row.disputestatus" slot-scope="scope">
+              {{ $t('occurrence.type.' + scope.row.disputestatus) }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="Ações"
+            class-name="view-management__row-actions"
+            width="110px"
+            align="center">
+            <template slot-scope="scope">
+              <el-popover trigger="hover">
+                <div>
+                  <strong>Responsáveis:</strong><br>
+                  <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
+                    {{ negotiator.f1 }}
+                  </span>
+                </div>
+                <br>
+                <div>
+                  <strong>Estratégia:</strong><br>
+                  {{ scope.row.strategyname }}
+                </div>
+                <jus-icon slot="reference" icon="more-info" />
+              </el-popover>
+              <el-tooltip content="Visualizar caso">
+                <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
+                  <jus-icon icon="open-case" style="margin-left: 10px;" />
+                </router-link>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <template v-if="!$store.state.loading" slot="empty">
+            <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
+            <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
           </template>
-        </el-table-column>
-        <el-table-column label="Nº do caso">
-          <template slot-scope="scope">{{ scope.row.disputecode }}</template>
-        </el-table-column>
-        <el-table-column label="Estratégia">
-          <template slot-scope="scope">{{ scope.row.strategyname }}</template>
-        </el-table-column>
-        <el-table-column label="Status">
-          <template v-if="scope.row.disputestatus" slot-scope="scope">
-            {{ $t('occurrence.type.' + scope.row.disputestatus) }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="Ações"
-          class-name="view-management__row-actions"
-          width="110px"
-          align="center">
-          <template slot-scope="scope">
-            <el-popover trigger="hover">
-              <div>
-                <strong>Responsáveis:</strong><br>
-                <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
-                  {{ negotiator.f1 }}
-                </span>
-              </div>
-              <br>
-              <div>
-                <strong>Estratégia:</strong><br>
-                {{ scope.row.strategyname }}
-              </div>
-              <jus-icon slot="reference" icon="more-info" />
-            </el-popover>
-            <el-tooltip content="Visualizar caso">
-              <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
-                <jus-icon icon="open-case" style="margin-left: 10px;" />
-              </router-link>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-        <template v-if="!$store.state.loading" slot="empty">
-          <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
-          <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
-        </template>
-      </el-table>
+        </el-table>
+      </div>
     </template>
   </JusViewMain>
 </template>
@@ -191,19 +195,11 @@ export default {
   .el-table--enable-row-hover .el-table__body tr:hover > td {
     background-color: #fff;
   }
-  // .cell {
-  //   img {
-  //     margin-left: 4px;
-  //     vertical-align: text-top;
-  //   }
-  // }
-  // .jus-main-view__main-card > .el-card__body {
-  //   position: relative;
-  //   height: 100%;
-  //   padding: 20px 0;
-  // }
-  // .el-table--enable-row-hover .el-table__body tr:hover > td {
-  //   background-color: #fff;
-  // }
+  &__cases {
+    transition: ease .5s padding;
+    &.batch-active {
+      padding-top: 60px;
+    }
+  }
 }
 </style>
