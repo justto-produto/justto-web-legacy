@@ -59,7 +59,8 @@
       "RUNNING": "engajamento",
       "ARCHIVED": "arquivado",
       "SETTLED": "ganho",
-      "UNSETTLED": "perdido"
+      "UNSETTLED": "perdido",
+      "EXPIRED": "expirado"
     }
   },
   "profile": {
