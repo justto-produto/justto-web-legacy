@@ -97,9 +97,8 @@ export default {
               this.showSuccess = true
               this.synced = true
               this.$store.dispatch('myAccount')
-            }).catch(error => {
+            }).catch(() => {
               this.showError = true
-              console.error(error)
             }).finally(() => {
               this.$store.dispatch('hideLoading')
             })

@@ -104,8 +104,7 @@ export default {
           this.showSuccess = true
           this.$router.push('login')
         })
-        .catch(error => {
-          console.error(error)
+        .catch(() => {
           this.$router.push('login')
         })
     }
@@ -129,8 +128,7 @@ export default {
                 })
                 window.analytics.group(this.$store.state.workspaceModule.subdomain)
                 this.$router.push('/management')
-              }).catch(error => {
-                console.error(error)
+              }).catch(() => {
                 this.errorMessage = `Houve uma falha de conexão com o servidor.
                 Tente novamente ou entre em contato com o administrador do sistema.`
                 this.showError = true
@@ -138,7 +136,6 @@ export default {
               })
             })
             .catch(error => {
-              console.error(error.response)
               if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
                 this.errorMessage = 'E-mail não cadastrado ou senha incorreta.'
               } else {

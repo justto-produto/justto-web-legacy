@@ -120,13 +120,8 @@ export default {
           })
           this.$store.commit('removeImportsFile')
           this.$router.push('/import/loading')
-        }).catch(error => {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
-          console.error(error)
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
         })
       } else {
         this.$jusNotification({

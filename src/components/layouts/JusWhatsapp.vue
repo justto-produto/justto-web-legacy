@@ -128,11 +128,7 @@ export default {
             })
           }).catch(() => {
             this.sending = false
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
+            this.$jusNotification({ type: 'error' })
           })
         }
       })

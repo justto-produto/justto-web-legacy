@@ -175,7 +175,9 @@ export default {
             this.unsettledTypeId = this.summary.reasons.length > 0 ? this.summary.reasons[0].id : null
           }
         }
-      }).catch(() => this.$jusNotification({ type: 'error' })).finally(() => {
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
         this.loading = false
       })
     },
