@@ -60,7 +60,7 @@
           <jus-icon icon="spreadsheet-xlsx"/>
         </div>
         <div class="import-history__content">
-          <h4>{{ imports.file_name }}</h4>
+          <h4><a href="#" @click="downloadItem(imports.file_name)">{{ imports.file_name }}</a></h4>
           <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
           <p>Linhas: {{ imports.rows }}</p>
         </div>
@@ -162,6 +162,9 @@ export default {
     downloadModel () {
       window.analytics.track('Planilha modelo baixada')
       window.open('Planilha-Modelo-Justto.xlsx', '_blank')
+    },
+    downloadItem (fileName) {
+      window.open('imported/'+fileName, '_blank')
     }
   }
 }
