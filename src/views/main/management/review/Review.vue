@@ -64,7 +64,7 @@
           </el-table-column>
           <el-table-column v-if="showReviewColumn" label="Revisar">
             <template slot-scope="scope">
-              <div v-for=" item in getCaseAlerts(scope.row)">
+              <div v-for="item in getCaseAlerts(scope.row)" :key="item.child_id + item.id ">
                 <jus-icon :icon="item.type === 'ERROR' ? 'alert' : 'warn'" style="vertical-align: sub;" />
                 {{ item.label }}: {{ item.message }}
               </div>

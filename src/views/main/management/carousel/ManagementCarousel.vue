@@ -110,7 +110,7 @@ export default {
   created () {
     let promises = []
     this.slides.forEach((slide, index) => {
-      let query = { query: { bool: {}}, from: 0, size: 3000, order_by: 'favorite DESC' }
+      let query = { query: { bool: { } }, from: 0, size: 3000, order_by: 'favorite DESC' }
       if (slide.filter) {
         query.query.bool.filter = slide.filter
       }
