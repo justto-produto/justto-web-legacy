@@ -94,7 +94,7 @@ export default {
       return this.showPassword ? 'text' : 'password'
     }
   },
-  beforeCreate () {
+  beforeMount () {
     this.$store.dispatch('logout')
   },
   created () {

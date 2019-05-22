@@ -791,8 +791,7 @@ export default {
     }
   }
   &__carousel-slider {
-    width: calc(100% - 40px);
-    margin: 0 10px;
+    margin-right: 34px;
   }
   &__tabs {
     .el-table__header {
@@ -807,6 +806,11 @@ export default {
         .cell {
           width: 175px;
           white-space: nowrap;
+          .el-popover__reference {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
         }
       }
       .cell {

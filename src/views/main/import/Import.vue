@@ -164,7 +164,7 @@ export default {
       window.open('Planilha-Modelo-Justto.xlsx', '_blank')
     },
     downloadItem (fileName) {
-      window.open('imported/'+fileName, '_blank')
+      window.open('imported/' + fileName, '_blank')
     }
   }
 }
