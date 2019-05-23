@@ -46,9 +46,9 @@
             Entrar
           </el-button>
           <el-row class="external-view__info">
-            Ao clicar no botão, eu concordo com os
-            <a href="#"> Termos de Uso</a> e
-            <a href="#">Política de Privacidade.</a>
+            Ao clicar em Entrar, eu concordo com os
+            <a href="#"> Termos de Uso</a> e com os
+            <a href="https://docs.google.com/document/d/13NTwuP3AGzMXGEyEAh4yOPLd5luILzGiOv-SYJ362Ck/edit?usp=sharing" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
             <a href="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
