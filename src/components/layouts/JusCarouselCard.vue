@@ -1,6 +1,11 @@
 <template>
   <el-card :class="bgClass" class="jus-carousel-card el-card--bg-primary" shadow="never">
-    {{ title }} {{ subtitle }}
+    <span v-if="slide.casesLength">
+      Você tem {{ slide.casesLength }} {{ title }}
+    </span>
+    <span v-else>
+      {{ title | capitalize }} {{ subtitle }}
+    </span>
     <el-button type="transparent" @click="$router.push({name: slide.to, params: {slide: slide}})">
       {{ slide.button }}
     </el-button>
@@ -27,6 +32,8 @@ export default {
     },
     bgClass () {
       switch (this.slide.color) {
+        case 'purple':
+          return 'el-card--bg-primary'
         case 'orange':
           return 'el-card--bg-secondary'
         case 'green':
@@ -44,6 +51,7 @@ export default {
   width: 100%;
   font-weight: 300;
   height: 90px;
+  direction: ltr;
   .el-card__body {
     text-align: justify;
     padding: 0px 20px;

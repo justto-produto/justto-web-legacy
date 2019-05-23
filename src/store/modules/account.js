@@ -25,6 +25,7 @@ const account = {
       state.email = ''
       state.status = ''
       state.token = ''
+      localStorage.removeItem('justoken')
     },
     setUser (state, response) {
       if (response.id) state.id = response.id

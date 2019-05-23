@@ -34,7 +34,7 @@
     "vue-currency-filter": "^3.3.0",
     "vue-i18n": "^8.1.0",
     "vue-moment": "^4.0.0",
-    "vue-owl-carousel": "^2.0.3",
+    "vue-owl-carousel": "github:SalemCode8/vue-owl-carousel#patch-1",
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-router": "^3.0.1",
     "vue-scrollto": "^2.13.0",

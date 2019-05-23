@@ -73,7 +73,7 @@ if (store.getters.isLoggedIn) {
   Promise.all([store.dispatch('myAccount'), store.dispatch('myWorkspace')])
     .then(responses => {
       store.dispatch('hideLoading')
-      if (responses[1][0]['subDomain']) {
+      if (responses[1][0] && responses[1][0]['subDomain']) {
         store.dispatch('getWorkspaceMembers')
         store.dispatch('myPerson')
       }

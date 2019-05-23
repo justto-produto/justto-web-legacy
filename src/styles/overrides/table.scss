@@ -1,5 +1,10 @@
 @import '../colors';
 
+.el-table {
+  .cell {
+    word-break: normal;
+  }
+}
 .el-table--card {
   th {
     font-weight: 500;

@@ -5,7 +5,7 @@
         <router-link to="/management">
           <jus-icon icon="back" />
         </router-link>
-        {{ slide.title }}
+        {{ slide.title | capitalize }}
       </h1>
     </template>
     <template slot="actions">
@@ -46,18 +46,9 @@
             class-name="fixed-width"
             label-class-name="fixed-width">
             <template slot-scope="scope">
-              <el-popover
-                title="Partes contrárias"
-                trigger="hover">
-                <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                  {{ claimant.name }}
-                </div>
-                <ul>
-                  <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                    {{ claimant.name }}
-                  </li>
-                </ul>
-              </el-popover>
+              <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                {{ claimant.name }}
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="Nº do caso">
@@ -68,7 +59,15 @@
           </el-table-column>
           <el-table-column label="Status">
             <template v-if="scope.row.disputestatus" slot-scope="scope">
-              {{ $t('occurrence.type.' + scope.row.disputestatus) }}
+              {{ $t('occurrence.type.' + scope.row.disputestatus) | capitalize }}
+            </template>
+          </el-table-column>
+          <el-table-column v-if="showReviewColumn" label="Revisar">
+            <template slot-scope="scope">
+              <div v-for="item in getCaseAlerts(scope.row)" :key="item.child_id + item.id ">
+                <jus-icon :icon="item.type === 'ERROR' ? 'alert' : 'warn'" style="vertical-align: sub;" />
+                {{ item.label }}: {{ item.message }}
+              </div>
             </template>
           </el-table-column>
           <el-table-column
@@ -123,24 +122,38 @@ export default {
     },
     multiActive () {
       return this.selectedIds.length >= 1
-    }
-  },
-  beforeCreate () {
-    if (!this.$route.params.slide) {
-      this.$router.push('/management')
+    },
+    showReviewColumn () {
+      return this.slide.color === 'purple'
     }
   },
   beforeMount () {
-    this.$store.dispatch('showLoading')
-    this.cases = []
-    let query = { query: { bool: { must: this.slide.must } }, from: 0, size: 3000, order_by: 'favorite DESC' }
-    this.$store.dispatch('getDisputes', query).then(response => {
-      this.cases = response
-    }).catch(() => {
-      this.$jusNotification({ type: 'error' })
-    }).finally(() => {
-      this.$store.dispatch('hideLoading')
-    })
+    if (this.$route.params.slide) {
+      this.$store.dispatch('showLoading')
+      this.cases = []
+      let query = { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' }
+      if (this.slide.filter) {
+        query.query.bool.filter = this.slide.filter
+      }
+      if (this.slide.must) {
+        query.query.bool.must = this.slide.must
+      }
+      if (this.slide.should) {
+        query.query.bool.should = this.slide.should
+      }
+      if (this.slide.minimum_should_match) {
+        query.query.bool.minimum_should_match = this.slide.minimum_should_match
+      }
+      this.$store.dispatch('getDisputes', query).then(response => {
+        this.cases = response
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.$store.dispatch('hideLoading')
+      })
+    } else {
+      this.$router.push('/management')
+    }
   },
   methods: {
     handleSelectionChange (selected) {
@@ -185,6 +198,36 @@ export default {
           this.$jusNotification({ type: 'error' })
         })
       })
+    },
+    getCaseAlerts (_case) {
+      let alerts = []
+      if (_case.alerts && _case.alerts.length) {
+        for (let alert of _case.alerts) {
+          alert.f1.label = 'Caso'
+          alerts.push(alert.f1)
+        }
+      }
+      if (_case.claiments && _case.claiments.length) {
+        for (let claimant of _case.claiments) {
+          if (claimant.alerts && claimant.alerts.length) {
+            for (let alert of claimant.alerts) {
+              alert.label = 'Parte contrária'
+              alerts.push(alert)
+            }
+          }
+        }
+      }
+      if (_case.claimentslawyer && _case.claimentslawyer.length) {
+        for (let claimant of _case.claimentslawyer) {
+          if (claimant.alerts && claimant.alerts.length) {
+            for (let alert of claimant.alerts) {
+              alert.label = 'Advogado da parte'
+              alerts.push(alert)
+            }
+          }
+        }
+      }
+      return alerts
     }
   }
 }
