@@ -56,10 +56,10 @@
       "ENRICHED": "enriquecido",
       "CHECKOUT": "acordo sem dados bancários",
       "REFUSED": "perdido",
-      "RUNNING": "engajamento",
       "ARCHIVED": "arquivado",
       "SETTLED": "ganho",
       "UNSETTLED": "perdido",
+      "RUNNING": "em negociação",
       "EXPIRED": "expirado"
     }
   },
