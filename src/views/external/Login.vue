@@ -46,7 +46,7 @@
             Entrar
           </el-button>
           <el-row class="external-view__info">
-            Ao clicar no botão, eu concordo com os
+            Ao clicar em Entrar, eu concordo com os
             <a href="#"> Termos de Uso</a> e com os
             <a href="https://docs.google.com/document/d/13NTwuP3AGzMXGEyEAh4yOPLd5luILzGiOv-SYJ362Ck/edit?usp=sharing" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
