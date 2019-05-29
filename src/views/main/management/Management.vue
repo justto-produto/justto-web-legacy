@@ -686,7 +686,23 @@ export default {
           type: action,
           disputeIds: this.selectedIds
         }).then(response => {
-          window.analytics.track('Ação em massa realizada', {
+          let trackTitle
+          if (action === 'SETTLED') {
+            trackTitle = 'Casos em massa perdidos'
+          } else if (action === 'UNSETTLED') {
+            trackTitle = 'Casos em massa ganhos'
+          } else if (action === 'PAUSED') {
+            trackTitle = 'Casos em massa pausados'
+          } else if (action === 'RESUME') {
+            trackTitle = 'Casos em massa despausado'
+          } else if (action === 'DELETE') {
+            trackTitle = 'Casos em massa deletados'
+          } else if (action === 'RESTART_ENGAGEMENT') {
+            trackTitle = 'Casos em massa reiniciados'
+          } else {
+            trackTitle = 'Ações em massa realizada' + action
+          }
+          window.analytics.track(trackTitle, {
             action: action,
             tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
             selecteds: this.selectedIds.length
