@@ -69,7 +69,8 @@ export default {
           this.mappedCampaigns = response
         })
       } else if (this.activeStep === 0) {
-        window.analytics.track('Planilha importada', {
+        window.analytics.track('Importação Iniciada', {
+          action: 'Planilha Importada'
           lines: this.$store.state.importModule.file.rows
         })
       }
@@ -116,6 +117,9 @@ export default {
       if (allValid) {
         Promise.all(promises).then(() => {
           window.analytics.track('Configuração de campanha concluida', {
+            campaign: campaignsTrack
+          })
+          window.analytics.track('Importação Concluída', {
             campaign: campaignsTrack
           })
           this.$store.commit('removeImportsFile')
