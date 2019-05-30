@@ -70,7 +70,7 @@ export default {
         })
       } else if (this.activeStep === 0) {
         window.analytics.track('Importação Iniciada', {
-          action: 'Planilha Importada'
+          action: 'Planilha Importada',
           lines: this.$store.state.importModule.file.rows
         })
       }
