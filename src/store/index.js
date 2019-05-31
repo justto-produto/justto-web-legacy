@@ -7,7 +7,7 @@ import importModule from './modules/import'
 import campaignModule from './modules/campaign'
 import strategyModule from './modules/strategy'
 import personModule from './modules/person'
-import disputeModule from './modules/dispute'
+import disputeModule from './modules/dispute/index'
 import messageModule from './modules/message'
 import chatModule from './modules/chat'
 
