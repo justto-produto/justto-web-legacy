@@ -24,8 +24,8 @@
             </i>
           </div>
           <div class="case-view-messages__message-time">
-            <span v-if="message.executionDateTime">
-              {{ message.executionDateTime | moment('HH:mm') }} •
+            <span v-if="message.executionDateTime || message.message.schedulerTime">
+              {{ message.executionDateTime != null ? message.executionDateTime : message.message.schedulerTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-if="directionClass(message) !== 'note'">
               <jus-icon :icon="getMessageIcon(message.message)" />
