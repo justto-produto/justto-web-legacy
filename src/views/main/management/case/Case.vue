@@ -348,7 +348,7 @@ export default {
   },
   methods: {
     checkWhatsappStatus () {
-      this.$store.dispatch('whatsappStatus').then((whatsapp) => {
+      this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
         if (whatsapp.status === 'CONNECTED') {
           this.whatsappStatus = 'CONNECTED'
         } else {

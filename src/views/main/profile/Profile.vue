@@ -200,7 +200,7 @@ export default {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.state.personModule.person))
     this.teamName = this.$store.state.workspaceModule.name + ''
-    this.$store.dispatch('whatsappStatus').then((whatsapp) => {
+    this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
         this.$store.dispatch('whatsappStart')
       } else {

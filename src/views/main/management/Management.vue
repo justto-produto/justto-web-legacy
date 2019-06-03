@@ -55,6 +55,7 @@
         <el-tab-pane name="3" label="Todos" />
       </el-tabs>
       <el-table
+        v-loading="loadingDisputes"
         ref="disputeTable"
         :data="disputes"
         size="small"
@@ -211,7 +212,8 @@ export default {
       selectedIds: [],
       activeFilters: {},
       activeTab: this.getActiveTabLabel(this.$store.state.disputeModule.filters.tab),
-      loadingExport: false
+      loadingExport: false,
+      loadingDisputes: false
     }
   },
   computed: {
@@ -230,14 +232,17 @@ export default {
     this.$store.dispatch('getStrategies')
     this.getDisputes()
   },
+  destroyed () {
+    this.$store.commit('clearDisputes')
+  },
   methods: {
     getDisputes () {
-      this.$store.dispatch('showLoading')
+      this.loadingDisputes = true
       this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' }).then(response => {
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
-        this.$store.dispatch('hideLoading')
+        this.loadingDisputes = false
       })
     },
     handleSelectionChange (selected) {
@@ -252,6 +257,7 @@ export default {
       if (oldTab !== undefined) {
         this.$store.commit('setDisputeTab', newTab)
         this.clearSelection()
+        this.clearFilters()
         this.activeTab = this.getActiveTabLabel(newTab)
       }
     },
@@ -289,7 +295,6 @@ export default {
       if (this.$refs.disputeTable) this.$refs.disputeTable.clearSelection()
     },
     applyFilters () {
-      console.log(JSON.parse(JSON.stringify(this.activeFilters)))
       this.$store.commit('setDisputeFilter', this.activeFilters)
       this.showFilters = false
       window.analytics.track('Filtro aplicado', {
@@ -303,6 +308,29 @@ export default {
     },
     restoreFilters () {
       this.activeFilters = JSON.parse(JSON.stringify(this.filters.terms))
+    },
+    setFavorite (action, id, tab) {
+      let label = action === 'favorite' ? 'favoritado' : 'removido de favoritos'
+      this.$store.dispatch('sendDisputeAction', {
+        action: action,
+        disputeId: id
+      }).then(() => {
+        window.analytics.track('Caso em "' + tab + '" ' + label, {
+          aba: tab,
+          action: label
+        })
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Caso ' + label + ' com sucesso.',
+          type: 'success'
+        })
+        let self = this
+        setTimeout(function () {
+          self.getCases()
+        }, 1500)
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      })
     }
   }
 }

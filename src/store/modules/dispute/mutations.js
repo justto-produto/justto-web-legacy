@@ -1,6 +1,9 @@
 const disputeMutations = {
+  clearDisputes (state) {
+    state.disputes = []
+  },
   clearDisputeFilters (state) {
-    state.filters = { tab: '0', terms: {} }
+    state.filters.terms = {}
   },
   setDisputes (state, disputes) {
     state.disputes = disputes
