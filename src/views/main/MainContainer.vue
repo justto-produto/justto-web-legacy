@@ -13,11 +13,11 @@
         :default-active="$route.path"
         router
         class="el-menu--main-menu">
-        <!-- <el-menu-item index="/">
+        <el-menu-item index="/">
           <jus-tip />
           <jus-icon icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
-        </el-menu-item> -->
+        </el-menu-item>
         <!-- <transition name="fade">
           <li v-if="!isCollapse" class="el-menu__title">
             <span>GERENCIAMENTO</span>
@@ -70,6 +70,14 @@ export default {
   beforeMount () {
     this.$store.dispatch('myPerson')
     this.$store.dispatch('getWorkspaceMembers')
+    this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
+    this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
+      if (whatsapp.status === 'OFFLINE') {
+        this.$store.dispatch('whatsappStart')
+      } else {
+        this.$store.commit('SOCKET_refresh', whatsapp)
+      }
+    })
   }
 }
 </script>

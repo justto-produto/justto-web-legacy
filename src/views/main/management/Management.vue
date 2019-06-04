@@ -357,7 +357,7 @@ export default {
                   Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
                   type: 'info'
                 })
-              }.bind(self), 300)
+              }, 300)
             }
           })
         }).catch(() => {

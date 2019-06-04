@@ -108,20 +108,20 @@ export default {
     }
   },
   mounted () {
-    this.$store.watch(state => state.chatModule.typing, typing => {
+    this.$store.watch(state => state.socketModule.chat.typing, typing => {
       this.typing = typing
     })
-    this.$store.watch(state => state.chatModule.join, join => {
+    this.$store.watch(state => state.socketModule.chat.join, join => {
       setTimeout(() => {
         this.$emit('dispute:refresh')
       }, 1000)
     })
-    this.$store.watch(state => state.chatModule.message, join => {
+    this.$store.watch(state => state.socketModule.chat.message, join => {
       setTimeout(() => {
         this.$emit('dispute:refresh')
       }, 1000)
     })
-    this.$store.watch(state => state.chatModule.leave, join => {
+    this.$store.watch(state => state.socketModule.chat.leave, join => {
       setTimeout(() => {
         this.$emit('dispute:refresh')
       }, 1000)

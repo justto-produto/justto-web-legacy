@@ -1,6 +1,6 @@
-import disputeMutations from './mutations'
-import disputeActions from './actions'
-import disputeGetters from './getters'
+import mutations from './mutations'
+import actions from './actions'
+import getters from './getters'
 
 const dispute = {
   state: {
@@ -10,9 +10,9 @@ const dispute = {
       terms: {}
     }
   },
-  mutations: disputeMutations,
-  actions: disputeActions,
-  getters: disputeGetters
+  mutations: mutations,
+  actions: actions,
+  getters: getters
 }
 
 export default dispute

@@ -2,14 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import workspaceModule from './modules/workspace'
 import accountModule from './modules/account'
-import whatsappModule from './modules/whatsapp'
 import importModule from './modules/import'
 import campaignModule from './modules/campaign'
 import strategyModule from './modules/strategy'
 import personModule from './modules/person'
 import disputeModule from './modules/dispute/index'
 import messageModule from './modules/message'
-import chatModule from './modules/chat'
+import socketModule from './modules/socket/index'
 
 Vue.use(Vuex)
 
@@ -43,13 +42,12 @@ export default new Vuex.Store({
   modules: {
     accountModule,
     workspaceModule,
-    whatsappModule,
     importModule,
     campaignModule,
     strategyModule,
     personModule,
     disputeModule,
     messageModule,
-    chatModule
+    socketModule
   }
 })
