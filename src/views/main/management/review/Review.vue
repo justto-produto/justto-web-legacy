@@ -64,7 +64,7 @@
           </el-table-column>
           <el-table-column v-if="showReviewColumn" label="Revisar">
             <template slot-scope="scope">
-              <div v-for="(item, index) in getCaseAlerts(scope.row)" :key="item.child_id + item.id + index ">
+              <div v-for="(item, index) in getDisputeAlerts(scope.row)" :key="item.child_id + item.id + index ">
                 <jus-icon :icon="item.type === 'ERROR' ? 'alert' : 'warn'" style="vertical-align: sub;" />
                 {{ item.label }}: {{ item.message }}
               </div>
@@ -91,7 +91,7 @@
                 <jus-icon slot="reference" icon="more-info" />
               </el-popover>
               <el-tooltip content="Visualizar caso">
-                <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
+                <router-link :to="{ name: 'dispute', params: {id: scope.row.disputeid} }">
                   <jus-icon icon="open-case" style="margin-left: 10px;" />
                 </router-link>
               </el-tooltip>
@@ -182,16 +182,16 @@ export default {
         })
       })
     },
-    getCaseAlerts (_case) {
+    getDisputeAlerts (dispute) {
       let alerts = []
-      if (_case.alerts && _case.alerts.length) {
-        for (let alert of _case.alerts) {
+      if (dispute.alerts && dispute.alerts.length) {
+        for (let alert of dispute.alerts) {
           alert.f1.label = 'Caso'
           alerts.push(alert.f1)
         }
       }
-      if (_case.claiments && _case.claiments.length) {
-        for (let claimant of _case.claiments) {
+      if (dispute.claiments && dispute.claiments.length) {
+        for (let claimant of dispute.claiments) {
           if (claimant.alerts && claimant.alerts.length) {
             for (let alert of claimant.alerts) {
               alert.label = 'Parte contrária'
@@ -200,8 +200,8 @@ export default {
           }
         }
       }
-      if (_case.claimentslawyer && _case.claimentslawyer.length) {
-        for (let claimant of _case.claimentslawyer) {
+      if (dispute.claimentslawyer && dispute.claimentslawyer.length) {
+        for (let claimant of dispute.claimentslawyer) {
           if (claimant.alerts && claimant.alerts.length) {
             for (let alert of claimant.alerts) {
               alert.label = 'Advogado da parte'

@@ -8,7 +8,7 @@
         :fetch-suggestions="search"
         placeholder="Busque aqui os seus casos">
         <template slot-scope="{ item }">
-          <router-link :to="'/management/case/' + item.disputeid">
+          <router-link :to="'/management/dispute/' + item.disputeid">
             <div class="jus-header-main__result">
               <h4>
                 Caso #{{ item.disputeid }} |

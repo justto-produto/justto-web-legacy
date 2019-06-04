@@ -96,15 +96,15 @@ const disputeActions = {
       })
     })
   },
-  editCase ({ commit }, caseForm) {
+  editDispute ({ commit }, disputeForm) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + caseForm.disputeId + '/update', {
-        id: caseForm.disputeId,
-        upperRange: caseForm.upperRange,
-        expirationDate: caseForm.expirationDate,
-        lastOffer: caseForm.lastOffer,
-        description: caseForm.description
+      axios.put('api/disputes/' + disputeForm.disputeId + '/update', {
+        id: disputeForm.disputeId,
+        upperRange: disputeForm.upperRange,
+        expirationDate: disputeForm.expirationDate,
+        lastOffer: disputeForm.lastOffer,
+        description: disputeForm.description
       })
       .then(response => {
         resolve(response.data)
@@ -125,7 +125,7 @@ const disputeActions = {
       })
     })
   },
-  editCaseReason ({ commit }, params) {
+  editDisputeReason ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/disputes/' + params.disputeId + '/reasons/' + params.reasonId + '/update', params.body)
@@ -136,7 +136,7 @@ const disputeActions = {
       })
     })
   },
-  removeCase ({ commit }, disputeId) {
+  removeDispute ({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.delete('api/disputes/' + disputeId)

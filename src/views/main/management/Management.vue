@@ -165,7 +165,7 @@
               </el-button>
             </el-tooltip>
             <el-tooltip content="Visualizar caso">
-              <router-link :to="{ name: 'case', params: { id: scope.row.disputeid } }">
+              <router-link :to="{ name: 'dispute', params: { id: scope.row.disputeid } }">
                 <jus-icon icon="open-case" />
               </router-link>
             </el-tooltip>
@@ -323,7 +323,7 @@ export default {
         })
         let self = this
         setTimeout(function () {
-          self.getCases()
+          self.getDisputes()
         }, 1500)
       }).catch(() => {
         this.$jusNotification({ type: 'error' })

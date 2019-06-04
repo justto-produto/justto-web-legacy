@@ -1,14 +1,14 @@
 <template>
-  <ul v-loading="messages.length === 0 && loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="case-view-messages">
+  <ul v-loading="messages.length === 0 && loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="message in messages"
       v-if="isntCanceled(message)"
       v-show="checkShowScheduled(message)"
       :key="message.id"
-      class="case-view-messages__message">
-      <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="case-view-messages__message-box">
+      class="dispute-view-messages__message">
+      <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="dispute-view-messages__message-box">
         <div>
-          <div :class="directionClass(message) + waitingClass(message)" class="case-view-messages__message-content">
+          <div :class="directionClass(message) + waitingClass(message)" class="dispute-view-messages__message-content">
             <div>{{ message.description }}</div>
             <el-button v-if="message.message && message.message.type === 'EMAIL'" type="text" @click="showMessageDialog(message.message.content)">Visualizar email</el-button>
             <span v-else v-html="message.message && message.message.content" />
@@ -23,7 +23,7 @@
               Esta é uma mensagem agendada que ainda não foi entregue.
             </i>
           </div>
-          <div class="case-view-messages__message-time">
+          <div class="dispute-view-messages__message-time">
             <span v-if="message.executionDateTime || message.message.schedulerTime">
               {{ message.executionDateTime != null ? message.executionDateTime : message.message.schedulerTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
@@ -44,7 +44,7 @@
           :purple="directionClass(message) === 'inbound'"
           size="sm" />
       </div>
-      <div v-else class="case-view-messages__message-log">
+      <div v-else class="dispute-view-messages__message-log">
         <div :class="message.type === 'TYPING' ? 'loading' : ''">{{ message.description }}</div>
         {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
       </div>
@@ -62,7 +62,7 @@
 
 <script>
 export default {
-  name: 'CaseMessages',
+  name: 'DisputeMessages',
   props: {
     messagesProp: {
       type: Array,
@@ -113,17 +113,17 @@ export default {
     })
     this.$store.watch(state => state.chatModule.join, join => {
       setTimeout(() => {
-        this.$emit('case:refresh')
+        this.$emit('dispute:refresh')
       }, 1000)
     })
     this.$store.watch(state => state.chatModule.message, join => {
       setTimeout(() => {
-        this.$emit('case:refresh')
+        this.$emit('dispute:refresh')
       }, 1000)
     })
     this.$store.watch(state => state.chatModule.leave, join => {
       setTimeout(() => {
-        this.$emit('case:refresh')
+        this.$emit('dispute:refresh')
       }, 1000)
     })
   },
@@ -196,7 +196,7 @@ export default {
 </script>
 
 <style lang="scss">
-.case-view-messages {
+.dispute-view-messages {
   overflow-y: auto;
   height: 100%;
   margin: 0;
@@ -210,7 +210,7 @@ export default {
     justify-content: flex-end;
     &.inbound {
       flex-direction: row-reverse;
-      .case-view-messages__message-time {
+      .dispute-view-messages__message-time {
         text-align: left;
       }
     }
