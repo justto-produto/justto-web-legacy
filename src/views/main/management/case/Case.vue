@@ -476,9 +476,17 @@ export default {
       this.$store.dispatch('sendDisputeAction', params).then(() => {
         let trackTitle
         if (action === 'unsettled') {
-          trackTitle = 'PERDA (Status modificado)'
+          trackTitle = 'Caso ganho'
         } else if (action === 'settled') {
-          trackTitle = 'GANHO (Status modificado)'
+          trackTitle = 'Caso perdido'
+        } else if (action === 'paused') {
+          trackTitle = 'Caso pausado'
+        } else if (action === 'resume') {
+          trackTitle = 'Caso despausado'
+        } else if (action === 'favorite') {
+          trackTitle = 'Caso favoritado'
+        } else if (action === 'disfavor') {
+          trackTitle = 'Caso desfavoritado'
         } else {
           trackTitle = 'Status Modificado'
         }
