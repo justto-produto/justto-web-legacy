@@ -688,9 +688,9 @@ export default {
         }).then(response => {
           let trackTitle
           if (action === 'SETTLED') {
-            trackTitle = 'Casos em massa perdidos'
-          } else if (action === 'UNSETTLED') {
             trackTitle = 'Casos em massa ganhos'
+          } else if (action === 'UNSETTLED') {
+            trackTitle = 'Casos em massa perdidos'
           } else if (action === 'PAUSED') {
             trackTitle = 'Casos em massa pausados'
           } else if (action === 'RESUME') {
