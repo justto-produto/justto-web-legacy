@@ -121,7 +121,7 @@
           <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
         </el-table-column>
         <el-table-column v-if="activeTab.index === '3'" label="Status">
-          <template v-if="scope.row.disputestatus" slot-scope="scope">
+          <template slot-scope="scope">
             {{ $t('occurrence.type.' + scope.row.disputestatus) }}
           </template>
         </el-table-column>
@@ -232,9 +232,6 @@ export default {
     this.$store.dispatch('getStrategies')
     this.getDisputes()
   },
-  destroyed () {
-    this.$store.commit('clearDisputes')
-  },
   methods: {
     getDisputes () {
       this.loadingDisputes = true
@@ -330,6 +327,42 @@ export default {
         }, 1500)
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
+      })
+    },
+    sendBatchAction (action) {
+      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('sendBatchAction', {
+          type: action,
+          disputeIds: this.selectedIds
+        }).then(response => {
+          window.analytics.track('Ação em massa realizada', {
+            action: action,
+            tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
+            selecteds: this.selectedIds.length
+          })
+          let self = this
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
+            type: 'success',
+            onClose () {
+              setTimeout(function () {
+                self.$jusNotification({
+                  title: 'Fique atento!',
+                  message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
+                  Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
+                  type: 'info'
+                })
+              }.bind(self), 300)
+            }
+          })
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        })
       })
     }
   }

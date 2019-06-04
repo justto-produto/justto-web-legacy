@@ -25,10 +25,10 @@
       </div>
     </template>
     <template slot="main">
-      <div :class="{'batch-active': multiActive}" class="view-management-review__cases">
+      <div :class="{'batch-active': multiActive}" class="view-management-review__disputes">
         <el-table
           ref="allTable"
-          :data="cases"
+          :data="disputes"
           size="small"
           class="el-table--card"
           @selection-change="handleSelectionChange">
@@ -64,7 +64,7 @@
           </el-table-column>
           <el-table-column v-if="showReviewColumn" label="Revisar">
             <template slot-scope="scope">
-              <div v-for="item in getCaseAlerts(scope.row)" :key="item.child_id + item.id ">
+              <div v-for="(item, index) in getCaseAlerts(scope.row)" :key="item.child_id + item.id + index ">
                 <jus-icon :icon="item.type === 'ERROR' ? 'alert' : 'warn'" style="vertical-align: sub;" />
                 {{ item.label }}: {{ item.message }}
               </div>
@@ -112,7 +112,7 @@ export default {
   name: 'Review',
   data () {
     return {
-      cases: [],
+      disputes: [],
       selectedIds: []
     }
   },
@@ -129,28 +129,7 @@ export default {
   },
   beforeMount () {
     if (this.$route.params.slide) {
-      this.$store.dispatch('showLoading')
-      this.cases = []
-      let query = { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' }
-      if (this.slide.filter) {
-        query.query.bool.filter = this.slide.filter
-      }
-      if (this.slide.must) {
-        query.query.bool.must = this.slide.must
-      }
-      if (this.slide.should) {
-        query.query.bool.should = this.slide.should
-      }
-      if (this.slide.minimum_should_match) {
-        query.query.bool.minimum_should_match = this.slide.minimum_should_match
-      }
-      this.$store.dispatch('getDisputes', query).then(response => {
-        this.cases = response
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.$store.dispatch('hideLoading')
-      })
+      this.disputes = this.$store.getters[this.slide.id]
     } else {
       this.$router.push('/management')
     }
@@ -177,6 +156,11 @@ export default {
           type: action,
           disputeIds: this.selectedIds
         }).then(response => {
+          window.analytics.track('Ação em massa realizada', {
+            action: action,
+            tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
+            selecteds: this.selectedIds.length
+          })
           let self = this
           this.$jusNotification({
             title: 'Yay!',
@@ -188,10 +172,9 @@ export default {
                   title: 'Fique atento!',
                   message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
                   Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
-                  type: 'info',
-                  duration: 0
+                  type: 'info'
                 })
-              }, 300)
+              }.bind(self), 300)
             }
           })
         }).catch(() => {
@@ -238,7 +221,7 @@ export default {
   .el-table--enable-row-hover .el-table__body tr:hover > td {
     background-color: #fff;
   }
-  &__cases {
+  &__disputes {
     transition: ease .5s padding;
     &.batch-active {
       padding-top: 60px;

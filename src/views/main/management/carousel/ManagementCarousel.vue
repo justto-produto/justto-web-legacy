@@ -1,6 +1,6 @@
 <template lang="html">
   <transition name="el-fade-in">
-    <div v-show="componentKey" class="view-management__carousel-container">
+    <div v-show="componentKey > 0" class="view-management__carousel-container">
       <owl-carousel
         :key="componentKey"
         :items="2"
@@ -15,7 +15,7 @@
         :autoplay="false"
         :nav-text="carouselIcons()"
         class="view-management__carousel-slider">
-        <div v-for="slide in slides" v-if="slide.length" :key="slide.title">
+        <div v-for="(slide, index) in slides" v-if="slide.shows" :key="slide.title + index">
           <jus-carousel-card :slide="slide" />
         </div>
       </owl-carousel>
@@ -38,105 +38,76 @@ export default {
   computed: {
     slides () {
       return [{
-        title: 'caso(s) que a negociação encerra nos próximos 3 dias',
+        id: 'alertOne',
+        title: 'casos que a negociação encerra nos próximos 3 dias',
         subtitle: 'Entre em contato',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        length: this.$store.getters.prescriptionOne.length
+        shows: this.$store.getters.alertOne.length > 0
       }, {
-        title: 'caso(s) sem e-mail válido',
+        id: 'alertTwo',
+        title: 'casos sem e-mail válido',
         subtitle: 'Atualize os dados',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        length: this.$store.getters.prescriptionTwo.length
+        shows: this.$store.getters.alertTwo.length > 0
       }, {
-        title: 'caso(s) com contraproposta até 20% acima da alçada',
+        id: 'alertThree',
+        title: 'casos com contraproposta até 20% acima da alçada',
         subtitle: 'Entre em contato',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        length: this.$store.getters.prescriptionThree.length
+        shows: this.$store.getters.alertThree.length > 0
       }, {
-        title: 'caso(s) com interações e sem contraproposta',
+        id: 'alertFour',
+        title: 'casos com interações e sem contraproposta',
         subtitle: 'Entre em contato',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        length: this.$store.getters.prescriptionFour.length
+        shows: this.$store.getters.alertFour.length > 0
       }, {
-        title: 'caso(s) sem celular válido',
+        id: 'alertFive',
+        title: 'casos sem celular válido',
         subtitle: 'Atualize os dados',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        length: this.$store.getters.prescriptionFive.length
+        shows: this.$store.getters.alertFive.length > 0
       }, {
-        title: 'caso(s) que nossas tentativas de engajamento encerraram',
+        id: 'alertSix',
+        title: 'casos que nossas tentativas de engajamento encerraram',
         subtitle: 'Reinicie ou entre em contato',
         button: 'Ver casos',
         to: 'review',
         color: 'orange',
-        length: this.$store.getters.prescriptionSix.length
+        shows: this.$store.getters.alertSix.length > 0
       }, {
-        title: 'caso(s) que precisam de sua revisão',
+        id: 'alertSeven',
+        title: 'casos que precisam de sua revisão',
         button: 'Ver casos',
         to: 'review',
         color: 'purple',
-        length: this.$store.getters.prescriptionSeven.length
+        shows: this.$store.getters.alertSeven.length > 0
       }, {
         title: 'sincronize seu WhatsApp para garantir que seus casos terão mais engajamento',
         button: 'Resolver',
         to: 'profile',
         color: 'green',
-        length: this.$store.getters.whatsappStatus !== 'CONNECTED'
+        shows: this.$store.getters.whatsappStatus !== 'CONNECTED'
       }]
     }
   },
   watch: {
     slides () {
-      this.componentKey = this.componentKey + 1
+      setTimeout(function () {
+        this.componentKey = this.componentKey + 1
+      }.bind(this), 300)
     }
   },
-  // created () {
-  //   let promises = []
-  //   this.slides.forEach((slide, index) => {
-  //     let query = { query: { bool: { } }, from: 0, size: 3000, order_by: 'favorite DESC' }
-  //     if (slide.filter) {
-  //       query.query.bool.filter = slide.filter
-  //     }
-  //     if (slide.must) {
-  //       query.query.bool.must = slide.must
-  //     }
-  //     if (slide.should) {
-  //       query.query.bool.should = slide.should
-  //     }
-  //     if (slide.minimum_should_match) {
-  //       query.query.bool.minimum_should_match = slide.minimum_should_match
-  //     }
-  //     promises.push(this.$store.dispatch('getDisputes', query).then(response => {
-  //       slide.shows = response.length > 0
-  //       slide.casesLength = response.length
-  //     }))
-  //   })
-  //   promises.push(this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
-  //     if (whatsapp.status !== 'CONNECTED') {
-  //       this.slides.push({
-  //         title: 'sincronize seu WhatsApp para garantir que seus casos terão mais engajamento',
-  //         button: 'Resolver',
-  //         to: 'profile',
-  //         color: 'green',
-  //         shows: true
-  //       })
-  //     }
-  //   }))
-  //   Promise.all(promises).finally(() => {
-  //     setTimeout(function () {
-  //       this.componentKey = this.componentKey + 1
-  //     }.bind(this), 1000)
-  //   })
-  // },
   methods: {
     carouselIcons () {
       let nextIcon = require('@/assets/icons/ic-left.svg')
@@ -146,6 +117,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-</style>

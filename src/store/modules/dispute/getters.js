@@ -31,7 +31,7 @@ const disputeGetters = {
     }
     return filteredDisputes
   },
-  prescriptionOne: state => {
+  alertOne: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if ((dispute.disputestatus === 'IMPORTED' ||
         dispute.disputestatus === 'PENDING' ||
@@ -44,7 +44,7 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  prescriptionTwo: state => {
+  alertTwo: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if ((dispute.disputestatus === 'IMPORTED' ||
         dispute.disputestatus === 'PENDING' ||
@@ -57,7 +57,7 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  prescriptionThree: state => {
+  alertThree: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if ((dispute.disputestatus === 'IMPORTED' ||
         dispute.disputestatus === 'PENDING' ||
@@ -71,7 +71,7 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  prescriptionFour: state => {
+  alertFour: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if ((dispute.disputestatus === 'IMPORTED' ||
         dispute.disputestatus === 'PENDING' ||
@@ -84,7 +84,7 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  prescriptionFive: state => {
+  alertFive: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if ((dispute.disputestatus === 'IMPORTED' ||
         dispute.disputestatus === 'PENDING' ||
@@ -97,7 +97,7 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  prescriptionSix: state => {
+  alertSix: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if (dispute.disputestatus === 'ENGAGEMENT' &&
         dispute.communicationmsgtotalallsented) {
@@ -106,7 +106,7 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  prescriptionSeven: state => {
+  alertSeven: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if ((dispute.alerts && dispute.alerts.length > 0) ||
           (dispute.claiments && dispute.claiments.alerts && dispute.claiments.alerts.length > 0) ||

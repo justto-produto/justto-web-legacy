@@ -131,6 +131,7 @@ export default {
         username: this.name
       })
       this.$store.dispatch('logout')
+      this.$store.commit('clearDisputes')
     },
     search (term, cb) {
       term = term.replace(' ', '\\ ')
