@@ -570,6 +570,11 @@ export default {
           )
         }
       }
+      if (this.activeTab.bool) {
+        query.query.bool.must.push(
+          { bool: this.activeTab.bool }
+        )
+      }
       if (this.activeTab.terms) {
         for (let terms of this.activeTab.terms) {
           query.query.bool.must.push({ terms: terms })
@@ -639,7 +644,20 @@ export default {
           newActive = { index: '0', label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: false }] }
           break
         case '1':
-          newActive = { index: '1', label: 'Com interação', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: true }] }
+          newActive = {
+            index: '1',
+            label: 'Com interação',
+            match: [{ disputehasinteractions: true }],
+            bool: { should: [
+              { match: { disputestatus: 'ENGAGEMENT' } },
+              { match: { disputestatus: 'RUNNING' } },
+              { match: { disputestatus: 'IMPORTED' } },
+              { match: { disputestatus: 'PENDING' } },
+              { match: { disputestatus: 'ENRICHED' } },
+              { match: { disputestatus: 'REFUSED' } }
+            ],
+            minimum_should_match: 1 }
+          }
           break
         case '2':
           newActive = { index: '2', label: 'Novos acordos', terms: [{ disputestatus: ['ACCEPTED', 'CHECKOUT'] }] }
