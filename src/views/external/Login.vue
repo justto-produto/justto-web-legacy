@@ -48,7 +48,7 @@
           <el-row class="external-view__info">
             Ao clicar em Entrar, eu concordo com os
             <a href="#"> Termos de Uso</a> e com os
-            <a href="https://docs.google.com/document/d/13NTwuP3AGzMXGEyEAh4yOPLd5luILzGiOv-SYJ362Ck/edit?usp=sharing" target="_blank">Termos Gerais de Contratação.</a>
+            <a href="https://drive.google.com/file/d/1kTb1y8lwIeA_utrOOjIlhZ97iGRS3b-r/view" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
             <a href="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
