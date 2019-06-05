@@ -7,6 +7,7 @@ const dispute = {
     disputes: [],
     filters: {
       tab: '0',
+      filterPersonId: 0,
       terms: {}
     }
   },

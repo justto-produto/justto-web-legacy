@@ -13,6 +13,17 @@ const disputeMutations = {
   },
   setDisputeFilter (state, terms) {
     state.filters.terms = terms
+  },
+  setFilterPersonId (state, id) {
+    state.filters.filterPersonId = id
+  },
+  updateDisputeList (state, disputeChanged) {
+    state.disputes = state.disputes.map(dispute => {
+      if (disputeChanged.id === dispute.id) {
+        dispute = disputeChanged
+      }
+      return dispute
+    })
   }
 }
 

@@ -11,6 +11,10 @@ const actions = {
           reject(error)
         })
     })
+  },
+  // DISPUTE
+  SOCKET_change ({ dispatch }, dispute) {
+    dispatch('updateDispute', dispute.disputeId)
   }
 }
 

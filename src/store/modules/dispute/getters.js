@@ -1,6 +1,7 @@
 const moment = require('moment')
 
 const disputeGetters = {
+  filterPersonId: state => state.filters.filterPersonId,
   filteredDisputes: state => {
     let filteredDisputes = state.disputes.slice(0)
     if (state.filters) {
@@ -27,6 +28,19 @@ const disputeGetters = {
             return dispute[term] === state.filters.terms[term]
           })
         }
+      }
+      if (state.filters.filterPersonId > 0) {
+        filteredDisputes = filteredDisputes.filter(dispute => {
+          let filter = false
+          if (dispute.negotiators && dispute.negotiators.length > 0) {
+            for (let negotiator of dispute.negotiators) {
+              if (negotiator.id === state.filters.filterPersonId) {
+                filter = true
+              }
+            }
+          }
+          return filter
+        })
       }
     }
     return filteredDisputes

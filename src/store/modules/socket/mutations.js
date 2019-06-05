@@ -24,6 +24,7 @@ const mutations = {
   clearSocket (state) {
     state.qrCode = ''
   },
+  // DISPUTE
   SOCKET_refresh (state, message) {
     if (message.qrCode) state.whatsapp.qrCode = message.qrCode
     if (message.status) state.whatsapp.status = message.status

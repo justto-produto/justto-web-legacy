@@ -230,17 +230,16 @@ export default {
   beforeMount () {
     this.$store.dispatch('getCampaigns')
     this.$store.dispatch('getStrategies')
-    this.getDisputes()
   },
   methods: {
     getDisputes () {
       this.loadingDisputes = true
-      this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' }).then(response => {
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.loadingDisputes = false
-      })
+      this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
+        .catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingDisputes = false
+        })
     },
     handleSelectionChange (selected) {
       this.selectedIds = []
@@ -260,7 +259,7 @@ export default {
     },
     exportDisputes () {
       this.loadingExport = true
-      this.$store.dispatch('exportDisputes', this.currentQuery).then(response => {
+      this.$store.dispatch('exportDisputes', [12218, 12193]).then(response => {
         // eslint-disable-next-line
         window.open('/api/export/' + response)
         window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
@@ -321,10 +320,10 @@ export default {
           message: 'Caso ' + label + ' com sucesso.',
           type: 'success'
         })
-        let self = this
-        setTimeout(function () {
-          self.getDisputes()
-        }, 1500)
+        // let self = this
+        // setTimeout(function () {
+        //   self.getDisputes()
+        // }, 1500)
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       })

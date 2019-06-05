@@ -11,6 +11,16 @@ const disputeActions = {
         })
     })
   },
+  updateDispute ({ commit, rootState }, disputeId) {
+    setTimeout(function () {
+      // eslint-disable-next-line
+      axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/', {
+        query: { bool: { must: [{ match: { disputeid: disputeId } }] } } })
+        .then(response => {
+          if (response.data.length > 0) commit('updateDisputeList', response.data[0])
+        })
+    }, 1000)
+  },
   getDisputes ({ commit, rootState }, query) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -24,10 +34,11 @@ const disputeActions = {
         })
     })
   },
-  exportDisputes ({ rootState }, query) {
+  exportDisputes ({ rootState }, disputeIds) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/export', query)
+      axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/export', {
+        query: { bool: { must: [{ terms: { disputeid: disputeIds } }] } } })
         .then(response => {
           resolve(response.data)
         })
