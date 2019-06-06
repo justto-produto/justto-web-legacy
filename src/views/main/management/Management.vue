@@ -173,7 +173,9 @@
         </el-table-column>
         <template v-if="!$store.state.loading" slot="empty">
           <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
-          <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
+          <h4 style="font-weight: normal; line-height: initial;">
+            Não foram encontrados casos para<br>os filtros e aba selecionados.
+          </h4>
         </template>
       </el-table>
       <el-dialog :visible.sync="showFilters" @open="restoreFilters()">
@@ -234,7 +236,7 @@ export default {
   methods: {
     getDisputes () {
       this.loadingDisputes = true
-      this.$store.dispatch('getDisputes', { query: { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' }, updateStore: true })
+      this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
         .catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {

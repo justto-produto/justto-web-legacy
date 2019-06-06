@@ -134,16 +134,31 @@ export default {
       this.$store.commit('clearDisputes')
     },
     search (term, cb) {
-      term = term.replace(' ', '\\ ')
-      let query = term ? '*' + term + '* OR ' + term : '*'
-
-      this.$store.dispatch('getDisputes', { query: {
-        query: { bool: { must: [
-          { query_string: { fields: this.getFields(term), query: query } },
-          { match: { workspaceid: this.$store.state.workspaceModule.id } }
-        ] } }
-      } }).then(response => {
-        cb(response)
+      this.$search(
+        term,
+        this.$store.state.disputeModule.disputes, {
+          shouldSort: true,
+          tokenize: true,
+          matchAllTokens: true,
+          threshold: 0.1,
+          location: 0,
+          distance: 100,
+          maxPatternLength: 32,
+          minMatchCharLength: 1,
+          keys: [
+            'disputeid',
+            'disputecode',
+            'campaignname',
+            'claiments.name',
+            'claiments.document_number',
+            'claimentslawyer.name',
+            'claimentslawyer.document_number',
+            'strategyname',
+            'disputeupperrange',
+            'disputelastrespondentoffer'
+          ]
+        }).then(results => {
+        cb(results)
       })
     }
   }
