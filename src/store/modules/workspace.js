@@ -137,7 +137,7 @@ const workspaceModule = {
           })
       })
     },
-    whatsappStatus ({ commit, state }) {
+    getWhatsappStatus ({ commit, state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/workspaces/whatsapp/status/' + state.subdomain)

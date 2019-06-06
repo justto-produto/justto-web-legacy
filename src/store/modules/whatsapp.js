@@ -22,6 +22,7 @@ const whatsappModule = {
   actions: {
   },
   getters: {
+    whatsappStatus: state => state.status,
     isWhatsappOffline: state => {
       return state.status === 'OFFLINE'
     },

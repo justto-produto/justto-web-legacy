@@ -16,6 +16,8 @@ const router = new Router({
         {
           name: 'dashboard',
           path: '/',
+          // TODO: RETIRAR APÓS IMPLEMENTAR DASHBOARD
+          redirect: 'management',
           component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard'),
           meta: {
             requiresTrack: true
@@ -54,15 +56,15 @@ const router = new Router({
           }
         },
         {
-          path: 'management/case/',
+          path: 'management/dispute/',
           redirect: {
             name: 'management'
           }
         },
         {
-          name: 'case',
-          path: 'management/case/:id',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/case/Case'),
+          name: 'dispute',
+          path: 'management/dispute/:id',
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/dispute/Dispute'),
           meta: {
             requiresTrack: true
           }

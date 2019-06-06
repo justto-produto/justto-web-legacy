@@ -1,11 +1,11 @@
 <template lang="html">
-  <div class="case-view__side-content">
+  <div class="dispute-view__side-content">
     <el-steps
       v-loading="loading"
       :active="0"
       direction="vertical"
       process-status="wait"
-      class="case-view__steps el-steps--dots">
+      class="dispute-view__steps el-steps--dots">
       <el-step>
         <template slot="title">Enriquecimento</template>
         <template slot="description">
@@ -18,7 +18,7 @@
       <el-step>
         <template slot="title">Engajamento</template>
         <template slot="description">
-          <el-checkbox v-model="scheduled" class="case-view__show-scheduled">
+          <el-checkbox v-model="scheduled" class="dispute-view__show-scheduled">
             Exibir mensagens agendadas
           </el-checkbox>
           <!-- <a href="#" @click.prevent="dialogVisible = true">Ver mensagens agendadas</a> -->
@@ -54,7 +54,7 @@
           <el-select
             v-if="summary && disputeStatus === 'UNSETTLED'"
             v-model="unsettledType"
-            class="case-view__unsettled-types"
+            class="dispute-view__unsettled-types"
             @change="changeReasonStatus">
             <el-option
               v-for="(type, index) in unsettledTypes"
@@ -87,7 +87,7 @@
 // import JusEngagementsDialog from '@/components/dialogs/JusEngagementsDialog'
 
 export default {
-  name: 'CaseSummary',
+  name: 'DisputeSummary',
   // components: { JusEngagementsDialog },
   props: {
     id: {
@@ -182,13 +182,13 @@ export default {
       })
     },
     changeReasonStatus () {
-      this.$store.dispatch('editCaseReason', {
+      this.$store.dispatch('editDisputeReason', {
         body: { [this.unsettledType]: this.unsettledTypes[this.unsettledType] },
         disputeId: this.id,
         reasonId: this.unsettledTypeId
       }).then(() => {
         setTimeout(function () {
-          this.$emit('case:refresh')
+          this.$emit('dispute:refresh')
         }.bind(this), 2000)
         this.$jusNotification({
           title: 'Yay!',
@@ -202,7 +202,7 @@ export default {
 </script>
 
 <style lang="scss">
-.case-view__side-content {
+.dispute-view__side-content {
   .el-step__description {
     padding: 0;
     margin-right: 20px;
@@ -212,7 +212,7 @@ export default {
     margin-top: 20px;
     pointer-events: none;
   }
-  .case-view__unsettled-types {
+  .dispute-view__unsettled-types {
     width: 100%;
     margin-top: 10px;
   }

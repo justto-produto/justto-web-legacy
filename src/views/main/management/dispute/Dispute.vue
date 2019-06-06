@@ -1,7 +1,7 @@
 <template>
-  <JusViewMain left-card-width="350" right-card-width="350" class="case-view">
+  <JusViewMain left-card-width="350" right-card-width="350" class="dispute-view">
     <template slot="title">
-      <h1 class="case-view__title">
+      <h1 class="dispute-view__title">
         <router-link to="/management">
           <jus-icon icon="back" />
         </router-link>
@@ -10,25 +10,25 @@
     </template>
     <!-- RESUMO DO CASO -->
     <template slot="left-card">
-      <div class="case-view__section-title">
+      <div class="dispute-view__section-title">
         <h2>Resumo do caso</h2>
       </div>
-      <case-summary
+      <dispute-summary
         v-if="dispute.strategy"
         :key="componentKey"
         :id="dispute.id"
         :unsettled-types="unsettledTypes"
         :show-scheduled.sync="showScheduled"
         :strategy-id="dispute.strategy.id"
-        @case:refresh="fetchData({ fetchMessages: true })" />
+        @dispute:refresh="fetchData({ fetchMessages: true })" />
     </template>
     <!-- CHAT -->
     <template slot="main">
-      <div class="case-view__section-messages">
-        <div class="case-view__actions">
-          <!-- <el-tooltip content="move-case">
+      <div class="dispute-view__section-messages">
+        <div class="dispute-view__actions">
+          <!-- <el-tooltip content="move-dispute">
             <el-button plain @click="disputeAction('move')">
-              <jus-icon icon="move-case" />
+              <jus-icon icon="move-dispute" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="delegate">
@@ -76,7 +76,7 @@
               <jus-icon icon="search2" />
             </el-button>
           </el-tooltip>
-          <div :class="{isVisible: showSearch}" class="case-view__search">
+          <div :class="{isVisible: showSearch}" class="dispute-view__search">
             <el-input v-model="searchTerm" autofocus>
               <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
             </el-input>
@@ -85,7 +85,7 @@
         <el-dialog
           :visible.sync="chooseUnsettledDialogVisible"
           title="Atenção!"
-          class="case-view__choose-unsettled-dialog"
+          class="dispute-view__choose-unsettled-dialog"
           width="460px">
           <div class="el-message-box__content">
             <div class="el-message-box__status el-icon-warning"/>
@@ -136,15 +136,15 @@
             <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
           </span>
         </el-dialog>
-        <case-messages
+        <dispute-messages
           :messages-prop="filteredDisputeMessages"
           :loading="loadingDisputeMessages"
           :show-scheduled="showScheduled"
-          @case:refresh="fetchData({ fetchMessages: true })" />
-        <div class="case-view__send-message">
+          @dispute:refresh="fetchData({ fetchMessages: true })" />
+        <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" value="1" @tab-click="handleTabClick">
             <el-tab-pane label="Mensagem" name="1">
-              <el-card shadow="always" class="case-view__send-message-box">
+              <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
                   <el-input
                     v-show="activePerson.id && validName"
@@ -154,9 +154,9 @@
                     type="textarea"
                     placeholder="Escreva alguma coisa" />
                 </el-collapse-transition>
-                <div class="case-view__send-message-actions">
+                <div class="dispute-view__send-message-actions">
                   <el-tooltip v-if="!validName" content="Atualize o nome no seu perfil para enviar mensagens">
-                    <div class="case-view__disabled-text">
+                    <div class="dispute-view__disabled-text">
                       Configure um nome em seu perfil
                     </div>
                   </el-tooltip>
@@ -180,7 +180,7 @@
                     </div>
                   </div>
                   <el-tooltip v-else content="Escolha um destinatário ao lado para receber sua mensagem">
-                    <div class="case-view__disabled-text">
+                    <div class="dispute-view__disabled-text">
                       Escolha um destinatário ao lado
                     </div>
                   </el-tooltip>
@@ -205,14 +205,14 @@
               </el-card>
             </el-tab-pane>
             <el-tab-pane label="Chat" name="3">
-              <el-card shadow="always" class="case-view__send-message-box">
+              <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-input
                   :rows="3"
                   v-model="newChatMessage"
                   type="textarea"
                   placeholder="Escreva alguma coisa"
                   @input="sendTypeEvent" />
-                <div class="case-view__send-message-actions note">
+                <div class="dispute-view__send-message-actions note">
                   <el-button type="primary" @click="sendChatMessage()">
                     Enviar
                   </el-button>
@@ -220,13 +220,13 @@
               </el-card>
             </el-tab-pane>
             <el-tab-pane label="Nota" name="2">
-              <el-card shadow="always" class="case-view__send-message-box">
+              <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-input
                   :rows="3"
                   v-model="newNote"
                   type="textarea"
                   placeholder="Escreva alguma coisa" />
-                <div class="case-view__send-message-actions note">
+                <div class="dispute-view__send-message-actions note">
                   <el-button type="primary" @click="sendNote()">
                     Salvar nota
                   </el-button>
@@ -239,33 +239,33 @@
     </template>
     <!-- DADOS DO CASO -->
     <template slot="right-card">
-      <div class="case-view__section-title">
+      <div class="dispute-view__section-title">
         <h2>Dados do caso</h2>
         <!-- <el-button plain>Exportar caso</el-button> -->
         <el-tooltip content="Excluir caso">
-          <el-button plain class="right" @click="removeCase()">
+          <el-button plain class="right" @click="removeDispute()">
             <jus-icon icon="trash" />
           </el-button>
         </el-tooltip>
       </div>
-      <case-overview
+      <dispute-overview
         :loading="loadingDispute"
         :dispute="dispute"
         :active-person.sync="activePerson"
-        @case:refresh="fetchData({ fetchDispute: true })" />
+        @dispute:refresh="fetchData({ fetchDispute: true })" />
     </template>
   </JusViewMain>
 </template>
 
 <script>
-import CaseSummary from './partials/CaseSummary'
-import CaseMessages from './partials/CaseMessages'
-import CaseOverview from './partials/CaseOverview'
+import DisputeSummary from './partials/DisputeSummary'
+import DisputeMessages from './partials/DisputeMessages'
+import DisputeOverview from './partials/DisputeOverview'
 
 export default {
-  name: 'Case',
+  name: 'Dispute',
   components: {
-    CaseSummary, CaseMessages, CaseOverview
+    DisputeSummary, DisputeMessages, DisputeOverview
   },
   data () {
     return {
@@ -348,7 +348,7 @@ export default {
   },
   methods: {
     checkWhatsappStatus () {
-      this.$store.dispatch('whatsappStatus').then((whatsapp) => {
+      this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
         if (whatsapp.status === 'CONNECTED') {
           this.whatsappStatus = 'CONNECTED'
         } else {
@@ -387,13 +387,13 @@ export default {
       })
       this.editNegotiatorDialogVisible = true
     },
-    removeCase () {
+    removeDispute () {
       this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error'
       }).then(() => {
-        this.$store.dispatch('removeCase', this.dispute.id).then(() => {
+        this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
           this.$router.push('/management')
         })
       })
@@ -606,7 +606,7 @@ export default {
 </script>
 
 <style lang="scss">
-.case-view {
+.dispute-view {
   &__list {
     margin: 20 0px;
     padding-left: 2px;

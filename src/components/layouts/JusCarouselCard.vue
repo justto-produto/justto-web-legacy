@@ -1,11 +1,6 @@
 <template>
   <el-card :class="bgClass" class="jus-carousel-card el-card--bg-primary" shadow="never">
-    <span v-if="slide.casesLength">
-      Você tem {{ slide.casesLength }} {{ title }}
-    </span>
-    <span v-else>
-      {{ title | capitalize }} {{ subtitle }}
-    </span>
+    {{ title | capitalize }} {{ subtitle }}
     <el-button type="transparent" @click="$router.push({name: slide.to, params: {slide: slide}})">
       {{ slide.button }}
     </el-button>

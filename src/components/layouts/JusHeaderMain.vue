@@ -8,7 +8,7 @@
         :fetch-suggestions="search"
         placeholder="Busque aqui os seus casos">
         <template slot-scope="{ item }">
-          <router-link :to="'/management/case/' + item.disputeid">
+          <router-link :to="'/management/dispute/' + item.disputeid">
             <div class="jus-header-main__result">
               <h4>
                 Caso #{{ item.disputeid }} |
@@ -131,6 +131,7 @@ export default {
         username: this.name
       })
       this.$store.dispatch('logout')
+      this.$store.commit('clearDisputes')
     },
     search (term, cb) {
       term = term.replace(' ', '\\ ')

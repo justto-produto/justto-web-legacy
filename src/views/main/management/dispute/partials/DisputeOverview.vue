@@ -1,49 +1,49 @@
 <template lang="html">
-  <div class="case-overview-view">
+  <div class="dispute-overview-view">
     <el-collapse value="1">
       <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
-        <div class="case-overview-view__info-line">
+        <div class="dispute-overview-view__info-line">
           <span class="title">Nº do Processo:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div v-if="dispute.campaign" class="case-overview-view__info-line">
+        <div v-if="dispute.campaign" class="dispute-overview-view__info-line">
           <span class="title">Campanha:</span>
           <span>{{ dispute.campaign.name }}</span>
         </div>
-        <div v-if="dispute.strategy" class="case-overview-view__info-line">
+        <div v-if="dispute.strategy" class="dispute-overview-view__info-line">
           <span class="title">Estratégia:</span>
           <span>{{ dispute.strategy.name }}</span>
         </div>
-        <div v-if="dispute.upperRange" class="case-overview-view__info-line">
+        <div v-if="dispute.upperRange" class="dispute-overview-view__info-line">
           <span class="title">Alçada máxima:</span>
           <span>{{ dispute.upperRange.boundary | currency }}</span>
         </div>
-        <div class="case-overview-view__info-line">
+        <div class="dispute-overview-view__info-line">
           <span class="title">Contraproposta:</span>
           <span v-if="dispute.lastOffer">{{ dispute.lastOffer.boundary | currency }}</span>
           <span v-else>{{ 0 | currency }}</span>
         </div>
         <div
           v-if="dispute.lastOffer && (dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT')"
-          class="case-overview-view__info-line">
+          class="dispute-overview-view__info-line">
           <span class="title">Valor do acordo:</span>
           <span>{{ dispute.lastOffer.boundary | currency }}</span>
         </div>
-        <div v-if="dispute.valueOfClaim" class="case-overview-view__info-line">
+        <div v-if="dispute.valueOfClaim" class="dispute-overview-view__info-line">
           <span class="title">Valor proposto:</span>
           <span>{{ dispute.valueOfClaim.value | currency }}</span>
         </div>
-        <div class="case-overview-view__info-line">
+        <div class="dispute-overview-view__info-line">
           <span class="title">Fim da negociação:</span>
           <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
         </div>
-        <div class="case-overview-view__info-line">
+        <div class="dispute-overview-view__info-line">
           <span class="title">Descrição:</span>
           <span>{{ dispute.description }}</span>
         </div>
-        <div class="case-overview-view__actions">
-          <el-button plain @click="removeCase()">Excluir</el-button>
-          <el-button type="primary" @click="openCaseDialog()">Editar</el-button>
+        <div class="dispute-overview-view__actions">
+          <el-button plain @click="removeDispute()">Excluir</el-button>
+          <el-button type="primary" @click="openDisputeDialog()">Editar</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -60,20 +60,20 @@
         :key="role.person.id"
         :name="JSON.stringify({id: role.person.id, name: role.person.name})">
         <template slot="title">
-          <div class="case-overview-view__name">
+          <div class="dispute-overview-view__name">
             <span>
               {{ role.person.name }}
             </span>
             <!-- <jus-status-dot type="danger"/> -->
           </div>
         </template>
-        <!-- <div class="case-overview-view__info-line">
+        <!-- <div class="dispute-overview-view__info-line">
           <span>Status:</span>
           <el-popover
             placement="top-end"
             width="220"
             trigger="hover">
-            <div class="case-overview-view__location">
+            <div class="dispute-overview-view__location">
               <span>Localização</span>
               -
               <span>Aparelho</span>
@@ -86,38 +86,38 @@
             </span>
           </el-popover>
         </div> -->
-        <div v-show="role.person.documentNumber" class="case-overview-view__info-line">
+        <div v-show="role.person.documentNumber" class="dispute-overview-view__info-line">
           <span class="title">CPF:</span>
           <span>{{ role.person.documentNumber }}</span>
         </div>
-        <div class="case-overview-view__info-line">
+        <div class="dispute-overview-view__info-line">
           Função:
           <span>{{ buildTitle(role) }}</span>
         </div>
-        <div v-show="role.person.phones.length" class="case-overview-view__info-line">
+        <div v-show="role.person.phones.length" class="dispute-overview-view__info-line">
           <span>Telefone(s):</span>
         </div>
-        <div v-show="role.person.phones.length" class="case-overview-view__info-list">
+        <div v-show="role.person.phones.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="phone in role.person.phones" :key="phone.id">
               {{ phone.number }}
             </li>
           </ul>
         </div>
-        <div v-show="role.person.emails.length" class="case-overview-view__info-line">
+        <div v-show="role.person.emails.length" class="dispute-overview-view__info-line">
           <span>E-mail(s):</span>
         </div>
-        <div v-show="role.person.emails.length" class="case-overview-view__info-list">
+        <div v-show="role.person.emails.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="email in role.person.emails" :key="email.id">
               {{ email.address }}
             </li>
           </ul>
         </div>
-        <div v-show="role.person.oabs.length" class="case-overview-view__info-line">
+        <div v-show="role.person.oabs.length" class="dispute-overview-view__info-line">
           <span>OAB(s):</span>
         </div>
-        <div v-show="role.person.oabs.length" class="case-overview-view__info-list">
+        <div v-show="role.person.oabs.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="oab in role.person.oabs" :key="oab.id">
               {{ oab.number }}
@@ -126,22 +126,22 @@
             </li>
           </ul>
         </div>
-        <div class="case-overview-view__actions">
+        <div class="dispute-overview-view__actions">
           <el-button plain @click="removeRole(role)">Excluir</el-button>
           <el-button type="primary" @click="openRoleDialog(role)">Editar</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
     <el-dialog
-      :visible.sync="editCaseDialogVisible"
+      :visible.sync="editDisputeDialogVisible"
       title="Editar informações gerais"
       width="30%">
       <el-form
-        ref="caseForm"
-        :model="caseForm"
-        :rules="caseRules"
+        ref="disputeForm"
+        :model="disputeForm"
+        :rules="disputeRules"
         label-position="top"
-        @submit.native.prevent="editCase">
+        @submit.native.prevent="editDispute">
         <el-row :gutter="20">
           <!-- <el-col :span="12">
             <el-form-item label="Campanha" prop="campaign">
@@ -169,22 +169,22 @@
           </el-col> -->
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="boundary">
-              <!-- <el-input v-model="caseForm.upperRange"/> -->
-              <money v-model="caseForm.upperRange.boundary" v-bind="money" class="el-input__inner" />
+              <!-- <el-input v-model="disputeForm.upperRange"/> -->
+              <money v-model="disputeForm.upperRange.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="Fim da negociação" prop="deadline">
               <el-date-picker
-                v-model="caseForm.expirationDate"
+                v-model="disputeForm.expirationDate"
                 :clearable="false"
                 type="date" />
             </el-form-item>
           </el-col>
           <el-col v-if="dispute.status == 'ACCEPTED' || dispute.status == 'CHECKOUT'" :span="24">
             <el-form-item label="Valor do acordo" prop="deal">
-              <!-- <el-input v-model="caseForm.lastOffer"/> -->
-              <money v-model="caseForm.lastOffer.boundary" v-bind="money" class="el-input__inner" />
+              <!-- <el-input v-model="disputeForm.lastOffer"/> -->
+              <money v-model="disputeForm.lastOffer.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="12">
@@ -201,14 +201,14 @@
           </el-col> -->
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
-              <el-input v-model="caseForm.description" type="textarea" rows="4" />
+              <el-input v-model="disputeForm.description" type="textarea" rows="4" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="editCaseDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="editCase(caseForm)">Editar dados</el-button>
+        <el-button @click="editDisputeDialogVisible = false">Cancelar</el-button>
+        <el-button type="primary" @click="editDispute(disputeForm)">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -236,7 +236,7 @@
         :model="oabForm"
         :rules="oabRules"
         label-position="top">
-        <div class="case-overview-view__oab-form">
+        <div class="dispute-overview-view__oab-form">
           <el-form-item class="oab" label="OAB" prop="oab">
             <el-input v-model="oabForm.oab" />
           </el-form-item>
@@ -253,7 +253,7 @@
             <jus-icon icon="add-white" />
           </el-button>
         </div>
-        <ul class="case-overview-view__list" style="margin-top: -10px">
+        <ul class="dispute-overview-view__list" style="margin-top: -10px">
           <li v-for="(oab, index) in roleForm.oabs" :key="oab.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ oab.number }} {{ oab.state }}
@@ -275,7 +275,7 @@
             </el-button>
           </el-input>
         </el-form-item>
-        <ul class="case-overview-view__list">
+        <ul class="dispute-overview-view__list">
           <li v-for="(phone, index) in roleForm.phones" :key="phone.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ phone.number }}
@@ -297,7 +297,7 @@
             </el-button>
           </el-input>
         </el-form-item>
-        <ul class="case-overview-view__list">
+        <ul class="dispute-overview-view__list">
           <li v-for="(email, index) in roleForm.emails" :key="email.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ email.address }}
@@ -320,7 +320,7 @@ import { Money } from 'v-money'
 import { mask, TheMask } from 'vue-the-mask'
 
 export default {
-  name: 'CaseOverview',
+  name: 'DisputeOverview',
   components: { TheMask, Money },
   directives: { mask },
   props: {
@@ -395,14 +395,14 @@ export default {
         //   { validator: validateDocument, trigger: 'change' }
         // ]
       },
-      caseForm: {
+      disputeForm: {
         disputeId: '',
         upperRange: { boundary: '', id: '' },
         lastOffer: { boundary: '', id: '' },
         expirationDate: '',
         description: ''
       },
-      caseRules: {
+      disputeRules: {
 
       },
       roleForm: {
@@ -415,7 +415,7 @@ export default {
       roleRules: {},
       emailDialogVisible: false,
       phoneDialogVisible: false,
-      editCaseDialogVisible: false,
+      editDisputeDialogVisible: false,
       editRoleDialogVisible: false,
       money: {
         decimal: ',',
@@ -447,20 +447,20 @@ export default {
     }
   },
   methods: {
-    openCaseDialog () {
-      this.editCaseDialogVisible = true
-      this.caseForm.disputeId = this.dispute.id
-      this.caseForm.upperRange.boundary = parseFloat(this.dispute.upperRange.boundary)
-      this.caseForm.upperRange.id = this.dispute.upperRange.id
-      this.caseForm.expirationDate = this.dispute.expirationDate
-      this.caseForm.description = this.dispute.description
+    openDisputeDialog () {
+      this.editDisputeDialogVisible = true
+      this.disputeForm.disputeId = this.dispute.id
+      this.disputeForm.upperRange.boundary = parseFloat(this.dispute.upperRange.boundary)
+      this.disputeForm.upperRange.id = this.dispute.upperRange.id
+      this.disputeForm.expirationDate = this.dispute.expirationDate
+      this.disputeForm.description = this.dispute.description
       if (this.dispute.lastOffer) {
-        this.caseForm.lastOffer.boundary = parseFloat(this.dispute.lastOffer.boundary)
-        this.caseForm.lastOffer.id = this.dispute.lastOffer.id
+        this.disputeForm.lastOffer.boundary = parseFloat(this.dispute.lastOffer.boundary)
+        this.disputeForm.lastOffer.id = this.dispute.lastOffer.id
       }
     },
-    editCase (caseForm) {
-      this.$store.dispatch('editCase', caseForm)
+    editDispute (disputeForm) {
+      this.$store.dispatch('editDispute', disputeForm)
         .then(response => {
           this.$jusNotification({
             title: 'Yay!',
@@ -468,20 +468,20 @@ export default {
             type: 'success'
           })
           setTimeout(function () {
-            this.$emit('case:refresh')
+            this.$emit('dispute:refresh')
           }.bind(this), 1000)
-          this.editCaseDialogVisible = false
+          this.editDisputeDialogVisible = false
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         })
     },
-    removeCase () {
+    removeDispute () {
       this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error'
       }).then(() => {
-        this.$store.dispatch('removeCase', this.dispute.id).then(() => {
+        this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
           this.$router.push('/management')
         })
       })
@@ -524,7 +524,7 @@ export default {
             emails.push({ id: response.id, address: response.address })
             this.emailForm.email = ''
             setTimeout(function () {
-              this.$emit('case:refresh')
+              this.$emit('dispute:refresh')
             }.bind(this), 1000)
           })
         }
@@ -540,7 +540,7 @@ export default {
             phones.push({ id: response.id, number: response.number })
             this.phoneForm.phone = ''
             setTimeout(function () {
-              this.$emit('case:refresh')
+              this.$emit('dispute:refresh')
             }.bind(this), 1000)
           })
         }
@@ -558,7 +558,7 @@ export default {
             this.oabForm.oab = ''
             this.oabForm.state = ''
             setTimeout(function () {
-              this.$emit('case:refresh')
+              this.$emit('dispute:refresh')
             }.bind(this), 1000)
           })
         }
@@ -573,7 +573,7 @@ export default {
         this.$delete(list, index)
         this.$store.dispatch('removeEmail', emailBody).then(() => {
           setTimeout(function () {
-            this.$emit('case:refresh')
+            this.$emit('dispute:refresh')
           }.bind(this), 1000)
         })
       })
@@ -587,7 +587,7 @@ export default {
         this.$delete(list, index)
         this.$store.dispatch('removePhone', phoneBody).then(() => {
           setTimeout(function () {
-            this.$emit('case:refresh')
+            this.$emit('dispute:refresh')
           }.bind(this), 1000)
         })
       })
@@ -601,7 +601,7 @@ export default {
         this.$delete(list, index)
         this.$store.dispatch('removeOab', oabBody).then(() => {
           setTimeout(function () {
-            this.$emit('case:refresh')
+            this.$emit('dispute:refresh')
           }.bind(this), 1000)
         })
       })
@@ -644,7 +644,7 @@ export default {
             type: 'success'
           })
           setTimeout(function () {
-            this.$emit('case:refresh')
+            this.$emit('dispute:refresh')
           }.bind(this), 1000)
           this.editRoleDialogVisible = false
         }).catch(() => {
@@ -674,7 +674,7 @@ export default {
             type: 'success'
           })
           setTimeout(function () {
-            this.$emit('case:refresh')
+            this.$emit('dispute:refresh')
           }.bind(this), 1000)
         }).catch(() => this.$jusNotification({ type: 'error' }))
       })
@@ -684,7 +684,7 @@ export default {
 </script>
 
 <style lang="scss">
-.case-overview-view {
+.dispute-overview-view {
   margin-bottom: -20px;
   .jus-status-dot {
     float: initial !important;
