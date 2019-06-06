@@ -21,12 +21,12 @@ const disputeActions = {
         })
     }, 1000)
   },
-  getDisputes ({ commit, rootState }, query) {
+  getDisputes ({ commit, rootState }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/', query)
+      axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/', params.query)
         .then(response => {
-          commit('setDisputes', response.data)
+          if (params.updateStore) commit('setDisputes', response.data)
           resolve(response.data)
         })
         .catch(error => {
