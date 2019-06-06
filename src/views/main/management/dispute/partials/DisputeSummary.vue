@@ -160,7 +160,9 @@ export default {
     }
   },
   beforeMount () {
-    this.fetchData()
+    this.$store.dispatch('getDisputeById', this.id).then(dispute => {
+      this.summary = dispute
+    })
   },
   methods: {
     fetchData () {

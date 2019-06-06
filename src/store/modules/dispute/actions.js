@@ -34,6 +34,14 @@ const disputeActions = {
         })
     })
   },
+  getDisputeById ({ state }, id) {
+    return new Promise((resolve, reject) => {
+      let dispute = state.disputes.find((dispute) => {
+        return dispute.disputeid === id
+      })
+      if (dispute) resolve(dispute)
+    })
+  },
   exportDisputes ({ rootState }, disputeIds) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
