@@ -234,7 +234,7 @@ export default {
   methods: {
     getDisputes () {
       this.loadingDisputes = true
-      this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
+      this.$store.dispatch('getDisputes', { query: { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' }, updateStore: true })
         .catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {

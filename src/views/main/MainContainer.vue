@@ -70,7 +70,7 @@ export default {
   beforeMount () {
     this.$store.dispatch('myPerson')
     this.$store.dispatch('getWorkspaceMembers')
-    this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
+    this.$store.dispatch('getDisputes', { query: { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' }, updateStore: true })
     this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
         this.$store.dispatch('whatsappStart')

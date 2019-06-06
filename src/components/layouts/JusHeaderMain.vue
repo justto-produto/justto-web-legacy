@@ -137,22 +137,12 @@ export default {
       term = term.replace(' ', '\\ ')
       let query = term ? '*' + term + '* OR ' + term : '*'
 
-      this.$store.dispatch('getDisputes', {
-        query: {
-          bool: {
-            must: [{
-              query_string: {
-                fields: this.getFields(term),
-                query: query
-              }
-            }, {
-              match: {
-                workspaceid: this.$store.state.workspaceModule.id
-              }
-            }]
-          }
-        }
-      }).then(response => {
+      this.$store.dispatch('getDisputes', { query: {
+        query: { bool: { must: [
+          { query_string: { fields: this.getFields(term), query: query } },
+          { match: { workspaceid: this.$store.state.workspaceModule.id } }
+        ] } }
+      } }).then(response => {
         cb(response)
       })
     }
