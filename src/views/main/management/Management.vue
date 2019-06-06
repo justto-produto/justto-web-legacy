@@ -232,6 +232,7 @@ export default {
     this.$store.dispatch('getStrategies')
   },
   methods: {
+<<<<<<< HEAD
     getDisputes () {
       this.loadingDisputes = true
       this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
@@ -240,6 +241,90 @@ export default {
         }).finally(() => {
           this.loadingDisputes = false
         })
+=======
+    getCases () {
+      this.$store.dispatch('showLoading')
+      this.cases = []
+      this.currentQuery = this.buildQuery()
+      this.$store.dispatch('getDisputes', this.currentQuery).then(response => {
+        this.cases = response
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.$store.dispatch('hideLoading')
+      })
+    },
+    buildQuery () {
+      let query = { query: { bool: { must: [] } }, from: 0, size: 3000, order_by: 'favorite DESC' }
+      query.query.bool.must.push(
+        { match: { workspaceid: this.$store.state.workspaceModule.id } }
+      )
+      if (this.activeTab.match) {
+        for (let match of this.activeTab.match) {
+          query.query.bool.must.push(
+            { match: match }
+          )
+        }
+      }
+      if (this.activeTab.bool) {
+        query.query.bool.must.push(
+          { bool: this.activeTab.bool }
+        )
+      }
+      if (this.activeTab.terms) {
+        for (let terms of this.activeTab.terms) {
+          query.query.bool.must.push({ terms: terms })
+        }
+      }
+      Object.keys(this.filters).forEach(key => {
+        let match = {}
+        let terms = {}
+        if (this.filters[key]) {
+          if (this.filters[key] === 'INTERACTIONS') {
+            match['disputehasinteractions'] = true
+          } else if (this.filters[key] === 'ACCEPTED') {
+            terms['disputestatus'] = ['ACCEPTED', 'CHECKOUT']
+          } else if (this.filters[key] === 'PAUSED') {
+            match['paused'] = true
+          } else match[key] = this.filters[key]
+          if (Object.entries(terms).length !== 0) {
+            query.query.bool.must.push({ terms: terms })
+          } else {
+            query.query.bool.must.push({ match: match })
+          }
+        }
+      })
+      if (this.$store.state.activePersonId) {
+        let match = {}
+        match['negotiators.f3'] = this.$store.state.activePersonId
+        query.query.bool.must.push({ match: match })
+      }
+      return query.query.bool.must.length > 0 ? query : null
+    },
+    applyFilters () {
+      let stringfilters = JSON.stringify({
+        accountId: this.$store.getters.accountId,
+        filters: this.activeFilters,
+        currentTab: this.activeTab.index
+      })
+      localStorage.setItem('jusfilters', stringfilters)
+      this.showFilters = false
+      this.filters = JSON.parse(JSON.stringify(this.activeFilters))
+      this.getCases()
+      window.analytics.track('Filtro aplicado', {
+        filters: this.filters,
+        tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento'
+      })
+    },
+    restoreFilters () {
+      this.activeFilters = JSON.parse(JSON.stringify(this.filters))
+    },
+    clearSelection () {
+      if (this.$refs.engagementTable) this.$refs.engagementTable.clearSelection()
+      if (this.$refs.interationTable) this.$refs.interationTable.clearSelection()
+      if (this.$refs.newAgreementsTable) this.$refs.newAgreementsTable.clearSelection()
+      if (this.$refs.allTable) this.$refs.allTable.clearSelection()
+>>>>>>> develop
     },
     handleSelectionChange (selected) {
       this.selectedIds = []
@@ -338,7 +423,27 @@ export default {
           type: action,
           disputeIds: this.selectedIds
         }).then(response => {
+<<<<<<< HEAD
           window.analytics.track('Ação em massa realizada', {
+=======
+          let trackTitle
+          if (action === 'SETTLED') {
+            trackTitle = 'Casos em massa ganhos'
+          } else if (action === 'UNSETTLED') {
+            trackTitle = 'Casos em massa perdidos'
+          } else if (action === 'PAUSED') {
+            trackTitle = 'Casos em massa pausados'
+          } else if (action === 'RESUME') {
+            trackTitle = 'Casos em massa despausado'
+          } else if (action === 'DELETE') {
+            trackTitle = 'Casos em massa deletados'
+          } else if (action === 'RESTART_ENGAGEMENT') {
+            trackTitle = 'Casos em massa reiniciados'
+          } else {
+            trackTitle = 'Ações em massa realizada' + action
+          }
+          window.analytics.track(trackTitle, {
+>>>>>>> develop
             action: action,
             tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
             selecteds: this.selectedIds.length
