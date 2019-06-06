@@ -100,7 +100,7 @@ export default {
       return Math.round((this.currentStep * (100 / slidesN)) * 0.2) / 0.2
     },
     showWhatsapp () {
-      return !this.$store.getters.isWhatsappOffline
+      return this.$store.getters.whatsappStatus !== 'OFFLINE'
     }
   },
   beforeCreate () {
@@ -117,9 +117,6 @@ export default {
     setTimeout(function () {
       this.right = 18
     }.bind(this), 1200)
-  },
-  destroyed () {
-    this.$socket.emit('unsubscribe', this.$store.state.workspaceModule.subdomain)
   },
   methods: {
     nextStep (responseObj) {

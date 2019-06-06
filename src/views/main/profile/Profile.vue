@@ -31,7 +31,7 @@
     </template>
     <template slot="right-card">
       <h3>WhatsApp</h3>
-      <jus-whatsapp v-if="!$store.getters.isWhatsappOffline" />
+      <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
       <div v-else>
         <h2>Desculpe :(</h2>
         <p>
@@ -66,8 +66,8 @@
               <span> {{ $t('profile.' + member.profile) }}</span>
             </div>
             <div class="actions">
-              <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
               <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
+              <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
             </div>
           </div>
         </div>
@@ -200,17 +200,6 @@ export default {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.state.personModule.person))
     this.teamName = this.$store.state.workspaceModule.name + ''
-    this.$store.dispatch('whatsappStatus').then((whatsapp) => {
-      if (whatsapp.status === 'OFFLINE') {
-        this.$store.dispatch('whatsappStart')
-      } else {
-        this.$store.commit('SOCKET_refresh', whatsapp)
-      }
-      this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
-    })
-  },
-  destroyed () {
-    this.$socket.emit('unsubscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
   },
   methods: {
     getMembers () {

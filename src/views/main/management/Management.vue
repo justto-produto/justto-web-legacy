@@ -25,19 +25,19 @@
         <el-button
           icon="el-icon-refresh"
           plain
-          @click="refresh">
+          @click="getDisputes">
           Atualizar
         </el-button>
         <el-button
-          :plain="!Object.keys(filters).length"
-          :type="Object.keys(filters).length ? 'primary' : ''"
+          :plain="!Object.keys(filters.terms).length"
+          :type="Object.keys(filters.terms).length ? 'primary' : ''"
           @click="showFilters = true">
-          <jus-icon :is-white="Object.keys(filters).length !== 0" icon="filter" />
+          <jus-icon :is-white="!!Object.keys(filters.terms).length" icon="filter" />
           Filtrar
         </el-button>
         <el-button
           :loading="loadingExport"
-          :disabled="cases.length === 0"
+          :disabled="disputes.length === 0"
           plain
           icon="el-icon-download"
           @click="exportDisputes">
@@ -45,431 +45,137 @@
         </el-button>
       </div>
       <el-tabs
-        v-loading="$store.state.loading"
         ref="management-tabs"
         :before-leave="handleChangeTab"
         v-model="activeTab.index"
-        class="view-management__tabs"
-        style="min-height: 100%;">
-        <el-tab-pane name="0" label="Engajamento">
-          <!-- TABELA DE ENGAJAMENTO -->
-          <el-table
-            ref="engagementTable"
-            :data="cases"
-            size="small"
-            class="el-table--card"
-            @selection-change="handleSelectionChange">
-            <el-table-column type="selection" />
-            <el-table-column
-              label="Campanha"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">{{ scope.row.campaignname }}</template>
-            </el-table-column>
-            <el-table-column
-              label="Parte(s) contrária(s)"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">
-                <el-popover
-                  title="Partes contrárias"
-                  trigger="hover">
-                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.name }}
-                  </div>
-                  <ul>
-                    <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.name }}
-                    </li>
-                  </ul>
-                </el-popover>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="Advogado(s) da parte"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">
-                <el-popover
-                  title="Advogados da parte"
-                  trigger="hover">
-                  <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                    {{ lawyer.name }}
-                  </div>
-                  <ul>
-                    <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                      {{ lawyer.name }}
-                    </li>
-                  </ul>
-                </el-popover>
-              </template>
-            </el-table-column>
-            <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
-            </el-table-column>
-            <el-table-column label="Valor proposto">
-              <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
-            </el-table-column>
-            <el-table-column label="Fim da negociação">
-              <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
-            </el-table-column>
-            <el-table-column label="Msgs enviadas">
-              <template slot-scope="scope">
-                <span v-if="!scope.row.communicationmsgtotalsent && !scope.row.communicationmsgtotalschedulled">
-                  Enriquecendo
-                </span>
-                <span v-else>
-                  {{ scope.row.communicationmsgtotalsent }} /
-                  {{ scope.row.communicationmsgtotalschedulled }}
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="Ações"
-              class-name="view-management__row-actions"
-              width="110px"
-              align="center">
-              <template slot-scope="scope">
-                <el-popover trigger="hover">
-                  <div>
-                    <strong>Responsáveis:</strong><br>
-                    <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
-                      {{ negotiator.f1 }}
-                    </span>
-                  </div>
-                  <br>
-                  <div>
-                    <strong>Estratégia:</strong><br>
-                    {{ scope.row.strategyname }}
-                  </div>
-                  <jus-icon slot="reference" icon="more-info" />
-                </el-popover>
-                <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-                  <el-button
-                    type="text"
-                    class="favorite"
-                    @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'ENGAJAMENTO')">
-                    <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: { id: scope.row.disputeid } }">
-                    <jus-icon icon="open-case" />
-                  </router-link>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <template v-if="!$store.state.loading" slot="empty">
-              <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
-              <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
-            </template>
-          </el-table>
-        </el-tab-pane>
-        <el-tab-pane name="1" label="Com interação">
-          <!-- TABELA COM INTERAÇÃO -->
-          <el-table
-            ref="interationTable"
-            :data="cases"
-            size="small"
-            class="el-table--card"
-            @selection-change="handleSelectionChange">
-            <el-table-column type="selection" />
-            <el-table-column
-              label="Campanha"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">{{ scope.row.campaignname }}</template>
-            </el-table-column>
-            <el-table-column
-              label="Parte(s) contrária(s)"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">
-                <el-popover
-                  title="Partes contrárias"
-                  trigger="hover">
-                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.name }}
-                  </div>
-                  <ul>
-                    <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.name }}
-                    </li>
-                  </ul>
-                </el-popover>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="Advogado(s) da parte"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">
-                <el-popover
-                  title="Advogados da parte"
-                  trigger="hover">
-                  <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                    {{ lawyer.name }}
-                  </div>
-                  <ul>
-                    <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                      {{ lawyer.name }}
-                    </li>
-                  </ul>
-                </el-popover>
-              </template>
-            </el-table-column>
-            <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
-            </el-table-column>
-            <el-table-column label="Contraproposta">
-              <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
-            </el-table-column>
-            <el-table-column label="Última interação">
-              <template slot-scope="scope">{{ scope.row.lastinteractiondate | moment('DD/MM/YY') }}</template>
-            </el-table-column>
-            <el-table-column label="Fim da negociação">
-              <template slot-scope="scope">
-                {{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="Ações"
-              class-name="view-management__row-actions"
-              width="110px"
-              align="center">
-              <template slot-scope="scope">
-                <el-popover trigger="hover">
-                  <div>
-                    <strong>Responsáveis:</strong><br>
-                    <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
-                      {{ negotiator.f1 }}
-                    </span>
-                  </div>
-                  <br>
-                  <div>
-                    <strong>Estratégia:</strong><br>
-                    {{ scope.row.strategyname }}
-                  </div>
-                  <jus-icon slot="reference" icon="more-info" />
-                </el-popover>
-                <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-                  <el-button
-                    type="text"
-                    class="favorite"
-                    @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'COM INTERAÇÃO')">
-                    <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
-                    <jus-icon icon="open-case" />
-                  </router-link>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <template v-if="!$store.state.loading" slot="empty">
-              <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
-              <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
-            </template>
-          </el-table>
-        </el-tab-pane>
-        <el-tab-pane name="2" label="Novos Acordos">
-          <!-- NOVOS ACORDOS -->
-          <el-table
-            ref="newAgreementsTable"
-            :data="cases"
-            size="small"
-            class="el-table--card"
-            @selection-change="handleSelectionChange">
-            <el-table-column type="selection" />
-            <el-table-column
-              label="Campanha"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">{{ scope.row.campaignname }}</template>
-            </el-table-column>
-            <el-table-column
-              label="Parte(s) contrária(s)"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">
-                <el-popover
-                  title="Partes contrárias"
-                  trigger="hover">
-                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.name }}
-                  </div>
-                  <ul>
-                    <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.name }}
-                    </li>
-                  </ul>
-                </el-popover>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="Advogado(s) da parte"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">
-                <el-popover
-                  title="Advogados da parte"
-                  trigger="hover">
-                  <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                    {{ lawyer.name }}
-                  </div>
-                  <ul>
-                    <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                      {{ lawyer.name }}
-                    </li>
-                  </ul>
-                </el-popover>
-              </template>
-            </el-table-column>
-            <el-table-column label="Alçada máxima">
-              <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
-            </el-table-column>
-            <el-table-column label="Valor do acordo">
-              <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
-            </el-table-column>
-            <el-table-column
-              label="Ações"
-              class-name="view-management__row-actions"
-              width="110px"
-              align="center">
-              <template slot-scope="scope">
-                <el-popover trigger="hover">
-                  <div>
-                    <strong>Responsáveis:</strong><br>
-                    <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
-                      {{ negotiator.f1 }}
-                    </span>
-                  </div>
-                  <br>
-                  <div>
-                    <strong>Estratégia:</strong><br>
-                    {{ scope.row.strategyname }}
-                  </div>
-                  <jus-icon slot="reference" icon="more-info" />
-                </el-popover>
-                <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-                  <el-button
-                    type="text"
-                    class="favorite"
-                    @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'NOVOS ACORDOS')">
-                    <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
-                    <jus-icon icon="open-case" />
-                  </router-link>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <template v-if="!$store.state.loading" slot="empty">
-              <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
-              <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
-            </template>
-          </el-table>
-        </el-tab-pane>
-        <el-tab-pane name="3" label="Todos">
-          <el-table
-            ref="allTable"
-            :data="cases"
-            size="small"
-            class="el-table--card"
-            @selection-change="handleSelectionChange">
-            <el-table-column type="selection" />
-            <el-table-column
-              label="Campanha"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">{{ scope.row.campaignname }}</template>
-            </el-table-column>
-            <el-table-column
-              label="Parte(s) contrária(s)"
-              width="175px"
-              class-name="fixed-width"
-              label-class-name="fixed-width">
-              <template slot-scope="scope">
-                <el-popover
-                  title="Partes contrárias"
-                  trigger="hover">
-                  <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                    {{ claimant.name }}
-                  </div>
-                  <ul>
-                    <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                      {{ claimant.name }}
-                    </li>
-                  </ul>
-                </el-popover>
-              </template>
-            </el-table-column>
-            <el-table-column label="Nº do caso">
-              <template slot-scope="scope">{{ scope.row.disputecode }}</template>
-            </el-table-column>
-            <el-table-column label="Estratégia">
-              <template slot-scope="scope">{{ scope.row.strategyname }}</template>
-            </el-table-column>
-            <el-table-column label="Status">
-              <template v-if="scope.row.disputestatus" slot-scope="scope">
-                {{ $t('occurrence.type.' + scope.row.disputestatus) }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="Ações"
-              class-name="view-management__row-actions"
-              width="110px"
-              align="center">
-              <template slot-scope="scope">
-                <el-popover trigger="hover">
-                  <div>
-                    <strong>Responsáveis:</strong><br>
-                    <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
-                      {{ negotiator.f1 }}
-                    </span>
-                  </div>
-                  <br>
-                  <div>
-                    <strong>Estratégia:</strong><br>
-                    {{ scope.row.strategyname }}
-                  </div>
-                  <jus-icon slot="reference" icon="more-info" />
-                </el-popover>
-                <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-                  <el-button
-                    type="text"
-                    class="favorite"
-                    @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'TODOS')">
-                    <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip content="Visualizar caso">
-                  <router-link :to="{ name: 'case', params: {id: scope.row.disputeid} }">
-                    <jus-icon icon="open-case" />
-                  </router-link>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <template v-if="!$store.state.loading" slot="empty">
-              <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
-              <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
-            </template>
-          </el-table>
-        </el-tab-pane>
+        class="view-management__tabs">
+        <el-tab-pane name="0" label="Engajamento" />
+        <el-tab-pane name="1" label="Com interação" />
+        <el-tab-pane name="2" label="Novos acordos" />
+        <el-tab-pane name="3" label="Todos" />
       </el-tabs>
+      <el-table
+        v-loading="loadingDisputes"
+        ref="disputeTable"
+        :data="disputes"
+        size="small"
+        class="el-table--card"
+        @selection-change="handleSelectionChange">
+        <el-table-column type="selection" />
+        <el-table-column label="Campanha">
+          <template slot-scope="scope">{{ scope.row.campaignname }}</template>
+        </el-table-column>
+        <el-table-column
+          label="Parte(s) contrária(s)"
+          class-name="fixed-width">
+          <template slot-scope="scope">
+            <el-popover
+              title="Partes contrárias"
+              trigger="hover">
+              <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+                {{ claimant.name }}
+              </div>
+              <ul>
+                <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
+                  {{ claimant.name }}
+                </li>
+              </ul>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="activeTab.index !== '3'"
+          label="Advogado(s) da parte"
+          class-name="fixed-width">
+          <template slot-scope="scope">
+            <el-popover
+              title="Advogados da parte"
+              trigger="hover">
+              <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
+                {{ lawyer.name }}
+              </div>
+              <ul>
+                <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
+                  {{ lawyer.name }}
+                </li>
+              </ul>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="activeTab.index !== '3'" label="Alçada máxima">
+          <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
+        </el-table-column>
+        <el-table-column v-if="activeTab.index === '0'" label="Valor proposto">
+          <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
+        </el-table-column>
+        <el-table-column v-if="activeTab.index === '1'" label="Contraproposta">
+          <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
+        </el-table-column>
+        <el-table-column v-if="activeTab.index === '1'" label="Última interação">
+          <template slot-scope="scope">{{ scope.row.lastinteractiondate | moment('DD/MM/YY') }}</template>
+        </el-table-column>
+        <el-table-column v-if="activeTab.index === '2'" label="Valor do acordo">
+          <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
+        </el-table-column>
+        <el-table-column v-if="activeTab.index < '2'" label="Fim da negociação">
+          <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
+        </el-table-column>
+        <el-table-column v-if="activeTab.index === '3'" label="Status">
+          <template slot-scope="scope">
+            {{ $t('occurrence.type.' + scope.row.disputestatus) }}
+          </template>
+        </el-table-column>
+        <el-table-column v-if="activeTab.index === '0'" label="Msgs enviadas">
+          <template slot-scope="scope">
+            <span v-if="!scope.row.communicationmsgtotalsent && !scope.row.communicationmsgtotalschedulled">
+              Enriquecendo
+            </span>
+            <span v-else>
+              {{ scope.row.communicationmsgtotalsent }} /
+              {{ scope.row.communicationmsgtotalschedulled }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="Ações"
+          width="100px"
+          class-name="view-management__row-actions"
+          align="center">
+          <template slot-scope="scope">
+            <!-- <el-popover trigger="hover">
+              <div>
+                <strong>Responsáveis:</strong><br>
+                <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
+                  {{ negotiator.f1 }}
+                </span>
+              </div>
+              <br>
+              <div>
+                <strong>Estratégia:</strong><br>
+                {{ scope.row.strategyname }}
+              </div>
+              <jus-icon slot="reference" icon="more-info" />
+            </el-popover> -->
+            <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+              <el-button
+                type="text"
+                class="favorite"
+                @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'ENGAJAMENTO')">
+                <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="Visualizar caso">
+              <router-link :to="{ name: 'dispute', params: { id: scope.row.disputeid } }">
+                <jus-icon icon="open-case" />
+              </router-link>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <template v-if="!$store.state.loading" slot="empty">
+          <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
+          <h4 style="font-weight: normal">Não foram encontrados casos para<br>os filtros e aba selecionados.</h4>
+        </template>
+      </el-table>
       <el-dialog :visible.sync="showFilters" @open="restoreFilters()">
         <template slot="title">
           <h2>Filtrar {{ activeTab.label }}</h2>
@@ -501,51 +207,41 @@ export default {
     JusManagementFilters
   },
   data () {
-    const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
-    let currentTab
-    if (savedFilters && savedFilters.currentTab && savedFilters.accountId === this.$store.getters.accountId) {
-      currentTab = savedFilters.currentTab
-    } else currentTab = '0'
     return {
       showFilters: false,
-      cases: [],
-      filters: {},
       selectedIds: [],
-      activeTab: this.getActiveTabLabel(currentTab),
       activeFilters: {},
-      currentQuery: '',
-      loadingExport: false
+      activeTab: this.getActiveTabLabel(this.$store.state.disputeModule.filters.tab),
+      loadingExport: false,
+      loadingDisputes: false
     }
   },
   computed: {
     multiActive () {
       return this.selectedIds.length >= 1
+    },
+    disputes () {
+      return this.$store.getters.filteredDisputes
+    },
+    filters () {
+      return this.$store.state.disputeModule.filters
     }
   },
-  watch: {
-    '$store.state.activePersonId': function (id) {
-      this.refresh()
-    }
-  },
-  mounted () {
-    this.$store.dispatch('showLoading')
+  beforeMount () {
     this.$store.dispatch('getCampaigns')
     this.$store.dispatch('getStrategies')
-    const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
-    if (savedFilters && savedFilters.accountId === this.$store.getters.accountId) {
-      let self = this
-      setTimeout(function () {
-        if (savedFilters.filters) {
-          self.activeFilters = savedFilters.filters
-          self.filters = savedFilters.filters
-        }
-        self.getCases()
-      }, 1000)
-    } else {
-      this.getCases()
-    }
   },
   methods: {
+<<<<<<< HEAD
+    getDisputes () {
+      this.loadingDisputes = true
+      this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
+        .catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingDisputes = false
+        })
+=======
     getCases () {
       this.$store.dispatch('showLoading')
       this.cases = []
@@ -628,6 +324,7 @@ export default {
       if (this.$refs.interationTable) this.$refs.interationTable.clearSelection()
       if (this.$refs.newAgreementsTable) this.$refs.newAgreementsTable.clearSelection()
       if (this.$refs.allTable) this.$refs.allTable.clearSelection()
+>>>>>>> develop
     },
     handleSelectionChange (selected) {
       this.selectedIds = []
@@ -637,62 +334,84 @@ export default {
         }
       }
     },
+    handleChangeTab (newTab, oldTab) {
+      if (oldTab !== undefined) {
+        this.$store.commit('setDisputeTab', newTab)
+        this.clearSelection()
+        this.clearFilters()
+        this.activeTab = this.getActiveTabLabel(newTab)
+      }
+    },
+    exportDisputes () {
+      this.loadingExport = true
+      this.$store.dispatch('exportDisputes', [12218, 12193]).then(response => {
+        // eslint-disable-next-line
+        window.open('/api/export/' + response)
+        window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
+      }).finally(() => {
+        this.loadingExport = false
+      })
+    },
     getActiveTabLabel (newTab) {
       let newActive
       switch (newTab) {
         case '0':
-          newActive = { index: '0', label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }, { disputehasinteractions: false }] }
+          newActive = { index: '0', label: 'Engajamento' }
           break
         case '1':
-          newActive = {
-            index: '1',
-            label: 'Com interação',
-            match: [{ disputehasinteractions: true }],
-            bool: { should: [
-              { match: { disputestatus: 'ENGAGEMENT' } },
-              { match: { disputestatus: 'RUNNING' } },
-              { match: { disputestatus: 'IMPORTED' } },
-              { match: { disputestatus: 'PENDING' } },
-              { match: { disputestatus: 'ENRICHED' } },
-              { match: { disputestatus: 'REFUSED' } }
-            ],
-            minimum_should_match: 1 }
-          }
+          newActive = { index: '1', label: 'Com interação' }
           break
         case '2':
-          newActive = { index: '2', label: 'Novos acordos', terms: [{ disputestatus: ['ACCEPTED', 'CHECKOUT'] }] }
+          newActive = { index: '2', label: 'Novos acordos' }
           break
         case '3':
           newActive = { index: '3', label: 'Todos' }
           break
         default:
-          newActive = { index: 0, label: 'Engajamento', match: [{ disputestatus: 'ENGAGEMENT' }] }
+          newActive = { index: 0, label: 'Engajamento' }
       }
       return newActive
     },
-    handleChangeTab (newTab, oldTab) {
-      if (oldTab !== undefined) {
-        this.filters = {}
-        this.activeFilters = {}
-        this.clearSelection()
-        this.activeTab = this.getActiveTabLabel(newTab)
-        this.getCases()
-        let stringfilters = JSON.stringify({
-          accountId: this.$store.getters.accountId,
-          currentTab: this.activeTab.index
-        })
-        localStorage.setItem('jusfilters', stringfilters)
-      }
+    clearSelection () {
+      if (this.$refs.disputeTable) this.$refs.disputeTable.clearSelection()
+    },
+    applyFilters () {
+      this.$store.commit('setDisputeFilter', this.activeFilters)
+      this.showFilters = false
+      window.analytics.track('Filtro aplicado', {
+        filters: this.filters,
+        tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento'
+      })
     },
     clearFilters () {
-      var stringfilters = JSON.stringify({
-        accountId: this.$store.getters.accountId,
-        currentTab: this.activeTab.index
-      })
-      localStorage.setItem('jusfilters', stringfilters)
       this.showFilters = false
-      this.filters = {}
-      this.getCases()
+      this.$store.commit('clearDisputeFilters')
+    },
+    restoreFilters () {
+      this.activeFilters = JSON.parse(JSON.stringify(this.filters.terms))
+    },
+    setFavorite (action, id, tab) {
+      let label = action === 'favorite' ? 'favoritado' : 'removido de favoritos'
+      this.$store.dispatch('sendDisputeAction', {
+        action: action,
+        disputeId: id
+      }).then(() => {
+        window.analytics.track('Caso em "' + tab + '" ' + label, {
+          aba: tab,
+          action: label
+        })
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Caso ' + label + ' com sucesso.',
+          type: 'success'
+        })
+        // let self = this
+        // setTimeout(function () {
+        //   self.getDisputes()
+        // }, 1500)
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      })
     },
     sendBatchAction (action) {
       this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
@@ -704,6 +423,9 @@ export default {
           type: action,
           disputeIds: this.selectedIds
         }).then(response => {
+<<<<<<< HEAD
+          window.analytics.track('Ação em massa realizada', {
+=======
           let trackTitle
           if (action === 'SETTLED') {
             trackTitle = 'Casos em massa ganhos'
@@ -721,65 +443,30 @@ export default {
             trackTitle = 'Ações em massa realizada' + action
           }
           window.analytics.track(trackTitle, {
+>>>>>>> develop
             action: action,
             tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
             selecteds: this.selectedIds.length
           })
+          let self = this
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
             type: 'success',
             onClose () {
               setTimeout(function () {
-                this.$jusNotification({
+                self.$jusNotification({
                   title: 'Fique atento!',
                   message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
                   Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
-                  type: 'info',
-                  duration: 0
+                  type: 'info'
                 })
-              }.bind(this), 300)
+              }, 300)
             }
           })
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         })
-      })
-    },
-    refresh () {
-      this.getCases()
-    },
-    setFavorite (action, id, aba) {
-      let label = action === 'favorite' ? 'favoritado' : 'removido de favoritos'
-      this.$store.dispatch('sendDisputeAction', {
-        action: action,
-        disputeId: id
-      }).then(() => {
-        window.analytics.track('Caso em "' + aba + '" ' + label, {
-          aba: aba,
-          action: label
-        })
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Caso ' + label + ' com sucesso.',
-          type: 'success'
-        })
-        let self = this
-        setTimeout(function () {
-          self.getCases()
-        }, 1500)
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      })
-    },
-    exportDisputes () {
-      this.loadingExport = true
-      this.$store.dispatch('exportDisputes', this.currentQuery).then(response => {
-        // eslint-disable-next-line
-        window.open('/api/export/' + response)
-        window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
-      }).finally(() => {
-        this.loadingExport = false
       })
     }
   }
@@ -828,32 +515,6 @@ export default {
     margin-right: 34px;
   }
   &__tabs {
-    .el-table__header {
-      .fixed-width {
-        .cell {
-          width: 175px;
-        }
-      }
-    }
-    .el-table__body {
-      .fixed-width {
-        .cell {
-          width: 175px;
-          white-space: nowrap;
-          .el-popover__reference {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-        }
-      }
-      .cell {
-        text-transform: capitalize;
-        &.names {
-          max-width: 158px;
-        }
-      }
-    }
     .el-tabs__header {
       width: fit-content;
       padding: 0 20px;
@@ -875,6 +536,32 @@ export default {
       width: 14px;
     }
   }
+  .el-table__header {
+    .fixed-width {
+      .cell {
+        width: 175px;
+      }
+    }
+  }
+  .el-table__body {
+    .fixed-width {
+      .cell {
+        width: 175px;
+        white-space: nowrap;
+        .el-popover__reference {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+    .cell {
+      text-transform: capitalize;
+      &.names {
+        max-width: 158px;
+      }
+    }
+  }
   .jus-main-view__main-card > .el-card__body {
     position: relative;
     height: 100%;
@@ -885,11 +572,6 @@ export default {
   }
   .el-carousel__item {
     display: flex;
-  }
-  > div:first-child {
-    // display: flex;
-    // align-items: center;
-    // justify-content: space-between;
   }
   .el-tabs__active-bar {
     width: 97px;
