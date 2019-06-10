@@ -261,7 +261,7 @@ export default {
     },
     exportDisputes () {
       this.loadingExport = true
-      this.$store.dispatch('exportDisputes', [12218, 12193]).then(response => {
+      this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).then(response => {
         // eslint-disable-next-line
         window.open('/api/export/' + response)
         window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
