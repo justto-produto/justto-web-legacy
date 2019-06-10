@@ -38,7 +38,7 @@
       </vue-perfect-scrollbar>
     </el-aside>
     <el-container direction="vertical">
-      <JusHeaderMain/>
+      <jus-header-main />
       <el-main>
         <transition name="fade">
           <router-view/>
