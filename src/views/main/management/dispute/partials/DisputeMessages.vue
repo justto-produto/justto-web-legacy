@@ -75,23 +75,43 @@ export default {
     showScheduled: {
       type: Boolean,
       default: false
+    },
+    currentTab: {
+      type: String,
+      default: '1'
     }
   },
   data () {
     return {
       showMessage: false,
       messageContent: '',
-      messages: [],
       typing: '',
       typingTimeout: 0
     }
   },
+  computed: {
+    messages () {
+      return this.messagesProp.filter(message => {
+        switch (this.currentTab) {
+          case '1':
+            if (message.type !== 'NOTE') {
+              if (message.message && message.message.type === 'CHAT') {
+                return false
+              } else {
+                return true
+              }
+            } else {
+              return false
+            }
+          case '2':
+            return message.message && message.message.type === 'CHAT'
+          case '3':
+            return message.type === 'NOTE'
+        }
+      })
+    }
+  },
   watch: {
-    messagesProp () {
-      setTimeout(function () {
-        this.messages = this.messagesProp
-      }.bind(this), 300)
-    },
     typing (value) {
       if (value.sender.personId !== this.$store.getters.personId) {
         this.removeTypingMessage()
