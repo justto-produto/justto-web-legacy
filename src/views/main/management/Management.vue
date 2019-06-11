@@ -27,6 +27,7 @@
         </owl-carousel>
       </div> -->
     </template>
+<<<<<<< Updated upstream
     <template slot="main">
       <div :class="{'active': multiActive}" class="view-management__multi-actions">
         Casos selecionados: {{ selectedIds.length }}
@@ -42,6 +43,17 @@
         </div>
         <i class="el-icon-close" @click="clearSelection()"/>
       </div>
+=======
+    <template slot="actions">
+      <management-actions
+        :active="multiActive"
+        :selected-ids="selectedIds"
+        :tab-label="activeTab.label"
+        @disputes:clear="clearSelection"
+      />
+    </template>
+    <template slot="main">
+>>>>>>> Stashed changes
       <div class="view-management__actions">
         <el-button
           icon="el-icon-refresh"
@@ -514,12 +526,23 @@
 <script>
 import OwlCarousel from 'vue-owl-carousel'
 import JusManagementFilters from '@/components/others/JusManagementFilters'
+<<<<<<< Updated upstream
+=======
+import ManagementCarousel from './partials/ManagementCarousel'
+import ManagementActions from './partials/ManagementActions'
+>>>>>>> Stashed changes
 
 export default {
   name: 'Management',
   components: {
+<<<<<<< Updated upstream
     OwlCarousel,
     JusManagementFilters
+=======
+    ManagementCarousel,
+    JusManagementFilters,
+    ManagementActions
+>>>>>>> Stashed changes
   },
   data () {
     const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
@@ -698,6 +721,7 @@ export default {
       }
     },
     clearFilters () {
+<<<<<<< Updated upstream
       var stringfilters = JSON.stringify({
         accountId: this.$store.getters.accountId,
         currentTab: this.activeTab.index
@@ -782,6 +806,32 @@ export default {
       }).finally(() => {
         this.loadingExport = false
       })
+=======
+      this.showFilters = false
+      this.$store.commit('clearDisputeFilters')
+    },
+    restoreFilters () {
+      this.activeFilters = JSON.parse(JSON.stringify(this.filters.terms))
+    },
+    setFavorite (action, id, tab) {
+      let label = action === 'favorite' ? 'favoritado' : 'removido de favoritos'
+      this.$store.dispatch('sendDisputeAction', {
+        action: action,
+        disputeId: id
+      }).then(() => {
+        window.analytics.track('Caso em "' + tab + '" ' + label, {
+          aba: tab,
+          action: label
+        })
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Caso ' + label + ' com sucesso.',
+          type: 'success'
+        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      })
+>>>>>>> Stashed changes
     }
   }
 }
@@ -910,6 +960,7 @@ export default {
   .el-tabs__active-bar {
     width: 97px;
   }
+<<<<<<< Updated upstream
   &__multi-actions {
     position: absolute;
     background-color: #fff;
@@ -945,6 +996,8 @@ export default {
       }
     }
   }
+=======
+>>>>>>> Stashed changes
   .el-table--enable-row-hover .el-table__body tr:hover > td {
     background-color: #fff;
   }

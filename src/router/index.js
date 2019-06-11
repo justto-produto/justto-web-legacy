@@ -60,18 +60,19 @@ const router = new Router({
           }
         },
         {
-          name: 'case',
-          path: 'management/case/:id',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/case/Case'),
+          name: 'dispute',
+          path: 'management/dispute/:id',
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Dispute'),
           meta: {
             requiresTrack: true
           }
         },
-        // {
-        //   name: 'review',
-        //   path: 'management/review/',
-        //   component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/review/Review')
-        // },
+        {
+          name: 'review',
+          path: 'management/review/',
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Review'),
+          props: { slide: true }
+        },
         {
           name: 'profile',
           path: 'profile',
