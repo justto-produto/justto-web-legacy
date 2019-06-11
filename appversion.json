@@ -1,8 +1,8 @@
 {
   "version": {
     "major": 1,
-    "minor": 1,
-    "patch": 32
+    "minor": 3,
+    "patch": 0
   },
   "status": {
     "stage": "alpha",
@@ -15,7 +15,7 @@
   },
   "commit": null,
   "config": {
-    "appversion": "1.7.1",
+    "appversion": "1.3.0",
     "markdown": [],
     "json": [],
     "ignore": []
