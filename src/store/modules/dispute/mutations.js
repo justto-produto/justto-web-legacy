@@ -24,12 +24,9 @@ const disputeMutations = {
       }
       return dispute
     })
-<<<<<<< HEAD
   },
   setDisputeStatuses (state, status) {
     state.disputeStatuses[status.label] = status.value
-=======
->>>>>>> master
   }
 }
 
