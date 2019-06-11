@@ -62,7 +62,7 @@ export default {
     },
     tabLabel: {
       type: String,
-      default: 'Engajamento'
+      default: 'Revisão'
     }
   },
   data () {
@@ -84,7 +84,7 @@ export default {
   methods: {
     doAction (action) {
       let params = {
-        type: action,
+        type: action.toUpperCase(),
         disputeIds: this.selectedIds
       }
       if (this.unsettledType) {
