@@ -27,23 +27,6 @@
         </owl-carousel>
       </div> -->
     </template>
-<<<<<<< Updated upstream
-    <template slot="main">
-      <div :class="{'active': multiActive}" class="view-management__multi-actions">
-        Casos selecionados: {{ selectedIds.length }}
-        <div>
-          <el-button plain @click="sendBatchAction('ACCEPTED')">Ganhar</el-button>
-          <el-button plain @click="sendBatchAction('REFUSED')">Perder</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">Parar</el-button>
-          <el-button plain @click="sendBatchAction('RESUME')">Reiniciar</el-button>
-          <el-button plain @click="sendBatchAction('DELETE')">Excluir</el-button>
-          <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">Reiniciar engajamento</el-button>
-          <!-- <el-button plain @click="sendBatchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
-          <!-- <el-button plain @click="sendBatchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
-        </div>
-        <i class="el-icon-close" @click="clearSelection()"/>
-      </div>
-=======
     <template slot="actions">
       <management-actions
         :active="multiActive"
@@ -53,7 +36,6 @@
       />
     </template>
     <template slot="main">
->>>>>>> Stashed changes
       <div class="view-management__actions">
         <el-button
           icon="el-icon-refresh"
@@ -526,23 +508,15 @@
 <script>
 import OwlCarousel from 'vue-owl-carousel'
 import JusManagementFilters from '@/components/others/JusManagementFilters'
-<<<<<<< Updated upstream
-=======
 import ManagementCarousel from './partials/ManagementCarousel'
 import ManagementActions from './partials/ManagementActions'
->>>>>>> Stashed changes
 
 export default {
   name: 'Management',
   components: {
-<<<<<<< Updated upstream
-    OwlCarousel,
-    JusManagementFilters
-=======
     ManagementCarousel,
     JusManagementFilters,
     ManagementActions
->>>>>>> Stashed changes
   },
   data () {
     const savedFilters = JSON.parse(localStorage.getItem('jusfilters'))
@@ -721,92 +695,6 @@ export default {
       }
     },
     clearFilters () {
-<<<<<<< Updated upstream
-      var stringfilters = JSON.stringify({
-        accountId: this.$store.getters.accountId,
-        currentTab: this.activeTab.index
-      })
-      localStorage.setItem('jusfilters', stringfilters)
-      this.showFilters = false
-      this.filters = {}
-      this.getCases()
-    },
-    sendBatchAction (action) {
-      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        type: 'warning'
-      }).then(() => {
-        this.$store.dispatch('sendBatchAction', {
-          type: action,
-          disputeIds: this.selectedIds
-        }).then(response => {
-          window.analytics.track('Ação em massa realizada', {
-            action: action,
-            tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
-            selecteds: this.selectedIds.length
-          })
-          let self = this
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
-            type: 'success',
-            onClose () {
-              setTimeout(function () {
-                self.$jusNotification({
-                  title: 'Fique atento!',
-                  message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
-                  Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
-                  type: 'info',
-                  duration: 0
-                })
-              }, 300)
-            }
-          })
-        })
-      })
-    },
-    refresh () {
-      this.getCases()
-    },
-    setFavorite (action, id, aba) {
-      let label = action === 'favorite' ? 'favoritado' : 'removido de favoritos'
-      this.$store.dispatch('sendDisputeAction', {
-        action: action,
-        disputeId: id
-      }).then(() => {
-        window.analytics.track('Caso em "' + aba + '" ' + label, {
-          aba: aba,
-          action: label
-        })
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Caso ' + label + ' com sucesso.',
-          type: 'success'
-        })
-        let self = this
-        setTimeout(function () {
-          self.getCases()
-        }, 1500)
-      }).catch(error => {
-        console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
-      })
-    },
-    exportDisputes () {
-      this.loadingExport = true
-      this.$store.dispatch('exportDisputes', this.currentQuery).then(response => {
-        // eslint-disable-next-line
-        window.open('/api/export/' + response)
-        window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
-      }).finally(() => {
-        this.loadingExport = false
-      })
-=======
       this.showFilters = false
       this.$store.commit('clearDisputeFilters')
     },
@@ -831,7 +719,6 @@ export default {
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       })
->>>>>>> Stashed changes
     }
   }
 }
@@ -960,44 +847,6 @@ export default {
   .el-tabs__active-bar {
     width: 97px;
   }
-<<<<<<< Updated upstream
-  &__multi-actions {
-    position: absolute;
-    background-color: #fff;
-    width: 100%;
-    z-index: 3;
-    padding: 0 20px;
-    transition: all 0.5s ease;
-    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
-    border-bottom: solid 1px #e4e8ea;
-    display: flex;
-    justify-content:space-between;
-    align-items: center;
-    margin-top: -44px;
-    transform: translateY(-100%);
-    div {
-      display: flex;
-    }
-    &.active {
-      margin-top: -20px;
-      transform: translateY(0%);
-    }
-    i {
-      cursor: pointer;
-      text-align: right;
-    }
-    button {
-      height: 68px;
-      padding: 8px 20px;
-      border: 0;
-      border-radius: 0;
-      &:hover {
-        background-color: #fafafa !important;
-      }
-    }
-  }
-=======
->>>>>>> Stashed changes
   .el-table--enable-row-hover .el-table__body tr:hover > td {
     background-color: #fff;
   }
