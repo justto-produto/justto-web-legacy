@@ -64,7 +64,7 @@ const router = new Router({
         {
           name: 'dispute',
           path: 'management/dispute/:id',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/dispute/Dispute'),
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Dispute'),
           meta: {
             requiresTrack: true
           }
@@ -72,7 +72,7 @@ const router = new Router({
         {
           name: 'review',
           path: 'management/review/',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/review/Review'),
+          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Review'),
           props: { slide: true }
         },
         {

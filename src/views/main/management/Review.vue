@@ -9,20 +9,11 @@
       </h1>
     </template>
     <template slot="actions">
-      <div :class="{'active': multiActive}" class="view-management__multi-actions">
-        Casos selecionados: {{ selectedIds.length }}
-        <div>
-          <el-button plain @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
-          <el-button plain @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
-          <el-button plain @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
-          <el-button plain @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
-          <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
-          <!-- <el-button plain @click="sendBatchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
-          <!-- <el-button plain @click="sendBatchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
-        </div>
-        <i class="el-icon-close" @click="clearSelection()"/>
-      </div>
+      <management-actions
+        :active="multiActive"
+        :selected-ids="selectedIds"
+        @disputes:clear="clearSelection"
+      />
     </template>
     <template slot="main">
       <div :class="{'batch-active': multiActive}" class="view-management-review__disputes">
@@ -110,8 +101,13 @@
 </template>
 
 <script>
+import ManagementActions from './partials/ManagementActions'
+
 export default {
   name: 'Review',
+  components: {
+    ManagementActions
+  },
   data () {
     return {
       disputes: [],

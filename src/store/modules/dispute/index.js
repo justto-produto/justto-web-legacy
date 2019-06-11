@@ -9,7 +9,8 @@ const dispute = {
       tab: '0',
       filterPersonId: 0,
       terms: {}
-    }
+    },
+    disputeStatuses: {}
   },
   mutations: mutations,
   actions: actions,

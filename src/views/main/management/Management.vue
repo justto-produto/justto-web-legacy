@@ -5,20 +5,12 @@
       <management-carousel />
     </template>
     <template slot="actions">
-      <div :class="{'active': multiActive}" class="view-management__multi-actions">
-        Casos selecionados: {{ selectedIds.length }}
-        <div>
-          <el-button plain @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
-          <el-button plain @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
-          <el-button plain @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
-          <el-button plain @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
-          <el-button plain @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
-          <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
-          <!-- <el-button plain @click="sendBatchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
-          <!-- <el-button plain @click="sendBatchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
-        </div>
-        <i class="el-icon-close" @click="clearSelection()"/>
-      </div>
+      <management-actions
+        :active="multiActive"
+        :selected-ids="selectedIds"
+        :tab-label="activeTab.label"
+        @disputes:clear="clearSelection"
+      />
     </template>
     <template slot="main">
       <div class="view-management__actions">
@@ -200,13 +192,15 @@
 
 <script>
 import JusManagementFilters from '@/components/others/JusManagementFilters'
-import ManagementCarousel from './carousel/ManagementCarousel'
+import ManagementCarousel from './partials/ManagementCarousel'
+import ManagementActions from './partials/ManagementActions'
 
 export default {
   name: 'Management',
   components: {
     ManagementCarousel,
-    JusManagementFilters
+    JusManagementFilters,
+    ManagementActions
   },
   data () {
     return {
@@ -292,14 +286,6 @@ export default {
     clearSelection () {
       if (this.$refs.disputeTable) this.$refs.disputeTable.clearSelection()
     },
-    applyFilters () {
-      this.$store.commit('setDisputeFilter', this.activeFilters)
-      this.showFilters = false
-      window.analytics.track('Filtro aplicado', {
-        filters: this.filters,
-        tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento'
-      })
-    },
     clearFilters () {
       this.showFilters = false
       this.$store.commit('clearDisputeFilters')
@@ -322,48 +308,8 @@ export default {
           message: 'Caso ' + label + ' com sucesso.',
           type: 'success'
         })
-        // let self = this
-        // setTimeout(function () {
-        //   self.getDisputes()
-        // }, 1500)
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
-      })
-    },
-    sendBatchAction (action) {
-      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        type: 'warning'
-      }).then(() => {
-        this.$store.dispatch('sendBatchAction', {
-          type: action,
-          disputeIds: this.selectedIds
-        }).then(response => {
-          window.analytics.track('Ação em massa realizada', {
-            action: action,
-            tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',
-            selecteds: this.selectedIds.length
-          })
-          let self = this
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
-            type: 'success',
-            onClose () {
-              setTimeout(function () {
-                self.$jusNotification({
-                  title: 'Fique atento!',
-                  message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
-                  Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
-                  type: 'info'
-                })
-              }, 300)
-            }
-          })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        })
       })
     }
   }
@@ -472,43 +418,6 @@ export default {
   }
   .el-tabs__active-bar {
     width: 97px;
-  }
-  &__multi-actions {
-    position: absolute;
-    left: 0;
-    right: 0;
-    background-color: #fff;
-    z-index: 3;
-    padding: 0 20px;
-    transition: all 0.5s ease;
-    display: flex;
-    justify-content:space-between;
-    align-items: center;
-    margin: -44px 22px 0;
-    transform: translateY(-100%);
-    border-radius: 5px 5px 0 0;
-    div {
-      display: flex;
-    }
-    &.active {
-      box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
-      margin: 0px 22px;
-      transform: translateY(0%);
-    }
-    i {
-      cursor: pointer;
-      text-align: right;
-    }
-    button {
-      height: 68px;
-      padding: 8px 20px;
-      border: 0;
-      border-radius: 0;
-      text-transform: uppercase;
-      &:hover {
-        background-color: #fafafa !important;
-      }
-    }
   }
   .el-table--enable-row-hover .el-table__body tr:hover > td {
     background-color: #fff;
