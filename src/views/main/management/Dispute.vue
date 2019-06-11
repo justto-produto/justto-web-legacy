@@ -341,9 +341,13 @@ export default {
   created () {
     this.fetchData({ fetchDispute: true, fetchMessages: true })
     this.checkWhatsappStatus()
-    this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
-      this.unsettledTypes = response
-    }).finally(() => this.$store.dispatch('hideLoading'))
+    if (this.$store.getters.disputeStatuses.unsettled) {
+      this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
+    } else {
+      this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
+        this.unsettledTypes = response
+      }).finally(() => this.$store.dispatch('hideLoading'))
+    }
   },
   destroyed () {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)

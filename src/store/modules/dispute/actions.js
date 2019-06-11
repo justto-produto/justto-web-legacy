@@ -72,6 +72,7 @@ const disputeActions = {
       // eslint-disable-next-line
       axios.get('api/disputes/outcome-reasons/' + status)
         .then(response => {
+          commit('setDisputeStatuses', { label: status, value: response.data })
           resolve(response.data)
         })
         .catch(error => {
