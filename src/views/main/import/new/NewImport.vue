@@ -69,7 +69,8 @@ export default {
           this.mappedCampaigns = response
         })
       } else if (this.activeStep === 0) {
-        window.analytics.track('Planilha importada', {
+        window.analytics.track('Importação Iniciada', {
+          action: 'Planilha Importada',
           lines: this.$store.state.importModule.file.rows
         })
       }
@@ -109,6 +110,7 @@ export default {
           delete campaign.strategy
           campaign.importId = this.$store.state.importModule.file.id
           promises.push(this.$store.dispatch('createCampaign', campaign))
+          allValid = true
         } else {
           allValid = false
         }
@@ -118,14 +120,13 @@ export default {
           window.analytics.track('Configuração de campanha concluida', {
             campaign: campaignsTrack
           })
-          this.$router.push('/import/loading')
-        }).catch(error => {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
+          window.analytics.track('Importação Concluída', {
+            campaign: campaignsTrack
           })
-          console.error(error)
+          this.$store.commit('removeImportsFile')
+          this.$router.push('/import/loading')
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
         })
       } else {
         this.$jusNotification({
@@ -144,7 +145,8 @@ export default {
         campaign.hasOwnProperty('protocolDeadLine') &&
         campaign.hasOwnProperty('paymentDeadLine') &&
         // campaign.hasOwnProperty('negotiatorIds') &&
-        campaign.hasOwnProperty('strategy')
+        campaign.hasOwnProperty('strategy') &&
+        campaign.strategy !== ''
       ) {
         return true
       } else return false
@@ -165,14 +167,6 @@ export default {
 .new-import-view__steps, .new-import-view__actions {
   width: 500px;
 }
-.new-import-view__content {
-  >*:not(.columns-step) {
-    width: 500px;
-  }
-  .el-collapse--bordered {
-    min-width: 100%;
-  }
-}
 .new-import-view__steps {
   margin-top: 20px;
 }
@@ -183,16 +177,6 @@ export default {
   }
   .enrichment-step .el-card {
     margin-top: 40px;
-  }
-  .el-collapse-item__header {
-    height: 100%;
-    line-height: inherit;
-    padding: 10px 0;
-    font-size: 14px;
-  }
-  .el-collapse-item__arrow {
-    line-height: 20px;
-    margin: 0;
   }
 }
 .new-import-view__title {

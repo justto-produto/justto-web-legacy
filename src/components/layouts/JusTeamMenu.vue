@@ -4,9 +4,9 @@
       <a
         v-for="member in members"
         :key="member.id"
-        :class="activePersonId === member.person.id ? 'active' : ''"
+        :class="filterPersonId === member.person.id ? 'active' : ''"
         class="jus-team-menu__member"
-        @click.prevent="setActivePersonId(member.person.id)">
+        @click.prevent="setFilterPersonId(member.person.id)">
         <el-tooltip :content="member.person.name" placement="right">
           <jus-avatar-user
             :name="member.person.name"
@@ -26,15 +26,15 @@ export default {
     members () {
       return this.$store.state.workspaceModule.members
     },
-    activePersonId () {
-      return this.$store.state.activePersonId
+    filterPersonId () {
+      return this.$store.getters.filterPersonId
     }
   },
   methods: {
-    setActivePersonId (id) {
-      if (id === this.activePersonId) {
-        this.$store.commit('setActivePersonId', 0)
-      } else this.$store.commit('setActivePersonId', id)
+    setFilterPersonId (id) {
+      if (id === this.filterPersonId) {
+        this.$store.commit('setFilterPersonId', 0)
+      } else this.$store.commit('setFilterPersonId', id)
     }
   }
 }

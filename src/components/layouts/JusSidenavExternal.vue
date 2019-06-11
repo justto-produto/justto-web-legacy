@@ -10,7 +10,7 @@
         Máximo de <br>100 casos
       </div>
     </div>
-    <div v-if="showPlans" class="jus-sidenav-external__divider">
+    <!-- <div v-if="showPlans" class="jus-sidenav-external__divider">
       Após período de teste
       <div />
     </div>
@@ -27,7 +27,7 @@
         <div>+ R$ 35</div>
         Por caso com interação<br>(carteira de cobrança)
       </el-button>
-    </div>
+    </div> -->
     <el-dialog
       v-if="showPlans"
       :title="modalType ? 'Indenizatório' : 'Cobrança'"

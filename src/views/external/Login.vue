@@ -46,9 +46,9 @@
             Entrar
           </el-button>
           <el-row class="external-view__info">
-            Ao clicar no botão, eu concordo com os
-            <a href="#"> Termos de Uso</a> e
-            <a href="#">Política de Privacidade.</a>
+            Ao clicar em Entrar, eu concordo com os
+            <a href="https://drive.google.com/file/d/1PzrxBPZ4gL2o_UA01k5sSXnwgaXJ3dmu/view?usp=sharing"> Termos de Uso</a> e com os
+            <a href="https://drive.google.com/file/d/1kTb1y8lwIeA_utrOOjIlhZ97iGRS3b-r/view" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
             <a href="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
@@ -94,7 +94,7 @@ export default {
       return this.showPassword ? 'text' : 'password'
     }
   },
-  beforeCreate () {
+  beforeMount () {
     this.$store.dispatch('logout')
   },
   created () {
@@ -104,8 +104,7 @@ export default {
           this.showSuccess = true
           this.$router.push('login')
         })
-        .catch(error => {
-          console.error(error)
+        .catch(() => {
           this.$router.push('login')
         })
     }
@@ -122,15 +121,14 @@ export default {
                 this.$store.dispatch('myAccount'),
                 this.$store.dispatch('myWorkspace')
               ]).then(responses => {
-                window.analytics.group(this.$store.state.workspaceModule.subdomain)
                 window.analytics.identify(this.loginForm.email, {
                   action: 'LOGIN',
                   email: this.loginForm.email,
                   workspace: this.$store.state.workspaceModule.subdomain
                 })
+                window.analytics.group(this.$store.state.workspaceModule.subdomain)
                 this.$router.push('/management')
-              }).catch(error => {
-                console.error(error)
+              }).catch(() => {
                 this.errorMessage = `Houve uma falha de conexão com o servidor.
                 Tente novamente ou entre em contato com o administrador do sistema.`
                 this.showError = true
@@ -138,7 +136,6 @@ export default {
               })
             })
             .catch(error => {
-              console.error(error.response)
               if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
                 this.errorMessage = 'E-mail não cadastrado ou senha incorreta.'
               } else {

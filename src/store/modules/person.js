@@ -23,6 +23,18 @@ const personModule = {
           })
       })
     },
+    removeRole ({ commit }, role) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
     myPerson ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -36,10 +48,21 @@ const personModule = {
           })
       })
     },
-    addOab ({ commit }, oamForm) {
+    editRole ({ commit }, infoRole) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('api/persons/my/oabs', { number: oamForm.oab, state: oamForm.state })
+        axios.put('api/persons', { id: infoRole.personId, name: infoRole.name, documentNumber: infoRole.documentNumber })
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
+    },
+    addOab ({ commit }, oabForm) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.post('api/persons/' + oabForm.personId +'/oabs', { number: oabForm.oab, state: oabForm.state })
           .then(response => {
             resolve(response.data)
           }).catch(error => {
@@ -80,31 +103,15 @@ const personModule = {
             reject(error)
           })
       })
-    },
-    removePhone ({ commit }, removePhoneBody) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.delete('api/persons/' + removePhoneBody.personId + '/phones/' + removePhoneBody.id)
-          .then(response => {
-            resolve(response.data)
-          }).catch(error => {
-            reject(error)
-          })
-      })
-    },
-    removeEmail ({ commit }, removeEmailBody) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.delete('api/persons/' + removeEmailBody.personId + '/emails/' + removeEmailBody.id)
-          .then(response => {
-            resolve(response.data)
-          }).catch(error => {
-            reject(error)
-          })
-      })
     }
   },
   getters: {
+    personName: state => {
+      return state.person.name
+    },
+    personId: state => {
+      return state.person.id
+    }
   }
 }
 

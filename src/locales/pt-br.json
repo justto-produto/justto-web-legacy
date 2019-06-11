@@ -1,6 +1,7 @@
 {
-  "message": "oláaa",
+  "message": "mensagem",
   "test": "teste",
+  "isTyping": "está digitando",
   "dispute": {
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
@@ -50,13 +51,16 @@
       "INTERACTIONS": "interações",
       "PENDING": "pendente",
       "IMPORTED": "importado",
-      "ACCEPTED": "aceito",
+      "ACCEPTED": "acordo",
       "PAUSED": "pausado",
       "ENRICHED": "enriquecido",
-      "CHECKOUT": "fechamento",
-      "REFUSED": "recusado",
-      "RUNNING": "engajamento",
-      "ARCHIVED": "arquivado"
+      "CHECKOUT": "acordo sem dados bancários",
+      "REFUSED": "perdido",
+      "ARCHIVED": "arquivado",
+      "SETTLED": "ganho",
+      "UNSETTLED": "perdido",
+      "RUNNING": "em negociação",
+      "EXPIRED": "expirado"
     }
   },
   "profile": {
@@ -65,11 +69,11 @@
   },
   "action":{
     "RESTART_ENGAGEMENT": "reiniciar engajamento",
-    "ACCEPTED": "ganhar",
-    "REFUSED": "perder",
+    "SETTLED": "ganhar",
+    "UNSETTLED": "perder",
     "DELETE": "excluir",
-    "PAUSED": "parar",
-    "RESUME": "reiniciar",
+    "PAUSED": "pausar",
+    "RESUME": "retomar",
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha"
   }

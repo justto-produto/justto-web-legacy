@@ -1,4 +1,8 @@
 import Vue from 'vue'
-import moment from 'vue-moment'
 
-Vue.use(moment)
+const moment = require('moment')
+require('moment/locale/pt-br')
+
+Vue.use(require('vue-moment'), {
+  moment
+})

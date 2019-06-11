@@ -19,17 +19,14 @@
           <swiper-slide v-if="!isGuest">
             <subdomain-step @onboarding:step:next="nextStep" @onboarding:createSubdomain="createSubdomain"/>
           </swiper-slide>
-          <swiper-slide>
+          <!-- <swiper-slide>
             <oab-step @onboarding:step:next="nextStep"/>
-          </swiper-slide>
+          </swiper-slide> -->
           <!-- <swiper-slide v-if="!isGuest">
             <LogoStep @onboarding:step:next="nextStep"/>
           </swiper-slide> -->
           <swiper-slide v-if="!isGuest">
             <invite-step @onboarding:step:next="nextStep"/>
-          </swiper-slide>
-          <swiper-slide>
-            <email-sync-step @onboarding:step:next="nextStep"/>
           </swiper-slide>
           <swiper-slide v-if="showWhatsapp">
             <whatsapp-step @onboarding:step:next="nextStep"/>
@@ -59,7 +56,6 @@
 import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
 import WelcomeStep from './steps/WelcomeStep'
 import OabStep from './steps/OabStep'
-import EmailSyncStep from './steps/EmailSyncStep'
 import WhatsappStep from './steps/WhatsappStep'
 import TeamNameStep from './steps/TeamNameStep'
 import SubdomainStep from './steps/SubdomainStep'
@@ -73,7 +69,6 @@ export default {
     JusSidenavExternal,
     WelcomeStep,
     OabStep,
-    EmailSyncStep,
     WhatsappStep,
     TeamNameStep,
     LogoStep,
@@ -101,17 +96,17 @@ export default {
       return !!this.$route.query.invitedBy
     },
     progressPercentage () {
-      let slidesN = this.showWhatsapp ? 7 : 6
+      let slidesN = this.showWhatsapp ? 5 : 4
       return Math.round((this.currentStep * (100 / slidesN)) * 0.2) / 0.2
     },
     showWhatsapp () {
-      return !this.$store.getters.isWhatsappOffline
+      return this.$store.getters.whatsappStatus !== 'OFFLINE'
     }
   },
   beforeCreate () {
     if (this.$store.state.workspaceModule.subdomain) {
       this.$store.dispatch('whatsappStart').then(() => {
-        this.$socket.emit('subscribe', this.$store.state.workspaceModule.subdomain)
+        this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
       })
     }
   },
@@ -122,9 +117,6 @@ export default {
     setTimeout(function () {
       this.right = 18
     }.bind(this), 1200)
-  },
-  destroyed () {
-    this.$socket.emit('unsubscribe', this.$store.state.workspaceModule.subdomain)
   },
   methods: {
     nextStep (responseObj) {
@@ -145,25 +137,16 @@ export default {
       this.$store.dispatch('createWorkpace', {
         name: this.responses.team,
         subDomain: this.responses.subdomain
-      }).catch(error => {
-        console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
       }).finally(() => {
         this.$store.dispatch('myWorkspace').then(response => {
           if (response.length && response[response.length - 1].subDomain === this.responses.subdomain) {
             this.$refs['swiper'].swiper.slideNext(800)
-            this.$socket.emit('subscribe', this.$store.state.workspaceModule.subdomain)
+            this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
             this.$store.dispatch('whatsappStart')
           } else {
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
+            this.$jusNotification({ type: 'error' })
           }
         }).finally(() => {
           this.$store.dispatch('hideLoading')

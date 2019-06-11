@@ -16,7 +16,7 @@ export default {
         cancelButtonText: 'Não exibir mais dicas'
       }).catch(() => {
         this.$message({
-          message: 'AZAR O SEU MANÉ!',
+          message: 'Ok',
           type: 'warning'
         })
       })

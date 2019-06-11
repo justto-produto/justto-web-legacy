@@ -8,7 +8,7 @@
         :fetch-suggestions="search"
         placeholder="Busque aqui os seus casos">
         <template slot-scope="{ item }">
-          <router-link :to="'/management/case/' + item.disputeid">
+          <router-link :to="'/management/dispute/' + item.disputeid">
             <div class="jus-header-main__result">
               <h4>
                 Caso #{{ item.disputeid }} |
@@ -17,30 +17,30 @@
               </h4>
               <div>Estratégia: {{ item.strategyname }}</div>
               <div>Status: <span>{{ $t('occurrence.type.' + item.disputestatus) }}</span></div>
-              <div v-for="(claiment, index) in item.claiments" :key="item.disputeid + claiment.f1 + index + 'claimant'">
-                Parte contrária: {{ claiment.f1 }}
+              <div v-for="(claiment, index) in item.claiments" :key="item.disputeid + claiment.name + index + 'claimant'">
+                Parte contrária: {{ claiment.name }}
               </div>
-              <div v-for="(lawyer, index) in item.claimentslawyer" :key="item.disputeid + lawyer.f1 + index + 'lawyer'">
-                Advogado: {{ lawyer.f1 }}
+              <div v-for="(lawyer, index) in item.claimentslawyer" :key="item.disputeid + lawyer.name + index + 'lawyer'">
+                Advogado: {{ lawyer.name }}
               </div>
             </div>
           </router-link>
         </template>
       </el-autocomplete>
     </div>
-    <div class="jus-header-main__notification">
+    <!-- <div class="jus-header-main__notification">
       <el-dropdown trigger="click" placement="bottom">
         <jus-icon icon="notification"/>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="e">Sem novas notificações</el-dropdown-item>
-          <!-- <el-dropdown-item command="e">Notificação importante 2</el-dropdown-item>
+          <el-dropdown-item command="e">Notificação importante 2</el-dropdown-item>
           <el-dropdown-item command="e">Notificação importante 3</el-dropdown-item>
           <el-dropdown-item command="e">Notificação importante 4</el-dropdown-item>
           <el-dropdown-item command="e">Notificação importante 5</el-dropdown-item>
-          <el-dropdown-item command="e">Notificação importante 6</el-dropdown-item> -->
+          <el-dropdown-item command="e">Notificação importante 6</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-    </div>
+    </div> -->
     <div class="jus-header-main__info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
@@ -114,50 +114,51 @@ export default {
       let fields = [
         'disputecode',
         'campaignname',
-        'claiments.f1',
-        'claiments.f2',
-        'claimentslawyer.f1',
-        'claimentslawyer.f2',
+        'claiments.name',
+        'claiments.document_number',
+        'claimentslawyer.name',
+        'claimentslawyer.document_number',
         'strategyname',
         'disputeupperrange',
         'disputelastrespondentoffer'
       ]
-      if (!isNaN(term)) fields.push('disputeid')
+      if (!isNaN(term) && term < Number.MAX_SAFE_INTEGER) fields.push('disputeid')
       return fields
     },
     logout () {
+      window.analytics.track('Logout realizado', {
+        workspace: this.workspace,
+        username: this.name
+      })
       this.$store.dispatch('logout')
+      this.$store.commit('clearDisputes')
     },
     search (term, cb) {
-      // var terms = term.split(' ')
-      // terms = [...new Set(terms)]
-      // var query = ''
-      // for (let word of terms) {
-      //   let w = '*' + word + '* OR ' + word
-      //   if (terms[terms.length - 1] !== word) {
-      //     w = w + ' AND '
-      //   }
-      //   query = query + w
-      // }
-      let query = term ? '*' + term + '* OR ' + term : '*'
-
-      this.$store.dispatch('getDisputes', {
-        query: {
-          bool: {
-            must: [{
-              query_string: {
-                fields: this.getFields(term),
-                query: query
-              }
-            }, {
-              match: {
-                workspaceid: this.$store.state.workspaceModule.id
-              }
-            }]
-          }
-        }
-      }).then(response => {
-        cb(response)
+      this.$search(
+        term,
+        this.$store.state.disputeModule.disputes, {
+          shouldSort: true,
+          tokenize: true,
+          matchAllTokens: true,
+          threshold: 0.1,
+          location: 0,
+          distance: 100,
+          maxPatternLength: 32,
+          minMatchCharLength: 1,
+          keys: [
+            'disputeid',
+            'disputecode',
+            'campaignname',
+            'claiments.name',
+            'claiments.document_number',
+            'claimentslawyer.name',
+            'claimentslawyer.document_number',
+            'strategyname',
+            'disputeupperrange',
+            'disputelastrespondentoffer'
+          ]
+        }).then(results => {
+        cb(results)
       })
     }
   }

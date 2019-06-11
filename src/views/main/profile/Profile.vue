@@ -27,43 +27,11 @@
             </el-input>
           </el-form-item>
         </el-form>
-        <br>
-        <hr>
-        <br>
-        <h3>E-mails sincronizados de contato com as partes</h3>
-        <el-form
-          v-loading="$store.state.loading"
-          ref="syncForm"
-          :model="syncForm"
-          :rules="syncFormRules"
-          label-position="top"
-          class="profile-view__sync-form"
-          @submit.native.prevent="syncNewEmail">
-          <el-form-item label="Email" prop="email">
-            <el-input v-model="syncForm.email" type="text"/>
-          </el-form-item>
-          <el-form-item label="Senha" prop="password">
-            <el-input v-model="syncForm.password" type="password"/>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" native-type="submit">Sincronizar novo email</el-button>
-          </el-form-item>
-        </el-form>
-        <el-collapse v-loading="$store.state.loading">
-          <el-collapse-item title="Lista de emails sincronizados">
-            <div v-for="email in syncedEmails" :key="email.id" class="profile-view__synced-email">
-              {{ email.email }}
-              <a href="#" @click.prevent="removeEmail(email.id)">
-                <jus-icon icon="trash" />
-              </a>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
       </div>
     </template>
     <template slot="right-card">
       <h3>WhatsApp</h3>
-      <jus-whatsapp v-if="!$store.getters.isWhatsappOffline" />
+      <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
       <div v-else>
         <h2>Desculpe :(</h2>
         <p>
@@ -98,8 +66,8 @@
               <span> {{ $t('profile.' + member.profile) }}</span>
             </div>
             <div class="actions">
-              <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
               <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
+              <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
             </div>
           </div>
         </div>
@@ -232,17 +200,6 @@ export default {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.state.personModule.person))
     this.teamName = this.$store.state.workspaceModule.name + ''
-    this.$store.dispatch('whatsappStatus').then((whatsapp) => {
-      if (whatsapp.status === 'OFFLINE') {
-        this.$store.dispatch('whatsappStart')
-      } else {
-        this.$store.commit('SOCKET_refresh', whatsapp)
-      }
-      this.$socket.emit('subscribe', this.$store.state.workspaceModule.subdomain)
-    })
-  },
-  destroyed () {
-    this.$socket.emit('unsubscribe', this.$store.state.workspaceModule.subdomain)
   },
   methods: {
     getMembers () {
@@ -266,13 +223,8 @@ export default {
                 message: 'Nome alterado com sucesso.',
                 type: 'success'
               })
-            }).catch(error => {
-              console.error(error)
-              this.$jusNotification({
-                title: 'Ops!',
-                message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-                type: 'error'
-              })
+            }).catch(() => {
+              this.$jusNotification({ type: 'error' })
             })
         } else {
           this.$jusNotification({
@@ -325,7 +277,6 @@ export default {
         })
         this.dialogPassword = false
       }).catch(error => {
-        console.error(error)
         if (error.response.status === 401) {
           this.$jusNotification({
             title: 'Ops!',
@@ -333,16 +284,12 @@ export default {
             type: 'warning'
           })
         } else {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+          this.$jusNotification({ type: 'error' })
         }
       })
     },
     removeEmail (id) {
-      this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Remover email', {
+      this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Excluir email', {
         confirmButtonText: 'Sim, remover',
         cancelButtonText: 'Cancelar',
         type: 'warning'
@@ -360,14 +307,9 @@ export default {
             self.$store.commit('hideLoading')
             self.getSyncedEmails()
           }, 1000)
-        }).catch(error => {
-          console.error(error)
+        }).catch(() => {
           this.$store.commit('hideLoading')
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-            type: 'error'
-          })
+          this.$jusNotification({ type: 'error' })
         })
       })
     },
@@ -383,13 +325,8 @@ export default {
                 message: 'Email sincronizado com sucesso.',
                 type: 'success'
               })
-            }).catch(error => {
-              console.error(error)
-              this.$jusNotification({
-                title: 'Ops!',
-                message: 'Não foi possível sincronizar seu email. Tente novamente ou entre em contato com o administrador do sistema.',
-                type: 'error'
-              })
+            }).catch(() => {
+              this.$jusNotification({ type: 'error' })
             }).finally(() => {
               this.$store.dispatch('hideLoading')
             })
@@ -400,7 +337,7 @@ export default {
     },
     removeMember (id, name) {
       this.$confirm('Tem certeza que deseja remover ' + name + ' da equipe?', 'Atenção!', {
-        confirmButtonText: 'Remover',
+        confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'warning'
       }).then(() => {
@@ -429,13 +366,8 @@ export default {
           message: 'Usuário editado com sucesso.',
           type: 'success'
         })
-      }).catch(error => {
-        console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
       })
     },
     changeWorkspaceName () {
@@ -474,13 +406,8 @@ export default {
             this.inviteForm.email = ''
             this.inviteForm.profile = 'NEGOTIATOR'
             this.getMembers()
-          }).catch(error => {
-            console.error(error)
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
+          }).catch(() => {
+            this.$jusNotification({ type: 'error' })
           })
         } else {
           return false

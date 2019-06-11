@@ -165,14 +165,8 @@ export default {
       this.$store.dispatch('showLoading')
       this.$store.dispatch('getImportsColumns').then(() => {
         this.$store.dispatch('hideLoading')
-      }).catch(error => {
-        this.$notify.closeAll()
-        console.error(error)
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-          type: 'error'
-        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
       })
     }
     this.$store.dispatch('getImportsTags').then(tags => {
@@ -182,14 +176,8 @@ export default {
       this.claimantParties = Array.from({ length: tags.claimantParty.rows }, (v, k) => k + 1)
       this.claimantLawyers = Array.from({ length: tags.claimantLawyer.rows }, (v, k) => k + 1)
       this.respondentParties = Array.from({ length: tags.respondentParty.rows }, (v, k) => k + 1)
-    }).catch(error => {
-      this.$notify.closeAll()
-      console.error(error)
-      this.$jusNotification({
-        title: 'Ops!',
-        message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-        type: 'error'
-      })
+    }).catch(() => {
+      this.$jusNotification({ type: 'error' })
     })
   },
   mounted () {
@@ -323,6 +311,16 @@ export default {
     &+.drag-group {
       margin-top: 20px;
     }
+  }
+  .el-collapse-item__header {
+    height: 100%;
+    line-height: inherit;
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  .el-collapse-item__arrow {
+    line-height: 20px;
+    margin: 0;
   }
 }
 </style>

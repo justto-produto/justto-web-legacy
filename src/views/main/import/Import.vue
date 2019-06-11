@@ -60,7 +60,7 @@
           <jus-icon icon="spreadsheet-xlsx"/>
         </div>
         <div class="import-history__content">
-          <h4>{{ imports.file_name }}</h4>
+          <h4><a href="#" @click="downloadItem(imports.file_name)">{{ imports.file_name }}</a></h4>
           <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
           <p>Linhas: {{ imports.rows }}</p>
         </div>
@@ -138,12 +138,20 @@ export default {
       this.$store.commit('setImportsFile', res)
       this.fileUrl = URL.createObjectURL(file.raw)
     },
-    handleError () {
+    handleError (error) {
+      let errorMessage = {}
+      if (error.status === 400) {
+        errorMessage.message = 'Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.'
+        errorMessage.type = 'warning'
+      } else {
+        errorMessage.message = 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
+        errorMessage.type = 'error'
+      }
       this.processingFile = false
       this.$jusNotification({
         title: 'Ops!',
-        message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-        type: 'error'
+        message: errorMessage.message,
+        type: errorMessage.type
       })
     },
     removeFile () {
@@ -154,6 +162,9 @@ export default {
     downloadModel () {
       window.analytics.track('Planilha modelo baixada')
       window.open('Planilha-Modelo-Justto.xlsx', '_blank')
+    },
+    downloadItem (fileName) {
+      window.open('imported/' + fileName, '_blank')
     }
   }
 }

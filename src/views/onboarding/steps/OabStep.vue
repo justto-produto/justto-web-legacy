@@ -63,9 +63,8 @@ export default {
                 this.$store.dispatch('myAccount')
                 this.$emit('onboarding:step:next')
               })
-              .catch((error) => {
+              .catch(() => {
                 this.showError = true
-                console.error(error)
               }).finally(() => {
                 this.$store.dispatch('hideLoading')
               })

@@ -41,7 +41,7 @@
               v-model="filters.disputedealdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
-              value-format="yyyy-MM-dd'T'HH:mm:ss"
+              value-format="yyyy-MM-dd"
               @change="clearDisputedealdate"/>
           </el-form-item>
         </el-col>
@@ -52,7 +52,7 @@
               v-model="filters.lastinteractiondate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
-              value-format="yyyy-MM-dd'T'HH:mm:ss"
+              value-format="yyyy-MM-dd"
               @change="clearLastinteractiondate" />
           </el-form-item>
         </el-col>
@@ -103,7 +103,7 @@
               v-model="filters.disputeexpirationdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
-              value-format="yyyy-MM-dd'T'HH:mm:ss"
+              value-format="yyyy-MM-dd"
               @change="clearDisputeexpirationdate"/>
           </el-form-item>
         </el-col>
@@ -144,7 +144,8 @@
               <el-radio-button label="ENGAGEMENT">Engajamento</el-radio-button>
               <el-radio-button label="INTERACTIONS">Com interação</el-radio-button>
               <el-radio-button label="ACCEPTED">Novos acordos</el-radio-button>
-              <el-radio-button label="REFUSED">Perdidos</el-radio-button>
+              <el-radio-button label="SETTLED">Ganhos</el-radio-button>
+              <el-radio-button label="UNSETTLED">Perdidos</el-radio-button>
               <el-radio-button label="EXPIRED">Expirados</el-radio-button>
               <el-radio-button label="PAUSED">Pausados</el-radio-button>
             </el-radio-group>

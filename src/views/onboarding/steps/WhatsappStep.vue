@@ -9,7 +9,7 @@
       </p>
     </div>
     <jus-whatsapp :number.sync="number" />
-    <el-button :disabled="!$store.getters.isWhatsappConnected" type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
+    <el-button :disabled="$store.getters.whatsappStatus !== 'CONNECTED'" type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
     <el-button type="text" @click="nextStep()">Pular</el-button>
   </div>
 </template>

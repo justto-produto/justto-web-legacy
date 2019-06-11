@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     qrCode () {
-      return this.$store.state.whatsappModule.qrCode
+      return this.$store.state.socketModule.whatsapp.qrCode
     },
     status () {
       if (this.isWhatsappStarting) {
@@ -83,13 +83,13 @@ export default {
       }
     },
     isWhatsappReady () {
-      return this.$store.getters.isWhatsappReady
+      return this.$store.getters.whatsappStatus === 'READY'
     },
     isWhatsappStarting () {
-      return this.$store.getters.isWhatsappStarting
+      return this.$store.getters.whatsappStatus === 'STARTING'
     },
     isWhatsappConnected () {
-      return this.$store.getters.isWhatsappConnected
+      return this.$store.getters.whatsappStatus === 'CONNECTED'
     },
     validNumber () {
       if (this.rawNumber.length > 9) {
@@ -105,8 +105,8 @@ export default {
     }
   },
   watch: {
-    '$store.state.whatsappModule.status': function () {
-      if (this.$store.state.whatsappModule.status === 'CONNECTED') {
+    '$store.state.socketModule.whatsapp.status': function () {
+      if (this.$store.state.socketModule.whatsapp.status === 'CONNECTED') {
         window.analytics.track('Whatsapp sincronizado')
       }
     }
@@ -128,17 +128,13 @@ export default {
             })
           }).catch(() => {
             this.sending = false
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.',
-              type: 'error'
-            })
+            this.$jusNotification({ type: 'error' })
           })
         }
       })
     },
     restart () {
-      this.$store.commit('SOCKET_refresh', { status: 'STARTING' })
+      this.$store.commit('SOCKET_refresh', { status: 'STARTING', qrCode: '' })
       this.$store.dispatch('whatsappStop').then(() => {
         this.$store.dispatch('whatsappStart')
       })

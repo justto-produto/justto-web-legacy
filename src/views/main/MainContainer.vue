@@ -13,26 +13,23 @@
         :default-active="$route.path"
         router
         class="el-menu--main-menu">
-        <el-menu-item index="/">
-          <!-- <jus-tip /> -->
+        <!-- <el-menu-item index="/">
+          <jus-tip />
           <jus-icon icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
-        </el-menu-item>
-        <transition name="fade">
+        </el-menu-item> -->
+        <!-- <transition name="fade">
           <li v-if="!isCollapse" class="el-menu__title">
             <span>GERENCIAMENTO</span>
           </li>
-        </transition>
-        <el-menu-item index="/import">
-          <jus-icon icon="import" class="el-menu__icon"/>
-          <span slot="title">Importação de casos</span>
-        </el-menu-item>
+        </transition> -->
         <el-menu-item index="/management">
           <jus-icon icon="management" class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
-        <el-menu-item index="/profile" style="display: none">
-          <span slot="title">Perfil</span>
+        <el-menu-item index="/import">
+          <jus-icon icon="import" class="el-menu__icon"/>
+          <span slot="title">Importação de casos</span>
         </el-menu-item>
       </el-menu>
       <div class="jus-team-menu__title">TIME</div>
@@ -41,7 +38,7 @@
       </vue-perfect-scrollbar>
     </el-aside>
     <el-container direction="vertical">
-      <JusHeaderMain/>
+      <jus-header-main />
       <el-main>
         <transition name="fade">
           <router-view/>
@@ -73,6 +70,16 @@ export default {
   beforeMount () {
     this.$store.dispatch('myPerson')
     this.$store.dispatch('getWorkspaceMembers')
+    this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
+    this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
+      if (whatsapp.status === 'OFFLINE') {
+        this.$store.dispatch('whatsappStart')
+      } else {
+        this.$store.commit('SOCKET_refresh', whatsapp)
+      }
+    })
+    this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
+    this.$socket.emit('subscribe', '/workspaces/' + this.$store.state.workspaceModule.id)
   }
 }
 </script>

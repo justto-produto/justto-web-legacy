@@ -14,11 +14,13 @@ import '@/plugins/moment'
 import '@/plugins/chatScroll'
 import '@/plugins/jusNotification'
 import '@/plugins/socket'
+import '@/plugins/fuse'
 // import '@/plugins/sentry'
 
 // filters
 import '@/filters/capitalize'
-import '@/filters/money'
+import '@/filters/currency'
+import '@/filters/firstName'
 
 // css
 import '@/styles/core.scss'
@@ -72,7 +74,7 @@ if (store.getters.isLoggedIn) {
   Promise.all([store.dispatch('myAccount'), store.dispatch('myWorkspace')])
     .then(responses => {
       store.dispatch('hideLoading')
-      if (responses[1][0]['subDomain']) {
+      if (responses[1][0] && responses[1][0]['subDomain']) {
         store.dispatch('getWorkspaceMembers')
         store.dispatch('myPerson')
       }

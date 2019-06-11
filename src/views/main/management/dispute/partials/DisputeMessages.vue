@@ -1,14 +1,14 @@
 <template>
-  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved:true }" class="case-view-messages">
+  <ul v-loading="messages.length === 0 && loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="message in messages"
       v-if="isntCanceled(message)"
       v-show="checkShowScheduled(message)"
       :key="message.id"
-      class="case-view-messages__message">
-      <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="case-view-messages__message-box">
+      class="dispute-view-messages__message">
+      <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="dispute-view-messages__message-box">
         <div>
-          <div :class="directionClass(message) + waitingClass(message)" class="case-view-messages__message-content">
+          <div :class="directionClass(message) + waitingClass(message)" class="dispute-view-messages__message-content">
             <div>{{ message.description }}</div>
             <el-button v-if="message.message && message.message.type === 'EMAIL'" type="text" @click="showMessageDialog(message.message.content)">Visualizar email</el-button>
             <span v-else v-html="message.message && message.message.content" />
@@ -23,8 +23,19 @@
               Esta é uma mensagem agendada que ainda não foi entregue.
             </i>
           </div>
-          <div class="case-view-messages__message-time">
-            {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
+          <div class="dispute-view-messages__message-time">
+            <span v-if="message.executionDateTime || message.message.schedulerTime">
+              {{ message.executionDateTime != null ? message.executionDateTime : message.message.schedulerTime | moment('DD [de] MMMM [às] HH:mm') }} •
+            </span>
+            <span v-if="directionClass(message) !== 'note'">
+              <jus-icon :icon="getMessageIcon(message.message)" />
+              <span v-if="message.message && message.message.senderName">
+                • {{ message.message.senderName | firstName }}
+              </span>
+            </span>
+            <span v-else>
+              Nota
+            </span>
           </div>
         </div>
         <jus-avatar-user
@@ -33,8 +44,9 @@
           :purple="directionClass(message) === 'inbound'"
           size="sm" />
       </div>
-      <div v-else class="case-view-messages__message-log">
-        {{ message.description }} <br> {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
+      <div v-else class="dispute-view-messages__message-log">
+        <div :class="message.type === 'TYPING' ? 'loading' : ''">{{ message.description }}</div>
+        {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
       </div>
     </li>
     <el-dialog
@@ -50,9 +62,9 @@
 
 <script>
 export default {
-  name: 'CaseMessages',
+  name: 'DisputeMessages',
   props: {
-    messages: {
+    messagesProp: {
       type: Array,
       default: () => []
     },
@@ -68,10 +80,59 @@ export default {
   data () {
     return {
       showMessage: false,
-      messageContent: ''
+      messageContent: '',
+      messages: [],
+      typing: '',
+      typingTimeout: 0
     }
   },
+  watch: {
+    messagesProp () {
+      setTimeout(function () {
+        this.messages = this.messagesProp
+      }.bind(this), 300)
+    },
+    typing (value) {
+      if (value.sender.personId !== this.$store.getters.personId) {
+        this.removeTypingMessage()
+        this.messages.push({
+          id: 0,
+          description: value.sender.name + ' ' + this.$t('isTyping'),
+          type: 'TYPING'
+        })
+        clearTimeout(this.typingTimeout)
+        this.typingTimeout = setTimeout(() => {
+          this.removeTypingMessage()
+        }, 4000)
+      }
+    }
+  },
+  mounted () {
+    this.$store.watch(state => state.socketModule.chat.typing, typing => {
+      this.typing = typing
+    })
+    this.$store.watch(state => state.socketModule.chat.join, join => {
+      setTimeout(() => {
+        this.$emit('dispute:refresh')
+      }, 1000)
+    })
+    this.$store.watch(state => state.socketModule.chat.message, join => {
+      setTimeout(() => {
+        this.$emit('dispute:refresh')
+      }, 1000)
+    })
+    this.$store.watch(state => state.socketModule.chat.leave, join => {
+      setTimeout(() => {
+        this.$emit('dispute:refresh')
+      }, 1000)
+    })
+  },
   methods: {
+    removeTypingMessage () {
+      this.messages = this.messages.filter(function (obj) {
+        return obj.id !== 0
+      })
+    },
     showAsCard (type) {
       if (type === 'INTERACTION' || type === 'COMMUNICATION' || type === 'NOTE') {
         return true
@@ -82,7 +143,7 @@ export default {
       this.showMessage = true
     },
     directionClass (message) {
-      if (message.message && message.message.direction === 'INBOUND') {
+      if (message.message && (message.message.direction === 'INBOUND' || message.message.senderParty === 'CLAIMANT')) {
         return 'inbound'
       } else if (message.message && message.message.type === 'NOTE') {
         return 'note'
@@ -107,13 +168,35 @@ export default {
           return false
         } return true
       } return true
+    },
+    getMessageIcon (message) {
+      if (message) {
+        switch (message.type) {
+          case 'EMAIL_CNA':
+            return 'cna'
+          case 'EMAIL':
+            return 'email'
+          case 'WHATSAPP':
+            return 'whatsapp'
+          case 'SMS':
+            return 'sms'
+          case 'TTS':
+            return 'tts'
+          case 'PUSH_NOTIFICATION':
+            return 'notification'
+          default:
+            return 'chat'
+        }
+      } else {
+        return 'chat'
+      }
     }
   }
 }
 </script>
 
 <style lang="scss">
-.case-view-messages {
+.dispute-view-messages {
   overflow-y: auto;
   height: 100%;
   margin: 0;
@@ -123,11 +206,11 @@ export default {
   }
   &__message-box {
     display: flex;
-    margin: 20px;
+    margin: 30px 20px;
     justify-content: flex-end;
     &.inbound {
       flex-direction: row-reverse;
-      .case-view-messages__message-time {
+      .dispute-view-messages__message-time {
         text-align: left;
       }
     }
@@ -192,6 +275,11 @@ export default {
     font-size: 12px;
     text-align: right;
     margin: 10px 20px 0;
+    font-weight: 500;
+    word-spacing: 5px;
+    img {
+      vertical-align: bottom;
+    }
   }
   .jus-avatar-user span, .jus-avatar-user img {
     width: 3rem;
@@ -199,6 +287,34 @@ export default {
   }
   .el-button--text {
     padding-bottom: 0;
+  }
+  .loading:after {
+    content: ' .';
+    animation: dots 1s steps(5, end) infinite;
+  }
+  @keyframes dots {
+    0%, 20% {
+      color: rgba(0,0,0,0);
+      text-shadow:
+        .25em 0 0 rgba(0,0,0,0),
+        .5em 0 0 rgba(0,0,0,0);
+    }
+    40% {
+      color: #adadad;
+      text-shadow:
+        .25em 0 0 rgba(0,0,0,0),
+        .5em 0 0 rgba(0,0,0,0);
+    }
+    60% {
+      text-shadow:
+        .25em 0 0 #adadad,
+        .5em 0 0 rgba(0,0,0,0);
+    }
+    80%, 100% {
+      text-shadow:
+        .25em 0 0 #adadad,
+        .5em 0 0 #adadad;
+    }
   }
 }
 </style>

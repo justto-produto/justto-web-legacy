@@ -16,6 +16,8 @@ const router = new Router({
         {
           name: 'dashboard',
           path: '/',
+          // TODO: RETIRAR APÓS IMPLEMENTAR DASHBOARD
+          redirect: 'management',
           component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard'),
           meta: {
             requiresTrack: true
@@ -54,7 +56,7 @@ const router = new Router({
           }
         },
         {
-          path: 'management/case/',
+          path: 'management/dispute/',
           redirect: {
             name: 'management'
           }
@@ -189,9 +191,9 @@ router.afterEach((to, from) => {
   if (to.matched.some(record => record.meta.requiresTrack)) {
     window.analytics.page(to.name)
   }
-  if (from.name === 'importNew') {
-    window.analytics.track('Importação interrompida')
-  }
+  // if (from.name === 'importNew') {
+  //   window.analytics.track('Importação interrompida')
+  // }
   if (to.name === 'onboarding' || to.name === 'login' || to.name === 'register' || to.name === 'forgot-password') {
     document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width,initial-scale=1.0')
   } else {
