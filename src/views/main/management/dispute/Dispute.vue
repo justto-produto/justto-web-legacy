@@ -140,10 +140,9 @@
           :messages-prop="filteredDisputeMessages"
           :loading="loadingDisputeMessages"
           :show-scheduled="showScheduled"
-          :current-tab="typingTab"
           @dispute:refresh="fetchData({ fetchMessages: true })" />
         <div class="dispute-view__send-message">
-          <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
+          <el-tabs ref="messageTab" value="1" @tab-click="handleTabClick">
             <el-tab-pane label="Mensagem" name="1">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
@@ -205,7 +204,7 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <el-tab-pane label="Chat" name="2">
+            <el-tab-pane label="Chat" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-input
                   :rows="3"
@@ -220,7 +219,7 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <el-tab-pane label="Nota" name="3">
+            <el-tab-pane label="Nota" name="2">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-input
                   :rows="3"
@@ -291,8 +290,7 @@ export default {
       negotiatorsRules: {},
       unsettledTypes: [],
       unsettledType: null,
-      whatsappStatus: '',
-      typingTab: '1'
+      whatsappStatus: ''
     }
   },
   computed: {
@@ -695,6 +693,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: -10px 0;
     img {
       margin-right: 10px;
       height: 20px;
