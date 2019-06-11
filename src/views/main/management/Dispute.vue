@@ -185,7 +185,7 @@
                       Escolha um destinatário ao lado
                     </div>
                   </el-tooltip>
-                  <el-tooltip v-if="messageType === 'whatsapp' && whatsappStatus === 'UNCONNECTED'" content="Whatsapp desconectado">
+                  <el-tooltip v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'" content="Whatsapp desconectado">
                     <div>
                       <el-button :disabled="true" type="primary" @click="sendMessage()">
                         Enviar
@@ -291,11 +291,13 @@ export default {
       negotiatorsRules: {},
       unsettledTypes: [],
       unsettledType: null,
-      whatsappStatus: '',
       typingTab: '1'
     }
   },
   computed: {
+    whatsappStatus () {
+      return this.$store.getters.whatsappStatus
+    },
     validName () {
       if (this.$store.state.personModule.person.name && this.$store.state.personModule.person.name !== this.$store.state.accountModule.email) {
         return true
@@ -340,7 +342,6 @@ export default {
   },
   created () {
     this.fetchData({ fetchDispute: true, fetchMessages: true })
-    this.checkWhatsappStatus()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
     } else {
@@ -353,18 +354,6 @@ export default {
     this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
-    checkWhatsappStatus () {
-      this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
-        if (whatsapp.status === 'CONNECTED') {
-          this.whatsappStatus = 'CONNECTED'
-        } else {
-          this.whatsappStatus = 'UNCONNECTED'
-        }
-      }).catch(() => {
-        this.whatsappStatus = 'UNCONNECTED'
-        this.$jusNotification({ type: 'error' })
-      })
-    },
     canSettled () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
     },
@@ -511,44 +500,34 @@ export default {
       }).catch(() => this.$jusNotification({ type: 'error' }))
     },
     sendChatMessage () {
-      this.checkWhatsappStatus()
-      if (this.messageType === 'whatsapp' && (this.whatsappStatus === 'UNCONNECTED' || this.whatsappStatus === 'UNKNOW')) {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Seu WhatsApp não está conectado.',
-          type: 'error'
-        })
-      } else {
-        if (this.newChatMessage.length > 0) {
-          this.newChatMessage = this.newChatMessage.charAt(0).toUpperCase() + this.newChatMessage.slice(1)
-          this.$store.dispatch('sendMessageEvent', {
-            id: this.dispute.id,
-            data: {
-              value: this.newChatMessage,
-              sender: {
-                personId: this.$store.getters.personId,
-                name: this.$store.getters.personName
-              }
+      if (this.newChatMessage) {
+        this.newChatMessage = this.newChatMessage.charAt(0).toUpperCase() + this.newChatMessage.slice(1)
+        this.$store.dispatch('sendMessageEvent', {
+          id: this.dispute.id,
+          data: {
+            value: this.newChatMessage,
+            sender: {
+              personId: this.$store.getters.personId,
+              name: this.$store.getters.personName
             }
-          }).then(() => {
-            this.newChatMessage = ''
-            setTimeout(function () {
-              this.fetchData({ fetchMessages: true })
-            }.bind(this), 500)
-          }).catch(() => this.$jusNotification({ type: 'error' }))
-        }
+          }
+        }).then(() => {
+          this.newChatMessage = ''
+          setTimeout(function () {
+            this.fetchData({ fetchMessages: true })
+          }.bind(this), 500)
+        }).catch(() => this.$jusNotification({ type: 'error' }))
       }
     },
     sendMessage () {
-      this.checkWhatsappStatus()
-      if (this.messageType === 'whatsapp' && this.whatsappStatus === 'UNCONNECTED') {
+      if (this.messageType === 'whatsapp' && this.whatsappStatus !== 'CONNECTED') {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Seu Whatsapp não está conectado, por favor conecte-se para enviar esta mensagem',
           type: 'warning'
         })
       } else {
-        if (this.newMessage.length > 0) {
+        if (this.newMessage) {
           this.newMessage = this.newMessage.charAt(0).toUpperCase() + this.newMessage.slice(1)
           this.$store.dispatch('send' + this.messageType, {
             to: [this.activePerson.id],
