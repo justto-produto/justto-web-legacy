@@ -110,21 +110,6 @@ export default {
     }
   },
   methods: {
-    getFields (term) {
-      let fields = [
-        'disputecode',
-        'campaignname',
-        'claiments.name',
-        'claiments.document_number',
-        'claimentslawyer.name',
-        'claimentslawyer.document_number',
-        'strategyname',
-        'disputeupperrange',
-        'disputelastrespondentoffer'
-      ]
-      if (!isNaN(term) && term < Number.MAX_SAFE_INTEGER) fields.push('disputeid')
-      return fields
-    },
     logout () {
       window.analytics.track('Logout realizado', {
         workspace: this.workspace,
@@ -155,7 +140,8 @@ export default {
             'claimentslawyer.document_number',
             'strategyname',
             'disputeupperrange',
-            'disputelastrespondentoffer'
+            'disputelastrespondentoffer',
+            'lastOfferValue'
           ]
         }).then(results => {
         cb(results)
