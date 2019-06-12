@@ -39,6 +39,7 @@ const campaign = {
     }
   },
   getters: {
+    campaignList: state => state.list
   }
 }
 

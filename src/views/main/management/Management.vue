@@ -8,7 +8,7 @@
       <management-actions
         :active="multiActive"
         :selected-ids="selectedIds"
-        :tab-label="activeTab.label"
+        :tab-label="activeTabLabel"
         @disputes:clear="clearSelection"
       />
     </template>
@@ -37,18 +37,19 @@
         </el-button>
       </div>
       <el-tabs
-        ref="management-tabs"
+        :key="tabKey"
         :before-leave="handleChangeTab"
-        v-model="activeTab.index"
+        v-model="activeTab"
         class="view-management__tabs">
         <el-tab-pane name="0" label="Engajamento" />
-        <el-tab-pane name="1" label="Com interação" />
-        <el-tab-pane name="2" label="Novos acordos" />
+        <el-tab-pane name="1" label="Com Interação" />
+        <el-tab-pane name="2" label="Novos Acordos" />
         <el-tab-pane name="3" label="Todos" />
       </el-tabs>
       <el-table
         v-loading="loadingDisputes"
         ref="disputeTable"
+        :key="tableKey"
         :data="disputes"
         size="small"
         class="el-table--card"
@@ -76,7 +77,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="activeTab.index !== '3'"
+          v-if="activeTab !== '3'"
           label="Advogado(s) da parte"
           class-name="fixed-width">
           <template slot-scope="scope">
@@ -94,30 +95,43 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab.index !== '3'" label="Alçada máxima">
+        <el-table-column v-if="activeTab !== '3'" label="Alçada máxima">
           <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab.index === '0'" label="Valor proposto">
+        <el-table-column v-if="activeTab === '0'" label="Valor proposto">
           <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab.index === '1'" label="Contraproposta">
+        <el-table-column v-if="activeTab === '1'" label="Contraproposta">
           <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab.index === '1'" label="Última interação">
-          <template slot-scope="scope">{{ scope.row.lastinteractiondate | moment('DD/MM/YY') }}</template>
-        </el-table-column>
-        <el-table-column v-if="activeTab.index === '2'" label="Valor do acordo">
-          <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
-        </el-table-column>
-        <el-table-column v-if="activeTab.index < '2'" label="Fim da negociação">
+        <el-table-column
+          v-if="activeTab < 2"
+          :sort-method="sortExpirationDate"
+          sortable
+          prop="disputeexpirationdate"
+          label="Fim da negociação">
           <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab.index === '3'" label="Status">
+        <el-table-column
+          v-if="activeTab === '1'"
+          :sort-method="sortLastInteractionDate"
+          sortable
+          prop="lastinteractiondate"
+          label="Última interação">
+          <template slot-scope="scope">
+            <jus-icon :icon="getLastInteractionIcon(scope.row.lastinteractiontype)" style="vertical-align: text-top; margin-right: 4px;" />
+            {{ getLastInteraction(scope.row.lastinteractiondate) }}
+          </template>
+        </el-table-column>
+        <el-table-column v-if="activeTab === '2'" label="Valor do acordo">
+          <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
+        </el-table-column>
+        <el-table-column v-if="activeTab === '3'" label="Status">
           <template slot-scope="scope">
             {{ $t('occurrence.type.' + scope.row.disputestatus) }}
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab.index === '0'" label="Msgs enviadas">
+        <el-table-column v-if="activeTab === '0'" label="Msgs enviadas">
           <template slot-scope="scope">
             <span v-if="!scope.row.communicationmsgtotalsent && !scope.row.communicationmsgtotalschedulled">
               Enriquecendo
@@ -172,10 +186,10 @@
       </el-table>
       <el-dialog :visible.sync="showFilters" @open="restoreFilters()">
         <template slot="title">
-          <h2>Filtrar {{ activeTab.label }}</h2>
+          <h2>Filtrar {{ activeTabLabel }}</h2>
         </template>
         <jus-management-filters
-          :tab-index="activeTab.index"
+          :tab-index="activeTab"
           :filters.sync="activeFilters"/>
         <span slot="footer">
           <el-button plain @click="clearFilters()">Limpar filtros</el-button>
@@ -204,10 +218,12 @@ export default {
   },
   data () {
     return {
+      tableKey: 0,
+      tabKey: false,
       showFilters: false,
       selectedIds: [],
       activeFilters: {},
-      activeTab: this.getActiveTabLabel(this.$store.state.disputeModule.filters.tab),
+      activeTab: '0',
       loadingExport: false,
       loadingDisputes: false
     }
@@ -221,11 +237,33 @@ export default {
     },
     filters () {
       return this.$store.state.disputeModule.filters
+    },
+    activeTabLabel () {
+      switch (this.activeTab) {
+        case '0':
+          return 'Engajamento'
+        case '1':
+          return 'Com Interação'
+        case '2':
+          return 'Novos Acordos'
+        case '3':
+          return 'Todos'
+      }
     }
   },
   beforeMount () {
-    this.$store.dispatch('getCampaigns')
-    this.$store.dispatch('getStrategies')
+    if (!this.$store.getters.campaignList.length) {
+      this.$store.dispatch('getCampaigns')
+    }
+    if (!this.$store.getters.strategyList) {
+      this.$store.dispatch('getStrategies')
+    }
+  },
+  mounted () {
+    this.$refs.disputeTable.sort('disputeexpirationdate', 'descending')
+    setTimeout(function () {
+      this.tabKey = true
+    }.bind(this), 500)
   },
   methods: {
     getDisputes () {
@@ -250,7 +288,24 @@ export default {
         this.$store.commit('setDisputeTab', newTab)
         this.clearSelection()
         this.clearFilters()
-        this.activeTab = this.getActiveTabLabel(newTab)
+        this.activeTab = newTab
+      }
+      this.$refs.disputeTable.clearSort()
+      this.tableKey = this.tableKey + 1
+      switch (newTab) {
+        case '0':
+          setTimeout(function () {
+            this.$refs.disputeTable.sort('disputeexpirationdate', 'descending')
+          }.bind(this), 100)
+          break
+        case '1':
+          setTimeout(function () {
+            this.$refs.disputeTable.sort('lastinteractiondate', 'ascending')
+          }.bind(this), 100)
+          break
+        default:
+          this.$refs.disputeTable.clearSort()
+          break
       }
     },
     exportDisputes () {
@@ -258,33 +313,13 @@ export default {
       this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).then(response => {
         // eslint-disable-next-line
         window.open('/api/export/' + response)
-        window.analytics.track('Planilha de "' + this.activeTab.label + '" exportada')
+        window.analytics.track('Planilha de "' + this.activeTabLabel + '" exportada')
       }).finally(() => {
         this.loadingExport = false
       })
     },
-    getActiveTabLabel (newTab) {
-      let newActive
-      switch (newTab) {
-        case '0':
-          newActive = { index: '0', label: 'Engajamento' }
-          break
-        case '1':
-          newActive = { index: '1', label: 'Com interação' }
-          break
-        case '2':
-          newActive = { index: '2', label: 'Novos acordos' }
-          break
-        case '3':
-          newActive = { index: '3', label: 'Todos' }
-          break
-        default:
-          newActive = { index: 0, label: 'Engajamento' }
-      }
-      return newActive
-    },
     clearSelection () {
-      if (this.$refs.disputeTable) this.$refs.disputeTable.clearSelection()
+      this.$refs.disputeTable.clearSelection()
     },
     clearFilters () {
       this.showFilters = false
@@ -311,6 +346,47 @@ export default {
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       })
+    },
+    sortExpirationDate (a, b) {
+      if (this.$moment(a.disputeexpirationdate).isAfter(b.disputeexpirationdate)) return 1
+      if (this.$moment(a.disputeexpirationdate).isBefore(b.disputeexpirationdate)) return -1
+      return 0
+    },
+    sortLastInteractionDate (a, b) {
+      if (this.$moment(a.lastinteractiondate).isAfter(b.lastinteractiondate)) return 1
+      if (this.$moment(a.lastinteractiondate).isBefore(b.lastinteractiondate)) return -1
+      return 0
+    },
+    getLastInteraction (lastinteractiondate) {
+      let date = this.$moment(lastinteractiondate)
+      let now = this.$moment()
+      if (now.diff(date, 'seconds') < 59) {
+        return now.diff(date, 'seconds') + ' segundos'
+      } else if (now.diff(date, 'minutes') < 59) {
+        return now.diff(date, 'minutes') + ' minuto(s)'
+      } else if (now.diff(date, 'hours') < 24) {
+        return now.diff(date, 'hours') + ' hora(s)'
+      } else if (now.diff(date, 'hours') < 48) {
+        return '1 dia'
+      } else {
+        return date.format('DD/MM/YY')
+      }
+    },
+    getLastInteractionIcon (type) {
+      switch (type) {
+        case 'EMAIL_CNA':
+          return 'cna'
+        case 'EMAIL':
+          return 'email'
+        case 'WHATSAPP':
+          return 'whatsapp'
+        case 'SMS':
+          return 'sms'
+        case 'TTS':
+          return 'tts'
+        default:
+          return 'chat'
+      }
     }
   }
 }
@@ -399,7 +475,6 @@ export default {
       }
     }
     .cell {
-      text-transform: capitalize;
       &.names {
         max-width: 158px;
       }

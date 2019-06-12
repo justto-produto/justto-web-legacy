@@ -162,10 +162,10 @@ export default {
   },
   computed: {
     strategies () {
-      return this.$store.state.strategyModule.list
+      return this.$store.getters.strategyList
     },
     campaigns () {
-      return this.$store.state.campaignModule.list
+      return this.$store.getters.campaignList
     },
     negotiatorsList () {
       return this.$store.state.workspaceModule.members

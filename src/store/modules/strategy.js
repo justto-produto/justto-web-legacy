@@ -35,6 +35,7 @@ const strategy = {
     }
   },
   getters: {
+    strategyList: state => state.list
   }
 }
 

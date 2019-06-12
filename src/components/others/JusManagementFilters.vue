@@ -217,10 +217,10 @@ export default {
       return this.tabIndex === '3'
     },
     strategies () {
-      return this.$store.state.strategyModule.list
+      return this.$store.getters.strategyList
     },
     campaigns () {
-      return this.$store.state.campaignModule.list
+      return this.$store.getters.campaignList
     },
     interactions () {
       return [{

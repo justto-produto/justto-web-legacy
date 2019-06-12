@@ -17,7 +17,11 @@ const disputeActions = {
       axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/', {
         query: { bool: { must: [{ match: { disputeid: disputeId } }] } } })
         .then(response => {
-          if (response.data.length > 0) commit('updateDisputeList', response.data[0])
+          if (response.data.length > 0) {
+            commit('updateDisputeList', response.data[0])
+          } else {
+            commit('removeDisputeFromList', disputeId)
+          }
         })
     }, 1000)
   },
