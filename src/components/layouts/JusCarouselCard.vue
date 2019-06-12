@@ -33,6 +33,8 @@ export default {
           return 'el-card--bg-secondary'
         case 'green':
           return 'el-card--bg-green'
+        case 'blue':
+          return 'el-card--bg-blue'
         default:
           return 'el-card--bg-primary'
       }

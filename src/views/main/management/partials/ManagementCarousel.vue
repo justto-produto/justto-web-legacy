@@ -51,7 +51,7 @@ export default {
         subtitle: 'Atualize os dados',
         button: 'Ver casos',
         to: 'review',
-        color: 'orange',
+        color: 'blue',
         shows: this.$store.getters.alertTwo.length > 0
       }, {
         id: 'alertThree',
@@ -71,11 +71,11 @@ export default {
         shows: this.$store.getters.alertFour.length > 0
       }, {
         id: 'alertFive',
-        title: 'casos sem celular válido',
+        title: 'casos sem telefone válido',
         subtitle: 'Atualize os dados',
         button: 'Ver casos',
         to: 'review',
-        color: 'orange',
+        color: 'blue',
         shows: this.$store.getters.alertFive.length > 0
       }, {
         id: 'alertSix',
