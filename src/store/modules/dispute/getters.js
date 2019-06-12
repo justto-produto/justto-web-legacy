@@ -13,7 +13,7 @@ const disputeGetters = {
           break
         case '1':
           filteredDisputes = filteredDisputes.filter(dispute => {
-            return dispute.disputestatus === 'ENGAGEMENT' && dispute.disputehasinteractions
+            return (dispute.disputestatus === 'ENGAGEMENT' || dispute.disputestatus === 'RUNNING') && dispute.disputehasinteractions
           })
           break
         case '2':
