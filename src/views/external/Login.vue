@@ -18,6 +18,7 @@
             v-show="showError"
             :title="errorMessage"
             type="error"
+            data-testid = "login-failure"
             @close="showError = false"/>
           <el-alert
             v-show="showSuccess"
@@ -25,16 +26,16 @@
             type="success"
             @close="showSuccess = false"/>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="loginForm.email" type="email" name="login-email"/>
+            <el-input v-model="loginForm.email" type="email" name="login-email" data-testid="login-email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
-            <el-input v-model="loginForm.password" :type="passwordType" name="login-password"/>
+            <el-input v-model="loginForm.password" :type="passwordType" name="login-password" data-testid="login-password"/>
             <div class="el-button--input-float">
               <jus-icon
                 :icon="showPassword ? 'hide' : 'eye'"
                 class="external-view__show-password"
                 @click.native="switchShowPassword"/>
-              <el-button type="text" @click="$router.push('forgot-password')">
+              <el-button type="text" @click="$router.push('forgot-password')" data-testid="forgot-password">
                 Esqueceu sua senha?
               </el-button>
             </div>
@@ -42,7 +43,8 @@
           <el-button
             native-type="submit"
             class="external-view__submit"
-            type="primary">
+            type="primary"
+            data-testid="submit">
             Entrar
           </el-button>
           <el-row class="external-view__info">
@@ -51,7 +53,7 @@
             <a href="https://drive.google.com/file/d/1kTb1y8lwIeA_utrOOjIlhZ97iGRS3b-r/view" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
-            <a href="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
+            <a href="register" @click.prevent="$router.push('register')" data-testid="register"> Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
       </el-main>
