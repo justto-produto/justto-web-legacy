@@ -103,12 +103,18 @@ export default {
   },
   watch: {
     slides () {
+      this.updateSlides()
+    }
+  },
+  mounted () {
+    this.updateSlides()
+  },
+  methods: {
+    updateSlides () {
       setTimeout(function () {
         this.componentKey = this.componentKey + 1
       }.bind(this), 300)
-    }
-  },
-  methods: {
+    },
     carouselIcons () {
       let nextIcon = require('@/assets/icons/ic-left.svg')
       let prevIcon = require('@/assets/icons/ic-right.svg')

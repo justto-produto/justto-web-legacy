@@ -165,24 +165,6 @@ export default {
     })
   },
   methods: {
-    fetchData () {
-      this.loading = true
-      this.$store.dispatch('getDisputes', { query: {
-        query: { bool: { must: [{ match: { disputeid: this.id } }] } }
-      } }).then(response => {
-        if (response.length) {
-          this.summary = response[0]
-          if (this.summary.reasons) {
-            this.unsettledType = this.summary.reasons.length > 0 ? Object.keys(this.summary.reasons[0].reasons)[0] : null
-            this.unsettledTypeId = this.summary.reasons.length > 0 ? this.summary.reasons[0].id : null
-          }
-        }
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.loading = false
-      })
-    },
     changeReasonStatus () {
       this.$store.dispatch('editDisputeReason', {
         body: { [this.unsettledType]: this.unsettledTypes[this.unsettledType] },

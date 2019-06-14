@@ -24,6 +24,9 @@ const disputeMutations = {
       }
       return dispute
     })
+  },
+  setDisputeStatuses (state, status) {
+    state.disputeStatuses[status.label] = status.value
   }
 }
 
