@@ -4,7 +4,20 @@
   .cell {
     word-break: normal;
   }
+
 }
+
+.el-table--disputes {
+  th {
+    font-weight: 500;
+    color: $--color-text-regular;
+    min-height: 47px;
+  }
+  &::before {
+    display: none;
+  }
+}
+
 .el-table--card {
   th {
     font-weight: 500;
@@ -63,10 +76,6 @@
         bottom: 0;
         width: 20px;
       }
-    }
-    .el-table-column--selection {
-      // border-left: 4px solid #72cbff;
-      border-radius: 4px;
     }
   }
 }

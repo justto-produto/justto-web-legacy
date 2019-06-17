@@ -51,48 +51,33 @@
         ref="disputeTable"
         :key="tableKey"
         :data="disputes"
-        size="small"
-        class="el-table--card"
+        size="mini"
+        class="el-table--disputes"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" />
+        <!-- <el-table-column type="expand">
+          <template slot-scope="props">
+            teste
+          </template>
+        </el-table-column> -->
         <el-table-column label="Campanha">
           <template slot-scope="scope">{{ scope.row.campaignname }}</template>
         </el-table-column>
         <el-table-column
-          label="Parte(s) contrária(s)"
-          class-name="fixed-width">
+          label="Parte(s) contrária(s)">
           <template slot-scope="scope">
-            <el-popover
-              title="Partes contrárias"
-              trigger="hover">
-              <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                {{ claimant.name }}
-              </div>
-              <ul>
-                <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                  {{ claimant.name }}
-                </li>
-              </ul>
-            </el-popover>
+            <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
+              {{ claimant.name }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column
           v-if="activeTab !== '3'"
-          label="Advogado(s) da parte"
-          class-name="fixed-width">
+          label="Advogado(s) da parte">
           <template slot-scope="scope">
-            <el-popover
-              title="Advogados da parte"
-              trigger="hover">
-              <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                {{ lawyer.name }}
-              </div>
-              <ul>
-                <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                  {{ lawyer.name }}
-                </li>
-              </ul>
-            </el-popover>
+            <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
+              {{ lawyer.name }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column v-if="activeTab !== '3'" label="Alçada máxima">
@@ -144,24 +129,10 @@
         </el-table-column>
         <el-table-column
           label="Ações"
-          width="100px"
+          width="70px"
           class-name="view-management__row-actions"
           align="center">
           <template slot-scope="scope">
-            <!-- <el-popover trigger="hover">
-              <div>
-                <strong>Responsáveis:</strong><br>
-                <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
-                  {{ negotiator.f1 }}
-                </span>
-              </div>
-              <br>
-              <div>
-                <strong>Estratégia:</strong><br>
-                {{ scope.row.strategyname }}
-              </div>
-              <jus-icon slot="reference" icon="more-info" />
-            </el-popover> -->
             <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
               <el-button
                 type="text"
@@ -455,47 +426,10 @@ export default {
       width: 14px;
     }
   }
-  .el-table__header {
-    .fixed-width {
-      .cell {
-        width: 175px;
-      }
-    }
-  }
-  .el-table__body {
-    .fixed-width {
-      .cell {
-        width: 175px;
-        white-space: nowrap;
-        .el-popover__reference {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-    }
-    .cell {
-      &.names {
-        max-width: 158px;
-      }
-    }
-  }
   .jus-main-view__main-card > .el-card__body {
     position: relative;
     height: 100%;
-    padding: 20px 0;
-  }
-  .el-carousel {
-    width: 65%;
-  }
-  .el-carousel__item {
-    display: flex;
-  }
-  .el-tabs__active-bar {
-    width: 97px;
-  }
-  .el-table--enable-row-hover .el-table__body tr:hover > td {
-    background-color: #fff;
+    // padding: 20px 0;
   }
   &__row-actions {
     img {
