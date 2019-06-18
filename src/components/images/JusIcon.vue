@@ -1,5 +1,5 @@
 <template>
-  <img :src="iconPath">
+  <img v-if="iconPath" :src="iconPath">
 </template>
 
 <script>
@@ -21,13 +21,16 @@ export default {
   },
   computed: {
     iconPath: function () {
-      return require(
-        '@/assets/icons/ic-' +
-        this.icon +
-        (this.isActive ? '-active' : '') +
-        (this.isWhite ? '-white' : '') +
-        '.svg'
-      )
+      if (this.icon) {
+        return require(
+          '@/assets/icons/ic-' +
+          this.icon +
+          (this.isActive ? '-active' : '') +
+          (this.isWhite ? '-white' : '') +
+          '.svg'
+        )
+      }
+      return false
     }
   }
 }
