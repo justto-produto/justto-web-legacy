@@ -25,7 +25,11 @@ const disputeGetters = {
       for (var term in state.filters.terms) {
         if (state.filters.terms.hasOwnProperty(term)) {
           filteredDisputes = filteredDisputes.filter(dispute => {
-            return dispute[term] === state.filters.terms[term]
+            if (term === 'disputeexpirationdate' || term === 'disputedealdate' || term === 'lastinteractiondate') {
+              return moment(dispute[term]).isSame(state.filters.terms[term], 'day')
+            } else {
+              return dispute[term] === state.filters.terms[term]
+            }
           })
         }
       }

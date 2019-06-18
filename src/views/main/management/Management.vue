@@ -275,6 +275,17 @@ export default {
           this.loadingDisputes = false
         })
     },
+    applyFilters () {
+      if (this.activeFilters.hasOwnProperty('disputedealvalue') && this.activeFilters.disputedealvalue === 0) {
+        delete this.activeFilters['disputedealvalue']
+      }
+      this.$store.commit('setDisputeFilter', this.activeFilters)
+      this.showFilters = false
+      window.analytics.track('Filtro aplicado', {
+        filters: this.filters,
+        tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento'
+      })
+    },
     handleSelectionChange (selected) {
       this.selectedIds = []
       for (let dispute of selected) {
