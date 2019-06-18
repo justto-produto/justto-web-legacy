@@ -34,10 +34,13 @@
       text-transform: capitalize;
     }
   }
-  .text-ellipsis .cell [slot="reference"] {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+  .text-ellipsis .cell {
+    display: flex;
+    div {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
   .el-table__row {
     cursor: pointer;
