@@ -12,11 +12,11 @@
             <div class="jus-header-main__result">
               <h4>
                 Caso #{{ item.disputeid }} |
-                Campanha: {{ item.campaignname }} |
+                Campanha: {{ item.campaignname | capitalize }} |
                 Processo: {{ item.disputecode }}
               </h4>
-              <div>Estratégia: {{ item.strategyname }}</div>
-              <div>Status: <span>{{ $t('occurrence.type.' + item.disputestatus) }}</span></div>
+              <div>Estratégia: {{ item.strategyname | capitalize }}</div>
+              <div>Status: <span>{{ $t('occurrence.type.' + item.disputestatus) | capitalize }}</span></div>
               <div v-for="(claiment, index) in item.claiments" :key="item.disputeid + claiment.name + index + 'claimant'">
                 Parte contrária: {{ claiment.name }}
               </div>

@@ -11,10 +11,36 @@
   th {
     font-weight: 500;
     color: $--color-text-regular;
-    min-height: 47px;
+    height: 47px;
   }
   &::before {
     display: none;
+  }
+  &.el-table--mini {
+    td {
+      padding: 0;
+    }
+  }
+  .el-table__expanded-cell > div {
+    line-height: 20px;
+    margin: 10px 20px;
+    h4 {
+      color: #9461f7;
+      margin: 0;
+      margin-bottom: 5px;
+    }
+    color: #adadad;
+    span {
+      text-transform: capitalize;
+    }
+  }
+  .text-ellipsis .cell [slot="reference"] {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .el-table__row {
+    cursor: pointer;
   }
 }
 
