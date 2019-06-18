@@ -108,6 +108,7 @@ export default {
         params['body'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
+        this.chooseUnsettledDialogVisible = false
         window.analytics.track(selecteds + ' ' + trackTitle, {
           action: action,
           selecteds: selecteds,
