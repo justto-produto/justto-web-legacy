@@ -75,11 +75,11 @@
     ],
     "rules": {
       "vue/max-attributes-per-line": [
-        2,
+        4,
         {
-          "singleline": 3,
+          "singleline": 4,
           "multiline": {
-            "max": 3,
+            "max": 4,
             "allowFirstLine": false
           }
         }
