@@ -73,11 +73,14 @@ if (store.getters.isLoggedIn) {
   store.dispatch('showLoading')
   Promise.all([store.dispatch('myAccount'), store.dispatch('myWorkspace')])
     .then(responses => {
-      store.dispatch('hideLoading')
       if (responses[1][0] && responses[1][0]['subDomain']) {
         store.dispatch('getWorkspaceMembers')
         store.dispatch('myPerson')
       }
+    }).catch(() => {
+      store.commit('logout')
+    }).finally(() => {
+      store.dispatch('hideLoading')
       initVue()
     })
 } else {
