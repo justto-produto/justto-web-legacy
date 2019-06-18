@@ -51,57 +51,80 @@
         ref="disputeTable"
         :key="tableKey"
         :data="disputes"
-        size="small"
-        class="el-table--card"
+        size="mini"
+        class="el-table--disputes"
+        @row-click="handleRowClick"
         @selection-change="handleSelectionChange">
-        <el-table-column type="selection" />
-        <el-table-column label="Campanha">
-          <template slot-scope="scope">{{ scope.row.campaignname }}</template>
-        </el-table-column>
-        <el-table-column
-          label="Parte(s) contrária(s)"
-          class-name="fixed-width">
-          <template slot-scope="scope">
-            <el-popover
-              title="Partes contrárias"
-              trigger="hover">
-              <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-                {{ claimant.name }}
-              </div>
-              <ul>
-                <li v-for="(claimant, index) in scope.row.claiments" :key="claimant + index">
-                  {{ claimant.name }}
-                </li>
-              </ul>
-            </el-popover>
+        <el-table-column type="selection" width="40px" />
+        <el-table-column type="expand" width="40px">
+          <template slot-scope="props">
+            <div>
+              <h4>
+                Processo: {{ props.row.disputecode }}
+              </h4>
+              <el-row>
+                <el-col :span="8">
+                  <div>Estratégia: {{ props.row.strategyname }}</div>
+                  <div>Status: <span>{{ $t('occurrence.type.' + props.row.disputestatus) | capitalize }}</span></div>
+                  <div v-for="(claiment, index) in props.row.claiments" :key="props.row.disputeid + claiment.name + index + 'claimant'">
+                    Parte contrária: {{ claiment.name }}
+                  </div>
+                  <div v-for="(lawyer, index) in props.row.claimentslawyer" :key="props.row.disputeid + lawyer.name + index + 'lawyer'">
+                    Advogado: {{ lawyer.name }}
+                  </div>
+                </el-col>
+                <el-col :span="8">
+                  <div>Campanha: {{ props.row.campaignname }}</div>
+                  <div>Fim da negociação: {{ props.row.disputeexpirationdate | moment('DD/MM/YY') }}</div>
+                  <div>Data do acordo: {{ props.row.disputedealdate | moment('DD/MM/YY') }}</div>
+                  <div>
+                    Última interação:
+                    {{ getLastInteraction(props.row.lastinteractiondate) }}
+                  </div>
+                </el-col>
+                <el-col :span="8">
+                  <div>Alçada máxima: {{ props.row.disputeupperrange | currency }}</div>
+                  <div>Valor proposto: {{ props.row.disputelastrespondentoffer | currency }}</div>
+                  <div>Contraproposta: {{ props.row.lastoffervalue | currency }}</div>
+                  <div>Valor do acordo: {{ props.row.disputedealvalue | currency }}</div>
+                </el-col>
+              </el-row>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column
-          v-if="activeTab !== '3'"
-          label="Advogado(s) da parte"
-          class-name="fixed-width">
+        <el-table-column label="Disputa" min-width="70px">
+          <template slot-scope="scope">#{{ scope.row.disputeid }}</template>
+        </el-table-column>
+        <el-table-column label="Campanha" min-width="90px">
+          <template slot-scope="scope">{{ scope.row.campaignname | capitalize }}</template>
+        </el-table-column>
+        <el-table-column min-width="140px" class-name="text-ellipsis" label="Parte(s) contrária(s)">
           <template slot-scope="scope">
-            <el-popover
-              title="Advogados da parte"
-              trigger="hover">
-              <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-                {{ lawyer.name }}
-              </div>
-              <ul>
-                <li v-for="(lawyer, index) in scope.row.claimentslawyer" :key="lawyer + index">
-                  {{ lawyer.name }}
-                </li>
-              </ul>
-            </el-popover>
+            <div v-if="scope.row.claiments && scope.row.claiments.length > 0">
+              {{ scope.row.claiments[0].name }}
+            </div>
+            <span v-if="scope.row.claiments && scope.row.claiments.length > 1">
+              &nbsp;(+{{ scope.row.claiments.length - 1 }})
+            </span>
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab !== '3'" label="Alçada máxima">
+        <el-table-column class-name="text-ellipsis" label="Advogado(s) da parte" min-width="152px">
+          <template slot-scope="scope">
+            <div v-if="scope.row.claimentslawyer && scope.row.claimentslawyer.length > 0">
+              {{ scope.row.claimentslawyer[0].name }}
+            </div>
+            <span v-if="scope.row.claimentslawyer && scope.row.claimentslawyer.length > 1">
+              &nbsp;(+{{ scope.row.claimentslawyer.length - 1 }})
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="activeTab !== '3'" label="Alçada máxima" align="center" min-width="116px">
           <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '0'" label="Valor proposto">
+        <el-table-column v-if="activeTab === '0'" label="Valor proposto" align="center" min-width="110px">
           <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '1'" label="Contraproposta">
+        <el-table-column v-if="activeTab === '1'" label="Contraproposta" align="center" min-width="116px">
           <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
         </el-table-column>
         <el-table-column
@@ -109,7 +132,9 @@
           :sort-method="sortExpirationDate"
           sortable
           prop="disputeexpirationdate"
-          label="Fim da negociação">
+          label="Fim da negociação"
+          align="center"
+          min-width="160px">
           <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
         </el-table-column>
         <el-table-column
@@ -117,21 +142,33 @@
           :sort-method="sortLastInteractionDate"
           sortable
           prop="lastinteractiondate"
-          label="Última interação">
+          label="Última interação"
+          min-width="146px"
+          align="center">
           <template slot-scope="scope">
             <jus-icon :icon="getLastInteractionIcon(scope.row.lastinteractiontype)" style="vertical-align: text-top; margin-right: 4px;" />
             {{ getLastInteraction(scope.row.lastinteractiondate) }}
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '2'" label="Valor do acordo">
+        <el-table-column v-if="activeTab === '2'" label="Valor do acordo" align="center" width="116px">
           <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '3'" label="Status">
+        <el-table-column
+          v-if="activeTab === '2'"
+          :sort-method="sortDisputeDealDate"
+          sortable
+          prop="disputedealdate"
+          label="Data do acordo"
+          min-width="138px"
+          align="center">
+          <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
+        </el-table-column>
+        <el-table-column v-if="activeTab === '3'" label="Status" align="center" min-width="110px">
           <template slot-scope="scope">
-            {{ $t('occurrence.type.' + scope.row.disputestatus) }}
+            {{ $t('occurrence.type.' + scope.row.disputestatus) | capitalize }}
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '0'" label="Msgs enviadas">
+        <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
           <template slot-scope="scope">
             <span v-if="!scope.row.communicationmsgtotalsent && !scope.row.communicationmsgtotalschedulled">
               Enriquecendo
@@ -143,25 +180,10 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="Ações"
-          width="100px"
+          width="40px"
           class-name="view-management__row-actions"
           align="center">
           <template slot-scope="scope">
-            <!-- <el-popover trigger="hover">
-              <div>
-                <strong>Responsáveis:</strong><br>
-                <span v-for="(negotiator, index) in scope.row.negotiators" :key="negotiator.f1 + index">
-                  {{ negotiator.f1 }}
-                </span>
-              </div>
-              <br>
-              <div>
-                <strong>Estratégia:</strong><br>
-                {{ scope.row.strategyname }}
-              </div>
-              <jus-icon slot="reference" icon="more-info" />
-            </el-popover> -->
             <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
               <el-button
                 type="text"
@@ -169,11 +191,6 @@
                 @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'ENGAJAMENTO')">
                 <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
               </el-button>
-            </el-tooltip>
-            <el-tooltip content="Visualizar caso">
-              <router-link :to="{ name: 'dispute', params: { id: scope.row.disputeid } }">
-                <jus-icon icon="open-case" />
-              </router-link>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -294,6 +311,11 @@ export default {
         }
       }
     },
+    handleRowClick (row, column, event) {
+      if (row.disputeid && event.target.tagName !== 'IMG') {
+        this.$router.push({ name: 'dispute', params: { id: row.disputeid } })
+      }
+    },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {
         this.$store.commit('setDisputeTab', newTab)
@@ -312,6 +334,11 @@ export default {
         case '1':
           setTimeout(function () {
             this.$refs.disputeTable.sort('lastinteractiondate', 'ascending')
+          }.bind(this), 100)
+          break
+        case '2':
+          setTimeout(function () {
+            this.$refs.disputeTable.sort('disputedealdate', 'descending')
           }.bind(this), 100)
           break
         default:
@@ -368,20 +395,28 @@ export default {
       if (this.$moment(a.lastinteractiondate).isBefore(b.lastinteractiondate)) return -1
       return 0
     },
+    sortDisputeDealDate (a, b) {
+      if (this.$moment(a.disputedealdate).isAfter(b.disputedealdate)) return 1
+      if (this.$moment(a.disputedealdate).isBefore(b.disputedealdate)) return -1
+      return 0
+    },
     getLastInteraction (lastinteractiondate) {
       let date = this.$moment(lastinteractiondate)
-      let now = this.$moment()
-      if (now.diff(date, 'seconds') < 59) {
-        return now.diff(date, 'seconds') + ' segundos'
-      } else if (now.diff(date, 'minutes') < 59) {
-        return now.diff(date, 'minutes') + ' minuto(s)'
-      } else if (now.diff(date, 'hours') < 24) {
-        return now.diff(date, 'hours') + ' hora(s)'
-      } else if (now.diff(date, 'hours') < 48) {
-        return '1 dia'
-      } else {
-        return date.format('DD/MM/YY')
+      if (date.isValid()) {
+        let now = this.$moment()
+        if (now.diff(date, 'seconds') < 59) {
+          return now.diff(date, 'seconds') + ' segundos'
+        } else if (now.diff(date, 'minutes') < 59) {
+          return now.diff(date, 'minutes') + ' minuto(s)'
+        } else if (now.diff(date, 'hours') < 24) {
+          return now.diff(date, 'hours') + ' hora(s)'
+        } else if (now.diff(date, 'hours') < 48) {
+          return '1 dia'
+        } else {
+          return date.format('DD/MM/YY')
+        }
       }
+      return ''
     },
     getLastInteractionIcon (type) {
       switch (type) {
@@ -466,47 +501,9 @@ export default {
       width: 14px;
     }
   }
-  .el-table__header {
-    .fixed-width {
-      .cell {
-        width: 175px;
-      }
-    }
-  }
-  .el-table__body {
-    .fixed-width {
-      .cell {
-        width: 175px;
-        white-space: nowrap;
-        .el-popover__reference {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-    }
-    .cell {
-      &.names {
-        max-width: 158px;
-      }
-    }
-  }
   .jus-main-view__main-card > .el-card__body {
     position: relative;
     height: 100%;
-    padding: 20px 0;
-  }
-  .el-carousel {
-    width: 65%;
-  }
-  .el-carousel__item {
-    display: flex;
-  }
-  .el-tabs__active-bar {
-    width: 97px;
-  }
-  .el-table--enable-row-hover .el-table__body tr:hover > td {
-    background-color: #fff;
   }
   &__row-actions {
     img {
