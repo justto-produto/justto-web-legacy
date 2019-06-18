@@ -95,16 +95,17 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('logout')
+    if (this.$store.getters.isLoggedIn) {
+      this.$store.dispatch('logout')
+    }
   },
   created () {
     if (this.$route.query.token) {
       this.$store.dispatch('activate', this.$route.query.token)
         .then(() => {
           this.showSuccess = true
-          this.$router.push('login')
         })
-        .catch(() => {
+        .finally(() => {
           this.$router.push('login')
         })
     }
