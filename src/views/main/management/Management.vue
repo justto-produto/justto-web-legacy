@@ -60,7 +60,6 @@
           <template slot-scope="props">
             <div>
               <h4>
-                Caso #{{ props.row.disputeid }} |
                 Processo: {{ props.row.disputecode }}
               </h4>
               <el-row>
@@ -93,30 +92,39 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="Campanha">
+        <el-table-column label="Disputa" min-width="70px">
+          <template slot-scope="scope">#{{ scope.row.disputeid }}</template>
+        </el-table-column>
+        <el-table-column label="Campanha" min-width="90px">
           <template slot-scope="scope">{{ scope.row.campaignname | capitalize }}</template>
         </el-table-column>
-        <el-table-column class-name="text-ellipsis" label="Parte(s) contrária(s)">
+        <el-table-column min-width="140px" class-name="text-ellipsis" label="Parte(s) contrária(s)">
           <template slot-scope="scope">
-            <div v-for="(claimant, index) in scope.row.claiments" slot="reference" :key="claimant + index">
-              {{ claimant.name }}
+            <div v-if="scope.row.claiments && scope.row.claiments.length > 0">
+              {{ scope.row.claiments[0].name }}
             </div>
+            <span v-if="scope.row.claiments && scope.row.claiments.length > 1">
+              &nbsp;(+{{ scope.row.claiments.length - 1 }})
+            </span>
           </template>
         </el-table-column>
-        <el-table-column class-name="text-ellipsis" label="Advogado(s) da parte">
+        <el-table-column class-name="text-ellipsis" label="Advogado(s) da parte" min-width="152px">
           <template slot-scope="scope">
-            <div v-for="(lawyer, index) in scope.row.claimentslawyer" slot="reference" :key="lawyer + index">
-              {{ lawyer.name }}
+            <div v-if="scope.row.claimentslawyer && scope.row.claimentslawyer.length > 0">
+              {{ scope.row.claimentslawyer[0].name }}
             </div>
+            <span v-if="scope.row.claimentslawyer && scope.row.claimentslawyer.length > 1">
+              &nbsp;(+{{ scope.row.claimentslawyer.length - 1 }})
+            </span>
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab !== '3'" label="Alçada máxima" align="center">
+        <el-table-column v-if="activeTab !== '3'" label="Alçada máxima" align="center" min-width="116px">
           <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '0'" label="Valor proposto" align="center">
+        <el-table-column v-if="activeTab === '0'" label="Valor proposto" align="center" min-width="110px">
           <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '1'" label="Contraproposta" align="center">
+        <el-table-column v-if="activeTab === '1'" label="Contraproposta" align="center" min-width="116px">
           <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
         </el-table-column>
         <el-table-column
@@ -125,7 +133,8 @@
           sortable
           prop="disputeexpirationdate"
           label="Fim da negociação"
-          align="center">
+          align="center"
+          min-width="160px">
           <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
         </el-table-column>
         <el-table-column
@@ -134,13 +143,14 @@
           sortable
           prop="lastinteractiondate"
           label="Última interação"
+          min-width="146px"
           align="center">
           <template slot-scope="scope">
             <jus-icon :icon="getLastInteractionIcon(scope.row.lastinteractiontype)" style="vertical-align: text-top; margin-right: 4px;" />
             {{ getLastInteraction(scope.row.lastinteractiondate) }}
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '2'" label="Valor do acordo" align="center">
+        <el-table-column v-if="activeTab === '2'" label="Valor do acordo" align="center" width="116px">
           <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
         </el-table-column>
         <el-table-column
@@ -149,15 +159,16 @@
           sortable
           prop="disputedealdate"
           label="Data do acordo"
+          min-width="138px"
           align="center">
           <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '3'" label="Status" align="center">
+        <el-table-column v-if="activeTab === '3'" label="Status" align="center" min-width="110px">
           <template slot-scope="scope">
             {{ $t('occurrence.type.' + scope.row.disputestatus) | capitalize }}
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center">
+        <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
           <template slot-scope="scope">
             <span v-if="!scope.row.communicationmsgtotalsent && !scope.row.communicationmsgtotalschedulled">
               Enriquecendo
