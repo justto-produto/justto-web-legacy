@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const disputeMutations = {
   clearDisputes (state) {
     state.disputes = []
@@ -18,12 +20,14 @@ const disputeMutations = {
     state.filters.filterPersonId = id
   },
   updateDisputeList (state, disputeChanged) {
-    state.disputes = state.disputes.map(dispute => {
-      if (disputeChanged.id === dispute.id) {
-        dispute = disputeChanged
-      }
-      return dispute
+    let changedIndex = state.disputes.findIndex(dispute => {
+      return (disputeChanged.id === dispute.id)
     })
+    if (changedIndex === -1) {
+      state.disputes.push(disputeChanged)
+    } else {
+      Vue.set(state.disputes, changedIndex, disputeChanged)
+    }
   },
   setDisputeStatuses (state, status) {
     state.disputeStatuses[status.label] = status.value
