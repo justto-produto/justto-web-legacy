@@ -109,6 +109,9 @@
         <el-table-column v-if="activeTab.index === '2'" label="Valor do acordo">
           <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
         </el-table-column>
+        <el-table-column v-if="activeTab.index === '2'" label="Data do acordo">
+          <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
+        </el-table-column>
         <el-table-column v-if="activeTab.index < '2'" label="Fim da negociação">
           <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
         </el-table-column>
@@ -223,10 +226,6 @@ export default {
       return this.$store.state.disputeModule.filters
     }
   },
-  beforeMount () {
-    this.$store.dispatch('getCampaigns')
-    this.$store.dispatch('getStrategies')
-  },
   methods: {
     getDisputes () {
       this.loadingDisputes = true
@@ -236,6 +235,17 @@ export default {
         }).finally(() => {
           this.loadingDisputes = false
         })
+    },
+    applyFilters () {
+      if (this.activeFilters.hasOwnProperty('disputedealvalue') && this.activeFilters.disputedealvalue === 0) {
+        delete this.activeFilters['disputedealvalue']
+      }
+      this.$store.commit('setDisputeFilter', this.activeFilters)
+      this.showFilters = false
+      window.analytics.track('Filtro aplicado', {
+        filters: this.filters,
+        tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento'
+      })
     },
     handleSelectionChange (selected) {
       this.selectedIds = []
