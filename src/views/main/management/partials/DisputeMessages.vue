@@ -1,5 +1,5 @@
 <template>
-  <ul v-loading="messages.length === 0 && loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
+  <ul v-loading="messages.length === 0" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="message in messages"
       v-if="isntCanceled(message)"
