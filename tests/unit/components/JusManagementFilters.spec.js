@@ -9,7 +9,6 @@ localVue.component('JusIcon', JusIcon)
 localVue.use(Vuex)
 localVue.use(Element)
 
-
 describe('JusManagementFilters.vue', () => {
   let actions
   let store
