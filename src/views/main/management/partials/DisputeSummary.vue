@@ -109,7 +109,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       summary: '',
       scheduled: false,
       unsettledType: null,
@@ -160,8 +160,11 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('getDisputeById', this.id).then(dispute => {
-      this.summary = dispute
+    this.$store.watch(state => state.disputeModule.disputes, disputes => {
+      this.summary = disputes.find((dispute) => {
+        return dispute.disputeid === this.id
+      })
+      this.loading = false
     })
   },
   methods: {
