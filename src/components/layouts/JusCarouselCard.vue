@@ -36,12 +36,6 @@ export default {
       }
       return ''
     },
-    button () {
-      if (this.slide && this.slide.button) {
-        return this.button
-      }
-      return ''
-    },
     bgClass () {
 <<<<<<< HEAD
       if (this.slide && this.slide.color) {
@@ -69,7 +63,11 @@ export default {
         return this.slide.button
 >>>>>>> SAAS-449 Correge testes de components
       }
-      return ''
+    },
+    button () {
+      if (this.slide) {
+        return this.slide.button
+      }
     }
   }
 }
