@@ -19,16 +19,10 @@ export default {
   },
   computed: {
     title () {
-<<<<<<< HEAD
       if (this.slide && this.slide.title) {
         return this.slide.title + '.'
       }
       return ''
-=======
-      if (this.slide) {
-        return this.slide.title + '.'
-      }
->>>>>>> SAAS-449 Correge testes de components
     },
     subtitle () {
       if (this.slide && this.slide.subtitle) {
@@ -37,11 +31,7 @@ export default {
       return ''
     },
     bgClass () {
-<<<<<<< HEAD
       if (this.slide && this.slide.color) {
-=======
-      if (this.slide) {
->>>>>>> SAAS-449 Correge testes de components
         switch (this.slide.color) {
           case 'purple':
             return 'el-card--bg-primary'
@@ -54,14 +44,6 @@ export default {
           default:
             return 'el-card--bg-primary'
         }
-<<<<<<< HEAD
-=======
-      }
-    },
-    button () {
-      if (this.slide) {
-        return this.slide.button
->>>>>>> SAAS-449 Correge testes de components
       }
     },
     button () {
