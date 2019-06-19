@@ -10,6 +10,7 @@ localVue.use(Element)
 
 let router = new VueRouter()
 const wrapper = shallowMount(JusCarouselCard, { localVue, router })
+wrapper.setProps({ slide: {} })
 
 describe('JusCarouselCard.vue', () => {
   it('É um objeto Vue.', () => {

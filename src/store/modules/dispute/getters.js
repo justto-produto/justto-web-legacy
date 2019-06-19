@@ -1,6 +1,7 @@
 const moment = require('moment')
 
 const disputeGetters = {
+  disputeFilters: state => state.filters,
   filterPersonId: state => state.filters.filterPersonId,
   filteredDisputes: state => {
     let filteredDisputes = state.disputes.slice(0)
