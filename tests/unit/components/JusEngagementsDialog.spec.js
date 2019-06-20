@@ -12,22 +12,14 @@ describe('JusEngagementsDialog.vue', () => {
   let store
   let state
   beforeEach(() => {
-    store = new Vuex.Store({
-      state
-    })
+    store = new Vuex.Store({ state })
   })
   it('É um objeto Vue.', () => {
-    const wrapper = shallowMount(JusEngagementsDialog, {
-      store,
-      localVue
-    })
+    const wrapper = shallowMount(JusEngagementsDialog, { store, localVue })
     expect(wrapper.isVueInstance()).toBe(true)
   })
   it('Inicia fechado', () => {
-    const wrapper = shallowMount(JusEngagementsDialog, {
-      store,
-      localVue
-    })
+    const wrapper = shallowMount(JusEngagementsDialog, { store, localVue })
     expect(wrapper.props().dialogVisible).toBe(false)
     expect(wrapper.props().strategyId).toBe(0)
     expect(wrapper.vm.dialog).toBe(false)
