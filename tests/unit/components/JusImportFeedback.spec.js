@@ -19,7 +19,6 @@ describe('JusImportFeedbackCard.vue', () => {
   let actions
   let store
   let state
-  let mutations
   let getters
   beforeEach(() => {
     getters = {
