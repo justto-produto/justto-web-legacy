@@ -36,6 +36,11 @@ const disputeMutations = {
       }
       return true
     })
+    if (changedIndex === -1) {
+      state.disputes.push(disputeChanged)
+    } else {
+      Vue.set(state.disputes, changedIndex, disputeChanged)
+    }
   },
   setDisputeStatuses (state, status) {
     state.disputeStatuses[status.label] = status.value

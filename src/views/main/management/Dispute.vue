@@ -725,15 +725,6 @@ export default {
       height: 16px;
     }
   }
-  &__side-content {
-    margin: 20px 0 0;
-    .el-step__title {
-      text-transform: capitalize;
-    }
-    .el-step__head {
-      // overflow: hidden;
-    }
-  }
   &__actions {
     padding: 11px 20px;
     box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
