@@ -23,11 +23,14 @@ describe('JusEngagementsDialog.vue', () => {
     })
     expect(wrapper.isVueInstance()).toBe(true)
   })
-  it('Inicia vazio', () => {
+  it('Inicia fechado', () => {
     const wrapper = shallowMount(JusEngagementsDialog, {
       store,
       localVue
     })
-    expect(wrapper.props().type).toBe(undefined)
+    expect(wrapper.props().dialogVisible).toBe(false)
+    expect(wrapper.props().strategyId).toBe(0)
+    expect(wrapper.vm.dialog).toBe(false)
+    expect(wrapper.vm.strategyEngagements.length).toBe(0)
   })
 })
