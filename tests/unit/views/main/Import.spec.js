@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 import Element from 'element-ui'
 import JusIcon from '@/components/images/JusIcon.vue'
 import JusViewMain from '@/components/layouts/JusViewMain'
+import '@/plugins/jusNotification'
 
 const localVue = createLocalVue()
 localVue.component('JusIcon', JusIcon)
@@ -46,9 +47,31 @@ describe('Import.vue', () => {
     expect(wrapper.isVueInstance()).toBe(true)
   })
 
-  it('É um objeto Vue.', () => {
+  it('Somente arquivos xlsx, xls, csv e até 20 mb.', () => {
     const wrapper = shallowMount(Import, { store, localVue, router })
-    expect(wrapper.isVueInstance()).toBe(true)
+    expect(wrapper.vm.beforeUpload({
+      name: "teste.xlsx",
+      size: 200000000
+    })).toBe(false)
+    expect(wrapper.vm.beforeUpload({
+      name: "teste.xlsx",
+      size: 100
+    })).toBe(true)
+    expect(wrapper.vm.beforeUpload({
+      name: "teste.pdf",
+      size: 100
+    })).toBe(false)
+    expect(wrapper.vm.beforeUpload({
+      name: "teste.exe",
+      size: 100
+    })).toBe(false)
+    expect(wrapper.vm.beforeUpload({
+      name: "teste.xls",
+      size: 100
+    })).toBe(true)
+    expect(wrapper.vm.beforeUpload({
+      name: "teste.csv",
+      size: 100
+    })).toBe(true)
   })
-
 })
