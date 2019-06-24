@@ -39,61 +39,61 @@ export default {
     slides () {
       return [{
         id: 'alertOne',
-        title: 'casos que a negociação encerra nos próximos 3 dias',
+        title: 'disputas que a negociação encerra nos próximos 3 dias',
         subtitle: 'Entre em contato',
-        button: 'Ver casos',
+        button: 'Ver disputas',
         to: 'review',
         color: 'orange',
         shows: this.$store.getters.alertOne.length > 0
       }, {
         id: 'alertTwo',
-        title: 'casos sem e-mail válido',
+        title: 'disputas sem e-mail válido',
         subtitle: 'Atualize os dados',
-        button: 'Ver casos',
+        button: 'Ver disputas',
         to: 'review',
         color: 'orange',
         shows: this.$store.getters.alertTwo.length > 0
       }, {
         id: 'alertThree',
-        title: 'casos com contraproposta até 20% acima da alçada',
+        title: 'disputas com contraproposta até 20% acima da alçada',
         subtitle: 'Entre em contato',
-        button: 'Ver casos',
+        button: 'Ver disputas',
         to: 'review',
         color: 'orange',
         shows: this.$store.getters.alertThree.length > 0
       }, {
         id: 'alertFour',
-        title: 'casos com interações e sem contraproposta',
+        title: 'disputas com interações e sem contraproposta',
         subtitle: 'Entre em contato',
-        button: 'Ver casos',
+        button: 'Ver disputas',
         to: 'review',
         color: 'orange',
         shows: this.$store.getters.alertFour.length > 0
       }, {
         id: 'alertFive',
-        title: 'casos sem celular válido',
+        title: 'disputas sem telefone válido',
         subtitle: 'Atualize os dados',
-        button: 'Ver casos',
+        button: 'Ver disputas',
         to: 'review',
         color: 'orange',
         shows: this.$store.getters.alertFive.length > 0
       }, {
         id: 'alertSix',
-        title: 'casos que nossas tentativas de engajamento encerraram',
+        title: 'disputas que nossas tentativas de engajamento encerraram',
         subtitle: 'Reinicie ou entre em contato',
-        button: 'Ver casos',
+        button: 'Ver disputas',
         to: 'review',
         color: 'orange',
         shows: this.$store.getters.alertSix.length > 0
       }, {
         id: 'alertSeven',
-        title: 'casos que precisam de sua revisão',
-        button: 'Ver casos',
+        title: 'disputas que precisam de sua revisão',
+        button: 'Ver disputas',
         to: 'review',
         color: 'purple',
         shows: this.$store.getters.alertSeven.length > 0
       }, {
-        title: 'sincronize seu WhatsApp para garantir que seus casos terão mais engajamento',
+        title: 'sincronize seu WhatsApp para garantir que suas disputas terão mais engajamento',
         button: 'Resolver',
         to: 'profile',
         color: 'green',

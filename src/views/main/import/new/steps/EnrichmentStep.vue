@@ -20,11 +20,11 @@
       </h3>
       <h3 v-show="!enriched && loading">Nosso sistema está coletando informações...</h3>
       <h3 v-show="enriched">Os dados foram enriquecidos
-        <span v-show="enriched && revision">, mas nós detectamos alguns casos com informações que necessitam da sua revisão</span>
+        <span v-show="enriched && revision">, mas nós detectamos algumas disputas com informações que necessitam da sua revisão</span>
       </h3>
       <p v-show="enriched && revision">
-        Mas não se preocupe. Os casos que não necessitam de revisão irão iniciar as etapas de negociação,
-        e você poderá revisar os casos pendentes mais tarde.
+        Mas não se preocupe. As disputas que não necessitam de revisão irão iniciar as etapas de negociação,
+        e você poderá revisar as disputas pendentes mais tarde.
         <br><br><br>
       </p>
       <ul>

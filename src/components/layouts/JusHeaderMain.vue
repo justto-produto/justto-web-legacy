@@ -6,13 +6,13 @@
         v-model="disputeId"
         :trigger-on-focus="false"
         :fetch-suggestions="search"
-        placeholder="Busque aqui os seus casos">
+        placeholder="Busque aqui os suas disputas">
         <template slot-scope="{ item }">
           <router-link :to="'/management/dispute/' + item.disputeid">
             <div class="jus-header-main__result">
               <h4>
-                Caso #{{ item.disputeid }} |
-                Campanha: {{ item.campaignname }} |
+                Disputa #{{ item.disputeid }} |
+                Campanha: {{ item.campaignname | capitalize }} |
                 Processo: {{ item.disputecode }}
               </h4>
               <div>Estratégia: {{ item.strategyname }}</div>

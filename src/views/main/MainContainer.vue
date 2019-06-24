@@ -29,10 +29,12 @@
         </el-menu-item>
         <el-menu-item index="/import">
           <jus-icon icon="import" class="el-menu__icon"/>
-          <span slot="title">Importação de casos</span>
+          <span slot="title">Importação de disputas</span>
         </el-menu-item>
       </el-menu>
-      <div class="jus-team-menu__title">TIME</div>
+      <div v-show="$store.state.workspaceModule.members.length" class="jus-team-menu__title">
+        TIME
+      </div>
       <vue-perfect-scrollbar>
         <jus-team-menu />
       </vue-perfect-scrollbar>

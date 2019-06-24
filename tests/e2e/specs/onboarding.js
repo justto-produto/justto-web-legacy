@@ -40,6 +40,6 @@ context('Actions', () => {
     cy.contains('Pular').then($els => $els.get(4))
       .click()
     // Concluir
-    cy.contains('Inserir primeiros casos').click()
+    cy.contains('Inserir primeiras disputas').click()
   })
 })
