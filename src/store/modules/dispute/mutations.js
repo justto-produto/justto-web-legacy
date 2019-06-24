@@ -29,6 +29,14 @@ const disputeMutations = {
       Vue.set(state.disputes, changedIndex, disputeChanged)
     }
   },
+  removeDisputeFromList (state, disputeId) {
+    state.disputes = state.disputes.filter(dispute => {
+      if (dispute.disputeid === disputeId) {
+        return false
+      }
+      return true
+    })
+  },
   setDisputeStatuses (state, status) {
     state.disputeStatuses[status.label] = status.value
   }

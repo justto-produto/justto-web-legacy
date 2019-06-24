@@ -13,6 +13,9 @@
         <div v-if="dispute.strategy" class="dispute-overview-view__info-line">
           <span class="title">Estratégia:</span>
           <span>{{ dispute.strategy.name }}</span>
+        </div><div v-if="dispute.strategy" class="dispute-overview-view__info-line">
+          <span class="title">Status:</span>
+          <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
         </div>
         <div v-if="dispute.upperRange" class="dispute-overview-view__info-line">
           <span class="title">Alçada máxima:</span>
@@ -24,7 +27,7 @@
           <span v-else>{{ 0 | currency }}</span>
         </div>
         <div
-          v-if="dispute.lastOffer && (dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT')"
+          v-if="dispute.lastOffer && (dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED')"
           class="dispute-overview-view__info-line">
           <span class="title">Valor do acordo:</span>
           <span>{{ dispute.lastOffer.boundary | currency }}</span>
@@ -61,10 +64,7 @@
         :name="JSON.stringify({id: role.person.id, name: role.person.name})">
         <template slot="title">
           <div class="dispute-overview-view__name">
-            <span>
-              {{ role.person.name }}
-            </span>
-            <!-- <jus-status-dot type="danger"/> -->
+            {{ role.person.name }}
           </div>
         </template>
         <!-- <div class="dispute-overview-view__info-line">
@@ -476,7 +476,7 @@ export default {
         })
     },
     removeDispute () {
-      this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error'
@@ -740,16 +740,10 @@ export default {
     }
   }
   &__name {
-    display: flex;
-    align-items: center;
-    span:first-child {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    span:last-child {
-      min-width: 10px;
-    }
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   &__list {
     margin: 20 0px;
