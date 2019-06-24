@@ -32,7 +32,8 @@
         v-model="strategy"
         :default-first-option="false"
         value-key="name"
-        clearable class="select-strategy"
+        clearable
+        class="select-strategy"
         placeholder="Escolha uma estratégia">
         <i
           slot="prefix"
@@ -104,8 +105,10 @@
           :label="item.person.name"
           :value="item.person.id">
           <jus-avatar-user
-            :name="item.person.name" shape="circle"
-            size="xs" style="vertical-align: middle" />
+            :name="item.person.name"
+            shape="circle"
+            size="xs"
+            style="vertical-align: middle" />
           <span style="vertical-align: middle;margin-left: 10px;">{{ item.person.name }}</span>
         </el-option>
       </el-select>

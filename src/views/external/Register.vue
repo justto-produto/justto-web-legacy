@@ -24,8 +24,8 @@
             v-show="showSuccess"
             title="Cadastro realizado com sucesso! Acesse seu email para prosseguir."
             type="success"
-            @close="showSuccess = false"
-            data-testid="showSucess"/>
+            data-testid="showSucess"
+            @close="showSuccess = false" />
           <el-form-item label="Nome" prop="name">
             <el-input v-model="registerForm.name" name="register-name" data-testid="register-name"/>
           </el-form-item>
