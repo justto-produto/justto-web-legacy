@@ -42,7 +42,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="Nº do caso">
+          <el-table-column label="Nº da disputa">
             <template slot-scope="scope">{{ scope.row.disputecode }}</template>
           </el-table-column>
           <el-table-column label="Estratégia">
@@ -81,7 +81,7 @@
                 </div>
                 <jus-icon slot="reference" icon="more-info" />
               </el-popover>
-              <el-tooltip content="Visualizar caso">
+              <el-tooltip content="Visualizar disputa">
                 <router-link :to="{ name: 'dispute', params: {id: scope.row.disputeid} }">
                   <jus-icon icon="open-case" style="margin-left: 10px;" />
                 </router-link>
@@ -91,7 +91,7 @@
           <template v-if="!$store.state.loading" slot="empty">
             <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
             <h4 style="font-weight: normal; line-height: initial;">
-              Não foram encontrados casos para<br>os filtros e aba selecionados.
+              Não foram encontradas disputas para<br>os filtros e aba selecionados.
             </h4>
           </template>
         </el-table>
@@ -184,7 +184,7 @@ export default {
       let alerts = []
       if (dispute.alerts && dispute.alerts.length) {
         for (let alert of dispute.alerts) {
-          alert.f1.label = 'Caso'
+          alert.f1.label = 'Disputa'
           alerts.push(alert.f1)
         }
       }

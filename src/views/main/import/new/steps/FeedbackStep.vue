@@ -2,7 +2,7 @@
   <div v-loading="$store.state.loading" class="feedback-step">
     <h2 class="new-import-view__title">Configuração de campanhas</h2>
     <p>
-      Agrupamos seus casos por empresas. Cada empresa possui a sua Campanha, que você poderá, posteriormente, editar
+      Agrupamos suas disputas por empresas. Cada empresa possui a sua Campanha, que você poderá, posteriormente, editar
       as existentes ou criar novas Campanhas.
       <br><br>
       <a href="#">Entenda o que são, e como funcionam as Campanhas.</a>

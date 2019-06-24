@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <div :class="{'active': active}" class="management-actions">
-      Casos selecionados: {{ selectedIds.length }}
+      Disputas selecionadas: {{ selectedIds.length }}
       <div>
         <el-button plain @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
         <el-button plain @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>

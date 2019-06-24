@@ -1,5 +1,5 @@
 <template>
-  <ul v-loading="messages.length === 0" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
+  <ul v-loading="messages" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="message in messages"
       v-if="isntCanceled(message)"
@@ -66,7 +66,7 @@ export default {
   props: {
     messagesProp: {
       type: Array,
-      default: () => []
+      default: undefined
     },
     loading: {
       type: Boolean,
@@ -91,7 +91,7 @@ export default {
   },
   computed: {
     messages () {
-      return this.messagesProp.filter(message => {
+      let filteredMessages = this.messagesProp.filter(message => {
         if (this.currentTab === '3') {
           return message.type === 'NOTE'
         } else {
@@ -115,6 +115,10 @@ export default {
         //     return message.type === 'NOTE'
         // }
       })
+      if (filteredMessages.length === 0 && (this.currentTab === '2' || this.currentTab === '3')) {
+        return null
+      }
+      return filteredMessages
     }
   },
   watch: {

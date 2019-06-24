@@ -33,7 +33,7 @@
           plain
           icon="el-icon-download"
           @click="exportDisputes">
-          Exportar casos
+          Exportar disputas
         </el-button>
       </div>
       <el-tabs
@@ -180,16 +180,28 @@
           </template>
         </el-table-column>
         <el-table-column
-          width="40px"
+          label="Ações"
+          width="95px"
           class-name="view-management__row-actions"
           align="center">
           <template slot-scope="scope">
             <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
               <el-button
                 type="text"
-                class="favorite"
                 @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'ENGAJAMENTO')">
                 <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="Visualizar disputa">
+              <router-link :to="{ name: 'dispute', params: { id: scope.row.disputeid } }">
+                <jus-icon icon="open-case" />
+              </router-link>
+            </el-tooltip>
+            <el-tooltip content="Abrir disputa em uma nova aba">
+              <el-button
+                type="text"
+                @click="openNewTab(scope.row.disputeid)">
+                <jus-icon icon="external" />
               </el-button>
             </el-tooltip>
           </template>
@@ -197,7 +209,7 @@
         <template v-if="!$store.state.loading" slot="empty">
           <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
           <h4 style="font-weight: normal; line-height: initial;">
-            Não foram encontrados casos para<br>os filtros e aba selecionados.
+            Não foram encontradas disputas para<br>os filtros e aba selecionados.
           </h4>
         </template>
       </el-table>
@@ -367,7 +379,7 @@ export default {
       this.activeFilters = JSON.parse(JSON.stringify(this.filters.terms))
     },
     setFavorite (action, id, tab) {
-      let label = action === 'favorite' ? 'favoritado' : 'removido de favoritos'
+      let label = action === 'favorite' ? 'favoritada' : 'removida de favoritos'
       this.$store.dispatch('sendDisputeAction', {
         action: action,
         disputeId: id
@@ -378,12 +390,16 @@ export default {
         })
         this.$jusNotification({
           title: 'Yay!',
-          message: 'Caso ' + label + ' com sucesso.',
+          message: 'Disputa ' + label + ' com sucesso.',
           type: 'success'
         })
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       })
+    },
+    openNewTab (disputeId) {
+      let routeData = this.$router.resolve({ name: 'dispute', params: { id: disputeId } })
+      window.open(routeData.href, '_blank')
     },
     sortExpirationDate (a, b) {
       if (this.$moment(a.disputeexpirationdate).isAfter(b.disputeexpirationdate)) return 1
@@ -510,8 +526,13 @@ export default {
       width: 20px;
       vertical-align: middle;
     }
-    span + button, button + a {
-      margin-left: 6px;
+    > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      :last-child {
+        margin-left: 1px;
+      }
     }
   }
   &__empty-table {
