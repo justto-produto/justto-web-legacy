@@ -103,11 +103,13 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('getImportsHistory').then(response => {
-      this.importsHistory = response.sort(function (a, b) {
-        if (a.id < b.id) return 1
-        if (a.id > b.id) return -1
-        return 0
-      })
+      if (response && response.length) {
+        this.importsHistory = response.sort(function (a, b) {
+          if (a.id < b.id) return 1
+          if (a.id > b.id) return -1
+          return 0
+        })
+      }
     })
   },
   beforeCreate () {
