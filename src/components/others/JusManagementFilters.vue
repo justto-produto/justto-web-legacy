@@ -90,7 +90,7 @@
           <el-form-item label="Exibir somente:" class="jus-management-filters__switch">
             <div>
               <div>
-                <jus-icon icon="golden-star" /> Casos favoritos
+                <jus-icon icon="golden-star" /> Disputas favoritas
               </div>
               <el-switch v-model="filters.favorite" />
             </div>
@@ -221,7 +221,7 @@ export default {
       return this.$store.state.strategyModule.list
     },
     campaigns () {
-      return this.$store.state.campaignModule.list
+      return this.$store.getters.activeCampaigns
     },
     interactions () {
       return [{

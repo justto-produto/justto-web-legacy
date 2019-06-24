@@ -7,7 +7,7 @@
         <span>dias de teste<br>gratuito</span>
       </div>
       <div>
-        Máximo de <br>100 casos
+        Máximo de <br>100 disputas
       </div>
     </div>
     <!-- <div v-if="showPlans" class="jus-sidenav-external__divider">
@@ -21,11 +21,11 @@
     <div v-if="showPlans" class="jus-sidenav-external__plans">
       <el-button plain @click="showModal(1)">
         <div>+ R$ 18</div>
-        Por caso com interação<br>(carteira indenizatória)
+        Por disputa com interação<br>(carteira indenizatória)
       </el-button>
       <el-button plain @click="showModal(0)">
         <div>+ R$ 35</div>
-        Por caso com interação<br>(carteira de cobrança)
+        Por disputa com interação<br>(carteira de cobrança)
       </el-button>
     </div> -->
     <el-dialog
@@ -35,15 +35,15 @@
       width="600px">
       <span>
         Nós da JUSTTO queremos fazer a diferença na sua frente de acordos. Portanto,
-        você pode inserir quantos casos quiser na plataforma e só cobraremos por aqueles
-        casos em que houver interação.
+        você pode inserir quantas disputas quiser na plataforma e só cobraremos por aquelas
+        disputas em que houver interação.
       </span>
       <el-collapse class="el-collapse--bordered">
         <el-collapse-item title="O que consideramos como interação?">
           <b>WhatsApp:</b> Qualquer resposta ou clique em Link <br>
           <b>E-mail e CNA:</b> Qualquer resposta ou clique em Link <br>
-          <b>Aplicativos Mobile JUSTTO:</b> Download ou Acesso ao Caso <br>
-          <b>Aplicativo Web JUSTTO:</b> Acesso ao Caso <br>
+          <b>Aplicativos Mobile JUSTTO:</b> Download ou Acesso à Disputas <br>
+          <b>Aplicativo Web JUSTTO:</b> Acesso à disputa <br>
           <b>Ações do Cliente / Negociador:</b> Mudança de Status do Ticket para "Em
           Engajamento", "Novos Acordos" ou "Ganho"
         </el-collapse-item>
@@ -51,10 +51,10 @@
           Quanto exatamente você vai pagar depende do perfil da sua carteira, mas
           temos uma média de mercado para te dar uma ideia: <br><br>
           <span v-if="modalType">
-            100 casos importados &rarr; 60 casos com interação &rarr; 40 acordos fechados
+            100 disputas importadas &rarr; 60 disputas com interação &rarr; 40 acordos fechados
           </span>
           <span v-else>
-            100 casos importados &rarr; 15 casos com interação &rarr; 10 acordos fechados
+            100 disputas importadas &rarr; 15 disputas com interação &rarr; 10 acordos fechados
           </span>
         </el-collapse-item>
       </el-collapse>

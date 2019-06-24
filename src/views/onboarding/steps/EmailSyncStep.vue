@@ -3,7 +3,7 @@
     <div class="onboarding-step-content__title">
       <h2>Deseja sincronizar o seu e-mail com a plataforma?</h2>
       <p>
-        Uma das formas que utilizamos para negociar seus casos é o e-mail. Mais adiante você poderá ver as mensagens
+        Uma das formas que utilizamos para negociar suas disputas é o e-mail. Mais adiante você poderá ver as mensagens
         que nosso sistema enviará. Contudo, é importante que você sincronize sua caixa de e-mails com o nosso sistema
         para que as respostas sejam capturadas pela plataforma.
       </p>
