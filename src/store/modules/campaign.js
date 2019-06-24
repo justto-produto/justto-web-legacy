@@ -39,6 +39,7 @@ const campaign = {
     }
   },
   getters: {
+    campaignList: state => state.list,
     activeCampaigns: (state, getters) => {
       let filteredCampaigns = []
       for (let dispute of getters.disputes) {
