@@ -38,6 +38,12 @@ export default {
   computed: {
     slides () {
       return [{
+        title: 'sincronize seu WhatsApp para garantir que suas disputas terão mais engajamento',
+        button: 'Resolver',
+        to: 'profile',
+        color: 'green',
+        shows: this.$store.getters.whatsappStatus !== 'CONNECTED'
+      }, {
         id: 'alertOne',
         title: 'disputas que a negociação encerra nos próximos 3 dias',
         subtitle: 'Entre em contato',
@@ -92,12 +98,6 @@ export default {
         to: 'review',
         color: 'purple',
         shows: this.$store.getters.alertSeven.length > 0
-      }, {
-        title: 'sincronize seu WhatsApp para garantir que suas disputas terão mais engajamento',
-        button: 'Resolver',
-        to: 'profile',
-        color: 'green',
-        shows: this.$store.getters.whatsappStatus !== 'CONNECTED'
       }]
     }
   },
@@ -111,9 +111,10 @@ export default {
   },
   methods: {
     updateSlides () {
+      this.componentKey = 0
       setTimeout(function () {
         this.componentKey = this.componentKey + 1
-      }.bind(this), 300)
+      }.bind(this), 800)
     },
     carouselIcons () {
       let nextIcon = require('@/assets/icons/ic-left.svg')
