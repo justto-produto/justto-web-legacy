@@ -24,15 +24,16 @@
             v-show="showSuccess"
             title="Cadastro realizado com sucesso! Acesse seu email para prosseguir."
             type="success"
-            @close="showSuccess = false"/>
+            data-testid="showSucess"
+            @close="showSuccess = false" />
           <el-form-item label="Nome" prop="name">
-            <el-input v-model="registerForm.name" name="register-name"/>
+            <el-input v-model="registerForm.name" name="register-name" data-testid="register-name"/>
           </el-form-item>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="registerForm.email" name="register-email"/>
+            <el-input v-model="registerForm.email" name="register-email" data-testid="register-email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
-            <el-input v-model="registerForm.password" :type="passwordType" name="register-password"/>
+            <el-input v-model="registerForm.password" :type="passwordType" name="register-password" data-testid="register-password"/>
             <div class="el-button--input-float">
               <jus-icon
                 :icon="showPassword ? 'hide' : 'eye'"
@@ -43,7 +44,8 @@
           <el-button
             native-type="submit"
             class="external-view__submit"
-            type="primary">
+            type="primary"
+            data-testid="submit">
             Cadastrar
           </el-button>
           <el-row class="external-view__info">

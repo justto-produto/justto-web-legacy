@@ -25,16 +25,16 @@
             type="success"
             @close="showSuccess = false"/>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="loginForm.email" type="email" name="login-email"/>
+            <el-input v-model="loginForm.email" type="email" name="login-email" data-testid="login-email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
-            <el-input v-model="loginForm.password" :type="passwordType" name="login-password"/>
+            <el-input v-model="loginForm.password" :type="passwordType" name="login-password" data-testid="login-password"/>
             <div class="el-button--input-float">
               <jus-icon
                 :icon="showPassword ? 'hide' : 'eye'"
                 class="external-view__show-password"
                 @click.native="switchShowPassword"/>
-              <el-button type="text" @click="$router.push('forgot-password')">
+              <el-button type="text" data-testid="forgot-password" @click="$router.push('forgot-password')">
                 Esqueceu sua senha?
               </el-button>
             </div>
@@ -42,7 +42,8 @@
           <el-button
             native-type="submit"
             class="external-view__submit"
-            type="primary">
+            type="primary"
+            data-testid="submit">
             Entrar
           </el-button>
           <el-row class="external-view__info">
@@ -51,7 +52,7 @@
             <a href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
-            <a href="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
+            <a href="register" data-testid="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
       </el-main>

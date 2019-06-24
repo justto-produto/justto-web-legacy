@@ -24,7 +24,7 @@
           </li>
         </transition> -->
         <el-menu-item index="/management">
-          <jus-icon icon="management" class="el-menu__icon"/>
+          <jus-icon icon="management" class="el-menu__icon" data-testid="menu_management"/>
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
         <el-menu-item index="/import">
