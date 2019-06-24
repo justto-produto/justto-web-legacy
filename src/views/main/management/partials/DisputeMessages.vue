@@ -1,5 +1,5 @@
 <template>
-  <ul v-loading="messages" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
+  <ul v-loading="messages === null" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="message in messages"
       v-if="isntCanceled(message)"
@@ -66,7 +66,7 @@ export default {
   props: {
     messagesProp: {
       type: Array,
-      default: undefined
+      default: () => []
     },
     loading: {
       type: Boolean,
@@ -91,34 +91,34 @@ export default {
   },
   computed: {
     messages () {
-      let filteredMessages = this.messagesProp.filter(message => {
-        if (this.currentTab === '3') {
-          return message.type === 'NOTE'
-        } else {
-          return true
-        }
-        // TRECHO DE CÓDIGO PRONTO ESPERANDO CHAT FUNCIONAR
-        // switch (this.currentTab) {
-        //   case '1':
-        //     if (message.type !== 'NOTE') {
-        //       if (message.message && message.message.type === 'CHAT') {
-        //         return false
-        //       } else {
-        //         return true
-        //       }
-        //     } else {
-        //       return false
-        //     }
-        //   case '2':
-        //     return message.message && message.message.type === 'CHAT'
-        //   case '3':
-        //     return message.type === 'NOTE'
-        // }
-      })
-      if (filteredMessages.length === 0 && (this.currentTab === '2' || this.currentTab === '3')) {
+      if (this.messagesProp.length) {
+        return this.messagesProp.filter(message => {
+          if (this.currentTab === '3') {
+            return message.type === 'NOTE'
+          } else {
+            return true
+          }
+        })
+      } else {
         return null
       }
-      return filteredMessages
+      // TRECHO DE CÓDIGO PRONTO ESPERANDO CHAT FUNCIONAR
+      // switch (this.currentTab) {
+      //   case '1':
+      //     if (message.type !== 'NOTE') {
+      //       if (message.message && message.message.type === 'CHAT') {
+      //         return false
+      //       } else {
+      //         return true
+      //       }
+      //     } else {
+      //       return false
+      //     }
+      //   case '2':
+      //     return message.message && message.message.type === 'CHAT'
+      //   case '3':
+      //     return message.type === 'NOTE'
+      // }
     }
   },
   watch: {
