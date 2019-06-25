@@ -24,7 +24,8 @@
         <!-- <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button> -->
         <el-button v-if="activeStep === 2" type="primary" @click="finalStep">Iniciar negociação</el-button>
         <el-button
-          v-else :disabled="$store.state.loading"
+          v-else
+          :disabled="$store.state.loading"
           type="primary"
           @click="nextStep">
           Próximo
