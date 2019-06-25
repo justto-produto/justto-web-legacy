@@ -19,7 +19,7 @@ describe('Justto.App - Login', function() {
 
         // Clica no botão "Entrar"
         cy.get('[data-testid=submit]')
-            .click()            
+            .click()
 
         cy.wait(5000)
 
@@ -31,7 +31,7 @@ describe('Justto.App - Login', function() {
         // Acessa a página de login
         cy.visit('localhost:8080')
 
-        // Sistema deve redirecionar para a página de Login        
+        // Sistema deve redirecionar para a página de Login
         cy.url().should('include', '/#/login')
 
         // Preenche campo 'Email' com email não existente
@@ -40,7 +40,7 @@ describe('Justto.App - Login', function() {
             .should('have.value', 'email@invalido.com')
 
         // Preenche o campo 'Senha'
-        cy.get('[data-testid=login-password]')
+        cy.get('[data-testid=login-password')
             .type('password')
             .should('have.value', 'password')
 
@@ -52,10 +52,8 @@ describe('Justto.App - Login', function() {
 
         // Valida se login falhou
         cy.url().should('include', '/#/login')
-        
+
         // Verifica de menssagem de erro foi exibida
         cy.get('[data-testid=login-failure]').should('exist')
-
-
     })
   })
