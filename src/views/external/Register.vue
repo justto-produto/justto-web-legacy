@@ -34,7 +34,11 @@
             <el-input v-model="registerForm.email" name="register-email" data-testid="register-email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
-            <el-input v-model="registerForm.password" :type="passwordType" name="register-password" data-testid="register-password"/>
+            <el-input
+              v-model="registerForm.password"
+              :type="passwordType"
+              name="register-password"
+              data-testid="register-password"/>
             <div class="el-button--input-float">
               <jus-icon
                 :icon="showPassword ? 'hide' : 'eye'"

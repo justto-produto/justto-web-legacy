@@ -66,13 +66,13 @@
         </div>
         <!-- <a href="#" style="text-align: right;white-space: pre;">Ver casos</a> -->
       </el-card>
-<<<<<<< HEAD
-      <el-button type="primary" class="import-view__download-example" @click="downloadModel()" data-testid="download_model">Download planilha modelo</el-button>
-=======
-      <el-button type="primary" class="import-view__download-example" data-testid="download_model" @click="downloadModel()">
+      <el-button
+        type="primary"
+        class="import-view__download-example"
+        data-testid="download_model"
+        @click="downloadModel()">
         Download planilha modelo
       </el-button>
->>>>>>> d203b33799ea528e2635b4247337ab222a97b958
     </template>
   </jus-view-main>
 </template>
