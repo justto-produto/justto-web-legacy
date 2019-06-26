@@ -1,82 +1,44 @@
-describe('Import - Justto.App', function () {
-    it('[C34] Listagem do Histórico de Importação: Possui Importações', function () {
-        cy.visit('localhost:8080')
+describe('Justto.App - PlanilhaModelo', function() {
 
-        cy.url().should('include', '/#/login')
+  it('Login: Sucesso', function() {
+    // Acessa a página inicial do Justto.App
+    // cy.visit('http://homol.justto.com.br')
+    cy.visit('localhost:8080')
 
-        cy.get('[data-testid="login-email"]')
-            .type('zozuyakip@royalhost.info')
-            .should('have.value', 'zozuyakip@royalhost.info')
+    // Sistema deve redirecionar para a página de Login
+    cy.url().should('include', '/#/login')
 
-        cy.get('[data-testid="login-password"]')
-            .type('password')
-            .should('have.value', 'password')
+    // Preenche o campo 'Email'
+    cy.get('[data-testid="login-email"]')
+      .type('gugo@eyeemail.com')
+      .should('have.value', 'gugo@eyeemail.com')
 
-        cy.get('[data-testid="submit"]')
-            .click()
+    // Preenche o campo 'Senha'
+    cy.get('[data-testid="login-password"]')
+      .type('password')
+      .should('have.value', 'password')
 
-        cy.url().should('include', '#/management')
+    // Clica no botão "Entrar"
+    cy.get('[data-testid="submit"]').click()
 
-        cy.get('[data-testid="menu_import"]')
-            .click()
+    // Valida se acesso foi feito
+    cy.url().should('include', '/#/management')
+ })
 
-        cy.url().should('include', '#/import')
+  it('PlanilhaModelo: Sucesso', function() {
 
-        cy.get('[src="/img/ic-spreadsheet-xlsx.0f4dae2b.svg"]')
-            .should('be.visible')
+      // Acessa a tela de gerenciamento
+      cy.get('[data-testid=menu-import]').click()
+
+      // Sistema deve redirecionar para a página de Importação
+      cy.url().should('include', '/#/import')
+
+      // verifica se o botão está visível
+      cy.get('[data-testid=download_model]')
+        .should('be.visible')
+        .click()
+
+      // Valida se acesso foi feito
+      // cy.url().should('include', '/#/management')
     })
-
-    it('[C35] Listagem do Histórico de Importação: Não Possui Importações', function () {
-        cy.visit('localhost:8080')
-
-        cy.url().should('include', '/#/login')
-
-        cy.get('[data-testid="login-email"]')
-            .type('vezoyelal@royalgifts.info')
-            .should('have.value', 'vezoyelal@royalgifts.info')
-
-        cy.get('[data-testid="login-password"]')
-            .type('password')
-            .should('have.value', 'password')
-
-        cy.get('[data-testid="submit"]')
-            .click()
-
-        cy.url().should('include', '#/management')
-
-        cy.get('[data-testid="menu_import"]')
-            .click()
-
-        cy.url().should('include', '#/import')
-
-        cy.get('[data-testid="download_model"]')
-            .should('be.visible')
-    })
-
-    // it('[C36] Importação de casos', function () {
-    //     cy.visit('localhost:8080')
-
-    //     cy.url().should('include', '/#/login')
-
-    //     cy.get('[data-testid="login-email"]')
-    //         .type('vezoyelal@royalgifts.info')
-    //         .should('have.value', 'vezoyelal@royalgifts.info')
-
-    //     cy.get('[data-testid="login-password"]')
-    //         .type('password')
-    //         .should('have.value', 'password')
-
-    //     cy.get('[data-testid="submit"]')
-    //         .click()
-
-    //     cy.url().should('include', '#/management')
-
-    //     cy.get('[data-testid="menu_import"]')
-    //         .click()
-
-    //     cy.url().should('include', '#/import')
-
-    //     cy.get('[data-idtest="upload_sheet"]')
-    //         .type('planilha-modelo.xlsx')
-    // })
-})
+  })
