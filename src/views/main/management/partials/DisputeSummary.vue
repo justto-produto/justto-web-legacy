@@ -1,7 +1,6 @@
 <template lang="html">
   <div class="dispute-view__side-content">
     <el-steps
-      v-loading="loading"
       :active="0"
       direction="vertical"
       process-status="wait"
@@ -21,7 +20,6 @@
           <el-checkbox v-model="scheduled" class="dispute-view__show-scheduled">
             Exibir mensagens agendadas
           </el-checkbox>
-          <!-- <a href="#" @click.prevent="dialogVisible = true">Ver mensagens agendadas</a> -->
         </template>
       </el-step>
       <el-step>
@@ -36,59 +34,27 @@
         </template>
       </el-step>
       <el-step>
-        <template slot="title">Contraproposta</template>
+        <template slot="title">
+          <span v-if="isDeal">Valor do acordo</span>
+          <span v-else>Última valor proposto</span>
+        </template>
         <template slot="description">
-          <div v-if="sliderProposal">
-            {{ lastoffer | currency }}
-            <!-- <el-slider v-model="sliderProposal" :show-tooltip="false" /> -->
+          <div v-if="deal">
+            {{ deal | currency }}
           </div>
           <div v-else>
             Sem contraproposta
           </div>
         </template>
       </el-step>
-      <el-step v-if="disputeStatus">
-        <template slot="title">Status</template>
-        <template slot="description">
-          {{ $t('occurrence.type.' + disputeStatus) | capitalize }}
-          <el-select
-            v-if="summary && disputeStatus === 'UNSETTLED'"
-            v-model="unsettledType"
-            class="dispute-view__unsettled-types"
-            @change="changeReasonStatus">
-            <el-option
-              v-for="(type, index) in unsettledTypes"
-              :key="index"
-              :label="type"
-              :value="index" />
-          </el-select>
-        </template>
-      </el-step>
-      <el-step>
-        <template slot="title">Acordo</template>
-        <template slot="description">
-          <div v-if="deal">
-            {{ deal | currency }}
-          </div>
-          <div v-else>
-            Sem valor de acordo
-          </div>
-        </template>
-      </el-step>
     </el-steps>
-    <!-- <jus-engagements-dialog
-      :dialog-visible.sync="dialogVisible"
-      :strategy-id="strategyId"
-    /> -->
   </div>
 </template>
 
 <script>
-// import JusEngagementsDialog from '@/components/dialogs/JusEngagementsDialog'
 
 export default {
   name: 'DisputeSummary',
-  // components: { JusEngagementsDialog },
   props: {
     id: {
       default: 0,
@@ -109,15 +75,18 @@ export default {
   },
   data () {
     return {
-      loading: false,
-      summary: '',
+      summary: {},
       scheduled: false,
       unsettledType: null,
       unsettledTypeId: null
-      // dialogVisible: false
     }
   },
   computed: {
+    isDeal () {
+      if (Object.keys(this.summary).length) {
+        return this.summary.disputestatus === 'ACCEPTED' || this.summary.disputestatus === 'CHECKOUT' || this.summary.disputestatus === 'SETTLED'
+      }
+    },
     enriched () {
       return {
         email: this.summary.enrichedemails ? this.summary.enrichedemails : 0,
@@ -137,18 +106,6 @@ export default {
     },
     deal () {
       return this.summary.disputedealvalue
-    },
-    lastoffer () {
-      return this.summary.lastoffervalue ? this.summary.lastoffervalue : 0
-    },
-    disputeStatus () {
-      return this.summary.disputestatus ? this.summary.disputestatus : null
-    },
-    sliderProposal: {
-      get () {
-        return (this.lastoffer * 100) / this.boundary
-      },
-      set (val) { return val }
     }
   },
   watch: {
@@ -160,11 +117,19 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('getDisputeById', this.id).then(dispute => {
-      this.summary = dispute
+    this.getSummary(this.$store.state.disputeModule.disputes)
+    this.$store.watch(state => state.disputeModule.disputes, disputes => {
+      this.getSummary(disputes)
     })
   },
   methods: {
+    getSummary (disputes) {
+      if (disputes.length) {
+        this.summary = disputes.find((dispute) => {
+          return dispute.disputeid === this.id
+        })
+      }
+    },
     changeReasonStatus () {
       this.$store.dispatch('editDisputeReason', {
         body: { [this.unsettledType]: this.unsettledTypes[this.unsettledType] },

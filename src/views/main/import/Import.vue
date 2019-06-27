@@ -1,16 +1,16 @@
 <template>
   <jus-view-main right-card-width="400" class="import-view">
     <template slot="title">
-      <h1>Importação de casos</h1>
+      <h1>Importação de disputas</h1>
     </template>
     <template slot="main">
       <div class="import-view__container">
         <div class="import-view__title">
-          <h2 v-show="!hasFile">Adicione novos casos</h2>
+          <h2 v-show="!hasFile">Adicione novas disputas</h2>
           <h2 v-show="hasFile">Planilha carregada com sucesso!</h2>
           <p v-show="!hasFile">
-            Aqui você pode inserir novos casos para sua equipe negociar. Escolha abaixo
-            a forma de inclusão de novos casos em sua conta.
+            Aqui você pode inserir novas disputas para sua equipe negociar. Escolha abaixo
+            a forma de inclusão de novas disputas em sua conta.
           </p>
         </div>
         <div class="import-view__content import-view__content---methods">
@@ -35,7 +35,7 @@
           </el-card>
           <!-- <el-card v-if="!hasFile" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
             <jus-icon icon="insert" is-active/>
-            <div class="import-view__method-info">Adicionar caso manualmente</div>
+            <div class="import-view__method-info">Adicionar disputas manualmente</div>
           </el-card> -->
         </div>
         <div v-if="hasFile" class="import-view__actions">
@@ -45,34 +45,37 @@
       </div>
     </template>
     <template slot="right-card">
-      <h2 class="import-view__history-title">
-        Histórico de importação
-      </h2>
-      <p v-if="importsHistory.length === 0">
-        Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
-        Abaixo você pode baixar o nosso modelo de planilha:
-      </p>
-      <el-card
-        v-for="imports in importsHistory"
-        :key="imports.id"
-        class="import-history">
-        <div>
-          <jus-icon icon="spreadsheet-xlsx"/>
+      <div class="import-view__history-container">
+        <div class="import-view__history-title">
+          <h2>
+            Histórico de importação
+          </h2>
+          <el-tooltip content="Download da planilha modelo">
+            <el-button type="primary" class="right" @click="downloadModel()">
+              <jus-icon icon="download-white" />
+            </el-button>
+          </el-tooltip>
         </div>
-        <div class="import-history__content">
-          <h4><a href="#" @click="downloadItem(imports.file_name)">{{ imports.file_name }}</a></h4>
-          <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
-          <p>Linhas: {{ imports.rows }}</p>
+        <p v-if="importsHistory.length === 0">
+          Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
+          Abaixo você pode baixar o nosso modelo de planilha:
+        </p>
+        <div class="import-view__cards">
+          <el-card
+            v-for="imports in importsHistory"
+            :key="imports.id"
+            class="import-view__card">
+            <div>
+              <jus-icon icon="spreadsheet-xlsx"/>
+            </div>
+            <div class="import-view__card-content">
+              <h4><a href="#" @click="downloadItem(imports.file_name)">{{ imports.file_name }}</a></h4>
+              <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
+              <p>Linhas: {{ imports.rows }}</p>
+            </div>
+          </el-card>
         </div>
-        <!-- <a href="#" style="text-align: right;white-space: pre;">Ver casos</a> -->
-      </el-card>
-      <el-button
-        type="primary"
-        class="import-view__download-example"
-        data-testid="download_model"
-        @click="downloadModel()">
-        Download planilha modelo
-      </el-button>
+      </div>
     </template>
   </jus-view-main>
 </template>
@@ -100,11 +103,13 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('getImportsHistory').then(response => {
-      this.importsHistory = response.sort(function (a, b) {
-        if (a.id < b.id) return 1
-        if (a.id > b.id) return -1
-        return 0
-      })
+      if (response && response.length) {
+        this.importsHistory = response.sort(function (a, b) {
+          if (a.id < b.id) return 1
+          if (a.id > b.id) return -1
+          return 0
+        })
+      }
     })
   },
   beforeCreate () {
@@ -181,33 +186,45 @@ export default {
 
 .import-view {
   &__history-title {
-      margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin-top: -20px;
+    h2 {
+      padding: 20px 0;
+      display: block;
+      margin: 0;
+    }
+    .el-button {
+      border-radius: 5px;
+      padding: 11px;
+    }
+    img {
+      width: 16px;
+      height: 16px;
+    }
   }
-  &__download-example {
-    min-width: 100%;
-    margin: 20px 0;
+  &__card {
+    margin-top: 20px;
+    .el-card__body {
+      display: flex;
+      align-items: center;
+    }
+  }
+  &__card-content {
+    margin-left: 20px;
+    text-align: left;
+    h4 {
+      word-break: break-all;
+      margin: 0;
+    }
+    p {
+      margin: 3px 0 0;
+    }
   }
   .jus-main-view__right-card {
     text-align: center;
-    .import-history{
-      margin-bottom: 20px;
-      border-color: #eee;
-      .el-card__body {
-        display: flex;
-        align-items: center;
-      }
-      &__content {
-        margin-left: 20px;
-        text-align: left;
-        h4 {
-          word-break: break-all;
-          margin: 0;
-        }
-        p {
-          margin: 3px 0 0;
-        }
-      }
-    }
   }
   .jus-main-view__main-card {
     display: flex;
@@ -216,42 +233,69 @@ export default {
       padding: 40px 20px;
     }
   }
-}
-.import-view__title {
-  text-align: center;
-  margin: auto;
-  h2 {
-    margin: 0;
+  &__history-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    margin: 0 -20px;
   }
-  p{
-    margin: 10px 0;
+  &__cards {
+    overflow-y: scroll;
+    padding: 0 20px 20px;
+    margin-bottom: -20px;
   }
-}
-.import-view__content {
-  margin: 40px 0 0;
-}
-.import-view__content---methods {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  .el-upload-list {
-    max-width: 210px;
-    &.is-disabled {
-      max-width: 368px;
+  &__method-info {
+    margin-top: 10px;
+    text-align: center;
+    transition: all ease .5s;
+  }
+  &__method-loading {
+    width: 400px;
+    max-width: 400px;
+  }
+  &__actions {
+    display: flex;
+    margin-top: 40px;
+    button {
+      width: 100%;
     }
   }
-  .el-icon-document {
-    display: none;
+  &__title {
+    text-align: center;
+    margin: auto;
+    h2 {
+      margin: 0;
+    }
+    p{
+      margin: 10px 0;
+    }
   }
-}
-.import-view__method {
-  max-width: 240px;
-  transition: all ease .5s;
-  &+.import-view__method {
-    margin-left: 20px;
+  &__content {
+    margin: 40px 0 0;
   }
-  >.el-card__body {
-    padding: 40px 20px;
+  &__content---methods {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    .el-upload-list {
+      max-width: 210px;
+      &.is-disabled {
+        max-width: 368px;
+      }
+    }
+    .el-icon-document {
+      display: none;
+    }
+  }
+  &__method {
+    max-width: 240px;
+    transition: all ease .5s;
+    &+.import-view__method {
+      margin-left: 20px;
+    }
+    >.el-card__body {
+      padding: 40px 20px;
+    }
   }
 }
 .el-card--dashed-hover:hover{
@@ -260,20 +304,5 @@ export default {
     color: $--color-primary;
   }
 }
-.import-view__method-info {
-  margin-top: 10px;
-  text-align: center;
-  transition: all ease .5s;
-}
-.import-view__method-loading {
-  width: 400px;
-  max-width: 400px;
-}
-.import-view__actions {
-  display: flex;
-  margin-top: 40px;
-  button {
-    width: 100%;
-  }
-}
+
 </style>

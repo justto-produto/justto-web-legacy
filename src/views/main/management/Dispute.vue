@@ -5,13 +5,13 @@
         <router-link to="/management">
           <jus-icon icon="back" />
         </router-link>
-        Caso #{{ dispute.id }}
+        Disputa #{{ dispute.id }}
       </h1>
     </template>
     <!-- RESUMO DO CASO -->
     <template slot="left-card">
       <div class="dispute-view__section-title">
-        <h2>Resumo do caso</h2>
+        <h2>Resumo da disputa</h2>
       </div>
       <dispute-summary
         v-if="dispute.strategy"
@@ -115,7 +115,7 @@
         </el-dialog>
         <el-dialog
           :visible.sync="editNegotiatorDialogVisible"
-          title="Editar negociadores do caso"
+          title="Editar negociadores da disputa"
           width="600px">
           <el-form
             ref="negotiatorsForm"
@@ -124,7 +124,7 @@
             label-position="top"
             @submit.native.prevent="editNegotiator">
             <el-transfer
-              :titles="['Workspace', 'Caso']"
+              :titles="['Workspace', 'Disputa']"
               :button-texts="['Remover', 'Adcionar']"
               :data="workspaceNegotiators"
               v-model="disputeNegotiators"
@@ -205,7 +205,7 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <el-tab-pane label="Chat" name="2">
+            <!-- <el-tab-pane label="Chat" name="2">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-input
                   :rows="3"
@@ -219,7 +219,7 @@
                   </el-button>
                 </div>
               </el-card>
-            </el-tab-pane>
+            </el-tab-pane> -->
             <el-tab-pane label="Nota" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-input
@@ -241,9 +241,9 @@
     <!-- DADOS DO CASO -->
     <template slot="right-card">
       <div class="dispute-view__section-title">
-        <h2>Dados do caso</h2>
-        <!-- <el-button plain>Exportar caso</el-button> -->
-        <el-tooltip content="Excluir caso">
+        <h2>Dados da disputa</h2>
+        <!-- <el-button plain>Exportar disputa</el-button> -->
+        <el-tooltip content="Excluir disputa">
           <el-button plain class="right" @click="removeDispute()">
             <jus-icon icon="trash" />
           </el-button>
@@ -383,7 +383,7 @@ export default {
       this.editNegotiatorDialogVisible = true
     },
     removeDispute () {
-      this.$confirm('Tem certeza que deseja excluir este caso? Esta ação é irreversível.', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error'
@@ -471,17 +471,17 @@ export default {
       this.$store.dispatch('sendDisputeAction', params).then(() => {
         let trackTitle
         if (action === 'unsettled') {
-          trackTitle = 'Caso ganho'
+          trackTitle = 'Disputa ganha'
         } else if (action === 'settled') {
-          trackTitle = 'Caso perdido'
+          trackTitle = 'Disputa perdida'
         } else if (action === 'paused') {
-          trackTitle = 'Caso pausado'
+          trackTitle = 'Disputa pausada'
         } else if (action === 'resume') {
-          trackTitle = 'Caso despausado'
+          trackTitle = 'Disputa despausada'
         } else if (action === 'favorite') {
-          trackTitle = 'Caso favoritado'
+          trackTitle = 'Disputa favoritada'
         } else if (action === 'disfavor') {
-          trackTitle = 'Caso desfavoritado'
+          trackTitle = 'Disputa desfavoritada'
         } else {
           trackTitle = 'Status Modificado'
         }
@@ -723,15 +723,6 @@ export default {
     img {
       width: 16px;
       height: 16px;
-    }
-  }
-  &__side-content {
-    margin: 20px 0 0;
-    .el-step__title {
-      text-transform: capitalize;
-    }
-    .el-step__head {
-      // overflow: hidden;
     }
   }
   &__actions {

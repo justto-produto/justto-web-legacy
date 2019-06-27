@@ -1,6 +1,6 @@
 <template>
   <div class="jus-management-filters">
-    <el-form :model="filters" label-position="top">
+    <el-form v-loading="loading" :model="filters" label-position="top">
       <el-row :gutter="20">
         <!--  CAMPANHA -->
         <el-col :span="12">
@@ -87,10 +87,10 @@
         </el-col> -->
         <!-- FAVORITOS -->
         <el-col :span="12">
-          <el-form-item label="Ordenar por:" class="jus-management-filters__switch">
+          <el-form-item label="Exibir somente:" class="jus-management-filters__switch">
             <div>
               <div>
-                <jus-icon icon="golden-star" /> Casos favoritos
+                <jus-icon icon="golden-star" /> Disputas favoritas
               </div>
               <el-switch v-model="filters.favorite" />
             </div>
@@ -195,6 +195,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       money: {
         decimal: ',',
         thousands: '.',
@@ -220,7 +221,7 @@ export default {
       return this.$store.getters.strategyList
     },
     campaigns () {
-      return this.$store.getters.campaignList
+      return this.$store.getters.activeCampaigns
     },
     interactions () {
       return [{
@@ -237,6 +238,15 @@ export default {
     negotiatorsList () {
       return this.$store.state.workspaceModule.members
     }
+  },
+  beforeMount () {
+    this.loading = true
+    Promise.all([
+      this.$store.dispatch('getCampaigns'),
+      this.$store.dispatch('getStrategies')
+    ]).finally(responses => {
+      this.loading = false
+    })
   },
   methods: {
     setInteraction (value) {

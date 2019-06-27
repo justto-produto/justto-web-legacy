@@ -3,9 +3,9 @@
     <template slot="title">
       <h2>Estratégia de engajamento das partes</h2>
       <p>
-        Abaixo, você encontra as mensagens a serem enviadas para às partes dos casos contidos
-        nesta Campanha. Com os dados do seu caso, nosso sistema escolhe a melhor estratégia de
-        engajamento para os seus casos.
+        Abaixo, você encontra as mensagens a serem enviadas para às partes das disputas contidas
+        nesta Campanha. Com os dados da sua disputas, nosso sistema escolhe a melhor estratégia de
+        engajamento para as suas disputas.
       </p>
     </template>
     <el-collapse v-loading="$store.state.loading" class="jus-engagements-dialog__engagement el-collapse--bordered">

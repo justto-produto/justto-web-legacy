@@ -90,4 +90,8 @@
     background-image: linear-gradient(to right, #00b346, #46e986);
     color: $--color-white;
   }
+  &-blue .el-card__body{
+    background-image: linear-gradient(to right, #008bdd, #72cbff);
+    color: $--color-white;
+  }
 }
