@@ -1,11 +1,11 @@
 <template>
   <div class="check-lines-step">
     <div class="new-import-view__title">
-      <h2>Número de casos</h2>
-      <p>Verifique abaixo se sua planilha possui o número correto de casos</p>
+      <h2>Número de disputas</h2>
+      <p>Verifique abaixo se sua planilha possui o número correto de disputas</p>
     </div>
     <el-card class="el-card--dashed" shadow="never">
-      <h4>Casos prontos para importação: {{ lines }}</h4>
+      <h4>Disputas prontos para importação: {{ lines }}</h4>
       <el-collapse accordion class="el-collapse--bordered el-collapse--active">
         <el-collapse-item name="1">
           <template slot="title">

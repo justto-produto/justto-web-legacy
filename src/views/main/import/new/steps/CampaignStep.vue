@@ -3,8 +3,8 @@
     <h2 class="new-import-view__title">Configuração de campanhas</h2>
     <p>
       O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de
-      casos dentro da mesma importação com um réu em comum. Por isso, ao importar,
-      o sistema automaticamente divide seus casos em campanhas para que você possa
+      disputas dentro da mesma importação com um réu em comum. Por isso, ao importar,
+      o sistema automaticamente divide suas disputas em campanhas para que você possa
       configurá-las separadamente.
       <br>
     </p>

@@ -2,7 +2,7 @@
   <JusViewMain class="new-import-view">
     <template slot="title">
       <h1>
-        Nova importação de casos
+        Nova importação de disputas
       </h1>
     </template>
     <template slot="main">

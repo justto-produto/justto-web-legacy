@@ -167,9 +167,9 @@ export default {
     strategies () {
       return this.$store.getters.strategyList
     },
-    campaigns () {
-      return this.$store.getters.campaignList
-    },
+    // campaigns () {
+    //   return this.$store.state.campaignModule.list
+    // },
     negotiatorsList () {
       return this.$store.state.workspaceModule.members
     }
