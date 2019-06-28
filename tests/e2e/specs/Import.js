@@ -61,7 +61,6 @@ describe('Justto.App - Planilha Modelo', function() {
             { subjectType: 'input' }
           )
         })
-
     })
     // it('Historico de Importações: Sucesso', function() {
     //     // Verifica se card de planilha importada está visivel
