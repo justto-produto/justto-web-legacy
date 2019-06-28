@@ -28,7 +28,7 @@
               </span>
             </div>
             <div>
-              <el-select data-testid="profile-teammember" v-model="member.profile" size="mini">
+              <el-select v-model="member.profile" data-testid="profile-teammember" size="mini">
                 <el-option
                   v-for="profile in profiles"
                   :key="profile.$index"

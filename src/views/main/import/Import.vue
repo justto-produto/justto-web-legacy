@@ -9,8 +9,7 @@
           <h2 v-show="!hasFile">Adicione novas disputas</h2>
           <h2 v-show="hasFile">Planilha carregada com sucesso!</h2>
           <p v-show="!hasFile">
-            Aqui você pode inserir novas disputas para sua equipe negociar. Escolha abaixo
-            a forma de inclusão de novas disputas em sua conta.
+            Aqui você pode inserir novas disputas para você sua equipe negociarem.
           </p>
         </div>
         <div class="import-view__content import-view__content---methods">
@@ -58,9 +57,10 @@
         </div>
         <p v-if="importsHistory.length === 0">
           Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
-          Abaixo você pode baixar o nosso modelo de planilha:
+          <br><br>
+          Faça o download da planilha modelo no ícone acima.
         </p>
-        <div class="import-view__cards">
+        <div v-if="importsHistory.length" class="import-view__cards">
           <el-card
             v-for="imports in importsHistory"
             :key="imports.id"
