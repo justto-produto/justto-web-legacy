@@ -50,13 +50,25 @@ describe('Justto.App - Planilha Modelo', function() {
         cy.request('localhost:8080/Planilha-Modelo-Justto.xlsx')
     })
 
-    it('Historico de Importações: Sucesso', function() {
-        // Verifica se card de planilha importada está visivel
-        cy.get('[data-testid=imported-download]')
-            .should('be.visible')
+    it('Importa planilha modelo: Sucesso', function() {
+        const fileName = 'Planilha-Modelo-Justto.xlsx'
+        // const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        // const fileInput = 'input[type=file]'
 
-        cy.get('[data-testid=imported-download]')
-            .click()
+        cy.fixture(fileName).then(fileContent => {
+          cy.get('input[type=file]').upload(
+            { fileContent, fileName, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+            { subjectType: 'input' }
+          )
+        })
 
     })
+    // it('Historico de Importações: Sucesso', function() {
+    //     // Verifica se card de planilha importada está visivel
+    //     cy.get('[data-testid=imported-download]')
+    //         .should('be.visible')
+    //
+    //     cy.get('[data-testid=imported-download]')
+    //         .click()
+    // })
 })

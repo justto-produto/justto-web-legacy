@@ -13,7 +13,7 @@
           </p>
         </div>
         <div class="import-view__content import-view__content---methods">
-          <el-card :class="{'import-view__method-loading': hasFile}" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
+          <el-card :class="{'import-view__method-loading': hasFile}" data-testid="file-input" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
             <el-upload
               v-loading="processingFile"
               ref="uploadMethod"
