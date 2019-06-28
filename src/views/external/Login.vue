@@ -26,10 +26,18 @@
             type="success"
             @close="showSuccess = false"/>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="loginForm.email" type="email" name="login-email" data-testid="login-email"/>
+            <el-input
+              v-model="loginForm.email"
+              type="email"
+              name="login-email"
+              data-testid="login-email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
-            <el-input v-model="loginForm.password" :type="passwordType" name="login-password" data-testid="login-password"/>
+            <el-input
+              v-model="loginForm.password"
+              :type="passwordType"
+              name="login-password"
+              data-testid="login-password"/>
             <div class="el-button--input-float">
               <jus-icon
                 :icon="showPassword ? 'hide' : 'eye'"
@@ -49,11 +57,11 @@
           </el-button>
           <el-row class="external-view__info">
             Ao clicar em Entrar, eu concordo com os
-            <a href="https://drive.google.com/file/d/1PzrxBPZ4gL2o_UA01k5sSXnwgaXJ3dmu/view?usp=sharing"> Termos de Uso</a> e com os
-            <a href="https://drive.google.com/file/d/1kTb1y8lwIeA_utrOOjIlhZ97iGRS3b-r/view" target="_blank">Termos Gerais de Contratação.</a>
+            <a href="https://justto.com.br/termos-de-uso/" target="_blank"> Termos de Uso</a> e com os
+            <a href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
-            <a href="register" data-testid="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
+            <a href="register" data-testid="register" @click.prevent="$router.push('register')">Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
       </el-main>
@@ -97,16 +105,17 @@ export default {
     }
   },
   beforeMount () {
-    this.$store.dispatch('logout')
+    if (this.$store.getters.isLoggedIn) {
+      this.$store.dispatch('logout')
+    }
   },
   created () {
     if (this.$route.query.token) {
       this.$store.dispatch('activate', this.$route.query.token)
         .then(() => {
           this.showSuccess = true
-          this.$router.push('login')
         })
-        .catch(() => {
+        .finally(() => {
           this.$router.push('login')
         })
     }

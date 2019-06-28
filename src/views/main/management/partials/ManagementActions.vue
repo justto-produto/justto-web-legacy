@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <div :class="{'active': active}" class="management-actions">
-      Casos selecionados: {{ selectedIds.length }}
+      Disputas selecionadas: {{ selectedIds.length }}
       <div>
         <el-button plain @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
         <el-button plain @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
@@ -83,6 +83,23 @@ export default {
   },
   methods: {
     doAction (action) {
+      let selecteds = this.selectedIds.length
+      let trackTitle
+      if (action === 'SETTLED') {
+        trackTitle = 'casos ganhos'
+      } else if (action === 'unsettled') {
+        trackTitle = 'casos perdidos'
+      } else if (action === 'PAUSED') {
+        trackTitle = 'casos pausados'
+      } else if (action === 'RESUME') {
+        trackTitle = 'casos despausados'
+      } else if (action === 'DELETE') {
+        trackTitle = 'casos deletados'
+      } else if (action === 'RESTART_ENGAGEMENT') {
+        trackTitle = 'engajamentos reiniciados'
+      } else {
+        trackTitle = 'Ação em massa realizada'
+      }
       let params = {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds
@@ -91,10 +108,11 @@ export default {
         params['body'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
-        window.analytics.track('Ação em massa realizada', {
+        this.chooseUnsettledDialogVisible = false
+        window.analytics.track(selecteds + ' ' + trackTitle, {
           action: action,
-          tab: this.tabLabel,
-          selecteds: this.selectedIds.length
+          selecteds: selecteds,
+          tab: this.tabLabel
         })
         let self = this
         this.$jusNotification({

@@ -11,7 +11,7 @@ export default {
     },
     data: {
       type: Array,
-      default: undefined
+      default: () => []
     }
   },
   mounted () {

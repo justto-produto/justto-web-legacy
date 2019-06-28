@@ -6,17 +6,17 @@
         v-model="disputeId"
         :trigger-on-focus="false"
         :fetch-suggestions="search"
-        placeholder="Busque aqui os seus casos">
+        placeholder="Busque aqui os suas disputas">
         <template slot-scope="{ item }">
           <router-link :to="'/management/dispute/' + item.disputeid">
             <div class="jus-header-main__result">
               <h4>
-                Caso #{{ item.disputeid }} |
-                Campanha: {{ item.campaignname }} |
+                Disputa #{{ item.disputeid }} |
+                Campanha: {{ item.campaignname | capitalize }} |
                 Processo: {{ item.disputecode }}
               </h4>
-              <div>Estratégia: {{ item.strategyname }}</div>
-              <div>Status: <span>{{ $t('occurrence.type.' + item.disputestatus) }}</span></div>
+              <div>Estratégia: {{ item.strategyname | capitalize }}</div>
+              <div>Status: <span>{{ $t('occurrence.type.' + item.disputestatus) | capitalize }}</span></div>
               <div v-for="(claiment, index) in item.claiments" :key="item.disputeid + claiment.name + index + 'claimant'">
                 Parte contrária: {{ claiment.name }}
               </div>
@@ -110,21 +110,6 @@ export default {
     }
   },
   methods: {
-    getFields (term) {
-      let fields = [
-        'disputecode',
-        'campaignname',
-        'claiments.name',
-        'claiments.document_number',
-        'claimentslawyer.name',
-        'claimentslawyer.document_number',
-        'strategyname',
-        'disputeupperrange',
-        'disputelastrespondentoffer'
-      ]
-      if (!isNaN(term) && term < Number.MAX_SAFE_INTEGER) fields.push('disputeid')
-      return fields
-    },
     logout () {
       window.analytics.track('Logout realizado', {
         workspace: this.workspace,
@@ -155,7 +140,8 @@ export default {
             'claimentslawyer.document_number',
             'strategyname',
             'disputeupperrange',
-            'disputelastrespondentoffer'
+            'disputelastrespondentoffer',
+            'lastOfferValue'
           ]
         }).then(results => {
         cb(results)
