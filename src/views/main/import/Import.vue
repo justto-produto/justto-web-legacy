@@ -51,12 +51,16 @@
             Histórico de importação
           </h2>
           <el-tooltip content="Download da planilha modelo">
-            <el-button type="primary" class="right" @click="downloadModel()">
+            <el-button
+              type="primary"
+              class="right"
+              data-testid="download-model"
+              @click="downloadModel()">
               <jus-icon icon="download-white" />
             </el-button>
           </el-tooltip>
         </div>
-        <p v-if="importsHistory.length === 0">
+        <p v-if="importsHistory.length === 0" data-testid="empty-history">
           Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
           Abaixo você pode baixar o nosso modelo de planilha:
         </p>
@@ -68,7 +72,7 @@
             <div>
               <jus-icon icon="spreadsheet-xlsx"/>
             </div>
-            <div class="import-view__card-content">
+            <div class="import-view__card-content" data-testid="imported-download">
               <h4><a href="#" @click="downloadItem(imports.file_name)">{{ imports.file_name }}</a></h4>
               <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
               <p>Linhas: {{ imports.rows }}</p>

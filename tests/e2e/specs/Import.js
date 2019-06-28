@@ -1,44 +1,62 @@
-describe('Justto.App - PlanilhaModelo', function() {
+describe('Justto.App - Planilha Modelo', function() {
 
-  it('Login: Sucesso', function() {
-    // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    it('Login: Sucesso', function() {
+        // Acessa a página inicial do Justto.App
+        // cy.visit('http://homol.justto.com.br')
+        cy.visit('localhost:8080')
 
-    // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/login')
+        // Sistema deve redirecionar para a página de Login
+        cy.url().should('include', '/#/login')
 
-    // Preenche o campo 'Email'
-    cy.get('[data-testid="login-email"]')
-      .type('gugo@eyeemail.com')
-      .should('have.value', 'gugo@eyeemail.com')
+        // Preenche o campo 'Email'
+        cy.get('[data-testid="login-email"]')
+            .type('guilherme@justto.com.br')
+            .should('have.value', 'guilherme@justto.com.br')
 
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid="login-password"]')
-      .type('password')
-      .should('have.value', 'password')
+        // Preenche o campo 'Senha'
+        cy.get('[data-testid="login-password"]')
+            .type('@bundanc1A')
+            .should('have.value', '@bundanc1A')
 
-    // Clica no botão "Entrar"
-    cy.get('[data-testid="submit"]').click()
+        // Clica no botão "Entrar"
+        cy.get('[data-testid="submit"]').click()
 
-    // Valida se acesso foi feito
-    cy.url().should('include', '/#/management')
- })
-
-  it('PlanilhaModelo: Sucesso', function() {
-
-      // Acessa a tela de gerenciamento
-      cy.get('[data-testid=menu-import]').click()
-
-      // Sistema deve redirecionar para a página de Importação
-      cy.url().should('include', '/#/import')
-
-      // verifica se o botão está visível
-      cy.get('[data-testid=download_model]')
-        .should('be.visible')
-        .click()
-
-      // Valida se acesso foi feito
-      // cy.url().should('include', '/#/management')
+        // Valida se acesso foi feito
+        cy.url().should('include', '/#/management')
     })
-  })
+
+    it('Historico de Importações: Vazio', function() {
+        // Acessa a tela de gerenciamento
+        cy.get('[data-testid=menu-import]').click()
+
+        // Sistema deve redirecionar para a página de Importação
+        cy.url().should('include', '/#/import')
+
+        // Verifica se Histórico de Importações esta vazio
+        cy.get('[data-testid=empty-history]')
+            .contains('Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.')
+            .should('be.visible')
+    })
+
+    it('Baixa Planilha Modelo: Sucesso', function() {
+        // verifica se o botão está visível
+        cy.get('[data-testid=download-model]')
+            .should('be.visible')
+            .click()
+    })
+
+    it('Planilha modelo Disponível: Sucesso', function() {
+        // Verifica se link está disponível
+        cy.request('localhost:8080/Planilha-Modelo-Justto.xlsx')
+    })
+
+    it('Historico de Importações: Sucesso', function() {
+        // Verifica se card de planilha importada está visivel
+        cy.get('[data-testid=imported-download]')
+            .should('be.visible')
+
+        cy.get('[data-testid=imported-download]')
+            .click()
+
+    })
+})
