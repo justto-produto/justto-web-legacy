@@ -1,8 +1,8 @@
 describe('Justto.app - Esqueci a Senha', function() {
   it('Esqueci minha Senha: Sucesso', function() {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('http://homol.justto.com.br')
+    // cy.visit('localhost:8080')
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
