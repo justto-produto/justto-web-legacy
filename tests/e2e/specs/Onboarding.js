@@ -1,11 +1,8 @@
 describe('Justto.App - Onboarding', function () {
   beforeEach(function () {
-    cy.viewport(1280, 720)
-  })
-  it('Onboarding - Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('http://homol.justto.com.br')
-    // cy.visit('localhost:8080')
+    // cy.visit('http://homol.justto.com.br')
+    cy.visit('localhost:8080')
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
@@ -29,30 +26,6 @@ describe('Justto.App - Onboarding', function () {
   })
 
   it('Onboarding: Vamos começar', function () {
-    // Acessa a página inicial do Justto.app
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
-
-    // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/login')
-
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type('dake@emailay.com')
-      .should('have.value', 'dake@emailay.com')
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Valida se primeira página acessada é a do Onboarding
-    cy.url().should('include', '/#/onboarding')
-
     // Seleciona botão 'Vamos Começar'
     cy.get('[data-testid=lets-start]')
       .click()
@@ -63,30 +36,6 @@ describe('Justto.App - Onboarding', function () {
   })
 
   it('Onboarding: Nome da Equipe', function () {
-    // Acessa a página inicial do Justto.app
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
-
-    // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/login')
-
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type('dake@emailay.com')
-      .should('have.value', 'dake@emailay.com')
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Valida se primeira página acessada é a do Onboarding
-    cy.url().should('include', '/#/onboarding')
-
     // Seleciona botão 'Vamos Começar'
     cy.get('[data-testid=lets-start]')
       .click()
@@ -108,30 +57,6 @@ describe('Justto.App - Onboarding', function () {
   })
 
   it('OnBoarding: Workspace Válido', function () {
-    // Acessa a página inicial do Justto.app
-    cy.visit('http://homol.justto.com.br')
-    // cy.visit('localhost:8080')
-
-    // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/login')
-
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type('dake@emailay.com')
-      .should('have.value', 'dake@emailay.com')
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Valida se primeira página acessada é a do Onboarding
-    cy.url().should('include', '/#/onboarding')
-
     // Seleciona botão 'Vamos Começar'
     cy.get('[data-testid=lets-start]')
       .click()
@@ -180,30 +105,6 @@ describe('Justto.App - Onboarding', function () {
   })
 
   it('OnBoarding: Workspace Inválido', function () {
-    // Acessa a página inicial do Justto.app
-    cy.visit('http://homol.justto.com.br')
-    // cy.visit('localhost:8080')
-
-    // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/login')
-
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type('dake@emailay.com')
-      .should('have.value', 'dake@emailay.com')
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Valida se primeira página acessada é a do Onboarding
-    cy.url().should('include', '/#/onboarding')
-
     // Seleciona botão 'Vamos Começar'
     cy.get('[data-testid=lets-start]')
       .click()
@@ -233,30 +134,6 @@ describe('Justto.App - Onboarding', function () {
   })
 
   it('OnBoarding: Adicione Pessoas à sua Equipe, Válido', function () {
-    // Acessa a página inicial do Justto.app
-    cy.visit('http://homol.justto.com.br')
-    // cy.visit('localhost:8080')
-
-    // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/login')
-
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type('dake@emailay.com')
-      .should('have.value', 'dake@emailay.com')
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Valida se primeira página acessada é a do Onboarding
-    cy.url().should('include', '/#/onboarding')
-
     // Seleciona botão 'Vamos Começar'
     cy.get('[data-testid=lets-start]')
       .click()
@@ -283,6 +160,7 @@ describe('Justto.App - Onboarding', function () {
         var randomNumber = Math.floor(Math.random() * allLetters.length);
         randomSubdomain += allLetters.substring(randomNumber, randomNumber + 1);
       }
+      // eslint-disable-next-line no-redeclare
       var randomSubdomain = 'teste' + randomSubdomain
       return randomSubdomain;
     }
@@ -324,30 +202,6 @@ describe('Justto.App - Onboarding', function () {
   })
 
   it('OnBoarding: Adicione Pessoas à sua Equipe, Inválido', function () {
-    // Acessa a página inicial do Justto.app
-    cy.visit('http://homol.justto.com.br')
-    // cy.visit('localhost:8080')
-
-    // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/login')
-
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type('dake@emailay.com')
-      .should('have.value', 'dake@emailay.com')
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Valida se primeira página acessada é a do Onboarding
-    cy.url().should('include', '/#/onboarding')
-
     // Seleciona botão 'Vamos Começar'
     cy.get('[data-testid=lets-start]')
       .click()
