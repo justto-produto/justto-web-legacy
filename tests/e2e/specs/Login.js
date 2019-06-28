@@ -18,7 +18,10 @@ describe('Justto.App - Login', function() {
             .should('have.value', 'password')
 
         // Clica no botão "Entrar"
-        cy.get('[data-testid=submit]').click()
+        cy.get('[data-testid=submit]')
+            .click()
+
+        cy.wait(5000)
 
         // Valida se acesso foi feito
         cy.url().should('include', '/#/management')
@@ -37,7 +40,7 @@ describe('Justto.App - Login', function() {
             .should('have.value', 'email@invalido.com')
 
         // Preenche o campo 'Senha'
-        cy.get('[data-testid=login-password')
+        cy.get('[data-testid=login-password]')
             .type('password')
             .should('have.value', 'password')
 

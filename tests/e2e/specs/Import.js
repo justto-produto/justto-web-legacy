@@ -15,8 +15,8 @@ describe('Justto.App - Planilha Modelo', function() {
 
         // Preenche o campo 'Senha'
         cy.get('[data-testid="login-password"]')
-            .type('@bundanc1A')
-            .should('have.value', '@bundanc1A')
+            .type('tOOr13@$')
+            .should('have.value', 'tOOr13@$')
 
         // Clica no botão "Entrar"
         cy.get('[data-testid="submit"]').click()
