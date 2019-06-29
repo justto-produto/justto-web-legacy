@@ -180,8 +180,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="Ações"
-          width="95px"
+          width="70px"
           class-name="view-management__row-actions"
           align="center">
           <template slot-scope="scope">
@@ -191,11 +190,6 @@
                 @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'ENGAJAMENTO')">
                 <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
               </el-button>
-            </el-tooltip>
-            <el-tooltip content="Visualizar disputa">
-              <router-link :to="{ name: 'dispute', params: { id: scope.row.disputeid } }">
-                <jus-icon icon="open-case" />
-              </router-link>
             </el-tooltip>
             <el-tooltip content="Abrir disputa em uma nova aba">
               <el-button
