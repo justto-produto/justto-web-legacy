@@ -1,6 +1,6 @@
 <template>
   <div class="jus-import-feedback-card">
-    <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ mappedName ? mappedName : 'Campanha ' + index }}</el-tag>
+    <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ campaignTitle }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
       <el-input v-model="respondent" placeholder="Dê um nome para o seu Réu">
         <i
@@ -14,19 +14,6 @@
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
       </el-input>
-      <!-- <el-autocomplete
-        v-model="campaignName"
-        :fetch-suggestions="querySearchCampaign"
-        :trigger-on-focus="false"
-        value-key="name"
-        clearable
-        placeholder="Dê um nome para a sua Campanha"
-        @select="handleSelectCampaign">
-        <i
-          slot="prefix"
-          :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon" />
-      </el-autocomplete> -->
       <el-select
         ref="strategySelect"
         v-model="strategy"
@@ -129,9 +116,7 @@ export default {
   props: {
     mappedCampaign: {
       type: Object,
-      default: function () {
-        return {}
-      }
+      default: () => {}
     },
     color: {
       type: String,
@@ -154,7 +139,6 @@ export default {
       dialogVisible: false,
       dueDate: null,
       negotiatorIds: [],
-      // filteredNegotiators: [],
       loading: false,
       datePickerOptions: {
         disabledDate (date) {
@@ -167,25 +151,19 @@ export default {
     strategies () {
       return this.$store.getters.strategyList
     },
-    // campaigns () {
-    //   return this.$store.state.campaignModule.list
-    // },
     negotiatorsList () {
       return this.$store.state.workspaceModule.members
+    },
+    campaignTitle () {
+      return this.campaignName ? this.campaignName : this.mappedCampaign.name ? this.mappedCampaign.name : 'Campanha ' + this.index
     }
   },
   watch: {
     respondent (value) {
       this.mappedCampaign.respondent = value
-      this.mappedCampaign.newName = value
-      this.campaignName = value
     },
     campaignName (value) {
-      if (value === '') {
-        this.mappedCampaign.newName = ''
-      } else {
-        this.mappedCampaign.newName = value
-      }
+      this.mappedCampaign.name = value
     },
     strategy (value) {
       this.mappedCampaign.strategy = value
@@ -204,48 +182,12 @@ export default {
     }
   },
   beforeMount () {
-    this.mappedName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
+    this.mappedCampaign.name = ''
+    this.mappedCampaign.respondent = this.mappedCampaign.name
+    this.respondent = this.mappedCampaign.name
     this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
-  },
-  methods: {
-    // querySearchCampaign (queryString, callback) {
-    //   var campaigns = this.campaigns
-    //   var results = queryString ? campaigns.filter(this.createCampaignFilter(queryString)) : campaigns
-    //   clearTimeout(this.campaignTimeout)
-    //   this.campaignTimeout = setTimeout(() => {
-    //     callback(results)
-    //   }, 1000 * Math.random())
-    // },
-    // createCampaignFilter (queryString) {
-    //   return (campaigns) => {
-    //     return (campaigns.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-    //   }
-    // },
-    // handleSelectCampaign (item) {
-    //   this.mappedCampaign.campaign = {
-    //     name: item.name,
-    //     cluster: item.cluster,
-    //     deadline: item.deadline,
-    //     protocolDeadLine: item.protocolDeadline,
-    //     paymentDeadLine: item.paymentDeadline
-    //   }
-    // },
-    // searchNegotiators (query) {
-    //   if (query !== '') {
-    //     this.loading = true
-    //     setTimeout(() => {
-    //       this.loading = false
-    //       this.filteredNegotiators = this.negotiatorsList.filter(item => {
-    //         return item.name.toLowerCase()
-    //           .indexOf(query.toLowerCase()) > -1
-    //       })
-    //     }, 1000 * Math.random())
-    //   } else {
-    //     this.filteredNegotiators = []
-    //   }
-    // }
   }
 }
 </script>

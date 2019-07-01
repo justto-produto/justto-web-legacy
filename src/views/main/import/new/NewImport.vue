@@ -91,13 +91,11 @@ export default {
       var promises = []
       for (let campaign of this.mappedCampaigns) {
         if (this.checkValidCampaign(campaign)) {
-          campaign.name = campaign.newName
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
           campaign.strategyId = campaign.strategy.id
           campaignsTrack.push({
             name: campaign.name,
-            newName: campaign.newName,
             strategy: campaign.strategy.name
           })
           delete campaign.campaign
@@ -107,7 +105,6 @@ export default {
           delete campaign.id
           delete campaign.updatedAt
           delete campaign.updatedBy
-          delete campaign.newName
           delete campaign.strategy
           campaign.importId = this.$store.state.importModule.file.id
           promises.push(this.$store.dispatch('createCampaign', campaign))
@@ -132,22 +129,29 @@ export default {
       } else {
         this.$jusNotification({
           title: 'Ops!',
-          message: 'Para prosseguir você deve configurar todas as campanhas',
+          message: 'Para prosseguir você deve configurar todos os campos.',
           type: 'warning'
         })
       }
     },
     checkValidCampaign (campaign) {
       if (
-        campaign.hasOwnProperty('newName') &&
         campaign.hasOwnProperty('respondent') &&
+        !!campaign.respondent &&
+        campaign.hasOwnProperty('name') &&
+        !!campaign.name &&
         campaign.hasOwnProperty('cluster') &&
+        !!campaign.cluster &&
         campaign.hasOwnProperty('deadline') &&
+        !!campaign.deadline &&
         campaign.hasOwnProperty('protocolDeadLine') &&
+        !!campaign.protocolDeadLine &&
         campaign.hasOwnProperty('paymentDeadLine') &&
-        // campaign.hasOwnProperty('negotiatorIds') &&
+        !!campaign.paymentDeadLine &&
+        campaign.hasOwnProperty('negotiatorIds') &&
+        !!campaign.negotiatorIds &&
         campaign.hasOwnProperty('strategy') &&
-        campaign.strategy !== ''
+        !!campaign.strategy
       ) {
         return true
       } else return false

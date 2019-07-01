@@ -30,13 +30,10 @@
 }
 
 .el-tag--drag {
-  cursor: move;
   color: $--color-text-primary !important;
   border-radius: 20px !important;
   background-color: #f7f7f7 !important;
   border: solid 1px #eeeeee !important;
-  margin-right: 10px;
-  margin-bottom: 5px;
   max-width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -48,8 +45,12 @@
   cursor: pointer;
 }
 
-span[draggable="true"] {
+.el-tag--drag-container {
+  opacity: 0.99;
   cursor: move;
+  display: inline-flex;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .el-tag--drag-active {
