@@ -27,6 +27,7 @@
           v-else
           :disabled="$store.state.loading"
           type="primary"
+          data-testid="submit"
           @click="nextStep">
           Próximo
         </el-button>

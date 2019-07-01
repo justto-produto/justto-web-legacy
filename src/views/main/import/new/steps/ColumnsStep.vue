@@ -2,7 +2,7 @@
   <div class="columns-step">
     <h2 class="new-import-view__title">Mapeamento de colunas</h2>
     <el-row :gutter="60">
-      <el-col :span="12">
+      <el-col :span="12" data-testid="import-columns">
         <h3>Colunas do arquivo</h3>
         <p>
           Estas são as colunas do seu arquivo. Os dados em roxo, acima do campo, são os dados da primeira linha de cada
@@ -40,7 +40,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="12" data-testid="import-tags">
         <h3>Campos do Sistema</h3>
         <p>
           Estes são os campos do sistema. Para mapeá-los, você deve arrastar os campos abaixo para a coluna

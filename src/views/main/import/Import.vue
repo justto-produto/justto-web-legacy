@@ -24,7 +24,7 @@
               :disabled="hasFile"
               :headers="uploadHeaders"
               accept=".csv,.xlsx,.xls"
-              action="/api/imports/upload">
+              action="http://homol.justto.com.br/api/imports/upload">
               <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon" data-idtest="upload_sheet"/>
               <div v-if="!hasFile && !processingFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
             </el-upload>
@@ -39,7 +39,7 @@
         </div>
         <div v-if="hasFile" class="import-view__actions">
           <el-button plain @click="removeFile">Voltar</el-button>
-          <el-button type="primary" @click="startImport">Próximo</el-button>
+          <el-button type="primary" data-testid="submit" @click="startImport">Próximo</el-button>
         </div>
       </div>
     </template>

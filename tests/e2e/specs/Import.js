@@ -50,24 +50,31 @@ describe('Justto.App - Planilha Modelo', function() {
         cy.request('localhost:8080/Planilha-Modelo-Justto.xlsx')
     })
 
+    // IMPORTA PLANILHA ===========================================
     it('Importa planilha modelo: Sucesso', function() {
-        const fileName = 'Planilha-Modelo-Justto.xlsx'
-        // const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        // const fileInput = 'input[type=file]'
 
-        cy.fixture(fileName).then(fileContent => {
-          cy.get('input[type=file]').upload(
-            { fileContent, fileName, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
-            { subjectType: 'input' }
-          )
-        })
+        cy.wait(10000)
+        cy.get('[data-testid=submit]').click()
+        cy.url().should('include', '/new')
+        cy.get('[data-testid=import-checklines]').should('be.visible')
+        cy.get('[data-testid=submit]').click()
+        cy.get('[data-testid=import-columns]').should('be.visible')
+        cy.get('[data-testid=import-tags]').should('be.visible')
+        // TESTAR DRAG AND DROP
+        cy.get('[data-testid=submit]').click()
+        cy.get('[data-testid=import-feedback]').should('be.visible')
+        cy.get('[data-testid=feedback-respondent]')
+            .type('Campanha Teste')
+            .should('have.value', 'Campanha Teste')
+        cy.get('[data-testid=feedback-campaignName]')
+            .should('have.value', 'Campanha Teste')
+            .type('Teste Campanha')
+            .should('have.value', 'Teste Campanha')
+
+
+
     })
-    // it('Historico de Importações: Sucesso', function() {
-    //     // Verifica se card de planilha importada está visivel
-    //     cy.get('[data-testid=imported-download]')
-    //         .should('be.visible')
-    //
-    //     cy.get('[data-testid=imported-download]')
-    //         .click()
-    // })
+
+
+
 })
