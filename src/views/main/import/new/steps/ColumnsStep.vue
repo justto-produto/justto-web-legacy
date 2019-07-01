@@ -26,7 +26,7 @@
             @close="removeTag(column)">
             <span v-if="column.tag">
               <span v-if="column.index !== undefined && column.index !== null">
-                {{ $t('fields.' + getColumnTitle(column.tag.id)) }} {{ column.index + 1}} -
+                {{ $t('fields.' + getColumnTitle(column.tag.id)) }} {{ column.index + 1 }} -
               </span>
               {{ $t(column.tag.key) | capitalize }}
             </span>
@@ -242,7 +242,6 @@ export default {
           let tagKey = tag.id
           if (elKey === tagKey && elIndex === index) {
             isAvailable = false
-
           }
         }
       })
