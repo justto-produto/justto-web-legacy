@@ -48,12 +48,11 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('showLoading')
-    Promise.all([
-      this.$store.dispatch('getCampaigns'),
-      this.$store.dispatch('getStrategies')
-    ]).then(() => {
-      this.$store.dispatch('hideLoading')
-    })
+    if (!this.$store.getters.strategyList.length) {
+      this.$store.dispatch('getStrategies').finally(() => {
+        this.$store.dispatch('hideLoading')
+      })
+    }
   }
 }
 </script>

@@ -274,14 +274,6 @@ export default {
       }
     }
   },
-  beforeMount () {
-    if (!this.$store.getters.campaignList.length) {
-      this.$store.dispatch('getCampaigns')
-    }
-    if (!this.$store.getters.strategyList) {
-      this.$store.dispatch('getStrategies')
-    }
-  },
   mounted () {
     this.$refs.disputeTable.sort('disputeexpirationdate', 'descending')
     setTimeout(function () {
