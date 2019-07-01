@@ -242,7 +242,6 @@ export default {
           let tagKey = tag.id
           if (elKey === tagKey && elIndex === index) {
             isAvailable = false
-
           }
         }
       })
