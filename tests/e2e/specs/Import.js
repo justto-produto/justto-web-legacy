@@ -1,5 +1,4 @@
 describe('Justto.App - Planilha Modelo', function() {
-
     it('Login: Sucesso', function() {
         // Acessa a página inicial do Justto.App
         // cy.visit('http://homol.justto.com.br')
@@ -25,6 +24,7 @@ describe('Justto.App - Planilha Modelo', function() {
         cy.url().should('include', '/#/management')
     })
 
+<<<<<<< HEAD
     it('Historico de Importações: Vazio', function() {
         // Acessa a tela de gerenciamento
         cy.get('[data-testid=menu-import]').click()
@@ -50,6 +50,8 @@ describe('Justto.App - Planilha Modelo', function() {
     //     cy.request('localhost:8080/Planilha-Modelo-Justto.xlsx')
     // })
 
+=======
+>>>>>>> 68a5632cfefa5d248354a1508e3d7c2a58b2de17
     // IMPORTA PLANILHA ===========================================
     it('Importa planilha modelo: Sucesso', function() {
 
