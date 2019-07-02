@@ -138,7 +138,7 @@
         </el-dialog>
         <dispute-messages
           :messages-prop="filteredDisputeMessages"
-          :loading="loadingDisputeMessages"
+          :loading.sync="loadingDisputeMessages"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
           @dispute:refresh="fetchData({ fetchMessages: true })" />
@@ -408,6 +408,7 @@ export default {
         })
       }
       if (options.fetchMessages) {
+        this.loadingDisputeMessages = true
         this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
           if (!this.disputeMessages.length) {
             this.disputeMessages = responses
@@ -421,7 +422,11 @@ export default {
             this.disputeMessages.push(...newMessages)
             this.filteredDisputeMessages.push(...newMessages)
           }
-        }).catch(() => this.$jusNotification({ type: 'error' }))
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingDisputeMessages = false
+        })
       }
     },
     handleTabClick (tab) {
