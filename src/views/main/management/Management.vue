@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain class="view-management">
+  <JusViewMain class="view-management" :loading-main="loadingDisputes">
     <template slot="title">
       <h1>Gerenciamento</h1>
       <management-carousel />
@@ -47,7 +47,7 @@
         <el-tab-pane name="3" label="Todos" />
       </el-tabs>
       <el-table
-        v-loading="loadingDisputes"
+
         ref="disputeTable"
         :key="tableKey"
         :data="disputes"
