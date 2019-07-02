@@ -1,4 +1,4 @@
-<template>
+t pu<template>
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ mappedName ? mappedName : 'Campanha ' + index }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
@@ -34,7 +34,8 @@
         value-key="name"
         clearable
         class="select-strategy"
-        placeholder="Escolha uma estratégia">
+        placeholder="Escolha uma estratégia"
+        data-testid="feedback-strategy">
         <i
           slot="prefix"
           :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"

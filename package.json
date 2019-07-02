@@ -56,12 +56,9 @@
     "axios": "^0.18.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
-<<<<<<< HEAD
     "cypress-file-upload": "^3.2.0",
-=======
     "cypress-drag-drop": "^1.1.1",
     "cypress-file-upload": "^3.1.4",
->>>>>>> 121b7906544bed981d6633d9a29e01419a032eb5
     "eslint-plugin-cypress": "^2.2.1",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.0.3",

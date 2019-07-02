@@ -38,43 +38,62 @@ describe('Justto.App - Planilha Modelo', function() {
             .should('be.visible')
     })
 
-    it('Baixa Planilha Modelo: Sucesso', function() {
-        // verifica se o botão está visível
-        cy.get('[data-testid=download-model]')
-            .should('be.visible')
-            .click()
-    })
-
-    it('Planilha modelo Disponível: Sucesso', function() {
-        // Verifica se link está disponível
-        cy.request('localhost:8080/Planilha-Modelo-Justto.xlsx')
-    })
+    // it('Baixa Planilha Modelo: Sucesso', function() {
+    //     // verifica se o botão está visível
+    //     cy.get('[data-testid=download-model]')
+    //         .should('be.visible')
+    //         .click()
+    // })
+    //
+    // it('Planilha modelo Disponível: Sucesso', function() {
+    //     // Verifica se link está disponível
+    //     cy.request('localhost:8080/Planilha-Modelo-Justto.xlsx')
+    // })
 
     // IMPORTA PLANILHA ===========================================
     it('Importa planilha modelo: Sucesso', function() {
 
+        // Importa arquivo
         cy.wait(10000)
+
+        // Acavça para proximo passo
         cy.get('[data-testid=submit]').click()
+
+        // Sstema deve redirecionar para a página de Nova Importação
         cy.url().should('include', '/new')
-        cy.get('[data-testid=import-checklines]').should('be.visible')
+        // Verifica se aparecem os números de linha da planilha importada
+        cy.get('[data-testid=import-checklines]')
+            .should('be.visible')
+        // Avança para proximo passo
         cy.get('[data-testid=submit]').click()
+        // Verifica se as colunas foram recebidas e estão visiveis
         cy.get('[data-testid=import-columns]').should('be.visible')
+        // Verifica se as tags foram recebidas e estão visiveis
         cy.get('[data-testid=import-tags]').should('be.visible')
-        // TESTAR DRAG AND DROP
+        // Apaga tag mapeada
+        cy.get('.columns-step .el-tag__close').click()
+        //Arrasta tags para colunas
+        // cy.get('.el-tag--drag:nth-child(1)').drag('.file-column:nth-child(1) .el-tag--dropzone')
+
+        // Avança apara proximo passo
         cy.get('[data-testid=submit]').click()
+        // Verifica se configurações da campanha estão visiveis
         cy.get('[data-testid=import-feedback]').should('be.visible')
+        // Preenche campo 'Nome do Reu'
         cy.get('[data-testid=feedback-respondent]')
             .type('Campanha Teste')
             .should('have.value', 'Campanha Teste')
+        ,// Preenche o campo 'Nome da Campanna'
         cy.get('[data-testid=feedback-campaignName]')
             .should('have.value', 'Campanha Teste')
-            .type('Teste Campanha')
+            .clear().type('Teste Campanha')
             .should('have.value', 'Teste Campanha')
+
+        cy.get('[data-testid=feedback-strategy]').click()
+        cy.get('.el-select-dropdown__item:first-child').click()
+
 
 
 
     })
-
-
-
 })

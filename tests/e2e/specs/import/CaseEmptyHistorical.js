@@ -1,6 +1,6 @@
 describe('Justto.App - Planilha Modelo', function () {
   beforeEach(function () {
-    it('Login', function () {
+    it('Login: Sucesso', function () {
       // Acessa a página inicial do Justto.App
       // cy.visit('http://homol.justto.com.br')
       cy.visit('localhost:8080')
@@ -13,12 +13,12 @@ describe('Justto.App - Planilha Modelo', function () {
         .type('guilherme@justto.com.br')
         .should('have.value', 'guilherme@justto.com.br')
 
-      // Preenche o campo 'Senha'
+        // Preenche o campo 'Senha'
       cy.get('[data-testid="login-password"]')
         .type('tOOr13@$')
         .should('have.value', 'tOOr13@$')
 
-      // Clica no botão "Entrar"
+        // Clica no botão "Entrar"
       cy.get('[data-testid="submit"]').click()
 
       // Valida se acesso foi feito - Primeira tela de login
@@ -26,19 +26,29 @@ describe('Justto.App - Planilha Modelo', function () {
     })
   })
 
-  it('Planilha modelo Disponível: Sucesso', function () {
-    // Verifica se link está disponível
-    cy.request('localhost:8080/Planilha-Modelo-Justto.xlsx')
-  })
-
-  it('Baixa Planilha Modelo: Sucesso', function () {
+  it('Historico de Importações: Vazio', function () {
     // Acessa a tela de gerenciamento
     cy.get('[data-testid=menu-import]').click()
+
     // Sistema deve redirecionar para a página de Importação
     cy.url().should('include', '/#/import')
-    // verifica se o botão está visível
-    cy.get('[data-testid=download-model]')
+
+    // Verifica se Histórico de Importações esta vazio
+    cy.get('[data-testid=empty-history]')
+      .contains('Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.')
       .should('be.visible')
-      .click()
+  })
+
+  it('Histórico de Importações: Com casos', function () {
+    // Acessa a tela de gerenciamento
+    cy.get('[data-testid=menu-import]').click()
+
+    // Sistema deve redirecionar para a página de Importação
+    cy.url().should('include', '/#/import')
+
+    // Verifica se Histórico de Importações esta vazio
+    cy.get('[data-testid=empty-history]')
+      .contains('Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.')
+      .should('be.visible')
   })
 })
