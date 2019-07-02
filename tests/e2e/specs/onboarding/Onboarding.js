@@ -209,7 +209,7 @@ describe('Justto.App - Onboarding', function () {
     // Verifica próximo passo é 'Qual o nome da sua equipe?'
     cy.contains('Qual o nome da sua equipe?').should('be.visible')
 
-    // Preenche o campo 'Equipe'
+    // // Preenche o campo 'Equipe'
     cy.get('[data-testid=name-teamname]')
       .type('Workspace de Teste')
       .should('have.value', 'Workspace de Teste')
@@ -221,24 +221,24 @@ describe('Justto.App - Onboarding', function () {
     // Verifica próximo passo é 'Crie o seu espaço de trabalho na Justto'
     cy.contains('Crie o seu espaço de trabalho na Justto').should('be.visible')
 
-    function randomSubdomain (range) {
-      var allLetters = '0123456789abcdefghiklmnopqrstuvwxyz'
-      var randomSubdomain = ''
-      for (var i = 0; i < range; i++) {
-        var randomNumber = Math.floor(Math.random() * allLetters.length)
-        randomSubdomain += allLetters.substring(randomNumber, randomNumber + 1)
-      }
-      var randomSubdomain = 'teste' + randomSubdomain
-      return randomSubdomain
-    }
+    // function randomSubdomain (range) {
+    //   var allLetters = '0123456789abcdefghiklmnopqrstuvwxyz'
+    //   var randomSubdomain = ''
+    //   for (var i = 0; i < range; i++) {
+    //     var randomNumber = Math.floor(Math.random() * allLetters.length)
+    //     randomSubdomain += allLetters.substring(randomNumber, randomNumber + 1)
+    //   }
+    //   var randomSubdomain = 'teste' + randomSubdomain
+    //   return randomSubdomain
+    // }
 
-    // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
+    // // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
     var subdomain = randomSubdomain(5)
     cy.get('[data-testid=name-subdomain]')
       .type(subdomain)
       .should(subdomain)
 
-    // Verifica se subdomínio digitado está disponível
+    // // Verifica se subdomínio digitado está disponível
     cy.contains('Subdomínio disponível.').should('be.visible')
 
     // Seleciona Próximo
@@ -252,6 +252,12 @@ describe('Justto.App - Onboarding', function () {
     cy.get('[data-testid=email-teammember]')
       .type('testeemailcom')
     // .should('teste@email.com')
+
+    if (window.Cypress) {
+      $(window).scroll(() => {
+        $(window).scrollTop(0);
+      });
+    }
 
     // Seleciona botão '+'
     cy.get('[data-testid=submit-teammember]')
