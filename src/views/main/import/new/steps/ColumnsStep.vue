@@ -13,13 +13,16 @@
           v-show="!$store.state.loading"
           :key="`${column.id}-${column.name}`"
           class="file-column"
-          @drop="dropTag($event, column)" @dragover.prevent>
+          @drop="dropTag($event, column)"
+          @dragover.prevent>
           <div class="file-column__name">
             <span class="file-column__title">{{ column.name }}</span>
             <span class="file-column__example">{{ column.example }}</span>
           </div>
           <el-tag
-            :closable="column.tag !== null" :class="{'el-tag--dropzone-active': column.tag}" class="el-tag--dropzone"
+            :closable="column.tag !== null"
+            :class="{'el-tag--dropzone-active': column.tag}"
+            class="el-tag--dropzone"
             @close="removeTag(column)">
             <span v-if="column.tag">{{ $t(column.tag.key) | capitalize }}</span>
             <span v-else>Arraste a coluna aqui</span>
