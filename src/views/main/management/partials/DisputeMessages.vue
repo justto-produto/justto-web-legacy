@@ -1,5 +1,5 @@
 <template>
-  <ul v-loading="messages === null" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
+  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="message in messages"
       v-if="isntCanceled(message)"
@@ -70,7 +70,7 @@ export default {
     },
     loading: {
       type: Boolean,
-      default: true
+      default: false
     },
     showScheduled: {
       type: Boolean,
@@ -91,17 +91,13 @@ export default {
   },
   computed: {
     messages () {
-      if (this.messagesProp.length) {
-        return this.messagesProp.filter(message => {
-          if (this.currentTab === '3') {
-            return message.type === 'NOTE'
-          } else {
-            return true
-          }
-        })
-      } else {
-        return null
-      }
+      return this.messagesProp.filter(message => {
+        if (this.currentTab === '3') {
+          return message.type === 'NOTE'
+        } else {
+          return true
+        }
+      })
       // TRECHO DE CÓDIGO PRONTO ESPERANDO CHAT FUNCIONAR
       // switch (this.currentTab) {
       //   case '1':

@@ -76,7 +76,7 @@ export default {
               this.showLoading = false
             })
             .catch(() => {
-              this.showSuccess = true
+              this.$jusNotification({ type: 'error' })
               this.forgotForm.email = ''
               this.showLoading = false
             })
