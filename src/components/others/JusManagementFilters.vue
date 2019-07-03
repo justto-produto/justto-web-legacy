@@ -9,6 +9,7 @@
               v-model="filters.campaignid"
               placeholder="Selecione uma opção"
               clearable
+              data-testid="filter-campaign"
               @clear="clearCampaign">
               <el-option
                 v-for="campaign in campaigns"
