@@ -74,7 +74,11 @@
               <jus-icon icon="spreadsheet-xlsx"/>
             </div>
             <div class="import-view__card-content">
-              <h4><a href="#" @click="downloadItem(imports.file_name)">{{ imports.file_name }}</a></h4>
+              <h4>
+                <a href="#" @click="downloadItem(imports.file_name)">
+                  {{ imports.file_name }}
+                </a>
+              </h4>
               <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
               <p>Linhas: {{ imports.rows }}</p>
             </div>

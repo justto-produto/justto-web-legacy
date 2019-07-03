@@ -65,7 +65,7 @@ t pu<template>
           </span>
         </div>
       </div>
-      <div v-if="strategy.id === 1 || strategy.id === 4" class="jus-import-feedback-card__number">
+      <div v-if="strategy.id === 1 || strategy.id === 4" class="jus-import-feedback-card__number" data-testid="feedback-paymendate">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
         </div>
@@ -87,7 +87,8 @@ t pu<template>
         :picker-options="datePickerOptions"
         type="date"
         format="dd-MM-yyyy"
-        placeholder="Defina a data limite para a negociação" />
+        placeholder="Defina a data limite para a negociação"
+        data-testid="feedback-datapicker" />
       <el-select
         v-model="negotiatorIds"
         :loading="loading"
@@ -95,7 +96,8 @@ t pu<template>
         size="large"
         multiple
         placeholder="Escolha os negociadores"
-        class="select-negotiator">
+        class="select-negotiator"
+        data-testid="feedback-negotiators">
         <i
           slot="prefix"
           :class="negotiatorIds.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
