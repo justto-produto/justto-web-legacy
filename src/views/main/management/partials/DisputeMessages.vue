@@ -92,29 +92,23 @@ export default {
   computed: {
     messages () {
       return this.messagesProp.filter(message => {
-        if (this.currentTab === '3') {
-          return message.type === 'NOTE'
-        } else {
-          return true
+        switch (this.currentTab) {
+          case '1':
+            if (message.type !== 'NOTE') {
+              if (message.message && message.message.type === 'CHAT') {
+                return false
+              } else {
+                return true
+              }
+            } else {
+              return false
+            }
+          case '2':
+            return message.message && message.message.type === 'CHAT'
+          case '3':
+            return message.type === 'NOTE'
         }
       })
-      // TRECHO DE CÓDIGO PRONTO ESPERANDO CHAT FUNCIONAR
-      // switch (this.currentTab) {
-      //   case '1':
-      //     if (message.type !== 'NOTE') {
-      //       if (message.message && message.message.type === 'CHAT') {
-      //         return false
-      //       } else {
-      //         return true
-      //       }
-      //     } else {
-      //       return false
-      //     }
-      //   case '2':
-      //     return message.message && message.message.type === 'CHAT'
-      //   case '3':
-      //     return message.type === 'NOTE'
-      // }
     }
   },
   watch: {
