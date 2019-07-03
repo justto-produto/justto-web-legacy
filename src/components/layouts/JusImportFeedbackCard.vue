@@ -185,7 +185,6 @@ export default {
   beforeMount () {
     this.initialCampaignName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
-    this.campaignName = this.mappedCampaign.name
     this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
   }
