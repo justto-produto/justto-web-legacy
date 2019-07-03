@@ -45,7 +45,6 @@
           <span>{{ dispute.description }}</span>
         </div>
         <div class="dispute-overview-view__actions">
-          <el-button plain @click="removeDispute()">Excluir</el-button>
           <el-button type="primary" @click="openDisputeDialog()">Editar</el-button>
         </div>
       </el-collapse-item>
