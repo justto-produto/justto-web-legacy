@@ -24,7 +24,7 @@
           :plain="!Object.keys(filters.terms).length"
           :type="Object.keys(filters.terms).length ? 'primary' : ''"
           @click="showFilters = true">
-          <jus-icon :is-white="!!Object.keys(filters.terms).length" icon="filter" />
+          <jus-icon :is-white="!!Object.keys(filters.terms).length" icon="filter" data-testid="management-filterbtn" />
           Filtrar
         </el-button>
         <el-button

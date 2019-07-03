@@ -37,6 +37,7 @@
       :plain="showGif < 5"
       :loading="showGif < 5"
       type="primary"
+      data-testid="submit"
       @click="$router.push('/management')">
       Continuar
     </el-button>

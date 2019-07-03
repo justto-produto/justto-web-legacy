@@ -24,36 +24,13 @@ describe('Justto.App - Planilha Modelo', function() {
         cy.url().should('include', '/#/management')
     })
 
-<<<<<<< HEAD
-    it('Historico de Importações: Vazio', function() {
-        // Acessa a tela de gerenciamento
-        cy.get('[data-testid=menu-import]').click()
-
-        // Sistema deve redirecionar para a página de Importação
-        cy.url().should('include', '/#/import')
-
-        // Verifica se Histórico de Importações esta vazio
-        cy.get('[data-testid=empty-history]')
-            .contains('Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.')
-            .should('be.visible')
-    })
-
-    // it('Baixa Planilha Modelo: Sucesso', function() {
-    //     // verifica se o botão está visível
-    //     cy.get('[data-testid=download-model]')
-    //         .should('be.visible')
-    //         .click()
-    // })
-    //
-    // it('Planilha modelo Disponível: Sucesso', function() {
-    //     // Verifica se link está disponível
-    //     cy.request('localhost:8080/Planilha-Modelo-Justto.xlsx')
-    // })
-
-=======
->>>>>>> 68a5632cfefa5d248354a1508e3d7c2a58b2de17
     // IMPORTA PLANILHA ===========================================
     it('Importa planilha modelo: Sucesso', function() {
+
+        // Acessa a tela de gerenciamento
+        cy.get('[data-testid=menu-import]').click()
+        // Sistema deve redirecionar para a página de Importação
+        cy.url().should('include', '/#/import')
 
         // Importa arquivo
         cy.wait(10000)
@@ -63,39 +40,72 @@ describe('Justto.App - Planilha Modelo', function() {
 
         // Sstema deve redirecionar para a página de Nova Importação
         cy.url().should('include', '/new')
+
         // Verifica se aparecem os números de linha da planilha importada
         cy.get('[data-testid=import-checklines]')
             .should('be.visible')
+
         // Avança para proximo passo
         cy.get('[data-testid=submit]').click()
+
         // Verifica se as colunas foram recebidas e estão visiveis
         cy.get('[data-testid=import-columns]').should('be.visible')
+
         // Verifica se as tags foram recebidas e estão visiveis
         cy.get('[data-testid=import-tags]').should('be.visible')
+
         // Apaga tag mapeada
         cy.get('.columns-step .el-tag__close').click()
+
         //Arrasta tags para colunas
         // cy.get('.el-tag--drag:nth-child(1)').drag('.file-column:nth-child(1) .el-tag--dropzone')
 
         // Avança apara proximo passo
         cy.get('[data-testid=submit]').click()
+
         // Verifica se configurações da campanha estão visiveis
         cy.get('[data-testid=import-feedback]').should('be.visible')
+
         // Preenche campo 'Nome do Reu'
         cy.get('[data-testid=feedback-respondent]')
             .type('Campanha Teste')
             .should('have.value', 'Campanha Teste')
-        ,// Preenche o campo 'Nome da Campanna'
+
+        // Preenche o campo 'Nome da Campanna'
         cy.get('[data-testid=feedback-campaignName]')
             .should('have.value', 'Campanha Teste')
             .clear().type('Teste Campanha')
             .should('have.value', 'Teste Campanha')
 
-        cy.get('[data-testid=feedback-strategy]').click()
-        cy.get('.el-select-dropdown__item:first-child').click()
+        // Seleciona  uma estratégia
+        cy.get('[data-testid=feedback-strategy]')
+            .click()
+            .trigger('keydown', {keyCode: 40, Which: 40}) // Pressiona seta para baixo
+            .trigger('keydown', {keyCode: 13, Which: 13}) // Pressiona Enter
 
+        // Campo com cata de pagamento dee estar visivel
+        cy.get('[data-testid=feedback-paymendate]').should('be.visible')
 
+        // Seleciona uma data limite
+        cy.get('[data-testid=feedback-datapicker]')
+            .click()
+            .trigger('keydown', {keyCode: 40, Which: 40}) // Pressiona seta para baixo (3x)
+            .trigger('keydown', {keyCode: 40, Which: 40})
+            .trigger('keydown', {keyCode: 40, Which: 40})
+            .trigger('keydown', {keyCode: 13, Which: 13}) // Pressiona Enter
 
+        // Seleciona um negociador
+        cy.get('[data-testid=feedback-negotiators]')
+            .click()
+            .trigger('keydown', {keyCode: 40, Which: 40}) // Pressiona seta para baixo (3x)
+            .trigger('keydown', {keyCode: 13, Which: 13}) // Pressiona Enter
+            .click()
 
+        // Avança para proximo passo
+        cy.get('[data-testid=start-negotiation]').click()
+
+        // Aguarda tempo do loading e clica e Continuar
+        cy.wait(10000)
+        cy.get('[data-testid=submit]').click()
     })
 })

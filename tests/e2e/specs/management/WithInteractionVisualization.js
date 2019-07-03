@@ -1,5 +1,5 @@
-describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
-  it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
+describe('Justto.App - Com Interação: Visualização Com Interação', function () {
+  it('Gerenciamento: Com Interação - Exibição dos Casos - Vazio', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
@@ -24,15 +24,15 @@ describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
 
-    // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible').click()
+    // Seleciona a aba "Com Interação"
+    cy.contains('Com Interação').should('be.visible').click()
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')
       .should('be.visible')
   })
 
-  it('Gerenciamento: Engajamento - Exibição de Casos - Com casos', function () {
+  it('Gerenciamento: Com Interação - Exibição de Casos - Com casos', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
@@ -45,7 +45,7 @@ describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
       .type('zozuyakip@royalhost.info')
       .should('have.value', 'zozuyakip@royalhost.info')
 
-    // Preenche o campo 'Senha'
+      // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
       .type('password')
       .should('have.value', 'password')
@@ -57,11 +57,14 @@ describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
 
-    // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible')
+    // Seleciona a aba "Com Interação"
+    cy.contains('Com Interação').should('be.visible')
       .click()
 
     // Verifica se existem casos exibidos
     cy.get('[class=el-table__body]').should('be.visible')
+
+    cy.wait(5000)
   })
 })
+
