@@ -32,17 +32,16 @@ export default {
   props: {
     mappedCampaigns: {
       type: Array,
-      default: function () {
-        return []
-      }
+      default: () => []
     }
   },
   data () {
     return {
       colors: [
-        '#ff7a72',
-        '#72cbff',
-        '#88ff59'
+        '#ff7a72', '#72cbff', '#88ff59', '#ff7a72',
+        '#72cbff', '#88ff59', '#ff7a72', '#72cbff',
+        '#88ff59', '#ff7a72', '#72cbff', '#88ff59',
+        '#ff7a72', '#72cbff', '#88ff59', '#ff7a72'
       ]
     }
   },

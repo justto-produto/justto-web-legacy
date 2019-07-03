@@ -187,6 +187,12 @@ export default {
     this.mappedCampaign.campaign = {}
     this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
+    if (this.mappedCampaign.respondent) {
+      this.respondent = this.mappedCampaign.respondent
+    }
+    if (this.mappedCampaign.dueDate) {
+      this.dueDate = this.mappedCampaign.dueDate
+    }
   }
 }
 </script>
