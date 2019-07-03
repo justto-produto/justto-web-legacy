@@ -131,6 +131,7 @@ export default {
           message: 'Arquivo em formato inválido.',
           type: 'warning'
         })
+        return false
       }
       if (!isLt20M) {
         this.processingFile = false
@@ -139,6 +140,7 @@ export default {
           message: 'Arquivo não pode ultrapassar 20MB.',
           type: 'warning'
         })
+        return false
       }
       return isValid && isLt20M
     },
