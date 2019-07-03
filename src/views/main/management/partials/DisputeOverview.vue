@@ -177,7 +177,7 @@
       :visible.sync="editRoleDialogVisible"
       width="40%">
       <span slot="title" class="el-dialog__title">
-        Alterar dados de {{ this.roleForm.title }}
+        Alterar dados de {{ roleForm.title }}
       </span>
       <el-form
         ref="roleForm"
