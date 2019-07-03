@@ -17,9 +17,9 @@
       <slot name="actions"/>
       <!-- MAIN CARD SLOT -->
       <el-card
-      v-loading="loadingMain"
-      :class="{'jus-main-view__loading-main': loadingMain}"
-      class="jus-main-view__main-card">
+        v-loading="loadingMain"
+        :class="{'jus-main-view__loading-main': loadingMain}"
+        class="jus-main-view__main-card">
         <slot name="main"/>
       </el-card>
       <!-- RIGHT CARD SLOT -->

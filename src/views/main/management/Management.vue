@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain class="view-management" :loading-main="loadingDisputes">
+  <JusViewMain :loading-main="loadingDisputes" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
       <management-carousel />

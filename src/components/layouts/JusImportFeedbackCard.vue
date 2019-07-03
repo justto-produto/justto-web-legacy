@@ -129,6 +129,7 @@ export default {
   },
   data () {
     return {
+      initialCampaignName: '',
       mappedName: '',
       respondent: '',
       protocolDeadLine: 1,
@@ -155,7 +156,7 @@ export default {
       return this.$store.state.workspaceModule.members
     },
     campaignTitle () {
-      return this.campaignName ? this.campaignName : this.mappedCampaign.name ? this.mappedCampaign.name : 'Campanha ' + this.index
+      return this.campaignName ? this.campaignName : this.initialCampaignName ? this.initialCampaignName : 'Campanha ' + this.index
     }
   },
   watch: {
@@ -182,10 +183,9 @@ export default {
     }
   },
   beforeMount () {
+    this.initialCampaignName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
-    this.mappedCampaign.name = ''
-    this.mappedCampaign.respondent = this.mappedCampaign.name
-    this.respondent = this.mappedCampaign.name
+    this.campaignName = this.mappedCampaign.name
     this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
   }
