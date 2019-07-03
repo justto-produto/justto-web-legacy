@@ -81,7 +81,10 @@ export default {
       }
     })
     this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
-    this.$socket.emit('subscribe', '/workspaces/' + this.$store.state.workspaceModule.id)
+    this.$socket.emit('subscribe', '/workspacess/' + this.$store.state.workspaceModule.id)
+  },
+  sockets: {
+    connect: function () {}
   }
 }
 </script>
