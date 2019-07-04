@@ -1,6 +1,6 @@
-describe('Justto.App - Gerenciamento: Engajamento', function() {
-  it('Gerenciamento: Engajamento - Exibição do Resumo da Disputa, Chat e Dados', function() {
-
+describe('Justto.App - Disputa: Visualização', function () {
+  beforeEach('Login', function () {
+    // Acessa a página inicial do Justto.App
     cy.visit('http://homol.justto.com.br')
     // cy.visit('localhost:8080')
 
@@ -23,7 +23,8 @@ describe('Justto.App - Gerenciamento: Engajamento', function() {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
-
+  })
+  it('Disputa: Resumo do Caso', function () {
     // Seleciona a aba "Todos"
     cy.contains('Todos').should('be.visible')
       .click()
@@ -44,6 +45,19 @@ describe('Justto.App - Gerenciamento: Engajamento', function() {
       .should('be.visible')
     cy.contains('Última valor proposto')
       .should('be.visible')
+  })
+
+  it('Disputa: Dados da Disputa', function () {
+    // Seleciona a aba "Todos"
+    cy.contains('Todos').should('be.visible')
+      .click()
+
+    // Seleciona e clica na Disputa
+    cy.contains('#12705').should('be.visible')
+      .click()
+
+    // Verifica se tela acessada é a da "Disputa"
+    cy.url().should('include', '/#/management/dispute/12705')
 
     // Verifica se carregou os dados em "Dados da disputa"
     cy.contains('Informações gerais')
@@ -58,6 +72,5 @@ describe('Justto.App - Gerenciamento: Engajamento', function() {
       .should('be.visible')
     cy.contains('contatos da Pessoa:')
       .should('be.visible')
-
   })
 })
