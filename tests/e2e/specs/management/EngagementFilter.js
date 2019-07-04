@@ -31,13 +31,33 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.get('[data-testid=management-filterbtn]').click()
 
     // Seleciona Campanha
-    cy.get('[data-testid=filter-campaign]').click()
+    cy.get('[data-testid=filter-campaign]')
+      .click()
+      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
     cy.wait(5000)
 
-    // cy.contains('Toy Story').should('be.visible').click()
+    // Seleciona Estratégia
+    cy.get('[data-testid=filter-strategy]')
+      .click()
+      .trigger('keydown', { keyCode: 40, Which: 40 })
+      .trigger('keydown', { keyCode: 13, Which: 13 })
 
-    cy.contains('Toy').click()
+    cy.wait(5000)
+
+    // Seleciona Disputas Favoritas
+    cy.get('[data-testid=filters-favorite]').click()
+
+    cy.wait(5000)
+
+    // Seleciona Fim da Negociação
+    cy.get('[data-testid=filters-disputeexpirationdate]')
+      .click()
+      
+    cy.get('[data-testid=filters-disputeexpirationdate]')
+      .click()
+      .type('{leftarrow}')
 
     cy.wait(5000)
   })

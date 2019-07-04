@@ -7,9 +7,9 @@
           <el-form-item label="Campanha">
             <el-select
               v-model="filters.campaignid"
+              data-testid="filter-campaign"
               placeholder="Selecione uma opção"
               clearable
-              data-testid="filter-campaign"
               @clear="clearCampaign">
               <el-option
                 v-for="campaign in campaigns"
@@ -24,6 +24,7 @@
           <el-form-item label="Estratégia">
             <el-select
               v-model="filters.strategyid"
+              data-testid="filter-strategy"
               placeholder="Selecione uma opção"
               clearable
               @clear="clearStrategy">
@@ -93,7 +94,7 @@
               <div>
                 <jus-icon icon="golden-star" /> Disputas favoritas
               </div>
-              <el-switch v-model="filters.favorite" />
+              <el-switch v-model="filters.favorite" data-testid="filters-favorite" />
             </div>
           </el-form-item>
         </el-col>
@@ -101,6 +102,7 @@
         <el-col v-if="isEngagement || isInteration || isNewAgreements" :span="12">
           <el-form-item label="Fim da negociação">
             <el-date-picker
+              data-testid="filters-disputeexpirationdate"
               v-model="filters.disputeexpirationdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
