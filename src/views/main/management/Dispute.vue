@@ -36,27 +36,27 @@
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip> -->
-          <el-tooltip content="Ganhar">
+          <el-tooltip content="Ganhar" data-testid="win">
             <el-button :disabled="!canSettled()" plain @click="disputeAction('settled')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Perder">
+          <el-tooltip content="Perder" data-testid="lose">
             <el-button :disabled="!canUnsettled()" plain @click="disputeAction('unsettled')">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Retomar">
+          <el-tooltip content="Retomar" data-testid="start-again">
             <el-button plain @click="disputeAction('resume')">
               <jus-icon icon="start-again" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Pausar">
+          <el-tooltip content="Pausar" data-testid="pause">
             <el-button plain @click="disputeAction('paused')">
               <jus-icon icon="pause" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Alterar Negociador">
+          <el-tooltip content="Alterar Negociador" data-testid="delegate">
             <el-button plain @click="editNegotiator()">
               <jus-icon icon="delegate" />
             </el-button>
@@ -104,7 +104,7 @@
               :value="index" />
           </el-select>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+            <el-button @click="chooseUnsettledDialogVisible = false" data-testid="cancel">Cancelar</el-button>
             <el-button
               :disabled="!unsettledType"
               type="primary"
