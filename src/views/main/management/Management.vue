@@ -37,6 +37,7 @@
         </el-button>
       </div>
       <el-tabs
+        ref="disputeTabs"
         :key="tabKey"
         :before-leave="handleChangeTab"
         v-model="activeTab"
@@ -212,8 +213,11 @@
           :page-size.sync="disputesPerPage"
           :current-page.sync="currentPage"
           :pager-count="15"
-          layout="prev, pager, next, total"
-          background />
+          :page-sizes="[20, 30, 50, 100]"
+          hide-on-single-page
+          layout="total, prev, pager, next, sizes"
+          background
+          @current-change="handleChangePage" />
       </div>
       <el-dialog :visible.sync="showFilters" @open="restoreFilters()">
         <template slot="title">
@@ -258,7 +262,7 @@ export default {
       loadingExport: false,
       loadingDisputes: false,
       currentPage: 1,
-      disputesPerPage: 18
+      disputesPerPage: 20
     }
   },
   computed: {
@@ -453,6 +457,11 @@ export default {
         default:
           return 'chat'
       }
+    },
+    handleChangePage () {
+      this.$nextTick(() => {
+        this.$el.querySelector('#main-card').scrollTop = 0
+      })
     }
   }
 }
