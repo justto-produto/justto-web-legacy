@@ -207,14 +207,13 @@
           </h4>
         </template>
       </el-table>
-      <div class="view-management__pagination-container">
+      <div v-if="disputesLength > initialDisputesPerPage" class="view-management__pagination-container">
         <el-pagination
           :total.sync="disputesLength"
           :page-size.sync="disputesPerPage"
           :current-page.sync="currentPage"
           :pager-count="15"
           :page-sizes="[20, 30, 50, 100]"
-          hide-on-single-page
           layout="total, prev, pager, next, sizes"
           background
           @current-change="handleChangePage" />
@@ -262,7 +261,8 @@ export default {
       loadingExport: false,
       loadingDisputes: false,
       currentPage: 1,
-      disputesPerPage: 20
+      disputesPerPage: 20,
+      initialDisputesPerPage: 20
     }
   },
   computed: {
