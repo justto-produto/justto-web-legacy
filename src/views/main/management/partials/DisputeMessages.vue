@@ -24,7 +24,7 @@
             </i>
           </div>
           <div class="dispute-view-messages__message-time">
-            <span v-if="message.executionDateTime || message.message.schedulerTime">
+            <span v-if="message.executionDateTime || (message.message && message.message.schedulerTime)">
               {{ message.executionDateTime != null ? message.executionDateTime : message.message.schedulerTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-if="directionClass(message) !== 'note'">
