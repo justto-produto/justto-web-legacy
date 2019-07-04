@@ -47,10 +47,9 @@
         <el-tab-pane name="3" label="Todos" />
       </el-tabs>
       <el-table
-
         ref="disputeTable"
         :key="tableKey"
-        :data="disputes"
+        :data="paginatedDisputes"
         size="mini"
         class="el-table--disputes"
         @row-click="handleRowClick"
@@ -207,6 +206,15 @@
           </h4>
         </template>
       </el-table>
+      <div class="view-management__pagination-container">
+        <el-pagination
+          :total.sync="disputesLength"
+          :page-size.sync="disputesPerPage"
+          :current-page.sync="currentPage"
+          :pager-count="15"
+          layout="prev, pager, next, total"
+          background />
+      </div>
       <el-dialog :visible.sync="showFilters" @open="restoreFilters()">
         <template slot="title">
           <h2>Filtrar {{ activeTabLabel }}</h2>
@@ -248,7 +256,9 @@ export default {
       activeFilters: {},
       activeTab: '0',
       loadingExport: false,
-      loadingDisputes: false
+      loadingDisputes: false,
+      currentPage: 1,
+      disputesPerPage: 18
     }
   },
   computed: {
@@ -257,6 +267,13 @@ export default {
     },
     disputes () {
       return this.$store.getters.filteredDisputes
+    },
+    disputesLength () {
+      return this.disputes.length
+    },
+    paginatedDisputes () {
+      let index = (this.currentPage - 1) * this.disputesPerPage
+      return this.disputes.slice(index, index + this.disputesPerPage)
     },
     filters () {
       return this.$store.state.disputeModule.filters
@@ -360,6 +377,7 @@ export default {
     clearFilters () {
       this.showFilters = false
       this.$store.commit('clearDisputeFilters')
+      this.currentPage = 1
     },
     restoreFilters () {
       this.activeFilters = JSON.parse(JSON.stringify(this.filters.terms))
@@ -485,7 +503,7 @@ export default {
     .el-tabs__header {
       width: fit-content;
       padding: 0 20px;
-      margin: 0 0 35px;
+      margin: 0 0 25px;
     }
   }
   &__actions {
@@ -527,6 +545,12 @@ export default {
   }
   .jus-main-view__container {
     position: relative;
+  }
+  &__pagination-container {
+    text-align: center;
+    .el-pagination {
+      margin: 20px 0;
+    }
   }
 }
 </style>
