@@ -190,7 +190,7 @@ export default {
     if (this.mappedCampaign.respondent) {
       this.respondent = this.mappedCampaign.respondent
     }
-    if (this.mappedCampaign.dueDate) {
+    if (this.mappedCampaign.dueDate && this.mappedCampaign.dueDate !== '0') {
       this.dueDate = this.mappedCampaign.dueDate
     }
   }

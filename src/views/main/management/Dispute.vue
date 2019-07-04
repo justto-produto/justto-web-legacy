@@ -289,7 +289,7 @@ export default {
       disputeNegotiators: [],
       negotiatorsForm: {},
       negotiatorsRules: {},
-      unsettledTypes: [],
+      unsettledTypes: {},
       unsettledType: null,
       typingTab: '1'
     }
