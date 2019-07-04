@@ -70,11 +70,6 @@ describe('Justto.App - Planilha Modelo', function() {
         // Verifica se as tags foram recebidas e estão visiveis
         cy.get('[data-testid=import-tags]').should('be.visible')
 
-        // Apaga tag mapeada
-        cy.get('.columns-step .el-tag__close').click()
-
-        //Arrasta tags para colunas
-        // cy.get('.el-tag--drag:nth-child(1)').drag('.file-column:nth-child(1) .el-tag--dropzone')
 
         // Avança apara proximo passo
         cy.get('[data-testid=submit]').click()

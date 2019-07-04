@@ -32,10 +32,10 @@ describe('Justto.App - Importação de planilha: Erros', function() {
         cy.url().should('include', '/#/import')
 
         // Importa arquivo
-        cy.wait(2000)
+        cy.wait(5000)
 
         // Deve mostrar erro de arquivo inválido
-        cy.contains('Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.')
+        cy.contains('Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.').should('be.visible')
     })
 
     it('Importa planilha modelo: Arquivo pesado', function() {
@@ -48,7 +48,7 @@ describe('Justto.App - Importação de planilha: Erros', function() {
         cy.wait(5000)
 
         // Deve mostrar erro de arquivo inválido
-        cy.contains('Arquivo não pode ultrapassar 20MB.')
+        cy.contains('Arquivo não pode ultrapassar 20MB.').should('be.visible')
     })
 
     it('Importa planilha modelo: Formato inválid', function() {
@@ -62,6 +62,6 @@ describe('Justto.App - Importação de planilha: Erros', function() {
         cy.wait(5000)
 
         // Deve mostrar erro de arquivo inválido
-        cy.contains('Arquivo em formato inválido.')
+        cy.contains('Arquivo em formato inválido.').should('be.visible')
     })
 })
