@@ -89,7 +89,8 @@ export default {
       var campaignsTrack = []
       var allValid = true
       var promises = []
-      for (let campaign of this.mappedCampaigns) {
+      for (let mappedCampaign of this.mappedCampaigns) {
+        let campaign = JSON.parse(JSON.stringify(mappedCampaign))
         if (this.checkValidCampaign(campaign)) {
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
