@@ -1,8 +1,9 @@
 describe('Justto.App - Disputa: Visualização', function () {
   beforeEach('Login', function () {
+
     // Acessa a página inicial do Justto.App
-    cy.visit('http://homol.justto.com.br')
-    // cy.visit('localhost:8080')
+    // cy.visit('http://homol.justto.com.br')
+    cy.visit('localhost:8080')
 
     // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
@@ -23,8 +24,11 @@ describe('Justto.App - Disputa: Visualização', function () {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
+
   })
+
   it('Disputa: Resumo do Caso', function () {
+
     // Seleciona a aba "Todos"
     cy.contains('Todos').should('be.visible')
       .click()
@@ -48,6 +52,7 @@ describe('Justto.App - Disputa: Visualização', function () {
   })
 
   it('Disputa: Dados da Disputa', function () {
+
     // Seleciona a aba "Todos"
     cy.contains('Todos').should('be.visible')
       .click()
@@ -72,5 +77,6 @@ describe('Justto.App - Disputa: Visualização', function () {
       .should('be.visible')
     cy.contains('contatos da Pessoa:')
       .should('be.visible')
+
   })
 })
