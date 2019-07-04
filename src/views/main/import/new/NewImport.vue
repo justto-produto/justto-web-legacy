@@ -92,6 +92,7 @@ export default {
       for (let mappedCampaign of this.mappedCampaigns) {
         let campaign = JSON.parse(JSON.stringify(mappedCampaign))
         if (this.checkValidCampaign(campaign)) {
+          campaign.deadline = this.$moment(campaign.deadline).format()
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
           campaign.strategyId = campaign.strategy.id
