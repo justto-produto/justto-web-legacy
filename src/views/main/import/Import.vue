@@ -13,7 +13,11 @@
           </p>
         </div>
         <div class="import-view__content import-view__content---methods">
+<<<<<<< HEAD
           <el-card :class="{'import-view__method-loading': hasFile}" data-testid="file-input" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
+=======
+          <el-card class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
+>>>>>>> develop
             <el-upload
               v-loading="processingFile"
               ref="uploadMethod"
@@ -38,7 +42,7 @@
           </el-card> -->
         </div>
         <div v-if="hasFile" class="import-view__actions">
-          <el-button plain @click="removeFile">Voltar</el-button>
+          <el-button plain @click="removeFile">Limpar</el-button>
           <el-button type="primary" data-testid="submit" @click="startImport">Próximo</el-button>
         </div>
       </div>
@@ -140,6 +144,7 @@ export default {
           message: 'Arquivo em formato inválido.',
           type: 'warning'
         })
+        return false
       }
       if (!isLt20M) {
         this.processingFile = false
@@ -148,6 +153,7 @@ export default {
           message: 'Arquivo não pode ultrapassar 20MB.',
           type: 'warning'
         })
+        return false
       }
       return isValid && isLt20M
     },
@@ -260,10 +266,6 @@ export default {
     text-align: center;
     transition: all ease .5s;
   }
-  &__method-loading {
-    width: 400px;
-    max-width: 400px;
-  }
   &__actions {
     display: flex;
     margin-top: 40px;
@@ -279,6 +281,7 @@ export default {
     }
     p{
       margin: 10px 0;
+      max-width: 400PX;
     }
   }
   &__content {
@@ -289,7 +292,7 @@ export default {
     justify-content: center;
     text-align: center;
     .el-upload-list {
-      max-width: 210px;
+      max-width: 95%;
       &.is-disabled {
         max-width: 368px;
       }
@@ -299,7 +302,8 @@ export default {
     }
   }
   &__method {
-    max-width: 240px;
+    width: 400px;
+    max-width: 400px;
     transition: all ease .5s;
     &+.import-view__method {
       margin-left: 20px;

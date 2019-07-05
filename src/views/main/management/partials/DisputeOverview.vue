@@ -45,7 +45,6 @@
           <span>{{ dispute.description }}</span>
         </div>
         <div class="dispute-overview-view__actions">
-          <el-button plain @click="removeDispute()">Excluir</el-button>
           <el-button type="primary" @click="openDisputeDialog()">Editar</el-button>
         </div>
       </el-collapse-item>
@@ -95,7 +94,7 @@
           <span>{{ buildTitle(role) }}</span>
         </div>
         <div v-show="role.person.phones.length" class="dispute-overview-view__info-line">
-          <span>Telefone(s):</span>
+          Telefone(s):
         </div>
         <div v-show="role.person.phones.length" class="dispute-overview-view__info-list">
           <ul>
@@ -105,7 +104,7 @@
           </ul>
         </div>
         <div v-show="role.person.emails.length" class="dispute-overview-view__info-line">
-          <span>E-mail(s):</span>
+          E-mail(s):
         </div>
         <div v-show="role.person.emails.length" class="dispute-overview-view__info-list">
           <ul>
@@ -115,7 +114,7 @@
           </ul>
         </div>
         <div v-show="role.person.oabs.length" class="dispute-overview-view__info-line">
-          <span>OAB(s):</span>
+          OAB(s):
         </div>
         <div v-show="role.person.oabs.length" class="dispute-overview-view__info-list">
           <ul>
@@ -126,7 +125,7 @@
             </li>
           </ul>
         </div>
-        <div class="dispute-overview-view__actions">
+        <div v-if="buildTitle(role) !== 'Negociador'" class="dispute-overview-view__actions">
           <el-button plain @click="removeRole(role)">Excluir</el-button>
           <el-button type="primary" @click="openRoleDialog(role)">Editar</el-button>
         </div>
@@ -143,33 +142,8 @@
         label-position="top"
         @submit.native.prevent="editDispute">
         <el-row :gutter="20">
-          <!-- <el-col :span="12">
-            <el-form-item label="Campanha" prop="campaign">
-              <el-select v-model="dispute.campaign.name" placeholder="Selecione">
-                 <el-option
-                   v-for="strategy in strategies"
-                   :key="strategy.id"
-                   :label="strategy.name"
-                   :value="strategy">
-                 </el-option>
-               </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="Estratégia" prop="strategy">
-              <el-select v-model="dispute.strategy.name" placeholder="Selecione">
-                 <el-option
-                   v-for="campaign in campaigns"
-                   :key="campaign.id"
-                   :label="campaign.name"
-                   :value="campaign">
-                 </el-option>
-               </el-select>
-            </el-form-item>
-          </el-col> -->
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="boundary">
-              <!-- <el-input v-model="disputeForm.upperRange"/> -->
               <money v-model="disputeForm.upperRange.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
@@ -183,22 +157,9 @@
           </el-col>
           <el-col v-if="dispute.status == 'ACCEPTED' || dispute.status == 'CHECKOUT'" :span="24">
             <el-form-item label="Valor do acordo" prop="deal">
-              <!-- <el-input v-model="disputeForm.lastOffer"/> -->
               <money v-model="disputeForm.lastOffer.boundary" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="12">
-            <el-form-item label="Classificação" prop="classification">
-              <el-select v-model="dispute.classification.name" placeholder="Selecione">
-                 <el-option
-                   v-for="item in options"
-                   :key="item.value"
-                   :label="item.label"
-                   :value="item.value">
-                 </el-option>
-               </el-select>
-            </el-form-item>
-          </el-col> -->
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
               <el-input v-model="disputeForm.description" type="textarea" rows="4" />
@@ -213,8 +174,10 @@
     </el-dialog>
     <el-dialog
       :visible.sync="editRoleDialogVisible"
-      title="Alterar dados da Contraparte"
       width="40%">
+      <span slot="title" class="el-dialog__title">
+        Alterar dados de {{ roleForm.title }}
+      </span>
       <el-form
         ref="roleForm"
         :model="roleForm"
@@ -223,15 +186,15 @@
         <el-form-item label="Nome" prop="name">
           <el-input v-model="roleForm.name" />
         </el-form-item>
-        <el-form-item v-show="partyRoles.party == true" label="CPF" prop="documentNumber">
+        <el-form-item v-show="partyRoles.party === true" label="CPF" prop="documentNumber">
           <the-mask v-model="roleForm.documentNumber" :mask="['###.###.###-##']" class="el-input__inner" />
         </el-form-item>
-        <el-form-item v-show="partyRoles.legal == true" label="CNPJ" prop="documentNumber">
+        <el-form-item v-show="partyRoles.legal === true" label="CNPJ" prop="documentNumber">
           <the-mask v-model="roleForm.documentNumber" :mask="['##.###.###/####-##']" class="el-input__inner" />
         </el-form-item>
       </el-form>
       <el-form
-        v-show="partyRoles.lawyer == true"
+        v-show="partyRoles.lawyer === true"
         ref="oabForm"
         :model="oabForm"
         :rules="oabRules"
@@ -338,15 +301,6 @@ export default {
     }
   },
   data () {
-    // var validateDocument = (rule, value, callback) => {
-    //   if (value) {
-    //     if ((CPFCNPJ.CPF.isValid(value)) || (CPFCNPJ.CNPJ.isValid(value)) ) {
-    //       callback()
-    //     } else callback(new Error('Insira um documento inválido'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
     var validateName = (rule, value, callback) => {
       if (value && value.length > 2) {
         callback()
@@ -390,10 +344,6 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres.', trigger: 'change' }
         ]
-        // documentNumber: [
-        //   { required: true, message: 'Campo obrigatório', trigger: 'change' },
-        //   { validator: validateDocument, trigger: 'change' }
-        // ]
       },
       disputeForm: {
         disputeId: '',
@@ -496,7 +446,7 @@ export default {
           case 'LAWYER':
             return 'Advogado do réu'
         }
-      } else { // if (role.party === ‘CLAIMANT’)
+      } else {
         if (role.roles[0] === 'PARTY') {
           return 'Parte contrária'
         } else if (role.roles[0] === 'LAWYER') {
@@ -611,6 +561,7 @@ export default {
       var roles = role.roles
       var party = role.party
       this.roleForm.personId = role.person.id
+      this.roleForm.title = this.buildTitle(role)
       this.roleForm.name = role.person.name
       this.roleForm.documentNumber = role.person.documentNumber
       this.roleForm.oabs = role.oabs

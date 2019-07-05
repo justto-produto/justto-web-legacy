@@ -49,8 +49,8 @@ export default {
   },
   watch: {
     dialogVisible (value) {
-      if (value) this.dialog = value
-      if (value && this.strategyEngagements.length === 0) {
+      if (value) {
+        this.dialog = value
         this.getEngagements()
       }
     },

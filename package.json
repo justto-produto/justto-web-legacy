@@ -38,7 +38,6 @@
     "vue-owl-carousel": "github:hliberato/vue-owl-carousel#patch-1",
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-router": "^3.0.6",
-    "vue-scrollto": "^2.15.0",
     "vue-socket.io": "^3.0.7",
     "vue-the-mask": "^0.11.1",
     "vuex": "^3.1.1"

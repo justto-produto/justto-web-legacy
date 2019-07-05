@@ -16,7 +16,11 @@
       <!-- ACTIONS SLOT -->
       <slot name="actions"/>
       <!-- MAIN CARD SLOT -->
-      <el-card class="jus-main-view__main-card">
+      <el-card
+        v-loading="loadingMain"
+        id="main-card"
+        :class="{'jus-main-view__loading-main': loadingMain}"
+        class="jus-main-view__main-card">
         <slot name="main"/>
       </el-card>
       <!-- RIGHT CARD SLOT -->
@@ -42,6 +46,10 @@ export default {
     leftCardWidth: {
       default: '300',
       type: String
+    },
+    loadingMain: {
+      default: false,
+      type: Boolean
     }
   }
 }
@@ -88,6 +96,9 @@ export default {
   }
   &--full-height {
     height: auto;
+  }
+  &__loading-main{
+    overflow: hidden;
   }
 }
 </style>

@@ -111,6 +111,11 @@ export default {
       }
     }
   },
+  created () {
+    if (this.$store.getters.whatsappStatus !== 'CONNECTED') {
+      this.restart()
+    }
+  },
   methods: {
     sendMessage () {
       this.$refs['numberForm'].validate(valid => {

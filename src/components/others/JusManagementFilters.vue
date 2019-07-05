@@ -150,6 +150,7 @@
               <el-radio-button label="SETTLED">Ganhos</el-radio-button>
               <el-radio-button label="UNSETTLED">Perdidos</el-radio-button>
               <el-radio-button label="EXPIRED">Expirados</el-radio-button>
+              <el-radio-button label="PENDING">Pendentes</el-radio-button>
               <el-radio-button label="PAUSED">Pausados</el-radio-button>
             </el-radio-group>
           </el-form-item>
