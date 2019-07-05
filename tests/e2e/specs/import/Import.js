@@ -23,13 +23,13 @@ describe('Justto.App - Planilha Modelo', function () {
 
         // Preenche o campo 'Email'
         cy.get('[data-testid="login-email"]')
-            .type('guilherme@justto.com.br')
-            .should('have.value', 'guilherme@justto.com.br')
+            .type('dubu@voemail.com')
+            .should('have.value', 'dubu@voemail.com')
 
         // Preenche o campo 'Senha'
         cy.get('[data-testid="login-password"]')
-            .type('tOOr13@$')
-            .should('have.value', 'tOOr13@$')
+            .type('password')
+            .should('have.value', 'password')
 
         // Clica no botão "Entrar"
         cy.get('[data-testid="submit"]').click()

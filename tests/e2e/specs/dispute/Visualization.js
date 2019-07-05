@@ -10,7 +10,8 @@ describe('Justto.App - Disputa: Visualização', function () {
         // Preenche o campo 'Email'
         cy.get('[data-testid=login-email]')
             .type('dubu@voemail.com')
-            .should('have.value', 'dubu@voemail.com')
+            .should('have.value', '
+            ')
 
         // Preenche o campo 'Senha'
         cy.get('[data-testid=login-password]')
