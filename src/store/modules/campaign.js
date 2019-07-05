@@ -39,7 +39,11 @@ const campaign = {
     }
   },
   getters: {
-    campaignList: state => state.list,
+    campaignList: state => state.list.sort((a, b) => {
+      if (a.createdAt < b.createdAt) { return -1 }
+      if (a.createdAt > b.createdAt) { return 1 }
+      return 0
+    }),
     activeCampaigns: (state, getters) => {
       let filteredCampaigns = []
       for (let dispute of getters.disputes) {
