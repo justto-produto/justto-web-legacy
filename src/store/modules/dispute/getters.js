@@ -10,7 +10,7 @@ const disputeGetters = {
       switch (state.filters.tab) {
         case '0':
           filteredDisputes = filteredDisputes.filter(dispute => {
-            return dispute.disputestatus === 'ENGAGEMENT' && !dispute.disputehasinteractions
+            return dispute.disputestatus === 'ENGAGEMENT' && !dispute.disputehasinteractions && !dispute.paused
           })
           break
         case '1':
@@ -29,6 +29,8 @@ const disputeGetters = {
           filteredDisputes = filteredDisputes.filter(dispute => {
             if (term === 'disputeexpirationdate' || term === 'disputedealdate' || term === 'lastinteractiondate') {
               return moment(dispute[term]).isSame(state.filters.terms[term], 'day')
+            } else if (term === 'disputestatus' && state.filters.terms[term] === 'PAUSED') {
+              return !!dispute.paused
             } else {
               return dispute[term] === state.filters.terms[term]
             }
@@ -128,9 +130,13 @@ const disputeGetters = {
   },
   alertSeven: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
-      if ((dispute.alerts && dispute.alerts.length > 0) ||
-          (dispute.claiments && dispute.claiments.alerts && dispute.claiments.alerts.length > 0) ||
-          (dispute.claimentslawyer && dispute.claimentslawyer.alerts && dispute.claimentslawyer.alerts.length > 0)) {
+      if (
+        dispute.disputestatus !== 'SETTLED' &&
+        dispute.disputestatus !== 'UNSETTLED' &&
+        ((dispute.alerts && dispute.alerts.length > 0) ||
+        (dispute.claiments && dispute.claiments.alerts && dispute.claiments.alerts.length > 0) ||
+        (dispute.claimentslawyer && dispute.claimentslawyer.alerts && dispute.claimentslawyer.alerts.length > 0))
+      ) {
         return true
       }
     })
