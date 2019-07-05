@@ -31,6 +31,8 @@ const disputeGetters = {
               return moment(dispute[term]).isSame(state.filters.terms[term], 'day')
             } else if (term === 'disputestatus' && state.filters.terms[term] === 'PAUSED') {
               return !!dispute.paused
+            } else if (term === 'disputestatus' && state.filters.terms[term] === 'INTERACTIONS') {
+              return !!dispute.disputehasinteractions && (dispute.disputestatus === 'ENGAGEMENT' || dispute.disputestatus === 'RUNNING')
             } else {
               return dispute[term] === state.filters.terms[term]
             }
