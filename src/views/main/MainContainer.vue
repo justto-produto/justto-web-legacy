@@ -76,7 +76,12 @@ export default {
     this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
         this.$store.dispatch('whatsappStart')
-      } else {
+      }  else if (whatsapp.status !== 'CONNECTED') {
+        this.$store.dispatch('whatsappStop').then(() => {
+          this.$store.dispatch('whatsappStart')
+        })
+      }
+      else {
         this.$store.commit('SOCKET_refresh', whatsapp)
       }
     })

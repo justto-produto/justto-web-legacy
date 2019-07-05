@@ -16,8 +16,10 @@ const mutations = {
     state.chat.typing = null
   },
   // WHATSAPP
-  clearSocket (state) {
+  clearWhatsappSocket (state) {
     state.qrCode = ''
+    state.status = 'STARTING'
+    state.number = ''
   },
   SOCKET_refresh (state, message) {
     if (message.qrCode) state.whatsapp.qrCode = message.qrCode
