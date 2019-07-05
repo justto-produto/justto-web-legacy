@@ -20,6 +20,7 @@
         :unsettled-types="unsettledTypes"
         :show-scheduled.sync="showScheduled"
         :strategy-id="dispute.strategy.id"
+        data-testid="dispute-summary"
         @dispute:refresh="fetchData({ fetchMessages: true })" />
     </template>
     <!-- CHAT -->
@@ -141,6 +142,7 @@
           :loading="loadingDisputeMessages"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
+          data-testid="dispute-messages"
           @dispute:refresh="fetchData({ fetchMessages: true })" />
         <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
@@ -253,6 +255,7 @@
         :loading="loadingDispute"
         :dispute="dispute"
         :active-person.sync="activePerson"
+        data-testid="dispute-overview"
         @dispute:refresh="fetchData({ fetchDispute: true })" />
     </template>
   </JusViewMain>
