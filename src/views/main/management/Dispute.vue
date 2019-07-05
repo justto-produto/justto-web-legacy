@@ -46,6 +46,11 @@
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
+          <el-tooltip content="Reiniciar engajamento">
+            <el-button plain @click="disputeAction('restart-engagement')">
+              <jus-icon icon="refresh" />
+            </el-button>
+          </el-tooltip>
           <el-tooltip content="Retomar">
             <el-button plain @click="disputeAction('resume')">
               <jus-icon icon="start-again" />
