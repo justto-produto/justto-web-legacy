@@ -62,7 +62,8 @@ const disputeGetters = {
         dispute.disputestatus === 'ENRICHED' ||
         dispute.disputestatus === 'ENGAGEMENT' ||
         dispute.disputestatus === 'RUNNING') &&
-        moment(dispute.disputeexpirationdate).isBetween(moment().subtract(3, 'day'), moment())) {
+        moment(dispute.disputeexpirationdate).isBetween(moment(), moment().add(3, 'day'))
+      ) {
         return true
       }
     })
