@@ -47,6 +47,11 @@
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
+          <el-tooltip content="Reiniciar engajamento">
+            <el-button plain @click="disputeAction('restart-engagement')">
+              <jus-icon icon="refresh" />
+            </el-button>
+          </el-tooltip>
           <el-tooltip content="Retomar" data-testid="start-again">
             <el-button plain @click="disputeAction('resume')">
               <jus-icon icon="start-again" />
@@ -139,7 +144,7 @@
         </el-dialog>
         <dispute-messages
           :messages-prop="filteredDisputeMessages"
-          :loading="loadingDisputeMessages"
+          :loading.sync="loadingDisputeMessages"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
           data-testid="dispute-messages"
@@ -292,7 +297,7 @@ export default {
       disputeNegotiators: [],
       negotiatorsForm: {},
       negotiatorsRules: {},
-      unsettledTypes: [],
+      unsettledTypes: {},
       unsettledType: null,
       typingTab: '1'
     }
@@ -411,6 +416,7 @@ export default {
         })
       }
       if (options.fetchMessages) {
+        this.loadingDisputeMessages = true
         this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
           if (!this.disputeMessages.length) {
             this.disputeMessages = responses
@@ -424,7 +430,11 @@ export default {
             this.disputeMessages.push(...newMessages)
             this.filteredDisputeMessages.push(...newMessages)
           }
-        }).catch(() => this.$jusNotification({ type: 'error' }))
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingDisputeMessages = false
+        })
       }
     },
     handleTabClick (tab) {

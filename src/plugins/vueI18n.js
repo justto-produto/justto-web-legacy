@@ -16,10 +16,10 @@ function loadLocaleMessages () {
     }
   })
   if (messages.hasOwnProperty('en')) {
-    messages['en'].el = enLocale.el
+    messages['en'].el = Object.assign(enLocale.el, messages['en'].el)
   }
   if (messages.hasOwnProperty('pt-br')) {
-    messages['pt-br'].el = brlocale.el
+    messages['pt-br'].el = Object.assign(brlocale.el, messages['pt-br'].el)
   }
   return messages
 }

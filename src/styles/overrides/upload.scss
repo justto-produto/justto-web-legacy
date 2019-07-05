@@ -36,14 +36,21 @@
 //   }
 // }
 
-.el-upload-list{
-  &.is-disabled{
-    .el-upload-list__item {
-      pointer-events: none;
-    }
-    .el-upload-list__item-status-label {
-        display: block !important;
+.el-upload-list {
+  .el-upload-list__item {
+    pointer-events: none;
+    transition: none !important;
+    label {
+      display: none !important;
     }
   }
-
+  &.is-disabled {
+    .el-upload-list__item {
+      transition: none !important;
+      a {
+        white-space: normal;
+        margin-right: 4px;
+      }
+    }
+  }
 }
