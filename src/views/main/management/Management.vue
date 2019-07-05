@@ -217,6 +217,7 @@
         <span slot="footer">
           <el-button plain @click="clearFilters()">Limpar filtros</el-button>
           <el-button
+            data-testid="filter-applyfilter"
             type="primary"
             @click="applyFilters()">
             Aplicar filtros

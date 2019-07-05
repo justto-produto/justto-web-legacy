@@ -102,8 +102,8 @@
         <el-col v-if="isEngagement || isInteration || isNewAgreements" :span="12">
           <el-form-item label="Fim da negociação">
             <el-date-picker
-              data-testid="filters-disputeexpirationdate"
               v-model="filters.disputeexpirationdate"
+              data-testid="filters-disputeexpirationdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd"

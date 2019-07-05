@@ -1,5 +1,5 @@
 describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
-  it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
+  beforeEach(function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
@@ -17,13 +17,15 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
       .type('password')
       .should('have.value', 'password')
 
-      // Clica no botão "Entrar"
+    // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
       .click()
 
-      // Verifica se tela acessada é a de "Gerenciamento"
+    // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
+  })
 
+  it('Gerenciamento: Engajamento - Exibição dos Casos', function () {
     // Seleciona a aba "Engajamento"
     cy.contains('Engajamento').should('be.visible').click()
 
@@ -36,29 +38,55 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
       .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
       .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
-    cy.wait(5000)
-
     // Seleciona Estratégia
     cy.get('[data-testid=filter-strategy]')
       .click()
       .trigger('keydown', { keyCode: 40, Which: 40 })
       .trigger('keydown', { keyCode: 13, Which: 13 })
 
-    cy.wait(5000)
-
     // Seleciona Disputas Favoritas
     cy.get('[data-testid=filters-favorite]').click()
 
-    cy.wait(5000)
+    // // Seleciona datepicker 'Fim da Negociação'
+    // cy.get('[data-testid=filters-disputeexpirationdate]')
+    //   .click()
+    //   .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
+    //   .trigger('keydown', { keyCode: 40, Which: 40 })
+    //   .trigger('keydown', { keyCode: 40, Which: 40 })
+    //   .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
-    // Seleciona Fim da Negociação
-    cy.get('[data-testid=filters-disputeexpirationdate]')
+    // Seleciona o botão "Aplicar filtros"
+    cy.get('[data-testid=filter-applyfilter]').click()
+
+    // Verifica se existem casos exibidos
+    cy.get('[class=el-table__body]').should('be.visible')
+  })
+
+  it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
+    // Seleciona a aba "Engajamento"
+    cy.contains('Engajamento').should('be.visible').click()
+
+    // Seleciona botão 'Filtrar'
+    cy.get('[data-testid=management-filterbtn]').click()
+
+    // Seleciona Campanha
+    cy.get('[data-testid=filter-campaign]')
       .click()
+      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
-    cy.get('[data-testid=filters-disputeexpirationdate]')
+    // Seleciona Estratégia
+    cy.get('[data-testid=filter-strategy]')
       .click()
-      .type('{leftarrow}')
+      .trigger('keydown', { keyCode: 40, Which: 40 })
+      .trigger('keydown', { keyCode: 40, Which: 40 })
+      .trigger('keydown', { keyCode: 13, Which: 13 })
 
-    cy.wait(5000)
+    // Seleciona o botão "Aplicar filtros"
+    cy.get('[data-testid=filter-applyfilter]').click()
+
+    // Verifica se mensagem "Não foram encontradas disputas" é exibida
+    cy.contains('Não foram encontradas disputas')
+      .should('be.visible')
   })
 })
