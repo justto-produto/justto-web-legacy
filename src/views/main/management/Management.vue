@@ -216,7 +216,8 @@
           :page-sizes="[20, 30, 50, 100]"
           layout="total, prev, pager, next, sizes"
           background
-          @current-change="handleChangePage" />
+          @size-change="handleChangePagination"
+          @current-change="handleChangePagination" />
       </div>
       <el-dialog :visible.sync="showFilters" @open="restoreFilters()">
         <template slot="title">
@@ -458,7 +459,7 @@ export default {
           return 'chat'
       }
     },
-    handleChangePage () {
+    handleChangePagination () {
       this.$nextTick(() => {
         this.$el.querySelector('#main-card').scrollTop = 0
       })
