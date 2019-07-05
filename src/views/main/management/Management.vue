@@ -320,7 +320,7 @@ export default {
       this.showFilters = false
       window.analytics.track('Filtro aplicado', {
         filters: this.filters,
-        tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento'
+        tab: this.activeTabLabel
       })
     },
     handleSelectionChange (selected) {

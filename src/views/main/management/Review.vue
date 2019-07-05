@@ -53,7 +53,7 @@
                   </el-col>
                   <el-col :span="8">
                     <div v-for="(item, index) in getDisputeAlerts(props.row)" :key="item.child_id + item.id + index ">
-                      <jus-icon :icon="item.type === 'ERROR' ? 'alert' : 'warn'" style="vertical-align: sub;" />
+                      <jus-icon icon="warn" style="vertical-align: sub;" />
                       {{ item.label }}: {{ item.message }}
                     </div>
                   </el-col>
@@ -95,14 +95,10 @@
           <el-table-column v-if="showReviewColumn" label="Alertas">
             <template slot-scope="scope">
               <el-tooltip content="Expanda as informações da disputa para visualizar os detalhes dos alertas">
-                <span v-if="getOnlyErrors(getDisputeAlerts(scope.row)).length">
-                  <jus-icon icon="alert" style="vertical-align: sub;" />
-                  ({{ getOnlyErrors(getDisputeAlerts(scope.row)).length }})
-                </span>
-                <span v-if="getOnlyWarns(getDisputeAlerts(scope.row)).length">
+                <div>
                   <jus-icon icon="warn" style="vertical-align: sub;" />
-                  ({{ getOnlyWarns(getDisputeAlerts(scope.row)).length }})
-                </span>
+                  ({{ getDisputeAlerts(scope.row).length }})
+                </div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -266,17 +262,17 @@ export default {
         }
       }
       return alerts
-    },
-    getOnlyErrors (alerts) {
-      return alerts.filter(alert => {
-        return alert.type === 'ERROR'
-      })
-    },
-    getOnlyWarns (alerts) {
-      return alerts.filter(alert => {
-        return alert.type === 'WARN'
-      })
     }
+    // getOnlyErrors (alerts) {
+    //   return alerts.filter(alert => {
+    //     return alert.type === 'ERROR'
+    //   })
+    // },
+    // getOnlyWarns (alerts) {
+    //   return alerts.filter(alert => {
+    //     return alert.type === 'WARN'
+    //   })
+    // }
   }
 }
 </script>
