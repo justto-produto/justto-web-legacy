@@ -134,6 +134,7 @@ export default {
       file.name.toLowerCase().endsWith('.csv')
       const isLt20M = file.size / 1024 / 1024 < 20
       if (!isValid) {
+        this.processingFile = false
         this.$jusNotification({
           title: 'Ops!',
           message: 'Arquivo em formato inválido.',
@@ -141,6 +142,7 @@ export default {
         })
       }
       if (!isLt20M) {
+        this.processingFile = false
         this.$jusNotification({
           title: 'Ops!',
           message: 'Arquivo não pode ultrapassar 20MB.',

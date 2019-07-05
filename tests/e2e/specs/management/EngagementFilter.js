@@ -54,7 +54,7 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     // Seleciona Fim da Negociação
     cy.get('[data-testid=filters-disputeexpirationdate]')
       .click()
-      
+
     cy.get('[data-testid=filters-disputeexpirationdate]')
       .click()
       .type('{leftarrow}')
