@@ -23,7 +23,7 @@
         </div>
         <div class="dispute-overview-view__info-line">
           <span class="title">Contraproposta:</span>
-          <span v-if="dispute.lastOffer">{{ dispute.lastOffer.boundary | currency }}</span>
+          <span v-if="dispute.lastCounterOffer">{{ dispute.lastCounterOffer | currency }}</span>
           <span v-else>{{ 0 | currency }}</span>
         </div>
         <div
@@ -34,7 +34,7 @@
         </div>
         <div v-if="dispute.valueOfClaim" class="dispute-overview-view__info-line">
           <span class="title">Valor proposto:</span>
-          <span>{{ dispute.valueOfClaim.value | currency }}</span>
+          <span>{{ dispute.lastOffer | currency }}</span>
         </div>
         <div class="dispute-overview-view__info-line">
           <span class="title">Fim da negociação:</span>
