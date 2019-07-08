@@ -481,6 +481,7 @@ export default {
         this.unsettledType = null
       } else {
         this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+          confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           type: 'warning'

@@ -26,60 +26,117 @@ describe('Justto.App - Disputa: Ações', function () {
         cy.url().should('include', '/#/management')
     })
 
-    it('Ação: Ganhar', function () {
+    it('Entra na disputa', function () {
+      cy.contains('#12739').click()
+    })
 
+    it('Ação: Pausar', function () {
+      // Clica em Pausar
+      cy.get('[data-testid=paused]')
+          .click()
+      // Modal de confirmação deve aparecer
+      cy.get('.el-message-box')
+          .should('be.visible')
+      // Confirma a ação
+      cy.get('.confirm-action-btn')
+          .click()
+      // Notificação de sucesso deve aparecer
+      cy.contains('Ação realizada com sucesso.')
+          .should('be.visivel')
+    })
+
+    it('Ação: Retomar', function () {
+      // Clica em Retomar
+      cy.get('[data-testid=resume')
+          .click()
+      // Modal de confirmação deve aparecer
+      cy.get('.el-message-box')
+          .should('be.visible')
+      // Confirma a ação
+      cy.get('.confirm-action-btn')
+          .click()
+      // Notificação de sucesso deve aparecer
+      cy.contains('Ação realizada com sucesso.')
+          .should('be.visivel')
+    })
+
+    it('Ação: Ganhar', function () {
         // Clica em Ganhar
         cy.get('[data-testid=settled]')
             .click()
-
+        // Modal de confirmação deve aparecer
+        cy.get('.el-message-box')
+            .should('be.visible')
+        // Confirma a ação
+        cy.get('.confirm-action-btn')
+            .click()
+        // Notificação de sucesso deve aparecer
+        cy.contains('Ação realizada com sucesso.')
+            .should('be.visivel')
     })
 
     it('Ação: Perder', function () {
-
         // Clica em Perder
         cy.get('[data-testid=unsettled]')
             .click()
-
-    })
-
-
-    it('Ação: Pausar', function () {
-
-        // Clica em Pausar
-        cy.get('[data-testid=paused]')
+        // Modal de confirmação deve aparecer
+        cy.get('.el-message-box')
+            .should('be.visible')
+        // Selectiona motivo da perda
+        cy.get('[data-testid=select-unsettled]')
             .click()
-
-    })
-
-    it('Ação: Pausar', function () {
-
-        // Clica em Retomar
-        cy.get('[data-testid=resume')
+            .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
+            .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+        // Confirma a ação
+        cy.get('.confirm-action-btn')
             .click()
-
-    })
-
-    it('Ação: Reiniciar Engajamento', function () {
-
-        // VClica em Reiniciar Engajamento
-        cy.get('[data-testid=restart-engagement]')
-            .click()
-
+        // Notificação de sucesso deve aparecer
+        cy.contains('Ação realizada com sucesso.')
+            .should('be.visivel')
     })
 
     it('Ação: Favoritar', function () {
-
         // Favorita/disfavorita caso
         cy.get('[data-testid=favorite]')
             .click()
-
-    })
-    
-    it('Ação: Remover', function () {
-
-        // Clica em Remover
-        cy.get('[data-testid=remove]')
+        // Modal de confirmação deve aparecer
+        cy.get('.el-message-box')
+            .should('be.visible')
+        // Confirma a ação
+        cy.get('.confirm-action-btn')
             .click()
+        // Notificação de sucesso deve aparecer
+        cy.contains('Ação realizada com sucesso.')
+            .should('be.visivel')
+    })
 
+    it('Ação: Reiniciar Engajamento', function () {
+      // VClica em Reiniciar Engajamento
+      cy.get('[data-testid=restart-engagement]')
+      .click()
+      // Modal de confirmação deve aparecer
+      cy.get('.el-message-box')
+      .should('be.visible')
+      // Confirma a ação
+      cy.get('.confirm-action-btn')
+      .click()
+      // Notificação de sucesso deve aparecer
+      cy.contains('Ação realizada com sucesso.')
+      .should('be.visivel')
+    })
+
+    it('Ação: Remover', function () {
+      // Clica em Remover
+      cy.get('[data-testid=remove]')
+      .click()
+      // Modal de confirmação deve aparecer
+      cy.get('.el-message-box')
+      .should('be.visible')
+      // Confirma a ação
+      cy.get('.confirm-action-btn')
+      .click()
+      // Notificação de sucesso deve aparecer
+      cy.contains('Ação realizada com sucesso.')
+      .should('be.visivel')
     })
 })
