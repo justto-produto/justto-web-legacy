@@ -429,7 +429,9 @@ export default {
       let date = this.$moment(lastinteractiondate)
       if (date.isValid()) {
         let now = this.$moment()
-        if (now.diff(date, 'seconds') < 59) {
+        if (now.diff(date, 'seconds') < 0) {
+          return ''
+        } else if (now.diff(date, 'seconds') < 59) {
           return now.diff(date, 'seconds') + ' segundos'
         } else if (now.diff(date, 'minutes') < 59) {
           return now.diff(date, 'minutes') + ' minuto(s)'
@@ -456,7 +458,7 @@ export default {
         case 'TTS':
           return 'tts'
         default:
-          return 'chat'
+          return ''
       }
     },
     handleChangePagination () {
