@@ -50,8 +50,8 @@
             Histórico de importação
           </h2>
           <el-tooltip content="Download da planilha modelo">
-            <el-button type="primary" class="right" @click="downloadModel()">
-              <jus-icon icon="download-white" />
+            <el-button plain class="right" @click="downloadModel()">
+              <jus-icon icon="download-sheet" />
             </el-button>
           </el-tooltip>
         </div>

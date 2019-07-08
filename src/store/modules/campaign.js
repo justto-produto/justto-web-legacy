@@ -50,7 +50,7 @@ const campaign = {
         let activeCampaign = state.list.filter((campaign) => {
           return campaign.id === dispute.campaignid
         })
-        filteredCampaigns.push(activeCampaign[0])
+        if (activeCampaign && activeCampaign.length) filteredCampaigns.push(activeCampaign[0])
       }
       filteredCampaigns = filteredCampaigns.sort((a, b) => {
         if (a.createdAt < b.createdAt) { return 1 }
