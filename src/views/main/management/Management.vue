@@ -195,7 +195,7 @@
               <el-button
                 type="text"
                 @click="openNewTab(scope.row.disputeid)">
-                <jus-icon icon="external" />
+                <jus-icon icon="external-link" />
               </el-button>
             </el-tooltip>
           </template>
