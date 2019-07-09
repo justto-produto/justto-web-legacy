@@ -104,7 +104,8 @@
           :visible.sync="chooseUnsettledDialogVisible"
           title="Atenção!"
           class="dispute-view__choose-unsettled-dialog"
-          width="460px">
+          width="460px"
+          data-testid="choose-unsettled-dialog">
           <div class="el-message-box__content">
             <div class="el-message-box__status el-icon-warning"/>
             <div class="el-message-box__message"><p>
@@ -114,6 +115,7 @@
           <el-select
             v-loading="$store.state.loading"
             v-model="unsettledType"
+            data-testid="select-unsettled"
             placeholder="Escolha o motivo da perda">
             <el-option
               v-for="(type, index) in unsettledTypes"
@@ -126,6 +128,7 @@
             <el-button
               :disabled="!unsettledType"
               type="primary"
+              class="confirm-action-unsettled"
               @click.prevent="doAction('unsettled')">
               Continuar
             </el-button>
@@ -408,6 +411,7 @@ export default {
     },
     removeDispute () {
       this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
+        confirmButtonClass: 'confirm-remove-btn',
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error'
@@ -518,7 +522,6 @@ export default {
         window.analytics.track(trackTitle, {
           action: action
         })
-        this.chooseUnsettledDialogVisible = false
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação realizada com sucesso.',
@@ -528,6 +531,7 @@ export default {
           this.fetchData({ fetchDispute: true, fetchMessages: true })
         }.bind(this), 1000)
       }).catch(() => this.$jusNotification({ type: 'error' }))
+      .finally(() => this.chooseUnsettledDialogVisible = false)
     },
     sendChatMessage () {
       if (this.newChatMessage) {
