@@ -3,7 +3,7 @@
     <el-form v-loading="loading" :model="filters" label-position="top">
       <el-row :gutter="20">
         <!--  CAMPANHA -->
-        <el-col :span="12">
+        <el-col v-if="!loading" :span="12">
           <el-form-item label="Campanha">
             <el-select
               v-model="filters.campaignid"
@@ -20,7 +20,7 @@
           </el-form-item>
         </el-col>
         <!-- ESTRATÉGIA -->
-        <el-col :span="12">
+        <el-col v-if="!loading" :span="12">
           <el-form-item label="Estratégia">
             <el-select
               v-model="filters.strategyid"

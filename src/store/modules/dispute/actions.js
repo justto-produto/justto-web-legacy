@@ -110,14 +110,16 @@ const disputeActions = {
   },
   sendDisputeAction ({ commit }, params) {
     return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
       let request
       if (params.action === 'restart-engagement') {
+        // eslint-disable-next-line
         request = axios.patch('api/disputes/' + params.disputeId + '/' + params.action)
       } else {
-        axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)
+        // eslint-disable-next-line
+        request = axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)
       }
-      request.then(response => {
+      request
+        .then(response => {
           resolve(response.data)
         })
         .catch(error => {
