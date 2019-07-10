@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain :loading-main="loadingDisputes" class="view-management">
+  <JusViewMain :loading-main="$store.state.loading" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
       <management-carousel />
@@ -257,7 +257,6 @@ export default {
       activeFilters: {},
       activeTab: '0',
       loadingExport: false,
-      loadingDisputes: false,
       currentPage: 1,
       disputesPerPage: 20,
       initialDisputesPerPage: 20
@@ -301,12 +300,9 @@ export default {
   },
   methods: {
     getDisputes () {
-      this.loadingDisputes = true
       this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
         .catch(() => {
           this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.loadingDisputes = false
         })
     },
     applyFilters () {
