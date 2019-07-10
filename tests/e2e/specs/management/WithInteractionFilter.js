@@ -1,4 +1,4 @@
-describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
+describe('Justto.App - Com Interação: Filtro Engajamento', function () {
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
@@ -25,8 +25,8 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.url().should('include', '/#/management')
   })
 
-  it('Gerenciamento: Engajamento - Exibição dos Casos', function () {
-    // Seleciona a aba "Engajamento"
+  it('Gerenciamento: Com Interação - Exibição dos Casos', function () {
+    // Seleciona a aba "Com Interação"
     cy.contains('Engajamento').should('be.visible').click()
 
     // Seleciona botão 'Filtrar'
@@ -62,8 +62,8 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.get('[class=el-table__body]').should('be.visible')
   })
 
-  it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
-    // Seleciona a aba "Engajamento"
+  it('Gerenciamento: Com Interação - Exibição dos Casos - Vazio', function () {
+    // Seleciona a aba "Com Interação"
     cy.contains('Engajamento').should('be.visible').click()
 
     // Seleciona botão 'Filtrar'
