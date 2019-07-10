@@ -114,6 +114,9 @@ const disputeActions = {
       if (params.action === 'restart-engagement') {
         // eslint-disable-next-line
         request = axios.patch('api/disputes/' + params.disputeId + '/' + params.action)
+      } else if (params.action === 'enrich') {
+        // eslint-disable-next-line
+        request = axios.patch('api/fusion-runner/enrich/' + params.disputeId)
       } else {
         // eslint-disable-next-line
         request = axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)
