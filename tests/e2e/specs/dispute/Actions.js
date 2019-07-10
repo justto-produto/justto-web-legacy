@@ -10,13 +10,13 @@ describe('Justto.App - Disputa: Ações', function () {
 
         // Preenche o campo 'Email'
         cy.get('[data-testid=login-email]')
-            .type('dubu@voemail.com')
-            .should('have.value', 'dubu@voemail.com')
+            .type('lucas@justto.com.br')
+            .should('have.value', 'lucas@justto.com.br')
 
         // Preenche o campo 'Senha'
         cy.get('[data-testid=login-password]')
-            .type('password')
-            .should('have.value', 'password')
+            .type('123456')
+            .should('have.value', '123456')
 
         // Clica no botão "Entrar"
         cy.get('[data-testid=submit]')
@@ -27,53 +27,53 @@ describe('Justto.App - Disputa: Ações', function () {
     })
 
     it('Entra na disputa', function () {
-      cy.contains('#12739').click()
+      cy.contains('#5045').click()
     })
 
-    // it('Ação: Pausar', function () {
-    //   // Clica em Pausar
-    //   cy.get('[data-testid=paused]')
-    //       .click()
-    //   // Modal de confirmação deve aparecer
-    //   cy.get('.el-message-box')
-    //       .should('be.visible')
-    //   // Confirma a ação
-    //   cy.get('.confirm-action-btn')
-    //       .click()
-    //   // Notificação de sucesso deve aparecer
-    //   cy.contains('Ação realizada com sucesso.')
-    //       .should('be.visivel')
-    // })
-    //
-    // it('Ação: Retomar', function () {
-    //   // Clica em Retomar
-    //   cy.get('[data-testid=resume')
-    //       .click()
-    //   // Modal de confirmação deve aparecer
-    //   cy.get('.el-message-box')
-    //       .should('be.visible')
-    //   // Confirma a ação
-    //   cy.get('.confirm-action-btn')
-    //       .click()
-    //   // Notificação de sucesso deve aparecer
-    //   cy.contains('Ação realizada com sucesso.')
-    //       .should('be.visivel')
-    // })
-    //
-    // it('Ação: Ganhar', function () {
-    //     // Clica em Ganhar
-    //     cy.get('[data-testid=settled]')
-    //         .click()
-    //     // Modal de confirmação deve aparecer
-    //     cy.get('.el-message-box')
-    //         .should('be.visible')
-    //     // Confirma a ação
-    //     cy.get('.confirm-action-btn')
-    //         .click()
-    //     // Notificação de sucesso deve aparecer
-    //     cy.contains('Ação realizada com sucesso.')
-    //         .should('be.visivel')
-    // })
+    it('Ação: Pausar', function () {
+      // Clica em Pausar
+      cy.get('[data-testid=paused]')
+          .click()
+      // Modal de confirmação deve aparecer
+      cy.get('.el-message-box')
+          .should('be.visible')
+      // Confirma a ação
+      cy.get('.confirm-action-btn')
+          .click()
+      // Notificação de sucesso deve aparecer
+      cy.contains('Ação realizada com sucesso.')
+          .should('be.visivel')
+    })
+
+    it('Ação: Retomar', function () {
+      // Clica em Retomar
+      cy.get('[data-testid=resume')
+          .click()
+      // Modal de confirmação deve aparecer
+      cy.get('.el-message-box')
+          .should('be.visible')
+      // Confirma a ação
+      cy.get('.confirm-action-btn')
+          .click()
+      // Notificação de sucesso deve aparecer
+      cy.contains('Ação realizada com sucesso.')
+          .should('be.visivel')
+    })
+
+    it('Ação: Ganhar', function () {
+        // Clica em Ganhar
+        cy.get('[data-testid=settled]')
+            .click()
+        // Modal de confirmação deve aparecer
+        cy.get('.el-message-box')
+            .should('be.visible')
+        // Confirma a ação
+        cy.get('.confirm-action-btn')
+            .click()
+        // Notificação de sucesso deve aparecer
+        cy.contains('Ação realizada com sucesso.')
+            .should('be.visivel')
+    })
 
     it('Ação: Perder', function () {
         // Clica em Perder
