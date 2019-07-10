@@ -63,6 +63,7 @@
           <el-form-item v-if="isInteration" label="Meio de interação">
             <el-select
               v-model="filters.interaction"
+              data-testid="filter-setinteraction"
               placeholder="Selecione uma opção"
               clearable
               @change="setInteraction">

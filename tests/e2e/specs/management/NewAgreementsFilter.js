@@ -1,4 +1,4 @@
-describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
+describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
@@ -25,9 +25,9 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.url().should('include', '/#/management')
   })
 
-  it('Gerenciamento: Engajamento - Exibição dos Casos', function () {
-    // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible').click()
+  it('Gerenciamento: Novos Acordos - Exibição dos Casos', function () {
+    // Seleciona a aba "Com Interação"
+    cy.contains('Novos Acordos').should('be.visible').click()
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -38,6 +38,8 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
       .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
       .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
       .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+
+    cy.wait(5000)
 
     // Seleciona Estratégia
     cy.get('[data-testid=filter-strategy]')
@@ -48,14 +50,6 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     // Seleciona Disputas Favoritas
     cy.get('[data-testid=filters-favorite]').click()
 
-    // // Seleciona datepicker 'Fim da Negociação'
-    // cy.get('[data-testid=filters-disputeexpirationdate]')
-    //   .click()
-    //   .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
-    //   .trigger('keydown', { keyCode: 40, Which: 40 })
-    //   .trigger('keydown', { keyCode: 40, Which: 40 })
-    //   .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
-
     // Seleciona o botão "Aplicar filtros"
     cy.get('[data-testid=filter-applyfilter]').click()
 
@@ -63,9 +57,9 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.get('[class=el-table__body]').should('be.visible')
   })
 
-  it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
-    // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible').click()
+  it('Gerenciamento: Novos Acordos - Exibição dos Casos - Vazio', function () {
+    // Seleciona a aba "Com Interação"
+    cy.contains('Novos Acordos').should('be.visible').click()
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -82,6 +76,9 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
       .trigger('keydown', { keyCode: 40, Which: 40 })
       .trigger('keydown', { keyCode: 40, Which: 40 })
       .trigger('keydown', { keyCode: 13, Which: 13 })
+
+    // Seleciona Disputas Favoritas
+    cy.get('[data-testid=filters-favorite]').click()
 
     // Seleciona o botão "Aplicar filtros"
     cy.get('[data-testid=filter-applyfilter]').click()
