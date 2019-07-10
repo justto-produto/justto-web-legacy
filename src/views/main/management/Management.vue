@@ -84,8 +84,8 @@
                 </el-col>
                 <el-col :span="8">
                   <div>Alçada máxima: {{ props.row.disputeupperrange | currency }}</div>
-                  <div>Valor proposto: {{ props.row.disputelastrespondentoffer | currency }}</div>
-                  <div>Contraproposta: {{ props.row.lastoffervalue | currency }}</div>
+                  <div>Valor proposto: {{ props.row.lastOfferValue | currency }}</div>
+                  <div>Contraproposta: {{ props.row.lastCounterOfferValue | currency }}</div>
                   <div>Valor do acordo: {{ props.row.disputedealvalue | currency }}</div>
                 </el-col>
               </el-row>
@@ -122,10 +122,10 @@
           <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
         </el-table-column>
         <el-table-column v-if="activeTab === '0'" label="Valor proposto" align="center" min-width="110px">
-          <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
+          <template slot-scope="scope">{{ scope.row.lastOfferValue | currency }}</template>
         </el-table-column>
         <el-table-column v-if="activeTab === '1'" label="Contraproposta" align="center" min-width="116px">
-          <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
+          <template slot-scope="scope">{{ scope.row.lastCounterOfferValue | currency }}</template>
         </el-table-column>
         <el-table-column
           v-if="activeTab < 2"
@@ -195,7 +195,7 @@
               <el-button
                 type="text"
                 @click="openNewTab(scope.row.disputeid)">
-                <jus-icon icon="external" />
+                <jus-icon icon="external-link" />
               </el-button>
             </el-tooltip>
           </template>
@@ -321,7 +321,7 @@ export default {
       this.showFilters = false
       window.analytics.track('Filtro aplicado', {
         filters: this.filters,
-        tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento'
+        tab: this.activeTabLabel
       })
     },
     handleSelectionChange (selected) {
@@ -430,7 +430,9 @@ export default {
       let date = this.$moment(lastinteractiondate)
       if (date.isValid()) {
         let now = this.$moment()
-        if (now.diff(date, 'seconds') < 59) {
+        if (now.diff(date, 'seconds') < 0) {
+          return ''
+        } else if (now.diff(date, 'seconds') < 59) {
           return now.diff(date, 'seconds') + ' segundos'
         } else if (now.diff(date, 'minutes') < 59) {
           return now.diff(date, 'minutes') + ' minuto(s)'
@@ -457,7 +459,7 @@ export default {
         case 'TTS':
           return 'tts'
         default:
-          return 'chat'
+          return ''
       }
     },
     handleChangePagination () {
