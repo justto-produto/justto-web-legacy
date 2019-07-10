@@ -175,6 +175,7 @@
                     :rows="3"
                     v-model="newMessage"
                     type="textarea"
+                    data-testid="input-message"
                     placeholder="Escreva alguma coisa" />
                 </el-collapse-transition>
                 <div class="dispute-view__send-message-actions">
@@ -209,7 +210,10 @@
                   </el-tooltip>
                   <el-tooltip v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'" content="Whatsapp desconectado">
                     <div>
-                      <el-button :disabled="true" type="primary" @click="sendMessage()">
+                      <el-button
+                        :disabled="true"
+                        type="primary"
+                        @click="sendMessage()">
                         Enviar
                       </el-button>
                     </div>
@@ -248,9 +252,10 @@
                   :rows="3"
                   v-model="newNote"
                   type="textarea"
+                  data-testid="input-nota"
                   placeholder="Escreva alguma coisa" />
                 <div class="dispute-view__send-message-actions note">
-                  <el-button type="primary" @click="sendNote()">
+                  <el-button type="primary" data-testid="submit-note" @click="sendNote()">
                     Salvar nota
                   </el-button>
                 </div>
