@@ -52,6 +52,19 @@ const disputeGetters = {
           return filter
         })
       }
+      if (state.filters.sort.order) {
+        filteredDisputes.sort((a, b) => {
+          let compareA = Object.assign({}, a)
+          let compareB = Object.assign({}, b)
+          let directionA = state.filters.sort.order === 'ascending' ? 1 : -1
+          let directionB = directionA === 1 ? -1 : 1
+          if (!compareA[state.filters.sort.prop]) compareA[state.filters.sort.prop] = moment(0)
+          if (!compareB[state.filters.sort.prop]) compareB[state.filters.sort.prop] = moment(0)
+          if (moment(compareA[state.filters.sort.prop]).isAfter(compareB[state.filters.sort.prop])) return directionA
+          if (moment(compareA[state.filters.sort.prop]).isBefore(compareB[state.filters.sort.prop])) return directionB
+          return 0
+        })
+      }
     }
     return filteredDisputes
   },

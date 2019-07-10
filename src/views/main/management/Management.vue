@@ -54,6 +54,7 @@
         size="mini"
         class="el-table--disputes"
         @row-click="handleRowClick"
+        @sort-change="handleSortChange"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="40px" />
         <el-table-column type="expand" width="40px">
@@ -83,7 +84,7 @@
                   </div>
                 </el-col>
                 <el-col :span="8">
-                  <div>Alçada máxima: {{ props.row.disputeupperrange | currency }}</div>
+                  <div>Alçada máxima: {{ props.row.disputeUpperRange | currency }}</div>
                   <div>Valor proposto: {{ props.row.lastOfferValue | currency }}</div>
                   <div>Contraproposta: {{ props.row.lastCounterOfferValue | currency }}</div>
                   <div>Valor do acordo: {{ props.row.disputedealvalue | currency }}</div>
@@ -119,7 +120,7 @@
           </template>
         </el-table-column>
         <el-table-column v-if="activeTab !== '3'" label="Alçada máxima" align="center" min-width="116px">
-          <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
+          <template slot-scope="scope">{{ scope.row.disputeUpperRange | currency }}</template>
         </el-table-column>
         <el-table-column v-if="activeTab === '0'" label="Valor proposto" align="center" min-width="110px">
           <template slot-scope="scope">{{ scope.row.lastOfferValue | currency }}</template>
@@ -129,8 +130,7 @@
         </el-table-column>
         <el-table-column
           v-if="activeTab < 2"
-          :sort-method="sortExpirationDate"
-          sortable
+          sortable="custom"
           prop="disputeexpirationdate"
           label="Fim da negociação"
           align="center"
@@ -139,8 +139,7 @@
         </el-table-column>
         <el-table-column
           v-if="activeTab === '1'"
-          :sort-method="sortLastInteractionDate"
-          sortable
+          sortable="custom"
           prop="lastinteractiondate"
           label="Última interação"
           min-width="146px"
@@ -155,8 +154,7 @@
         </el-table-column>
         <el-table-column
           v-if="activeTab === '2'"
-          :sort-method="sortDisputeDealDate"
-          sortable
+          sortable="custom"
           prop="disputedealdate"
           label="Data do acordo"
           min-width="138px"
@@ -410,20 +408,8 @@ export default {
       let routeData = this.$router.resolve({ name: 'dispute', params: { id: disputeId } })
       window.open(routeData.href, '_blank')
     },
-    sortExpirationDate (a, b) {
-      if (this.$moment(a.disputeexpirationdate).isAfter(b.disputeexpirationdate)) return 1
-      if (this.$moment(a.disputeexpirationdate).isBefore(b.disputeexpirationdate)) return -1
-      return 0
-    },
-    sortLastInteractionDate (a, b) {
-      if (this.$moment(a.lastinteractiondate).isAfter(b.lastinteractiondate)) return 1
-      if (this.$moment(a.lastinteractiondate).isBefore(b.lastinteractiondate)) return -1
-      return 0
-    },
-    sortDisputeDealDate (a, b) {
-      if (this.$moment(a.disputedealdate).isAfter(b.disputedealdate)) return 1
-      if (this.$moment(a.disputedealdate).isBefore(b.disputedealdate)) return -1
-      return 0
+    handleSortChange (sort) {
+      this.$store.commit('setDisputeSort', sort)
     },
     getLastInteraction (lastinteractiondate) {
       let date = this.$moment(lastinteractiondate)
