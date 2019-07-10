@@ -6,35 +6,38 @@
           <span class="title">Nº do Processo:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div v-if="dispute.campaign" class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line">
           <span class="title">Campanha:</span>
-          <span>{{ dispute.campaign.name }}</span>
+          <span v-if="dispute.campaign">{{ dispute.campaign.name }}</span>
         </div>
-        <div v-if="dispute.strategy" class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line">
           <span class="title">Estratégia:</span>
-          <span>{{ dispute.strategy.name }}</span>
-        </div><div v-if="dispute.strategy" class="dispute-overview-view__info-line">
+          <span v-if="dispute.strategy">{{ dispute.strategy.name }}</span>
+        </div>
+        <div class="dispute-overview-view__info-line">
           <span class="title">Status:</span>
           <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
         </div>
-        <div v-if="dispute.upperRange" class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line">
           <span class="title">Alçada máxima:</span>
-          <span>{{ dispute.upperRange.boundary | currency }}</span>
+          <span v-if="dispute.upperRange">{{ dispute.upperRange.boundary | currency }}</span>
+          <span v-else>{{ 0 | currency }}</span>
         </div>
         <div class="dispute-overview-view__info-line">
           <span class="title">Contraproposta:</span>
-          <span v-if="dispute.lastCounterOffer">{{ dispute.lastCounterOffer | currency }}</span>
+          <span v-if="dispute.lastCounterOffer">{{ dispute.lastCounterOffer.boundary | currency }}</span>
           <span v-else>{{ 0 | currency }}</span>
         </div>
         <div
-          v-if="dispute.lastOffer && (dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED')"
+          v-if="dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED'"
           class="dispute-overview-view__info-line">
           <span class="title">Valor do acordo:</span>
-          <span>{{ dispute.lastOffer.boundary | currency }}</span>
+          <span v-if="dispute.dealValue">{{ dispute.dealValue.boundary | currency }}</span>
+          <span v-else>{{ 0 | currency }}</span>
         </div>
-        <div v-if="dispute.valueOfClaim" class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line">
           <span class="title">Valor proposto:</span>
-          <span>{{ dispute.lastOffer | currency }}</span>
+          <span>{{ dispute.lastOffer.boundary | currency }}</span>
         </div>
         <div class="dispute-overview-view__info-line">
           <span class="title">Fim da negociação:</span>
