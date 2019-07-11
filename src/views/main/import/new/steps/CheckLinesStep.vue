@@ -52,5 +52,8 @@ export default {
     line-height: 20px;
     margin: 0;
   }
+  strong {
+    width: 100%;
+  }
 }
 </style>

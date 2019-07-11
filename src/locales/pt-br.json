@@ -76,5 +76,19 @@
     "RESUME": "retomar",
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha"
+  },
+  "fields": {
+    "claimantParty": "Parte contrária",
+    "claimantLawyer": "Advogado da parte",
+    "dispute": "disputa",
+    "respondentParty": "Réu"
+  },
+  "el": {
+    "pagination": {
+      "pagesize": " por página",
+      "goto": "Ir para",
+      "pageClassifier": "",
+      "total": "Total de disputas: {total}"
+    }
   }
 }

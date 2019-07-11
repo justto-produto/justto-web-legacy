@@ -24,7 +24,12 @@
             :class="{'el-tag--dropzone-active': column.tag}"
             class="el-tag--dropzone"
             @close="removeTag(column)">
-            <span v-if="column.tag">{{ $t(column.tag.key) | capitalize }}</span>
+            <span v-if="column.tag">
+              <span v-if="column.index !== undefined && column.index !== null">
+                {{ $t('fields.' + getColumnTitle(column.tag.id)) }} {{ column.index + 1 }} -
+              </span>
+              {{ $t(column.tag.key) | capitalize }}
+            </span>
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
         </div>
@@ -53,8 +58,9 @@
               v-for="(tag, index) in disputeTags"
               :key="`${tag.id}-${tag.name}`"
               :class="{'el-tag--drag-active': !isAvailable(tag)}"
+              class="el-tag--drag-container"
               draggable="true"
-              @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
+              @dragstart.self="dragTag($event, JSON.stringify({ tag, index }))">
               <el-tag class="el-tag--drag">
                 {{ $t(tag.key) | capitalize }}
               </el-tag>
@@ -72,6 +78,7 @@
                 v-for="tag in tags.claimantParty.tags"
                 :key="`${tag.id}-${tag.name}`"
                 :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                class="el-tag--drag-container"
                 draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
                 <el-tag class="el-tag--drag">
@@ -96,6 +103,7 @@
                 v-for="tag in tags.claimantLawyer.tags"
                 :key="`${tag.id}-${tag.name}`"
                 :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                class="el-tag--drag-container"
                 draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
                 <el-tag class="el-tag--drag">
@@ -120,6 +128,7 @@
                 v-for="tag in tags.respondentParty.tags"
                 :key="`${tag.id}-${tag.name}`"
                 :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
+                class="el-tag--drag-container"
                 draggable="true"
                 @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
                 <el-tag class="el-tag--drag">
@@ -226,10 +235,10 @@ export default {
     },
     isMultipleAvailable (tag, index) {
       var isAvailable = true
-      this.columns.find(element => {
-        if (element.tag) {
-          let elIndex = element.index ? element.index : 0
-          let elKey = element.tag.id
+      this.columns.find(column => {
+        if (column.tag) {
+          let elIndex = column.index ? column.index : 0
+          let elKey = column.tag.id
           let tagKey = tag.id
           if (elKey === tagKey && elIndex === index) {
             isAvailable = false
@@ -265,6 +274,21 @@ export default {
         }
       })
       return match
+    },
+    getColumnTitle (id) {
+      let title = ''
+      for (let tagList in this.tags) {
+        if (this.tags.hasOwnProperty(tagList)) {
+          if (this.tags[tagList] && this.tags[tagList].tags) {
+            this.tags[tagList].tags.map(tag => {
+              if (tag.id === id) {
+                title = tagList
+              }
+            })
+          }
+        }
+      }
+      return title
     }
   }
 }
@@ -320,6 +344,7 @@ export default {
     line-height: inherit;
     padding: 10px 0;
     font-size: 14px;
+    margin: 1px;
   }
   .el-collapse-item__arrow {
     line-height: 20px;

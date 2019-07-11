@@ -76,12 +76,22 @@ export default {
     this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
         this.$store.dispatch('whatsappStart')
+      } else if (whatsapp.status !== 'CONNECTED') {
+        this.$store.dispatch('whatsappStop').then(() => {
+          this.$store.dispatch('whatsappStart')
+        })
       } else {
         this.$store.commit('SOCKET_refresh', whatsapp)
       }
     })
     this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
     this.$socket.emit('subscribe', '/workspaces/' + this.$store.state.workspaceModule.id)
+  },
+  sockets: {
+    reconnect () {
+      this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
+      this.$socket.emit('subscribe', '/workspaces/' + this.$store.state.workspaceModule.id)
+    }
   }
 }
 </script>

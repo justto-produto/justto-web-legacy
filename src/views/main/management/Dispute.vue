@@ -20,6 +20,7 @@
         :unsettled-types="unsettledTypes"
         :show-scheduled.sync="showScheduled"
         :strategy-id="dispute.strategy.id"
+        data-testid="dispute-summary"
         @dispute:refresh="fetchData({ fetchMessages: true })" />
     </template>
     <!-- CHAT -->
@@ -36,27 +37,40 @@
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip> -->
-          <el-tooltip content="Ganhar" data-testid="win">
-            <el-button :disabled="!canSettled()" plain @click="disputeAction('settled')">
+          <el-tooltip content="Ganhar">
+            <el-button
+              :disabled="!canSettled()"
+              plain
+              data-testid="settled"
+              @click="disputeAction('settled')">
               <jus-icon icon="win" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Perder" data-testid="lose">
-            <el-button :disabled="!canUnsettled()" plain @click="disputeAction('unsettled')">
+          <el-tooltip content="Perder">
+            <el-button
+              :disabled="!canUnsettled()"
+              plain
+              data-testid="unsettled"
+              @click="disputeAction('unsettled')">
               <jus-icon icon="lose" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Retomar" data-testid="start-again">
-            <el-button plain @click="disputeAction('resume')">
+          <el-tooltip content="Reiniciar engajamento">
+            <el-button plain data-testid="restart-engagement" @click="disputeAction('restart-engagement')">
+              <jus-icon icon="refresh" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="Retomar">
+            <el-button plain data-testid="resume" @click="disputeAction('resume')">
               <jus-icon icon="start-again" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Pausar" data-testid="pause">
-            <el-button plain @click="disputeAction('paused')">
+          <el-tooltip content="Pausar">
+            <el-button plain data-testid="paused" @click="disputeAction('paused')">
               <jus-icon icon="pause" />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Alterar Negociador" data-testid="delegate">
+          <el-tooltip content="Alterar Negociador">
             <el-button plain @click="editNegotiator()">
               <jus-icon icon="delegate" />
             </el-button>
@@ -67,7 +81,11 @@
             </el-button>
           </el-tooltip> -->
           <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-            <el-button plain class="right" @click="disputeAction(isFavorite ? 'disfavor' : 'favorite')">
+            <el-button
+              plain
+              class="right"
+              data-testid="favorite"
+              @click="disputeAction(isFavorite ? 'disfavor' : 'favorite')">
               <jus-icon :icon="isFavorite ? 'golden-star' : 'star'" />
             </el-button>
           </el-tooltip>
@@ -86,7 +104,8 @@
           :visible.sync="chooseUnsettledDialogVisible"
           title="Atenção!"
           class="dispute-view__choose-unsettled-dialog"
-          width="460px">
+          width="460px"
+          data-testid="choose-unsettled-dialog">
           <div class="el-message-box__content">
             <div class="el-message-box__status el-icon-warning"/>
             <div class="el-message-box__message"><p>
@@ -96,6 +115,7 @@
           <el-select
             v-loading="$store.state.loading"
             v-model="unsettledType"
+            data-testid="select-unsettled"
             placeholder="Escolha o motivo da perda">
             <el-option
               v-for="(type, index) in unsettledTypes"
@@ -104,10 +124,11 @@
               :value="index" />
           </el-select>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="chooseUnsettledDialogVisible = false" data-testid="cancel">Cancelar</el-button>
+            <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
             <el-button
               :disabled="!unsettledType"
               type="primary"
+              class="confirm-action-unsettled"
               @click.prevent="doAction('unsettled')">
               Continuar
             </el-button>
@@ -138,9 +159,10 @@
         </el-dialog>
         <dispute-messages
           :messages-prop="filteredDisputeMessages"
-          :loading="loadingDisputeMessages"
+          :loading.sync="loadingDisputeMessages"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
+          data-testid="dispute-messages"
           @dispute:refresh="fetchData({ fetchMessages: true })" />
         <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
@@ -153,6 +175,7 @@
                     :rows="3"
                     v-model="newMessage"
                     type="textarea"
+                    data-testid="input-message"
                     placeholder="Escreva alguma coisa" />
                 </el-collapse-transition>
                 <div class="dispute-view__send-message-actions">
@@ -181,13 +204,16 @@
                     </div>
                   </div>
                   <el-tooltip v-else content="Escolha um destinatário ao lado para receber sua mensagem">
-                    <div class="dispute-view__disabled-text">
+                    <div class="dispute-view__disabled-text" data-testid="unselected-party">
                       Escolha um destinatário ao lado
                     </div>
                   </el-tooltip>
                   <el-tooltip v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'" content="Whatsapp desconectado">
                     <div>
-                      <el-button :disabled="true" type="primary" @click="sendMessage()">
+                      <el-button
+                        :disabled="true"
+                        type="primary"
+                        @click="sendMessage()">
                         Enviar
                       </el-button>
                     </div>
@@ -198,7 +224,11 @@
                     </el-button>
                   </div>
                   <div v-else>
-                    <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
+                    <el-button
+                      :disabled="!activePerson.id"
+                      type="primary"
+                      data-testid="submit-email"
+                      @click="sendMessage()">
                       Enviar
                     </el-button>
                   </div>
@@ -226,9 +256,10 @@
                   :rows="3"
                   v-model="newNote"
                   type="textarea"
+                  data-testid="input-nota"
                   placeholder="Escreva alguma coisa" />
                 <div class="dispute-view__send-message-actions note">
-                  <el-button type="primary" @click="sendNote()">
+                  <el-button type="primary" data-testid="submit-note" @click="sendNote()">
                     Salvar nota
                   </el-button>
                 </div>
@@ -244,7 +275,11 @@
         <h2>Dados da disputa</h2>
         <!-- <el-button plain>Exportar disputa</el-button> -->
         <el-tooltip content="Excluir disputa">
-          <el-button plain class="right" @click="removeDispute()">
+          <el-button
+            plain
+            class="right"
+            data-testid="remove"
+            @click="removeDispute()">
             <jus-icon icon="trash" />
           </el-button>
         </el-tooltip>
@@ -253,6 +288,7 @@
         :loading="loadingDispute"
         :dispute="dispute"
         :active-person.sync="activePerson"
+        data-testid="dispute-overview"
         @dispute:refresh="fetchData({ fetchDispute: true })" />
     </template>
   </JusViewMain>
@@ -289,7 +325,7 @@ export default {
       disputeNegotiators: [],
       negotiatorsForm: {},
       negotiatorsRules: {},
-      unsettledTypes: [],
+      unsettledTypes: {},
       unsettledType: null,
       typingTab: '1'
     }
@@ -384,6 +420,7 @@ export default {
     },
     removeDispute () {
       this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
+        confirmButtonClass: 'confirm-remove-btn',
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error'
@@ -408,6 +445,7 @@ export default {
         })
       }
       if (options.fetchMessages) {
+        this.loadingDisputeMessages = true
         this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
           if (!this.disputeMessages.length) {
             this.disputeMessages = responses
@@ -421,7 +459,11 @@ export default {
             this.disputeMessages.push(...newMessages)
             this.filteredDisputeMessages.push(...newMessages)
           }
-        }).catch(() => this.$jusNotification({ type: 'error' }))
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingDisputeMessages = false
+        })
       }
     },
     handleTabClick (tab) {
@@ -452,6 +494,7 @@ export default {
         this.unsettledType = null
       } else {
         this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+          confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           type: 'warning'
@@ -488,7 +531,6 @@ export default {
         window.analytics.track(trackTitle, {
           action: action
         })
-        this.chooseUnsettledDialogVisible = false
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação realizada com sucesso.',
@@ -498,6 +540,7 @@ export default {
           this.fetchData({ fetchDispute: true, fetchMessages: true })
         }.bind(this), 1000)
       }).catch(() => this.$jusNotification({ type: 'error' }))
+      .finally(() => this.chooseUnsettledDialogVisible = false)
     },
     sendChatMessage () {
       if (this.newChatMessage) {

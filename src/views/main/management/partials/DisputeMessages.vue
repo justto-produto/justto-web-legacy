@@ -1,16 +1,23 @@
 <template>
-  <ul v-loading="messages === null" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
+  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="message in messages"
       v-if="isntCanceled(message)"
       v-show="checkShowScheduled(message)"
       :key="message.id"
+      data-testid="message-index"
       class="dispute-view-messages__message">
       <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="dispute-view-messages__message-box">
         <div>
           <div :class="directionClass(message) + waitingClass(message)" class="dispute-view-messages__message-content">
             <div>{{ message.description }}</div>
-            <el-button v-if="message.message && message.message.type === 'EMAIL'" type="text" @click="showMessageDialog(message.message.content)">Visualizar email</el-button>
+            <el-button
+              v-if="message.message && message.message.type === 'EMAIL'"
+              type="text"
+              data-testid="show-email"
+              @click="showMessageDialog(message.message.content)">
+              Visualizar email
+            </el-button>
             <span v-else v-html="message.message && message.message.content" />
             <i v-if="directionClass(message) === 'note'">
               <br>
@@ -24,7 +31,7 @@
             </i>
           </div>
           <div class="dispute-view-messages__message-time">
-            <span v-if="message.executionDateTime || message.message.schedulerTime">
+            <span v-if="message.executionDateTime || (message.message && message.message.schedulerTime)">
               {{ message.executionDateTime != null ? message.executionDateTime : message.message.schedulerTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-if="directionClass(message) !== 'note'">
@@ -51,10 +58,11 @@
     </li>
     <el-dialog
       :visible.sync="showMessage"
+      data-testid="email-dialog"
       width="80%">
       <span v-html="messageContent"/>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="showMessage = false">Fechar</el-button>
+        <el-button data-testid="close-button" @click="showMessage = false">Fechar</el-button>
       </span>
     </el-dialog>
   </ul>
@@ -70,7 +78,7 @@ export default {
     },
     loading: {
       type: Boolean,
-      default: true
+      default: false
     },
     showScheduled: {
       type: Boolean,
@@ -91,34 +99,24 @@ export default {
   },
   computed: {
     messages () {
-      if (this.messagesProp.length) {
-        return this.messagesProp.filter(message => {
-          if (this.currentTab === '3') {
+      return this.messagesProp.filter(message => {
+        switch (this.currentTab) {
+          case '1':
+            if (message.type !== 'NOTE') {
+              if (message.message && message.message.type === 'CHAT') {
+                return false
+              } else {
+                return true
+              }
+            } else {
+              return false
+            }
+          case '2':
+            return message.message && message.message.type === 'CHAT'
+          case '3':
             return message.type === 'NOTE'
-          } else {
-            return true
-          }
-        })
-      } else {
-        return null
-      }
-      // TRECHO DE CÓDIGO PRONTO ESPERANDO CHAT FUNCIONAR
-      // switch (this.currentTab) {
-      //   case '1':
-      //     if (message.type !== 'NOTE') {
-      //       if (message.message && message.message.type === 'CHAT') {
-      //         return false
-      //       } else {
-      //         return true
-      //       }
-      //     } else {
-      //       return false
-      //     }
-      //   case '2':
-      //     return message.message && message.message.type === 'CHAT'
-      //   case '3':
-      //     return message.type === 'NOTE'
-      // }
+        }
+      })
     }
   },
   watch: {

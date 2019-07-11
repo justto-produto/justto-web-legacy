@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="dispute-view__side-content">
+  <div v-loading="!summary" class="dispute-view__side-content">
     <el-steps
       :active="0"
       direction="vertical"
@@ -75,7 +75,7 @@ export default {
   },
   data () {
     return {
-      summary: {},
+      summary: null,
       scheduled: false,
       unsettledType: null,
       unsettledTypeId: null
@@ -83,29 +83,30 @@ export default {
   },
   computed: {
     isDeal () {
-      if (Object.keys(this.summary).length) {
+      if (this.summary && Object.keys(this.summary).length) {
         return this.summary.disputestatus === 'ACCEPTED' || this.summary.disputestatus === 'CHECKOUT' || this.summary.disputestatus === 'SETTLED'
       }
+      return false
     },
     enriched () {
       return {
-        email: this.summary.enrichedemails ? this.summary.enrichedemails : 0,
-        phone: this.summary.enrichedphones ? this.summary.enrichedphones : 0
+        email: this.summary && this.summary.enrichedemails ? this.summary.enrichedemails : 0,
+        phone: this.summary && this.summary.enrichedphones ? this.summary.enrichedphones : 0
       }
     },
     interactions () {
       return {
-        email: this.summary.emailinteractions ? this.summary.emailinteractions : 0,
-        whatsapp: this.summary.whatsappinterations ? this.summary.whatsappinterations : 0,
-        cna: this.summary.cnainteractions ? this.summary.cnainteractions : 0,
-        views: this.summary.disputenegotiationviews ? this.summary.disputenegotiationviews : 0
+        email: this.summary && this.summary.emailinteractions ? this.summary.emailinteractions : 0,
+        whatsapp: this.summary && this.summary.whatsappinterations ? this.summary.whatsappinterations : 0,
+        cna: this.summary && this.summary.cnainteractions ? this.summary.cnainteractions : 0,
+        views: this.summary && this.summary.disputenegotiationviews ? this.summary.disputenegotiationviews : 0
       }
     },
     boundary () {
       return parseInt(this.summary.disputeobjectboundary ? this.summary.disputeobjectboundary : 0)
     },
     deal () {
-      return this.summary.disputedealvalue
+      return this.summary && this.summary.disputedealvalue ? this.summary.disputedealvalue : null
     }
   },
   watch: {
@@ -119,7 +120,9 @@ export default {
   beforeMount () {
     this.getSummary(this.$store.state.disputeModule.disputes)
     this.$store.watch(state => state.disputeModule.disputes, disputes => {
-      this.getSummary(disputes)
+      if (!this.summary) {
+        this.getSummary(disputes)
+      }
     })
   },
   methods: {

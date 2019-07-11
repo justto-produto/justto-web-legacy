@@ -1,50 +1,48 @@
 
-  // it('Importa planilha modelo: Sucesso', function () {
-  //   const fileName = 'Planilha-Modelo-Justto.xlsx'
-  //   // const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  //   // const fileInput = 'input[type=file]'
-  //
-  //   cy.fixture(fileName).then(fileContent => {
-  //     cy.get('input[type=file]').upload(
-  //       { fileContent, fileName, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
-  //       { subjectType: 'input' }
-  //     )
-  //   })
-  // })
+// it('Importa planilha modelo: Sucesso', function () {
+//   const fileName = 'Planilha-Modelo-Justto.xlsx'
+//   // const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+//   // const fileInput = 'input[type=file]'
+//
+//   cy.fixture(fileName).then(fileContent => {
+//     cy.get('input[type=file]').upload(
+//       { fileContent, fileName, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+//       { subjectType: 'input' }
+//     )
+//   })
+// })
 
-describe('Justto.App - Planilha Modelo', function() {
-    // beforeEach(function () {
-        it('Login: Sucesso', function() {
-            // Acessa a página inicial do Justto.App
-            // cy.visit('http://homol.justto.com.br')
-            cy.visit('localhost:8080')
+describe('Justto.App - Planilha Modelo', function () {
+    it('Login: Sucesso', function () {
+        // Acessa a página inicial do Justto.App
+        // cy.visit('http://homol.justto.com.br')
+        cy.visit('localhost:8080')
 
-            // Sistema deve redirecionar para a página de Login
-            cy.url().should('include', '/#/login')
+        // Sistema deve redirecionar para a página de Login
+        cy.url().should('include', '/#/login')
 
-            // Preenche o campo 'Email'
-            cy.get('[data-testid="login-email"]')
-                .type('guilherme@justto.com.br')
-                .should('have.value', 'guilherme@justto.com.br')
+        // Preenche o campo 'Email'
+        cy.get('[data-testid="login-email"]')
+            .type('dubu@voemail.com')
+            .should('have.value', 'dubu@voemail.com')
 
-            // Preenche o campo 'Senha'
-            cy.get('[data-testid="login-password"]')
-                .type('tOOr13@$')
-                .should('have.value', 'tOOr13@$')
+        // Preenche o campo 'Senha'
+        cy.get('[data-testid="login-password"]')
+            .type('password')
+            .should('have.value', 'password')
 
-            // Clica no botão "Entrar"
-            cy.get('[data-testid="submit"]').click()
+        // Clica no botão "Entrar"
+        cy.get('[data-testid="submit"]').click()
 
-            // Valida se acesso foi feito
-            cy.url().should('include', '/#/management')
-        })
-    // })
+        // Valida se acesso foi feito
+        cy.url().should('include', '/#/management')
+    })
 
-    // IMPORTA PLANILHA ===========================================
-    it('Importa planilha modelo: Sucesso', function() {
-
+  // IMPORTA PLANILHA ===========================================
+    it('Importa planilha modelo: Sucesso', function () {
         // Acessa a tela de gerenciamento
         cy.get('[data-testid=menu-import]').click()
+
         // Sistema deve redirecionar para a página de Importação
         cy.url().should('include', '/#/import')
 
@@ -70,7 +68,6 @@ describe('Justto.App - Planilha Modelo', function() {
         // Verifica se as tags foram recebidas e estão visiveis
         cy.get('[data-testid=import-tags]').should('be.visible')
 
-
         // Avança apara proximo passo
         cy.get('[data-testid=submit]').click()
 
@@ -91,8 +88,8 @@ describe('Justto.App - Planilha Modelo', function() {
         // Seleciona  uma estratégia
         cy.get('[data-testid=feedback-strategy]')
             .click()
-            .trigger('keydown', {keyCode: 40, Which: 40}) // Pressiona seta para baixo
-            .trigger('keydown', {keyCode: 13, Which: 13}) // Pressiona Enter
+            .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+            .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
         // Campo com cata de pagamento dee estar visivel
         cy.get('[data-testid=feedback-paymendate]').should('be.visible')
@@ -100,16 +97,16 @@ describe('Justto.App - Planilha Modelo', function() {
         // Seleciona uma data limite
         cy.get('[data-testid=feedback-datapicker]')
             .click()
-            .trigger('keydown', {keyCode: 40, Which: 40}) // Pressiona seta para baixo (3x)
-            .trigger('keydown', {keyCode: 40, Which: 40})
-            .trigger('keydown', {keyCode: 40, Which: 40})
-            .trigger('keydown', {keyCode: 13, Which: 13}) // Pressiona Enter
+            .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
+            .trigger('keydown', { keyCode: 40, Which: 40 })
+            .trigger('keydown', { keyCode: 40, Which: 40 })
+            .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
         // Seleciona um negociador
         cy.get('[data-testid=feedback-negotiators]')
             .click()
-            .trigger('keydown', {keyCode: 40, Which: 40}) // Pressiona seta para baixo (3x)
-            .trigger('keydown', {keyCode: 13, Which: 13}) // Pressiona Enter
+            .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
+            .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
             .click()
 
         // Avança para proximo passo
