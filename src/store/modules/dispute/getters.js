@@ -111,12 +111,15 @@ const disputeGetters = {
   },
   alertFour: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
-      if ((dispute.disputestatus === 'IMPORTED' ||
+      if (
+        (dispute.disputestatus === 'IMPORTED' ||
         dispute.disputestatus === 'PENDING' ||
         dispute.disputestatus === 'ENRICHED' ||
         dispute.disputestatus === 'ENGAGEMENT' ||
         dispute.disputestatus === 'RUNNING') &&
-        dispute.disputehasinteractions) {
+        dispute.disputehasinteractions &&
+        !dispute.lastcounteroffervalue
+      ) {
         return true
       }
     })
