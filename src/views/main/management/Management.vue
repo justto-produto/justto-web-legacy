@@ -145,7 +145,9 @@
           min-width="146px"
           align="center">
           <template slot-scope="scope">
-            <jus-icon :icon="getLastInteractionIcon(scope.row.lastinteractiontype)" style="vertical-align: text-top; margin-right: 4px;" />
+            <el-tooltip :content="getLastInteractionTooltip(scope.row.lastinteractiontype)">
+              <jus-icon :icon="getLastInteractionIcon(scope.row.lastinteractiontype)" class="view-management__interaction-icon" />
+            </el-tooltip>
             {{ getLastInteraction(scope.row.lastinteractiondate) }}
           </template>
         </el-table-column>
@@ -416,11 +418,11 @@ export default {
         if (now.diff(date, 'seconds') < 0) {
           return ''
         } else if (now.diff(date, 'seconds') < 59) {
-          return now.diff(date, 'seconds') + ' segundos'
+          return now.diff(date, 'seconds') + ' há segundos'
         } else if (now.diff(date, 'minutes') < 59) {
-          return now.diff(date, 'minutes') + ' minuto(s)'
+          return now.diff(date, 'minutes') + ' há minuto(s)'
         } else if (now.diff(date, 'hours') < 24) {
-          return now.diff(date, 'hours') + ' hora(s)'
+          return now.diff(date, 'hours') + ' há hora(s)'
         } else if (now.diff(date, 'hours') < 48) {
           return '1 dia'
         } else {
@@ -441,6 +443,26 @@ export default {
           return 'sms'
         case 'TTS':
           return 'tts'
+        case 'NEGOTIATION':
+          return 'negotiation2'
+        default:
+          return 'chat'
+      }
+    },
+    getLastInteractionTooltip (type) {
+      switch (type) {
+        case 'EMAIL_CNA':
+          return 'Última interação via CNA'
+        case 'EMAIL':
+          return 'Última interação via E-mail'
+        case 'WHATSAPP':
+          return 'Última interação via WhatsApp'
+        case 'SMS':
+          return 'Última interação via SMS'
+        case 'TTS':
+          return 'Última interação via WhatsApp'
+        case 'NEGOTIATION':
+          return 'Última interação via Sistema Justto'
         default:
           return ''
       }
@@ -547,6 +569,11 @@ export default {
     .el-pagination {
       margin: 20px 0;
     }
+  }
+  &__interaction-icon {
+    vertical-align: text-top;
+    margin-right: 4px;
+    max-height: 16px;
   }
 }
 </style>

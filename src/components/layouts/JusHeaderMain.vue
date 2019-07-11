@@ -147,13 +147,13 @@ export default {
             'lastOfferValue'
           ]
         }).then(results => {
-          setTimeout(function () {
-            if (results && results.length) {
-              cb(results)
-            } else {
-              cb([0])
-            }
-          }, 500)
+        setTimeout(function () {
+          if (results && results.length) {
+            cb(results)
+          } else {
+            cb([0])
+          }
+        }, 500)
       })
     }
   }
