@@ -45,7 +45,7 @@
           <span>{{ dispute.description }}</span>
         </div>
         <div class="dispute-overview-view__actions">
-          <el-button type="primary" @click="openDisputeDialog()">Editar</el-button>
+          <el-button type="primary" @click="openDisputeDialog()" data-testid="edit-dispute">Editar</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
