@@ -29,8 +29,9 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     // Seleciona a aba "Todos"
     cy.contains('Todos').should('be.visible').click()
 
-    cy.get('.is-leaf > .cell > .el-checkbox > .el-checkbox__input > .el-checkbox__inner').click()
-    
+    cy.get('.is-leaf > .cell > .el-checkbox > .el-checkbox__input > .el-checkbox__inner')
+      .click()
+
     cy.get('[data-testid=batch-settled]').click()
 
     cy.contains('Tem certeza que deseja realizar esta ação?').should('be.visible')

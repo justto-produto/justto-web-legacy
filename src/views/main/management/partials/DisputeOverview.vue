@@ -58,6 +58,7 @@
       style="margin: 20px 0;"
       @change="handleChange">
       <el-collapse-item
+        data-testid="party"
         v-for="role in disputeRolesSort"
         :key="role.person.id"
         :name="JSON.stringify({id: role.person.id, name: role.person.name})">
