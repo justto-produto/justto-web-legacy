@@ -2,6 +2,7 @@ import Vue from 'vue'
 import store from '../store'
 import VueSocketIO from 'vue-socket.io'
 
+// let hostname = 'kubernetes.justto.com.br/'
 let hostname = location.hostname
 let protocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
 
