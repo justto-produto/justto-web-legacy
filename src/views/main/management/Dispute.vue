@@ -204,7 +204,7 @@
                     </div>
                   </div>
                   <el-tooltip v-else content="Escolha um destinatário ao lado para receber sua mensagem">
-                    <div class="dispute-view__disabled-text">
+                    <div class="dispute-view__disabled-text" data-testid="unselected-party">
                       Escolha um destinatário ao lado
                     </div>
                   </el-tooltip>
@@ -224,7 +224,11 @@
                     </el-button>
                   </div>
                   <div v-else>
-                    <el-button :disabled="!activePerson.id" type="primary" @click="sendMessage()">
+                    <el-button
+                      :disabled="!activePerson.id"
+                      type="primary"
+                      data-testid="submit-email"
+                      @click="sendMessage()">
                       Enviar
                     </el-button>
                   </div>

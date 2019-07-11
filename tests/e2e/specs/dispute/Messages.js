@@ -27,5 +27,36 @@ describe('Justto.App - Disputa: Menssagens', function () {
     })
 
     it('Entra na disputa', function () {
-      cy.contains('#5045').click()
+        cy.wait(2000)
+        cy.get('[data-testid=dispute-index]').eq(0)
+            .click()
     })
+
+    it('Input inativo', function () {
+      cy.get('[data-testid=unselected-party]')
+          .contains('Escolha um destinatário ao lado')
+    })
+
+    it('Envia mensagem', function () {
+        cy.get('[data-testid=party]').eq(0)
+            .click()
+        cy.get('[data-testid=input-message]')
+            .type('Teste email 11')
+        cy.get('[data-testid=submit-email]')
+            .click()
+    })
+
+    it('Email está visivel', function () {
+      cy.wait(5000)
+      cy.get('[data-testid=show-email]')
+          .last()
+          .click()
+      cy.get('[data-testid=email-dialog]')
+          .contains('Teste email 11')
+          .should('be.visible')
+      cy.get('[data-testid=close-button]')
+          .click()
+      cy.get('[data-testid=email-dialog]')
+          .should('not.be.visible')
+    })
+})

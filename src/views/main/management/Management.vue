@@ -53,6 +53,7 @@
         :data="paginatedDisputes"
         size="mini"
         class="el-table--disputes"
+        data-testid="dispute-index"
         @row-click="handleRowClick"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="40px" />

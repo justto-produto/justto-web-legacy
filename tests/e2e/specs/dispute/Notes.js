@@ -27,7 +27,8 @@ describe('Justto.App - Disputa: Menssagens', function () {
     })
 
     it('Entra na disputa', function () {
-        cy.contains('#5048').click()
+        cy.get('[data-testid=dispute-index]').eq(0)
+            .click()
     })
 
     it('Cria nota', function () {

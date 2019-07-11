@@ -27,7 +27,8 @@ describe('Justto.App - Disputa: Ações', function () {
     })
 
     it('Entra na disputa', function () {
-      cy.contains('#5045').click()
+      cy.get('[data-testid=dispute-index]').eq(0)
+          .click()
     })
 
     it('Ação: Pausar', function () {
