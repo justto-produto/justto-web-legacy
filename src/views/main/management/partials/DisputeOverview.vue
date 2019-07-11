@@ -46,7 +46,7 @@
         </div>
         <div class="dispute-overview-view__actions">
           <el-button plain @click="removeDispute()">Excluir</el-button>
-          <el-button type="primary" @click="openDisputeDialog()">Editar</el-button>
+          <el-button type="primary" @click="openDisputeDialog()" data-testid="edit-dispute">Editar</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -201,14 +201,14 @@
           </el-col> -->
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
-              <el-input v-model="disputeForm.description" type="textarea" rows="4" />
+              <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description"/>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDisputeDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="editDispute(disputeForm)">Editar dados</el-button>
+        <el-button type="primary" @click="editDispute(disputeForm)" data-testid="confirm-edit-data">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog

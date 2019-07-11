@@ -1,22 +1,24 @@
+//OBS: AINDA INCOMPLETO
+
 describe('Justto.App - Disputa: Ações', function () {
   beforeEach('Login', function () {
 
     // Acessa a página inicial do Justto.App
-    cy.visit('http://homol.justto.com.br')
-    // cy.visit('localhost:8080')
+    // cy.visit('http://homol.justto.com.br')
+    cy.visit('localhost:8080')
 
     // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('dubu@voemail.com')
-      .should('have.value', 'dubu@voemail.com')
+      .type('lucas@justto.com.br')
+      .should('have.value', 'lucas@justto.com.br')
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type('123456')
+      .should('have.value', '123456')
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
@@ -29,16 +31,8 @@ describe('Justto.App - Disputa: Ações', function () {
 
   it('Ação: Ganhar', function () {
 
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible')
-      .click()
-
-    // Seleciona e clica na Disputa
-    cy.contains('#12738').should('be.visible')
-      .click()
-
-    // Verifica se tela acessada é a da "Disputa"
-    cy.url().should('include', '/#/management/dispute/12738')
+    //clica no primeiro caso index 0
+    cy.get('[data-testid=dispute-index]').eq(0).click()
 
     // Verifica se a ação "Ganhar" é visível e clica
     cy.get('[data-testid=win]').should('be.visible')
