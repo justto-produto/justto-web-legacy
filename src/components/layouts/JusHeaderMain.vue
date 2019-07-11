@@ -8,7 +8,7 @@
         :fetch-suggestions="search"
         placeholder="Busque aqui os suas disputas">
         <template slot-scope="{ item }">
-          <router-link :to="'/management/dispute/' + item.disputeid">
+          <router-link v-if="item.disputeid" :to="'/management/dispute/' + item.disputeid">
             <div class="jus-header-main__result">
               <h4>
                 Disputa #{{ item.disputeid }} |
@@ -25,6 +25,9 @@
               </div>
             </div>
           </router-link>
+          <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
+            Não foram encontradas disputas para esta busca.
+          </span>
         </template>
       </el-autocomplete>
     </div>
@@ -144,7 +147,13 @@ export default {
             'lastOfferValue'
           ]
         }).then(results => {
-        cb(results)
+          setTimeout(function () {
+            if (results && results.length) {
+              cb(results)
+            } else {
+              cb([0])
+            }
+          }, 500)
       })
     }
   }
