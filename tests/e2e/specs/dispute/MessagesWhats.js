@@ -1,10 +1,10 @@
-describe('Justto.App - Disputa: Notas', function () {
-  beforeEach('Login', function () {
+describe('Justto.App - Disputa: Menssagens', function () {
+  it('Login', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
 
-    // Valida se o endereço redirecionado é o 'Login'
+    // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
@@ -25,34 +25,28 @@ describe('Justto.App - Disputa: Notas', function () {
     cy.url().should('include', '/#/management')
   })
 
-  it('Salvar Nota: Sucesso', function () {
+  // it('Envio de Whatsapp: Não Sincronizado', function () {
+  // })
+
+  it('Envio de Whatsapp: Desconectado', function () {
     // Entra na primeira disputa da lista
     cy.wait(2000)
     cy.get('[data-testid=dispute-index]').eq(0)
       .click()
 
-    // Entra na aba 'Notas'
-    cy.contains('Nota')
+    // Seleciona primeira parte do caso
+    cy.get('[data-testid=party]').eq(0)
       .click()
 
-    // Digita uma nota
-    cy.get('[data-testid=input-nota]')
-      .type('Teste notaaaa 10')
-
-    // Salva a nota
-    cy.get('[data-testid=submit-note]')
+    // Seleciona Whatsapp
+    cy.get('[data-testid=select-whatsapp]')
       .click()
 
-    // Notificação de sucesso deve desaparecer
-    cy.contains('Nota gravada com sucesso.')
-      .should('be.visible')
-
-    // // Aguarda chat atualizar
-    // cy.wait(10000)
-
-    // Nota deve aparecer entre as mensagens
-    cy.get('.dispute-view-messages__message-content.note')
-      .should('be.visible')
-      .contains('Teste notaaaa 10')
+    // Input deve estar desabilitado
+    cy.get('[data-testid=submit-whats-disable]')
+      .should('be.disabled')
   })
+
+  // it('Envio de Whatsapp: Sucesso', function () {
+  // })
 })

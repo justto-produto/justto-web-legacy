@@ -1,5 +1,5 @@
 describe('Justto.App - Disputa: Menssagens', function () {
-  beforeEach('Login', function () {
+  it('Login', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
@@ -25,39 +25,46 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.url().should('include', '/#/management')
   })
 
-  it('Acessa uma Disputa na tela de Gerenciamento', function () {
-    // Acessa uma disputa na tela de Gerenciamento
+  it('Envio de Email: Parte não selecionada', function () {
+    // Entra na primeira disputa da lista
+    cy.wait(2000)
     cy.get('[data-testid=dispute-index]').eq(0)
       .click()
-  })
-
-  it('Valida tentativa de envio sem Destinatário selecionado', function () {
-    // Valida se mensagem de erro é exibida ao tentar envio sem Destinatário
+    // Caixa de texto deve estar desabilitada, mensagem deve aparecer no lugar.
     cy.get('[data-testid=unselected-party]')
       .contains('Escolha um destinatário ao lado')
   })
 
-  it('Envia mensagem', function () {
-    // Seleciona destinatário
+
+  it('Envia de Email: Sucesso', function () {
+    // Entra na primeira disputa da lista
+    cy.wait(2000)
+    cy.get('[data-testid=dispute-index]').eq(0)
+      .click()
+    // Seleciona primeira parte do caso
     cy.get('[data-testid=party]').eq(0)
       .click()
     // Digita mensagem
     cy.get('[data-testid=input-message]')
       .type('Teste email 11')
-    // Aciona o botão de envio
+      .should('have.text', 'Teste email 11')
+    // Envia mensagem
     cy.get('[data-testid=submit-email]')
       .click()
-  })
-
-  it('Verifica se Email está visivel no histórico', function () {
+    // Aguarda atualização
+    cy.wait(5000)
+    // Clica para visualizar ultima mensagem
     cy.get('[data-testid=show-email]')
       .last()
       .click()
+    // Mensagem deve ser a enviada
     cy.get('[data-testid=email-dialog]')
       .contains('Teste email 11')
       .should('be.visible')
+    // Fecha modal da mensagem
     cy.get('[data-testid=close-button]')
       .click()
+    // Modal deve desaparecer
     cy.get('[data-testid=email-dialog]')
       .should('not.be.visible')
   })

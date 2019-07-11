@@ -34,13 +34,16 @@ describe('Justto.App - Disputa: Ações', function () {
     // Clica em Pausar
     cy.get('[data-testid=paused]')
       .click()
-      // Modal de confirmação deve aparecer
+
+    // Modal de confirmação deve aparecer
     cy.get('.el-message-box')
       .should('be.visible')
-      // Confirma a ação
+
+    // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-      // Notificação de sucesso deve aparecer
+
+    // Notificação de sucesso deve aparecer
     cy.contains('Ação realizada com sucesso.')
       .should('be.visivel')
   })
@@ -49,13 +52,16 @@ describe('Justto.App - Disputa: Ações', function () {
     // Clica em Retomar
     cy.get('[data-testid=resume')
       .click()
-      // Modal de confirmação deve aparecer
+
+    // Modal de confirmação deve aparecer
     cy.get('.el-message-box')
       .should('be.visible')
-      // Confirma a ação
+
+    // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-      // Notificação de sucesso deve aparecer
+
+    // Notificação de sucesso deve aparecer
     cy.contains('Ação realizada com sucesso.')
       .should('be.visivel')
   })
@@ -64,12 +70,15 @@ describe('Justto.App - Disputa: Ações', function () {
     // Clica em Ganhar
     cy.get('[data-testid=settled]')
       .click()
+
     // Modal de confirmação deve aparecer
     cy.get('.el-message-box')
       .should('be.visible')
+
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
+
     // Notificação de sucesso deve aparecer
     cy.contains('Ação realizada com sucesso.')
       .should('be.visivel')
@@ -79,19 +88,21 @@ describe('Justto.App - Disputa: Ações', function () {
     // Clica em Perder
     cy.get('[data-testid=unsettled]')
       .click()
+
     // Modal de confirmação deve aparecer
     cy.get('[data-testid=choose-unsettled-dialog]')
       .should('be.visible')
+
     // Selectiona motivo da perda
     cy.get('[data-testid=select-unsettled]')
       .click()
       .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
       .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+
     // Confirma a ação
     cy.get('.confirm-action-unsettled')
       .click()
-    // cy.get('.el-dialog__close')
-    //     .click()
+
     // Notificação de sucesso deve aparecer
     cy.contains('Ação realizada com sucesso.')
       .should('be.visivel')
@@ -101,12 +112,15 @@ describe('Justto.App - Disputa: Ações', function () {
     // Favorita/disfavorita caso
     cy.get('[data-testid=favorite]')
       .click()
+
     // Modal de confirmação deve aparecer
     cy.get('.el-message-box')
       .should('be.visible')
+
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
+
     // Notificação de sucesso deve aparecer
     cy.contains('Ação realizada com sucesso.')
       .should('be.visivel')
@@ -116,13 +130,16 @@ describe('Justto.App - Disputa: Ações', function () {
     // VClica em Reiniciar Engajamento
     cy.get('[data-testid=restart-engagement]')
       .click()
-      // Modal de confirmação deve aparecer
+
+    // Modal de confirmação deve aparecer
     cy.get('.el-message-box')
       .should('be.visible')
-      // Confirma a ação
+
+    // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-      // Notificação de sucesso deve aparecer
+
+    // Notificação de sucesso deve aparecer
     cy.contains('Ação realizada com sucesso.')
       .should('be.visivel')
   })
@@ -131,13 +148,16 @@ describe('Justto.App - Disputa: Ações', function () {
     // Clica em Remover
     cy.get('[data-testid=remove]')
       .click()
-      // Modal de confirmação deve aparecer
+
+    // Modal de confirmação deve aparecer
     cy.get('.el-message-box')
       .should('be.visible')
-      // Confirma a ação
+
+    // Confirma a ação
     cy.get('.confirm-remove-btn')
       .click()
-      // Notificação de sucesso deve aparecer
+
+    // Notificação de sucesso deve aparecer
     cy.contains('Ação realizada com sucesso.')
       .should('be.visivel')
   })
