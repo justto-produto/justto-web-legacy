@@ -1,6 +1,5 @@
-describe('Justto.App - Disputa: Edição do Caso', function() {
-  it('Login', function () {
-
+describe('Justto.App - Disputa: Edição do Caso', function () {
+  beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
@@ -24,32 +23,26 @@ describe('Justto.App - Disputa: Edição do Caso', function() {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
-
   })
 
   it('Entra na disputa', function () {
-
-    //clica no primeiro caso: index 0
+    // clica no primeiro caso: index 0
     cy.get('tbody>tr').eq(0).click()
 
     // Verifica se entrou na tela de Disputa
     cy.contains('Resumo da disputa').should('be.visible')
-
   })
 
   it('Clica no botão Editar de Dados da disputa', function () {
-
     // Verifica se o botão "Editar" é visível e clica
     cy.get('[data-testid=edit-dispute]')
       .click()
 
     // Verifica se todos os 'spans' aparecem
-		cy.get('span').should('be.visible')
-
+    cy.get('span').should('be.visible')
   })
 
   it('Altera dados e confirma a edição', function () {
-
     // Preenche o Campo de 'Descrição'
     cy.get('[data-testid=description]')
       .type(' Descrição de testes')
@@ -60,7 +53,5 @@ describe('Justto.App - Disputa: Edição do Caso', function() {
 
     // Verifica se mensagem de confirmação aparece
     cy.contains('Os dados foram alterados com sucesso.').should('be.visible')
-
   })
-
 })
