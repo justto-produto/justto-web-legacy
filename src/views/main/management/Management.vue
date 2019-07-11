@@ -84,9 +84,9 @@
                   </div>
                 </el-col>
                 <el-col :span="8">
-                  <div>Alçada máxima: {{ props.row.disputeUpperRange | currency }}</div>
-                  <div>Valor proposto: {{ props.row.lastOfferValue | currency }}</div>
-                  <div>Contraproposta: {{ props.row.lastCounterOfferValue | currency }}</div>
+                  <div>Alçada máxima: {{ props.row.disputeupperrange | currency }}</div>
+                  <div>Valor proposto: {{ props.row.lastoffervalue | currency }}</div>
+                  <div>Contraproposta: {{ props.row.lastcounteroffervalue | currency }}</div>
                   <div>Valor do acordo: {{ props.row.disputedealvalue | currency }}</div>
                 </el-col>
               </el-row>
@@ -120,13 +120,13 @@
           </template>
         </el-table-column>
         <el-table-column v-if="activeTab !== '3'" label="Alçada máxima" align="center" min-width="116px">
-          <template slot-scope="scope">{{ scope.row.disputeUpperRange | currency }}</template>
+          <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
         </el-table-column>
         <el-table-column v-if="activeTab === '0'" label="Valor proposto" align="center" min-width="110px">
-          <template slot-scope="scope">{{ scope.row.lastOfferValue | currency }}</template>
+          <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
         </el-table-column>
         <el-table-column v-if="activeTab === '1'" label="Contraproposta" align="center" min-width="116px">
-          <template slot-scope="scope">{{ scope.row.lastCounterOfferValue | currency }}</template>
+          <template slot-scope="scope">{{ scope.row.lastcounteroffervalue | currency }}</template>
         </el-table-column>
         <el-table-column
           v-if="activeTab < 2"
