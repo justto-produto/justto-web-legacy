@@ -187,17 +187,17 @@
                   <div v-else-if="activePerson.id">
                     <div>
                       <el-tooltip content="Enviar e-mail">
-                        <a href="" @click.prevent="setMessageType('email')">
+                        <a href="" data-testid="select-email" @click.prevent="setMessageType('email')">
                           <jus-icon :is-active="messageType === 'email'" icon="email"/>
                         </a>
                       </el-tooltip>
                       <el-tooltip content="Enviar Whatsapp">
-                        <a href="#" @click.prevent="setMessageType('whatsapp')">
+                        <a href="#" data-testid="select-whatsapp" @click.prevent="setMessageType('whatsapp')">
                           <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
                         </a>
                       </el-tooltip>
                       <el-tooltip content="Enviar CNA">
-                        <a href="#" @click.prevent="setMessageType('cna')">
+                        <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
                           <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
                         </a>
                       </el-tooltip>
@@ -213,6 +213,7 @@
                       <el-button
                         :disabled="true"
                         type="primary"
+                        data-testid="submit-whats-disable"
                         @click="sendMessage()">
                         Enviar
                       </el-button>

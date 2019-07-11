@@ -1,5 +1,4 @@
 describe('Justto.App - Disputa: Menssagens', function () {
-
     it('Login', function () {
         // Acessa a página inicial do Justto.App
         // cy.visit('http://homol.justto.com.br')
@@ -26,37 +25,25 @@ describe('Justto.App - Disputa: Menssagens', function () {
         cy.url().should('include', '/#/management')
     })
 
-    it('Entra na disputa', function () {
+    // it('Envio de Whatsapp: Não Sincronizado', function () {
+    // })
+
+    it('Envio de Whatsapp: Desconectado', function () {
+        // Entra na primeira disputa da lista
         cy.wait(2000)
         cy.get('[data-testid=dispute-index]').eq(0)
             .click()
-    })
-
-    it('Input inativo', function () {
-      cy.get('[data-testid=unselected-party]')
-          .contains('Escolha um destinatário ao lado')
-    })
-
-    it('Envia mensagem', function () {
+        // Seleciona primeira parte do caso
         cy.get('[data-testid=party]').eq(0)
             .click()
-        cy.get('[data-testid=input-message]')
-            .type('Teste email 11')
-        cy.get('[data-testid=submit-email]')
+        // Seleciona Whatsapp
+        cy.get('[data-testid=select-whatsapp]')
             .click()
+        // Input deve estar desabilitado
+        cy.get('[data-testid=submit-whats-disable]')
+            .should('be.disabled')
     })
 
-    it('Email está visivel', function () {
-      cy.wait(5000)
-      cy.get('[data-testid=show-email]')
-          .last()
-          .click()
-      cy.get('[data-testid=email-dialog]')
-          .contains('Teste email 11')
-          .should('be.visible')
-      cy.get('[data-testid=close-button]')
-          .click()
-      cy.get('[data-testid=email-dialog]')
-          .should('not.be.visible')
-    })
+    // it('Envio de Whatsapp: Sucesso', function () {
+    // })
 })
