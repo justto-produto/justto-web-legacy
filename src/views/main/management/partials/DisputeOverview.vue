@@ -37,7 +37,7 @@
         </div>
         <div class="dispute-overview-view__info-line">
           <span class="title">Valor proposto:</span>
-          <span>{{ dispute.lastOffer.boundary | currency }}</span>
+          <span v-if="dispute.lastOffer">{{ dispute.lastOffer.boundary | currency }}</span>
         </div>
         <div class="dispute-overview-view__info-line">
           <span class="title">Fim da negociação:</span>

@@ -292,6 +292,9 @@ export default {
       }
     }
   },
+  beforeCreate () {
+    this.$store.commit('setDisputeTab', '0')
+  },
   mounted () {
     this.$refs.disputeTable.sort('disputeexpirationdate', 'descending')
     setTimeout(function () {
