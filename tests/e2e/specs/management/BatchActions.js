@@ -9,13 +9,13 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('graziele@justto.com.br')
-      .should('have.value', 'graziele@justto.com.br')
+      .type('lucas@justto.com.br')
+      .should('have.value', 'lucas@justto.com.br')
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('batata123')
-      .should('have.value', 'batata123')
+      .type('123456')
+      .should('have.value', '123456')
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
@@ -23,35 +23,137 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
+
+    cy.wait(2000)
   })
 
-  it('Ação em Lote: Ganhar', function () {
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click()
+  afterEach('Notificação de Sucesso', function () {
+    cy.wait(2000)
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success')
+      .contains('Yay!')
+      .should('be.visible')
 
-    cy.get('.is-leaf > .cell > .el-checkbox > .el-checkbox__input > .el-checkbox__inner')
-      .click()
+    // Modal de confirmação deve adesaparecer
+    cy.get('.el-message-box')
+      .should('not.be.visible')
 
-    cy.get('[data-testid=batch-settled]').click()
-
-    cy.contains('Tem certeza que deseja realizar esta ação?').should('be.visible')
-    cy.contains('Atenção!').should('be.visible')
-
-    cy.wait(5000)
+    // Modal de confirmação deve desaparecer
+    cy.get('[data-testid=choose-unsettled-dialog]')
+      .should('not.be.visible')
   })
 
   it('Ação em Lote: Pausar', function () {
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click()
-
-    cy.get('.is-leaf > .cell > .el-checkbox > .el-checkbox__input > .el-checkbox__inner')
+    // Seleciona primeira disputa
+    cy.get('[role=checkbox]').eq(1)
       .click()
 
-    cy.get('[data-testid=batch-settled]').click()
+    // Clica na ação
+    cy.get('[data-testid=batch-paused]')
+      .click()
 
-    cy.contains('Tem certeza que deseja realizar esta ação?').should('be.visible')
-    cy.contains('Atenção!').should('be.visible')
+    // Mensagem de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
 
-    cy.wait(5000)
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+      .click()
+  })
+
+  it('Ação em Lote: Retomar', function () {
+    // Seleciona primeira disputa
+    cy.get('[role=checkbox]').eq(1)
+      .click()
+
+    // Clica na ação
+    cy.get('[data-testid=batch-resume]')
+      .click()
+
+    // Mensagem de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+      .click()
+  })
+
+  it('Ação em Lote: Ganha', function () {
+    // Seleciona primeira disputa
+    cy.get('[role=checkbox]').eq(1)
+      .click()
+
+    // Clica na ação
+    cy.get('[data-testid=batch-settled]')
+      .click()
+
+    // Mensagem de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+      .click()
+  })
+
+  it('Ação em Lote: Perder', function () {
+    // Seleciona primeira disputa
+    cy.get('[role=checkbox]').eq(1)
+      .click()
+
+    // Clica na ação
+    cy.get('[data-testid=batch-unsettled]')
+      .click()
+
+    // Mensagem de confirmação deve aparecer
+    cy.get('[data-testid=unsettled-dialog]')
+      .should('be.visible')
+
+    // Selectiona motivo da perda
+    cy.get('[data-testid=select-unsettled]')
+      .click()
+      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
+      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+
+    // Confirma a ação
+    cy.get('.confirm-action-unsettled')
+      .click()
+  })
+
+  it('Ação em Lote: Reiniciar Engajamento', function () {
+    // Seleciona primeira disputa
+    cy.get('[role=checkbox]').eq(1)
+      .click()
+
+    // VClica em Reiniciar Engajamento
+    cy.get('[data-testid=batch-restartengagement]')
+      .click()
+
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+      .click()
+  })
+
+  it('Ação em Lote: Excluir', function () {
+    // Seleciona primeira disputa
+    cy.get('[role=checkbox]').eq(1)
+      .click()
+
+    // Clica em Remover
+    cy.get('[data-testid=batch-delete]')
+      .click()
+
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-remove-btn')
+      .click()
   })
 })

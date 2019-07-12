@@ -1,5 +1,5 @@
 describe('Justto.App - Disputa: Menssagens', function () {
-  it('Login', function () {
+  beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
@@ -30,9 +30,14 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.wait(2000)
     cy.get('[data-testid=dispute-index]').eq(0)
       .click()
+
     // Caixa de texto deve estar desabilitada, mensagem deve aparecer no lugar.
     cy.get('[data-testid=unselected-party]')
       .contains('Escolha um destinatário ao lado')
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-email]')
+      .should('be.disabled')
   })
 
 
@@ -41,29 +46,37 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.wait(2000)
     cy.get('[data-testid=dispute-index]').eq(0)
       .click()
+
     // Seleciona primeira parte do caso
     cy.get('[data-testid=party]').eq(0)
       .click()
+
     // Digita mensagem
     cy.get('[data-testid=input-message]')
       .type('Teste email 11')
-      .should('have.text', 'Teste email 11')
+      .should('have.value', 'Teste email 11')
+
     // Envia mensagem
     cy.get('[data-testid=submit-email]')
       .click()
+
     // Aguarda atualização
     cy.wait(5000)
+
     // Clica para visualizar ultima mensagem
     cy.get('[data-testid=show-email]')
       .last()
       .click()
+
     // Mensagem deve ser a enviada
     cy.get('[data-testid=email-dialog]')
       .contains('Teste email 11')
       .should('be.visible')
+
     // Fecha modal da mensagem
     cy.get('[data-testid=close-button]')
       .click()
+
     // Modal deve desaparecer
     cy.get('[data-testid=email-dialog]')
       .should('not.be.visible')

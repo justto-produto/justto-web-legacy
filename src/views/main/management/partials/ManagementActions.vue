@@ -18,7 +18,8 @@
       :visible.sync="chooseUnsettledDialogVisible"
       title="Atenção!"
       class="management-actions__unsettled-dialog"
-      width="460px">
+      width="460px"
+      data-testid="unsettled-dialog">
       <div class="el-message-box__content">
         <div class="el-message-box__status el-icon-warning"/>
         <div class="el-message-box__message"><p>
@@ -28,6 +29,7 @@
       <el-select
         v-loading="$store.state.loading"
         v-model="unsettledType"
+        data-testid="select-unsettled"
         placeholder="Escolha o motivo da perda">
         <el-option
           v-for="(type, index) in unsettledTypes"
@@ -40,6 +42,7 @@
         <el-button
           :disabled="!unsettledType"
           type="primary"
+          class="confirm-action-unsettled"
           @click.prevent="doAction('unsettled')">
           Continuar
         </el-button>
@@ -140,6 +143,7 @@ export default {
         this.unsettledType = ''
       } else {
         this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+          confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           type: 'warning'
