@@ -2,7 +2,7 @@
   <JusViewMain :loading-main="$store.state.loading" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <management-carousel />
+      <management-carousel v-if="!$store.state.loading" />
     </template>
     <template slot="actions">
       <management-actions
@@ -305,9 +305,13 @@ export default {
   },
   methods: {
     getDisputes () {
+      this.$store.commit('showLoading')
       this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
         .catch(() => {
           this.$jusNotification({ type: 'error' })
+        })
+        .finally(() => {
+          this.$store.commit('hideLoading')
         })
     },
     applyFilters () {
