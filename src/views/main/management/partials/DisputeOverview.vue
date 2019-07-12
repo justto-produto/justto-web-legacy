@@ -128,7 +128,7 @@
         </div>
         <div v-if="buildTitle(role) !== 'Negociador'" class="dispute-overview-view__actions">
           <el-button plain @click="removeRole(role)">Excluir</el-button>
-          <el-button type="primary" @click="openRoleDialog(role)">Editar</el-button>
+          <el-button type="primary" @click="openRoleDialog(role)" data-testid="edit-part">Editar</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -255,8 +255,8 @@
         :rules="emailRules"
         label-position="top">
         <el-form-item label="E-mail" prop="email">
-          <el-input v-model="emailForm.email">
-            <el-button slot="append" @click="addEmail(roleForm.personId, roleForm.emails)">
+          <el-input v-model="emailForm.email" data-testid="input-email">
+            <el-button slot="append" @click="addEmail(roleForm.personId, roleForm.emails)" data-testid="add-email">
               <jus-icon icon="add-white" />
             </el-button>
           </el-input>
@@ -273,7 +273,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editRoleDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click.prevent="editRole(roleForm.personId, roleForm.name, roleForm.documentNumber)">Editar dados</el-button>
+        <el-button type="primary" @click.prevent="editRole(roleForm.personId, roleForm.name, roleForm.documentNumber)" data-testid="edit-data-part">Editar dados</el-button>
       </span>
     </el-dialog>
   </div>
