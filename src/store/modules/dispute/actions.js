@@ -26,7 +26,6 @@ const disputeActions = {
     }, 1000)
   },
   getDisputes ({ commit, rootState }, query) {
-    commit('showLoading')
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/', query)
@@ -38,7 +37,6 @@ const disputeActions = {
           reject(error)
         })
         .finally (() => {
-          commit('hideLoading')
         })
     })
   },
