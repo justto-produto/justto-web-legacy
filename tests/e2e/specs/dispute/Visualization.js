@@ -9,13 +9,13 @@ describe('Justto.App - Disputa: Visualização', function () {
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('dubu@voemail.com')
-      .should('have.value', 'dubu@voemail.com')
+      .type('lucas@justto.com.br')
+      .should('have.value', 'lucas@justto.com.br')
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type('123456')
+      .should('have.value', '123456')
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
@@ -23,37 +23,30 @@ describe('Justto.App - Disputa: Visualização', function () {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
-  })
-  it('Disputa: Visualização', function () {
-    // Seleciona e clica na Disputa
-    cy.contains('#12705').click()
+
+    // Entra na disputa
+    cy.get('[data-testid=dispute-index]').eq(0)
+      .click()
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
   })
 
-  it('Disputa: Resumo do Caso', function () {
+  it('Visualização da Disputa: Sucesso', function () {
     // Resumo da disputa deve estar visivel
     cy.get('[data-testid=dispute-summary]')
       .should('be.visible')
-    cy.get('.el-loading-mask')
-      .should('not.be.visible')
-  })
 
-  it('Disputa: Dados da Disputa', function () {
     // Dados da disputa devem estar visiveis
     cy.get('[data-testid=dispute-overview]')
       .should('be.visible')
-    cy.get('.el-loading-mask')
-      .should('not.be.visible')
-  })
 
-  it('Disputa: Mensagens', function () {
     // Dados da disputa devem estar visiveis
     cy.get('[data-testid=dispute-messages]')
       .should('be.visible')
+
+    // Loadings devem desaparecer
     cy.get('.el-loading-mask')
       .should('not.be.visible')
-
   })
 })

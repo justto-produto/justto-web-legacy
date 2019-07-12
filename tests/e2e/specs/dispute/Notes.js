@@ -26,8 +26,8 @@ describe('Justto.App - Disputa: Notas', function () {
   })
 
   it('Salvar Nota: Sucesso', function () {
-    // Entra na primeira disputa da lista
     cy.wait(2000)
+    // Entra na primeira disputa da lista
     cy.get('[data-testid=dispute-index]').eq(0)
       .click()
 

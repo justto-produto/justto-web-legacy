@@ -1,112 +1,63 @@
 describe('Justto.app - Esqueci a Senha', function () {
-    it('Esqueci minha Senha: Sucesso', function () {
-        // Acessa a página inicial do Justto.App
-        // cy.visit('http://homol.justto.com.br')
-        cy.visit('localhost:8080')
+  beforeEach('Acesso', function () {
+    // Acessa a página inicial do Justto.App
+    // cy.visit('http://homol.justto.com.br')
+    cy.visit('localhost:8080')
 
-        // Sistema deve redirecionar para a página de Login
-        cy.url().should('include', '/#/login')
+    // Sistema deve redirecionar para a página de Login
+    cy.url().should('include', '/#/login')
 
-        // Acessa a página de Equeci minha Senha
-        cy.get('[data-testid=forgot-password]').click()
+    // Acessa a página de Equeci minha Senha
+    cy.get('[data-testid=forgot-password]')
+      .click()
 
-        // Sistema deve redirecionar para a página de Esqueci minha Senha
-        cy.url().should('include', '/#/forgot-password')
+    // Sistema deve redirecionar para a página de Esqueci minha Senha
+    cy.url().should('include', '/#/forgot-password')
+  })
 
-        // Digita um email válido existente
-        cy.get('[data-testid=forgot-password-email]')
-            .type('teste.onboarding@justto.com.br')
-            .should('have.value', 'teste.onboarding@justto.com.br')
+  it('Esqueci minha Senha: Sucesso', function () {
+    // Digita um email válido existente
+    cy.get('[data-testid=forgot-password-email]')
+      .type('teste.onboarding@justto.com.br')
+      .should('have.value', 'teste.onboarding@justto.com.br')
 
-        // Clica no botão Recuperar
-        cy.get('[data-testid=submit]').click()
+    // Clica no botão Recuperar
+    cy.get('[data-testid=submit]')
+      .click()
 
-        // Verifica se email foi enviado
-        cy.get('[data-testid=forgot-password-success]')
-            .should('be.visible')
-        cy.get('[data-testid=forgot-password-success]')
-            .contains('Requisição de recuperação enviada com sucesso! Acesse seu email para prosseguir.')
-            .should('be.visible')
-    })
+    // Mensagem de 'Email Enviado' deve aparecer
+    cy.get('[data-testid=forgot-password-success]')
+      .contains('Requisição de recuperação enviada com sucesso! Acesse seu email para prosseguir.')
+      .should('be.visible')
+  })
 
-    it('Alteração de senha: Token Inválido', function () {
-        // Acessa a página de nova senha invalida
-        cy.visit('localhost:8080/#/new-password/FAILURE123')
+  it('Esqueci minha senha: Email Inválido', function () {
+    // Digita um email inválido
+    cy.get('[data-testid=forgot-password-email]')
+      .type('email inválido')
+      .should('have.value', 'email inválido')
 
-        // Sistema deve redirecionar para a página de Nova Senha
-        cy.url().should('include', '/#/new-password/FAILURE123')
+    // Clica no botão Recuperar
+    cy.get('[data-testid=submit]')
+      .click()
 
-        // Insere uma senha
-        cy.get('[data-testid=new-password]')
-            .type('password')
+    // Mensagme de email inválido deve desaparecer
+    cy.contains('Insira um e-mail válido')
+      .should('be.visible')
+  })
 
-        // Repete a Senha
-        cy.get('[data-testid=confirm-password]')
-            .type('password')
+  it('Esqueci minha senha: Email Inexistente', function () {
+    // Digita um email inválido
+    cy.get('[data-testid=forgot-password-email]')
+      .type('email@inexistente.com')
+      .should('have.value', 'email@inexistente.com')
 
-        // Clica em Alterar Senha
-        cy.get('[data-testid=submit]')
-            .click()
+    // Clica no botão Recuperar
+    cy.get('[data-testid=submit]')
+      .click()
 
-        // Verifica se mensagem de erro é exibida
-        cy.get('[data-testid=new-password-failure]')
-            .should('be.visible')
-    })
-
-    it('Tente Novamente: Sucesso', function () {
-        // Clica em tentar novamente
-        cy.get('[data-testid=try-again]')
-        .click()
-
-        // Verifica se retornou para página de Esqueci minha Senha
-        cy.url().should('include', '/#/forgot-password')
-    })
-
-    it('Alteração se senha: Senhas não competem', function () {
-        // Acessa a página de nova senha (Click no link do email)
-        cy.visit('localhost:8080/#/new-password/TSTAUTO')
-
-        // Sistema deve redirecionar para a página de Nova Senha
-        cy.url().should('include', '/#/new-password/TSTAUTO')
-
-        // Digita uma senha
-        cy.get('[data-testid=new-password]')
-            .type('password')
-
-        // Digita uma senha incorreta
-        cy.get('[data-testid=confirm-password]')
-            .type('drowssap')
-
-        // Clica em Alterar senha
-        cy.get('[data-testid=submit]')
-            .click()
-
-        // Verifica se mensagem de erro foi exibida
-        cy.contains('Campos não correspondem').should('be.visible')
-    })
-
-    it('Alteração de senha: Sucesso', function () {
-        // Limpa confirmação se senha e insere senha correta
-        cy.get('[data-testid=confirm-password]')
-            .clear()
-            .type('password')
-
-        // Clica em Alterar Senha
-        cy.get('[data-testid=submit]')
-            .click()
-
-        // Verifica se mensagem de sucesso foi exibida
-        cy.get('[data-testid=new-password-success]')
-            .should('be.visible')
-    })
-
-    it('Ir para login: Sucesso', function () {
-        // Clica em Ir Para Login
-        cy.get('[data-testid=go-login]')
-            .click()
-
-        // Verifica se retornou para login
-        cy.url().should('include', '/#/login')
-    })
-
+    // Mensagme de email inválido deve desaparecer
+    cy.contains('Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.')
+      .should('be.visible')
+  })
 })

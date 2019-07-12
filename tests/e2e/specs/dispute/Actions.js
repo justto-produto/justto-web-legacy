@@ -23,11 +23,30 @@ describe('Justto.App - Disputa: Ações', function () {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
-  })
 
-  it('Entra na disputa', function () {
+    // Entra na disputa
+    cy.wait(1000)
     cy.get('[data-testid=dispute-index]').eq(0)
       .click()
+
+    // Sistema deve redirecionar para a página de Registro
+    cy.url().should('include', '/#/management/dispute/')
+  })
+
+  afterEach('Notificação de Sucesso', function () {
+    cy.wait(2000)
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success')
+      .contains('Ação realizada com sucesso.')
+      .should('be.visible')
+
+    // Modal de confirmação deve adesaparecer
+    cy.get('.el-message-box')
+      .should('not.be.visible')
+
+    // Modal de confirmação deve desaparecer
+    cy.get('[data-testid=choose-unsettled-dialog]')
+      .should('not.be.visible')
   })
 
   it('Ação: Pausar', function () {
@@ -42,10 +61,6 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-
-    // Notificação de sucesso deve aparecer
-    cy.contains('Ação realizada com sucesso.')
-      .should('be.visivel')
   })
 
   it('Ação: Retomar', function () {
@@ -60,10 +75,6 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-
-    // Notificação de sucesso deve aparecer
-    cy.contains('Ação realizada com sucesso.')
-      .should('be.visivel')
   })
 
   it('Ação: Ganhar', function () {
@@ -78,10 +89,6 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-
-    // Notificação de sucesso deve aparecer
-    cy.contains('Ação realizada com sucesso.')
-      .should('be.visivel')
   })
 
   it('Ação: Perder', function () {
@@ -102,10 +109,6 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-unsettled')
       .click()
-
-    // Notificação de sucesso deve aparecer
-    cy.contains('Ação realizada com sucesso.')
-      .should('be.visivel')
   })
 
   it('Ação: Favoritar', function () {
@@ -120,10 +123,6 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-
-    // Notificação de sucesso deve aparecer
-    cy.contains('Ação realizada com sucesso.')
-      .should('be.visivel')
   })
 
   it('Ação: Reiniciar Engajamento', function () {
@@ -138,10 +137,6 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-
-    // Notificação de sucesso deve aparecer
-    cy.contains('Ação realizada com sucesso.')
-      .should('be.visivel')
   })
 
   it('Ação: Remover', function () {
@@ -156,9 +151,5 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-remove-btn')
       .click()
-
-    // Notificação de sucesso deve aparecer
-    cy.contains('Ação realizada com sucesso.')
-      .should('be.visivel')
   })
 })

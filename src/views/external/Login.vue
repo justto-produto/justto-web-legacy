@@ -24,6 +24,7 @@
             v-show="showSuccess"
             title="Cadastro ativado com sucesso!"
             type="success"
+            data-testid="register-success"
             @close="showSuccess = false"/>
           <el-form-item label="Email" prop="email">
             <el-input
