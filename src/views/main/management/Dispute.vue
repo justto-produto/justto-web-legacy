@@ -75,6 +75,11 @@
               <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip>
+          <el-tooltip content="Enriquecer disputa">
+            <el-button plain @click="disputeAction('enrich')">
+              <jus-icon icon="enrich" />
+            </el-button>
+          </el-tooltip>
           <!-- <el-tooltip content="snooze">
             <el-button plain @click="disputeAction('move')">
               <jus-icon icon="snooze" />

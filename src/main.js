@@ -70,7 +70,6 @@ Vue.component('JusStatusDot', JusStatusDot)
 Vue.config.productionTip = false
 
 if (store.getters.isLoggedIn) {
-  store.dispatch('showLoading')
   Promise.all([store.dispatch('myAccount'), store.dispatch('myWorkspace')])
     .then(responses => {
       if (responses[1][0] && responses[1][0]['subDomain']) {
@@ -80,7 +79,6 @@ if (store.getters.isLoggedIn) {
     }).catch(() => {
       store.commit('logout')
     }).finally(() => {
-      store.dispatch('hideLoading')
       initVue()
     })
 } else {

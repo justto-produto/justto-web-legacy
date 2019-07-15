@@ -20,6 +20,7 @@
         v-loading="loadingMain"
         id="main-card"
         :class="{'jus-main-view__loading-main': loadingMain}"
+        element-loading-text="Carregando disputas..."
         class="jus-main-view__main-card">
         <slot name="main"/>
       </el-card>
