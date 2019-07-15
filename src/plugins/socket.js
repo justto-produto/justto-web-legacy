@@ -2,12 +2,12 @@ import Vue from 'vue'
 import store from '../store'
 import VueSocketIO from 'vue-socket.io'
 
-let hostname = 'homol.justto.com.br/' // location.hostname
-let protocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
+const HOSTNAME = process.env.VUE_APP_BASE_URL || location.hostname
+const PROTOCOL = location.protocol === 'https:' ? 'wss://' : 'ws://'
 
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: protocol + hostname,
+  connection: PROTOCOL + HOSTNAME,
   vuex: {
     store,
     actionPrefix: 'SOCKET_',

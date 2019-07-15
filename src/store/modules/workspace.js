@@ -61,7 +61,7 @@ const workspaceModule = {
     createWorkpace ({ commit }, object) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('api/workspaces', object)
+        axios.post('api/accounts/workspaces', object)
           .then(response => {
             commit('updateWorkspace', response.data)
             resolve(response.data)
@@ -85,7 +85,7 @@ const workspaceModule = {
     inviteTeammates ({ commit, state }, teammates) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.post('api/workspaces/invite-teammates/' + state.subdomain, teammates)
+        axios.post('api/accounts/workspaces/invite-teammates/' + state.subdomain, teammates)
           .then(response => {
             resolve(response.data)
           }).catch(error => {
