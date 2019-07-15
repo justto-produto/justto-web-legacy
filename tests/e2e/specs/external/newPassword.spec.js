@@ -1,8 +1,8 @@
 describe('Justto.App - Nova Senha', function () {
   it('Nova Senha: Sucesso', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080/#/new-password/TSTAUTO')
+    cy.visit('https://kubernetes.justto.com.br/#/new-password/TSTAUTO')
+    // cy.visit('localhost:8080/#/new-password/TSTAUTO')
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=new-password]')
@@ -33,8 +33,8 @@ describe('Justto.App - Nova Senha', function () {
 
   it('Nova Senha: Senhas não Correspondem', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080/#/new-password/TSTAUTO')
+    cy.visit('https://kubernetes.justto.com.br/#/new-password/TSTAUTO')
+    // cy.visit('localhost:8080/#/new-password/TSTAUTO')
 
     // Sistema deve redirecionar para a página de Nova Senha
     cy.url().should('include', '/#/new-password/TSTAUTO')
@@ -60,8 +60,8 @@ describe('Justto.App - Nova Senha', function () {
 
   it('Nova Senha: Token Inválido', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080/#/new-password/FAILURE123')
+    cy.visit('https://kubernetes.justto.com.br/#/new-password/FAILURE123')
+    // cy.visit('localhost:8080/#/new-password/FAILURE123')
 
     // Sistema deve redirecionar para a página de Nova Senha
     cy.url().should('include', '/#/new-password/FAILURE123')

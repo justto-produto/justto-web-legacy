@@ -16,6 +16,10 @@
     "password4": "batata123",
 
     "email5": "zozuyakip@royalhost.info",
-    "password5": "password"
+    "password5": "password",
+
+    "emailonboarding": "teste.onboarding@justto.com.br",
+
+    "emailtoken": "teste.token@justto.com.br"
   }
 }
