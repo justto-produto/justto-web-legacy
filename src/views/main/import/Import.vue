@@ -24,7 +24,7 @@
               :disabled="hasFile"
               :headers="uploadHeaders"
               accept=".csv,.xlsx,.xls"
-              action="/api/imports/upload">
+              :action="uploadAction">
               <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon" data-idtest="upload_sheet"/>
               <div v-if="!hasFile && !processingFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
             </el-upload>
@@ -99,6 +99,10 @@ export default {
         'Authorization': this.$store.state.accountModule.token,
         'Workspace': this.$store.state.workspaceModule.subdomain
       }
+    },
+    uploadAction () {
+      let baseUrl = axios.defaults.baseURL || '/'
+      return baseUrl + '/api/imports/upload'
     }
   },
   beforeMount () {
