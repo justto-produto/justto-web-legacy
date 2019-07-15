@@ -28,7 +28,7 @@ const campaign = {
           .then(response => {
             if (campaign.importId) {
               // eslint-disable-next-line
-              axios.post('api/genese/' + campaign.importId + '/start')
+              axios.post('api/geneserunner/' + campaign.importId + '/start')
             }
             resolve(response)
           })
