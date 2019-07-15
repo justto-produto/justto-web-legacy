@@ -36,8 +36,6 @@ const disputeActions = {
         .catch(error => {
           reject(error)
         })
-        .finally (() => {
-        })
     })
   },
   getDisputeById ({ state }, id) {
