@@ -8,16 +8,19 @@ describe('Justto.App - Login', function () {
     cy.url().should('include', '/#/login')
   })
 
+  const login = Cypress.env('email1')
+  const password = Cypress.env('password1')
+
   it('Login: Sucesso', function () {
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('lucas@justto.com.br')
-      .should('have.value', 'lucas@justto.com.br')
+      .type(login)
+      .should('have.value', login)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('123456')
-      .should('have.value', '123456')
+      .type(password)
+      .should('have.value', password)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
