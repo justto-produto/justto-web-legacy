@@ -8,7 +8,6 @@ if (AUTH_TOKEN) {
   axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
 }
 
-
 let config = {
   baseURL: process.env.VUE_APP_BASE_URL ? ('https://' + process.env.VUE_APP_BASE_URL) : '/',
   timeout: 60 * 100000,

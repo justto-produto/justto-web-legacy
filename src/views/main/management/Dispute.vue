@@ -546,7 +546,7 @@ export default {
           this.fetchData({ fetchDispute: true, fetchMessages: true })
         }.bind(this), 1000)
       }).catch(() => this.$jusNotification({ type: 'error' }))
-      .finally(() => this.chooseUnsettledDialogVisible = false)
+        .finally(() => { this.chooseUnsettledDialogVisible = false })
     },
     sendChatMessage () {
       if (this.newChatMessage) {
