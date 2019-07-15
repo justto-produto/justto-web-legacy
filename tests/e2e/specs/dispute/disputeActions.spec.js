@@ -1,30 +1,31 @@
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
+
 describe('Justto.App - Disputa: Ações', function () {
   beforeEach('Login', function () {
-
     // Acessa a página inicial do Justto.App
-    cy.visit('http://homol.justto.com.br')
-    // cy.visit('localhost:8080')
+    // cy.visit('http://homol.justto.com.br')
+    cy.visit('localhost:8080')
 
-    // Redireciona para 'Login'
+    // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('dubu@voemail.com')
-      .should('have.value', 'dubu@voemail.com')
+      .type(login)
+      .should('have.value', login)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type(password)
+      .should('have.value', password)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
       .click()
 
-    // Verifica se tela acessada é a de "Gerenciamento"
+    // Valida se acesso foi feito
     cy.url().should('include', '/#/management')
-
   })
 
   it('Ação: Ganhar', function () {

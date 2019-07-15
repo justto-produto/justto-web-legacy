@@ -1,3 +1,6 @@
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
+
 describe('Justto.App - Disputa: Visualização', function () {
   beforeEach('Login', function () {
 
@@ -10,13 +13,13 @@ describe('Justto.App - Disputa: Visualização', function () {
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('dubu@voemail.com')
-      .should('have.value', 'dubu@voemail.com')
+      .type(login)
+      .should('have.value', login)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type(password)
+      .should('have.value', password)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
