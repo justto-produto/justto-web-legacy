@@ -1,8 +1,41 @@
-const login = Cypress.env('email3')
-const password = Cypress.env('password3')
+const login = Cypress.env('email6')
+const password = Cypress.env('password6')
 
 describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
   it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
+    // Acessa a página inicial do Justto.App
+    // cy.visit('http://homol.justto.com.br')
+    cy.visit('localhost:8080')
+
+    // Sistema deve redirecionar para a página de Login
+    cy.url().should('include', '/#/login')
+
+    // Preenche o campo 'Email'
+    cy.get('[data-testid=login-email]')
+      .type('lucas@justto.com.br')
+      .should('have.value', 'lucas@justto.com.br')
+
+    // Preenche o campo 'Senha'
+    cy.get('[data-testid=login-password]')
+      .type('123456')
+      .should('have.value', '123456')
+
+    // Clica no botão "Entrar"
+    cy.get('[data-testid=submit]')
+      .click()
+
+    // Verifica se tela acessada é a de "Gerenciamento"
+    cy.url().should('include', '/#/management')
+
+    // Seleciona a aba "Engajamento"
+    cy.contains('Engajamento').should('be.visible').click({force: true})
+
+    // Verifica se mensagem "Não foram encontradas disputas" é exibida
+    cy.contains('Não foram encontradas disputas')
+      .should('be.visible')
+  })
+
+  it('Gerenciamento: Engajamento - Exibição de Casos - Com casos', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
@@ -28,45 +61,12 @@ describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible').click()
-
-    // Verifica se mensagem "Não foram encontradas disputas" é exibida
-    cy.contains('Não foram encontradas disputas')
-      .should('be.visible')
-  })
-
-  it('Gerenciamento: Engajamento - Exibição de Casos - Com casos', function () {
-    // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
-
-    // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/login')
-
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type('zozuyakip@royalhost.info')
-      .should('have.value', 'zozuyakip@royalhost.info')
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Verifica se tela acessada é a de "Gerenciamento"
-    cy.url().should('include', '/#/management')
-
-    // Seleciona a aba "Engajamento"
     cy.contains('Engajamento')
       .should('be.visible')
-      .click()
+      .click({force: true})
 
     // Verifica se existem casos exibidos
-    cy.get('[class=el-table__body]')
+    cy.get('tbody>tr').eq(0)
       .should('be.visible')
   })
 })
