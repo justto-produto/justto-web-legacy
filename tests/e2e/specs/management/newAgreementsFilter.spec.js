@@ -1,3 +1,6 @@
+const login = Cypress.env('email4')
+const password = Cypress.env('password4')
+
 describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
@@ -9,13 +12,13 @@ describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('graziele@justto.com.br')
-      .should('have.value', 'graziele@justto.com.br')
+      .type(login)
+      .should('have.value', login)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('batata123')
-      .should('have.value', 'batata123')
+      .type(password)
+      .should('have.value', password)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
