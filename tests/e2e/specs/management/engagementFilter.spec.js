@@ -1,5 +1,5 @@
-const login = Cypress.env('email4')
-const password = Cypress.env('password4')
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
 
 describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
   beforeEach(function () {
@@ -30,7 +30,7 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
 
   it('Gerenciamento: Engajamento - Exibição dos Casos', function () {
     // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible').click()
+    cy.contains('Todos').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -63,12 +63,12 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.get('[data-testid=filter-applyfilter]').click()
 
     // Verifica se existem casos exibidos
-    cy.get('[class=el-table__body]').should('be.visible')
+    cy.get('tbody>tr').eq(0).should('be.visible')
   })
 
   it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
     // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible').click()
+    cy.contains('Engajamento').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
