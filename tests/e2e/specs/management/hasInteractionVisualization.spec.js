@@ -1,3 +1,6 @@
+const login = Cypress.env('email3')
+const password = Cypress.env('password3')
+
 describe('Justto.App - Com Interação: Visualização Com Interação', function () {
   it('Gerenciamento: Com Interação - Exibição dos Casos - Vazio', function () {
     // Acessa a página inicial do Justto.App
@@ -9,13 +12,13 @@ describe('Justto.App - Com Interação: Visualização Com Interação', functio
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('dubu@voemail.com')
-      .should('have.value', 'dubu@voemail.com')
+      .type(login)
+      .should('have.value', login)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type(password)
+      .should('have.value', password)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
@@ -67,4 +70,3 @@ describe('Justto.App - Com Interação: Visualização Com Interação', functio
     cy.wait(5000)
   })
 })
-

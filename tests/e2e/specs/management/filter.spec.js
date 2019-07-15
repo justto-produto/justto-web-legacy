@@ -1,3 +1,6 @@
+const login = Cypress.env('email5')
+const password = Cypress.env('password5')
+
 describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
   it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
     // Acessa a página inicial do Justto.App
@@ -9,13 +12,13 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('zozuyakip@royalhost.info')
-      .should('have.value', 'zozuyakip@royalhost.info')
+      .type(login)
+      .should('have.value', login)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type(password)
+      .should('have.value', password)
 
       // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
