@@ -1,21 +1,23 @@
 describe('Justto.App - Onboarding', function () {
+  const email = Cypress.env('emailonboarding')
+  const senha = Cypress.env('senhaonboarding')
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('https://kubernetes.justto.com.br')
+    // cy.visit('localhost:8080')
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('dake@emailay.com')
-      .should('have.value', 'dake@emailay.com')
+      .type(email)
+      .should('have.value', email)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type(senha)
+      .should('have.value', senha)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')

@@ -1,5 +1,5 @@
-const login = Cypress.env('email3')
-const password = Cypress.env('password3')
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
 
 describe('Justto.App - Gerenciamento: Visualização Novos Acordos', function () {
   it('Gerenciamento: Novos Acordos - Exibição dos Casos - Vazio', function () {
@@ -28,7 +28,7 @@ describe('Justto.App - Gerenciamento: Visualização Novos Acordos', function ()
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Novos Acordos"
-    cy.contains('Novos Acordos').should('be.visible').click()
+    cy.contains('Novos Acordos').click({force: true})
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')
@@ -45,13 +45,13 @@ describe('Justto.App - Gerenciamento: Visualização Novos Acordos', function ()
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('zozuyakip@royalhost.info')
-      .should('have.value', 'zozuyakip@royalhost.info')
+      .type(login)
+      .should('have.value', login)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type(password)
+      .should('have.value', password)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
@@ -62,10 +62,10 @@ describe('Justto.App - Gerenciamento: Visualização Novos Acordos', function ()
 
     // Seleciona a aba "Novos Acordos"
     cy.contains('Novos Acordos').should('be.visible')
-      .click()
+      .click({force: true})
 
     // Verifica se existem casos exibidos
-    cy.get('[class=el-table__body]').should('be.visible')
+    cy.get('tbody>tr').eq(0).should('be.visible')
 
     cy.wait(5000)
   })
