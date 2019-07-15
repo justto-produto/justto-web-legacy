@@ -1,5 +1,5 @@
-const login = Cypress.env('email4')
-const password = Cypress.env('password4')
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
 
 describe('Justto.App - Gerenciamento: Filtro Com Interação', function () {
   beforeEach(function () {
@@ -30,7 +30,8 @@ describe('Justto.App - Gerenciamento: Filtro Com Interação', function () {
 
   it('Gerenciamento: Com Interação - Exibição dos Casos', function () {
     // Seleciona a aba "Com Interação"
-    cy.contains('Com Interação').should('be.visible').click()
+    cy.contains('Com Interação').should('be.visible')
+    .click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -64,7 +65,7 @@ describe('Justto.App - Gerenciamento: Filtro Com Interação', function () {
     cy.get('[data-testid=filter-applyfilter]').click()
 
     // Verifica se existem casos exibidos
-    cy.get('[class=el-table__body]').should('be.visible')
+    cy.get('tbody>tr').eq(0).should('be.visible')
   })
 
   it('Gerenciamento: Com Interação - Exibição dos Casos - Vazio', function () {

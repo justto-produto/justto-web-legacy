@@ -3,16 +3,16 @@ import axios from 'axios'
 import store from '@/store'
 
 const AUTH_TOKEN = localStorage.justoken
+
 if (AUTH_TOKEN) {
   axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
 }
+
+
 let config = {
-  baseURL: process.env.baseURL || process.env.apiUrl || '/',
-  // baseURL: process.env.baseURL || process.env.apiUrl || 'http://homol.justto.com.br/',
-  // baseURL: process.env.baseURL || process.env.apiUrl || 'https://justto.app/',
+  baseURL: process.env.VUE_APP_BASE_URL ? ('https://' + process.env.VUE_APP_BASE_URL) : '/',
   timeout: 60 * 100000,
-  headers: {
-  }
+  headers: {}
 }
 
 const _axios = axios.create(config)
