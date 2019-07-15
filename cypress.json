@@ -4,6 +4,12 @@
   "pluginsFile": "tests/e2e/plugins/index.js",
   "env": {
     "email1": "lucas@justto.com.br",
-    "password1": "123456"
+    "password1": "123456",
+
+    "email2": "guilherme@justto.com.br",
+    "password2": "tOOr13@$",
+
+    "email3": "dubu@voemail.com",
+    "password3": "password"
   }
 }

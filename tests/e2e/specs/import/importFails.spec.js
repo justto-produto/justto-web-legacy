@@ -1,3 +1,6 @@
+const login = Cypress.env('email2')
+const password = Cypress.env('password2')
+
 describe('Justto.App - Importação de planilha: Erros', function() {
     // beforeEach(function () {
         it('Login: Sucesso', function() {
@@ -10,13 +13,13 @@ describe('Justto.App - Importação de planilha: Erros', function() {
 
             // Preenche o campo 'Email'
             cy.get('[data-testid="login-email"]')
-                .type('guilherme@justto.com.br')
-                .should('have.value', 'guilherme@justto.com.br')
+                .type(login)
+                .should('have.value', login)
 
             // Preenche o campo 'Senha'
             cy.get('[data-testid="login-password"]')
-                .type('tOOr13@$')
-                .should('have.value', 'tOOr13@$')
+                .type(password)
+                .should('have.value', password)
 
             // Clica no botão "Entrar"
             cy.get('[data-testid="submit"]').click()

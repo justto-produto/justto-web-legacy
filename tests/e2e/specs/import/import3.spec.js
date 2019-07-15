@@ -11,6 +11,8 @@
 //     )
 //   })
 // })
+const login = Cypress.env('email3')
+const password = Cypress.env('password3')
 
 describe('Justto.App - Planilha Modelo', function () {
   it('Login: Sucesso', function () {
