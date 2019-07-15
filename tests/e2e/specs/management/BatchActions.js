@@ -28,7 +28,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   })
 
   afterEach('Notificação de Sucesso', function () {
-    cy.wait(2000)
+    cy.wait(4000)
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success')
       .contains('Yay!')
@@ -36,10 +36,6 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
 
     // Modal de confirmação deve adesaparecer
     cy.get('.el-message-box')
-      .should('not.be.visible')
-
-    // Modal de confirmação deve desaparecer
-    cy.get('[data-testid=choose-unsettled-dialog]')
       .should('not.be.visible')
   })
 

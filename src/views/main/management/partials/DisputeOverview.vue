@@ -3,7 +3,7 @@
     <el-collapse value="1">
       <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
         <div class="dispute-overview-view__info-line">
-          <span class="title">Nº do Processo:</span>
+          <span class="title">Num.:</span>
           <span>{{ dispute.code }}</span>
         </div>
         <div v-if="dispute.campaign" class="dispute-overview-view__info-line">

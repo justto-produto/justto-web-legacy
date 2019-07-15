@@ -1,4 +1,4 @@
-describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
+describe('Justto.App - Novos Acordos: Filtro Novos Acordos', function () {
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')

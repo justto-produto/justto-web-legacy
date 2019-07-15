@@ -1,6 +1,5 @@
 describe('Justto.App - Planilha Modelo', function () {
   beforeEach(function () {
-    it('Login', function () {
       // Acessa a página inicial do Justto.App
       // cy.visit('http://homol.justto.com.br')
       cy.visit('localhost:8080')
@@ -10,20 +9,19 @@ describe('Justto.App - Planilha Modelo', function () {
 
       // Preenche o campo 'Email'
       cy.get('[data-testid="login-email"]')
-        .type('guilherme@justto.com.br')
-        .should('have.value', 'guilherme@justto.com.br')
+        .type('lucas@justto.com.br')
+        .should('have.value', 'lucas@justto.com.br')
 
       // Preenche o campo 'Senha'
       cy.get('[data-testid="login-password"]')
-        .type('tOOr13@$')
-        .should('have.value', 'tOOr13@$')
+        .type('123456')
+        .should('have.value', '123456')
 
       // Clica no botão "Entrar"
       cy.get('[data-testid="submit"]').click()
 
       // Valida se acesso foi feito - Primeira tela de login
       cy.url().should('include', '/#/management')
-    })
   })
 
   it('Planilha modelo Disponível: Sucesso', function () {

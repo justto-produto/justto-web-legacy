@@ -43,10 +43,6 @@ describe('Justto.App - Disputa: Ações', function () {
     // Modal de confirmação deve adesaparecer
     cy.get('.el-message-box')
       .should('not.be.visible')
-
-    // Modal de confirmação deve desaparecer
-    cy.get('[data-testid=choose-unsettled-dialog]')
-      .should('not.be.visible')
   })
 
   it('Ação: Pausar', function () {
@@ -88,26 +84,6 @@ describe('Justto.App - Disputa: Ações', function () {
 
     // Confirma a ação
     cy.get('.confirm-action-btn')
-      .click()
-  })
-
-  it('Ação: Perder', function () {
-    // Clica em Perder
-    cy.get('[data-testid=unsettled]')
-      .click()
-
-    // Modal de confirmação deve aparecer
-    cy.get('[data-testid=choose-unsettled-dialog]')
-      .should('be.visible')
-
-    // Selectiona motivo da perda
-    cy.get('[data-testid=select-unsettled]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
-      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
-
-    // Confirma a ação
-    cy.get('.confirm-action-unsettled')
       .click()
   })
 

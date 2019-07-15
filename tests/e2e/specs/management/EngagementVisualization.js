@@ -58,10 +58,12 @@ describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible')
+    cy.contains('Engajamento')
+      .should('be.visible')
       .click()
 
     // Verifica se existem casos exibidos
-    cy.get('[class=el-table__body]').should('be.visible')
+    cy.get('[class=el-table__body]')
+      .should('be.visible')
   })
 })

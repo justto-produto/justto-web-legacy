@@ -90,6 +90,6 @@ describe('Justto.App - Nova Senha', function () {
       .click()
 
     // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/forgot-password')
+    cy.url().shoudild('include', '/#/forgot-password')
   })
 })

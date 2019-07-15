@@ -2,7 +2,7 @@ import Vue from 'vue'
 import store from '../store'
 import VueSocketIO from 'vue-socket.io'
 
-let hostname = location.hostname
+let hostname = 'homol.justto.com.br/' // location.hostname
 let protocol = location.protocol === 'https:' ? 'wss://' : 'ws://'
 
 Vue.use(new VueSocketIO({

@@ -46,17 +46,17 @@ describe('Justto.App - Login', function () {
     cy.contains('Insira um e-mail válido')
       .should('be.visible')
   })
-
-  it('Login: Email Inexistente', function () {
+  
+  it('Login: Email ou senha incorretos', function() {
     // Preenche campo 'Email' com email não existente
     cy.get('[data-testid=login-email]')
-      .type('email@inexistente.com')
-      .should('have.value', 'email@inexistente.com')
+      .type('graziele@justto.com.br')
+      .should('have.value', 'graziele@justto.com.br')
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type('kjdisjdi')
+      .should('have.value', 'kjdisjdi')
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
@@ -66,7 +66,7 @@ describe('Justto.App - Login', function () {
     cy.url().should('include', '/#/login')
 
     // Verifica de menssagem de erro foi exibida
-    cy.get('[data-testid=login-failure]')
+    cy.contains('E-mail não cadastrado ou senha incorreta.')
       .should('be.visible')
   })
 })
