@@ -69,17 +69,17 @@ export default {
       isCollapse: true
     }
   },
-  beforeMount () {
-    this.$store.dispatch('myPerson')
-    this.$store.dispatch('getWorkspaceMembers')
+  beforeCreate () {
+    this.$store.commit('showLoading')
     this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
+      .finally(() => {
+        setTimeout(function () {
+          this.$store.commit('hideLoading')
+        }.bind(this), 2000)
+      })
     this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
         this.$store.dispatch('whatsappStart')
-      } else if (whatsapp.status !== 'CONNECTED') {
-        this.$store.dispatch('whatsappStop').then(() => {
-          this.$store.dispatch('whatsappStart')
-        })
       } else {
         this.$store.commit('SOCKET_refresh', whatsapp)
       }

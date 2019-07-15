@@ -1,8 +1,9 @@
 import Vue from 'vue'
+import VueMoment from 'vue-moment'
+import moment from 'moment-timezone'
+import 'moment/locale/pt-br'
+moment.tz.setDefault('UTC')
 
-const moment = require('moment')
-require('moment/locale/pt-br')
-
-Vue.use(require('vue-moment'), {
-  moment
+Vue.use(VueMoment, {
+  moment,
 })
