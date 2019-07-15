@@ -6,6 +6,12 @@
     "email1": "lucas@justto.com.br",
     "password1": "123456",
 
+    "email2": "guilherme@justto.com.br",
+    "password2": "tOOr13@$",
+
+    "email3": "dubu@voemail.com",
+    "password3": "password",
+
     "emailonboarding": "teste.onboarding@justto.com.br",
 
     "emailtoken": "teste.token@justto.com.br"
