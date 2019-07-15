@@ -159,6 +159,7 @@ export default {
         !!campaign.paymentDeadLine &&
         campaign.hasOwnProperty('negotiatorIds') &&
         !!campaign.negotiatorIds &&
+        campaign.negotiatorIds.length > 0 &&
         campaign.hasOwnProperty('strategy') &&
         !!campaign.strategy
       ) {

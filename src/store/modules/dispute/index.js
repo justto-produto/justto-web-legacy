@@ -8,7 +8,11 @@ const dispute = {
     filters: {
       tab: '0',
       filterPersonId: 0,
-      terms: {}
+      terms: {},
+      sort: {
+        prop: '',
+        order: null
+      }
     },
     disputeStatuses: {}
   },

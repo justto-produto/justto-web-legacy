@@ -231,6 +231,10 @@ export default {
         })
       })
     },
+    openNewTab (disputeId) {
+      let routeData = this.$router.resolve({ name: 'dispute', params: { id: disputeId } })
+      window.open(routeData.href, '_blank')
+    },
     getDisputeAlerts (dispute) {
       let alerts = []
       if (dispute.alerts && dispute.alerts.length) {

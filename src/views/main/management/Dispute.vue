@@ -41,7 +41,7 @@
             <el-button
               :disabled="!canSettled()"
               plain
-              data-testid="settled"
+              data-testid="action-win"
               @click="disputeAction('settled')">
               <jus-icon icon="win" />
             </el-button>
@@ -50,7 +50,7 @@
             <el-button
               :disabled="!canUnsettled()"
               plain
-              data-testid="unsettled"
+              data-testid="action-lose"
               @click="disputeAction('unsettled')">
               <jus-icon icon="lose" />
             </el-button>
@@ -62,17 +62,22 @@
           </el-tooltip>
           <el-tooltip content="Retomar">
             <el-button plain data-testid="resume" @click="disputeAction('resume')">
-              <jus-icon icon="start-again" />
+              <jus-icon icon="action-start-again" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Pausar">
             <el-button plain data-testid="paused" @click="disputeAction('paused')">
-              <jus-icon icon="pause" />
+              <jus-icon icon="action-pause" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Alterar Negociador">
             <el-button plain @click="editNegotiator()">
-              <jus-icon icon="delegate" />
+              <jus-icon icon="action-delegate" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="Enriquecer disputa">
+            <el-button plain @click="disputeAction('enrich')">
+              <jus-icon icon="enrich" />
             </el-button>
           </el-tooltip>
           <!-- <el-tooltip content="snooze">

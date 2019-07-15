@@ -36,7 +36,7 @@ t pu<template>
       <div class="select-strategy__messages">
         <a v-show="strategy !== ''" @click.prevent="dialogVisible = true">Ver estratégia de engajamento das partes</a>
       </div>
-      <div class="jus-import-feedback-card__number">
+      <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do protocolo
         </div>
@@ -52,7 +52,7 @@ t pu<template>
           </span>
         </div>
       </div>
-      <div v-if="strategy.id === 1 || strategy.id === 4" class="jus-import-feedback-card__number" data-testid="feedback-paymendate">
+      <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
         </div>
@@ -160,6 +160,17 @@ export default {
     },
     campaignTitle () {
       return this.campaignName ? this.campaignName : this.initialCampaignName ? this.initialCampaignName : 'Campanha ' + this.index
+    },
+    isPaymentStrategy () {
+      let isStrategy = false
+      if (this.strategy && this.strategy.types) {
+        this.strategy.types.map(type => {
+          if (type === 'PAYMENT') isStrategy = true
+        })
+        return isStrategy
+      } else {
+        return false
+      }
     }
   },
   watch: {
