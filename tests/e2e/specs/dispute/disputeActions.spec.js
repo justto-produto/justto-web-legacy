@@ -35,11 +35,8 @@ describe('Justto.App - Disputa: Ações', function () {
       .click()
 
     // Seleciona e clica na Disputa
-    cy.contains('#12738').should('be.visible')
+    cy.get('[data-testid=dispute-index]').eq(1)
       .click()
-
-    // Verifica se tela acessada é a da "Disputa"
-    cy.url().should('include', '/#/management/dispute/12738')
 
     // Verifica se a ação "Ganhar" é visível e clica
     cy.get('[data-testid=win]').should('be.visible')

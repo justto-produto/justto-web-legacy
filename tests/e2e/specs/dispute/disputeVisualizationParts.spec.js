@@ -1,3 +1,6 @@
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
+
 describe('Justto.App - Disputa: Edição do Caso', function () {
   it('Login', function () {
     // Acessa a página inicial do Justto.App
@@ -26,6 +29,9 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
   })
 
   it('Entra na disputa', function () {
+    // Seleciona a aba "Todos"
+    cy.contains('Todos').click({force: true})
+
     // clica no primeiro caso: index 0
     cy.get('tbody>tr').eq(0).click()
 
@@ -35,7 +41,7 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
 
   it('Clica no botão para expandir o card', function () {
     // Clica no nome para expandir o card
-    cy.get('[data-testid=party]').eq(0)
+    cy.get('[data-testid=expand-party]').eq(0)
       .click()
 
     // Clica no botão de 'Editar'
