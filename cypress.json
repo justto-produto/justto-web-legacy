@@ -19,7 +19,7 @@
     "password5": "password",
 
     "emailonboarding": "teste.onboarding@justto.com.br",
-    "senhaonboarding": "",
+    "senhaonboarding": "123456",
 
     "emailtoken": "teste.token@justto.com.br"
   }
