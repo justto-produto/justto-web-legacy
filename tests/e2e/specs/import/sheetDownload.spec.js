@@ -3,7 +3,6 @@ const password = Cypress.env('password2')
 
 describe('Justto.App - Planilha Modelo', function () {
   beforeEach(function () {
-    it('Login', function () {
       // Acessa a página inicial do Justto.App
       // cy.visit('http://homol.justto.com.br')
       cy.visit('localhost:8080')
@@ -26,7 +25,6 @@ describe('Justto.App - Planilha Modelo', function () {
 
       // Valida se acesso foi feito - Primeira tela de login
       cy.url().should('include', '/#/management')
-    })
   })
 
   it('Planilha modelo Disponível: Sucesso', function () {
