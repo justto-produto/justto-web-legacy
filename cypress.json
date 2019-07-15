@@ -4,6 +4,10 @@
   "pluginsFile": "tests/e2e/plugins/index.js",
   "env": {
     "email1": "lucas@justto.com.br",
-    "password1": "123456"
+    "password1": "123456",
+
+    "emailonboarding": "teste.onboarding@justto.com.br",
+
+    "emailtoken": "teste.token@justto.com.br"
   }
 }

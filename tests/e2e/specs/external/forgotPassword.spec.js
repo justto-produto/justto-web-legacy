@@ -1,8 +1,10 @@
 describe('Justto.app - Esqueci a Senha', function () {
+  const email = Cypress.env('emailonboarding')
+
   beforeEach('Acesso', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('https://kubernetes.justto.com.br')
+    // cy.visit('localhost:8080')
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
@@ -18,8 +20,8 @@ describe('Justto.app - Esqueci a Senha', function () {
   it('Esqueci minha Senha: Sucesso', function () {
     // Digita um email válido existente
     cy.get('[data-testid=forgot-password-email]')
-      .type('teste.onboarding@justto.com.br')
-      .should('have.value', 'teste.onboarding@justto.com.br')
+      .type(email)
+      .should('have.value', email)
 
     // Clica no botão Recuperar
     cy.get('[data-testid=submit]')
