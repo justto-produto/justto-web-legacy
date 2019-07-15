@@ -13,6 +13,7 @@
     "password3": "password",
 
     "emailonboarding": "teste.onboarding@justto.com.br",
+    "senhaonboarding": "",
 
     "emailtoken": "teste.token@justto.com.br"
   }
