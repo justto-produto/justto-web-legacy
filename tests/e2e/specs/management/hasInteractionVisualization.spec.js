@@ -1,5 +1,5 @@
-const login = Cypress.env('email3')
-const password = Cypress.env('password3')
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
 
 describe('Justto.App - Com Interação: Visualização Com Interação', function () {
   it('Gerenciamento: Com Interação - Exibição dos Casos - Vazio', function () {
@@ -28,7 +28,7 @@ describe('Justto.App - Com Interação: Visualização Com Interação', functio
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Com Interação"
-    cy.contains('Com Interação').should('be.visible').click()
+    cy.contains('Com Interação').click({force: true})
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')
@@ -45,13 +45,13 @@ describe('Justto.App - Com Interação: Visualização Com Interação', functio
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('zozuyakip@royalhost.info')
-      .should('have.value', 'zozuyakip@royalhost.info')
+      .type(login)
+      .should('have.value', login)
 
       // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type(password)
+      .should('have.value', password)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
@@ -62,10 +62,10 @@ describe('Justto.App - Com Interação: Visualização Com Interação', functio
 
     // Seleciona a aba "Com Interação"
     cy.contains('Com Interação').should('be.visible')
-      .click()
+      .click({force: true})
 
     // Verifica se existem casos exibidos
-    cy.get('[class=el-table__body]').should('be.visible')
+    cy.get('tbody>tr').eq(0).should('be.visible')
 
     cy.wait(5000)
   })
