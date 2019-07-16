@@ -1,5 +1,5 @@
-const login = Cypress.env('email3')
-const password = Cypress.env('password3')
+const login = Cypress.env('email6')
+const password = Cypress.env('password6')
 
 describe('Justto.App - Gerenciamento: Visualização Todos', function () {
   it('Gerenciamento: Todos - Exibição dos Casos - Vazio', function () {
@@ -28,7 +28,7 @@ describe('Justto.App - Gerenciamento: Visualização Todos', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click()
+    cy.contains('Todos').should('be.visible').click({force: true})
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')

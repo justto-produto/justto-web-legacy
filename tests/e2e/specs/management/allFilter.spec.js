@@ -1,5 +1,5 @@
-const login = Cypress.env('email4')
-const password = Cypress.env('password4')
+const login = Cypress.env('email6')
+const password = Cypress.env('password6')
 
 describe('Justto.App - Com Interação: Filtro Todos', function () {
   beforeEach(function () {
@@ -30,7 +30,7 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
 
   it('Gerenciamento: Todos - Exibição dos Casos', function () {
     // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click()
+    cy.contains('Todos').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -62,7 +62,7 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
 
   it('Gerenciamento: Todos - Exibição dos Casos - Vazio', function () {
     // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click()
+    cy.contains('Todos').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
