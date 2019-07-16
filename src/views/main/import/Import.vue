@@ -23,8 +23,8 @@
               :on-error="handleError"
               :disabled="hasFile"
               :headers="uploadHeaders"
-              accept=".csv,.xlsx,.xls"
-              :action="uploadAction">
+              :action="uploadAction"
+              accept=".csv,.xlsx,.xls">
               <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon" data-idtest="upload_sheet"/>
               <div v-if="!hasFile && !processingFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
             </el-upload>
