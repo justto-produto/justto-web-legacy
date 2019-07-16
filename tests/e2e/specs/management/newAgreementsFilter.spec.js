@@ -1,5 +1,5 @@
-const login = Cypress.env('email4')
-const password = Cypress.env('password4')
+const login = Cypress.env('email6')
+const password = Cypress.env('password6')
 
 describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
   beforeEach(function () {
@@ -30,7 +30,7 @@ describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
 
   it('Gerenciamento: Novos Acordos - Exibição dos Casos', function () {
     // Seleciona a aba "Com Interação"
-    cy.contains('Novos Acordos').should('be.visible').click()
+    cy.contains('Novos Acordos').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -61,8 +61,8 @@ describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
   })
 
   it('Gerenciamento: Novos Acordos - Exibição dos Casos - Vazio', function () {
-    // Seleciona a aba "Com Interação"
-    cy.contains('Novos Acordos').should('be.visible').click()
+    // Seleciona a aba "Novos Acordos"
+    cy.contains('Novos Acordos').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
