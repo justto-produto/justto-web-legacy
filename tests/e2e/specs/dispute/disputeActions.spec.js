@@ -1,5 +1,5 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('email6')
+const password = Cypress.env('password6')
 
 describe('Justto.App - Disputa: Ações', function () {
   beforeEach('Login', function () {
@@ -43,7 +43,7 @@ describe('Justto.App - Disputa: Ações', function () {
       .contains('Ação realizada com sucesso.')
       .should('be.visible')
 
-    // Modal de confirmação deve adesaparecer
+    // Modal de confirmação deve desaparecer
     cy.get('.el-message-box')
       .should('not.be.visible')
   })

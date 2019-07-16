@@ -1,5 +1,5 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('email6')
+const password = Cypress.env('password6')
 
 describe('Justto.App - Disputa: Menssagens', function () {
   beforeEach('Login', function () {
@@ -51,7 +51,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .click()
 
     // Seleciona primeira parte do caso
-    cy.get('[data-testid=party]').eq(0)
+    cy.get('[data-testid=expand-party]').eq(0)
       .click()
 
     // Digita mensagem
