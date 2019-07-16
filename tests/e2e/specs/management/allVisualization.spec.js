@@ -45,13 +45,13 @@ describe('Justto.App - Gerenciamento: Visualização Todos', function () {
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('zozuyakip@royalhost.info')
-      .should('have.value', 'zozuyakip@royalhost.info')
+      .type(login)
+      .should('have.value', login)
 
       // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('password')
-      .should('have.value', 'password')
+      .type(password)
+      .should('have.value', password)
 
       // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
@@ -65,7 +65,7 @@ describe('Justto.App - Gerenciamento: Visualização Todos', function () {
       .click()
 
       // Verifica se existem casos exibidos
-    cy.get('[class=el-table__body]').should('be.visible')
+    cy.get('tbody>tr').eq(0).should('be.visible')
 
     cy.wait(5000)
   })

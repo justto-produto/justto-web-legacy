@@ -28,7 +28,7 @@ describe('Justto.App - Planilha Modelo', function () {
     cy.url().should('include', '/#/management')
   })
 
-  // IMPORTA PLANILHA ===========================================
+  // IMPORTA PLANILHA
   it('Importa planilha modelo: Sucesso', function () {
     // Acessa a tela de gerenciamento
     cy.get('[data-testid=menu-import]')
