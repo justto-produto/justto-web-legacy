@@ -3,12 +3,12 @@ const password = Cypress.env('password1')
 
 describe('Justto.App - Disputa: Visualização', function () {
   beforeEach('Login', function () {
-
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
+    // cy.visit('https://kubernetes.justto.com.br')
     cy.visit('localhost:8080')
 
-    // Redireciona para 'Login'
+    // Verifica se link redirecionado é o 'Login'
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
@@ -28,58 +28,43 @@ describe('Justto.App - Disputa: Visualização', function () {
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
 
+    // Seleciona a aba "Todos"
+    cy.contains('Todos').click({force: true})
+
+    // Entra na disputa
+    cy.get('tbody>tr').eq(0).click()
+
+    // Sistema deve redirecionar para a página de Registro
+    cy.url().should('include', '/#/management/dispute/')
   })
 
-  it('Disputa: Resumo do Caso', function () {
+  it('Visualização da Disputa: Sucesso', function () {
+    // Resumo da disputa deve estar visivel
+    cy.get('[data-testid=dispute-summary]')
+      .should('be.visible')
 
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible')
+    // Dados da disputa devem estar visiveis
+    cy.get('[data-testid=dispute-overview]')
+      .should('be.visible')
+
+    // Dados da disputa devem estar visiveis
+    cy.get('[data-testid=dispute-messages]')
+      .should('be.visible')
+
+    // Loadings devem desaparecer
+    cy.get('.el-loading-mask')
+      .should('not.be.visible')
+    
+    // Expande uma parte da disputa
+    cy.get('[data-testid=expand-party]').eq(0)
       .click()
-
-    // Seleciona e clica na Disputa
-    cy.contains('#12705').should('be.visible')
-      .click()
-
-    // Verifica se tela acessada é a da "Disputa"
-    cy.url().should('include', '/#/management/dispute/12705')
-
-    // Verifica se carrega os dados em "Resumo da disputa"
-    cy.contains('Enriquecimento')
+      
+    // Informações da disputa devem estar visiveis
+    cy.get('.dispute-overview-view__info-line')
       .should('be.visible')
-    cy.contains('Engajamento')
+    
+    // Informações do sumario devem estar visiveis
+    cy.get('.dispute-view__steps .el-steps--dots')
       .should('be.visible')
-    cy.contains('Interação')
-      .should('be.visible')
-    cy.contains('Última valor proposto')
-      .should('be.visible')
-  })
-
-  it('Disputa: Dados da Disputa', function () {
-
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible')
-      .click()
-
-    // Seleciona e clica na Disputa
-    cy.contains('#12705').should('be.visible')
-      .click()
-
-    // Verifica se tela acessada é a da "Disputa"
-    cy.url().should('include', '/#/management/dispute/12705')
-
-    // Verifica se carregou os dados em "Dados da disputa"
-    cy.contains('Informações gerais')
-      .should('be.visible')
-    cy.contains('Nº do Processo:')
-      .should('be.visible')
-    cy.contains('Campanha:')
-      .should('be.visible')
-
-    // Verifica se carrega os dados em "Dados da disputa"
-    cy.contains('Código da Disputa')
-      .should('be.visible')
-    cy.contains('contatos da Pessoa:')
-      .should('be.visible')
-
   })
 })
