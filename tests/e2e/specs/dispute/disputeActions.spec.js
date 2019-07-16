@@ -7,7 +7,7 @@ describe('Justto.App - Disputa: Ações', function () {
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
 
-    // Sistema deve redirecionar para a página de Login
+    // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
@@ -24,109 +24,111 @@ describe('Justto.App - Disputa: Ações', function () {
     cy.get('[data-testid=submit]')
       .click()
 
-    // Valida se acesso foi feito
+    // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
+
+    // Entra na disputa
+    cy.wait(1000)
+    cy.get('[data-testid=dispute-index]').eq(0)
+      .click()
+
+    // Sistema deve redirecionar para a página de Registro
+    cy.url().should('include', '/#/management/dispute/')
   })
 
-  it('Ação: Ganhar', function () {
+  afterEach('Notificação de Sucesso', function () {
+    cy.wait(2000)
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success')
+      .contains('Ação realizada com sucesso.')
+      .should('be.visible')
 
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible')
-      .click()
-
-    // Seleciona e clica na Disputa
-    cy.get('[data-testid=dispute-index]').eq(1)
-      .click()
-
-    // Verifica se a ação "Ganhar" é visível e clica
-    cy.get('[data-testid=win]').should('be.visible')
-      .click()
-    cy.get('[data-testid=cancel]').should('be.visible')
-      .click()
-
-  })
-
-  it('Ação: Perder', function () {
-
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible')
-      .click()
-
-    // Seleciona e clica na Disputa
-    cy.contains('#12738').should('be.visible')
-      .click()
-
-    // Verifica se tela acessada é a da "Disputa"
-    cy.url().should('include', '/#/management/dispute/12738')
-
-    // Verifica se a ação "Perder" é visível e clica
-    cy.get('[data-testid=lose]').should('be.visible')
-      .click()
-    cy.get('[data-testid=cancel]').should('be.visible')
-      .click()
-
-  })
-
-  it('Ação: Retomar', function () {
-
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible')
-      .click()
-
-    // Seleciona e clica na Disputa
-    cy.contains('#12738').should('be.visible')
-      .click()
-
-    // Verifica se tela acessada é a da "Disputa"
-    cy.url().should('include', '/#/management/dispute/12738')
-
-    // Verifica se a ação "Retomar" é visível e clica
-    cy.get('[data-testid=start-again]').should('be.visible')
-      .click()
-    cy.get('[data-testid=cancel]').should('be.visible')
-      .click()
-
+    // Modal de confirmação deve adesaparecer
+    cy.get('.el-message-box')
+      .should('not.be.visible')
   })
 
   it('Ação: Pausar', function () {
-
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible')
+    // Clica em Pausar
+    cy.get('[data-testid=paused]')
       .click()
 
-    // Seleciona e clica na Disputa
-    cy.contains('#12738').should('be.visible')
-      .click()
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
 
-    // Verifica se tela acessada é a da "Disputa"
-    cy.url().should('include', '/#/management/dispute/12738')
-
-    // Verifica se a ação "Pausar" é visível e clica
-    cy.get('[data-testid=pause]').should('be.visible')
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
       .click()
-    cy.get('[data-testid=cancel]').should('be.visible')
-      .click()
-
   })
 
-  it('Ação: Alterar Negociador', function () {
-
-    // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible')
+  it('Ação: Retomar', function () {
+    // Clica em Retomar
+    cy.get('[data-testid=resume')
       .click()
 
-    // Seleciona e clica na Disputa
-    cy.contains('#12738').should('be.visible')
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+      .click()
+  })
+
+  it('Ação: Ganhar', function () {
+    // Clica em Ganhar
+    cy.get('[data-testid=settled]')
       .click()
 
-    // Verifica se tela acessada é a da "Disputa"
-    cy.url().should('include', '/#/management/dispute/12738')
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
 
-    // Verifica se a ação "Alterar Negociador" é visível e clica
-    cy.get('[data-testid=delegate]').should('be.visible')
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
       .click()
-    cy.get('[data-testid=cancel]').should('be.visible')
+  })
+
+  it('Ação: Favoritar', function () {
+    // Favorita/disfavorita caso
+    cy.get('[data-testid=favorite]')
       .click()
 
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+      .click()
+  })
+
+  it('Ação: Reiniciar Engajamento', function () {
+    // VClica em Reiniciar Engajamento
+    cy.get('[data-testid=restart-engagement]')
+      .click()
+
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+      .click()
+  })
+
+  it('Ação: Remover', function () {
+    // Clica em Remover
+    cy.get('[data-testid=remove]')
+      .click()
+
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-remove-btn')
+      .click()
   })
 })
