@@ -25,5 +25,6 @@
     "senhaonboarding": "123456",
 
     "emailtoken": "teste.token@justto.com.br"
-  }
+  },
+  "ignoreTestFiles": "/**/*.dev.js"
 }
