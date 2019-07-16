@@ -42,10 +42,11 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
   it('Clica no botão para expandir o card', function () {
     // Clica no nome para expandir o card
     cy.get('[data-testid=expand-party]').eq(0)
-      .click()
+      .click({force: true})
 
     // Clica no botão de 'Editar'
-    cy.get('[data-testid=edit-part]').eq(0).click()
+    cy.get('[data-testid=edit-part]').eq(0)
+      .click({force: true})
 
     // Verifica se todos os 'spans' aparecem
     cy.get('span').should('be.visible')
@@ -61,7 +62,7 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
     cy.get('[data-testid=add-email]').click()
 
     // Verifica se o email inserido aparece
-    cy.contains('testes@testes.com').should('be.visible')
+    cy.contains('testes@testes.com').should('to.exist')
 
   })
 

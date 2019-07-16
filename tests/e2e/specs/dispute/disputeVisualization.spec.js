@@ -54,17 +54,17 @@ describe('Justto.App - Disputa: Visualização', function () {
     // Loadings devem desaparecer
     cy.get('.el-loading-mask')
       .should('not.be.visible')
-    
+
     // Expande uma parte da disputa
     cy.get('[data-testid=expand-party]').eq(0)
       .click()
-      
+
     // Informações da disputa devem estar visiveis
     cy.get('.dispute-overview-view__info-line')
       .should('be.visible')
-    
+
     // Informações do sumario devem estar visiveis
-    cy.get('.dispute-view__steps .el-steps--dots')
-      .should('be.visible')
+    cy.contains('CPF:').should('be.visible')
+    cy.contains('Função:').should('be.visible')
   })
 })
