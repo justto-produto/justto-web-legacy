@@ -5,12 +5,19 @@
       v-if="isntCanceled(message)"
       v-show="checkShowScheduled(message)"
       :key="message.id"
+      data-testid="message-index"
       class="dispute-view-messages__message">
       <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="dispute-view-messages__message-box">
         <div>
           <div :class="directionClass(message) + waitingClass(message)" class="dispute-view-messages__message-content">
             <div>{{ message.description }}</div>
-            <el-button v-if="message.message && message.message.type === 'EMAIL'" type="text" @click="showMessageDialog(message.message.content)">Visualizar email</el-button>
+            <el-button
+              v-if="message.message && message.message.type === 'EMAIL'"
+              type="text"
+              data-testid="show-email"
+              @click="showMessageDialog(message.message.content)">
+              Visualizar email
+            </el-button>
             <span v-else v-html="message.message && message.message.content" />
             <i v-if="directionClass(message) === 'note'">
               <br>
@@ -51,10 +58,11 @@
     </li>
     <el-dialog
       :visible.sync="showMessage"
+      data-testid="email-dialog"
       width="80%">
       <span v-html="messageContent"/>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="showMessage = false">Fechar</el-button>
+        <el-button data-testid="close-button" @click="showMessage = false">Fechar</el-button>
       </span>
     </el-dialog>
   </ul>

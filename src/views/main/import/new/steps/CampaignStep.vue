@@ -15,7 +15,8 @@
           :mapped-campaign.sync="mappedCampaign"
           :key="mappedCampaign.cluster"
           :index="index + 1"
-          :color="colors[index]"/>
+          :color="colors[index]"
+          data-testid="import-feedback"/>
       </div>
     </div>
   </div>

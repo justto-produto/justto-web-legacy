@@ -13,7 +13,7 @@
           </p>
         </div>
         <div class="import-view__content import-view__content---methods">
-          <el-card class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
+          <el-card :class="{'import-view__method-loading': hasFile}" data-testid="file-input" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
             <el-upload
               v-loading="processingFile"
               ref="uploadMethod"
@@ -23,8 +23,8 @@
               :on-error="handleError"
               :disabled="hasFile"
               :headers="uploadHeaders"
-              accept=".csv,.xlsx,.xls"
-              :action="uploadAction">
+              :action="uploadAction"
+              accept=".csv,.xlsx,.xls">
               <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon" data-idtest="upload_sheet"/>
               <div v-if="!hasFile && !processingFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
             </el-upload>
@@ -39,7 +39,7 @@
         </div>
         <div v-if="hasFile" class="import-view__actions">
           <el-button plain @click="removeFile">Limpar</el-button>
-          <el-button type="primary" @click="startImport">Próximo</el-button>
+          <el-button type="primary" data-testid="submit" @click="startImport">Próximo</el-button>
         </div>
       </div>
     </template>
@@ -50,12 +50,16 @@
             Histórico de importação
           </h2>
           <el-tooltip content="Download da planilha modelo">
-            <el-button plain class="right" @click="downloadModel()">
-              <jus-icon icon="download-sheet" />
+            <el-button
+              type="primary"
+              class="right"
+              data-testid="download-model"
+              @click="downloadModel()">
+              <jus-icon icon="download-white" />
             </el-button>
           </el-tooltip>
         </div>
-        <p v-if="importsHistory.length === 0">
+        <p v-if="importsHistory.length === 0" data-testid="empty-history">
           Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
           <br><br>
           Faça o download da planilha modelo no ícone acima.
@@ -64,12 +68,17 @@
           <el-card
             v-for="imports in importsHistory"
             :key="imports.id"
-            class="import-view__card">
+            class="import-view__card"
+            data-testid="spreadsheet-card">
             <div>
               <jus-icon icon="spreadsheet-xlsx"/>
             </div>
             <div class="import-view__card-content">
-              <h4><a href="#" @click="downloadItem(imports.file_name)">{{ imports.file_name }}</a></h4>
+              <h4>
+                <a href="#" @click="downloadItem(imports.file_name)">
+                  {{ imports.file_name }}
+                </a>
+              </h4>
               <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
               <p>Linhas: {{ imports.rows }}</p>
             </div>
@@ -101,6 +110,7 @@ export default {
       }
     },
     uploadAction () {
+      // eslint-disable-next-line
       let baseUrl = axios.defaults.baseURL || '/'
       return baseUrl + '/api/imports/upload'
     }
