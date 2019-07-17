@@ -4,8 +4,7 @@ const password = Cypress.env('password6')
 describe('Justto.App - Disputa: Notas', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('https://' + Cypress.env('BASE_URL'))
 
     // Valida se o endereço redirecionado é o 'Login'
     cy.url().should('include', '/#/login')
