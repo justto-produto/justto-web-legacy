@@ -4,7 +4,7 @@ const password = Cypress.env('password6')
 describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
   it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit(Cypress.env('BASE_URL'))
+    cy.visit()
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')

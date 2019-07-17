@@ -3,6 +3,7 @@
   "viewportHeight": 660,
   "defaultCommandTimeout": 10000,
   "pluginsFile": "tests/e2e/plugins/index.js",
+  "baseUrl": "http://localhost:8080/",
   "env": {
     "email1": "lucas@justto.com.br",
     "password1": "123456",

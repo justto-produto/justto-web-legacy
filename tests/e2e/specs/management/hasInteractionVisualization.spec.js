@@ -4,7 +4,7 @@ const password = Cypress.env('password1')
 describe('Justto.App - Com Interação: Visualização Com Interação', function () {
   it('Gerenciamento: Com Interação - Exibição dos Casos - Vazio', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit(Cypress.env('BASE_URL'))
+    cy.visit()
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
@@ -36,7 +36,7 @@ describe('Justto.App - Com Interação: Visualização Com Interação', functio
 
   it('Gerenciamento: Com Interação - Exibição de Casos - Com casos', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit(Cypress.env('BASE_URL'))
+    cy.visit()
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
