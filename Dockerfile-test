@@ -14,4 +14,4 @@ COPY styleguide.config.js styleguide.config.js
 COPY cypress.json cypress.json
 
 # rerun E2E tests only if any of the previous files change
-RUN $(npm bin)/cypress run
+RUN $(npm bin)/cypress run -e BASE_URL=homol.justto.com.br
