@@ -4,8 +4,7 @@ const password = Cypress.env('password1')
 describe('Justto.App - Gerenciamento: Visualização Novos Acordos', function () {
   it('Gerenciamento: Novos Acordos - Exibição dos Casos - Vazio', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit(Cypress.env('BASE_URL'))
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
@@ -37,8 +36,7 @@ describe('Justto.App - Gerenciamento: Visualização Novos Acordos', function ()
 
   it('Gerenciamento: Novos Acordos - Exibição de Casos - Com casos', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit(Cypress.env('BASE_URL'))
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
