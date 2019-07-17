@@ -30,6 +30,9 @@ describe('Justto.App - Disputa: Notas', function () {
 
   it('Salvar Nota: Sucesso', function () {
     cy.wait(2000)
+    // Clica na aba 'Todos'
+    cy.contains('Todos').click({force: true})
+
     // Entra na primeira disputa da lista
     cy.get('[data-testid=dispute-index]').eq(0)
       .click()

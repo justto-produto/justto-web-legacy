@@ -29,6 +29,9 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
   })
 
   it('Entra na disputa', function () {
+    // Clica na aba 'Todos'
+    cy.contains('Todos').click({force: true})
+
     // clica no primeiro caso: index 0
     cy.get('tbody>tr').eq(0).click()
 
