@@ -3,8 +3,9 @@ describe('Justto.app - Esqueci a Senha', function () {
 
   beforeEach('Acesso', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('https://kubernetes.justto.com.br')
+    // cy.visit('https://kubernetes.justto.com.br')
     // cy.visit('localhost:8080')
+    cy.visit(Cypress.env('BASE_URL'))
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
@@ -19,7 +20,7 @@ describe('Justto.app - Esqueci a Senha', function () {
 
   it('Esqueci minha Senha: Sucesso', function () {
     // Digita um email válido existente
-    cy.get('[data-testid=forgot-password-email]')
+    cy.get('[data-testid=forgot-email]')
       .type(email)
       .should('have.value', email)
 
@@ -28,14 +29,13 @@ describe('Justto.app - Esqueci a Senha', function () {
       .click()
 
     // Mensagem de 'Email Enviado' deve aparecer
-    cy.get('[data-testid=forgot-password-success]')
-      .contains('Requisição de recuperação enviada com sucesso! Acesse seu email para prosseguir.')
+    cy.contains('Requisição de recuperação enviada com sucesso! Acesse seu email para prosseguir.')
       .should('be.visible')
   })
 
   it('Esqueci minha senha: Email Inválido', function () {
     // Digita um email inválido
-    cy.get('[data-testid=forgot-password-email]')
+    cy.get('[data-testid=forgot-email]')
       .type('email inválido')
       .should('have.value', 'email inválido')
 
@@ -50,7 +50,7 @@ describe('Justto.app - Esqueci a Senha', function () {
 
   it('Esqueci minha senha: Email Inexistente', function () {
     // Digita um email inválido
-    cy.get('[data-testid=forgot-password-email]')
+    cy.get('[data-testid=forgot-email]')
       .type('email@inexistente.com')
       .should('have.value', 'email@inexistente.com')
 
@@ -59,7 +59,7 @@ describe('Justto.app - Esqueci a Senha', function () {
       .click()
 
     // Mensagme de email inválido deve desaparecer
-    cy.contains('Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.')
+    cy.contains('Requisição de recuperação enviada com sucesso! Acesse seu email para prosseguir.')
       .should('be.visible')
   })
 })

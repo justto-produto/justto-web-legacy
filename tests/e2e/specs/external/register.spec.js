@@ -2,8 +2,9 @@ describe('Justto.App - Register', function () {
   const emailtoken = Cypress.env('emailtoken')
   beforeEach('Acesso Registro', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('https://kubernetes.justto.com.br')
+    // cy.visit('https://kubernetes.justto.com.br')
     // cy.visit('localhost:8080')
+    cy.visit(Cypress.env('BASE_URL'))
 
     // Acessa a página de registro
     cy.get('[data-testid=register]').click()
@@ -36,10 +37,7 @@ describe('Justto.App - Register', function () {
       .click()
 
     // Valida se registro funcionou
-    cy.get('[data-testid=register-success]')
-      .should('be.visible')
-    cy.get('[data-testid=register-success]')
-      .contains('Cadastro realizado com sucesso! Acesse seu email para prosseguir.')
+    cy.contains('Cadastro realizado com sucesso! Acesse seu email para prosseguir.')
       .should('be.visible')
   })
 
@@ -91,7 +89,7 @@ describe('Justto.App - Register', function () {
     cy.url().should('include', '/#/register')
 
     // Verifica de menssagem de erro foi exibida
-    cy.get('[data-testid=register-failure]')
+    cy.contains('Já existe um usuário cadastrado com este e-mail.')
       .should('be.visible')
   })
 })

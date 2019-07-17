@@ -4,6 +4,12 @@ WORKDIR /opt/justto-web
 COPY package.json .
 RUN npm install
 
+# Install chrome
+sudo apt-get update
+sudo apt-get install -y libappindicator1 fonts-liberation
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome*.deb
+
 # copy spec files and website files
 COPY public public
 COPY src src
@@ -14,4 +20,4 @@ COPY styleguide.config.js styleguide.config.js
 COPY cypress.json cypress.json
 
 # rerun E2E tests only if any of the previous files change
-RUN $(npm bin)/cypress run -e BASE_URL=homol.justto.com.br
+RUN $(npm bin)/cypress run -b chrome -e BASE_URL=https://homol.justto.com.br
