@@ -1,6 +1,7 @@
 {
   "viewportWidth": 1000,
   "viewportHeight": 660,
+  "defaultCommandTimeout": 10000,
   "pluginsFile": "tests/e2e/plugins/index.js",
   "env": {
     "email1": "lucas@justto.com.br",
