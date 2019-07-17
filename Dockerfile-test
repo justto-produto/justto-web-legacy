@@ -15,4 +15,4 @@ COPY cypress.json cypress.json
 RUN export VUE_APP_BASE_URL=homol.justto.com.br
 
 # rerun E2E tests only if any of the previous files change
-RUN $(npm bin)/cypress run -b chrome
+RUN npx vue-cli-service test:e2e --browser chrome
