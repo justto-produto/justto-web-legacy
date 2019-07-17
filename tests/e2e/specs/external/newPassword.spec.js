@@ -3,7 +3,7 @@ describe('Justto.App - Nova Senha', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('https://kubernetes.justto.com.br/#/new-password/TSTAUTO')
     // cy.visit('localhost:8080/#/new-password/TSTAUTO')
-    cy.visit('https://' + Cypress.env('BASE_URL') + '/#/new-password/TSTAUTO')
+    cy.visit(Cypress.env('BASE_URL') + '/#/new-password/TSTAUTO')
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=new-password]')
@@ -36,7 +36,7 @@ describe('Justto.App - Nova Senha', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('https://kubernetes.justto.com.br/#/new-password/TSTAUTO')
     // cy.visit('localhost:8080/#/new-password/TSTAUTO')
-    cy.visit('https://' + Cypress.env('BASE_URL') + '/#/new-password/TSTAUTO')
+    cy.visit(Cypress.env('BASE_URL') + '/#/new-password/TSTAUTO')
 
     // Sistema deve redirecionar para a página de Nova Senha
     cy.url().should('include', '/#/new-password/TSTAUTO')
@@ -64,7 +64,7 @@ describe('Justto.App - Nova Senha', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('https://kubernetes.justto.com.br/#/new-password/FAILURE123')
     // cy.visit('localhost:8080/#/new-password/FAILURE123')
-    cy.visit('https://' + Cypress.env('BASE_URL') + '/FAILURE123')
+    cy.visit(Cypress.env('BASE_URL') + '/FAILURE123')
 
     // Sistema deve redirecionar para a página de Nova Senha
     cy.url().should('include', '/#/new-password/FAILURE123')

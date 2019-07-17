@@ -4,7 +4,7 @@ describe('Justto.App - Register', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('https://kubernetes.justto.com.br')
     // cy.visit('localhost:8080')
-    cy.visit('https://' + Cypress.env('BASE_URL'))
+    cy.visit(Cypress.env('BASE_URL'))
 
     // Acessa a página de registro
     cy.get('[data-testid=register]').click()
