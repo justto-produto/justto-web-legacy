@@ -74,8 +74,8 @@ describe('Justto.App - Register', function () {
 
     // Preenche   campo 'Email' com email não existente
     cy.get('[data-testid=register-email]')
-      .type(emailtoken)
-      .should('have.value', emailtoken)
+      .type('graziele@justto.com.br')
+      .should('have.value', 'graziele@justto.com.br')
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=register-password')
