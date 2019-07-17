@@ -1,5 +1,5 @@
-const login = Cypress.env('email6')
-const password = Cypress.env('password6')
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
 
 describe('Justto.App - Disputa: Notas', function () {
   beforeEach('Login', function () {
@@ -29,8 +29,6 @@ describe('Justto.App - Disputa: Notas', function () {
 
   it('Salvar Nota: Sucesso', function () {
     cy.wait(2000)
-    // Clica na aba 'Todos'
-    cy.contains('Todos').click({force: true})
 
     // Entra na primeira disputa da lista
     cy.get('[data-testid=dispute-index]').eq(0)

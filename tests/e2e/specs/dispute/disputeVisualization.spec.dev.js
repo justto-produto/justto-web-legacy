@@ -30,7 +30,8 @@ describe('Justto.App - Disputa: Visualização', function () {
     cy.contains('Todos').click({force: true})
 
     // Entra na disputa
-    cy.get('tbody>tr').eq(0).click()
+    cy.get('[data-testid=dispute-index]').eq(0)
+      .click()
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
