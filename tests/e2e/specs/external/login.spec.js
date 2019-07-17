@@ -1,8 +1,7 @@
 describe('Justto.App - Login', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('https://kubernetes.justto.com.br')
-    // cy.visit('localhost:8080')
+    cy.visit('https://' + Cypress.env('BASE_URL'))
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
@@ -49,7 +48,7 @@ describe('Justto.App - Login', function () {
     cy.contains('Insira um e-mail válido')
       .should('be.visible')
   })
-  
+
   it('Login: Email ou senha incorretos', function() {
     // Preenche campo 'Email' com email não existente
     cy.get('[data-testid=login-email]')
