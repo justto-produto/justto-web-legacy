@@ -2,8 +2,6 @@ describe('Justto.App - Register', function () {
   const emailtoken = Cypress.env('emailtoken')
   beforeEach('Acesso Registro', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('https://kubernetes.justto.com.br')
-    // cy.visit('localhost:8080')
     cy.visit('/')
 
     // Acessa a página de registro
