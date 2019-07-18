@@ -27,9 +27,6 @@ describe('Justto.App - Disputa: Visualização', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Todos"
-    // cy.get('.el-tabs__nav > #tab-3')
-    //   .click()
-
     cy.get('.el-tabs__nav > #tab-3')
       .click({force: true})
 

@@ -27,7 +27,8 @@ describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible').click({force: true})
+    cy.contains('Engajamento')
+      .click({force: true})
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')

@@ -29,11 +29,13 @@ describe('Justto.App - Gerenciamento: Filtro Com Interação', function () {
 
   it('Gerenciamento: Com Interação - Exibição dos Casos', function () {
     // Seleciona a aba "Com Interação"
-    cy.contains('Com Interação').should('be.visible')
-    .click({force: true})
+    cy.contains('Com Interação')
+      .should('be.visible')
+      .click({force: true})
 
     // Seleciona botão 'Filtrar'
-    cy.get('[data-testid=management-filterbtn]').click()
+    cy.get('[data-testid=management-filterbtn]')
+      .click()
 
     // Seleciona Campanha
     cy.get('[data-testid=filter-campaign]')
@@ -69,10 +71,12 @@ describe('Justto.App - Gerenciamento: Filtro Com Interação', function () {
 
   it('Gerenciamento: Com Interação - Exibição dos Casos - Vazio', function () {
     // Seleciona a aba "Com Interação"
-    cy.contains('Com Interação').should('be.visible').click()
+    cy.contains('Com Interação')
+      .click()
 
     // Seleciona botão 'Filtrar'
-    cy.get('[data-testid=management-filterbtn]').click()
+    cy.get('[data-testid=management-filterbtn]')
+      .click()
 
     // Seleciona Campanha
     cy.get('[data-testid=filter-campaign]')

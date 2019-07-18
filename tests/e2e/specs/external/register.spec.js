@@ -79,7 +79,8 @@ describe('Justto.App - Register', function () {
       .should('have.value', 'password')
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]').click()
+    cy.get('[data-testid=submit]')
+      .click()
 
     // Valida se login falhou
     cy.url().should('include', '/#/register')

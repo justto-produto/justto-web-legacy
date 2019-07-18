@@ -30,7 +30,8 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
 
   it('Gerenciamento: Engajamento - Exibição dos Casos', function () {
     // Seleciona a aba "Engajamento"
-    cy.get('.el-tabs__nav > #tab-3').should('be.visible').click({force: true})
+    cy.get('.el-tabs__nav > #tab-3')
+      .click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -49,7 +50,8 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
       .trigger('keydown', { keyCode: 13, Which: 13 })
 
     // Seleciona Disputas Favoritas
-    cy.get('[data-testid=filters-favorite]').click()
+    cy.get('[data-testid=filters-favorite]')
+      .click()
 
     // // Seleciona datepicker 'Fim da Negociação'
     // cy.get('[data-testid=filters-disputeexpirationdate]')
@@ -60,18 +62,22 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     //   .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
     // Seleciona o botão "Aplicar filtros"
-    cy.get('[data-testid=filter-applyfilter]').click()
+    cy.get('[data-testid=filter-applyfilter]')
+      .click()
 
     // Verifica se existem casos exibidos
-    cy.get('tbody>tr').first().should('be.visible')
+    cy.get('tbody>tr').first()
+      .should('be.visible')
   })
 
   it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
     // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible').click({force: true})
+    cy.contains('Engajamento')
+      .click({force: true})
 
     // Seleciona botão 'Filtrar'
-    cy.get('[data-testid=management-filterbtn]').click()
+    cy.get('[data-testid=management-filterbtn]')
+      .click()
 
     // Seleciona Campanha
     cy.get('[data-testid=filter-campaign]')
@@ -87,7 +93,8 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
       .trigger('keydown', { keyCode: 13, Which: 13 })
 
     // Seleciona o botão "Aplicar filtros"
-    cy.get('[data-testid=filter-applyfilter]').click()
+    cy.get('[data-testid=filter-applyfilter]')
+      .click()
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')

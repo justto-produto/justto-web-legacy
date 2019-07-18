@@ -30,7 +30,8 @@ describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
 
   it('Gerenciamento: Novos Acordos - Exibição dos Casos', function () {
     // Seleciona a aba "Com Interação"
-    cy.contains('Novos Acordos').should('be.visible').click({force: true})
+    cy.contains('Novos Acordos')
+      .click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
