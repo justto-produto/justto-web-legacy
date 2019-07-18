@@ -111,7 +111,7 @@ export default {
     },
     uploadAction () {
       // eslint-disable-next-line
-      let baseUrl = axios.defaults.baseURL || '/'
+      let baseUrl = axios.defaults.baseURL
       return baseUrl + '/api/imports/upload'
     }
   },
