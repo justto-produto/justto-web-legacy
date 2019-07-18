@@ -9,7 +9,7 @@ if (AUTH_TOKEN) {
 }
 
 let config = {
-  baseURL: process.env.VUE_APP_BASE_URL ? ('https://' + process.env.VUE_APP_BASE_URL) : '/',
+  baseURL: process.env.VUE_APP_BASE_URL || location.origin,
   timeout: 60 * 100000,
   headers: {}
 }
