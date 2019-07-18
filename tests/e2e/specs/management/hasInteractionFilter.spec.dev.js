@@ -64,7 +64,7 @@ describe('Justto.App - Gerenciamento: Filtro Com Interação', function () {
     cy.get('[data-testid=filter-applyfilter]').click()
 
     // Verifica se existem casos exibidos
-    cy.get('tbody>tr').eq(0).should('be.visible')
+    cy.get('tbody>tr').first().should('be.visible')
   })
 
   it('Gerenciamento: Com Interação - Exibição dos Casos - Vazio', function () {

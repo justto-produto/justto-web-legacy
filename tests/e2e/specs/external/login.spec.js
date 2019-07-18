@@ -1,3 +1,6 @@
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
+
 describe('Justto.App - Login', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
@@ -6,9 +9,6 @@ describe('Justto.App - Login', function () {
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
   })
-
-  const login = Cypress.env('email1')
-  const password = Cypress.env('password1')
 
   it('Login: Sucesso', function () {
     // Preenche o campo 'Email'

@@ -31,7 +31,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.wait(2000
     )
     // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index]').eq(0)
+    cy.get('[data-testid=dispute-index]').first()
       .click()
 
     // Caixa de texto deve estar desabilitada, mensagem deve aparecer no lugar.
@@ -47,11 +47,11 @@ describe('Justto.App - Disputa: Menssagens', function () {
   it('Envia de Email: Sucesso', function () {
     // Entra na primeira disputa da lista
     cy.wait(2000)
-    cy.get('[data-testid=dispute-index]').eq(0)
+    cy.get('[data-testid=dispute-index]').first()
       .click()
 
     // Seleciona primeira parte do caso
-    cy.get('[data-testid=expand-party]').eq(0)
+    cy.get('[data-testid=expand-party]').first()
       .click()
 
     // Digita mensagem

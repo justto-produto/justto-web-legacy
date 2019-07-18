@@ -30,7 +30,7 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
 
   it('Gerenciamento: Engajamento - Exibição dos Casos', function () {
     // Seleciona a aba "Engajamento"
-    cy.contains('Todos').should('be.visible').click({force: true})
+    cy.get('.el-tabs__nav > #tab-3').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -63,7 +63,7 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.get('[data-testid=filter-applyfilter]').click()
 
     // Verifica se existem casos exibidos
-    cy.get('tbody>tr').eq(0).should('be.visible')
+    cy.get('tbody>tr').first().should('be.visible')
   })
 
   it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {

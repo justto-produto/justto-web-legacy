@@ -27,7 +27,7 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click({force: true})
+    cy.get('.el-tabs__nav > #tab-3').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -70,7 +70,7 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.contains('Aplicar filtros').click({force: true})
 
     // Verifica se existem disputas
-    cy.get('tbody>tr').eq(0).should('to.exist')
+    cy.get('tbody>tr').first().should('to.exist')
 
     cy.wait(5000)
   })

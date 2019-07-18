@@ -29,7 +29,7 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
 
   it('Entra na disputa', function () {
     // clica no primeiro caso: index 0
-    cy.get('[data-testid=dispute-index]').eq(0)
+    cy.get('[data-testid=dispute-index]').first()
       .click()
 
     // Verifica se entrou na tela de Disputa
@@ -39,11 +39,11 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
 
   it('Clica no botão para expandir o card', function () {
     // Clica no nome para expandir o card
-    cy.get('[data-testid=expand-party]').eq(0)
+    cy.get('[data-testid=expand-party]').first()
       .click()
 
     // Clica no botão de 'Editar'
-    cy.get('[data-testid=edit-part]').eq(0)
+    cy.get('[data-testid=edit-part]').first()
       .click()
 
     // Verifica se todos os 'spans' aparecem

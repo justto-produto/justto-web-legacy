@@ -30,7 +30,7 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
 
   it('Gerenciamento: Todos - Exibição dos Casos', function () {
     // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click({force: true})
+    cy.get('.el-tabs__nav > #tab-3').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()
@@ -57,12 +57,12 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
     cy.get('[data-testid=filter-applyfilter]').click()
 
     // Verifica se existem casos exibidos
-    cy.get('tbody>tr').eq(0).should('be.visible')
+    cy.get('tbody>tr').first().should('be.visible')
   })
 
   it('Gerenciamento: Todos - Exibição dos Casos - Vazio', function () {
     // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click({force: true})
+    cy.get('.el-tabs__nav > #tab-3').should('be.visible').click({force: true})
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]').click()

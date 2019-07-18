@@ -31,7 +31,7 @@ describe('Justto.App - Disputa: Visualização', function () {
       .click({force: true})
 
     // Entra na disputa
-    cy.get('[data-testid=dispute-index]').eq(0)
+    cy.get('[data-testid=dispute-index]').first()
       .click()
 
     // Sistema deve redirecionar para a página de Registro
@@ -56,7 +56,7 @@ describe('Justto.App - Disputa: Visualização', function () {
       .should('not.be.visible')
 
     // Expande uma parte da disputa
-    cy.get('[data-testid=expand-party]').eq(0)
+    cy.get('[data-testid=expand-party]').first()
       .click()
 
     // Informações da disputa devem estar visiveis

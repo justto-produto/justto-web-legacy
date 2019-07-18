@@ -1,6 +1,6 @@
-describe('Justto.app - Esqueci a Senha', function () {
-  const email = Cypress.env('emailonboarding')
+const email = Cypress.env('emailonboarding')
 
+describe('Justto.app - Esqueci a Senha', function () {
   beforeEach('Acesso', function () {
     // Acessa a página inicial do Justto.App
     cy.visit('/')

@@ -28,7 +28,7 @@ describe('Justto.App - Disputa: Ação Perder', function () {
 
     // Entra na disputa
     cy.wait(2000)
-    cy.get('[data-testid=dispute-index]').eq(0)
+    cy.get('[data-testid=dispute-index]').first()
       .click()
 
     // Sistema deve redirecionar para a página de Registro

@@ -27,7 +27,7 @@ describe('Justto.App - Disputa: Visualização', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Todos"
-    // cy.contains('Todos')
+    // cy.get('.el-tabs__nav > #tab-3')
     //   .click()
 
     cy.get('.el-tabs__nav > #tab-3')
@@ -59,7 +59,7 @@ describe('Justto.App - Disputa: Visualização', function () {
       .should('not.be.visible')
 
     // Expande uma parte da disputa
-    cy.get('[data-testid=expand-party]').eq(0)
+    cy.get('[data-testid=expand-party]').first()
       .click()
 
     // Informações da disputa devem estar visiveis

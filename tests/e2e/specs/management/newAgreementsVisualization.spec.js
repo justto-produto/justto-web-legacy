@@ -63,7 +63,7 @@ describe('Justto.App - Gerenciamento: Visualização Novos Acordos', function ()
       .click({force: true})
 
     // Verifica se existem casos exibidos
-    cy.get('tbody>tr').eq(0).should('be.visible')
+    cy.get('tbody>tr').first().should('be.visible')
 
     cy.wait(5000)
   })

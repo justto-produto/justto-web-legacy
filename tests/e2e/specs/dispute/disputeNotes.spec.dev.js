@@ -31,7 +31,7 @@ describe('Justto.App - Disputa: Notas', function () {
     cy.wait(2000)
 
     // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index]').eq(0)
+    cy.get('[data-testid=dispute-index]').first()
       .click()
 
     // Entra na aba 'Notas'
