@@ -19,10 +19,10 @@
             v-show="showSuccess"
             title="Requisição de recuperação enviada com sucesso! Acesse seu email para prosseguir."
             type="success"
-            data-testid="showSucess"
-            @close="showSuccess = false" />
+            data-testid="forgot-password-success"
+            @close="showSuccess = false"/>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="forgotForm.email" data-testid="forgot-email"/>
+            <el-input v-model="forgotForm.email" data-testid="forgot-password-email"/>
           </el-form-item>
           <el-button
             native-type="submit"

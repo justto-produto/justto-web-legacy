@@ -1,14 +1,14 @@
-<template>
+t pu<template>
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ campaignTitle }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-input v-model="respondent" placeholder="Dê um nome para o seu Réu">
+      <el-input v-model="respondent" data-testid="feedback-respondent" placeholder="Dê um nome para o seu Réu">
         <i
           slot="prefix"
           :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
       </el-input>
-      <el-input v-model="campaignName" placeholder="Dê um nome para a sua Campanha">
+      <el-input v-model="campaignName" data-testid="feedback-campaignName" placeholder="Dê um nome para a sua Campanha">
         <i
           slot="prefix"
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -21,7 +21,8 @@
         value-key="name"
         clearable
         class="select-strategy"
-        placeholder="Escolha uma estratégia">
+        placeholder="Escolha uma estratégia"
+        data-testid="feedback-strategy">
         <i
           slot="prefix"
           :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -73,7 +74,8 @@
         :picker-options="datePickerOptions"
         type="date"
         format="dd-MM-yyyy"
-        placeholder="Defina a data limite para a negociação" />
+        placeholder="Defina a data limite para a negociação"
+        data-testid="feedback-datapicker" />
       <el-select
         v-model="negotiatorIds"
         :loading="loading"
@@ -81,7 +83,8 @@
         size="large"
         multiple
         placeholder="Escolha os negociadores"
-        class="select-negotiator">
+        class="select-negotiator"
+        data-testid="feedback-negotiators">
         <i
           slot="prefix"
           :class="negotiatorIds.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"

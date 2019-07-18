@@ -18,17 +18,27 @@
             v-show="showError"
             :title="errorMessage"
             type="error"
+            data-testid = "login-failure"
             @close="showError = false"/>
           <el-alert
             v-show="showSuccess"
             title="Cadastro ativado com sucesso!"
             type="success"
+            data-testid="register-success"
             @close="showSuccess = false"/>
           <el-form-item label="Email" prop="email">
-            <el-input v-model="loginForm.email" type="email" name="login-email" data-testid="login-email"/>
+            <el-input
+              v-model="loginForm.email"
+              type="email"
+              name="login-email"
+              data-testid="login-email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
-            <el-input v-model="loginForm.password" :type="passwordType" name="login-password" data-testid="login-password"/>
+            <el-input
+              v-model="loginForm.password"
+              :type="passwordType"
+              name="login-password"
+              data-testid="login-password"/>
             <div class="el-button--input-float">
               <jus-icon
                 :icon="showPassword ? 'hide' : 'eye'"
@@ -52,7 +62,7 @@
             <a href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
-            <a href="register" data-testid="register" @click.prevent="$router.push('register')"> Cadastre-se agora mesmo.</a>
+            <a href="register" data-testid="register" @click.prevent="$router.push('register')">Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
       </el-main>

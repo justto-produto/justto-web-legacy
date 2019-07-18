@@ -5,5 +5,5 @@ import 'moment/locale/pt-br'
 moment.tz.setDefault('UTC')
 
 Vue.use(VueMoment, {
-  moment,
+  moment
 })

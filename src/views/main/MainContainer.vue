@@ -23,11 +23,11 @@
             <span>GERENCIAMENTO</span>
           </li>
         </transition> -->
-        <el-menu-item index="/management">
-          <jus-icon icon="management" class="el-menu__icon" data-testid="menu_management"/>
+        <el-menu-item index="/management" data-testid="menu-management">
+          <jus-icon icon="management" class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
-        <el-menu-item index="/import">
+        <el-menu-item index="/import" data-testid="menu-import">
           <jus-icon icon="import" class="el-menu__icon"/>
           <span slot="title">Importação de disputas</span>
         </el-menu-item>

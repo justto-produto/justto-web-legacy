@@ -1,4 +1,4 @@
-FROM cypress/base
+FROM cypress/browsers:chrome69
 RUN mkdir -p /opt/justto-web
 WORKDIR /opt/justto-web
 COPY package.json .
@@ -12,6 +12,8 @@ COPY .env .env
 COPY vue.config.js vue.config.js
 COPY styleguide.config.js styleguide.config.js
 COPY cypress.json cypress.json
+COPY babel.config.js babel.config.js
+RUN export VUE_APP_BASE_URL=homol.justto.com.br
 
 # rerun E2E tests only if any of the previous files change
-RUN $(npm bin)/cypress run
+RUN npx vue-cli-service test:e2e --headless --browser chrome

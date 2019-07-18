@@ -3,12 +3,12 @@
     <div :class="{'active': active}" class="management-actions">
       Disputas selecionadas: {{ selectedIds.length }}
       <div>
-        <el-button plain @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
-        <el-button plain @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
-        <el-button plain @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
-        <el-button plain @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
-        <el-button plain @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
-        <el-button plain @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
+        <el-button plain data-testid="batch-settled" @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
+        <el-button plain data-testid="batch-unsettled" @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
+        <el-button plain data-testid="batch-paused" @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
+        <el-button plain data-testid="batch-resume" @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
+        <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
+        <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
         <!-- <el-button plain @click="sendBatchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
         <!-- <el-button plain @click="sendBatchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
       </div>
@@ -18,7 +18,8 @@
       :visible.sync="chooseUnsettledDialogVisible"
       title="Atenção!"
       class="management-actions__unsettled-dialog"
-      width="460px">
+      width="460px"
+      data-testid="unsettled-dialog">
       <div class="el-message-box__content">
         <div class="el-message-box__status el-icon-warning"/>
         <div class="el-message-box__message"><p>
@@ -28,6 +29,7 @@
       <el-select
         v-loading="$store.state.loading"
         v-model="unsettledType"
+        data-testid="select-unsettled"
         placeholder="Escolha o motivo da perda">
         <el-option
           v-for="(type, index) in unsettledTypes"
@@ -40,6 +42,7 @@
         <el-button
           :disabled="!unsettledType"
           type="primary"
+          class="confirm-action-unsettled"
           @click.prevent="doAction('unsettled')">
           Continuar
         </el-button>
@@ -140,6 +143,7 @@ export default {
         this.unsettledType = ''
       } else {
         this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+          confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           type: 'warning'

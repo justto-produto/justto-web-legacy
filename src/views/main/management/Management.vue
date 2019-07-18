@@ -24,7 +24,7 @@
           :plain="!Object.keys(filters.terms).length"
           :type="Object.keys(filters.terms).length ? 'primary' : ''"
           @click="showFilters = true">
-          <jus-icon :is-white="!!Object.keys(filters.terms).length" icon="filter" />
+          <jus-icon :is-white="!!Object.keys(filters.terms).length" icon="filter" data-testid="management-filterbtn" />
           Filtrar
         </el-button>
         <el-button
@@ -42,10 +42,10 @@
         :before-leave="handleChangeTab"
         v-model="activeTab"
         class="view-management__tabs">
-        <el-tab-pane name="0" label="Engajamento" />
-        <el-tab-pane name="1" label="Com Interação" />
-        <el-tab-pane name="2" label="Novos Acordos" />
-        <el-tab-pane name="3" label="Todos" />
+        <el-tab-pane name="0" label="Engajamento" data-testid="tab-engagement"/>
+        <el-tab-pane name="1" label="Com Interação" data-testid="tab-withinteraction"/>
+        <el-tab-pane name="2" label="Novos Acordos" data-testid="tab-newagreements"/>
+        <el-tab-pane name="3" label="Todos" data-testid="tab-all"/>
       </el-tabs>
       <el-table
         ref="disputeTable"
@@ -53,6 +53,7 @@
         :data="paginatedDisputes"
         size="mini"
         class="el-table--disputes"
+        data-testid="dispute-index"
         @row-click="handleRowClick"
         @sort-change="handleSortChange"
         @selection-change="handleSelectionChange">
@@ -228,6 +229,7 @@
         <span slot="footer">
           <el-button plain @click="clearFilters()">Limpar filtros</el-button>
           <el-button
+            data-testid="filter-applyfilter"
             type="primary"
             @click="applyFilters()">
             Aplicar filtros
