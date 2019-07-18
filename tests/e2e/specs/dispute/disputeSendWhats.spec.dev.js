@@ -36,7 +36,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
 
   it('Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('https://' + Cypress.env('BASE_URL'))
+    cy.visit('/#/login')
 
     // Redireciona para 'Login'
     cy.url().should('include', '/#/login')

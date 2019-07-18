@@ -1,11 +1,10 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('email6')
+const password = Cypress.env('password6')
 
 describe('Justto.App - Gerenciamento: Filtro Com Interação', function () {
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('/')
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')

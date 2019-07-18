@@ -3,9 +3,7 @@ describe('Justto.app - Esqueci a Senha', function () {
 
   beforeEach('Acesso', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('https://kubernetes.justto.com.br')
-    // cy.visit('localhost:8080')
-    cy.visit(Cypress.env('BASE_URL'))
+    cy.visit('/')
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')

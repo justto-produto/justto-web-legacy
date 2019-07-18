@@ -1,5 +1,5 @@
-const login = Cypress.env('email6')
-const password = Cypress.env('password6')
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
 
 describe('Justto.App - Disputa: Edição do Caso', function () {
   it('Login', function () {
@@ -29,34 +29,47 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
 
   it('Entra na disputa', function () {
     // clica no primeiro caso: index 0
-    cy.get('tbody>tr').eq(0).click()
+    cy.get('[data-testid=dispute-index]').eq(0)
+      .click()
 
     // Verifica se entrou na tela de Disputa
     cy.contains('Resumo da disputa')
       .should('be.visible')
   })
 
-  it('Clica no botão Editar de Dados da disputa', function () {
-    // Clica no botão "Editar"
-    cy.get('[data-testid=edit-dispute]')
+  it('Clica no botão para expandir o card', function () {
+    // Clica no nome para expandir o card
+    cy.get('[data-testid=expand-party]').eq(0)
+      .click()
+
+    // Clica no botão de 'Editar'
+    cy.get('[data-testid=edit-part]').eq(0)
       .click()
 
     // Verifica se todos os 'spans' aparecem
     cy.get('span').should('be.visible')
+
   })
 
-  it('Altera dados e confirma a edição', function () {
-    // Preenche o Campo de 'Descrição'
-    cy.get('[data-testid=description]')
-      .type(' Descrição de testes')
+  it('Altera dados', function () {
+    // Preenche o Campo de 'E-mail'
+    cy.get('[data-testid=input-email]')
+      .type('testes@testes.com')
 
+    // Clica no botão de '+'
+    cy.get('[data-testid=add-email]').click()
+
+    // Verifica se o email inserido aparece
+    cy.contains('testes@testes.com').should('to.exist')
+
+  })
+
+  it('Confirma a edição', function () {
     // Verifica se o botão 'Editar dados' é visível e clica
-    cy.get('[data-testid=confirm-edit-data]')
-      .should('be.visible')
+    cy.get('[data-testid=edit-data-part]').should('be.visible')
       .click()
 
     // Verifica se mensagem de confirmação aparece
-    cy.contains('Os dados foram alterados com sucesso.')
-      .should('be.visible')
+    cy.contains('Os dados foram alterados com sucesso.').should('be.visible')
   })
 })

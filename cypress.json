@@ -1,14 +1,21 @@
 {
   "viewportWidth": 1000,
   "viewportHeight": 660,
-  "defaultCommandTimeout": 10000,
+  "defaultCommandTimeout": 20000,
   "pluginsFile": "tests/e2e/plugins/index.js",
+  "baseUrl": "http://localhost:8080/",
   "env": {
+    "empty-account-email": "empty-account@maillist.in",
+    "empty-account-password": "password",
+
+    "not-editable-cases-email": "not-editable-cases@maillist.in",
+    "not-editable-cases-password": "password",
+
     "email1": "lucas@justto.com.br",
     "password1": "123456",
 
     "email2": "guilherme@justto.com.br",
-    "password2": "tOOr13@$",
+    "password2": "123456",
 
     "email3": "",
     "password3": "",

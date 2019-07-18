@@ -42,10 +42,10 @@
         :before-leave="handleChangeTab"
         v-model="activeTab"
         class="view-management__tabs">
-        <el-tab-pane name="0" label="Engajamento" data-testid="tab-engagement"/>
-        <el-tab-pane name="1" label="Com Interação" data-testid="tab-withinteraction"/>
-        <el-tab-pane name="2" label="Novos Acordos" data-testid="tab-newagreements"/>
-        <el-tab-pane name="3" label="Todos" data-testid="tab-all"/>
+        <el-tab-pane name="0" label="Engajamento"/>
+        <el-tab-pane name="1" label="Com Interação"/>
+        <el-tab-pane name="2" label="Novos Acordos"/>
+        <el-tab-pane name="3" label="Todos"/>
       </el-tabs>
       <el-table
         ref="disputeTable"

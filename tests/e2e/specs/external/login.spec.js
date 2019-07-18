@@ -1,7 +1,7 @@
 describe('Justto.App - Login', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit(Cypress.env('BASE_URL'))
+    cy.visit('/')
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
