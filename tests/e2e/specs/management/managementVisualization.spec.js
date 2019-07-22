@@ -42,6 +42,7 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
   it('Exibição de Casos - Com casos', function () {
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
       .click({force: true})
 
     // Verifica se existem casos exibidos
