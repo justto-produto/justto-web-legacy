@@ -202,8 +202,8 @@
           </template>
         </el-table-column>
         <template v-if="!$store.state.loading" slot="empty">
-          <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
-          <h4 style="font-weight: normal; line-height: initial;">
+          <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
+          <h4 style="font-weight: normal; line-height: initial;" data-testid="cases-empty-text">
             Não foram encontradas disputas para<br>os filtros e aba selecionados.
           </h4>
         </template>
