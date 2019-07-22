@@ -1,5 +1,4 @@
 describe('Justto.App - Register', function () {
-  const emailtoken = Cypress.env('emailtoken')
   beforeEach('Acesso Registro', function () {
     // Acessa a página inicial do Justto.App
     cy.visit('/')
@@ -22,8 +21,7 @@ describe('Justto.App - Register', function () {
     // Preenche o campo 'Email'
     cy.get('[data-testid=register-email]')
       .type(randomEmail)
-      // .type('teste.onboarding@justto.com.br')
-      // .should('have.value', 'teste.onboarding@justto.com.br')
+      .should('have.value', randomEmail)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=register-password]')
@@ -72,8 +70,8 @@ describe('Justto.App - Register', function () {
 
     // Preenche   campo 'Email' com email não existente
     cy.get('[data-testid=register-email]')
-      .type('graziele@justto.com.br')
-      .should('have.value', 'graziele@justto.com.br')
+      .type(randomEmail)
+      .should('have.value', randomEmail)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=register-password')
@@ -81,7 +79,8 @@ describe('Justto.App - Register', function () {
       .should('have.value', 'password')
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]').click()
+    cy.get('[data-testid=submit]')
+      .click()
 
     // Valida se login falhou
     cy.url().should('include', '/#/register')

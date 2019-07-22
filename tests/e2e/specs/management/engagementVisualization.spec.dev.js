@@ -27,7 +27,8 @@ describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Engajamento"
-    cy.contains('Engajamento').should('be.visible').click({force: true})
+    cy.contains('Engajamento')
+      .click({force: true})
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')
@@ -64,7 +65,7 @@ describe('Justto.App - Gerenciamento: Visualização Engajamento', function () {
       .click({force: true})
 
     // // Verifica se existem casos exibidos  OBS: PRECISA DE LOGAR EM CONTA COM CASOS EM ENGAJAMENTO
-    // cy.get('tbody>tr').eq(0)
+    // cy.get('tbody>tr').first()
     //   .should('be.visible')
   })
 })

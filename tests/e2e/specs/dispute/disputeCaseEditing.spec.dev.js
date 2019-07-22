@@ -4,8 +4,7 @@ const password = Cypress.env('password6')
 describe('Justto.App - Disputa: Edição do Caso', function () {
   it('Login', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('/#/login')
 
     // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
@@ -29,14 +28,12 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
   })
 
   it('Entra na disputa', function () {
-    // Clica na aba 'Todos'
-    cy.contains('Todos').click({force: true})
-
     // clica no primeiro caso: index 0
-    cy.get('tbody>tr').eq(0).click()
+    cy.get('tbody>tr').first().click()
 
     // Verifica se entrou na tela de Disputa
-    cy.contains('Resumo da disputa').should('be.visible')
+    cy.contains('Resumo da disputa')
+      .should('be.visible')
   })
 
   it('Clica no botão Editar de Dados da disputa', function () {
@@ -54,10 +51,12 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
       .type(' Descrição de testes')
 
     // Verifica se o botão 'Editar dados' é visível e clica
-    cy.get('[data-testid=confirm-edit-data]').should('be.visible')
+    cy.get('[data-testid=confirm-edit-data]')
+      .should('be.visible')
       .click()
 
     // Verifica se mensagem de confirmação aparece
-    cy.contains('Os dados foram alterados com sucesso.').should('be.visible')
+    cy.contains('Os dados foram alterados com sucesso.')
+      .should('be.visible')
   })
 })

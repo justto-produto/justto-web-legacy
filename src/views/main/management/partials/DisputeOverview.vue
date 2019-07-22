@@ -2,28 +2,28 @@
   <div class="dispute-overview-view">
     <el-collapse value="1">
       <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Num.:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Campanha:</span>
           <span v-if="dispute.campaign">{{ dispute.campaign.name }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
           <span v-if="dispute.strategy">{{ dispute.strategy.name }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
           <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
           <span v-if="dispute.upperRange">{{ dispute.upperRange.boundary | currency }}</span>
           <span v-else>{{ 0 | currency }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
           <span v-if="dispute.lastCounterOffer">{{ dispute.lastCounterOffer.boundary | currency }}</span>
           <span v-else>{{ 0 | currency }}</span>
@@ -35,15 +35,15 @@
           <span v-if="dispute.dealValue">{{ dispute.dealValue.boundary | currency }}</span>
           <span v-else>{{ 0 | currency }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Valor proposto:</span>
           <span v-if="dispute.lastOffer">{{ dispute.lastOffer.boundary | currency }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
           <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Descrição:</span>
           <span>{{ dispute.description }}</span>
         </div>
@@ -70,7 +70,7 @@
             {{ role.person.name }}
           </div>
         </template>
-        <!-- <div class="dispute-overview-view__info-line">
+        <!-- <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span>Status:</span>
           <el-popover
             placement="top-end"

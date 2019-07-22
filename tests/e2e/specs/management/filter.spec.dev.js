@@ -27,10 +27,12 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click({force: true})
+    cy.get('.el-tabs__nav > #tab-3')
+      .click({force: true})
 
     // Seleciona botão 'Filtrar'
-    cy.get('[data-testid=management-filterbtn]').click()
+    cy.get('[data-testid=management-filterbtn]')
+      .click()
 
     // Seleciona Campanha
     cy.get('[data-testid=filter-campaign]')
@@ -41,8 +43,6 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
       .trigger('keydown', { keyCode: 40, Which: 40 })
       .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
-    cy.wait(5000)
-
     // Seleciona Estratégia
     cy.get('[data-testid=filter-strategy]')
       .click()
@@ -52,12 +52,10 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
       .trigger('keydown', { keyCode: 40, Which: 40 })
       .trigger('keydown', { keyCode: 13, Which: 13 })
 
-    cy.wait(5000)
 
     // Seleciona Disputas Favoritas
-    cy.get('[data-testid=filters-favorite]').click()
-
-    cy.wait(5000)
+    cy.get('[data-testid=filters-favorite]')
+      .click()
 
     // // Seleciona Fim da Negociação
     // cy.get('[data-testid=filters-disputeexpirationdate]')
@@ -67,11 +65,11 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     //   .click({force: true})
 
     // Aplica os filtros selecionados
-    cy.contains('Aplicar filtros').click({force: true})
+    cy.contains('Aplicar filtros')
+      .click({force: true})
 
     // Verifica se existem disputas
-    cy.get('tbody>tr').eq(0).should('to.exist')
-
-    cy.wait(5000)
+    cy.get('tbody>tr').first()
+      .should('to.exist')
   })
 })

@@ -4,7 +4,7 @@ const password = Cypress.env('password1')
 describe('Justto.App - Disputa: Visualização', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/#/login')
+    cy.visit('/')
 
     // Verifica se link redirecionado é o 'Login'
     cy.url().should('include', '/#/login')
@@ -27,10 +27,13 @@ describe('Justto.App - Disputa: Visualização', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Todos"
-    cy.contains('Todos').click({force: true})
+    cy.get('.el-tabs__nav > #tab-3')
+      .click({force: true})
 
     // Entra na disputa
-    cy.get('tbody>tr').eq(0).click()
+    cy.wait(2000)
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
+      .click()
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
@@ -53,16 +56,8 @@ describe('Justto.App - Disputa: Visualização', function () {
     cy.get('.el-loading-mask')
       .should('not.be.visible')
 
-    // Expande uma parte da disputa
-    cy.get('[data-testid=expand-party]').eq(0)
-      .click()
-
     // Informações da disputa devem estar visiveis
-    cy.get('.dispute-overview-view__info-line')
+    cy.get('[data-testid=dispute-infoline]')
       .should('be.visible')
-
-    // Informações do sumario devem estar visiveis
-    cy.contains('CPF:').should('be.visible')
-    cy.contains('Função:').should('be.visible')
   })
 })

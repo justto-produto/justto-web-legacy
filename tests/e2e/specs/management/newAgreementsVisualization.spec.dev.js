@@ -27,7 +27,8 @@ describe('Justto.App - Gerenciamento: Visualização Novos Acordos', function ()
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Novos Acordos"
-    cy.contains('Novos Acordos').click({force: true})
+    cy.contains('Novos Acordos')
+      .click({force: true})
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')
@@ -59,11 +60,13 @@ describe('Justto.App - Gerenciamento: Visualização Novos Acordos', function ()
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Novos Acordos"
-    cy.contains('Novos Acordos').should('be.visible')
+    cy.contains('Novos Acordos')
+      .should('be.visible')
       .click({force: true})
 
     // Verifica se existem casos exibidos
-    cy.get('tbody>tr').eq(0).should('be.visible')
+    cy.get('tbody>tr').first()
+      .should('be.visible')
 
     cy.wait(5000)
   })

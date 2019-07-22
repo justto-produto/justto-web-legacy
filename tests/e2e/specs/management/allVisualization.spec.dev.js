@@ -28,7 +28,8 @@ describe('Justto.App - Gerenciamento: Visualização Todos', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible').click({force: true})
+    cy.get('.el-tabs__nav > #tab-3')
+      .click({force: true})
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')
@@ -61,11 +62,12 @@ describe('Justto.App - Gerenciamento: Visualização Todos', function () {
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Todos"
-    cy.contains('Todos').should('be.visible')
-      .click()
+    cy.get('.el-tabs__nav > #tab-3')
+      .click({force: true})
 
       // Verifica se existem casos exibidos
-    cy.get('tbody>tr').eq(0).should('be.visible')
+    cy.get('tbody>tr').first()
+      .should('be.visible')
 
     cy.wait(5000)
   })

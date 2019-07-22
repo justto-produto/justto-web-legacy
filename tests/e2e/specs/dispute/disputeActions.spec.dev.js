@@ -4,8 +4,7 @@ const password = Cypress.env('password6')
 describe('Justto.App - Disputa: Ações', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('/#/login')
 
     // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
@@ -29,7 +28,7 @@ describe('Justto.App - Disputa: Ações', function () {
 
     // Entra na disputa
     cy.wait(1000)
-    cy.get('[data-testid=dispute-index]').eq(0)
+    cy.get('[data-testid=dispute-index]').first()
       .click()
 
     // Sistema deve redirecionar para a página de Registro

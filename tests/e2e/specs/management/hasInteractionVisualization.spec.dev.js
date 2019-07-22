@@ -27,7 +27,8 @@ describe('Justto.App - Com Interação: Visualização Com Interação', functio
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Com Interação"
-    cy.contains('Com Interação').click({force: true})
+    cy.contains('Com Interação')
+      .click({force: true})
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')
@@ -59,12 +60,11 @@ describe('Justto.App - Com Interação: Visualização Com Interação', functio
     cy.url().should('include', '/#/management')
 
     // Seleciona a aba "Com Interação"
-    cy.contains('Com Interação').should('be.visible')
+    cy.contains('Com Interação')
       .click({force: true})
 
     // Verifica se existem casos exibidos
-    cy.get('tbody>tr').eq(0).should('be.visible')
-
-    cy.wait(5000)
+    cy.get('tbody>tr').first()
+      .should('be.visible')
   })
 })

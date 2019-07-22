@@ -1,11 +1,10 @@
-const login = Cypress.env('email6')
-const password = Cypress.env('password6')
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
 
 describe('Justto.App - Disputa: Menssagens', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('/#/login')
 
     // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
@@ -29,9 +28,10 @@ describe('Justto.App - Disputa: Menssagens', function () {
   })
 
   it('Envio de Email: Parte não selecionada', function () {
+    cy.wait(2000
+    )
     // Entra na primeira disputa da lista
-    cy.wait(2000)
-    cy.get('[data-testid=dispute-index]').eq(0)
+    cy.get('[data-testid=dispute-index]').first()
       .click()
 
     // Caixa de texto deve estar desabilitada, mensagem deve aparecer no lugar.
@@ -47,11 +47,11 @@ describe('Justto.App - Disputa: Menssagens', function () {
   it('Envia de Email: Sucesso', function () {
     // Entra na primeira disputa da lista
     cy.wait(2000)
-    cy.get('[data-testid=dispute-index]').eq(0)
+    cy.get('[data-testid=dispute-index]').first()
       .click()
 
     // Seleciona primeira parte do caso
-    cy.get('[data-testid=expand-party]').eq(0)
+    cy.get('[data-testid=expand-party]').first()
       .click()
 
     // Digita mensagem
