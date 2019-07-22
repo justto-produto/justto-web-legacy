@@ -139,12 +139,13 @@ export default {
                   workspace: this.$store.state.workspaceModule.subdomain
                 })
                 window.analytics.group(this.$store.state.workspaceModule.subdomain)
-                Promise.all([
-                  this.$store.dispatch('myPerson'),
+                if (responses[1][0] && responses[1][0]['subDomain']) {
                   this.$store.dispatch('getWorkspaceMembers')
-                ]).finally(() => {
+                  this.$store.dispatch('myPerson')
+                }
+                setTimeout(function () {
                   this.$router.push('/management')
-                })
+                }.bind(this), 1000)
               }).catch(() => {
                 this.errorMessage = `Houve uma falha de conexão com o servidor.
                 Tente novamente ou entre em contato com o administrador do sistema.`
