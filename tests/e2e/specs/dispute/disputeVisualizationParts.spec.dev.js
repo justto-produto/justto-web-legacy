@@ -57,19 +57,23 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
       .type('testes@testes.com')
 
     // Clica no botão de '+'
-    cy.get('[data-testid=add-email]').click()
+    cy.get('[data-testid=add-email]')
+      .click()
 
     // Verifica se o email inserido aparece
-    cy.contains('testes@testes.com').should('to.exist')
+    cy.contains('testes@testes.com')
+      .should('to.exist')
 
   })
 
   it('Confirma a edição', function () {
     // Verifica se o botão 'Editar dados' é visível e clica
-    cy.get('[data-testid=edit-data-part]').should('be.visible')
+    cy.get('[data-testid=edit-data-part]')
+      .should('be.visible')
       .click()
 
     // Verifica se mensagem de confirmação aparece
-    cy.contains('Os dados foram alterados com sucesso.').should('be.visible')
+    cy.contains('Os dados foram alterados com sucesso.')
+      .should('be.visible')
   })
 })

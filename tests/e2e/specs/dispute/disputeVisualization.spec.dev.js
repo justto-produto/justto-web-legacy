@@ -4,7 +4,7 @@ const password = Cypress.env('password1')
 describe('Justto.App - Disputa: Visualização', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('https://' + Cypress.env('BASE_URL'))
+    cy.visit('/')
 
     // Verifica se link redirecionado é o 'Login'
     cy.url().should('include', '/#/login')
@@ -31,8 +31,9 @@ describe('Justto.App - Disputa: Visualização', function () {
       .click({force: true})
 
     // Entra na disputa
+    cy.wait(2000)
     cy.get('[data-testid=dispute-index]').first()
-      .click()
+      .click({force: true})
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
@@ -62,9 +63,5 @@ describe('Justto.App - Disputa: Visualização', function () {
     // Informações da disputa devem estar visiveis
     cy.get('.dispute-overview-view__info-line')
       .should('be.visible')
-
-    // Informações do sumario devem estar visiveis
-    cy.contains('CPF:').should('be.visible')
-    cy.contains('Função:').should('be.visible')
   })
 })
