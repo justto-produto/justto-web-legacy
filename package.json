@@ -17,7 +17,8 @@
     "test:e2e": "vue-cli-service test:e2e",
     "styleguide": "vue-styleguidist server --open",
     "styleguide:build": "vue-styleguidist build",
-    "inspect": "vue-cli-service inspect"
+    "inspect": "vue-cli-service inspect",
+    "test:server": "npx vue-cli-service test:e2e --headless --browser chrome"
   },
   "dependencies": {
     "@sentry/browser": "^4.6.6",
