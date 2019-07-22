@@ -14,6 +14,7 @@ COPY styleguide.config.js styleguide.config.js
 COPY cypress.json cypress.json
 COPY babel.config.js babel.config.js
 RUN export VUE_APP_BASE_URL=https://homol.justto.com.br
+RUN env
 
 # rerun E2E tests only if any of the previous files change
 RUN npx vue-cli-service test:e2e --headless --browser chrome
