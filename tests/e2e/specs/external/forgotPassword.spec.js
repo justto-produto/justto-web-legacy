@@ -18,7 +18,7 @@ describe('Justto.app - Esqueci a Senha', function () {
 
   it('Esqueci minha Senha: Sucesso', function () {
     // Digita um email válido existente
-    cy.get('[data-testid=forgot-email]')
+    cy.get('[data-testid=forgot-password-email]')
       .type(email)
       .should('have.value', email)
 
@@ -33,7 +33,7 @@ describe('Justto.app - Esqueci a Senha', function () {
 
   it('Esqueci minha senha: Email Inválido', function () {
     // Digita um email inválido
-    cy.get('[data-testid=forgot-email]')
+    cy.get('[data-testid=forgot-password-email]')
       .type('email inválido')
       .should('have.value', 'email inválido')
 
@@ -48,7 +48,7 @@ describe('Justto.app - Esqueci a Senha', function () {
 
   it('Esqueci minha senha: Email Inexistente', function () {
     // Digita um email inválido
-    cy.get('[data-testid=forgot-email]')
+    cy.get('[data-testid=forgot-password-email]')
       .type('email@inexistente.com')
       .should('have.value', 'email@inexistente.com')
 
