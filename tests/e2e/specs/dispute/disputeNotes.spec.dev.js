@@ -28,19 +28,26 @@ describe('Justto.App - Disputa: Notas', function () {
   })
 
   it('Salvar Nota: Sucesso', function () {
-    cy.wait(2000)
+    // Entra na aba 'Todos'
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
+      .click({force: true})
 
-    // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index]').first()
+    // Entra na disputa
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
+
+    // Sistema deve redirecionar para a página de Registro
+    cy.url().should('include', '/#/management/dispute/')
 
     // Entra na aba 'Notas'
-    cy.contains('Nota')
-      .click()
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Nota')
+      .click({force: true})
 
     // Digita uma nota
     cy.get('[data-testid=input-nota]')
-      .type('Teste notaaaa 10')
+      .type('Teste nota 10')
 
     // Salva a nota
     cy.get('[data-testid=submit-note]')
@@ -56,6 +63,6 @@ describe('Justto.App - Disputa: Notas', function () {
     // Nota deve aparecer entre as mensagens
     cy.get('.dispute-view-messages__message-content.note')
       .should('be.visible')
-      .contains('Teste notaaaa 10')
+      .contains('Teste nota 10')
   })
 })

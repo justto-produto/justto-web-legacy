@@ -28,10 +28,10 @@ describe('Justto.App - Disputa: Visualização', function () {
 
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
       .click({force: true})
 
     // Entra na disputa
-    cy.wait(2000)
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
 
