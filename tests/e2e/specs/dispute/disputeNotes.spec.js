@@ -72,7 +72,7 @@ describe('Justto.App - Disputa: Notas', function () {
     // Nota deve aparecer entre as mensagens
     cy.contains(message)
       .should('be.visible')
-      .get('[data-testid=message-note]')
+      .get('[data-testid=message-box]')
       .should('be.visible')
   })
 })
