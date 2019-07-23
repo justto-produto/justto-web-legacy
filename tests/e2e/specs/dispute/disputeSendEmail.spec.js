@@ -28,10 +28,8 @@ describe('Justto.App - Disputa: Menssagens', function () {
   })
 
   it('Envio de Email: Parte não selecionada', function () {
-    cy.wait(2000
-    )
     // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index]').first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
 
     // Caixa de texto deve estar desabilitada, mensagem deve aparecer no lugar.
@@ -46,42 +44,37 @@ describe('Justto.App - Disputa: Menssagens', function () {
 
   it('Envia de Email: Sucesso', function () {
     // Entra na primeira disputa da lista
-    cy.wait(2000)
-    cy.get('[data-testid=dispute-index]').first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
 
     // Seleciona primeira parte do caso
     cy.get('[data-testid=expand-party]').first()
       .click()
 
+    function randomText(size) {
+      var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+      var result = '';
+      for (var i = 0; i < size; i++) {
+        var n = Math.floor(Math.random() * caracters.length);
+        result += caracters.substring(n, n + 1);
+      }
+      return 'TST' + result;
+    }
+    const message = randomText(12)
+
     // Digita mensagem
     cy.get('[data-testid=input-message]')
-      .type('Teste email 11')
-      .should('have.value', 'Teste email 11')
+      .type(message)
+      .should('have.value', message)
 
     // Envia mensagem
     cy.get('[data-testid=submit-email]')
       .click()
 
-    // Aguarda atualização
-    cy.wait(5000)
-
-    // Clica para visualizar ultima mensagem
-    cy.get('[data-testid=show-email]')
-      .last()
-      .click()
-
     // Mensagem deve ser a enviada
-    cy.get('[data-testid=email-dialog]')
-      .contains('Teste email 11')
+    cy.contains(message)
       .should('be.visible')
-
-    // Fecha modal da mensagem
-    cy.get('[data-testid=close-button]')
-      .click()
-
-    // Modal deve desaparecer
-    cy.get('[data-testid=email-dialog]')
-      .should('not.be.visible')
+      .get('[data-testid=message-box]')
+      .should('be.visible')
   })
 })

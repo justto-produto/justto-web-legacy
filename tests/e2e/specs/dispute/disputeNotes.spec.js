@@ -45,9 +45,21 @@ describe('Justto.App - Disputa: Notas', function () {
       .contains('Nota')
       .click({force: true})
 
+    function randomText(size) {
+      var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+      var result = '';
+      for (var i = 0; i < size; i++) {
+        var n = Math.floor(Math.random() * caracters.length);
+        result += caracters.substring(n, n + 1);
+      }
+      return 'TST' + result;
+    }
+    const message = randomText(12)
+
     // Digita uma nota
     cy.get('[data-testid=input-nota]')
-      .type('Teste nota 10')
+      .type(message)
+      .should('have.value', message)
 
     // Salva a nota
     cy.get('[data-testid=submit-note]')
@@ -57,12 +69,10 @@ describe('Justto.App - Disputa: Notas', function () {
     cy.contains('Nota gravada com sucesso.')
       .should('be.visible')
 
-    // // Aguarda chat atualizar
-    // cy.wait(10000)
-
     // Nota deve aparecer entre as mensagens
-    cy.get('.dispute-view-messages__message-content.note')
+    cy.contains(message)
       .should('be.visible')
-      .contains('Teste nota 10')
+      .get('[data-testid=message-note]')
+      .should('be.visible')
   })
 })

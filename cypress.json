@@ -5,6 +5,8 @@
   "pluginsFile": "tests/e2e/plugins/index.js",
   "baseUrl": "http://localhost:8080/",
   "env": {
+    "default-password": "password",
+
     "empty-account-email": "empty-account@thetempmail.com",
     "empty-account-password": "password",
 
