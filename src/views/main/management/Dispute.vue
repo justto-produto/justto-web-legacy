@@ -62,17 +62,17 @@
           </el-tooltip>
           <el-tooltip content="Retomar">
             <el-button plain data-testid="resume" @click="disputeAction('resume')">
-              <jus-icon icon="action-start-again" />
+              <jus-icon icon="start-again" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Pausar">
             <el-button plain data-testid="paused" @click="disputeAction('paused')">
-              <jus-icon icon="action-pause" />
+              <jus-icon icon="pause" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Alterar Negociador">
             <el-button plain @click="editNegotiator()">
-              <jus-icon icon="action-delegate" />
+              <jus-icon icon="delegate" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Enriquecer disputa">
