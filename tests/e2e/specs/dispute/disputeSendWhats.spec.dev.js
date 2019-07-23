@@ -77,5 +77,4 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.get('[data-testid=submit-whats-disable]')
       .should('be.disabled')
   })
-
 })

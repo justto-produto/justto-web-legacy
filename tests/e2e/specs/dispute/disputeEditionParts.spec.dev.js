@@ -2,11 +2,11 @@ const login = Cypress.env('email1')
 const password = Cypress.env('password1')
 
 describe('Justto.App - Disputa: Edição do Caso', function () {
-  it('Login', function () {
+  beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/#/login')
+    cy.visit('/')
 
-    // Redireciona para 'Login'
+    // Verifica se link redirecionado é o 'Login'
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
@@ -25,17 +25,21 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
-  })
 
-  it('Entra na disputa', function () {
-    // clica no primeiro caso: index 0
-    cy.get('[data-testid=dispute-index]').first()
+    // Seleciona a aba "Todos"
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
+      .click({force: true})
+
+    // Entra na disputa
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
 
-    // Verifica se entrou na tela de Disputa
-    cy.contains('Resumo da disputa')
-      .should('be.visible')
+    // Sistema deve redirecionar para a página de Registro
+    cy.url().should('include', '/#/management/dispute/')
   })
+
+
 
   it('Clica no botão para expandir o card', function () {
     // Clica no nome para expandir o card
@@ -47,11 +51,9 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
       .click()
 
     // Verifica se todos os 'spans' aparecem
-    cy.get('span').should('be.visible')
-
-  })
-
-  it('Altera dados', function () {
+    cy.get('span')
+      .should('be.visible')
+      
     // Preenche o Campo de 'E-mail'
     cy.get('[data-testid=input-email]')
       .type('testes@testes.com')
@@ -64,9 +66,6 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
     cy.contains('testes@testes.com')
       .should('to.exist')
 
-  })
-
-  it('Confirma a edição', function () {
     // Verifica se o botão 'Editar dados' é visível e clica
     cy.get('[data-testid=edit-data-part]')
       .should('be.visible')

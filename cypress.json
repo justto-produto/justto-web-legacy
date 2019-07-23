@@ -5,14 +5,17 @@
   "pluginsFile": "tests/e2e/plugins/index.js",
   "baseUrl": "http://localhost:8080/",
   "env": {
-    "empty-account-email": "empty-account@maillist.in",
+    "empty-account-email": "empty-account@thetempmail.com",
     "empty-account-password": "password",
 
-    "not-editable-cases-email": "not-editable-cases@maillist.in",
+    "not-editable-cases-email": "not-editable-cases@thetempmail.com",
     "not-editable-cases-password": "password",
 
     "editable-cases-email": "editable-cases@thetempmail.com",
     "editable-cases-password": "password",
+
+    "not-configured-account-email": "not-configured-account@thetempmail.com",
+    "not-configured-account-password": "password",
 
     "email1": "lucas@justto.com.br",
     "password1": "123456",

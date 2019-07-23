@@ -31,6 +31,7 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
   it('Gerenciamento: Engajamento - Exibição dos Casos', function () {
     // Seleciona a aba "Engajamento"
     cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
       .click({force: true})
 
     // Seleciona botão 'Filtrar'

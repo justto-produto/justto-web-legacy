@@ -31,6 +31,7 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
   it('Gerenciamento: Todos - Exibição dos Casos', function () {
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
       .click({force: true})
 
     // Seleciona botão 'Filtrar'
@@ -68,6 +69,7 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
   it('Gerenciamento: Todos - Exibição dos Casos - Vazio', function () {
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
       .click({force: true})
 
     // Seleciona botão 'Filtrar'
