@@ -1,12 +1,12 @@
 const login = Cypress.env('email1')
 const password = Cypress.env('password1')
 
-describe('Justto.App - Disputa: Notas', function () {
+describe('Justto.App - Disputa: Edição do Caso', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/#/login')
+    cy.visit('/')
 
-    // Valida se o endereço redirecionado é o 'Login'
+    // Verifica se link redirecionado é o 'Login'
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
@@ -25,10 +25,8 @@ describe('Justto.App - Disputa: Notas', function () {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
-  })
 
-  it('Salvar Nota: Sucesso', function () {
-    // Entra na aba 'Todos'
+    // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
       .click({force: true})
@@ -39,30 +37,42 @@ describe('Justto.App - Disputa: Notas', function () {
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
+  })
 
-    // Entra na aba 'Notas'
-    cy.get('.el-tabs__nav > #tab-3')
-      .contains('Nota')
-      .click({force: true})
 
-    // Digita uma nota
-    cy.get('[data-testid=input-nota]')
-      .type('Teste nota 10')
 
-    // Salva a nota
-    cy.get('[data-testid=submit-note]')
+  it('Clica no botão para expandir o card', function () {
+    // Clica no nome para expandir o card
+    cy.get('[data-testid=expand-party]').first()
       .click()
 
-    // Notificação de sucesso deve desaparecer
-    cy.contains('Nota gravada com sucesso.')
-      .should('be.visible')
+    // Clica no botão de 'Editar'
+    cy.get('[data-testid=edit-part]').first()
+      .click()
 
-    // // Aguarda chat atualizar
-    // cy.wait(10000)
-
-    // Nota deve aparecer entre as mensagens
-    cy.get('.dispute-view-messages__message-content.note')
+    // Verifica se todos os 'spans' aparecem
+    cy.get('span')
       .should('be.visible')
-      .contains('Teste nota 10')
+      
+    // Preenche o Campo de 'E-mail'
+    cy.get('[data-testid=input-email]')
+      .type('testes@testes.com')
+
+    // Clica no botão de '+'
+    cy.get('[data-testid=add-email]')
+      .click()
+
+    // Verifica se o email inserido aparece
+    cy.contains('testes@testes.com')
+      .should('to.exist')
+
+    // Verifica se o botão 'Editar dados' é visível e clica
+    cy.get('[data-testid=edit-data-part]')
+      .should('be.visible')
+      .click()
+
+    // Verifica se mensagem de confirmação aparece
+    cy.contains('Os dados foram alterados com sucesso.')
+      .should('be.visible')
   })
 })

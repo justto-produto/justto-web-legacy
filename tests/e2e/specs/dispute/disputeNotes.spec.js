@@ -1,12 +1,12 @@
 const login = Cypress.env('email1')
 const password = Cypress.env('password1')
 
-describe('Justto.App - Disputa: Menssagens', function () {
+describe('Justto.App - Disputa: Notas', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
     cy.visit('/#/login')
 
-    // Redireciona para 'Login'
+    // Valida se o endereço redirecionado é o 'Login'
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
@@ -27,29 +27,23 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.url().should('include', '/#/management')
   })
 
-  it('Envio de Email: Parte não selecionada', function () {
-    // Entra na primeira disputa da lista
+  it('Salvar Nota: Sucesso', function () {
+    // Entra na aba 'Todos'
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
+      .click({force: true})
+
+    // Entra na disputa
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
 
-    // Caixa de texto deve estar desabilitada, mensagem deve aparecer no lugar.
-    cy.get('[data-testid=unselected-party]')
-      .contains('Escolha um destinatário ao lado')
+    // Sistema deve redirecionar para a página de Registro
+    cy.url().should('include', '/#/management/dispute/')
 
-    // 'Enviar' deve estar desabilitado
-    cy.get('[data-testid=submit-email]')
-      .should('be.disabled')
-  })
-
-
-  it('Envia de Email: Sucesso', function () {
-    // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
-      .click()
-
-    // Seleciona primeira parte do caso
-    cy.get('[data-testid=expand-party]').first()
-      .click()
+    // Entra na aba 'Notas'
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Nota')
+      .click({force: true})
 
     function randomText(size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
@@ -62,16 +56,20 @@ describe('Justto.App - Disputa: Menssagens', function () {
     }
     const message = randomText(12)
 
-    // Digita mensagem
-    cy.get('[data-testid=input-message]')
+    // Digita uma nota
+    cy.get('[data-testid=input-nota]')
       .type(message)
       .should('have.value', message)
 
-    // Envia mensagem
-    cy.get('[data-testid=submit-email]')
+    // Salva a nota
+    cy.get('[data-testid=submit-note]')
       .click()
 
-    // Mensagem deve ser a enviada
+    // Notificação de sucesso deve desaparecer
+    cy.contains('Nota gravada com sucesso.')
+      .should('be.visible')
+
+    // Nota deve aparecer entre as mensagens
     cy.contains(message)
       .should('be.visible')
       .get('[data-testid=message-box]')

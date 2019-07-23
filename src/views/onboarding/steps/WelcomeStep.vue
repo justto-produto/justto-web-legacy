@@ -1,15 +1,15 @@
 <template>
   <div class="onboarding-step-content onboarding-welcome-step">
-    <JusLogoCompany
+    <!-- <JusLogoCompany
       v-if="isGuest"
       src="shostners.jpg"
       shadow
       shape="circle"
-      size="xl"/>
+      size="xl"/> -->
     <h1>
       {{ name }}, bem-vindo(a) à Justto<br>
       <span v-if="isGuest">
-        Junte-se ao escritório Shostners & Shostners
+        Junte-se ao escritório {{ companyName }}.
       </span>
     </h1>
     <p>
@@ -32,6 +32,10 @@ export default {
     isGuest: {
       type: Boolean,
       default: false
+    },
+    companyName: {
+      type: String,
+      default: ''
     }
   },
   computed: {

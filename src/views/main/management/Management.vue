@@ -32,6 +32,7 @@
           :disabled="disputes.length === 0"
           plain
           icon="el-icon-download"
+          data-testid="export-disputes"
           @click="exportDisputes">
           Exportar disputas
         </el-button>

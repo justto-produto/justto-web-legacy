@@ -9,7 +9,7 @@
       class="dispute-view-messages__message">
       <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="dispute-view-messages__message-box">
         <div>
-          <div :class="directionClass(message) + waitingClass(message)" class="dispute-view-messages__message-content">
+          <div :class="directionClass(message) + waitingClass(message)" class="dispute-view-messages__message-content" data-testid="message-box">
             <div>{{ message.description }}</div>
             <el-button
               v-if="message.message && message.message.type === 'EMAIL'"

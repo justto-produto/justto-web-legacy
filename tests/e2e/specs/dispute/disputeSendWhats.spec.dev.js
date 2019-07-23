@@ -61,8 +61,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
 
   it('Envio de Whatsapp: Desconectado', function () {
     // Entra na primeira disputa da lista
-    cy.wait(2000)
-    cy.get('[data-testid=dispute-index]').first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
 
     // Seleciona primeira parte do caso
@@ -77,5 +76,4 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.get('[data-testid=submit-whats-disable]')
       .should('be.disabled')
   })
-
 })

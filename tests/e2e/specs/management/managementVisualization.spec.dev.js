@@ -37,6 +37,10 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
     cy.get('[data-testid=cases-empty-text]')
       .contains('Não foram encontradas disputas')
       .should('be.visible')
+
+    // Exportação de disputas deve estar desabilitada
+    cy.get('[data-testid=export-disputes]')
+      .should('be.disabled')
   })
 
   it('Exibição de Casos - Com casos', function () {
@@ -48,5 +52,9 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
     // Verifica se existem casos exibidos
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row')
       .should('be.visible')
+
+    // Exporta disputas
+    cy.get('[data-testid=export-disputes]')
+      .click()
   })
 })
