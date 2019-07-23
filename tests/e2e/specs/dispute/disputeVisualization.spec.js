@@ -1,4 +1,4 @@
-]const login = Cypress.env('email1')
+const login = Cypress.env('email1')
 const password = Cypress.env('password1')
 
 describe('Justto.App - Disputa: Visualização', function () {
