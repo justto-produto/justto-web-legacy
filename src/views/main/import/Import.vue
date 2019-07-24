@@ -13,7 +13,7 @@
           <h2 v-show="isSuccess">Planilha carregada com sucesso!</h2>
         </div>
         <div class="import-view__content import-view__content--upload">
-          <label for='fileupload'>
+          <label for="fileupload">
             <el-card class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
               <div v-if="isInitial">
                 <jus-icon icon="upload-file" />
@@ -23,7 +23,7 @@
                 </div>
               </div>
               <div v-if="isSaving">
-                <div v-loading="true" class="import-view__loading"></div>
+                <div v-loading="true" class="import-view__loading" />
                 <div>
                   <br>
                   Carregando...
@@ -38,11 +38,11 @@
               </div>
             </el-card>
             <input
-            id="fileupload"
-            ref="fileupload"
-            type="file"
-            class="import-view__upload"
-            @change="handleFile($event.target.files)">
+              id="fileupload"
+              ref="fileupload"
+              type="file"
+              class="import-view__upload"
+              @change="handleFile($event.target.files)">
           </label>
         </div>
         <div v-if="isSuccess" class="import-view__actions">
@@ -59,7 +59,6 @@
           </h2>
           <el-tooltip content="Download da planilha modelo">
             <el-button
-              type=""
               class="right"
               data-testid="download-model"
               @click="downloadModel()">
@@ -110,7 +109,7 @@ export default {
       importsHistory: [],
       uploadedFile: null,
       uploadError: null,
-      currentStatus: 1
+      currentStatus: 0
     }
   },
   computed: {
