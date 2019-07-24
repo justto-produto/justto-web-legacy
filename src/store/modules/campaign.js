@@ -26,10 +26,6 @@ const campaign = {
         // eslint-disable-next-line
         axios.post('api/campaigns', campaign)
           .then(response => {
-            if (campaign.importId) {
-              // eslint-disable-next-line
-              axios.post('api/geneserunner/' + campaign.importId + '/start')
-            }
             resolve(response)
           })
           .catch(error => {
