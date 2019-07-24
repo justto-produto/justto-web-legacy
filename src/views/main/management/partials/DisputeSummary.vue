@@ -135,7 +135,7 @@ export default {
     }
     // changeReasonStatus () {
     //   this.$store.dispatch('editDisputeReason', {
-    //     body: { [this.unsettledType]: this.unsettledTypes[this.unsettledType] },
+    //     body: { 'reason': this.unsettledTypes[this.unsettledType] },
     //     disputeId: this.id,
     //     reasonId: this.unsettledTypeId
     //   }).then(() => {
