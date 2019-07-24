@@ -37,6 +37,7 @@ Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
         const dataTransfer = new DataTransfer()
         dataTransfer.items.add(testFile)
         el.files = dataTransfer.files
+        el.dispatchEvent(new Event('change', {bubbles: true}))
       })
   })
 })

@@ -10,7 +10,7 @@
         </p>
         <div
           v-for="column in columns"
-          v-show="!$store.state.loading"
+          v-show="!loading"
           :key="`${column.id}-${column.name}`"
           class="file-column"
           @drop="dropTag($event, column)"
@@ -33,7 +33,7 @@
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
         </div>
-        <div v-loading="true" v-show="$store.state.loading">
+        <div v-loading="true" v-show="loading">
           <div v-for="item in [1,2,3,4,5]" :key="item" class="file-column">
             <div :item="item" class="file-column__name">
               <span class="file-column__title">coluna</span>
@@ -159,7 +159,8 @@ export default {
       respondentParties: [],
       loadingTags: true,
       errorColumns: false,
-      errorTags: false
+      errorTags: false,
+      loading: false
     }
   },
   computed: {
@@ -174,11 +175,11 @@ export default {
   },
   beforeMount () {
     if (!this.$store.state.importModule.map.length) {
-      this.$store.dispatch('showLoading')
-      this.$store.dispatch('getImportsColumns').then(() => {
-        this.$store.dispatch('hideLoading')
-      }).catch(() => {
+      this.loading = true
+      this.$store.dispatch('getImportsColumns').catch(() => {
         this.$jusNotification({ type: 'error' })
+      }).finally (() => {
+        this.loading = false
       })
     }
     this.$store.dispatch('getImportsTags').then(tags => {
