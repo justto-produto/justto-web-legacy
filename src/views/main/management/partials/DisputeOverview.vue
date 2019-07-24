@@ -9,10 +9,12 @@
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Campanha:</span>
           <span v-if="dispute.campaign">{{ dispute.campaign.name }}</span>
+          <span v-else></span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
           <span v-if="dispute.strategy">{{ dispute.strategy.name }}</span>
+          <span v-else></span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
@@ -38,6 +40,7 @@
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Valor proposto:</span>
           <span v-if="dispute.lastOffer">{{ dispute.lastOffer.boundary | currency }}</span>
+          <span v-else>{{ 0 | currency }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>

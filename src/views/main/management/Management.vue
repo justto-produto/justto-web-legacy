@@ -419,7 +419,7 @@ export default {
       this.$store.commit('setDisputeSort', sort)
     },
     getLastInteraction (lastinteractiondate) {
-      let date = this.$moment(lastinteractiondate)
+      let date = this.$moment(lastinteractiondate + 'Z')
       if (date.isValid()) {
         let now = this.$moment()
         if (now.diff(date, 'seconds') < 0) {

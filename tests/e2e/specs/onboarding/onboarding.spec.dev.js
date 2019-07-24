@@ -1,10 +1,10 @@
 describe('Justto.App - Onboarding', function () {
   const email = Cypress.env('emailonboarding')
   const senha = Cypress.env('senhaonboarding')
+  
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('https://kubernetes.justto.com.br')
-    // cy.visit('localhost:8080')
+    cy.visit('localhost:8080')
 
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
