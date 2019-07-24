@@ -116,6 +116,7 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
+    cy.wait(4500)
   })
 
   it('Ação: Remover', function () {

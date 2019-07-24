@@ -111,6 +111,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
+    cy.wait(4500)
   })
 
   it('Ação em Lote: Excluir', function () {
