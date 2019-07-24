@@ -21,16 +21,16 @@ describe('Justto.App - Importação de planilha: Erros', function() {
 
   it('Importa planilha modelo: Planilha inválida', function() {
     cy.upload_file('PLANINHA_EMPTY_FILE_TEST.xlsx', fileType, fileInput)
-    cy.contains('Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.').should('be.visible')
+    cy.contains('Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.')
   })
 
   it('Importa planilha modelo: Arquivo pesado', function() {
     cy.upload_file('ss20mb.xlsx', fileType, fileInput)
-    cy.contains('Arquivo não pode ultrapassar 20MB.').should('be.visible')
+    cy.contains('Arquivo não pode ultrapassar 20MB.')
   })
 
   it('Importa planilha modelo: Formato inválido', function() {
     cy.upload_file('CERTAMENTE_NAO_E_UMA_PLANILHA.jpeg', fileType, fileInput)
-    cy.contains('Arquivo em formato inválido.').should('be.visible')
+    cy.contains('Arquivo em formato inválido.')
   })
 })
