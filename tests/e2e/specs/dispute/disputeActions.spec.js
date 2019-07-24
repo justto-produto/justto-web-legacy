@@ -1,5 +1,5 @@
-const login = Cypress.env('email6')
-const password = Cypress.env('password6')
+const login = Cypress.env('email1')
+const password = Cypress.env('password1')
 
 describe('Justto.App - Disputa: Ações', function () {
   beforeEach('Login', function () {
@@ -26,13 +26,14 @@ describe('Justto.App - Disputa: Ações', function () {
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
 
-    // Entra na disputa
-    cy.wait(1000)
-    cy.get('[data-testid=dispute-index]').first()
-      .click()
+    // Entra na aba 'Todos'
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
+      .click({force: true})
 
-    // Sistema deve redirecionar para a página de Registro
-    cy.url().should('include', '/#/management/dispute/')
+    // Entra na disputa
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
+      .click()
   })
 
   afterEach('Notificação de Sucesso', function () {

@@ -1,5 +1,5 @@
-const login = Cypress.env('email2')
-const password = Cypress.env('password2')
+const login = Cypress.env('import-actions-email')
+const password = Cypress.env('default-password')
 
 describe('Justto.App - Planilha Modelo', function () {
   it('Login: Sucesso', function () {

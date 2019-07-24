@@ -1,5 +1,5 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('not-configured-account-email')
+const password = Cypress.env('defaukt-password')
 
 describe('Justto.App - Disputa: Edição do Caso', function () {
   beforeEach('Login', function () {
@@ -43,17 +43,19 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
 
   it('Clica no botão para expandir o card', function () {
     // Clica no nome para expandir o card
-    cy.get('[data-testid=expand-party]').first()
+    cy.get('[data-testid=expand-party]').eq(0)
       .click()
+
+    cy.contains('CPF').should('be.visible')
+    cy.contains('Função').should('be.visible')
+    cy.contains('Parte contrária').should('be.visible')
 
     // Clica no botão de 'Editar'
     cy.get('[data-testid=edit-part]').first()
       .click()
 
-    // Verifica se todos os 'spans' aparecem
-    cy.get('span')
-      .should('be.visible')
-      
+    cy.contains('(12) 91234-5678')
+
     // Preenche o Campo de 'E-mail'
     cy.get('[data-testid=input-email]')
       .type('testes@testes.com')

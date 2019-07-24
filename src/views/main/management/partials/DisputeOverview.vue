@@ -246,7 +246,7 @@
           <li v-for="(phone, index) in roleForm.phones" :key="phone.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ phone.number }}
-            <a href="#" @click.prevent="removePhone({disputeId: dispute.id, id: phone.id}, roleForm.phones, index)">
+            <a href="#" data-testid="remove-phone" @click.prevent="removePhone({disputeId: dispute.id, id: phone.id}, roleForm.phones, index)">
               <img src="@/assets/icons/ic-error.svg">
             </a>
           </li>

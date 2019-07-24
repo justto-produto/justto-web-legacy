@@ -1,4 +1,4 @@
-const login = Cypress.env('empty-account-email')
+const login = Cypress.env('not-configured-account-email')
 const password = Cypress.env('default-password')
 
 describe('Justto.App - Visualização de Gerenciamento', function () {
