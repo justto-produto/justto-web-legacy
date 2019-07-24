@@ -4,69 +4,31 @@ const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sh
 const fileInput = 'input[type=file]'
 
 describe('Justto.App - Importação de planilha: Erros', function() {
-    // beforeEach(function () {
-        it('Login: Sucesso', function() {
-            // Acessa a página inicial do Justto.App
-            // cy.visit('http://homol.justto.com.br')
-            cy.visit('localhost:8080')
+  beforeEach(function () {
+    cy.visit('localhost:8080')
+    cy.url().should('include', '/#/login')
+    cy.get('[data-testid="login-email"]')
+        .type(login)
+        .should('have.value', login)
+    cy.get('[data-testid="login-password"]')
+        .type(password)
+        .should('have.value', password)
+    cy.get('[data-testid="submit"]').click()
+    cy.url().should('include', '/#/management')
+    cy.get('[data-testid=menu-import]').click()
+    cy.url().should('include', '/#/import')
+  })
+  it('Importa planilha modelo: Planilha inválida', function() {
+    cy.upload_file('PLANINHA_EMPTY_FILE_TEST.xlsx', fileType, fileInput)
+    cy.contains('Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.').should('be.visible')
+  })
 
-            // Sistema deve redirecionar para a página de Login
-            cy.url().should('include', '/#/login')
-
-            // Preenche o campo 'Email'
-            cy.get('[data-testid="login-email"]')
-                .type(login)
-                .should('have.value', login)
-
-            // Preenche o campo 'Senha'
-            cy.get('[data-testid="login-password"]')
-                .type(password)
-                .should('have.value', password)
-
-            // Clica no botão "Entrar"
-            cy.get('[data-testid="submit"]').click()
-
-            // Valida se acesso foi feito
-            cy.url().should('include', '/#/management')
-        })
-    // })
-    it('Importa planilha modelo: Planilha inválida', function() {
-        // Acessa a tela de gerenciamento
-        cy.get('[data-testid=menu-import]').click()
-        // Sistema deve redirecionar para a página de Importação
-        cy.url().should('include', '/#/import')
-
-        // Importa arquivo
-        cy.upload_file('PLANINHA_EMPTY_FILE_TEST.xlsx', fileType, fileInput)
-
-        // Deve mostrar erro de arquivo inválido
-        cy.contains('Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.').should('be.visible')
-    })
-
-    it('Importa planilha modelo: Arquivo pesado', function() {
-        // Acessa a tela de gerenciamento
-        cy.get('[data-testid=menu-import]').click()
-        // Sistema deve redirecionar para a página de Importação
-        cy.url().should('include', '/#/import')
-
-        // Importa arquivo
-        cy.upload_file('ss20mb.xlsx', fileType, fileInput)
-
-        // Deve mostrar erro de arquivo inválido
-        cy.contains('Arquivo não pode ultrapassar 20MB.').should('be.visible')
-    })
-
-    it('Importa planilha modelo: Formato inválido', function() {
-
-        // Acessa a tela de gerenciamento
-        cy.get('[data-testid=menu-import]').click()
-        // Sistema deve redirecionar para a página de Importação
-        cy.url().should('include', '/#/import')
-
-        // Importa arquivo
-        cy.upload_file('CERTAMENTE_NAO_E_UMA_PLANILHA.jpeg', fileType, fileInput)
-
-        // Deve mostrar erro de arquivo inválido
-        cy.contains('Arquivo em formato inválido.').should('be.visible')
-    })
+  it('Importa planilha modelo: Arquivo pesado', function() {
+    cy.upload_file('ss20mb.xlsx', fileType, fileInput)
+    cy.contains('Arquivo não pode ultrapassar 20MB.').should('be.visible')
+  })
+  it('Importa planilha modelo: Formato inválido', function() {
+    cy.upload_file('CERTAMENTE_NAO_E_UMA_PLANILHA.jpeg', fileType, fileInput)
+    cy.contains('Arquivo em formato inválido.').should('be.visible')
+  })
 })
