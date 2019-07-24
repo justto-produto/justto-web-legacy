@@ -51,11 +51,11 @@
           </h2>
           <el-tooltip content="Download da planilha modelo">
             <el-button
-              type="primary"
+              type=""
               class="right"
               data-testid="download-model"
               @click="downloadModel()">
-              <jus-icon icon="download-white" />
+              <jus-icon icon="download-sheet" />
             </el-button>
           </el-tooltip>
         </div>
