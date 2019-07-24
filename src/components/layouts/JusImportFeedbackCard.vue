@@ -78,7 +78,6 @@ t pu<template>
         data-testid="feedback-datapicker" />
       <el-select
         v-model="negotiatorIds"
-        :loading="loading"
         value-key="name"
         size="large"
         multiple
@@ -143,7 +142,6 @@ export default {
       dialogVisible: false,
       dueDate: null,
       negotiatorIds: [],
-      loading: false,
       datePickerOptions: {
         disabledDate (date) {
           return date < new Date()

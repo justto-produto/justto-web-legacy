@@ -72,6 +72,18 @@ const imports = {
             reject(error)
           })
       })
+    },
+    uploadImportFile ({ commit }, file) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.post('api/imports/upload', file)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

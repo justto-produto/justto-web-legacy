@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="$store.state.loading" class="campaign-step">
+  <div v-loading="loading" class="campaign-step">
     <h2 class="new-import-view__title">Configuração de campanhas</h2>
     <p>
       O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de
@@ -43,14 +43,15 @@ export default {
         '#72cbff', '#88ff59', '#ff7a72', '#72cbff',
         '#88ff59', '#ff7a72', '#72cbff', '#88ff59',
         '#ff7a72', '#72cbff', '#88ff59', '#ff7a72'
-      ]
+      ],
+      loading: false
     }
   },
   beforeMount () {
-    this.$store.dispatch('showLoading')
     if (!this.$store.getters.strategyList.length) {
+      this.loading = true
       this.$store.dispatch('getStrategies').finally(() => {
-        this.$store.dispatch('hideLoading')
+        this.loading = false
       })
     }
   }
