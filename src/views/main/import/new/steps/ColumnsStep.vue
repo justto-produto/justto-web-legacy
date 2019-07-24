@@ -178,7 +178,7 @@ export default {
       this.loading = true
       this.$store.dispatch('getImportsColumns').catch(() => {
         this.$jusNotification({ type: 'error' })
-      }).finally (() => {
+      }).finally(() => {
         this.loading = false
       })
     }
