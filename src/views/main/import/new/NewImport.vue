@@ -115,7 +115,6 @@ export default {
           delete campaign.updatedAt
           delete campaign.updatedBy
           delete campaign.strategy
-          campaign.importId = this.$store.state.importModule.file.id
           promises.push(this.$store.dispatch('createCampaign', campaign))
           allValid = true
         } else {
@@ -130,7 +129,9 @@ export default {
           window.analytics.track('Importação Concluída', {
             campaign: campaignsTrack
           })
-          this.$store.commit('removeImportsFile')
+          this.$store.dispatch('startGeneseRunner').finally(() => {
+            this.$store.commit('removeImportsFile')
+          })
           this.$router.push('/import/loading')
         }).catch(() => {
           this.$jusNotification({ type: 'error' })

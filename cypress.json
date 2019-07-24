@@ -8,16 +8,19 @@
     "default-password": "password",
 
     "empty-account-email": "empty-account@thetempmail.com",
-    "empty-account-password": "password",
+    "empty-account-description": "",
 
     "not-editable-cases-email": "not-editable-cases@thetempmail.com",
-    "not-editable-cases-password": "password",
+    "not-editable-cases-description": "",
 
     "editable-cases-email": "editable-cases@thetempmail.com",
-    "editable-cases-password": "password",
+    "editable-cases-description": "",
 
     "not-configured-account-email": "not-configured-account@thetempmail.com",
-    "not-configured-account-password": "password",
+    "not-configured-account-description": "",
+
+    "import-actions-email": "import-actions@thetempmail.com",
+    "import-actions-description": "",
 
     "email1": "lucas@justto.com.br",
     "password1": "123456",
