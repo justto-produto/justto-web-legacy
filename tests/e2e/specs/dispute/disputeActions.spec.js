@@ -37,7 +37,7 @@ describe('Justto.App - Disputa: Ações', function () {
   })
 
   afterEach('Notificação de Sucesso', function () {
-    cy.wait(2000)
+    // cy.wait(2000)
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success')
       .contains('Ação realizada com sucesso.')
@@ -130,5 +130,6 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-remove-btn')
       .click()
+      cy.wait(4500)
   })
 })
