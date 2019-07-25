@@ -36,7 +36,7 @@
       <el-step>
         <template slot="title">
           <span v-if="isDeal">Valor do acordo</span>
-          <span v-else>Última valor proposto</span>
+          <span v-else>Último valor proposto</span>
         </template>
         <template slot="description">
           <div v-if="deal">
