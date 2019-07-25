@@ -62,7 +62,7 @@ const disputeActions = {
   getDisputeMessages ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/messages')
+      axios.get('api/messages/disputes/' + id)
         .then(response => {
           resolve(response.data)
         })
@@ -99,7 +99,7 @@ const disputeActions = {
   sendDisputeNote ({ commit }, body) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/disputes/' + body.disputeId + '/note', body)
+      axios.post('api/messages/disputes/' + body.disputeId + '/note', body)
         .then(response => {
           resolve(response.data)
         })
@@ -114,6 +114,9 @@ const disputeActions = {
       if (params.action === 'restart-engagement') {
         // eslint-disable-next-line
         request = axios.patch('api/disputes/' + params.disputeId + '/' + params.action)
+      } else if (params.action === 'enrich') {
+        // eslint-disable-next-line
+        request = axios.patch('api/fusion-runner/enrich/' + params.disputeId)
       } else {
         // eslint-disable-next-line
         request = axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)

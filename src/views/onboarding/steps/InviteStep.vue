@@ -15,20 +15,20 @@
         label-position="top"
         @submit.native.prevent="addTeamMember('teamMembersForm')">
         <el-form-item label="E-mail" prop="teamMember">
-          <el-input v-model="teamMembersForm.teamMember" name="teamMember">
-            <el-button slot="append" icon="el-icon-plus" native-type="submit"/>
+          <el-input v-model="teamMembersForm.teamMember" name="teamMember" data-testid="email-teammember">
+            <el-button slot="append" icon="el-icon-plus" native-type="submit" data-testid="submit-teammember"/>
           </el-input>
         </el-form-item>
         <ul>
           <li v-for="member in teamMembersForm.teamMembers" :key="member.$index">
             <div>
-              <img src="@/assets/icons/ic-check.svg">
+              <img data-testid="check-teammember" src="@/assets/icons/ic-check.svg">
               <span class="member-email">
                 {{ member.email }}
               </span>
             </div>
             <div>
-              <el-select v-model="member.profile" size="mini">
+              <el-select v-model="member.profile" data-testid="profile-teammember" size="mini">
                 <el-option
                   v-for="profile in profiles"
                   :key="profile.$index"
@@ -46,7 +46,7 @@
       title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
       type="error"/>
-    <el-button :disabled="teamMembersForm.teamMembers.length === 0" type="primary" @click="submitForm">Convidar</el-button>
+    <el-button :disabled="teamMembersForm.teamMembers.length === 0" type="primary" data-testid="invite-teammember" @click="submitForm">Convidar</el-button>
     <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
   </div>
 </template>

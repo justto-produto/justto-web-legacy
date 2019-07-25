@@ -4,8 +4,8 @@
       <h2>Número de disputas</h2>
       <p>Verifique abaixo se sua planilha possui o número correto de disputas</p>
     </div>
-    <el-card class="el-card--dashed" shadow="never">
-      <h4>Disputas prontos para importação: {{ lines }}</h4>
+    <el-card data-testid="import-checklines" class="el-card--dashed" shadow="never">
+      <h4>Disputas prontas para importação: {{ lines }}</h4>
       <el-collapse accordion class="el-collapse--bordered el-collapse--active">
         <el-collapse-item name="1">
           <template slot="title">

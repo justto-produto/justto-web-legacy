@@ -111,7 +111,7 @@
                 <el-button
                   type="text"
                   @click="openNewTab(scope.row.disputeid)">
-                  <jus-icon icon="external" />
+                  <jus-icon icon="external-link" />
                 </el-button>
               </el-tooltip>
             </template>
@@ -230,6 +230,10 @@ export default {
           this.$jusNotification({ type: 'error' })
         })
       })
+    },
+    openNewTab (disputeId) {
+      let routeData = this.$router.resolve({ name: 'dispute', params: { id: disputeId } })
+      window.open(routeData.href, '_blank')
     },
     getDisputeAlerts (dispute) {
       let alerts = []

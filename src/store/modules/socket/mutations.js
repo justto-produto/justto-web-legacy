@@ -18,7 +18,7 @@ const mutations = {
   // WHATSAPP
   clearWhatsappSocket (state) {
     state.qrCode = ''
-    state.status = 'STARTING'
+    state.status = 'OFFLINE'
     state.number = ''
   },
   SOCKET_refresh (state, message) {

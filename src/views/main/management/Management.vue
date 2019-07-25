@@ -1,8 +1,8 @@
 <template>
-  <JusViewMain :loading-main="loadingDisputes" class="view-management">
+  <JusViewMain :loading-main="$store.state.loading" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <management-carousel />
+      <management-carousel v-if="!$store.state.loading" />
     </template>
     <template slot="actions">
       <management-actions
@@ -24,7 +24,7 @@
           :plain="!Object.keys(filters.terms).length"
           :type="Object.keys(filters.terms).length ? 'primary' : ''"
           @click="showFilters = true">
-          <jus-icon :is-white="!!Object.keys(filters.terms).length" icon="filter" />
+          <jus-icon :is-white="!!Object.keys(filters.terms).length" icon="filter" data-testid="management-filterbtn" />
           Filtrar
         </el-button>
         <el-button
@@ -32,6 +32,7 @@
           :disabled="disputes.length === 0"
           plain
           icon="el-icon-download"
+          data-testid="export-disputes"
           @click="exportDisputes">
           Exportar disputas
         </el-button>
@@ -42,10 +43,10 @@
         :before-leave="handleChangeTab"
         v-model="activeTab"
         class="view-management__tabs">
-        <el-tab-pane name="0" label="Engajamento" />
-        <el-tab-pane name="1" label="Com Interação" />
-        <el-tab-pane name="2" label="Novos Acordos" />
-        <el-tab-pane name="3" label="Todos" />
+        <el-tab-pane name="0" label="Engajamento"/>
+        <el-tab-pane name="1" label="Com Interação"/>
+        <el-tab-pane name="2" label="Novos Acordos"/>
+        <el-tab-pane name="3" label="Todos"/>
       </el-tabs>
       <el-table
         ref="disputeTable"
@@ -53,7 +54,9 @@
         :data="paginatedDisputes"
         size="mini"
         class="el-table--disputes"
+        data-testid="dispute-index"
         @row-click="handleRowClick"
+        @sort-change="handleSortChange"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="40px" />
         <el-table-column type="expand" width="40px">
@@ -84,8 +87,8 @@
                 </el-col>
                 <el-col :span="8">
                   <div>Alçada máxima: {{ props.row.disputeupperrange | currency }}</div>
-                  <div>Valor proposto: {{ props.row.disputelastrespondentoffer | currency }}</div>
-                  <div>Contraproposta: {{ props.row.lastoffervalue | currency }}</div>
+                  <div>Valor proposto: {{ props.row.lastoffervalue | currency }}</div>
+                  <div>Contraproposta: {{ props.row.lastcounteroffervalue | currency }}</div>
                   <div>Valor do acordo: {{ props.row.disputedealvalue | currency }}</div>
                 </el-col>
               </el-row>
@@ -122,15 +125,14 @@
           <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
         </el-table-column>
         <el-table-column v-if="activeTab === '0'" label="Valor proposto" align="center" min-width="110px">
-          <template slot-scope="scope">{{ scope.row.disputelastrespondentoffer | currency }}</template>
+          <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
         </el-table-column>
         <el-table-column v-if="activeTab === '1'" label="Contraproposta" align="center" min-width="116px">
-          <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
+          <template slot-scope="scope">{{ scope.row.lastcounteroffervalue | currency }}</template>
         </el-table-column>
         <el-table-column
           v-if="activeTab < 2"
-          :sort-method="sortExpirationDate"
-          sortable
+          sortable="custom"
           prop="disputeexpirationdate"
           label="Fim da negociação"
           align="center"
@@ -139,14 +141,15 @@
         </el-table-column>
         <el-table-column
           v-if="activeTab === '1'"
-          :sort-method="sortLastInteractionDate"
-          sortable
+          sortable="custom"
           prop="lastinteractiondate"
           label="Última interação"
           min-width="146px"
           align="center">
           <template slot-scope="scope">
-            <jus-icon :icon="getLastInteractionIcon(scope.row.lastinteractiontype)" style="vertical-align: text-top; margin-right: 4px;" />
+            <el-tooltip :content="getLastInteractionTooltip(scope.row.lastinteractiontype)">
+              <jus-icon :icon="getLastInteractionIcon(scope.row.lastinteractiontype)" class="view-management__interaction-icon" />
+            </el-tooltip>
             {{ getLastInteraction(scope.row.lastinteractiondate) }}
           </template>
         </el-table-column>
@@ -155,8 +158,7 @@
         </el-table-column>
         <el-table-column
           v-if="activeTab === '2'"
-          :sort-method="sortDisputeDealDate"
-          sortable
+          sortable="custom"
           prop="disputedealdate"
           label="Data do acordo"
           min-width="138px"
@@ -195,14 +197,14 @@
               <el-button
                 type="text"
                 @click="openNewTab(scope.row.disputeid)">
-                <jus-icon icon="external" />
+                <jus-icon icon="external-link" />
               </el-button>
             </el-tooltip>
           </template>
         </el-table-column>
         <template v-if="!$store.state.loading" slot="empty">
-          <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
-          <h4 style="font-weight: normal; line-height: initial;">
+          <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
+          <h4 style="font-weight: normal; line-height: initial;" data-testid="cases-empty-text">
             Não foram encontradas disputas para<br>os filtros e aba selecionados.
           </h4>
         </template>
@@ -215,7 +217,6 @@
           :pager-count="15"
           :page-sizes="[20, 30, 50, 100]"
           layout="total, prev, pager, next, sizes"
-          background
           @size-change="handleChangePagination"
           @current-change="handleChangePagination" />
       </div>
@@ -229,6 +230,7 @@
         <span slot="footer">
           <el-button plain @click="clearFilters()">Limpar filtros</el-button>
           <el-button
+            data-testid="filter-applyfilter"
             type="primary"
             @click="applyFilters()">
             Aplicar filtros
@@ -260,7 +262,6 @@ export default {
       activeFilters: {},
       activeTab: '0',
       loadingExport: false,
-      loadingDisputes: false,
       currentPage: 1,
       disputesPerPage: 20,
       initialDisputesPerPage: 20
@@ -296,6 +297,9 @@ export default {
       }
     }
   },
+  beforeCreate () {
+    this.$store.commit('setDisputeTab', '0')
+  },
   mounted () {
     this.$refs.disputeTable.sort('disputeexpirationdate', 'descending')
     setTimeout(function () {
@@ -304,12 +308,13 @@ export default {
   },
   methods: {
     getDisputes () {
-      this.loadingDisputes = true
+      this.$store.commit('showLoading')
       this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
         .catch(() => {
           this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.loadingDisputes = false
+        })
+        .finally(() => {
+          this.$store.commit('hideLoading')
         })
     },
     applyFilters () {
@@ -410,31 +415,21 @@ export default {
       let routeData = this.$router.resolve({ name: 'dispute', params: { id: disputeId } })
       window.open(routeData.href, '_blank')
     },
-    sortExpirationDate (a, b) {
-      if (this.$moment(a.disputeexpirationdate).isAfter(b.disputeexpirationdate)) return 1
-      if (this.$moment(a.disputeexpirationdate).isBefore(b.disputeexpirationdate)) return -1
-      return 0
-    },
-    sortLastInteractionDate (a, b) {
-      if (this.$moment(a.lastinteractiondate).isAfter(b.lastinteractiondate)) return 1
-      if (this.$moment(a.lastinteractiondate).isBefore(b.lastinteractiondate)) return -1
-      return 0
-    },
-    sortDisputeDealDate (a, b) {
-      if (this.$moment(a.disputedealdate).isAfter(b.disputedealdate)) return 1
-      if (this.$moment(a.disputedealdate).isBefore(b.disputedealdate)) return -1
-      return 0
+    handleSortChange (sort) {
+      this.$store.commit('setDisputeSort', sort)
     },
     getLastInteraction (lastinteractiondate) {
-      let date = this.$moment(lastinteractiondate)
+      let date = this.$moment(lastinteractiondate + 'Z')
       if (date.isValid()) {
         let now = this.$moment()
-        if (now.diff(date, 'seconds') < 59) {
-          return now.diff(date, 'seconds') + ' segundos'
+        if (now.diff(date, 'seconds') < 0) {
+          return ''
+        } else if (now.diff(date, 'seconds') < 59) {
+          return now.diff(date, 'seconds') + ' há segundos'
         } else if (now.diff(date, 'minutes') < 59) {
-          return now.diff(date, 'minutes') + ' minuto(s)'
+          return now.diff(date, 'minutes') + ' há minuto(s)'
         } else if (now.diff(date, 'hours') < 24) {
-          return now.diff(date, 'hours') + ' hora(s)'
+          return now.diff(date, 'hours') + ' há hora(s)'
         } else if (now.diff(date, 'hours') < 48) {
           return '1 dia'
         } else {
@@ -455,8 +450,28 @@ export default {
           return 'sms'
         case 'TTS':
           return 'tts'
+        case 'NEGOTIATION':
+          return 'negotiation2'
         default:
           return 'chat'
+      }
+    },
+    getLastInteractionTooltip (type) {
+      switch (type) {
+        case 'EMAIL_CNA':
+          return 'Última interação via CNA'
+        case 'EMAIL':
+          return 'Última interação via E-mail'
+        case 'WHATSAPP':
+          return 'Última interação via WhatsApp'
+        case 'SMS':
+          return 'Última interação via SMS'
+        case 'TTS':
+          return 'Última interação via WhatsApp'
+        case 'NEGOTIATION':
+          return 'Última interação via Sistema Justto'
+        default:
+          return ''
       }
     },
     handleChangePagination () {
@@ -561,6 +576,11 @@ export default {
     .el-pagination {
       margin: 20px 0;
     }
+  }
+  &__interaction-icon {
+    vertical-align: text-top;
+    margin-right: 4px;
+    max-height: 16px;
   }
 }
 </style>

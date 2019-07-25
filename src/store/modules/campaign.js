@@ -26,10 +26,6 @@ const campaign = {
         // eslint-disable-next-line
         axios.post('api/campaigns', campaign)
           .then(response => {
-            if (campaign.importId) {
-              // eslint-disable-next-line
-              axios.post('api/genese/' + campaign.importId + '/start')
-            }
             resolve(response)
           })
           .catch(error => {
@@ -50,7 +46,7 @@ const campaign = {
         let activeCampaign = state.list.filter((campaign) => {
           return campaign.id === dispute.campaignid
         })
-        filteredCampaigns.push(activeCampaign[0])
+        if (activeCampaign && activeCampaign.length) filteredCampaigns.push(activeCampaign[0])
       }
       filteredCampaigns = filteredCampaigns.sort((a, b) => {
         if (a.createdAt < b.createdAt) { return 1 }

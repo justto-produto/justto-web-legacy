@@ -1,14 +1,14 @@
-<template>
+t pu<template>
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ campaignTitle }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-input v-model="respondent" placeholder="Dê um nome para o seu Réu">
+      <el-input v-model="respondent" data-testid="feedback-respondent" placeholder="Dê um nome para o seu Réu">
         <i
           slot="prefix"
           :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
       </el-input>
-      <el-input v-model="campaignName" placeholder="Dê um nome para a sua Campanha">
+      <el-input v-model="campaignName" data-testid="feedback-campaignName" placeholder="Dê um nome para a sua Campanha">
         <i
           slot="prefix"
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -21,7 +21,8 @@
         value-key="name"
         clearable
         class="select-strategy"
-        placeholder="Escolha uma estratégia">
+        placeholder="Escolha uma estratégia"
+        data-testid="feedback-strategy">
         <i
           slot="prefix"
           :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -35,7 +36,7 @@
       <div class="select-strategy__messages">
         <a v-show="strategy !== ''" @click.prevent="dialogVisible = true">Ver estratégia de engajamento das partes</a>
       </div>
-      <div class="jus-import-feedback-card__number">
+      <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do protocolo
         </div>
@@ -51,7 +52,7 @@
           </span>
         </div>
       </div>
-      <div v-if="strategy.id === 1 || strategy.id === 4" class="jus-import-feedback-card__number">
+      <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
         </div>
@@ -73,15 +74,16 @@
         :picker-options="datePickerOptions"
         type="date"
         format="dd-MM-yyyy"
-        placeholder="Defina a data limite para a negociação" />
+        placeholder="Defina a data limite para a negociação"
+        data-testid="feedback-datapicker" />
       <el-select
         v-model="negotiatorIds"
-        :loading="loading"
         value-key="name"
         size="large"
         multiple
         placeholder="Escolha os negociadores"
-        class="select-negotiator">
+        class="select-negotiator"
+        data-testid="feedback-negotiators">
         <i
           slot="prefix"
           :class="negotiatorIds.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -140,7 +142,6 @@ export default {
       dialogVisible: false,
       dueDate: null,
       negotiatorIds: [],
-      loading: false,
       datePickerOptions: {
         disabledDate (date) {
           return date < new Date()
@@ -157,6 +158,17 @@ export default {
     },
     campaignTitle () {
       return this.campaignName ? this.campaignName : this.initialCampaignName ? this.initialCampaignName : 'Campanha ' + this.index
+    },
+    isPaymentStrategy () {
+      let isStrategy = false
+      if (this.strategy && this.strategy.types) {
+        this.strategy.types.map(type => {
+          if (type === 'PAYMENT') isStrategy = true
+        })
+        return isStrategy
+      } else {
+        return false
+      }
     }
   },
   watch: {

@@ -23,11 +23,11 @@
             <span>GERENCIAMENTO</span>
           </li>
         </transition> -->
-        <el-menu-item index="/management">
-          <jus-icon icon="management" class="el-menu__icon" data-testid="menu_management"/>
+        <el-menu-item index="/management" data-testid="menu-management">
+          <jus-icon icon="management" class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
-        <el-menu-item index="/import">
+        <el-menu-item index="/import" data-testid="menu-import">
           <jus-icon icon="import" class="el-menu__icon"/>
           <span slot="title">Importação de disputas</span>
         </el-menu-item>
@@ -69,17 +69,17 @@ export default {
       isCollapse: true
     }
   },
-  beforeMount () {
-    this.$store.dispatch('myPerson')
-    this.$store.dispatch('getWorkspaceMembers')
+  beforeCreate () {
+    this.$store.commit('showLoading')
     this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
+      .finally(() => {
+        setTimeout(function () {
+          this.$store.commit('hideLoading')
+        }.bind(this), 2000)
+      })
     this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
         this.$store.dispatch('whatsappStart')
-      } else if (whatsapp.status !== 'CONNECTED') {
-        this.$store.dispatch('whatsappStop').then(() => {
-          this.$store.dispatch('whatsappStart')
-        })
       } else {
         this.$store.commit('SOCKET_refresh', whatsapp)
       }

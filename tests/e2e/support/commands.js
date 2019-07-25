@@ -23,6 +23,9 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import 'cypress-file-upload'
+
+require('cypress-drag-drop')
 
 Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
   cy.get(selector).then(subject => {
@@ -34,6 +37,7 @@ Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
         const dataTransfer = new DataTransfer()
         dataTransfer.items.add(testFile)
         el.files = dataTransfer.files
+        el.dispatchEvent(new Event('change', {bubbles: true}))
       })
   })
 })

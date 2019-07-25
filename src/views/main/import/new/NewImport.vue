@@ -22,11 +22,18 @@
       <div class="new-import-view__actions">
         <el-button plain @click="previousStep">Voltar</el-button>
         <!-- <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button> -->
-        <el-button v-if="activeStep === 2" type="primary" @click="finalStep">Iniciar negociação</el-button>
+        <el-button
+          v-if="activeStep === 2"
+          type="primary"
+          data-testid="start-negotiation"
+          @click="finalStep">
+          Iniciar negociação
+        </el-button>
         <el-button
           v-else
           :disabled="$store.state.loading"
           type="primary"
+          data-testid="submit"
           @click="nextStep">
           Próximo
         </el-button>
@@ -108,7 +115,6 @@ export default {
           delete campaign.updatedAt
           delete campaign.updatedBy
           delete campaign.strategy
-          campaign.importId = this.$store.state.importModule.file.id
           promises.push(this.$store.dispatch('createCampaign', campaign))
           allValid = true
         } else {
@@ -123,7 +129,9 @@ export default {
           window.analytics.track('Importação Concluída', {
             campaign: campaignsTrack
           })
-          this.$store.commit('removeImportsFile')
+          this.$store.dispatch('startGeneseRunner').finally(() => {
+            this.$store.commit('removeImportsFile')
+          })
           this.$router.push('/import/loading')
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
@@ -152,6 +160,7 @@ export default {
         !!campaign.paymentDeadLine &&
         campaign.hasOwnProperty('negotiatorIds') &&
         !!campaign.negotiatorIds &&
+        campaign.negotiatorIds.length > 0 &&
         campaign.hasOwnProperty('strategy') &&
         !!campaign.strategy
       ) {
