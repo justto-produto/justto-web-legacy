@@ -35,7 +35,7 @@ describe('Justto.App - Disputa: Notas', function () {
 
     // Entra na disputa
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
-      .click()
+      .click({force: true})
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
@@ -66,13 +66,16 @@ describe('Justto.App - Disputa: Notas', function () {
       .click()
 
     // Notificação de sucesso deve desaparecer
-    cy.contains('Nota gravada com sucesso.', { timeout: 30000 })
+    cy.contains('Nota gravada com sucesso.', { timeout: 60000 })
       .should('be.visible')
 
     // Nota deve aparecer entre as mensagens
-    cy.contains(message,  { timeout: 30000 })
+    cy.contains(message,  { timeout: 60000 })
       .should('be.visible')
       .get('[data-testid=message-box]')
+      .should('be.visible')
+      .should('have.css', 'background-color', 'rgb(255, 235, 161)',)
+      .contains('Esta mensagem é visível somente aos negociadores.').last()
       .should('be.visible')
   })
 })

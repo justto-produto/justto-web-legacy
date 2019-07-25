@@ -33,7 +33,7 @@ describe('Justto.App - Disputa: Visualização', function () {
 
     // Entra na disputa
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
-      .click()
+      .click({force: true})
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
