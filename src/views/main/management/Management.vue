@@ -9,10 +9,18 @@
         :active="multiActive"
         :selected-ids="selectedIds"
         :tab-label="activeTabLabel"
-        @disputes:clear="clearSelection"
-      />
-    </template>
-    <template slot="main">
+        @disputes:clear="clearSelection"/>
+      <el-tabs
+        ref="disputeTabs"
+        :key="tabKey"
+        :before-leave="handleChangeTab"
+        v-model="activeTab"
+        class="view-management__tabs">
+        <el-tab-pane name="0" label="Engajamento"/>
+        <el-tab-pane name="1" label="Com Interação"/>
+        <el-tab-pane name="2" label="Novos Acordos"/>
+        <el-tab-pane name="3" label="Todos"/>
+      </el-tabs>
       <div class="view-management__actions">
         <el-button
           icon="el-icon-refresh"
@@ -38,17 +46,8 @@
           Exportar disputas
         </el-button>
       </div>
-      <el-tabs
-        ref="disputeTabs"
-        :key="tabKey"
-        :before-leave="handleChangeTab"
-        v-model="activeTab"
-        class="view-management__tabs">
-        <el-tab-pane name="0" label="Engajamento"/>
-        <el-tab-pane name="1" label="Com Interação"/>
-        <el-tab-pane name="2" label="Novos Acordos"/>
-        <el-tab-pane name="3" label="Todos"/>
-      </el-tabs>
+    </template>
+    <template slot="main">
       <el-table
         ref="disputeTable"
         :key="tableKey"
@@ -564,18 +563,26 @@ export default {
     margin-right: 34px;
   }
   &__tabs {
+    position: absolute;
+    left: 23px;
+    right: 36px;
+    top: 21px;
+    background-color: #fff;
+    z-index: 2;
+    padding-top: 20px;
+    border-radius: 5px 5px 0 0;
     .el-tabs__header {
       width: fit-content;
       padding: 0 20px;
-      margin: 0 0 25px;
+      margin: 0px 0 20px;
     }
   }
   &__actions {
     display: inline-flex;
     position: absolute;
-    right: 318px;
-    right: 20px;
-    top: 20px;
+    z-index: 2;
+    top: 40px;
+    right: 40px;
     .el-button {
       line-height: 14px;
       padding: 8px 18px;
@@ -585,9 +592,11 @@ export default {
       width: 14px;
     }
   }
-  .jus-main-view__main-card > .el-card__body {
-    position: relative;
-    height: 100%;
+  .jus-main-view__main-card {
+    > .el-card__body {
+      padding-top: 110px;
+      height: 100%;
+    }
   }
   &__row-actions {
     img {
@@ -609,6 +618,7 @@ export default {
   }
   .jus-main-view__container {
     position: relative;
+    overflow-x: hidden;
   }
   &__pagination-container {
     text-align: center;

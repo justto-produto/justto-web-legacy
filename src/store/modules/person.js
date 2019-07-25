@@ -88,11 +88,11 @@ const personModule = {
         axios.put('api/persons/' + person.id + '/name', {
           name: person.name
         }).then(response => {
-            commit('setPerson', response.data)
-            resolve(response.data)
-          }).catch(error => {
-            reject(error)
-          })
+          commit('setPerson', response.data)
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
       })
     },
     createEmail ({ commit }, newEmailBody) {
