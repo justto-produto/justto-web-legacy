@@ -41,7 +41,7 @@
             <el-button
               :disabled="!canSettled()"
               plain
-              data-testid="action-win"
+              data-testid="settled"
               @click="disputeAction('settled')">
               <jus-icon icon="win" />
             </el-button>
@@ -50,7 +50,7 @@
             <el-button
               :disabled="!canUnsettled()"
               plain
-              data-testid="action-lose"
+              data-testid="unsettled"
               @click="disputeAction('unsettled')">
               <jus-icon icon="lose" />
             </el-button>

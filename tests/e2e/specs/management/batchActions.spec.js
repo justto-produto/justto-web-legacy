@@ -31,9 +31,8 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   })
 
   afterEach('Notificação de Sucesso', function () {
-    cy.wait(4000)
     // Notificação de sucesso deve aparecer
-    cy.get('.el-notification.success')
+    cy.get('.el-notification.success', { timeout: 40000 })
       .contains('Yay!')
       .should('be.visible')
 
@@ -128,7 +127,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .should('be.visible')
 
     // Confirma a ação
-    cy.get('.confirm-remove-btn')
+    cy.get('.confirm-action-btn')
       .click()
   })
 })

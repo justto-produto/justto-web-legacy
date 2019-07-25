@@ -82,7 +82,7 @@
             </div>
             <div class="import-view__card-content">
               <h4>
-                <a href="#" @click="downloadItem(imports.file_name)">
+                <a href="#" @click="downloadItem(imports.file_url)">
                   {{ imports.file_name }}
                 </a>
               </h4>
@@ -218,7 +218,7 @@ export default {
       window.open('Planilha-Modelo-Justto.xlsx', '_blank')
     },
     downloadItem (fileName) {
-      window.open('imported/' + fileName, '_blank')
+      window.open(fileName, '_blank')
     }
   }
 }
