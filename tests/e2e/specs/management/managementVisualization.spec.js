@@ -55,6 +55,26 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
 
     // Exporta disputas
     cy.get('[data-testid=export-disputes]')
+      .should('be.enabled')
+
+    cy.get('.el-table__expand-icon').first()
       .click()
+
+    cy.get('[data-testid=dispute-title]')
+      .should('be.visible')
+    cy.get('[data-testid=dipute-info]')
+      .should('be.visible')
+  })
+
+  it('Atualização de Casos: Loading', function () {
+    // Clica em 'Atualizar'
+    cy.get('[data-testid=update-cases]')
+    .should('be.visible')
+    .click({force: true})
+
+    // Loading deve aparecer
+    cy.get('.el-loading-spinner')
+    .contains('Carregando disputas...')
+    .should('be.visible')
   })
 })

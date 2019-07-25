@@ -8,6 +8,12 @@
 
 .el-table--disputes {
   margin-bottom: 20px;
+  position: initial;
+  .el-table__header-wrapper {
+    position: absolute;
+    top: 84px;
+    z-index: 2;
+  }
   th {
     font-weight: 500;
     color: $--color-text-regular;

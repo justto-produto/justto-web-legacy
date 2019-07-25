@@ -1,10 +1,10 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('import-actions-email')
+const password = Cypress.env('default-password')
 
 describe('Justto.App - Disputa: Ações', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/#/login')
+    cy.visit('/')
 
     // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
@@ -37,9 +37,8 @@ describe('Justto.App - Disputa: Ações', function () {
   })
 
   afterEach('Notificação de Sucesso', function () {
-    // cy.wait(2000)
     // Notificação de sucesso deve aparecer
-    cy.get('.el-notification.success', { timeout: 40000 })
+    cy.get('.el-notification.success', { timeout: 60000 })
       .contains('Ação realizada com sucesso.')
       .should('be.visible')
 
@@ -59,8 +58,9 @@ describe('Justto.App - Disputa: Ações', function () {
 
     // Confirma a ação
     cy.get('.confirm-action-btn')
-      .click()
+    .click()
   })
+
 
   it('Ação: Retomar', function () {
     // Clica em Retomar

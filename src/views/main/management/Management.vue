@@ -9,14 +9,23 @@
         :active="multiActive"
         :selected-ids="selectedIds"
         :tab-label="activeTabLabel"
-        @disputes:clear="clearSelection"
-      />
-    </template>
-    <template slot="main">
+        @disputes:clear="clearSelection"/>
+      <el-tabs
+        ref="disputeTabs"
+        :key="tabKey"
+        :before-leave="handleChangeTab"
+        v-model="activeTab"
+        class="view-management__tabs">
+        <el-tab-pane name="0" label="Engajamento"/>
+        <el-tab-pane name="1" label="Com Interação"/>
+        <el-tab-pane name="2" label="Novos Acordos"/>
+        <el-tab-pane name="3" label="Todos"/>
+      </el-tabs>
       <div class="view-management__actions">
         <el-button
           icon="el-icon-refresh"
           plain
+          data-testid="update-cases"
           @click="getDisputes">
           Atualizar
         </el-button>
@@ -37,17 +46,8 @@
           Exportar disputas
         </el-button>
       </div>
-      <el-tabs
-        ref="disputeTabs"
-        :key="tabKey"
-        :before-leave="handleChangeTab"
-        v-model="activeTab"
-        class="view-management__tabs">
-        <el-tab-pane name="0" label="Engajamento"/>
-        <el-tab-pane name="1" label="Com Interação"/>
-        <el-tab-pane name="2" label="Novos Acordos"/>
-        <el-tab-pane name="3" label="Todos"/>
-      </el-tabs>
+    </template>
+    <template slot="main">
       <el-table
         ref="disputeTable"
         :key="tableKey"
@@ -62,10 +62,10 @@
         <el-table-column type="expand" width="40px">
           <template slot-scope="props">
             <div>
-              <h4>
+              <h4 data-testid="dispute-title">
                 Processo: {{ props.row.disputecode }}
               </h4>
-              <el-row>
+              <el-row data-testid="dipute-info">
                 <el-col :span="8">
                   <div>Estratégia: {{ props.row.strategyname }}</div>
                   <div>Status: <span>{{ $t('occurrence.type.' + props.row.disputestatus) | capitalize }}</span></div>
@@ -95,10 +95,18 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="Disputa" min-width="70px">
+        <el-table-column
+          label="Disputa"
+          min-width="80px"
+          prop="disputeid"
+          sortable="custom">
           <template slot-scope="scope">#{{ scope.row.disputeid }}</template>
         </el-table-column>
-        <el-table-column label="Campanha" min-width="90px">
+        <el-table-column
+          sortable="custom"
+          prop="campaignname"
+          label="Campanha"
+          min-width="102px">
           <template slot-scope="scope">{{ scope.row.campaignname | capitalize }}</template>
         </el-table-column>
         <el-table-column min-width="140px" class-name="text-ellipsis" label="Parte(s) contrária(s)">
@@ -121,13 +129,31 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab !== '3'" label="Alçada máxima" align="center" min-width="116px">
+        <el-table-column
+          v-if="activeTab !== '3'"
+          label="Alçada máxima"
+          align="center"
+          sortable="custom"
+          prop="disputeupperrange"
+          min-width="126px">
           <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '0'" label="Valor proposto" align="center" min-width="110px">
+        <el-table-column
+          v-if="activeTab === '0'"
+          label="Valor proposto"
+          sortable="custom"
+          prop="lastoffervalue"
+          align="center"
+          min-width="118px">
           <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '1'" label="Contraproposta" align="center" min-width="116px">
+        <el-table-column
+          v-if="activeTab === '1'"
+          label="Contraproposta"
+          align="center"
+          sortable="custom"
+          prop="lastcounteroffervalue"
+          min-width="128px">
           <template slot-scope="scope">{{ scope.row.lastcounteroffervalue | currency }}</template>
         </el-table-column>
         <el-table-column
@@ -153,7 +179,13 @@
             {{ getLastInteraction(scope.row.lastinteractiondate) }}
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '2'" label="Valor do acordo" align="center" width="116px">
+        <el-table-column
+          v-if="activeTab === '2'"
+          label="Valor do acordo"
+          sortable="custom"
+          prop="disputedealvalue"
+          align="center"
+          width="140px">
           <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
         </el-table-column>
         <el-table-column
@@ -165,7 +197,13 @@
           align="center">
           <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '3'" label="Status" align="center" min-width="110px">
+        <el-table-column
+          v-if="activeTab === '3'"
+          label="Status"
+          sortable="custom"
+          prop="disputestatus"
+          align="center"
+          min-width="110px">
           <template slot-scope="scope">
             {{ $t('occurrence.type.' + scope.row.disputestatus) | capitalize }}
           </template>
@@ -525,18 +563,26 @@ export default {
     margin-right: 34px;
   }
   &__tabs {
+    position: absolute;
+    left: 23px;
+    right: 36px;
+    top: 21px;
+    background-color: #fff;
+    z-index: 2;
+    padding-top: 20px;
+    border-radius: 5px 5px 0 0;
     .el-tabs__header {
       width: fit-content;
       padding: 0 20px;
-      margin: 0 0 25px;
+      margin: 0px 0 20px;
     }
   }
   &__actions {
     display: inline-flex;
     position: absolute;
-    right: 318px;
-    right: 20px;
-    top: 20px;
+    z-index: 2;
+    top: 40px;
+    right: 40px;
     .el-button {
       line-height: 14px;
       padding: 8px 18px;
@@ -546,9 +592,11 @@ export default {
       width: 14px;
     }
   }
-  .jus-main-view__main-card > .el-card__body {
-    position: relative;
-    height: 100%;
+  .jus-main-view__main-card {
+    > .el-card__body {
+      padding-top: 110px;
+      height: 100%;
+    }
   }
   &__row-actions {
     img {
@@ -570,6 +618,7 @@ export default {
   }
   .jus-main-view__container {
     position: relative;
+    overflow-x: hidden;
   }
   &__pagination-container {
     text-align: center;

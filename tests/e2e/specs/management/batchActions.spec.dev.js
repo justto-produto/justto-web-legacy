@@ -1,11 +1,11 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('import-actions-email')
+const password = Cypress.env('default-password')
 
 describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('/')
 
     // Valida se o endereço redirecionado é o 'Login'
     cy.url().should('include', '/#/login')
@@ -27,7 +27,10 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
 
-    cy.wait(2000)
+    // Entra na aba 'Todos'
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
+      .click({force: true})
   })
 
   afterEach('Notificação de Sucesso', function () {
@@ -43,12 +46,13 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
 
   it('Ação em Lote: Pausar', function () {
     // Seleciona primeira disputa
-    cy.get('[role=checkbox]').eq(1)
+    cy.get('type="checkbox"]')
+      // .click({force: true})
       .click()
 
     // Clica na ação
     cy.get('[data-testid=batch-paused]')
-      .click()
+      // .click()
 
     // Mensagem de confirmação deve aparecer
     cy.get('.el-message-box')

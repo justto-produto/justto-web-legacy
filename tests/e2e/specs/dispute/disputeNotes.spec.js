@@ -66,11 +66,11 @@ describe('Justto.App - Disputa: Notas', function () {
       .click()
 
     // Notificação de sucesso deve desaparecer
-    cy.contains('Nota gravada com sucesso.')
+    cy.contains('Nota gravada com sucesso.', { timeout: 30000 })
       .should('be.visible')
 
     // Nota deve aparecer entre as mensagens
-    cy.contains(message)
+    cy.contains(message,  { timeout: 30000 })
       .should('be.visible')
       .get('[data-testid=message-box]')
       .should('be.visible')
