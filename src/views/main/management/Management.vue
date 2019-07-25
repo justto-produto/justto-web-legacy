@@ -96,10 +96,18 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="Disputa" min-width="70px">
+        <el-table-column
+          label="Disputa"
+          min-width="80px"
+          prop="disputeid"
+          sortable="custom">
           <template slot-scope="scope">#{{ scope.row.disputeid }}</template>
         </el-table-column>
-        <el-table-column label="Campanha" min-width="90px">
+        <el-table-column
+          sortable="custom"
+          prop="campaignname"
+          label="Campanha"
+          min-width="102px">
           <template slot-scope="scope">{{ scope.row.campaignname | capitalize }}</template>
         </el-table-column>
         <el-table-column min-width="140px" class-name="text-ellipsis" label="Parte(s) contrária(s)">
@@ -122,13 +130,31 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab !== '3'" label="Alçada máxima" align="center" min-width="116px">
+        <el-table-column
+          v-if="activeTab !== '3'"
+          label="Alçada máxima"
+          align="center"
+          sortable="custom"
+          prop="disputeupperrange"
+          min-width="126px">
           <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '0'" label="Valor proposto" align="center" min-width="110px">
+        <el-table-column
+          v-if="activeTab === '0'"
+          label="Valor proposto"
+          sortable="custom"
+          prop="lastoffervalue"
+          align="center"
+          min-width="118px">
           <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '1'" label="Contraproposta" align="center" min-width="116px">
+        <el-table-column
+          v-if="activeTab === '1'"
+          label="Contraproposta"
+          align="center"
+          sortable="custom"
+          prop="lastcounteroffervalue"
+          min-width="128px">
           <template slot-scope="scope">{{ scope.row.lastcounteroffervalue | currency }}</template>
         </el-table-column>
         <el-table-column
@@ -154,7 +180,13 @@
             {{ getLastInteraction(scope.row.lastinteractiondate) }}
           </template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '2'" label="Valor do acordo" align="center" width="116px">
+        <el-table-column
+          v-if="activeTab === '2'"
+          label="Valor do acordo"
+          sortable="custom"
+          prop="disputedealvalue"
+          align="center"
+          width="140px">
           <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
         </el-table-column>
         <el-table-column
@@ -166,7 +198,13 @@
           align="center">
           <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
         </el-table-column>
-        <el-table-column v-if="activeTab === '3'" label="Status" align="center" min-width="110px">
+        <el-table-column
+          v-if="activeTab === '3'"
+          label="Status"
+          sortable="custom"
+          prop="disputestatus"
+          align="center"
+          min-width="110px">
           <template slot-scope="scope">
             {{ $t('occurrence.type.' + scope.row.disputestatus) | capitalize }}
           </template>
