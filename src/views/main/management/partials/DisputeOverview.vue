@@ -9,12 +9,12 @@
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Campanha:</span>
           <span v-if="dispute.campaign">{{ dispute.campaign.name }}</span>
-          <span v-else></span>
+          <span v-else />
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
           <span v-if="dispute.strategy">{{ dispute.strategy.name }}</span>
-          <span v-else></span>
+          <span v-else />
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>

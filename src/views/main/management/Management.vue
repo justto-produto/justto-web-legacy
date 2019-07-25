@@ -17,6 +17,7 @@
         <el-button
           icon="el-icon-refresh"
           plain
+          data-testid="update-cases"
           @click="getDisputes">
           Atualizar
         </el-button>
@@ -62,10 +63,10 @@
         <el-table-column type="expand" width="40px">
           <template slot-scope="props">
             <div>
-              <h4>
+              <h4 data-testid="dispute-title">
                 Processo: {{ props.row.disputecode }}
               </h4>
-              <el-row>
+              <el-row data-testid="dipute-info">
                 <el-col :span="8">
                   <div>Estratégia: {{ props.row.strategyname }}</div>
                   <div>Status: <span>{{ $t('occurrence.type.' + props.row.disputestatus) | capitalize }}</span></div>

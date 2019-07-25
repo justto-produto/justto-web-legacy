@@ -76,4 +76,17 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.get('[data-testid=submit-whats-disable]')
       .should('be.disabled')
   })
+
+  it('Envio de Whatsapp: Não Sincronizado', function () {
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
+      .click()
+
+    // Seleciona primeira parte do caso
+    cy.get('[data-testid=party]').first()
+      .click()
+
+    // Seleciona Whatsapp
+    cy.get('[data-testid=select-whatsapp]')
+      .click()
+  })
 })
