@@ -173,7 +173,7 @@ export default {
     directionClass (message) {
       if (message.message && (message.message.direction === 'INBOUND' || message.message.senderParty === 'CLAIMANT')) {
         return 'inbound'
-      } else if (message.message && message.message.type === 'NOTE') {
+      } else if (message.type === 'NOTE') {
         return 'note'
       } else return 'outbound'
     },
