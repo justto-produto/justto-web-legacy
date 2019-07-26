@@ -118,8 +118,15 @@ export default {
         workspace: this.workspace,
         username: this.name
       })
-      this.$store.dispatch('logout')
-      this.$store.commit('clearDisputes')
+      setTimeout(() => {
+        this.$store.dispatch('logout')
+      }, 500)
+      const loading = this.$loading({
+        lock: true
+      });
+      setTimeout(() => {
+        loading.close()
+      }, 1000)
     },
     search (term, cb) {
       this.$search(

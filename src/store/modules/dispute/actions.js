@@ -162,7 +162,7 @@ const disputeActions = {
   editDisputeReason ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + params.disputeId + '/reasons/' + params.reasonId + '/update', params.body)
+      axios.put('api/disputes/' + params.disputeId + '/update-reason/', params.body)
         .then(response => {
           resolve(response.data)
         }).catch(error => {

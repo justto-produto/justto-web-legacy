@@ -171,17 +171,20 @@
           @dispute:refresh="fetchData({ fetchMessages: true })" />
         <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
-            <el-tab-pane label="Mensagem" name="1">
+            <el-tab-pane v-loading="loadingTextarea" label="Mensagem" name="1">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
-                  <el-input
+                  <textarea
                     v-show="activePerson.id && validName"
-                    ref="textarea"
-                    :rows="3"
                     v-model="newMessage"
-                    type="textarea"
+                    rows="3"
                     data-testid="input-message"
-                    placeholder="Escreva alguma coisa" />
+                    placeholder="Escreva alguma coisa"
+                    class="el-textarea__inner"
+                    @keydown.enter.exact.prevent
+                    @keydown.enter.alt="newLineMessage()"
+                    @keydown.enter.shift="newLineMessage()"
+                    @keyup.enter.exact="sendMessage()" />
                 </el-collapse-transition>
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip v-if="!validName" content="Atualize o nome no seu perfil para enviar mensagens">
@@ -192,7 +195,7 @@
                   <div v-else-if="activePerson.id">
                     <div>
                       <el-tooltip content="Enviar e-mail">
-                        <a href="" data-testid="select-email" @click.prevent="setMessageType('email')">
+                        <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
                           <jus-icon :is-active="messageType === 'email'" icon="email"/>
                         </a>
                       </el-tooltip>
@@ -241,14 +244,19 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <!-- <el-tab-pane label="Chat" name="2">
+            <!-- <el-tab-pane v-loading="loadingTextarea" label="Chat" name="2">
               <el-card shadow="always" class="dispute-view__send-message-box">
-                <el-input
-                  :rows="3"
+                <textarea
                   v-model="newChatMessage"
-                  type="textarea"
+                  rows="3"
+                  data-testid="input-chat"
                   placeholder="Escreva alguma coisa"
-                  @input="sendTypeEvent" />
+                  class="el-textarea__inner"
+                  @input="sendTypeEvent()"
+                  @keydown.enter.alt="newLineChat()"
+                  @keydown.enter.shift="newLineChat()"
+                  @keydown.enter.exact.prevent
+                  @keydown.enter.exact="sendChatMessage()" />
                 <div class="dispute-view__send-message-actions note">
                   <el-button type="primary" @click="sendChatMessage()">
                     Enviar
@@ -256,14 +264,18 @@
                 </div>
               </el-card>
             </el-tab-pane> -->
-            <el-tab-pane label="Nota" name="3">
+            <el-tab-pane v-loading="loadingTextarea" label="Nota" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
-                <el-input
-                  :rows="3"
+                <textarea
                   v-model="newNote"
-                  type="textarea"
+                  rows="3"
                   data-testid="input-nota"
-                  placeholder="Escreva alguma coisa" />
+                  placeholder="Escreva alguma coisa"
+                  class="el-textarea__inner"
+                  @keydown.enter.exact.prevent
+                  @keydown.enter.alt="newLineNote()"
+                  @keydown.enter.shift="newLineNote()"
+                  @keydown.enter.exact="sendNote()" />
                 <div class="dispute-view__send-message-actions note">
                   <el-button type="primary" data-testid="submit-note" @click="sendNote()">
                     Salvar nota
@@ -333,7 +345,8 @@ export default {
       negotiatorsRules: {},
       unsettledTypes: {},
       unsettledType: null,
-      typingTab: '1'
+      typingTab: '1',
+      loadingTextarea: false
     }
   },
   computed: {
@@ -515,7 +528,7 @@ export default {
         disputeId: this.dispute.id
       }
       if (this.unsettledType) {
-        params['body'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+        params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
       }
       this.$store.dispatch('sendDisputeAction', params).then(() => {
         let trackTitle
@@ -548,9 +561,18 @@ export default {
       }).catch(() => this.$jusNotification({ type: 'error' }))
         .finally(() => { this.chooseUnsettledDialogVisible = false })
     },
+    newLineMessage () {
+      this.newMessage = `${this.newMessage}\n`
+    },
+    newLineChat () {
+      this.newChatMessage = `${this.newChatMessage}\n`
+    },
+    newLineNote () {
+      this.newNote = `${this.newNote}\n`
+    },
     sendChatMessage () {
+      this.loadingTextarea = true
       if (this.newChatMessage) {
-        this.newChatMessage = this.newChatMessage.charAt(0).toUpperCase() + this.newChatMessage.slice(1)
         this.$store.dispatch('sendMessageEvent', {
           id: this.dispute.id,
           data: {
@@ -565,7 +587,11 @@ export default {
           setTimeout(function () {
             this.fetchData({ fetchMessages: true })
           }.bind(this), 500)
-        }).catch(() => this.$jusNotification({ type: 'error' }))
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingTextarea = false
+        })
       }
     },
     sendMessage () {
@@ -577,7 +603,7 @@ export default {
         })
       } else {
         if (this.newMessage) {
-          this.newMessage = this.newMessage.charAt(0).toUpperCase() + this.newMessage.slice(1)
+          this.loadingTextarea = true
           this.$store.dispatch('send' + this.messageType, {
             to: [this.activePerson.id],
             message: this.newMessage,
@@ -596,13 +622,15 @@ export default {
             }.bind(this), 500)
           }).catch(() => {
             this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.loadingTextarea = false
           })
         }
       }
     },
     sendNote () {
       if (this.newNote) {
-        this.newNote = this.newNote.charAt(0).toUpperCase() + this.newNote.slice(1)
+        this.loadingTextarea = true
         this.$store.dispatch('sendDisputeNote', {
           note: this.newNote,
           disputeId: this.dispute.id
@@ -617,6 +645,8 @@ export default {
           this.fetchData({ fetchMessages: true })
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingTextarea = false
         })
       }
     },
@@ -716,10 +746,7 @@ export default {
       &__inner {
         resize: none;
         border: 0;
-        padding: 5px 20px;
-      }
-      &::first-letter {
-        text-transform: capitalize;
+        padding: 5px 0;
       }
     }
   }

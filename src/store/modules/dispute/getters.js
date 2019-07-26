@@ -1,4 +1,5 @@
-const moment = require('moment')
+import moment from 'moment'
+import i18n from '@/plugins/vueI18n.js'
 
 const disputeGetters = {
   disputes: state => state.disputes,
@@ -63,6 +64,26 @@ const disputeGetters = {
             if (!compareB[state.filters.sort.prop]) compareB[state.filters.sort.prop] = moment(0)
             if (moment(compareA[state.filters.sort.prop]).isAfter(compareB[state.filters.sort.prop])) return directionA
             if (moment(compareA[state.filters.sort.prop]).isBefore(compareB[state.filters.sort.prop])) return directionB
+            return 0
+          } else if (state.filters.sort.prop === 'claiments' || state.filters.sort.prop === 'claimentslawyer') {
+            if (Array.isArray(compareA[state.filters.sort.prop])) {
+              if (Array.isArray(compareB[state.filters.sort.prop])) {
+                if (compareA[state.filters.sort.prop][0]['name'] > compareB[state.filters.sort.prop][0]['name']) return directionA
+                if (compareA[state.filters.sort.prop][0]['name'] < compareB[state.filters.sort.prop][0]['name']) return directionB
+                return 0
+              } else {
+                return directionA
+              }
+            } else {
+              if (Array.isArray(compareB[state.filters.sort.prop])) {
+                return directionB
+              } else {
+                return 0
+              }
+            }
+          } else if (state.filters.sort.prop === 'disputestatus') {
+            if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) > i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionA
+            if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) < i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionB
             return 0
           } else {
             if (compareA[state.filters.sort.prop] > compareB[state.filters.sort.prop]) return directionA
@@ -167,7 +188,8 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  disputeStatuses: state => state.disputeStatuses
+  disputeStatuses: state => state.disputeStatuses,
+  disputeActiveTab: state => state.filters.tab
 }
 
 export default disputeGetters
