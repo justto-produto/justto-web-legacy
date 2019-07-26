@@ -40,7 +40,7 @@
       text-transform: capitalize;
     }
   }
-  .text-ellipsis .cell {
+  td.text-ellipsis .cell {
     display: flex;
     div {
       text-overflow: ellipsis;
