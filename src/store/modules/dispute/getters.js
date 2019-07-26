@@ -85,7 +85,6 @@ const disputeGetters = {
             if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) > i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionA
             if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) < i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionB
             return 0
-
           } else {
             if (compareA[state.filters.sort.prop] > compareB[state.filters.sort.prop]) return directionA
             if (compareA[state.filters.sort.prop] < compareB[state.filters.sort.prop]) return directionB
