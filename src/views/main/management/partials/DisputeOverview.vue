@@ -2,51 +2,45 @@
   <div class="dispute-overview-view">
     <el-collapse value="1">
       <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-          <span class="title">Num.:</span>
+        <div v-if="dispute.code" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+          <span class="title">Código:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.campaign" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Campanha:</span>
-          <span v-if="dispute.campaign">{{ dispute.campaign.name }}</span>
-          <span v-else/>
+          <span>{{ dispute.campaign.name }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.strategy" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
-          <span v-if="dispute.strategy">{{ dispute.strategy.name }}</span>
-          <span v-else/>
+          <span>{{ dispute.strategy.name }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.status" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
           <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.upperRange" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
-          <span v-if="dispute.upperRange">{{ dispute.upperRange.boundary | currency }}</span>
-          <span v-else>{{ 0 | currency }}</span>
+          <span>{{ dispute.upperRange.boundary | currency }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.lastCounterOffer" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
-          <span v-if="dispute.lastCounterOffer">{{ dispute.lastCounterOffer.boundary | currency }}</span>
-          <span v-else>{{ 0 | currency }}</span>
+          <span>{{ dispute.lastCounterOffer.boundary | currency }}</span>
         </div>
         <div
-          v-if="dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED'"
+          v-if="(dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED') && dispute.dealValue"
           class="dispute-overview-view__info-line">
           <span class="title">Valor do acordo:</span>
-          <span v-if="dispute.dealValue">{{ dispute.dealValue.boundary | currency }}</span>
-          <span v-else>{{ 0 | currency }}</span>
+          <span>{{ dispute.dealValue.boundary | currency }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.lastOffer" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Valor proposto:</span>
-          <span v-if="dispute.lastOffer">{{ dispute.lastOffer.boundary | currency }}</span>
-          <span v-else>{{ 0 | currency }}</span>
+          <span>{{ dispute.lastOffer.boundary | currency }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.expirationDate" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
           <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.description" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Descrição:</span>
           <span>{{ dispute.description }}</span>
         </div>

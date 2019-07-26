@@ -38,6 +38,7 @@ export default {
   computed: {
     slides () {
       return [{
+        id: 'alertWhatsapp',
         title: 'sincronize seu WhatsApp para garantir que suas disputas terão mais engajamento',
         button: 'Resolver',
         to: 'profile',
@@ -102,8 +103,13 @@ export default {
     }
   },
   watch: {
-    slides () {
-      this.updateSlides()
+    slides (newSlides, oldSlides) {
+      oldSlides.map(oldSlide => {
+        let newSlide = newSlides.find(slide => slide.id === oldSlide.id)
+        if (oldSlide.shows !== newSlide.shows) {
+          this.updateSlides()
+        }
+      })
     }
   },
   mounted () {
