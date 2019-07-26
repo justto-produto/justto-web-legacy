@@ -515,7 +515,7 @@ export default {
         disputeId: this.dispute.id
       }
       if (this.unsettledType) {
-        params['body'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+        params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
       }
       this.$store.dispatch('sendDisputeAction', params).then(() => {
         let trackTitle
