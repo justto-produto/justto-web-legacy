@@ -182,6 +182,8 @@
                     placeholder="Escreva alguma coisa"
                     class="el-textarea__inner"
                     @keydown.enter.exact.prevent
+                    @keydown.enter.alt="newLineMessage()"
+                    @keydown.enter.shift="newLineMessage()"
                     @keyup.enter.exact="sendMessage()" />
                 </el-collapse-transition>
                 <div class="dispute-view__send-message-actions">
@@ -251,6 +253,8 @@
                   placeholder="Escreva alguma coisa"
                   class="el-textarea__inner"
                   @input="sendTypeEvent()"
+                  @keydown.enter.alt="newLineChat()"
+                  @keydown.enter.shift="newLineChat()"
                   @keydown.enter.exact.prevent
                   @keydown.enter.exact="sendChatMessage()" />
                 <div class="dispute-view__send-message-actions note">
@@ -269,6 +273,8 @@
                   placeholder="Escreva alguma coisa"
                   class="el-textarea__inner"
                   @keydown.enter.exact.prevent
+                  @keydown.enter.alt="newLineNote()"
+                  @keydown.enter.shift="newLineNote()"
                   @keydown.enter.exact="sendNote()" />
                 <div class="dispute-view__send-message-actions note">
                   <el-button type="primary" data-testid="submit-note" @click="sendNote()">
@@ -554,6 +560,15 @@ export default {
         }.bind(this), 1000)
       }).catch(() => this.$jusNotification({ type: 'error' }))
         .finally(() => { this.chooseUnsettledDialogVisible = false })
+    },
+    newLineMessage () {
+      this.newMessage = `${this.newMessage}\n`
+    },
+    newLineChat () {
+      this.newChatMessage = `${this.newChatMessage}\n`
+    },
+    newLineNote () {
+      this.newNote = `${this.newNote}\n`
     },
     sendChatMessage () {
       this.loadingTextarea = true
