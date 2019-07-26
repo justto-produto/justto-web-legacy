@@ -123,7 +123,7 @@ export default {
       }, 500)
       const loading = this.$loading({
         lock: true
-      });
+      })
       setTimeout(() => {
         loading.close()
       }, 1000)
