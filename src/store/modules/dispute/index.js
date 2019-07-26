@@ -10,7 +10,7 @@ const dispute = {
       filterPersonId: 0,
       terms: {},
       sort: {
-        prop: '',
+        prop: null,
         order: null
       }
     },

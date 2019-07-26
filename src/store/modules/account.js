@@ -95,18 +95,18 @@ const account = {
       })
     },
     logout ({ commit }, options) {
-      return new Promise((resolve, reject) => {
-        commit('logout')
-        commit('clearPerson')
-        commit('clearWorkspace')
-        commit('clearWhatsappSocket')
-        localStorage.removeItem('justoken')
-        // eslint-disable-next-line
-        delete axios.defaults.headers.common['Authorization']
-        if (options && options.redirect === false) {
-        } else router.push('/login')
-        resolve()
-      })
+      commit('logout')
+      commit('clearPerson')
+      commit('clearWorkspace')
+      commit('clearWhatsappSocket')
+      commit('clearDisputes')
+      commit('clearDisputeFilters')
+      commit('clearDisputeTab')
+      localStorage.removeItem('justoken')
+      // eslint-disable-next-line
+      delete axios.defaults.headers.common['Authorization']
+      if (options && options.redirect === false) {
+      } else router.push('/login')
     },
     forgotPassword ({ commit }, email) {
       return new Promise((resolve, reject) => {

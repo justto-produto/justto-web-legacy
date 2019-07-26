@@ -308,7 +308,6 @@ export default {
       showFilters: false,
       selectedIds: [],
       activeFilters: {},
-      activeTab: '0',
       loadingExport: false,
       currentPage: 1,
       disputesPerPage: 20,
@@ -316,6 +315,14 @@ export default {
     }
   },
   computed: {
+    activeTab: {
+      get () {
+        return this.$store.getters.disputeActiveTab
+      },
+      set (tab) {
+        this.$store.commit('setDisputeTab', tab)
+      }
+    },
     multiActive () {
       return this.selectedIds.length >= 1
     },
@@ -345,11 +352,7 @@ export default {
       }
     }
   },
-  beforeCreate () {
-    this.$store.commit('setDisputeTab', '0')
-  },
   mounted () {
-    this.$refs.disputeTable.sort('disputeexpirationdate', 'descending')
     setTimeout(function () {
       this.tabKey = true
     }.bind(this), 500)
@@ -391,10 +394,8 @@ export default {
     },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {
-        this.$store.commit('setDisputeTab', newTab)
         this.clearSelection()
         this.clearFilters()
-        this.activeTab = newTab
       }
       this.$refs.disputeTable.clearSort()
       this.tableKey = this.tableKey + 1

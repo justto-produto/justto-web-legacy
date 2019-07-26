@@ -13,6 +13,9 @@ const disputeMutations = {
   setDisputeTab (state, tab) {
     state.filters.tab = tab
   },
+  clearDisputeTab (state, tab) {
+    state.filters.tab = '0'
+  },
   setDisputeFilter (state, terms) {
     state.filters.terms = terms
   },

@@ -188,7 +188,8 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  disputeStatuses: state => state.disputeStatuses
+  disputeStatuses: state => state.disputeStatuses,
+  disputeActiveTab: state => state.filters.tab
 }
 
 export default disputeGetters
