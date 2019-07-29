@@ -27,12 +27,27 @@ describe('Justto.App - Disputa: Ação Perder', function () {
     cy.url().should('include', '/#/management')
 
     // Entra na disputa
-    cy.wait(2000)
-    cy.get('[data-testid=dispute-index]').first()
-      .click()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
+      .click(){force: true}
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
+  })
+
+  afterEach('Remove a Conta', function () {
+    // Clica em Remover
+    cy.get('[data-testid=remove]')
+      .click()
+
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-remove-btn')
+      .click()
+      
+    cy.wait(1000)
   })
 
   const motives = [
