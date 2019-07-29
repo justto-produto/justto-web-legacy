@@ -1,5 +1,5 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('import-actions-email')
+const password = Cypress.env('default-password')
 
 describe('Justto.App - Disputa: Menssagens', function () {
   beforeEach('Login', function () {
@@ -71,10 +71,34 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.get('[data-testid=submit-email]')
       .click()
 
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success', { timeout: 60000 })
+    cy.contains('email enviado com sucesso.')
+      .should('be.visible')
+
+    cy.wait(12000)
+    // Caixas de nota devem aparecer
+    cy.get('[data-testid=message-box]')
+      .should('be.visible')
+
+    // Clica em 'vusualizar email'
+    cy.get('[data-testid=show-email]').last()
+      .click({force: true})
+
+    // Dialog de conteudo do email deve aparecer
+    cy.get('[data-testid=email-dialog]')
+      .should('be.visible')
+
     // Mensagem deve ser a enviada
     cy.contains(message)
       .should('be.visible')
-      .get('[data-testid=message-box]')
-      .should('be.visible')
+
+    // Fecha dialog
+    cy.get('[data-testid=close-button]')
+      .click()
+      
+    // Dialog deve desaparecer
+    cy.get('[data-testid=email-dialog]')
+      .should('not.be.visible')
   })
 })

@@ -31,11 +31,20 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
       .click({force: true})
+
+    // Seleciona primeira disputa
+    cy.get('tbody label[role=checkbox]').first()
+      .click()
+
+    // Menu de ações deve estar visivel
+    cy.get('.management-actions')
+      .should('have.class', 'active')
+      .should('be.visible')
   })
 
   afterEach('Notificação de Sucesso', function () {
     // Notificação de sucesso deve aparecer
-    cy.get('.el-notification.success', { timeout: 40000 })
+    cy.get('.el-notification.success', { timeout: 60000 })
       .contains('Yay!')
       .should('be.visible')
 
@@ -45,14 +54,9 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   })
 
   it('Ação em Lote: Pausar', function () {
-    // Seleciona primeira disputa
-    cy.get('type="checkbox"]')
-      // .click({force: true})
-      .click()
-
     // Clica na ação
     cy.get('[data-testid=batch-paused]')
-      // .click()
+      .click()
 
     // Mensagem de confirmação deve aparecer
     cy.get('.el-message-box')
@@ -64,10 +68,6 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   })
 
   it('Ação em Lote: Retomar', function () {
-    // Seleciona primeira disputa
-    cy.get('[role=checkbox]').eq(1)
-      .click()
-
     // Clica na ação
     cy.get('[data-testid=batch-resume]')
       .click()
@@ -82,10 +82,6 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   })
 
   it('Ação em Lote: Ganha', function () {
-    // Seleciona primeira disputa
-    cy.get('[role=checkbox]').eq(1)
-      .click()
-
     // Clica na ação
     cy.get('[data-testid=batch-settled]')
       .click()
@@ -100,10 +96,6 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   })
 
   it('Ação em Lote: Reiniciar Engajamento', function () {
-    // Seleciona primeira disputa
-    cy.get('[role=checkbox]').eq(1)
-      .click()
-
     // VClica em Reiniciar Engajamento
     cy.get('[data-testid=batch-restartengagement]')
       .click()
@@ -118,10 +110,6 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   })
 
   it('Ação em Lote: Excluir', function () {
-    // Seleciona primeira disputa
-    cy.get('[role=checkbox]').eq(1)
-      .click()
-
     // Clica em Remover
     cy.get('[data-testid=batch-delete]')
       .click()
@@ -133,5 +121,14 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
+
+    // Desseleciona disputa
+    cy.get('tbody label[role=checkbox]').first()
+      .click()
+
+    // Menu de ações deve estar visivel
+    cy.get('.management-actions')
+      .should('not.have.class', 'active')
+      .should('not.be.visible')
   })
 })

@@ -72,7 +72,9 @@ describe('Justto.App - Disputa: Notas', function () {
     // Nota deve aparecer entre as mensagens
     cy.contains(message,  { timeout: 60000 })
       .should('be.visible')
-      .get('[data-testid=message-box]')
+
+    // Caixa de nota deve estar visivel e amarela
+    cy.get('[data-testid=message-box]')
       .should('be.visible')
       .should('have.css', 'background-color', 'rgb(255, 235, 161)',)
       .contains('Esta mensagem é visível somente aos negociadores.').last()

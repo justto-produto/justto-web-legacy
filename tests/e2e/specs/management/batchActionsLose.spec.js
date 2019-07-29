@@ -1,11 +1,11 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('import-actions-email')
+const password = Cypress.env('default-password')
 
 describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('/')
 
     // Valida se o endereço redirecionado é o 'Login'
     cy.url().should('include', '/#/login')
@@ -27,7 +27,28 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
 
-    cy.wait(2000)
+    // Entra na aba 'Todos'
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
+      .click({force: true})
+
+    cy.get('tbody label[role=checkbox]').first()
+      .click()
+
+    // Menu de ações deve estar visivel
+    cy.get('.management-actions')
+      .should('have.class', 'active')
+      .should('be.visible')
+  })
+
+  afterEach(function () {
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Yay!')
+
+    // Modal de confirmação deve desaparecer
+    cy.get('[data-testid=choose-unsettled-dialog]')
+      .should('not.be.visible')
   })
 
   const motives = [
@@ -43,10 +64,6 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
 
   motives.forEach((motive) => {
     it('Ação em Lote: Perder - ' + motive, function () {
-      // Seleciona primeira disputa
-      cy.get('[role=checkbox]').eq(1)
-        .click()
-
       // Clica na ação
       cy.get('[data-testid=batch-unsettled]')
         .click()
@@ -62,21 +79,10 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       // Seleciona motivo da perda
       cy.contains(motive)
         .click()
-      // .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
-      // .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
       // Confirma a ação
       cy.get('.confirm-action-unsettled')
         .click()
-
-      cy.wait(4000)
-      // Notificação de sucesso deve aparecer
-      cy.get('.el-notification.success')
-        .contains('Yay!')
-
-      // Modal de confirmação deve desaparecer
-      cy.get('[data-testid=choose-unsettled-dialog]')
-        .should('not.be.visible')
     })
   })
 })
