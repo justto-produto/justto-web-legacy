@@ -1,5 +1,5 @@
 <template lang="html">
-  <el-tooltip content="Filtro dinânico" :disabled="!isCollapsed">
+  <el-tooltip :disabled="!isCollapsed" content="Filtro dinânico">
     <div :class="{'jus-filter-button--collapse': isCollapsed}" class="jus-filter-button" @keyup.esc="toggle()">
       <el-input ref="filterInput" v-model="term" @blur="blur()">
         <el-button slot="prepend" @click="toggle()">

@@ -16,13 +16,13 @@
       </transition>
       <transition name="el-zoom-in-center">
         <div v-show="showGif > 2" class="import-loading-view__gif">
-          <img src="@/assets/gifs/send.gif">
+          <img src="@/assets/gifs/message.gif">
           <h3>Envio de<br>mensagens</h3>
         </div>
       </transition>
       <transition name="el-zoom-in-center">
         <div v-show="showGif > 3" class="import-loading-view__gif">
-          <img src="@/assets/gifs/message.gif">
+          <img src="@/assets/gifs/send.gif">
           <h3>Comece a<br>negociar</h3>
         </div>
       </transition>

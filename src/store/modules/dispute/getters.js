@@ -69,15 +69,15 @@ const disputeGetters = {
           } else if (state.filters.sort.prop === 'claiments' || state.filters.sort.prop === 'claimentslawyer') {
             if (Array.isArray(compareA[state.filters.sort.prop])) {
               if (Array.isArray(compareB[state.filters.sort.prop])) {
-                if (compareA[state.filters.sort.prop][0]['name'] > compareB[state.filters.sort.prop][0]['name']) return directionA
-                if (compareA[state.filters.sort.prop][0]['name'] < compareB[state.filters.sort.prop][0]['name']) return directionB
+                if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') > compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionA
+                if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') < compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionB
                 return 0
               } else {
-                return directionA
+                return directionB
               }
             } else {
               if (Array.isArray(compareB[state.filters.sort.prop])) {
-                return directionB
+                return directionA
               } else {
                 return 0
               }

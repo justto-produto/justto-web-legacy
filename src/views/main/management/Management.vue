@@ -267,7 +267,7 @@
           :page-size.sync="disputesPerPage"
           :current-page.sync="currentPage"
           :pager-count="15"
-          :page-sizes="[20, 30, 50, 100]"
+          :page-sizes="[disputesPerPage, 30, 50, 100]"
           layout="total, prev, pager, next, sizes"
           @size-change="handleChangePagination"
           @current-change="handleChangePagination" />
