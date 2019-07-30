@@ -19,6 +19,12 @@ const disputeMutations = {
   setDisputeFilter (state, terms) {
     state.filters.terms = terms
   },
+  setDisputeFilterTerm (state, term) {
+    state.filters.filterTerm = term
+  },
+  clearDisputeFilterTerm (state, tab) {
+    state.filters.filterTerm = ''
+  },
   setDisputeSort (state, sort) {
     state.filters.sort.prop = sort.prop
     state.filters.sort.order = sort.order

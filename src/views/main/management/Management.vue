@@ -22,6 +22,7 @@
         <el-tab-pane name="3" label="Todos"/>
       </el-tabs>
       <div class="view-management__actions">
+        <jus-filter-button />
         <el-button
           icon="el-icon-refresh"
           plain
@@ -260,7 +261,7 @@
           </template>
         </el-table>
       </div>
-      <div class="view-management__pagination-container">
+      <div v-if="disputesLength > initialDisputesPerPage" class="view-management__pagination-container">
         <el-pagination
           :total.sync="disputesLength"
           :page-size.sync="disputesPerPage"
@@ -294,6 +295,7 @@
 
 <script>
 import JusManagementFilters from '@/components/others/JusManagementFilters'
+import JusFilterButton from '@/components/buttons/JusFilterButton'
 import ManagementCarousel from './partials/ManagementCarousel'
 import ManagementActions from './partials/ManagementActions'
 
@@ -302,7 +304,8 @@ export default {
   components: {
     ManagementCarousel,
     JusManagementFilters,
-    ManagementActions
+    ManagementActions,
+    JusFilterButton
   },
   data () {
     return {
@@ -597,7 +600,7 @@ export default {
     }
   }
   &__actions {
-    display: inline-flex;
+    display: flex;
     position: absolute;
     z-index: 2;
     top: 40px;
