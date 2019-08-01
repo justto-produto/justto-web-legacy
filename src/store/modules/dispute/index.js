@@ -12,7 +12,8 @@ const dispute = {
       sort: {
         prop: null,
         order: null
-      }
+      },
+      filterTerm: ''
     },
     disputeStatuses: {}
   },

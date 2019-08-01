@@ -1,5 +1,6 @@
 import moment from 'moment'
 import i18n from '@/plugins/vueI18n.js'
+import Fuse from 'fuse.js'
 
 const disputeGetters = {
   disputes: state => state.disputes,
@@ -68,15 +69,15 @@ const disputeGetters = {
           } else if (state.filters.sort.prop === 'claiments' || state.filters.sort.prop === 'claimentslawyer') {
             if (Array.isArray(compareA[state.filters.sort.prop])) {
               if (Array.isArray(compareB[state.filters.sort.prop])) {
-                if (compareA[state.filters.sort.prop][0]['name'] > compareB[state.filters.sort.prop][0]['name']) return directionA
-                if (compareA[state.filters.sort.prop][0]['name'] < compareB[state.filters.sort.prop][0]['name']) return directionB
+                if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') > compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionA
+                if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') < compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionB
                 return 0
               } else {
-                return directionA
+                return directionB
               }
             } else {
               if (Array.isArray(compareB[state.filters.sort.prop])) {
-                return directionB
+                return directionA
               } else {
                 return 0
               }
@@ -91,6 +92,32 @@ const disputeGetters = {
             return 0
           }
         })
+      }
+      if (state.filters.filterTerm) {
+        var run = new Fuse(filteredDisputes, {
+          shouldSort: true,
+          tokenize: true,
+          matchAllTokens: true,
+          threshold: 0.1,
+          location: 0,
+          distance: 100,
+          maxPatternLength: 32,
+          minMatchCharLength: 1,
+          keys: [
+            'disputeid',
+            'disputecode',
+            'campaignname',
+            'claiments.name',
+            'claiments.document_number',
+            'claimentslawyer.name',
+            'claimentslawyer.document_number',
+            'strategyname',
+            'disputeupperrange',
+            'disputelastrespondentoffer',
+            'lastOfferValue'
+          ]
+        })
+        filteredDisputes = run.search(state.filters.filterTerm)
       }
     }
     return filteredDisputes
