@@ -360,13 +360,17 @@ export default {
     }
   },
   mounted () {
-    setTimeout(function () {
+    this.$nextTick(() => {
       this.tabKey = true
       this.tableHeigth = this.$refs.tableContainer.clientHeight
-    }.bind(this), 500)
-    window.addEventListener('resize', () => {
-      this.tableHeigth = this.$refs.tableContainer.clientHeight
+      window.addEventListener('resize', () => {
+        this.tableHeigth = this.$refs.tableContainer.clientHeight
+      })
     })
+    // setTimeout(function () {
+    //   this.tabKey = true
+    //   this.tableHeigth = this.$refs.tableContainer.clientHeight
+    // }.bind(this), 500)
   },
   methods: {
     getDisputes () {

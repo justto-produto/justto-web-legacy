@@ -4,11 +4,11 @@ const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sh
 const fileInput = 'input[type=file]'
 
 describe('Justto.App - Planilha Modelo', function () {
-  it('Login: Sucesso', function () {
+  beforeEach(function () {
     // Acessa a página inicial do Justto.App
-    
+
     // cy.visit('http://homol.justto.com.br')
-    cy.visit('localhost:8080')
+    cy.visit('/')
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
 
@@ -40,7 +40,7 @@ describe('Justto.App - Planilha Modelo', function () {
     cy.url().should('include', '/#/import')
 
     // Importa arquivo
-    cy.upload_file('PLANINHA_MODELO.xlsx', fileType, fileInput)
+    cy.upload_file('PLANILHA_TESTE-CASOS_REAIS.xlsx', fileType, fileInput)
 
     // Acavça para proximo passo
     cy.get('[data-testid=submit]')
@@ -65,6 +65,9 @@ describe('Justto.App - Planilha Modelo', function () {
     cy.get('[data-testid=import-tags]')
       .should('be.visible')
 
+    cy.get('.file-column>.el-tag')
+      .should('have.css', 'background-color', 'rgb(148, 97, 247)')
+
     // Apaga tag mapeada
     // cy.get('.columns-step .el-tag__close')
     //   .click()
@@ -80,40 +83,57 @@ describe('Justto.App - Planilha Modelo', function () {
     cy.get('[data-testid=import-feedback]')
       .should('be.visible')
 
-    // Preenche campo 'Nome do Reu'
-    cy.get('[data-testid=feedback-respondent]')
-      .clear().type('Campanha Teste')
-      .should('have.value', 'Campanha Teste')
 
-    // Preenche o campo 'Nome da Campanna'
-    cy.get('[data-testid=feedback-campaignName]')
-      .clear().type('Teste Campanha')
-      .should('have.value', 'Teste Campanha')
+    const campaings = ['Natura', 'Nestle', 'Garoto']
 
-    // Seleciona  uma estratégia
-    cy.get('[data-testid=feedback-strategy]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
-      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+    campaings.forEach((campaing, index) => {
+      // Preenche campo 'Nome do Reu'
+      cy.get('[data-testid=feedback-respondent]').eq(index)
+        .clear().type(campaing)
+        .should('have.value', campaing)
 
-    // Campo com data de pagamento deve estar visivel
-    // cy.get('[data-testid=feedback-paymendate]')
-    //   .should('be.visible')
+      // Preenche o campo 'Nome da Campanna'
+      cy.get('[data-testid=feedback-campaignName]').eq(index)
+        .clear().type(campaing)
+        .should('have.value', campaing)
 
-    // Seleciona uma data limite
-    cy.get('[data-testid=feedback-datapicker]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
-      .trigger('keydown', { keyCode: 40, Which: 40 })
-      .trigger('keydown', { keyCode: 40, Which: 40 })
-      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+      var strategy
+      switch(index) {
+        case 0: strategy = 'Indenizatorio'
+          break;
+        case 1: strategy = 'Indenizatorio - Advogado'
+          break;
+        case 2: strategy = 'Trabalhista'
+          break;
+        default: strategy = 'Indenizatorio - Advogado'
+      }
 
-    // Seleciona um negociador
-    cy.get('[data-testid=feedback-negotiators]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo (3x)
-      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
-      .click()
+      // Seleciona  uma estratégia
+      cy.get('[data-testid=feedback-strategy]').eq(index)
+        .click()
+      // .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+      // .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+      cy.get('.el-select-dropdown__list')
+        .contains(strategy)
+        .click({force: true})
+
+      // Campo com data de pagamento deve estar visivel
+      // cy.get('[data-testid=feedback-paymendate]')
+      //   .should('be.visible')
+
+      // Seleciona uma data limite
+      cy.get('[data-testid=feedback-datapicker]').eq(index)
+        .click()
+        .trigger('keydown', { keyCode: 39, Which: 39 }) // Pressiona seta direita
+        .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+
+      // Seleciona um negociador
+      cy.get('[data-testid=feedback-negotiators]').eq(index)
+        .click()
+        .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+        .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+        .click()
+    })
 
     // Avança para proximo passo
     cy.get('[data-testid=start-negotiation]')

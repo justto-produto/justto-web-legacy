@@ -12,14 +12,14 @@
           <div :class="directionClass(message) + waitingClass(message)" class="dispute-view-messages__message-content" data-testid="message-box">
             <div>{{ message.description }}</div>
             <el-button
-              v-if="message.message && message.message.type === 'EMAIL'"
+              v-if="message.message && message.message.type === 'EMAIL' && message.type !== 'NOTE'"
               type="text"
               data-testid="show-email"
               @click="showMessageDialog(message.message.content)">
               Visualizar email
             </el-button>
             <span v-else v-html="message.message && message.message.content" />
-            <i v-if="directionClass(message) === 'note'">
+            <i v-if="directionClass(message) === 'NOTE'">
               <br>
               <jus-icon icon="eye" style="vertical-align: sub;"/>
               Esta mensagem é visível somente aos negociadores.

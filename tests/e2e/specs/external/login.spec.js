@@ -52,13 +52,13 @@ describe('Justto.App - Login', function () {
   it('Login: Email ou senha incorretos', function() {
     // Preenche campo 'Email' com email não existente
     cy.get('[data-testid=login-email]')
-      .type('graziele@justto.com.br')
-      .should('have.value', 'graziele@justto.com.br')
+      .type(login)
+      .should('have.value', login)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('kjdisjdi')
-      .should('have.value', 'kjdisjdi')
+      .type('123456')
+      .should('have.value', '123456')
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')

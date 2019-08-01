@@ -5,7 +5,7 @@ const fileInput = 'input[type=file]'
 
 describe('Justto.App - Importação de planilha: Erros', function() {
   beforeEach(function () {
-    cy.visit('localhost:8080')
+    cy.visit('/')
     cy.url().should('include', '/#/login')
     cy.get('[data-testid="login-email"]')
         .type(login)

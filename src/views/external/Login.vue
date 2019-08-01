@@ -58,8 +58,8 @@
           </el-button>
           <el-row class="external-view__info">
             Ao clicar em Entrar, eu concordo com os
-            <a href="https://justto.com.br/termos-de-uso/" target="_blank"> Termos de Uso</a> e com os
-            <a href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação.</a>
+            <a data-testid="use-terms" href="https://justto.com.br/termos-de-uso/" target="_blank"> Termos de Uso</a> e com os
+            <a data-testid="contract-terms" href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
             <a href="register" data-testid="register" @click.prevent="$router.push('register')">Cadastre-se agora mesmo.</a>

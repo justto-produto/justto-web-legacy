@@ -1,4 +1,4 @@
-const login = Cypress.env('not-configured-account-email')
+const login = Cypress.env('editable-cases-email')
 const password = Cypress.env('default-password')
 
 describe('Justto.App - Disputa: Visualização', function () {

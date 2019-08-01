@@ -1,10 +1,10 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('import-actions-email')
+const password = Cypress.env('default-password')
 
 describe('Justto.App - Disputa: Ação Perder', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/#/login')
+    cy.visit('/')
 
     // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
@@ -46,7 +46,7 @@ describe('Justto.App - Disputa: Ação Perder', function () {
     // Confirma a ação
     cy.get('.confirm-remove-btn')
       .click()
-      
+
     cy.wait(1000)
   })
 

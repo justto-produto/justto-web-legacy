@@ -1,65 +1,34 @@
-const login = Cypress.env('email6')
-const password = Cypress.env('password6')
-// const login2 = Cypress.env('')
-// const password = Cypress.env('')
+const login_unconected = Cypress.env('not-editable-cases-email')
+const login_unsynced = Cypress.env('not-configured-account-email')
+const password = Cypress.env('default-password  ')
 
 describe('Justto.App - Disputa: Menssagens', function () {
-  // it('Login', function () {
-  //   // Acessa a página inicial do Justto.App
-  //   // cy.visit('http://homol.justto.com.br')
-  //   cy.visit('localhost:8080')
-  //
-  //   // Redireciona para 'Login'
-  //   cy.url().should('include', '/#/login')
-  //
-  //   // Preenche o campo 'Email'
-  //   cy.get('[data-testid=login-email]')
-  //     .type(login)
-  //     .should('have.value', login)
-  //
-  //   // Preenche o campo 'Senha'
-  //   cy.get('[data-testid=login-password]')
-  //     .type(password)
-  //     .should('have.value', password)
-  //
-  //   // Clica no botão "Entrar"
-  //   cy.get('[data-testid=submit]')
-  //     .click()
-  //
-  //   // Verifica se tela acessada é a de "Gerenciamento"
-  //   cy.url().should('include', '/#/management')
-  // })
-  //
-  // it('Envio de Whatsapp: Não Sincronizado', function () {
-  //
-  // })
 
-  it('Login', function () {
+  it('Envio de Whatsapp: Desconectado', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/#/login')
+    cy.visit('/')
 
     // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type(login)
-      .should('have.value', login)
+    .type(login_unconected)
+    .should('have.value', login_unconected)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type(password)
-      .should('have.value', password)
+    .type(password)
+    .should('have.value', password)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
-      .click()
+    .click()
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
-  })
 
-  it('Envio de Whatsapp: Desconectado', function () {
+
     // Entra na primeira disputa da lista
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
@@ -78,6 +47,32 @@ describe('Justto.App - Disputa: Menssagens', function () {
   })
 
   it('Envio de Whatsapp: Não Sincronizado', function () {
+    // Acessa a página inicial do Justto.App
+    cy.visit('/')
+
+    // Redireciona para 'Login'
+    cy.url().should('include', '/#/login')
+
+    // Preenche o campo 'Email'
+    cy.get('[data-testid=login-email]')
+    .type(login_unsynced)
+    .should('have.value', login_unsynced)
+
+    // Preenche o campo 'Senha'
+    cy.get('[data-testid=login-password]')
+    .type(password)
+    .should('have.value', password)
+
+    // Clica no botão "Entrar"
+    cy.get('[data-testid=submit]')
+    .click()
+
+    // Verifica se tela acessada é a de "Gerenciamento"
+    cy.url().should('include', '/#/management')
+
+
+
+    // Entra na primeira disputa da lista
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
 

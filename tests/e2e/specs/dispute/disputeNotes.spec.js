@@ -1,5 +1,5 @@
-const login = Cypress.env('email1')
-const password = Cypress.env('password1')
+const login = Cypress.env('editable-cases-email')
+const password = Cypress.env('default-password')
 
 describe('Justto.App - Disputa: Notas', function () {
   beforeEach('Login', function () {
@@ -25,14 +25,14 @@ describe('Justto.App - Disputa: Notas', function () {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
+
+    // Entra na aba 'Todos'
+    cy.get('.el-tabs__nav > #tab-3')
+    .contains('Todos')
+    .click({force: true})
   })
 
   it('Salvar Nota: Sucesso', function () {
-    // Entra na aba 'Todos'
-    cy.get('.el-tabs__nav > #tab-3')
-      .contains('Todos')
-      .click({force: true})
-
     // Entra na disputa
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click({force: true})
@@ -66,7 +66,8 @@ describe('Justto.App - Disputa: Notas', function () {
       .click()
 
     // Notificação de sucesso deve desaparecer
-    cy.contains('Nota gravada com sucesso.', { timeout: 60000 })
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Nota gravada com sucesso.')
       .should('be.visible')
 
     // Nota deve aparecer entre as mensagens

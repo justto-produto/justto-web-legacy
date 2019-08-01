@@ -32,7 +32,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
     .click({force: true})
   })
 
-  it('Envio de Email: Parte não selecionada', function () {
+  it('Envio de CNA: Parte não selecionada', function () {
     // Entra na primeira disputa da lista
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
@@ -44,16 +44,25 @@ describe('Justto.App - Disputa: Menssagens', function () {
     // 'Enviar' deve estar desabilitado
     cy.get('[data-testid=submit-email]')
       .should('be.disabled')
+
+    // Entra na aba 'Todos'
+    cy.get('.el-tabs__nav > #tab-3')
+    .contains('Todos')
+    .click({force: true})
   })
 
 
-  it('Envia de Email: Sucesso', function () {
+  it('Envia de CNA: Sucesso', function () {
     // Entra na primeira disputa da lista
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
       .click()
 
     // Seleciona primeira parte do caso
     cy.get('[data-testid=expand-party]').first()
+      .click()
+
+    // Seleciona CNA
+    cy.get('[data-testid=select-cna]')
       .click()
 
     function randomText(size) {
@@ -82,28 +91,28 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .should('be.visible')
 
     cy.wait(12000)
-    // Caixas de nota devem aparecer
+    // Caixas de CNA devem aparecer
     cy.get('[data-testid=message-box]')
       .should('be.visible')
 
-    // Clica em 'vusualizar email'
-    cy.get('[data-testid=show-email]').last()
-      .click({force: true})
-
-    // Dialog de conteudo do email deve aparecer
-    cy.get('[data-testid=email-dialog]')
-      .should('be.visible')
+    // // Clica em 'vusualizar email'
+    // cy.get('[data-testid=show-email]').last()
+    //   .click({force: true})
+    //
+    // // Dialog de conteudo do email deve aparecer
+    // cy.get('[data-testid=email-dialog]')
+    //   .should('be.visible')
 
     // Mensagem deve ser a enviada
     cy.contains(message)
       .should('be.visible')
 
-    // Fecha dialog
-    cy.get('[data-testid=close-button]')
-      .click()
-
-    // Dialog deve desaparecer
-    cy.get('[data-testid=email-dialog]')
-      .should('not.be.visible')
+    // // Fecha dialog
+    // cy.get('[data-testid=close-button]')
+    //   .click()
+    //
+    // // Dialog deve desaparecer
+    // cy.get('[data-testid=email-dialog]')
+    //   .should('not.be.visible')
   })
 })
