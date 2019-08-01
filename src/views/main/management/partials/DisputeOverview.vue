@@ -18,6 +18,10 @@
           <span class="title">Status:</span>
           <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
         </div>
+        <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+          <span class="title">Classificação:</span>
+          <span>{{ dispute.classification.name | capitalize }}</span>
+        </div>
         <div v-if="dispute.upperRange" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
           <span>{{ dispute.upperRange.boundary | currency }}</span>
