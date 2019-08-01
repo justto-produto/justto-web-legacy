@@ -100,7 +100,7 @@
           </el-table-column>
           <el-table-column
             label="Disputa"
-            min-width="86px"
+            min-width="92px"
             prop="disputeid"
             sortable="custom">
             <template slot-scope="scope">#{{ scope.row.disputeid }}</template>
@@ -109,13 +109,13 @@
             sortable="custom"
             prop="campaignname"
             label="Campanha"
-            min-width="108px">
+            min-width="112px">
             <template slot-scope="scope">{{ scope.row.campaignname | capitalize }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
             prop="claiments"
-            min-width="158px"
+            min-width="164px"
             class-name="text-ellipsis"
             label="Parte(s) contrária(s)">
             <template slot-scope="scope">
@@ -132,7 +132,7 @@
             prop="claimentslawyer"
             class-name="text-ellipsis"
             label="Advogado(s) da parte"
-            min-width="168px">
+            min-width="176px">
             <template slot-scope="scope">
               <div v-if="scope.row.claimentslawyer && scope.row.claimentslawyer.length > 0">
                 {{ scope.row.claimentslawyer[0].name }}
@@ -148,7 +148,7 @@
             align="center"
             sortable="custom"
             prop="disputeupperrange"
-            min-width="134px">
+            min-width="140px">
             <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
           </el-table-column>
           <el-table-column
@@ -157,7 +157,7 @@
             sortable="custom"
             prop="lastoffervalue"
             align="center"
-            min-width="122px">
+            min-width="134px">
             <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
           </el-table-column>
           <el-table-column
@@ -166,7 +166,7 @@
             align="center"
             sortable="custom"
             prop="lastcounteroffervalue"
-            min-width="134px">
+            min-width="140px">
             <template slot-scope="scope">{{ scope.row.lastcounteroffervalue | currency }}</template>
           </el-table-column>
           <el-table-column
