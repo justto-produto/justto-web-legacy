@@ -19,12 +19,13 @@
             v-show="showError"
             :title="errorMessage"
             type="error"
+            data-testid="register-failure"
             @close="showError = false"/>
           <el-alert
             v-show="showSuccess"
             title="Cadastro realizado com sucesso! Acesse seu email para prosseguir."
             type="success"
-            data-testid="showSucess"
+            data-testid="register-success"
             @close="showSuccess = false" />
           <el-form-item label="Nome" prop="name">
             <el-input v-model="registerForm.name" name="register-name" data-testid="register-name"/>
@@ -33,7 +34,11 @@
             <el-input v-model="registerForm.email" name="register-email" data-testid="register-email"/>
           </el-form-item>
           <el-form-item label="Senha" prop="password">
-            <el-input v-model="registerForm.password" :type="passwordType" name="register-password" data-testid="register-password"/>
+            <el-input
+              v-model="registerForm.password"
+              :type="passwordType"
+              name="register-password"
+              data-testid="register-password"/>
             <div class="el-button--input-float">
               <jus-icon
                 :icon="showPassword ? 'hide' : 'eye'"

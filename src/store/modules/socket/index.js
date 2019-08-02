@@ -12,7 +12,7 @@ const socketModule = {
     },
     whatsapp: {
       qrCode: '',
-      status: 'STARTING',
+      status: 'OFFLINE',
       number: ''
     }
   },

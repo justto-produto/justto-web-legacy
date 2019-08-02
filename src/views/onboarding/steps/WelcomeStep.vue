@@ -1,15 +1,15 @@
 <template>
   <div class="onboarding-step-content onboarding-welcome-step">
-    <JusLogoCompany
+    <!-- <JusLogoCompany
       v-if="isGuest"
       src="shostners.jpg"
       shadow
       shape="circle"
-      size="xl"/>
+      size="xl"/> -->
     <h1>
       {{ name }}, bem-vindo(a) à Justto<br>
       <span v-if="isGuest">
-        Junte-se ao escritório Shostners & Shostners
+        Junte-se ao escritório {{ companyName }}.
       </span>
     </h1>
     <p>
@@ -17,7 +17,7 @@
       quem irá operar o sistema (você e sua equipe). Se você não tiver todas as informações agora, você poderá pular
       e adicionar depois.
     </p>
-    <el-button type="primary" @click="nextStep">Vamos começar</el-button>
+    <el-button type="primary" data-testid="lets-start" @click="nextStep">Vamos começar</el-button>
   </div>
 </template>
 
@@ -32,6 +32,10 @@ export default {
     isGuest: {
       type: Boolean,
       default: false
+    },
+    companyName: {
+      type: String,
+      default: ''
     }
   },
   computed: {

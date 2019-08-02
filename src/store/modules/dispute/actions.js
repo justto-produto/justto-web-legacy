@@ -36,8 +36,6 @@ const disputeActions = {
         .catch(error => {
           reject(error)
         })
-        .finally (() => {
-        })
     })
   },
   getDisputeById ({ state }, id) {
@@ -64,7 +62,7 @@ const disputeActions = {
   getDisputeMessages ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/messages')
+      axios.get('api/messages/disputes/' + id)
         .then(response => {
           resolve(response.data)
         })
@@ -101,7 +99,7 @@ const disputeActions = {
   sendDisputeNote ({ commit }, body) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/disputes/' + body.disputeId + '/note', body)
+      axios.post('api/messages/disputes/' + body.disputeId + '/note', body)
         .then(response => {
           resolve(response.data)
         })

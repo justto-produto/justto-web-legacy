@@ -2,28 +2,30 @@
   <div class="dispute-overview-view">
     <el-collapse value="1">
       <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
-        <div class="dispute-overview-view__info-line">
-          <span class="title">Nº do Processo:</span>
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+          <span class="title">Num.:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Campanha:</span>
           <span v-if="dispute.campaign">{{ dispute.campaign.name }}</span>
+          <span v-else/>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
           <span v-if="dispute.strategy">{{ dispute.strategy.name }}</span>
+          <span v-else/>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
           <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
           <span v-if="dispute.upperRange">{{ dispute.upperRange.boundary | currency }}</span>
           <span v-else>{{ 0 | currency }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
           <span v-if="dispute.lastCounterOffer">{{ dispute.lastCounterOffer.boundary | currency }}</span>
           <span v-else>{{ 0 | currency }}</span>
@@ -35,20 +37,21 @@
           <span v-if="dispute.dealValue">{{ dispute.dealValue.boundary | currency }}</span>
           <span v-else>{{ 0 | currency }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Valor proposto:</span>
           <span v-if="dispute.lastOffer">{{ dispute.lastOffer.boundary | currency }}</span>
+          <span v-else>{{ 0 | currency }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
           <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Descrição:</span>
           <span>{{ dispute.description }}</span>
         </div>
         <div class="dispute-overview-view__actions">
-          <el-button type="primary" @click="openDisputeDialog()">Editar</el-button>
+          <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -63,13 +66,14 @@
       <el-collapse-item
         v-for="role in disputeRolesSort"
         :key="role.person.id"
-        :name="JSON.stringify({id: role.person.id, name: role.person.name})">
+        :name="JSON.stringify({id: role.person.id, name: role.person.name})"
+        data-testid="expand-party">
         <template slot="title">
           <div class="dispute-overview-view__name">
             {{ role.person.name }}
           </div>
         </template>
-        <!-- <div class="dispute-overview-view__info-line">
+        <!-- <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span>Status:</span>
           <el-popover
             placement="top-end"
@@ -130,7 +134,7 @@
         </div>
         <div v-if="buildTitle(role) !== 'Negociador'" class="dispute-overview-view__actions">
           <el-button plain @click="removeRole(role)">Excluir</el-button>
-          <el-button type="primary" @click="openRoleDialog(role)">Editar</el-button>
+          <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -165,14 +169,14 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
-              <el-input v-model="disputeForm.description" type="textarea" rows="4" />
+              <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description"/>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDisputeDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="editDispute(disputeForm)">Editar dados</el-button>
+        <el-button type="primary" data-testid="confirm-edit-data" @click="editDispute(disputeForm)">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -245,7 +249,7 @@
           <li v-for="(phone, index) in roleForm.phones" :key="phone.id">
             <img src="@/assets/icons/ic-check.svg">
             {{ phone.number }}
-            <a href="#" @click.prevent="removePhone({disputeId: dispute.id, id: phone.id}, roleForm.phones, index)">
+            <a href="#" data-testid="remove-phone" @click.prevent="removePhone({disputeId: dispute.id, id: phone.id}, roleForm.phones, index)">
               <img src="@/assets/icons/ic-error.svg">
             </a>
           </li>
@@ -257,8 +261,8 @@
         :rules="emailRules"
         label-position="top">
         <el-form-item label="E-mail" prop="email">
-          <el-input v-model="emailForm.email">
-            <el-button slot="append" @click="addEmail(roleForm.personId, roleForm.emails)">
+          <el-input v-model="emailForm.email" data-testid="input-email">
+            <el-button slot="append" data-testid="add-email" @click="addEmail(roleForm.personId, roleForm.emails)">
               <jus-icon icon="add-white" />
             </el-button>
           </el-input>
@@ -275,7 +279,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editRoleDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click.prevent="editRole(roleForm.personId, roleForm.name, roleForm.documentNumber)">Editar dados</el-button>
+        <el-button type="primary" data-testid="edit-data-part" @click.prevent="editRole(roleForm.personId, roleForm.name, roleForm.documentNumber)">Editar dados</el-button>
       </span>
     </el-dialog>
   </div>

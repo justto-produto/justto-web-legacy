@@ -9,6 +9,7 @@ const imports = {
     },
     removeImportsFile (state) {
       state.file = undefined
+      state.map = []
     },
     setImportsMap (state, map) {
       state.map = map
@@ -65,6 +66,30 @@ const imports = {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.put('api/imports/'+ state.file.id + '/map', map)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    uploadImportFile ({ commit }, file) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.post('api/imports/upload', file)
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+    startGeneseRunner ({ state }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.post('api/geneserunner/' + state.file.id + '/start')
           .then(response => {
             resolve(response.data)
           })

@@ -24,22 +24,28 @@ const disputeMutations = {
     state.filters.filterPersonId = id
   },
   updateDisputeList (state, disputeChanged) {
-    let changedIndex = state.disputes.findIndex(dispute => {
-      return (disputeChanged.id === dispute.id)
-    })
-    if (changedIndex === -1) {
-      state.disputes.push(disputeChanged)
-    } else {
-      Vue.set(state.disputes, changedIndex, disputeChanged)
-    }
+    // TODO: Retirar o timeout após a morte do elastic search
+    setTimeout(function () {
+      let changedIndex = state.disputes.findIndex(dispute => {
+        return (disputeChanged.id === dispute.id)
+      })
+      if (changedIndex === -1) {
+        state.disputes.push(disputeChanged)
+      } else {
+        Vue.set(state.disputes, changedIndex, disputeChanged)
+      }
+    }, 1000)
   },
   removeDisputeFromList (state, disputeId) {
-    state.disputes = state.disputes.filter(dispute => {
-      if (dispute.disputeid === disputeId) {
-        return false
-      }
-      return true
-    })
+    // TODO: Retirar o timeout após a morte do elastic search
+    setTimeout(function () {
+      state.disputes = state.disputes.filter(dispute => {
+        if (dispute.disputeid === disputeId) {
+          return false
+        }
+        return true
+      })
+    }, 1000)
   },
   setDisputeStatuses (state, status) {
     state.disputeStatuses[status.label] = status.value

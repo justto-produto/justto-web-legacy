@@ -9,15 +9,27 @@
           v-loading="$store.state.loading"
           ref="swiper"
           :options="swiperOption"
-          class="swiper-box">
+          class="swiper-box"
+          @slideChange="slideChange"
+          @progress="updateProgress">
           <swiper-slide>
-            <welcome-step :is-guest="isGuest" @onboarding:step:next="nextStep"/>
+            <transition name="el-fade-in-linear">
+              <welcome-step
+                v-if="currentVisible === 'welcome'"
+                :is-guest="isGuest"
+                :company-name="$route.query.invitedBy"
+                @onboarding:step:next="nextStep"/>
+            </transition>
           </swiper-slide>
           <swiper-slide v-if="!isGuest">
-            <team-name-step @onboarding:step:next="nextStep"/>
+            <transition name="el-fade-in-linear">
+              <team-name-step v-if="currentVisible === 'teamname'" @onboarding:step:next="nextStep"/>
+            </transition>
           </swiper-slide>
           <swiper-slide v-if="!isGuest">
-            <subdomain-step @onboarding:step:next="nextStep" @onboarding:createSubdomain="createSubdomain"/>
+            <transition name="el-fade-in-linear">
+              <subdomain-step v-if="currentVisible === 'subdomain'" @onboarding:step:next="nextStep" @onboarding:createSubdomain="createSubdomain"/>
+            </transition>
           </swiper-slide>
           <!-- <swiper-slide>
             <oab-step @onboarding:step:next="nextStep"/>
@@ -26,13 +38,19 @@
             <LogoStep @onboarding:step:next="nextStep"/>
           </swiper-slide> -->
           <swiper-slide v-if="!isGuest">
-            <invite-step @onboarding:step:next="nextStep"/>
+            <transition name="el-fade-in-linear">
+              <invite-step v-if="currentVisible === 'invite'" @onboarding:step:next="nextStep"/>
+            </transition>
           </swiper-slide>
           <swiper-slide v-if="showWhatsapp">
-            <whatsapp-step @onboarding:step:next="nextStep"/>
+            <transition name="el-fade-in-linear">
+              <whatsapp-step v-if="currentVisible === 'whatsapp'" @onboarding:step:next="nextStep"/>
+            </transition>
           </swiper-slide>
           <swiper-slide>
-            <final-step :is-guest="isGuest"/>
+            <transition name="el-fade-in-linear">
+              <final-step v-if="currentVisible === 'final'" :is-guest="isGuest"/>
+            </transition>
           </swiper-slide>
         </swiper>
         <div class="onboarding-progress">
@@ -82,6 +100,7 @@ export default {
       left: 12,
       right: 0,
       currentStep: 0,
+      progressPercentage: 0,
       secondFase: false,
       swiperOption: {
         direction: 'vertical',
@@ -95,12 +114,35 @@ export default {
     isGuest () {
       return !!this.$route.query.invitedBy
     },
-    progressPercentage () {
-      let slidesN = this.showWhatsapp ? 5 : 4
-      return Math.round((this.currentStep * (100 / slidesN)) * 0.2) / 0.2
-    },
     showWhatsapp () {
       return this.$store.getters.whatsappStatus !== 'OFFLINE'
+    },
+    currentVisible () {
+      if (this.isGuest) {
+        switch (this.currentStep) {
+          case 0:
+            return 'welcome'
+          case 1:
+            return this.showWhatsapp ? 'whatsapp' : 'final'
+          case 2:
+            return 'final'
+        }
+      } else {
+        switch (this.currentStep) {
+          case 0:
+            return 'welcome'
+          case 1:
+            return 'teamname'
+          case 2:
+            return 'subdomain'
+          case 3:
+            return 'invite'
+          case 4:
+            return this.showWhatsapp ? 'whatsapp' : 'final'
+          case 5:
+            return 'final'
+        }
+      }
     }
   },
   beforeCreate () {
@@ -119,17 +161,18 @@ export default {
     }.bind(this), 1200)
   },
   methods: {
+    updateProgress (progress) {
+      this.progressPercentage = Math.round((progress * 100) * 0.2) / 0.2
+    },
+    slideChange () {
+      this.currentStep = this.$refs.swiper.swiper.activeIndex
+    },
     nextStep (responseObj) {
       Object.assign(this.responses, responseObj)
-      this.$refs['swiper'].swiper.slideNext(800)
-      this.updateCurrentStep()
+      this.$refs.swiper.swiper.slideNext(800)
     },
     previousStep () {
-      this.$refs['swiper'].swiper.slidePrev(800)
-      this.updateCurrentStep()
-    },
-    updateCurrentStep () {
-      this.currentStep = this.$refs['swiper'].swiper.activeIndex
+      this.$refs.swiper.swiper.slidePrev(800)
     },
     createSubdomain (responseObj) {
       this.$store.dispatch('showLoading')
@@ -142,7 +185,7 @@ export default {
       }).finally(() => {
         this.$store.dispatch('myWorkspace').then(response => {
           if (response.length && response[response.length - 1].subDomain === this.responses.subdomain) {
-            this.$refs['swiper'].swiper.slideNext(800)
+            this.$refs.swiper.swiper.slideNext(800)
             this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
             this.$store.dispatch('whatsappStart')
           } else {

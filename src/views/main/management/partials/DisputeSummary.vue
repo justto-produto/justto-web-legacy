@@ -36,7 +36,7 @@
       <el-step>
         <template slot="title">
           <span v-if="isDeal">Valor do acordo</span>
-          <span v-else>Última valor proposto</span>
+          <span v-else>Último valor proposto</span>
         </template>
         <template slot="description">
           <div v-if="deal">
@@ -132,23 +132,23 @@ export default {
           return dispute.disputeid === this.id
         })
       }
-    },
-    changeReasonStatus () {
-      this.$store.dispatch('editDisputeReason', {
-        body: { [this.unsettledType]: this.unsettledTypes[this.unsettledType] },
-        disputeId: this.id,
-        reasonId: this.unsettledTypeId
-      }).then(() => {
-        setTimeout(function () {
-          this.$emit('dispute:refresh')
-        }.bind(this), 2000)
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Motivo de perda alterado com sucesso.',
-          type: 'success'
-        })
-      }).catch(() => this.$jusNotification({ type: 'error' }))
     }
+    // changeReasonStatus () {
+    //   this.$store.dispatch('editDisputeReason', {
+    //     body: { [this.unsettledType]: this.unsettledTypes[this.unsettledType] },
+    //     disputeId: this.id,
+    //     reasonId: this.unsettledTypeId
+    //   }).then(() => {
+    //     setTimeout(function () {
+    //       this.$emit('dispute:refresh')
+    //     }.bind(this), 2000)
+    //     this.$jusNotification({
+    //       title: 'Yay!',
+    //       message: 'Motivo de perda alterado com sucesso.',
+    //       type: 'success'
+    //     })
+    //   }).catch(() => this.$jusNotification({ type: 'error' }))
+    // }
   }
 }
 </script>

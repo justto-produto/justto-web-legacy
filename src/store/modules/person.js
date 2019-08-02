@@ -82,6 +82,19 @@ const personModule = {
           })
       })
     },
+    changePersonName ({ commit }, person) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/persons/' + person.id + '/name', {
+          name: person.name
+        }).then(response => {
+          commit('setPerson', response.data)
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     createEmail ({ commit }, newEmailBody) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line

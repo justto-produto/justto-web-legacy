@@ -215,7 +215,7 @@ export default {
     changeName () {
       if (this.person.name) {
         if (this.person.name.length > 2) {
-          this.$store.dispatch('setPerson', this.person)
+          this.$store.dispatch('changePersonName', this.person)
             .then(response => {
               window.analytics.track('Nome alterado')
               this.$jusNotification({

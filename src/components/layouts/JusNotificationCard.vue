@@ -13,7 +13,6 @@
       {{ complement }}
     </div>
   </div>
-
 </template>
 
 <script>

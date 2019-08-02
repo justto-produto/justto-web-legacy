@@ -6,40 +6,48 @@
     <template slot="main">
       <div class="import-view__container">
         <div class="import-view__title">
-          <h2 v-show="!hasFile">Adicione novas disputas</h2>
-          <h2 v-show="hasFile">Planilha carregada com sucesso!</h2>
-          <p v-show="!hasFile">
+          <h2 v-show="!isSuccess">Adicione novas disputas</h2>
+          <p v-show="!isSuccess">
             Aqui você pode inserir novas disputas para você sua equipe negociarem.
           </p>
+          <h2 v-show="isSuccess">Planilha carregada com sucesso!</h2>
         </div>
-        <div class="import-view__content import-view__content---methods">
-          <el-card class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
-            <el-upload
-              v-loading="processingFile"
-              ref="uploadMethod"
-              :show-file-list="true"
-              :on-success="handleSuccess"
-              :before-upload="beforeUpload"
-              :on-error="handleError"
-              :disabled="hasFile"
-              :headers="uploadHeaders"
-              accept=".csv,.xlsx,.xls"
-              action="/api/imports/upload">
-              <jus-icon :icon="hasFile ? 'spreadsheet-xlsx' : 'upload-file'" class="upload-icon" data-idtest="upload_sheet"/>
-              <div v-if="!hasFile && !processingFile" class="import-view__method-info">Planilha nos formatos XLSX, CSV ou XLS</div>
-            </el-upload>
-            <div v-if="processingFile" style="margin-top: 20px; margin-bottom: -20px;">
-              Carregando...
-            </div>
-          </el-card>
-          <!-- <el-card v-if="!hasFile" class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
-            <jus-icon icon="insert" is-active/>
-            <div class="import-view__method-info">Adicionar disputas manualmente</div>
-          </el-card> -->
+        <div class="import-view__content import-view__content--upload">
+          <label for="fileupload">
+            <el-card class="import-view__method el-card--dashed-hover el-card--vertical-content" shadow="never">
+              <div v-if="isInitial">
+                <jus-icon icon="upload-file" />
+                <div>
+                  <br>
+                  Planilha nos formatos XLSX, CSV ou XLS
+                </div>
+              </div>
+              <div v-if="isSaving">
+                <div v-loading="true" class="import-view__loading" />
+                <div>
+                  <br>
+                  Carregando...
+                </div>
+              </div>
+              <div v-if="isSuccess">
+                <jus-icon icon="spreadsheet-xlsx" />
+                <div>
+                  <br>
+                  {{ uploadedFile.file_name }}
+                </div>
+              </div>
+            </el-card>
+            <input
+              id="fileupload"
+              ref="fileupload"
+              type="file"
+              class="import-view__upload"
+              @change="handleFile($event.target.files)">
+          </label>
         </div>
-        <div v-if="hasFile" class="import-view__actions">
-          <el-button plain @click="removeFile">Limpar</el-button>
-          <el-button type="primary" @click="startImport">Próximo</el-button>
+        <div v-if="isSuccess" class="import-view__actions">
+          <el-button plain @click="removeFile">Remover arquivo</el-button>
+          <el-button type="primary" data-testid="submit" @click="startImport">Próximo</el-button>
         </div>
       </div>
     </template>
@@ -50,12 +58,15 @@
             Histórico de importação
           </h2>
           <el-tooltip content="Download da planilha modelo">
-            <el-button plain class="right" @click="downloadModel()">
+            <el-button
+              class="right"
+              data-testid="download-model"
+              @click="downloadModel()">
               <jus-icon icon="download-sheet" />
             </el-button>
           </el-tooltip>
         </div>
-        <p v-if="importsHistory.length === 0">
+        <p v-if="importsHistory.length === 0" data-testid="empty-history">
           Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
           <br><br>
           Faça o download da planilha modelo no ícone acima.
@@ -64,12 +75,17 @@
           <el-card
             v-for="imports in importsHistory"
             :key="imports.id"
-            class="import-view__card">
+            class="import-view__card"
+            data-testid="spreadsheet-card">
             <div>
               <jus-icon icon="spreadsheet-xlsx"/>
             </div>
             <div class="import-view__card-content">
-              <h4><a href="#" @click="downloadItem(imports.file_name)">{{ imports.file_name }}</a></h4>
+              <h4>
+                <a href="#" @click="downloadItem(imports.file_url)">
+                  {{ imports.file_name }}
+                </a>
+              </h4>
               <p>Data: {{ imports.date | moment('DD/MM/YY - HH:mm') }} <br></p>
               <p>Linhas: {{ imports.rows }}</p>
             </div>
@@ -81,24 +97,33 @@
 </template>
 
 <script>
+const STATUS_INITIAL = 0
+const STATUS_SAVING = 1
+const STATUS_SUCCESS = 2
+const STATUS_FAILED = 3
+
 export default {
   name: 'Import',
   data () {
     return {
       importsHistory: [],
-      fileUrl: '',
-      processingFile: false
+      uploadedFile: null,
+      uploadError: null,
+      currentStatus: 0
     }
   },
   computed: {
-    hasFile () {
-      return this.fileUrl !== ''
+    isInitial () {
+      return this.currentStatus === STATUS_INITIAL
     },
-    uploadHeaders () {
-      return {
-        'Authorization': this.$store.state.accountModule.token,
-        'Workspace': this.$store.state.workspaceModule.subdomain
-      }
+    isSaving () {
+      return this.currentStatus === STATUS_SAVING
+    },
+    isSuccess () {
+      return this.currentStatus === STATUS_SUCCESS
+    },
+    isFailed () {
+      return this.currentStatus === STATUS_FAILED
     }
   },
   beforeMount () {
@@ -116,22 +141,20 @@ export default {
     this.$store.commit('removeImportsFile')
   },
   methods: {
-    beforeUpload (file) {
+    handleFile (files) {
       this.$notify.closeAll()
-      this.processingFile = true
-      const isValid =
-      file.name.toLowerCase().endsWith('.xlsx') ||
-      file.name.toLowerCase().endsWith('.xls') ||
-      file.name.toLowerCase().endsWith('.csv')
+      const file = files[0]
       const isLt20M = file.size / 1024 / 1024 < 20
+      const isValid =
+        file.name.toLowerCase().endsWith('.xlsx') ||
+        file.name.toLowerCase().endsWith('.xls') ||
+        file.name.toLowerCase().endsWith('.csv')
       if (!isValid) {
-        this.processingFile = false
         this.$jusNotification({
           title: 'Ops!',
           message: 'Arquivo em formato inválido.',
           type: 'warning'
         })
-        return false
       }
       if (!isLt20M) {
         this.processingFile = false
@@ -140,18 +163,26 @@ export default {
           message: 'Arquivo não pode ultrapassar 20MB.',
           type: 'warning'
         })
-        return false
       }
-      return isValid && isLt20M
+      if (isLt20M && isValid) {
+        const formData = new FormData()
+        formData.append('file', file)
+        this.saveFile(formData)
+      } else {
+        this.removeFile()
+      }
     },
-    startImport () {
-      this.$router.push('/import/new')
-      this.$store.dispatch('hideLoading')
-    },
-    handleSuccess (res, file) {
-      this.processingFile = false
-      this.$store.commit('setImportsFile', res)
-      this.fileUrl = URL.createObjectURL(file.raw)
+    saveFile (formData) {
+      this.currentStatus = STATUS_SAVING
+      this.$store.dispatch('uploadImportFile', formData).then(response => {
+        this.currentStatus = STATUS_SUCCESS
+        this.uploadedFile = response
+        this.$store.commit('setImportsFile', response)
+      }).catch(error => {
+        this.handleError(error.response)
+        this.removeFile()
+        this.currentStatus = STATUS_FAILED
+      })
     },
     handleError (error) {
       let errorMessage = {}
@@ -170,16 +201,24 @@ export default {
       })
     },
     removeFile () {
-      this.fileUrl = ''
+      const input = this.$refs.fileupload
+      input.type = 'text'
+      input.type = 'file'
       this.$store.commit('removeImportsFile')
-      this.$refs['uploadMethod'].clearFiles()
+      this.currentStatus = STATUS_INITIAL
+      this.uploadedFile = null
+      this.uploadError = null
+    },
+    startImport () {
+      this.$router.push('/import/new')
+      this.$store.dispatch('hideLoading')
     },
     downloadModel () {
       window.analytics.track('Planilha modelo baixada')
       window.open('Planilha-Modelo-Justto.xlsx', '_blank')
     },
     downloadItem (fileName) {
-      window.open('imported/' + fileName, '_blank')
+      window.open(fileName, '_blank')
     }
   }
 }
@@ -244,14 +283,9 @@ export default {
     margin: 0 -20px;
   }
   &__cards {
-    overflow-y: scroll;
+    overflow-y: auto;
     padding: 0 20px 20px;
     margin-bottom: -20px;
-  }
-  &__method-info {
-    margin-top: 10px;
-    text-align: center;
-    transition: all ease .5s;
   }
   &__actions {
     display: flex;
@@ -274,37 +308,39 @@ export default {
   &__content {
     margin: 40px 0 0;
   }
-  &__content---methods {
+  &__content--upload {
     display: flex;
     justify-content: center;
     text-align: center;
-    .el-upload-list {
-      max-width: 95%;
-      &.is-disabled {
-        max-width: 368px;
+    .el-card {
+      width: 400px;
+      max-width: 400px;
+      transition: all ease .5s;
+      &+.import-view__method {
+        margin-left: 20px;
+      }
+      >.el-card__body {
+        padding: 40px 20px;
+      }
+      &:hover {
+        cursor: pointer;
+        color: $--color-primary;
       }
     }
-    .el-icon-document {
-      display: none;
-    }
   }
-  &__method {
-    width: 400px;
-    max-width: 400px;
-    transition: all ease .5s;
-    &+.import-view__method {
-      margin-left: 20px;
-    }
-    >.el-card__body {
-      padding: 40px 20px;
-    }
+  &__upload {
+    display: none
   }
-}
-.el-card--dashed-hover:hover{
-  cursor: pointer;
-  .import-view__method-info {
-    color: $--color-primary;
+  &__upload-label {
+    background-color: #3498db;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    margin: 10px;
+    padding: 6px 20px
+  }
+  &__loading {
+    height: 55px;
   }
 }
-
 </style>
