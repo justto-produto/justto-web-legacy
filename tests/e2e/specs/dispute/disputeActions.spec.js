@@ -124,18 +124,4 @@ describe('Justto.App - Disputa: Ações', function () {
     cy.get('.confirm-action-btn')
       .click()
   })
-
-  it('Ação: Remover', function () {
-    // Clica em Remover
-    cy.get('[data-testid=remove]')
-      .click()
-
-    // Modal de confirmação deve aparecer
-    cy.get('.el-message-box')
-      .should('be.visible')
-
-    // Confirma a ação
-    cy.get('.confirm-remove-btn')
-      .click()
-  })
 })

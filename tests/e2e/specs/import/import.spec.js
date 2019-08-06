@@ -31,6 +31,106 @@ describe('Justto.App - Planilha Modelo', function () {
   })
 
   // IMPORTA PLANILHA
+  it('Importa planilha modelo: Falha', function () {
+    // Acessa a tela de gerenciamento
+    cy.get('[data-testid=menu-import]')
+      .click()
+
+    // Sistema deve redirecionar para a página de Importação
+    cy.url().should('include', '/#/import')
+
+    // Importa arquivo
+    cy.upload_file('Varios_Casos_Aleatorios.xlsx', fileType, fileInput)
+
+    // Acavça para proximo passo
+    cy.get('[data-testid=submit]')
+      .click()
+
+    // Sstema deve redirecionar para a página de Nova Importação
+    cy.url().should('include', '/new')
+
+    // Verifica se aparecem os números de linha da planilha importada
+    cy.get('[data-testid=import-checklines]')
+      .should('be.visible')
+
+    // Avança para proximo passo
+    cy.get('[data-testid=submit]')
+      .click()
+
+    // Verifica se as colunas foram recebidas e estão visiveis
+    cy.get('[data-testid=import-columns]')
+      .should('not.have.class', '.el-tag--dropzone-active')
+      .should('be.visible')
+
+    // Verifica se as tags foram recebidas e estão visiveis
+    cy.get('[data-testid=import-tags]')
+      .should('be.visible')
+
+    cy.get('.file-column>.el-tag')
+      .should('be.visible')
+      // .should('have.css', 'background-color', 'rgb(148, 97, 247)')
+
+    // Apaga tag mapeada
+    // cy.get('.columns-step .el-tag__close')
+    //   .click()
+
+    // Arrasta tags para colunas
+    // cy.get('.el-tag--drag:nth-child(1)').drag('.file-column:nth-child(1) .el-tag--dropzone')
+
+    // Avança apara proximo passo
+    cy.get('[data-testid=submit]')
+      .click()
+
+    // Verifica se configurações da campanha estão visiveis
+    cy.get('[data-testid=import-feedback]')
+      .should('be.visible')
+
+    // Preenche campo 'Nome do Reu'
+    cy.get('[data-testid=feedback-respondent]')
+      .clear().type('Teste')
+      .should('have.value', 'Teste')
+
+    // Preenche o campo 'Nome da Campanna'
+    cy.get('[data-testid=feedback-campaignName]')
+      .clear()
+      .should('have.value', '')
+
+    // Seleciona  uma estratégia
+    cy.get('[data-testid=feedback-strategy]')
+      .click()
+    // .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+    // .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+    cy.get('.el-select-dropdown__list')
+      .contains('Trabalhista')
+      .click({force: true})
+
+    // Campo com data de pagamento deve estar visivel
+    // cy.get('[data-testid=feedback-paymendate]')
+    //   .should('be.visible')
+
+    // Seleciona uma data limite
+    cy.get('[data-testid=feedback-datapicker]')
+      .click()
+      .trigger('keydown', { keyCode: 39, Which: 39 }) // Pressiona seta direita
+      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+
+    // Seleciona um negociador
+    cy.get('[data-testid=feedback-negotiators]')
+      .click()
+      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+      .click()
+
+    // Avança para proximo passo
+    cy.get('[data-testid=start-negotiation]')
+      .click()
+
+    // Mensagem de erro deve aparecer
+    cy.get('.el-notification.warning')
+      .contains('Para prosseguir você deve configurar todos os campos')
+  })
+
+  // IMPORTA PLANILHA
   it('Importa planilha modelo: Sucesso', function () {
     // Acessa a tela de gerenciamento
     cy.get('[data-testid=menu-import]')
