@@ -39,8 +39,7 @@ _axios.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.response.status === 401 && error.response.data.code !== 'ALREADY_EXISTS' &&
-        !error.request.responseURL.endsWith('update-password')) {
+    if (error.response.status === 401) {
       store.dispatch('logout')
     }
     return Promise.reject(error)
