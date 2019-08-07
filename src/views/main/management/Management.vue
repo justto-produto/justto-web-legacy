@@ -439,7 +439,7 @@ export default {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).then(response => {
         // eslint-disable-next-line
-        window.open('/api/export/' + response)
+        // window.open('/api/export/' + response)
         window.analytics.track('Planilha de "' + this.activeTabLabel + '" exportada')
       }).finally(() => {
         this.loadingExport = false

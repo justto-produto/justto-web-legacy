@@ -1,3 +1,4 @@
+const FileSaver = require('file-saver')
 const disputeActions = {
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
@@ -50,9 +51,16 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/export', {
+        responseType: 'arraybuffer',
         query: { bool: { must: [{ terms: { disputeid: disputeIds } }] } } })
         .then(response => {
-          resolve(response.data)
+          const blob = new Blob([response.data], {
+            type: 'application/vnd.ms-excel'
+          })
+          let reg = /(?:filename\*?=)(?<filename>(['"])[\s\S]*?\2|[^;\n]*)/
+          let fileName = response.headers['content-disposition'].match(reg).groups.filename
+          FileSaver.saveAs(blob, fileName)
+          resolve(response)
         })
         .catch(error => {
           reject(error)
