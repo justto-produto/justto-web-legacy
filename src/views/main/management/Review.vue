@@ -27,69 +27,28 @@
           <el-table-column type="selection" width="40px" />
           <el-table-column type="expand" width="40px">
             <template slot-scope="props">
-              <div>
-                <h4>
-                  Processo: {{ props.row.disputecode }}
-                </h4>
-                <el-row>
-                  <el-col :span="8">
-                    <div>Estratégia: {{ props.row.strategyname }}</div>
-                    <div>Status: <span>{{ $t('occurrence.type.' + props.row.disputestatus) | capitalize }}</span></div>
-                    <div v-for="(claiment, index) in props.row.claiments" :key="props.row.disputeid + claiment.name + index + 'claimant'">
-                      Parte contrária: {{ claiment.name }}
-                    </div>
-                    <div v-for="(lawyer, index) in props.row.claimentslawyer" :key="props.row.disputeid + lawyer.name + index + 'lawyer'">
-                      Advogado: {{ lawyer.name }}
-                    </div>
-                  </el-col>
-                  <el-col :span="8">
-                    <div>Campanha: {{ props.row.campaignname }}</div>
-                    <div>Fim da negociação: {{ props.row.disputeexpirationdate | moment('DD/MM/YY') }}</div>
-                    <div>Data do acordo: {{ props.row.disputedealdate | moment('DD/MM/YY') }}</div>
-                    <div>
-                      Última interação:
-                      {{ getLastInteraction(props.row.lastinteractiondate) }}
-                    </div>
-                  </el-col>
-                  <el-col :span="8">
-                    <div v-for="(item, index) in getDisputeAlerts(props.row)" :key="item.child_id + item.id + index ">
-                      <jus-icon icon="warn" style="vertical-align: sub;" />
-                      {{ item.label }}: {{ item.message }}
-                    </div>
-                  </el-col>
-                </el-row>
-              </div>
+              <jus-dispute-resume :dispute="props.row" />
             </template>
           </el-table-column>
           <el-table-column label="Disputa" min-width="70px">
-            <template slot-scope="scope">#{{ scope.row.disputeid }}</template>
+            <template slot-scope="scope">#{{ scope.row.id }}</template>
           </el-table-column>
           <el-table-column label="Campanha" min-width="90px">
-            <template slot-scope="scope">{{ scope.row.campaignname | capitalize }}</template>
+            <template slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
           </el-table-column>
           <el-table-column min-width="140px" class-name="text-ellipsis" label="Parte(s) contrária(s)">
             <template slot-scope="scope">
-              <div v-if="scope.row.claiments && scope.row.claiments.length > 0">
-                {{ scope.row.claiments[0].name }}
-              </div>
-              <span v-if="scope.row.claiments && scope.row.claiments.length > 1">
-                &nbsp;(+{{ scope.row.claiments.length - 1 }})
-              </span>
+              {{ getClaimants(scope.row.disputeRoles, true) }}
             </template>
           </el-table-column>
           <el-table-column class-name="text-ellipsis" label="Advogado(s) da parte" min-width="152px">
             <template slot-scope="scope">
-              <div v-if="scope.row.claimentslawyer && scope.row.claimentslawyer.length > 0">
-                {{ scope.row.claimentslawyer[0].name }}
-              </div>
-              <span v-if="scope.row.claimentslawyer && scope.row.claimentslawyer.length > 1">
-                &nbsp;(+{{ scope.row.claimentslawyer.length - 1 }})
-              </span>
+              {{ getClaimants(scope.row.disputeRoles, true, 'LAWYER') }}
             </template>
           </el-table-column>
           <el-table-column label="Status" align="center" min-width="110px">
             <template slot-scope="scope">
-              {{ $t('occurrence.type.' + scope.row.disputestatus) | capitalize }}
+              {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
             </template>
           </el-table-column>
           <el-table-column v-if="showReviewColumn" label="Alertas">
@@ -110,7 +69,7 @@
               <el-tooltip content="Abrir disputa em uma nova aba">
                 <el-button
                   type="text"
-                  @click="openNewTab(scope.row.disputeid)">
+                  @click="openNewTab(scope.row.id)">
                   <jus-icon icon="external-link" />
                 </el-button>
               </el-tooltip>
@@ -130,11 +89,14 @@
 
 <script>
 import ManagementActions from './partials/ManagementActions'
+import JusDisputeResume from '@/components/layouts/JusDisputeResume'
+import { getClaimants as getClaimantsUtils } from '@/plugins/jusUtils'
 
 export default {
   name: 'Review',
   components: {
-    ManagementActions
+    ManagementActions,
+    JusDisputeResume
   },
   data () {
     return {
@@ -164,8 +126,8 @@ export default {
     handleSelectionChange (selected) {
       this.selectedIds = []
       for (let dispute of selected) {
-        if (dispute && dispute.disputeid) {
-          this.selectedIds.push(dispute.disputeid)
+        if (dispute && dispute.id) {
+          this.selectedIds.push(dispute.id)
         }
       }
     },
@@ -191,8 +153,8 @@ export default {
       return ''
     },
     handleRowClick (row, column, event) {
-      if (row.disputeid && event.target.tagName !== 'IMG') {
-        this.$router.push({ name: 'dispute', params: { id: row.disputeid } })
+      if (row.id && event.target.tagName !== 'IMG') {
+        this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
     sendBatchAction (action) {
@@ -266,6 +228,9 @@ export default {
         }
       }
       return alerts
+    },
+    getClaimants (disputeRoles, showFirstOnly = false, role = 'PARTY') {
+      return getClaimantsUtils(disputeRoles, showFirstOnly, role)
     }
     // getOnlyErrors (alerts) {
     //   return alerts.filter(alert => {

@@ -140,28 +140,23 @@ export default {
                 })
                 window.analytics.group(this.$store.state.workspaceModule.subdomain)
                 if (responses[1][0] && responses[1][0]['subDomain']) {
-                  this.$store.dispatch('getWorkspaceMembers')
-                  this.$store.dispatch('myPerson')
+                  Promise.all([
+                    this.$store.dispatch('getWorkspaceMembers'),
+                    this.$store.dispatch('myPerson')
+                  ]).then(() => {
+                    setTimeout(function () {
+                      this.$router.push('/management')
+                    }.bind(this), 1000)
+                  }).catch(() => this.mountError())
                 }
-                setTimeout(function () {
-                  this.$router.push('/management')
-                }.bind(this), 1000)
-              }).catch(() => {
-                this.errorMessage = `Houve uma falha de conexão com o servidor.
-                Tente novamente ou entre em contato com o administrador do sistema.`
-                this.showError = true
-                this.showLoading = false
-              })
+              }).catch(() => this.mountError())
             })
             .catch(error => {
               if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
-                this.errorMessage = 'E-mail não cadastrado ou senha incorreta.'
+                this.mountError('E-mail não cadastrado ou senha incorreta.')
               } else {
-                this.errorMessage = `Houve uma falha de conexão com o servidor.
-                Tente novamente ou entre em contato com o administrador do sistema.`
+                this.mountError()
               }
-              this.showError = true
-              this.showLoading = false
             })
         } else {
           return false
@@ -170,6 +165,12 @@ export default {
     },
     switchShowPassword () {
       this.showPassword = !this.showPassword
+    },
+    mountError (message) {
+      this.errorMessage = message || `Houve uma falha de conexão com o servidor.
+      Tente novamente ou entre em contato com o administrador do sistema.`
+      this.showError = true
+      this.showLoading = false
     }
   }
 }

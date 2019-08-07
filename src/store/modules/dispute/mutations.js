@@ -47,7 +47,7 @@ const disputeMutations = {
   removeDisputeFromList (state, disputeId) {
     Vue.nextTick(() => {
       state.disputes = state.disputes.filter(dispute => {
-        if (dispute.disputeid === disputeId) {
+        if (dispute.id === disputeId) {
           return false
         }
         return true
@@ -56,6 +56,19 @@ const disputeMutations = {
   },
   setDisputeStatuses (state, status) {
     state.disputeStatuses[status.label] = status.value
+  },
+  addUpdatingList (state, disputeId) {
+    if (!(disputeId in state.updatingList)) {
+      state.updatingList.push(disputeId)
+    }
+  },
+  removeUpdatingList (state, disputeId) {
+    state.updatingList = state.updatingList.filter(dispute => {
+      if (dispute.id === disputeId) {
+        return false
+      }
+      return true
+    })
   }
 }
 

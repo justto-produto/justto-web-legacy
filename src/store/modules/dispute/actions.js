@@ -12,25 +12,28 @@ const disputeActions = {
     })
   },
   updateDispute ({ commit, rootState }, disputeId) {
+    commit('addUpdatingList', disputeId)
     setTimeout(function () {
       // eslint-disable-next-line
-      axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/', {
-        query: { bool: { must: [{ match: { disputeid: disputeId } }] } } })
+      axios.get('api/disputes/' + disputeId)
         .then(response => {
-          if (response.data.length > 0) {
-            commit('updateDisputeList', response.data[0])
+          if (response.data) {
+            commit('updateDisputeList', response.data)
           } else {
             commit('removeDisputeFromList', disputeId)
           }
+        })
+        .finally(() => {
+          commit('removeUpdatingList', disputeId)
         })
     }, 1000)
   },
   getDisputes ({ commit, rootState }, query) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/', query)
+      axios.get('api/disputes?pageSize=20000')
         .then(response => {
-          commit('setDisputes', response.data)
+          commit('setDisputes', response.data.content)
           resolve(response.data)
         })
         .catch(error => {
@@ -41,7 +44,7 @@ const disputeActions = {
   getDisputeById ({ state }, id) {
     return new Promise((resolve, reject) => {
       let dispute = state.disputes.find((dispute) => {
-        return dispute.disputeid === id
+        return dispute.id === id
       })
       if (dispute) resolve(dispute)
     })

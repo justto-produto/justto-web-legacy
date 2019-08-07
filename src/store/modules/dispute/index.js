@@ -15,7 +15,8 @@ const dispute = {
       },
       filterTerm: ''
     },
-    disputeStatuses: {}
+    disputeStatuses: {},
+    updatingList: [6311]
   },
   mutations: mutations,
   actions: actions,

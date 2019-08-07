@@ -2,7 +2,7 @@
   <JusViewMain :loading-main="$store.state.loading" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <management-carousel v-if="!$store.state.loading" />
+      <management-carousel />
     </template>
     <template slot="actions">
       <management-actions
@@ -27,7 +27,7 @@
           icon="el-icon-refresh"
           plain
           data-testid="update-cases"
-          @click="getDisputes">
+          @click="getDisputes()">
           Atualizar
         </el-button>
         <el-button
@@ -58,44 +58,14 @@
           size="mini"
           class="el-table--disputes"
           data-testid="dispute-index"
+          :row-class-name="handleRowClassName"
           @row-click="handleRowClick"
           @sort-change="handleSortChange"
           @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="40px" />
           <el-table-column type="expand" width="40px">
             <template slot-scope="props">
-              <div>
-                <h4 data-testid="dispute-title">
-                  Processo: {{ props.row.disputecode }}
-                </h4>
-                <el-row data-testid="dipute-info">
-                  <el-col :span="8">
-                    <div>Estratégia: {{ props.row.strategyname }}</div>
-                    <div>Status: <span>{{ $t('occurrence.type.' + props.row.disputestatus) | capitalize }}</span></div>
-                    <div v-for="(claiment, index) in props.row.claiments" :key="props.row.disputeid + claiment.name + index + 'claimant'">
-                      Parte contrária: {{ claiment.name }}
-                    </div>
-                    <div v-for="(lawyer, index) in props.row.claimentslawyer" :key="props.row.disputeid + lawyer.name + index + 'lawyer'">
-                      Advogado: {{ lawyer.name }}
-                    </div>
-                  </el-col>
-                  <el-col :span="8">
-                    <div>Campanha: {{ props.row.campaignname }}</div>
-                    <div>Fim da negociação: {{ props.row.disputeexpirationdate | moment('DD/MM/YY') }}</div>
-                    <div>Data do acordo: {{ props.row.disputedealdate | moment('DD/MM/YY') }}</div>
-                    <div>
-                      Última interação:
-                      {{ getLastInteraction(props.row.lastinteractiondate) }}
-                    </div>
-                  </el-col>
-                  <el-col :span="8">
-                    <div>Alçada máxima: {{ props.row.disputeupperrange | currency }}</div>
-                    <div>Valor proposto: {{ props.row.lastoffervalue | currency }}</div>
-                    <div>Contraproposta: {{ props.row.lastcounteroffervalue | currency }}</div>
-                    <div>Valor do acordo: {{ props.row.disputedealvalue | currency }}</div>
-                  </el-col>
-                </el-row>
-              </div>
+              <jus-dispute-resume :dispute="props.row" />
             </template>
           </el-table-column>
           <el-table-column
@@ -103,14 +73,14 @@
             min-width="92px"
             prop="disputeid"
             sortable="custom">
-            <template slot-scope="scope">#{{ scope.row.disputeid }}</template>
+            <template slot-scope="scope">#{{ scope.row.id }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
             prop="campaignname"
             label="Campanha"
             min-width="112px">
-            <template slot-scope="scope">{{ scope.row.campaignname | capitalize }}</template>
+            <template slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
@@ -119,12 +89,7 @@
             class-name="text-ellipsis"
             label="Parte(s) contrária(s)">
             <template slot-scope="scope">
-              <div v-if="scope.row.claiments && scope.row.claiments.length > 0">
-                {{ scope.row.claiments[0].name }}
-              </div>
-              <span v-if="scope.row.claiments && scope.row.claiments.length > 1">
-                &nbsp;(+{{ scope.row.claiments.length - 1 }})
-              </span>
+              {{ getClaimants(scope.row.disputeRoles, true) }}
             </template>
           </el-table-column>
           <el-table-column
@@ -134,15 +99,10 @@
             label="Advogado(s) da parte"
             min-width="176px">
             <template slot-scope="scope">
-              <div v-if="scope.row.claimentslawyer && scope.row.claimentslawyer.length > 0">
-                {{ scope.row.claimentslawyer[0].name }}
-              </div>
-              <span v-if="scope.row.claimentslawyer && scope.row.claimentslawyer.length > 1">
-                &nbsp;(+{{ scope.row.claimentslawyer.length - 1 }})
-              </span>
+              {{ getClaimants(scope.row.disputeRoles, true, 'LAWYER') }}
             </template>
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             v-if="activeTab !== '3'"
             label="Alçada máxima"
             align="center"
@@ -159,8 +119,8 @@
             align="center"
             min-width="134px">
             <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
-          </el-table-column>
-          <el-table-column
+          </el-table-column> -->
+          <!-- <el-table-column
             v-if="activeTab === '1'"
             label="Contraproposta"
             align="center"
@@ -168,17 +128,17 @@
             prop="lastcounteroffervalue"
             min-width="140px">
             <template slot-scope="scope">{{ scope.row.lastcounteroffervalue | currency }}</template>
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column
             v-if="activeTab < 2"
             sortable="custom"
-            prop="disputeexpirationdate"
+            prop="expirationDate"
             label="Fim da negociação"
             align="center"
             min-width="160px">
-            <template slot-scope="scope">{{ scope.row.disputeexpirationdate | moment('DD/MM/YY') }}</template>
+            <template slot-scope="scope">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</template>
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             v-if="activeTab === '1'"
             sortable="custom"
             prop="lastinteractiondate"
@@ -191,8 +151,8 @@
               </el-tooltip>
               {{ getLastInteraction(scope.row.lastinteractiondate) }}
             </template>
-          </el-table-column>
-          <el-table-column
+          </el-table-column> -->
+          <!-- <el-table-column
             v-if="activeTab === '2'"
             label="Valor do acordo"
             sortable="custom"
@@ -200,8 +160,8 @@
             align="center"
             width="140px">
             <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
-          </el-table-column>
-          <el-table-column
+          </el-table-column> -->
+          <!-- <el-table-column
             v-if="activeTab === '2'"
             sortable="custom"
             prop="disputedealdate"
@@ -209,19 +169,19 @@
             min-width="138px"
             align="center">
             <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             v-if="activeTab === '3'"
             label="Status"
             sortable="custom"
-            prop="disputestatus"
+            prop="status"
             align="center"
             min-width="110px">
             <template slot-scope="scope">
-              {{ $t('occurrence.type.' + scope.row.disputestatus) | capitalize }}
+              {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
             </template>
           </el-table-column>
-          <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
+          <!-- <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
             <template slot-scope="scope">
               <span v-if="!scope.row.communicationmsgtotalsent && !scope.row.communicationmsgtotalschedulled">
                 Enriquecendo
@@ -231,7 +191,7 @@
                 {{ scope.row.communicationmsgtotalschedulled }}
               </span>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             width="70px"
             class-name="view-management__row-actions"
@@ -240,14 +200,14 @@
               <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
                 <el-button
                   type="text"
-                  @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeid, 'ENGAJAMENTO')">
+                  @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
                   <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
                 </el-button>
               </el-tooltip>
               <el-tooltip content="Abrir disputa em uma nova aba">
                 <el-button
                   type="text"
-                  @click="openNewTab(scope.row.disputeid)">
+                  @click="openNewTab(scope.row.id)">
                   <jus-icon icon="external-link" />
                 </el-button>
               </el-tooltip>
@@ -298,6 +258,8 @@ import JusManagementFilters from '@/components/others/JusManagementFilters'
 import JusFilterButton from '@/components/buttons/JusFilterButton'
 import ManagementCarousel from './partials/ManagementCarousel'
 import ManagementActions from './partials/ManagementActions'
+import JusDisputeResume from '@/components/layouts/JusDisputeResume'
+import { getClaimants as getClaimantsUtils } from '@/plugins/jusUtils'
 
 export default {
   name: 'Management',
@@ -305,7 +267,8 @@ export default {
     ManagementCarousel,
     JusManagementFilters,
     ManagementActions,
-    JusFilterButton
+    JusFilterButton,
+    JusDisputeResume
   },
   data () {
     return {
@@ -367,15 +330,15 @@ export default {
         this.tableHeigth = this.$refs.tableContainer.clientHeight
       })
     })
-    // setTimeout(function () {
-    //   this.tabKey = true
-    //   this.tableHeigth = this.$refs.tableContainer.clientHeight
-    // }.bind(this), 500)
+    setTimeout(function () {
+      this.tabKey = true
+      this.tableHeigth = this.$refs.tableContainer.clientHeight
+    }.bind(this), 500)
   },
   methods: {
     getDisputes () {
       this.$store.commit('showLoading')
-      this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
+      this.$store.dispatch('getDisputes')
         .catch(() => {
           this.$jusNotification({ type: 'error' })
         })
@@ -397,14 +360,19 @@ export default {
     handleSelectionChange (selected) {
       this.selectedIds = []
       for (let dispute of selected) {
-        if (dispute && dispute.disputeid) {
-          this.selectedIds.push(dispute.disputeid)
+        if (dispute && dispute.id) {
+          this.selectedIds.push(dispute.id)
         }
       }
     },
     handleRowClick (row, column, event) {
-      if (row.disputeid && event.target.tagName !== 'IMG') {
-        this.$router.push({ name: 'dispute', params: { id: row.disputeid } })
+      if (row.id && event.target.tagName !== 'IMG') {
+        this.$router.push({ name: 'dispute', params: { id: row.id } })
+      }
+    },
+    handleRowClassName (obj) {
+      if (this.$store.getters.disputesUpdatingList.includes(obj.row.id)) {
+        return 'el-table__row--loading'
       }
     },
     handleChangeTab (newTab, oldTab) {
@@ -542,6 +510,9 @@ export default {
       this.$nextTick(() => {
         this.$el.querySelector('#main-card').scrollTop = 0
       })
+    },
+    getClaimants (disputeRoles, showFirstOnly = false, role = 'PARTY') {
+      return getClaimantsUtils(disputeRoles, showFirstOnly, role)
     }
   }
 }

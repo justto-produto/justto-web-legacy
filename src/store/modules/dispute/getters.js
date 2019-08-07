@@ -12,17 +12,17 @@ const disputeGetters = {
       switch (state.filters.tab) {
         case '0':
           filteredDisputes = filteredDisputes.filter(dispute => {
-            return dispute.disputestatus === 'ENGAGEMENT' && !dispute.disputehasinteractions && !dispute.paused
+            return dispute.status === 'ENGAGEMENT' && !dispute.hasInteraction && !dispute.paused
           })
           break
         case '1':
           filteredDisputes = filteredDisputes.filter(dispute => {
-            return (dispute.disputestatus === 'ENGAGEMENT' || dispute.disputestatus === 'RUNNING') && dispute.disputehasinteractions
+            return (dispute.status === 'ENGAGEMENT' || dispute.status === 'RUNNING') && dispute.hasInteraction
           })
           break
         case '2':
           filteredDisputes = filteredDisputes.filter(dispute => {
-            return dispute.disputestatus === 'ACCEPTED' || dispute.disputestatus === 'CHECKOUT'
+            return dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT'
           })
           break
       }
@@ -34,7 +34,7 @@ const disputeGetters = {
             } else if (term === 'disputestatus' && state.filters.terms[term] === 'PAUSED') {
               return !!dispute.paused
             } else if (term === 'disputestatus' && state.filters.terms[term] === 'INTERACTIONS') {
-              return !!dispute.disputehasinteractions && (dispute.disputestatus === 'ENGAGEMENT' || dispute.disputestatus === 'RUNNING')
+              return !!dispute.hasInteraction && (dispute.status === 'ENGAGEMENT' || dispute.status === 'RUNNING')
             } else {
               return dispute[term] === state.filters.terms[term]
             }
@@ -55,43 +55,43 @@ const disputeGetters = {
         })
       }
       if (state.filters.sort.order) {
-        filteredDisputes.sort((a, b) => {
-          let compareA = Object.assign({}, a)
-          let compareB = Object.assign({}, b)
-          let directionA = state.filters.sort.order === 'ascending' ? 1 : -1
-          let directionB = directionA === 1 ? -1 : 1
-          if (moment(compareA[state.filters.sort.prop]).isValid()) {
-            if (!compareA[state.filters.sort.prop]) compareA[state.filters.sort.prop] = moment(0)
-            if (!compareB[state.filters.sort.prop]) compareB[state.filters.sort.prop] = moment(0)
-            if (moment(compareA[state.filters.sort.prop]).isAfter(compareB[state.filters.sort.prop])) return directionA
-            if (moment(compareA[state.filters.sort.prop]).isBefore(compareB[state.filters.sort.prop])) return directionB
-            return 0
-          } else if (state.filters.sort.prop === 'claiments' || state.filters.sort.prop === 'claimentslawyer') {
-            if (Array.isArray(compareA[state.filters.sort.prop])) {
-              if (Array.isArray(compareB[state.filters.sort.prop])) {
-                if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') > compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionA
-                if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') < compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionB
-                return 0
-              } else {
-                return directionB
-              }
-            } else {
-              if (Array.isArray(compareB[state.filters.sort.prop])) {
-                return directionA
-              } else {
-                return 0
-              }
-            }
-          } else if (state.filters.sort.prop === 'disputestatus') {
-            if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) > i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionA
-            if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) < i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionB
-            return 0
-          } else {
-            if (compareA[state.filters.sort.prop] > compareB[state.filters.sort.prop]) return directionA
-            if (compareA[state.filters.sort.prop] < compareB[state.filters.sort.prop]) return directionB
-            return 0
-          }
-        })
+        // filteredDisputes.sort((a, b) => {
+        //   let compareA = Object.assign({}, a)
+        //   let compareB = Object.assign({}, b)
+        //   let directionA = state.filters.sort.order === 'ascending' ? 1 : -1
+        //   let directionB = directionA === 1 ? -1 : 1
+        //   if (moment(compareA[state.filters.sort.prop]).isValid()) {
+        //     if (!compareA[state.filters.sort.prop]) compareA[state.filters.sort.prop] = moment(0)
+        //     if (!compareB[state.filters.sort.prop]) compareB[state.filters.sort.prop] = moment(0)
+        //     if (moment(compareA[state.filters.sort.prop]).isAfter(compareB[state.filters.sort.prop])) return directionA
+        //     if (moment(compareA[state.filters.sort.prop]).isBefore(compareB[state.filters.sort.prop])) return directionB
+        //     return 0
+        //   } else if (state.filters.sort.prop === 'claiments' || state.filters.sort.prop === 'claimentslawyer') {
+        //     if (Array.isArray(compareA[state.filters.sort.prop])) {
+        //       if (Array.isArray(compareB[state.filters.sort.prop])) {
+        //         if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') > compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionA
+        //         if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') < compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionB
+        //         return 0
+        //       } else {
+        //         return directionB
+        //       }
+        //     } else {
+        //       if (Array.isArray(compareB[state.filters.sort.prop])) {
+        //         return directionA
+        //       } else {
+        //         return 0
+        //       }
+        //     }
+        //   } else if (state.filters.sort.prop === 'disputestatus') {
+        //     if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) > i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionA
+        //     if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) < i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionB
+        //     return 0
+        //   } else {
+        //     if (compareA[state.filters.sort.prop] > compareB[state.filters.sort.prop]) return directionA
+        //     if (compareA[state.filters.sort.prop] < compareB[state.filters.sort.prop]) return directionB
+        //     return 0
+        //   }
+        // })
       }
       if (state.filters.filterTerm) {
         var run = new Fuse(filteredDisputes, {
@@ -124,12 +124,12 @@ const disputeGetters = {
   },
   alertOne: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
-      if ((dispute.disputestatus === 'IMPORTED' ||
-        dispute.disputestatus === 'PENDING' ||
-        dispute.disputestatus === 'ENRICHED' ||
-        dispute.disputestatus === 'ENGAGEMENT' ||
-        dispute.disputestatus === 'RUNNING') &&
-        moment(dispute.disputeexpirationdate).isBetween(moment(), moment().add(3, 'day'))
+      if ((dispute.status === 'IMPORTED' ||
+        dispute.status === 'PENDING' ||
+        dispute.status === 'ENRICHED' ||
+        dispute.status === 'ENGAGEMENT' ||
+        dispute.status === 'RUNNING') &&
+        moment(dispute.expirationDate.dateTime).isBetween(moment(), moment().add(3, 'day'))
       ) {
         return true
       }
@@ -138,11 +138,11 @@ const disputeGetters = {
   },
   alertTwo: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
-      if ((dispute.disputestatus === 'IMPORTED' ||
-        dispute.disputestatus === 'PENDING' ||
-        dispute.disputestatus === 'ENRICHED' ||
-        dispute.disputestatus === 'ENGAGEMENT' ||
-        dispute.disputestatus === 'RUNNING') &&
+      if ((dispute.status === 'IMPORTED' ||
+        dispute.status === 'PENDING' ||
+        dispute.status === 'ENRICHED' ||
+        dispute.status === 'ENGAGEMENT' ||
+        dispute.status === 'RUNNING') &&
         !dispute.hasvalidemail) {
         return true
       }
@@ -151,11 +151,11 @@ const disputeGetters = {
   },
   alertThree: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
-      if ((dispute.disputestatus === 'IMPORTED' ||
-        dispute.disputestatus === 'PENDING' ||
-        dispute.disputestatus === 'ENRICHED' ||
-        dispute.disputestatus === 'ENGAGEMENT' ||
-        dispute.disputestatus === 'RUNNING') &&
+      if ((dispute.status === 'IMPORTED' ||
+        dispute.status === 'PENDING' ||
+        dispute.status === 'ENRICHED' ||
+        dispute.status === 'ENGAGEMENT' ||
+        dispute.status === 'RUNNING') &&
         (dispute.lastofferpercenttoupperrange >= 100 &&
         dispute.lastofferpercenttoupperrange <= 120)) {
         return true
@@ -166,12 +166,12 @@ const disputeGetters = {
   alertFour: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if (
-        (dispute.disputestatus === 'IMPORTED' ||
-        dispute.disputestatus === 'PENDING' ||
-        dispute.disputestatus === 'ENRICHED' ||
-        dispute.disputestatus === 'ENGAGEMENT' ||
-        dispute.disputestatus === 'RUNNING') &&
-        dispute.disputehasinteractions &&
+        (dispute.status === 'IMPORTED' ||
+        dispute.status === 'PENDING' ||
+        dispute.status === 'ENRICHED' ||
+        dispute.status === 'ENGAGEMENT' ||
+        dispute.status === 'RUNNING') &&
+        dispute.hasInteraction &&
         !dispute.lastcounteroffervalue
       ) {
         return true
@@ -181,11 +181,11 @@ const disputeGetters = {
   },
   alertFive: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
-      if ((dispute.disputestatus === 'IMPORTED' ||
-        dispute.disputestatus === 'PENDING' ||
-        dispute.disputestatus === 'ENRICHED' ||
-        dispute.disputestatus === 'ENGAGEMENT' ||
-        dispute.disputestatus === 'RUNNING') &&
+      if ((dispute.status === 'IMPORTED' ||
+        dispute.status === 'PENDING' ||
+        dispute.status === 'ENRICHED' ||
+        dispute.status === 'ENGAGEMENT' ||
+        dispute.status === 'RUNNING') &&
         !dispute.hasvalidphone) {
         return true
       }
@@ -194,7 +194,7 @@ const disputeGetters = {
   },
   alertSix: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
-      if (dispute.disputestatus === 'ENGAGEMENT' &&
+      if (dispute.status === 'ENGAGEMENT' &&
         dispute.communicationmsgtotalallsented) {
         return true
       }
@@ -204,8 +204,8 @@ const disputeGetters = {
   alertSeven: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if (
-        dispute.disputestatus !== 'SETTLED' &&
-        dispute.disputestatus !== 'UNSETTLED' &&
+        dispute.status !== 'SETTLED' &&
+        dispute.status !== 'UNSETTLED' &&
         ((dispute.alerts && dispute.alerts.length > 0) ||
         (dispute.claiments && dispute.claiments.alerts && dispute.claiments.alerts.length > 0) ||
         (dispute.claimentslawyer && dispute.claimentslawyer.alerts && dispute.claimentslawyer.alerts.length > 0))
@@ -216,7 +216,8 @@ const disputeGetters = {
     return filteredDisputes
   },
   disputeStatuses: state => state.disputeStatuses,
-  disputeActiveTab: state => state.filters.tab
+  disputeActiveTab: state => state.filters.tab,
+  disputesUpdatingList: state => state.updatingList
 }
 
 export default disputeGetters
