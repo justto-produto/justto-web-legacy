@@ -2,7 +2,7 @@ const disputeActions = {
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/overview')
+      axios.get('api/disputes/' + id)
         .then(response => {
           resolve(response.data)
         })

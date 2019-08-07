@@ -13,7 +13,7 @@
       <div class="dispute-view__section-title">
         <h2>Resumo da disputa</h2>
       </div>
-      <dispute-summary
+      <!-- <dispute-summary
         v-if="dispute.strategy"
         :key="componentKey"
         :id="dispute.id"
@@ -21,7 +21,7 @@
         :show-scheduled.sync="showScheduled"
         :strategy-id="dispute.strategy.id"
         data-testid="dispute-summary"
-        @dispute:refresh="fetchData({ fetchMessages: true })" />
+        @dispute:refresh="fetchData({ fetchMessages: true })" /> -->
     </template>
     <!-- CHAT -->
     <template slot="main">

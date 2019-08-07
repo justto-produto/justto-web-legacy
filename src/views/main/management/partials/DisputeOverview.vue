@@ -20,7 +20,7 @@
         </div>
         <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Classificação:</span>
-          <span>{{ dispute.classification.name | capitalize }}</span>
+          <span>{{ dispute.classification | capitalize }}</span>
         </div>
         <div v-if="dispute.upperRange" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
@@ -63,12 +63,12 @@
       @change="handleChange">
       <el-collapse-item
         v-for="role in disputeRolesSort"
-        :key="role.person.id"
-        :name="JSON.stringify({id: role.person.id, name: role.person.name})"
+        :key="role.id"
+        :name="JSON.stringify({id: role.id, name: role.name})"
         data-testid="expand-party">
         <template slot="title">
           <div class="dispute-overview-view__name">
-            {{ role.person.name }}
+            {{ role.name }}
           </div>
         </template>
         <!-- <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
@@ -90,40 +90,40 @@
             </span>
           </el-popover>
         </div> -->
-        <div v-show="role.person.documentNumber" class="dispute-overview-view__info-line">
+        <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
           <span class="title">CPF:</span>
-          <span>{{ role.person.documentNumber }}</span>
+          <span>{{ role.documentNumber }}</span>
         </div>
         <div class="dispute-overview-view__info-line">
           Função:
           <span>{{ buildTitle(role) }}</span>
         </div>
-        <div v-show="role.person.phones.length" class="dispute-overview-view__info-line">
+        <div v-show="role.phones.length" class="dispute-overview-view__info-line">
           Telefone(s):
         </div>
-        <div v-show="role.person.phones.length" class="dispute-overview-view__info-list">
+        <div v-show="role.phones.length" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="phone in role.person.phones" :key="phone.id">
+            <li v-for="phone in role.phones" :key="phone.id">
               {{ phone.number }}
             </li>
           </ul>
         </div>
-        <div v-show="role.person.emails.length" class="dispute-overview-view__info-line">
+        <div v-show="role.emails.length" class="dispute-overview-view__info-line">
           E-mail(s):
         </div>
-        <div v-show="role.person.emails.length" class="dispute-overview-view__info-list">
+        <div v-show="role.emails.length" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="email in role.person.emails" :key="email.id">
+            <li v-for="email in role.emails" :key="email.id">
               {{ email.address }}
             </li>
           </ul>
         </div>
-        <div v-show="role.person.oabs.length" class="dispute-overview-view__info-line">
+        <div v-show="role.oabs.length" class="dispute-overview-view__info-line">
           OAB(s):
         </div>
-        <div v-show="role.person.oabs.length" class="dispute-overview-view__info-list">
+        <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="oab in role.person.oabs" :key="oab.id">
+            <li v-for="oab in role.oabs" :key="oab.id">
               {{ oab.number }}
               <span v-if="oab.state">-</span>
               {{ oab.state }}
@@ -457,7 +457,7 @@ export default {
         } else if (role.roles[0] === 'LAWYER') {
           return 'Advogado da parte'
         } else {
-          return role.person.name
+          return role.name
         }
       }
     },
@@ -565,14 +565,14 @@ export default {
       this.editRoleDialogVisible = true
       var roles = role.roles
       var party = role.party
-      this.roleForm.personId = role.person.id
+      this.roleForm.personId = role.id
       this.roleForm.title = this.buildTitle(role)
-      this.roleForm.name = role.person.name
-      this.roleForm.documentNumber = role.person.documentNumber
+      this.roleForm.name = role.name
+      this.roleForm.documentNumber = role.documentNumber
       this.roleForm.oabs = role.oabs
-      this.roleForm.emails = role.person.emails
-      this.roleForm.phones = role.person.phones
-      this.roleForm.oabs = role.person.oabs
+      this.roleForm.emails = role.emails
+      this.roleForm.phones = role.phones
+      this.roleForm.oabs = role.oabs
       this.oabForm.state = ''
       this.partyRoles.legal = false
       this.partyRoles.party = false
