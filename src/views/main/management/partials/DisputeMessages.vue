@@ -100,6 +100,9 @@ export default {
   computed: {
     messages () {
       return this.messagesProp.filter(message => {
+        if (!message) {
+          return false
+        }
         switch (this.currentTab) {
           case '1':
             if (message.type !== 'NOTE') {

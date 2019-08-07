@@ -80,7 +80,7 @@
           <el-form-item label="Status" class="jus-management-filters__switch">
             <div>
               <div>Pausados</div>
-              <el-switch v-model="filters.disputestatus" active-value="PAUSED" :inactive-value="false"/>
+              <el-switch v-model="filters.status" active-value="PAUSED" :inactive-value="false"/>
             </div>
             <el-radio-group v-model="filters.status">
               <el-radio-button label="paused">Pausados</el-radio-button>
@@ -103,7 +103,7 @@
         <el-col v-if="isEngagement || isInteration || isNewAgreements" :span="12">
           <el-form-item label="Fim da negociação">
             <el-date-picker
-              v-model="filters.disputeexpirationdate"
+              v-model="filters.expirationDate.dateTime"
               data-testid="filters-disputeexpirationdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
@@ -144,7 +144,7 @@
         <!-- STATUS -->
         <el-col v-if="isAll" :span="24">
           <el-form-item label="Status">
-            <el-radio-group v-model="filters.disputestatus">
+            <el-radio-group v-model="filters.status">
               <el-radio-button label="ENGAGEMENT">Engajamento</el-radio-button>
               <el-radio-button label="INTERACTIONS">Com interação</el-radio-button>
               <el-radio-button label="ACCEPTED">Novos acordos</el-radio-button>
@@ -285,9 +285,9 @@ export default {
     },
     clearDisputeexpirationdate (value) {
       if (value) {
-        this.filters.disputeexpirationdate = value
+        this.filters.expirationDate.dateTime = value
       } else {
-        delete this.filters.disputeexpirationdate
+        delete this.filters.expirationDate.dateTime
       }
     }
   }

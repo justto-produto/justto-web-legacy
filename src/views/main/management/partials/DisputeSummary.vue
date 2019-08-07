@@ -84,7 +84,7 @@ export default {
   computed: {
     isDeal () {
       if (this.summary && Object.keys(this.summary).length) {
-        return this.summary.disputestatus === 'ACCEPTED' || this.summary.disputestatus === 'CHECKOUT' || this.summary.disputestatus === 'SETTLED'
+        return this.summary.status === 'ACCEPTED' || this.summary.status === 'CHECKOUT' || this.summary.status === 'SETTLED'
       }
       return false
     },
@@ -129,7 +129,7 @@ export default {
     getSummary (disputes) {
       if (disputes.length) {
         this.summary = disputes.find((dispute) => {
-          return dispute.disputeid === this.id
+          return dispute.id === this.id
         })
       }
     }

@@ -8,22 +8,23 @@
         :fetch-suggestions="search"
         placeholder="Busque aqui os suas disputas">
         <template slot-scope="{ item }">
-          <router-link v-if="item.disputeid" :to="'/management/dispute/' + item.disputeid">
-            <div class="jus-header-main__result">
+          <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
+            <jus-dispute-resume :dispute="item" />
+            <!-- <div class="jus-header-main__result">
               <h4>
-                Disputa #{{ item.disputeid }} |
-                Campanha: {{ item.campaignname | capitalize }} |
-                Processo: {{ item.disputecode }}
+                Disputa #{{ item.id }} |
+                Campanha: {{ item.campaign.name | capitalize }} |
+                Processo: {{ item.code }}
               </h4>
-              <div>Estratégia: {{ item.strategyname | capitalize }}</div>
-              <div>Status: <span>{{ $t('occurrence.type.' + item.disputestatus) | capitalize }}</span></div>
-              <div v-for="(claiment, index) in item.claiments" :key="item.disputeid + claiment.name + index + 'claimant'">
+              <div>Estratégia: {{ item.campaign.strategy | capitalize }}</div>
+              <div>Status: <span>{{ $t('occurrence.type.' + item.status) | capitalize }}</span></div>
+              <div v-for="(claiment, index) in item.claiments" :key="item.id + claiment.name + index + 'claimant'">
                 Parte contrária: {{ claiment.name }}
               </div>
-              <div v-for="(lawyer, index) in item.claimentslawyer" :key="item.disputeid + lawyer.name + index + 'lawyer'">
+              <div v-for="(lawyer, index) in item.claimentslawyer" :key="item.id + lawyer.name + index + 'lawyer'">
                 Advogado: {{ lawyer.name }}
               </div>
-            </div>
+            </div> -->
           </router-link>
           <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
             Não foram encontradas disputas para esta busca.
@@ -31,19 +32,6 @@
         </template>
       </el-autocomplete>
     </div>
-    <!-- <div class="jus-header-main__notification">
-      <el-dropdown trigger="click" placement="bottom">
-        <jus-icon icon="notification"/>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="e">Sem novas notificações</el-dropdown-item>
-          <el-dropdown-item command="e">Notificação importante 2</el-dropdown-item>
-          <el-dropdown-item command="e">Notificação importante 3</el-dropdown-item>
-          <el-dropdown-item command="e">Notificação importante 4</el-dropdown-item>
-          <el-dropdown-item command="e">Notificação importante 5</el-dropdown-item>
-          <el-dropdown-item command="e">Notificação importante 6</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div> -->
     <div class="jus-header-main__info">
       <el-dropdown trigger="click" placement="bottom-start">
         <span class="el-dropdown-link">
@@ -67,16 +55,6 @@
               Perfil
             </el-dropdown-item>
           </router-link>
-          <!-- <router-link to="/profile/notifications">
-            <el-dropdown-item>
-              Notificações
-            </el-dropdown-item>
-          </router-link>
-          <router-link to="/profile/activities">
-            <el-dropdown-item>
-              Minhas atividades
-            </el-dropdown-item>
-          </router-link> -->
           <a href="http://ajuda.justto.com.br/" target="_blank">
             <el-dropdown-item>
               Central de ajuda
@@ -94,8 +72,13 @@
 </template>
 
 <script>
+import JusDisputeResume from '@/components/layouts/JusDisputeResume'
+
 export default {
   name: 'JusHeaderMain',
+  components: {
+    JusDisputeResume
+  },
   data () {
     return {
       disputeId: ''
@@ -141,17 +124,14 @@ export default {
           maxPatternLength: 32,
           minMatchCharLength: 1,
           keys: [
-            'disputeid',
-            'disputecode',
-            'campaignname',
+            'id',
+            'code',
+            'campaign.name',
             'claiments.name',
-            'claiments.document_number',
-            'claimentslawyer.name',
-            'claimentslawyer.document_number',
-            'strategyname',
-            'disputeupperrange',
-            'disputelastrespondentoffer',
-            'lastOfferValue'
+            'disputeRoles.name',
+            'disputeRoles.documentNumber',
+            'disputeRoles.oabs.number',
+            'campaign.strategy'
           ]
         }).then(results => {
         setTimeout(function () {
@@ -173,19 +153,6 @@ export default {
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   z-index: 1;
   display: flex;
-  &__result {
-    line-height: 24px;
-    margin: 10px 0;
-    h4 {
-      color: #9461f7;
-      margin: 0;
-      margin-bottom: 5px;
-    }
-    color: #adadad;
-    span {
-      text-transform: capitalize;
-    }
-  }
   &__version {
     margin: 6px 20px 12px 20px;
     color: #adadad;
@@ -210,16 +177,6 @@ export default {
   margin: auto;
   margin-right: 20px;
   cursor: pointer;
-  .el-dropdown:after {
-    // content: ' ';
-    // min-width: 10px;
-    // min-height: 10px;
-    // background-color: #9f6cf8;
-    // position: absolute;
-    // border-radius: 50%;
-    // bottom: 21px;
-    // right: -1px;
-  }
 }
 .jus-header-main__info {
   .el-dropdown-link {

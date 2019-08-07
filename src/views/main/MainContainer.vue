@@ -71,7 +71,7 @@ export default {
   },
   beforeCreate () {
     this.$store.commit('showLoading')
-    this.$store.dispatch('getDisputes', { query: { bool: {} }, from: 0, size: 3000, order_by: 'favorite DESC' })
+    this.$store.dispatch('getDisputes')
       .finally(() => {
         setTimeout(function () {
           this.$store.commit('hideLoading')
