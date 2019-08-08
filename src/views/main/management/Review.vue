@@ -38,12 +38,12 @@
           </el-table-column>
           <el-table-column min-width="140px" class-name="text-ellipsis" label="Parte(s) contrária(s)">
             <template slot-scope="scope">
-              {{ getClaimants(scope.row.disputeRoles, true) }}
+              {{ getClaimants(scope.row.disputeRoles, 'CLAIMANT', 'PARTY') }}
             </template>
           </el-table-column>
           <el-table-column class-name="text-ellipsis" label="Advogado(s) da parte" min-width="152px">
             <template slot-scope="scope">
-              {{ getClaimants(scope.row.disputeRoles, true, 'LAWYER') }}
+              {{ getClaimants(scope.row.disputeRoles, 'CLAIMANT', 'LAWYER') }}
             </template>
           </el-table-column>
           <el-table-column label="Status" align="center" min-width="110px">
@@ -90,7 +90,7 @@
 <script>
 import ManagementActions from './partials/ManagementActions'
 import JusDisputeResume from '@/components/layouts/JusDisputeResume'
-import { getClaimants as getClaimantsUtils } from '@/plugins/jusUtils'
+import { getFirstRole } from '@/plugins/jusUtils'
 
 export default {
   name: 'Review',
@@ -229,8 +229,8 @@ export default {
       }
       return alerts
     },
-    getClaimants (disputeRoles, showFirstOnly = false, role = 'PARTY') {
-      return getClaimantsUtils(disputeRoles, showFirstOnly, role)
+    getClaimants (disputeRoles, party, role) {
+      return getFirstRole(disputeRoles, party, role)
     }
     // getOnlyErrors (alerts) {
     //   return alerts.filter(alert => {

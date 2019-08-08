@@ -13,13 +13,13 @@ import '@/plugins/moment'
 import '@/plugins/chatScroll'
 import '@/plugins/jusNotification'
 import '@/plugins/socket'
-import '@/plugins/fuse'
 // import '@/plugins/sentry'
 
 // filters
 import '@/filters/capitalize'
 import '@/filters/currency'
 import '@/filters/firstName'
+import '@/filters/dispute'
 
 // css
 import '@/styles/core.scss'

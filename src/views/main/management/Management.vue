@@ -55,10 +55,10 @@
           :key="tableKey"
           :max-height="tableHeigth"
           :data="paginatedDisputes"
+          :row-class-name="handleRowClassName"
           size="mini"
           class="el-table--disputes"
           data-testid="dispute-index"
-          :row-class-name="handleRowClassName"
           @row-click="handleRowClick"
           @sort-change="handleSortChange"
           @selection-change="handleSelectionChange">
@@ -71,35 +71,35 @@
           <el-table-column
             label="Disputa"
             min-width="92px"
-            prop="disputeid"
+            prop="id"
             sortable="custom">
             <template slot-scope="scope">#{{ scope.row.id }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
-            prop="campaignname"
+            prop="campaign"
             label="Campanha"
             min-width="112px">
             <template slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
-            prop="claiments"
+            prop="claimants"
             min-width="164px"
             class-name="text-ellipsis"
             label="Parte(s) contrária(s)">
             <template slot-scope="scope">
-              {{ getClaimants(scope.row.disputeRoles, true) }}
+              {{ getClaimants(scope.row.disputeRoles, 'CLAIMANT', 'PARTY') }}
             </template>
           </el-table-column>
           <el-table-column
             sortable="custom"
-            prop="claimentslawyer"
+            prop="claimantsLawyer"
             class-name="text-ellipsis"
             label="Advogado(s) da parte"
             min-width="176px">
             <template slot-scope="scope">
-              {{ getClaimants(scope.row.disputeRoles, true, 'LAWYER') }}
+              {{ getClaimants(scope.row.disputeRoles, 'CLAIMANT', 'LAWYER') }}
             </template>
           </el-table-column>
           <!-- <el-table-column
@@ -110,16 +110,20 @@
             prop="disputeupperrange"
             min-width="140px">
             <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column
             v-if="activeTab === '0'"
             label="Valor proposto"
             sortable="custom"
-            prop="lastoffervalue"
+            prop="lastOfferValue"
             align="center"
             min-width="134px">
-            <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
-          </el-table-column> -->
+            <template slot-scope="scope">
+              <span v-if="scope.row.objects[0].offers && scope.row.objects[0].offers.length">
+                {{ scope.row.objects[0].offers | getLastValue | currency }}
+              </span>
+            </template>
+          </el-table-column>
           <!-- <el-table-column
             v-if="activeTab === '1'"
             label="Contraproposta"
@@ -161,15 +165,19 @@
             width="140px">
             <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
           </el-table-column> -->
-          <!-- <el-table-column
+          <el-table-column
             v-if="activeTab === '2'"
             sortable="custom"
-            prop="disputedealdate"
+            prop="disputeDealDate"
             label="Data do acordo"
             min-width="138px"
             align="center">
-            <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
-          </el-table-column> -->
+            <template slot-scope="scope">
+              <span v-if="scope.row.conclusion && scope.row.conclusion.conclusionDate">
+                {{ scope.row.conclusion.conclusionDate.dateTime | moment('DD/MM/YY') }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column
             v-if="activeTab === '3'"
             label="Status"
@@ -259,7 +267,7 @@ import JusFilterButton from '@/components/buttons/JusFilterButton'
 import ManagementCarousel from './partials/ManagementCarousel'
 import ManagementActions from './partials/ManagementActions'
 import JusDisputeResume from '@/components/layouts/JusDisputeResume'
-import { getClaimants as getClaimantsUtils } from '@/plugins/jusUtils'
+import { getFirstRole } from '@/plugins/jusUtils'
 
 export default {
   name: 'Management',
@@ -395,7 +403,7 @@ export default {
           break
         case '2':
           setTimeout(function () {
-            this.$refs.disputeTable.sort('disputedealdate', 'descending')
+            this.$refs.disputeTable.sort('disputeDealDate', 'descending')
           }.bind(this), 100)
           break
         default:
@@ -511,8 +519,8 @@ export default {
         this.$el.querySelector('#main-card').scrollTop = 0
       })
     },
-    getClaimants (disputeRoles, showFirstOnly = false, role = 'PARTY') {
-      return getClaimantsUtils(disputeRoles, showFirstOnly, role)
+    getClaimants (disputeRoles, party, role) {
+      return getFirstRole(disputeRoles, party, role)
     }
   }
 }

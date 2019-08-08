@@ -73,6 +73,7 @@
 
 <script>
 import JusDisputeResume from '@/components/layouts/JusDisputeResume'
+import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
 export default {
   name: 'JusHeaderMain',
@@ -112,36 +113,14 @@ export default {
       }, 1000)
     },
     search (term, cb) {
-      this.$search(
-        term,
-        this.$store.state.disputeModule.disputes, {
-          shouldSort: true,
-          tokenize: true,
-          matchAllTokens: true,
-          threshold: 0.1,
-          location: 0,
-          distance: 100,
-          maxPatternLength: 32,
-          minMatchCharLength: 1,
-          keys: [
-            'id',
-            'code',
-            'campaign.name',
-            'claiments.name',
-            'disputeRoles.name',
-            'disputeRoles.documentNumber',
-            'disputeRoles.oabs.number',
-            'campaign.strategy'
-          ]
-        }).then(results => {
-        setTimeout(function () {
-          if (results && results.length) {
-            cb(results)
-          } else {
-            cb([0])
-          }
-        }, 500)
-      })
+      let results = fuseSearchDisputes(this.$store.getters.disputes).search(term)
+      setTimeout(function () {
+        if (results && results.length) {
+          cb(results)
+        } else {
+          cb([0])
+        }
+      }, 500)
     }
   }
 }

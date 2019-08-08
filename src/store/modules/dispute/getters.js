@@ -1,6 +1,6 @@
 import moment from 'moment'
 import i18n from '@/plugins/vueI18n.js'
-import Fuse from 'fuse.js'
+import { fuseSearchDisputes, getFirstRole } from '@/plugins/jusUtils'
 
 const disputeGetters = {
   disputes: state => state.disputes,
@@ -55,69 +55,58 @@ const disputeGetters = {
         })
       }
       if (state.filters.sort.order) {
-        // filteredDisputes.sort((a, b) => {
-        //   let compareA = Object.assign({}, a)
-        //   let compareB = Object.assign({}, b)
-        //   let directionA = state.filters.sort.order === 'ascending' ? 1 : -1
-        //   let directionB = directionA === 1 ? -1 : 1
-        //   if (moment(compareA[state.filters.sort.prop]).isValid()) {
-        //     if (!compareA[state.filters.sort.prop]) compareA[state.filters.sort.prop] = moment(0)
-        //     if (!compareB[state.filters.sort.prop]) compareB[state.filters.sort.prop] = moment(0)
-        //     if (moment(compareA[state.filters.sort.prop]).isAfter(compareB[state.filters.sort.prop])) return directionA
-        //     if (moment(compareA[state.filters.sort.prop]).isBefore(compareB[state.filters.sort.prop])) return directionB
-        //     return 0
-        //   } else if (state.filters.sort.prop === 'claiments' || state.filters.sort.prop === 'claimentslawyer') {
-        //     if (Array.isArray(compareA[state.filters.sort.prop])) {
-        //       if (Array.isArray(compareB[state.filters.sort.prop])) {
-        //         if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') > compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionA
-        //         if (compareA[state.filters.sort.prop][0]['name'].replace(/ .*/, '') < compareB[state.filters.sort.prop][0]['name'].replace(/ .*/, '')) return directionB
-        //         return 0
-        //       } else {
-        //         return directionB
-        //       }
-        //     } else {
-        //       if (Array.isArray(compareB[state.filters.sort.prop])) {
-        //         return directionA
-        //       } else {
-        //         return 0
-        //       }
-        //     }
-        //   } else if (state.filters.sort.prop === 'disputestatus') {
-        //     if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) > i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionA
-        //     if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) < i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionB
-        //     return 0
-        //   } else {
-        //     if (compareA[state.filters.sort.prop] > compareB[state.filters.sort.prop]) return directionA
-        //     if (compareA[state.filters.sort.prop] < compareB[state.filters.sort.prop]) return directionB
-        //     return 0
-        //   }
-        // })
+        filteredDisputes.sort((a, b) => {
+          let compareA = Object.assign({}, a)
+          let compareB = Object.assign({}, b)
+          let directionA = state.filters.sort.order === 'ascending' ? 1 : -1
+          let directionB = directionA === 1 ? -1 : 1
+          if (moment(new Date(compareA[state.filters.sort.prop])).isValid()) {
+            if (!compareA[state.filters.sort.prop]) compareA[state.filters.sort.prop] = moment(0)
+            if (!compareB[state.filters.sort.prop]) compareB[state.filters.sort.prop] = moment(0)
+            if (moment(compareA[state.filters.sort.prop]).isAfter(compareB[state.filters.sort.prop])) return directionA
+            if (moment(compareA[state.filters.sort.prop]).isBefore(compareB[state.filters.sort.prop])) return directionB
+            return 0
+          } else if (state.filters.sort.prop === 'campaign') {
+            if (compareA[state.filters.sort.prop].name > compareB[state.filters.sort.prop].name) return directionA
+            if (compareA[state.filters.sort.prop].name < compareB[state.filters.sort.prop].name) return directionB
+          } else if (state.filters.sort.prop === 'claimants' || state.filters.sort.prop === 'claimantsLawyer') {
+            let role = state.filters.sort.prop === 'claimants' ? 'PARTY' : 'LAWYER'
+            if (
+              getFirstRole(compareA.disputeRoles, 'CLAIMANT', role).replace(/ .*/, '') >
+              getFirstRole(compareB.disputeRoles, 'CLAIMANT', role).replace(/ .*/, '')) return directionA
+            if (
+              getFirstRole(compareA.disputeRoles, 'CLAIMANT', role).replace(/ .*/, '') <
+              getFirstRole(compareB.disputeRoles, 'CLAIMANT', role).replace(/ .*/, '')) return directionB
+            return 0
+          } else if (state.filters.sort.prop === 'status') {
+            if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) > i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionA
+            if (i18n.t('occurrence.type.' + compareA[state.filters.sort.prop]) < i18n.t('occurrence.type.' + compareB[state.filters.sort.prop])) return directionB
+            return 0
+          } else if (state.filters.sort.prop === 'lastOfferValue') {
+            if (compareA.objects[0].offers.slice(-1).pop().value > compareB.objects[0].offers.slice(-1).pop().value) return directionA
+            if (compareA.objects[0].offers.slice(-1).pop().value < compareB.objects[0].offers.slice(-1).pop().value) return directionB
+            return 0
+          } else if (state.filters.sort.prop === 'disputeDealDate') {
+            if (compareA.conclusion) {
+              if (compareB.conclusion) {
+                if (compareA.conclusion.conclusionDate.dateTimeToDate > compareB.conclusion.conclusionDate.dateTimeToDate) return directionA
+                if (compareA.conclusion.conclusionDate.dateTimeToDate < compareB.conclusion.conclusionDate.dateTimeToDate) return directionB
+                return 0
+              } else {
+                return directionB
+              }
+            } else {
+              return directionA
+            }
+          } else {
+            if (compareA[state.filters.sort.prop] > compareB[state.filters.sort.prop]) return directionA
+            if (compareA[state.filters.sort.prop] < compareB[state.filters.sort.prop]) return directionB
+            return 0
+          }
+        })
       }
       if (state.filters.filterTerm) {
-        var run = new Fuse(filteredDisputes, {
-          shouldSort: true,
-          tokenize: true,
-          matchAllTokens: true,
-          threshold: 0.1,
-          location: 0,
-          distance: 100,
-          maxPatternLength: 32,
-          minMatchCharLength: 1,
-          keys: [
-            'disputeid',
-            'disputecode',
-            'campaignname',
-            'claiments.name',
-            'claiments.document_number',
-            'claimentslawyer.name',
-            'claimentslawyer.document_number',
-            'strategyname',
-            'disputeupperrange',
-            'disputelastrespondentoffer',
-            'lastOfferValue'
-          ]
-        })
-        filteredDisputes = run.search(state.filters.filterTerm)
+        filteredDisputes = fuseSearchDisputes(filteredDisputes).search(state.filters.filterTerm)
       }
     }
     return filteredDisputes

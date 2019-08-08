@@ -146,6 +146,7 @@ const account = {
     }
   },
   getters: {
+    accountToken: state => state.token,
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
     accountId: state => state.id
