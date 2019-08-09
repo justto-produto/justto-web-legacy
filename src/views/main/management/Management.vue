@@ -495,7 +495,7 @@ export default {
         case 'NEGOTIATION':
           return 'negotiation2'
         default:
-          return 'chat'
+          return ''
       }
     },
     getLastInteractionTooltip (type) {

@@ -18,8 +18,9 @@ const getFirstRole = function (disputeRoles, party, role) {
   }
 }
 
-const fuseSearchDisputes = function (disputes) {
-  return new Fuse(disputes, {
+const fuseSearchDisputes = function (disputes, term) {
+  debugger
+  const fuse = new Fuse(disputes, {
     shouldSort: true,
     tokenize: true,
     matchAllTokens: true,
@@ -29,16 +30,18 @@ const fuseSearchDisputes = function (disputes) {
     maxPatternLength: 32,
     minMatchCharLength: 1,
     keys: [
-      'id',
+      'disputeId',
       'code',
       'campaign.name',
-      'claiments.name',
+      'disputeRoles.name',
       'disputeRoles.name',
       'disputeRoles.documentNumber',
       'disputeRoles.oabs.number',
       'campaign.strategy'
     ]
   })
+  let list = fuse.search(term)
+  return list
 }
 
 export { getRoles, getFirstRole, fuseSearchDisputes }

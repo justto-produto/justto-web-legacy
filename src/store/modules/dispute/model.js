@@ -1,16 +1,18 @@
-import { getFirstRole } from '@/plugins/jusUtils'
+import { getFirstRole, getRoles } from '@/plugins/jusUtils'
 
 const disputeViewModel = function (disputes) {
   let viewModelDisputes = []
   for (let dispute of disputes) {
     let viewModelDispute = {
       disputeId: dispute.id,
+      code: dispute.code,
       favorite: !!dispute.favorite,
       status: dispute.status,
       strategyName: dispute.campaign ? dispute.campaign.strategy : '',
       campaignName: dispute.campaign ? dispute.campaign.name : '',
       firstClaimant: getFirstRole(dispute.disputeRoles, 'CLAIMANT', 'PARTY'),
       firstClaimantLawyer: getFirstRole(dispute.disputeRoles, 'CLAIMANT', 'LAWYER'),
+      disputeRoles: dispute.disputeRoles,
       expirationDate: dispute.expirationDate.dateTime,
       conclusionDate: dispute.conclusion ? dispute.conclusion.conclusionDate.dateTime : null,
       lastInteractionDate: dispute.lastInteraction ? dispute.lastInteraction.date.dateTime : null,
@@ -20,7 +22,8 @@ const disputeViewModel = function (disputes) {
       disputeUpperRange: 0,
       lastOfferValue: 0,
       lastCounterOfferValue: 0,
-      disputeDealValue: 0
+      disputeDealValue: 0,
+      negotiators: getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR')
     }
     let object = dispute.objects.length ? dispute.objects[0] : null
     if (object) {
