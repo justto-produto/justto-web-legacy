@@ -136,7 +136,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            vv-if="activeTab < 2"
+            v-if="activeTab < 2"
             sortable="custom"
             prop="expirationDate"
             label="Fim da negociação"

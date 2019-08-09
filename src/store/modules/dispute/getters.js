@@ -1,6 +1,5 @@
 import moment from 'moment'
-import i18n from '@/plugins/vueI18n.js'
-import { fuseSearchDisputes, getFirstRole } from '@/plugins/jusUtils'
+import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
 const disputeGetters = {
   disputes: state => state.disputes,
@@ -100,7 +99,7 @@ const disputeGetters = {
         dispute.status === 'ENRICHED' ||
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
-        !dispute.hasvalidemail) {
+        dispute.hasInvalidEmail) {
         return true
       }
     })
@@ -129,7 +128,7 @@ const disputeGetters = {
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
         dispute.hasInteraction &&
-        !dispute.lastcounteroffervalue
+        !dispute.lastCounterOfferValue
       ) {
         return true
       }
@@ -143,7 +142,7 @@ const disputeGetters = {
         dispute.status === 'ENRICHED' ||
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
-        !dispute.hasvalidphone) {
+        dispute.hasInvalidPhone) {
         return true
       }
     })
@@ -152,7 +151,7 @@ const disputeGetters = {
   alertSix: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if (dispute.status === 'ENGAGEMENT' &&
-        dispute.communicationmsgtotalallsented) {
+        dispute.communicationMsgTotalSent) {
         return true
       }
     })

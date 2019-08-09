@@ -26,7 +26,7 @@ const disputeViewModel = function (disputes) {
       communicationMsgTotalSent: dispute.communications.filter(c => c.status === 'PROCESSED').length,
       communicationMsgTotalsShedulled: dispute.communications.filter(c => c.status === 'WAITING').length,
       negotiators: getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR'),
-      disputeUpperRange:  '0.0',
+      disputeUpperRange: '0.0',
       lastOfferValue: '0.0',
       lastCounterOfferValue: '0.0',
       disputeDealValue: '0.0',
@@ -37,7 +37,8 @@ const disputeViewModel = function (disputes) {
       sendWhatsappMessages: 0,
       visualizedMessages: 0,
       isDeal: false,
-      hasInteraction: dispute.hasInteraction || dispute.lastInteraction
+      hasInteraction: dispute.hasInteraction || dispute.lastInteraction,
+      lastofferpercenttoupperrange: 0
     }
     let object = dispute.objects.length ? dispute.objects[0] : null
     if (object) {
@@ -59,6 +60,14 @@ const disputeViewModel = function (disputes) {
     viewModelDispute.lastInteractionTooltip = getLastInteractionTooltip(viewModelDispute.lastInteractionType)
     viewModelDispute.lastInteractionIcon = getLastInteractionIcon(viewModelDispute.lastInteractionType)
     viewModelDispute.lastInteractionFormatedDate = getLastInteraction(viewModelDispute.lastInteractionDate)
+
+    viewModelDispute.hasInvalidEmail = dispute.disputeRoles.filter(d => {
+      return d.emails.filter(e => !e.isValid).length
+    }).length
+    viewModelDispute.hasInvalidPhone = dispute.disputeRoles.filter(d => {
+      return d.phones.filter(e => !e.isValid).length
+    }).length
+
     viewModelDisputes.push(viewModelDispute)
   }
   return viewModelDisputes

@@ -3,7 +3,7 @@
     <el-form v-loading="loading" :model="filters" label-position="top">
       <el-row :gutter="20">
         <!--  CAMPANHA -->
-        <el-col vv-if="!loading" :span="12">
+        <el-col v-if="!loading" :span="12">
           <el-form-item label="Campanha">
             <el-select
               v-model="filters.campaignName"
@@ -20,7 +20,7 @@
           </el-form-item>
         </el-col>
         <!-- ESTRATÉGIA -->
-        <el-col vv-if="!loading" :span="12">
+        <el-col v-if="!loading" :span="12">
           <el-form-item label="Estratégia">
             <el-select
               v-model="filters.strategyName"
@@ -37,7 +37,7 @@
           </el-form-item>
         </el-col>
         <!-- DATA DO ACORDO -->
-        <el-col vv-if="isNewAgreements" :span="12">
+        <el-col v-if="isNewAgreements" :span="12">
           <el-form-item label="Data do acordo">
             <el-date-picker
               v-model="filters.disputeDealDate"
@@ -48,7 +48,7 @@
           </el-form-item>
         </el-col>
         <!-- ÚLTIMA INTERAÇÃO -->
-        <el-col vv-if="isInteration" :span="12">
+        <el-col v-if="isInteration" :span="12">
           <el-form-item label="Última interação">
             <el-date-picker
               v-model="filters.lastInteractionDate"
@@ -60,7 +60,7 @@
         </el-col>
         <!-- MEIO DE INTERAÇÃO -->
         <el-col :span="12">
-          <el-form-item vv-if="isInteration" label="Meio de interação">
+          <el-form-item v-if="isInteration" label="Meio de interação">
             <el-select
               v-model="filters.lastInteractionType"
               data-testid="filter-setinteraction"
@@ -89,7 +89,7 @@
           </el-form-item>
         </el-col> -->
         <!-- FIM DA NEGOCIAÇÃO -->
-        <el-col vv-if="isEngagement || isInteration || isNewAgreements" :span="12">
+        <el-col v-if="isEngagement || isInteration || isNewAgreements" :span="12">
           <el-form-item label="Fim da negociação">
             <el-date-picker
               v-model="filters.expirationDate"
@@ -142,7 +142,7 @@
           </el-form-item>
         </el-col> -->
         <!-- STATUS -->
-        <el-col vv-if="isAll" :span="24">
+        <el-col v-if="isAll" :span="24">
           <el-form-item label="Status">
             <el-radio-group v-model="filters.status">
               <el-radio-button label="ENGAGEMENT">Engajamento</el-radio-button>
