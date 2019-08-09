@@ -70,7 +70,7 @@
           </el-table-column>
           <el-table-column
             label="Disputa"
-            min-width="92px"
+            min-width="94px"
             prop="disputeId"
             sortable="custom">
             <template slot-scope="scope">#{{ scope.row.disputeId }}</template>
@@ -79,7 +79,7 @@
             sortable="custom"
             prop="campaignName"
             label="Campanha"
-            min-width="112px">
+            min-width="114px">
             <template slot-scope="scope">{{ scope.row.campaignName | capitalize }}</template>
           </el-table-column>
           <el-table-column
@@ -103,7 +103,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            wv-if="activeTab !== '3'"
+            v-if="activeTab !== '3'"
             label="Alçada máxima"
             align="center"
             sortable="custom"
@@ -114,7 +114,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            vv-if="activeTab === '0'"
+            v-if="activeTab === '0'"
             label="Valor proposto"
             sortable="custom"
             prop="lastOfferValue"
@@ -125,7 +125,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            vv-if="activeTab === '1'"
+            v-if="activeTab === '1'"
             label="Contraproposta"
             align="center"
             sortable="custom"
@@ -136,7 +136,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            vv-if="activeTab < 2"
+            v-if="activeTab < 2"
             sortable="custom"
             prop="expirationDate"
             label="Fim da negociação"
@@ -147,7 +147,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            vv-if="activeTab === '1'"
+            v-if="activeTab === '1'"
             sortable="custom"
             prop="lastInteractionDate"
             label="Última interação"
@@ -161,7 +161,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            vv-if="activeTab === '2'"
+            v-if="activeTab === '2'"
             label="Valor do acordo"
             sortable="custom"
             prop="disputeDealValue"
@@ -170,7 +170,7 @@
             <template slot-scope="scope">{{ scope.row.disputeDealValue | currency }}</template>
           </el-table-column>
           <el-table-column
-            vv-if="activeTab === '2'"
+            v-if="activeTab === '2'"
             sortable="custom"
             prop="conclusionDate"
             label="Data do acordo"
@@ -181,7 +181,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            vv-if="activeTab === '3'"
+            v-if="activeTab === '3'"
             label="Status"
             sortable="custom"
             prop="status"
@@ -375,8 +375,8 @@ export default {
       }
     },
     handleRowClick (row, column, event) {
-      if (row.id && event.target.tagName !== 'IMG') {
-        this.$router.push({ name: 'dispute', params: { id: row.id } })
+      if (row.disputeId && event.target.tagName !== 'IMG') {
+        this.$router.push({ name: 'dispute', params: { id: row.disputeId } })
       }
     },
     handleRowClassName (obj) {
