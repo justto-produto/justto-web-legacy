@@ -26,21 +26,21 @@ const disputeGetters = {
       //     })
       //     break
       // }
-      // for (var term in state.filters.terms) {
-      //   if (state.filters.terms.hasOwnProperty(term)) {
-      //     filteredDisputes = filteredDisputes.filter(dispute => {
-      //       if (term === 'disputeexpirationdate' || term === 'disputedealdate' || term === 'lastinteractiondate') {
-      //         return moment(dispute[term]).isSame(state.filters.terms[term], 'day')
-      //       } else if (term === 'disputestatus' && state.filters.terms[term] === 'PAUSED') {
-      //         return !!dispute.paused
-      //       } else if (term === 'disputestatus' && state.filters.terms[term] === 'INTERACTIONS') {
-      //         return !!dispute.hasInteraction && (dispute.status === 'ENGAGEMENT' || dispute.status === 'RUNNING')
-      //       } else {
-      //         return dispute[term] === state.filters.terms[term]
-      //       }
-      //     })
-      //   }
-      // }
+      for (var term in state.filters.terms) {
+        if (state.filters.terms.hasOwnProperty(term)) {
+          filteredDisputes = filteredDisputes.filter(dispute => {
+            if (typeof dispute[term] !== 'boolean' && moment(new Date(dispute[term])).isValid()) {
+              return moment(dispute[term]).isSame(state.filters.terms[term], 'day')
+            } else if (term === 'status' && state.filters.terms[term] === 'PAUSED') {
+              return !!dispute.paused
+            } else if (term === 'status' && state.filters.terms[term] === 'INTERACTIONS') {
+              return !!dispute.hasInteraction && (dispute.status === 'ENGAGEMENT' || dispute.status === 'RUNNING')
+            } else {
+              return dispute[term] === state.filters.terms[term]
+            }
+          })
+        }
+      }
       // if (state.filters.filterPersonId > 0) {
       //   filteredDisputes = filteredDisputes.filter(dispute => {
       //     let filter = false
@@ -122,7 +122,7 @@ const disputeGetters = {
         dispute.status === 'ENRICHED' ||
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
-        moment(dispute.expirationDate.dateTime).isBetween(moment(), moment().add(3, 'day'))
+        moment(dispute.expirationDate).isBetween(moment(), moment().add(3, 'day'))
       ) {
         return true
       }
@@ -208,7 +208,7 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  disputeStatuses: state => state.disputeStatuses,
+  disputeStatuses: state => state.statuses,
   disputeActiveTab: state => state.filters.tab,
   disputesUpdatingList: state => state.updatingList
 }

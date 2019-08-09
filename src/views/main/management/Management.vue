@@ -146,29 +146,29 @@
               {{ scope.row.expirationDate | moment('DD/MM/YY') }}
             </template>
           </el-table-column>
-          <!-- <el-table-column
-            v-if="activeTab === '1'"
+          <el-table-column
+            vv-if="activeTab === '1'"
             sortable="custom"
-            prop="lastinteractiondate"
+            prop="lastInteractionDate"
             label="Última interação"
             min-width="146px"
             align="center">
             <template slot-scope="scope">
-              <el-tooltip :content="getLastInteractionTooltip(scope.row.lastinteractiontype)">
-                <jus-icon :icon="getLastInteractionIcon(scope.row.lastinteractiontype)" class="view-management__interaction-icon" />
+              <el-tooltip :content="getLastInteractionTooltip(scope.row.lastInteractionType)">
+                <jus-icon :icon="getLastInteractionIcon(scope.row.lastInteractionType)" class="view-management__interaction-icon" />
               </el-tooltip>
-              {{ getLastInteraction(scope.row.lastinteractiondate) }}
+              {{ getLastInteraction(scope.row.lastInteractionDate) }}
             </template>
-          </el-table-column> -->
-          <!-- <el-table-column
-            v-if="activeTab === '2'"
+          </el-table-column>
+          <el-table-column
+            vv-if="activeTab === '2'"
             label="Valor do acordo"
             sortable="custom"
-            prop="disputedealvalue"
+            prop="disputeDealValue"
             align="center"
             width="140px">
-            <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
-          </el-table-column> -->
+            <template slot-scope="scope">{{ scope.row.disputeDealValue | currency }}</template>
+          </el-table-column>
           <el-table-column
             vv-if="activeTab === '2'"
             sortable="custom"
@@ -191,17 +191,17 @@
               {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
             </template>
           </el-table-column>
-          <!-- <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
+          <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
             <template slot-scope="scope">
-              <span v-if="!scope.row.communicationmsgtotalsent && !scope.row.communicationmsgtotalschedulled">
+              <span v-if="!scope.row.communicationMsgTotalsShedulled">
                 Enriquecendo
               </span>
               <span v-else>
-                {{ scope.row.communicationmsgtotalsent }} /
-                {{ scope.row.communicationmsgtotalschedulled }}
+                {{ scope.row.communicationMsgTotalSent }} /
+                {{ scope.row.communicationMsgTotalsShedulled }}
               </span>
             </template>
-          </el-table-column> -->
+          </el-table-column>
           <el-table-column
             width="70px"
             class-name="view-management__row-actions"
@@ -356,8 +356,8 @@ export default {
         })
     },
     applyFilters () {
-      if (this.activeFilters.hasOwnProperty('disputedealvalue') && this.activeFilters.disputedealvalue === 0) {
-        delete this.activeFilters['disputedealvalue']
+      if (this.activeFilters.hasOwnProperty('disputeDealValue') && this.activeFilters.disputedealvalue === 0) {
+        delete this.activeFilters['disputeDealValue']
       }
       this.$store.commit('setDisputeFilter', this.activeFilters)
       this.showFilters = false
@@ -460,19 +460,20 @@ export default {
       this.$store.commit('setDisputeSort', sort)
     },
     getLastInteraction (lastinteractiondate) {
+      if (!lastinteractiondate) return null
       let date = this.$moment(lastinteractiondate + 'Z')
       if (date.isValid()) {
         let now = this.$moment()
         if (now.diff(date, 'seconds') < 0) {
           return ''
         } else if (now.diff(date, 'seconds') < 59) {
-          return now.diff(date, 'seconds') + ' há segundos'
+          return 'há ' + now.diff(date, 'seconds') + ' segundos'
         } else if (now.diff(date, 'minutes') < 59) {
-          return now.diff(date, 'minutes') + ' há minuto(s)'
+          return 'há ' + now.diff(date, 'minutes') + ' minuto(s)'
         } else if (now.diff(date, 'hours') < 24) {
-          return now.diff(date, 'hours') + ' há hora(s)'
+          return 'há ' + now.diff(date, 'hours') + ' hora(s)'
         } else if (now.diff(date, 'hours') < 48) {
-          return '1 dia'
+          return 'há 1 dia'
         } else {
           return date.format('DD/MM/YY')
         }

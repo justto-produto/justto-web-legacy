@@ -57,7 +57,7 @@ const disputeMutations = {
     })
   },
   setDisputeStatuses (state, status) {
-    state.disputeStatuses[status.label] = status.value
+    state.statuses[status.label] = status.value
   },
   addUpdatingList (state, disputeId) {
     if (!(disputeId in state.updatingList)) {

@@ -16,7 +16,7 @@ const dispute = {
       },
       filterTerm: ''
     },
-    disputeStatuses: {},
+    statuses: {},
     updatingList: []
   },
   mutations: mutations,

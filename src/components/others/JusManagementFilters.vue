@@ -6,7 +6,7 @@
         <el-col v-if="!loading" :span="12">
           <el-form-item label="Campanha">
             <el-select
-              v-model="filters.campaignid"
+              v-model="filters.campaignName"
               data-testid="filter-campaign"
               placeholder="Selecione uma opção"
               clearable
@@ -14,7 +14,7 @@
               <el-option
                 v-for="campaign in campaigns"
                 :key="campaign.id"
-                :value="campaign.id"
+                :value="campaign.name"
                 :label="campaign.name"/>
             </el-select>
           </el-form-item>
@@ -23,7 +23,7 @@
         <el-col v-if="!loading" :span="12">
           <el-form-item label="Estratégia">
             <el-select
-              v-model="filters.strategyid"
+              v-model="filters.strategyName"
               data-testid="filter-strategy"
               placeholder="Selecione uma opção"
               clearable
@@ -31,7 +31,7 @@
               <el-option
                 v-for="strategy in strategies"
                 :key="strategy.id"
-                :value="strategy.id"
+                :value="strategy.name"
                 :label="strategy.name"/>
             </el-select>
           </el-form-item>
@@ -103,12 +103,12 @@
         <el-col v-if="isEngagement || isInteration || isNewAgreements" :span="12">
           <el-form-item label="Fim da negociação">
             <el-date-picker
-              v-model="filters.expirationDate.dateTime"
+              v-model="filters.expirationDate"
               data-testid="filters-disputeexpirationdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd"
-              @change="clearDisputeexpirationdate"/>
+              @change="clearDisputeExpirationDate"/>
           </el-form-item>
         </el-col>
         <!-- ESTADO -->
@@ -261,10 +261,10 @@ export default {
       if (value) this.filters[value] = true
     },
     clearStrategy () {
-      delete this.filters.strategyid
+      delete this.filters.strategyName
     },
     clearCampaign () {
-      delete this.filters.campaignid
+      delete this.filters.campaignName
     },
     clearDisputestate () {
       delete this.filters.disputestate
@@ -283,11 +283,11 @@ export default {
         delete this.filters.lastinteractiondate
       }
     },
-    clearDisputeexpirationdate (value) {
+    clearDisputeExpirationDate (value) {
       if (value) {
-        this.filters.expirationDate.dateTime = value
+        this.filters.expirationDate = value
       } else {
-        delete this.filters.expirationDate.dateTime
+        delete this.filters.expirationDate
       }
     }
   }

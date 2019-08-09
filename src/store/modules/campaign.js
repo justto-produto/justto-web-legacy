@@ -44,7 +44,7 @@ const campaign = {
       let filteredCampaigns = []
       for (let dispute of getters.disputes) {
         let activeCampaign = state.list.filter((campaign) => {
-          return campaign.id === dispute.campaignid
+          return campaign.name === dispute.campaignName
         })
         if (activeCampaign && activeCampaign.length) filteredCampaigns.push(activeCampaign[0])
       }
