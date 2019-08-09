@@ -1,5 +1,6 @@
 <template lang="html">
-  <div v-loading="!summary" class="dispute-view__side-content">
+
+  <div v-loading="!dispute" class="dispute-view__side-content">
     <el-steps
       :active="0"
       direction="vertical"
@@ -9,8 +10,8 @@
         <template slot="title">Enriquecimento</template>
         <template slot="description">
           <ul>
-            <li>Emails: {{ enriched.email }}</li>
-            <li>Telefones: {{ enriched.phone }}</li>
+            <li>Emails: {{ dispute.enrichedEmails }}</li>
+            <li>Telefones: {{ dispute.enrichedPhones }}</li>
           </ul>
         </template>
       </el-step>
@@ -26,21 +27,20 @@
         <template slot="title">Interação</template>
         <template slot="description">
           <ul>
-            <li>Emails: {{ interactions.email }}</li>
-            <li>CNA: {{ interactions.cna }}</li>
-            <li>Whatsapp: {{ interactions.whatsapp }}</li>
-            <li>Visualizações: {{ interactions.views }} </li>
+            <li>Emails: {{ dispute.sentEmailMessages }}</li>
+            <li>CNA: {{ dispute.sentCnaMessages }}</li>
+            <li>Whatsapp: {{ dispute.sendWhatsappMessages }}</li>
           </ul>
         </template>
       </el-step>
       <el-step>
         <template slot="title">
-          <span v-if="isDeal">Valor do acordo</span>
+          <span v-if="dispute.isDeal">Valor do acordo</span>
           <span v-else>Último valor proposto</span>
         </template>
         <template slot="description">
-          <div v-if="deal">
-            {{ deal | currency }}
+          <div v-if="dispute.disputeDealValue">
+            {{ dispute.disputeDealValue | currency }}
           </div>
           <div v-else>
             Sem contraproposta
@@ -82,31 +82,8 @@ export default {
     }
   },
   computed: {
-    isDeal () {
-      if (this.summary && Object.keys(this.summary).length) {
-        return this.summary.status === 'ACCEPTED' || this.summary.status === 'CHECKOUT' || this.summary.status === 'SETTLED'
-      }
-      return false
-    },
-    enriched () {
-      return {
-        email: this.summary && this.summary.enrichedemails ? this.summary.enrichedemails : 0,
-        phone: this.summary && this.summary.enrichedphones ? this.summary.enrichedphones : 0
-      }
-    },
-    interactions () {
-      return {
-        email: this.summary && this.summary.emailinteractions ? this.summary.emailinteractions : 0,
-        whatsapp: this.summary && this.summary.whatsappinterations ? this.summary.whatsappinterations : 0,
-        cna: this.summary && this.summary.cnainteractions ? this.summary.cnainteractions : 0,
-        views: this.summary && this.summary.disputenegotiationviews ? this.summary.disputenegotiationviews : 0
-      }
-    },
-    boundary () {
-      return parseInt(this.summary.disputeobjectboundary ? this.summary.disputeobjectboundary : 0)
-    },
-    deal () {
-      return this.summary && this.summary.disputedealvalue ? this.summary.disputedealvalue : null
+    dispute () {
+      return this.$store.getters.findById(this.id)
     }
   },
   watch: {
@@ -117,38 +94,7 @@ export default {
       this.$emit('update:showScheduled', value)
     }
   },
-  beforeMount () {
-    this.getSummary(this.$store.state.disputeModule.disputes)
-    this.$store.watch(state => state.disputeModule.disputes, disputes => {
-      if (!this.summary) {
-        this.getSummary(disputes)
-      }
-    })
-  },
   methods: {
-    getSummary (disputes) {
-      if (disputes.length) {
-        this.summary = disputes.find((dispute) => {
-          return dispute.id === this.id
-        })
-      }
-    }
-    // changeReasonStatus () {
-    //   this.$store.dispatch('editDisputeReason', {
-    //     body: { 'reason': this.unsettledTypes[this.unsettledType] },
-    //     disputeId: this.id,
-    //     reasonId: this.unsettledTypeId
-    //   }).then(() => {
-    //     setTimeout(function () {
-    //       this.$emit('dispute:refresh')
-    //     }.bind(this), 2000)
-    //     this.$jusNotification({
-    //       title: 'Yay!',
-    //       message: 'Motivo de perda alterado com sucesso.',
-    //       type: 'success'
-    //     })
-    //   }).catch(() => this.$jusNotification({ type: 'error' }))
-    // }
   }
 }
 </script>
