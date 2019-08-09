@@ -9,23 +9,23 @@ const disputeGetters = {
   filteredDisputes: state => {
     let filteredDisputes = state.disputes.slice(0)
     if (state.filters) {
-      // switch (state.filters.tab) {
-      //   case '0':
-      //     filteredDisputes = filteredDisputes.filter(dispute => {
-      //       return dispute.status === 'ENGAGEMENT' && !dispute.hasInteraction && !dispute.paused
-      //     })
-      //     break
-      //   case '1':
-      //     filteredDisputes = filteredDisputes.filter(dispute => {
-      //       return (dispute.status === 'ENGAGEMENT' || dispute.status === 'RUNNING') && dispute.hasInteraction
-      //     })
-      //     break
-      //   case '2':
-      //     filteredDisputes = filteredDisputes.filter(dispute => {
-      //       return dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT'
-      //     })
-      //     break
-      // }
+      switch (state.filters.tab) {
+        case '0':
+          filteredDisputes = filteredDisputes.filter(dispute => {
+            return dispute.status === 'ENGAGEMENT' && !dispute.hasInteraction && !dispute.paused
+          })
+          break
+        case '1':
+          filteredDisputes = filteredDisputes.filter(dispute => {
+            return (dispute.status === 'ENGAGEMENT' || dispute.status === 'RUNNING') && dispute.hasInteraction
+          })
+          break
+        case '2':
+          filteredDisputes = filteredDisputes.filter(dispute => {
+            return dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT'
+          })
+          break
+      }
       for (var term in state.filters.terms) {
         if (state.filters.terms.hasOwnProperty(term)) {
           filteredDisputes = filteredDisputes.filter(dispute => {

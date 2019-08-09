@@ -1,4 +1,10 @@
-import { getFirstRole, getRoles } from '@/plugins/jusUtils'
+import {
+  getFirstRole,
+  getRoles,
+  getLastInteraction,
+  getLastInteractionIcon,
+  getLastInteractionTooltip
+} from '@/plugins/jusUtils'
 
 const disputeViewModel = function (disputes) {
   let viewModelDisputes = []
@@ -30,7 +36,8 @@ const disputeViewModel = function (disputes) {
       sentCnaMessages: 0,
       sendWhatsappMessages: 0,
       visualizedMessages: 0,
-      isDeal: false
+      isDeal: false,
+      hasInteraction: dispute.hasInteraction
     }
     let object = dispute.objects.length ? dispute.objects[0] : null
     if (object) {
@@ -49,6 +56,9 @@ const disputeViewModel = function (disputes) {
         viewModelDispute.disputeDealValue = object.offers.slice(-1).pop().value
       }
     }
+    dispute.lastInteractionTooltip = getLastInteractionTooltip(dispute.lastInteractionType)
+    dispute.lastInteractionIcon = getLastInteractionIcon(dispute.lastInteractionType)
+    dispute.lastInteractionFormatedDate = getLastInteraction(dispute.lastInteractionDate)
     viewModelDisputes.push(viewModelDispute)
   }
   return viewModelDisputes

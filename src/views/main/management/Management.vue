@@ -154,10 +154,10 @@
             min-width="146px"
             align="center">
             <template slot-scope="scope">
-              <el-tooltip :content="getLastInteractionTooltip(scope.row.lastInteractionType)">
-                <jus-icon :icon="getLastInteractionIcon(scope.row.lastInteractionType)" class="view-management__interaction-icon" />
+              <el-tooltip :content="scope.row.lastInteractionTooltip">
+                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
               </el-tooltip>
-              {{ getLastInteraction(scope.row.lastInteractionDate) }}
+              {{ scope.row.lastInteractionFormatedDate }}
             </template>
           </el-table-column>
           <el-table-column
@@ -458,63 +458,6 @@ export default {
     },
     handleSortChange (sort) {
       this.$store.commit('setDisputeSort', sort)
-    },
-    getLastInteraction (lastinteractiondate) {
-      if (!lastinteractiondate) return null
-      let date = this.$moment(lastinteractiondate + 'Z')
-      if (date.isValid()) {
-        let now = this.$moment()
-        if (now.diff(date, 'seconds') < 0) {
-          return ''
-        } else if (now.diff(date, 'seconds') < 59) {
-          return 'há ' + now.diff(date, 'seconds') + ' segundos'
-        } else if (now.diff(date, 'minutes') < 59) {
-          return 'há ' + now.diff(date, 'minutes') + ' minuto(s)'
-        } else if (now.diff(date, 'hours') < 24) {
-          return 'há ' + now.diff(date, 'hours') + ' hora(s)'
-        } else if (now.diff(date, 'hours') < 48) {
-          return 'há 1 dia'
-        } else {
-          return date.format('DD/MM/YY')
-        }
-      }
-      return ''
-    },
-    getLastInteractionIcon (type) {
-      switch (type) {
-        case 'EMAIL_CNA':
-          return 'cna'
-        case 'EMAIL':
-          return 'email'
-        case 'WHATSAPP':
-          return 'whatsapp'
-        case 'SMS':
-          return 'sms'
-        case 'TTS':
-          return 'tts'
-        case 'NEGOTIATION':
-          return 'negotiation2'
-        default:
-          return ''
-      }
-    },
-    getLastInteractionTooltip (type) {
-      switch (type) {
-        case 'EMAIL_CNA':
-          return 'Última interação via CNA'
-        case 'EMAIL':
-          return 'Última interação via E-mail'
-        case 'WHATSAPP':
-          return 'Última interação via WhatsApp'
-        case 'SMS':
-          return 'Última interação via SMS'
-        case 'TTS':
-          return 'Última interação via WhatsApp'
-        case 'NEGOTIATION':
-          return 'Última interação via Sistema Justto'
-        default:
-          return ''
-      }
     },
     handleChangePagination () {
       this.$nextTick(() => {
