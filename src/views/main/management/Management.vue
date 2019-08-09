@@ -65,82 +65,86 @@
           <el-table-column type="selection" width="40px" />
           <el-table-column type="expand" width="40px">
             <template slot-scope="props">
-              <jus-dispute-resume :dispute="props.row" />
+              <!-- <jus-dispute-resume :dispute="props.row" /> -->
             </template>
           </el-table-column>
           <el-table-column
             label="Disputa"
             min-width="92px"
-            prop="id"
+            prop="disputeId"
             sortable="custom">
-            <template slot-scope="scope">#{{ scope.row.id }}</template>
+            <template slot-scope="scope">#{{ scope.row.disputeId }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
-            prop="campaign"
+            prop="campaignName"
             label="Campanha"
             min-width="112px">
-            <template slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
+            <template slot-scope="scope">{{ scope.row.campaignName | capitalize }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
-            prop="claimants"
+            prop="firstClaimant"
             min-width="164px"
             class-name="text-ellipsis"
             label="Parte(s) contrária(s)">
             <template slot-scope="scope">
-              {{ getClaimants(scope.row.disputeRoles, 'CLAIMANT', 'PARTY') }}
+              {{ scope.row.firstClaimant }}
             </template>
           </el-table-column>
           <el-table-column
             sortable="custom"
-            prop="claimantsLawyer"
+            prop="firstClaimantLawyer"
             class-name="text-ellipsis"
             label="Advogado(s) da parte"
             min-width="176px">
             <template slot-scope="scope">
-              {{ getClaimants(scope.row.disputeRoles, 'CLAIMANT', 'LAWYER') }}
+              {{ scope.row.firstClaimantLawyer }}
             </template>
           </el-table-column>
-          <!-- <el-table-column
-            v-if="activeTab !== '3'"
+          <el-table-column
+            wv-if="activeTab !== '3'"
             label="Alçada máxima"
             align="center"
             sortable="custom"
-            prop="disputeupperrange"
+            prop="disputeUpperRange"
             min-width="140px">
-            <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
-          </el-table-column> -->
+            <template slot-scope="scope">
+              {{ scope.row.disputeUpperRange | currency }}
+            </template>
+          </el-table-column>
           <el-table-column
-            v-if="activeTab === '0'"
+            vv-if="activeTab === '0'"
             label="Valor proposto"
             sortable="custom"
             prop="lastOfferValue"
             align="center"
             min-width="134px">
             <template slot-scope="scope">
-              <span v-if="scope.row.objects[0].offers && scope.row.objects[0].offers.length">
-                {{ scope.row.objects[0].offers | getLastValue | currency }}
-              </span>
+              {{ scope.row.lastOfferValue | currency }}
             </template>
           </el-table-column>
-          <!-- <el-table-column
-            v-if="activeTab === '1'"
+          <el-table-column
+            vv-if="activeTab === '1'"
             label="Contraproposta"
             align="center"
             sortable="custom"
-            prop="lastcounteroffervalue"
+            prop="lastCounterOfferValue"
             min-width="140px">
-            <template slot-scope="scope">{{ scope.row.lastcounteroffervalue | currency }}</template>
-          </el-table-column>-->
+            <template slot-scope="scope">
+              {{ scope.row.lastCounterOfferValue | currency }}
+            </template>
+          </el-table-column>
           <el-table-column
-            v-if="activeTab < 2"
+            vv-if="activeTab < 2"
             sortable="custom"
             prop="expirationDate"
             label="Fim da negociação"
             align="center"
             min-width="160px">
-            <template slot-scope="scope">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</template>
+            <template slot-scope="scope">
+              {{ scope.row.expirationDate | moment('DD/MM/YY') }}
+            </template>
           </el-table-column>
           <!-- <el-table-column
             v-if="activeTab === '1'"
@@ -166,20 +170,18 @@
             <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
           </el-table-column> -->
           <el-table-column
-            v-if="activeTab === '2'"
+            vv-if="activeTab === '2'"
             sortable="custom"
-            prop="disputeDealDate"
+            prop="conclusionDate"
             label="Data do acordo"
             min-width="138px"
             align="center">
             <template slot-scope="scope">
-              <span v-if="scope.row.conclusion && scope.row.conclusion.conclusionDate">
-                {{ scope.row.conclusion.conclusionDate.dateTime | moment('DD/MM/YY') }}
-              </span>
+              {{ scope.row.conclusionDate | moment('DD/MM/YY') }}
             </template>
           </el-table-column>
           <el-table-column
-            v-if="activeTab === '3'"
+            vv-if="activeTab === '3'"
             label="Status"
             sortable="custom"
             prop="status"
@@ -208,14 +210,14 @@
               <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
                 <el-button
                   type="text"
-                  @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+                  @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeId, 'ENGAJAMENTO')">
                   <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
                 </el-button>
               </el-tooltip>
               <el-tooltip content="Abrir disputa em uma nova aba">
                 <el-button
                   type="text"
-                  @click="openNewTab(scope.row.id)">
+                  @click="openNewTab(scope.row.disputeId)">
                   <jus-icon icon="external-link" />
                 </el-button>
               </el-tooltip>
@@ -267,7 +269,6 @@ import JusFilterButton from '@/components/buttons/JusFilterButton'
 import ManagementCarousel from './partials/ManagementCarousel'
 import ManagementActions from './partials/ManagementActions'
 import JusDisputeResume from '@/components/layouts/JusDisputeResume'
-import { getFirstRole } from '@/plugins/jusUtils'
 
 export default {
   name: 'Management',
@@ -518,9 +519,6 @@ export default {
       this.$nextTick(() => {
         this.$el.querySelector('#main-card').scrollTop = 0
       })
-    },
-    getClaimants (disputeRoles, party, role) {
-      return getFirstRole(disputeRoles, party, role)
     }
   }
 }

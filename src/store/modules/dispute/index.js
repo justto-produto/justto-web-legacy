@@ -4,6 +4,7 @@ import getters from './getters'
 
 const dispute = {
   state: {
+    disputesDTO: [],
     disputes: [],
     filters: {
       tab: '0',
@@ -16,7 +17,7 @@ const dispute = {
       filterTerm: ''
     },
     disputeStatuses: {},
-    updatingList: [6311]
+    updatingList: []
   },
   mutations: mutations,
   actions: actions,

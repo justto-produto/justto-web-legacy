@@ -19,7 +19,6 @@ import '@/plugins/socket'
 import '@/filters/capitalize'
 import '@/filters/currency'
 import '@/filters/firstName'
-import '@/filters/dispute'
 
 // css
 import '@/styles/core.scss'

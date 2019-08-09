@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import disputeViewModel from './model'
 
 const disputeMutations = {
   clearDisputes (state) {
@@ -8,7 +9,8 @@ const disputeMutations = {
     state.filters.terms = {}
   },
   setDisputes (state, disputes) {
-    state.disputes = disputes
+    state.disputesDTO = disputes
+    state.disputes = disputeViewModel(disputes)
   },
   setDisputeTab (state, tab) {
     state.filters.tab = tab
