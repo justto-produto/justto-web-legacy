@@ -6,6 +6,9 @@ const disputeGetters = {
   disputes: state => state.disputes,
   disputeFilters: state => state.filters,
   filterPersonId: state => state.filters.filterPersonId,
+  findById: (state) => (disputeId) => {
+    return state.disputes.find(d => d.id === parseInt(disputeId))
+  },
   filteredDisputes: state => {
     let filteredDisputes = state.disputes.slice(0)
     if (state.filters) {
