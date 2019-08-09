@@ -22,8 +22,7 @@
         <div>Data do acordo: {{ dispute.disputeDealDate | moment('DD/MM/YY') }}</div>
         <div>
           Última interação:
-          <jus-icon :icon="dispute.lastInteractionIcon" class="view-management__interaction-icon" />
-          {{ dispute.lastInteractionFormatedDate }}
+          {{ dispute.lastInteractionFormatedDate | capitalize }}
         </div>
       </el-col>
       <el-col :span="8">

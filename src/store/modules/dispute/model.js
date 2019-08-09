@@ -37,7 +37,7 @@ const disputeViewModel = function (disputes) {
       sendWhatsappMessages: 0,
       visualizedMessages: 0,
       isDeal: false,
-      hasInteraction: dispute.hasInteraction
+      hasInteraction: dispute.hasInteraction || dispute.lastInteraction
     }
     let object = dispute.objects.length ? dispute.objects[0] : null
     if (object) {
@@ -56,9 +56,9 @@ const disputeViewModel = function (disputes) {
         viewModelDispute.disputeDealValue = object.offers.slice(-1).pop().value
       }
     }
-    dispute.lastInteractionTooltip = getLastInteractionTooltip(dispute.lastInteractionType)
-    dispute.lastInteractionIcon = getLastInteractionIcon(dispute.lastInteractionType)
-    dispute.lastInteractionFormatedDate = getLastInteraction(dispute.lastInteractionDate)
+    viewModelDispute.lastInteractionTooltip = getLastInteractionTooltip(viewModelDispute.lastInteractionType)
+    viewModelDispute.lastInteractionIcon = getLastInteractionIcon(viewModelDispute.lastInteractionType)
+    viewModelDispute.lastInteractionFormatedDate = getLastInteraction(viewModelDispute.lastInteractionDate)
     viewModelDisputes.push(viewModelDispute)
   }
   return viewModelDisputes

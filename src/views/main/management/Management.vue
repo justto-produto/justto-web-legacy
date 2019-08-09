@@ -136,7 +136,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="activeTab < 2"
+            vv-if="activeTab < 2"
             sortable="custom"
             prop="expirationDate"
             label="Fim da negociação"
@@ -151,7 +151,7 @@
             sortable="custom"
             prop="lastInteractionDate"
             label="Última interação"
-            min-width="146px"
+            min-width="148px"
             align="center">
             <template slot-scope="scope">
               <el-tooltip :content="scope.row.lastInteractionTooltip">
