@@ -334,17 +334,21 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.tabKey = true
-      this.tableHeigth = this.$refs.tableContainer.clientHeight
-      window.addEventListener('resize', () => {
-        this.tableHeigth = this.$refs.tableContainer.clientHeight
-      })
+      this.adjustHeight()
+      window.addEventListener('resize', this.adjustHeight)
     })
     setTimeout(function () {
       this.tabKey = true
       this.tableHeigth = this.$refs.tableContainer.clientHeight
     }.bind(this), 500)
   },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.adjustHeight)
+  },
   methods: {
+    adjustHeight() {
+      this.tableHeigth = this.$refs.tableContainer.clientHeight
+    },
     getDisputes () {
       this.$store.commit('showLoading')
       this.$store.dispatch('getDisputes')
