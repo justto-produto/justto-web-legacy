@@ -65,7 +65,7 @@
           <el-table-column type="selection" width="40px" />
           <el-table-column type="expand" width="40px">
             <template slot-scope="props">
-              <!-- <jus-dispute-resume :dispute="props.row" /> -->
+              <jus-dispute-resume :dispute="props.row" />
             </template>
           </el-table-column>
           <el-table-column
@@ -73,7 +73,7 @@
             min-width="94px"
             prop="disputeId"
             sortable="custom">
-            <template slot-scope="scope">#{{ scope.row.disputeId }}</template>
+            <template slot-scope="scope">#{{ scope.row.id }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
@@ -154,10 +154,10 @@
             min-width="146px"
             align="center">
             <template slot-scope="scope">
-              <el-tooltip :content="getLastInteractionTooltip(scope.row.lastInteractionType)">
-                <jus-icon :icon="getLastInteractionIcon(scope.row.lastInteractionType)" class="view-management__interaction-icon" />
+              <el-tooltip :content="scope.row.lastInteractionTooltip">
+                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
               </el-tooltip>
-              {{ getLastInteraction(scope.row.lastInteractionDate) }}
+              {{ scope.row.lastInteractionFormatedDate }}
             </template>
           </el-table-column>
           <el-table-column
@@ -172,12 +172,12 @@
           <el-table-column
             v-if="activeTab === '2'"
             sortable="custom"
-            prop="conclusionDate"
+            prop="disputeDealDate"
             label="Data do acordo"
             min-width="138px"
             align="center">
             <template slot-scope="scope">
-              {{ scope.row.conclusionDate | moment('DD/MM/YY') }}
+              {{ scope.row.disputeDealDate | moment('DD/MM/YY') }}
             </template>
           </el-table-column>
           <el-table-column
@@ -210,14 +210,14 @@
               <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
                 <el-button
                   type="text"
-                  @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeId, 'ENGAJAMENTO')">
+                  @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
                   <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
                 </el-button>
               </el-tooltip>
               <el-tooltip content="Abrir disputa em uma nova aba">
                 <el-button
                   type="text"
-                  @click="openNewTab(scope.row.disputeId)">
+                  @click="openNewTab(scope.row.id)">
                   <jus-icon icon="external-link" />
                 </el-button>
               </el-tooltip>
@@ -379,8 +379,8 @@ export default {
       }
     },
     handleRowClick (row, column, event) {
-      if (row.disputeId && event.target.tagName !== 'IMG') {
-        this.$router.push({ name: 'dispute', params: { id: row.disputeId } })
+      if (row.id && event.target.tagName !== 'IMG') {
+        this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
     handleRowClassName (obj) {
@@ -462,63 +462,6 @@ export default {
     },
     handleSortChange (sort) {
       this.$store.commit('setDisputeSort', sort)
-    },
-    getLastInteraction (lastinteractiondate) {
-      if (!lastinteractiondate) return null
-      let date = this.$moment(lastinteractiondate + 'Z')
-      if (date.isValid()) {
-        let now = this.$moment()
-        if (now.diff(date, 'seconds') < 0) {
-          return ''
-        } else if (now.diff(date, 'seconds') < 59) {
-          return 'há ' + now.diff(date, 'seconds') + ' segundos'
-        } else if (now.diff(date, 'minutes') < 59) {
-          return 'há ' + now.diff(date, 'minutes') + ' minuto(s)'
-        } else if (now.diff(date, 'hours') < 24) {
-          return 'há ' + now.diff(date, 'hours') + ' hora(s)'
-        } else if (now.diff(date, 'hours') < 48) {
-          return 'há 1 dia'
-        } else {
-          return date.format('DD/MM/YY')
-        }
-      }
-      return ''
-    },
-    getLastInteractionIcon (type) {
-      switch (type) {
-        case 'EMAIL_CNA':
-          return 'cna'
-        case 'EMAIL':
-          return 'email'
-        case 'WHATSAPP':
-          return 'whatsapp'
-        case 'SMS':
-          return 'sms'
-        case 'TTS':
-          return 'tts'
-        case 'NEGOTIATION':
-          return 'negotiation2'
-        default:
-          return ''
-      }
-    },
-    getLastInteractionTooltip (type) {
-      switch (type) {
-        case 'EMAIL_CNA':
-          return 'Última interação via CNA'
-        case 'EMAIL':
-          return 'Última interação via E-mail'
-        case 'WHATSAPP':
-          return 'Última interação via WhatsApp'
-        case 'SMS':
-          return 'Última interação via SMS'
-        case 'TTS':
-          return 'Última interação via WhatsApp'
-        case 'NEGOTIATION':
-          return 'Última interação via Sistema Justto'
-        default:
-          return ''
-      }
     },
     handleChangePagination () {
       this.$nextTick(() => {

@@ -621,7 +621,7 @@ export default {
         type: 'error'
       }).then(() => {
         this.$store.dispatch('removeRole', {
-          disputeId: role.disputeId,
+          disputeId: role.id,
           roleId: role.id
         }).then(response => {
           this.$jusNotification({
