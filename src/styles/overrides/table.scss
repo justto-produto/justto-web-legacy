@@ -33,6 +33,16 @@
   .el-table__row {
     cursor: pointer;
   }
+  .el-table__empty-text {
+    i {
+      font-size: 3rem;
+    }
+    h4 {
+      font-size: 1.2rem;
+      font-weight: normal;
+      line-height: initial;
+    }
+  }
 }
 
 .el-table--card {

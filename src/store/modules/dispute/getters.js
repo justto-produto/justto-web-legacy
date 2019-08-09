@@ -4,6 +4,9 @@ import { fuseSearchDisputes } from '@/plugins/jusUtils'
 const disputeGetters = {
   disputes: state => state.disputes,
   disputeFilters: state => state.filters,
+  disputeHasFilters: state => {
+    return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm
+  },
   disputeFiltersTerm: state => state.filters.filterTerm,
   filterPersonId: state => state.filters.filterPersonId,
   findById: (state) => (disputeId) => {

@@ -53,7 +53,7 @@
         <el-table
           ref="disputeTable"
           :key="tableKey"
-          :max-height="tableHeigth"
+          :height="tableHeigth"
           :data="paginatedDisputes"
           :row-class-name="handleRowClassName"
           size="mini"
@@ -224,14 +224,22 @@
             </template>
           </el-table-column>
           <template v-if="!$store.state.loading" slot="empty">
-            <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
-            <h4 style="font-weight: normal; line-height: initial;" data-testid="cases-empty-text">
-              Não foram encontradas disputas para<br>os filtros e aba selecionados.
-            </h4>
+            <span v-if="hasFilters">
+              <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
+              <h4 data-testid="cases-empty-text">
+                Não foram encontradas disputas para<br>os filtros selecionados.
+              </h4>
+            </span>
+            <span v-else>
+              <img src="@/assets/loading2.svg">
+              <h4 data-testid="cases-empty-text">
+                Aguardando por novas disputas.
+              </h4>
+            </span>
           </template>
         </el-table>
       </div>
-      <div v-if="disputesLength > initialDisputesPerPage" class="view-management__pagination-container">
+      <div class="view-management__pagination-container">
         <el-pagination
           :total.sync="disputesLength"
           :page-size.sync="disputesPerPage"
@@ -317,6 +325,9 @@ export default {
     },
     filters () {
       return this.$store.state.disputeModule.filters
+    },
+    hasFilters () {
+      return this.$store.getters.disputeHasFilters
     },
     activeTabLabel () {
       switch (this.activeTab) {
