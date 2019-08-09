@@ -346,7 +346,7 @@ export default {
     window.removeEventListener('resize', this.adjustHeight)
   },
   methods: {
-    adjustHeight() {
+    adjustHeight () {
       this.tableHeigth = this.$refs.tableContainer.clientHeight
     },
     getDisputes () {
