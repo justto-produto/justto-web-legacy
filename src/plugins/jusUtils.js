@@ -19,7 +19,6 @@ const getFirstRole = function (disputeRoles, party, role) {
 }
 
 const fuseSearchDisputes = function (disputes, term) {
-  debugger
   const fuse = new Fuse(disputes, {
     shouldSort: true,
     tokenize: true,

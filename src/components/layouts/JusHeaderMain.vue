@@ -10,21 +10,6 @@
         <template slot-scope="{ item }">
           <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
             <jus-dispute-resume :dispute="item" />
-            <!-- <div class="jus-header-main__result">
-              <h4>
-                Disputa #{{ item.id }} |
-                Campanha: {{ item.campaign.name | capitalize }} |
-                Processo: {{ item.code }}
-              </h4>
-              <div>Estratégia: {{ item.campaign.strategy | capitalize }}</div>
-              <div>Status: <span>{{ $t('occurrence.type.' + item.status) | capitalize }}</span></div>
-              <div v-for="(claiment, index) in item.claiments" :key="item.id + claiment.name + index + 'claimant'">
-                Parte contrária: {{ claiment.name }}
-              </div>
-              <div v-for="(lawyer, index) in item.claimentslawyer" :key="item.id + lawyer.name + index + 'lawyer'">
-                Advogado: {{ lawyer.name }}
-              </div>
-            </div> -->
           </router-link>
           <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
             Não foram encontradas disputas para esta busca.
