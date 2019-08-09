@@ -4,7 +4,7 @@ const disputeViewModel = function (disputes) {
   let viewModelDisputes = []
   for (let dispute of disputes) {
     let viewModelDispute = {
-      disputeId: dispute.id,
+      id: dispute.id,
       code: dispute.code,
       favorite: !!dispute.favorite,
       status: dispute.status,
@@ -14,16 +14,23 @@ const disputeViewModel = function (disputes) {
       firstClaimantLawyer: getFirstRole(dispute.disputeRoles, 'CLAIMANT', 'LAWYER'),
       disputeRoles: dispute.disputeRoles,
       expirationDate: dispute.expirationDate.dateTime,
-      conclusionDate: dispute.conclusion ? dispute.conclusion.conclusionDate.dateTime : null,
+      disputeDealDate: dispute.conclusion ? dispute.conclusion.conclusionDate.dateTime : null,
       lastInteractionDate: dispute.lastInteraction ? dispute.lastInteraction.date.dateTime : null,
       lastInteractionType: dispute.lastInteraction ? dispute.lastInteraction.type : null,
       communicationMsgTotalSent: dispute.communications.filter(c => c.status === 'PROCESSED').length,
       communicationMsgTotalsShedulled: dispute.communications.filter(c => c.status === 'WAITING').length,
+      negotiators: getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR'),
       disputeUpperRange:  '0.0',
       lastOfferValue: '0.0',
       lastCounterOfferValue: '0.0',
       disputeDealValue: '0.0',
-      negotiators: getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR')
+      enrichedEmails: 0,
+      enrichedPhones: 0,
+      sentEmailMessages: 0,
+      sentCnaMessages: 0,
+      sendWhatsappMessages: 0,
+      visualizedMessages: 0,
+      isDeal: false
     }
     let object = dispute.objects.length ? dispute.objects[0] : null
     if (object) {

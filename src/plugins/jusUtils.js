@@ -29,7 +29,7 @@ const fuseSearchDisputes = function (disputes, term) {
     maxPatternLength: 32,
     minMatchCharLength: 1,
     keys: [
-      'disputeId',
+      'id',
       'code',
       'campaign.name',
       'disputeRoles.name',

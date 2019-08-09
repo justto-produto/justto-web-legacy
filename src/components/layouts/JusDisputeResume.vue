@@ -2,12 +2,12 @@
   <div class="jus-dispute-resume">
     <h4 data-testid="dispute-title">
       Disputa #{{ dispute.id }} |
-      Campanha: {{ dispute.campaign.name | capitalize }} |
+      Campanha: {{ dispute.campaignName | capitalize }} |
       Processo: {{ dispute.code }}
     </h4>
     <el-row data-testid="dipute-info">
       <el-col :span="8">
-        <div>Estratégia: {{ dispute.campaign.strategy }}</div>
+        <div>Estratégia: {{ dispute.strategyName }}</div>
         <div>Status: <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span></div>
         <div v-for="(claiment, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'PARTY')" :key="dispute.id + claiment.name + index + 'claimant'">
           Parte contrária: {{ claiment.name }}
@@ -17,19 +17,19 @@
         </div>
       </el-col>
       <el-col :span="8">
-        <div>Campanha: {{ dispute.campaign.name }}</div>
-        <div>Fim da negociação: {{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</div>
-        <!-- <div>Data do acordo: {{ dispute.disputedealdate | moment('DD/MM/YY') }}</div> -->
+        <div>Campanha: {{ dispute.campaignName }}</div>
+        <div>Fim da negociação: {{ dispute.expirationDate | moment('DD/MM/YY') }}</div>
+        <div>Data do acordo: {{ dispute.disputeDealDate | moment('DD/MM/YY') }}</div>
         <div>
           Última interação:
-          <!-- {{ getLastInteraction(dispute.lastinteractiondate) }} -->
+          {{ getLastInteraction(dispute.lastInteractionDate) }}
         </div>
       </el-col>
       <el-col :span="8">
-        <!-- <div>Alçada máxima: {{ dispute.disputeupperrange | currency }}</div>
-        <div>Valor proposto: {{ dispute.lastoffervalue | currency }}</div>
-        <div>Contraproposta: {{ dispute.lastcounteroffervalue | currency }}</div>
-        <div>Valor do acordo: {{ dispute.disputedealvalue | currency }}</div> -->
+        <div>Alçada máxima: {{ dispute.disputeUpperRange | currency }}</div>
+        <div>Valor proposto: {{ dispute.lastOfferValue | currency }}</div>
+        <div>Contraproposta: {{ dispute.lastCounterOfferValue | currency }}</div>
+        <div>Valor do acordo: {{ dispute.disputeDealValue | currency }}</div>
       </el-col>
     </el-row>
   </div>

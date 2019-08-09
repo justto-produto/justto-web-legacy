@@ -65,7 +65,7 @@
           <el-table-column type="selection" width="40px" />
           <el-table-column type="expand" width="40px">
             <template slot-scope="props">
-              <!-- <jus-dispute-resume :dispute="props.row" /> -->
+              <jus-dispute-resume :dispute="props.row" />
             </template>
           </el-table-column>
           <el-table-column
@@ -73,7 +73,7 @@
             min-width="94px"
             prop="disputeId"
             sortable="custom">
-            <template slot-scope="scope">#{{ scope.row.disputeId }}</template>
+            <template slot-scope="scope">#{{ scope.row.id }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
@@ -172,12 +172,12 @@
           <el-table-column
             v-if="activeTab === '2'"
             sortable="custom"
-            prop="conclusionDate"
+            prop="disputeDealDate"
             label="Data do acordo"
             min-width="138px"
             align="center">
             <template slot-scope="scope">
-              {{ scope.row.conclusionDate | moment('DD/MM/YY') }}
+              {{ scope.row.disputeDealDate | moment('DD/MM/YY') }}
             </template>
           </el-table-column>
           <el-table-column
@@ -210,14 +210,14 @@
               <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
                 <el-button
                   type="text"
-                  @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.disputeId, 'ENGAJAMENTO')">
+                  @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
                   <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
                 </el-button>
               </el-tooltip>
               <el-tooltip content="Abrir disputa em uma nova aba">
                 <el-button
                   type="text"
-                  @click="openNewTab(scope.row.disputeId)">
+                  @click="openNewTab(scope.row.id)">
                   <jus-icon icon="external-link" />
                 </el-button>
               </el-tooltip>
@@ -375,8 +375,8 @@ export default {
       }
     },
     handleRowClick (row, column, event) {
-      if (row.disputeId && event.target.tagName !== 'IMG') {
-        this.$router.push({ name: 'dispute', params: { id: row.disputeId } })
+      if (row.id && event.target.tagName !== 'IMG') {
+        this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
     handleRowClassName (obj) {
