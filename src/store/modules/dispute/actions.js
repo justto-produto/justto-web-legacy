@@ -86,7 +86,7 @@ const disputeActions = {
   getDisputeMessages ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/messages')
+      axios.get('api/disputes/' + id + '/occurrences')
         .then(response => {
           resolve(response.data)
         })

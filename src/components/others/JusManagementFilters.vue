@@ -40,33 +40,33 @@
         <el-col v-if="isNewAgreements" :span="12">
           <el-form-item label="Data do acordo">
             <el-date-picker
-              v-model="filters.disputedealdate"
+              v-model="filters.disputeDealDate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd"
-              @change="clearDisputedealdate"/>
+              @change="clearDisputeDealDate"/>
           </el-form-item>
         </el-col>
         <!-- ÚLTIMA INTERAÇÃO -->
         <el-col v-if="isInteration" :span="12">
           <el-form-item label="Última interação">
             <el-date-picker
-              v-model="filters.lastinteractiondate"
+              v-model="filters.lastInteractionDate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd"
-              @change="clearLastinteractiondate" />
+              @change="clearLastInteractionDate" />
           </el-form-item>
         </el-col>
         <!-- MEIO DE INTERAÇÃO -->
         <el-col :span="12">
           <el-form-item v-if="isInteration" label="Meio de interação">
             <el-select
-              v-model="filters.interaction"
+              v-model="filters.lastInteractionType"
               data-testid="filter-setinteraction"
               placeholder="Selecione uma opção"
               clearable
-              @change="setInteraction">
+              @clear="clearInteraction">
               <el-option
                 v-for="interaction in interactions"
                 :key="interaction.key"
@@ -88,17 +88,6 @@
             </el-radio-group>
           </el-form-item>
         </el-col> -->
-        <!-- FAVORITOS -->
-        <el-col :span="12">
-          <el-form-item label="Exibir somente:" class="jus-management-filters__switch">
-            <div>
-              <div>
-                <jus-icon icon="golden-star" /> Disputas favoritas
-              </div>
-              <el-switch v-model="filters.favorite" data-testid="filters-favorite" />
-            </div>
-          </el-form-item>
-        </el-col>
         <!-- FIM DA NEGOCIAÇÃO -->
         <el-col v-if="isEngagement || isInteration || isNewAgreements" :span="12">
           <el-form-item label="Fim da negociação">
@@ -109,6 +98,17 @@
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd"
               @change="clearDisputeExpirationDate"/>
+          </el-form-item>
+        </el-col>
+        <!-- FAVORITOS -->
+        <el-col :span="12">
+          <el-form-item label="Exibir somente:" class="jus-management-filters__switch">
+            <div>
+              <div>
+                <jus-icon icon="golden-star" /> Disputas favoritas
+              </div>
+              <el-switch v-model="filters.favorite" data-testid="filters-favorite" />
+            </div>
           </el-form-item>
         </el-col>
         <!-- ESTADO -->
@@ -124,13 +124,13 @@
           </el-form-item>
         </el-col>  -->
         <!-- VALOR INICIAL DO ACORDO -->
-        <el-col v-if="isNewAgreements" :span="12">
+        <!-- <el-col v-if="isNewAgreements" :span="12">
           <el-form-item label="Valor inicial do acordo">
             <div class="el-input">
-              <money v-model="filters.disputedealvalue" v-bind="money" class="el-input__inner" />
+              <money v-model="filters.disputeDealValue" v-bind="money" class="el-input__inner" />
             </div>
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <!-- VALOR FINAL DO ACORDO -->
         <!-- <el-col v-if="isNewAgreements" :span="24">
           <el-form-item label="Valor final do acordo">
@@ -230,13 +230,13 @@ export default {
     },
     interactions () {
       return [{
-        key: 'haswhatsappinteration',
+        key: 'WHATSAPP',
         value: 'Whatsapp'
       }, {
-        key: 'hasemailinteraction',
+        key: 'EMAIL',
         value: 'Email'
       }, {
-        key: 'hascnainteraction',
+        key: 'CNA',
         value: 'CNA'
       }]
     },
@@ -254,11 +254,8 @@ export default {
     })
   },
   methods: {
-    setInteraction (value) {
-      delete this.filters['whatsappinterations']
-      delete this.filters['emailinteractions']
-      delete this.filters['cnainteractions']
-      if (value) this.filters[value] = true
+    clearInteraction (value) {
+      delete this.filters.lastInteractionType
     },
     clearStrategy () {
       delete this.filters.strategyName
@@ -269,18 +266,18 @@ export default {
     clearDisputestate () {
       delete this.filters.disputestate
     },
-    clearDisputedealdate (value) {
+    clearDisputeDealDate (value) {
       if (value) {
-        this.filters.disputedealdate = value
+        this.filters.disputeDealDate = value
       } else {
-        delete this.filters.disputedealdate
+        delete this.filters.disputeDealDate
       }
     },
-    clearLastinteractiondate (value) {
+    clearLastInteractionDate (value) {
       if (value) {
-        this.filters.lastinteractiondate = value
+        this.filters.lastInteractionDate = value
       } else {
-        delete this.filters.lastinteractiondate
+        delete this.filters.lastInteractionDate
       }
     },
     clearDisputeExpirationDate (value) {

@@ -1,12 +1,13 @@
 <template>
-  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
+  <ul v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="message in messages"
-      v-if="isntCanceled(message)"
-      v-show="checkShowScheduled(message)"
+      v-if="message.status !== 'CANCELED'"
+      v-show="showScheduled ? true : message.status !== 'WAITING'"
       :key="message.id"
       data-testid="message-index"
       class="dispute-view-messages__message">
+      {{ message.content }}
       <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="dispute-view-messages__message-box">
         <div>
           <div :class="directionClass(message) + waitingClass(message)" class="dispute-view-messages__message-content" data-testid="message-box">
@@ -52,7 +53,7 @@
           size="sm" />
       </div>
       <div v-else class="dispute-view-messages__message-log">
-        <div :class="message.type === 'TYPING' ? 'loading' : ''">{{ message.description }}</div>
+        <div :class="message.type === 'TYPING' ? 'typing' : ''">{{ message.description }}</div>
         {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
       </div>
     </li>
@@ -75,10 +76,6 @@ export default {
     messagesProp: {
       type: Array,
       default: () => []
-    },
-    loading: {
-      type: Boolean,
-      default: false
     },
     showScheduled: {
       type: Boolean,
@@ -186,20 +183,7 @@ export default {
       }
       return ''
     },
-    checkShowScheduled (message) {
-      if (!this.showScheduled) {
-        if (message.message && message.message.status === 'WAITING') {
-          return false
-        } else return true
-      } else return true
-    },
-    isntCanceled (message) {
-      if (message.message) {
-        if (message.message.status === 'CANCELED') {
-          return false
-        } return true
-      } return true
-    },
+
     getMessageIcon (message) {
       if (message) {
         switch (message.type) {
@@ -319,33 +303,9 @@ export default {
   .el-button--text {
     padding-bottom: 0;
   }
-  .loading:after {
+  .typing:after {
     content: ' .';
     animation: dots 1s steps(5, end) infinite;
-  }
-  @keyframes dots {
-    0%, 20% {
-      color: rgba(0,0,0,0);
-      text-shadow:
-        .25em 0 0 rgba(0,0,0,0),
-        .5em 0 0 rgba(0,0,0,0);
-    }
-    40% {
-      color: #adadad;
-      text-shadow:
-        .25em 0 0 rgba(0,0,0,0),
-        .5em 0 0 rgba(0,0,0,0);
-    }
-    60% {
-      text-shadow:
-        .25em 0 0 #adadad,
-        .5em 0 0 rgba(0,0,0,0);
-    }
-    80%, 100% {
-      text-shadow:
-        .25em 0 0 #adadad,
-        .5em 0 0 #adadad;
-    }
   }
 }
 </style>

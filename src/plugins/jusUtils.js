@@ -1,4 +1,5 @@
 import Fuse from 'fuse.js'
+import moment from 'moment'
 
 const getRoles = function (disputeRoles, party, role) {
   let roles = disputeRoles.filter(disputeRole => {
@@ -45,9 +46,9 @@ const fuseSearchDisputes = function (disputes, term) {
 
 const getLastInteraction = function (lastinteractiondate) {
   if (!lastinteractiondate) return ''
-  let date = this.$moment(lastinteractiondate + 'Z')
+  let date = moment(lastinteractiondate + 'Z')
   if (date.isValid()) {
-    let now = this.$moment()
+    let now = moment()
     if (now.diff(date, 'seconds') < 0) {
       return ''
     } else if (now.diff(date, 'seconds') < 59) {

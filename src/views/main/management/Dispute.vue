@@ -1,9 +1,12 @@
 <template>
-  <JusViewMain left-card-width="350" right-card-width="350" class="dispute-view">
+  <div v-if="!dispute" class="center-center">
+    <div v-loading="!dispute"/>
+  </div>
+  <JusViewMain v-else-if="dispute" left-card-width="350" right-card-width="350" class="dispute-view">
     <template slot="title">
       <h1 class="dispute-view__title">
         <router-link to="/management">
-          <jus-icon icon="back" />
+          <jus-icon icon="back"/>
         </router-link>
         Disputa #{{ dispute.id }}
       </h1>
@@ -13,7 +16,7 @@
       <div class="dispute-view__section-title">
         <h2>Resumo da disputa</h2>
       </div>
-      <!-- <dispute-summary
+      <dispute-summary
         v-if="dispute.strategy"
         :key="componentKey"
         :id="dispute.id"
@@ -21,29 +24,29 @@
         :show-scheduled.sync="showScheduled"
         :strategy-id="dispute.strategy.id"
         data-testid="dispute-summary"
-        @dispute:refresh="fetchData({ fetchMessages: true })" /> -->
+        @dispute:refresh="fetchData({ fetchMessages: true })"/>
     </template>
     <!-- CHAT -->
     <template slot="main">
       <div class="dispute-view__section-messages">
         <div class="dispute-view__actions">
           <!-- <el-tooltip content="move-dispute">
-            <el-button plain @click="disputeAction('move')">
-              <jus-icon icon="move-dispute" />
-            </el-button>
-          </el-tooltip>
-          <el-tooltip content="delegate">
-            <el-button plain @click="disputeAction('move')">
-              <jus-icon icon="delegate" />
-            </el-button>
-          </el-tooltip> -->
+                        <el-button plain @click="disputeAction('move')">
+                          <jus-icon icon="move-dispute" />
+                        </el-button>
+                      </el-tooltip>
+                      <el-tooltip content="delegate">
+                        <el-button plain @click="disputeAction('move')">
+                          <jus-icon icon="delegate" />
+                        </el-button>
+                      </el-tooltip> -->
           <el-tooltip content="Ganhar">
             <el-button
               :disabled="!canSettled()"
               plain
               data-testid="settled"
               @click="disputeAction('settled')">
-              <jus-icon icon="win" />
+              <jus-icon icon="win"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Perder">
@@ -52,32 +55,35 @@
               plain
               data-testid="unsettled"
               @click="disputeAction('unsettled')">
-              <jus-icon icon="lose" />
+              <jus-icon icon="lose"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Reiniciar engajamento">
-            <el-button plain data-testid="restart-engagement" @click="disputeAction('restart-engagement')">
-              <jus-icon icon="refresh" />
+            <el-button
+              plain
+              data-testid="restart-engagement"
+              @click="disputeAction('restart-engagement')">
+              <jus-icon icon="refresh"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Retomar">
             <el-button plain data-testid="resume" @click="disputeAction('resume')">
-              <jus-icon icon="start-again" />
+              <jus-icon icon="start-again"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Pausar">
             <el-button plain data-testid="paused" @click="disputeAction('paused')">
-              <jus-icon icon="pause" />
+              <jus-icon icon="pause"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Alterar Negociador">
             <el-button plain @click="editNegotiator()">
-              <jus-icon icon="delegate" />
+              <jus-icon icon="delegate"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Enriquecer disputa">
             <el-button plain @click="disputeAction('enrich')">
-              <jus-icon icon="enrich" />
+              <jus-icon icon="enrich"/>
             </el-button>
           </el-tooltip>
           <!-- <el-tooltip content="snooze">
@@ -91,12 +97,12 @@
               class="right"
               data-testid="favorite"
               @click="disputeAction(isFavorite ? 'disfavor' : 'favorite')">
-              <jus-icon :icon="isFavorite ? 'golden-star' : 'star'" />
+              <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Buscar">
             <el-button plain class="right" @click="showSearch = !showSearch">
-              <jus-icon icon="search2" />
+              <jus-icon icon="search2"/>
             </el-button>
           </el-tooltip>
           <div :class="{isVisible: showSearch}" class="dispute-view__search">
@@ -126,7 +132,7 @@
               v-for="(type, index) in unsettledTypes"
               :key="index"
               :label="type"
-              :value="index" />
+              :value="index"/>
           </el-select>
           <span slot="footer" class="dialog-footer">
             <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
@@ -155,7 +161,7 @@
               :data="workspaceNegotiators"
               v-model="disputeNegotiators"
               filter-placeholder="Buscar"
-              filterable />
+              filterable/>
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
@@ -164,11 +170,10 @@
         </el-dialog>
         <dispute-messages
           :messages-prop="filteredDisputeMessages"
-          :loading.sync="loadingDisputeMessages"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
           data-testid="dispute-messages"
-          @dispute:refresh="fetchData({ fetchMessages: true })" />
+          @dispute:refresh="fetchData({ fetchMessages: true })"/>
         <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Mensagem" name="1">
@@ -184,10 +189,12 @@
                     @keydown.enter.exact.prevent
                     @keydown.enter.alt="newLineMessage()"
                     @keydown.enter.shift="newLineMessage()"
-                    @keyup.enter.exact="sendMessage()" />
+                    @keyup.enter.exact="sendMessage()"/>
                 </el-collapse-transition>
                 <div class="dispute-view__send-message-actions">
-                  <el-tooltip v-if="!validName" content="Atualize o nome no seu perfil para enviar mensagens">
+                  <el-tooltip
+                    v-if="!validName"
+                    content="Atualize o nome no seu perfil para enviar mensagens">
                     <div class="dispute-view__disabled-text">
                       Configure um nome em seu perfil
                     </div>
@@ -195,28 +202,43 @@
                   <div v-else-if="activePerson.id">
                     <div>
                       <el-tooltip content="Enviar e-mail">
-                        <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
+                        <a
+                          href="#"
+                          data-testid="select-email"
+                          @click.prevent="setMessageType('email')">
                           <jus-icon :is-active="messageType === 'email'" icon="email"/>
                         </a>
                       </el-tooltip>
                       <el-tooltip content="Enviar Whatsapp">
-                        <a href="#" data-testid="select-whatsapp" @click.prevent="setMessageType('whatsapp')">
-                          <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
+                        <a
+                          href="#"
+                          data-testid="select-whatsapp"
+                          @click.prevent="setMessageType('whatsapp')">
+                          <jus-icon
+                            :is-active="messageType === 'whatsapp'"
+                            icon="whatsapp"/>
                         </a>
                       </el-tooltip>
                       <el-tooltip content="Enviar CNA">
-                        <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
+                        <a
+                          href="#"
+                          data-testid="select-cna"
+                          @click.prevent="setMessageType('cna')">
                           <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
                         </a>
                       </el-tooltip>
                     </div>
                   </div>
-                  <el-tooltip v-else content="Escolha um destinatário ao lado para receber sua mensagem">
+                  <el-tooltip
+                    v-else
+                    content="Escolha um destinatário ao lado para receber sua mensagem">
                     <div class="dispute-view__disabled-text" data-testid="unselected-party">
                       Escolha um destinatário ao lado
                     </div>
                   </el-tooltip>
-                  <el-tooltip v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'" content="Whatsapp desconectado">
+                  <el-tooltip
+                    v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'"
+                    content="Whatsapp desconectado">
                     <div>
                       <el-button
                         :disabled="true"
@@ -275,7 +297,7 @@
                   @keydown.enter.exact.prevent
                   @keydown.enter.alt="newLineNote()"
                   @keydown.enter.shift="newLineNote()"
-                  @keydown.enter.exact="sendNote()" />
+                  @keydown.enter.exact="sendNote()"/>
                 <div class="dispute-view__send-message-actions note">
                   <el-button type="primary" data-testid="submit-note" @click="sendNote()">
                     Salvar nota
@@ -298,7 +320,7 @@
             class="right"
             data-testid="remove"
             @click="removeDispute()">
-            <jus-icon icon="trash" />
+            <jus-icon icon="trash"/>
           </el-button>
         </el-tooltip>
       </div>
@@ -307,7 +329,7 @@
         :dispute="dispute"
         :active-person.sync="activePerson"
         data-testid="dispute-overview"
-        @dispute:refresh="fetchData({ fetchDispute: true })" />
+        @dispute:refresh="fetchData({ fetchDispute: true })"/>
     </template>
   </JusViewMain>
 </template>
@@ -324,13 +346,11 @@ export default {
   },
   data () {
     return {
+      id: 0,
       editNegotiatorDialogVisible: false,
       chooseUnsettledDialogVisible: false,
-      dispute: {},
       loadingDispute: false,
       disputeMessages: [],
-      filteredDisputeMessages: [],
-      loadingDisputeMessages: false,
       showSearch: false,
       searchTerm: '',
       messageType: 'email',
@@ -362,6 +382,18 @@ export default {
         }
       }
     },
+    dispute () {
+      return this.$store.getters.findById(this.id)
+    },
+    filteredDisputeMessages () {
+      if (this.searchTerm) {
+        return this.disputeMessages.filter(dispute => {
+          return dispute.content.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          dispute.sender.toLowerCase().includes(this.searchTerm.toLowerCase())
+        })
+      }
+      return this.disputeMessages
+    },
     isFavorite () {
       return this.dispute.favorite
     },
@@ -384,9 +416,6 @@ export default {
         this.searchTerm = ''
       }
     },
-    searchTerm (term) {
-      this.filterDisputeMessages(term)
-    },
     activePerson (value) {
       this.$nextTick(() => {
         if (value.constructor === Object && Object.entries(value).length !== 0) {
@@ -396,7 +425,8 @@ export default {
     }
   },
   created () {
-    this.fetchData({ fetchDispute: true, fetchMessages: true })
+    this.id = this.$route.params.id
+    this.fetchData({ fetchMessages: true })
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
     } else {
@@ -416,7 +446,10 @@ export default {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
     },
     editNegotiators () {
-      this.$store.dispatch('editNegotiators', { negotiators: this.disputeNegotiators, disputeId: this.dispute.id }).then(() => {
+      this.$store.dispatch('editNegotiators', {
+        negotiators: this.disputeNegotiators,
+        disputeId: this.dispute.id
+      }).then(() => {
         // window.analytics.track('Negociadores alterados')
         this.$jusNotification({
           title: 'Yay!',
@@ -450,58 +483,26 @@ export default {
       })
     },
     fetchData (options) {
-      if (options.fetchDispute) {
-        this.loadingDispute = true
-        this.$store.dispatch('getDispute', this.$route.params.id).then((response) => {
-          this.dispute = response
-          this.loadingDispute = false
-          this.componentKey += 1
-          this.$socket.emit('subscribe', '/disputes/' + this.dispute.id)
-        }).catch(error => {
-          if (error.response.status === 404) {
-            this.$router.push('/management')
-          } else this.$jusNotification({ type: 'error' })
-        })
-      }
       if (options.fetchMessages) {
-        this.loadingDisputeMessages = true
-        this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
+        this.$store.dispatch('getDisputeMessages', this.$route.params.id).then(response => {
           if (!this.disputeMessages.length) {
-            this.disputeMessages = responses
-            this.filteredDisputeMessages = this.disputeMessages.slice(0)
+            this.disputeMessages = response.content
           } else {
-            let newMessages = responses.filter((i) => {
-              return this.disputeMessages.map((e) => {
+            let newMessages = response.content.filter(i => {
+              return this.disputeMessages.map(e => {
                 return JSON.stringify(e)
               }).indexOf(JSON.stringify(i)) < 0
             })
             this.disputeMessages.push(...newMessages)
-            this.filteredDisputeMessages.push(...newMessages)
           }
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.loadingDisputeMessages = false
         })
       }
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
         this.activePerson = {}
-      }
-    },
-    filterDisputeMessages (term) {
-      var messages = this.disputeMessages.slice(0)
-      if (term) {
-        var results = messages.filter(this.createDisputeFilter(term))
-        this.filteredDisputeMessages = results
-      } else {
-        this.filteredDisputeMessages = messages
-      }
-    },
-    createDisputeFilter (term) {
-      return (occurrence) => {
-        return (occurrence.description.toLowerCase().includes(term.toLowerCase()))
       }
     },
     setMessageType (type) {
@@ -559,7 +560,9 @@ export default {
           this.fetchData({ fetchDispute: true, fetchMessages: true })
         }.bind(this), 1000)
       }).catch(() => this.$jusNotification({ type: 'error' }))
-        .finally(() => { this.chooseUnsettledDialogVisible = false })
+        .finally(() => {
+          this.chooseUnsettledDialogVisible = false
+        })
     },
     newLineMessage () {
       this.newMessage = `${this.newMessage}\n`
@@ -670,210 +673,264 @@ export default {
 </script>
 
 <style lang="scss">
-.dispute-view {
-  &__list {
-    margin: 20 0px;
-    padding-left: 2px;
-    li {
-      margin-top: 12px;
-      list-style: none;
-      :first-child {
-        margin-right: 10px;
-      }
-      :last-child {
-        vertical-align: text-top;
-        float: right;
-      }
+    .dispute-view {
+        &__list {
+            margin: 20 0px;
+            padding-left: 2px;
+
+            li {
+                margin-top: 12px;
+                list-style: none;
+
+                :first-child {
+                    margin-right: 10px;
+                }
+
+                :last-child {
+                    vertical-align: text-top;
+                    float: right;
+                }
+            }
+        }
+
+        &__section-messages {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        &__content {
+            margin-left: 20px;
+            position: relative;
+
+            &:before {
+                content: '';
+                position: absolute;
+                left: 10px;
+                top: 20px;
+                width: 0;
+                height: 0;
+                border: 17px solid transparent;
+                border-right-color: #ffffff;
+                border-left: 0;
+                margin-top: -17px;
+                margin-left: -17px;
+            }
+
+            span {
+                margin-top: 10px;
+            }
+        }
+
+        &__content-info {
+            margin-top: 10px;
+
+            img {
+                width: 16px;
+            }
+        }
+
+        &__send-message {
+            position: relative;
+            border-top: 1px solid #eeeeee;
+
+            .el-tabs__header {
+                width: fit-content;
+                padding: 10px 20px 0;
+                margin-bottom: 0px;
+            }
+
+            .el-tabs__active-bar {
+                width: 80px;
+            }
+
+            .el-tabs__nav-wrap::after {
+                background-color: transparent;
+            }
+        }
+
+        &__show-scheduled {
+            margin-top: 10px;
+        }
+
+        &__send-message-box {
+            margin: 20px;
+            border: 0;
+
+            .el-textarea {
+                padding-top: 10px;
+                margin: -20px -20px 0;
+                display: block;
+                width: auto;
+
+                &__inner {
+                    resize: none;
+                    border: 0;
+                    padding: 5px 0;
+                }
+            }
+        }
+
+        &__send-message-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            img {
+                margin-right: 10px;
+                height: 20px;
+
+                &:nth-child(2) {
+                    height: 19px;
+                    margin-right: 11px;
+                }
+            }
+
+            .el-button {
+                padding: 8px 20px;
+            }
+
+            &.note {
+                justify-content: flex-end;
+            }
+        }
+
+        &__disabled-text {
+            color: #adadad;
+            cursor: default;
+        }
+
+        &__back {
+            margin-right: 10px;
+        }
+
+        &__title {
+            font-weight: 500;
+        }
+
+        &__section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            margin: -20px -20px 0;
+            border-bottom: 1px solid #eeeeee;
+
+            h2 {
+                padding: 20px 0;
+                font-weight: 500;
+                display: block;
+                margin: 0;
+            }
+
+            .el-button {
+                border-radius: 5px;
+                padding: 11px;
+            }
+
+            img {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        &__actions {
+            padding: 11px 20px;
+            box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+            z-index: 1;
+
+            .el-button {
+                border-radius: 5px;
+                padding: 11px;
+            }
+
+            .right {
+                float: right;
+            }
+
+            img {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        &__steps {
+            padding: 20px 0;
+
+            ul {
+                margin: 0;
+            }
+
+            .el-button--text {
+                padding-top: 0;
+            }
+        }
+
+        .jus-main-view__main-card {
+            height: 100%;
+            min-width: 485px;
+
+            > .el-card__body {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                padding: 0;
+            }
+        }
+
+        hr {
+            margin: 1px -20px 20px;
+        }
+
+        &__search {
+            visibility: hidden;
+            transition: 0.3s ease all;
+            height: 0px;
+
+            .el-input__suffix {
+                cursor: pointer;
+            }
+
+            .el-input {
+                display: none;
+            }
+
+            &.isVisible {
+                margin-top: 20px;
+                margin-bottom: 10px;
+                visibility: visible;
+                height: auto;
+
+                .el-input {
+                    display: inline-block;
+                }
+            }
+        }
+
+        &__choose-unsettled-dialog {
+            .el-message-box__content {
+                padding: 10px 0;
+            }
+
+            .el-select {
+                margin: 10px 0;
+                width: 100%;
+            }
+        }
+
+        .el-input-group__append {
+            border-color: #9462f7;
+            background-color: #9462f7;
+
+            img {
+                margin-top: 1px;
+            }
+        }
     }
-  }
-  &__section-messages {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  &__content {
-    margin-left: 20px;
-    position: relative;
-    &:before {
-      content: '';
-      position: absolute;
-      left: 10px;
-      top: 20px;
-      width: 0;
-      height: 0;
-      border: 17px solid transparent;
-      border-right-color: #ffffff;
-      border-left: 0;
-      margin-top: -17px;
-      margin-left: -17px;
-    }
-    span {
-      margin-top: 10px;
-    }
-  }
-  &__content-info {
-    margin-top: 10px;
-    img {
-      width: 16px;
-    }
-  }
-  &__send-message {
-    position: relative;
-    border-top: 1px solid #eeeeee;
-    .el-tabs__header {
-      width: fit-content;
-      padding: 10px 20px 0;
-      margin-bottom: 0px;
-    }
-    .el-tabs__active-bar {
-      width: 80px;
-    }
-    .el-tabs__nav-wrap::after {
-      background-color: transparent;
-    }
-  }
-  &__show-scheduled {
-    margin-top: 10px;
-  }
-  &__send-message-box {
-    margin: 20px;
-    border: 0;
-    .el-textarea {
-      padding-top: 10px;
-      margin: -20px -20px 0;
-      display: block;
-      width: auto;
-      &__inner {
-        resize: none;
-        border: 0;
-        padding: 5px 0;
-      }
-    }
-  }
-  &__send-message-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    img {
-      margin-right: 10px;
-      height: 20px;
-      &:nth-child(2) {
-        height: 19px;
-        margin-right: 11px;
-      }
-    }
-    .el-button {
-      padding: 8px 20px;
-    }
-    &.note {
-      justify-content: flex-end;
-    }
-  }
-  &__disabled-text {
-    color: #adadad;
-    cursor: default;
-  }
-  &__back {
-    margin-right: 10px;
-  }
-  &__title {
-    font-weight: 500;
-  }
-  &__section-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    margin: -20px -20px 0;
-    border-bottom: 1px solid #eeeeee;
-    h2 {
-      padding: 20px 0;
-      font-weight: 500;
-      display: block;
-      margin: 0;
-    }
-    .el-button {
-      border-radius: 5px;
-      padding: 11px;
-    }
-    img {
-      width: 16px;
-      height: 16px;
-    }
-  }
-  &__actions {
-    padding: 11px 20px;
-    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
-    z-index: 1;
-    .el-button {
-      border-radius: 5px;
-      padding: 11px;
-    }
-    .right {
-      float: right;
-    }
-    img {
-      width: 16px;
-      height: 16px;
-    }
-  }
-  &__steps {
-    padding: 20px 0;
-    ul {
-      margin: 0;
-    }
-    .el-button--text {
-      padding-top: 0;
-    }
-  }
-  .jus-main-view__main-card {
-    height: 100%;
-    min-width: 485px;
-    > .el-card__body {
-      height: 100%;
+    .center-center {
+      align-items: center;
+      justify-content: center;
       display: flex;
-      flex-direction: column;
-      padding: 0;
+      height: 100vh;
     }
-  }
-  hr {
-    margin: 1px -20px 20px;
-  }
-  &__search {
-    visibility: hidden;
-    transition: 0.3s ease all;
-    height: 0px;
-    .el-input__suffix {
-      cursor: pointer;
-    }
-    .el-input {
-      display: none;
-    }
-    &.isVisible {
-      margin-top: 20px;
-      margin-bottom: 10px;
-      visibility: visible;
-      height: auto;
-      .el-input {
-        display: inline-block;
-      }
-    }
-  }
-  &__choose-unsettled-dialog {
-    .el-message-box__content {
-      padding: 10px 0;
-    }
-    .el-select {
-      margin: 10px 0;
-      width: 100%;
-    }
-  }
-  .el-input-group__append {
-    border-color: #9462f7;
-    background-color: #9462f7;
-    img {
-      margin-top: 1px;
-    }
-  }
-}
 </style>

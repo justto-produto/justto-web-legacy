@@ -1,11 +1,17 @@
 import moment from 'moment'
-import i18n from '@/plugins/vueI18n.js'
-import { fuseSearchDisputes, getFirstRole } from '@/plugins/jusUtils'
+import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
 const disputeGetters = {
   disputes: state => state.disputes,
   disputeFilters: state => state.filters,
+  disputeHasFilters: state => {
+    return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm
+  },
+  disputeFiltersTerm: state => state.filters.filterTerm,
   filterPersonId: state => state.filters.filterPersonId,
+  findById: (state) => (disputeId) => {
+    return state.disputes.find(d => d.id === parseInt(disputeId))
+  },
   filteredDisputes: state => {
     let filteredDisputes = state.disputes.slice(0)
     if (state.filters) {
@@ -29,7 +35,7 @@ const disputeGetters = {
       for (var term in state.filters.terms) {
         if (state.filters.terms.hasOwnProperty(term)) {
           filteredDisputes = filteredDisputes.filter(dispute => {
-            if (typeof variable !== 'boolean' && moment(new Date(dispute[term])).isValid()) {
+            if (typeof dispute[term] !== 'boolean' && moment(new Date(dispute[term])).isValid()) {
               return moment(dispute[term]).isSame(state.filters.terms[term], 'day')
             } else if (term === 'status' && state.filters.terms[term] === 'PAUSED') {
               return !!dispute.paused
@@ -100,7 +106,7 @@ const disputeGetters = {
         dispute.status === 'ENRICHED' ||
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
-        !dispute.hasvalidemail) {
+        dispute.hasInvalidEmail) {
         return true
       }
     })
@@ -113,8 +119,8 @@ const disputeGetters = {
         dispute.status === 'ENRICHED' ||
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
-        (dispute.lastofferpercenttoupperrange >= 100 &&
-        dispute.lastofferpercenttoupperrange <= 120)) {
+        (dispute.lastOfferPercentToUpperRange >= 100 &&
+        dispute.lastOfferPercentToUpperRange <= 120)) {
         return true
       }
     })
@@ -129,7 +135,7 @@ const disputeGetters = {
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
         dispute.hasInteraction &&
-        !dispute.lastcounteroffervalue
+        dispute.lastCounterOfferValue === '0.0'
       ) {
         return true
       }
@@ -143,7 +149,7 @@ const disputeGetters = {
         dispute.status === 'ENRICHED' ||
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
-        !dispute.hasvalidphone) {
+        dispute.hasInvalidPhone) {
         return true
       }
     })
@@ -152,7 +158,7 @@ const disputeGetters = {
   alertSix: state => {
     let filteredDisputes = state.disputes.filter(dispute => {
       if (dispute.status === 'ENGAGEMENT' &&
-        dispute.communicationmsgtotalallsented) {
+        dispute.communicationMsgTotalSent) {
         return true
       }
     })
@@ -174,7 +180,8 @@ const disputeGetters = {
   },
   disputeStatuses: state => state.statuses,
   disputeActiveTab: state => state.filters.tab,
-  disputesUpdatingList: state => state.updatingList
+  disputesUpdatingList: state => state.updatingList,
+  disputesPerPage: state => state.filters.perPage
 }
 
 export default disputeGetters

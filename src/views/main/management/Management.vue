@@ -53,7 +53,7 @@
         <el-table
           ref="disputeTable"
           :key="tableKey"
-          :max-height="tableHeigth"
+          :height="tableHeigth"
           :data="paginatedDisputes"
           :row-class-name="handleRowClassName"
           size="mini"
@@ -151,7 +151,7 @@
             sortable="custom"
             prop="lastInteractionDate"
             label="Última interação"
-            min-width="146px"
+            min-width="148px"
             align="center">
             <template slot-scope="scope">
               <el-tooltip :content="scope.row.lastInteractionTooltip">
@@ -224,20 +224,28 @@
             </template>
           </el-table-column>
           <template v-if="!$store.state.loading" slot="empty">
-            <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
-            <h4 style="font-weight: normal; line-height: initial;" data-testid="cases-empty-text">
-              Não foram encontradas disputas para<br>os filtros e aba selecionados.
-            </h4>
+            <span v-if="hasFilters">
+              <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
+              <h4 data-testid="cases-empty-text">
+                Não foram encontradas disputas para<br>os filtros selecionados.
+              </h4>
+            </span>
+            <span v-else>
+              <img src="@/assets/loading2.svg">
+              <h4 data-testid="cases-empty-text">
+                Aguardando por novas disputas.
+              </h4>
+            </span>
           </template>
         </el-table>
       </div>
-      <div v-if="disputesLength > initialDisputesPerPage" class="view-management__pagination-container">
+      <div class="view-management__pagination-container">
         <el-pagination
           :total.sync="disputesLength"
           :page-size.sync="disputesPerPage"
           :current-page.sync="currentPage"
           :pager-count="15"
-          :page-sizes="[disputesPerPage, 30, 50, 100]"
+          :page-sizes="[initialDisputesPerPage, 30, 50, 100]"
           layout="total, prev, pager, next, sizes"
           @size-change="handleChangePagination"
           @current-change="handleChangePagination" />
@@ -288,7 +296,6 @@ export default {
       activeFilters: {},
       loadingExport: false,
       currentPage: 1,
-      disputesPerPage: 20,
       initialDisputesPerPage: 20,
       tableHeigth: 0
     }
@@ -318,6 +325,9 @@ export default {
     filters () {
       return this.$store.state.disputeModule.filters
     },
+    hasFilters () {
+      return this.$store.getters.disputeHasFilters
+    },
     activeTabLabel () {
       switch (this.activeTab) {
         case '0':
@@ -328,6 +338,14 @@ export default {
           return 'Novos Acordos'
         case '3':
           return 'Todos'
+      }
+    },
+    disputesPerPage: {
+      get () {
+        return this.$store.getters.disputesPerPage
+      },
+      set (disputesPerPage) {
+        return this.$store.commit('setDisputesPerPage', disputesPerPage)
       }
     }
   },
@@ -477,7 +495,8 @@ export default {
     },
     handleChangePagination () {
       this.$nextTick(() => {
-        this.$el.querySelector('#main-card').scrollTop = 0
+        let main = this.$el.querySelector('.el-table__body-wrapper')
+        main.scrollTop = 0
       })
     }
   }

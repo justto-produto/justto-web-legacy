@@ -33,6 +33,10 @@ export default {
       this.$store.commit('setDisputeFilterTerm', term)
     }
   },
+  beforeMount () {
+    this.term = this.$store.getters.disputeFiltersTerm
+    if (this.term) this.isCollapsed = false
+  },
   methods: {
     toggle () {
       this.isCollapsed = !this.isCollapsed
