@@ -4,7 +4,7 @@
     <div v-if="this.$slots['title']" class="jus-main-view__title">
       <slot name="title"/>
     </div>
-    <div class="jus-main-view__container">
+    <div class="jus-main-view__container" v-loading="loadingContainer">
       <!-- LEFT CARD SLOT -->
       <div v-if="this.$slots['left-card']">
         <el-card
@@ -50,6 +50,10 @@ export default {
     loadingMain: {
       default: false,
       type: Boolean
+    },
+    loadingContainer: {
+      default: false,
+      type: Boolean
     }
   }
 }
@@ -74,6 +78,10 @@ export default {
     padding: 20px;
     display: flex;
     height: calc(100% - 37px);
+    > .el-loading-mask {
+      background-color: rgba(246, 245, 246, 0.89);
+      margin: 20px;
+    }
   }
   &__main-card {
     width: 100%;
