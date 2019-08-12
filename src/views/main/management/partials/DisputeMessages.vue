@@ -7,10 +7,9 @@
       :key="message.id"
       data-testid="message-index"
       class="dispute-view-messages__message">
-      {{ message.content }}
-      <div v-if="showAsCard(message.type)" :class="directionClass(message)" class="dispute-view-messages__message-box">
+      <div v-if="showAsCard(message.type)" :class="message" class="dispute-view-messages__message-box">
         <div>
-          <div :class="directionClass(message) + waitingClass(message)" class="dispute-view-messages__message-content" data-testid="message-box">
+          <div :class="message.direction.toLowerCase() + '' + waitingClass(message)" class="dispute-view-messages__message-content" data-testid="message-box">
             <div>{{ message.description }}</div>
             <el-button
               v-if="message.message && message.message.type === 'EMAIL' && message.type !== 'NOTE'"
@@ -171,19 +170,18 @@ export default {
       this.showMessage = true
     },
     directionClass (message) {
-      if (message.message && (message.message.direction === 'INBOUND' || message.message.senderParty === 'CLAIMANT')) {
+      if (message.direction === 'INBOUND' || message.senderParty === 'CLAIMANT') {
         return 'inbound'
       } else if (message.type === 'NOTE') {
         return 'note'
       } else return 'outbound'
     },
     waitingClass (message) {
-      if (message.message && message.message.status === 'WAITING') {
+      if (message.status === 'WAITING') {
         return ' waiting'
       }
       return ''
     },
-
     getMessageIcon (message) {
       if (message) {
         switch (message.type) {

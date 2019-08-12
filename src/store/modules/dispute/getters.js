@@ -10,7 +10,8 @@ const disputeGetters = {
   disputeFiltersTerm: state => state.filters.filterTerm,
   filterPersonId: state => state.filters.filterPersonId,
   findById: (state) => (disputeId) => {
-    return state.disputes.find(d => d.id === parseInt(disputeId))
+    let dispute = state.disputes.find(d => d.id === parseInt(disputeId))
+    return dispute ? dispute : {}
   },
   filteredDisputes: state => {
     let filteredDisputes = state.disputes.slice(0)

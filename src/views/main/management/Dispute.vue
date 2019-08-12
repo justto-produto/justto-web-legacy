@@ -1,8 +1,5 @@
 <template>
-  <div v-if="!dispute" class="center-center">
-    <div v-loading="!dispute"/>
-  </div>
-  <JusViewMain v-else-if="dispute" left-card-width="350" right-card-width="350" class="dispute-view">
+  <JusViewMain left-card-width="350" right-card-width="350" class="dispute-view" :loading-container="!dispute.id">
     <template slot="title">
       <h1 class="dispute-view__title">
         <router-link to="/management">
@@ -608,7 +605,7 @@ export default {
         if (this.newMessage) {
           this.loadingTextarea = true
           this.$store.dispatch('send' + this.messageType, {
-            to: [this.activePerson.id],
+            to: [this.activePerson.personId],
             message: this.newMessage,
             disputeId: this.dispute.id
           }).then(() => {
@@ -673,264 +670,258 @@ export default {
 </script>
 
 <style lang="scss">
-    .dispute-view {
-        &__list {
-            margin: 20 0px;
-            padding-left: 2px;
+.dispute-view {
+  &__list {
+    margin: 20 0px;
+    padding-left: 2px;
 
-            li {
-                margin-top: 12px;
-                list-style: none;
+    li {
+      margin-top: 12px;
+      list-style: none;
 
-                :first-child {
-                    margin-right: 10px;
-                }
+      :first-child {
+        margin-right: 10px;
+      }
 
-                :last-child {
-                    vertical-align: text-top;
-                    float: right;
-                }
-            }
-        }
-
-        &__section-messages {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        &__content {
-            margin-left: 20px;
-            position: relative;
-
-            &:before {
-                content: '';
-                position: absolute;
-                left: 10px;
-                top: 20px;
-                width: 0;
-                height: 0;
-                border: 17px solid transparent;
-                border-right-color: #ffffff;
-                border-left: 0;
-                margin-top: -17px;
-                margin-left: -17px;
-            }
-
-            span {
-                margin-top: 10px;
-            }
-        }
-
-        &__content-info {
-            margin-top: 10px;
-
-            img {
-                width: 16px;
-            }
-        }
-
-        &__send-message {
-            position: relative;
-            border-top: 1px solid #eeeeee;
-
-            .el-tabs__header {
-                width: fit-content;
-                padding: 10px 20px 0;
-                margin-bottom: 0px;
-            }
-
-            .el-tabs__active-bar {
-                width: 80px;
-            }
-
-            .el-tabs__nav-wrap::after {
-                background-color: transparent;
-            }
-        }
-
-        &__show-scheduled {
-            margin-top: 10px;
-        }
-
-        &__send-message-box {
-            margin: 20px;
-            border: 0;
-
-            .el-textarea {
-                padding-top: 10px;
-                margin: -20px -20px 0;
-                display: block;
-                width: auto;
-
-                &__inner {
-                    resize: none;
-                    border: 0;
-                    padding: 5px 0;
-                }
-            }
-        }
-
-        &__send-message-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            img {
-                margin-right: 10px;
-                height: 20px;
-
-                &:nth-child(2) {
-                    height: 19px;
-                    margin-right: 11px;
-                }
-            }
-
-            .el-button {
-                padding: 8px 20px;
-            }
-
-            &.note {
-                justify-content: flex-end;
-            }
-        }
-
-        &__disabled-text {
-            color: #adadad;
-            cursor: default;
-        }
-
-        &__back {
-            margin-right: 10px;
-        }
-
-        &__title {
-            font-weight: 500;
-        }
-
-        &__section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            margin: -20px -20px 0;
-            border-bottom: 1px solid #eeeeee;
-
-            h2 {
-                padding: 20px 0;
-                font-weight: 500;
-                display: block;
-                margin: 0;
-            }
-
-            .el-button {
-                border-radius: 5px;
-                padding: 11px;
-            }
-
-            img {
-                width: 16px;
-                height: 16px;
-            }
-        }
-
-        &__actions {
-            padding: 11px 20px;
-            box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
-            z-index: 1;
-
-            .el-button {
-                border-radius: 5px;
-                padding: 11px;
-            }
-
-            .right {
-                float: right;
-            }
-
-            img {
-                width: 16px;
-                height: 16px;
-            }
-        }
-
-        &__steps {
-            padding: 20px 0;
-
-            ul {
-                margin: 0;
-            }
-
-            .el-button--text {
-                padding-top: 0;
-            }
-        }
-
-        .jus-main-view__main-card {
-            height: 100%;
-            min-width: 485px;
-
-            > .el-card__body {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                padding: 0;
-            }
-        }
-
-        hr {
-            margin: 1px -20px 20px;
-        }
-
-        &__search {
-            visibility: hidden;
-            transition: 0.3s ease all;
-            height: 0px;
-
-            .el-input__suffix {
-                cursor: pointer;
-            }
-
-            .el-input {
-                display: none;
-            }
-
-            &.isVisible {
-                margin-top: 20px;
-                margin-bottom: 10px;
-                visibility: visible;
-                height: auto;
-
-                .el-input {
-                    display: inline-block;
-                }
-            }
-        }
-
-        &__choose-unsettled-dialog {
-            .el-message-box__content {
-                padding: 10px 0;
-            }
-
-            .el-select {
-                margin: 10px 0;
-                width: 100%;
-            }
-        }
-
-        .el-input-group__append {
-            border-color: #9462f7;
-            background-color: #9462f7;
-
-            img {
-                margin-top: 1px;
-            }
-        }
+      :last-child {
+        vertical-align: text-top;
+        float: right;
+      }
     }
-    .center-center {
-      align-items: center;
-      justify-content: center;
+  }
+
+  &__section-messages {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  &__content {
+    margin-left: 20px;
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 20px;
+      width: 0;
+      height: 0;
+      border: 17px solid transparent;
+      border-right-color: #ffffff;
+      border-left: 0;
+      margin-top: -17px;
+      margin-left: -17px;
+    }
+
+    span {
+      margin-top: 10px;
+    }
+  }
+
+  &__content-info {
+    margin-top: 10px;
+
+    img {
+      width: 16px;
+    }
+  }
+
+  &__send-message {
+    position: relative;
+    border-top: 1px solid #eeeeee;
+
+    .el-tabs__header {
+      width: fit-content;
+      padding: 10px 20px 0;
+      margin-bottom: 0px;
+    }
+
+    .el-tabs__active-bar {
+      width: 80px;
+    }
+
+    .el-tabs__nav-wrap::after {
+      background-color: transparent;
+    }
+  }
+
+  &__show-scheduled {
+    margin-top: 10px;
+  }
+
+  &__send-message-box {
+    margin: 20px;
+    border: 0;
+
+    .el-textarea {
+      padding-top: 10px;
+      margin: -20px -20px 0;
+      display: block;
+      width: auto;
+
+      &__inner {
+        resize: none;
+        border: 0;
+        padding: 5px 0;
+      }
+    }
+  }
+
+  &__send-message-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    img {
+      margin-right: 10px;
+      height: 20px;
+
+      &:nth-child(2) {
+        height: 19px;
+        margin-right: 11px;
+      }
+    }
+
+    .el-button {
+      padding: 8px 20px;
+    }
+
+    &.note {
+      justify-content: flex-end;
+    }
+  }
+
+  &__disabled-text {
+    color: #adadad;
+    cursor: default;
+  }
+
+  &__back {
+    margin-right: 10px;
+  }
+
+  &__title {
+    font-weight: 500;
+  }
+
+  &__section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin: -20px -20px 0;
+    border-bottom: 1px solid #eeeeee;
+
+    h2 {
+      padding: 20px 0;
+      font-weight: 500;
+      display: block;
+      margin: 0;
+    }
+
+    .el-button {
+      border-radius: 5px;
+      padding: 11px;
+    }
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__actions {
+    padding: 11px 20px;
+    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+    z-index: 1;
+
+    .el-button {
+      border-radius: 5px;
+      padding: 11px;
+    }
+
+    .right {
+      float: right;
+    }
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__steps {
+    padding: 20px 0;
+
+    ul {
+      margin: 0;
+    }
+
+    .el-button--text {
+      padding-top: 0;
+    }
+  }
+
+  .jus-main-view__main-card {
+    height: 100%;
+    min-width: 485px;
+
+    > .el-card__body {
+      height: 100%;
       display: flex;
-      height: 100vh;
+      flex-direction: column;
+      padding: 0;
     }
+  }
+
+  hr {
+    margin: 1px -20px 20px;
+  }
+
+  &__search {
+    visibility: hidden;
+    transition: 0.3s ease all;
+    height: 0px;
+
+    .el-input__suffix {
+      cursor: pointer;
+    }
+
+    .el-input {
+      display: none;
+    }
+
+    &.isVisible {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      visibility: visible;
+      height: auto;
+
+      .el-input {
+        display: inline-block;
+      }
+    }
+  }
+
+  &__choose-unsettled-dialog {
+    .el-message-box__content {
+      padding: 10px 0;
+    }
+
+    .el-select {
+      margin: 10px 0;
+      width: 100%;
+    }
+  }
+
+  .el-input-group__append {
+    border-color: #9462f7;
+    background-color: #9462f7;
+
+    img {
+      margin-top: 1px;
+    }
+  }
+}
 </style>
