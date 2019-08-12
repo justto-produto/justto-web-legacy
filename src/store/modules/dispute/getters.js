@@ -119,8 +119,8 @@ const disputeGetters = {
         dispute.status === 'ENRICHED' ||
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
-        (dispute.lastofferpercenttoupperrange >= 100 &&
-        dispute.lastofferpercenttoupperrange <= 120)) {
+        (dispute.lastOfferPercentToUpperRange >= 100 &&
+        dispute.lastOfferPercentToUpperRange <= 120)) {
         return true
       }
     })
@@ -135,7 +135,7 @@ const disputeGetters = {
         dispute.status === 'ENGAGEMENT' ||
         dispute.status === 'RUNNING') &&
         dispute.hasInteraction &&
-        !dispute.lastCounterOfferValue
+        dispute.lastCounterOfferValue === '0.0'
       ) {
         return true
       }
@@ -180,7 +180,8 @@ const disputeGetters = {
   },
   disputeStatuses: state => state.statuses,
   disputeActiveTab: state => state.filters.tab,
-  disputesUpdatingList: state => state.updatingList
+  disputesUpdatingList: state => state.updatingList,
+  disputesPerPage: state => state.filters.perPage
 }
 
 export default disputeGetters

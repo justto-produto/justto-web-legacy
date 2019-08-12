@@ -245,7 +245,7 @@
           :page-size.sync="disputesPerPage"
           :current-page.sync="currentPage"
           :pager-count="15"
-          :page-sizes="[disputesPerPage, 30, 50, 100]"
+          :page-sizes="[initialDisputesPerPage, 30, 50, 100]"
           layout="total, prev, pager, next, sizes"
           @size-change="handleChangePagination"
           @current-change="handleChangePagination" />
@@ -296,7 +296,6 @@ export default {
       activeFilters: {},
       loadingExport: false,
       currentPage: 1,
-      disputesPerPage: 20,
       initialDisputesPerPage: 20,
       tableHeigth: 0
     }
@@ -339,6 +338,14 @@ export default {
           return 'Novos Acordos'
         case '3':
           return 'Todos'
+      }
+    },
+    disputesPerPage: {
+      get () {
+        return this.$store.getters.disputesPerPage
+      },
+      set (disputesPerPage) {
+        return this.$store.commit('setDisputesPerPage', disputesPerPage)
       }
     }
   },
@@ -476,7 +483,8 @@ export default {
     },
     handleChangePagination () {
       this.$nextTick(() => {
-        this.$el.querySelector('#main-card').scrollTop = 0
+        let main = this.$el.querySelector('.el-table__body-wrapper')
+        main.scrollTop = 0
       })
     }
   }

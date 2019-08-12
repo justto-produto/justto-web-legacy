@@ -10,11 +10,12 @@ const dispute = {
       tab: '0',
       filterPersonId: 0,
       terms: {},
+      filterTerm: '',
+      perPage: 20,
       sort: {
         prop: null,
         order: null
-      },
-      filterTerm: ''
+      }
     },
     statuses: {},
     updatingList: []
