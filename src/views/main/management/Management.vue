@@ -331,22 +331,34 @@ export default {
       }
     }
   },
+  beforeMount () {
+  //   this.$nextTick(() => {
+  //     this.tabKey = true
+  //     // this.adjustHeight()
+  //     window.addEventListener('resize', this.adjustHeight)
+  //   })
+  //   setTimeout(function () {
+  //     this.tabKey = true
+  //     this.adjustHeight()
+  //   }.bind(this), 1000)
+  },
   mounted () {
+    this.$store.dispatch('showLoading')
     this.$nextTick(() => {
       this.tabKey = true
-      this.adjustHeight()
-      window.addEventListener('resize', this.adjustHeight)
+      setTimeout(function () {
+        this.tabKey = true
+        this.adjustHeight()
+      }.bind(this), 500)
     })
-    setTimeout(function () {
-      this.tabKey = true
-      this.tableHeigth = this.$refs.tableContainer.clientHeight
-    }.bind(this), 500)
+    this.$store.dispatch('hideLoading')
+    window.addEventListener('resize', this.adjustHeight)
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.adjustHeight)
   },
   methods: {
-    adjustHeight() {
+    adjustHeight () {
       this.tableHeigth = this.$refs.tableContainer.clientHeight
     },
     getDisputes () {
