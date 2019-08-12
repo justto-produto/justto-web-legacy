@@ -50,6 +50,12 @@
     </template>
     <template slot="main">
       <div ref="tableContainer" class="view-management__table-container">
+        <div class="view-management__table-container--loading" v-show="paginatedDisputes.length == 0 && !hasFilters">
+          <img src="@/assets/loading2.svg">
+          <h4 data-testid="cases-empty-text">
+            Aguardando por novas disputas.
+          </h4>
+        </div>
         <el-table
           ref="disputeTable"
           :key="tableKey"
@@ -245,7 +251,7 @@
           :page-size.sync="disputesPerPage"
           :current-page.sync="currentPage"
           :pager-count="15"
-          :page-sizes="[disputesPerPage, 30, 50, 100]"
+          :page-sizes="[initialDisputesPerPage, 30, 50, 100]"
           layout="total, prev, pager, next, sizes"
           @size-change="handleChangePagination"
           @current-change="handleChangePagination" />
@@ -296,7 +302,6 @@ export default {
       activeFilters: {},
       loadingExport: false,
       currentPage: 1,
-      disputesPerPage: 20,
       initialDisputesPerPage: 20,
       tableHeigth: 0
     }
@@ -340,18 +345,21 @@ export default {
         case '3':
           return 'Todos'
       }
+    },
+    disputesPerPage: {
+      get () {
+        return this.$store.getters.disputesPerPage
+      },
+      set (disputesPerPage) {
+        return this.$store.commit('setDisputesPerPage', disputesPerPage)
+      }
     }
   },
   mounted () {
-    this.$nextTick(() => {
-      this.tabKey = true
-      this.adjustHeight()
-      window.addEventListener('resize', this.adjustHeight)
-    })
-    setTimeout(function () {
-      this.tabKey = true
-      this.tableHeigth = this.$refs.tableContainer.clientHeight
-    }.bind(this), 500)
+    window.addEventListener('resize', this.adjustHeight)
+  },
+  beforeUpdate () {
+    this.adjustHeight()
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.adjustHeight)
@@ -476,7 +484,8 @@ export default {
     },
     handleChangePagination () {
       this.$nextTick(() => {
-        this.$el.querySelector('#main-card').scrollTop = 0
+        let main = this.$el.querySelector('.el-table__body-wrapper')
+        main.scrollTop = 0
       })
     }
   }
@@ -595,6 +604,17 @@ export default {
   }
   &__table-container {
     height: calc(100% - 52px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    &--loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
   }
 }
 </style>

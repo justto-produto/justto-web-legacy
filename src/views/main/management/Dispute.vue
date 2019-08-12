@@ -1,8 +1,5 @@
 <template>
-  <div v-if="!dispute" class="center-center">
-    <div v-loading="!dispute"/>
-  </div>
-  <JusViewMain v-else-if="dispute" left-card-width="350" right-card-width="350" class="dispute-view">
+  <JusViewMain left-card-width="350" right-card-width="350" class="dispute-view" :loading-container="!dispute.id">
     <template slot="title">
       <h1 class="dispute-view__title">
         <router-link to="/management">
@@ -87,10 +84,10 @@
             </el-button>
           </el-tooltip>
           <!-- <el-tooltip content="snooze">
-                        <el-button plain @click="disputeAction('move')">
-                          <jus-icon icon="snooze" />
-                        </el-button>
-                      </el-tooltip> -->
+            <el-button plain @click="disputeAction('move')">
+              <jus-icon icon="snooze" />
+            </el-button>
+          </el-tooltip> -->
           <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
             <el-button
               plain
@@ -170,7 +167,6 @@
         </el-dialog>
         <dispute-messages
           :messages-prop="filteredDisputeMessages"
-          :loading.sync="loadingDisputeMessages"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
           data-testid="dispute-messages"
@@ -268,25 +264,25 @@
               </el-card>
             </el-tab-pane>
             <!-- <el-tab-pane v-loading="loadingTextarea" label="Chat" name="2">
-                            <el-card shadow="always" class="dispute-view__send-message-box">
-                              <textarea
-                                v-model="newChatMessage"
-                                rows="3"
-                                data-testid="input-chat"
-                                placeholder="Escreva alguma coisa"
-                                class="el-textarea__inner"
-                                @input="sendTypeEvent()"
-                                @keydown.enter.alt="newLineChat()"
-                                @keydown.enter.shift="newLineChat()"
-                                @keydown.enter.exact.prevent
-                                @keydown.enter.exact="sendChatMessage()" />
-                              <div class="dispute-view__send-message-actions note">
-                                <el-button type="primary" @click="sendChatMessage()">
-                                  Enviar
-                                </el-button>
-                              </div>
-                            </el-card>
-                          </el-tab-pane> -->
+              <el-card shadow="always" class="dispute-view__send-message-box">
+                <textarea
+                  v-model="newChatMessage"
+                  rows="3"
+                  data-testid="input-chat"
+                  placeholder="Escreva alguma coisa"
+                  class="el-textarea__inner"
+                  @input="sendTypeEvent()"
+                  @keydown.enter.alt="newLineChat()"
+                  @keydown.enter.shift="newLineChat()"
+                  @keydown.enter.exact.prevent
+                  @keydown.enter.exact="sendChatMessage()" />
+                <div class="dispute-view__send-message-actions note">
+                  <el-button type="primary" @click="sendChatMessage()">
+                    Enviar
+                  </el-button>
+                </div>
+              </el-card>
+            </el-tab-pane> -->
             <el-tab-pane v-loading="loadingTextarea" label="Nota" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <textarea
@@ -352,8 +348,6 @@ export default {
       chooseUnsettledDialogVisible: false,
       loadingDispute: false,
       disputeMessages: [],
-      filteredDisputeMessages: [],
-      loadingDisputeMessages: false,
       showSearch: false,
       searchTerm: '',
       messageType: 'email',
@@ -388,6 +382,15 @@ export default {
     dispute () {
       return this.$store.getters.findById(this.id)
     },
+    filteredDisputeMessages () {
+      if (this.searchTerm) {
+        return this.disputeMessages.filter(dispute => {
+          return dispute.content.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          dispute.sender.toLowerCase().includes(this.searchTerm.toLowerCase())
+        })
+      }
+      return this.disputeMessages
+    },
     isFavorite () {
       return this.dispute.favorite
     },
@@ -409,9 +412,6 @@ export default {
       if (!value) {
         this.searchTerm = ''
       }
-    },
-    searchTerm (term) {
-      this.filterDisputeMessages(term)
     },
     activePerson (value) {
       this.$nextTick(() => {
@@ -481,44 +481,25 @@ export default {
     },
     fetchData (options) {
       if (options.fetchMessages) {
-        this.loadingDisputeMessages = true
-        this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
+        this.$store.dispatch('getDisputeMessages', this.$route.params.id).then(response => {
           if (!this.disputeMessages.length) {
-            this.disputeMessages = responses
-            this.filteredDisputeMessages = this.disputeMessages.slice(0)
+            this.disputeMessages = response.content
           } else {
-            let newMessages = responses.filter((i) => {
-              return this.disputeMessages.map((e) => {
+            let newMessages = response.content.filter(i => {
+              return this.disputeMessages.map(e => {
                 return JSON.stringify(e)
               }).indexOf(JSON.stringify(i)) < 0
             })
             this.disputeMessages.push(...newMessages)
-            this.filteredDisputeMessages.push(...newMessages)
           }
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.loadingDisputeMessages = false
         })
       }
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
         this.activePerson = {}
-      }
-    },
-    filterDisputeMessages (term) {
-      var messages = this.disputeMessages.slice(0)
-      if (term) {
-        var results = messages.filter(this.createDisputeFilter(term))
-        this.filteredDisputeMessages = results
-      } else {
-        this.filteredDisputeMessages = messages
-      }
-    },
-    createDisputeFilter (term) {
-      return (occurrence) => {
-        return (occurrence.description.toLowerCase().includes(term.toLowerCase()))
       }
     },
     setMessageType (type) {
@@ -624,7 +605,7 @@ export default {
         if (this.newMessage) {
           this.loadingTextarea = true
           this.$store.dispatch('send' + this.messageType, {
-            to: [this.activePerson.id],
+            to: [this.activePerson.personId],
             message: this.newMessage,
             disputeId: this.dispute.id
           }).then(() => {
@@ -689,264 +670,258 @@ export default {
 </script>
 
 <style lang="scss">
-    .dispute-view {
-        &__list {
-            margin: 20 0px;
-            padding-left: 2px;
+.dispute-view {
+  &__list {
+    margin: 20 0px;
+    padding-left: 2px;
 
-            li {
-                margin-top: 12px;
-                list-style: none;
+    li {
+      margin-top: 12px;
+      list-style: none;
 
-                :first-child {
-                    margin-right: 10px;
-                }
+      :first-child {
+        margin-right: 10px;
+      }
 
-                :last-child {
-                    vertical-align: text-top;
-                    float: right;
-                }
-            }
-        }
-
-        &__section-messages {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        &__content {
-            margin-left: 20px;
-            position: relative;
-
-            &:before {
-                content: '';
-                position: absolute;
-                left: 10px;
-                top: 20px;
-                width: 0;
-                height: 0;
-                border: 17px solid transparent;
-                border-right-color: #ffffff;
-                border-left: 0;
-                margin-top: -17px;
-                margin-left: -17px;
-            }
-
-            span {
-                margin-top: 10px;
-            }
-        }
-
-        &__content-info {
-            margin-top: 10px;
-
-            img {
-                width: 16px;
-            }
-        }
-
-        &__send-message {
-            position: relative;
-            border-top: 1px solid #eeeeee;
-
-            .el-tabs__header {
-                width: fit-content;
-                padding: 10px 20px 0;
-                margin-bottom: 0px;
-            }
-
-            .el-tabs__active-bar {
-                width: 80px;
-            }
-
-            .el-tabs__nav-wrap::after {
-                background-color: transparent;
-            }
-        }
-
-        &__show-scheduled {
-            margin-top: 10px;
-        }
-
-        &__send-message-box {
-            margin: 20px;
-            border: 0;
-
-            .el-textarea {
-                padding-top: 10px;
-                margin: -20px -20px 0;
-                display: block;
-                width: auto;
-
-                &__inner {
-                    resize: none;
-                    border: 0;
-                    padding: 5px 0;
-                }
-            }
-        }
-
-        &__send-message-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            img {
-                margin-right: 10px;
-                height: 20px;
-
-                &:nth-child(2) {
-                    height: 19px;
-                    margin-right: 11px;
-                }
-            }
-
-            .el-button {
-                padding: 8px 20px;
-            }
-
-            &.note {
-                justify-content: flex-end;
-            }
-        }
-
-        &__disabled-text {
-            color: #adadad;
-            cursor: default;
-        }
-
-        &__back {
-            margin-right: 10px;
-        }
-
-        &__title {
-            font-weight: 500;
-        }
-
-        &__section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            margin: -20px -20px 0;
-            border-bottom: 1px solid #eeeeee;
-
-            h2 {
-                padding: 20px 0;
-                font-weight: 500;
-                display: block;
-                margin: 0;
-            }
-
-            .el-button {
-                border-radius: 5px;
-                padding: 11px;
-            }
-
-            img {
-                width: 16px;
-                height: 16px;
-            }
-        }
-
-        &__actions {
-            padding: 11px 20px;
-            box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
-            z-index: 1;
-
-            .el-button {
-                border-radius: 5px;
-                padding: 11px;
-            }
-
-            .right {
-                float: right;
-            }
-
-            img {
-                width: 16px;
-                height: 16px;
-            }
-        }
-
-        &__steps {
-            padding: 20px 0;
-
-            ul {
-                margin: 0;
-            }
-
-            .el-button--text {
-                padding-top: 0;
-            }
-        }
-
-        .jus-main-view__main-card {
-            height: 100%;
-            min-width: 485px;
-
-            > .el-card__body {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                padding: 0;
-            }
-        }
-
-        hr {
-            margin: 1px -20px 20px;
-        }
-
-        &__search {
-            visibility: hidden;
-            transition: 0.3s ease all;
-            height: 0px;
-
-            .el-input__suffix {
-                cursor: pointer;
-            }
-
-            .el-input {
-                display: none;
-            }
-
-            &.isVisible {
-                margin-top: 20px;
-                margin-bottom: 10px;
-                visibility: visible;
-                height: auto;
-
-                .el-input {
-                    display: inline-block;
-                }
-            }
-        }
-
-        &__choose-unsettled-dialog {
-            .el-message-box__content {
-                padding: 10px 0;
-            }
-
-            .el-select {
-                margin: 10px 0;
-                width: 100%;
-            }
-        }
-
-        .el-input-group__append {
-            border-color: #9462f7;
-            background-color: #9462f7;
-
-            img {
-                margin-top: 1px;
-            }
-        }
+      :last-child {
+        vertical-align: text-top;
+        float: right;
+      }
     }
-    .center-center {
-      align-items: center;
-      justify-content: center;
+  }
+
+  &__section-messages {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  &__content {
+    margin-left: 20px;
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 20px;
+      width: 0;
+      height: 0;
+      border: 17px solid transparent;
+      border-right-color: #ffffff;
+      border-left: 0;
+      margin-top: -17px;
+      margin-left: -17px;
+    }
+
+    span {
+      margin-top: 10px;
+    }
+  }
+
+  &__content-info {
+    margin-top: 10px;
+
+    img {
+      width: 16px;
+    }
+  }
+
+  &__send-message {
+    position: relative;
+    border-top: 1px solid #eeeeee;
+
+    .el-tabs__header {
+      width: fit-content;
+      padding: 10px 20px 0;
+      margin-bottom: 0px;
+    }
+
+    .el-tabs__active-bar {
+      width: 80px;
+    }
+
+    .el-tabs__nav-wrap::after {
+      background-color: transparent;
+    }
+  }
+
+  &__show-scheduled {
+    margin-top: 10px;
+  }
+
+  &__send-message-box {
+    margin: 20px;
+    border: 0;
+
+    .el-textarea {
+      padding-top: 10px;
+      margin: -20px -20px 0;
+      display: block;
+      width: auto;
+
+      &__inner {
+        resize: none;
+        border: 0;
+        padding: 5px 0;
+      }
+    }
+  }
+
+  &__send-message-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    img {
+      margin-right: 10px;
+      height: 20px;
+
+      &:nth-child(2) {
+        height: 19px;
+        margin-right: 11px;
+      }
+    }
+
+    .el-button {
+      padding: 8px 20px;
+    }
+
+    &.note {
+      justify-content: flex-end;
+    }
+  }
+
+  &__disabled-text {
+    color: #adadad;
+    cursor: default;
+  }
+
+  &__back {
+    margin-right: 10px;
+  }
+
+  &__title {
+    font-weight: 500;
+  }
+
+  &__section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    margin: -20px -20px 0;
+    border-bottom: 1px solid #eeeeee;
+
+    h2 {
+      padding: 20px 0;
+      font-weight: 500;
+      display: block;
+      margin: 0;
+    }
+
+    .el-button {
+      border-radius: 5px;
+      padding: 11px;
+    }
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__actions {
+    padding: 11px 20px;
+    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+    z-index: 1;
+
+    .el-button {
+      border-radius: 5px;
+      padding: 11px;
+    }
+
+    .right {
+      float: right;
+    }
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__steps {
+    padding: 20px 0;
+
+    ul {
+      margin: 0;
+    }
+
+    .el-button--text {
+      padding-top: 0;
+    }
+  }
+
+  .jus-main-view__main-card {
+    height: 100%;
+    min-width: 485px;
+
+    > .el-card__body {
+      height: 100%;
       display: flex;
-      height: 100vh;
+      flex-direction: column;
+      padding: 0;
     }
+  }
+
+  hr {
+    margin: 1px -20px 20px;
+  }
+
+  &__search {
+    visibility: hidden;
+    transition: 0.3s ease all;
+    height: 0px;
+
+    .el-input__suffix {
+      cursor: pointer;
+    }
+
+    .el-input {
+      display: none;
+    }
+
+    &.isVisible {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      visibility: visible;
+      height: auto;
+
+      .el-input {
+        display: inline-block;
+      }
+    }
+  }
+
+  &__choose-unsettled-dialog {
+    .el-message-box__content {
+      padding: 10px 0;
+    }
+
+    .el-select {
+      margin: 10px 0;
+      width: 100%;
+    }
+  }
+
+  .el-input-group__append {
+    border-color: #9462f7;
+    background-color: #9462f7;
+
+    img {
+      margin-top: 1px;
+    }
+  }
+}
 </style>

@@ -33,7 +33,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .click({force: true})
 
     // Seleciona primeira disputa
-    cy.get('tbody label[role=checkbox]').first()
+    cy.get('tbody label[role=checkbox]', { timeout: 60000 }).first()
       .click()
 
     // Menu de ações deve estar visivel

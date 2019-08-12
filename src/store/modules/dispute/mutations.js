@@ -71,6 +71,9 @@ const disputeMutations = {
       }
       return true
     })
+  },
+  setDisputesPerPage (state, disputesPerPage) {
+    state.filters.perPage = disputesPerPage
   }
 }
 

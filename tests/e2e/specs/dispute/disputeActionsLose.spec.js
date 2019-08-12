@@ -26,8 +26,13 @@ describe('Justto.App - Disputa: Ação Perder', function () {
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
 
+    // Entra na aba 'Todos'
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
+      .click({force: true})
+
     // Entra na disputa
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
       .click({force: true})
 
     // Sistema deve redirecionar para a página de Registro

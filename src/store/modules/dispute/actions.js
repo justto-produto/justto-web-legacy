@@ -32,7 +32,7 @@ const disputeActions = {
   getDisputes ({ commit, rootState }, query) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes')
+      axios.get('api/disputes?pageSize=20000')
         .then(response => {
           commit('setDisputes', response.data.content)
           resolve(response.data)
@@ -50,6 +50,19 @@ const disputeActions = {
       if (dispute) resolve(dispute)
     })
   },
+  // exportDisputes ({ rootState }, disputeIds) {
+  //   return new Promise((resolve, reject) => {
+  //     // eslint-disable-next-line
+  //     axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/export', {
+  //       query: { bool: { must: [{ terms: { disputeid: disputeIds } }] } } })
+  //       .then(response => {
+  //         resolve(response.data)
+  //       })
+  //       .catch(error => {
+  //         reject(error)
+  //       })
+  //   })
+  // },
   exportDisputes ({ rootState }, disputeIds) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -73,7 +86,7 @@ const disputeActions = {
   getDisputeMessages ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/messages')
+      axios.get('api/disputes/' + id + '/occurrences')
         .then(response => {
           resolve(response.data)
         })
@@ -98,7 +111,7 @@ const disputeActions = {
   sendBatchAction ({ commit }, body) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/batch', body)
+      axios.put('api/disputes/actions/batch', body)
         .then(response => {
           resolve(response.data)
         })

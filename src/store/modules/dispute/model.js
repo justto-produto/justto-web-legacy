@@ -41,7 +41,8 @@ const disputeViewModel = function (disputes) {
       sendWhatsappMessages: dispute.communications.filter(c => c.status === 'PROCESSED' && c.direction === 'OUTBOUND' && c.type === 'WHATSAPP').length,
       isDeal: ['ACCEPTED', 'CHECKOUT', 'SETTLED'].some(s => s === dispute.status),
       hasInteraction: dispute.hasInteraction,
-      lastofferpercenttoupperrange: 0
+      lastOfferPercentToUpperRange: 0,
+      paused: dispute.paused
     }
     let object = dispute.objects.length ? dispute.objects[0] : null
     if (object) {
@@ -70,6 +71,10 @@ const disputeViewModel = function (disputes) {
     viewModelDispute.hasInvalidPhone = dispute.disputeRoles.filter(d => {
       return d.phones.filter(e => !e.isValid).length
     }).length
+
+    if (viewModelDispute.lastCounterOfferValue !== '0.0') {
+      viewModelDispute.lastOfferPercentToUpperRange = viewModelDispute.lastOfferValue / viewModelDispute.disputeUpperRange * 100
+    }
 
     viewModelDisputes.push(viewModelDispute)
   }
