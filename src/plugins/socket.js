@@ -10,12 +10,5 @@ Vue.use(new VueSocketIO({
     actionPrefix: 'SOCKET_',
     mutationPrefix: 'SOCKET_'
   },
-  options: { path: '/websocket' },
-  transportOptions: {
-    polling: {
-      extraHeaders: {
-        Authorization: localStorage.justoken
-      }
-    }
-  }
+  options: { path: '/websocket' }
 }))

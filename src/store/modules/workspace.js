@@ -242,7 +242,10 @@ const workspaceModule = {
     },
     creatingWorkspace: state => {
       return state.status === 'CREATING'
-    }
+    },
+    workspaceId: state => state.subdomain,
+    workspaceSubdomain: state => state.subdomain,
+    workspaceMembers: state => state.members
   }
 }
 

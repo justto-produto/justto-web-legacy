@@ -32,7 +32,7 @@ const disputeActions = {
   getDisputes ({ commit, rootState }, query) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes?pageSize=20000')
+      axios.get('api/disputes')
         .then(response => {
           commit('setDisputes', response.data.content)
           resolve(response.data)

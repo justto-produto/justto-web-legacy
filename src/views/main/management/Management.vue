@@ -53,12 +53,12 @@
         <el-table
           ref="disputeTable"
           :key="tableKey"
-          :max-height="tableHeigth"
+          :height="tableHeigth"
           :data="paginatedDisputes"
+          :row-class-name="handleRowClassName"
           size="mini"
           class="el-table--disputes"
           data-testid="dispute-index"
-          :row-class-name="handleRowClassName"
           @row-click="handleRowClick"
           @sort-change="handleSortChange"
           @selection-change="handleSelectionChange">
@@ -70,65 +70,71 @@
           </el-table-column>
           <el-table-column
             label="Disputa"
-            min-width="92px"
-            prop="disputeid"
+            min-width="94px"
+            prop="disputeId"
             sortable="custom">
             <template slot-scope="scope">#{{ scope.row.id }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
-            prop="campaignname"
+            prop="campaignName"
             label="Campanha"
-            min-width="112px">
-            <template slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
+            min-width="114px">
+            <template slot-scope="scope">{{ scope.row.campaignName | capitalize }}</template>
           </el-table-column>
           <el-table-column
             sortable="custom"
-            prop="claiments"
+            prop="firstClaimant"
             min-width="164px"
             class-name="text-ellipsis"
             label="Parte(s) contrária(s)">
             <template slot-scope="scope">
-              {{ getClaimants(scope.row.disputeRoles, true) }}
+              {{ scope.row.firstClaimant }}
             </template>
           </el-table-column>
           <el-table-column
             sortable="custom"
-            prop="claimentslawyer"
+            prop="firstClaimantLawyer"
             class-name="text-ellipsis"
             label="Advogado(s) da parte"
             min-width="176px">
             <template slot-scope="scope">
-              {{ getClaimants(scope.row.disputeRoles, true, 'LAWYER') }}
+              {{ scope.row.firstClaimantLawyer }}
             </template>
           </el-table-column>
-          <!-- <el-table-column
+          <el-table-column
             v-if="activeTab !== '3'"
             label="Alçada máxima"
             align="center"
             sortable="custom"
-            prop="disputeupperrange"
+            prop="disputeUpperRange"
             min-width="140px">
-            <template slot-scope="scope">{{ scope.row.disputeupperrange | currency }}</template>
+            <template slot-scope="scope">
+              {{ scope.row.disputeUpperRange | currency }}
+            </template>
           </el-table-column>
           <el-table-column
             v-if="activeTab === '0'"
             label="Valor proposto"
             sortable="custom"
-            prop="lastoffervalue"
+            prop="lastOfferValue"
             align="center"
             min-width="134px">
-            <template slot-scope="scope">{{ scope.row.lastoffervalue | currency }}</template>
-          </el-table-column> -->
-          <!-- <el-table-column
+            <template slot-scope="scope">
+              {{ scope.row.lastOfferValue | currency }}
+            </template>
+          </el-table-column>
+          <el-table-column
             v-if="activeTab === '1'"
             label="Contraproposta"
             align="center"
             sortable="custom"
-            prop="lastcounteroffervalue"
+            prop="lastCounterOfferValue"
             min-width="140px">
-            <template slot-scope="scope">{{ scope.row.lastcounteroffervalue | currency }}</template>
-          </el-table-column>-->
+            <template slot-scope="scope">
+              {{ scope.row.lastCounterOfferValue | currency }}
+            </template>
+          </el-table-column>
           <el-table-column
             v-if="activeTab < 2"
             sortable="custom"
@@ -136,40 +142,44 @@
             label="Fim da negociação"
             align="center"
             min-width="160px">
-            <template slot-scope="scope">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</template>
+            <template slot-scope="scope">
+              {{ scope.row.expirationDate | moment('DD/MM/YY') }}
+            </template>
           </el-table-column>
-          <!-- <el-table-column
+          <el-table-column
             v-if="activeTab === '1'"
             sortable="custom"
-            prop="lastinteractiondate"
+            prop="lastInteractionDate"
             label="Última interação"
-            min-width="146px"
+            min-width="148px"
             align="center">
             <template slot-scope="scope">
-              <el-tooltip :content="getLastInteractionTooltip(scope.row.lastinteractiontype)">
-                <jus-icon :icon="getLastInteractionIcon(scope.row.lastinteractiontype)" class="view-management__interaction-icon" />
+              <el-tooltip :content="scope.row.lastInteractionTooltip">
+                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
               </el-tooltip>
-              {{ getLastInteraction(scope.row.lastinteractiondate) }}
+              {{ scope.row.lastInteractionFormatedDate }}
             </template>
-          </el-table-column> -->
-          <!-- <el-table-column
+          </el-table-column>
+          <el-table-column
             v-if="activeTab === '2'"
             label="Valor do acordo"
             sortable="custom"
-            prop="disputedealvalue"
+            prop="disputeDealValue"
             align="center"
             width="140px">
-            <template slot-scope="scope">{{ scope.row.disputedealvalue | currency }}</template>
-          </el-table-column> -->
-          <!-- <el-table-column
+            <template slot-scope="scope">{{ scope.row.disputeDealValue | currency }}</template>
+          </el-table-column>
+          <el-table-column
             v-if="activeTab === '2'"
             sortable="custom"
-            prop="disputedealdate"
+            prop="disputeDealDate"
             label="Data do acordo"
             min-width="138px"
             align="center">
-            <template slot-scope="scope">{{ scope.row.disputedealdate | moment('DD/MM/YY') }}</template>
-          </el-table-column> -->
+            <template slot-scope="scope">
+              {{ scope.row.disputeDealDate | moment('DD/MM/YY') }}
+            </template>
+          </el-table-column>
           <el-table-column
             v-if="activeTab === '3'"
             label="Status"
@@ -181,17 +191,17 @@
               {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
             </template>
           </el-table-column>
-          <!-- <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
+          <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
             <template slot-scope="scope">
-              <span v-if="!scope.row.communicationmsgtotalsent && !scope.row.communicationmsgtotalschedulled">
+              <span v-if="!scope.row.communicationMsgTotalsShedulled">
                 Enriquecendo
               </span>
               <span v-else>
-                {{ scope.row.communicationmsgtotalsent }} /
-                {{ scope.row.communicationmsgtotalschedulled }}
+                {{ scope.row.communicationMsgTotalSent }} /
+                {{ scope.row.communicationMsgTotalsShedulled }}
               </span>
             </template>
-          </el-table-column> -->
+          </el-table-column>
           <el-table-column
             width="70px"
             class-name="view-management__row-actions"
@@ -214,14 +224,22 @@
             </template>
           </el-table-column>
           <template v-if="!$store.state.loading" slot="empty">
-            <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
-            <h4 style="font-weight: normal; line-height: initial;" data-testid="cases-empty-text">
-              Não foram encontradas disputas para<br>os filtros e aba selecionados.
-            </h4>
+            <span v-if="hasFilters">
+              <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
+              <h4 data-testid="cases-empty-text">
+                Não foram encontradas disputas para<br>os filtros selecionados.
+              </h4>
+            </span>
+            <span v-else>
+              <img src="@/assets/loading2.svg">
+              <h4 data-testid="cases-empty-text">
+                Aguardando por novas disputas.
+              </h4>
+            </span>
           </template>
         </el-table>
       </div>
-      <div v-if="disputesLength > initialDisputesPerPage" class="view-management__pagination-container">
+      <div class="view-management__pagination-container">
         <el-pagination
           :total.sync="disputesLength"
           :page-size.sync="disputesPerPage"
@@ -259,7 +277,6 @@ import JusFilterButton from '@/components/buttons/JusFilterButton'
 import ManagementCarousel from './partials/ManagementCarousel'
 import ManagementActions from './partials/ManagementActions'
 import JusDisputeResume from '@/components/layouts/JusDisputeResume'
-import { getClaimants as getClaimantsUtils } from '@/plugins/jusUtils'
 
 export default {
   name: 'Management',
@@ -309,6 +326,9 @@ export default {
     filters () {
       return this.$store.state.disputeModule.filters
     },
+    hasFilters () {
+      return this.$store.getters.disputeHasFilters
+    },
     activeTabLabel () {
       switch (this.activeTab) {
         case '0':
@@ -325,17 +345,21 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.tabKey = true
-      this.tableHeigth = this.$refs.tableContainer.clientHeight
-      window.addEventListener('resize', () => {
-        this.tableHeigth = this.$refs.tableContainer.clientHeight
-      })
+      this.adjustHeight()
+      window.addEventListener('resize', this.adjustHeight)
     })
     setTimeout(function () {
       this.tabKey = true
       this.tableHeigth = this.$refs.tableContainer.clientHeight
     }.bind(this), 500)
   },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.adjustHeight)
+  },
   methods: {
+    adjustHeight () {
+      this.tableHeigth = this.$refs.tableContainer.clientHeight
+    },
     getDisputes () {
       this.$store.commit('showLoading')
       this.$store.dispatch('getDisputes')
@@ -347,8 +371,8 @@ export default {
         })
     },
     applyFilters () {
-      if (this.activeFilters.hasOwnProperty('disputedealvalue') && this.activeFilters.disputedealvalue === 0) {
-        delete this.activeFilters['disputedealvalue']
+      if (this.activeFilters.hasOwnProperty('disputeDealValue') && this.activeFilters.disputedealvalue === 0) {
+        delete this.activeFilters['disputeDealValue']
       }
       this.$store.commit('setDisputeFilter', this.activeFilters)
       this.showFilters = false
@@ -395,7 +419,7 @@ export default {
           break
         case '2':
           setTimeout(function () {
-            this.$refs.disputeTable.sort('disputedealdate', 'descending')
+            this.$refs.disputeTable.sort('disputeDealDate', 'descending')
           }.bind(this), 100)
           break
         default:
@@ -450,69 +474,10 @@ export default {
     handleSortChange (sort) {
       this.$store.commit('setDisputeSort', sort)
     },
-    getLastInteraction (lastinteractiondate) {
-      let date = this.$moment(lastinteractiondate + 'Z')
-      if (date.isValid()) {
-        let now = this.$moment()
-        if (now.diff(date, 'seconds') < 0) {
-          return ''
-        } else if (now.diff(date, 'seconds') < 59) {
-          return now.diff(date, 'seconds') + ' há segundos'
-        } else if (now.diff(date, 'minutes') < 59) {
-          return now.diff(date, 'minutes') + ' há minuto(s)'
-        } else if (now.diff(date, 'hours') < 24) {
-          return now.diff(date, 'hours') + ' há hora(s)'
-        } else if (now.diff(date, 'hours') < 48) {
-          return '1 dia'
-        } else {
-          return date.format('DD/MM/YY')
-        }
-      }
-      return ''
-    },
-    getLastInteractionIcon (type) {
-      switch (type) {
-        case 'EMAIL_CNA':
-          return 'cna'
-        case 'EMAIL':
-          return 'email'
-        case 'WHATSAPP':
-          return 'whatsapp'
-        case 'SMS':
-          return 'sms'
-        case 'TTS':
-          return 'tts'
-        case 'NEGOTIATION':
-          return 'negotiation2'
-        default:
-          return 'chat'
-      }
-    },
-    getLastInteractionTooltip (type) {
-      switch (type) {
-        case 'EMAIL_CNA':
-          return 'Última interação via CNA'
-        case 'EMAIL':
-          return 'Última interação via E-mail'
-        case 'WHATSAPP':
-          return 'Última interação via WhatsApp'
-        case 'SMS':
-          return 'Última interação via SMS'
-        case 'TTS':
-          return 'Última interação via WhatsApp'
-        case 'NEGOTIATION':
-          return 'Última interação via Sistema Justto'
-        default:
-          return ''
-      }
-    },
     handleChangePagination () {
       this.$nextTick(() => {
         this.$el.querySelector('#main-card').scrollTop = 0
       })
-    },
-    getClaimants (disputeRoles, showFirstOnly = false, role = 'PARTY') {
-      return getClaimantsUtils(disputeRoles, showFirstOnly, role)
     }
   }
 }

@@ -32,7 +32,7 @@
           <span slot="title">Importação de disputas</span>
         </el-menu-item>
       </el-menu>
-      <div v-show="$store.state.workspaceModule.members.length" class="jus-team-menu__title">
+      <div v-show="$store.getters.workspaceMembers.length" class="jus-team-menu__title">
         TIME
       </div>
       <vue-perfect-scrollbar>
@@ -84,13 +84,23 @@ export default {
         this.$store.commit('SOCKET_refresh', whatsapp)
       }
     })
-    this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
-    this.$socket.emit('subscribe', '/workspaces/' + this.$store.state.workspaceModule.id)
+  },
+  beforeMount () {
+    this.subscribe()
   },
   sockets: {
     reconnect () {
-      this.$socket.emit('subscribe', '/whatsapp/' + this.$store.state.workspaceModule.subdomain)
-      this.$socket.emit('subscribe', '/workspaces/' + this.$store.state.workspaceModule.id)
+      this.subscribe()
+    }
+  },
+  methods: {
+    subscribe () {
+      const headers = {
+        Authorization: this.$store.getters.accountToken,
+        Workspace: this.$store.getters.workspaceSubdomain
+      }
+      this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp' })
+      this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute' })
     }
   }
 }

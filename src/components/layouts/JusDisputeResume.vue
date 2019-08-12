@@ -2,41 +2,41 @@
   <div class="jus-dispute-resume">
     <h4 data-testid="dispute-title">
       Disputa #{{ dispute.id }} |
-      Campanha: {{ dispute.campaign.name | capitalize }} |
+      Campanha: {{ dispute.campaignName | capitalize }} |
       Processo: {{ dispute.code }}
     </h4>
     <el-row data-testid="dipute-info">
       <el-col :span="8">
-        <div>Estratégia: {{ dispute.campaign.strategy }}</div>
+        <div>Estratégia: {{ dispute.strategyName }}</div>
         <div>Status: <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span></div>
-        <div v-for="(claiment, index) in getClaimants(dispute.disputeRoles, false)" :key="dispute.id + claiment.name + index + 'claimant'">
+        <div v-for="(claiment, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'PARTY')" :key="dispute.id + claiment.name + index + 'claimant'">
           Parte contrária: {{ claiment.name }}
         </div>
-        <div v-for="(lawyer, index) in getClaimants(dispute.disputeRoles, false, 'LAWYER')" :key="dispute.id + lawyer.name + index + 'lawyer'">
+        <div v-for="(lawyer, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'LAWYER')" :key="dispute.id + lawyer.name + index + 'lawyer'">
           Advogado: {{ lawyer.name }}
         </div>
       </el-col>
       <el-col :span="8">
-        <div>Campanha: {{ dispute.campaign.name }}</div>
-        <div>Fim da negociação: {{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</div>
-        <!-- <div>Data do acordo: {{ dispute.disputedealdate | moment('DD/MM/YY') }}</div> -->
+        <div>Campanha: {{ dispute.campaignName }}</div>
+        <div>Fim da negociação: {{ dispute.expirationDate | moment('DD/MM/YY') }}</div>
+        <div>Data do acordo: {{ dispute.disputeDealDate | moment('DD/MM/YY') }}</div>
         <div>
           Última interação:
-          <!-- {{ getLastInteraction(dispute.lastinteractiondate) }} -->
+          {{ dispute.lastInteractionFormatedDate | capitalize }}
         </div>
       </el-col>
       <el-col :span="8">
-        <!-- <div>Alçada máxima: {{ dispute.disputeupperrange | currency }}</div>
-        <div>Valor proposto: {{ dispute.lastoffervalue | currency }}</div>
-        <div>Contraproposta: {{ dispute.lastcounteroffervalue | currency }}</div>
-        <div>Valor do acordo: {{ dispute.disputedealvalue | currency }}</div> -->
+        <div>Alçada máxima: {{ dispute.disputeUpperRange | currency }}</div>
+        <div>Valor proposto: {{ dispute.lastOfferValue | currency }}</div>
+        <div>Contraproposta: {{ dispute.lastCounterOfferValue | currency }}</div>
+        <div>Valor do acordo: {{ dispute.disputeDealValue | currency }}</div>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import { getClaimants as getClaimantsUtils } from '@/plugins/jusUtils'
+import { getRoles } from '@/plugins/jusUtils'
 
 export default {
   name: 'JusDisputeResume',
@@ -47,8 +47,8 @@ export default {
     }
   },
   methods: {
-    getClaimants (disputeRoles, showFirstOnly = false, role = 'PARTY') {
-      return getClaimantsUtils(disputeRoles, showFirstOnly, role)
+    getClaimants (disputeRoles, party, role) {
+      return getRoles(disputeRoles, party, role)
     }
   }
 }
