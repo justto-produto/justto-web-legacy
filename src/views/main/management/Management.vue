@@ -50,6 +50,12 @@
     </template>
     <template slot="main">
       <div ref="tableContainer" class="view-management__table-container">
+        <div class="view-management__table-container--loading" v-show="paginatedDisputes.length == 0 && !hasFilters">
+          <img src="@/assets/loading2.svg">
+          <h4 data-testid="cases-empty-text">
+            Aguardando por novas disputas.
+          </h4>
+        </div>
         <el-table
           ref="disputeTable"
           :key="tableKey"
@@ -349,28 +355,11 @@ export default {
       }
     }
   },
-  beforeMount () {
-  //   this.$nextTick(() => {
-  //     this.tabKey = true
-  //     // this.adjustHeight()
-  //     window.addEventListener('resize', this.adjustHeight)
-  //   })
-  //   setTimeout(function () {
-  //     this.tabKey = true
-  //     this.adjustHeight()
-  //   }.bind(this), 1000)
-  },
   mounted () {
-    this.$store.dispatch('showLoading')
-    this.$nextTick(() => {
-      this.tabKey = true
-      setTimeout(function () {
-        this.tabKey = true
-        this.adjustHeight()
-      }.bind(this), 500)
-    })
-    this.$store.dispatch('hideLoading')
     window.addEventListener('resize', this.adjustHeight)
+  },
+  beforeUpdate () {
+    this.adjustHeight()
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.adjustHeight)
@@ -615,6 +604,17 @@ export default {
   }
   &__table-container {
     height: calc(100% - 52px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    &--loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
   }
 }
 </style>
