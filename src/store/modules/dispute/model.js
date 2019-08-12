@@ -73,7 +73,7 @@ const disputeViewModel = function (disputes) {
     }).length
 
     if (viewModelDispute.lastCounterOfferValue !== '0.0') {
-      // viewModelDispute.lastOfferPercentToUpperRange
+      viewModelDispute.lastOfferPercentToUpperRange = viewModelDispute.lastOfferValue / viewModelDispute.disputeUpperRange * 100
     }
 
     viewModelDisputes.push(viewModelDispute)

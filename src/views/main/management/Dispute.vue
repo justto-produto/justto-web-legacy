@@ -87,10 +87,10 @@
             </el-button>
           </el-tooltip>
           <!-- <el-tooltip content="snooze">
-                        <el-button plain @click="disputeAction('move')">
-                          <jus-icon icon="snooze" />
-                        </el-button>
-                      </el-tooltip> -->
+            <el-button plain @click="disputeAction('move')">
+              <jus-icon icon="snooze" />
+            </el-button>
+          </el-tooltip> -->
           <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
             <el-button
               plain
@@ -170,7 +170,6 @@
         </el-dialog>
         <dispute-messages
           :messages-prop="filteredDisputeMessages"
-          :loading.sync="loadingDisputeMessages"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
           data-testid="dispute-messages"
@@ -268,25 +267,25 @@
               </el-card>
             </el-tab-pane>
             <!-- <el-tab-pane v-loading="loadingTextarea" label="Chat" name="2">
-                            <el-card shadow="always" class="dispute-view__send-message-box">
-                              <textarea
-                                v-model="newChatMessage"
-                                rows="3"
-                                data-testid="input-chat"
-                                placeholder="Escreva alguma coisa"
-                                class="el-textarea__inner"
-                                @input="sendTypeEvent()"
-                                @keydown.enter.alt="newLineChat()"
-                                @keydown.enter.shift="newLineChat()"
-                                @keydown.enter.exact.prevent
-                                @keydown.enter.exact="sendChatMessage()" />
-                              <div class="dispute-view__send-message-actions note">
-                                <el-button type="primary" @click="sendChatMessage()">
-                                  Enviar
-                                </el-button>
-                              </div>
-                            </el-card>
-                          </el-tab-pane> -->
+              <el-card shadow="always" class="dispute-view__send-message-box">
+                <textarea
+                  v-model="newChatMessage"
+                  rows="3"
+                  data-testid="input-chat"
+                  placeholder="Escreva alguma coisa"
+                  class="el-textarea__inner"
+                  @input="sendTypeEvent()"
+                  @keydown.enter.alt="newLineChat()"
+                  @keydown.enter.shift="newLineChat()"
+                  @keydown.enter.exact.prevent
+                  @keydown.enter.exact="sendChatMessage()" />
+                <div class="dispute-view__send-message-actions note">
+                  <el-button type="primary" @click="sendChatMessage()">
+                    Enviar
+                  </el-button>
+                </div>
+              </el-card>
+            </el-tab-pane> -->
             <el-tab-pane v-loading="loadingTextarea" label="Nota" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <textarea
@@ -352,8 +351,6 @@ export default {
       chooseUnsettledDialogVisible: false,
       loadingDispute: false,
       disputeMessages: [],
-      filteredDisputeMessages: [],
-      loadingDisputeMessages: false,
       showSearch: false,
       searchTerm: '',
       messageType: 'email',
@@ -388,6 +385,15 @@ export default {
     dispute () {
       return this.$store.getters.findById(this.id)
     },
+    filteredDisputeMessages () {
+      if (this.searchTerm) {
+        return this.disputeMessages.filter(dispute => {
+          return dispute.content.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          dispute.sender.toLowerCase().includes(this.searchTerm.toLowerCase())
+        })
+      }
+      return this.disputeMessages
+    },
     isFavorite () {
       return this.dispute.favorite
     },
@@ -409,9 +415,6 @@ export default {
       if (!value) {
         this.searchTerm = ''
       }
-    },
-    searchTerm (term) {
-      this.filterDisputeMessages(term)
     },
     activePerson (value) {
       this.$nextTick(() => {
@@ -481,44 +484,25 @@ export default {
     },
     fetchData (options) {
       if (options.fetchMessages) {
-        this.loadingDisputeMessages = true
-        this.$store.dispatch('getDisputeMessages', this.$route.params.id).then((responses) => {
+        this.$store.dispatch('getDisputeMessages', this.$route.params.id).then(response => {
           if (!this.disputeMessages.length) {
-            this.disputeMessages = responses
-            this.filteredDisputeMessages = this.disputeMessages.slice(0)
+            this.disputeMessages = response.content
           } else {
-            let newMessages = responses.filter((i) => {
-              return this.disputeMessages.map((e) => {
+            let newMessages = response.content.filter(i => {
+              return this.disputeMessages.map(e => {
                 return JSON.stringify(e)
               }).indexOf(JSON.stringify(i)) < 0
             })
             this.disputeMessages.push(...newMessages)
-            this.filteredDisputeMessages.push(...newMessages)
           }
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.loadingDisputeMessages = false
         })
       }
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
         this.activePerson = {}
-      }
-    },
-    filterDisputeMessages (term) {
-      var messages = this.disputeMessages.slice(0)
-      if (term) {
-        var results = messages.filter(this.createDisputeFilter(term))
-        this.filteredDisputeMessages = results
-      } else {
-        this.filteredDisputeMessages = messages
-      }
-    },
-    createDisputeFilter (term) {
-      return (occurrence) => {
-        return (occurrence.description.toLowerCase().includes(term.toLowerCase()))
       }
     },
     setMessageType (type) {
