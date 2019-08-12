@@ -32,7 +32,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .contains('Todos')
       .click({force: true})
 
-    cy.get('tbody label[role=checkbox]').first()
+    cy.get('tbody label[role=checkbox]', { timeout: 60000 }).first()
       .click()
 
     // Menu de ações deve estar visivel

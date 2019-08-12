@@ -26,7 +26,7 @@ const disputeViewModel = function (disputes) {
       communicationMsgTotalSent: dispute.communications.filter(c => c.status === 'PROCESSED').length,
       communicationMsgTotalsShedulled: dispute.communications.filter(c => c.status === 'WAITING').length,
       negotiators: getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR'),
-      disputeUpperRange:  '0.0',
+      disputeUpperRange: '0.0',
       lastOfferValue: '0.0',
       lastCounterOfferValue: '0.0',
       disputeDealValue: '0.0',

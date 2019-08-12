@@ -34,7 +34,7 @@ describe('Justto.App - Disputa: Notas', function () {
 
   it('Salvar Nota: Sucesso', function () {
     // Entra na disputa
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
       .click({force: true})
 
     // Sistema deve redirecionar para a página de Registro
