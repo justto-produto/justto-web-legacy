@@ -2,49 +2,49 @@
   <div class="dispute-overview-view">
     <el-collapse value="1">
       <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
-        <div v-if="dispute.code" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Código:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div v-if="dispute.campaign" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Campanha:</span>
-          <span>{{ dispute.campaign.name }}</span>
+          <span>{{ dispute.campaignName }}</span>
         </div>
-        <div v-if="dispute.strategy" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
-          <span>{{ dispute.strategy.name }}</span>
+          <span>{{ dispute.strategyName }}</span>
         </div>
-        <div v-if="dispute.status" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
           <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
         </div>
-        <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Classificação:</span>
           <span>{{ dispute.classification | capitalize }}</span>
         </div>
-        <div v-if="dispute.disputeUpperRange" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
           <span>{{ dispute.disputeUpperRange | currency }}</span>
         </div>
-        <div v-if="dispute.lastCounterOffer" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
-          <span>{{ dispute.lastCounterOffer.boundary | currency }}</span>
+          <span>{{ dispute.lastCounterOfferValue | currency }}</span>
         </div>
         <div
           v-if="(dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED') && dispute.dealValue"
           class="dispute-overview-view__info-line">
           <span class="title">Valor do acordo:</span>
-          <span>{{ dispute.dealValue.boundary | currency }}</span>
+          <span>{{ dispute.disputeDealValue | currency }}</span>
         </div>
-        <div v-if="dispute.lastOffer" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Valor proposto:</span>
-          <span>{{ dispute.lastOffer.boundary | currency }}</span>
+          <span>{{ dispute.lastOfferValue | currency }}</span>
         </div>
-        <div v-if="dispute.expirationDate" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
           <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
         </div>
-        <div v-if="dispute.description" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Descrição:</span>
           <span>{{ dispute.description }}</span>
         </div>

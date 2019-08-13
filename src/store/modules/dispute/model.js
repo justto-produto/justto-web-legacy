@@ -29,11 +29,13 @@ const getDisputeVM = function (dispute) {
       name: dispute.campaign ? dispute.campaign.strategy : '',
       id: dispute.campaign ? dispute.campaign.strategyId : 0
     },
+    classification: dispute.classification ? dispute.classification : '',
     campaignName: dispute.campaign ? dispute.campaign.name : '',
     firstClaimant: getFirstRole(dispute.disputeRoles, 'CLAIMANT', 'PARTY'),
     firstClaimantLawyer: getFirstRole(dispute.disputeRoles, 'CLAIMANT', 'LAWYER'),
     disputeRoles: dispute.disputeRoles,
     expirationDate: dispute.expirationDate.dateTime,
+    description: dispute.description,
     disputeDealDate: dispute.conclusion ? dispute.conclusion.conclusionDate.dateTime : null,
     lastInteractionDate: dispute.lastInteraction ? dispute.lastInteraction.date.dateTime : null,
     lastInteractionType: dispute.lastInteraction ? dispute.lastInteraction.type : null,

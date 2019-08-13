@@ -16,12 +16,9 @@
       <dispute-summary
         v-if="dispute.strategy"
         :key="componentKey"
-        :id="dispute.id"
-        :unsettled-types="unsettledTypes"
+        :dispute="dispute"
         :show-scheduled.sync="showScheduled"
-        :strategy-id="dispute.strategy.id"
-        data-testid="dispute-summary"
-        @dispute:refresh="fetchData({ fetchMessages: true })"/>
+        data-testid="dispute-summary" />
     </template>
     <!-- CHAT -->
     <template slot="main">
@@ -322,7 +319,6 @@
         </el-tooltip>
       </div>
       <dispute-overview
-        :loading="loadingDispute"
         :dispute="dispute"
         :active-person.sync="activePerson"
         data-testid="dispute-overview"
@@ -346,7 +342,6 @@ export default {
       id: 0,
       editNegotiatorDialogVisible: false,
       chooseUnsettledDialogVisible: false,
-      loadingDispute: false,
       disputeMessages: [],
       showSearch: false,
       searchTerm: '',

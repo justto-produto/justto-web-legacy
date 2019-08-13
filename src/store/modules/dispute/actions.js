@@ -105,16 +105,10 @@ const disputeActions = {
         })
     })
   },
-  editDispute ({ commit }, disputeForm) {
+  editDispute ({ commit }, dispute) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + disputeForm.disputeId + '/update', {
-        id: disputeForm.disputeId,
-        upperRange: disputeForm.upperRange,
-        expirationDate: disputeForm.expirationDate,
-        lastOffer: disputeForm.lastOffer,
-        description: disputeForm.description
-      })
+      axios.put('api/disputes/', dispute)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
