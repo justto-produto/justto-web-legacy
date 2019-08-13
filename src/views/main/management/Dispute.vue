@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain left-card-width="350" right-card-width="350" class="dispute-view" :loading-container="!dispute.id">
+  <JusViewMain :loading-container="!dispute.id" left-card-width="350" right-card-width="350" class="dispute-view">
     <template slot="title">
       <h1 class="dispute-view__title">
         <router-link to="/management">

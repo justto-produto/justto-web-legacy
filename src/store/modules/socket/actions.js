@@ -13,7 +13,10 @@ const actions = {
     })
   },
   // DISPUTE
-  SOCKET_change ({ dispatch }, dispute) {
+  SOCKET_add ({ dispatch }, dispute) {
+    dispatch('updateDispute', dispute.id)
+  },
+  SOCKET_remove ({ dispatch }, dispute) {
     dispatch('updateDispute', dispute.id)
   }
 }

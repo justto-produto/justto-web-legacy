@@ -50,12 +50,6 @@
     </template>
     <template slot="main">
       <div ref="tableContainer" class="view-management__table-container">
-        <div class="view-management__table-container--loading" v-show="paginatedDisputes.length == 0 && !hasFilters">
-          <img src="@/assets/loading2.svg">
-          <h4 data-testid="cases-empty-text">
-            Aguardando por novas disputas.
-          </h4>
-        </div>
         <el-table
           ref="disputeTable"
           :key="tableKey"
@@ -604,17 +598,6 @@ export default {
   }
   &__table-container {
     height: calc(100% - 52px);
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    &--loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
   }
 }
 </style>

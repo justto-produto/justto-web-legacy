@@ -1,43 +1,46 @@
 <template>
   <ul v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
-      v-for="message in messages"
-      v-if="message.status !== 'CANCELED'"
-      v-show="showScheduled ? true : message.status !== 'WAITING'"
-      :key="message.id"
+      v-for="occurrence in occurrences"
+      v-if="occurrence.status !== 'CANCELED'"
+      v-show="showScheduled ? true : occurrence.status !== 'WAITING'"
+      :key="occurrence.id"
       data-testid="message-index"
       class="dispute-view-messages__message">
-      <div v-if="showAsCard(message.type)" :class="message" class="dispute-view-messages__message-box">
+      <div v-if="showAsCard(occurrence.type)" class="dispute-view-messages__message-box">
         <div>
-          <div :class="message.direction.toLowerCase() + '' + waitingClass(message)" class="dispute-view-messages__message-content" data-testid="message-box">
-            <div>{{ message.description }}</div>
+          <div :class="directionClass(occurrence) + waitingClass(occurrence)" class="dispute-view-messages__message-content" data-testid="message-box">
+            <div>{{ occurrence.description }}</div>
             <el-button
-              v-if="message.message && message.message.type === 'EMAIL' && message.type !== 'NOTE'"
+              v-if="occurrence.message && occurrence.message.communicationType === 'EMAIL' && message.type !== 'NOTE'"
               type="text"
               data-testid="show-email"
-              @click="showMessageDialog(message.message.content)">
+              @click="showMessageDialog(occurrence.message.content)">
               Visualizar email
             </el-button>
-            <span v-else v-html="message.message && message.message.content" />
-            <i v-if="directionClass(message) === 'NOTE'">
+            <span v-else v-html="occurrence.message && occurrence.message.content" />
+            <i v-if="directionClass(occurrence) === 'NOTE'">
               <br>
               <jus-icon icon="eye" style="vertical-align: sub;"/>
               Esta mensagem é visível somente aos negociadores.
             </i>
-            <i v-show="message.message && message.message.status === 'WAITING'">
+            <i v-show="occurrence.message && occurrence.message.status === 'WAITING'">
               <br><br>
               <jus-icon icon="clock" is-active style="vertical-align: sub;"/>
               Esta é uma mensagem agendada que ainda não foi entregue.
             </i>
           </div>
           <div class="dispute-view-messages__message-time">
-            <span v-if="message.executionDateTime || (message.message && message.message.schedulerTime)">
-              {{ message.executionDateTime != null ? message.executionDateTime : message.message.schedulerTime | moment('DD [de] MMMM [às] HH:mm') }} •
+            <span v-if="occurrence.executionDateTime">
+              {{ occurrence.executionDateTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
-            <span v-if="directionClass(message) !== 'note'">
-              <jus-icon :icon="getMessageIcon(message.message)" />
-              <span v-if="message.message && message.message.senderName">
-                • {{ message.message.senderName | firstName }}
+            <span v-else-if="waitingClass(occurrence)">
+              {{ occurrence.message.schedulerTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
+            </span>
+            <span v-if="directionClass(occurrence) !== 'note'">
+              <jus-icon :icon="getMessageIcon(occurrence.message)" />
+              <span v-if="occurrence.message && occurrence.message.sender">
+                • {{ occurrence.message.sender | firstName }}
               </span>
             </span>
             <span v-else>
@@ -46,14 +49,14 @@
           </div>
         </div>
         <jus-avatar-user
-          v-if="message.message"
-          :name="message.message.senderName"
-          :purple="directionClass(message) === 'inbound'"
+          v-if="occurrence.message"
+          :name="occurrence.message.sender"
+          :purple="directionClass(occurrence) === 'inbound'"
           size="sm" />
       </div>
       <div v-else class="dispute-view-messages__message-log">
-        <div :class="message.type === 'TYPING' ? 'typing' : ''">{{ message.description }}</div>
-        {{ message.executionDateTime | moment('DD/MM/YYYY - HH:mm') }}
+        <div :class="occurrence.type === 'TYPING' ? 'typing' : ''">{{ occurrence.description }}</div>
+        {{ occurrence.executionDateTime ? occurrence.executionDateTime.dateTime : '' | moment('DD/MM/YYYY - HH:mm') }}
       </div>
     </li>
     <el-dialog
@@ -94,15 +97,15 @@ export default {
     }
   },
   computed: {
-    messages () {
-      return this.messagesProp.filter(message => {
-        if (!message) {
+    occurrences () {
+      return this.messagesProp.filter(occurrence => {
+        if (!occurrence) {
           return false
         }
         switch (this.currentTab) {
           case '1':
-            if (message.type !== 'NOTE') {
-              if (message.message && message.message.type === 'CHAT') {
+            if (occurrence.type !== 'NOTE') {
+              if (occurrence.message && occurrence.message.type === 'CHAT') {
                 return false
               } else {
                 return true
@@ -111,9 +114,9 @@ export default {
               return false
             }
           case '2':
-            return message.message && message.message.type === 'CHAT'
+            return occurrence.message && occurrence.message.type === 'CHAT'
           case '3':
-            return message.type === 'NOTE'
+            return occurrence.type === 'NOTE'
         }
       })
     }
@@ -169,22 +172,22 @@ export default {
       this.messageContent = content
       this.showMessage = true
     },
-    directionClass (message) {
-      if (message.direction === 'INBOUND' || message.senderParty === 'CLAIMANT') {
-        return 'inbound'
-      } else if (message.type === 'NOTE') {
-        return 'note'
-      } else return 'outbound'
+    directionClass (occurrence) {
+      if (occurrence.type === 'NOTE') return 'note'
+      if (occurrence.message) {
+        if (occurrence.message.direction === 'OUTBOUND') return 'outbound'
+        if (occurrence.message.direction === 'INBOUND') return 'inbound'
+      }
     },
-    waitingClass (message) {
-      if (message.status === 'WAITING') {
+    waitingClass (occurrence) {
+      if (occurrence.message && occurrence.message.status === 'WAITING') {
         return ' waiting'
       }
       return ''
     },
-    getMessageIcon (message) {
-      if (message) {
-        switch (message.type) {
+    getMessageIcon (occurrence) {
+      if (occurrence) {
+        switch (occurrence.type) {
           case 'EMAIL_CNA':
             return 'cna'
           case 'EMAIL':

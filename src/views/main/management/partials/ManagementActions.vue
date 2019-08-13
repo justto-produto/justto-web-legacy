@@ -81,7 +81,7 @@ export default {
     } else {
       this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
         this.unsettledTypes = response
-      }).finally(() => this.$store.dispatch('hideLoading'))
+      })
     }
   },
   methods: {
