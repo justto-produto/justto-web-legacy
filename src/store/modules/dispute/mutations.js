@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 const disputeMutations = {
   clearDisputes (state) {
-    state.disputes = []
+    state.disputesDTO = []
   },
   clearDisputeFilters (state) {
     state.filters.terms = {}
@@ -34,7 +34,7 @@ const disputeMutations = {
   },
   updateDisputeList (state, disputeChanged) {
     Vue.nextTick(() => {
-      let changedIndex = state.disputes.findIndex(dispute => {
+      let changedIndex = state.disputesDTO.findIndex(dispute => {
         return (disputeChanged.id === dispute.id)
       })
       if (changedIndex === -1) {
@@ -46,7 +46,7 @@ const disputeMutations = {
   },
   removeDisputeFromList (state, disputeId) {
     Vue.nextTick(() => {
-      state.disputes = state.disputes.filter(dispute => {
+      state.disputesDTO = state.disputesDTO.filter(dispute => {
         if (dispute.id === disputeId) {
           return false
         }
