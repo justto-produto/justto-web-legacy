@@ -35,7 +35,7 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
 
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.get('[data-testid=cases-empty-text]')
-      .contains('Não foram encontradas disputas')
+      .contains('Aguardando por novas disputas.')
       .should('be.visible')
 
     // Exportação de disputas deve estar desabilitada

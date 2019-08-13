@@ -231,7 +231,7 @@
               </h4>
             </span>
             <span v-else>
-              <img src="@/assets/loading2.svg">
+              <img src="@/assets/loading2.svg" data-testid="cases-empty-icon">
               <h4 data-testid="cases-empty-text">
                 Aguardando por novas disputas.
               </h4>
