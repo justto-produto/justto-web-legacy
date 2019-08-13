@@ -34,7 +34,7 @@
             <span v-if="occurrence.executionDateTime">
               {{ occurrence.executionDateTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
-            <span v-else-if="waitingClass(occurrence)">
+            <span v-else-if="occurrence.message && occurrence.message.schedulerTime && waitingClass(occurrence)">
               {{ occurrence.message.schedulerTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-if="directionClass(occurrence) !== 'note'">
