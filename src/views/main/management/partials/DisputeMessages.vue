@@ -65,7 +65,7 @@
       width="80%">
       <span v-html="messageContent"/>
       <span slot="footer" class="dialog-footer">
-        <el-button data-testid="close-button" @click="showMessage = false">Fechar</el-button>
+        <el-button plain data-testid="close-button" @click="showMessage = false">Fechar</el-button>
       </span>
     </el-dialog>
   </ul>

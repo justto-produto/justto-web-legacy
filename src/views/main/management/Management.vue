@@ -349,7 +349,10 @@ export default {
       }
     }
   },
-  mounted () {
+  beforeMount () {
+    setTimeout(() => {
+      this.adjustHeight()
+    }, 1000)
     window.addEventListener('resize', this.adjustHeight)
   },
   beforeUpdate () {
