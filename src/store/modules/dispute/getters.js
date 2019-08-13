@@ -1,8 +1,9 @@
 import moment from 'moment'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
+import { getDisputeVM, getDisputeVMList } from './model'
 
 const disputeGetters = {
-  disputes: state => state.disputes,
+  disputes: state => getDisputeVMList(state.disputesDTO),
   disputeFilters: state => state.filters,
   disputeHasFilters: state => {
     return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm
@@ -10,11 +11,11 @@ const disputeGetters = {
   disputeFiltersTerm: state => state.filters.filterTerm,
   filterPersonId: state => state.filters.filterPersonId,
   findById: (state) => (disputeId) => {
-    let dispute = state.disputes.find(d => d.id === parseInt(disputeId))
-    return dispute || {}
+    let dispute = state.disputesDTO.find(d => d.id === parseInt(disputeId))
+    return getDisputeVM(dispute)
   },
-  filteredDisputes: state => {
-    let filteredDisputes = state.disputes.slice(0)
+  filteredDisputes: (state, getters) => {
+    let filteredDisputes = getters.disputes.slice(0)
     if (state.filters) {
       switch (state.filters.tab) {
         case '0':
@@ -86,8 +87,8 @@ const disputeGetters = {
     }
     return filteredDisputes
   },
-  alertOne: state => {
-    let filteredDisputes = state.disputes.filter(dispute => {
+  alertOne: (state, getters) => {
+    let filteredDisputes = getters.disputes.filter(dispute => {
       if ((dispute.status === 'IMPORTED' ||
         dispute.status === 'PENDING' ||
         dispute.status === 'ENRICHED' ||
@@ -100,8 +101,8 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  alertTwo: state => {
-    let filteredDisputes = state.disputes.filter(dispute => {
+  alertTwo: (state, getters) => {
+    let filteredDisputes = getters.disputes.filter(dispute => {
       if ((dispute.status === 'IMPORTED' ||
         dispute.status === 'PENDING' ||
         dispute.status === 'ENRICHED' ||
@@ -113,8 +114,8 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  alertThree: state => {
-    let filteredDisputes = state.disputes.filter(dispute => {
+  alertThree: (state, getters) => {
+    let filteredDisputes = getters.disputes.filter(dispute => {
       if ((dispute.status === 'IMPORTED' ||
         dispute.status === 'PENDING' ||
         dispute.status === 'ENRICHED' ||
@@ -127,8 +128,8 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  alertFour: state => {
-    let filteredDisputes = state.disputes.filter(dispute => {
+  alertFour: (state, getters) => {
+    let filteredDisputes = getters.disputes.filter(dispute => {
       if (
         (dispute.status === 'IMPORTED' ||
         dispute.status === 'PENDING' ||
@@ -143,8 +144,8 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  alertFive: state => {
-    let filteredDisputes = state.disputes.filter(dispute => {
+  alertFive: (state, getters) => {
+    let filteredDisputes = getters.disputes.filter(dispute => {
       if ((dispute.status === 'IMPORTED' ||
         dispute.status === 'PENDING' ||
         dispute.status === 'ENRICHED' ||
@@ -156,8 +157,8 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  alertSix: state => {
-    let filteredDisputes = state.disputes.filter(dispute => {
+  alertSix: (state, getters) => {
+    let filteredDisputes = getters.disputes.filter(dispute => {
       if (dispute.status === 'ENGAGEMENT' &&
         dispute.communicationMsgTotalSent) {
         return true
@@ -165,8 +166,8 @@ const disputeGetters = {
     })
     return filteredDisputes
   },
-  alertSeven: state => {
-    let filteredDisputes = state.disputes.filter(dispute => {
+  alertSeven: (state, getters) => {
+    let filteredDisputes = getters.disputes.filter(dispute => {
       if (
         dispute.status !== 'SETTLED' &&
         dispute.status !== 'UNSETTLED' &&

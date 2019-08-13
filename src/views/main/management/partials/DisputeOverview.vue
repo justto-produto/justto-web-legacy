@@ -22,9 +22,9 @@
           <span class="title">Classificação:</span>
           <span>{{ dispute.classification | capitalize }}</span>
         </div>
-        <div v-if="dispute.upperRange" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.disputeUpperRange" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
-          <span>{{ dispute.upperRange.boundary | currency }}</span>
+          <span>{{ dispute.disputeUpperRange | currency }}</span>
         </div>
         <div v-if="dispute.lastCounterOffer" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
@@ -63,8 +63,8 @@
       @change="handleChange">
       <el-collapse-item
         v-for="role in disputeRolesSort"
-        :key="role.id"
-        :name="JSON.stringify({id: role.id, name: role.name})"
+        :key="role.personId"
+        :name="JSON.stringify({personId: role.personId, name: role.name})"
         data-testid="expand-party">
         <template slot="title">
           <div class="dispute-overview-view__name">
@@ -323,7 +323,7 @@ export default {
       }
     }
     return {
-      active: this.activePerson.id,
+      active: this.activePerson.personId,
       partyRoles: {
         legal: false,
         party: false,
@@ -405,6 +405,9 @@ export default {
     openDisputeDialog () {
       this.editDisputeDialogVisible = true
       this.disputeForm.disputeId = this.dispute.id
+      if (this.disputeForm.upperRange) {
+
+      }
       this.disputeForm.upperRange.boundary = parseFloat(this.dispute.upperRange.boundary)
       this.disputeForm.upperRange.id = this.dispute.upperRange.id
       this.disputeForm.expirationDate = this.dispute.expirationDate

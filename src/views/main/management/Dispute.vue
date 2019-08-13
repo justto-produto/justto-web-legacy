@@ -177,7 +177,7 @@
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
                   <textarea
-                    v-show="activePerson.id && validName"
+                    v-show="activePerson.personId && validName"
                     v-model="newMessage"
                     rows="3"
                     data-testid="input-message"
@@ -196,7 +196,7 @@
                       Configure um nome em seu perfil
                     </div>
                   </el-tooltip>
-                  <div v-else-if="activePerson.id">
+                  <div v-else-if="activePerson.personId">
                     <div>
                       <el-tooltip content="Enviar e-mail">
                         <a
@@ -253,7 +253,7 @@
                   </div>
                   <div v-else>
                     <el-button
-                      :disabled="!activePerson.id"
+                      :disabled="!activePerson.personId"
                       type="primary"
                       data-testid="submit-email"
                       @click="sendMessage()">
@@ -474,8 +474,11 @@ export default {
         cancelButtonText: 'Cancelar',
         type: 'error'
       }).then(() => {
+        const loading = this.$loading({ lock: true })
         this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
           this.$router.push('/management')
+        }).finally(() => {
+          loading.close()
         })
       })
     },

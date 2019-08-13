@@ -1,34 +1,6 @@
 const FileSaver = require('file-saver')
+
 const disputeActions = {
-  getDispute ({ commit }, id) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/disputes/' + id)
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
-  updateDispute ({ commit, rootState }, disputeId) {
-    commit('addUpdatingList', disputeId)
-    setTimeout(function () {
-      // eslint-disable-next-line
-      axios.get('api/disputes/' + disputeId)
-        .then(response => {
-          if (response.data) {
-            commit('updateDisputeList', response.data)
-          } else {
-            commit('removeDisputeFromList', disputeId)
-          }
-        })
-        .finally(() => {
-          commit('removeUpdatingList', disputeId)
-        })
-    }, 1000)
-  },
   getDisputes ({ commit, rootState }, query) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -42,27 +14,6 @@ const disputeActions = {
         })
     })
   },
-  getDisputeById ({ state }, id) {
-    return new Promise((resolve, reject) => {
-      let dispute = state.disputes.find((dispute) => {
-        return dispute.id === id
-      })
-      if (dispute) resolve(dispute)
-    })
-  },
-  // exportDisputes ({ rootState }, disputeIds) {
-  //   return new Promise((resolve, reject) => {
-  //     // eslint-disable-next-line
-  //     axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/export', {
-  //       query: { bool: { must: [{ terms: { disputeid: disputeIds } }] } } })
-  //       .then(response => {
-  //         resolve(response.data)
-  //       })
-  //       .catch(error => {
-  //         reject(error)
-  //       })
-  //   })
-  // },
   exportDisputes ({ rootState }, disputeIds) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

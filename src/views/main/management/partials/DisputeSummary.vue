@@ -38,11 +38,11 @@
           <span v-else>Último valor proposto</span>
         </template>
         <template slot="description">
-          <div v-if="dispute.disputeDealValue">
+          <div v-if="dispute.isDeal">
             {{ dispute.disputeDealValue | currency }}
           </div>
-          <div v-else>
-            Sem contraproposta
+          <div else>
+            {{ dispute.lastOfferValue | currency }}
           </div>
         </template>
       </el-step>

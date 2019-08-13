@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import disputeViewModel from './model'
 
 const disputeMutations = {
   clearDisputes (state) {
@@ -8,9 +7,8 @@ const disputeMutations = {
   clearDisputeFilters (state) {
     state.filters.terms = {}
   },
-  setDisputes (state, disputes) {
-    state.disputesDTO = disputes
-    state.disputes = disputeViewModel(disputes)
+  setDisputes (state, disputesDTO) {
+    state.disputesDTO = disputesDTO
   },
   setDisputeTab (state, tab) {
     state.filters.tab = tab
@@ -40,9 +38,9 @@ const disputeMutations = {
         return (disputeChanged.id === dispute.id)
       })
       if (changedIndex === -1) {
-        state.disputes.push(disputeChanged)
+        state.disputesDTO.push(disputeChanged)
       } else {
-        Vue.set(state.disputes, changedIndex, disputeChanged)
+        Vue.set(state.disputesDTO, changedIndex, disputeChanged)
       }
     })
   },

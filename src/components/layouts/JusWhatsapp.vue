@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     qrCode () {
-      return this.$store.state.socketModule.whatsapp.qrCode
+      return this.$store.getters.whatsappQrCode
     },
     status () {
       if (this.isWhatsappStarting) {
@@ -109,11 +109,6 @@ export default {
       if (this.$store.state.socketModule.whatsapp.status === 'CONNECTED') {
         window.analytics.track('Whatsapp sincronizado')
       }
-    }
-  },
-  created () {
-    if (this.$store.getters.whatsappStatus !== 'CONNECTED') {
-      this.restart()
     }
   },
   methods: {
