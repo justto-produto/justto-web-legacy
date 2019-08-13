@@ -1,5 +1,4 @@
 <template lang="html">
-
   <div v-loading="!dispute" class="dispute-view__side-content">
     <el-steps
       :active="0"
