@@ -55,34 +55,18 @@
 export default {
   name: 'DisputeSummary',
   props: {
-    id: {
-      default: 0,
-      type: Number
-    },
-    strategyId: {
-      default: null,
-      type: Number
+    dispute: {
+      default: () => {},
+      type: Object
     },
     showScheduled: {
       default: false,
       type: Boolean
-    },
-    unsettledTypes: {
-      default: () => {},
-      type: Object
     }
   },
   data () {
     return {
-      summary: null,
-      scheduled: false,
-      unsettledType: null,
-      unsettledTypeId: null
-    }
-  },
-  computed: {
-    dispute () {
-      return this.$store.getters.findById(this.id)
+      scheduled: false
     }
   },
   watch: {
@@ -92,8 +76,6 @@ export default {
     scheduled (value) {
       this.$emit('update:showScheduled', value)
     }
-  },
-  methods: {
   }
 }
 </script>
