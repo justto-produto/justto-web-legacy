@@ -3,16 +3,16 @@
     <li
       v-for="occurrence in occurrences"
       v-if="occurrence.status !== 'CANCELED'"
-      v-show="showScheduled ? true : occurrence.status !== 'WAITING'"
+      v-show="hideScheduled(occurrence)"
       :key="occurrence.id"
       data-testid="message-index"
       class="dispute-view-messages__message">
-      <div v-if="showAsCard(occurrence.type)" class="dispute-view-messages__message-box">
+      <div v-if="showAsCard(occurrence.type)" :class="directionClass(occurrence)" class="dispute-view-messages__message-box">
         <div>
           <div :class="directionClass(occurrence) + waitingClass(occurrence)" class="dispute-view-messages__message-content" data-testid="message-box">
             <div>{{ occurrence.description }}</div>
             <el-button
-              v-if="occurrence.message && occurrence.message.communicationType === 'EMAIL' && message.type !== 'NOTE'"
+              v-if="occurrence.message && occurrence.message.communicationType === 'EMAIL'"
               type="text"
               data-testid="show-email"
               @click="showMessageDialog(occurrence.message.content)">
@@ -104,15 +104,16 @@ export default {
         }
         switch (this.currentTab) {
           case '1':
-            if (occurrence.type !== 'NOTE') {
-              if (occurrence.message && occurrence.message.type === 'CHAT') {
-                return false
-              } else {
-                return true
-              }
-            } else {
-              return false
-            }
+            return occurrence.type !== 'NOTE'
+            // if (occurrence.type !== 'NOTE') {
+            //   if (occurrence.message && occurrence.message.type === 'CHAT') {
+            //     return false
+            //   } else {
+            //     return true
+            //   }
+            // } else {
+            //   return false
+            // }
           case '2':
             return occurrence.message && occurrence.message.type === 'CHAT'
           case '3':
@@ -184,6 +185,14 @@ export default {
         return ' waiting'
       }
       return ''
+    },
+    hideScheduled (occurrence) {
+      if (this.showScheduled) {
+        return true
+      } else {
+        if (occurrence.message && occurrence.message.status === 'WAITING') return false
+        else return true
+      }
     },
     getMessageIcon (occurrence) {
       if (occurrence) {
