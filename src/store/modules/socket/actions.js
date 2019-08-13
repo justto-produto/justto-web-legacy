@@ -13,11 +13,11 @@ const actions = {
     })
   },
   // DISPUTE
-  SOCKET_add ({ dispatch }, dispute) {
-    dispatch('updateDispute', dispute.id)
+  SOCKET_ADD ({ commit }, dispute) {
+    commit('updateDisputeList', dispute)
   },
-  SOCKET_remove ({ dispatch }, dispute) {
-    dispatch('updateDispute', dispute.id)
+  SOCKET_REMOVE ({ commit }, dispute) {
+    commit('removeDisputeFromList', dispute)
   }
 }
 

@@ -2,7 +2,7 @@
   <ul v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="occurrence in occurrences"
-      v-if="occurrence.status !== 'CANCELED'"
+      v-if="occurrence.message && occurrence.message.status !== 'CANCELED'"
       v-show="hideScheduled(occurrence)"
       :key="occurrence.id"
       data-testid="message-index"
@@ -31,12 +31,16 @@
             </i>
           </div>
           <div class="dispute-view-messages__message-time">
-            <span v-if="occurrence.executionDateTime">
-              {{ occurrence.executionDateTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
-            </span>
-            <span v-else-if="occurrence.message && occurrence.message.schedulerTime && waitingClass(occurrence)">
+            <span v-if="occurrence.message && occurrence.message.schedulerTime && waitingClass(occurrence)">
               {{ occurrence.message.schedulerTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
+            <span v-else-if="occurrence.message && occurrence.message.executionTime">
+              {{ occurrence.message.executionTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
+            </span>
+            <span v-else-if="occurrence.executionDateTime">
+              {{ occurrence.executionDateTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
+            </span>
+
             <span v-if="directionClass(occurrence) !== 'note'">
               <jus-icon :icon="getMessageIcon(occurrence.message)" />
               <span v-if="occurrence.message && occurrence.message.sender">

@@ -560,10 +560,12 @@ export default {
       width: 14px;
     }
   }
-  .jus-main-view__main-card {
-    > .el-card__body {
-      padding-top: 80px;
-      height: 100%;
+  &:not(.view-management-review) {
+    .jus-main-view__main-card {
+      > .el-card__body {
+        padding-top: 80px;
+        height: 100%;
+      }
     }
   }
   &__row-actions {
