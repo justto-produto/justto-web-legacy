@@ -2,7 +2,7 @@
   <ul v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="occurrence in occurrences"
-      v-if="occurrence.message && occurrence.message.status !== 'CANCELED'"
+      v-if="occurrence.message ? occurrence.message.status !== 'CANCELED' : true"
       v-show="hideScheduled(occurrence)"
       :key="occurrence.id"
       data-testid="message-index"
@@ -148,17 +148,17 @@ export default {
     })
     this.$store.watch(state => state.socketModule.chat.join, join => {
       setTimeout(() => {
-        this.$emit('dispute:refresh')
+        this.$emit('dispute:occurrences:get')
       }, 1000)
     })
     this.$store.watch(state => state.socketModule.chat.message, join => {
       setTimeout(() => {
-        this.$emit('dispute:refresh')
+        this.$emit('dispute:occurrences:get')
       }, 1000)
     })
     this.$store.watch(state => state.socketModule.chat.leave, join => {
       setTimeout(() => {
-        this.$emit('dispute:refresh')
+        this.$emit('dispute:occurrences:get')
       }, 1000)
     })
   },

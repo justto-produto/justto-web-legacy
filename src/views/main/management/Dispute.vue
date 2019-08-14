@@ -167,7 +167,7 @@
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
           data-testid="dispute-messages"
-          @dispute:refresh="fetchData({ fetchMessages: true })"/>
+          @dispute:occurrences:get="getOccurrences()"/>
         <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Mensagem" name="1">
@@ -321,8 +321,7 @@
       <dispute-overview
         :dispute="dispute"
         :active-person.sync="activePerson"
-        data-testid="dispute-overview"
-        @dispute:refresh="fetchData({ fetchDispute: true })"/>
+        data-testid="dispute-overview" />
     </template>
   </JusViewMain>
 </template>
@@ -401,7 +400,7 @@ export default {
   },
   watch: {
     '$route.params.id': function (id) {
-      this.fetchData({ fetchDispute: true, fetchMessages: true })
+      this.getOccurrences()
     },
     showSearch (value) {
       if (!value) {
@@ -418,13 +417,13 @@ export default {
   },
   created () {
     this.id = this.$route.params.id
-    this.fetchData({ fetchMessages: true })
+    this.getOccurrences()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
     } else {
       this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
         this.unsettledTypes = response
-      }).finally(() => this.$store.dispatch('hideLoading'))
+      })
     }
   },
   destroyed () {
@@ -448,9 +447,6 @@ export default {
           message: 'Negociadores editados com sucesso.',
           type: 'success'
         })
-        setTimeout(function () {
-          this.fetchData({ fetchDispute: true })
-        }.bind(this), 1000)
         this.editNegotiatorDialogVisible = false
       }).catch(() => this.$jusNotification({ type: 'error' }))
     },
@@ -477,23 +473,19 @@ export default {
         })
       })
     },
-    fetchData (options) {
-      if (options.fetchMessages) {
-        this.$store.dispatch('getDisputeMessages', this.$route.params.id).then(response => {
-          if (!this.disputeMessages.length) {
-            this.disputeMessages = response.content
-          } else {
-            let newMessages = response.content.filter(i => {
-              return this.disputeMessages.map(e => {
-                return JSON.stringify(e)
-              }).indexOf(JSON.stringify(i)) < 0
-            })
-            this.disputeMessages.push(...newMessages)
-          }
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        })
-      }
+    getOccurrences () {
+      this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then(response => {
+        if (!this.disputeMessages.length) {
+          this.disputeMessages = response.content
+        } else {
+          let newMessages = response.content.filter(i => {
+            return this.disputeMessages.map(e => JSON.stringify(e)).indexOf(JSON.stringify(i)) < 0
+          })
+          this.disputeMessages.push(...newMessages)
+        }
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      })
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
@@ -551,13 +543,11 @@ export default {
           message: 'Ação realizada com sucesso.',
           type: 'success'
         })
-        setTimeout(function () {
-          this.fetchData({ fetchDispute: true, fetchMessages: true })
-        }.bind(this), 1000)
-      }).catch(() => this.$jusNotification({ type: 'error' }))
-        .finally(() => {
-          this.chooseUnsettledDialogVisible = false
-        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.chooseUnsettledDialogVisible = false
+      })
     },
     newLineMessage () {
       this.newMessage = `${this.newMessage}\n`
@@ -583,7 +573,7 @@ export default {
         }).then(() => {
           this.newChatMessage = ''
           setTimeout(function () {
-            this.fetchData({ fetchMessages: true })
+            this.getOccurrences()
           }.bind(this), 500)
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
@@ -615,7 +605,7 @@ export default {
               type: 'success'
             })
             setTimeout(function () {
-              this.fetchData({ fetchMessages: true })
+              this.getOccurrences()
               this.newMessage = ''
             }.bind(this), 500)
           }).catch(() => {
@@ -640,7 +630,7 @@ export default {
             message: 'Nota gravada com sucesso.',
             type: 'success'
           })
-          this.fetchData({ fetchMessages: true })
+          this.getOccurrences()
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {

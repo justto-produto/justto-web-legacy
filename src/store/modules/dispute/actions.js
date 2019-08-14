@@ -34,7 +34,7 @@ const disputeActions = {
         })
     })
   },
-  getDisputeMessages ({ commit }, id) {
+  getDisputeOccurrences ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/disputes/' + id + '/occurrences?sort=id,desc')
