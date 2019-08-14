@@ -425,24 +425,10 @@ export default {
             message: 'Os dados foram alterados com sucesso.',
             type: 'success'
           })
-          setTimeout(function () {
-            this.$emit('dispute:refresh')
-          }.bind(this), 1000)
           this.editDisputeDialogVisible = false
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         })
-    },
-    removeDispute () {
-      this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
-        confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'error'
-      }).then(() => {
-        this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
-          this.$router.push('/management')
-        })
-      })
     },
     buildTitle (role) {
       if (role.party === 'RESPONDENT') {
@@ -481,9 +467,8 @@ export default {
           }).then(response => {
             emails.push({ id: response.id, address: response.address })
             this.emailForm.email = ''
-            setTimeout(function () {
-              this.$emit('dispute:refresh')
-            }.bind(this), 1000)
+          }).catch(() => {
+            this.$jusNotification({ type: 'error' })
           })
         }
       })
@@ -497,9 +482,8 @@ export default {
           }).then(response => {
             phones.push({ id: response.id, number: response.number })
             this.phoneForm.phone = ''
-            setTimeout(function () {
-              this.$emit('dispute:refresh')
-            }.bind(this), 1000)
+          }).catch(() => {
+            this.$jusNotification({ type: 'error' })
           })
         }
       })
@@ -515,9 +499,8 @@ export default {
             oabs.push({ id: response.id, number: response.number, state: response.state })
             this.oabForm.oab = ''
             this.oabForm.state = ''
-            setTimeout(function () {
-              this.$emit('dispute:refresh')
-            }.bind(this), 1000)
+          }).catch(() => {
+            this.$jusNotification({ type: 'error' })
           })
         }
       })
@@ -528,12 +511,13 @@ export default {
         cancelButtonText: 'Cancelar',
         type: 'error'
       }).then(() => {
-        this.$delete(list, index)
-        this.$store.dispatch('removeEmail', emailBody).then(() => {
-          setTimeout(function () {
-            this.$emit('dispute:refresh')
-          }.bind(this), 1000)
-        })
+        this.$store.dispatch('removeEmail', emailBody)
+          .then(() => {
+            this.$delete(list, index)
+          })
+          .catch(() => {
+            this.$jusNotification({ type: 'error' })
+          })
       })
     },
     removePhone (phoneBody, list, index) {
@@ -542,12 +526,13 @@ export default {
         cancelButtonText: 'Cancelar',
         type: 'error'
       }).then(() => {
-        this.$delete(list, index)
-        this.$store.dispatch('removePhone', phoneBody).then(() => {
-          setTimeout(function () {
-            this.$emit('dispute:refresh')
-          }.bind(this), 1000)
-        })
+        this.$store.dispatch('removePhone', phoneBody)
+          .then(() => {
+            this.$delete(list, index)
+          })
+          .catch(() => {
+            this.$jusNotification({ type: 'error' })
+          })
       })
     },
     removeOab (oabBody, list, index) {
@@ -556,19 +541,21 @@ export default {
         cancelButtonText: 'Cancelar',
         type: 'error'
       }).then(() => {
-        this.$delete(list, index)
-        this.$store.dispatch('removeOab', oabBody).then(() => {
-          setTimeout(function () {
-            this.$emit('dispute:refresh')
-          }.bind(this), 1000)
-        })
+        this.$store.dispatch('removeOab', oabBody)
+          .then(() => {
+            this.$delete(list, index)
+          })
+          .catch(() => {
+            this.$jusNotification({ type: 'error' })
+          })
       })
     },
     openRoleDialog (role) {
       this.editRoleDialogVisible = true
       var roles = role.roles
       var party = role.party
-      this.roleForm.personId = role.id
+      this.roleForm.id = role.id
+      this.roleForm.personId = role.personId
       this.roleForm.title = this.buildTitle(role)
       this.roleForm.name = role.name
       this.roleForm.documentNumber = role.documentNumber
@@ -602,9 +589,6 @@ export default {
             message: 'Os dados foram alterados com sucesso.',
             type: 'success'
           })
-          setTimeout(function () {
-            this.$emit('dispute:refresh')
-          }.bind(this), 1000)
           this.editRoleDialogVisible = false
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
@@ -632,10 +616,9 @@ export default {
             message: 'Pessoa removida com sucesso.',
             type: 'success'
           })
-          setTimeout(function () {
-            this.$emit('dispute:refresh')
-          }.bind(this), 1000)
-        }).catch(() => this.$jusNotification({ type: 'error' }))
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        })
       })
     }
   }
