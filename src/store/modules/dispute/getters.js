@@ -20,19 +20,13 @@ const disputeGetters = {
     if (state.filters) {
       switch (state.filters.tab) {
         case '0':
-          filteredDisputes = filteredDisputes.filter(dispute => {
-            return dispute.status === 'ENGAGEMENT' && !dispute.hasInteraction && !dispute.paused
-          })
+          filteredDisputes = filteredDisputes.filter(d => d.tab === 'ENGAGEMENT')
           break
         case '1':
-          filteredDisputes = filteredDisputes.filter(dispute => {
-            return (dispute.status === 'ENGAGEMENT' || dispute.status === 'RUNNING') && dispute.hasInteraction
-          })
+          filteredDisputes = filteredDisputes.filter(d => d.tab === 'INTERACTION')
           break
         case '2':
-          filteredDisputes = filteredDisputes.filter(dispute => {
-            return dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT'
-          })
+          filteredDisputes = filteredDisputes.filter(d => d.tab === 'NEWDEALS')
           break
       }
       for (var term in state.filters.terms) {
