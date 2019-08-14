@@ -16,10 +16,50 @@
         :before-leave="handleChangeTab"
         v-model="activeTab"
         class="view-management__tabs">
-        <el-tab-pane name="0" label="Engajamento"/>
-        <el-tab-pane name="1" label="Com Interação"/>
-        <el-tab-pane name="2" label="Novos Acordos"/>
-        <el-tab-pane name="3" label="Todos"/>
+        <el-tab-pane name="0">
+          <span slot="label">
+            Engajamento
+            <el-badge
+              :hidden="!engagementLength"
+              :value="engagementLength"
+              :max="99"
+              type="primary"
+              class="el-badge--inline" />
+          </span>
+        </el-tab-pane>
+        <el-tab-pane name="1" label="Com Interação">
+          <span slot="label">
+            Com Interação
+            <el-badge
+              :hidden="!interactionLength"
+              :value="interactionLength"
+              :max="99"
+              type="primary"
+              class="el-badge--inline" />
+          </span>
+        </el-tab-pane>
+        <el-tab-pane name="2" label="Com Interação">
+          <span slot="label">
+            Novos Acordos
+            <el-badge
+              :hidden="!newDealsLength"
+              :value="newDealsLength"
+              :max="99"
+              type="primary"
+              class="el-badge--inline" />
+          </span>
+        </el-tab-pane>
+        <el-tab-pane name="3" label="Com Interação">
+          <span slot="label">
+            Todos
+            <el-badge
+              :hidden="!allLength"
+              :value="allLength"
+              :max="99"
+              type="primary"
+              class="el-badge--inline" />
+          </span>
+        </el-tab-pane>
       </el-tabs>
       <div class="view-management__actions">
         <jus-filter-button />
@@ -340,6 +380,18 @@ export default {
       set (disputesPerPage) {
         return this.$store.commit('setDisputesPerPage', disputesPerPage)
       }
+    },
+    engagementLength () {
+      return this.$store.getters.disputes.filter(d => d.tab === 'ENGAGEMENT').length
+    },
+    interactionLength () {
+      return this.$store.getters.disputes.filter(d => d.tab === 'INTERACTION').length
+    },
+    newDealsLength () {
+      return this.$store.getters.disputes.filter(d => d.tab === 'NEWDEALS').length
+    },
+    allLength () {
+      return this.$store.getters.disputes.length
     }
   },
   beforeMount () {

@@ -148,6 +148,8 @@ export default {
                       this.$router.push('/management')
                     }.bind(this), 1000)
                   }).catch(() => this.mountError())
+                } else {
+                  this.$router.push('/management')
                 }
               }).catch(() => this.mountError())
             })
