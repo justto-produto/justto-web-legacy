@@ -23,7 +23,6 @@
               :hidden="!engagementLength"
               :value="engagementLength"
               :max="99"
-              type="primary"
               class="el-badge--inline" />
           </span>
         </el-tab-pane>
@@ -34,7 +33,6 @@
               :hidden="!interactionLength"
               :value="interactionLength"
               :max="99"
-              type="primary"
               class="el-badge--inline" />
           </span>
         </el-tab-pane>
@@ -45,7 +43,6 @@
               :hidden="!newDealsLength"
               :value="newDealsLength"
               :max="99"
-              type="primary"
               class="el-badge--inline" />
           </span>
         </el-tab-pane>
@@ -56,7 +53,6 @@
               :hidden="!allLength"
               :value="allLength"
               :max="99"
-              type="primary"
               class="el-badge--inline" />
           </span>
         </el-tab-pane>
@@ -525,6 +521,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .view-management {
   .jus-main-view__title {
     position: relative;
@@ -541,7 +539,7 @@ export default {
       height: 20px;
       width: 20px;
       font-size: 1.4rem;
-      color: #adadad;
+      color: $--color-text-secondary;
     }
     .owl-nav {
       position: absolute;
@@ -570,7 +568,7 @@ export default {
     left: 23px;
     right: 36px;
     top: 21px;
-    background-color: #fff;
+    background-color: $--color-white;
     z-index: 2;
     padding-top: 20px;
     border-radius: 5px 5px 0 0;
@@ -578,6 +576,16 @@ export default {
       width: fit-content;
       padding: 0 20px;
       margin: 0px 0 20px;
+    }
+    .el-tabs__item {
+      .el-badge__content {
+        background-color: $--color-primary-light-7;
+      }
+      &.is-active {
+        .el-badge__content {
+          background-color: $--color-primary;
+        }
+      }
     }
   }
   &__actions {

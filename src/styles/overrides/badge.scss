@@ -1,9 +1,4 @@
-@import '../colors';
-
 .el-badge {
-  &__content--secondary  {
-    background-color: $--color-secondary;
-  }
   &--inline {
     vertical-align: middle;
     vertical-align: -webkit-baseline-middle;
