@@ -454,7 +454,8 @@ export default {
       this.disputeNegotiators = this.dispute.disputeRoles.filter((negotiator) => {
         return negotiator.roles.includes('NEGOTIATOR') === true
       }).map(member => {
-        return member.person.id
+        
+        return member.personId
       })
       this.editNegotiatorDialogVisible = true
     },
