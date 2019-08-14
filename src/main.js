@@ -19,6 +19,7 @@ import '@/plugins/socket'
 import '@/filters/capitalize'
 import '@/filters/currency'
 import '@/filters/firstName'
+import '@/filters/phoneMask'
 
 // css
 import '@/styles/core.scss'
