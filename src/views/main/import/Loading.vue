@@ -34,8 +34,8 @@
       </transition>
     </div>
     <el-button
-      :plain="showGif < 5"
-      :loading="showGif < 5"
+      :plain="showGif < 6"
+      :loading="showGif < 6"
       type="primary"
       data-testid="submit"
       @click="$router.push('/management')">
@@ -61,17 +61,18 @@ export default {
       if (self.showGif === 0) {
         setTimeout(function () {
           self.showGif++
-          if (self.showGif < 5) {
-            self.increaseShow()
-          }
+          self.increaseShow()
         }, 1000)
-      } else {
+      } else if (self.showGif < 5) {
         setTimeout(function () {
           self.showGif++
-          if (self.showGif < 5) {
-            self.increaseShow()
-          }
+          self.increaseShow()
         }, 2000)
+      } else if (self.showGif === 5) {
+        setTimeout(function () {
+          self.showGif++
+          self.increaseShow()
+        }, Math.floor(Math.random() * 2000))
       }
     }
   }
