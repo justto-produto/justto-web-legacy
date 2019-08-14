@@ -10,7 +10,8 @@ const disputeGetters = {
   },
   disputeFiltersTerm: state => state.filters.filterTerm,
   filterPersonId: state => state.filters.filterPersonId,
-  findById: (state) => (disputeId) => {
+  findDisputeDTOById: (state) => (disputeId) => state.disputesDTO.find(d => d.id === parseInt(disputeId)),
+  findDisputeById: (state) => (disputeId) => {
     let dispute = state.disputesDTO.find(d => d.id === parseInt(disputeId))
     return getDisputeVM(dispute)
   },
@@ -19,19 +20,13 @@ const disputeGetters = {
     if (state.filters) {
       switch (state.filters.tab) {
         case '0':
-          filteredDisputes = filteredDisputes.filter(dispute => {
-            return dispute.status === 'ENGAGEMENT' && !dispute.hasInteraction && !dispute.paused
-          })
+          filteredDisputes = filteredDisputes.filter(d => d.tab === 'ENGAGEMENT')
           break
         case '1':
-          filteredDisputes = filteredDisputes.filter(dispute => {
-            return (dispute.status === 'ENGAGEMENT' || dispute.status === 'RUNNING') && dispute.hasInteraction
-          })
+          filteredDisputes = filteredDisputes.filter(d => d.tab === 'INTERACTION')
           break
         case '2':
-          filteredDisputes = filteredDisputes.filter(dispute => {
-            return dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT'
-          })
+          filteredDisputes = filteredDisputes.filter(d => d.tab === 'NEWDEALS')
           break
       }
       for (var term in state.filters.terms) {

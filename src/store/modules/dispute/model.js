@@ -54,7 +54,8 @@ const getDisputeVM = function (dispute) {
     isDeal: ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(dispute.status),
     hasInteraction: dispute.hasInteraction,
     lastOfferPercentToUpperRange: 0,
-    paused: dispute.paused
+    paused: dispute.paused,
+    tab: 'ALL'
   }
   let object = dispute.objects.length ? dispute.objects[0] : null
   if (object) {
@@ -82,6 +83,13 @@ const getDisputeVM = function (dispute) {
   }).length
   if (vm.lastCounterOfferValue !== '0.0') {
     vm.lastOfferPercentToUpperRange = vm.lastOfferValue / vm.disputeUpperRange * 100
+  }
+  if (vm.status === 'ENGAGEMENT' && !vm.hasInteraction && !vm.paused) {
+    vm.tab = 'ENGAGEMENT'
+  } else if ((vm.status === 'ENGAGEMENT' || vm.status === 'RUNNING') && vm.hasInteraction) {
+    vm.tab = 'INTERACTION'
+  } else if (vm.status === 'ACCEPTED' || vm.status === 'CHECKOUT') {
+    vm.tab = 'NEWDEALS'
   }
   return vm
 }
