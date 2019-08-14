@@ -186,9 +186,8 @@ export default {
       this.$store.dispatch('createWorkpace', {
         name: this.responses.team,
         subDomain: this.responses.subdomain
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
       }).finally(() => {
+        this.$store.dispatch('refreshToken')
         this.$store.dispatch('myWorkspace').then(response => {
           if (response.length && response[response.length - 1].subDomain === this.responses.subdomain) {
             this.$refs.swiper.swiper.slideNext(800)
