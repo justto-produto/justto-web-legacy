@@ -1,12 +1,12 @@
 const FileSaver = require('file-saver')
 
 const disputeActions = {
-  getDisputes ({ commit, rootState }, query) {
+  loadDisputes ({ commit, rootState }, query) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes?pageSize=20000')
+      axios.put('api/disputes/actions/load')
         .then(response => {
-          commit('setDisputes', response.data.content)
+          // commit('setDisputes', response.data.content)
           resolve(response.data)
         })
         .catch(error => {
@@ -37,7 +37,7 @@ const disputeActions = {
   getDisputeOccurrences ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/occurrences?sort=id,desc')
+      axios.get('api/disputes/' + id + '/occurrences?sort=id,asc&size=100000')
         .then(response => {
           resolve(response.data)
         })
@@ -108,7 +108,7 @@ const disputeActions = {
   editDispute ({ commit }, dispute) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/', dispute)
+      axios.put('api/disputes/' + dispute.id + '/update', dispute)
         .then(response => {
           resolve(response.data)
         }).catch(error => {

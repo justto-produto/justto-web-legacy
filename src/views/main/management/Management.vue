@@ -24,13 +24,6 @@
       <div class="view-management__actions">
         <jus-filter-button />
         <el-button
-          icon="el-icon-refresh"
-          plain
-          data-testid="update-cases"
-          @click="getDisputes()">
-          Atualizar
-        </el-button>
-        <el-button
           :plain="!Object.keys(filters.terms).length"
           :type="Object.keys(filters.terms).length ? 'primary' : ''"
           @click="showFilters = true">
@@ -364,16 +357,6 @@ export default {
   methods: {
     adjustHeight () {
       this.tableHeigth = this.$refs.tableContainer.clientHeight
-    },
-    getDisputes () {
-      this.$store.commit('showLoading')
-      this.$store.dispatch('getDisputes')
-        .catch(() => {
-          this.$jusNotification({ type: 'error' })
-        })
-        .finally(() => {
-          this.$store.commit('hideLoading')
-        })
     },
     applyFilters () {
       if (this.activeFilters.hasOwnProperty('disputeDealValue') && this.activeFilters.disputedealvalue === 0) {

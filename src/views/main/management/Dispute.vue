@@ -374,7 +374,7 @@ export default {
       }
     },
     dispute () {
-      return this.$store.getters.findById(this.id)
+      return this.$store.getters.findDisputeById(this.id)
     },
     filteredDisputeMessages () {
       if (this.searchTerm) {
