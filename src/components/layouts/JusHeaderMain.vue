@@ -6,7 +6,7 @@
         v-model="disputeId"
         :trigger-on-focus="false"
         :fetch-suggestions="search"
-        placeholder="Busque aqui os suas disputas">
+        placeholder="Busque aqui as suas disputas">
         <template slot-scope="{ item }">
           <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
             <jus-dispute-resume :dispute="item" />

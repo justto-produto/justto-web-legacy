@@ -94,6 +94,27 @@ const account = {
           })
       })
     },
+    refreshToken ({ commit }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('api/accounts/refresh-token')
+          .then(response => {
+            // eslint-disable-next-line
+            delete axios.defaults.headers.common['Authorization']
+            const token = response.data.token
+            // eslint-disable-next-line
+            axios.defaults.headers.common['Authorization'] = token
+            localStorage.setItem('justoken', token)
+            commit('authSuccess', token)
+            resolve(response)
+          })
+          .catch(error => {
+            commit('authError')
+            localStorage.removeItem('justoken')
+            reject(error)
+          })
+      })
+    },
     logout ({ commit }, options) {
       commit('logout')
       commit('clearPerson')

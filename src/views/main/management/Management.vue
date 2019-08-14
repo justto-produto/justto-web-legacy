@@ -31,11 +31,11 @@
           <span slot="label">
             Com Interação
             <el-badge
-            :hidden="!interactionLength"
-            :value="interactionLength"
-            :max="99"
-            type="primary"
-            class="el-badge--inline" />
+              :hidden="!interactionLength"
+              :value="interactionLength"
+              :max="99"
+              type="primary"
+              class="el-badge--inline" />
           </span>
         </el-tab-pane>
         <el-tab-pane name="2" label="Com Interação">

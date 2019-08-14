@@ -17,12 +17,13 @@ const disputeActions = {
   exportDisputes ({ rootState }, disputeIds) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/search/' + rootState.workspaceModule.id + '/t_el_disputes/export', {
+      axios.get('api/search/' + rootState.workspaceModule.id + '/v_el_disputes/export', {
         responseType: 'arraybuffer',
         query: { bool: { must: [{ terms: { disputeid: disputeIds } }] } } })
         .then(response => {
           const blob = new Blob([response.data], {
-            type: 'application/vnd.ms-excel'
+            // type: 'application/vnd.ms-excel'
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
           })
           let reg = /(?:filename\*?=)(?<filename>(['"])[\s\S]*?\2|[^;\n]*)/
           let fileName = response.headers['content-disposition'].match(reg).groups.filename
