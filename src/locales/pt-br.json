@@ -10,6 +10,9 @@
   "disputeClassification": {
     "name": "classificação"
   },
+  "disputeClassificationDetail": {
+    "name": "subclassificação"
+  },
   "disputeSubClassification": {
     "name": "subclassificação"
   },
