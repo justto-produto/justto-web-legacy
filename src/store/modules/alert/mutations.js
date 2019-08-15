@@ -5,7 +5,7 @@ const alertMutations = {
     state.alerts = []
   },
   addAlert (state, alert) {
-    state.alerts.push(alert)
+    if (!state.alerts.find(a => a.id === alert.id)) { state.alerts.push(alert) }
   },
   removeAlert (state, alertChanged) {
     Vue.nextTick(() => {

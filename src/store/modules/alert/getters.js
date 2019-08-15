@@ -1,24 +1,22 @@
 
 const alertGetters = {
   findDisputeAlertById: (state) => (entityId) => {
-    let disputeAlerts = state.alerts.filter(d => d.childId === parseInt(entityId) && d.source === 'DISPUTE')
-    return disputeAlerts
+    return state.alerts.filter(d => d.source === 'DISPUTE' && d.childId === parseInt(entityId))
   },
   findDisputeOrgAlertById: (state) => (entityId) => {
-    let disputeAlerts = state.alerts.filter(d => d.childId === parseInt(entityId) && d.source === 'DISPUTE_ORG')
-    return disputeAlerts
+    return state.alerts.filter(d => d.source === 'DISPUTE_ORG' && d.childId === parseInt(entityId))
   },
   findPersonAlertById: (state) => (entityId) => {
-    let disputeAlerts = state.alerts.filter(d => d.childId === parseInt(entityId) && d.source === 'PERSON')
-    return disputeAlerts
+    return state.alerts.filter(d => d.source === 'PERSON' && d.childId === parseInt(entityId))
   },
   findOABAlertById: (state) => (entityId) => {
-    let disputeAlerts = state.alerts.filter(d => d.childId === parseInt(entityId) && d.source === 'OAB')
-    return disputeAlerts
+    return state.alerts.filter(d => d.source === 'OAB' && d.childId === parseInt(entityId))
   },
   findEmailAlertById: (state) => (entityId) => {
-    let disputeAlerts = state.alerts.filter(d => d.childId === parseInt(entityId) && d.source === 'EMAIL')
-    return disputeAlerts
+    return state.alerts.filter(d => d.source === 'EMAIL' && d.childId === parseInt(entityId))
+  },
+  findPhoneAlertById: (state) => (entityId) => {
+    return state.alerts.filter(d => d.source === 'PHONE' && d.childId === parseInt(entityId))
   }
 }
 
