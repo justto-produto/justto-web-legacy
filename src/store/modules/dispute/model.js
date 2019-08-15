@@ -55,11 +55,12 @@ const getDisputeVM = function (dispute) {
     hasInteraction: dispute.hasInteraction,
     lastOfferPercentToUpperRange: 0,
     paused: dispute.paused,
-    tab: 'ALL'
+    tab: 'ALL',
+    conclusionReasons: dispute.conclusion ? dispute.conclusion.reasons : null
   }
   let object = dispute.objects.length ? dispute.objects[0] : null
   if (object) {
-    vm.disputeUpperRange = object.respondentBoundary ? object.respondentBoundary.boundary : 0
+    vm.disputeUpperRange = object.respondentBoundary ? object.respondentBoundary.boundary : '0.0'
     let lastOfferValue = object.offers.filter(o => o.role.party === 'RESPONDENT')
     let lastCounterOfferValue = object.offers.filter(o => o.role.party === 'CLAIMANT')
     if (lastOfferValue.length) {

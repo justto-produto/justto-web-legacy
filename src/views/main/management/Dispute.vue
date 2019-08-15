@@ -320,7 +320,7 @@
         </el-tooltip>
       </div>
       <dispute-overview
-        :dispute="dispute"
+        :dispute.sync="dispute"
         :active-person.sync="activePerson"
         data-testid="dispute-overview" />
     </template>
