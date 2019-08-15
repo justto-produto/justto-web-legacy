@@ -1,6 +1,6 @@
 <template>
   <div :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass + ' ' + activeClass" class="jus-avatar-user">
-    <img v-if="avatarSrc" :src="avatarSrc">
+    <img v-if="validate" :src="avatarSrc">
     <span v-else>
       {{ nameInitials.toUpperCase() }}
     </span>
@@ -44,12 +44,18 @@ export default {
     }
   },
   computed: {
+    validate () {
+      if (this.src) return true
+      if (this.name.split('').includes('@')) return true
+      if (/^\d/.test(this.name)) return true
+      return false
+    },
     avatarSrc () {
       if (this.src) {
         return this.src
-      } else if (!this.name) {
+      } else {
         return require('@/assets/icons/ic-user.svg')
-      } else return ''
+      }
     },
     shapeClass () {
       return 'jus-avatar-user--' + this.shape

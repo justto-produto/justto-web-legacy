@@ -105,6 +105,7 @@ const getLastInteractionTooltip = function (type) {
 }
 
 const isBase64 = function (str) {
+  if (!str) return false
   if (str === '' || str.trim() === '') return false
   try {
     return btoa(atob(str)) == str
