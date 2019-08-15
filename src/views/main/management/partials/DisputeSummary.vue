@@ -46,6 +46,25 @@
           </div>
         </template>
       </el-step>
+
+      <el-step v-if="dispute.status">
+        <template slot="title">Status</template>
+        <template slot="description">
+          {{ $t('occurrence.type.' + dispute.status) | capitalize }}
+          <el-select
+            v-if="dispute.status === 'UNSETTLED'"
+            v-model="unsettledReason"
+            class="case-view__unsettled-types"
+            @change="changeReasonStatus">
+            <el-option
+              v-for="(type, index) in unsettledTypes"
+              :key="index"
+              :label="type"
+              :value="index" />
+          </el-select>
+        </template>
+      </el-step>
+
     </el-steps>
   </div>
 </template>
@@ -62,11 +81,30 @@ export default {
     showScheduled: {
       default: false,
       type: Boolean
+    },
+    unsettledTypes: {
+      default: () => {},
+      type: Object
     }
   },
   data () {
     return {
-      scheduled: false
+      scheduled: false,
+      unsettledReason: this.dispute.conclusionReasons[0]
+    }
+  },
+  methods: {
+    changeReasonStatus () {
+      this.$store.dispatch('editCaseReason', {
+        disputeId: this.dispute.id,
+        reasonValue: this.unsettledTypes[this.unsettledReason]
+      }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Motivo de perda alterado com sucesso.',
+          type: 'success'
+        })
+      }).catch(() => this.$jusNotification({ type: 'error' }))
     }
   },
   watch: {
@@ -95,5 +133,10 @@ export default {
     width: 100%;
     margin-top: 10px;
   }
+}
+
+.case-view__unsettled-types {
+  width: 100%;
+  margin-top: 10px;
 }
 </style>
