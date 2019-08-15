@@ -40,7 +40,7 @@ const disputeMutations = {
         state.disputesDTO.push(disputeChanged)
       } else {
         let dispute = state.disputesDTO.find(d => disputeChanged.id === d.id)
-        if (moment(dispute.updateAt.dateTime).isSaremoveDisputeFromLisremoveDisputeFromListmeOrBefore(moment(disputeChanged.updateAt.dateTime))) {
+        if (moment(dispute.updateAt.dateTime).isSameOrBefore(moment(disputeChanged.updateAt.dateTime))) {
           Vue.set(state.disputesDTO, disputeIndex, disputeChanged)
         }
       }
