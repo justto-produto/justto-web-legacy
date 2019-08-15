@@ -1,4 +1,4 @@
-t pu<template>
+<template>
   <div class="jus-import-feedback-card">
     <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ campaignTitle }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
@@ -185,7 +185,7 @@ export default {
     },
     dueDate (value) {
       this.mappedCampaign.deadline = {
-        dateTime: this.$moment(value).format()
+        dateTime: this.$moment(value).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       }
     },
     negotiatorIds (value) {

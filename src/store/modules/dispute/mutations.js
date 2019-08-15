@@ -46,14 +46,10 @@ const disputeMutations = {
       }
     })
   },
-  removeDisputeFromList (state, disputeId) {
+  removeDisputeFromList (state, disputeChanged) {
     Vue.nextTick(() => {
-      state.disputesDTO = state.disputesDTO.filter(dispute => {
-        if (dispute.id === disputeId) {
-          return false
-        }
-        return true
-      })
+      let disputeIndex = state.disputesDTO.findIndex(d => disputeChanged.id === d.id)
+      Vue.delete(state.disputesDTO, disputeIndex)
     })
   },
   setDisputeStatuses (state, status) {
