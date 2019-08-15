@@ -23,7 +23,6 @@
               :hidden="!engagementLength"
               :value="engagementLength"
               :max="99"
-              type="primary"
               class="el-badge--inline" />
           </span>
         </el-tab-pane>
@@ -34,7 +33,6 @@
               :hidden="!interactionLength"
               :value="interactionLength"
               :max="99"
-              type="primary"
               class="el-badge--inline" />
           </span>
         </el-tab-pane>
@@ -45,7 +43,6 @@
               :hidden="!newDealsLength"
               :value="newDealsLength"
               :max="99"
-              type="primary"
               class="el-badge--inline" />
           </span>
         </el-tab-pane>
@@ -56,7 +53,6 @@
               :hidden="!allLength"
               :value="allLength"
               :max="99"
-              type="primary"
               class="el-badge--inline" />
           </span>
         </el-tab-pane>
@@ -88,7 +84,6 @@
           :key="tableKey"
           :height="tableHeigth"
           :data="paginatedDisputes"
-          :row-class-name="handleRowClassName"
           size="mini"
           class="el-table--disputes"
           data-testid="dispute-index"
@@ -104,7 +99,7 @@
           <el-table-column
             label="Disputa"
             min-width="94px"
-            prop="disputeId"
+            prop="id"
             sortable="custom">
             <template slot-scope="scope">#{{ scope.row.id }}</template>
           </el-table-column>
@@ -434,11 +429,6 @@ export default {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
-    handleRowClassName (obj) {
-      if (this.$store.getters.disputesUpdatingList.includes(obj.row.id)) {
-        return 'el-table__row--loading'
-      }
-    },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {
         this.clearSelection()
@@ -525,6 +515,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .view-management {
   .jus-main-view__title {
     position: relative;
@@ -541,7 +533,7 @@ export default {
       height: 20px;
       width: 20px;
       font-size: 1.4rem;
-      color: #adadad;
+      color: $--color-text-secondary;
     }
     .owl-nav {
       position: absolute;
@@ -570,7 +562,7 @@ export default {
     left: 23px;
     right: 36px;
     top: 21px;
-    background-color: #fff;
+    background-color: $--color-white;
     z-index: 2;
     padding-top: 20px;
     border-radius: 5px 5px 0 0;
@@ -578,6 +570,16 @@ export default {
       width: fit-content;
       padding: 0 20px;
       margin: 0px 0 20px;
+    }
+    .el-tabs__item {
+      .el-badge__content {
+        background-color: $--color-primary-light-7;
+      }
+      &.is-active {
+        .el-badge__content {
+          background-color: $--color-primary;
+        }
+      }
     }
   }
   &__actions {

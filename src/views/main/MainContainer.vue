@@ -101,6 +101,7 @@ export default {
       }
       this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp' })
       this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute' })
+      this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/alert' })
     }
   }
 }

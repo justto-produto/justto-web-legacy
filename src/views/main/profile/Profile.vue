@@ -198,7 +198,7 @@ export default {
   },
   mounted () {
     this.getMembers()
-    this.person = JSON.parse(JSON.stringify(this.$store.state.personModule.person))
+    this.person = JSON.parse(JSON.stringify(this.$store.getters.currentPerson))
     this.teamName = this.$store.state.workspaceModule.name + ''
   },
   methods: {

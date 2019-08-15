@@ -166,6 +166,7 @@
           :messages-prop="filteredDisputeMessages"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
+          :loading="loadingOccurrences"
           data-testid="dispute-messages"
           @dispute:occurrences:get="getOccurrences()"/>
         <div class="dispute-view__send-message">
@@ -357,7 +358,8 @@ export default {
       unsettledTypes: {},
       unsettledType: null,
       typingTab: '1',
-      loadingTextarea: false
+      loadingTextarea: false,
+      loadingOccurrences: false
     }
   },
   computed: {
@@ -365,10 +367,10 @@ export default {
       return this.$store.getters.whatsappStatus
     },
     validName () {
-      if (this.$store.state.personModule.person.name && this.$store.state.personModule.person.name !== this.$store.state.accountModule.email) {
+      if (this.$store.getters.currentPersonName && this.$store.getters.currentPersonName !== this.$store.state.accountModule.email) {
         return true
       } else {
-        if (!this.$store.state.personModule.person.name || (this.$store.state.personModule.person.name === this.$store.state.accountModule.email)) {
+        if (!this.$store.getters.currentPersonName || (this.$store.getters.currentPersonName === this.$store.state.accountModule.email)) {
           return false
         }
       }
@@ -474,6 +476,7 @@ export default {
       })
     },
     getOccurrences () {
+      this.loadingOccurrences = true
       this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then(response => {
         if (!this.disputeMessages.length) {
           this.disputeMessages = response.content
@@ -485,6 +488,8 @@ export default {
         }
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.loadingOccurrences = false
       })
     },
     handleTabClick (tab) {

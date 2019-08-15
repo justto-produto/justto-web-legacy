@@ -56,6 +56,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .jus-filter-button {
   position: relative;
   width: 56px;
@@ -66,21 +68,20 @@ export default {
   }
   .el-input__inner {
     transition: width 0.5s ease, padding 0.5s ease;
-    width: 436px;
+    width: 303px;
     border-left: 0;
     &:hover {
-      border-left: 1px solid #424242;
+      border-left: 1px solid $--color-text-regular;
     }
     &:focus {
-      border-left: 1px solid #9461f7;
+      border-left: 1px solid $--color-primary;
     }
   }
   .el-input-group__prepend {
     border-right: 1px solid #dcdfe6;
-    background-color: #fff;
-    // pointer-events: none;
+    background-color: $--color-white;
     &:hover {
-      border-color: #9461f7;
+      border-color: $--color-primary;;
     }
   }
   &--collapse {

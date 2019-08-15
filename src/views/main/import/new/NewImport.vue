@@ -45,7 +45,6 @@
 <script>
 import CheckLinesStep from './steps/CheckLinesStep'
 import ColumnsStep from './steps/ColumnsStep'
-// import EnrichmentStep from './steps/EnrichmentStep'
 import CampaignStep from './steps/CampaignStep'
 
 export default {
@@ -53,7 +52,6 @@ export default {
   components: {
     CheckLinesStep,
     ColumnsStep,
-    // EnrichmentStep,
     CampaignStep
   },
   data () {
@@ -99,13 +97,11 @@ export default {
       for (let mappedCampaign of this.mappedCampaigns) {
         let campaign = JSON.parse(JSON.stringify(mappedCampaign))
         if (this.checkValidCampaign(campaign)) {
-          campaign.deadline = this.$moment(campaign.deadline).format()
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
-          campaign.strategyId = campaign.strategy.id
           campaignsTrack.push({
             name: campaign.name,
-            strategy: campaign.strategy.name
+            strategy: campaign.strategy
           })
           delete campaign.campaign
           delete campaign.rows
@@ -114,7 +110,6 @@ export default {
           delete campaign.id
           delete campaign.updatedAt
           delete campaign.updatedBy
-          delete campaign.strategy
           promises.push(this.$store.dispatch('createCampaign', campaign))
           allValid = true
         } else {

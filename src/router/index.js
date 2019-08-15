@@ -85,35 +85,6 @@ const router = new Router({
         }
       ]
     },
-    // {
-    //   path: '/profile',
-    //   component: () => import(/* webpackChunkName: "profileContainer" */ '@/views/profile/ProfileContainer'),
-    //   meta: {
-    //     requiresAuth: true
-    //   },
-    //   children: [
-    //     {
-    //       path: '/',
-    //       component: () => import(/* webpackChunkName: "profileIndex" */ '@/views/profile')
-    //     },
-    //     {
-    //       path: 'notifications',
-    //       component: () => import(/* webpackChunkName: "notificationsIndex" */ '@/views/profile/Notifications')
-    //     },
-    //     {
-    //       path: 'setup',
-    //       component: () => import(/* webpackChunkName: "setupIndex" */ '@/views/profile/Setup')
-    //     },
-    //     {
-    //       path: 'activities',
-    //       component: () => import(/* webpackChunkName: "activitiesIndex" */ '@/views/profile/Activities')
-    //     },
-    //     {
-    //       path: 'users',
-    //       component: () => import(/* webpackChunkName: "usersIndex" */ '@/views/profile/Users')
-    //     }
-    //   ]
-    // },
     {
       name: 'login',
       path: '/login',
@@ -191,9 +162,6 @@ router.afterEach((to, from) => {
   if (to.matched.some(record => record.meta.requiresTrack)) {
     window.analytics.page(to.name)
   }
-  // if (from.name === 'importNew') {
-  //   window.analytics.track('Importação interrompida')
-  // }
   if (to.name === 'onboarding' || to.name === 'login' || to.name === 'register' || to.name === 'forgot-password') {
     document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width,initial-scale=1.0')
   } else {

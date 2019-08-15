@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.state.personModule.person.name
+      return this.$store.getters.currentPersonName
     },
     workspace () {
       return this.$store.state.workspaceModule.name
