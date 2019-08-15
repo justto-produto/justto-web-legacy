@@ -14,6 +14,20 @@ const disputeActions = {
         })
     })
   },
+  editCaseReason ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.put('api/disputes/' + params.disputeId + '/update-reason', {
+        reason: params.reasonValue
+      })
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   exportDisputes ({ rootState }, disputeIds) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

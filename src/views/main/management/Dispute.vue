@@ -17,6 +17,7 @@
         v-if="dispute.strategy"
         :key="componentKey"
         :dispute="dispute"
+        :unsettledTypes="unsettledTypes"
         :show-scheduled.sync="showScheduled"
         data-testid="dispute-summary" />
     </template>
