@@ -41,7 +41,7 @@
           <div v-if="dispute.isDeal">
             {{ dispute.disputeDealValue | currency }}
           </div>
-          <div else>
+          <div v-else>
             {{ dispute.lastOfferValue | currency }}
           </div>
         </template>
