@@ -108,7 +108,7 @@ const isBase64 = function (str) {
   if (!str) return false
   if (str === '' || str.trim() === '') return false
   try {
-    return btoa(atob(str)) == str
+    return btoa(atob(str)) === str
   } catch (err) {
     return false
   }

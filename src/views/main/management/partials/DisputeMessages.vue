@@ -181,7 +181,7 @@ export default {
     },
     processMessage (content) {
       if (isBase64(content)) {
-        return '<center><img src="data:image/png;base64,' + content +'"/></center>'
+        return '<center><img src="data:image/png;base64,' + content + '"/></center>'
       }
       return content
     },
