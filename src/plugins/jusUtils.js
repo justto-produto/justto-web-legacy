@@ -104,11 +104,21 @@ const getLastInteractionTooltip = function (type) {
   }
 }
 
+const isBase64 = function (str) {
+  if (str === '' || str.trim() === '') return false
+  try {
+    return btoa(atob(str)) == str
+  } catch (err) {
+    return false
+  }
+}
+
 export {
   getRoles,
   getFirstRole,
   fuseSearchDisputes,
   getLastInteraction,
   getLastInteractionIcon,
-  getLastInteractionTooltip
+  getLastInteractionTooltip,
+  isBase64
 }

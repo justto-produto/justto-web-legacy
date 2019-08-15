@@ -84,7 +84,6 @@
           :key="tableKey"
           :height="tableHeigth"
           :data="paginatedDisputes"
-          :row-class-name="handleRowClassName"
           size="mini"
           class="el-table--disputes"
           data-testid="dispute-index"
@@ -100,7 +99,7 @@
           <el-table-column
             label="Disputa"
             min-width="94px"
-            prop="disputeId"
+            prop="id"
             sortable="custom">
             <template slot-scope="scope">#{{ scope.row.id }}</template>
           </el-table-column>
@@ -428,11 +427,6 @@ export default {
     handleRowClick (row, column, event) {
       if (row.id && event.target.tagName !== 'IMG') {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
-      }
-    },
-    handleRowClassName (obj) {
-      if (this.$store.getters.disputesUpdatingList.includes(obj.row.id)) {
-        return 'el-table__row--loading'
       }
     },
     handleChangeTab (newTab, oldTab) {

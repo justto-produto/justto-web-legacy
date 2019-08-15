@@ -177,7 +177,6 @@ const disputeGetters = {
   },
   disputeStatuses: state => state.statuses,
   disputeActiveTab: state => state.filters.tab,
-  disputesUpdatingList: state => state.updatingList,
   disputesPerPage: state => state.filters.perPage
 }
 

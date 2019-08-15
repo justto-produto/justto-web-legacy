@@ -16,8 +16,7 @@ const dispute = {
         order: null
       }
     },
-    statuses: {},
-    updatingList: []
+    statuses: {}
   },
   mutations: mutations,
   actions: actions,

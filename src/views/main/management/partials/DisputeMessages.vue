@@ -1,5 +1,5 @@
 <template>
-  <ul v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
+  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-messages">
     <li
       v-for="occurrence in occurrences"
       v-if="occurrence.message ? occurrence.message.status !== 'CANCELED' : true"
@@ -18,7 +18,7 @@
               @click="showMessageDialog(occurrence.message.content)">
               Visualizar email
             </el-button>
-            <span v-else v-html="occurrence.message && occurrence.message.content" />
+            <span v-else v-html="occurrence.message && processMessage(occurrence.message.content)" />
             <i v-if="directionClass(occurrence) === 'NOTE'">
               <br>
               <jus-icon icon="eye" style="vertical-align: sub;"/>
@@ -76,6 +76,8 @@
 </template>
 
 <script>
+import { isBase64 } from '@/plugins/jusUtils'
+
 export default {
   name: 'DisputeMessages',
   props: {
@@ -84,6 +86,10 @@ export default {
       default: () => []
     },
     showScheduled: {
+      type: Boolean,
+      default: false
+    },
+    loading: {
       type: Boolean,
       default: false
     },
@@ -172,6 +178,12 @@ export default {
       if (type === 'INTERACTION' || type === 'COMMUNICATION' || type === 'NOTE') {
         return true
       } return false
+    },
+    processMessage (content) {
+      if (isBase64(content)) {
+        return '<center><img src="data:image/png;base64,' + content +'"/></center>'
+      }
+      return content
     },
     showMessageDialog (content) {
       this.messageContent = content

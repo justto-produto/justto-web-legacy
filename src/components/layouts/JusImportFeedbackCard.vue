@@ -139,6 +139,7 @@ export default {
       campaignName: '',
       campaignTimeout: null,
       strategy: '',
+      strategyId: '',
       dialogVisible: false,
       dueDate: null,
       negotiatorIds: [],
@@ -163,7 +164,7 @@ export default {
       let isStrategy = false
       if (this.strategy && this.strategy.types) {
         this.strategy.types.map(type => {
-          if (type === 'PAYMENT') isStrategy = true
+          if (type.includes('PAYMENT')) isStrategy = true
         })
         return isStrategy
       } else {
@@ -179,10 +180,13 @@ export default {
       this.mappedCampaign.name = value
     },
     strategy (value) {
-      this.mappedCampaign.strategy = value
+      this.mappedCampaign.strategy = value.name
+      this.mappedCampaign.strategyId = value.id
     },
     dueDate (value) {
-      this.mappedCampaign.deadline = value
+      this.mappedCampaign.deadline = {
+        dateTime: this.$moment(value).format()
+      }
     },
     negotiatorIds (value) {
       this.mappedCampaign.negotiatorIds = value

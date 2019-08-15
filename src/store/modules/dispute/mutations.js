@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import moment from 'moment'
 
 const disputeMutations = {
   clearDisputes (state) {
@@ -34,13 +35,14 @@ const disputeMutations = {
   },
   updateDisputeList (state, disputeChanged) {
     Vue.nextTick(() => {
-      let changedIndex = state.disputesDTO.findIndex(dispute => {
-        return (disputeChanged.id === dispute.id)
-      })
-      if (changedIndex === -1) {
+      let disputeIndex = state.disputesDTO.findIndex(d => disputeChanged.id === d.id)
+      if (disputeIndex === -1) {
         state.disputesDTO.push(disputeChanged)
       } else {
-        Vue.set(state.disputesDTO, changedIndex, disputeChanged)
+        let dispute = state.disputesDTO.find(d => disputeChanged.id === d.id)
+        if (moment(dispute.updateAt.dateTime).isBefore(moment(disputeChanged.updateAt.dateTime))) {
+          Vue.set(state.disputesDTO, disputeIndex, disputeChanged)
+        }
       }
     })
   },
@@ -56,19 +58,6 @@ const disputeMutations = {
   },
   setDisputeStatuses (state, status) {
     state.statuses[status.label] = status.value
-  },
-  addUpdatingList (state, disputeId) {
-    if (!(disputeId in state.updatingList)) {
-      state.updatingList.push(disputeId)
-    }
-  },
-  removeUpdatingList (state, disputeId) {
-    state.updatingList = state.updatingList.filter(dispute => {
-      if (dispute.id === disputeId) {
-        return false
-      }
-      return true
-    })
   },
   setDisputesPerPage (state, disputesPerPage) {
     state.filters.perPage = disputesPerPage

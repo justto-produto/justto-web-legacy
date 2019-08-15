@@ -149,7 +149,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="boundary">
-              <money v-model="disputeForm.upperRange.boundary" v-bind="money" class="el-input__inner" />
+              <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -162,7 +162,7 @@
           </el-col>
           <el-col v-if="dispute.status == 'ACCEPTED' || dispute.status == 'CHECKOUT'" :span="24">
             <el-form-item label="Valor do acordo" prop="deal">
-              <money v-model="disputeForm.lastOffer.boundary" v-bind="money" class="el-input__inner" />
+              <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -174,7 +174,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDisputeDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" data-testid="confirm-edit-data" @click="editDispute(disputeForm)">Editar dados</el-button>
+        <el-button type="primary" data-testid="confirm-edit-data" @click="editDispute()">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -404,28 +404,30 @@ export default {
   methods: {
     openDisputeDialog () {
       this.editDisputeDialogVisible = true
-      this.disputeForm.disputeId = this.dispute.id
-      if (this.disputeForm.upperRange) {
-
-      }
-      this.disputeForm.upperRange.boundary = parseFloat(this.dispute.upperRange.boundary)
-      this.disputeForm.upperRange.id = this.dispute.upperRange.id
+      this.disputeForm.id = this.dispute.id
+      this.disputeForm.disputeUpperRange = this.dispute.disputeUpperRange
+      this.disputeForm.lastOfferValue = this.dispute.lastOfferValue
       this.disputeForm.expirationDate = this.dispute.expirationDate
       this.disputeForm.description = this.dispute.description
-      if (this.dispute.lastOffer) {
-        this.disputeForm.lastOffer.boundary = parseFloat(this.dispute.lastOffer.boundary)
-        this.disputeForm.lastOffer.id = this.dispute.lastOffer.id
-      }
     },
-    editDispute (disputeForm) {
-      this.$store.dispatch('editDispute', disputeForm)
+    editDispute () {
+      let disputeToEdit = Object.assign({}, this.$store.getters.findDisputeDTOById(this.disputeForm.id))
+      // if (this.disputeForm.disputeUpperRange) {
+      //   if (!disputeToEdit.respondentBoundary) disputeToEdit.respondentBoundary = {}
+      //   disputeToEdit.respondentBoundary.boundary = this.disputeForm.disputeUpperRange
+      // }
+      // if (this.disputeForm.lastOfferValue) disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
+      // if (this.disputeForm.expirationDate) disputeToEdit.expirationDate.dateTime = this.disputeForm.expirationDate
+      if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
+      this.$store.dispatch('editDispute', disputeToEdit)
         .then(response => {
+          this.$store.dispatch('SOCKET_ADD', disputeToEdit)
+          this.editDisputeDialogVisible = false
           this.$jusNotification({
             title: 'Yay!',
             message: 'Os dados foram alterados com sucesso.',
             type: 'success'
           })
-          this.editDisputeDialogVisible = false
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         })
