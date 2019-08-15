@@ -12,12 +12,17 @@ const actions = {
         })
     })
   },
-  // DISPUTE
-  SOCKET_ADD ({ commit }, dispute) {
+  SOCKET_ADD_DISPUTE ({ commit }, dispute) {
     commit('updateDisputeList', dispute)
   },
-  SOCKET_REMOVE ({ commit }, dispute) {
+  SOCKET_REMOVE_DISPUTE ({ commit }, dispute) {
     commit('removeDisputeFromList', dispute)
+  },
+  SOCKET_ADD_ALERT ({ commit }, alert) {
+    commit('addAlert', alert)
+  },
+  SOCKET_REMOVE_ALERT ({ commit }, alert) {
+    commit('removeAlert', alert)
   }
 }
 
