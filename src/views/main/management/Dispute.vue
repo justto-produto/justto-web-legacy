@@ -163,6 +163,7 @@
           </span>
         </el-dialog>
         <dispute-messages
+          :dispute-id="dispute.id"
           :messages-prop="filteredDisputeMessages"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
@@ -476,21 +477,23 @@ export default {
       })
     },
     getOccurrences () {
-      this.loadingOccurrences = true
-      this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then(response => {
-        if (!this.disputeMessages.length) {
-          this.disputeMessages = response.content
-        } else {
-          let newMessages = response.content.filter(i => {
-            return this.disputeMessages.map(e => JSON.stringify(e)).indexOf(JSON.stringify(i)) < 0
-          })
-          this.disputeMessages.push(...newMessages)
-        }
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.loadingOccurrences = false
-      })
+      if (!this.loadingOccurrences) {
+        this.loadingOccurrences = true
+        this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then(response => {
+          if (!this.disputeMessages.length) {
+            this.disputeMessages = response.content
+          } else {
+            let newMessages = response.content.filter(i => {
+              return this.disputeMessages.map(e => JSON.stringify(e)).indexOf(JSON.stringify(i)) < 0
+            })
+            this.disputeMessages.push(...newMessages)
+          }
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingOccurrences = false
+        })
+      }
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {

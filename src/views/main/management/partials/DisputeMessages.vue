@@ -53,7 +53,6 @@
           </div>
         </div>
         <jus-avatar-user
-          v-if="occurrence.message"
           :name="getSenderName(occurrence.message)"
           :purple="directionClass(occurrence) === 'inbound'"
           size="sm" />
@@ -96,6 +95,10 @@ export default {
     currentTab: {
       type: String,
       default: '1'
+    },
+    disputeId: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -157,15 +160,22 @@ export default {
         this.$emit('dispute:occurrences:get')
       }, 1000)
     })
-    this.$store.watch(state => state.socketModule.chat.message, join => {
+    this.$store.watch(state => state.socketModule.chat.message, message => {
       setTimeout(() => {
         this.$emit('dispute:occurrences:get')
       }, 1000)
     })
-    this.$store.watch(state => state.socketModule.chat.leave, join => {
+    this.$store.watch(state => state.socketModule.chat.leave, leave => {
       setTimeout(() => {
         this.$emit('dispute:occurrences:get')
       }, 1000)
+    })
+    this.$store.watch(state => state.socketModule.dispute.lastIdChanged, lastIdChanged => {
+      if (this.disputeId === lastIdChanged) {
+        setTimeout(() => {
+          this.$emit('dispute:occurrences:get')
+        }, 1000)
+      }
     })
   },
   methods: {

@@ -44,9 +44,8 @@
           <span class="title">Fim da negociação:</span>
           <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-          <span class="title">Descrição:</span>
-          <span>{{ dispute.description }}</span>
+        <div v-if="dispute.description && dispute.description.trim()" class="dispute-overview-view__info-textarea">
+          Descrição: <strong>{{ dispute.description }}</strong>
         </div>
         <div class="dispute-overview-view__actions">
           <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>
@@ -643,7 +642,7 @@ export default {
       white-space: nowrap;
       margin-right: 10px;
     }
-    *:last-child {
+    span:last-child {
       font-weight: 500;
       white-space: nowrap;
       overflow: hidden;
@@ -651,6 +650,13 @@ export default {
     }
     a {
       line-height: 15px;
+    }
+  }
+  &__info-textarea {
+    margin-top: 10px;
+    strong {
+      display: block;
+      font-weight: 500;
     }
   }
   &__actions {
