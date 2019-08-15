@@ -1,6 +1,6 @@
 <template>
   <div :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass + ' ' + activeClass" class="jus-avatar-user">
-    <img v-if="validate" :src="avatarSrc">
+    <img v-if="showAvatar" :src="avatarSrc">
     <span v-else>
       {{ nameInitials.toUpperCase() }}
     </span>
@@ -44,20 +44,30 @@ export default {
     }
   },
   computed: {
-    validate () {
+    showAvatar () {
       if (this.src) return true
-      if (this.name) {
-        if (this.name.split('').includes('@')) return true
-        if (/^\d/.test(this.name)) return true
+      if (this.name && this.name.trim()) {
+        if (this.name.split('').includes('@') || /^\d/.test(this.name)) {
+          return true
+        }
+        return false
       }
-      return false
+      return true
     },
     avatarSrc () {
-      if (this.src) {
-        return this.src
-      } else {
-        return require('@/assets/icons/ic-user.svg')
+      if (this.src) return this.src
+      return require('@/assets/icons/ic-user.svg')
+    },
+    nameInitials () {
+      if (this.name && this.name.trim()) {
+        let split = this.name.split(' ').filter(Boolean)
+        if (split.length > 1) {
+          return split[0].substring(0, 1) + split[split.length - 1].substring(0, 1)
+        } else if (split.length === 1) {
+          return split[0].substring(0, 2)
+        }
       }
+      return ''
     },
     shapeClass () {
       return 'jus-avatar-user--' + this.shape
@@ -70,17 +80,6 @@ export default {
     },
     activeClass () {
       return this.active ? 'jus-avatar-user--active' : ''
-    },
-    nameInitials () {
-      if (this.name) {
-        let split = this.name.split(' ').filter(Boolean)
-        if (split.length > 1) {
-          return split[0].substring(0, 1) + split[split.length - 1].substring(0, 1)
-        } else if (split.length === 1) {
-          return split[0].substring(0, 2)
-        }
-      }
-      return ''
     }
   }
 }
