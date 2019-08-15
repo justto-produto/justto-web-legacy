@@ -44,7 +44,7 @@
             <span v-if="directionClass(occurrence) !== 'note'">
               <jus-icon :icon="getMessageIcon(occurrence.message)" />
               <span v-if="occurrence.message && occurrence.message.sender">
-                • {{ occurrence.message.sender | firstName }}
+                • {{ getSenderName(occurrence.message) | firstName }}
               </span>
             </span>
             <span v-else>
@@ -54,7 +54,7 @@
         </div>
         <jus-avatar-user
           v-if="occurrence.message"
-          :name="occurrence.message.sender"
+          :name="getSenderName(occurrence.message)"
           :purple="directionClass(occurrence) === 'inbound'"
           size="sm" />
       </div>
@@ -199,6 +199,15 @@ export default {
     waitingClass (occurrence) {
       if (occurrence.message && occurrence.message.status === 'WAITING') {
         return ' waiting'
+      }
+      return ''
+    },
+    getSenderName (message) {
+      if (message) {
+        if (message.parameters && message.parameters.SENDER_NAME) {
+          return message.parameters.SENDER_NAME
+        }
+        return message.sender
       }
       return ''
     },

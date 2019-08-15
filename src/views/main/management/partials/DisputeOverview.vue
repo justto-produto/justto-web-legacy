@@ -157,6 +157,7 @@
               <el-date-picker
                 v-model="disputeForm.expirationDate"
                 :clearable="false"
+                format="dd/MM/yyyy"
                 type="date" />
             </el-form-item>
           </el-col>
@@ -404,24 +405,21 @@ export default {
   methods: {
     openDisputeDialog () {
       this.editDisputeDialogVisible = true
-      this.disputeForm.id = this.dispute.id
-      this.disputeForm.disputeUpperRange = this.dispute.disputeUpperRange
-      this.disputeForm.lastOfferValue = this.dispute.lastOfferValue
-      this.disputeForm.expirationDate = this.dispute.expirationDate
-      this.disputeForm.description = this.dispute.description
+      let dispute = Object.assign({}, this.dispute)
+      this.disputeForm.id = dispute.id
+      this.disputeForm.disputeUpperRange = parseInt(dispute.disputeUpperRange)
+      this.disputeForm.lastOfferValue = parseInt(dispute.lastOfferValue)
+      this.disputeForm.expirationDate = dispute.expirationDate
+      this.disputeForm.description = dispute.description
     },
     editDispute () {
-      let disputeToEdit = Object.assign({}, this.$store.getters.findDisputeDTOById(this.disputeForm.id))
-      // if (this.disputeForm.disputeUpperRange) {
-      //   if (!disputeToEdit.respondentBoundary) disputeToEdit.respondentBoundary = {}
-      //   disputeToEdit.respondentBoundary.boundary = this.disputeForm.disputeUpperRange
-      // }
-      // if (this.disputeForm.lastOfferValue) disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
-      // if (this.disputeForm.expirationDate) disputeToEdit.expirationDate.dateTime = this.disputeForm.expirationDate
+      let disputeToEdit = JSON.parse(JSON.stringify(this.$store.getters.findDisputeDTOById(this.disputeForm.id)))
+      if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
+      if (this.disputeForm.lastOfferValue) disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue + ''
+      if (this.disputeForm.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
       this.$store.dispatch('editDispute', disputeToEdit)
         .then(response => {
-          this.$store.dispatch('SOCKET_ADD', disputeToEdit)
           this.editDisputeDialogVisible = false
           this.$jusNotification({
             title: 'Yay!',

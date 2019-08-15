@@ -46,8 +46,10 @@ export default {
   computed: {
     validate () {
       if (this.src) return true
-      if (this.name.split('').includes('@')) return true
-      if (/^\d/.test(this.name)) return true
+      if (this.name) {
+        if (this.name.split('').includes('@')) return true
+        if (/^\d/.test(this.name)) return true
+      }
       return false
     },
     avatarSrc () {
@@ -70,11 +72,15 @@ export default {
       return this.active ? 'jus-avatar-user--active' : ''
     },
     nameInitials () {
-      var split = this.name.split(' ')
-      split = split.filter(Boolean)
-      if (split.length > 1) {
-        return split[0].substring(0, 1) + split[split.length - 1].substring(0, 1)
-      } return split[0].substring(0, 2)
+      if (this.name) {
+        let split = this.name.split(' ').filter(Boolean)
+        if (split.length > 1) {
+          return split[0].substring(0, 1) + split[split.length - 1].substring(0, 1)
+        } else if (split.length === 1) {
+          return split[0].substring(0, 2)
+        }
+      }
+      return ''
     }
   }
 }
