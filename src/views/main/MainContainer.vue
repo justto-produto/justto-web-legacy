@@ -70,13 +70,6 @@ export default {
     }
   },
   beforeCreate () {
-    this.$store.commit('showLoading')
-    this.$store.dispatch('loadDisputes')
-      .finally(() => {
-        setTimeout(function () {
-          this.$store.commit('hideLoading')
-        }.bind(this), 1000)
-      })
     this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
         this.$store.dispatch('whatsappStart')

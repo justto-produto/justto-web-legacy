@@ -401,6 +401,16 @@ export default {
       return length
     }
   },
+  beforeCreate () {
+    if (!this.$store.getters.disputeInitialLoad) {
+      this.$store.commit('showLoading')
+      this.$store.dispatch('loadDisputes').finally(() => {
+        setTimeout(() => {
+          this.$store.commit('hideLoading')
+        }, 1200)
+      })
+    }
+  },
   beforeMount () {
     setTimeout(() => {
       this.adjustHeight()
