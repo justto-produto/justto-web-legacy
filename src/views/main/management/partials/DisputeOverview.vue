@@ -63,7 +63,13 @@
       <el-collapse-item
         v-for="role in disputeRolesSort"
         :key="role.personId"
-        :name="JSON.stringify({personId: role.personId, name: role.name})"
+        :name="JSON.stringify({
+          personId: role.personId,
+          name: role.name,
+          invalidEmail: !role.emails.length,
+          invalidPhone: !role.phones.length,
+          invalidOab: !role.oabs.length
+        })"
         data-testid="expand-party">
         <template slot="title">
           <div class="dispute-overview-view__name">

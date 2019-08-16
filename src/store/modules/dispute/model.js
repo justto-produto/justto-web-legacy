@@ -89,8 +89,7 @@ const getDisputeVM = function (dispute) {
     !vm.hasInteraction &&
     !vm.paused &&
     vm.communicationMsgTotalsShedulled !== 0 &&
-    vm.communicationMsgTotalsShedulled !== vm.communicationMsgTotalSent)
-  {
+    vm.communicationMsgTotalsShedulled !== vm.communicationMsgTotalSent) {
     vm.tab = 'ENGAGEMENT'
   } else if ((vm.status === 'ENGAGEMENT' || vm.status === 'RUNNING') && vm.hasInteraction) {
     vm.tab = 'INTERACTION'
