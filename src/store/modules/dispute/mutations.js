@@ -26,6 +26,9 @@ const disputeMutations = {
   clearDisputeFilterTerm (state, tab) {
     state.filters.filterTerm = ''
   },
+  setInitialLoad (state) {
+    state.initialLoad = true
+  },
   setDisputeSort (state, sort) {
     state.filters.sort.prop = sort.prop
     state.filters.sort.order = sort.order

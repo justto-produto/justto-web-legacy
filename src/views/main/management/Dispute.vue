@@ -419,6 +419,9 @@ export default {
   },
   created () {
     this.id = this.$route.params.id
+    if (!this.$store.getters.disputeInitialLoad) {
+      this.$store.dispatch('loadOneDispute', { id: this.id })
+    }
     this.getOccurrences()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
@@ -427,9 +430,6 @@ export default {
         this.unsettledTypes = response
       })
     }
-  },
-  destroyed () {
-    this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
     canSettled () {

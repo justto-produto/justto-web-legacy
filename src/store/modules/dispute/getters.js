@@ -11,6 +11,7 @@ const disputeGetters = {
   },
   disputeFiltersTerm: state => state.filters.filterTerm,
   filterPersonId: state => state.filters.filterPersonId,
+  disputeInitialLoad: state => state.initialLoad,
   findDisputeDTOById: (state) => (disputeId) => state.disputesDTO.find(d => d.id === parseInt(disputeId)),
   findDisputeById: (state) => (disputeId) => {
     let dispute = state.disputesDTO.find(d => d.id === parseInt(disputeId))
