@@ -18,7 +18,7 @@
         class="view-management__tabs">
         <el-tab-pane name="0">
           <span slot="label">
-            Engajamento
+            Engajando
             <el-badge
               :hidden="!engagementLength"
               :value="engagementLength"
@@ -219,15 +219,10 @@
               {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
             </template>
           </el-table-column>
-          <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
+          <el-table-column  label="Msgs enviadas" align="center" min-width="110px">
             <template slot-scope="scope">
-              <span v-if="!scope.row.communicationMsgTotalsShedulled">
-                Enriquecendo
-              </span>
-              <span v-else>
-                {{ scope.row.communicationMsgTotalSent }} /
-                {{ scope.row.communicationMsgTotalsShedulled }}
-              </span>
+              {{ scope.row.communicationMsgTotalSent }} /
+              {{ scope.row.communicationMsgTotalsShedulled }}
             </template>
           </el-table-column>
           <el-table-column

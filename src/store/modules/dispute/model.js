@@ -85,7 +85,12 @@ const getDisputeVM = function (dispute) {
   if (vm.lastCounterOfferValue !== '0.0') {
     vm.lastOfferPercentToUpperRange = vm.lastOfferValue / vm.disputeUpperRange * 100
   }
-  if (vm.status === 'ENGAGEMENT' && !vm.hasInteraction && !vm.paused) {
+  if (vm.status === 'ENGAGEMENT' &&
+    !vm.hasInteraction &&
+    !vm.paused &&
+    vm.communicationMsgTotalsShedulled !== 0 &&
+    vm.communicationMsgTotalsShedulled !== vm.communicationMsgTotalSent)
+  {
     vm.tab = 'ENGAGEMENT'
   } else if ((vm.status === 'ENGAGEMENT' || vm.status === 'RUNNING') && vm.hasInteraction) {
     vm.tab = 'INTERACTION'
