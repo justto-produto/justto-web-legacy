@@ -241,16 +241,10 @@
             </template>
           </el-table-column>
           <template v-if="!$store.state.loading" slot="empty">
-            <span v-if="hasFilters">
+            <span>
               <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
               <h4 data-testid="cases-empty-text">
                 Não foram encontradas disputas para<br>os filtros selecionados.
-              </h4>
-            </span>
-            <span v-else>
-              <img src="@/assets/loading2.svg" data-testid="cases-empty-icon">
-              <h4 data-testid="cases-empty-text">
-                Aguardando por novas disputas.
               </h4>
             </span>
           </template>
@@ -341,9 +335,6 @@ export default {
     },
     filters () {
       return this.$store.state.disputeModule.filters
-    },
-    hasFilters () {
-      return this.$store.getters.disputeHasFilters
     },
     activeTabLabel () {
       switch (this.activeTab) {
