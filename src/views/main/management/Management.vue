@@ -219,12 +219,6 @@
               {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
             </template>
           </el-table-column>
-          <el-table-column  label="Msgs enviadas" align="center" min-width="110px">
-            <template slot-scope="scope">
-              {{ scope.row.communicationMsgTotalSent }} /
-              {{ scope.row.communicationMsgTotalsShedulled }}
-            </template>
-          </el-table-column>
           <el-table-column
             width="70px"
             class-name="view-management__row-actions"
