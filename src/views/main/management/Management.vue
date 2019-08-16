@@ -348,9 +348,6 @@ export default {
     filters () {
       return this.$store.state.disputeModule.filters
     },
-    hasFilters () {
-      return this.$store.getters.disputeHasFilters
-    },
     activeTabLabel () {
       switch (this.activeTab) {
         case '0':
