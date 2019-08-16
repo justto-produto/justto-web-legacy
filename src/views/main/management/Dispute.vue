@@ -74,14 +74,13 @@
           <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
             <el-button
               plain
-              class="right"
               data-testid="favorite"
               @click="disputeAction(isFavorite ? 'disfavor' : 'favorite')">
               <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Buscar">
-            <el-button plain class="right" @click="showSearch = !showSearch">
+            <el-button plain @click="showSearch = !showSearch">
               <jus-icon icon="search2"/>
             </el-button>
           </el-tooltip>
@@ -804,9 +803,6 @@ export default {
       border-radius: 5px;
       padding: 11px;
     }
-    .right {
-      float: right;
-    }
     img {
       width: 16px;
       height: 16px;
@@ -823,6 +819,7 @@ export default {
   }
   .jus-main-view__main-card {
     height: 100%;
+    min-width: 482px;
     > .el-card__body {
       height: 100%;
       display: flex;
