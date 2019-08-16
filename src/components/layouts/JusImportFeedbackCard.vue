@@ -69,8 +69,8 @@
         </div>
       </div>
       <el-date-picker
-        v-model="dueDate"
-        :prefix-icon="dueDate === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
+        v-model="deadline"
+        :prefix-icon="deadline === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         :picker-options="datePickerOptions"
         type="date"
         format="dd-MM-yyyy"
@@ -141,7 +141,7 @@ export default {
       strategy: '',
       strategyId: '',
       dialogVisible: false,
-      dueDate: null,
+      deadline: null,
       negotiatorIds: [],
       datePickerOptions: {
         disabledDate (date) {
@@ -183,7 +183,7 @@ export default {
       this.mappedCampaign.strategy = value.name
       this.mappedCampaign.strategyId = value.id
     },
-    dueDate (value) {
+    deadline (value) {
       this.mappedCampaign.deadline = {
         dateTime: this.$moment(value).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       }
@@ -206,8 +206,8 @@ export default {
     if (this.mappedCampaign.respondent) {
       this.respondent = this.mappedCampaign.respondent
     }
-    if (this.mappedCampaign.dueDate && this.mappedCampaign.dueDate !== '0') {
-      this.dueDate = this.mappedCampaign.dueDate
+    if (this.mappedCampaign.deadline && this.$moment(new Date(this.mappedCampaign.deadline)).isValid()) {
+      this.deadline = this.mappedCampaign.deadline
     }
   }
 }
