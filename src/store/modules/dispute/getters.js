@@ -1,4 +1,5 @@
 import moment from 'moment'
+import i18n from '@/plugins/vueI18n.js'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
 import { getDisputeVM, getDisputeVMList } from './model'
 
@@ -6,10 +7,11 @@ const disputeGetters = {
   disputes: state => getDisputeVMList(state.disputesDTO),
   disputeFilters: state => state.filters,
   disputeHasFilters: state => {
-    return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm
+    return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm || !!state.filters.filterPersonId
   },
   disputeFiltersTerm: state => state.filters.filterTerm,
   filterPersonId: state => state.filters.filterPersonId,
+  disputeInitialLoad: state => state.initialLoad,
   findDisputeDTOById: (state) => (disputeId) => state.disputesDTO.find(d => d.id === parseInt(disputeId)),
   findDisputeById: (state) => (disputeId) => {
     let dispute = state.disputesDTO.find(d => d.id === parseInt(disputeId))
@@ -63,11 +65,15 @@ const disputeGetters = {
           let compareB = Object.assign({}, b)
           let directionA = state.filters.sort.order === 'ascending' ? 1 : -1
           let directionB = directionA === 1 ? -1 : 1
-          if (typeof variable !== 'boolean' && moment(new Date(compareA[state.filters.sort.prop])).isValid()) {
+          if (typeof compareA[state.filters.sort.prop] !== 'boolean' && moment(new Date(compareA[state.filters.sort.prop])).isValid()) {
             if (!compareA[state.filters.sort.prop]) compareA[state.filters.sort.prop] = moment(0)
             if (!compareB[state.filters.sort.prop]) compareB[state.filters.sort.prop] = moment(0)
             if (moment(compareA[state.filters.sort.prop]).isAfter(compareB[state.filters.sort.prop])) return directionA
             if (moment(compareA[state.filters.sort.prop]).isBefore(compareB[state.filters.sort.prop])) return directionB
+            return 0
+          } else if (state.filters.sort.prop === 'status') {
+            if (i18n.t('occurrence.type.' + compareA.status).trim() > i18n.t('occurrence.type.' + compareB.status).trim()) return directionA
+            if (i18n.t('occurrence.type.' + compareA.status).trim() < i18n.t('occurrence.type.' + compareB.status).trim()) return directionB
             return 0
           } else {
             if (compareA[state.filters.sort.prop] > compareB[state.filters.sort.prop]) return directionA

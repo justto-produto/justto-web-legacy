@@ -46,7 +46,6 @@
           </div>
         </template>
       </el-step>
-
       <el-step v-if="dispute.status">
         <template slot="title">Status</template>
         <template slot="description">
@@ -64,7 +63,6 @@
           </el-select>
         </template>
       </el-step>
-
     </el-steps>
   </div>
 </template>
@@ -89,8 +87,20 @@ export default {
   },
   data () {
     return {
-      scheduled: false,
-      unsettledReason: this.dispute.conclusionReasons[0]
+      scheduled: false
+    }
+  },
+  computed: {
+    unsettledReason () {
+      return this.dispute.conclusionReasons.length ? this.dispute.conclusionReasons[0] : ''
+    }
+  },
+  watch: {
+    showScheduled (value) {
+      this.scheduled = value
+    },
+    scheduled (value) {
+      this.$emit('update:showScheduled', value)
     }
   },
   methods: {
@@ -105,14 +115,6 @@ export default {
           type: 'success'
         })
       }).catch(() => this.$jusNotification({ type: 'error' }))
-    }
-  },
-  watch: {
-    showScheduled (value) {
-      this.scheduled = value
-    },
-    scheduled (value) {
-      this.$emit('update:showScheduled', value)
     }
   }
 }

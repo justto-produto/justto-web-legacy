@@ -12,18 +12,18 @@
         @disputes:clear="clearSelection"/>
       <el-tabs
         ref="disputeTabs"
-        :key="tabKey"
         :before-leave="handleChangeTab"
         v-model="activeTab"
         class="view-management__tabs">
         <el-tab-pane name="0">
           <span slot="label">
-            Engajamento
+            Engajando
             <el-badge
               :hidden="!engagementLength"
               :value="engagementLength"
               :max="99"
               class="el-badge--inline" />
+            <jus-icon v-show="activeTab === '0' && hasFilters" icon="filter" />
           </span>
         </el-tab-pane>
         <el-tab-pane name="1" label="Com Interação">
@@ -34,6 +34,7 @@
               :value="interactionLength"
               :max="99"
               class="el-badge--inline" />
+            <jus-icon v-show="activeTab === '1' && hasFilters" icon="filter" />
           </span>
         </el-tab-pane>
         <el-tab-pane name="2" label="Com Interação">
@@ -44,6 +45,7 @@
               :value="newDealsLength"
               :max="99"
               class="el-badge--inline" />
+            <jus-icon v-show="activeTab === '2' && hasFilters" icon="filter" />
           </span>
         </el-tab-pane>
         <el-tab-pane name="3" label="Com Interação">
@@ -54,6 +56,7 @@
               :value="allLength"
               :max="99"
               class="el-badge--inline" />
+            <jus-icon v-show="activeTab === '3' && hasFilters" icon="filter" />
           </span>
         </el-tab-pane>
       </el-tabs>
@@ -219,17 +222,6 @@
               {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
             </template>
           </el-table-column>
-          <el-table-column v-if="activeTab === '0'" label="Msgs enviadas" align="center" min-width="110px">
-            <template slot-scope="scope">
-              <span v-if="!scope.row.communicationMsgTotalsShedulled">
-                Enriquecendo
-              </span>
-              <span v-else>
-                {{ scope.row.communicationMsgTotalSent }} /
-                {{ scope.row.communicationMsgTotalsShedulled }}
-              </span>
-            </template>
-          </el-table-column>
           <el-table-column
             width="70px"
             class-name="view-management__row-actions"
@@ -252,18 +244,19 @@
             </template>
           </el-table-column>
           <template v-if="!$store.state.loading" slot="empty">
-            <span v-if="hasFilters">
+            <!-- <span v-if="hasFilters"> -->
+            <span>
               <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
               <h4 data-testid="cases-empty-text">
                 Não foram encontradas disputas para<br>os filtros selecionados.
               </h4>
             </span>
-            <span v-else>
+            <!-- <span v-else>
               <img src="@/assets/loading2.svg" data-testid="cases-empty-icon">
               <h4 data-testid="cases-empty-text">
                 Aguardando por novas disputas.
               </h4>
-            </span>
+            </span> -->
           </template>
         </el-table>
       </div>
@@ -318,7 +311,6 @@ export default {
   data () {
     return {
       tableKey: 0,
-      tabKey: false,
       showFilters: false,
       selectedIds: [],
       activeFilters: {},
@@ -336,6 +328,9 @@ export default {
       set (tab) {
         this.$store.commit('setDisputeTab', tab)
       }
+    },
+    hasFilters () {
+      return this.$store.getters.disputeHasFilters
     },
     multiActive () {
       return this.selectedIds.length >= 1
@@ -377,16 +372,43 @@ export default {
       }
     },
     engagementLength () {
-      return this.$store.getters.disputes.filter(d => d.tab === 'ENGAGEMENT').length
+      let length = this.$store.getters.disputes.filter(d => d.tab === 'ENGAGEMENT').length
+      if (length >= this.disputesLength && this.activeTab === '0') {
+        return this.disputesLength
+      }
+      return length
     },
     interactionLength () {
-      return this.$store.getters.disputes.filter(d => d.tab === 'INTERACTION').length
+      this.updateTable()
+      let length = this.$store.getters.disputes.filter(d => d.tab === 'INTERACTION').length
+      if (length >= this.disputesLength && this.activeTab === '1') {
+        return this.disputesLength
+      }
+      return length
     },
     newDealsLength () {
-      return this.$store.getters.disputes.filter(d => d.tab === 'NEWDEALS').length
+      let length = this.$store.getters.disputes.filter(d => d.tab === 'NEWDEALS').length
+      if (length >= this.disputesLength && this.activeTab === '2') {
+        return this.disputesLength
+      }
+      return length
     },
     allLength () {
-      return this.$store.getters.disputes.length
+      let length = this.$store.getters.disputes.length
+      if (length >= this.disputesLength && this.activeTab === '3') {
+        return this.disputesLength
+      }
+      return length
+    }
+  },
+  beforeCreate () {
+    if (!this.$store.getters.disputeInitialLoad) {
+      this.$store.commit('showLoading')
+      this.$store.dispatch('loadDisputes').finally(() => {
+        setTimeout(() => {
+          this.$store.commit('hideLoading')
+        }, 1200)
+      })
     }
   },
   beforeMount () {
@@ -429,13 +451,17 @@ export default {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
+    updateTable () {
+      setTimeout(() => {
+        this.tableKey = this.tableKey + 1
+      }, 400)
+    },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {
         this.clearSelection()
         this.clearFilters()
       }
-      this.$refs.disputeTable.clearSort()
-      this.tableKey = this.tableKey + 1
+      this.updateTable()
       switch (newTab) {
         case '0':
           setTimeout(function () {
@@ -572,8 +598,13 @@ export default {
       margin: 0px 0 20px;
     }
     .el-tabs__item {
-      .el-badge__content {
+      &:hover .el-badge__content {
+        // background-color: $--color-primary;
         background-color: $--color-primary-light-7;
+      }
+      .el-badge__content {
+        // background-color: $--color-primary-light-7;
+        background-color: rgb(220, 223, 230);
       }
       &.is-active {
         .el-badge__content {

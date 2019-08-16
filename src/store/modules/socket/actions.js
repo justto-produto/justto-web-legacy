@@ -18,7 +18,7 @@ const actions = {
   },
   SOCKET_REMOVE_DISPUTE ({ commit }, dispute) {
     commit('removeDisputeFromList', dispute)
-  },
+  }
   // SOCKET_ADD_ALERT ({ commit }, alert) {
   //   commit('addAlert', alert)
   // },

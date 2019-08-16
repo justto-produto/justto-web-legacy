@@ -17,7 +17,7 @@
         v-if="dispute.strategy"
         :key="componentKey"
         :dispute="dispute"
-        :unsettledTypes="unsettledTypes"
+        :unsettled-types="unsettledTypes"
         :show-scheduled.sync="showScheduled"
         data-testid="dispute-summary" />
     </template>
@@ -25,16 +25,6 @@
     <template slot="main">
       <div class="dispute-view__section-messages">
         <div class="dispute-view__actions">
-          <!-- <el-tooltip content="move-dispute">
-            <el-button plain @click="disputeAction('move')">
-              <jus-icon icon="move-dispute" />
-            </el-button>
-          </el-tooltip>
-          <el-tooltip content="delegate">
-            <el-button plain @click="disputeAction('move')">
-              <jus-icon icon="delegate" />
-            </el-button>
-          </el-tooltip> -->
           <el-tooltip content="Ganhar">
             <el-button
               :disabled="!canSettled()"
@@ -81,22 +71,16 @@
               <jus-icon icon="enrich"/>
             </el-button>
           </el-tooltip>
-          <!-- <el-tooltip content="snooze">
-            <el-button plain @click="disputeAction('move')">
-              <jus-icon icon="snooze" />
-            </el-button>
-          </el-tooltip> -->
           <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
             <el-button
               plain
-              class="right"
               data-testid="favorite"
               @click="disputeAction(isFavorite ? 'disfavor' : 'favorite')">
               <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Buscar">
-            <el-button plain class="right" @click="showSearch = !showSearch">
+            <el-button plain @click="showSearch = !showSearch">
               <jus-icon icon="search2"/>
             </el-button>
           </el-tooltip>
@@ -184,6 +168,7 @@
                     placeholder="Escreva alguma coisa"
                     class="el-textarea__inner"
                     @keydown.enter.exact.prevent
+                    @keydown.enter.shift.prevent
                     @keydown.enter.alt="newLineMessage()"
                     @keydown.enter.shift="newLineMessage()"
                     @keyup.enter.exact="sendMessage()"/>
@@ -199,36 +184,25 @@
                   <div v-else-if="activePerson.personId">
                     <div>
                       <el-tooltip content="Enviar e-mail">
-                        <a
-                          href="#"
-                          data-testid="select-email"
-                          @click.prevent="setMessageType('email')">
+                        <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
                           <jus-icon :is-active="messageType === 'email'" icon="email"/>
                         </a>
                       </el-tooltip>
                       <el-tooltip content="Enviar Whatsapp">
-                        <a
-                          href="#"
-                          data-testid="select-whatsapp"
-                          @click.prevent="setMessageType('whatsapp')">
+                        <a href="#" data-testid="select-whatsapp" @click.prevent="setMessageType('whatsapp')">
                           <jus-icon
                             :is-active="messageType === 'whatsapp'"
                             icon="whatsapp"/>
                         </a>
                       </el-tooltip>
                       <el-tooltip content="Enviar CNA">
-                        <a
-                          href="#"
-                          data-testid="select-cna"
-                          @click.prevent="setMessageType('cna')">
+                        <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
                           <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
                         </a>
                       </el-tooltip>
                     </div>
                   </div>
-                  <el-tooltip
-                    v-else
-                    content="Escolha um destinatário ao lado para receber sua mensagem">
+                  <el-tooltip v-else content="Escolha um destinatário ao lado para receber sua mensagem">
                     <div class="dispute-view__disabled-text" data-testid="unselected-party">
                       Escolha um destinatário ao lado
                     </div>
@@ -236,6 +210,27 @@
                   <el-tooltip
                     v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'"
                     content="Whatsapp desconectado">
+                    <div>
+                      <el-button
+                        :disabled="true"
+                        type="primary"
+                        data-testid="submit-whats-disable"
+                        @click="sendMessage()">
+                        Enviar
+                      </el-button>
+                    </div>
+                  </el-tooltip>
+                  <el-tooltip
+                    v-else-if="
+                      (activePerson.invalidEmail && messageType === 'email') ||
+                        (activePerson.invalidPhone && messageType === 'whatsapp') ||
+                        (activePerson.invalidOab && messageType === 'cna')
+                    ">
+                    <div slot="content">
+                      <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não configurado</span>
+                      <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não configurado</span>
+                      <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não configurado</span>
+                    </div>
                     <div>
                       <el-button
                         :disabled="true"
@@ -275,6 +270,7 @@
                   @keydown.enter.alt="newLineChat()"
                   @keydown.enter.shift="newLineChat()"
                   @keydown.enter.exact.prevent
+                  @keydown.enter.shift.prevent
                   @keydown.enter.exact="sendChatMessage()" />
                 <div class="dispute-view__send-message-actions note">
                   <el-button type="primary" @click="sendChatMessage()">
@@ -292,6 +288,7 @@
                   placeholder="Escreva alguma coisa"
                   class="el-textarea__inner"
                   @keydown.enter.exact.prevent
+                  @keydown.enter.shift.prevent
                   @keydown.enter.alt="newLineNote()"
                   @keydown.enter.shift="newLineNote()"
                   @keydown.enter.exact="sendNote()"/>
@@ -421,6 +418,9 @@ export default {
   },
   created () {
     this.id = this.$route.params.id
+    if (!this.$store.getters.disputeInitialLoad) {
+      this.$store.dispatch('loadOneDispute', { id: this.id })
+    }
     this.getOccurrences()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
@@ -429,9 +429,6 @@ export default {
         this.unsettledTypes = response
       })
     }
-  },
-  destroyed () {
-    this.$socket.emit('unsubscribe', '/disputes/' + this.dispute.id)
   },
   methods: {
     canSettled () {
@@ -569,7 +566,7 @@ export default {
     },
     sendChatMessage () {
       this.loadingTextarea = true
-      if (this.newChatMessage) {
+      if (this.newChatMessage.trim().replace('\n', '')) {
         this.$store.dispatch('sendMessageEvent', {
           id: this.dispute.id,
           data: {
@@ -599,7 +596,7 @@ export default {
           type: 'warning'
         })
       } else {
-        if (this.newMessage) {
+        if (this.newMessage.trim().replace('\n', '')) {
           this.loadingTextarea = true
           this.$store.dispatch('send' + this.messageType, {
             to: [this.activePerson.personId],
@@ -626,7 +623,7 @@ export default {
       }
     },
     sendNote () {
-      if (this.newNote) {
+      if (this.newNote.trim().replace('\n', '')) {
         this.loadingTextarea = true
         this.$store.dispatch('sendDisputeNote', {
           note: this.newNote,
@@ -648,7 +645,7 @@ export default {
       }
     },
     sendTypeEvent () {
-      if (this.newChatMessage) {
+      if (this.newChatMessage.trim().replace('\n', '')) {
         this.$socket.emit('send', {
           channel: '/disputes/' + this.dispute.id,
           event: 'type',
@@ -806,9 +803,6 @@ export default {
       border-radius: 5px;
       padding: 11px;
     }
-    .right {
-      float: right;
-    }
     img {
       width: 16px;
       height: 16px;
@@ -825,6 +819,7 @@ export default {
   }
   .jus-main-view__main-card {
     height: 100%;
+    min-width: 482px;
     > .el-card__body {
       height: 100%;
       display: flex;

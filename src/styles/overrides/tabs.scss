@@ -1,6 +1,11 @@
 .el-tabs__item {
   height: 36px;
   line-height: 36px;
+  img {
+    vertical-align: sub;
+    width: 14px;
+    margin-left: 4px;
+  }
 }
 
 .el-tabs--card {

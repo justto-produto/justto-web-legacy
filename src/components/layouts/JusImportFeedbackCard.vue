@@ -36,7 +36,7 @@
       <div class="select-strategy__messages">
         <a v-show="strategy !== ''" @click.prevent="dialogVisible = true">Ver estratégia de engajamento das partes</a>
       </div>
-      <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
+      <!-- <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do protocolo
         </div>
@@ -51,7 +51,7 @@
             dia(s) corridos após acordo
           </span>
         </div>
-      </div>
+      </div> -->
       <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
@@ -134,7 +134,7 @@ export default {
       initialCampaignName: '',
       mappedName: '',
       respondent: '',
-      protocolDeadLine: 1,
+      // protocolDeadLine: 1,
       paymentDeadLine: 1,
       campaignName: '',
       campaignTimeout: null,
@@ -191,9 +191,9 @@ export default {
     negotiatorIds (value) {
       this.mappedCampaign.negotiatorIds = value
     },
-    protocolDeadLine (value) {
-      this.mappedCampaign.protocolDeadLine = value
-    },
+    // protocolDeadLine (value) {
+    //   this.mappedCampaign.protocolDeadLine = value
+    // },
     paymentDeadLine (value) {
       this.mappedCampaign.paymentDeadLine = value
     }
@@ -201,7 +201,7 @@ export default {
   beforeMount () {
     this.initialCampaignName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
-    this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
+    // this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
     if (this.mappedCampaign.respondent) {
       this.respondent = this.mappedCampaign.respondent

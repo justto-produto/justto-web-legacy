@@ -98,7 +98,7 @@ export default {
         let campaign = JSON.parse(JSON.stringify(mappedCampaign))
         if (this.checkValidCampaign(campaign)) {
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
-          campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
+          // campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
           campaignsTrack.push({
             name: campaign.name,
             strategy: campaign.strategy
@@ -149,8 +149,8 @@ export default {
         !!campaign.cluster &&
         campaign.hasOwnProperty('deadline') &&
         !!campaign.deadline &&
-        campaign.hasOwnProperty('protocolDeadLine') &&
-        !!campaign.protocolDeadLine &&
+        // campaign.hasOwnProperty('protocolDeadLine') &&
+        // !!campaign.protocolDeadLine &&
         campaign.hasOwnProperty('paymentDeadLine') &&
         !!campaign.paymentDeadLine &&
         campaign.hasOwnProperty('negotiatorIds') &&
