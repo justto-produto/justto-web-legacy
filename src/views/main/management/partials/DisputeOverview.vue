@@ -110,6 +110,9 @@
           <ul>
             <li v-for="phone in role.phones" :key="phone.id">
               {{ phone.number | phoneMask }}
+                <span v-if="!phone.isValid">
+                  <img src="@/assets/icons/ic-warn-dark.svg">
+                </span>
             </li>
           </ul>
         </div>
@@ -120,6 +123,9 @@
           <ul>
             <li v-for="email in role.emails" :key="email.id">
               {{ email.address }}
+                <span v-if="!email.isValid">
+                  <img src="@/assets/icons/ic-warn-dark.svg">
+                </span>
             </li>
           </ul>
         </div>
@@ -132,6 +138,9 @@
               {{ oab.number }}
               <span v-if="oab.state">-</span>
               {{ oab.state }}
+                <!-- <span v-if="!oab.isValid">
+                  <img src="@/assets/icons/ic-warn-dark.svg">
+                </span> -->
             </li>
           </ul>
         </div>
@@ -232,8 +241,13 @@
             <img src="@/assets/icons/ic-check.svg">
             {{ oab.number }} {{ oab.state }}
             <a href="#" @click.prevent="removeOab({ disputeId: dispute.id, id: oab.id }, roleForm.oabs, index)">
-              <img src="@/assets/icons/ic-error.svg">
+              <i class="el-icon-error" />
             </a>
+            <!-- <a v-if="!phone.isValid" href="#" @click.prevent="setPhoneAttribs(phone, 'ISVALIS')"> -->
+            <!-- <span v-if="!oab.isValid">
+              <i class="el-icon-warning" />
+            </span> -->
+            <!-- </a> -->
           </li>
         </ul>
       </el-form>
@@ -254,8 +268,13 @@
             <img src="@/assets/icons/ic-check.svg">
             {{ phone.number | phoneMask }}
             <a href="#" data-testid="remove-phone" @click.prevent="removePhone({disputeId: dispute.id, id: phone.id}, roleForm.phones, index)">
-              <img src="@/assets/icons/ic-error.svg">
+              <i class="el-icon-error" />
             </a>
+            <!-- <a v-if="!phone.isValid" href="#" @click.prevent="setPhoneAttribs(phone, 'ISVALIS')"> -->
+            <span v-if="!phone.isValid">
+              <i class="el-icon-warning" />
+            </span>
+            <!-- </a> -->
           </li>
         </ul>
       </el-form>
@@ -276,8 +295,13 @@
             <img src="@/assets/icons/ic-check.svg">
             {{ email.address }}
             <a href="#" @click.prevent="removeEmail({ disputeId: dispute.id, id: email.id }, roleForm.emails, index)">
-              <img src="@/assets/icons/ic-error.svg">
+              <i class="el-icon-error" />
             </a>
+            <!-- <a v-if="!phone.isValid" href="#" @click.prevent="setPhoneAttribs(phone, 'ISVALIS')"> -->
+            <span v-if="!email.isValid">
+              <i class="el-icon-warning" />
+            </span>
+            <!-- </a> -->
           </li>
         </ul>
       </el-form>
@@ -632,6 +656,28 @@ export default {
 
 <style lang="scss">
 .dispute-overview-view {
+  .el-icon-error {
+    color: #ADADAD;
+    font-size: 18px;
+    &:hover {
+      color: #FF6961;
+    }
+  }
+  .el-icon-warning {
+    color: #ADADAD;
+    font-size: 18px;
+    &:hover {
+      color: #FFA500;
+    }
+  }
+  .el-icon-success {
+    color: #ADADAD;
+    font-size: 18px;
+    &:hover {
+      color: #9461f7;
+    }
+  }
+
   margin-bottom: -20px;
   .jus-status-dot {
     float: initial !important;
