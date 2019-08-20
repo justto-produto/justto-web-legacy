@@ -32,9 +32,6 @@ export default {
   },
   methods: {
     setFilterPersonId (id) {
-      if (this.$route.name !== 'management') {
-        this.$router.push('/management')
-      }
       if (id === this.filterPersonId) {
         this.$store.commit('setFilterPersonId', 0)
       } else this.$store.commit('setFilterPersonId', id)

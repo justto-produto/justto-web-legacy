@@ -19,7 +19,7 @@
       <div :class="{'batch-active': multiActive}" class="view-management-review__disputes">
         <el-table
           ref="disputeTable"
-          :data="disputes"
+          :data="filteredDisputes"
           size="mini"
           class="el-table--disputes"
           @row-click="handleRowClick"
@@ -78,7 +78,7 @@
           <template v-if="!$store.state.loading" slot="empty">
             <jus-icon icon="empty-screen-filter" class="view-management__empty-table"/>
             <h4 style="font-weight: normal; line-height: initial;">
-              Não foram encontradas disputas para<br>os filtros e aba selecionados.
+              Não foram encontradas disputas para<br>o filtros selecionados.
             </h4>
           </template>
         </el-table>
@@ -100,7 +100,6 @@ export default {
   },
   data () {
     return {
-      disputes: [],
       selectedIds: []
     }
   },
@@ -113,12 +112,30 @@ export default {
     },
     showReviewColumn () {
       return this.slide.color === 'purple'
+    },
+    disputes () {
+      return this.$store.getters[this.slide.id]
+    },
+    filteredDisputes () {
+      let filterPersonId = this.$store.getters.filterPersonId
+      if (filterPersonId) {
+        return this.disputes.filter(dispute => {
+          let filter = false
+          if (dispute.negotiators && dispute.negotiators.length > 0) {
+            for (let negotiator of dispute.negotiators) {
+              if (negotiator.personId === filterPersonId) {
+                filter = true
+              }
+            }
+          }
+          return filter
+        })
+      }
+      return this.disputes
     }
   },
   beforeMount () {
-    if (this.$route.params.slide) {
-      this.disputes = this.$store.getters[this.slide.id]
-    } else {
+    if (!this.$route.params.slide) {
       this.$router.push('/management')
     }
   },
