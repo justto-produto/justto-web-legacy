@@ -84,6 +84,12 @@
               <jus-icon icon="search2"/>
             </el-button>
           </el-tooltip>
+          <el-tooltip content="Exibir mensagens agendadas">
+            <el-button plain @click="toggleShowSchedule(!showScheduled)">
+              <!-- el-icon-chat-dot-square -->
+              <jus-icon icon="eye" /> 
+            </el-button>
+          </el-tooltip>  
           <div :class="{isVisible: showSearch}" class="dispute-view__search">
             <el-input v-model="searchTerm" autofocus>
               <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
@@ -474,6 +480,9 @@ export default {
           loading.close()
         })
       })
+    },
+    toggleShowSchedule(value) {
+      this.showScheduled = value
     },
     getOccurrences () {
       if (!this.loadingOccurrences) {
