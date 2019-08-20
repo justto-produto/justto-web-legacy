@@ -162,6 +162,19 @@ export default {
         return true
       } else return false
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.$store.getters.hasImportsFile) {
+      this.$confirm('Tem certeza que deseja sair da importação? Todos os dados serão perdidos.', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        next()
+      })
+    } else {
+      next()
+    }
   }
 }
 </script>
