@@ -213,17 +213,6 @@ const workspaceModule = {
           })
       })
     },
-    getInbox ({ commit, state }, object) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.get('api/workspaces/inbox/' + state.subdomain)
-          .then(response => {
-            resolve(response.data)
-          }).catch(error => {
-            reject(error)
-          })
-      })
-    },
     removeInbox ({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line

@@ -29,6 +29,7 @@ export default {
   border-radius: 50%;
   display: inline-block;
   background-color: #9461f7;
+  content: ' ';
   &.jus-status-dot--success{
     background-color: $--color-success;
   }
