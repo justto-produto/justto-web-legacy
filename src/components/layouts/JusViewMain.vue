@@ -117,7 +117,9 @@ export default {
     .jus-main-view__container {
       height: 100%;
     }
-
+    .jus-main-view__right-card {
+      height: 100%;
+    }
   }
 }
 </style>
