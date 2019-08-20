@@ -1,5 +1,10 @@
 <template>
-  <JusViewMain :loading-container="!dispute.id" left-card-width="320" right-card-width="320" class="dispute-view">
+  <JusViewMain
+    :loading-container="!dispute.id"
+    fullScreen
+    left-card-width="320"
+    right-card-width="320"
+    class="dispute-view">
     <template slot="title" v-if="false">
       <h1 class="dispute-view__title">
         <router-link to="/management">
@@ -87,9 +92,9 @@
           <el-tooltip content="Exibir mensagens agendadas">
             <el-button plain @click="toggleShowSchedule(!showScheduled)">
               <!-- el-icon-chat-dot-square -->
-              <jus-icon icon="eye" /> 
+              <jus-icon icon="eye" />
             </el-button>
-          </el-tooltip>  
+          </el-tooltip>
           <div :class="{isVisible: showSearch}" class="dispute-view__search">
             <el-input v-model="searchTerm" autofocus>
               <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
