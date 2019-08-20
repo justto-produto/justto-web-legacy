@@ -1,21 +1,23 @@
 <template>
   <el-header class="jus-header-main">
     <div class="jus-header-main__search">
-      <jus-icon icon="search" class="el-menu__icon-search"/>
-      <el-autocomplete
-        v-model="disputeId"
-        :trigger-on-focus="false"
-        :fetch-suggestions="search"
-        placeholder="Busque aqui as suas disputas">
-        <template slot-scope="{ item }">
-          <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
-            <jus-dispute-resume :dispute="item" />
-          </router-link>
-          <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
-            Não foram encontradas disputas para esta busca.
-          </span>
-        </template>
-      </el-autocomplete>
+        <jus-icon icon="search" class="el-menu__icon-search" v-if="showSearch"/>
+        <el-autocomplete
+          v-model="disputeId"
+          v-if="showSearch"
+          :trigger-on-focus="false"
+          :fetch-suggestions="search"
+          placeholder="Busque aqui as suas disputas">
+          <template slot-scope="{ item }">
+            <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
+              <jus-dispute-resume :dispute="item" />
+            </router-link>
+            <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
+              Não foram encontradas disputas para esta busca.
+            </span>
+          </template>
+        </el-autocomplete>
+        <h3 v-if="!showSearch">#{{ disputeId }}</h3>
     </div>
     <div class="jus-header-main__info">
       <el-dropdown trigger="click" placement="bottom-start">
@@ -79,6 +81,16 @@ export default {
     },
     appVersion () {
       return process.env.VUE_APP_VERSION
+    },
+    showSearch () {
+      if(this.$router.currentRoute.name !== 'dispute') {
+        this.disputeId = this.$router.path.split('/').pop()
+        return true
+      } else {
+        this.disputeId = '';
+        return false
+      }
+      return 
     }
   },
   methods: {
@@ -107,7 +119,7 @@ export default {
         }
       }, 500)
     }
-  }
+  },
 }
 </script>
 
