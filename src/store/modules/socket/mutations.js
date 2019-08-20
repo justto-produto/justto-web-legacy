@@ -24,7 +24,7 @@ const mutations = {
   SOCKET_refresh (state, message) {
     if (message.qrCode) state.whatsapp.qrCode = message.qrCode
     if (message.status) state.whatsapp.status = message.status
-    if (message.number) state.whatsapp.number = message.number
+    if (message.phone) state.whatsapp.number = message.phone
   },
   // DISPUTE
   setDisputeLastIdChanged (state, id) {

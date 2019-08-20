@@ -124,3 +124,20 @@ a {
       .5em 0 0 #adadad;
   }
 }
+
+@keyframes throbber-fade {
+  0%,to {
+    opacity: .3
+  }
+  40%,60% {
+    opacity: 1
+  }
+}
+@keyframes throbber-pulse {
+  0%,to {
+    transform: scale3d(.5,.5,1)
+  }
+  50% {
+    transform: scaleX(1)
+  }
+}

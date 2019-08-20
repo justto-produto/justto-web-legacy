@@ -1,73 +1,102 @@
 <template>
-  <el-header class="jus-header-main">
-    <div class="jus-header-main__search">
-      <jus-icon icon="search" class="el-menu__icon-search"/>
-      <el-autocomplete
-        v-model="disputeId"
-        :trigger-on-focus="false"
-        :fetch-suggestions="search"
-        placeholder="Busque aqui as suas disputas">
-        <template slot-scope="{ item }">
-          <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
-            <jus-dispute-resume :dispute="item" />
-          </router-link>
-          <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
-            Não foram encontradas disputas para esta busca.
-          </span>
-        </template>
-      </el-autocomplete>
-    </div>
-    <div class="jus-header-main__info">
-      <el-dropdown trigger="click" placement="bottom-start">
-        <span class="el-dropdown-link">
-          <jus-avatar-user
-            :name="name"
-            size="sm"/>
-          <div class="main-info__name">
-            <div style="text-transform: capitalize;">
-              {{ name }}
+  <div>
+    <el-header class="jus-header-main">
+      <div class="jus-header-main__search">
+        <jus-icon icon="search" class="el-menu__icon-search"/>
+        <el-autocomplete
+          v-model="disputeId"
+          :trigger-on-focus="false"
+          :fetch-suggestions="search"
+          placeholder="Busque aqui as suas disputas">
+          <template slot-scope="{ item }">
+            <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
+              <jus-dispute-resume :dispute="item" />
+            </router-link>
+            <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
+              Não foram encontradas disputas para esta busca.
+            </span>
+          </template>
+        </el-autocomplete>
+      </div>
+      <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
+        <el-tooltip>
+          <div slot="content">
+            <span v-if="!isWhatsappconnected">
+              WhatsApp desconectado
+            </span>
+            <span v-else-if="!!whatsappNumber">
+              Conectado via: {{ whatsappNumber | phoneMask }}
+            </span>
+            <span v-else>
+              WhatsApp conectado
+            </span>
+          </div>
+          <jus-icon :icon="'whatsapp-' + (!isWhatsappconnected ? 'disconnected' : 'connected')" />
+        </el-tooltip>
+        <i v-if="!isWhatsappconnected" class="el-icon-warning" />
+      </div>
+      <div class="jus-header-main__info">
+        <el-dropdown trigger="click" placement="bottom-start">
+          <span class="el-dropdown-link">
+            <jus-avatar-user :name="name" size="sm" />
+            <div class="main-info__name">
+              <div style="text-transform: capitalize;">
+                {{ name }}
+              </div>
+              <span>{{ workspace }}</span>
             </div>
-            <span>{{ workspace }}</span>
-          </div>
-          <jus-icon icon="expand-dropdown"/>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <div class="jus-header-main__version">
-            Versão {{ appVersion }}
-          </div>
-          <router-link to="/profile">
-            <el-dropdown-item divided>
-              Perfil
-            </el-dropdown-item>
-          </router-link>
-          <a href="http://ajuda.justto.com.br/" target="_blank">
-            <el-dropdown-item>
-              Central de ajuda
-            </el-dropdown-item>
-          </a>
-          <a href="#" @click="logout()">
-            <el-dropdown-item divided>
-              Sair
-            </el-dropdown-item>
-          </a>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
-  </el-header>
+            <jus-icon icon="expand-dropdown"/>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <div class="jus-header-main__version">
+              Versão {{ appVersion }}
+            </div>
+            <router-link to="/profile">
+              <el-dropdown-item divided>
+                Perfil
+              </el-dropdown-item>
+            </router-link>
+            <a href="http://ajuda.justto.com.br/" target="_blank">
+              <el-dropdown-item>
+                Central de ajuda
+              </el-dropdown-item>
+            </a>
+            <a href="#" @click="logout()">
+              <el-dropdown-item divided>
+                Sair
+              </el-dropdown-item>
+            </a>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </el-header>
+    <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
+      <span slot="title">
+        <h2>Whatsapp</h2>
+      </span>
+      <jus-whatsapp />
+      <span slot="footer">
+        <el-button plain @click="whatsappVisible = false">Fechar</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
 import JusDisputeResume from '@/components/layouts/JusDisputeResume'
+import JusWhatsapp from '@/components/layouts/JusWhatsapp'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume
+    JusDisputeResume,
+    JusWhatsapp
   },
   data () {
     return {
-      disputeId: ''
+      disputeId: '',
+      whatsappVisible: false
     }
   },
   computed: {
@@ -79,6 +108,12 @@ export default {
     },
     appVersion () {
       return process.env.VUE_APP_VERSION
+    },
+    whatsappNumber () {
+      return this.$store.getters.whatsappNumber
+    },
+    isWhatsappconnected () {
+      return this.$store.getters.whatsappStatus === 'CONNECTED'
     }
   },
   methods: {
@@ -137,10 +172,29 @@ export default {
     }
   }
 }
-.jus-header-main__notification {
+.jus-header-main__whatsapp {
+  position: relative;
   margin: auto;
-  margin-right: 20px;
-  cursor: pointer;
+  margin-right: 14px;
+  img {
+    width: 28px;
+    cursor: pointer;
+  }
+  .el-icon-warning {
+    background-color: #fff;
+    border-radius: 50%;
+    color: #FF4B54;
+    position: absolute;
+    right: -4px;
+    bottom: 1px;
+    font-size: 18px;
+    animation-delay: .2s;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: throbber-pulse,throbber-fade;
+    animation-timing-function: ease-in-out;
+  }
 }
 .jus-header-main__info {
   .el-dropdown-link {

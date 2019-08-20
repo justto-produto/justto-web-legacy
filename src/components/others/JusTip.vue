@@ -63,21 +63,5 @@ export default {
       width: 22px;
     }
   }
-  @keyframes throbber-fade {
-    0%,to {
-      opacity: .5
-    }
-    40%,60% {
-      opacity: .8
-    }
-  }
-  @keyframes throbber-pulse {
-    0%,to {
-      transform: scale3d(.5,.5,1)
-    }
-    50% {
-      transform: scaleX(1)
-    }
-  }
 }
 </style>
