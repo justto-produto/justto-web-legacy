@@ -77,9 +77,9 @@ const getLastInteractionIcon = function (type) {
     case 'TTS':
       return 'tts'
     case 'NEGOTIATION':
-      return 'negotiation2'
+      return 'eye'
     default:
-      return 'negotiation2'
+      return 'eye'
   }
 }
 
@@ -96,9 +96,9 @@ const getLastInteractionTooltip = function (type) {
     case 'TTS':
       return 'Última interação via WhatsApp'
     case 'NEGOTIATION':
-      return 'Última interação via Sistema Justto'
+      return 'Última visualização via Sistema Justto'
     default:
-      return 'Última interação via Sistema Justto'
+      return 'Última visualização via Sistema Justto'
   }
 }
 
