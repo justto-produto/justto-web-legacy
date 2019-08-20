@@ -14,7 +14,6 @@ const actions = {
   },
   SOCKET_ADD_DISPUTE ({ commit }, dispute) {
     commit('updateDisputeList', dispute)
-    commit('setDisputeLastIdChanged', dispute.id)
   },
   SOCKET_REMOVE_DISPUTE ({ commit }, dispute) {
     commit('removeDisputeFromList', dispute)

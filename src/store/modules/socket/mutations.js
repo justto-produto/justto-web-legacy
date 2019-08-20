@@ -26,10 +26,6 @@ const mutations = {
     if (message.status) state.whatsapp.status = message.status
     if (message.phone) state.whatsapp.number = message.phone
   },
-  // DISPUTE
-  setDisputeLastIdChanged (state, id) {
-    if (id) state.dispute.lastIdChanged = id
-  }
 }
 
 export default mutations
