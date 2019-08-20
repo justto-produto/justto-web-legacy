@@ -378,11 +378,12 @@ export default {
       return this.$store.getters.findDisputeById(this.id)
     },
     filteredDisputeMessages () {
+      // debugger
       if (this.searchTerm) {
         return this.disputeMessages.filter(occurrence => {
-          return  occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          occurrence.message.content.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          occurrence.message.sender.toLowerCase().includes(this.searchTerm.toLowerCase())
+          return (occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+          (occurrence.message.content ? occurrence.message.content.toLowerCase().includes(this.searchTerm.toLowerCase()) : false) ||
+          (occurrence.message.sender ? occurrence.message.sender.toLowerCase().includes(this.searchTerm.toLowerCase()) : false)
         })
       }
       return this.disputeMessages
