@@ -380,7 +380,7 @@ export default {
     filteredDisputeMessages () {
       if (this.searchTerm) {
         return this.disputeMessages.filter(occurrence => {
-          return  occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          return occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           occurrence.message.content.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           occurrence.message.sender.toLowerCase().includes(this.searchTerm.toLowerCase())
         })

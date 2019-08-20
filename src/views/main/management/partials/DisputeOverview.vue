@@ -110,9 +110,9 @@
           <ul>
             <li v-for="phone in role.phones" :key="phone.id">
               {{ phone.number | phoneMask }}
-                <span v-if="!phone.isValid">
-                  <img src="@/assets/icons/ic-warn-dark.svg">
-                </span>
+              <span v-if="!phone.isValid">
+                <img src="@/assets/icons/ic-warn-dark.svg">
+              </span>
             </li>
           </ul>
         </div>
@@ -123,9 +123,9 @@
           <ul>
             <li v-for="email in role.emails" :key="email.id">
               {{ email.address }}
-                <span v-if="!email.isValid">
-                  <img src="@/assets/icons/ic-warn-dark.svg">
-                </span>
+              <span v-if="!email.isValid">
+                <img src="@/assets/icons/ic-warn-dark.svg">
+              </span>
             </li>
           </ul>
         </div>
@@ -138,9 +138,9 @@
               {{ oab.number }}
               <span v-if="oab.state">-</span>
               {{ oab.state }}
-                <!-- <span v-if="!oab.isValid">
-                  <img src="@/assets/icons/ic-warn-dark.svg">
-                </span> -->
+              <!-- <span v- if="!oab.isValid">
+                <img src="@/assets/icons/ic-warn-dark.svg">
+              </span> -->
             </li>
           </ul>
         </div>
