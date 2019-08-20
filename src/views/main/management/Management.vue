@@ -424,7 +424,7 @@ export default {
   },
   methods: {
     tableRowClassName ({row, rowIndex}) {
-      if (rowIndex === 1 ){//row.visualized) {
+      if (!row.visualized) {
         return 'el-table__row--visualized-row'
       }
     },
