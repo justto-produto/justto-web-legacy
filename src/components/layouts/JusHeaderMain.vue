@@ -17,7 +17,7 @@
             </span>
           </template>
         </el-autocomplete>
-        <h3 v-if="disputeId"># {{ disputeId }}</h3>
+        <h2 v-else class="jus-header-main__title">Disputa #{{ disputeId }}</h2>
       </div>
       <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
         <el-tooltip>
@@ -40,7 +40,7 @@
         <el-dropdown trigger="click" placement="bottom-start">
           <span class="el-dropdown-link">
             <jus-avatar-user :name="name" size="sm" />
-            <div class="main-info__name">
+            <div class="jus-header-main__name">
               <div style="text-transform: capitalize;">
                 {{ name }}
               </div>
@@ -165,63 +165,67 @@ export default {
     color: #adadad;
     font-size: 12px;
   }
-}
-.jus-header-main__search {
-  display: flex;
-  width: 100%;
-  .el-autocomplete {
+  &__title {
+    margin-left: 20px;
+    font-weight: 500;
+  }
+  &__search {
+    display: flex;
     width: 100%;
-    input {
-      border: 0;
-      outline: 0;
-      height: 58px;
-      font-size: 16px;
-      opacity: .75;
+    .el-autocomplete {
+      width: 100%;
+      input {
+        border: 0;
+        outline: 0;
+        height: 58px;
+        font-size: 16px;
+        opacity: .75;
+      }
     }
   }
-}
-.jus-header-main__whatsapp {
-  position: relative;
-  margin: auto;
-  margin-right: 14px;
-  img {
-    width: 28px;
-    cursor: pointer;
+  &__whatsapp {
+    position: relative;
+    margin: auto;
+    margin-right: 14px;
+    img {
+      width: 28px;
+      cursor: pointer;
+    }
+    .el-icon-warning {
+      background-color: #fff;
+      border-radius: 50%;
+      color: #FF4B54;
+      position: absolute;
+      right: -4px;
+      bottom: 1px;
+      font-size: 18px;
+      animation-delay: .2s;
+      animation-duration: 1.5s;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      animation-name: throbber-pulse,throbber-fade;
+      animation-timing-function: ease-in-out;
+    }
   }
-  .el-icon-warning {
-    background-color: #fff;
-    border-radius: 50%;
-    color: #FF4B54;
-    position: absolute;
-    right: -4px;
-    bottom: 1px;
-    font-size: 18px;
-    animation-delay: .2s;
-    animation-duration: 1.5s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
-    animation-name: throbber-pulse,throbber-fade;
-    animation-timing-function: ease-in-out;
+  &__info {
+    .el-dropdown-link {
+      display: flex;
+      align-items: center;
+      margin: 8px 0;
+      cursor: pointer;
+    }
   }
-}
-.jus-header-main__info {
-  .el-dropdown-link {
-    display: flex;
-    align-items: center;
-    margin: 8px 0;
-    cursor: pointer;
-  }
-}
-.main-info__name {
-  margin: 0 20px 0 10px;
-  div {
-    white-space: nowrap;
-    font-weight: 600;
-  }
-  span {
-    font-size: 12px;
-    color: #666666;
-    white-space: nowrap;
+  &__name {
+    margin: 0 20px 0 10px;
+    div {
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    span {
+      font-size: 12px;
+      color: #666666;
+      white-space: nowrap;
+    }
   }
 }
 </style>
