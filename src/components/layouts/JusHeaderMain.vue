@@ -69,7 +69,7 @@ export default {
   },
   data () {
     return {
-      disputeId: ''
+      disputeId: null
     }
   },
   watch: {
@@ -115,7 +115,10 @@ export default {
       }, 500)
     }
   },
-}
+  beforeMount() {
+    this.disputeId = this.$route.params.id
+  }
+ }
 </script>
 
 <style lang="scss">
