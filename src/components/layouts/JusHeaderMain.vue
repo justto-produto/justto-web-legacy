@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <el-header class="jus-header-main">
-      <div class="jus-header-main__search">
-        <jus-icon v-if="showSearch" icon="search" class="el-menu__icon-search" />
+  <el-header class="jus-header-main">
+    <div class="jus-header-main__search">
+        <jus-icon icon="search" class="el-menu__icon-search" v-if="!disputeId"/>
         <el-autocomplete
-          v-if="showSearch"
           v-model="disputeId"
+          v-if="!disputeId"
           :trigger-on-focus="false"
           :fetch-suggestions="search"
           placeholder="Busque aqui as suas disputas">
@@ -18,7 +17,7 @@
             </span>
           </template>
         </el-autocomplete>
-        <h3 v-if="!showSearch"># {{ disputeId }}</h3>
+        <h3 v-if="disputeId"># {{ disputeId }}</h3>
       </div>
       <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
         <el-tooltip>
@@ -71,41 +70,44 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
+      <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
+        <span slot="title">
+          <h2>Whatsapp</h2>
+        </span>
+        <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
+        <div v-else>
+          <h2>Desculpe :(</h2>
+          <p>
+            Nosso servidor Whatsapp encontra-se instável neste momento.<br>
+            Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
+          </p>
+        </div>
+        <span slot="footer">
+          <el-button plain @click="whatsappVisible = false">Fechar</el-button>
+        </span>
+      </el-dialog>
     </el-header>
-    <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
-      <span slot="title">
-        <h2>Whatsapp</h2>
-      </span>
-      <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
-      <div v-else>
-        <h2>Desculpe :(</h2>
-        <p>
-          Nosso servidor Whatsapp encontra-se instável neste momento.<br>
-          Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
-        </p>
-      </div>
-      <span slot="footer">
-        <el-button plain @click="whatsappVisible = false">Fechar</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import JusDisputeResume from '@/components/layouts/JusDisputeResume'
-import JusWhatsapp from '@/components/layouts/JusWhatsapp'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume,
-    JusWhatsapp
   },
   data () {
     return {
       disputeId: '',
-      whatsappVisible: false
+      whatsappVisible: false,
+      disputeId: null
+    }
+  },
+  watch: {
+    '$route.params.id': function (id) {
+      this.disputeId = id
     }
   },
   computed: {
@@ -117,21 +119,6 @@ export default {
     },
     appVersion () {
       return process.env.VUE_APP_VERSION
-    },
-    showSearch () {
-      if (this.$router.currentRoute.name === 'dispute') {
-        this.disputeId = this.$route.path.split('/').pop()
-        return false
-      } else {
-        this.disputeId = ''
-        return true
-      }
-    },
-    whatsappNumber () {
-      return this.$store.getters.whatsappNumber
-    },
-    isWhatsappconnected () {
-      return this.$store.getters.whatsappStatus === 'CONNECTED'
     }
   },
   methods: {
@@ -160,8 +147,11 @@ export default {
         }
       }, 500)
     }
+  },
+  beforeMount() {
+    this.disputeId = this.$route.params.id
   }
-}
+ }
 </script>
 
 <style lang="scss">
