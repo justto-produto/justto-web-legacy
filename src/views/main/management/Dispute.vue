@@ -1,6 +1,6 @@
 <template>
   <JusViewMain :loading-container="!dispute.id" left-card-width="320" right-card-width="320" class="dispute-view">
-    <template slot="title">
+    <template slot="title" v-if="false">
       <h1 class="dispute-view__title">
         <router-link to="/management">
           <jus-icon icon="back"/>
@@ -9,7 +9,7 @@
       </h1>
     </template>
     <!-- RESUMO DO CASO -->
-    <template slot="left-card">
+    <template slot="left-card" v-if="false">
       <div class="dispute-view__section-title">
         <h2>Resumo da disputa</h2>
       </div>
