@@ -1,10 +1,10 @@
 <template>
   <el-header class="jus-header-main">
     <div class="jus-header-main__search">
-        <jus-icon icon="search" class="el-menu__icon-search" v-if="showSearch"/>
+        <jus-icon icon="search" class="el-menu__icon-search" v-if="!disputeId"/>
         <el-autocomplete
           v-model="disputeId"
-          v-if="showSearch"
+          v-if="!disputeId"
           :trigger-on-focus="false"
           :fetch-suggestions="search"
           placeholder="Busque aqui as suas disputas">
@@ -17,7 +17,7 @@
             </span>
           </template>
         </el-autocomplete>
-        <h3 v-if="!showSearch"># {{ disputeId }}</h3>
+        <h3 v-if="disputeId">Disputa #{{ disputeId }}</h3>
     </div>
     <div class="jus-header-main__info">
       <el-dropdown trigger="click" placement="bottom-start">
@@ -72,6 +72,11 @@ export default {
       disputeId: ''
     }
   },
+  watch: {
+    '$route.params.id': function (id) {
+      this.disputeId = id
+    }
+  },
   computed: {
     name () {
       return this.$store.getters.currentPersonName
@@ -81,15 +86,6 @@ export default {
     },
     appVersion () {
       return process.env.VUE_APP_VERSION
-    },
-    showSearch () {
-      if(this.$router.currentRoute.name == 'dispute') {
-        this.disputeId = this.$route.path.split('/').pop()
-        return false
-      } else {
-        this.disputeId = '';
-        return true
-      } 
     }
   },
   methods: {
