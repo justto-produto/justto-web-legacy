@@ -44,12 +44,26 @@
       line-height: initial;
     }
   }
-  .el-table__body tr {
-    &:hover {
-      transform: scale(1);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
-      > td {
-        background-color: initial;
+  .el-table__body tbody{
+    tr {
+      &:hover {
+        transform: scale(1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+        > td {
+          background-color: initial;
+          &:first-child {
+            border-left: 1px solid #f6f6f6;
+            > .cell {
+              padding-left: 13px;
+            }
+          }
+          &:last-child {
+            border-right: 1px solid #f6f6f6;
+            > .cell {
+              padding-right: 9px;
+            }
+          }
+        }
       }
     }
   }
