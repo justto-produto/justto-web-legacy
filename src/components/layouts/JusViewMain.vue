@@ -1,5 +1,5 @@
 <template>
-  <div class="jus-main-view">
+  <div class="jus-main-view" :class="{'fullScreen': fullScreen}">
     <!-- TITLE SLOT -->
     <div v-if="this.$slots['title']" class="jus-main-view__title">
       <slot name="title"/>
@@ -52,6 +52,10 @@ export default {
       type: Boolean
     },
     loadingContainer: {
+      default: false,
+      type: Boolean
+    },
+    fullScreen: {
       default: false,
       type: Boolean
     }
@@ -107,6 +111,13 @@ export default {
   }
   &__loading-main{
     overflow: hidden;
+  }
+  &.fullScreen {
+    height: 100%;
+    .jus-main-view__container {
+      height: 100%;
+    }
+
   }
 }
 </style>
