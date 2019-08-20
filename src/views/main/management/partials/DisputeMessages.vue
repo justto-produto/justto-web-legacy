@@ -19,7 +19,7 @@
               Visualizar email
             </el-button>
             <span v-else v-html="occurrence.message && processMessage(occurrence.message.content)" />
-            <i v-if="directionClass(occurrence) === 'NOTE'">
+            <i v-if="directionClass(occurrence) === 'note'">
               <br>
               <jus-icon icon="eye" style="vertical-align: sub;"/>
               Esta mensagem é visível somente aos negociadores.
@@ -31,8 +31,9 @@
             </i>
           </div>
           <div class="dispute-view-messages__message-time">
-            <span v-if="occurrence.message && occurrence.message.schedulerTime && waitingClass(occurrence)">
-              {{ occurrence.message.schedulerTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
+            <span v-if="occurrence.message && occurrence.message.scheduledTime && waitingClass(occurrence)">
+              <!-- Ainda não foi entregue • -->
+              Agendado para {{ occurrence.message.scheduledTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-else-if="occurrence.message && occurrence.message.executionTime">
               {{ occurrence.message.executionTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
@@ -40,7 +41,6 @@
             <span v-else-if="occurrence.executionDateTime">
               {{ occurrence.executionDateTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
-
             <span v-if="directionClass(occurrence) !== 'note'">
               <jus-icon :icon="getMessageIcon(occurrence.message)" />
               <span v-if="occurrence.message && occurrence.message.sender">

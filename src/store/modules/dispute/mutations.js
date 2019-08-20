@@ -29,6 +29,9 @@ const disputeMutations = {
   setInitialLoad (state) {
     state.initialLoad = true
   },
+  clearInitialLoad (state) {
+    state.initialLoad = false
+  },
   setDisputeSort (state, sort) {
     state.filters.sort.prop = sort.prop
     state.filters.sort.order = sort.order
