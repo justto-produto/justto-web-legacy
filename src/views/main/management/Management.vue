@@ -395,7 +395,7 @@ export default {
         return this.disputesLength
       }
       return length
-    },
+    }
   },
   beforeCreate () {
     if (!this.$store.getters.disputeInitialLoad) {
@@ -423,7 +423,7 @@ export default {
     window.removeEventListener('resize', this.adjustHeight)
   },
   methods: {
-    tableRowClassName ({row, rowIndex}) {
+    tableRowClassName ({ row, rowIndex }) {
       if (!row.visualized) {
         return 'el-table__row--visualized-row'
       }

@@ -25,7 +25,7 @@ const mutations = {
     if (message.qrCode) state.whatsapp.qrCode = message.qrCode
     if (message.status) state.whatsapp.status = message.status
     if (message.phone) state.whatsapp.number = message.phone
-  },
+  }
 }
 
 export default mutations
