@@ -45,7 +45,10 @@
           <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
         </div>
         <div v-if="dispute.description && dispute.description.trim()" class="dispute-overview-view__info-textarea">
-          Descrição: <strong>{{ dispute.description }}</strong>
+          Descrição:
+          <strong :class="{ 'right': dispute.description.length < 25 }">
+            {{ dispute.description }}
+          </strong>
         </div>
         <div class="dispute-overview-view__actions">
           <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>
@@ -705,9 +708,9 @@ export default {
     }
   }
   &__info-textarea {
+    text-align: justify;
     margin-top: 10px;
     strong {
-      display: block;
       font-weight: 500;
     }
   }
