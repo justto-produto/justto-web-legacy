@@ -74,7 +74,14 @@
       <span slot="title">
         <h2>Whatsapp</h2>
       </span>
-      <jus-whatsapp />
+      <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
+      <div v-else>
+        <h2>Desculpe :(</h2>
+        <p>
+          Nosso servidor Whatsapp encontra-se instável neste momento.<br>
+          Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
+        </p>
+      </div>
       <span slot="footer">
         <el-button plain @click="whatsappVisible = false">Fechar</el-button>
       </span>
