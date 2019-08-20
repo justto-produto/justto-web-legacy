@@ -17,7 +17,12 @@
             </span>
           </template>
         </el-autocomplete>
-        <h2 v-else class="jus-header-main__title">Disputa #{{ disputeId }}</h2>
+        <h2 v-else class="jus-header-main__title">
+          <router-link to="/management">
+            <jus-icon icon="back"/>
+          </router-link>
+          Disputa #{{ disputeId }}
+        </h2>
       </div>
       <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
         <el-tooltip>
@@ -168,6 +173,9 @@ export default {
   &__title {
     margin-left: 20px;
     font-weight: 500;
+    a {
+      margin-right: 20px;
+    }
   }
   &__search {
     display: flex;
