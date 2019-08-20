@@ -2,8 +2,9 @@
   <div>
     <el-header class="jus-header-main">
       <div class="jus-header-main__search">
-        <jus-icon icon="search" class="el-menu__icon-search"/>
+        <jus-icon v-if="showSearch" icon="search" class="el-menu__icon-search" />
         <el-autocomplete
+          v-if="showSearch"
           v-model="disputeId"
           :trigger-on-focus="false"
           :fetch-suggestions="search"
@@ -17,6 +18,7 @@
             </span>
           </template>
         </el-autocomplete>
+        <h3 v-if="!showSearch"># {{ disputeId }}</h3>
       </div>
       <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
         <el-tooltip>
@@ -115,6 +117,15 @@ export default {
     },
     appVersion () {
       return process.env.VUE_APP_VERSION
+    },
+    showSearch () {
+      if (this.$router.currentRoute.name === 'dispute') {
+        this.disputeId = this.$route.path.split('/').pop()
+        return false
+      } else {
+        this.disputeId = ''
+        return true
+      }
     },
     whatsappNumber () {
       return this.$store.getters.whatsappNumber

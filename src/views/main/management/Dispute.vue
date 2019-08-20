@@ -1,6 +1,11 @@
 <template>
-  <JusViewMain :loading-container="!dispute.id" left-card-width="320" right-card-width="320" class="dispute-view">
-    <template slot="title">
+  <JusViewMain
+    :loading-container="!dispute.id"
+    full-screen
+    left-card-width="320"
+    right-card-width="320"
+    class="dispute-view">
+    <template v-if="false" slot="title">
       <h1 class="dispute-view__title">
         <router-link to="/management">
           <jus-icon icon="back"/>
@@ -9,7 +14,7 @@
       </h1>
     </template>
     <!-- RESUMO DO CASO -->
-    <template slot="left-card">
+    <template v-if="false" slot="left-card">
       <div class="dispute-view__section-title">
         <h2>Resumo da disputa</h2>
       </div>
@@ -82,6 +87,12 @@
           <el-tooltip content="Buscar">
             <el-button plain @click="showSearch = !showSearch">
               <jus-icon icon="search2"/>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="Exibir mensagens agendadas">
+            <el-button plain @click="toggleShowSchedule(!showScheduled)">
+              <!-- el-icon-chat-dot-square -->
+              <jus-icon icon="eye" />
             </el-button>
           </el-tooltip>
           <div :class="{isVisible: showSearch}" class="dispute-view__search">
@@ -475,6 +486,9 @@ export default {
           loading.close()
         })
       })
+    },
+    toggleShowSchedule (value) {
+      this.showScheduled = value
     },
     getOccurrences () {
       if (!this.loadingOccurrences) {
