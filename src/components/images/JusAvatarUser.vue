@@ -89,6 +89,7 @@ export default {
 .jus-avatar-user {
   position: relative;
   display: inline-flex;
+  border: 2px solid #ffffff00;
 
   &.jus-avatar-user--xs {
     font-size: 8px;

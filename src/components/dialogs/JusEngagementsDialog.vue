@@ -76,7 +76,7 @@ export default {
     getEngagements () {
       this.$store.dispatch('showLoading')
       this.$store.dispatch('getStrategyEngagement', this.strategyId).then(response => {
-        this.strategyEngagements = response.steps
+        this.strategyEngagements = response.communications
         this.$store.dispatch('hideLoading')
       }).catch(() => {
         this.$jusNotification({ type: 'error' })

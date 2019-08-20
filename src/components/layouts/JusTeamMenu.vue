@@ -4,12 +4,12 @@
       <a
         v-for="member in members"
         :key="member.id"
-        :class="filterPersonId === member.person.id ? 'active' : ''"
         class="jus-team-menu__member"
         @click.prevent="setFilterPersonId(member.person.id)">
         <el-tooltip :content="member.person.name" placement="right">
           <jus-avatar-user
             :name="member.person.name"
+            :active="filterPersonId === member.person.id"
             size="sm"
             shape="circle"
             class="el-menu__avatar" />
@@ -55,12 +55,7 @@ export default {
     flex-direction: column;
   }
   &__member {
-    padding: 11px 0px;
-    &.active {
-      span {
-        border: 2px solid #7c4cf3;
-      }
-    }
+    padding: 8px 0px;
   }
 }
 </style>

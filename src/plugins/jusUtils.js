@@ -46,22 +46,20 @@ const fuseSearchDisputes = function (disputes, term) {
 
 const getLastInteraction = function (lastinteractiondate) {
   if (!lastinteractiondate) return ''
-  let date = moment(lastinteractiondate + 'Z')
-  if (date.isValid()) {
-    let now = moment()
-    if (now.diff(date, 'seconds') < 0) {
-      return ''
-    } else if (now.diff(date, 'seconds') < 59) {
-      return 'há ' + now.diff(date, 'seconds') + ' segundos'
-    } else if (now.diff(date, 'minutes') < 59) {
-      return 'há ' + now.diff(date, 'minutes') + ' minuto(s)'
-    } else if (now.diff(date, 'hours') < 24) {
-      return 'há ' + now.diff(date, 'hours') + ' hora(s)'
-    } else if (now.diff(date, 'hours') < 48) {
-      return 'há 1 dia'
-    } else {
-      return date.format('DD/MM/YY')
-    }
+  let now = moment()
+  let date = moment(lastinteractiondate)
+  if (now.diff(date, 'seconds') < 0) {
+    return ''
+  } else if (now.diff(date, 'seconds') < 59) {
+    return 'há ' + now.diff(date, 'seconds') + ' segundos'
+  } else if (now.diff(date, 'minutes') < 59) {
+    return 'há ' + now.diff(date, 'minutes') + ' minuto(s)'
+  } else if (now.diff(date, 'hours') < 24) {
+    return 'há ' + now.diff(date, 'hours') + ' hora(s)'
+  } else if (now.diff(date, 'hours') < 48) {
+    return 'há 1 dia'
+  } else {
+    return date.format('DD/MM/YY')
   }
   return ''
 }
@@ -81,7 +79,7 @@ const getLastInteractionIcon = function (type) {
     case 'NEGOTIATION':
       return 'negotiation2'
     default:
-      return ''
+      return 'negotiation2'
   }
 }
 
@@ -100,7 +98,7 @@ const getLastInteractionTooltip = function (type) {
     case 'NEGOTIATION':
       return 'Última interação via Sistema Justto'
     default:
-      return ''
+      return 'Última interação via Sistema Justto'
   }
 }
 
