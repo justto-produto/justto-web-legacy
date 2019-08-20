@@ -193,9 +193,6 @@ export default {
       currentEditMember: {}
     }
   },
-  beforeMount () {
-    this.getSyncedEmails()
-  },
   mounted () {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.getters.currentPerson))
@@ -205,11 +202,6 @@ export default {
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
         this.teamMembers = response
-      })
-    },
-    getSyncedEmails () {
-      this.$store.dispatch('getInbox').then(response => {
-        this.syncedEmails = response.content
       })
     },
     changeName () {
@@ -305,7 +297,6 @@ export default {
           var self = this
           setTimeout(function () {
             self.$store.commit('hideLoading')
-            self.getSyncedEmails()
           }, 1000)
         }).catch(() => {
           this.$store.commit('hideLoading')

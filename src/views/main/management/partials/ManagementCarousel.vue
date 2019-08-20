@@ -38,13 +38,13 @@ export default {
   computed: {
     slides () {
       return [{
-        id: 'alertWhatsapp',
-        title: 'sincronize seu WhatsApp para garantir que suas disputas terão mais engajamento',
-        button: 'Resolver',
-        to: 'profile',
-        color: 'green',
-        shows: this.$store.getters.whatsappStatus !== 'CONNECTED'
-      }, {
+      //   id: 'alertWhatsapp',
+      //   title: 'sincronize seu WhatsApp para garantir que suas disputas terão mais engajamento',
+      //   button: 'Resolver',
+      //   to: 'profile',
+      //   color: 'green',
+      //   shows: this.$store.getters.whatsappStatus !== 'CONNECTED'
+      // }, {
         id: 'alertOne',
         title: 'disputas que a negociação encerra nos próximos 3 dias',
         subtitle: 'Entre em contato',

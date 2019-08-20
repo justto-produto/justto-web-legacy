@@ -1,11 +1,11 @@
 <template>
   <JusViewMain
     :loading-container="!dispute.id"
-    fullScreen
+    full-screen
     left-card-width="320"
     right-card-width="320"
     class="dispute-view">
-    <template slot="title" v-if="false">
+    <template v-if="false" slot="title">
       <h1 class="dispute-view__title">
         <router-link to="/management">
           <jus-icon icon="back"/>
@@ -14,7 +14,7 @@
       </h1>
     </template>
     <!-- RESUMO DO CASO -->
-    <template slot="left-card" v-if="false">
+    <template v-if="false" slot="left-card">
       <div class="dispute-view__section-title">
         <h2>Resumo da disputa</h2>
       </div>
@@ -391,7 +391,7 @@ export default {
     filteredDisputeMessages () {
       if (this.searchTerm) {
         return this.disputeMessages.filter(occurrence => {
-          return  occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          return occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           occurrence.message.content.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           occurrence.message.sender.toLowerCase().includes(this.searchTerm.toLowerCase())
         })
@@ -486,7 +486,7 @@ export default {
         })
       })
     },
-    toggleShowSchedule(value) {
+    toggleShowSchedule (value) {
       this.showScheduled = value
     },
     getOccurrences () {

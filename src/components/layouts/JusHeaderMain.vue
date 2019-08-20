@@ -17,45 +17,77 @@
             </span>
           </template>
         </el-autocomplete>
-        <h3 v-if="disputeId">Disputa #{{ disputeId }}</h3>
-    </div>
-    <div class="jus-header-main__info">
-      <el-dropdown trigger="click" placement="bottom-start">
-        <span class="el-dropdown-link">
-          <jus-avatar-user
-            :name="name"
-            size="sm"/>
-          <div class="main-info__name">
-            <div style="text-transform: capitalize;">
-              {{ name }}
+        <h3 v-if="disputeId"># {{ disputeId }}</h3>
+      </div>
+      <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
+        <el-tooltip>
+          <div slot="content">
+            <span v-if="!isWhatsappconnected">
+              WhatsApp desconectado
+            </span>
+            <span v-else-if="!!whatsappNumber">
+              Conectado via: {{ whatsappNumber | phoneMask }}
+            </span>
+            <span v-else>
+              WhatsApp conectado
+            </span>
+          </div>
+          <jus-icon :icon="'whatsapp-' + (!isWhatsappconnected ? 'disconnected' : 'connected')" />
+        </el-tooltip>
+        <i v-if="!isWhatsappconnected" class="el-icon-warning" />
+      </div>
+      <div class="jus-header-main__info">
+        <el-dropdown trigger="click" placement="bottom-start">
+          <span class="el-dropdown-link">
+            <jus-avatar-user :name="name" size="sm" />
+            <div class="main-info__name">
+              <div style="text-transform: capitalize;">
+                {{ name }}
+              </div>
+              <span>{{ workspace }}</span>
             </div>
-            <span>{{ workspace }}</span>
-          </div>
-          <jus-icon icon="expand-dropdown"/>
+            <jus-icon icon="expand-dropdown"/>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <div class="jus-header-main__version">
+              Versão {{ appVersion }}
+            </div>
+            <router-link to="/profile">
+              <el-dropdown-item divided>
+                Perfil
+              </el-dropdown-item>
+            </router-link>
+            <a href="http://ajuda.justto.com.br/" target="_blank">
+              <el-dropdown-item>
+                Central de ajuda
+              </el-dropdown-item>
+            </a>
+            <a href="#" @click="logout()">
+              <el-dropdown-item divided>
+                Sair
+              </el-dropdown-item>
+            </a>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+      <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
+        <span slot="title">
+          <h2>Whatsapp</h2>
         </span>
-        <el-dropdown-menu slot="dropdown">
-          <div class="jus-header-main__version">
-            Versão {{ appVersion }}
-          </div>
-          <router-link to="/profile">
-            <el-dropdown-item divided>
-              Perfil
-            </el-dropdown-item>
-          </router-link>
-          <a href="http://ajuda.justto.com.br/" target="_blank">
-            <el-dropdown-item>
-              Central de ajuda
-            </el-dropdown-item>
-          </a>
-          <a href="#" @click="logout()">
-            <el-dropdown-item divided>
-              Sair
-            </el-dropdown-item>
-          </a>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
-  </el-header>
+        <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
+        <div v-else>
+          <h2>Desculpe :(</h2>
+          <p>
+            Nosso servidor Whatsapp encontra-se instável neste momento.<br>
+            Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
+          </p>
+        </div>
+        <span slot="footer">
+          <el-button plain @click="whatsappVisible = false">Fechar</el-button>
+        </span>
+      </el-dialog>
+    </el-header>
+  </div>
 </template>
 
 <script>
@@ -65,10 +97,11 @@ import { fuseSearchDisputes } from '@/plugins/jusUtils'
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume
   },
   data () {
     return {
+      disputeId: '',
+      whatsappVisible: false,
       disputeId: null
     }
   },
@@ -147,10 +180,29 @@ export default {
     }
   }
 }
-.jus-header-main__notification {
+.jus-header-main__whatsapp {
+  position: relative;
   margin: auto;
-  margin-right: 20px;
-  cursor: pointer;
+  margin-right: 14px;
+  img {
+    width: 28px;
+    cursor: pointer;
+  }
+  .el-icon-warning {
+    background-color: #fff;
+    border-radius: 50%;
+    color: #FF4B54;
+    position: absolute;
+    right: -4px;
+    bottom: 1px;
+    font-size: 18px;
+    animation-delay: .2s;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: throbber-pulse,throbber-fade;
+    animation-timing-function: ease-in-out;
+  }
 }
 .jus-header-main__info {
   .el-dropdown-link {

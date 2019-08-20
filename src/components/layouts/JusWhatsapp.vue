@@ -1,12 +1,19 @@
 <template>
   <div class="jus-whatsapp">
     <div class="jus-whatsapp__container">
-      <div
-        v-loading="isWhatsappStarting"
-        :class="{'is-connected' : isWhatsappConnected}"
-        class="jus-whatsapp__qrcode">
-        <img :src="qrCode" class="qrcode">
-        <jus-icon v-if="!isWhatsappReady && !isWhatsappStarting" icon="check" class="check"/>
+      <div>
+        <div
+          v-loading="isWhatsappStarting"
+          :class="{'is-connected' : isWhatsappConnected}"
+          class="jus-whatsapp__qrcode">
+          <img :src="qrCode" class="qrcode">
+          <jus-icon v-if="!isWhatsappReady && !isWhatsappStarting" icon="check" class="check"/>
+        </div>
+        <div v-if="status" class="jus-whatsapp__status">
+          Status:
+          <strong>{{ status.message }}</strong>
+          <jus-status-dot :type="status.type" />
+        </div>
       </div>
       <div v-show="isWhatsappReady || isWhatsappStarting" class="jus-whatsapp__status-info">
         1. Abra o WhatsApp em seu telefone
@@ -44,11 +51,6 @@
           </div>
         </el-form>
       </div>
-    </div>
-    <div v-if="status" class="jus-whatsapp__status">
-      Status:
-      <strong>{{ status.message }}</strong>
-      <jus-status-dot :type="status.type"/>
     </div>
   </div>
 </template>
@@ -145,15 +147,17 @@ export default {
 
 <style lang="scss">
 .jus-whatsapp {
+  display: flex;
   &__container {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   &__qrcode {
-    width: 200px;
-    min-width: 200px;
-    height: 200px;
+    width: 160px;
+    min-width: 160px;
+    height: 160px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     padding: 6px;
     img {
@@ -177,10 +181,15 @@ export default {
   &__status-info {
     margin-left: 20px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
   }
   &__status {
     margin-top: 20px;
     strong {
+      word-break: break-word;
       margin: 0 8px 0 4px;
     }
   }

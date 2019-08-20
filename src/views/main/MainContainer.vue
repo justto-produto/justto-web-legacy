@@ -53,7 +53,6 @@
 <script>
 import JusHeaderMain from '@/components/layouts/JusHeaderMain'
 import JusTeamMenu from '@/components/layouts/JusTeamMenu'
-import JusTip from '@/components/others/JusTip'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
@@ -61,7 +60,6 @@ export default {
   components: {
     JusHeaderMain,
     JusTeamMenu,
-    JusTip,
     VuePerfectScrollbar
   },
   data () {
