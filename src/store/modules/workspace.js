@@ -4,29 +4,27 @@ const workspaceModule = {
     name: '',
     status: '',
     subdomain: '',
+    profile: '',
     members: []
   },
   mutations: {
     updateWorkspace (state, response) {
-      if (response) {
-        if (response.subDomain) {
-          // eslint-disable-next-line
-          axios.defaults.headers.common['Workspace'] = response.subDomain
-        }
-        if (response.name) state.name = response.name
-        if (response.status) state.status = response.status
-        if (response.subDomain) state.subdomain = response.subDomain
-        if (response.id) state.id = response.id
+      if (response.workspace) {
+        // eslint-disable-next-line
+        axios.defaults.headers.common['Workspace'] = response.workspace.subDomain
+        state.subdomain = response.workspace.subDomain
+        state.name = response.workspace.name
+        state.status = response.workspace.status
+        state.id = response.workspace.id
       }
-    },
-    getError (state) {
-      state.status = 'error'
+      state.profile = response.profile
     },
     clearWorkspace (state) {
       state.id = ''
       state.name = ''
       state.status = ''
       state.subdomain = ''
+      state.profile = ''
       state.members = []
     },
     setWorkspaceMembers (state, members) {

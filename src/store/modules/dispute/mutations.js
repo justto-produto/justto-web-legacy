@@ -40,6 +40,9 @@ const disputeMutations = {
     state.filters.filterPersonId = id
   },
   updateDisputeList (state, disputeChanged) {
+    if (true) {
+
+    }
     Vue.nextTick(() => {
       let disputeIndex = state.disputesDTO.findIndex(d => disputeChanged.id === d.id)
       if (disputeIndex === -1) {
