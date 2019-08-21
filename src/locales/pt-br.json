@@ -7,6 +7,9 @@
     "expirationDate": "fim da negociação",
     "description": "descrição"
   },
+  "expirationDate": {
+    "dateTime": "fim da negociação"
+  },
   "disputeClassification": {
     "name": "classificação"
   },
@@ -30,10 +33,12 @@
   },
   "phone": {
     "mobileNumber": "celular",
-    "landLineNumber": "telefone"
+    "landLineNumber": "telefone",
+    "number": "telefone/celular"
   },
   "oab": {
-    "stateNumber": "oab"
+    "stateNumber": "oab",
+    "number": "OAB"
   },
   "person": {
     "name": "nome",
