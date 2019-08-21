@@ -166,7 +166,7 @@ export default {
   beforeRouteLeave (to, from, next) {
     if (to.path === '/import/loading') {
       next()
-    }  else if (this.$store.getters.hasImportsFile) {
+    } else if (this.$store.getters.hasImportsFile) {
       this.$confirm('Tem certeza que deseja sair da importação? Todos os dados serão perdidos.', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancelar',
