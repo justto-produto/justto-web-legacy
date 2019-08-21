@@ -22,9 +22,9 @@ const mutations = {
     state.number = ''
   },
   SOCKET_refresh (state, message) {
-    if (message.qrCode) state.whatsapp.qrCode = message.qrCode
-    if (message.status) state.whatsapp.status = message.status
-    if (message.phone) state.whatsapp.number = message.phone
+    state.whatsapp.qrCode = message.qrCode
+    state.whatsapp.status = message.status
+    state.whatsapp.number = message.phone
   },
   // DISPUTE
   setDisputeLastIdChanged (state, id) {
