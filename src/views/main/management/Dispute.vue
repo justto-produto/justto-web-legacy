@@ -29,6 +29,7 @@
     <!-- CHAT -->
     <template slot="main">
       <div class="dispute-view__section-messages">
+        <!-- BUTTONS -->
         <div class="dispute-view__actions">
           <el-tooltip content="Ganhar">
             <el-button
@@ -158,6 +159,7 @@
             <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
           </span>
         </el-dialog>
+        <!-- MESSAGES -->
         <dispute-messages
           :dispute-id="dispute.id"
           :messages-prop="filteredDisputeMessages"
@@ -172,9 +174,8 @@
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
                   <textarea
-                    v-show="activePerson.personId && validName"
                     v-model="newMessage"
-                    rows="3"
+                    rows="2"
                     data-testid="input-message"
                     placeholder="Escreva alguma coisa"
                     class="el-textarea__inner"
@@ -192,7 +193,7 @@
                       Configure um nome em seu perfil
                     </div>
                   </el-tooltip>
-                  <div v-else-if="activePerson.personId">
+                  <div>
                     <div>
                       <el-tooltip content="Enviar e-mail">
                         <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
@@ -213,11 +214,6 @@
                       </el-tooltip>
                     </div>
                   </div>
-                  <el-tooltip v-else content="Escolha um destinatário ao lado para receber sua mensagem">
-                    <div class="dispute-view__disabled-text" data-testid="unselected-party">
-                      Escolha um destinatário ao lado
-                    </div>
-                  </el-tooltip>
                   <el-tooltip
                     v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'"
                     content="Whatsapp desconectado">
@@ -258,13 +254,23 @@
                     </el-button>
                   </div>
                   <div v-else>
-                    <el-button
-                      :disabled="!activePerson.personId"
-                      type="primary"
-                      data-testid="submit-email"
-                      @click="sendMessage()">
-                      Enviar
-                    </el-button>
+                    <el-tooltip>
+                      <div slot="content">
+                        <span v-if="!activePerson.personId">
+                          Escolha um destinatário ao lado para receber sua mensagem
+                        </span>
+                        <span v-else>Enviar mensagem</span>
+                      </div>
+                      <div>
+                        <el-button
+                          :disabled="!activePerson.personId"
+                          type="primary"
+                          data-testid="submit-email"
+                          @click="sendMessage()">
+                          Enviar
+                        </el-button>
+                      </div>
+                    </el-tooltip>
                   </div>
                 </div>
               </el-card>
@@ -294,7 +300,7 @@
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <textarea
                   v-model="newNote"
-                  rows="3"
+                  rows="2"
                   data-testid="input-nota"
                   placeholder="Escreva alguma coisa"
                   class="el-textarea__inner"
@@ -732,8 +738,8 @@ export default {
     border-top: 1px solid #eeeeee;
     .el-tabs__header {
       width: fit-content;
-      padding: 10px 20px 0;
-      margin-bottom: 0px;
+      padding: 0 20px;
+      margin-bottom: 0;
     }
     .el-tabs__active-bar {
       width: 80px;
@@ -746,7 +752,7 @@ export default {
     margin-top: 10px;
   }
   &__send-message-box {
-    margin: 20px;
+    margin: 10px;
     border: 0;
     .el-textarea {
       padding-top: 10px;
