@@ -213,7 +213,7 @@ const disputeActions = {
   disputeVisualized ({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + disputeId + '/visualized/')
+      axios.patch('api/disputes/' + disputeId + '/visualized/')
         .then(response => {
           resolve(response.data)
         }).catch(error => {
