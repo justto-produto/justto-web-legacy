@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <el-header class="jus-header-main">
-      <div class="jus-header-main__search">
-        <jus-icon v-if="showSearch" icon="search" class="el-menu__icon-search" />
+  <el-header class="jus-header-main">
+    <div class="jus-header-main__search">
+        <jus-icon icon="search" class="el-menu__icon-search" v-if="!disputeId"/>
         <el-autocomplete
-          v-if="showSearch"
           v-model="disputeId"
+          v-if="!disputeId"
           :trigger-on-focus="false"
           :fetch-suggestions="search"
           placeholder="Busque aqui as suas disputas">
@@ -18,7 +17,12 @@
             </span>
           </template>
         </el-autocomplete>
-        <h3 v-if="!showSearch"># {{ disputeId }}</h3>
+        <h2 v-else class="jus-header-main__title">
+          <router-link to="/management">
+            <jus-icon icon="back"/>
+          </router-link>
+          Disputa #{{ disputeId }}
+        </h2>
       </div>
       <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
         <el-tooltip>
@@ -41,7 +45,7 @@
         <el-dropdown trigger="click" placement="bottom-start">
           <span class="el-dropdown-link">
             <jus-avatar-user :name="name" size="sm" />
-            <div class="main-info__name">
+            <div class="jus-header-main__name">
               <div style="text-transform: capitalize;">
                 {{ name }}
               </div>
@@ -71,41 +75,44 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
+      <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
+        <span slot="title">
+          <h2>Whatsapp</h2>
+        </span>
+        <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
+        <div v-else>
+          <h2>Desculpe :(</h2>
+          <p>
+            Nosso servidor Whatsapp encontra-se instável neste momento.<br>
+            Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
+          </p>
+        </div>
+        <span slot="footer">
+          <el-button plain @click="whatsappVisible = false">Fechar</el-button>
+        </span>
+      </el-dialog>
     </el-header>
-    <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
-      <span slot="title">
-        <h2>Whatsapp</h2>
-      </span>
-      <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
-      <div v-else>
-        <h2>Desculpe :(</h2>
-        <p>
-          Nosso servidor Whatsapp encontra-se instável neste momento.<br>
-          Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
-        </p>
-      </div>
-      <span slot="footer">
-        <el-button plain @click="whatsappVisible = false">Fechar</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import JusDisputeResume from '@/components/layouts/JusDisputeResume'
-import JusWhatsapp from '@/components/layouts/JusWhatsapp'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume,
-    JusWhatsapp
   },
   data () {
     return {
       disputeId: '',
-      whatsappVisible: false
+      whatsappVisible: false,
+      disputeId: null
+    }
+  },
+  watch: {
+    '$route.params.id': function (id) {
+      this.disputeId = id
     }
   },
   computed: {
@@ -117,21 +124,6 @@ export default {
     },
     appVersion () {
       return process.env.VUE_APP_VERSION
-    },
-    showSearch () {
-      if (this.$router.currentRoute.name === 'dispute') {
-        this.disputeId = this.$route.path.split('/').pop()
-        return false
-      } else {
-        this.disputeId = ''
-        return true
-      }
-    },
-    whatsappNumber () {
-      return this.$store.getters.whatsappNumber
-    },
-    isWhatsappconnected () {
-      return this.$store.getters.whatsappStatus === 'CONNECTED'
     }
   },
   methods: {
@@ -160,8 +152,11 @@ export default {
         }
       }, 500)
     }
+  },
+  beforeMount() {
+    this.disputeId = this.$route.params.id
   }
-}
+ }
 </script>
 
 <style lang="scss">
@@ -175,63 +170,70 @@ export default {
     color: #adadad;
     font-size: 12px;
   }
-}
-.jus-header-main__search {
-  display: flex;
-  width: 100%;
-  .el-autocomplete {
-    width: 100%;
-    input {
-      border: 0;
-      outline: 0;
-      height: 58px;
-      font-size: 16px;
-      opacity: .75;
+  &__title {
+    margin-left: 20px;
+    font-weight: 500;
+    a {
+      margin-right: 20px;
     }
   }
-}
-.jus-header-main__whatsapp {
-  position: relative;
-  margin: auto;
-  margin-right: 14px;
-  img {
-    width: 28px;
-    cursor: pointer;
-  }
-  .el-icon-warning {
-    background-color: #fff;
-    border-radius: 50%;
-    color: #FF4B54;
-    position: absolute;
-    right: -4px;
-    bottom: 1px;
-    font-size: 18px;
-    animation-delay: .2s;
-    animation-duration: 1.5s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
-    animation-name: throbber-pulse,throbber-fade;
-    animation-timing-function: ease-in-out;
-  }
-}
-.jus-header-main__info {
-  .el-dropdown-link {
+  &__search {
     display: flex;
-    align-items: center;
-    margin: 8px 0;
-    cursor: pointer;
+    width: 100%;
+    .el-autocomplete {
+      width: 100%;
+      input {
+        border: 0;
+        outline: 0;
+        height: 58px;
+        font-size: 16px;
+        opacity: .75;
+      }
+    }
   }
-}
-.main-info__name {
-  margin: 0 20px 0 10px;
-  div {
-    white-space: nowrap;
-    font-weight: 600;
+  &__whatsapp {
+    position: relative;
+    margin: auto;
+    margin-right: 14px;
+    img {
+      width: 28px;
+      cursor: pointer;
+    }
+    .el-icon-warning {
+      background-color: #fff;
+      border-radius: 50%;
+      color: #FF4B54;
+      position: absolute;
+      right: -4px;
+      bottom: 1px;
+      font-size: 18px;
+      animation-delay: .2s;
+      animation-duration: 1.5s;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      animation-name: throbber-pulse,throbber-fade;
+      animation-timing-function: ease-in-out;
+    }
   }
-  span {
-    font-size: 12px;
-    color: #666666;
-    white-space: nowrap;
+  &__info {
+    .el-dropdown-link {
+      display: flex;
+      align-items: center;
+      margin: 8px 0;
+      cursor: pointer;
+    }
+  }
+  &__name {
+    margin: 0 20px 0 10px;
+    div {
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    span {
+      font-size: 12px;
+      color: #666666;
+      white-space: nowrap;
+    }
   }
 }
 </style>
