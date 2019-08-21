@@ -83,10 +83,9 @@
       </span>
       <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
       <div v-else>
-        <h2>Desculpe :(</h2>
+        <h3>Whatsapp te desconectou</h3>
         <p>
-          Nosso servidor Whatsapp encontra-se instável neste momento.<br>
-          Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
+          Estamos reiniciando sua conexão, aguarde para fazer a leitura do QRCODE
         </p>
       </div>
       <span slot="footer">
