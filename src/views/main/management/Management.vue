@@ -414,9 +414,6 @@ export default {
     }, 1000)
     window.addEventListener('resize', this.adjustHeight)
   },
-  beforeUpdate () {
-    this.adjustHeight()
-  },
   beforeDestroy () {
     window.removeEventListener('resize', this.adjustHeight)
   },
