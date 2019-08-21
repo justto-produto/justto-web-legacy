@@ -5,6 +5,7 @@ import {
   getLastInteractionIcon,
   getLastInteractionTooltip
 } from '@/plugins/jusUtils'
+import moment from 'moment'
 
 const getDisputeVMList = function (disputes) {
   let vmList = []
@@ -34,10 +35,10 @@ const getDisputeVM = function (dispute) {
     firstClaimant: getFirstRole(dispute.disputeRoles, 'CLAIMANT', 'PARTY'),
     firstClaimantLawyer: getFirstRole(dispute.disputeRoles, 'CLAIMANT', 'LAWYER'),
     disputeRoles: dispute.disputeRoles,
-    expirationDate: dispute.expirationDate.dateTime,
+    expirationDate: moment(dispute.expirationDate.dateTime).format(),
     description: dispute.description,
-    disputeDealDate: dispute.conclusion ? dispute.conclusion.conclusionDate.dateTime : null,
-    lastInteractionDate: dispute.lastInteraction ? dispute.lastInteraction.date.dateTime : null,
+    disputeDealDate: dispute.conclusion ? moment(dispute.conclusion.conclusionDate.dateTime).format() : null,
+    lastInteractionDate: dispute.lastInteraction ? moment(dispute.lastInteraction.date.dateTimeToDate).format() : null,
     lastInteractionType: dispute.lastInteraction ? dispute.lastInteraction.type : null,
     communicationMsgTotalSent: dispute.communications.filter(c => c.status === 'PROCESSED' && c.direction === 'OUTBOUND').length,
     communicationMsgTotalsShedulled: dispute.communications.filter(c => c.status === 'WAITING' && c.direction === 'OUTBOUND').length,
