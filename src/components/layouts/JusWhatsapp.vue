@@ -179,6 +179,7 @@ export default {
     }
   }
   &__status-info {
+    word-break: break-word;
     margin-left: 20px;
     width: 100%;
     display: flex;

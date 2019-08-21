@@ -2,102 +2,100 @@
   <div>
     <el-header class="jus-header-main">
       <div class="jus-header-main__search">
-          <jus-icon icon="search" class="el-menu__icon-search" v-if="!disputeId"/>
-          <el-autocomplete
-            v-model="disputeId"
-            v-if="!disputeId"
-            :trigger-on-focus="false"
-            :fetch-suggestions="search"
-            placeholder="Busque aqui as suas disputas">
-            <template slot-scope="{ item }">
-              <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
-                <jus-dispute-resume :dispute="item" />
-              </router-link>
-              <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
-                Não foram encontradas disputas para esta busca.
-              </span>
-            </template>
-          </el-autocomplete>
-          <h2 v-else class="jus-header-main__title">
-            <router-link to="/management">
-              <jus-icon icon="back"/>
+        <jus-icon v-if="!disputeId" icon="search" class="el-menu__icon-search" />
+        <el-autocomplete
+          v-if="!disputeId"
+          v-model="disputeId"
+          :trigger-on-focus="false"
+          :fetch-suggestions="search"
+          placeholder="Busque aqui as suas disputas">
+          <template slot-scope="{ item }">
+            <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
+              <jus-dispute-resume :dispute="item" />
             </router-link>
-            Disputa #{{ disputeId }}
-          </h2>
-        </div>
-        <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
-          <el-tooltip>
-            <div slot="content">
-              <span v-if="!isWhatsappConnected">
-                WhatsApp desconectado
-              </span>
-              <span v-else-if="!!whatsappNumber">
-                Conectado via: {{ whatsappNumber | phoneMask }}
-              </span>
-              <span v-else>
-                WhatsApp conectado
-              </span>
-            </div>
-            <jus-icon :icon="'whatsapp-' + (!isWhatsappConnected ? 'disconnected' : 'connected')" />
-          </el-tooltip>
-          <i v-if="!isWhatsappConnected" class="el-icon-warning" />
-        </div>
-        <div class="jus-header-main__info">
-          <el-dropdown trigger="click" placement="bottom-start">
-            <span class="el-dropdown-link">
-              <jus-avatar-user :name="name" size="sm" />
-              <div class="jus-header-main__name">
-                <div style="text-transform: capitalize;">
-                  {{ name }}
-                </div>
-                <span>{{ workspace }}</span>
-              </div>
-              <jus-icon icon="expand-dropdown"/>
+            <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
+              Não foram encontradas disputas para esta busca.
             </span>
-            <el-dropdown-menu slot="dropdown">
-              <div class="jus-header-main__version">
-                Versão {{ appVersion }}
+          </template>
+        </el-autocomplete>
+        <h2 v-else class="jus-header-main__title">
+          <router-link to="/management">
+            <jus-icon icon="back"/>
+          </router-link>
+          Disputa #{{ disputeId }}
+        </h2>
+      </div>
+      <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
+        <el-tooltip>
+          <div slot="content">
+            <span v-if="!isWhatsappConnected">
+              WhatsApp desconectado
+            </span>
+            <span v-else-if="!!whatsappNumber">
+              Conectado via: {{ whatsappNumber | phoneMask }}
+            </span>
+            <span v-else>
+              WhatsApp conectado
+            </span>
+          </div>
+          <jus-icon :icon="'whatsapp-' + (!isWhatsappConnected ? 'disconnected' : 'connected')" />
+        </el-tooltip>
+        <i v-if="!isWhatsappConnected" class="el-icon-warning" />
+      </div>
+      <div class="jus-header-main__info">
+        <el-dropdown trigger="click" placement="bottom-start">
+          <span class="el-dropdown-link">
+            <jus-avatar-user :name="name" size="sm" />
+            <div class="jus-header-main__name">
+              <div style="text-transform: capitalize;">
+                {{ name }}
               </div>
-              <router-link to="/profile">
-                <el-dropdown-item divided>
-                  Perfil
-                </el-dropdown-item>
-              </router-link>
-              <a href="http://ajuda.justto.com.br/" target="_blank">
-                <el-dropdown-item>
-                  Central de ajuda
-                </el-dropdown-item>
-              </a>
-              <a href="#" @click="logout()">
-                <el-dropdown-item divided>
-                  Sair
-                </el-dropdown-item>
-              </a>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </el-header>
-  <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
-    <span slot="title">
-      <h2>Whatsapp</h2>
-    </span>
-    <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
-    <div v-else>
-      <h2>Desculpe :(</h2>
-      <p>
-        Nosso servidor Whatsapp encontra-se instável neste momento.<br>
-        Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
-      </p>
-    </div>
-    <span slot="footer">
-      <el-button plain @click="whatsappVisible = false">Fechar</el-button>
-    </span>
-  </el-dialog>
+              <span>{{ workspace }}</span>
+            </div>
+            <jus-icon icon="expand-dropdown"/>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <div class="jus-header-main__version">
+              Versão {{ appVersion }}
+            </div>
+            <router-link to="/profile">
+              <el-dropdown-item divided>
+                Perfil
+              </el-dropdown-item>
+            </router-link>
+            <a href="http://ajuda.justto.com.br/" target="_blank">
+              <el-dropdown-item>
+                Central de ajuda
+              </el-dropdown-item>
+            </a>
+            <a href="#" @click="logout()">
+              <el-dropdown-item divided>
+                Sair
+              </el-dropdown-item>
+            </a>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </el-header>
+    <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
+      <span slot="title">
+        <h2>Whatsapp</h2>
+      </span>
+      <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
+      <div v-else>
+        <h3>Whatsapp te desconectou</h3>
+        <p>
+          Estamos reiniciando sua conexão, aguarde para fazer a leitura do QRCODE
+        </p>
+      </div>
+      <span slot="footer">
+        <el-button plain @click="whatsappVisible = false">Fechar</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import JusDisputeResume from '@/components/layouts/JusDisputeResume'
 import JusWhatsapp from '@/components/layouts/JusWhatsapp'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
@@ -109,13 +107,7 @@ export default {
   data () {
     return {
       disputeId: '',
-      whatsappVisible: false,
-      disputeId: null
-    }
-  },
-  watch: {
-    '$route.params.id': function (id) {
-      this.disputeId = id
+      whatsappVisible: false
     }
   },
   computed: {
@@ -134,6 +126,14 @@ export default {
     whatsappNumber () {
       return this.$store.getters.whatsappNumber
     }
+  },
+  watch: {
+    '$route.params.id': function (id) {
+      this.disputeId = id
+    }
+  },
+  beforeMount () {
+    this.disputeId = this.$route.params.id
   },
   methods: {
     logout () {
@@ -161,11 +161,8 @@ export default {
         }
       }, 500)
     }
-  },
-  beforeMount() {
-    this.disputeId = this.$route.params.id
   }
- }
+}
 </script>
 
 <style lang="scss">

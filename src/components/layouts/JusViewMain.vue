@@ -1,5 +1,5 @@
 <template>
-  <div class="jus-main-view" :class="{'fullScreen': fullScreen}">
+  <div :class="{'fullScreen': fullScreen}" class="jus-main-view">
     <!-- TITLE SLOT -->
     <div v-if="this.$slots['title']" class="jus-main-view__title">
       <slot name="title"/>
