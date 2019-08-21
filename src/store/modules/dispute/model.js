@@ -60,6 +60,7 @@ const getDisputeVM = function (dispute) {
   }
   let object = dispute.objects.length ? dispute.objects[0] : null
   if (object) {
+    vm.objectId = object.id
     vm.disputeUpperRange = object.respondentBoundary ? object.respondentBoundary.boundary : '0.0'
     let lastOfferValue = object.offers.filter(o => o.role.party === 'RESPONDENT')
     let lastCounterOfferValue = object.offers.filter(o => o.role.party === 'CLAIMANT')

@@ -165,12 +165,22 @@
         @submit.native.prevent="editDispute">
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="Alçada máxima" prop="boundary">
+            <el-form-item label="Alçada máxima" prop="disputeUpperRange">
               <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="Fim da negociação" prop="deadline">
+            <el-form-item label="Contraproposta" prop="lastCounterOfferValue">
+              <money v-model="disputeForm.lastCounterOfferValue" v-bind="money" class="el-input__inner" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="Valor proposto" prop="lastOfferValue">
+              <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="Fim da negociação" prop="expirationDate">
               <el-date-picker
                 v-model="disputeForm.expirationDate"
                 :clearable="false"
@@ -178,9 +188,9 @@
                 type="date" />
             </el-form-item>
           </el-col>
-          <el-col v-if="dispute.status == 'ACCEPTED' || dispute.status == 'CHECKOUT'" :span="24">
-            <el-form-item label="Valor do acordo" prop="deal">
-              <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" />
+          <el-col :span="24">
+            <el-form-item label="Valor do acordo" prop="disputeDealValue">
+              <money v-model="disputeForm.disputeDealValue" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -343,7 +353,7 @@ export default {
       if (value && value.length > 2) {
         callback()
       } else {
-        callback(new Error('Nome precisa conter mais de 3 caracteres.'))
+        callback(new Error())
       }
     }
     var validatePhone = (rule, value, callback) => {
@@ -366,33 +376,32 @@ export default {
       phoneForm: { phone: '' },
       oabForm: { oab: '', state: '' },
       emailRules: { email: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'submit' }
+        { required: true, message: 'Campo obrigatório', trigger: 'blur' },
+        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'blur' }
       ] },
       phoneRules: { phone: [
-        { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        { validator: validatePhone, trigger: 'submit' }
+        { required: true, message: 'Campo obrigatório', trigger: 'blur' },
+        { validator: validatePhone, trigger: 'blur' }
       ] },
       oabRules: {
-        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'blur' }],
+        state: [{ required: true, message: 'Campo obrigatório', trigger: 'blur' }]
       },
       personRules: {
         name: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres.', trigger: 'change' }
+          { required: true, message: 'Campo obrigatório', trigger: 'blur' },
+          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' }
         ]
       },
       disputeForm: {
-        disputeId: '',
-        upperRange: { boundary: '', id: '' },
-        lastOffer: { boundary: '', id: '' },
+        disputeUpperRange: '',
+        lastCounterOfferValue: '',
+        lastOfferValue: '',
         expirationDate: '',
+        disputeDealValue: '',
         description: ''
       },
-      disputeRules: {
-
-      },
+      disputeRules: {},
       roleForm: {
         name: '',
         documentNumber: '',
@@ -441,27 +450,38 @@ export default {
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseInt(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseInt(dispute.lastOfferValue)
+      this.disputeForm.lastCounterOfferValue = parseInt(dispute.lastCounterOfferValue)
+      this.disputeForm.disputeDealValue = parseInt(dispute.disputeDealValue)
       this.disputeForm.expirationDate = dispute.expirationDate
       this.disputeForm.description = dispute.description
     },
     editDispute () {
+      let promises = []
       let disputeToEdit = JSON.parse(JSON.stringify(this.$store.getters.findDisputeDTOById(this.disputeForm.id)))
       if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
       if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
       if (this.disputeForm.lastOfferValue) disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue + ''
       if (this.disputeForm.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
-      this.$store.dispatch('editDispute', disputeToEdit)
-        .then(response => {
-          this.editDisputeDialogVisible = false
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Os dados foram alterados com sucesso.',
-            type: 'success'
-          })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        })
+      promises.push(this.$store.dispatch('editDispute', disputeToEdit))
+      if (this.disputeForm.lastCounterOfferValue !== parseInt(this.dispute.lastCounterOfferValue)) {
+        promises.push(this.$store.dispatch('editDisputeOffer', {
+          objectId: this.dispute.objectId,
+          roleId: 0,
+          value: this.disputeForm.lastCounterOfferValue
+        }))
+      }
+      // Promise.all(promises)
+      //   .then(response => {
+      //     this.editDisputeDialogVisible = false
+      //     this.$jusNotification({
+      //       title: 'Yay!',
+      //       message: 'Os dados foram alterados com sucesso.',
+      //       type: 'success'
+      //     })
+      //   }).catch(() => {
+      //     this.$jusNotification({ type: 'error' })
+      //   })
     },
     buildTitle (role) {
       if (role.party === 'RESPONDENT') {

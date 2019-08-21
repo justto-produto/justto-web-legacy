@@ -143,6 +143,21 @@ const disputeActions = {
         })
     })
   },
+  editDisputeOffer ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.post('api/disputes/' + params.disputeId + '/offer', {
+        object: { id: params.objectId },
+        role: { id: params.roleId },
+        value: params.value
+      })
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
   editNegotiators ({ commit }, negotiators) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
