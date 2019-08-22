@@ -188,11 +188,11 @@
                 type="date" />
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <!-- <el-col :span="24">
             <el-form-item label="Valor do acordo" prop="disputeDealValue">
               <money v-model="disputeForm.disputeDealValue" v-bind="money" class="el-input__inner" />
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
               <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description"/>
@@ -398,7 +398,6 @@ export default {
         lastCounterOfferValue: '',
         lastOfferValue: '',
         expirationDate: '',
-        disputeDealValue: '',
         description: ''
       },
       disputeRules: {},
@@ -451,7 +450,6 @@ export default {
       this.disputeForm.disputeUpperRange = parseInt(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseInt(dispute.lastOfferValue)
       this.disputeForm.lastCounterOfferValue = parseInt(dispute.lastCounterOfferValue)
-      this.disputeForm.disputeDealValue = parseInt(dispute.disputeDealValue)
       this.disputeForm.expirationDate = dispute.expirationDate
       this.disputeForm.description = dispute.description
     },
@@ -471,17 +469,24 @@ export default {
           value: this.disputeForm.lastCounterOfferValue
         }))
       }
-      // Promise.all(promises)
-      //   .then(response => {
-      //     this.editDisputeDialogVisible = false
-      //     this.$jusNotification({
-      //       title: 'Yay!',
-      //       message: 'Os dados foram alterados com sucesso.',
-      //       type: 'success'
-      //     })
-      //   }).catch(() => {
-      //     this.$jusNotification({ type: 'error' })
-      //   })
+      if (this.disputeForm.lastOfferValue !== parseInt(this.dispute.lastOfferValue)) {
+        promises.push(this.$store.dispatch('editDisputeOffer', {
+          objectId: this.dispute.objectId,
+          roleId: 0,
+          value: this.disputeForm.lastOfferValue
+        }))
+      }
+      Promise.all(promises)
+        .then(() => {
+          this.editDisputeDialogVisible = false
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Os dados foram alterados com sucesso.',
+            type: 'success'
+          })
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        })
     },
     buildTitle (role) {
       if (role.party === 'RESPONDENT') {
