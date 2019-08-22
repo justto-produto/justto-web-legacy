@@ -2,9 +2,17 @@ import Fuse from 'fuse.js'
 import moment from 'moment'
 
 const getRoles = function (disputeRoles, party, role) {
-  const roles = disputeRoles.filter(disputeRole => {
-    return disputeRole.party === party && disputeRole.roles.includes(role)
-  })
+  let roles
+  if (party) {
+    roles = disputeRoles.filter(disputeRole => {
+      return disputeRole.party === party
+    })
+  }
+  if (role) {
+    roles = disputeRoles.filter(disputeRole => {
+      return disputeRole.roles.includes(role)
+    })
+  }
   return roles
 }
 

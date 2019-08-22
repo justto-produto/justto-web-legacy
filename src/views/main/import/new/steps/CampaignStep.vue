@@ -13,14 +13,14 @@
       Foram encontradas disputa(s) duplicada(s) e/ou expirada(s):
       <ul v-for="d in duplicatedDisputes">
         <li>
-          Linha {{ d.row }} -
-          <span v-if="d === 1">
-            Disputa <strong>exportada</strong> com data já expirada
-            ({{ d.expiredDate.dateTime | moment('DD/MM/YY') }}).
+          {{ d.code }} - Disputa
+          <span v-if="d.duplicated">
+            <strong>não importada</strong> por duplicidade
+            (campanha {{ d.duplicatedBy.campaignName }}).
           </span>
           <span v-else>
-            Disputa <strong>não exportada</strong> por duplicidade
-            (campanha {{ d.duplicatedBy.campaignName }}).
+            <strong>importada</strong> com data já expirada
+            ({{ d.expirationDate.dateTime | moment('DD/MM/YY') }}).
           </span>
         </li>
       </ul>
