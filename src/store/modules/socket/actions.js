@@ -1,3 +1,5 @@
+import { getRoles } from '@/plugins/jusUtils'
+
 const actions = {
   // CHAT
   sendMessageEvent ({ commit }, params) {
@@ -12,8 +14,13 @@ const actions = {
         })
     })
   },
-  SOCKET_ADD_DISPUTE ({ commit }, dispute) {
-    commit('updateDisputeList', dispute)
+  SOCKET_ADD_DISPUTE ({ commit, rootState }, dispute) {
+    const negotiators = getRoles(dispute)
+    const negotiatorIds = negotiators.map(n => n.personId)
+    if (rootState.workspaceModule.profile === 'ADMINISTRATOR' ||
+      negotiatorIds.includes(rootState.personModule.currentPerson.id)) {
+      commit('updateDisputeList', dispute)
+    }
     commit('setDisputeLastIdChanged', dispute.id)
   },
   SOCKET_REMOVE_DISPUTE ({ commit }, dispute) {

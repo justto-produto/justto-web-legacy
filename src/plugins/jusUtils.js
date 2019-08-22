@@ -2,14 +2,14 @@ import Fuse from 'fuse.js'
 import moment from 'moment'
 
 const getRoles = function (disputeRoles, party, role) {
-  let roles = disputeRoles.filter(disputeRole => {
+  const roles = disputeRoles.filter(disputeRole => {
     return disputeRole.party === party && disputeRole.roles.includes(role)
   })
   return roles
 }
 
 const getFirstRole = function (disputeRoles, party, role) {
-  let roles = getRoles(disputeRoles, party, role)
+  const roles = getRoles(disputeRoles, party, role)
   if (roles.length === 0) {
     return ''
   } else if (roles.length === 1) {
@@ -40,14 +40,14 @@ const fuseSearchDisputes = function (disputes, term) {
       'campaign.strategy'
     ]
   })
-  let list = fuse.search(term)
+  const list = fuse.search(term)
   return list
 }
 
 const getLastInteraction = function (lastinteractiondate) {
   if (!lastinteractiondate) return ''
-  let now = moment()
-  let date = moment(lastinteractiondate)
+  const now = moment()
+  const date = moment(lastinteractiondate)
   if (now.diff(date, 'seconds') < 0) {
     return ''
   } else if (now.diff(date, 'seconds') < 59) {
