@@ -57,8 +57,8 @@ const getDisputeVM = function (dispute) {
     lastOfferPercentToUpperRange: 0,
     paused: dispute.paused,
     tab: 'ALL',
-    visualized: dispute.visualized,
-    conclusionReasons: dispute.conclusion ? dispute.conclusion.reasons : null
+    conclusionReasons: dispute.conclusion ? dispute.conclusion.reasons : null,
+    createAt: dispute.createAt
   }
   let object = dispute.objects.length ? dispute.objects[0] : null
   if (object) {
