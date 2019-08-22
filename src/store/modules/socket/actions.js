@@ -15,7 +15,7 @@ const actions = {
     })
   },
   SOCKET_ADD_DISPUTE ({ commit, rootState }, dispute) {
-    const negotiators = getRoles(dispute)
+    const negotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR')
     const negotiatorIds = negotiators.map(n => n.personId)
     if (rootState.workspaceModule.profile === 'ADMINISTRATOR' ||
       negotiatorIds.includes(rootState.personModule.currentPerson.id)) {

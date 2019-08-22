@@ -395,7 +395,6 @@ export default {
       return this.$store.getters.findDisputeById(this.id)
     },
     filteredDisputeMessages () {
-      // debugger
       if (this.searchTerm) {
         return this.disputeMessages.filter(occurrence => {
           return (occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
