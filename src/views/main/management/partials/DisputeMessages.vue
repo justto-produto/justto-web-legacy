@@ -170,13 +170,6 @@ export default {
         this.$emit('dispute:occurrences:get')
       }, 1000)
     })
-    this.$store.watch(state => state.socketModule.dispute.lastIdChanged, lastIdChanged => {
-      if (this.disputeId === lastIdChanged) {
-        setTimeout(() => {
-          this.$emit('dispute:occurrences:get')
-        }, 1000)
-      }
-    })
   },
   methods: {
     removeTypingMessage () {

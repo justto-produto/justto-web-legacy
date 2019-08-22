@@ -61,7 +61,6 @@ const getLastInteraction = function (lastinteractiondate) {
   } else {
     return date.format('DD/MM/YY')
   }
-  return ''
 }
 
 const getLastInteractionIcon = function (type) {

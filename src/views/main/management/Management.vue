@@ -84,9 +84,9 @@
       <div ref="tableContainer" class="view-management__table-container">
         <el-table
           ref="disputeTable"
-          :key="tableKey"
           :height="tableHeigth"
           :data="paginatedDisputes"
+          :row-class-name="tableRowClassName"
           size="mini"
           class="el-table--disputes"
           data-testid="dispute-index"
@@ -310,7 +310,6 @@ export default {
   },
   data () {
     return {
-      tableKey: 0,
       showFilters: false,
       selectedIds: [],
       activeFilters: {},
@@ -414,10 +413,21 @@ export default {
     }, 1000)
     window.addEventListener('resize', this.adjustHeight)
   },
+  beforeUpdate () {
+    this.adjustHeight()
+    setTimeout(function () {
+      this.$refs.disputeTable.sort('expirationDate', 'descending')
+    }.bind(this), 100)
+  },
   beforeDestroy () {
     window.removeEventListener('resize', this.adjustHeight)
   },
   methods: {
+    tableRowClassName ({ row, rowIndex }) {
+      if (!row.visualized) {
+        return 'el-table__row--visualized-row'
+      }
+    },
     adjustHeight () {
       this.tableHeigth = this.$refs.tableContainer.clientHeight
     },
@@ -447,7 +457,7 @@ export default {
     },
     updateTable () {
       setTimeout(() => {
-        this.tableKey = this.tableKey + 1
+        this.$refs.disputeTable.doLayout()
       }, 400)
     },
     handleChangeTab (newTab, oldTab) {
@@ -455,16 +465,15 @@ export default {
         this.clearSelection()
         this.clearFilters()
       }
-      this.updateTable()
       switch (newTab) {
         case '0':
           setTimeout(function () {
-            this.$refs.disputeTable.sort('disputeexpirationdate', 'descending')
+            this.$refs.disputeTable.sort('expirationDate', 'descending')
           }.bind(this), 100)
           break
         case '1':
           setTimeout(function () {
-            this.$refs.disputeTable.sort('lastinteractiondate', 'ascending')
+            this.$refs.disputeTable.sort('lastInteractionDate', 'ascending')
           }.bind(this), 100)
           break
         case '2':
@@ -476,6 +485,7 @@ export default {
           this.$refs.disputeTable.clearSort()
           break
       }
+      this.updateTable()
     },
     exportDisputes () {
       this.loadingExport = true

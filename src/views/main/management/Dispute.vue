@@ -448,6 +448,7 @@ export default {
         this.unsettledTypes = response
       })
     }
+    this.$store.dispatch('disputeVisualized', this.id)
   },
   methods: {
     canSettled () {

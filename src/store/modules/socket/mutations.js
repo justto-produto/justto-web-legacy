@@ -25,10 +25,6 @@ const mutations = {
     state.whatsapp.qrCode = message.qrCode
     state.whatsapp.status = message.status
     state.whatsapp.number = message.phone
-  },
-  // DISPUTE
-  setDisputeLastIdChanged (state, id) {
-    if (id) state.dispute.lastIdChanged = id
   }
 }
 

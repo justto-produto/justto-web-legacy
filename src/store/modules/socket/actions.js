@@ -21,7 +21,6 @@ const actions = {
       negotiatorIds.includes(rootState.personModule.currentPerson.id)) {
       commit('updateDisputeList', dispute)
     }
-    commit('setDisputeLastIdChanged', dispute.id)
   },
   SOCKET_REMOVE_DISPUTE ({ commit }, dispute) {
     commit('removeDisputeFromList', dispute)
