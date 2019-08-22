@@ -5,7 +5,7 @@
         <jus-icon v-if="!disputeId" icon="search" class="el-menu__icon-search" />
         <el-autocomplete
           v-if="!disputeId"
-          v-model="disputeId"
+          v-model="dispute"
           :trigger-on-focus="false"
           :fetch-suggestions="search"
           placeholder="Busque aqui as suas disputas">
@@ -106,6 +106,7 @@ export default {
   },
   data () {
     return {
+      dispute: '',
       disputeId: '',
       whatsappVisible: false
     }

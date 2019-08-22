@@ -7,7 +7,7 @@
       shape="circle"
       size="xl"/> -->
     <h1>
-      {{ name }}, bem-vindo(a) à Justto<br>
+      {{ name }}, bem-vindo(a) a Justto<br>
       <span v-if="isGuest">
         Junte-se ao escritório {{ companyName }}.
       </span>

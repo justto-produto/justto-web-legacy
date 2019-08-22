@@ -120,10 +120,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    color: {
-      type: String,
-      default: ''
-    },
     index: {
       type: Number,
       default: 1
@@ -131,6 +127,7 @@ export default {
   },
   data () {
     return {
+      color: '#ff9300',
       initialCampaignName: '',
       mappedName: '',
       respondent: '',

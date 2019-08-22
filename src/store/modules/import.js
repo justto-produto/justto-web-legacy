@@ -97,6 +97,18 @@ const imports = {
             reject(error)
           })
       })
+    },
+    validateGeneseRunner ({ state }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('api/geneserunner/' + state.file.id + '/validate')
+          .then(response => {
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

@@ -8,6 +8,23 @@
       configurá-las separadamente.
       <br>
     </p>
+    <el-alert v-if="duplicatedDisputes.length" type="error">
+      <h2>Atenção!</h2>
+      Foram encontradas disputa(s) duplicada(s) e/ou expirada(s):
+      <ul v-for="d in duplicatedDisputes">
+        <li>
+          Linha {{ d.row }} -
+          <span v-if="d === 1">
+            Disputa <strong>exportada</strong> com data já expirada
+            ({{ d.expiredDate.dateTime | moment('DD/MM/YY') }}).
+          </span>
+          <span v-else>
+            Disputa <strong>não exportada</strong> por duplicidade
+            (campanha {{ d.duplicatedBy.campaignName }}).
+          </span>
+        </li>
+      </ul>
+    </el-alert>
     <div class="import-view__container">
       <div class="import-view__content">
         <jus-import-feedback-card
@@ -15,8 +32,7 @@
           :mapped-campaign.sync="mappedCampaign"
           :key="mappedCampaign.cluster"
           :index="index + 1"
-          :color="colors[index]"
-          data-testid="import-feedback"/>
+          data-testid="import-feedback" />
       </div>
     </div>
   </div>
@@ -38,13 +54,8 @@ export default {
   },
   data () {
     return {
-      colors: [
-        '#ff7a72', '#72cbff', '#88ff59', '#ff7a72',
-        '#72cbff', '#88ff59', '#ff7a72', '#72cbff',
-        '#88ff59', '#ff7a72', '#72cbff', '#88ff59',
-        '#ff7a72', '#72cbff', '#88ff59', '#ff7a72'
-      ],
-      loading: false
+      loading: false,
+      duplicatedDisputes: []
     }
   },
   beforeMount () {
@@ -54,6 +65,9 @@ export default {
         this.loading = false
       })
     }
+    this.$store.dispatch('validateGeneseRunner').then(response => {
+      this.duplicatedDisputes = response.disputes
+    })
   }
 }
 </script>
@@ -79,6 +93,22 @@ export default {
   }
   .el-input--suffix .el-input__inner {
     padding-right: 40px;
+  }
+  .el-alert {
+    margin-top: 20px;
+    padding-bottom: 12px;
+    .el-alert__content {
+      width: 100%;
+    }
+    h2 {
+      margin: 0 0 10px;
+    }
+    p {
+      font-size: 14px;
+    }
+    ul {
+      padding-left: 14px;
+    }
   }
 }
 </style>

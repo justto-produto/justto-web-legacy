@@ -44,8 +44,11 @@
                 :icon="showPassword ? 'hide' : 'eye'"
                 class="external-view__show-password"
                 @click.native="switchShowPassword"/>
-              <el-button type="text" tabindex="-1"
-                        data-testid="forgot-password" @click="$router.push('forgot-password')">
+              <el-button
+                type="text"
+                tabindex="-1"
+                data-testid="forgot-password"
+                @click="$router.push('forgot-password')">
                 Esqueceu sua senha?
               </el-button>
             </div>
