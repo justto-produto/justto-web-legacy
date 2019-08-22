@@ -188,8 +188,7 @@
                   v-for="claimant in disputeClaimants"
                   :key="claimant.id"
                   :label="claimant.name"
-                  :value="claimant.id">
-                </el-option>
+                  :value="claimant.id" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -498,7 +497,7 @@ export default {
             disputeId: this.dispute.id,
             objectId: this.dispute.objectId,
             value: this.disputeForm.lastCounterOfferValue.toString(),
-            roleId: this.selectedClaimantId,
+            roleId: this.selectedClaimantId
           }))
         }
       }

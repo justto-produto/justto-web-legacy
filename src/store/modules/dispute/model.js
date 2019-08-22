@@ -56,6 +56,7 @@ const getDisputeVM = function (dispute) {
     hasInteraction: dispute.hasInteraction,
     lastOfferPercentToUpperRange: 0,
     paused: dispute.paused,
+    visualized: dispute.visualized,
     tab: 'ALL',
     conclusionReasons: dispute.conclusion ? dispute.conclusion.reasons : null,
     createAt: dispute.createAt
