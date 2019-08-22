@@ -424,7 +424,6 @@ export default {
   },
   methods: {
     tableRowClassName ({ row, rowIndex }) {
-      debugger
       if (!row.visualized) {
         return 'el-table__row--visualized-row'
       }
