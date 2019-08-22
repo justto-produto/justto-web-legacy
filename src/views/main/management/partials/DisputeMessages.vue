@@ -33,13 +33,13 @@
           <div class="dispute-view-messages__message-time">
             <span v-if="occurrence.message && occurrence.message.scheduledTime && waitingClass(occurrence)">
               <!-- Ainda não foi entregue • -->
-              Agendado para {{ occurrence.message.scheduledTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
+              Agendado para {{ occurrence.message.scheduledTime.dateTimeToDateToDate | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-else-if="occurrence.message && occurrence.message.executionTime">
-              {{ occurrence.message.executionTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
+              {{ occurrence.message.executionTime.dateTimeToDate | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-else-if="occurrence.executionDateTime">
-              {{ occurrence.executionDateTime.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
+              {{ occurrence.executionDateTime.dateTimeToDate | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-if="directionClass(occurrence) !== 'note'">
               <jus-icon :icon="getMessageIcon(occurrence.message)" />
@@ -59,7 +59,7 @@
       </div>
       <div v-else class="dispute-view-messages__message-log">
         <div :class="occurrence.type === 'TYPING' ? 'typing' : ''">{{ occurrence.description }}</div>
-        {{ occurrence.executionDateTime ? occurrence.executionDateTime.dateTime : '' | moment('DD/MM/YYYY - HH:mm') }}
+        {{ occurrence.executionDateTime ? occurrence.executionDateTime.dateTimeToDate : '' | moment('DD/MM/YYYY - HH:mm') }}
       </div>
     </li>
     <el-dialog
