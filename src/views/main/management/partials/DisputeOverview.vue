@@ -160,7 +160,7 @@
     <el-dialog
       :visible.sync="editDisputeDialogVisible"
       title="Editar informações gerais"
-      width="30%">
+      width="50%">
       <el-form
         ref="disputeForm"
         :model="disputeForm"
@@ -173,11 +173,29 @@
               <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+        </el-row>
+        <el-divider />
+        <el-row :gutter="20">
+          <el-col :span="12">
             <el-form-item label="Contraproposta" prop="lastCounterOfferValue">
               <money v-model="disputeForm.lastCounterOfferValue" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="Requerente" prop="lastCounterOfferValue">
+              <el-select v-model="selectedClaimantId" placeholder="Autor da contraproposta">
+                <el-option
+                  v-for="claimant in disputeClaimants"
+                  :key="claimant.id"
+                  :label="claimant.name"
+                  :value="claimant.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-divider />
+        <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="Valor proposto" prop="lastOfferValue">
               <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" />
@@ -333,6 +351,7 @@
 <script>
 import { Money } from 'v-money'
 import { mask, TheMask } from 'vue-the-mask'
+import { getRoles } from '@/plugins/jusUtils'
 
 export default {
   name: 'DisputeOverview',
@@ -371,6 +390,7 @@ export default {
     }
     return {
       active: this.activePerson.personId,
+      selectedClaimantId: '',
       partyRoles: {
         legal: false,
         party: false,
@@ -437,6 +457,12 @@ export default {
           }
         })
       } return []
+    },
+    disputeClaimants () {
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
+      }
+      return []
     }
   },
   watch: {
@@ -448,6 +474,7 @@ export default {
   },
   methods: {
     openDisputeDialog () {
+      this.selectedClaimantId = ''
       this.editDisputeDialogVisible = true
       let dispute = Object.assign({}, this.dispute)
       this.disputeForm.id = dispute.id
@@ -462,22 +489,26 @@ export default {
       let disputeToEdit = JSON.parse(JSON.stringify(this.$store.getters.findDisputeDTOById(this.disputeForm.id)))
       if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
       if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
-      if (this.disputeForm.lastOfferValue) disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue + ''
-      if (this.disputeForm.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+      if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
       promises.push(this.$store.dispatch('editDispute', disputeToEdit))
       if (this.disputeForm.lastCounterOfferValue !== parseInt(this.dispute.lastCounterOfferValue)) {
-        promises.push(this.$store.dispatch('editDisputeOffer', {
-          objectId: this.dispute.objectId,
-          roleId: 0,
-          value: this.disputeForm.lastCounterOfferValue
-        }))
+        if (this.selectedClaimantId) {
+          promises.push(this.$store.dispatch('editDisputeOffer', {
+            disputeId: this.dispute.id,
+            objectId: this.dispute.objectId,
+            value: this.disputeForm.lastCounterOfferValue.toString(),
+            roleId: this.selectedClaimantId,
+          }))
+        }
       }
       if (this.disputeForm.lastOfferValue !== parseInt(this.dispute.lastOfferValue)) {
+        let role = this.dispute.disputeRoles.find(d => d.personId === this.$store.getters.currentPersonId)
         promises.push(this.$store.dispatch('editDisputeOffer', {
+          disputeId: this.dispute.id,
           objectId: this.dispute.objectId,
-          roleId: 0,
-          value: this.disputeForm.lastOfferValue
+          roleId: role.id,
+          value: this.disputeForm.lastOfferValue.toString()
         }))
       }
       Promise.all(promises)
@@ -831,6 +862,9 @@ export default {
   }
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
+  }
+  .el-dialog {
+    min-width: 500px;
   }
 }
 </style>

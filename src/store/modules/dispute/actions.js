@@ -147,7 +147,7 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.post('api/disputes/' + params.disputeId + '/offer', {
-        object: { id: params.objectId },
+        attribute: { id: params.objectId },
         role: { id: params.roleId },
         value: params.value
       })

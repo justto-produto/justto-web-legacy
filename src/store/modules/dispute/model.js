@@ -35,7 +35,7 @@ const getDisputeVM = function (dispute) {
     firstClaimant: getFirstRole(dispute.disputeRoles, 'CLAIMANT', 'PARTY'),
     firstClaimantLawyer: getFirstRole(dispute.disputeRoles, 'CLAIMANT', 'LAWYER'),
     disputeRoles: dispute.disputeRoles,
-    expirationDate: moment(dispute.expirationDate.dateTime).format(),
+    expirationDate: dispute.expirationDate.dateTime,
     description: dispute.description,
     disputeDealDate: dispute.conclusion ? moment(dispute.conclusion.conclusionDate.dateTime).format() : null,
     lastInteractionDate: dispute.lastInteraction ? moment(dispute.lastInteraction.date.dateTimeToDate).format() : null,
