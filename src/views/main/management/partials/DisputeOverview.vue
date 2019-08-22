@@ -3,6 +3,10 @@
     <el-collapse value="1">
       <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+          <span class="title">Data da importação:</span>
+          <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
+        </div>
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Código:</span>
           <span>{{ dispute.code }}</span>
         </div>
