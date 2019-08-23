@@ -235,6 +235,17 @@ const disputeActions = {
           reject(error)
         })
     })
+  },
+  loadDisputeOccurrences ({ commit }, disputeId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.put('api/disputes/' + disputeId + '/occurrences/load')
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
   }
 }
 

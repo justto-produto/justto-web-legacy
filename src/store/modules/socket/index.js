@@ -14,6 +14,9 @@ const socketModule = {
       qrCode: '',
       status: 'OFFLINE',
       number: ''
+    },
+    occurrence: {
+      list: []
     }
   },
   mutations: mutations,

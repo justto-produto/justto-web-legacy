@@ -162,12 +162,11 @@
         <!-- MESSAGES -->
         <dispute-messages
           :dispute-id="dispute.id"
-          :messages-prop="filteredDisputeMessages"
+          :messages-prop="filteredOccurrences"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
-          :loading="loadingOccurrences"
-          data-testid="dispute-messages"
-          @dispute:occurrences:get="getOccurrences()"/>
+          :loading.sync="loadingOccurrences"
+          data-testid="dispute-messages" />
         <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Mensagem" name="1">
@@ -358,7 +357,6 @@ export default {
       id: 0,
       editNegotiatorDialogVisible: false,
       chooseUnsettledDialogVisible: false,
-      disputeMessages: [],
       showSearch: false,
       searchTerm: '',
       messageType: 'email',
@@ -379,6 +377,9 @@ export default {
     }
   },
   computed: {
+    occurrences () {
+      return this.$store.getters.disputeOccurrences
+    },
     whatsappStatus () {
       return this.$store.getters.whatsappStatus
     },
@@ -394,15 +395,15 @@ export default {
     dispute () {
       return this.$store.getters.findDisputeById(this.id)
     },
-    filteredDisputeMessages () {
+    filteredOccurrences () {
       if (this.searchTerm) {
-        return this.disputeMessages.filter(occurrence => {
+        return this.occurrences.filter(occurrence => {
           return (occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
           (occurrence.message.content ? occurrence.message.content.toLowerCase().includes(this.searchTerm.toLowerCase()) : false) ||
           (occurrence.message.sender ? occurrence.message.sender.toLowerCase().includes(this.searchTerm.toLowerCase()) : false)
         })
       }
-      return this.disputeMessages
+      return this.occurrences
     },
     isFavorite () {
       return this.dispute.favorite
@@ -415,11 +416,22 @@ export default {
         newMember.value = member
         return newMember
       })
+    },
+    socketHeaders () {
+      return {
+        Authorization: this.$store.getters.accountToken,
+        Workspace: this.$store.getters.workspaceSubdomain
+      }
     }
   },
   watch: {
-    '$route.params.id': function (id) {
+    '$route.params.id': function (id, oldId) {
       this.id = id
+      this.$socket.emit('unsubscribe', {
+        headers: this.socketHeaders,
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute/' + oldId + '/occurrence'
+      })
+      this.unsubscribeOccurrences(oldId)
       this.getOccurrences()
     },
     showSearch (value) {
@@ -447,7 +459,17 @@ export default {
     }
     this.$store.dispatch('disputeVisualized', this.id)
   },
+  beforeDestroy () {
+    this.unsubscribeOccurrences(this.id)
+  },
   methods: {
+    unsubscribeOccurrences (id) {
+      this.$store.commit('clearDisputeOccurrence')
+      this.$socket.emit('unsubscribe', {
+        headers: this.socketHeaders,
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute/' + id + '/occurrence'
+      })
+    },
     canSettled () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
     },
@@ -498,23 +520,32 @@ export default {
       if (!this.$store.getters.disputeInitialLoad) {
         this.$store.dispatch('loadOneDispute', { id: this.id })
       }
-      if (!this.loadingOccurrences) {
-        this.loadingOccurrences = true
-        this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then(response => {
-          if (!this.disputeMessages.length) {
-            this.disputeMessages = response.content
-          } else {
-            let newMessages = response.content.filter(i => {
-              return this.disputeMessages.map(e => JSON.stringify(e)).indexOf(JSON.stringify(i)) < 0
-            })
-            this.disputeMessages.push(...newMessages)
-          }
-        }).catch(() => {
+      this.$socket.emit('subscribe', {
+        headers: this.socketHeaders,
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute/' + this.id + '/occurrence'
+      })
+      this.loadingOccurrences = true
+      this.$store.dispatch('loadDisputeOccurrences', this.id)
+        .catch(() => {
           this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.loadingOccurrences = false
         })
-      }
+        .finally(() => {
+          setTimeout(() => {
+            this.loadingOccurrences = false
+          }, 2000)
+        })
+      // this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then(response => {
+      //   if (!this.occurrences.length) {
+      //     this.occurrences = response.content
+      //   } else {
+      //     let newMessages = response.content.filter(i => {
+      //       return this.occurrences.map(e => JSON.stringify(e)).indexOf(JSON.stringify(i)) < 0
+      //     })
+      //     this.occurrences.push(...newMessages)
+      //   }
+      // }).catch(() => {
+      //   this.$jusNotification({ type: 'error' })
+      // })
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
@@ -602,7 +633,7 @@ export default {
         }).then(() => {
           this.newChatMessage = ''
           setTimeout(function () {
-            this.getOccurrences()
+            // this.getOccurrences()
           }.bind(this), 500)
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
@@ -634,7 +665,7 @@ export default {
               type: 'success'
             })
             setTimeout(function () {
-              this.getOccurrences()
+              // this.getOccurrences()
               this.newMessage = ''
             }.bind(this), 500)
           }).catch(() => {
@@ -659,7 +690,7 @@ export default {
             message: 'Nota gravada com sucesso.',
             type: 'success'
           })
-          this.getOccurrences()
+          // this.getOccurrences()
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
