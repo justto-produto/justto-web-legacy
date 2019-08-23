@@ -157,17 +157,17 @@ export default {
     })
     this.$store.watch(state => state.socketModule.chat.join, join => {
       setTimeout(() => {
-        this.$emit('dispute:occurrences:get')
+        // this.$emit('dispute:occurrences:get')
       }, 1000)
     })
     this.$store.watch(state => state.socketModule.chat.message, message => {
       setTimeout(() => {
-        this.$emit('dispute:occurrences:get')
+        // this.$emit('dispute:occurrences:get')
       }, 1000)
     })
     this.$store.watch(state => state.socketModule.chat.leave, leave => {
       setTimeout(() => {
-        this.$emit('dispute:occurrences:get')
+        // this.$emit('dispute:occurrences:get')
       }, 1000)
     })
   },
