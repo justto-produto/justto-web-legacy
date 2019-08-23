@@ -33,7 +33,7 @@
           <div class="dispute-view-messages__message-time">
             <span v-if="occurrence.message && occurrence.message.scheduledTime && waitingClass(occurrence)">
               <!-- Ainda não foi entregue • -->
-              Agendado para {{ occurrence.message.scheduledTime.dateTimeToDateToDate | moment('DD [de] MMMM [às] HH:mm') }} •
+              Agendado para {{ occurrence.message.scheduledTime.dateTimeToDate | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-else-if="occurrence.message && occurrence.message.executionTime">
               {{ occurrence.message.executionTime.dateTimeToDate | moment('DD [de] MMMM [às] HH:mm') }} •

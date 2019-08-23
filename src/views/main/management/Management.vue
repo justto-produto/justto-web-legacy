@@ -157,6 +157,20 @@
           </el-table-column>
           <el-table-column
             v-if="activeTab === '1'"
+            sortable="custom"
+            prop="lastInteractionDate"
+            label="Última interação"
+            min-width="148px"
+            align="center">
+            <template slot-scope="scope">
+              <el-tooltip :content="scope.row.lastInteractionTooltip">
+                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
+              </el-tooltip>
+              {{ scope.row.lastInteractionFormatedDate }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="activeTab === '1'"
             label="Contraproposta"
             align="center"
             sortable="custom"
@@ -175,20 +189,6 @@
             min-width="160px">
             <template slot-scope="scope">
               {{ scope.row.expirationDate | moment('DD/MM/YY') }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-if="activeTab === '1'"
-            sortable="custom"
-            prop="lastInteractionDate"
-            label="Última interação"
-            min-width="148px"
-            align="center">
-            <template slot-scope="scope">
-              <el-tooltip :content="scope.row.lastInteractionTooltip">
-                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
-              </el-tooltip>
-              {{ scope.row.lastInteractionFormatedDate }}
             </template>
           </el-table-column>
           <el-table-column

@@ -10,15 +10,15 @@
     </p>
     <el-alert v-if="duplicatedDisputes.length" type="error">
       <h2>Atenção!</h2>
-      Foram encontradas disputa(s) duplicada(s) e/ou expirada(s):
+        Foram encontradas disputa(s) duplicada(s) e/ou expirada(s):
       <ul v-for="d in duplicatedDisputes">
         <li>
           {{ d.code }} - Disputa
-          <span v-if="d.duplicated">
+          <span v-if="d.status === 'DUPLICATE' || d.status === 'DUPLICATE_AND_EXPIRED'">
             <strong>não importada</strong> por duplicidade
             (campanha {{ d.duplicatedBy.campaignName }}).
           </span>
-          <span v-else>
+          <span v-if="d.status === 'EXPIRED'">
             <strong>importada</strong> com data já expirada
             ({{ d.expirationDate.dateTime | moment('DD/MM/YY') }}).
           </span>

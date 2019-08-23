@@ -9,7 +9,7 @@ const getRoles = function (disputeRoles, party, role) {
     })
   }
   if (role) {
-    roles = disputeRoles.filter(disputeRole => {
+    roles = roles.filter(disputeRole => {
       return disputeRole.roles.includes(role)
     })
   }
@@ -103,9 +103,9 @@ const getLastInteractionTooltip = function (type) {
     case 'TTS':
       return 'Última interação via WhatsApp'
     case 'NEGOTIATION':
-      return 'Última visualização via Sistema Justto'
+      return 'Última visualização'
     default:
-      return 'Última visualização via Sistema Justto'
+      return 'Última visualização'
   }
 }
 
