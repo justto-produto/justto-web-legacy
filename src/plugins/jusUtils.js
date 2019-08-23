@@ -9,7 +9,7 @@ const getRoles = function (disputeRoles, party, role) {
     })
   }
   if (role) {
-    roles = disputeRoles.filter(disputeRole => {
+    roles = roles.filter(disputeRole => {
       return disputeRole.roles.includes(role)
     })
   }
