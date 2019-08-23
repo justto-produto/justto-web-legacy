@@ -419,6 +419,7 @@ export default {
   },
   watch: {
     '$route.params.id': function (id) {
+      this.id = id
       this.getOccurrences()
     },
     showSearch (value) {
@@ -436,9 +437,6 @@ export default {
   },
   created () {
     this.id = this.$route.params.id
-    if (!this.$store.getters.disputeInitialLoad) {
-      this.$store.dispatch('loadOneDispute', { id: this.id })
-    }
     this.getOccurrences()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
@@ -497,6 +495,9 @@ export default {
       this.showScheduled = value
     },
     getOccurrences () {
+      if (!this.$store.getters.disputeInitialLoad) {
+        this.$store.dispatch('loadOneDispute', { id: this.id })
+      }
       if (!this.loadingOccurrences) {
         this.loadingOccurrences = true
         this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then(response => {

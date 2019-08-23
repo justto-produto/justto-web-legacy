@@ -103,9 +103,9 @@ const getLastInteractionTooltip = function (type) {
     case 'TTS':
       return 'Última interação via WhatsApp'
     case 'NEGOTIATION':
-      return 'Última visualização via Sistema Justto'
+      return 'Última visualização'
     default:
-      return 'Última visualização via Sistema Justto'
+      return 'Última visualização'
   }
 }
 
