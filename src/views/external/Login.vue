@@ -143,7 +143,9 @@ export default {
                   workspace: this.$store.state.workspaceModule.subdomain
                 })
                 window.analytics.group(this.$store.state.workspaceModule.subdomain)
-                if (responses[1][0] && responses[1][0]['subDomain']) {
+                let workspaceMember = responses[1][0]
+                let { workspace } = workspaceMember
+                if (workspaceMember && workspace.subDomain) {
                   Promise.all([
                     this.$store.dispatch('getWorkspaceMembers'),
                     this.$store.dispatch('myPerson')
