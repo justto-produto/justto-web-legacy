@@ -873,7 +873,7 @@ export default {
   }
   .jus-main-view__main-card {
     height: 100%;
-    min-width: 482px;
+    min-width: 532px;
     > .el-card__body {
       height: 100%;
       display: flex;
