@@ -22,7 +22,7 @@
           <span class="title">Status:</span>
           <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Classificação:</span>
           <span>{{ dispute.classification | capitalize }}</span>
         </div>
@@ -32,7 +32,12 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
-          <span>{{ dispute.lastCounterOfferValue | currency }}</span>
+          <span>
+            <el-tooltip :content="'Proposto por: ' + dispute.lastCounterOfferName">
+              <jus-avatar-user size="mini" :name="dispute.lastCounterOfferName" />
+            </el-tooltip>
+            {{ dispute.lastCounterOfferValue | currency }}
+          </span>
         </div>
         <div
           v-if="(dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED') && dispute.dealValue"
@@ -42,7 +47,12 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Valor proposto:</span>
-          <span>{{ dispute.lastOfferValue | currency }}</span>
+          <span>
+            <el-tooltip :content="'Proposto por: ' + dispute.lastOfferName">
+              <jus-avatar-user size="mini" :name="dispute.lastOfferName" />
+            </el-tooltip>
+            {{ dispute.lastOfferValue | currency }}
+          </span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
@@ -104,7 +114,7 @@
         </div> -->
         <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
           <span class="title">CPF:</span>
-          <span>{{ role.documentNumber }}</span>
+          <span>{{ role.documentNumber | cpfMask }}</span>
         </div>
         <div class="dispute-overview-view__info-line">
           Função:
@@ -158,10 +168,12 @@
       </el-collapse-item>
     </el-collapse>
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="editDisputeDialogVisible"
-      title="Editar informações gerais"
+      title="Editar disputa"
       width="50%">
       <el-form
+        v-loading="editDisputeDialogLoading"
         ref="disputeForm"
         :model="disputeForm"
         :rules="disputeRules"
@@ -174,15 +186,15 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-divider />
+        <h3>Contraproposta</h3>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="Contraproposta" prop="lastCounterOfferValue">
+            <el-form-item label="Valor" prop="lastCounterOfferValue">
               <money v-model="disputeForm.lastCounterOfferValue" v-bind="money" class="el-input__inner" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Requerente" prop="lastCounterOfferValue">
+            <el-form-item label="Proposto por" prop="lastCounterOfferValue">
               <el-select v-model="selectedClaimantId" placeholder="Autor da contraproposta">
                 <el-option
                   v-for="claimant in disputeClaimants"
@@ -193,11 +205,22 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-divider />
+        <h3>Valor proposto</h3>
         <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item label="Valor proposto" prop="lastOfferValue">
+          <el-col :span="12">
+            <el-form-item label="Valor" prop="lastOfferValue">
               <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Proposto por" prop="lastCounterOfferValue">
+              <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta">
+                <el-option
+                  v-for="negotiator in dispute.negotiators"
+                  :key="negotiator.id"
+                  :label="negotiator.name"
+                  :value="negotiator.id" />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -222,11 +245,12 @@
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="editDisputeDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" data-testid="confirm-edit-data" @click="editDispute()">Editar dados</el-button>
+        <el-button plain @click="editDisputeDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="editDisputeDialogLoading" type="primary" data-testid="confirm-edit-data" @click="editDispute()">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="editRoleDialogVisible"
       width="40%">
       <span slot="title" class="el-dialog__title">
@@ -340,7 +364,7 @@
         </ul>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="editRoleDialogVisible = false">Cancelar</el-button>
+        <el-button plain @click="editRoleDialogVisible = false">Cancelar</el-button>
         <el-button type="primary" data-testid="edit-data-part" @click.prevent="editRole(roleForm.personId, roleForm.name, roleForm.documentNumber)">Editar dados</el-button>
       </span>
     </el-dialog>
@@ -390,6 +414,7 @@ export default {
     return {
       active: this.activePerson.personId,
       selectedClaimantId: '',
+      selectedNegotiatorId: '',
       partyRoles: {
         legal: false,
         party: false,
@@ -417,6 +442,7 @@ export default {
         ]
       },
       disputeForm: {
+        id: '',
         disputeUpperRange: '',
         lastCounterOfferValue: '',
         lastOfferValue: '',
@@ -435,6 +461,7 @@ export default {
       emailDialogVisible: false,
       phoneDialogVisible: false,
       editDisputeDialogVisible: false,
+      editDisputeDialogLoading: false,
       editRoleDialogVisible: false,
       money: {
         decimal: ',',
@@ -473,17 +500,20 @@ export default {
   },
   methods: {
     openDisputeDialog () {
-      this.selectedClaimantId = ''
+      this.editDisputeDialogLoading = false
+      this.selectedClaimantId = this.disputeClaimants[0].id || ''
+      this.selectedNegotiatorId = this.dispute.negotiators[0].id || ''
       this.editDisputeDialogVisible = true
       let dispute = Object.assign({}, this.dispute)
       this.disputeForm.id = dispute.id
-      this.disputeForm.disputeUpperRange = parseInt(dispute.disputeUpperRange)
-      this.disputeForm.lastOfferValue = parseInt(dispute.lastOfferValue)
-      this.disputeForm.lastCounterOfferValue = parseInt(dispute.lastCounterOfferValue)
+      this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
+      this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
+      this.disputeForm.lastCounterOfferValue = parseFloat(dispute.lastCounterOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate
       this.disputeForm.description = dispute.description
     },
     editDispute () {
+      this.editDisputeDialogLoading = true
       let promises = []
       let disputeToEdit = JSON.parse(JSON.stringify(this.$store.getters.findDisputeDTOById(this.disputeForm.id)))
       if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
@@ -502,14 +532,28 @@ export default {
         }
       }
       if (this.disputeForm.lastOfferValue !== parseInt(this.dispute.lastOfferValue)) {
-        let role = this.dispute.disputeRoles.find(d => d.personId === this.$store.getters.currentPersonId)
         promises.push(this.$store.dispatch('editDisputeOffer', {
           disputeId: this.dispute.id,
           objectId: this.dispute.objectId,
-          roleId: role.id,
-          value: this.disputeForm.lastOfferValue.toString()
+          value: this.disputeForm.lastOfferValue.toString(),
+          roleId: this.selectedNegotiatorId
         }))
       }
+      if (this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange) {
+        this.$confirm('Alçada máxima está abaixo do valor proposto, deseja continuar?', 'Atenção!', {
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning'
+        }).then(() => {
+          this.executeEditPromise(promises)
+        }).catch(() => {
+          this.editDisputeDialogLoading = false
+        })
+      } else {
+        this.executeEditPromise(promises)
+      }
+    },
+    executeEditPromise (promises) {
       Promise.all(promises)
         .then(() => {
           this.editDisputeDialogVisible = false
@@ -520,6 +564,8 @@ export default {
           })
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.editDisputeDialogLoading = false
         })
     },
     buildTitle (role) {
@@ -772,6 +818,7 @@ export default {
     margin-top: 10px;
     strong {
       font-weight: 500;
+      word-break: break-all;
     }
   }
   &__actions {
@@ -790,6 +837,11 @@ export default {
     ul {
       margin-top: 6px;
       padding-left: 17px;
+      li {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
   &__location {
@@ -864,6 +916,9 @@ export default {
   }
   .el-dialog {
     min-width: 500px;
+    h3 {
+      margin-bottom: 10px;
+    }
   }
 }
 </style>

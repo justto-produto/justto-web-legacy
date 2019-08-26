@@ -45,7 +45,9 @@ const getDisputeVM = function (dispute) {
     negotiators: getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR'),
     disputeUpperRange: '0.0',
     lastOfferValue: '0.0',
+    lastOfferName: '',
     lastCounterOfferValue: '0.0',
+    lastCounterOfferName: '',
     disputeDealValue: '0.0',
     enrichedEmails: dispute.disputeRoles.map(r => r.emails).filter(p => p.enriched).length,
     enrichedPhones: dispute.disputeRoles.map(r => r.phones).filter(p => p.enriched).length,
@@ -65,13 +67,15 @@ const getDisputeVM = function (dispute) {
   if (object) {
     vm.objectId = object.id
     vm.disputeUpperRange = object.respondentBoundary ? object.respondentBoundary.boundary : '0.0'
-    let lastOfferValue = object.offers.filter(o => o.role.party === 'RESPONDENT')
-    let lastCounterOfferValue = object.offers.filter(o => o.role.party === 'CLAIMANT')
-    if (lastOfferValue.length) {
-      vm.lastOfferValue = lastOfferValue.slice(-1).pop().value
+    let lastOffer = object.offers.filter(o => o.role.party === 'RESPONDENT')
+    let lastCounterOffer = object.offers.filter(o => o.role.party === 'CLAIMANT')
+    if (lastOffer.length) {
+      vm.lastOfferValue = lastOffer.slice(-1).pop().value
+      vm.lastOfferName = lastOffer.slice(-1).pop().role.name
     }
-    if (lastCounterOfferValue.length) {
-      vm.lastCounterOfferValue = lastCounterOfferValue.slice(-1).pop().value
+    if (lastCounterOffer.length) {
+      vm.lastCounterOfferValue = lastCounterOffer.slice(-1).pop().value
+      vm.lastCounterOfferName = lastCounterOffer.slice(-1).pop().role.name
     }
     if (['SETTLED', 'CHECKOUT', 'ACCEPTED'].includes(dispute.status)) {
       vm.disputeDealValue = object.offers.slice(-1).pop().value
