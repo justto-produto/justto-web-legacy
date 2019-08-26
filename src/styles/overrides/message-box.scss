@@ -1,5 +1,7 @@
 .el-message-box {
-  padding: 20px 0px 30px !important;
+  &:not(.el-message-box--center) {
+    padding: 20px 0px 30px !important;
+  }
   .el-button {
     padding: 10px 20px;
     font-size: 14px;

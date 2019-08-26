@@ -502,8 +502,7 @@ export default {
       this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonClass: 'confirm-remove-btn',
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'error'
+        cancelButtonText: 'Cancelar'
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
@@ -563,8 +562,7 @@ export default {
         this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning'
+          cancelButtonText: 'Cancelar'
         }).then(() => {
           this.doAction(action)
         })

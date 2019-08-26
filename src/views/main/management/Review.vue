@@ -177,8 +177,7 @@ export default {
     sendBatchAction (action) {
       this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
         confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        type: 'warning'
+        cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('sendBatchAction', {
           type: action,

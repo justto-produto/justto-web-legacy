@@ -33,7 +33,7 @@
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
           <span>
-            <el-tooltip :content="'Proposto por: ' + dispute.lastCounterOfferName">
+            <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">
               <jus-avatar-user size="mini" :name="dispute.lastCounterOfferName" />
             </el-tooltip>
             {{ dispute.lastCounterOfferValue | currency }}
@@ -48,7 +48,7 @@
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Valor proposto:</span>
           <span>
-            <el-tooltip :content="'Proposto por: ' + dispute.lastOfferName">
+            <el-tooltip v-if="dispute.lastOfferName" :content="'Proposto por: ' + dispute.lastOfferName">
               <jus-avatar-user size="mini" :name="dispute.lastOfferName" />
             </el-tooltip>
             {{ dispute.lastOfferValue | currency }}
@@ -539,34 +539,36 @@ export default {
           roleId: this.selectedNegotiatorId
         }))
       }
-      if (this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange) {
-        this.$confirm('Alçada máxima está abaixo do valor proposto, deseja continuar?', 'Atenção!', {
-          confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning'
-        }).then(() => {
-          this.executeEditPromise(promises)
-        }).catch(() => {
-          this.editDisputeDialogLoading = false
-        })
-      } else {
-        this.executeEditPromise(promises)
-      }
-    },
-    executeEditPromise (promises) {
-      Promise.all(promises)
-        .then(() => {
-          this.editDisputeDialogVisible = false
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Os dados foram alterados com sucesso.',
-            type: 'success'
+      const h = this.$createElement
+      this.$msgbox({
+        title: 'Atenção!',
+        message: h('p', null, [
+          h('div', null,'- As novas informações vão sobrescrever as antigas.'),
+          this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange ?
+          h('div', null,'- Alçada máxima está abaixo do valor proposto.') : null,
+          h('br', null, null),
+          h('div', null, 'Deseja continuar?')
+        ]),
+        confirmButtonText: 'Continuar',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar'
+      }).then(() => {
+        Promise.all(promises)
+          .then(() => {
+            this.editDisputeDialogVisible = false
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Os dados foram alterados com sucesso.',
+              type: 'success'
+            })
+          }).catch(() => {
+            this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.editDisputeDialogLoading = false
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.editDisputeDialogLoading = false
-        })
+      }).catch(() => {
+        this.editDisputeDialogLoading = false
+      })
     },
     buildTitle (role) {
       if (role.party === 'RESPONDENT') {
@@ -644,10 +646,9 @@ export default {
       })
     },
     removeEmail (emailBody, list, index) {
-      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'error'
+        cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('removeEmail', emailBody)
           .then(() => {
@@ -659,10 +660,9 @@ export default {
       })
     },
     removePhone (phoneBody, list, index) {
-      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'error'
+        cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('removePhone', phoneBody)
           .then(() => {
@@ -674,10 +674,9 @@ export default {
       })
     },
     removeOab (oabBody, list, index) {
-      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'error'
+        cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('removeOab', oabBody)
           .then(() => {
@@ -740,10 +739,9 @@ export default {
       }
     },
     removeRole (role) {
-      this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'error'
+        cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('removeRole', {
           disputeId: role.id,
