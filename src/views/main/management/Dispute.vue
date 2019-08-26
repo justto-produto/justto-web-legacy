@@ -90,10 +90,11 @@
               <jus-icon icon="search2"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Exibir mensagens agendadas">
-            <el-button plain @click="toggleShowSchedule(!showScheduled)">
+          <el-tooltip content="Exibir/ocultar mensagens agendadas">
+            <el-button :plain="!showScheduled" :type="showScheduled ? 'primary' : null" @click="toggleShowSchedule(!showScheduled)">
               <!-- el-icon-chat-dot-square -->
-              <jus-icon icon="eye" />
+              <jus-icon v-show="!showScheduled" icon="eye" />
+              <jus-icon v-show="showScheduled" icon="eye-white" />
             </el-button>
           </el-tooltip>
           <div :class="{isVisible: showSearch}" class="dispute-view__search">
