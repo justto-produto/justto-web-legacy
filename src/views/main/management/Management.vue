@@ -423,7 +423,7 @@ export default {
   },
   methods: {
     tableRowClassName ({ row, rowIndex }) {
-      if (!row.visualized) {
+      if (!row.visualized &&  ['1', '2'].includes(this.activeTab)) {
         return 'el-table__row--visualized-row'
       }
     },
