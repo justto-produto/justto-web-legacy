@@ -145,8 +145,7 @@ export default {
         this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning'
+          cancelButtonText: 'Cancelar'
         }).then(() => {
           this.doAction(action)
         })

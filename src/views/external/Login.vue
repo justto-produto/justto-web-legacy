@@ -136,16 +136,14 @@ export default {
               Promise.all([
                 this.$store.dispatch('myAccount'),
                 this.$store.dispatch('myWorkspace')
-              ]).then(responses => {
+              ]).then(() => {
                 window.analytics.identify(this.loginForm.email, {
                   action: 'LOGIN',
                   email: this.loginForm.email,
-                  workspace: this.$store.state.workspaceModule.subdomain
+                  workspace: this.$store.getters.workspaceSubdomain
                 })
-                window.analytics.group(this.$store.state.workspaceModule.subdomain)
-                let workspaceMember = responses[1][0]
-                let { workspace } = workspaceMember
-                if (workspaceMember && workspace.subDomain) {
+                window.analytics.group(this.$store.getters.workspaceSubdomain)
+                if (this.$store.getters.workspaceSubdomain) {
                   Promise.all([
                     this.$store.dispatch('getWorkspaceMembers'),
                     this.$store.dispatch('myPerson')
@@ -157,7 +155,10 @@ export default {
                 } else {
                   this.$router.push('/management')
                 }
-              }).catch(() => this.mountError())
+              }).catch((error) => {
+                console.error(error)
+                this.mountError()
+              })
             })
             .catch(error => {
               if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {

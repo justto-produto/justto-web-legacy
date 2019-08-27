@@ -133,6 +133,15 @@ export default {
   &.jus-avatar-user--purple span {
     background-color: #9f6cf8;
   }
+  &.jus-avatar-user--mini {
+    vertical-align: top;
+    font-size: 9px;
+    img, span {
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 50%;
+    }
+  }
   img {
     object-fit: cover;
     border-radius: 6px;

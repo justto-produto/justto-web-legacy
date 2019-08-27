@@ -90,10 +90,11 @@
               <jus-icon icon="search2"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Exibir mensagens agendadas">
-            <el-button plain @click="toggleShowSchedule(!showScheduled)">
+          <el-tooltip content="Exibir/ocultar mensagens agendadas">
+            <el-button :plain="!showScheduled" :type="showScheduled ? 'primary' : null" @click="toggleShowSchedule(!showScheduled)">
               <!-- el-icon-chat-dot-square -->
-              <jus-icon icon="eye" />
+              <jus-icon v-show="!showScheduled" icon="eye" />
+              <jus-icon v-show="showScheduled" icon="eye-white" />
             </el-button>
           </el-tooltip>
           <div :class="{isVisible: showSearch}" class="dispute-view__search">
@@ -502,8 +503,7 @@ export default {
       this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonClass: 'confirm-remove-btn',
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'error'
+        cancelButtonText: 'Cancelar'
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
@@ -563,8 +563,7 @@ export default {
         this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning'
+          cancelButtonText: 'Cancelar'
         }).then(() => {
           this.doAction(action)
         })
@@ -873,7 +872,7 @@ export default {
   }
   .jus-main-view__main-card {
     height: 100%;
-    min-width: 482px;
+    min-width: 532px;
     > .el-card__body {
       height: 100%;
       display: flex;

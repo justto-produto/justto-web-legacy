@@ -10,14 +10,12 @@ export default {
   methods: {
     open () {
       this.$confirm('Essa é uma dica pra você ficar esperto ;)', 'Dica!', {
-        type: 'info',
         distinguishCancelAndClose: true,
         confirmButtonText: 'Beleza',
         cancelButtonText: 'Não exibir mais dicas'
       }).catch(() => {
         this.$message({
-          message: 'Ok',
-          type: 'warning'
+          message: 'Ok'
         })
       })
     }
