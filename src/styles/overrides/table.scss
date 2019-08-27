@@ -3,6 +3,9 @@
 .el-table {
   .cell {
     word-break: normal;
+    img {
+      vertical-align: text-top;
+    }
   }
 }
 
