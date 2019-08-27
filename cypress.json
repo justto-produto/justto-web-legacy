@@ -6,6 +6,7 @@
   "baseUrl": "http://localhost:8080/",
   "env": {
     "default-password": "password",
+    "default-test-password": "123456",
 
     "empty-account-email": "empty-account@justto.com.br",
     "empty-account-description": "",

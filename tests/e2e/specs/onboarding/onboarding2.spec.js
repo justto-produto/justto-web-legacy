@@ -1,9 +1,9 @@
 describe('Justto.App - Onboarding', function () {
-  const email = Cypress.env('emailonboarding')
-  const senha = Cypress.env('senhaonboarding')
+  const email = Cypress.env('onboarding-email')
+  const senha = Cypress.env('default-test-password')
 
   it('Onboarding: Login', function () {
-    cy.visit('localhost:8080')
+    cy.visit('/#/login')
     cy.url()
       .should('include', '/#/login')
     cy.get('[data-testid=login-email]')

@@ -1,4 +1,4 @@
-const email = Cypress.env('emailonboarding')
+const email = Cypress.env('token-email')
 
 describe('Justto.app - Esqueci a Senha', function () {
   beforeEach('Acesso', function () {

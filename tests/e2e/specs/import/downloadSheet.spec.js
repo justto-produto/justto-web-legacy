@@ -3,11 +3,6 @@ const password = Cypress.env('default-password')
 
 describe('Justto.App - Planilha Modelo', function () {
   it('Planilha modelo Disponível: Sucesso', function () {
-    // Verifica se link está disponível
-    cy.request('/Planilha-Modelo-Justto.xlsx')
-  })
-
-  it('Baixa Planilha Modelo: Sucesso', function () {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('/')
@@ -41,6 +36,8 @@ describe('Justto.App - Planilha Modelo', function () {
     // verifica se o botão está visível
     cy.get('[data-testid=download-model]')
       .should('be.visible')
-      .click()
+
+    // Verifica se link está disponível
+    cy.request('/Planilha-Modelo-Justto.xlsx')
   })
 })
