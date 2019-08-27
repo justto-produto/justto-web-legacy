@@ -15,6 +15,7 @@ describe('Justto.App - Importação de planilha: Erros', function() {
         .should('have.value', password)
     cy.get('[data-testid="submit"]').click()
     cy.url().should('include', '/#/management')
+    cy.wait(1000)
     cy.get('[data-testid=menu-import]').click()
     cy.url().should('include', '/#/import')
   })

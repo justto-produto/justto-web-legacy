@@ -1,5 +1,5 @@
 const loginEmptyHistorical = Cypress.env('empty-account-email')
-const loginHasHistorical = Cypress.env('not-editable-cases-email')
+const loginHasHistorical = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
 var loop = 0
 
@@ -40,6 +40,7 @@ describe('Justto.App - Planilha Modelo', function () {
 
     // Valida se acesso foi feito - Primeira tela de login
     cy.url().should('include', '/#/management')
+    cy.wait(1000)
   })
 
   it('Historico de Importações: Vazio', function () {

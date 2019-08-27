@@ -28,6 +28,7 @@ describe('Justto.App - Planilha Modelo', function () {
 
     // Valida se acesso foi feito
     cy.url().should('include', '/#/management')
+    cy.wait(1000)
   })
 
   // IMPORTA PLANILHA
@@ -39,6 +40,8 @@ describe('Justto.App - Planilha Modelo', function () {
     // Sistema deve redirecionar para a página de Importação
     cy.url().should('include', '/#/import')
 
+    cy.wait(1000)
+
     // Importa arquivo
     cy.upload_file('Varios_Casos_Aleatorios.xlsx', fileType, fileInput)
 
@@ -48,6 +51,7 @@ describe('Justto.App - Planilha Modelo', function () {
 
     // Sstema deve redirecionar para a página de Nova Importação
     cy.url().should('include', '/new')
+
 
     // Verifica se aparecem os números de linha da planilha importada
     cy.get('[data-testid=import-checklines]')
@@ -199,13 +203,13 @@ describe('Justto.App - Planilha Modelo', function () {
 
       var strategy
       switch(index) {
-        case 0: strategy = 'Indenizatorio'
+        case 0: strategy = 'Indenizatório'
           break;
-        case 1: strategy = 'Indenizatorio - Advogado'
+        case 1: strategy = 'Indenizatório - Advogado'
           break;
         case 2: strategy = 'Trabalhista'
           break;
-        default: strategy = 'Indenizatorio - Advogado'
+        default: strategy = 'Indenizatório - Advogado'
       }
 
       // Seleciona  uma estratégia

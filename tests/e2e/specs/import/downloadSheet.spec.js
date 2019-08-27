@@ -26,10 +26,11 @@ describe('Justto.App - Planilha Modelo', function () {
 
     // Valida se acesso foi feito - Primeira tela de login
     cy.url().should('include', '/#/management')
+    cy.wait(1000)
 
     // Acessa a tela de gerenciamento
     cy.get('[data-testid=menu-import]')
-      .click()
+      .click({force: true})
     // Sistema deve redirecionar para a página de Importação
     cy.url().should('include', '/#/import')
 
