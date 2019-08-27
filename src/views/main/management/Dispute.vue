@@ -631,9 +631,9 @@ export default {
           }
         }).then(() => {
           this.newChatMessage = ''
-          setTimeout(function () {
-            // this.getOccurrences()
-          }.bind(this), 500)
+          // setTimeout(() => {
+          //   this.getOccurrences()
+          // }.bind(this), 500)
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {

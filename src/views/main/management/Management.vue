@@ -20,10 +20,10 @@
             Sem resposta
             <el-tooltip content="Disputas que a negociação encerra nos próximos 3 dias">
               <el-badge
-              :hidden="!engagementLength"
-              :value="engagementLength"
-              :max="99"
-              class="el-badge--absolute" />
+                :hidden="!engagementLength"
+                :value="engagementLength"
+                :max="99"
+                class="el-badge--absolute" />
             </el-tooltip>
           </span>
         </el-tab-pane>
@@ -418,7 +418,7 @@ export default {
   },
   methods: {
     tableRowClassName ({ row, rowIndex }) {
-      if (!row.visualized &&  ['1', '2'].includes(this.activeTab)) {
+      if (!row.visualized && ['1', '2'].includes(this.activeTab)) {
         return 'el-table__row--visualized-row'
       }
     },
