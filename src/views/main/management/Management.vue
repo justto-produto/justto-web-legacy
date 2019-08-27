@@ -12,7 +12,6 @@
         @disputes:clear="clearSelection"/>
       <el-tabs
         ref="disputeTabs"
-        :key="disputeKey"
         :before-leave="handleChangeTab"
         v-model="activeTab"
         class="view-management__tabs">
@@ -24,7 +23,7 @@
               :hidden="!engagementLength"
               :value="engagementLength"
               :max="99"
-              class="el-badge--inline" />
+              class="el-badge--absolute" />
             </el-tooltip>
           </span>
         </el-tab-pane>
@@ -36,7 +35,7 @@
                 :hidden="!interactionLength"
                 :value="interactionLength"
                 :max="99"
-                class="el-badge--inline" />
+                class="el-badge--absolute" />
             </el-tooltip>
           </span>
         </el-tab-pane>
@@ -48,7 +47,7 @@
                 :hidden="!newDealsLength"
                 :value="newDealsLength"
                 :max="99"
-                class="el-badge--inline" />
+                class="el-badge--absolute" />
             </el-tooltip>
           </span>
         </el-tab-pane>
@@ -159,10 +158,15 @@
             min-width="148px"
             align="center">
             <template slot-scope="scope">
-              <el-tooltip :content="scope.row.lastInteractionTooltip">
-                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
-              </el-tooltip>
-              {{ scope.row.lastInteractionFormatedDate }}
+              <span class="position-relative">
+                <el-tooltip :content="scope.row.lastInteractionTooltip">
+                  <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
+                </el-tooltip>
+                <i v-if="!scope.row.visualized" class="view-management__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+              </span>
+              <span style="margin-left: 4px;">
+                {{ scope.row.lastInteractionFormatedDate }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column
@@ -186,7 +190,8 @@
             <template slot-scope="scope">
               {{ scope.row.expirationDate | moment('DD/MM/YY') }}
               <el-tooltip content="Negociação encerra nos próximos 3 dias">
-                <jus-icon v-if="disputeNextToExpire(scope.row.expirationDate)" icon="alert-active" />
+                <!-- <jus-icon v-if="disputeNextToExpire(scope.row.expirationDate)" icon="alert-active" /> -->
+                <i v-if="activeTab === '0'" class="view-management__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </el-tooltip>
             </template>
           </el-table-column>
@@ -314,8 +319,7 @@ export default {
       loadingExport: false,
       currentPage: 1,
       initialDisputesPerPage: 20,
-      tableHeigth: 0,
-      disputeKey: 0
+      tableHeigth: 0
     }
   },
   computed: {
@@ -364,17 +368,11 @@ export default {
       }
     },
     engagementLength () {
-      setTimeout(() => {
-        this.disputeKey = this.disputeKey + 1
-      }, 100)
       return this.$store.getters.disputes.filter(d => {
         return d.tab === 'ENGAGEMENT' && this.disputeNextToExpire(d.expirationDate)
       }).length
     },
     interactionLength () {
-      setTimeout(() => {
-        this.disputeKey = this.disputeKey + 1
-      }, 100)
       return this.$store.getters.disputes.filter(d => {
         const personId = this.$store.getters.filterPersonId
         if (personId) {
@@ -384,9 +382,6 @@ export default {
       }).length
     },
     newDealsLength () {
-      setTimeout(() => {
-        this.disputeKey = this.disputeKey + 1
-      }, 100)
       return this.$store.getters.disputes.filter(d => {
         const personId = this.$store.getters.filterPersonId
         if (personId) {
@@ -677,6 +672,15 @@ export default {
   }
   &__table-container {
     height: calc(100% - 52px);
+  }
+  &__interaction-pulse {
+    position: absolute;
+    font-size: 16px;
+    bottom: -5px;
+    right: -3px;
+  }
+  &__expiration-pulse {
+    vertical-align: sub;
   }
 }
 </style>
