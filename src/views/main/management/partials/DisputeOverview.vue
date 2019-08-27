@@ -34,7 +34,7 @@
           <span class="title">Contraproposta:</span>
           <span>
             <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">
-              <jus-avatar-user size="mini" :name="dispute.lastCounterOfferName" />
+              <jus-avatar-user :name="dispute.lastCounterOfferName" size="mini" />
             </el-tooltip>
             {{ dispute.lastCounterOfferValue | currency }}
           </span>
@@ -302,7 +302,7 @@
             <img src="@/assets/icons/ic-check.svg">
             {{ phone.number | phoneMask }}
             <a href="#" data-testid="remove-phone" @click.prevent="removePhone(index)">
-              <i class="el-icon-error" />
+              <i class="el-icon-error el-icon-danger" />
             </a>
           </li>
         </ul>
@@ -318,7 +318,7 @@
             <img src="@/assets/icons/ic-check.svg">
             {{ email.address }}
             <a href="#" @click.prevent="removeEmail(index)">
-              <i class="el-icon-error" />
+              <i class="el-icon-error el-icon-danger" />
             </a>
           </li>
         </ul>
