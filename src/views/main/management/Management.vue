@@ -452,7 +452,7 @@ export default {
     updateTable () {
       setTimeout(() => {
         this.$refs.disputeTable.doLayout()
-      }, 400)
+      }, 1000)
     },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {

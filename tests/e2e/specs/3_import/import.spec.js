@@ -6,9 +6,8 @@ const fileInput = 'input[type=file]'
 describe('Justto.App - Planilha Modelo', function () {
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
-
-    // cy.visit('http://homol.justto.com.br')
     cy.visit('/')
+
     // Sistema deve redirecionar para a página de Login
     cy.url().should('include', '/#/login')
 
@@ -28,6 +27,8 @@ describe('Justto.App - Planilha Modelo', function () {
 
     // Valida se acesso foi feito
     cy.url().should('include', '/#/management')
+
+    // Espera carregamento
     cy.wait(1000)
   })
 
@@ -40,6 +41,7 @@ describe('Justto.App - Planilha Modelo', function () {
     // Sistema deve redirecionar para a página de Importação
     cy.url().should('include', '/#/import')
 
+    // Espera carregamento
     cy.wait(1000)
 
     // Importa arquivo
