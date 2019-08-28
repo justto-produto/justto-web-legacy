@@ -1,5 +1,7 @@
 const login = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
+const defaultStrategy = Cypress.env('default-strategy')
+const defaultCampaign = Cypress.env('default-campaign')
 
 describe('Justto.App - Com Interação: Filtro Todos', function () {
   beforeEach(function () {
@@ -46,12 +48,11 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
     cy.get('[data-testid=filter-campaign]')
     .click()
     cy.get('ul')
-    .contains('Nestle')
-
+    .contains(defaultCampaign)
     // Seleciona Estratégia
     cy.get('[data-testid=filter-strategy]')
       .click()
-    cy.get('ul').contains('Indenizatório')
+    cy.get('ul').contains(defaultStrategy)
     // Seleciona o botão "Aplicar filtros"
     cy.get('[data-testid=filter-applyfilter]')
       .click()
@@ -69,24 +70,10 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]')
       .click()
-
-    // Seleciona Campanha
-    cy.get('[data-testid=filter-campaign]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
-      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
-
-    // Seleciona Estratégia
-    cy.get('[data-testid=filter-strategy]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 })
-      .trigger('keydown', { keyCode: 40, Which: 40 })
-      .trigger('keydown', { keyCode: 13, Which: 13 })
-
-      // Seleciona Disputas Favoritas
-    cy.get('[data-testid=filters-favorite]')
-      .click()
-
+      // Seleciona Disputas Favoritas - Workspace bão tem disputas favoritadas
+      // Esperado não retornar disputas
+      cy.get('[data-testid=filters-favorite]')
+        .click()
     // Seleciona o botão "Aplicar filtros"
     cy.get('[data-testid=filter-applyfilter]')
       .click()

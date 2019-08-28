@@ -5,6 +5,8 @@
   "pluginsFile": "tests/e2e/plugins/index.js",
   "baseUrl": "http://localhost:8080/",
   "env": {
+    "default-strategy": "Indenizatório",
+    "default-campaign": "Nestle",
     "default-password": "password",
     "default-test-password": "123456",
 

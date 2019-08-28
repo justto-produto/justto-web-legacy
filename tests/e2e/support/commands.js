@@ -41,3 +41,7 @@ Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
       })
   })
 })
+
+Cypress.Commands.add('login',(email, password) => {
+  
+})
