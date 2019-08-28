@@ -32,6 +32,10 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .contains('Todos')
       .click({force: true})
 
+    //// TODO: Tivemos que adiciocar um delay por causa da lentidão do sistema
+    cy.log("Aguarde carregar disputas")
+    cy.wait(10000)
+
     // Seleciona primeira disputa
     cy.get('tbody label[role=checkbox]', { timeout: 60000 }).first()
       .click()

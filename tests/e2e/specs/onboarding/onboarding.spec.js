@@ -1,5 +1,6 @@
 describe('Justto.App - Onboarding', function () {
   const email = Cypress.env('onboarding-email')
+  // const email = new Date().getTime() + '@teste2e.com'
   const senha = Cypress.env('default-password')
 
   it('Onboarding: Login', function () {

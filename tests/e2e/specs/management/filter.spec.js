@@ -1,5 +1,5 @@
-const login = Cypress.env('email6')
-const password = Cypress.env('password6')
+const login = Cypress.env('import-actions-email')
+const password = Cypress.env('default-password')
 
 describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
   it('Gerenciamento: Engajamento - Exibição dos Casos - Vazio', function () {
@@ -30,6 +30,10 @@ describe('Justto.App - Gerenciamento: Filtro Engajamento', function () {
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
       .click({force: true})
+
+      //// TODO: Tivemos que adiciocar um delay por causa da lentidão do sistema
+      cy.log("Aguarde carregar disputas")
+      cy.wait(10000)
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]')
