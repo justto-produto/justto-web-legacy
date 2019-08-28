@@ -1,5 +1,3 @@
-Cypress.on('uncaught:exception', (err, runnable) => { return false })
-
 const login = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
 
