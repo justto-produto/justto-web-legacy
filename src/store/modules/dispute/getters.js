@@ -61,8 +61,8 @@ const disputeGetters = {
       }
       if (state.filters.sort.order) {
         filteredDisputes.sort((a, b) => {
-          let compareA = Object.assign({}, a)
-          let compareB = Object.assign({}, b)
+          let compareA = JSON.parse(JSON.stringify(a))
+          let compareB = JSON.parse(JSON.stringify(b))
           let directionA = state.filters.sort.order === 'ascending' ? 1 : -1
           let directionB = directionA === 1 ? -1 : 1
           if (typeof compareA[state.filters.sort.prop] !== 'boolean' && moment(new Date(compareA[state.filters.sort.prop])).isValid()) {
