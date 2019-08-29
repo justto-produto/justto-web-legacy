@@ -1,4 +1,4 @@
-const login = Cypress.env('editable-cases-email')
+const login = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
 
 describe('Justto.App - Disputa: Visualização', function () {
@@ -26,6 +26,9 @@ describe('Justto.App - Disputa: Visualização', function () {
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
 
+    // Espera carregamento
+    cy.wait(1000)
+
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
@@ -41,23 +44,23 @@ describe('Justto.App - Disputa: Visualização', function () {
 
   it('Visualização da Disputa: Sucesso', function () {
     // Resumo da disputa deve estar visivel
-    cy.get('[data-testid=dispute-summary]')
-      .should('be.visible')
+    // cy.get('[data-testid=dispute-summary]')
+    //   .should('be.visible')
 
     // Dados da disputa devem estar visiveis
     cy.get('[data-testid=dispute-overview]')
       .should('be.visible')
 
-    // Dados da disputa devem estar visiveis
+    // Informações da disputa devem estar visiveis
+    cy.get('[data-testid=dispute-infoline]')
+      .should('be.visible')
+
+    // Menssagens da disputa devem estar visiveis
     cy.get('[data-testid=dispute-messages]')
       .should('be.visible')
 
     // Loadings devem desaparecer
     cy.get('.el-loading-mask')
       .should('not.be.visible')
-
-    // Informações da disputa devem estar visiveis
-    cy.get('[data-testid=dispute-infoline]')
-      .should('be.visible')
   })
 })

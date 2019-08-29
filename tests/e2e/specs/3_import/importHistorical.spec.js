@@ -18,7 +18,6 @@ describe('Justto.App - Planilha Modelo', function () {
     }
 
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
     cy.visit('/')
 
     // Sistema deve redirecionar para a página de Login
