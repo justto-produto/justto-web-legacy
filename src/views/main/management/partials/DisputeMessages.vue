@@ -35,8 +35,8 @@
               <!-- Ainda não foi entregue • -->
               Agendado para {{ occurrence.message.scheduledTime.dateTimeToDate | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
-            <span v-else-if="occurrence.message && occurrence.createdAt && occurrence.type === 'INTERACTION'">
-              {{ occurrence.createdAt.dateTime | moment('DD [de] MMMM [às] HH:mm') }} •
+            <span v-else-if="occurrence.message && occurrence.createAt && occurrence.type === 'INTERACTION'">
+              {{ occurrence.createAt.dateTimeToDate | moment('DD [de] MMMM [às] HH:mm') }} •
             </span>
             <span v-else-if="occurrence.message && occurrence.message.executionTime">
               {{ occurrence.message.executionTime.dateTimeToDate | moment('DD [de] MMMM [às] HH:mm') }} •
