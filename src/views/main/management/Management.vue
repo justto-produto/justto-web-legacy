@@ -410,8 +410,8 @@ export default {
   beforeUpdate () {
     this.adjustHeight()
     setTimeout(function () {
-      this.$refs.disputeTable.sort('expirationDate', 'descending')
-    }.bind(this), 100)
+      this.doSort('expirationDate', 'descending')
+    }.bind(this), 500)
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.adjustHeight)
@@ -451,8 +451,8 @@ export default {
     },
     updateTable () {
       setTimeout(() => {
-        this.$refs.disputeTable.doLayout()
-      }, 400)
+        if (this.$refs.disputeTable) this.$refs.disputeTable.doLayout()
+      }, 1000)
     },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {
@@ -462,24 +462,33 @@ export default {
       switch (newTab) {
         case '0':
           setTimeout(function () {
-            this.$refs.disputeTable.sort('expirationDate', 'descending')
-          }.bind(this), 100)
+            this.doSort('expirationDate', 'descending')
+          }.bind(this), 500)
           break
         case '1':
           setTimeout(function () {
-            this.$refs.disputeTable.sort('lastInteractionDate', 'ascending')
-          }.bind(this), 100)
+            this.doSort('lastInteractionDate', 'ascending')
+          }.bind(this), 500)
           break
         case '2':
           setTimeout(function () {
-            this.$refs.disputeTable.sort('disputeDealDate', 'descending')
-          }.bind(this), 100)
+            this.doSort('disputeDealDate', 'descending')
+          }.bind(this), 500)
           break
         default:
-          this.$refs.disputeTable.clearSort()
+          this.doSort()
           break
       }
       this.updateTable()
+    },
+    doSort(direction, prop) {
+      if (this.$refs.disputeTable) {
+        if (direction && prop) {
+          this.$refs.disputeTable.sort(direction, prop)
+        } else {
+          this.$refs.disputeTable.clearSort()
+        }
+      }
     },
     exportDisputes () {
       this.loadingExport = true

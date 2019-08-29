@@ -1,5 +1,7 @@
-const login = Cypress.env('email6')
-const password = Cypress.env('password6')
+const login = Cypress.env('import-actions-email')
+const password = Cypress.env('default-password')
+const defaultStrategy = Cypress.env('default-strategy')
+const defaultCampaign = Cypress.env('default-campaign')
 
 describe('Justto.App - Com Interação: Filtro Todos', function () {
   beforeEach(function () {
@@ -34,33 +36,26 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
       .contains('Todos')
       .click({force: true})
 
+    //// TODO: Tivemos que adiciocar um delay por causa da lentidão do sistema
+    cy.log("Aguarde carregar disputas")
+    cy.wait(10000)
+
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]')
       .click()
 
     // Seleciona Campanha
     cy.get('[data-testid=filter-campaign]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
-      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
-      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
-
-    cy.wait(5000)
-
+    .click()
+    cy.get('ul')
+    .contains(defaultCampaign)
     // Seleciona Estratégia
     cy.get('[data-testid=filter-strategy]')
       .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 })
-      .trigger('keydown', { keyCode: 13, Which: 13 })
-
-      // Seleciona Disputas Favoritas
-    cy.get('[data-testid=filters-favorite]')
-      .click()
-
+    cy.get('ul').contains(defaultStrategy)
     // Seleciona o botão "Aplicar filtros"
     cy.get('[data-testid=filter-applyfilter]')
       .click()
-
     // Verifica se existem casos exibidos
     cy.get('tbody>tr').first()
       .should('be.visible')
@@ -75,24 +70,10 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]')
       .click()
-
-    // Seleciona Campanha
-    cy.get('[data-testid=filter-campaign]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
-      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
-
-    // Seleciona Estratégia
-    cy.get('[data-testid=filter-strategy]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 })
-      .trigger('keydown', { keyCode: 40, Which: 40 })
-      .trigger('keydown', { keyCode: 13, Which: 13 })
-
-      // Seleciona Disputas Favoritas
-    cy.get('[data-testid=filters-favorite]')
-      .click()
-
+      // Seleciona Disputas Favoritas - Workspace bão tem disputas favoritadas
+      // Esperado não retornar disputas
+      cy.get('[data-testid=filters-favorite]')
+        .click()
     // Seleciona o botão "Aplicar filtros"
     cy.get('[data-testid=filter-applyfilter]')
       .click()

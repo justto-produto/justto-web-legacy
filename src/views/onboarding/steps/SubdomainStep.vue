@@ -17,7 +17,7 @@
       @submit.native.prevent="submitForm">
       <span>https://</span>
       <el-form-item prop="subdomain">
-        <el-input v-model="subdomainForm.subdomain" :disabled="creatingWorkspace" name="subdomain" data-testid="name-subdomain"/>
+        <el-input v-model="subdomainForm.subdomain" :disabled="creatingWorkspace" name="subdomain" data-testid="subdomain-form"/>
       </el-form-item>
       <span>.justto.app</span>
     </el-form>
@@ -27,7 +27,7 @@
       :title="availabilityAlert.title"
       :type="availabilityAlert.type"
       :closable="false"/>
-    <el-button type="primary" data-testid="next-subdomain" @click="submitForm">Próximo</el-button>
+    <el-button type="primary" data-testid="subdomain-next" @click="submitForm">Próximo</el-button>
   </div>
 </template>
 
