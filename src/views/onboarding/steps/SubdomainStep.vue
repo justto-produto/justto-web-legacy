@@ -120,7 +120,6 @@ export default {
   },
   methods: {
     submitForm () {
-      debugger
       if (!this.creatingWorkspace) {
         this.$refs['subdomainForm'].validate(valid => {
           if (valid) {
