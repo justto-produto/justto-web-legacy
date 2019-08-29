@@ -17,47 +17,42 @@
         class="view-management__tabs">
         <el-tab-pane name="0">
           <span slot="label">
-            Engajando
-            <el-badge
-              :hidden="!engagementLength"
-              :value="engagementLength"
-              :max="99"
-              class="el-badge--inline" />
-            <jus-icon v-show="activeTab === '0' && hasFilters" icon="filter" />
+            Sem resposta
+            <el-tooltip content="Disputas que a negociação encerra nos próximos 3 dias">
+              <el-badge
+                :hidden="!engagementLength"
+                :value="engagementLength"
+                :max="99"
+                class="el-badge--absolute" />
+            </el-tooltip>
           </span>
         </el-tab-pane>
-        <el-tab-pane name="1" label="Com Interação">
+        <el-tab-pane name="1">
           <span slot="label">
-            Com Interação
-            <el-badge
-              :hidden="!interactionLength"
-              :value="interactionLength"
-              :max="99"
-              class="el-badge--inline" />
-            <jus-icon v-show="activeTab === '1' && hasFilters" icon="filter" />
+            Em negociação
+            <el-tooltip content="Disputas com novas interações">
+              <el-badge
+                :hidden="!interactionLength"
+                :value="interactionLength"
+                :max="99"
+                class="el-badge--absolute" />
+            </el-tooltip>
           </span>
         </el-tab-pane>
         <el-tab-pane name="2" label="Com Interação">
           <span slot="label">
-            Novos Acordos
-            <el-badge
-              :hidden="!newDealsLength"
-              :value="newDealsLength"
-              :max="99"
-              class="el-badge--inline" />
-            <jus-icon v-show="activeTab === '2' && hasFilters" icon="filter" />
+            Proposta aceita
+            <el-tooltip content="Disputas com novas interações">
+              <el-badge
+                :hidden="!newDealsLength"
+                :value="newDealsLength"
+                :max="99"
+                class="el-badge--absolute" />
+            </el-tooltip>
           </span>
         </el-tab-pane>
         <el-tab-pane name="3" label="Com Interação">
-          <span slot="label">
-            Todos
-            <el-badge
-              :hidden="!allLength"
-              :value="allLength"
-              :max="99"
-              class="el-badge--inline" />
-            <jus-icon v-show="activeTab === '3' && hasFilters" icon="filter" />
-          </span>
+          <span slot="label">Todos</span>
         </el-tab-pane>
       </el-tabs>
       <div class="view-management__actions">
@@ -156,17 +151,22 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="activeTab === '1'"
+            v-if="['1', '2'].includes(activeTab)"
             sortable="custom"
             prop="lastInteractionDate"
             label="Última interação"
             min-width="148px"
             align="center">
             <template slot-scope="scope">
-              <el-tooltip :content="scope.row.lastInteractionTooltip">
-                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
-              </el-tooltip>
-              {{ scope.row.lastInteractionFormatedDate }}
+              <span class="position-relative">
+                <el-tooltip :content="scope.row.lastInteractionTooltip">
+                  <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
+                </el-tooltip>
+                <i v-if="!scope.row.visualized" class="view-management__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+              </span>
+              <span style="margin-left: 4px;">
+                {{ scope.row.lastInteractionFormatedDate }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column
@@ -189,6 +189,10 @@
             min-width="160px">
             <template slot-scope="scope">
               {{ scope.row.expirationDate | moment('DD/MM/YY') }}
+              <el-tooltip content="Negociação encerra nos próximos 3 dias">
+                <!-- <jus-icon v-if="disputeNextToExpire(scope.row.expirationDate)" icon="alert-active" /> -->
+                <i v-if="activeTab === '0'" class="view-management__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column
@@ -244,7 +248,6 @@
             </template>
           </el-table-column>
           <template v-if="!$store.state.loading" slot="empty">
-            <!-- <span v-if="hasFilters"> -->
             <span>
               <jus-icon icon="empty-screen-filter" class="view-management__empty-table" data-testid="cases-empty-icon"/>
               <h4 data-testid="cases-empty-text">
@@ -328,9 +331,6 @@ export default {
         this.$store.commit('setDisputeTab', tab)
       }
     },
-    hasFilters () {
-      return this.$store.getters.disputeHasFilters
-    },
     multiActive () {
       return this.selectedIds.length >= 1
     },
@@ -368,33 +368,27 @@ export default {
       }
     },
     engagementLength () {
-      let length = this.$store.getters.disputes.filter(d => d.tab === 'ENGAGEMENT').length
-      if (length >= this.disputesLength && this.activeTab === '0') {
-        return this.disputesLength
-      }
-      return length
+      return this.$store.getters.disputes.filter(d => {
+        return d.tab === 'ENGAGEMENT' && this.disputeNextToExpire(d.expirationDate)
+      }).length
     },
     interactionLength () {
-      this.updateTable()
-      let length = this.$store.getters.disputes.filter(d => d.tab === 'INTERACTION').length
-      if (length >= this.disputesLength && this.activeTab === '1') {
-        return this.disputesLength
-      }
-      return length
+      return this.$store.getters.disputes.filter(d => {
+        const personId = this.$store.getters.filterPersonId
+        if (personId) {
+          return d.tab === 'INTERACTION' && !d.visualized && d.negotiators.findIndex(n => n.id === personId) !== -1
+        }
+        return d.tab === 'INTERACTION' && !d.visualized
+      }).length
     },
     newDealsLength () {
-      let length = this.$store.getters.disputes.filter(d => d.tab === 'NEWDEALS').length
-      if (length >= this.disputesLength && this.activeTab === '2') {
-        return this.disputesLength
-      }
-      return length
-    },
-    allLength () {
-      let length = this.$store.getters.disputes.length
-      if (length >= this.disputesLength && this.activeTab === '3') {
-        return this.disputesLength
-      }
-      return length
+      return this.$store.getters.disputes.filter(d => {
+        const personId = this.$store.getters.filterPersonId
+        if (personId) {
+          return d.tab === 'NEWDEALS' && !d.visualized && d.negotiators.findIndex(n => n.id === personId) !== -1
+        }
+        return d.tab === 'NEWDEALS' && !d.visualized
+      }).length
     }
   },
   beforeCreate () {
@@ -424,7 +418,7 @@ export default {
   },
   methods: {
     tableRowClassName ({ row, rowIndex }) {
-      if (!row.visualized) {
+      if (!row.visualized && ['1', '2'].includes(this.activeTab)) {
         return 'el-table__row--visualized-row'
       }
     },
@@ -496,6 +490,9 @@ export default {
       }).finally(() => {
         this.loadingExport = false
       })
+    },
+    disputeNextToExpire (dateTime) {
+      return this.$moment(dateTime).isBetween(this.$moment(), this.$moment().add(3, 'day'))
     },
     clearSelection () {
       this.$refs.disputeTable.clearSelection()
@@ -675,6 +672,15 @@ export default {
   }
   &__table-container {
     height: calc(100% - 52px);
+  }
+  &__interaction-pulse {
+    position: absolute;
+    font-size: 16px;
+    bottom: -5px;
+    right: -3px;
+  }
+  &__expiration-pulse {
+    vertical-align: sub;
   }
 }
 </style>

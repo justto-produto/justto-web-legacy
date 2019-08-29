@@ -40,7 +40,7 @@
           </div>
           <jus-icon :icon="'whatsapp-' + (!isWhatsappConnected ? 'disconnected' : 'connected')" />
         </el-tooltip>
-        <i v-if="!isWhatsappConnected" class="el-icon-warning" />
+        <i v-if="!isWhatsappConnected" class="el-icon-warning el-icon-pulse el-icon-danger" />
       </div>
       <div class="jus-header-main__info">
         <el-dropdown trigger="click" placement="bottom-start">
@@ -207,19 +207,9 @@ export default {
       cursor: pointer;
     }
     .el-icon-warning {
-      background-color: #fff;
-      border-radius: 50%;
-      color: #FF4B54;
       position: absolute;
       right: -4px;
       bottom: 1px;
-      font-size: 18px;
-      animation-delay: .2s;
-      animation-duration: 1.5s;
-      animation-fill-mode: forwards;
-      animation-iteration-count: infinite;
-      animation-name: throbber-pulse,throbber-fade;
-      animation-timing-function: ease-in-out;
     }
   }
   &__info {

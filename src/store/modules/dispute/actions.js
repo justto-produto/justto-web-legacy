@@ -192,39 +192,6 @@ const disputeActions = {
         })
     })
   },
-  removePhone ({ commit }, removePhoneBody) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.delete('api/disputes/' + removePhoneBody.disputeId + '/phones/' + removePhoneBody.id)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
-    })
-  },
-  removeEmail ({ commit }, removeEmailBody) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.delete('api/disputes/' + removeEmailBody.disputeId + '/emails/' + removeEmailBody.id)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
-    })
-  },
-  removeOab ({ commit }, removeOabBody) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.delete('api/disputes/' + removeOabBody.disputeId + '/oab/' + removeOabBody.id)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
-    })
-  },
   disputeVisualized ({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

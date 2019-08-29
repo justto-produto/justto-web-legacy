@@ -36,25 +36,14 @@ const actions = {
         })
     })
   },
-  editRole ({ commit }, infoRole) {
+  editRole ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/persons', { id: infoRole.personId, name: infoRole.name, documentNumber: infoRole.documentNumber })
+      axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
-          reject(error)
-        })
-    })
-  },
-  addOab ({ commit }, oabForm) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.post('api/persons/' + oabForm.personId +'/oabs', { number: oabForm.oab, state: oabForm.state })
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
+          reject(error.response)
         })
     })
   },
@@ -81,28 +70,6 @@ const actions = {
       }).catch(error => {
         reject(error)
       })
-    })
-  },
-  createEmail ({ commit }, newEmailBody) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/persons/' + newEmailBody.personId + '/emails', {address: newEmailBody.address})
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
-    })
-  },
-  createPhone ({ commit }, newPhoneBody) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/persons/' + newPhoneBody.personId + '/phones', {number: newPhoneBody.number})
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
     })
   }
 }

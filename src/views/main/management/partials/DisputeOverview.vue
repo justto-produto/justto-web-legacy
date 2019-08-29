@@ -34,7 +34,7 @@
           <span class="title">Contraproposta:</span>
           <span>
             <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">
-              <jus-avatar-user size="mini" :name="dispute.lastCounterOfferName" />
+              <jus-avatar-user :name="dispute.lastCounterOfferName" size="mini" />
             </el-tooltip>
             {{ dispute.lastCounterOfferValue | currency }}
           </span>
@@ -49,7 +49,7 @@
           <span class="title">Valor proposto:</span>
           <span>
             <el-tooltip v-if="dispute.lastOfferName" :content="'Proposto por: ' + dispute.lastOfferName">
-              <jus-avatar-user size="mini" :name="dispute.lastOfferName" />
+              <jus-avatar-user :name="dispute.lastOfferName" size="mini" />
             </el-tooltip>
             {{ dispute.lastOfferValue | currency }}
           </span>
@@ -113,7 +113,7 @@
           </el-popover>
         </div> -->
         <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
-          <span class="title">CPF:</span>
+          <span class="title">CPF/CNPJ:</span>
           <span>{{ role.documentNumber | cpfMask }}</span>
         </div>
         <div class="dispute-overview-view__info-line">
@@ -126,10 +126,12 @@
         <div v-show="role.phones.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="phone in role.phones" :key="phone.id">
-              {{ phone.number | phoneMask }}
-              <span v-if="!phone.isValid">
-                <img src="@/assets/icons/ic-warn-dark.svg">
-              </span>
+              <span>{{ phone.number | phoneMask }}</span>
+              <div class="dispute-overview-view__list-actions">
+                <el-tooltip content="Telefone inválido">
+                  <jus-icon v-if="!phone.isValid" icon="warn-dark" />
+                </el-tooltip>
+              </div>
             </li>
           </ul>
         </div>
@@ -139,10 +141,12 @@
         <div v-show="role.emails.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="email in role.emails" :key="email.id">
-              {{ email.address }}
-              <span v-if="!email.isValid">
-                <img src="@/assets/icons/ic-warn-dark.svg">
-              </span>
+              <span>{{ email.address }}</span>
+              <div class="dispute-overview-view__list-actions">
+                <el-tooltip content="E-mail inválido">
+                  <jus-icon v-if="!email.isValid" icon="warn-dark" />
+                </el-tooltip>
+              </div>
             </li>
           </ul>
         </div>
@@ -152,16 +156,16 @@
         <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="oab in role.oabs" :key="oab.id">
-              {{ oab.number }}
-              <span v-if="oab.state">-</span>
-              {{ oab.state }}
-              <!-- <span v- if="!oab.isValid">
-                <img src="@/assets/icons/ic-warn-dark.svg">
-              </span> -->
+              <div>{{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span></div>
+              <div class="dispute-overview-view__list-actions">
+                <el-tooltip content="OAB inválido">
+                  <jus-icon v-if="!oab.isValid" icon="warn-dark" />
+                </el-tooltip>
+              </div>
             </li>
           </ul>
         </div>
-        <div v-if="buildTitle(role) !== 'Negociador'" class="dispute-overview-view__actions">
+        <div class="dispute-overview-view__actions">
           <el-button plain @click="removeRole(role)">Excluir</el-button>
           <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
         </div>
@@ -176,7 +180,6 @@
         v-loading="editDisputeDialogLoading"
         ref="disputeForm"
         :model="disputeForm"
-        :rules="disputeRules"
         label-position="top"
         @submit.native.prevent="editDispute">
         <el-row :gutter="20">
@@ -232,11 +235,6 @@
                 type="date" />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="24">
-            <el-form-item label="Valor do acordo" prop="disputeDealValue">
-              <money v-model="disputeForm.disputeDealValue" v-bind="money" class="el-input__inner" />
-            </el-form-item>
-          </el-col> -->
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
               <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description"/>
@@ -256,33 +254,33 @@
       <span slot="title" class="el-dialog__title">
         Alterar dados de {{ roleForm.title }}
       </span>
+      <el-alert
+        v-show="editRoleDialogError"
+        type="error"
+        @close="editRoleDialogError = false">
+          <ul><li v-for="error in editRoleDialogErrorList">
+            {{ error }}
+          </li></ul>
+        </el-alert>
       <el-form
+        v-loading="editRoleDialogLoading"
         ref="roleForm"
         :model="roleForm"
-        :rules="personRules"
-        label-position="top">
+        :rules="roleRules"
+        label-position="top"
+        @submit.native.prevent>
         <el-form-item label="Nome" prop="name">
-          <el-input v-model="roleForm.name" />
+          <el-input v-model="roleForm.name" autofocus="" />
         </el-form-item>
-        <el-form-item v-show="partyRoles.party === true" label="CPF" prop="documentNumber">
-          <the-mask v-model="roleForm.documentNumber" :mask="['###.###.###-##']" class="el-input__inner" />
+        <el-form-item label="CPF/CNPJ" prop="documentNumber">
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="roleForm.documentNumber" />
         </el-form-item>
-        <el-form-item v-show="partyRoles.legal === true" label="CNPJ" prop="documentNumber">
-          <the-mask v-model="roleForm.documentNumber" :mask="['##.###.###/####-##']" class="el-input__inner" />
-        </el-form-item>
-      </el-form>
-      <el-form
-        v-show="partyRoles.lawyer === true"
-        ref="oabForm"
-        :model="oabForm"
-        :rules="oabRules"
-        label-position="top">
-        <div class="dispute-overview-view__oab-form">
+        <div v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" class="dispute-overview-view__oab-form">
           <el-form-item class="oab" label="OAB" prop="oab">
-            <el-input v-model="oabForm.oab" />
+            <el-input v-model="roleForm.oab" />
           </el-form-item>
           <el-form-item class="state" label="Estado" prop="state">
-            <el-select v-model="oabForm.state" placeholder="">
+            <el-select v-model="roleForm.state" placeholder="">
               <el-option
                 v-for="state in $store.state.statesList"
                 :key="state"
@@ -294,78 +292,68 @@
             <jus-icon icon="add-white" />
           </el-button>
         </div>
-        <ul class="dispute-overview-view__list" style="margin-top: -10px">
-          <li v-for="(oab, index) in roleForm.oabs" :key="oab.id">
-            <img src="@/assets/icons/ic-check.svg">
-            {{ oab.number }} {{ oab.state }}
-            <a href="#" @click.prevent="removeOab({ disputeId: dispute.id, id: oab.id }, roleForm.oabs, index)">
-              <i class="el-icon-error" />
-            </a>
-            <!-- <a v-if="!phone.isValid" href="#" @click.prevent="setPhoneAttribs(phone, 'ISVALIS')"> -->
-            <!-- <span v-if="!oab.isValid">
-              <i class="el-icon-warning" />
-            </span> -->
-            <!-- </a> -->
-          </li>
-        </ul>
-      </el-form>
-      <el-form
-        ref="phoneForm"
-        :model="phoneForm"
-        :rules="phoneRules"
-        label-position="top">
+        <el-table v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" :data="roleForm.oabs" :show-header="false" class="el-table--list">
+          <el-table-column>
+            <template slot-scope="scope">
+              {{ scope.row.number }} - {{ scope.row.state }}
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" width="40px">
+            <template slot-scope="scope">
+              <a href="#" @click.prevent="removeOab(scope.$index)">
+                <jus-icon icon="trash" />
+              </a>
+            </template>
+          </el-table-column>
+        </el-table>
         <el-form-item label="Telefone" prop="phone">
-          <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="phoneForm.phone">
-            <el-button slot="append" @click="addPhone(roleForm.personId, roleForm.phones)">
+          <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="roleForm.phone">
+            <el-button slot="append" @click="addPhone()">
               <jus-icon icon="add-white" />
             </el-button>
           </el-input>
         </el-form-item>
-        <ul class="dispute-overview-view__list">
-          <li v-for="(phone, index) in roleForm.phones" :key="phone.id">
-            <img src="@/assets/icons/ic-check.svg">
-            {{ phone.number | phoneMask }}
-            <a href="#" data-testid="remove-phone" @click.prevent="removePhone({disputeId: dispute.id, id: phone.id}, roleForm.phones, index)">
-              <i class="el-icon-error" />
-            </a>
-            <!-- <a v-if="!phone.isValid" href="#" @click.prevent="setPhoneAttribs(phone, 'ISVALIS')"> -->
-            <span v-if="!phone.isValid">
-              <i class="el-icon-warning" />
-            </span>
-            <!-- </a> -->
-          </li>
-        </ul>
-      </el-form>
-      <el-form
-        ref="emailForm"
-        :model="emailForm"
-        :rules="emailRules"
-        label-position="top">
+        <el-table :data="roleForm.phones" :show-header="false" class="el-table--list">
+          <el-table-column>
+            <template slot-scope="scope">
+              {{ scope.row.number | phoneMask }}
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" width="36px">
+            <template slot-scope="scope">
+              <a href="#" @click.prevent="removePhone(scope.$index)">
+                <jus-icon icon="trash" />
+              </a>
+            </template>
+          </el-table-column>
+        </el-table>
         <el-form-item label="E-mail" prop="email">
-          <el-input v-model="emailForm.email" data-testid="input-email">
-            <el-button slot="append" data-testid="add-email" @click="addEmail(roleForm.personId, roleForm.emails)">
+          <el-input v-model="roleForm.email" data-testid="input-email">
+            <el-button slot="append" data-testid="add-email" @click="addEmail()">
               <jus-icon icon="add-white" />
             </el-button>
           </el-input>
         </el-form-item>
-        <ul class="dispute-overview-view__list">
-          <li v-for="(email, index) in roleForm.emails" :key="email.id">
-            <img src="@/assets/icons/ic-check.svg">
-            {{ email.address }}
-            <a href="#" @click.prevent="removeEmail({ disputeId: dispute.id, id: email.id }, roleForm.emails, index)">
-              <i class="el-icon-error" />
-            </a>
-            <!-- <a v-if="!phone.isValid" href="#" @click.prevent="setPhoneAttribs(phone, 'ISVALIS')"> -->
-            <span v-if="!email.isValid">
-              <i class="el-icon-warning" />
-            </span>
-            <!-- </a> -->
-          </li>
-        </ul>
+        <el-table :data="roleForm.emails" :show-header="false" class="el-table--list">
+          <el-table-column>
+            <template slot-scope="scope">
+              {{ scope.row.address }}
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" width="36px">
+            <template slot-scope="scope">
+              <a href="#" @click.prevent="removeEmail(scope.$index)">
+                <jus-icon icon="trash" />
+              </a>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button plain @click="editRoleDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" data-testid="edit-data-part" @click.prevent="editRole(roleForm.personId, roleForm.name, roleForm.documentNumber)">Editar dados</el-button>
+        <el-button :loading="editRoleDialogLoading" type="primary" data-testid="edit-data-part" @click="editRole">
+          Editar dados
+        </el-button>
       </span>
     </el-dialog>
   </div>
@@ -373,12 +361,13 @@
 
 <script>
 import { Money } from 'v-money'
-import { mask, TheMask } from 'vue-the-mask'
+import { mask } from 'vue-the-mask'
 import { getRoles } from '@/plugins/jusUtils'
+import CPFCNPJ from 'cpf_cnpj'
 
 export default {
   name: 'DisputeOverview',
-  components: { TheMask, Money },
+  components: { Money },
   directives: { mask },
   props: {
     loading: {
@@ -395,18 +384,30 @@ export default {
     }
   },
   data () {
-    var validateName = (rule, value, callback) => {
+    const validateName = (rule, value, callback) => {
       if (value && value.length > 2) {
         callback()
       } else {
         callback(new Error())
       }
     }
-    var validatePhone = (rule, value, callback) => {
+    const validateCpf = (rule, value, callback) => {
+      if (!value) callback()
+      if (value.length === 14) {
+        if (CPFCNPJ.CPF.isValid(value)) {
+          callback()
+        } else callback(new Error())
+      } else {
+        if (CPFCNPJ.CNPJ.isValid(value)) {
+          callback()
+        } else callback(new Error())
+      }
+    }
+    const validatePhone = (rule, value, callback) => {
       if (value) {
         if (value && value.length > 13) {
           callback()
-        } else callback(new Error('Insira um telefone válido.'))
+        } else callback(new Error())
       } else {
         callback()
       }
@@ -415,54 +416,33 @@ export default {
       active: this.activePerson.personId,
       selectedClaimantId: '',
       selectedNegotiatorId: '',
-      partyRoles: {
-        legal: false,
-        party: false,
-        lawyer: false
-      },
-      emailForm: { email: '' },
-      phoneForm: { phone: '' },
-      oabForm: { oab: '', state: '' },
-      emailRules: { email: [
-        { required: true, message: 'Campo obrigatório', trigger: 'blur' },
-        { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'blur' }
-      ] },
-      phoneRules: { phone: [
-        { required: true, message: 'Campo obrigatório', trigger: 'blur' },
-        { validator: validatePhone, trigger: 'blur' }
-      ] },
-      oabRules: {
-        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'blur' }],
-        state: [{ required: true, message: 'Campo obrigatório', trigger: 'blur' }]
-      },
-      personRules: {
+      disputeForm: {},
+      roleForm: {},
+      roleRules: {
         name: [
-          { required: true, message: 'Campo obrigatório', trigger: 'blur' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' }
-        ]
+        ],
+        phone: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
+        ],
+        email: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
+        ],
+        documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }],
+        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
-      disputeForm: {
-        id: '',
-        disputeUpperRange: '',
-        lastCounterOfferValue: '',
-        lastOfferValue: '',
-        expirationDate: '',
-        description: ''
-      },
-      disputeRules: {},
-      roleForm: {
-        name: '',
-        documentNumber: '',
-        oabs: '',
-        emails: '',
-        phones: ''
-      },
-      roleRules: {},
       emailDialogVisible: false,
       phoneDialogVisible: false,
       editDisputeDialogVisible: false,
       editDisputeDialogLoading: false,
       editRoleDialogVisible: false,
+      editRoleDialogLoading: false,
+      editRoleDialogError: false,
+      editRoleDialogErrorList: [],
       money: {
         decimal: ',',
         thousands: '.',
@@ -543,9 +523,9 @@ export default {
       this.$msgbox({
         title: 'Atenção!',
         message: h('p', null, [
-          h('div', null,'- As novas informações vão sobrescrever as antigas.'),
-          this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange ?
-          h('div', null,'- Alçada máxima está abaixo do valor proposto.') : null,
+          h('div', null, '- As novas informações vão sobrescrever as antigas.'),
+          this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
+            ? h('div', null, '- Alçada máxima está abaixo do valor proposto.') : null,
           h('br', null, null),
           h('div', null, 'Deseja continuar?')
         ]),
@@ -598,128 +578,25 @@ export default {
       }
       this.$emit('update:activePerson', this.active)
     },
-    addEmail (personId, emails) {
-      this.$refs['emailForm'].validate(valid => {
-        if (valid) {
-          this.$store.dispatch('createEmail', {
-            personId: personId,
-            address: this.emailForm.email
-          }).then(response => {
-            emails.push({ id: response.id, address: response.address })
-            this.emailForm.email = ''
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
-          })
-        }
-      })
-    },
-    addPhone (personId, phones) {
-      this.$refs['phoneForm'].validate(valid => {
-        if (valid) {
-          this.$store.dispatch('createPhone', {
-            personId: personId,
-            number: this.phoneForm.phone.match(/\d+/g).join([])
-          }).then(response => {
-            phones.push({ id: response.id, number: response.number })
-            this.phoneForm.phone = ''
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
-          })
-        }
-      })
-    },
-    addOab (personId, oabs) {
-      this.$refs['oabForm'].validate(valid => {
-        if (valid) {
-          this.$store.dispatch('addOab', {
-            oab: this.oabForm.oab,
-            state: this.oabForm.state,
-            personId: personId
-          }).then(response => {
-            oabs.push({ id: response.id, number: response.number, state: response.state })
-            this.oabForm.oab = ''
-            this.oabForm.state = ''
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
-          })
-        }
-      })
-    },
-    removeEmail (emailBody, list, index) {
-      this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
-        confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar'
-      }).then(() => {
-        this.$store.dispatch('removeEmail', emailBody)
-          .then(() => {
-            this.$delete(list, index)
-          })
-          .catch(() => {
-            this.$jusNotification({ type: 'error' })
-          })
-      })
-    },
-    removePhone (phoneBody, list, index) {
-      this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
-        confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar'
-      }).then(() => {
-        this.$store.dispatch('removePhone', phoneBody)
-          .then(() => {
-            this.$delete(list, index)
-          })
-          .catch(() => {
-            this.$jusNotification({ type: 'error' })
-          })
-      })
-    },
-    removeOab (oabBody, list, index) {
-      this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
-        confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar'
-      }).then(() => {
-        this.$store.dispatch('removeOab', oabBody)
-          .then(() => {
-            this.$delete(list, index)
-          })
-          .catch(() => {
-            this.$jusNotification({ type: 'error' })
-          })
-      })
-    },
     openRoleDialog (role) {
       this.editRoleDialogVisible = true
-      var roles = role.roles
-      var party = role.party
-      this.roleForm.id = role.id
-      this.roleForm.personId = role.personId
+      this.roleForm = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildTitle(role)
-      this.roleForm.name = role.name
-      this.roleForm.documentNumber = role.documentNumber
-      this.roleForm.oabs = role.oabs
-      this.roleForm.emails = role.emails
-      this.roleForm.phones = role.phones
-      this.roleForm.oabs = role.oabs
-      this.oabForm.state = ''
-      this.partyRoles.legal = false
-      this.partyRoles.party = false
-      this.partyRoles.lawyer = false
-      if (roles.includes('LAWYER') === true) {
-        this.partyRoles.lawyer = true
-      }
-      if ((roles.includes('NEGOTIATOR') === true) || (roles.includes('PARTY') === true && party.includes('CLAIMANT') === true)) {
-        this.partyRoles.party = true
-      }
-      if (roles.includes('PARTY') === true && party.includes('RESPONDENT') === true) {
-        this.partyRoles.legal = true
-      }
+      this.roleForm.documentNumber = this.$options.filters.cpfMask(this.roleForm.documentNumber)
+      if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },
-    editRole (personId, name, documentNumber) {
-      if (name && name.length > 2) {
+    editRole () {
+      let isValid = true
+      this.$refs.roleForm.validateField(['name', 'documentNumber'], errorMessage => {
+        if (errorMessage)isValid = false
+      })
+      if (isValid) {
+        let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
+        delete roleToEdit.title
+        this.editRoleDialogLoading = true
         this.$store.dispatch('editRole', {
-          personId: personId,
-          name: name,
-          documentNumber: documentNumber
+          disputeId: this.dispute.id,
+          disputeRole: roleToEdit
         }).then(responde => {
           this.$jusNotification({
             title: 'Yay!',
@@ -727,16 +604,65 @@ export default {
             type: 'success'
           })
           this.editRoleDialogVisible = false
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        })
-      } else {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Nome precisa conter mais de 3 caracteres.',
-          type: 'warning'
+        }).catch(error => {
+          this.editRoleDialogError = true
+          this.editRoleDialogErrorList = []
+          if (error.status === 400) {
+            this.editRoleDialogError = true
+            this.editRoleDialogErrorList.push(error.data.message)
+          } else this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.editRoleDialogLoading = false
         })
       }
+    },
+    addPhone () {
+      let isValid = true
+      this.$refs.roleForm.validateField('phone', errorMessage => {
+        if (errorMessage) isValid = false
+      })
+      if (isValid) {
+        this.roleForm.phones.push({
+          number: this.roleForm.phone
+        })
+        this.roleForm.phone = ''
+      }
+    },
+    removePhone (index) {
+      this.roleForm.phones.splice(index, 1)
+    },
+
+    addEmail () {
+      let isValid = true
+      this.$refs.roleForm.validateField('email', errorMessage => {
+        if (errorMessage) isValid = false
+      })
+      if (isValid) {
+        this.roleForm.emails.push({
+          address: this.roleForm.email
+        })
+        this.roleForm.email = ''
+      }
+    },
+    removeEmail (index) {
+      this.roleForm.emails.splice(index, 1)
+    },
+    addOab () {
+      let isValid = true
+      this.$refs.roleForm.validateField(['oab', 'state'], errorMessage => {
+        if (errorMessage) isValid = false
+      })
+      if (isValid) {
+        this.roleForm.oabs.push({
+          number: this.roleForm.oab,
+          state: this.roleForm.state
+        })
+        this.roleForm.oab = ''
+        this.roleForm.state = ''
+      }
+    },
+    removeOab (index) {
+      this.roleForm.oabs.splice(index, 1)
     },
     removeRole (role) {
       this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
@@ -763,28 +689,6 @@ export default {
 
 <style lang="scss">
 .dispute-overview-view {
-  .el-icon-error {
-    color: #ADADAD;
-    font-size: 18px;
-    &:hover {
-      color: #FF6961;
-    }
-  }
-  .el-icon-warning {
-    color: #ADADAD;
-    font-size: 18px;
-    &:hover {
-      color: #FFA500;
-    }
-  }
-  .el-icon-success {
-    color: #ADADAD;
-    font-size: 18px;
-    &:hover {
-      color: #9461f7;
-    }
-  }
-
   margin-bottom: -20px;
   .jus-status-dot {
     float: initial !important;
@@ -828,18 +732,26 @@ export default {
   }
   &__info-list {
     font-weight: 500;
-    img {
-      float: right;
-      width: 16px;
-    }
     ul {
-      margin-top: 6px;
-      padding-left: 17px;
+      margin-top: 4px;
+      padding-left: 0;
       li {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
+    }
+  }
+  &__list-actions {
+    img {
+      margin-right: 8px;
+      vertical-align: middle;
+      width: 16px;
     }
   }
   &__location {
@@ -858,21 +770,6 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  &__list {
-    margin: 20 0px;
-    padding-left: 2px;
-    li {
-      margin-top: 12px;
-      list-style: none;
-      :first-child {
-        margin-right: 10px;
-      }
-      :last-child {
-        vertical-align: text-top;
-        float: right;
-      }
-    }
-  }
   &__oab-form {
     display: flex;
     width: 100%;
@@ -881,7 +778,7 @@ export default {
     }
     .state {
       margin-left: 16px;
-      width: 120px;
+      flex: 1;
     }
     .button {
       margin-top: 30px;
