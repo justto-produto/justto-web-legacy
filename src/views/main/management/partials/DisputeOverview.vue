@@ -113,7 +113,7 @@
           </el-popover>
         </div> -->
         <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
-          <span class="title">CPF:</span>
+          <span class="title">CPF/CNPJ:</span>
           <span>{{ role.documentNumber | cpfMask }}</span>
         </div>
         <div class="dispute-overview-view__info-line">
@@ -126,10 +126,12 @@
         <div v-show="role.phones.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="phone in role.phones" :key="phone.id">
-              {{ phone.number | phoneMask }}
-              <span v-if="!phone.isValid">
-                <img src="@/assets/icons/ic-warn-dark.svg">
-              </span>
+              <span>{{ phone.number | phoneMask }}</span>
+              <div class="dispute-overview-view__list-actions">
+                <el-tooltip content="Telefone inválido">
+                  <jus-icon v-if="!phone.isValid" icon="warn-dark" />
+                </el-tooltip>
+              </div>
             </li>
           </ul>
         </div>
@@ -139,10 +141,12 @@
         <div v-show="role.emails.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="email in role.emails" :key="email.id">
-              {{ email.address }}
-              <span v-if="!email.isValid">
-                <img src="@/assets/icons/ic-warn-dark.svg">
-              </span>
+              <span>{{ email.address }}</span>
+              <div class="dispute-overview-view__list-actions">
+                <el-tooltip content="E-mail inválido">
+                  <jus-icon v-if="!email.isValid" icon="warn-dark" />
+                </el-tooltip>
+              </div>
             </li>
           </ul>
         </div>
@@ -152,16 +156,16 @@
         <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="oab in role.oabs" :key="oab.id">
-              {{ oab.number }}
-              <span v-if="oab.state">-</span>
-              {{ oab.state }}
-              <!-- <span v- if="!oab.isValid">
-                <img src="@/assets/icons/ic-warn-dark.svg">
-              </span> -->
+              <div>{{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span></div>
+              <div class="dispute-overview-view__list-actions">
+                <el-tooltip content="OAB inválido">
+                  <jus-icon v-if="!oab.isValid" icon="warn-dark" />
+                </el-tooltip>
+              </div>
             </li>
           </ul>
         </div>
-        <div v-if="buildTitle(role) !== 'Negociador'" class="dispute-overview-view__actions">
+        <div class="dispute-overview-view__actions">
           <el-button plain @click="removeRole(role)">Excluir</el-button>
           <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
         </div>
@@ -250,6 +254,14 @@
       <span slot="title" class="el-dialog__title">
         Alterar dados de {{ roleForm.title }}
       </span>
+      <el-alert
+        v-show="editRoleDialogError"
+        type="error"
+        @close="editRoleDialogError = false">
+          <ul><li v-for="error in editRoleDialogErrorList">
+            {{ error }}
+          </li></ul>
+        </el-alert>
       <el-form
         v-loading="editRoleDialogLoading"
         ref="roleForm"
@@ -263,7 +275,7 @@
         <el-form-item label="CPF/CNPJ" prop="documentNumber">
           <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="roleForm.documentNumber" />
         </el-form-item>
-        <div class="dispute-overview-view__oab-form">
+        <div v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" class="dispute-overview-view__oab-form">
           <el-form-item class="oab" label="OAB" prop="oab">
             <el-input v-model="roleForm.oab" />
           </el-form-item>
@@ -280,16 +292,20 @@
             <jus-icon icon="add-white" />
           </el-button>
         </div>
-        <ul class="dispute-overview-view__list" style="margin-top: -10px">
-          <li v-for="(oab, index) in roleForm.oabs" :key="oab.number + index">
-            <img src="@/assets/icons/ic-check.svg">
-            {{ oab.number }} - {{ oab.state }}
-            <a href="#" @click.prevent="removeOab(index)">
-              <i class="el-icon-error el-icon-danger" />
-            </a>
-          </li>
-        </ul>
-
+        <el-table v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" :data="roleForm.oabs" :show-header="false" class="el-table--list">
+          <el-table-column>
+            <template slot-scope="scope">
+              {{ scope.row.number }} - {{ scope.row.state }}
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" width="40px">
+            <template slot-scope="scope">
+              <a href="#" @click.prevent="removeOab(scope.$index)">
+                <jus-icon icon="trash" />
+              </a>
+            </template>
+          </el-table-column>
+        </el-table>
         <el-form-item label="Telefone" prop="phone">
           <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="roleForm.phone">
             <el-button slot="append" @click="addPhone()">
@@ -297,15 +313,20 @@
             </el-button>
           </el-input>
         </el-form-item>
-        <ul class="dispute-overview-view__list">
-          <li v-for="(phone, index) in roleForm.phones" :key="phone.number + index">
-            <img src="@/assets/icons/ic-check.svg">
-            {{ phone.number | phoneMask }}
-            <a href="#" data-testid="remove-phone" @click.prevent="removePhone(index)">
-              <i class="el-icon-error el-icon-danger" />
-            </a>
-          </li>
-        </ul>
+        <el-table :data="roleForm.phones" :show-header="false" class="el-table--list">
+          <el-table-column>
+            <template slot-scope="scope">
+              {{ scope.row.number | phoneMask }}
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" width="36px">
+            <template slot-scope="scope">
+              <a href="#" @click.prevent="removePhone(scope.$index)">
+                <jus-icon icon="trash" />
+              </a>
+            </template>
+          </el-table-column>
+        </el-table>
         <el-form-item label="E-mail" prop="email">
           <el-input v-model="roleForm.email" data-testid="input-email">
             <el-button slot="append" data-testid="add-email" @click="addEmail()">
@@ -313,15 +334,20 @@
             </el-button>
           </el-input>
         </el-form-item>
-        <ul class="dispute-overview-view__list">
-          <li v-for="(email, index) in roleForm.emails" :key="email.address + index">
-            <img src="@/assets/icons/ic-check.svg">
-            {{ email.address }}
-            <a href="#" @click.prevent="removeEmail(index)">
-              <i class="el-icon-error el-icon-danger" />
-            </a>
-          </li>
-        </ul>
+        <el-table :data="roleForm.emails" :show-header="false" class="el-table--list">
+          <el-table-column>
+            <template slot-scope="scope">
+              {{ scope.row.address }}
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" width="36px">
+            <template slot-scope="scope">
+              <a href="#" @click.prevent="removeEmail(scope.$index)">
+                <jus-icon icon="trash" />
+              </a>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button plain @click="editRoleDialogVisible = false">Cancelar</el-button>
@@ -415,6 +441,8 @@ export default {
       editDisputeDialogLoading: false,
       editRoleDialogVisible: false,
       editRoleDialogLoading: false,
+      editRoleDialogError: false,
+      editRoleDialogErrorList: [],
       money: {
         decimal: ',',
         thousands: '.',
@@ -555,6 +583,7 @@ export default {
       this.roleForm = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildTitle(role)
       this.roleForm.documentNumber = this.$options.filters.cpfMask(this.roleForm.documentNumber)
+      if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },
     editRole () {
       let isValid = true
@@ -562,10 +591,12 @@ export default {
         if (errorMessage)isValid = false
       })
       if (isValid) {
+        let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
+        delete roleToEdit.title
         this.editRoleDialogLoading = true
         this.$store.dispatch('editRole', {
           disputeId: this.dispute.id,
-          disputeRole: this.roleForm
+          disputeRole: roleToEdit
         }).then(responde => {
           this.$jusNotification({
             title: 'Yay!',
@@ -573,8 +604,13 @@ export default {
             type: 'success'
           })
           this.editRoleDialogVisible = false
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.editRoleDialogError = true
+          this.editRoleDialogErrorList = []
+          if (error.status === 400) {
+            this.editRoleDialogError = true
+            this.editRoleDialogErrorList.push(error.data.message)
+          } else this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.editRoleDialogLoading = false
         })
@@ -696,18 +732,26 @@ export default {
   }
   &__info-list {
     font-weight: 500;
-    img {
-      float: right;
-      width: 16px;
-    }
     ul {
       margin-top: 4px;
       padding-left: 0;
       li {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
+    }
+  }
+  &__list-actions {
+    img {
+      margin-right: 8px;
+      vertical-align: middle;
+      width: 16px;
     }
   }
   &__location {
@@ -725,21 +769,6 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  &__list {
-    margin: 20 0px;
-    padding-left: 2px;
-    li {
-      margin-top: 12px;
-      list-style: none;
-      :first-child {
-        margin-right: 10px;
-      }
-      :last-child {
-        vertical-align: text-top;
-        float: right;
-      }
-    }
   }
   &__oab-form {
     display: flex;
