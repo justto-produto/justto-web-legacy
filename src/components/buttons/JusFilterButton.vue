@@ -17,7 +17,8 @@ export default {
   data () {
     return {
       term: '',
-      isCollapsed: true
+      isCollapsed: true,
+      debounce: ''
     }
   },
   watch: {
@@ -30,7 +31,10 @@ export default {
       }
     },
     term (term) {
-      this.$store.commit('setDisputeFilterTerm', term)
+      clearTimeout(this.debounce)
+      this.debounce = setTimeout(() => {
+        this.$store.commit('setDisputeFilterTerm', term)
+      }, 800)
     }
   },
   beforeMount () {
@@ -42,11 +46,11 @@ export default {
       this.isCollapsed = !this.isCollapsed
     },
     blur () {
-      setTimeout(function () {
+      setTimeout(() => {
         if (!this.term) {
           this.isCollapsed = true
         }
-      }.bind(this), 250)
+      }, 250)
     },
     focus () {
       this.$refs.filterInput.focus()
