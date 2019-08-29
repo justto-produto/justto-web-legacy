@@ -416,7 +416,10 @@ export default {
       active: this.activePerson.personId,
       selectedClaimantId: '',
       selectedNegotiatorId: '',
-      disputeForm: {},
+      disputeForm: {
+        expirationDate: '',
+        description: ''
+      },
       roleForm: {},
       roleRules: {
         name: [
@@ -484,7 +487,7 @@ export default {
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
       this.selectedNegotiatorId = this.dispute.negotiators[0].id || ''
       this.editDisputeDialogVisible = true
-      let dispute = Object.assign({}, this.dispute)
+      const dispute = JSON.parse(JSON.stringify(this.dispute))
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
@@ -493,32 +496,6 @@ export default {
       this.disputeForm.description = dispute.description
     },
     editDispute () {
-      this.editDisputeDialogLoading = true
-      let promises = []
-      let disputeToEdit = JSON.parse(JSON.stringify(this.$store.getters.findDisputeDTOById(this.disputeForm.id)))
-      if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
-      if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
-      if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
-      if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
-      promises.push(this.$store.dispatch('editDispute', disputeToEdit))
-      if (this.disputeForm.lastCounterOfferValue !== parseInt(this.dispute.lastCounterOfferValue)) {
-        if (this.selectedClaimantId) {
-          promises.push(this.$store.dispatch('editDisputeOffer', {
-            disputeId: this.dispute.id,
-            objectId: this.dispute.objectId,
-            value: this.disputeForm.lastCounterOfferValue.toString(),
-            roleId: this.selectedClaimantId
-          }))
-        }
-      }
-      if (this.disputeForm.lastOfferValue !== parseInt(this.dispute.lastOfferValue)) {
-        promises.push(this.$store.dispatch('editDisputeOffer', {
-          disputeId: this.dispute.id,
-          objectId: this.dispute.objectId,
-          value: this.disputeForm.lastOfferValue.toString(),
-          roleId: this.selectedNegotiatorId
-        }))
-      }
       const h = this.$createElement
       this.$msgbox({
         title: 'Atenção!',
@@ -533,6 +510,32 @@ export default {
         showCancelButton: true,
         cancelButtonText: 'Cancelar'
       }).then(() => {
+        this.editDisputeDialogLoading = true
+        let promises = []
+        let disputeToEdit = JSON.parse(JSON.stringify(this.$store.getters.findDisputeDTOById(this.disputeForm.id)))
+        if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
+        if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
+        if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
+        promises.push(this.$store.dispatch('editDispute', disputeToEdit))
+        if (this.disputeForm.lastCounterOfferValue !== parseInt(this.dispute.lastCounterOfferValue)) {
+          if (this.selectedClaimantId) {
+            promises.push(this.$store.dispatch('editDisputeOffer', {
+              disputeId: this.dispute.id,
+              objectId: this.dispute.objectId,
+              value: this.disputeForm.lastCounterOfferValue.toString(),
+              roleId: this.selectedClaimantId
+            }))
+          }
+        }
+        if (this.disputeForm.lastOfferValue !== parseInt(this.dispute.lastOfferValue)) {
+          promises.push(this.$store.dispatch('editDisputeOffer', {
+            disputeId: this.dispute.id,
+            objectId: this.dispute.objectId,
+            value: this.disputeForm.lastOfferValue.toString(),
+            roleId: this.selectedNegotiatorId
+          }))
+        }
         Promise.all(promises)
           .then(() => {
             this.editDisputeDialogVisible = false
@@ -670,7 +673,7 @@ export default {
         cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('removeRole', {
-          disputeId: role.id,
+          disputeId: this.dispute.id,
           roleId: role.id
         }).then(response => {
           this.$jusNotification({
