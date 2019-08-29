@@ -46,7 +46,6 @@ describe('Justto.App - Disputa: Visualização', function () {
     // Resumo da disputa deve estar visivel
     // cy.get('[data-testid=dispute-summary]')
     //   .should('be.visible')
-
     // Dados da disputa devem estar visiveis
     cy.get('[data-testid=dispute-overview]')
       .should('be.visible')
