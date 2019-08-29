@@ -670,7 +670,7 @@ export default {
         cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('removeRole', {
-          disputeId: role.id,
+          disputeId: this.dispute.id,
           roleId: role.id
         }).then(response => {
           this.$jusNotification({
