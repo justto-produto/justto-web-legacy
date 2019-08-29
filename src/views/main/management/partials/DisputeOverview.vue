@@ -417,7 +417,8 @@ export default {
       selectedClaimantId: '',
       selectedNegotiatorId: '',
       disputeForm: {
-        expirationDate: ''
+        expirationDate: '',
+        description: ''
       },
       roleForm: {},
       roleRules: {
