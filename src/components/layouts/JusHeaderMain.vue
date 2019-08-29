@@ -8,6 +8,7 @@
           v-model="dispute"
           :trigger-on-focus="false"
           :fetch-suggestions="search"
+          :debounce="800"
           placeholder="Busque aqui as suas disputas">
           <template slot-scope="{ item }">
             <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
@@ -97,12 +98,14 @@
 
 <script>
 import JusWhatsapp from '@/components/layouts/JusWhatsapp'
+import JusDisputeResume from '@/components/layouts/JusDisputeResume'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusWhatsapp
+    JusWhatsapp,
+    JusDisputeResume
   },
   data () {
     return {

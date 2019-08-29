@@ -190,8 +190,9 @@
             <template slot-scope="scope">
               {{ scope.row.expirationDate | moment('DD/MM/YY') }}
               <el-tooltip content="Negociação encerra nos próximos 3 dias">
-                <i v-if="activeTab === '0' && disputeNextToExpire(scope.row.expirationDate)" 
-                class="view-management__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+                <i
+                  v-if="activeTab === '0' && disputeNextToExpire(scope.row.expirationDate)"
+                  class="view-management__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </el-tooltip>
             </template>
           </el-table-column>
