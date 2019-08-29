@@ -409,9 +409,6 @@ export default {
   },
   beforeUpdate () {
     this.adjustHeight()
-    setTimeout(function () {
-      this.doSort('expirationDate', 'descending')
-    }.bind(this), 500)
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.adjustHeight)
