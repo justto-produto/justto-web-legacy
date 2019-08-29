@@ -1,10 +1,9 @@
 import moment from 'moment'
 import i18n from '@/plugins/vueI18n.js'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
-import { getDisputeVM, getDisputeVMList } from './model'
 
 const disputeGetters = {
-  disputes: state => getDisputeVMList(state.disputesDTO),
+  disputes: state => state.disputesVM,
   disputeFilters: state => state.filters,
   disputeHasFilters: state => {
     return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm || !!state.filters.filterPersonId
@@ -14,8 +13,8 @@ const disputeGetters = {
   disputeInitialLoad: state => state.initialLoad,
   findDisputeDTOById: (state) => (disputeId) => state.disputesDTO.find(d => d.id === parseInt(disputeId)),
   findDisputeById: (state) => (disputeId) => {
-    let dispute = state.disputesDTO.find(d => d.id === parseInt(disputeId))
-    return getDisputeVM(dispute)
+    let dispute = state.disputesVM.find(d => d.id === parseInt(disputeId))
+    return dispute
   },
   filteredDisputes: (state, getters) => {
     let filteredDisputes = getters.disputes.slice(0)
@@ -58,6 +57,7 @@ const disputeGetters = {
           }
           return filter
         })
+        state.filters.filteredPerson = true
       }
       if (state.filters.sort.order) {
         filteredDisputes.sort((a, b) => {
@@ -89,97 +89,25 @@ const disputeGetters = {
     return filteredDisputes
   },
   alertOne: (state, getters) => {
-    let filteredDisputes = getters.disputes.filter(dispute => {
-      if ((dispute.status === 'IMPORTED' ||
-        dispute.status === 'PENDING' ||
-        dispute.status === 'ENRICHED' ||
-        dispute.status === 'ENGAGEMENT' ||
-        dispute.status === 'RUNNING') &&
-        moment(dispute.expirationDate).isBetween(moment(), moment().add(3, 'day'))
-      ) {
-        return true
-      }
-    })
-    return filteredDisputes
+    return state.alerts[0]
   },
   alertTwo: (state, getters) => {
-    let filteredDisputes = getters.disputes.filter(dispute => {
-      if ((dispute.status === 'IMPORTED' ||
-        dispute.status === 'PENDING' ||
-        dispute.status === 'ENRICHED' ||
-        dispute.status === 'ENGAGEMENT' ||
-        dispute.status === 'RUNNING') &&
-        dispute.hasInvalidEmail) {
-        return true
-      }
-    })
-    return filteredDisputes
+    return state.alerts[1]
   },
   alertThree: (state, getters) => {
-    let filteredDisputes = getters.disputes.filter(dispute => {
-      if ((dispute.status === 'IMPORTED' ||
-        dispute.status === 'PENDING' ||
-        dispute.status === 'ENRICHED' ||
-        dispute.status === 'ENGAGEMENT' ||
-        dispute.status === 'RUNNING') &&
-        (dispute.lastOfferPercentToUpperRange >= 100 &&
-        dispute.lastOfferPercentToUpperRange <= 120)) {
-        return true
-      }
-    })
-    return filteredDisputes
+    return state.alerts[2]
   },
   alertFour: (state, getters) => {
-    let filteredDisputes = getters.disputes.filter(dispute => {
-      if (
-        (dispute.status === 'IMPORTED' ||
-        dispute.status === 'PENDING' ||
-        dispute.status === 'ENRICHED' ||
-        dispute.status === 'ENGAGEMENT' ||
-        dispute.status === 'RUNNING') &&
-        dispute.hasInteraction &&
-        dispute.lastCounterOfferValue === '0.0'
-      ) {
-        return true
-      }
-    })
-    return filteredDisputes
+    return state.alerts[3]
   },
   alertFive: (state, getters) => {
-    let filteredDisputes = getters.disputes.filter(dispute => {
-      if ((dispute.status === 'IMPORTED' ||
-        dispute.status === 'PENDING' ||
-        dispute.status === 'ENRICHED' ||
-        dispute.status === 'ENGAGEMENT' ||
-        dispute.status === 'RUNNING') &&
-        dispute.hasInvalidPhone) {
-        return true
-      }
-    })
-    return filteredDisputes
+    return state.alerts[4]
   },
   alertSix: (state, getters) => {
-    let filteredDisputes = getters.disputes.filter(dispute => {
-      if (dispute.status === 'ENGAGEMENT' &&
-        dispute.communicationMsgTotalSent) {
-        return true
-      }
-    })
-    return filteredDisputes
+    return state.alerts[5]
   },
   alertSeven: (state, getters) => {
-    let filteredDisputes = getters.disputes.filter(dispute => {
-      if (
-        dispute.status !== 'SETTLED' &&
-        dispute.status !== 'UNSETTLED' &&
-        ((dispute.alerts && dispute.alerts.length > 0) ||
-        (dispute.claiments && dispute.claiments.alerts && dispute.claiments.alerts.length > 0) ||
-        (dispute.claimentslawyer && dispute.claimentslawyer.alerts && dispute.claimentslawyer.alerts.length > 0))
-      ) {
-        return true
-      }
-    })
-    return filteredDisputes
+    return state.alerts[6]
   },
   disputeStatuses: state => state.statuses,
   disputeActiveTab: state => state.filters.tab,
