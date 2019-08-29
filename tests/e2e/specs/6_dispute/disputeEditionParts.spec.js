@@ -1,5 +1,8 @@
-const login = Cypress.env('not-configured-account-email')
-const password = Cypress.env('defaukt-password')
+// const login = Cypress.env('not-configured-account-email')
+// const password = Cypress.env('defaukt-password')
+const login = Cypress.env('import-actions-email')
+const password = Cypress.env('default-password')
+
 
 describe('Justto.App - Disputa: Edição do Caso', function () {
   beforeEach('Login', function () {
