@@ -399,7 +399,7 @@ export default {
     filteredOccurrences () {
       if (this.searchTerm) {
         return this.occurrences.filter(occurrence => {
-          return (occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+          return (occurrence.description ? occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase()) : false) ||
           (occurrence.message.content ? occurrence.message.content.toLowerCase().includes(this.searchTerm.toLowerCase()) : false) ||
           (occurrence.message.sender ? occurrence.message.sender.toLowerCase().includes(this.searchTerm.toLowerCase()) : false)
         })

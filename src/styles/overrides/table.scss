@@ -7,6 +7,25 @@
       vertical-align: text-top;
     }
   }
+  &--list {
+    margin-bottom: 20px;
+    td {
+      padding: 4px 0;
+      border: 0;
+    }
+    img {
+      width: 16px;
+    }
+    &::before {
+      display: none;
+    }
+    .el-table__empty-block {
+      display: none;
+    }
+    .el-table__fixed::before, .el-table__fixed-right::before {
+      display: none;
+    }
+  }
 }
 
 .el-table--disputes {

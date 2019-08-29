@@ -1,4 +1,4 @@
-const email = Cypress.env('emailonboarding')
+const email = Cypress.env('token-email')
 
 describe('Justto.app - Esqueci a Senha', function () {
   beforeEach('Acesso', function () {
@@ -43,21 +43,6 @@ describe('Justto.app - Esqueci a Senha', function () {
 
     // Mensagme de email inválido deve desaparecer
     cy.contains('Insira um e-mail válido')
-      .should('be.visible')
-  })
-
-  it('Esqueci minha senha: Email Inexistente', function () {
-    // Digita um email inválido
-    cy.get('[data-testid=forgot-password-email]')
-      .type('email@inexistente.com')
-      .should('have.value', 'email@inexistente.com')
-
-    // Clica no botão Recuperar
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Mensagme de email inválido deve desaparecer
-    cy.contains('Requisição de recuperação enviada com sucesso! Acesse seu email para prosseguir.')
       .should('be.visible')
   })
 })
