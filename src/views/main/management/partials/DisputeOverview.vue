@@ -258,10 +258,10 @@
         v-show="editRoleDialogError"
         type="error"
         @close="editRoleDialogError = false">
-          <ul><li v-for="error in editRoleDialogErrorList">
-            {{ error }}
-          </li></ul>
-        </el-alert>
+        <ul><li v-for="error in editRoleDialogErrorList" :key="error">
+          {{ error }}
+        </li></ul>
+      </el-alert>
       <el-form
         v-loading="editRoleDialogLoading"
         ref="roleForm"

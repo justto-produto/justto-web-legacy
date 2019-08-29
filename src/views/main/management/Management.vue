@@ -458,19 +458,19 @@ export default {
       }
       switch (newTab) {
         case '0':
-          setTimeout(function () {
+          setTimeout(() => {
             this.doSort('expirationDate', 'descending')
-          }.bind(this), 500)
+          }, 500)
           break
         case '1':
-          setTimeout(function () {
+          setTimeout(() => {
             this.doSort('lastInteractionDate', 'ascending')
-          }.bind(this), 500)
+          }, 500)
           break
         case '2':
-          setTimeout(function () {
+          setTimeout(() => {
             this.doSort('disputeDealDate', 'descending')
-          }.bind(this), 500)
+          }, 500)
           break
         default:
           this.doSort()
@@ -478,7 +478,7 @@ export default {
       }
       this.updateTable()
     },
-    doSort(direction, prop) {
+    doSort (direction, prop) {
       if (this.$refs.disputeTable) {
         if (direction && prop) {
           this.$refs.disputeTable.sort(direction, prop)
