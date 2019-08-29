@@ -28,6 +28,7 @@
 
     "onboarding-email": "teste.onboarding@justto.com.br",
     "onboarding-description": "",
+    "default-onboarding-sub-domain":"testeonboarding",
 
     "token-email": "teste.token@justto.com.br",
     "token-description": "",

@@ -1,4 +1,4 @@
-const login = Cypress.env('not-configured-account-email')
+const login = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
 
 describe('Justto.App - Visualização de Gerenciamento', function () {
@@ -28,21 +28,6 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
     cy.url().should('include', '/#/management')
   })
 
-  it('Exibição dos Casos - Vazio', function () {
-    // Verifica se ícone está visivel
-    cy.get('[data-testid=cases-empty-icon]')
-      .should('be.visible')
-
-    // Verifica se mensagem "Não foram encontradas disputas" é exibida
-    cy.get('[data-testid=cases-empty-text]')
-      .contains('Aguardando por novas disputas.')
-      .should('be.visible')
-
-    // Exportação de disputas deve estar desabilitada
-    cy.get('[data-testid=export-disputes]')
-      .should('be.disabled')
-  })
-
   it('Exibição de Casos - Com casos', function () {
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
@@ -53,28 +38,11 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row')
       .should('be.visible', { timeout: 60000 })
 
-    // Exporta disputas
-    cy.get('[data-testid=export-disputes]')
-      .should('be.enabled')
-
     cy.get('.el-table__expand-icon').first()
       .click()
 
-    cy.get('[data-testid=dispute-title]')
-      .should('be.visible')
-    cy.get('[data-testid=dipute-info]')
-      .should('be.visible')
-  })
-
-  it('Atualização de Casos: Loading', function () {
-    // Clica em 'Atualizar'
-    cy.get('[data-testid=update-cases]')
-    .should('be.visible')
-    .click({force: true})
-
-    // Loading deve aparecer
-    cy.get('.el-loading-spinner')
-    .contains('Carregando disputas...')
-    .should('be.visible')
+      // Verifica se existem casos exibidos
+      cy.get('tbody>tr').first()
+        .should('be.visible')
   })
 })

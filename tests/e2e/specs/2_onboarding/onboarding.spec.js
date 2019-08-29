@@ -1,7 +1,11 @@
+const email = Cypress.env('onboarding-email')
+const subDomain = Cypress.env('default-onboarding-sub-domain')
+const password = Cypress.env('default-password')
 describe('Justto.App - Onboarding', function () {
-  const email = Cypress.env('onboarding-email')
-  // const email = new Date().getTime() + '@teste2e.com'
-  const senha = Cypress.env('default-password')
+  beforeEach(function () {
+    cy.deleteWorkspace(email, password, subDomain)
+    // cy.deleteWorkspace('admin')
+  })
 
   it('Onboarding: Login', function () {
     cy.visit('/#/login')
@@ -11,8 +15,8 @@ describe('Justto.App - Onboarding', function () {
       .type(email)
       .should('have.value', email)
     cy.get('[data-testid=login-password]')
-      .type(senha)
-      .should('have.value', senha)
+      .type(password)
+      .should('have.value', password)
     cy.get('[data-testid=submit]')
       .click()
     cy.url().should('include', '/#/onboarding')
@@ -75,8 +79,8 @@ describe('Justto.App - Onboarding', function () {
 
     cy.get('[data-testid=subdomain-form]')
       .clear()
-      .type(randomSubdomain)
-      .should('have.value', randomSubdomain)
+      .type(subDomain)
+      .should('have.value', subDomain)
 
 
     // Verifica se subdomínio digitado está disponível
