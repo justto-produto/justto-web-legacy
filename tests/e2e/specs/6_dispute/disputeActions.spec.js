@@ -1,13 +1,12 @@
 const login = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
 
-describe('Justto.App - Gerenciamento: Ação em Lote', function () {
-  beforeEach(function () {
+describe('Justto.App - Disputa: Ações', function () {
+  beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
     cy.visit('/')
 
-    // Valida se o endereço redirecionado é o 'Login'
+    // Redireciona para 'Login'
     cy.url().should('include', '/#/login')
 
     // Preenche o campo 'Email'
@@ -26,39 +25,51 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
-
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
       .click({force: true})
+    // Entra na disputa
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
+      .click({force: true})
 
-    // Seleciona primeira disputa
-    cy.get('tbody label[role=checkbox]', { timeout: 60000 }).first()
-      .click()
-
-    // Menu de ações deve estar visivel
-    cy.get('.management-actions')
-      .should('have.class', 'active')
-      .should('be.visible')
+    // Sistema deve redirecionar para a página de Registro
+    cy.url().should('include', '/#/management/dispute/')
   })
 
   afterEach('Notificação de Sucesso', function () {
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success', { timeout: 60000 })
-      .contains('Yay!')
+      .contains('Ação realizada com sucesso.')
       .should('be.visible')
 
-    // Modal de confirmação deve adesaparecer
+    // Modal de confirmação deve desaparecer
     cy.get('.el-message-box')
       .should('not.be.visible')
   })
 
-  it('Ação em Lote: Pausar', function () {
-    // Clica na ação
-    cy.get('[data-testid=batch-paused]')
+  it('Ação: Pausar', function () {
+    cy.wait(10000)
+    // Clica em Pausar
+    cy.get('[data-testid=paused]')
       .click()
 
-    // Mensagem de confirmação deve aparecer
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+    .click()
+  })
+
+
+  it('Ação: Retomar', function () {
+    // Clica em Retomar
+    cy.get('[data-testid=resume')
+      .click()
+
+    // Modal de confirmação deve aparecer
     cy.get('.el-message-box')
       .should('be.visible')
 
@@ -67,12 +78,30 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .click()
   })
 
-  it('Ação em Lote: Retomar', function () {
-    // Clica na ação
-    cy.get('[data-testid=batch-resume]')
+  it('Ação: Ganhar', function () {
+    // Clica em Ganhar
+    cy.get('[data-testid=settled]')
       .click()
 
-    // Mensagem de confirmação deve aparecer
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+      .click()
+
+    // Botão deve estar desabilitado
+    cy.get('[data-testid=settled]')
+      .should('be.disabled')
+  })
+
+  it('Ação: Favoritar', function () {
+    // Favorita/disfavorita caso
+    cy.get('[data-testid=favorite]')
+      .click()
+
+    // Modal de confirmação deve aparecer
     cy.get('.el-message-box')
       .should('be.visible')
 
@@ -81,23 +110,9 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .click()
   })
 
-  it('Ação em Lote: Ganha', function () {
-    // Clica na ação
-    cy.get('[data-testid=batch-settled]')
-      .click()
-
-    // Mensagem de confirmação deve aparecer
-    cy.get('.el-message-box')
-      .should('be.visible')
-
-    // Confirma a ação
-    cy.get('.confirm-action-btn')
-      .click()
-  })
-
-  it('Ação em Lote: Reiniciar Engajamento', function () {
+  it('Ação: Reiniciar Engajamento', function () {
     // VClica em Reiniciar Engajamento
-    cy.get('[data-testid=batch-restartengagement]')
+    cy.get('[data-testid=restart-engagement]')
       .click()
 
     // Modal de confirmação deve aparecer
@@ -107,28 +122,5 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-  })
-
-  it('Ação em Lote: Excluir', function () {
-    // Clica em Remover
-    cy.get('[data-testid=batch-delete]')
-      .click()
-
-    // Modal de confirmação deve aparecer
-    cy.get('.el-message-box')
-      .should('be.visible')
-
-    // Confirma a ação
-    cy.get('.confirm-action-btn')
-      .click()
-
-    // Desseleciona disputa
-    cy.get('tbody label[role=checkbox]').first()
-      .click()
-
-    // Menu de ações deve estar visivel
-    cy.get('.management-actions')
-      .should('not.have.class', 'active')
-      .should('not.be.visible')
   })
 })

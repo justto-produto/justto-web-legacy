@@ -1,12 +1,12 @@
 <template>
   <JusViewMain
-    :loading-container="!dispute.id"
+    :loading-container="dispute && !dispute.id"
     full-screen
     left-card-width="320"
     right-card-width="320"
     class="dispute-view">
     <template v-if="false" slot="title">
-      <h1 class="dispute-view__title">
+      <h1 v-if="dispute" class="dispute-view__title">
         <router-link to="/management">
           <jus-icon icon="back"/>
         </router-link>
@@ -162,6 +162,7 @@
         </el-dialog>
         <!-- MESSAGES -->
         <dispute-messages
+          v-if="dispute"
           :dispute-id="dispute.id"
           :messages-prop="filteredOccurrences"
           :show-scheduled="showScheduled"
@@ -336,6 +337,7 @@
         </el-tooltip>
       </div>
       <dispute-overview
+        v-if="dispute"
         :dispute.sync="dispute"
         :active-person.sync="activePerson"
         data-testid="dispute-overview" />
@@ -399,7 +401,7 @@ export default {
     filteredOccurrences () {
       if (this.searchTerm) {
         return this.occurrences.filter(occurrence => {
-          return (occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+          return (occurrence.description ? occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase()) : false) ||
           (occurrence.message.content ? occurrence.message.content.toLowerCase().includes(this.searchTerm.toLowerCase()) : false) ||
           (occurrence.message.sender ? occurrence.message.sender.toLowerCase().includes(this.searchTerm.toLowerCase()) : false)
         })
@@ -407,7 +409,7 @@ export default {
       return this.occurrences
     },
     isFavorite () {
-      return this.dispute.favorite
+      return this.dispute ? this.dispute.favorite : false
     },
     workspaceNegotiators () {
       return this.$store.state.workspaceModule.members.map(member => {

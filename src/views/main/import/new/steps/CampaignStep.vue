@@ -10,8 +10,8 @@
     </p>
     <el-alert v-if="duplicatedDisputes.length" type="error">
       <h2>Atenção!</h2>
-        Foram encontradas disputa(s) duplicada(s) e/ou expirada(s):
-      <ul v-for="d in duplicatedDisputes">
+      Foram encontradas disputa(s) duplicada(s) e/ou expirada(s):
+      <ul v-for="(d, index) in duplicatedDisputes" :key="d.code + index">
         <li>
           {{ d.code }} - Disputa
           <span v-if="d.status === 'DUPLICATE' || d.status === 'DUPLICATE_AND_EXPIRED'">

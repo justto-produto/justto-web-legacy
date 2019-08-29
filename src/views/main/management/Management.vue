@@ -190,8 +190,8 @@
             <template slot-scope="scope">
               {{ scope.row.expirationDate | moment('DD/MM/YY') }}
               <el-tooltip content="Negociação encerra nos próximos 3 dias">
-                <!-- <jus-icon v-if="disputeNextToExpire(scope.row.expirationDate)" icon="alert-active" /> -->
-                <i v-if="activeTab === '0'" class="view-management__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+                <i v-if="activeTab === '0' && disputeNextToExpire(scope.row.expirationDate)" 
+                class="view-management__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </el-tooltip>
             </template>
           </el-table-column>
@@ -409,9 +409,6 @@ export default {
   },
   beforeUpdate () {
     this.adjustHeight()
-    setTimeout(function () {
-      this.$refs.disputeTable.sort('expirationDate', 'descending')
-    }.bind(this), 100)
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.adjustHeight)
@@ -451,8 +448,8 @@ export default {
     },
     updateTable () {
       setTimeout(() => {
-        this.$refs.disputeTable.doLayout()
-      }, 400)
+        if (this.$refs.disputeTable) this.$refs.disputeTable.doLayout()
+      }, 1000)
     },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {
@@ -461,25 +458,34 @@ export default {
       }
       switch (newTab) {
         case '0':
-          setTimeout(function () {
-            this.$refs.disputeTable.sort('expirationDate', 'descending')
-          }.bind(this), 100)
+          setTimeout(() => {
+            this.doSort('expirationDate', 'descending')
+          }, 500)
           break
         case '1':
-          setTimeout(function () {
-            this.$refs.disputeTable.sort('lastInteractionDate', 'ascending')
-          }.bind(this), 100)
+          setTimeout(() => {
+            this.doSort('lastInteractionDate', 'ascending')
+          }, 500)
           break
         case '2':
-          setTimeout(function () {
-            this.$refs.disputeTable.sort('disputeDealDate', 'descending')
-          }.bind(this), 100)
+          setTimeout(() => {
+            this.doSort('disputeDealDate', 'descending')
+          }, 500)
           break
         default:
-          this.$refs.disputeTable.clearSort()
+          this.doSort()
           break
       }
       this.updateTable()
+    },
+    doSort (direction, prop) {
+      if (this.$refs.disputeTable) {
+        if (direction && prop) {
+          this.$refs.disputeTable.sort(direction, prop)
+        } else {
+          this.$refs.disputeTable.clearSort()
+        }
+      }
     },
     exportDisputes () {
       this.loadingExport = true

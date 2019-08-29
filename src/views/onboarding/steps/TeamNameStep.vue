@@ -11,10 +11,10 @@
       label-position="top"
       @submit.native.prevent="submitForm">
       <el-form-item label="Equipe" prop="name">
-        <el-input v-model="nameForm.name" :disabled="$store.getters.creatingWorkspace" name="name" data-testid="name-teamname"/>
+        <el-input v-model="nameForm.name" :disabled="$store.getters.creatingWorkspace" name="name" data-testid="teamname-form"/>
       </el-form-item>
     </el-form>
-    <el-button type="primary" data-testid="next-teamname" @click="submitForm">Próximo</el-button>
+    <el-button type="primary" data-testid="teamname-next" @click="submitForm">Próximo</el-button>
   </div>
 </template>
 
