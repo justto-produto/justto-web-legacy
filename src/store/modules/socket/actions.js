@@ -20,10 +20,12 @@ const actions = {
     if (rootState.workspaceModule.profile === 'ADMINISTRATOR' ||
       negotiatorIds.includes(rootState.personModule.currentPerson.id)) {
       commit('updateDisputeList', dispute)
+      commit('updateDisputeAlerts', dispute)
     }
   },
   SOCKET_REMOVE_DISPUTE ({ commit }, dispute) {
     commit('removeDisputeFromList', dispute)
+    commit('updateDisputeAlerts', dispute)
   }
   // SOCKET_ADD_ALERT ({ commit }, alert) {
   //   commit('addAlert', alert)
