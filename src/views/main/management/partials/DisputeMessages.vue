@@ -109,7 +109,8 @@ export default {
       showMessage: false,
       messageContent: '',
       typing: '',
-      typingTimeout: 0
+      typingTimeout: 0,
+      visualizedTimeout: 0
     }
   },
   computed: {
@@ -139,6 +140,9 @@ export default {
     }
   },
   watch: {
+    occurrences () {
+      this.setVisualized()
+    },
     typing (value) {
       if (value.sender.personId !== this.$store.getters.personId) {
         this.removeTypingMessage()
@@ -175,6 +179,12 @@ export default {
     })
   },
   methods: {
+    setVisualized () {
+      clearTimeout(this.visualizedTimeout)
+      this.visualizedTimeout = setTimeout(() => {
+        this.$store.dispatch('disputeVisualized', this.disputeId)
+      }, 3000)
+    },
     removeTypingMessage () {
       this.messages = this.messages.filter(function (obj) {
         return obj.id !== 0
