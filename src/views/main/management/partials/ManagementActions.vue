@@ -120,8 +120,9 @@ export default {
         let self = this
         this.$jusNotification({
           title: 'Yay!',
-          message: 'Ação ' + this.$t('action.' + action) + ' realizada com sucesso.',
+          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
+          dangerouslyUseHTMLString: true,
           onClose () {
             setTimeout(function () {
               self.$jusNotification({
