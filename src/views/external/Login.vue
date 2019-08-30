@@ -144,10 +144,7 @@ export default {
                 })
                 window.analytics.group(this.$store.getters.workspaceSubdomain)
                 if (this.$store.getters.workspaceSubdomain) {
-                  Promise.all([
-                    this.$store.dispatch('getWorkspaceMembers'),
-                    this.$store.dispatch('myPerson')
-                  ]).then(() => {
+                  this.$store.dispatch('getWorkspaceMembers').then(() => {
                     setTimeout(function () {
                       this.$router.push('/management')
                     }.bind(this), 1000)

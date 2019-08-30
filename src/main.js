@@ -75,7 +75,6 @@ if (store.getters.isLoggedIn) {
     .then(responses => {
       if (responses[1][0] && responses[1][0]['workspace']['subDomain']) {
         store.dispatch('getWorkspaceMembers')
-        store.dispatch('myPerson')
       }
     }).catch(() => {
       store.commit('logout')

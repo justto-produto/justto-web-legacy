@@ -186,25 +186,26 @@ export default {
       this.$store.dispatch('createWorkpace', {
         name: this.responses.team,
         subDomain: this.responses.subdomain
-      }).finally(() => {
-        this.$store.dispatch('refreshToken')
-        this.$store.dispatch('myWorkspace').then(response => {
-          if (response.length && response[response.length - 1].subDomain === this.responses.subdomain) {
-            this.$refs.swiper.swiper.slideNext(800)
-            this.$socket.emit('subscribe', {
-              headers: {
-                Authorization: this.$store.getters.accountToken,
-                Workspace: this.$store.getters.workspaceSubdomain
-              },
-              channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
-            })
-            this.$store.dispatch('whatsappStart')
-          } else {
-            this.$jusNotification({ type: 'error' })
-          }
+      }).then(() => {
+        this.$store.dispatch('refreshToken').then(() => {
+          this.$refs.swiper.swiper.slideNext(800)
+          this.$store.dispatch('whatsappStart')
+          this.$socket.emit('subscribe', {
+            headers: {
+              Authorization: this.$store.getters.accountToken,
+              Workspace: this.$store.getters.workspaceSubdomain
+            },
+            channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
+          })
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.$store.dispatch('hideLoading')
         })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.$store.dispatch('hideLoading')
       })
     }
   }
