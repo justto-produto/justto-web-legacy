@@ -37,6 +37,7 @@ const workspaceModule = {
         // eslint-disable-next-line
         axios.get('api/workspaces/my')
           .then(response => {
+            commit('setCurrentPerson', response.data[0].person)
             commit('updateWorkspace', response.data[0])
             resolve(response.data)
           })

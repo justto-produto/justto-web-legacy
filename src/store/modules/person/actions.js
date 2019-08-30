@@ -47,18 +47,18 @@ const actions = {
         })
     })
   },
-  setPerson ({ commit }, person) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/persons', person)
-        .then(response => {
-          commit('setCurrentPerson', response.data)
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
-    })
-  },
+  // setPerson ({ commit }, person) {
+  //   return new Promise((resolve, reject) => {
+  //     // eslint-disable-next-line
+  //     axios.put('api/persons', person)
+  //       .then(response => {
+  //         commit('setCurrentPerson', response.data)
+  //         resolve(response.data)
+  //       }).catch(error => {
+  //         reject(error)
+  //       })
+  //   })
+  // },
   changePersonName ({ commit }, person) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
