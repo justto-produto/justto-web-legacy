@@ -19,6 +19,16 @@ const workspaceModule = {
       }
       if (response && response.profile) state.profile = response.profile
     },
+    addWorkspace (state, response) {
+      if (response) {
+        // eslint-disable-next-line
+        axios.defaults.headers.common['Workspace'] = response.subDomain
+        state.subdomain = response.subDomain
+        state.name = response.name
+        state.status = response.status
+        state.id = response.id
+      }
+    },
     clearWorkspace (state) {
       state.id = ''
       state.name = ''
@@ -37,8 +47,10 @@ const workspaceModule = {
         // eslint-disable-next-line
         axios.get('api/workspaces/my')
           .then(response => {
-            commit('setCurrentPerson', response.data[0].person)
-            commit('updateWorkspace', response.data[0])
+            if (response.data[0]) {
+              commit('updateWorkspace', response.data[0])
+              if (response.data[0].person) commit('setCurrentPerson', response.data[0].person)
+            }
             resolve(response.data)
           })
           .catch(error => {
@@ -62,7 +74,7 @@ const workspaceModule = {
         // eslint-disable-next-line
         axios.post('api/accounts/workspaces', object)
           .then(response => {
-            commit('updateWorkspace', response.data)
+            commit('addWorkspace', response.data)
             resolve(response.data)
           }).catch(error => {
             reject(error)
@@ -228,9 +240,7 @@ const workspaceModule = {
     hasWorkspace: state => {
       return state.status !== '' && state.status !== 'CREATING'
     },
-    creatingWorkspace: state => {
-      return state.status === 'CREATING'
-    },
+    creatingWorkspace: state => state.status === 'CREATING',
     workspaceId: state => state.subdomain,
     workspaceSubdomain: state => state.subdomain,
     workspaceMembers: state => state.members

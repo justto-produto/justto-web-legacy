@@ -179,7 +179,6 @@ export default {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar'
       }).then(() => {
-        let selecteds = this.selectedIds.length
         let params = {
           type: action.toUpperCase(),
           disputeIds: this.selectedIds

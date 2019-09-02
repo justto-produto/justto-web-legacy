@@ -2,7 +2,12 @@
   <div class="onboarding-step-content">
     <div data-testid="teamname-step" class="onboarding-step-content__title">
       <h2>Qual o nome da sua equipe?</h2>
-      <p>Você pode colocar o nome do seu escritório ou empresa. Por exemplo, Dias e Ramos Advogados Associados.</p>
+      <p>
+        Você pode colocar o nome do seu escritório ou empresa.
+        Por exemplo, Dias e Ramos Advogados Associados.
+        <br>
+        Não se preocupe, posteriormente você poderá alterar o nome da equipe.
+      </p>
     </div>
     <el-form
       ref="nameForm"
@@ -41,7 +46,7 @@ export default {
       this.$refs['nameForm'].validate(valid => {
         if (valid) {
           window.analytics.track('Equipe nomeada', { team: this.nameForm.name })
-          this.$emit('onboarding:step:next', { team: this.nameForm.name })
+          this.$emit('onboarding:createSubdomain', { team: this.nameForm.name })
         } else {
           return false
         }

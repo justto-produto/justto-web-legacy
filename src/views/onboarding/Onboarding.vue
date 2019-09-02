@@ -23,14 +23,14 @@
           </swiper-slide>
           <swiper-slide v-if="!isGuest">
             <transition name="el-fade-in-linear">
-              <team-name-step v-if="currentVisible === 'teamname'" @onboarding:step:next="nextStep"/>
+              <team-name-step v-if="currentVisible === 'teamname'" @onboarding:createSubdomain="createSubdomain"/>
             </transition>
           </swiper-slide>
-          <swiper-slide v-if="!isGuest">
+          <!-- <swiper-slide v-if="!isGuest">
             <transition name="el-fade-in-linear">
-              <subdomain-step v-if="currentVisible === 'subdomain'" @onboarding:step:next="nextStep" @onboarding:createSubdomain="createSubdomain"/>
+              <subdomain-step v-if="currentVisible === 'subdomain'" @onboarding:step:next="nextStep" />
             </transition>
-          </swiper-slide>
+          </swiper-slide> -->
           <!-- <swiper-slide>
             <oab-step @onboarding:step:next="nextStep"/>
           </swiper-slide> -->
@@ -80,6 +80,7 @@ import SubdomainStep from './steps/SubdomainStep'
 import LogoStep from './steps/LogoStep'
 import InviteStep from './steps/InviteStep'
 import FinalStep from './steps/FinalStep'
+import { uuidv4 } from '@/plugins/jusUtils'
 
 export default {
   name: 'Onboarding',
@@ -134,12 +135,10 @@ export default {
           case 1:
             return 'teamname'
           case 2:
-            return 'subdomain'
-          case 3:
             return 'invite'
-          case 4:
+          case 3:
             return this.showWhatsapp ? 'whatsapp' : 'final'
-          case 5:
+          case 4:
             return 'final'
         }
       }
@@ -181,32 +180,36 @@ export default {
       this.$refs.swiper.swiper.slidePrev(800)
     },
     createSubdomain (responseObj) {
-      this.$store.dispatch('showLoading')
-      Object.assign(this.responses, responseObj)
-      this.$store.dispatch('createWorkpace', {
-        name: this.responses.team,
-        subDomain: this.responses.subdomain
-      }).then(() => {
-        this.$store.dispatch('refreshToken').then(() => {
-          this.$refs.swiper.swiper.slideNext(800)
-          this.$store.dispatch('whatsappStart')
-          this.$socket.emit('subscribe', {
-            headers: {
-              Authorization: this.$store.getters.accountToken,
-              Workspace: this.$store.getters.workspaceSubdomain
-            },
-            channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
+      if (!this.$store.getters.creatingWorkspace) {
+        this.$store.dispatch('showLoading')
+        Object.assign(this.responses, responseObj)
+        this.$store.dispatch('createWorkpace', {
+          name: this.responses.team,
+          subDomain: uuidv4()
+        }).then(() => {
+          this.$store.dispatch('refreshToken').then(() => {
+            this.$refs.swiper.swiper.slideNext(800)
+            this.$store.dispatch('whatsappStart')
+            this.$socket.emit('subscribe', {
+              headers: {
+                Authorization: this.$store.getters.accountToken,
+                Workspace: this.$store.getters.workspaceSubdomain
+              },
+              channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
+            })
+          }).catch(() => {
+            this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.$store.dispatch('hideLoading')
           })
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.$store.dispatch('hideLoading')
         })
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.$store.dispatch('hideLoading')
-      })
+      } else {
+        this.$refs.swiper.swiper.slideNext(800)
+      }
     }
   }
 }
