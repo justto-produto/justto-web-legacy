@@ -108,7 +108,7 @@ export default {
         disputeIds: this.selectedIds
       }
       if (this.unsettledType) {
-        params['body'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+        params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseUnsettledDialogVisible = false

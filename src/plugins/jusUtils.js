@@ -52,6 +52,28 @@ const fuseSearchDisputes = function (disputes, term) {
   return list
 }
 
+const fuseSearchOccurrences = function (occurrences, term) {
+  const fuse = new Fuse(occurrences, {
+    shouldSort: true,
+    tokenize: true,
+    matchAllTokens: true,
+    threshold: 0.1,
+    location: 0,
+    distance: 100,
+    maxPatternLength: 32,
+    minMatchCharLength: 1,
+    keys: [
+      'description',
+      'code',
+      'message.content',
+      'message.sender',
+      'message.receiver'
+    ]
+  })
+  const list = fuse.search(term)
+  return list
+}
+
 const getLastInteraction = function (lastinteractiondate) {
   if (!lastinteractiondate) return ''
   const now = moment()
@@ -123,6 +145,7 @@ export {
   getRoles,
   getFirstRole,
   fuseSearchDisputes,
+  fuseSearchOccurrences,
   getLastInteraction,
   getLastInteractionIcon,
   getLastInteractionTooltip,

@@ -349,6 +349,7 @@
 import DisputeSummary from './partials/DisputeSummary'
 import DisputeMessages from './partials/DisputeMessages'
 import DisputeOverview from './partials/DisputeOverview'
+import { fuseSearchOccurrences } from '@/plugins/jusUtils'
 
 export default {
   name: 'Dispute',
@@ -399,12 +400,8 @@ export default {
       return this.$store.getters.findDisputeById(this.id)
     },
     filteredOccurrences () {
-      if (this.searchTerm) {
-        return this.occurrences.filter(occurrence => {
-          return (occurrence.description ? occurrence.description.toLowerCase().includes(this.searchTerm.toLowerCase()) : false) ||
-          (occurrence.message.content ? occurrence.message.content.toLowerCase().includes(this.searchTerm.toLowerCase()) : false) ||
-          (occurrence.message.sender ? occurrence.message.sender.toLowerCase().includes(this.searchTerm.toLowerCase()) : false)
-        })
+      if (this.searchTerm.trim()) {
+        return fuseSearchOccurrences(this.occurrences, this.searchTerm.trim())
       }
       return this.occurrences
     },
@@ -534,20 +531,8 @@ export default {
         .finally(() => {
           setTimeout(() => {
             this.loadingOccurrences = false
-          }, 2000)
+          }, 1000)
         })
-      // this.$store.dispatch('getDisputeOccurrences', this.$route.params.id).then(response => {
-      //   if (!this.occurrences.length) {
-      //     this.occurrences = response.content
-      //   } else {
-      //     let newMessages = response.content.filter(i => {
-      //       return this.occurrences.map(e => JSON.stringify(e)).indexOf(JSON.stringify(i)) < 0
-      //     })
-      //     this.occurrences.push(...newMessages)
-      //   }
-      // }).catch(() => {
-      //   this.$jusNotification({ type: 'error' })
-      // })
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
@@ -633,9 +618,6 @@ export default {
           }
         }).then(() => {
           this.newChatMessage = ''
-          // setTimeout(() => {
-          //   this.getOccurrences()
-          // }.bind(this), 500)
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
@@ -666,7 +648,6 @@ export default {
               type: 'success'
             })
             setTimeout(function () {
-              // this.getOccurrences()
               this.newMessage = ''
             }.bind(this), 500)
           }).catch(() => {
@@ -691,7 +672,6 @@ export default {
             message: 'Nota gravada com sucesso.',
             type: 'success'
           })
-          // this.getOccurrences()
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {

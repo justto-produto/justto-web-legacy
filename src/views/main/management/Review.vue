@@ -179,10 +179,15 @@ export default {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar'
       }).then(() => {
-        this.$store.dispatch('sendBatchAction', {
-          type: action,
+        let selecteds = this.selectedIds.length
+        let params = {
+          type: action.toUpperCase(),
           disputeIds: this.selectedIds
-        }).then(response => {
+        }
+        if (this.unsettledType) {
+          params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+        }
+        this.$store.dispatch('sendBatchAction', params).then(response => {
           window.analytics.track('Ação em massa realizada', {
             action: action,
             tab: this.activeTab.label ? this.activeTab.label : this.activeTab.label = 'Engajamento',

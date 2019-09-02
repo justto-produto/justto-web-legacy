@@ -31,11 +31,15 @@ const mutations = {
   // OCCURRENCE
   SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
     Vue.nextTick(() => {
-      let occurrenceIndex = state.occurrence.list.findIndex(d => newOccurrence.id === d.id)
-      if (occurrenceIndex === -1) {
+      if (!newOccurrence.id) {
         state.occurrence.list.push(newOccurrence)
       } else {
-        Vue.set(state.occurrence.list, occurrenceIndex, newOccurrence)
+        let occurrenceIndex = state.occurrence.list.findIndex(d => newOccurrence.id === d.id)
+        if (occurrenceIndex === -1) {
+          state.occurrence.list.push(newOccurrence)
+        } else {
+          Vue.set(state.occurrence.list, occurrenceIndex, newOccurrence)
+        }
       }
     })
   },

@@ -582,6 +582,7 @@ export default {
       this.$emit('update:activePerson', this.active)
     },
     openRoleDialog (role) {
+      this.editRoleDialogError = false
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildTitle(role)
