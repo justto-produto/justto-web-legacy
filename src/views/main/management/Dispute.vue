@@ -230,14 +230,14 @@
                   </el-tooltip>
                   <el-tooltip
                     v-else-if="
-                      (activePerson.invalidEmail && messageType === 'email') ||
-                        (activePerson.invalidPhone && messageType === 'whatsapp') ||
-                        (activePerson.invalidOab && messageType === 'cna')
+                      (activeRole.invalidEmail && messageType === 'email') ||
+                        (activeRole.invalidPhone && messageType === 'whatsapp') ||
+                        (activeRole.invalidOab && messageType === 'cna')
                     ">
                     <div slot="content">
-                      <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não configurado</span>
-                      <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não configurado</span>
-                      <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não configurado</span>
+                      <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
+                      <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não selecionado/configurado</span>
+                      <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não selecionado/configurado</span>
                     </div>
                     <div>
                       <el-button
@@ -257,14 +257,14 @@
                   <div v-else>
                     <el-tooltip>
                       <div slot="content">
-                        <span v-if="!activePerson.personId">
+                        <span v-if="!activeRole.personId">
                           Escolha um destinatário ao lado para receber sua mensagem
                         </span>
                         <span v-else>Enviar mensagem</span>
                       </div>
                       <div>
                         <el-button
-                          :disabled="!activePerson.personId"
+                          :disabled="!activeRole.personId"
                           type="primary"
                           data-testid="submit-email"
                           @click="sendMessage()">
@@ -339,7 +339,7 @@
       <dispute-overview
         v-if="dispute"
         :dispute.sync="dispute"
-        :active-person.sync="activePerson"
+        :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview" />
     </template>
   </JusViewMain>
@@ -367,7 +367,6 @@ export default {
       newMessage: '',
       newNote: '',
       showScheduled: false,
-      activePerson: {},
       newChatMessage: '',
       componentKey: 0,
       disputeNegotiators: [],
@@ -377,10 +376,24 @@ export default {
       unsettledType: null,
       typingTab: '1',
       loadingTextarea: false,
-      loadingOccurrences: false
+      loadingOccurrences: false,
+      activeRoleId: 0
     }
   },
   computed: {
+    activeRole () {
+      if (this.dispute && this.dispute.disputeRoles) {
+        const role = this.dispute.disputeRoles.find(d => d.id === this.activeRoleId)
+        if (role) {
+          return Object.assign(
+            role, {
+              invalidEmail: !role.emails.length || !role.emails.filter(e => e.selected).length,
+              invalidPhone: !role.phones.length || !role.phones.filter(e => e.selected).length,
+              invalidOab: !role.oabs.length || !role.oabs.filter(e => e.selected).length })
+        }
+      }
+      return {}
+    },
     occurrences () {
       return this.$store.getters.disputeOccurrences
     },
@@ -438,14 +451,14 @@ export default {
       if (!value) {
         this.searchTerm = ''
       }
-    },
-    activePerson (value) {
-      this.$nextTick(() => {
-        if (value.constructor === Object && Object.entries(value).length !== 0) {
-          this.$refs.messageTab.currentName = '1'
-        }
-      })
     }
+    // activeRole (value) {
+    //   this.$nextTick(() => {
+    //     if (value.constructor === Object && Object.entries(value).length !== 0) {
+    //       this.$refs.messageTab.currentName = '1'
+    //     }
+    //   })
+    // }
   },
   created () {
     this.id = this.$route.params.id
@@ -536,7 +549,7 @@ export default {
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
-        this.activePerson = {}
+        this.activeRoleId = 0
       }
     },
     setMessageType (type) {
@@ -625,6 +638,21 @@ export default {
         })
       }
     },
+    /*
+    * @params Object {type, role}
+    */
+    getSelectedContacts (params) {
+      switch (params.type) {
+        case 'email':
+          return params.role.emails.filter(e => e.selected).map(e => e.id)
+        case 'cna':
+          return params.role.oabs.filter(e => e.selected).map(e => e.id)
+        case 'whatsapp':
+          return params.role.phones.filter(e => e.selected).map(e => e.id)
+        default:
+          return []
+      }
+    },
     sendMessage () {
       if (this.messageType === 'whatsapp' && this.whatsappStatus !== 'CONNECTED') {
         this.$jusNotification({
@@ -636,7 +664,10 @@ export default {
         if (this.newMessage.trim().replace('\n', '')) {
           this.loadingTextarea = true
           this.$store.dispatch('send' + this.messageType, {
-            to: [this.activePerson.personId],
+            to: [{
+              roleId: this.activeRole.id,
+              contactsId: this.getSelectedContacts({ type: this.messageType, role: this.activeRole })
+            }],
             message: this.newMessage,
             disputeId: this.dispute.id
           }).then(() => {

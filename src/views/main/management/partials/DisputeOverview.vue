@@ -80,13 +80,7 @@
       <el-collapse-item
         v-for="role in disputeRolesSort"
         :key="role.personId"
-        :name="JSON.stringify({
-          personId: role.personId,
-          name: role.name,
-          invalidEmail: !role.emails.length,
-          invalidPhone: !role.phones.length,
-          invalidOab: !role.oabs.length
-        })"
+        :name="role.id"
         data-testid="expand-party">
         <template slot="title">
           <div class="dispute-overview-view__name">
@@ -126,7 +120,10 @@
         <div v-show="role.phones.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="phone in role.phones" :key="phone.id">
-              <span>{{ phone.number | phoneMask }}</span>
+              <span>
+                <el-checkbox v-model="phone.selected" />
+                {{ phone.number | phoneMask }}
+              </span>
               <div class="dispute-overview-view__list-actions">
                 <el-tooltip content="Telefone inválido">
                   <jus-icon v-if="!phone.isValid" icon="warn-dark" />
@@ -141,7 +138,10 @@
         <div v-show="role.emails.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="email in role.emails" :key="email.id">
-              <span>{{ email.address }}</span>
+              <span>
+                <el-checkbox v-model="email.selected" />
+                {{ email.address }}
+              </span>
               <div class="dispute-overview-view__list-actions">
                 <el-tooltip content="E-mail inválido">
                   <jus-icon v-if="!email.isValid" icon="warn-dark" />
@@ -156,7 +156,10 @@
         <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
           <ul>
             <li v-for="oab in role.oabs" :key="oab.id">
-              <div>{{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span></div>
+              <div>
+                <el-checkbox v-model="oab.selected" />
+                {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
+              </div>
               <div class="dispute-overview-view__list-actions">
                 <el-tooltip content="OAB inválido">
                   <jus-icon v-if="!oab.isValid" icon="warn-dark" />
@@ -378,9 +381,9 @@ export default {
       default: () => {},
       type: Object
     },
-    activePerson: {
-      default: () => {},
-      type: Object
+    activeRoleId: {
+      default: 0,
+      type: Number
     }
   },
   data () {
@@ -413,7 +416,7 @@ export default {
       }
     }
     return {
-      active: this.activePerson.personId,
+      activeId: 0,
       selectedClaimantId: '',
       selectedNegotiatorId: '',
       disputeForm: {
@@ -474,13 +477,13 @@ export default {
       return []
     }
   },
-  watch: {
-    activePerson (value) {
-      if (Object.entries(value).length === 0) {
-        this.$refs.roleCollapse.activeNames = []
-      }
-    }
-  },
+  // watch: {
+  //   activeRoleId (value) {
+  //     if (value) {
+  //       this.$refs.roleCollapse.activeNames = []
+  //     }
+  //   }
+  // },
   methods: {
     openDisputeDialog () {
       this.editDisputeDialogLoading = false
@@ -574,12 +577,8 @@ export default {
       }
     },
     handleChange (val) {
-      if (val) {
-        this.active = JSON.parse(val)
-      } else {
-        this.active = {}
-      }
-      this.$emit('update:activePerson', this.active)
+      this.activeId = val ? val : 0
+      this.$emit('update:activeRoleId', this.activeId)
     },
     openRoleDialog (role) {
       this.editRoleDialogError = false
