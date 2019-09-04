@@ -10,10 +10,10 @@
     </template>
     <el-collapse v-loading="$store.state.loading" class="jus-engagements-dialog__engagement el-collapse--bordered">
       <div v-for="step in strategyEngagements" :key="step.id">
-        <div v-if="step.channel != 'DELAY'" class="jus-engagements-dialog__step">Envio</div>
-        <el-collapse-item v-if="step.channel !== 'DELAY'">
+        <div v-if="step.communicationType != 'DELAY'" class="jus-engagements-dialog__step">Envio</div>
+        <el-collapse-item v-if="step.communicationType !== 'DELAY'">
           <template slot="title">
-            <jus-icon :icon="getIcon(step.channel)" is-active/> {{ step.name | capitalize }}
+            <jus-icon :icon="getIcon(step.communicationType)"/> {{ step.name | capitalize }}
           </template>
           <div v-if="step.template">
             <h3>{{ step.template.title }}</h3>
@@ -21,7 +21,7 @@
           </div>
         </el-collapse-item>
         <div v-else class="jus-engagements-dialog__wait">
-          <jus-icon :icon="getIcon(step.channel)" is-active/> {{ step.name }}
+          <jus-icon :icon="getIcon(step.communicationType)" is-active/> {{ step.name }}
         </div>
       </div>
     </el-collapse>
@@ -44,7 +44,7 @@ export default {
   data () {
     return {
       dialog: false,
-      strategyEngagements: []
+      strategyEngagements: [],      
     }
   },
   watch: {
@@ -59,8 +59,8 @@ export default {
     }
   },
   methods: {
-    getIcon (channel) {
-      switch (channel) {
+    getIcon (communicationType) {
+      switch (communicationType) {
         case 'WHATSAPP':
           return 'whatsapp'
         case 'EMAIL':

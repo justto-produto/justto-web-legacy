@@ -15,11 +15,11 @@
         <li>
           {{ d.code }} - Disputa
           <span v-if="d.status === 'DUPLICATE' || d.status === 'DUPLICATE_AND_EXPIRED'">
-            <strong>não importada</strong> por duplicidade
+            <strong>não será importada</strong> por duplicidade
             (campanha {{ d.duplicatedBy.campaignName }}).
           </span>
           <span v-if="d.status === 'EXPIRED'">
-            <strong>importada</strong> com data já expirada
+            <strong>será importada</strong> com data já expirada
             ({{ d.expirationDate.dateTime | moment('DD/MM/YY') }}).
           </span>
         </li>
