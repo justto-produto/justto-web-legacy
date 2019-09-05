@@ -2,7 +2,6 @@
   <JusViewMain :loading-main="$store.state.loading" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <management-carousel />
     </template>
     <template slot="actions">
       <management-actions
@@ -289,7 +288,6 @@
 export default {
   name: 'Management',
   components: {
-    ManagementCarousel: () => import('./partials/ManagementCarousel'),
     JusManagementFilters: () => import('@/components/others/JusManagementFilters'),
     ManagementActions: () => import('./partials/ManagementActions'),
     JusFilterButton: () => import('@/components/buttons/JusFilterButton'),

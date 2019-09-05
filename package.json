@@ -37,7 +37,6 @@
     "vue-currency-filter": "^3.4.2",
     "vue-i18n": "^8.11.2",
     "vue-moment": "^4.0.0",
-    "vue-owl-carousel": "github:hliberato/vue-owl-carousel#patch-1",
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-router": "^3.0.6",
     "vue-socket.io": "^3.0.7",

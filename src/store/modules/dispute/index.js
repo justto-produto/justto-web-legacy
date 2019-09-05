@@ -7,9 +7,6 @@ const dispute = {
     disputesVM: [],
     disputesDTO: [],
     initialLoad: false,
-    alerts: [
-      [], [], [], [], [], [], []
-    ],
     filters: {
       tab: '0',
       filterPersonId: 0,
