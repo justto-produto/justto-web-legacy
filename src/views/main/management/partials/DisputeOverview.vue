@@ -108,7 +108,7 @@
         </div> -->
         <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
           <span class="title">CPF/CNPJ:</span>
-          <span>{{ role.documentNumber | cpfMask }}</span>
+          <span>{{ role.documentNumber | cpfCnpjMask }}</span>
         </div>
         <div class="dispute-overview-view__info-line">
           Função:
@@ -585,7 +585,7 @@ export default {
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildTitle(role)
-      this.roleForm.documentNumber = this.$options.filters.cpfMask(this.roleForm.documentNumber)
+      this.roleForm.documentNumber = this.$options.filters.cpfCnpjMask(this.roleForm.documentNumber)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },
     editRole () {
