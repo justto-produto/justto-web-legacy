@@ -383,10 +383,8 @@ export default {
   beforeCreate () {
     if (!this.$store.getters.disputeInitialLoad) {
       this.$store.commit('showLoading')
-      this.$store.dispatch('loadDisputes').finally(() => {
-        setTimeout(() => {
-          this.$store.commit('hideLoading')
-        }, 1200)
+      this.$store.dispatch('getDisputes').finally(() => {
+        this.$store.commit('hideLoading')
       })
     }
   },

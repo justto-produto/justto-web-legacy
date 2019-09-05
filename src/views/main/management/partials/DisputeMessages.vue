@@ -336,6 +336,7 @@ export default {
     text-align: center;
     color: #adadad;
     margin: 20px;
+    word-break: break-all;
   }
   &__message-time {
     font-size: 12px;

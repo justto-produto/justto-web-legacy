@@ -19,7 +19,7 @@ const actions = {
     const negotiatorIds = negotiators.map(n => n.personId)
     if (rootState.workspaceModule.profile === 'ADMINISTRATOR' ||
       negotiatorIds.includes(rootState.personModule.currentPerson.id)) {
-      commit('updateDisputeList', dispute)
+      commit('updateDispute', dispute)
     }
   },
   SOCKET_REMOVE_DISPUTE ({ commit }, dispute) {

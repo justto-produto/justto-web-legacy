@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import moment from 'moment'
+import { getDisputeVMList } from './model'
 
 const disputeMutations = {
   clearDisputes (state) {
@@ -29,6 +30,9 @@ const disputeMutations = {
   clearInitialLoad (state) {
     state.initialLoad = false
   },
+  setDisputes (state, disputes) {
+    state.disputes = getDisputeVMList(disputes)
+  },
   setDisputeSort (state, sort) {
     state.filters.sort.prop = sort.prop
     state.filters.sort.order = sort.order
@@ -38,7 +42,7 @@ const disputeMutations = {
     state.filters.filterPersonId = id
     state.filters.filteredPerson = false
   },
-  updateDisputeList (state, disputeChanged) {
+  updateDispute (state, disputeChanged) {
     Vue.nextTick(() => {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       if (disputeIndex === -1) {
