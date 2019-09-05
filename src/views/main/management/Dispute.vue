@@ -162,8 +162,7 @@
         </el-dialog>
         <!-- MESSAGES -->
         <dispute-messages
-          v-if="dispute"
-          :dispute-id="dispute.id"
+          :dispute-id="dispute ? dispute.id : 0"
           :messages-prop="filteredOccurrences"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
@@ -451,13 +450,6 @@ export default {
         this.searchTerm = ''
       }
     }
-    // activeRole (value) {
-    //   this.$nextTick(() => {
-    //     if (value.constructor === Object && Object.entries(value).length !== 0) {
-    //       this.$refs.messageTab.currentName = '1'
-    //     }
-    //   })
-    // }
   },
   created () {
     this.id = this.$route.params.id
@@ -493,7 +485,7 @@ export default {
         negotiators: this.disputeNegotiators,
         disputeId: this.dispute.id
       }).then(() => {
-        // window.analytics.track('Negociadores alterados')
+        window.analytics.track('Negociadores alterados')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Negociadores editados com sucesso.',
@@ -543,7 +535,7 @@ export default {
         .finally(() => {
           setTimeout(() => {
             this.loadingOccurrences = false
-          }, 1000)
+          }, 500)
         })
     },
     handleTabClick (tab) {
