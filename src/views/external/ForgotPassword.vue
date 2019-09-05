@@ -43,12 +43,10 @@
 </template>
 
 <script>
-import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
-
 export default {
   name: 'ForgotPassword',
   components: {
-    JusSidenavExternal
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
   },
   data () {
     return {

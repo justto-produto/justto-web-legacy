@@ -20,11 +20,9 @@
 </template>
 
 <script>
-import JusLogoCompany from '@/components/images/JusLogoCompany'
-
 export default {
   components: {
-    JusLogoCompany
+    JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
   },
   props: {
     isGuest: {

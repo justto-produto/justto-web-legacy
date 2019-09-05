@@ -39,12 +39,10 @@
 </template>
 
 <script>
-import JusImportFeedbackCard from '@/components/layouts/JusImportFeedbackCard'
-
 export default {
   name: 'CampaignStep',
   components: {
-    JusImportFeedbackCard
+    JusImportFeedbackCard: () => import('@/components/layouts/JusImportFeedbackCard')
   },
   props: {
     mappedCampaigns: {

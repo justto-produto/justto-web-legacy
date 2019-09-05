@@ -97,15 +97,13 @@
 </template>
 
 <script>
-import JusWhatsapp from '@/components/layouts/JusWhatsapp'
-import JusDisputeResume from '@/components/layouts/JusDisputeResume'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusWhatsapp,
-    JusDisputeResume
+    JusWhatsapp: () => import('@/components/layouts/JusWhatsapp'),
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
   data () {
     return {

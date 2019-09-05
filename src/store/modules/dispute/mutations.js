@@ -6,13 +6,6 @@ const disputeMutations = {
   clearDisputes (state) {
     state.disputesDTO = []
     state.disputesVM = []
-    Vue.set(state.alerts, 0, [])
-    Vue.set(state.alerts, 1, [])
-    Vue.set(state.alerts, 2, [])
-    Vue.set(state.alerts, 3, [])
-    Vue.set(state.alerts, 4, [])
-    Vue.set(state.alerts, 5, [])
-    Vue.set(state.alerts, 6, [])
   },
   clearDisputeFilters (state) {
     state.filters.terms = {}
@@ -50,81 +43,6 @@ const disputeMutations = {
   setFilterPersonId (state, id) {
     state.filters.filterPersonId = id
     state.filters.filteredPerson = false
-  },
-  updateDisputeAlerts (state) {
-    Vue.set(state.alerts, 0, state.disputesVM.filter(dispute => {
-      if ((dispute.status === 'IMPORTED' ||
-        dispute.status === 'PENDING' ||
-        dispute.status === 'ENRICHED' ||
-        dispute.status === 'ENGAGEMENT' ||
-        dispute.status === 'RUNNING') &&
-        moment(dispute.expirationDate).isBetween(moment(), moment().add(3, 'day'))
-      ) {
-        return true
-      }
-    }))
-
-    Vue.set(state.alerts, 1, state.disputesVM.filter(dispute => {
-      if ((dispute.status === 'IMPORTED' ||
-        dispute.status === 'PENDING' ||
-        dispute.status === 'ENRICHED' ||
-        dispute.status === 'ENGAGEMENT' ||
-        dispute.status === 'RUNNING') &&
-        dispute.hasInvalidEmail) {
-        return true
-      }
-    }))
-    Vue.set(state.alerts, 2, state.disputesVM.filter(dispute => {
-      if ((dispute.status === 'IMPORTED' ||
-        dispute.status === 'PENDING' ||
-        dispute.status === 'ENRICHED' ||
-        dispute.status === 'ENGAGEMENT' ||
-        dispute.status === 'RUNNING') &&
-        (dispute.lastOfferPercentToUpperRange >= 100 &&
-          dispute.lastOfferPercentToUpperRange <= 120)) {
-        return true
-      }
-    }))
-    Vue.set(state.alerts, 3, state.disputesVM.filter(dispute => {
-      if (
-        (dispute.status === 'IMPORTED' ||
-          dispute.status === 'PENDING' ||
-          dispute.status === 'ENRICHED' ||
-          dispute.status === 'ENGAGEMENT' ||
-          dispute.status === 'RUNNING') &&
-        dispute.hasInteraction &&
-        dispute.lastCounterOfferValue === '0.0'
-      ) {
-        return true
-      }
-    }))
-    Vue.set(state.alerts, 4, state.disputesVM.filter(dispute => {
-      if ((dispute.status === 'IMPORTED' ||
-        dispute.status === 'PENDING' ||
-        dispute.status === 'ENRICHED' ||
-        dispute.status === 'ENGAGEMENT' ||
-        dispute.status === 'RUNNING') &&
-        dispute.hasInvalidPhone) {
-        return true
-      }
-    }))
-    Vue.set(state.alerts, 5, state.disputesVM.filter(dispute => {
-      if (dispute.status === 'ENGAGEMENT' &&
-        dispute.communicationMsgTotalSent) {
-        return true
-      }
-    }))
-    Vue.set(state.alerts, 6, state.disputesVM.filter(dispute => {
-      if (
-        dispute.status !== 'SETTLED' &&
-        dispute.status !== 'UNSETTLED' &&
-        ((dispute.alerts && dispute.alerts.length > 0) ||
-          (dispute.claiments && dispute.claiments.alerts && dispute.claiments.alerts.length > 0) ||
-          (dispute.claimentslawyer && dispute.claimentslawyer.alerts && dispute.claimentslawyer.alerts.length > 0))
-      ) {
-        return true
-      }
-    }))
   },
   updateDisputeList (state, disputeChanged) {
     Vue.nextTick(() => {

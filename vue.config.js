@@ -23,6 +23,11 @@ module.exports = {
   productionSourceMap: false,
   parallel: undefined,
   css: {
-    sourceMap: true
+    sourceMap: true,
+    loaderOptions: {
+      css: {
+        localIdentName: '[hash:base64:5]'
+      }
+    }
   }
 }

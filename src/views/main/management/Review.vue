@@ -88,15 +88,13 @@
 </template>
 
 <script>
-import ManagementActions from './partials/ManagementActions'
-import JusDisputeResume from '@/components/layouts/JusDisputeResume'
 import { getFirstRole } from '@/plugins/jusUtils'
 
 export default {
   name: 'Review',
   components: {
-    ManagementActions,
-    JusDisputeResume
+    ManagementActions: () => import('./partials/ManagementActions'),
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
   data () {
     return {

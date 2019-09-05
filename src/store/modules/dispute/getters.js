@@ -88,27 +88,6 @@ const disputeGetters = {
     }
     return filteredDisputes
   },
-  alertOne: (state, getters) => {
-    return state.alerts[0]
-  },
-  alertTwo: (state, getters) => {
-    return state.alerts[1]
-  },
-  alertThree: (state, getters) => {
-    return state.alerts[2]
-  },
-  alertFour: (state, getters) => {
-    return state.alerts[3]
-  },
-  alertFive: (state, getters) => {
-    return state.alerts[4]
-  },
-  alertSix: (state, getters) => {
-    return state.alerts[5]
-  },
-  alertSeven: (state, getters) => {
-    return state.alerts[6]
-  },
   disputeStatuses: state => state.statuses,
   disputeActiveTab: state => state.filters.tab,
   disputesPerPage: state => state.filters.perPage

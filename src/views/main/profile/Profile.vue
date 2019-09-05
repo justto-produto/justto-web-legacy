@@ -146,12 +146,10 @@
 </template>
 
 <script>
-import JusWhatsapp from '@/components/layouts/JusWhatsapp'
-
 export default {
   name: 'Profile',
   components: {
-    JusWhatsapp
+    JusWhatsapp: () => import('@/components/layouts/JusWhatsapp')
   },
   data () {
     return {
