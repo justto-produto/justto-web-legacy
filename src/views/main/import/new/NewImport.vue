@@ -46,7 +46,7 @@ export default {
   components: {
     CheckLinesStep: () => import('./steps/CheckLinesStep'),
     ColumnsStep: () => import('./steps/ColumnsStep'),
-    CampaignSte: () => import('./steps/CampaignStep')
+    CampaignStep: () => import('./steps/CampaignStep')
   },
   data () {
     return {

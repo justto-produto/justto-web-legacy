@@ -44,7 +44,7 @@ export default {
   data () {
     return {
       dialog: false,
-      strategyEngagements: [],      
+      strategyEngagements: []
     }
   },
   watch: {
