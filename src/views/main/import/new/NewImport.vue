@@ -15,13 +15,11 @@
         <transition name="fade">
           <check-lines-step v-if="activeStep === 0" key="0"/>
           <columns-step v-if="activeStep === 1" key="1"/>
-          <!-- <enrichment-step v-if="activeStep === 2" key="2" @import:step:next="nextStep"/> -->
           <campaign-step v-if="activeStep === 2" key="2" :mapped-campaigns="mappedCampaigns"/>
         </transition>
       </div>
       <div class="new-import-view__actions">
         <el-button plain @click="previousStep">Voltar</el-button>
-        <!-- <el-button v-if="activeStep === 2" type="primary" @click="nextStep">Pular enriquecimento</el-button> -->
         <el-button
           v-if="activeStep === 2"
           type="primary"

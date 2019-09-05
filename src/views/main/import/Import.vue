@@ -19,7 +19,7 @@
                 <jus-icon icon="upload-file" />
                 <div>
                   <br>
-                  Planilha nos formatos XLSX, CSV ou XLS
+                  Clique aqui e importe sua planilha nos formatos XLSX, CSV ou XLS.
                 </div>
               </div>
               <div v-if="isSaving">
