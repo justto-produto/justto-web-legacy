@@ -51,16 +51,12 @@
 </template>
 
 <script>
-import JusHeaderMain from '@/components/layouts/JusHeaderMain'
-import JusTeamMenu from '@/components/layouts/JusTeamMenu'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-
 export default {
   name: 'MainContainer',
   components: {
-    JusHeaderMain,
-    JusTeamMenu,
-    VuePerfectScrollbar
+    JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
+    JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
+    VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
   },
   data () {
     return {

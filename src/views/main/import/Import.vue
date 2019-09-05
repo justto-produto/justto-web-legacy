@@ -49,6 +49,15 @@
           <el-button plain @click="removeFile">Remover arquivo</el-button>
           <el-button type="primary" data-testid="submit" @click="startImport">Próximo</el-button>
         </div>
+        <div v-if="!isSuccess" class="import-view__download">
+          <el-button
+            plain
+            type="primary"
+            data-testid="download-model"
+            @click="downloadModel()">
+            Baixe a planilha modelo clicando aqui
+          </el-button>
+        </div>
       </div>
     </template>
     <template slot="right-card">
@@ -57,14 +66,6 @@
           <h2>
             Histórico de importação
           </h2>
-          <el-tooltip content="Download da planilha modelo">
-            <el-button
-              class="right"
-              data-testid="download-model"
-              @click="downloadModel()">
-              <jus-icon icon="download-sheet" />
-            </el-button>
-          </el-tooltip>
         </div>
         <p v-if="importsHistory.length === 0" data-testid="empty-history">
           Aqui você encontra o registro de importações no sistema. Por enquanto, você não possui importações.
@@ -292,6 +293,13 @@ export default {
     margin-top: 40px;
     button {
       width: 100%;
+    }
+  }
+  &__download {
+    margin-top: 40px;
+    text-align: center;
+    img {
+      width: 14px;
     }
   }
   &__title {

@@ -71,29 +71,19 @@
 </template>
 
 <script>
-import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
-import WelcomeStep from './steps/WelcomeStep'
-import OabStep from './steps/OabStep'
-import WhatsappStep from './steps/WhatsappStep'
-import TeamNameStep from './steps/TeamNameStep'
-import SubdomainStep from './steps/SubdomainStep'
-import LogoStep from './steps/LogoStep'
-import InviteStep from './steps/InviteStep'
-import FinalStep from './steps/FinalStep'
 import { uuidv4 } from '@/plugins/jusUtils'
 
 export default {
   name: 'Onboarding',
   components: {
-    JusSidenavExternal,
-    WelcomeStep,
-    OabStep,
-    WhatsappStep,
-    TeamNameStep,
-    LogoStep,
-    InviteStep,
-    FinalStep,
-    SubdomainStep
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
+    WelcomeStep: () => import('./steps/WelcomeStep'),
+    OabStep: () => import('./steps/OabStep'),
+    WhatsappStep: () => import('./steps/WhatsappStep'),
+    TeamNameStep: () => import('./steps/TeamNameStep'),
+    LogoStep: () => import('./steps/LogoStep'),
+    InviteStep: () => import('./steps/InviteStep'),
+    FinalStep: () => import('./steps/InviteStep')
   },
   data () {
     return {

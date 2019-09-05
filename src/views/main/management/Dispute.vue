@@ -346,15 +346,14 @@
 </template>
 
 <script>
-import DisputeSummary from './partials/DisputeSummary'
-import DisputeMessages from './partials/DisputeMessages'
-import DisputeOverview from './partials/DisputeOverview'
 import { fuseSearchOccurrences } from '@/plugins/jusUtils'
 
 export default {
   name: 'Dispute',
   components: {
-    DisputeSummary, DisputeMessages, DisputeOverview
+    DisputeSummary: () => import('./partials/DisputeSummary'),
+    DisputeMessages: () => import('./partials/DisputeMessages'),
+    DisputeOverview: () => import('./partials/DisputeOverview')
   },
   data () {
     return {

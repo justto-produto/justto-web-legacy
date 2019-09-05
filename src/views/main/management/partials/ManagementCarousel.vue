@@ -24,12 +24,12 @@
 </template>
 
 <script>
-import OwlCarousel from 'vue-owl-carousel'
-import JusCarouselCard from '@/components/layouts/JusCarouselCard'
-
 export default {
   name: 'ManagementCarousel',
-  components: { OwlCarousel, JusCarouselCard },
+  components: {
+    OwlCarousel: () => import('vue-owl-carousel'),
+    JusCarouselCard: () => import('@/components/layouts/JusCarouselCard')
+  },
   data () {
     return {
       componentKey: 0

@@ -110,11 +110,11 @@
 </template>
 
 <script>
-import JusEngagementsDialog from '@/components/dialogs/JusEngagementsDialog'
-
 export default {
   name: 'JusImportFeedbackCard',
-  components: { JusEngagementsDialog },
+  components: {
+    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog')
+  },
   props: {
     mappedCampaign: {
       type: Object,

@@ -63,12 +63,10 @@
 </template>
 
 <script>
-import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
-
 export default {
   name: 'NewPassword',
   components: {
-    JusSidenavExternal
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
   },
   data () {
     var validatePassword = (rule, value, callback) => {

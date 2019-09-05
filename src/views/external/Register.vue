@@ -65,14 +65,11 @@
 </template>
 
 <script>
-import JusSidenavExternal from '@/components/layouts/JusSidenavExternal'
-import JusButtonBack from '@/components/buttons/JusButtonBack'
-
 export default {
   name: 'Register',
   components: {
-    JusSidenavExternal,
-    JusButtonBack
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
+    JusButtonBack: () => import('@/components/buttons/JusButtonBack')
   },
   data () {
     return {

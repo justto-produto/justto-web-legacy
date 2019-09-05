@@ -15,11 +15,9 @@
 </template>
 
 <script>
-import JusWhatsapp from '@/components/layouts/JusWhatsapp'
-
 export default {
   components: {
-    JusWhatsapp
+    JusWhatsapp: () => import('@/components/layouts/JusWhatsapp')
   },
   data () {
     return {

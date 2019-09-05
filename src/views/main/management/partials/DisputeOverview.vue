@@ -577,7 +577,7 @@ export default {
       }
     },
     handleChange (val) {
-      this.activeId = val ? val : 0
+      this.activeId = val || 0
       this.$emit('update:activeRoleId', this.activeId)
     },
     openRoleDialog (role) {

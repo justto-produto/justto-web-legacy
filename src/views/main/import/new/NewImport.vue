@@ -43,16 +43,12 @@
 </template>
 
 <script>
-import CheckLinesStep from './steps/CheckLinesStep'
-import ColumnsStep from './steps/ColumnsStep'
-import CampaignStep from './steps/CampaignStep'
-
 export default {
   name: 'NewImport',
   components: {
-    CheckLinesStep,
-    ColumnsStep,
-    CampaignStep
+    CheckLinesStep: () => import('./steps/CheckLinesStep'),
+    ColumnsStep: () => import('./steps/ColumnsStep'),
+    CampaignSte: () => import('./steps/CampaignStep')
   },
   data () {
     return {

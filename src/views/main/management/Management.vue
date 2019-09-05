@@ -297,20 +297,14 @@
 </template>
 
 <script>
-import JusManagementFilters from '@/components/others/JusManagementFilters'
-import JusFilterButton from '@/components/buttons/JusFilterButton'
-import ManagementCarousel from './partials/ManagementCarousel'
-import ManagementActions from './partials/ManagementActions'
-import JusDisputeResume from '@/components/layouts/JusDisputeResume'
-
 export default {
   name: 'Management',
   components: {
-    ManagementCarousel,
-    JusManagementFilters,
-    ManagementActions,
-    JusFilterButton,
-    JusDisputeResume
+    ManagementCarousel: () => import('./partials/ManagementCarousel'),
+    JusManagementFilters: () => import('@/components/others/JusManagementFilters'),
+    ManagementActions: () => import('./partials/ManagementActions'),
+    JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
   data () {
     return {
