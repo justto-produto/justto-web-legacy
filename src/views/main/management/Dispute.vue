@@ -529,7 +529,7 @@ export default {
     },
     getOccurrences () {
       if (!this.$store.getters.disputeInitialLoad) {
-        this.$store.dispatch('loadOneDispute', { id: this.id })
+        this.$store.dispatch('loadDisputes', { id: this.id })
       }
       this.$socket.emit('subscribe', {
         headers: this.socketHeaders,

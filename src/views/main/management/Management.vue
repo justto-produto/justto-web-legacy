@@ -349,25 +349,32 @@ export default {
         return this.$store.commit('setDisputesPerPage', disputesPerPage)
       }
     },
+    selectedPersonId () {
+      return this.$store.getters.filterPersonId
+    },
     engagementLength () {
       return this.$store.getters.disputes.filter(d => {
+        if (this.selectedPersonId) {
+          let negotiatorIndex = d.negotiators.findIndex(n => n.personId === this.selectedPersonId)
+          return d.tab === 'ENGAGEMENT' && this.disputeNextToExpire(d.expirationDate) && negotiatorIndex !== -1
+        }
         return d.tab === 'ENGAGEMENT' && this.disputeNextToExpire(d.expirationDate)
       }).length
     },
     interactionLength () {
       return this.$store.getters.disputes.filter(d => {
-        const personId = this.$store.getters.filterPersonId
-        if (personId) {
-          return d.tab === 'INTERACTION' && !d.visualized && d.negotiators.findIndex(n => n.id === personId) !== -1
+        if (this.selectedPersonId) {
+          let negotiatorIndex = d.negotiators.findIndex(n => n.personId === this.selectedPersonId)
+          return d.tab === 'INTERACTION' && !d.visualized && negotiatorIndex !== -1
         }
         return d.tab === 'INTERACTION' && !d.visualized
       }).length
     },
     newDealsLength () {
       return this.$store.getters.disputes.filter(d => {
-        const personId = this.$store.getters.filterPersonId
-        if (personId) {
-          return d.tab === 'NEWDEALS' && !d.visualized && d.negotiators.findIndex(n => n.id === personId) !== -1
+        if (this.selectedPersonId) {
+          let negotiatorIndex = d.negotiators.findIndex(n => n.personId === this.selectedPersonId)
+          return d.tab === 'NEWDEALS' && !d.visualized && negotiatorIndex !== -1
         }
         return d.tab === 'NEWDEALS' && !d.visualized
       }).length

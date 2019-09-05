@@ -46,12 +46,7 @@ export default {
   computed: {
     showAvatar () {
       if (this.src) return true
-      if (this.name && this.name.trim()) {
-        if (this.name.split('').includes('@') || /^\d/.test(this.name)) {
-          return true
-        }
-        return false
-      }
+      if (this.name && this.name.trim()) return false
       return true
     },
     avatarSrc () {

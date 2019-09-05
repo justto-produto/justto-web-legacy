@@ -1,18 +1,12 @@
 import Vue from 'vue'
 import moment from 'moment'
-import { getDisputeVM, getDisputeVMList } from './model'
 
 const disputeMutations = {
   clearDisputes (state) {
-    state.disputesDTO = []
-    state.disputesVM = []
+    state.disputes = []
   },
   clearDisputeFilters (state) {
     state.filters.terms = {}
-  },
-  setDisputes (state, disputesDTO) {
-    state.disputesDTO = disputesDTO
-    state.disputesVM = getDisputeVMList(disputesDTO)
   },
   setDisputeTab (state, tab) {
     state.filters.tab = tab
@@ -46,24 +40,21 @@ const disputeMutations = {
   },
   updateDisputeList (state, disputeChanged) {
     Vue.nextTick(() => {
-      let disputeIndex = state.disputesDTO.findIndex(d => disputeChanged.id === d.id)
+      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       if (disputeIndex === -1) {
-        state.disputesVM.push(getDisputeVM(disputeChanged))
-        state.disputesDTO.push(disputeChanged)
+        state.disputes.push(disputeChanged)
       } else {
-        let dispute = state.disputesDTO.find(d => disputeChanged.id === d.id)
-        if (!dispute.updateAt.dateTime || moment(dispute.updateAt.dateTime).isSameOrBefore(moment(disputeChanged.updateAt.dateTime))) {
-          Vue.set(state.disputesDTO, disputeIndex, disputeChanged)
-          Vue.set(state.disputesVM, disputeIndex, getDisputeVM(disputeChanged))
+        let dispute = state.disputes.find(d => disputeChanged.id === d.id)
+        if (dispute.updateAt && (!dispute.updateAt.dateTime || moment(dispute.updateAt.dateTime).isSameOrBefore(moment(disputeChanged.updateAt.dateTime)))) {
+          Vue.set(state.disputes, disputeIndex, disputeChanged)
         }
       }
     })
   },
   removeDisputeFromList (state, disputeChanged) {
     Vue.nextTick(() => {
-      let disputeIndex = state.disputesDTO.findIndex(d => disputeChanged.id === d.id)
-      Vue.delete(state.disputesDTO, disputeIndex)
-      Vue.delete(state.disputesVM, disputeIndex)
+      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
+      Vue.delete(state.disputes, disputeIndex)
     })
   },
   setDisputeStatuses (state, status) {

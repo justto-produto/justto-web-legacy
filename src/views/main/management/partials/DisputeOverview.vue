@@ -515,7 +515,7 @@ export default {
         cancelButtonText: 'Cancelar'
       }).then(() => {
         let promises = []
-        let disputeToEdit = JSON.parse(JSON.stringify(this.$store.getters.findDisputeDTOById(this.disputeForm.id)))
+        let disputeToEdit = JSON.parse(JSON.stringify(this.$store.getters.findDisputeById(this.disputeForm.id)))
         if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
         if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
         if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
