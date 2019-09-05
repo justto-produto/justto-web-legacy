@@ -18,37 +18,31 @@
         <el-tab-pane name="0">
           <span slot="label">
             Sem resposta
-            <el-tooltip content="Disputas que a negociação encerra nos próximos 3 dias">
-              <el-badge
-                :hidden="!engagementLength"
-                :value="engagementLength"
-                :max="99"
-                class="el-badge--absolute" />
-            </el-tooltip>
+            <el-badge
+              :hidden="!engagementLength"
+              :value="engagementLength"
+              :max="99"
+              class="el-badge--absolute" />
           </span>
         </el-tab-pane>
         <el-tab-pane name="1">
           <span slot="label">
             Em negociação
-            <el-tooltip content="Disputas com novas interações">
-              <el-badge
-                :hidden="!interactionLength"
-                :value="interactionLength"
-                :max="99"
-                class="el-badge--absolute" />
-            </el-tooltip>
+            <el-badge
+              :hidden="!interactionLength"
+              :value="interactionLength"
+              :max="99"
+              class="el-badge--absolute" />
           </span>
         </el-tab-pane>
         <el-tab-pane name="2" label="Com Interação">
           <span slot="label">
             Proposta aceita
-            <el-tooltip content="Disputas com novas interações">
-              <el-badge
-                :hidden="!newDealsLength"
-                :value="newDealsLength"
-                :max="99"
-                class="el-badge--absolute" />
-            </el-tooltip>
+            <el-badge
+              :hidden="!newDealsLength"
+              :value="newDealsLength"
+              :max="99"
+              class="el-badge--absolute" />
           </span>
         </el-tab-pane>
         <el-tab-pane name="3" label="Com Interação">
@@ -159,9 +153,7 @@
             align="center">
             <template slot-scope="scope">
               <span class="position-relative">
-                <el-tooltip :content="scope.row.lastInteractionTooltip">
-                  <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
-                </el-tooltip>
+                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
                 <i v-if="!scope.row.visualized" class="view-management__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </span>
               <span style="margin-left: 4px;">
@@ -232,20 +224,17 @@
             class-name="view-management__row-actions"
             align="center">
             <template slot-scope="scope">
-              <el-tooltip :content="scope.row.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-                <el-button
-                  type="text"
-                  @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-                  <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-                </el-button>
-              </el-tooltip>
-              <el-tooltip content="Abrir disputa em uma nova aba">
-                <el-button
-                  type="text"
-                  @click="openNewTab(scope.row.id)">
-                  <jus-icon icon="external-link" />
-                </el-button>
-              </el-tooltip>
+              <el-button
+                type="text"
+                @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+                <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+              </el-button>
+              <el-button
+                title="Abrir disputa em uma nova aba"
+                type="text"
+                @click="openNewTab(scope.row.id)">
+                <jus-icon icon="external-link" />
+              </el-button>
             </template>
           </el-table-column>
           <template v-if="!$store.state.loading" slot="empty">
