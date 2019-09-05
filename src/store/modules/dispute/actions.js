@@ -1,25 +1,15 @@
 const FileSaver = require('file-saver')
 
 const disputeActions = {
-  loadOneDispute ({ commit }, body) {
+  loadDisputes ({ commit }, body) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/disputes/actions/load', body)
         .then(response => {
           resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
-  loadDisputes ({ commit }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/disputes/actions/load')
-        .then(response => {
-          resolve(response.data)
-          commit('setInitialLoad')
+          if (!body) {
+            commit('setInitialLoad')
+          }
         })
         .catch(error => {
           reject(error)

@@ -29,7 +29,7 @@
         </el-menu-item>
         <el-menu-item index="/import" data-testid="menu-import">
           <jus-icon icon="import" class="el-menu__icon"/>
-          <span slot="title">Importação de disputas</span>
+          <span slot="title">Importação</span>
         </el-menu-item>
       </el-menu>
       <div v-show="$store.getters.workspaceMembers.length" class="jus-team-menu__title">

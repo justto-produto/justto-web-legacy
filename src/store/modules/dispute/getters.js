@@ -3,7 +3,7 @@ import i18n from '@/plugins/vueI18n.js'
 import { fuseSearchDisputes } from '@/plugins/jusUtils'
 
 const disputeGetters = {
-  disputes: state => state.disputesVM,
+  disputes: state => state.disputes,
   disputeFilters: state => state.filters,
   disputeHasFilters: state => {
     return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm || !!state.filters.filterPersonId
@@ -11,11 +11,7 @@ const disputeGetters = {
   disputeFiltersTerm: state => state.filters.filterTerm,
   filterPersonId: state => state.filters.filterPersonId,
   disputeInitialLoad: state => state.initialLoad,
-  findDisputeDTOById: (state) => (disputeId) => state.disputesDTO.find(d => d.id === parseInt(disputeId)),
-  findDisputeById: (state) => (disputeId) => {
-    let dispute = state.disputesVM.find(d => d.id === parseInt(disputeId))
-    return dispute
-  },
+  findDisputeById: (state) => (disputeId) => state.disputes.find(d => d.id === parseInt(disputeId)),
   filteredDisputes: (state, getters) => {
     let filteredDisputes = getters.disputes.slice(0)
     if (state.filters) {
