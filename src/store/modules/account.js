@@ -117,7 +117,6 @@ const account = {
     },
     logout ({ commit }, options) {
       commit('logout')
-      commit('clearPerson')
       commit('clearWorkspace')
       commit('clearWhatsappSocket')
       commit('clearDisputes')
