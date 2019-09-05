@@ -442,6 +442,7 @@ export default {
       if (oldTab !== undefined) {
         this.clearSelection()
         this.clearFilters()
+        this.$refs.disputeTable.clearSort()
       }
       // switch (newTab) {
       //   case '0':
