@@ -436,13 +436,15 @@ export default {
     updateTable () {
       setTimeout(() => {
         if (this.$refs.disputeTable) this.$refs.disputeTable.doLayout()
-      }, 1000)
+      }, 300)
     },
     handleChangeTab (newTab, oldTab) {
       if (oldTab !== undefined) {
         this.clearSelection()
         this.clearFilters()
         this.$refs.disputeTable.clearSort()
+        this.$store.commit('clearDisputeSort')
+        this.updateTable()
       }
       // switch (newTab) {
       //   case '0':
@@ -464,7 +466,6 @@ export default {
       //     this.doSort()
       //     break
       // }
-      this.updateTable()
     },
     // doSort (direction, prop) {
     //   if (this.$refs.disputeTable) {

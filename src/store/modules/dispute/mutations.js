@@ -36,7 +36,10 @@ const disputeMutations = {
   setDisputeSort (state, sort) {
     state.filters.sort.prop = sort.prop
     state.filters.sort.order = sort.order
-    state.filters.sort.processed = false
+  },
+  clearDisputeSort (state) {
+    state.filters.sort.prop = null
+    state.filters.sort.order = null
   },
   setFilterPersonId (state, id) {
     state.filters.filterPersonId = id
