@@ -443,37 +443,37 @@ export default {
         this.clearSelection()
         this.clearFilters()
       }
-      switch (newTab) {
-        case '0':
-          setTimeout(() => {
-            this.doSort('expirationDate', 'descending')
-          }, 500)
-          break
-        case '1':
-          setTimeout(() => {
-            this.doSort('lastInteractionDate', 'ascending')
-          }, 500)
-          break
-        case '2':
-          setTimeout(() => {
-            this.doSort('disputeDealDate', 'descending')
-          }, 500)
-          break
-        default:
-          this.doSort()
-          break
-      }
+      // switch (newTab) {
+      //   case '0':
+      //     setTimeout(() => {
+      //       this.doSort('expirationDate', 'descending')
+      //     }, 500)
+      //     break
+      //   case '1':
+      //     setTimeout(() => {
+      //       this.doSort('lastInteractionDate', 'ascending')
+      //     }, 500)
+      //     break
+      //   case '2':
+      //     setTimeout(() => {
+      //       this.doSort('disputeDealDate', 'descending')
+      //     }, 500)
+      //     break
+      //   default:
+      //     this.doSort()
+      //     break
+      // }
       this.updateTable()
     },
-    doSort (direction, prop) {
-      if (this.$refs.disputeTable) {
-        if (direction && prop) {
-          this.$refs.disputeTable.sort(direction, prop)
-        } else {
-          this.$refs.disputeTable.clearSort()
-        }
-      }
-    },
+    // doSort (direction, prop) {
+    //   if (this.$refs.disputeTable) {
+    //     if (direction && prop) {
+    //       this.$refs.disputeTable.sort(direction, prop)
+    //     } else {
+    //       this.$refs.disputeTable.clearSort()
+    //     }
+    //   }
+    // },
     exportDisputes () {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).then(response => {
