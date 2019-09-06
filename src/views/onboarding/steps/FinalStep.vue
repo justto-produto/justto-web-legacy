@@ -22,7 +22,7 @@
 <script>
 export default {
   components: {
-    JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
+    JusLogoCompany: () => import('@/components/images/JusLogoCompany')
   },
   props: {
     isGuest: {

@@ -306,7 +306,11 @@
               {{ scope.row.number }} - {{ scope.row.state }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" align="right" width="48px">
+          <el-table-column
+            fixed="right"
+            align="right"
+            width="48px"
+            class-name="visible">
             <template slot-scope="scope">
               <a href="#" @click.prevent="removeOab(scope.$index)">
                 <jus-icon icon="trash" />
@@ -331,7 +335,11 @@
               {{ scope.row.number | phoneMask }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" align="right" width="48px">
+          <el-table-column
+            fixed="right"
+            align="right"
+            width="48px"
+            class-name="visible">
             <template slot-scope="scope">
               <a href="#" @click.prevent="removePhone(scope.$index)">
                 <jus-icon icon="trash" />
@@ -356,7 +364,11 @@
               {{ scope.row.address }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" align="right" width="48px">
+          <el-table-column
+            fixed="right"
+            align="right"
+            width="48px"
+            class-name="visible">
             <template slot-scope="scope">
               <a href="#" @click.prevent="removeEmail(scope.$index)">
                 <jus-icon icon="trash" />
