@@ -29,8 +29,13 @@ const disputeGetters = {
       for (var term in state.filters.terms) {
         if (state.filters.terms.hasOwnProperty(term)) {
           filteredDisputes = filteredDisputes.filter(dispute => {
-            if (typeof dispute[term] !== 'boolean' && moment(new Date(dispute[term])).isValid()) {
-              return moment(dispute[term]).isSame(state.filters.terms[term], 'day')
+            if (Array.isArray(state.filters.terms[term])) {
+              debugger
+              return moment(dispute[term])
+                .isBetween(
+                  state.filters.terms[term][0],
+                  state.filters.terms[term][1],
+                  'day', '[]')
             } else if (term === 'status' && state.filters.terms[term] === 'PAUSED') {
               return !!dispute.paused
             } else if (term === 'status' && state.filters.terms[term] === 'INTERACTIONS') {

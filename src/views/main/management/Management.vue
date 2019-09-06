@@ -180,7 +180,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="activeTab < 2"
+            v-if="['0', '1', '3'].includes(activeTab)"
             :sortable="false"
             prop="expirationDate"
             label="Fim da negociação"
