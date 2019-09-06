@@ -16,7 +16,6 @@ const disputeGetters = {
   filteredDisputes: (state, getters) => {
     let filteredDisputes = getters.disputes.slice(0)
     if (state.filters) {
-      console.log(state.filters)
       switch (state.filters.tab) {
         case '0':
           filteredDisputes = filteredDisputes.filter(d => d.tab === 'ENGAGEMENT')
