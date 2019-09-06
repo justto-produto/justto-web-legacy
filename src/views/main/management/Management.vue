@@ -50,6 +50,13 @@
         </el-tab-pane>
       </el-tabs>
       <div class="view-management__actions">
+        <el-button
+          :type="prioritySort ? 'primary' : 'text'"
+          plain
+          class="view-management__quick-filter"
+          @click="prioritySort = !prioritySort">
+          Disputas prioritárias
+        </el-button>
         <jus-filter-button />
         <el-button
           :plain="!Object.keys(filters.terms).length"
@@ -297,7 +304,8 @@ export default {
       loadingExport: false,
       currentPage: 1,
       initialDisputesPerPage: 20,
-      tableHeigth: 0
+      tableHeigth: 0,
+      prioritySort: false
     }
   },
   computed: {
@@ -379,6 +387,11 @@ export default {
   beforeCreate () {
     if (!this.$store.getters.disputeInitialLoad) this.$store.dispatch('loadDisputes')
   },
+  watch: {
+    prioritySort () {
+      this.sortDisputes(this.activeTab)
+    }
+  },
   beforeMount () {
     setTimeout(() => {
       this.adjustHeight()
@@ -435,22 +448,32 @@ export default {
         this.clearFilters()
         this.$refs.disputeTable.clearSort()
         this.$store.commit('clearDisputeSort')
+        this.sortDisputes(newTab)
         this.updateTable()
+      }
+    },
+    sortDisputes (newTab) {
+      if (this.prioritySort) {
+        setTimeout(() => {
+          this.doSort()
+          this.$store.commit('setDisputeSort', { prop: 'visualized', order: 'ascending' })
+        }, 300)
+      } else {
         switch (newTab) {
           case '0':
-            setTimeout(() => {
-              this.doSort('expirationDate', 'descending')
-            }, 300)
+          setTimeout(() => {
+            this.doSort('expirationDate', 'descending')
+          }, 300)
           break
           case '1':
-            setTimeout(() => {
-              this.doSort('lastInteractionDate', 'ascending')
-            }, 300)
+          setTimeout(() => {
+            this.doSort('lastInteractionDate', 'ascending')
+          }, 300)
           break
           case '2':
-            setTimeout(() => {
-              this.doSort('disputeDealDate', 'descending')
-            }, 300)
+          setTimeout(() => {
+            this.doSort('disputeDealDate', 'descending')
+          }, 300)
           break
         }
       }
@@ -604,7 +627,7 @@ export default {
     display: flex;
     position: absolute;
     z-index: 2;
-    top: 40px;
+    top: 39px;
     right: 40px;
     .el-button {
       line-height: 14px;
@@ -613,6 +636,24 @@ export default {
     img {
       vertical-align: sub;
       width: 14px;
+    }
+  }
+  &__quick-filter {
+    margin-right: 12px;
+    &.el-button--primary {
+      &:hover, &:focus {
+        color: #9461f7 !important;
+        background: #f4effe !important;
+        border-color: #d4c0fc !important;
+      }
+    }
+    &.el-button--text {
+      &:focus {
+        border-color: #fff !important;
+      }
+      &:hover {
+        border-color: #9461f7 !important;
+      }
     }
   }
   &:not(.view-management-review) {
