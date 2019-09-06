@@ -40,7 +40,7 @@ const disputeGetters = {
         if (state.filters.terms.hasOwnProperty(term)) {
           filteredDisputes = filteredDisputes.filter(dispute => {
             if (Array.isArray(state.filters.terms[term])) {
-              return moment(dispute[term])
+              return moment(dispute[term].dateTime)
                 .isBetween(
                   state.filters.terms[term][0],
                   state.filters.terms[term][1],
