@@ -29,8 +29,13 @@ const disputeGetters = {
       for (var term in state.filters.terms) {
         if (state.filters.terms.hasOwnProperty(term)) {
           filteredDisputes = filteredDisputes.filter(dispute => {
-            if (typeof dispute[term] !== 'boolean' && moment(new Date(dispute[term])).isValid()) {
-              return moment(dispute[term]).isSame(state.filters.terms[term], 'day')
+            if (Array.isArray(state.filters.terms[term])) {
+              debugger
+              return moment(dispute[term])
+                .isBetween(
+                  state.filters.terms[term][0],
+                  state.filters.terms[term][1],
+                  'day', '[]')
             } else if (term === 'status' && state.filters.terms[term] === 'PAUSED') {
               return !!dispute.paused
             } else if (term === 'status' && state.filters.terms[term] === 'INTERACTIONS') {
@@ -55,7 +60,7 @@ const disputeGetters = {
         })
         state.filters.filteredPerson = true
       }
-      if (state.filters.sort.order) {
+      if (state.filters.sort.order && !state.loadingNew) {
         filteredDisputes.sort((a, b) => {
           let compareA = JSON.parse(JSON.stringify(a))
           let compareB = JSON.parse(JSON.stringify(b))
@@ -86,7 +91,8 @@ const disputeGetters = {
   },
   disputeStatuses: state => state.statuses,
   disputeActiveTab: state => state.filters.tab,
-  disputesPerPage: state => state.filters.perPage
+  disputesPerPage: state => state.filters.perPage,
+  disputeLoading: state => state.loadingNew
 }
 
 export default disputeGetters

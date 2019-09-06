@@ -6,6 +6,7 @@ const dispute = {
   state: {
     disputes: [],
     initialLoad: false,
+    loadingNew: false,
     filters: {
       tab: '0',
       filterPersonId: 0,

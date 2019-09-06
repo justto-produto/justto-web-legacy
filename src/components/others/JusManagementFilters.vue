@@ -41,10 +41,22 @@
           <el-form-item label="Data do acordo">
             <el-date-picker
               v-model="filters.disputeDealDate"
+              data-testid="filters-disputeexpirationdate"
+              type="daterange"
+              align="right"
+              format="dd/MM/yyyy"
+              unlink-panels
+              clearable
+              range-separator="-"
+              start-placeholder="Data inicial"
+              end-placeholder="Data final"
+              @change="clearDisputeDealDate" />
+            <!-- <el-date-picker
+              v-model="filters.disputeDealDate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd"
-              @change="clearDisputeDealDate"/>
+              @change="clearDisputeDealDate"/> -->
           </el-form-item>
         </el-col>
         <!-- ÚLTIMA INTERAÇÃO -->
@@ -52,10 +64,21 @@
           <el-form-item label="Última interação">
             <el-date-picker
               v-model="filters.lastInteractionDate"
+              type="daterange"
+              align="right"
+              format="dd/MM/yyyy"
+              unlink-panels
+              clearable
+              range-separator="-"
+              start-placeholder="Data inicial"
+              end-placeholder="Data final"
+              @change="clearLastInteractionDate" />
+            <!-- <el-date-picker
+              v-model="filters.lastInteractionDate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd"
-              @change="clearLastInteractionDate" />
+              @change="clearLastInteractionDate" /> -->
           </el-form-item>
         </el-col>
         <!-- MEIO DE INTERAÇÃO -->
@@ -89,15 +112,27 @@
           </el-form-item>
         </el-col> -->
         <!-- FIM DA NEGOCIAÇÃO -->
-        <el-col v-if="isEngagement || isInteration || isNewAgreements" :span="12">
+        <el-col :span="12">
           <el-form-item label="Fim da negociação">
             <el-date-picker
+              v-model="filters.expirationDate"
+              data-testid="filters-disputeexpirationdate"
+              type="daterange"
+              align="right"
+              format="dd/MM/yyyy"
+              unlink-panels
+              clearable
+              range-separator="-"
+              start-placeholder="Data inicial"
+              end-placeholder="Data final"
+              @change="clearDisputeExpirationDate" />
+            <!-- <el-date-picker
               v-model="filters.expirationDate"
               data-testid="filters-disputeexpirationdate"
               format="dd/MM/yyyy"
               placeholder="Selecione uma data"
               value-format="yyyy-MM-dd"
-              @change="clearDisputeExpirationDate"/>
+              @change="clearDisputeExpirationDate"/> -->
           </el-form-item>
         </el-col>
         <!-- FAVORITOS -->
