@@ -51,12 +51,6 @@
               start-placeholder="Data inicial"
               end-placeholder="Data final"
               @change="clearDisputeDealDate" />
-            <!-- <el-date-picker
-              v-model="filters.disputeDealDate"
-              format="dd/MM/yyyy"
-              placeholder="Selecione uma data"
-              value-format="yyyy-MM-dd"
-              @change="clearDisputeDealDate"/> -->
           </el-form-item>
         </el-col>
         <!-- ÚLTIMA INTERAÇÃO -->
@@ -73,12 +67,6 @@
               start-placeholder="Data inicial"
               end-placeholder="Data final"
               @change="clearLastInteractionDate" />
-            <!-- <el-date-picker
-              v-model="filters.lastInteractionDate"
-              format="dd/MM/yyyy"
-              placeholder="Selecione uma data"
-              value-format="yyyy-MM-dd"
-              @change="clearLastInteractionDate" /> -->
           </el-form-item>
         </el-col>
         <!-- MEIO DE INTERAÇÃO -->
@@ -126,13 +114,6 @@
               start-placeholder="Data inicial"
               end-placeholder="Data final"
               @change="clearDisputeExpirationDate" />
-            <!-- <el-date-picker
-              v-model="filters.expirationDate"
-              data-testid="filters-disputeexpirationdate"
-              format="dd/MM/yyyy"
-              placeholder="Selecione uma data"
-              value-format="yyyy-MM-dd"
-              @change="clearDisputeExpirationDate"/> -->
           </el-form-item>
         </el-col>
         <!-- FAVORITOS -->

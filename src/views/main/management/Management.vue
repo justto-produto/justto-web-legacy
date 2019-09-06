@@ -131,9 +131,9 @@
           </el-table-column>
           <el-table-column
             v-if="activeTab !== '3'"
+            :sortable="false"
             label="Alçada máxima"
             align="center"
-            :sortable="false"
             prop="disputeUpperRange"
             min-width="118px">
             <template slot-scope="scope">
@@ -142,8 +142,8 @@
           </el-table-column>
           <el-table-column
             v-if="activeTab === '0'"
-            label="Valor proposto"
             :sortable="false"
+            label="Valor proposto"
             prop="lastOfferValue"
             align="center"
             min-width="114px">
@@ -170,9 +170,9 @@
           </el-table-column>
           <el-table-column
             v-if="activeTab === '1'"
+            :sortable="false"
             label="Contraproposta"
             align="center"
-            :sortable="false"
             prop="lastCounterOfferValue"
             min-width="120px">
             <template slot-scope="scope">
@@ -197,8 +197,8 @@
           </el-table-column>
           <el-table-column
             v-if="activeTab === '2'"
-            label="Valor do acordo"
             :sortable="false"
+            label="Valor do acordo"
             prop="disputeDealValue"
             align="center"
             width="120px">
@@ -217,8 +217,8 @@
           </el-table-column>
           <el-table-column
             v-if="activeTab === '3'"
-            label="Status"
             :sortable="false"
+            label="Status"
             prop="status"
             align="center"
             min-width="90px">
@@ -324,8 +324,7 @@ export default {
     },
     priorityOnly () {
       return this.$store.getters.priorityOnly
-    }
-    ,
+    },
     disputes () {
       return this.$store.getters.filteredDisputes
     },
@@ -390,13 +389,13 @@ export default {
       }).length
     }
   },
-  beforeCreate () {
-    if (!this.$store.getters.disputeInitialLoad) this.$store.dispatch('loadDisputes')
-  },
   watch: {
     prioritySort () {
       this.sortDisputes(this.activeTab)
     }
+  },
+  beforeCreate () {
+    if (!this.$store.getters.disputeInitialLoad) this.$store.dispatch('loadDisputes')
   },
   beforeMount () {
     setTimeout(() => {
@@ -421,7 +420,7 @@ export default {
     adjustHeight () {
       this.tableHeigth = this.$refs.tableContainer.clientHeight
     },
-    changePriorityView() {
+    changePriorityView () {
       this.$store.commit('changePriorityView')
     },
     applyFilters () {
@@ -472,19 +471,19 @@ export default {
       } else {
         switch (newTab) {
           case '0':
-          setTimeout(() => {
-            this.doSort('expirationDate', 'descending')
-          }, 300)
-          break
+            setTimeout(() => {
+              this.doSort('expirationDate', 'descending')
+            }, 300)
+            break
           case '1':
-          setTimeout(() => {
-            this.doSort('lastInteractionDate', 'ascending')
-          }, 300)
-          break
+            setTimeout(() => {
+              this.doSort('lastInteractionDate', 'ascending')
+            }, 300)
+            break
           case '2':
-          setTimeout(() => {
-            this.doSort('disputeDealDate', 'descending')
-          }, 300)
+            setTimeout(() => {
+              this.doSort('disputeDealDate', 'descending')
+            }, 300)
             break
         }
       }
