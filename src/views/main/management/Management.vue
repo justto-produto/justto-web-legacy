@@ -164,7 +164,7 @@
                 <i v-if="!scope.row.visualized" class="view-management__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </span>
               <span style="margin-left: 4px;">
-                {{ getLastInteraction(scope.row.lastInteractionDate) }}
+                {{ getLastInteraction(scope.row.lastInteractionDate.dateTime) }}
               </span>
             </template>
           </el-table-column>
