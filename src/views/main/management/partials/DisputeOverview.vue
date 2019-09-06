@@ -56,7 +56,7 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
-          <span>{{ dispute.expirationDate | moment('DD/MM/YY') }}</span>
+          <span>{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </div>
         <div v-if="dispute.description && dispute.description.trim()" class="dispute-overview-view__info-textarea">
           Descrição:

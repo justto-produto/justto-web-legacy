@@ -150,7 +150,7 @@ export default {
       if (this.$refs.allTable) this.$refs.allTable.clearSelection()
     },
     getLastInteraction (lastinteractiondate) {
-      let date = this.$moment(lastinteractiondate)
+      let date = this.$moment(lastinteractiondate.dateTime)
       if (date.isValid()) {
         let now = this.$moment()
         if (now.diff(date, 'seconds') < 59) {
