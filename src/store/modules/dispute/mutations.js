@@ -24,7 +24,7 @@ const disputeMutations = {
   clearDisputeFilterTerm (state, tab) {
     state.filters.filterTerm = ''
   },
-  changPriorityView (state) {
+  changePriorityView (state) {
     state.filters.priorityOnly = !state.filters.priorityOnly
   },
   setInitialLoad (state) {

@@ -54,7 +54,7 @@
           :type="priorityOnly ? 'primary' : 'text'"
           plain
           class="view-management__quick-filter"
-          @click="changPriorityView">
+          @click="changePriorityView">
           Disputas prioritárias
         </el-button>
         <jus-filter-button />
@@ -322,7 +322,9 @@ export default {
     multiActive () {
       return this.selectedIds.length >= 1
     },
-    priorityOnly () {}
+    priorityOnly () {
+      return this.$store.getters.priorityOnly
+    }
     ,
     disputes () {
       return this.$store.getters.filteredDisputes
@@ -419,8 +421,8 @@ export default {
     adjustHeight () {
       this.tableHeigth = this.$refs.tableContainer.clientHeight
     },
-    changPriorityView() {
-      this.$store.commit('changPriorityView')
+    changePriorityView() {
+      this.$store.commit('changePriorityView')
     },
     applyFilters () {
       if (this.activeFilters.hasOwnProperty('disputeDealValue') && this.activeFilters.disputedealvalue === 0) {
