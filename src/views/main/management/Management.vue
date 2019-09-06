@@ -163,7 +163,7 @@
                 <jus-icon :icon="getLastInteractionIcon(scope.row.lastInteractionType)" class="view-management__interaction-icon" />
                 <i v-if="!scope.row.visualized" class="view-management__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </span>
-              <span style="margin-left: 4px;">
+              <span v-if="scope.row.lastInteractionDate" style="margin-left: 4px;">
                 {{ getLastInteraction(scope.row.lastInteractionDate.dateTime) }}
               </span>
             </template>
@@ -187,7 +187,7 @@
             align="center"
             min-width="140px">
             <template slot-scope="scope">
-              {{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}
+              <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
               <el-tooltip content="Negociação encerra nos próximos 3 dias">
                 <i
                   v-if="activeTab === '0' && scope.row.disputeNextToExpire"
@@ -212,7 +212,7 @@
             min-width="118px"
             align="center">
             <template slot-scope="scope">
-              {{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}
+              <span v-if="scope.row.disputeDealDate">{{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}</span>
             </template>
           </el-table-column>
           <el-table-column
