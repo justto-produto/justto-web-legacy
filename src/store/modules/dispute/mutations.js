@@ -24,6 +24,9 @@ const disputeMutations = {
   clearDisputeFilterTerm (state, tab) {
     state.filters.filterTerm = ''
   },
+  changePriorityView (state) {
+    state.filters.priorityOnly = !state.filters.priorityOnly
+  },
   setInitialLoad (state) {
     state.initialLoad = true
   },
@@ -44,6 +47,7 @@ const disputeMutations = {
   },
   updateDispute (state, disputeChanged) {
     state.loadingNew = true
+    disputeChanged.disputeNextToExpire = moment(disputeChanged.expirationDate.dateTime).isBetween(moment(), moment().add(3, 'day'))
     clearTimeout(newDisputeTimeout)
     newDisputeTimeout = setTimeout(() => {
       state.loadingNew = false

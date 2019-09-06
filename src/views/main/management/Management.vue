@@ -51,10 +51,10 @@
       </el-tabs>
       <div class="view-management__actions">
         <el-button
-          :type="prioritySort ? 'primary' : 'text'"
+          :type="priorityOnly ? 'primary' : 'text'"
           plain
           class="view-management__quick-filter"
-          @click="prioritySort = !prioritySort">
+          @click="changePriorityView">
           Disputas prioritárias
         </el-button>
         <jus-filter-button />
@@ -160,11 +160,11 @@
             align="center">
             <template slot-scope="scope">
               <span class="position-relative">
-                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
+                <jus-icon :icon="getLastInteractionIcon(scope.row.lastInteractionType)" class="view-management__interaction-icon" />
                 <i v-if="!scope.row.visualized" class="view-management__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </span>
-              <span style="margin-left: 4px;">
-                {{ scope.row.lastInteractionFormatedDate }}
+              <span v-if="scope.row.lastInteractionDate" style="margin-left: 4px;">
+                {{ getLastInteraction(scope.row.lastInteractionDate.dateTime) }}
               </span>
             </template>
           </el-table-column>
@@ -187,10 +187,10 @@
             align="center"
             min-width="140px">
             <template slot-scope="scope">
-              {{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}
+              <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
               <el-tooltip content="Negociação encerra nos próximos 3 dias">
                 <i
-                  v-if="activeTab === '0' && disputeNextToExpire(scope.row.expirationDate)"
+                  v-if="activeTab === '0' && scope.row.disputeNextToExpire"
                   class="view-management__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </el-tooltip>
             </template>
@@ -212,7 +212,7 @@
             min-width="118px"
             align="center">
             <template slot-scope="scope">
-              {{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}
+              <span v-if="scope.row.disputeDealDate">{{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -287,6 +287,8 @@
 </template>
 
 <script>
+import { getLastInteraction, getLastInteractionIcon } from '@/plugins/jusUtils'
+
 export default {
   name: 'Management',
   components: {
@@ -320,6 +322,10 @@ export default {
     multiActive () {
       return this.selectedIds.length >= 1
     },
+    priorityOnly () {
+      return this.$store.getters.priorityOnly
+    }
+    ,
     disputes () {
       return this.$store.getters.filteredDisputes
     },
@@ -360,9 +366,9 @@ export default {
       return this.$store.getters.disputes.filter(d => {
         if (this.selectedPersonId) {
           let negotiatorIndex = d.negotiators.findIndex(n => n.personId === this.selectedPersonId)
-          return d.tab === 'ENGAGEMENT' && this.disputeNextToExpire(d.expirationDate) && negotiatorIndex !== -1
+          return d.tab === 'ENGAGEMENT' && d.disputeNextToExpire && negotiatorIndex !== -1
         }
-        return d.tab === 'ENGAGEMENT' && this.disputeNextToExpire(d.expirationDate)
+        return d.tab === 'ENGAGEMENT' && d.disputeNextToExpire
       }).length
     },
     interactionLength () {
@@ -405,6 +411,8 @@ export default {
     window.removeEventListener('resize', this.adjustHeight)
   },
   methods: {
+    getLastInteraction: (i) => getLastInteraction(i),
+    getLastInteractionIcon: (i) => getLastInteractionIcon(i),
     tableRowClassName ({ row, rowIndex }) {
       if (!row.visualized && ['1', '2'].includes(this.activeTab)) {
         return 'el-table__row--visualized-row'
@@ -412,6 +420,9 @@ export default {
     },
     adjustHeight () {
       this.tableHeigth = this.$refs.tableContainer.clientHeight
+    },
+    changePriorityView() {
+      this.$store.commit('changePriorityView')
     },
     applyFilters () {
       if (this.activeFilters.hasOwnProperty('disputeDealValue') && this.activeFilters.disputedealvalue === 0) {
@@ -474,7 +485,7 @@ export default {
           setTimeout(() => {
             this.doSort('disputeDealDate', 'descending')
           }, 300)
-          break
+            break
         }
       }
     },
@@ -496,9 +507,6 @@ export default {
       }).finally(() => {
         this.loadingExport = false
       })
-    },
-    disputeNextToExpire (dateTime) {
-      return this.$moment(dateTime.dateTime).isBetween(this.$moment(), this.$moment().add(3, 'day'))
     },
     clearSelection () {
       this.$refs.disputeTable.clearSelection()

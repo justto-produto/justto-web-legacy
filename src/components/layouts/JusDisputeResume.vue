@@ -18,11 +18,15 @@
       </el-col>
       <el-col :span="8">
         <div>Campanha: {{ dispute.campaignName }}</div>
-        <div>Fim da negociação: {{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</div>
-        <div>Data do acordo: {{ dispute.disputeDealDate.dateTime | moment('DD/MM/YY') }}</div>
+        <div>Fim da negociação:
+          <span v-if="dispute.expirationDate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+        </div>
+        <div>Data do acordo:
+          <span v-if="dispute.disputeDealDate">{{ dispute.disputeDealDate.dateTime | moment('DD/MM/YY') }}</span>
+        </div>
         <div>
           Última interação:
-          {{ dispute.lastInteractionFormatedDate.dateTime | capitalize }}
+          <span v-if="dispute.lastInteractionDate">{{ getLastInteraction(dispute.lastInteractionDate.dateTime) }}</span>
         </div>
       </el-col>
       <el-col :span="8">
@@ -36,7 +40,7 @@
 </template>
 
 <script>
-import { getRoles } from '@/plugins/jusUtils'
+import { getRoles, getLastInteraction } from '@/plugins/jusUtils'
 
 export default {
   name: 'JusDisputeResume',
@@ -47,6 +51,7 @@ export default {
     }
   },
   methods: {
+    getLastInteraction: (i) => getLastInteraction(i),
     getClaimants (disputeRoles, party, role) {
       return getRoles(disputeRoles, party, role)
     }

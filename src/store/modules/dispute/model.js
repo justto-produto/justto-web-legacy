@@ -38,7 +38,7 @@ const getDisputeVM = function (dispute) {
     expirationDate: dispute.expirationDate.dateTime,
     description: dispute.description,
     disputeDealDate: dispute.conclusion ? moment(dispute.conclusion.conclusionDate.dateTime).format() : null,
-    lastInteractionDate: dispute.lastInteraction ? moment(dispute.lastInteraction.date.dateTimeToDate).format() : null,
+    lastInteractionDate: dispute.lastInteraction ? moment(dispute.lastInteraction.date.dateTime).format() : null,
     lastInteractionType: dispute.lastInteraction ? dispute.lastInteraction.type : null,
     communicationMsgTotalSent: dispute.communications.filter(c => c.status === 'PROCESSED' && c.direction === 'OUTBOUND').length,
     communicationMsgTotalsShedulled: dispute.communications.filter(c => c.status === 'WAITING' && c.direction === 'OUTBOUND').length,

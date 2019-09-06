@@ -8,6 +8,7 @@ const disputeGetters = {
   disputeHasFilters: state => {
     return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm || !!state.filters.filterPersonId
   },
+  priorityOnly: state => state.filters.priorityOnly,
   disputeFiltersTerm: state => state.filters.filterTerm,
   filterPersonId: state => state.filters.filterPersonId,
   disputeInitialLoad: state => state.initialLoad,
@@ -18,12 +19,21 @@ const disputeGetters = {
       switch (state.filters.tab) {
         case '0':
           filteredDisputes = filteredDisputes.filter(d => d.tab === 'ENGAGEMENT')
+          if (state.filters.priorityOnly) {
+            filteredDisputes = filteredDisputes.filter(d => d.disputeNextToExpire)
+          }
           break
         case '1':
           filteredDisputes = filteredDisputes.filter(d => d.tab === 'INTERACTION')
+          if (state.filters.priorityOnly) {
+            filteredDisputes = filteredDisputes.filter(d => !d.visualized)
+          }
           break
         case '2':
           filteredDisputes = filteredDisputes.filter(d => d.tab === 'NEWDEALS')
+          if (state.filters.priorityOnly) {
+            filteredDisputes = filteredDisputes.filter(d => !d.visualized)
+          }
           break
       }
       for (var term in state.filters.terms) {

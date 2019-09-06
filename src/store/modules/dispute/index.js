@@ -12,6 +12,7 @@ const dispute = {
       filterPersonId: 0,
       terms: {},
       filterTerm: '',
+      priorityOnly: false,
       perPage: 20,
       sort: {
         prop: null,
