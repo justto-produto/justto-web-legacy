@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain :loading-main="$store.state.loading" class="view-management">
+  <JusViewMain class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
       <jus-loader v-show="$store.getters.disputeLoading" content="Carregando disputa(s)"/>
@@ -83,29 +83,29 @@
           @sort-change="handleSortChange"
           @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="40px" />
-          <el-table-column type="expand" width="40px">
+          <el-table-column type="expand" width="20px">
             <template slot-scope="props">
               <jus-dispute-resume :dispute="props.row" />
             </template>
           </el-table-column>
           <el-table-column
+            :sortable="false"
             label="Disputa"
-            min-width="94px"
-            prop="id"
-            sortable="custom">
+            min-width="68px"
+            prop="id">
             <template slot-scope="scope">#{{ scope.row.id }}</template>
           </el-table-column>
           <el-table-column
-            sortable="custom"
+            :sortable="false"
             prop="campaignName"
             label="Campanha"
-            min-width="114px">
+            min-width="94px">
             <template slot-scope="scope">{{ scope.row.campaignName | capitalize }}</template>
           </el-table-column>
           <el-table-column
-            sortable="custom"
+            :sortable="false"
             prop="firstClaimant"
-            min-width="164px"
+            min-width="140px"
             class-name="text-ellipsis"
             label="Parte(s) contrária(s)">
             <template slot-scope="scope">
@@ -113,11 +113,11 @@
             </template>
           </el-table-column>
           <el-table-column
-            sortable="custom"
+            :sortable="false"
             prop="firstClaimantLawyer"
             class-name="text-ellipsis"
             label="Advogado(s) da parte"
-            min-width="176px">
+            min-width="154px">
             <template slot-scope="scope">
               {{ scope.row.firstClaimantLawyer }}
             </template>
@@ -126,9 +126,9 @@
             v-if="activeTab !== '3'"
             label="Alçada máxima"
             align="center"
-            sortable="custom"
+            :sortable="false"
             prop="disputeUpperRange"
-            min-width="140px">
+            min-width="118px">
             <template slot-scope="scope">
               {{ scope.row.disputeUpperRange | currency }}
             </template>
@@ -136,20 +136,20 @@
           <el-table-column
             v-if="activeTab === '0'"
             label="Valor proposto"
-            sortable="custom"
+            :sortable="false"
             prop="lastOfferValue"
             align="center"
-            min-width="134px">
+            min-width="114px">
             <template slot-scope="scope">
               {{ scope.row.lastOfferValue | currency }}
             </template>
           </el-table-column>
           <el-table-column
             v-if="['1', '2'].includes(activeTab)"
-            sortable="custom"
+            :sortable="false"
             prop="lastInteractionDate"
             label="Última interação"
-            min-width="148px"
+            min-width="124px"
             align="center">
             <template slot-scope="scope">
               <span class="position-relative">
@@ -165,20 +165,20 @@
             v-if="activeTab === '1'"
             label="Contraproposta"
             align="center"
-            sortable="custom"
+            :sortable="false"
             prop="lastCounterOfferValue"
-            min-width="140px">
+            min-width="120px">
             <template slot-scope="scope">
               {{ scope.row.lastCounterOfferValue | currency }}
             </template>
           </el-table-column>
           <el-table-column
             v-if="activeTab < 2"
-            sortable="custom"
+            :sortable="false"
             prop="expirationDate"
             label="Fim da negociação"
             align="center"
-            min-width="160px">
+            min-width="140px">
             <template slot-scope="scope">
               {{ scope.row.expirationDate | moment('DD/MM/YY') }}
               <el-tooltip content="Negociação encerra nos próximos 3 dias">
@@ -191,18 +191,18 @@
           <el-table-column
             v-if="activeTab === '2'"
             label="Valor do acordo"
-            sortable="custom"
+            :sortable="false"
             prop="disputeDealValue"
             align="center"
-            width="140px">
+            width="120px">
             <template slot-scope="scope">{{ scope.row.disputeDealValue | currency }}</template>
           </el-table-column>
           <el-table-column
             v-if="activeTab === '2'"
-            sortable="custom"
+            :sortable="false"
             prop="disputeDealDate"
             label="Data do acordo"
-            min-width="138px"
+            min-width="118px"
             align="center">
             <template slot-scope="scope">
               {{ scope.row.disputeDealDate | moment('DD/MM/YY') }}
@@ -211,10 +211,10 @@
           <el-table-column
             v-if="activeTab === '3'"
             label="Status"
-            sortable="custom"
+            :sortable="false"
             prop="status"
             align="center"
-            min-width="110px">
+            min-width="90px">
             <template slot-scope="scope">
               {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
             </template>
@@ -244,12 +244,6 @@
                 Não foram encontradas disputas para<br>os filtros selecionados.
               </h4>
             </span>
-            <!-- <span v-else>
-              <img src="@/assets/loading2.svg" data-testid="cases-empty-icon">
-              <h4 data-testid="cases-empty-text">
-                Aguardando por novas disputas.
-              </h4>
-            </span> -->
           </template>
         </el-table>
       </div>
@@ -444,19 +438,19 @@ export default {
         this.updateTable()
         switch (newTab) {
           case '0':
-          setTimeout(() => {
-            this.doSort('expirationDate', 'descending')
-          }, 300)
+            setTimeout(() => {
+              this.doSort('expirationDate', 'descending')
+            }, 300)
           break
           case '1':
-          setTimeout(() => {
-            this.doSort('lastInteractionDate', 'ascending')
-          }, 300)
+            setTimeout(() => {
+              this.doSort('lastInteractionDate', 'ascending')
+            }, 300)
           break
           case '2':
-          setTimeout(() => {
-            this.doSort('disputeDealDate', 'descending')
-          }, 300)
+            setTimeout(() => {
+              this.doSort('disputeDealDate', 'descending')
+            }, 300)
           break
         }
       }

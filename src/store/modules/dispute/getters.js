@@ -55,7 +55,8 @@ const disputeGetters = {
         })
         state.filters.filteredPerson = true
       }
-      if (state.filters.sort.order) {
+      if (state.filters.sort.order && !state.loadingNew) {
+        console.log('ordenou')
         filteredDisputes.sort((a, b) => {
           let compareA = JSON.parse(JSON.stringify(a))
           let compareB = JSON.parse(JSON.stringify(b))
