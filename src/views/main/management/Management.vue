@@ -160,11 +160,11 @@
             align="center">
             <template slot-scope="scope">
               <span class="position-relative">
-                <jus-icon :icon="scope.row.lastInteractionIcon" class="view-management__interaction-icon" />
+                <jus-icon :icon="getLastInteractionIcon(scope.row.lastInteractionType)" class="view-management__interaction-icon" />
                 <i v-if="!scope.row.visualized" class="view-management__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </span>
               <span style="margin-left: 4px;">
-                {{ scope.row.lastInteractionFormatedDate }}
+                {{ getLastInteraction(scope.row.lastInteractionDate) }}
               </span>
             </template>
           </el-table-column>
@@ -287,6 +287,8 @@
 </template>
 
 <script>
+import { getLastInteraction, getLastInteractionIcon } from '@/plugins/jusUtils'
+
 export default {
   name: 'Management',
   components: {
@@ -405,6 +407,8 @@ export default {
     window.removeEventListener('resize', this.adjustHeight)
   },
   methods: {
+    getLastInteraction: (i) => getLastInteraction(i),
+    getLastInteractionIcon: (i) => getLastInteractionIcon(i),
     tableRowClassName ({ row, rowIndex }) {
       if (!row.visualized && ['1', '2'].includes(this.activeTab)) {
         return 'el-table__row--visualized-row'

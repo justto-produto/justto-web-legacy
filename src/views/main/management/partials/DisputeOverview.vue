@@ -56,7 +56,7 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
-          <span>{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+          <span v-if="dispute.expirationDate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </div>
         <div v-if="dispute.description && dispute.description.trim()" class="dispute-overview-view__info-textarea">
           Descrição:
@@ -477,13 +477,6 @@ export default {
       return []
     }
   },
-  // watch: {
-  //   activeRoleId (value) {
-  //     if (value) {
-  //       this.$refs.roleCollapse.activeNames = []
-  //     }
-  //   }
-  // },
   methods: {
     openDisputeDialog () {
       this.editDisputeDialogLoading = false
@@ -495,7 +488,7 @@ export default {
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
       this.disputeForm.lastCounterOfferValue = parseFloat(dispute.lastCounterOfferValue)
-      this.disputeForm.expirationDate = dispute.expirationDate
+      this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
     },
     editDispute () {
@@ -514,33 +507,32 @@ export default {
         showCancelButton: true,
         cancelButtonText: 'Cancelar'
       }).then(() => {
-        let promises = []
-        let disputeToEdit = JSON.parse(JSON.stringify(this.$store.getters.findDisputeById(this.disputeForm.id)))
-        if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
-        if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
-        if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
-        if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
-        promises.push(this.$store.dispatch('editDispute', disputeToEdit))
-        if (this.disputeForm.lastCounterOfferValue !== parseInt(this.dispute.lastCounterOfferValue)) {
-          if (this.selectedClaimantId) {
+        this.$store.dispatch('getDispute', this.dispute.id).then(disputeToEdit => {
+          let promises = []
+          if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
+          if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
+          if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+          if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
+          promises.push(this.$store.dispatch('editDispute', disputeToEdit))
+          if (this.disputeForm.lastCounterOfferValue !== this.dispute.lastCounterOfferValue) {
+            if (this.selectedClaimantId) {
+              promises.push(this.$store.dispatch('editDisputeOffer', {
+                disputeId: this.dispute.id,
+                objectId: this.dispute.objectId,
+                value: this.disputeForm.lastCounterOfferValue.toString(),
+                roleId: this.selectedClaimantId
+              }))
+            }
+          }
+          if (this.disputeForm.lastOfferValue !== this.dispute.lastOfferValue) {
             promises.push(this.$store.dispatch('editDisputeOffer', {
               disputeId: this.dispute.id,
               objectId: this.dispute.objectId,
-              value: this.disputeForm.lastCounterOfferValue.toString(),
-              roleId: this.selectedClaimantId
+              value: this.disputeForm.lastOfferValue.toString(),
+              roleId: this.selectedNegotiatorId
             }))
           }
-        }
-        if (this.disputeForm.lastOfferValue !== parseInt(this.dispute.lastOfferValue)) {
-          promises.push(this.$store.dispatch('editDisputeOffer', {
-            disputeId: this.dispute.id,
-            objectId: this.dispute.objectId,
-            value: this.disputeForm.lastOfferValue.toString(),
-            roleId: this.selectedNegotiatorId
-          }))
-        }
-        Promise.all(promises)
-          .then(() => {
+          Promise.all(promises).then(() => {
             this.editDisputeDialogVisible = false
             this.$jusNotification({
               title: 'Yay!',
@@ -552,6 +544,7 @@ export default {
           }).finally(() => {
             this.editDisputeDialogLoading = false
           })
+        })
       }).catch(() => {
         this.editDisputeDialogLoading = false
       })
