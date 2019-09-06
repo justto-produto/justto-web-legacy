@@ -187,7 +187,7 @@
             align="center"
             min-width="140px">
             <template slot-scope="scope">
-              {{ scope.row.expirationDate | moment('DD/MM/YY') }}
+              {{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}
               <el-tooltip content="Negociação encerra nos próximos 3 dias">
                 <i
                   v-if="activeTab === '0' && disputeNextToExpire(scope.row.expirationDate)"
@@ -212,7 +212,7 @@
             min-width="118px"
             align="center">
             <template slot-scope="scope">
-              {{ scope.row.disputeDealDate | moment('DD/MM/YY') }}
+              {{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}
             </template>
           </el-table-column>
           <el-table-column
@@ -498,7 +498,7 @@ export default {
       })
     },
     disputeNextToExpire (dateTime) {
-      return this.$moment(dateTime).isBetween(this.$moment(), this.$moment().add(3, 'day'))
+      return this.$moment(dateTime.dateTime).isBetween(this.$moment(), this.$moment().add(3, 'day'))
     },
     clearSelection () {
       this.$refs.disputeTable.clearSelection()

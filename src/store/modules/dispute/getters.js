@@ -30,7 +30,6 @@ const disputeGetters = {
         if (state.filters.terms.hasOwnProperty(term)) {
           filteredDisputes = filteredDisputes.filter(dispute => {
             if (Array.isArray(state.filters.terms[term])) {
-              debugger
               return moment(dispute[term])
                 .isBetween(
                   state.filters.terms[term][0],
