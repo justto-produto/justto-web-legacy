@@ -18,11 +18,11 @@
       </el-col>
       <el-col :span="8">
         <div>Campanha: {{ dispute.campaignName }}</div>
-        <div>Fim da negociação: {{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</div>
-        <div>Data do acordo: {{ dispute.disputeDealDate.dateTime | moment('DD/MM/YY') }}</div>
+        <div>Fim da negociação: {{ dispute.expirationDate | moment('DD/MM/YY') }}</div>
+        <div>Data do acordo: {{ dispute.disputeDealDate | moment('DD/MM/YY') }}</div>
         <div>
           Última interação:
-          {{ dispute.lastInteractionFormatedDate.dateTime | capitalize }}
+          {{ dispute.lastInteractionFormatedDate | capitalize }}
         </div>
       </el-col>
       <el-col :span="8">

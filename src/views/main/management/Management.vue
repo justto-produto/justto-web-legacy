@@ -51,10 +51,10 @@
       </el-tabs>
       <div class="view-management__actions">
         <el-button
-          :type="prioritySort ? 'primary' : 'text'"
+          :type="priorityOnly ? 'primary' : 'text'"
           plain
           class="view-management__quick-filter"
-          @click="prioritySort = !prioritySort">
+          @click="changPriorityView">
           Disputas prioritárias
         </el-button>
         <jus-filter-button />
@@ -190,7 +190,7 @@
               {{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}
               <el-tooltip content="Negociação encerra nos próximos 3 dias">
                 <i
-                  v-if="activeTab === '0' && disputeNextToExpire(scope.row.expirationDate)"
+                  v-if="activeTab === '0' && scope.row.disputeNextToExpire"
                   class="view-management__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </el-tooltip>
             </template>
@@ -320,6 +320,8 @@ export default {
     multiActive () {
       return this.selectedIds.length >= 1
     },
+    priorityOnly () {}
+    ,
     disputes () {
       return this.$store.getters.filteredDisputes
     },
@@ -360,9 +362,9 @@ export default {
       return this.$store.getters.disputes.filter(d => {
         if (this.selectedPersonId) {
           let negotiatorIndex = d.negotiators.findIndex(n => n.personId === this.selectedPersonId)
-          return d.tab === 'ENGAGEMENT' && this.disputeNextToExpire(d.expirationDate) && negotiatorIndex !== -1
+          return d.tab === 'ENGAGEMENT' && d.disputeNextToExpire && negotiatorIndex !== -1
         }
-        return d.tab === 'ENGAGEMENT' && this.disputeNextToExpire(d.expirationDate)
+        return d.tab === 'ENGAGEMENT' && d.disputeNextToExpire
       }).length
     },
     interactionLength () {
@@ -412,6 +414,9 @@ export default {
     },
     adjustHeight () {
       this.tableHeigth = this.$refs.tableContainer.clientHeight
+    },
+    changPriorityView() {
+      this.$store.commit('changPriorityView')
     },
     applyFilters () {
       if (this.activeFilters.hasOwnProperty('disputeDealValue') && this.activeFilters.disputedealvalue === 0) {
@@ -474,7 +479,7 @@ export default {
           setTimeout(() => {
             this.doSort('disputeDealDate', 'descending')
           }, 300)
-          break
+            break
         }
       }
     },
@@ -496,9 +501,6 @@ export default {
       }).finally(() => {
         this.loadingExport = false
       })
-    },
-    disputeNextToExpire (dateTime) {
-      return this.$moment(dateTime.dateTime).isBetween(this.$moment(), this.$moment().add(3, 'day'))
     },
     clearSelection () {
       this.$refs.disputeTable.clearSelection()
