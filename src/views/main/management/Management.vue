@@ -2,6 +2,7 @@
   <JusViewMain :loading-main="$store.state.loading" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
+      <jus-loader v-show="$store.getters.disputeLoading" content="Carregando disputa(s)"/>
     </template>
     <template slot="actions">
       <management-actions
@@ -291,7 +292,8 @@ export default {
     JusManagementFilters: () => import('@/components/others/JusManagementFilters'),
     ManagementActions: () => import('./partials/ManagementActions'),
     JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
-    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
+    JusLoader: () => import('@/components/others/JusLoader')
   },
   data () {
     return {
@@ -381,12 +383,7 @@ export default {
     }
   },
   beforeCreate () {
-    if (!this.$store.getters.disputeInitialLoad) {
-      this.$store.commit('showLoading')
-      this.$store.dispatch('getDisputes').finally(() => {
-        this.$store.commit('hideLoading')
-      })
-    }
+    if (!this.$store.getters.disputeInitialLoad) this.$store.dispatch('loadDisputes')
   },
   beforeMount () {
     setTimeout(() => {
@@ -445,37 +442,34 @@ export default {
         this.$refs.disputeTable.clearSort()
         this.$store.commit('clearDisputeSort')
         this.updateTable()
+        switch (newTab) {
+          case '0':
+          setTimeout(() => {
+            this.doSort('expirationDate', 'descending')
+          }, 300)
+          break
+          case '1':
+          setTimeout(() => {
+            this.doSort('lastInteractionDate', 'ascending')
+          }, 300)
+          break
+          case '2':
+          setTimeout(() => {
+            this.doSort('disputeDealDate', 'descending')
+          }, 300)
+          break
+        }
       }
-      // switch (newTab) {
-      //   case '0':
-      //     setTimeout(() => {
-      //       this.doSort('expirationDate', 'descending')
-      //     }, 500)
-      //     break
-      //   case '1':
-      //     setTimeout(() => {
-      //       this.doSort('lastInteractionDate', 'ascending')
-      //     }, 500)
-      //     break
-      //   case '2':
-      //     setTimeout(() => {
-      //       this.doSort('disputeDealDate', 'descending')
-      //     }, 500)
-      //     break
-      //   default:
-      //     this.doSort()
-      //     break
-      // }
     },
-    // doSort (direction, prop) {
-    //   if (this.$refs.disputeTable) {
-    //     if (direction && prop) {
-    //       this.$refs.disputeTable.sort(direction, prop)
-    //     } else {
-    //       this.$refs.disputeTable.clearSort()
-    //     }
-    //   }
-    // },
+    doSort (direction, prop) {
+      if (this.$refs.disputeTable) {
+        if (direction && prop) {
+          this.$refs.disputeTable.sort(direction, prop)
+        } else {
+          this.$refs.disputeTable.clearSort()
+        }
+      }
+    },
     exportDisputes () {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).then(response => {
@@ -542,6 +536,9 @@ export default {
 .view-management {
   .jus-main-view__title {
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 20px 0;
   }
   &__carousel-container {
     position: absolute;

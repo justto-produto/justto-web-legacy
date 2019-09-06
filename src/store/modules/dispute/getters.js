@@ -86,7 +86,8 @@ const disputeGetters = {
   },
   disputeStatuses: state => state.statuses,
   disputeActiveTab: state => state.filters.tab,
-  disputesPerPage: state => state.filters.perPage
+  disputesPerPage: state => state.filters.perPage,
+  disputeLoading: state => state.loadingNew
 }
 
 export default disputeGetters
