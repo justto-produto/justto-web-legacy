@@ -26,7 +26,7 @@
         </div>
         <div>
           Última interação:
-          {{ getLastInteraction(dispute.lastInteractionDate) }}
+          {{ getLastInteraction(dispute.lastInteractionDate.dateTime) }}
         </div>
       </el-col>
       <el-col :span="8">
