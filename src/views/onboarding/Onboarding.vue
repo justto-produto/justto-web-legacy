@@ -83,7 +83,7 @@ export default {
     TeamNameStep: () => import('./steps/TeamNameStep'),
     LogoStep: () => import('./steps/LogoStep'),
     InviteStep: () => import('./steps/InviteStep'),
-    FinalStep: () => import('./steps/InviteStep')
+    FinalStep: () => import('./steps/FinalStep')
   },
   data () {
     return {
