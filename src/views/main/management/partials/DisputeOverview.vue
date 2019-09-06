@@ -295,13 +295,18 @@
             <jus-icon icon="add-white" />
           </el-button>
         </div>
-        <el-table v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" :data="roleForm.oabs" :show-header="false" class="el-table--list">
+        <el-table
+          v-if="roleForm.roles && roleForm.roles.includes('LAWYER')"
+          :data="roleForm.oabs"
+          :show-header="false"
+          fit
+          class="el-table--list">
           <el-table-column>
             <template slot-scope="scope">
               {{ scope.row.number }} - {{ scope.row.state }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" width="40px">
+          <el-table-column fixed="right" align="right" width="48px">
             <template slot-scope="scope">
               <a href="#" @click.prevent="removeOab(scope.$index)">
                 <jus-icon icon="trash" />
@@ -316,13 +321,17 @@
             </el-button>
           </el-input>
         </el-form-item>
-        <el-table :data="roleForm.phones" :show-header="false" class="el-table--list">
+        <el-table
+          :data="roleForm.phones"
+          :show-header="false"
+          fit
+          class="el-table--list">
           <el-table-column>
             <template slot-scope="scope">
               {{ scope.row.number | phoneMask }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" width="36px">
+          <el-table-column fixed="right" align="right" width="48px">
             <template slot-scope="scope">
               <a href="#" @click.prevent="removePhone(scope.$index)">
                 <jus-icon icon="trash" />
@@ -337,13 +346,17 @@
             </el-button>
           </el-input>
         </el-form-item>
-        <el-table :data="roleForm.emails" :show-header="false" class="el-table--list">
+        <el-table
+          :data="roleForm.emails"
+          :show-header="false"
+          fit
+          class="el-table--list">
           <el-table-column>
             <template slot-scope="scope">
               {{ scope.row.address }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" width="36px">
+          <el-table-column fixed="right" align="right" width="48px">
             <template slot-scope="scope">
               <a href="#" @click.prevent="removeEmail(scope.$index)">
                 <jus-icon icon="trash" />
