@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain :loading-container="$store.state.loading" class="view-management">
+  <JusViewMain :loading-main="$store.state.loading" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
       <jus-loader v-show="$store.getters.disputeLoading" content="Carregando disputa(s)"/>
