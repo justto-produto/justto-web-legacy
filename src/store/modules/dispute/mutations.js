@@ -1,8 +1,13 @@
 import Vue from 'vue'
 import moment from 'moment'
+import { getDisputeVMList } from './model'
+
 let newDisputeTimeout
 
 const disputeMutations = {
+  setDisputes (state, disputes) {
+    state.disputes = getDisputeVMList(disputes)
+  },
   clearDisputes (state) {
     state.disputes = []
   },
@@ -51,14 +56,18 @@ const disputeMutations = {
     clearTimeout(newDisputeTimeout)
     newDisputeTimeout = setTimeout(() => {
       state.loadingNew = false
-    }, 2000)
+    }, 500)
     Vue.nextTick(() => {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       if (disputeIndex === -1) {
         state.disputes.push(disputeChanged)
       } else {
         let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-        if (!dispute.updateAt || !dispute.updateAt.dateTime || moment(dispute.updateAt.dateTime).isSameOrBefore(moment(disputeChanged.updateAt.dateTime))) {
+        if (dispute.updateAt && disputeChanged.updateAt) {
+          if (moment(dispute.updateAt.dateTime).isSameOrBefore(moment(disputeChanged.updateAt.dateTime))) {
+            Vue.set(state.disputes, disputeIndex, disputeChanged)
+          }
+        } else {
           Vue.set(state.disputes, disputeIndex, disputeChanged)
         }
       }

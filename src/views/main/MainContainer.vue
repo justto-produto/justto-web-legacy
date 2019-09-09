@@ -60,7 +60,8 @@ export default {
   },
   data () {
     return {
-      isCollapse: true
+      isCollapse: true,
+      workspace: ''
     }
   },
   beforeCreate () {
@@ -73,12 +74,13 @@ export default {
     })
   },
   beforeMount () {
+    this.workspace = this.$store.getters.workspaceSubdomain
     this.subscribe()
   },
   beforeDestroy () {
-    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp' })
-    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute' })
-    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/alert' })
+    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.workspace + '/whatsapp' })
+    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.workspace + '/dispute' })
+    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.workspace + '/alert' })
   },
   sockets: {
     reconnect () {
@@ -87,13 +89,15 @@ export default {
   },
   methods: {
     subscribe () {
-      const headers = {
-        Authorization: this.$store.getters.accountToken,
-        Workspace: this.$store.getters.workspaceSubdomain
+      if (this.workspace) {
+        const headers = {
+          Authorization: this.$store.getters.accountToken,
+          Workspace: this.workspace
+        }
+        this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.workspace + '/whatsapp' })
+        this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.workspace + '/dispute' })
+        this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.workspace + '/alert' })
       }
-      this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp' })
-      this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute' })
-      this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/alert' })
     }
   }
 }

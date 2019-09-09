@@ -1,5 +1,5 @@
 <template>
-  <JusViewMain class="view-management">
+  <JusViewMain :loading-container="$store.state.loading" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
       <jus-loader v-show="$store.getters.disputeLoading" content="Carregando disputa(s)"/>
@@ -395,7 +395,12 @@ export default {
     }
   },
   beforeCreate () {
-    if (!this.$store.getters.disputeInitialLoad) this.$store.dispatch('loadDisputes')
+    if (!this.$store.getters.disputeInitialLoad) {
+      this.$store.commit('showLoading')
+      this.$store.dispatch('getDisputes').finally(() => {
+        this.$store.commit('hideLoading')
+      })
+    }
   },
   beforeMount () {
     setTimeout(() => {
