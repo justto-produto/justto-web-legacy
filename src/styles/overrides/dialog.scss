@@ -1,6 +1,9 @@
 @import '../colors';
 
 .el-dialog {
+  &__body {
+    word-break: break-word;
+  }
   width: 600px;
   border-radius: 6px;
   background-color: #ffffff;

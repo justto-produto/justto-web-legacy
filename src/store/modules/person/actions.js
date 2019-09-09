@@ -59,6 +59,17 @@ const actions = {
   //       })
   //   })
   // },
+  setPhone ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.put('api/persons/' + params.personId + '/phones', params.phoneDTO)
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
   changePersonName ({ commit }, person) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

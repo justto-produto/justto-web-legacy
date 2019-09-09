@@ -169,7 +169,7 @@
           </ul>
         </div>
         <div class="dispute-overview-view__actions">
-          <el-button plain @click="removeRole(role)">Excluir</el-button>
+          <el-button v-if="!role.roles.includes('NEGOTIATOR')" plain @click="removeRole(role)">Excluir</el-button>
           <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
         </div>
       </el-collapse-item>
@@ -609,7 +609,7 @@ export default {
     editRole () {
       let isValid = true
       this.$refs.roleForm.validateField(['name', 'documentNumber'], errorMessage => {
-        if (errorMessage)isValid = false
+        if (errorMessage) isValid = false
       })
       if (isValid) {
         let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))

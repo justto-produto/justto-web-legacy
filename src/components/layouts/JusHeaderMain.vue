@@ -26,7 +26,7 @@
           Disputa #{{ disputeId }}
         </h2>
       </div>
-      <div class="jus-header-main__whatsapp" @click="whatsappVisible = true">
+      <div class="jus-header-main__whatsapp" @click="toggleWhatsapDialog">
         <el-tooltip>
           <div slot="content">
             <span v-if="!isWhatsappConnected">
@@ -78,21 +78,7 @@
         </el-dropdown>
       </div>
     </el-header>
-    <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
-      <span slot="title">
-        <h2>Whatsapp</h2>
-      </span>
-      <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
-      <div v-else>
-        <h3>Whatsapp te desconectou</h3>
-        <p>
-          Estamos reiniciando sua conexão, aguarde para fazer a leitura do QRCODE
-        </p>
-      </div>
-      <span slot="footer">
-        <el-button plain @click="whatsappVisible = false">Fechar</el-button>
-      </span>
-    </el-dialog>
+    <jus-whatsapp />
   </div>
 </template>
 
@@ -108,8 +94,7 @@ export default {
   data () {
     return {
       dispute: '',
-      disputeId: '',
-      whatsappVisible: false
+      disputeId: ''
     }
   },
   computed: {
@@ -138,6 +123,9 @@ export default {
     this.disputeId = this.$route.params.id
   },
   methods: {
+    toggleWhatsapDialog () {
+      this.$store.commit('toggleWhatsapDialog')
+    },
     logout () {
       window.analytics.track('Logout realizado', {
         workspace: this.workspace,

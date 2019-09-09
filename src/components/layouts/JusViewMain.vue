@@ -101,6 +101,7 @@ export default {
   &__left-card, &__right-card {
     display: flex;
     max-height: 100%;
+    height: 100%;
     overflow-y: auto;
     .el-card__body {
       width: 100%;

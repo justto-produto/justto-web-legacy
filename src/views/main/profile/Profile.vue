@@ -10,7 +10,11 @@
     </template>
     <template slot="main">
       <div class="profile-view__container">
-        <el-form label-position="top">
+        <el-form
+          ref="profileForm"
+          :model="profileForm"
+          :rules="profileFormRules"
+          label-position="top">
           <el-form-item label="Nome">
             <el-input v-model="person.name">
               <el-button slot="append" @click="changeName">
@@ -26,35 +30,27 @@
               <el-button slot="append" @click="passwordModal">Alterar</el-button>
             </el-input>
           </el-form-item>
+          <el-form-item label="Contato" prop="phone">
+            <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="profileForm.phone">
+              <el-button slot="append" @click="updatePhone">Alterar</el-button>
+            </el-input>
+          </el-form-item>
         </el-form>
       </div>
     </template>
     <template slot="right-card">
-      <h3>WhatsApp</h3>
-      <jus-whatsapp v-if="$store.getters.whatsappStatus !== 'OFFLINE'" />
-      <div v-else>
-        <h2>Desculpe :(</h2>
-        <p>
-          Nosso servidor Whatsapp encontra-se instável neste momento.<br>
-          Tente novamente mais tarde ou entre em contato com nosso suporte técnico.
-        </p>
-      </div>
-      <br>
-      <hr>
-      <br>
-      <el-form label-position="top">
+      <h2>Equipe</h2>
+      <el-form label-position="top" class="mt20 mb40">
         <el-form-item label="Nome da equipe">
           <el-input v-model="teamName">
             <el-button slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
           </el-input>
         </el-form-item>
       </el-form>
-      <br>
-      <hr>
-      <br>
+      <el-divider/>
       <div class="profile-view__team">
         <h3>
-          Equipe
+          Membros
           <a href="#" @click.prevent="dialogInvite = true">
             <jus-icon icon="add" />
           </a>
@@ -146,12 +142,24 @@
 </template>
 
 <script>
+import { mask } from 'vue-the-mask'
+
 export default {
   name: 'Profile',
+  directives: { mask },
   components: {
     JusWhatsapp: () => import('@/components/layouts/JusWhatsapp')
   },
   data () {
+    const validatePhone = (rule, value, callback) => {
+      if (value) {
+        if (value && value.length > 13) {
+          callback()
+        } else callback(new Error())
+      } else {
+        callback()
+      }
+    }
     return {
       dialogPassword: false,
       dialogMember: false,
@@ -159,19 +167,13 @@ export default {
       roles: [{ key: 'NEGOTIATOR', value: 'Negociador' }, { key: 'ADMINISTRATOR', value: 'Administrador' }],
       profileForm: {
         newPassword: '',
-        password: ''
+        password: '',
+        phone: ''
       },
-      syncForm: {
-        email: '',
-        password: ''
-      },
-      syncFormRules: {
-        email: [
-          { required: true, message: 'Campo obrigatório', trigger: 'change' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['change'] }
-        ],
-        password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'change' }
+      profileFormRules: {
+        phone: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
         ]
       },
       inviteForm: {
@@ -188,13 +190,22 @@ export default {
       person: {},
       teamName: '',
       teamMembers: [],
-      currentEditMember: {}
+      currentEditMember: {},
+      phoneDTO: ''
     }
   },
   mounted () {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.getters.currentPerson))
     this.teamName = this.$store.state.workspaceModule.name + ''
+    this.phoneDTO = this.$store.getters.currentPersonPhone || {}
+    if (this.phoneDTO && this.phoneDTO.number) {
+      if (this.phoneDTO.number.length === 13) {
+        this.profileForm.phone = this.phoneDTO.number.substr(2)
+      } else {
+        this.profileForm.phone = this.phoneDTO.number
+      }
+    }
   },
   methods: {
     getMembers () {
@@ -233,6 +244,26 @@ export default {
     },
     cancelChangePassword () {
       this.dialogPassword = false
+    },
+    updatePhone () {
+      this.$refs.profileForm.validateField('phone', errorMessage => {
+        if (!errorMessage) {
+          this.phoneDTO.number = this.profileForm.phone
+          this.phoneDTO.isMain = true
+          this.$store.dispatch('setPhone', {
+            phoneDTO: this.phoneDTO,
+            personId: this.person.id
+          }).then(response => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Telefone de contato alterado com sucesso.',
+              type: 'success'
+            })
+          }).catch(() => {
+            this.$jusNotification({ type: 'error' })
+          })
+        }
+      })
     },
     passwordModal () {
       if (this.profileForm.newPassword) {
@@ -299,28 +330,6 @@ export default {
           this.$store.commit('hideLoading')
           this.$jusNotification({ type: 'error' })
         })
-      })
-    },
-    syncNewEmail () {
-      this.$refs['syncForm'].validate((valid) => {
-        if (valid) {
-          this.$store.dispatch('showLoading')
-          this.$store.dispatch('syncInbox', this.syncForm)
-            .then(response => {
-              window.analytics.track('Sincroniza novo e-mail')
-              this.$jusNotification({
-                title: 'Yay!',
-                message: 'Email sincronizado com sucesso.',
-                type: 'success'
-              })
-            }).catch(() => {
-              this.$jusNotification({ type: 'error' })
-            }).finally(() => {
-              this.$store.dispatch('hideLoading')
-            })
-        } else {
-          return false
-        }
       })
     },
     removeMember (id, name) {
@@ -434,6 +443,7 @@ export default {
     }
   }
   &__team {
+    margin-top: 40px;
     h3 a {
       float: right;
     }

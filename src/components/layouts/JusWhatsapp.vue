@@ -1,58 +1,72 @@
 <template>
-  <div class="jus-whatsapp">
-    <div class="jus-whatsapp__container">
-      <div>
-        <div
-          v-loading="isWhatsappStarting"
-          :class="{'is-connected' : isWhatsappConnected}"
-          class="jus-whatsapp__qrcode">
-          <img :src="qrCode" class="qrcode">
-          <jus-icon v-if="!isWhatsappReady && !isWhatsappStarting" icon="check" class="check"/>
-        </div>
-        <div v-if="status" class="jus-whatsapp__status">
-          Status:
-          <strong>{{ status.message }}</strong>
-          <jus-status-dot :type="status.type" />
-        </div>
-      </div>
-      <div v-show="isWhatsappReady || isWhatsappStarting" class="jus-whatsapp__status-info">
-        1. Abra o WhatsApp em seu telefone
-        <br><br>
-        2. Toque em Menu ou Configurações e selecione WhatsApp Web
-        <br><br>
-        3. Aponte seu telefone para esta tela para capturar o código
-        <br><br>
-        4. Aguarde a sincronização, esse processo pode levar alguns minutos
-      </div>
-      <div v-show="isWhatsappConnected" class="jus-whatsapp__status-info">
-        <p>
-          Clique abaixo para enviar uma mensagem de teste.
-        </p>
-        <el-form
-          ref="numberForm"
-          :model="numberForm"
-          label-position="top"
-          @submit.native.prevent="sendMessage">
-          <el-form-item label="Número" prop="number">
-            <el-input
-              v-mask="['(##) ####-####', '(##) #####-####']"
-              v-model="numberForm.number"
-              name="number"/>
-          </el-form-item>
-          <div class="jus-whatsapp__actions">
-            <el-button
-              v-loading="sending"
-              :disabled="!validNumber"
-              type="primary"
-              native-type="submit">
-              Testar
-            </el-button>
-            <el-button plain @click="restart">Alterar número</el-button>
+  <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
+    <span slot="title">
+      <h2>Whatsapp</h2>
+    </span>
+    <div v-if="$store.getters.whatsappStatus !== 'OFFLINE'" class="jus-whatsapp">
+      <div class="jus-whatsapp__container">
+        <div>
+          <div
+            v-loading="isWhatsappStarting"
+            :class="{'is-connected' : isWhatsappConnected}"
+            class="jus-whatsapp__qrcode">
+            <img :src="qrCode" class="qrcode">
+            <jus-icon v-if="!isWhatsappReady && !isWhatsappStarting" icon="check" class="check"/>
           </div>
-        </el-form>
+          <div v-if="status" class="jus-whatsapp__status">
+            Status:
+            <strong>{{ status.message }}</strong>
+            <jus-status-dot :type="status.type" />
+          </div>
+        </div>
+        <div v-show="isWhatsappReady || isWhatsappStarting" class="jus-whatsapp__status-info">
+          1. Abra o WhatsApp em seu telefone
+          <br><br>
+          2. Toque em Menu ou Configurações e selecione WhatsApp Web
+          <br><br>
+          3. Aponte seu telefone para esta tela para capturar o código
+          <br><br>
+          4. Aguarde a sincronização, esse processo pode levar alguns minutos
+        </div>
+        <div v-show="isWhatsappConnected" class="jus-whatsapp__status-info">
+          <p>
+            Clique abaixo para enviar uma mensagem de teste.
+          </p>
+          <el-form
+            ref="numberForm"
+            :model="numberForm"
+            label-position="top"
+            @submit.native.prevent="sendMessage">
+            <el-form-item label="Número" prop="number">
+              <el-input
+                v-mask="['(##) ####-####', '(##) #####-####']"
+                v-model="numberForm.number"
+                name="number"/>
+            </el-form-item>
+            <div class="jus-whatsapp__actions">
+              <el-button
+                v-loading="sending"
+                :disabled="!validNumber"
+                type="primary"
+                native-type="submit">
+                Testar
+              </el-button>
+              <el-button plain @click="restart">Alterar número</el-button>
+            </div>
+          </el-form>
+        </div>
       </div>
     </div>
-  </div>
+    <div v-else>
+      <h3>Whatsapp foi desconectado :(</h3>
+      <p>
+        Estamos reiniciando sua conexão, aguarde para fazer uma nova leitura do QRCODE.
+      </p>
+    </div>
+    <span slot="footer">
+      <el-button plain @click="whatsappVisible = false">Fechar</el-button>
+    </span>
+  </el-dialog>
 </template>
 
 <script>
@@ -70,6 +84,14 @@ export default {
     }
   },
   computed: {
+    whatsappVisible: {
+      get () {
+        return this.$store.state.whatsapDialog
+      },
+      set () {
+        this.$store.commit('toggleWhatsapDialog')
+      }
+    },
     qrCode () {
       return this.$store.getters.whatsappQrCode
     },
