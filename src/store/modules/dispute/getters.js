@@ -69,7 +69,7 @@ const disputeGetters = {
         })
         state.filters.filteredPerson = true
       }
-      if (state.filters.sort.order && !state.loadingNew) {
+      if (state.filters.sort.order) {
         filteredDisputes.sort((a, b) => {
           let compareA = JSON.parse(JSON.stringify(a))
           let compareB = JSON.parse(JSON.stringify(b))
@@ -100,8 +100,7 @@ const disputeGetters = {
   },
   disputeStatuses: state => state.statuses,
   disputeActiveTab: state => state.filters.tab,
-  disputesPerPage: state => state.filters.perPage,
-  disputeLoading: state => state.loadingNew
+  disputesPerPage: state => state.filters.perPage
 }
 
 export default disputeGetters

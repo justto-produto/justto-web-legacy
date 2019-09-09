@@ -2,7 +2,6 @@
   <JusViewMain :loading-main="$store.state.loading" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
-      <jus-loader v-show="$store.getters.disputeLoading" content="Carregando disputa(s)"/>
     </template>
     <template slot="actions">
       <management-actions

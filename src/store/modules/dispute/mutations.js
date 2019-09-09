@@ -2,8 +2,6 @@ import Vue from 'vue'
 import moment from 'moment'
 import { getDisputeVMList } from './model'
 
-let newDisputeTimeout
-
 const disputeMutations = {
   setDisputes (state, disputes) {
     state.disputes = getDisputeVMList(disputes)
@@ -51,12 +49,7 @@ const disputeMutations = {
     state.filters.filteredPerson = false
   },
   updateDispute (state, disputeChanged) {
-    state.loadingNew = true
     disputeChanged.disputeNextToExpire = moment(disputeChanged.expirationDate.dateTime).isBetween(moment(), moment().add(3, 'day'))
-    clearTimeout(newDisputeTimeout)
-    newDisputeTimeout = setTimeout(() => {
-      state.loadingNew = false
-    }, 500)
     Vue.nextTick(() => {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       if (disputeIndex === -1) {
