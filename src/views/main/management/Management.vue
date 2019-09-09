@@ -88,7 +88,7 @@
           @row-click="handleRowClick"
           @sort-change="handleSortChange"
           @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="40px" />
+          <el-table-column type="selection" width="42px" />
           <el-table-column type="expand" width="20px">
             <template slot-scope="props">
               <jus-dispute-resume :dispute="props.row" />

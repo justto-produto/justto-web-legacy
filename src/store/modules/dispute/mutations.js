@@ -56,8 +56,8 @@ const disputeMutations = {
         state.disputes.push(disputeChanged)
       } else {
         let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-        if (dispute.updateAt && disputeChanged.updateAt) {
-          if (moment(dispute.updateAt.dateTime).isSameOrBefore(moment(disputeChanged.updateAt.dateTime))) {
+        if (dispute.updatedAt && disputeChanged.updatedAt) {
+          if (moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
             Vue.set(state.disputes, disputeIndex, disputeChanged)
           }
         } else {
