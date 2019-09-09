@@ -397,7 +397,10 @@ export default {
   beforeCreate () {
     if (!this.$store.getters.disputeInitialLoad) {
       this.$store.commit('showLoading')
-      this.$store.dispatch('getDisputes').finally(() => {
+      this.$store.dispatch('getDisputes').catch(error => {
+        console.error(error)
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
         this.$store.commit('hideLoading')
       })
     }
