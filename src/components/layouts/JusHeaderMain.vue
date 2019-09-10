@@ -99,7 +99,7 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.getters.currentPersonName
+      return this.$store.getters.loggedPersonName
     },
     workspace () {
       return this.$store.state.workspaceModule.name

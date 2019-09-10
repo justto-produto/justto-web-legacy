@@ -62,9 +62,8 @@ export default {
 
 .jus-filter-button {
   position: relative;
-  width: 56px;
-  height: 40px;
-  margin-right: 10px;
+  display: inline-block;
+  white-space: nowrap;
   .el-input {
     position: absolute;
   }

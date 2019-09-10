@@ -70,12 +70,6 @@ const router = new Router({
           }
         },
         {
-          name: 'review',
-          path: 'management/review/',
-          component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Review'),
-          props: { slide: true }
-        },
-        {
           name: 'profile',
           path: 'profile',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/profile/Profile'),

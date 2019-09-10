@@ -399,10 +399,10 @@ export default {
       return this.$store.getters.whatsappStatus
     },
     validName () {
-      if (this.$store.getters.currentPersonName && this.$store.getters.currentPersonName !== this.$store.state.accountModule.email) {
+      if (this.$store.getters.loggedPersonName && this.$store.getters.loggedPersonName !== this.$store.state.accountModule.email) {
         return true
       } else {
-        if (!this.$store.getters.currentPersonName || (this.$store.getters.currentPersonName === this.$store.state.accountModule.email)) {
+        if (!this.$store.getters.loggedPersonName || (this.$store.getters.loggedPersonName === this.$store.state.accountModule.email)) {
           return false
         }
       }
