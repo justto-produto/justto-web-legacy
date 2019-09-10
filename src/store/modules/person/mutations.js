@@ -1,9 +1,9 @@
 const mutations = {
-  setCurrentPerson (state, currentPerson) {
-    if (currentPerson) state.currentPerson = currentPerson
+  setLoggedPerson (state, loggedPerson) {
+    if (loggedPerson) state.loggedPerson = loggedPerson
   },
-  clearCurrentPerson (state) {
-    state.currentPerson = {}
+  clearLoggedPerson (state) {
+    state.loggedPerson = {}
   }
 }
 

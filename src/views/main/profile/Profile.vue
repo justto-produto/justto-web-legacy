@@ -196,9 +196,9 @@ export default {
   },
   mounted () {
     this.getMembers()
-    this.person = JSON.parse(JSON.stringify(this.$store.getters.currentPerson))
+    this.person = JSON.parse(JSON.stringify(this.$store.getters.loggedPerson))
     this.teamName = this.$store.state.workspaceModule.name + ''
-    this.phoneDTO = this.$store.getters.currentPersonPhone || {}
+    this.phoneDTO = this.$store.getters.loggedPersonPhone || {}
     if (this.phoneDTO && this.phoneDTO.number) {
       if (this.phoneDTO.number.length === 13) {
         this.profileForm.phone = this.phoneDTO.number.substr(2)
