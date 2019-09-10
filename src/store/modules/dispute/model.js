@@ -78,7 +78,9 @@ const getDisputeVM = function (dispute) {
       vm.lastCounterOfferName = lastCounterOffer.slice(-1).pop().role.name
     }
     if (['SETTLED', 'CHECKOUT', 'ACCEPTED'].includes(dispute.status)) {
-      vm.disputeDealValue = object.offers.slice(-1).pop().value
+      if (object.offers.length) {
+        vm.disputeDealValue = object.offers.slice(-1).pop().value
+      }
     }
   }
   vm.lastInteractionTooltip = getLastInteractionTooltip(vm.lastInteractionType)
