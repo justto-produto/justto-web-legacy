@@ -6,18 +6,16 @@ const dispute = {
   state: {
     disputes: [],
     occurrence: [],
-    initialLoad: false,
-    filters: {
-      tab: '0',
-      filterPersonId: 0,
-      terms: {},
-      filterTerm: '',
-      priorityOnly: false,
-      perPage: 20,
-      sort: {
-        prop: null,
-        order: null
-      }
+    filter: {
+      persons: [],
+      campaigns: [],
+      expirationDateTime: {}
+    },
+    query: {
+      page: 1,
+      size: 4,
+      initialsize: 4,
+      total: 0
     },
     statuses: {}
   },

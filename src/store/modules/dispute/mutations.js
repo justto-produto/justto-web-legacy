@@ -2,6 +2,22 @@ import Vue from 'vue'
 import moment from 'moment'
 
 const disputeMutations = {
+  setDisputes (state, pageable) {
+    state.disputes = pageable.content
+    state.query.size = pageable.size
+    state.query.total = pageable.totalElements
+  },
+  setDisputesSize (state, size) {
+    state.query.size = size
+  },
+  setDisputesPage (state, page) {
+    state.query.page = page
+  },
+
+
+
+
+
   SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
     Vue.nextTick(() => {
       if (!newOccurrence.id) {
@@ -45,23 +61,14 @@ const disputeMutations = {
       Vue.delete(state.disputes, disputeIndex)
     })
   }
-  // setDisputes (state, disputes) {
-  //   state.disputes = getDisputeVMList(disputes)
-  // },
   // clearDisputes (state) {
   //   state.disputes = []
-  // },
-  // clearDisputeFilters (state) {
-  //   state.filters.terms = {}
   // },
   // setDisputeTab (state, tab) {
   //   state.filters.tab = tab
   // },
   // clearDisputeTab (state, tab) {
   //   state.filters.tab = '0'
-  // },
-  // setDisputeFilter (state, terms) {
-  //   state.filters.terms = terms
   // },
   // setDisputeFilterTerm (state, term) {
   //   state.filters.filterTerm = term

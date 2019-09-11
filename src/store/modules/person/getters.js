@@ -1,4 +1,4 @@
-const disputeGetters = {
+const getters = {
   loggedPerson: state => state.loggedPerson,
   loggedPersonName: state => {
     return state.loggedPerson.name
@@ -16,4 +16,4 @@ const disputeGetters = {
   }
 }
 
-export default disputeGetters
+export default getters

@@ -1,5 +1,5 @@
 <template>
-  <div class="jus-management-filters">
+  <div class="management-filters">
     <el-form v-loading="loading" :model="filters" label-position="top">
       <el-row :gutter="20">
         <!--  CAMPANHA -->
@@ -88,7 +88,7 @@
         </el-col>
         <!-- STATUS -->
         <!-- <el-col v-if="isEngagement" :span="12">
-          <el-form-item label="Status" class="jus-management-filters__switch">
+          <el-form-item label="Status" class="management-filters__switch">
             <div>
               <div>Pausados</div>
               <el-switch v-model="filters.status" active-value="PAUSED" :inactive-value="false"/>
@@ -118,7 +118,7 @@
         </el-col>
         <!-- FAVORITOS -->
         <el-col :span="12">
-          <el-form-item label="Exibir somente:" class="jus-management-filters__switch">
+          <el-form-item label="Exibir somente:" class="management-filters__switch">
             <div>
               <div>
                 <jus-icon icon="golden-star" /> Disputas favoritas
@@ -199,11 +199,11 @@
 </template>
 
 <script>
-import { Money } from 'v-money'
-
 export default {
-  name: 'JusManagementFilters',
-  components: { Money },
+  name: 'ManagementFilters',
+  components: { 
+    Money: () => import { Money } from 'v-money'
+  },
   props: {
     tabIndex: {
       type: String,
@@ -308,7 +308,7 @@ export default {
 </script>
 
 <style lang="scss">
-.jus-management-filters {
+.management-filters {
   .el-form-item__content {
     // max-height: 40px;
   }

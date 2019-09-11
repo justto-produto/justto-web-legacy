@@ -4,7 +4,7 @@ import getters from './getters'
 
 const personModule = {
   state: {
-    loggedPerson: null
+    loggedPerson: {}
   },
   mutations: mutations,
   actions: actions,

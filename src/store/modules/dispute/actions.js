@@ -14,12 +14,13 @@ const disputeActions = {
         })
     })
   },
-  getDisputes ({ commit }) {
+  getDisputes ({ commit, state }, disputeFilterDTO) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes')
+      const page = state.query.page - 1
+      axios.post('api/disputes/search?page=' + page + '&size=' + state.query.size, disputeFilterDTO)
         .then(response => {
-          commit('setDisputes', response.data.content)
+          commit('setDisputes', response.data)
           resolve(response.data)
         })
         .catch(error => {
@@ -27,35 +28,21 @@ const disputeActions = {
         })
     })
   },
-  editRole ({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error.response)
-        })
-    })
-  },
-  removeRole ({ commit }, role) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
-  // editCaseReason ({ commit }, params) {
+  // editRole ({ commit }, params) {
   //   return new Promise((resolve, reject) => {
   //     // eslint-disable-next-line
-  //     axios.put('api/disputes/' + params.disputeId + '/update-reason', {
-  //       reason: params.reasonValue
-  //     })
+  //     axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
+  //       .then(response => {
+  //         resolve(response.data)
+  //       }).catch(error => {
+  //         reject(error.response)
+  //       })
+  //   })
+  // },
+  // removeRole ({ commit }, role) {
+  //   return new Promise((resolve, reject) => {
+  //     // eslint-disable-next-line
+  //     axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
   //       .then(response => {
   //         resolve(response.data)
   //       })
@@ -64,21 +51,14 @@ const disputeActions = {
   //       })
   //   })
   // },
-  // exportDisputes ({ rootState }, disputeIds) {
+  // editCaseReason ({ commit }, params) {
   //   return new Promise((resolve, reject) => {
   //     // eslint-disable-next-line
-  //     axios.get('api/search/' + rootState.workspaceModule.id + '/v_el_disputes/export', {
-  //       responseType: 'arraybuffer',
-  //       query: { bool: { must: [{ terms: { disputeid: disputeIds } }] } } })
+  //     axios.put('api/disputes/' + params.disputeId + '/update-reason', {
+  //       reason: params.reasonValue
+  //     })
   //       .then(response => {
-  //         const blob = new Blob([response.data], {
-  //           // type: 'application/vnd.ms-excel'
-  //           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  //         })
-  //         let reg = /(?:filename\*?=)(?<filename>(['"])[\s\S]*?\2|[^;\n]*)/
-  //         let fileName = response.headers['content-disposition'].match(reg).groups.filename
-  //         FileSaver.saveAs(blob, fileName)
-  //         resolve(response)
+  //         resolve(response.data)
   //       })
   //       .catch(error => {
   //         reject(error)

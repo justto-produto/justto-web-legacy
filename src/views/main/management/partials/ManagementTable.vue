@@ -177,6 +177,9 @@
 <script>
 export default {
   name: 'ManagementTable',
+  components: {
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
+  },
   props: {
     activeTab: {
       type: String,
@@ -213,6 +216,29 @@ export default {
           this.selectedIds.push(dispute.id)
         }
       }
+    },
+    openNewTab (disputeId) {
+      let routeData = this.$router.resolve({ name: 'dispute', params: { id: disputeId } })
+      window.open(routeData.href, '_blank')
+    },
+    setFavorite (action, id, tab) {
+      let label = action === 'favorite' ? 'favoritada' : 'removida de favoritos'
+      this.$store.dispatch('sendDisputeAction', {
+        action: action,
+        disputeId: id
+      }).then(() => {
+        window.analytics.track('Caso em "' + tab + '" ' + label, {
+          aba: tab,
+          action: label
+        })
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Disputa ' + label + ' com sucesso.',
+          type: 'success'
+        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      })
     }
   }
 }

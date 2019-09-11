@@ -61,7 +61,16 @@
           </el-button>
         </div>
       </div>
-      <management-table :disputes="[]" />
+      <management-table :disputes="disputes" />
+      <el-pagination
+        :total.sync="disputesTotalLength"
+        :page-size.sync="disputesPerPage"
+        :current-page.sync="currentPage"
+        :pager-count="15"
+        :page-sizes="[initialDisputesPerPage, 30, 50, 100]"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleChangePagination"
+        @current-change="handleChangePagination" />
     </template>
   </jus-view-main>
 </template>
@@ -70,14 +79,14 @@
 export default {
   name: 'Management',
   components: {
-    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
     ManagementTable: () => import('./partials/ManagementTable')
   },
   data () {
     return {
       activeTab: '0',
       loadingExport: false,
-      filtersVisible: false
+      filtersVisible: false,
+      initialDisputesPerPage: this.$store.getters.disputesInitialSize
     }
   },
   computed: {
@@ -86,12 +95,51 @@ export default {
     newDealsLength () {},
     filters () {},
     disputes () {
-      return  []
+      return this.$store.getters.disputes
+    },
+    disputesTotalLength () {
+      return this.$store.getters.disputesTotal
+    },
+    disputesPerPage: {
+      get () {
+        return this.$store.getters.disputesSize
+      },
+      set (size) {
+        this.$store.commit('setDisputesSize', size)
+      }
+    },
+    currentPage: {
+      get () {
+        return this.$store.getters.disputesPage
+      },
+      set (size) {
+        this.$store.commit('setDisputesPage', size)
+      }
     }
   },
+  created () {
+    this.getDisputes().then(() => {
+      this.$store.watch(state => state.disputeModule.query['page'], () => {
+        this.getDisputes()
+      })
+      this.$store.watch(state => state.disputeModule.query['size'], () => {
+        this.getDisputes()
+      })
+    })
+  },
   methods: {
+    getDisputes () {
+      return this.$store.dispatch('getDisputes')
+    },
     handleChangeTab () {},
-    exportDisputes () {}
+    exportDisputes () {},
+    handleChangePagination () {
+
+      // this.$nextTick(() => {
+      //   let main = this.$el.querySelector('.el-table__body-wrapper')
+      //   main.scrollTop = 0
+      // })
+    }
   }
 }
 </script>
