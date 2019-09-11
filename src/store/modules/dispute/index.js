@@ -13,8 +13,8 @@ const dispute = {
     },
     query: {
       page: 1,
-      size: 4,
-      initialsize: 4,
+      size: 20,
+      initialsize: 20,
       total: 0
     },
     statuses: {}

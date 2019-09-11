@@ -96,7 +96,7 @@
       "pagesize": " por página",
       "goto": "Ir para",
       "pageClassifier": "",
-      "total": "Total: {total}"
+      "total": "Total de disputas: {total}"
     }
   }
 }

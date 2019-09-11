@@ -134,11 +134,10 @@ export default {
     handleChangeTab () {},
     exportDisputes () {},
     handleChangePagination () {
-
-      // this.$nextTick(() => {
-      //   let main = this.$el.querySelector('.el-table__body-wrapper')
-      //   main.scrollTop = 0
-      // })
+      this.$nextTick(() => {
+        let main = this.$el.querySelector('.el-table__body-wrapper')
+        main.scrollTop = 0
+      })
     }
   }
 }
@@ -164,6 +163,14 @@ export default {
       margin: -3px 0px;
       width: 14px;
     }
+  }
+  .jus-main-view__main-card .el-card__body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .el-pagination {
+    margin: 20px 0 0;
   }
 }
 </style>

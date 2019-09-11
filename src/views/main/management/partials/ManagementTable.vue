@@ -4,6 +4,7 @@
     :data="disputes"
     :row-class-name="tableRowClassName"
     size="mini"
+    height="100%"
     class="management-table el-table--disputes"
     @row-click="handleRowClick"
     @sort-change="handleSortChange"
