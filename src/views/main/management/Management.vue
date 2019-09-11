@@ -1,5 +1,5 @@
 <template>
-  <jus-view-main class="view-management">
+  <jus-view-main class="view-management" :loading-main="loadingDisputes">
     <template slot="title">
       <h1>Gerenciamento</h1>
     </template>
@@ -83,6 +83,7 @@ export default {
   },
   data () {
     return {
+      loadingDisputes: false,
       activeTab: '0',
       loadingExport: false,
       filtersVisible: false,
@@ -129,7 +130,10 @@ export default {
   },
   methods: {
     getDisputes () {
-      return this.$store.dispatch('getDisputes')
+      this.loadingDisputes = true
+      return this.$store.dispatch('getDisputes').finally(() => {
+        this.loadingDisputes = false
+      })
     },
     handleChangeTab () {},
     exportDisputes () {},
@@ -170,7 +174,8 @@ export default {
     height: 100%;
   }
   .el-pagination {
-    margin: 20px 0 0;
+    text-align: center;
+    margin-top: 10px;
   }
 }
 </style>
