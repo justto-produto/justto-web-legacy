@@ -6,10 +6,9 @@ const dispute = {
   state: {
     disputes: [],
     occurrence: [],
-    filter: {
-      persons: [],
-      campaigns: [],
-      expirationDateTime: {}
+    tab: '0',
+    filters: {
+      status: ['ENGAGEMENT']
     },
     query: {
       page: 1,

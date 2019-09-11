@@ -18,7 +18,6 @@
       <!-- MAIN CARD SLOT -->
       <el-card
         v-loading="loadingMain"
-        :class="{'jus-main-view__loading-main': loadingMain}"
         element-loading-text="Carregando disputas..."
         class="jus-main-view__main-card">
         <slot name="main"/>
@@ -109,9 +108,6 @@ export default {
   }
   &--full-height {
     height: auto;
-  }
-  &__loading-main{
-    overflow: hidden;
   }
   &.fullScreen {
     height: 100%;

@@ -315,7 +315,7 @@ export default {
         return this.$store.getters.disputeActiveTab
       },
       set (tab) {
-        this.$store.commit('setDisputeTab', tab)
+        this.$store.commit('setDisputesTab', tab)
       }
     },
     multiActive () {

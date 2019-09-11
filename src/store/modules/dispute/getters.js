@@ -7,7 +7,9 @@ const disputeGetters = {
   disputesPage: state => state.query.page,
   disputesSize: state => state.query.size,
   disputesInitialSize: state => state.query.initialsize,
-  disputesTotal: state => state.query.total
+  disputesTotal: state => state.query.total,
+  disputeFilters: state => state.filters,
+  disputeTab: state => state.tab
   // disputeOccurrences: state => state.occurrence.sort((a, b) => {
   //   if (moment(a.createAt.dateTime).isAfter(b.createAt.dateTime)) return 1
   //   if (moment(a.createAt.dateTime).isBefore(b.createAt.dateTime)) return -1

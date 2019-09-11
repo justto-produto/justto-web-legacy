@@ -61,6 +61,9 @@
           </el-button>
         </div>
       </div>
+      <management-filters
+        :visible.sync="filtersVisible"
+        :tab-index="activeTab" />
       <management-table :disputes="disputes" />
       <el-pagination
         :total.sync="disputesTotalLength"
@@ -68,9 +71,7 @@
         :current-page.sync="currentPage"
         :pager-count="15"
         :page-sizes="[initialDisputesPerPage, 30, 50, 100]"
-        layout="total, prev, pager, next, sizes"
-        @size-change="handleChangePagination"
-        @current-change="handleChangePagination" />
+        layout="total, prev, pager, next, sizes" />
     </template>
   </jus-view-main>
 </template>
@@ -79,12 +80,12 @@
 export default {
   name: 'Management',
   components: {
+    ManagementFilters: () => import('./partials/ManagementFilters'),
     ManagementTable: () => import('./partials/ManagementTable')
   },
   data () {
     return {
       loadingDisputes: false,
-      activeTab: '0',
       loadingExport: false,
       filtersVisible: false,
       initialDisputesPerPage: this.$store.getters.disputesInitialSize
@@ -94,9 +95,14 @@ export default {
     engagementLength () {},
     interactionLength () {},
     newDealsLength () {},
-    filters () {},
     disputes () {
       return this.$store.getters.disputes
+    },
+    activeTab: {
+      get () { return this.$store.getters.disputeTab},
+      set (tab) {
+        this.$store.commit('setDisputesTab', tab)
+      }
     },
     disputesTotalLength () {
       return this.$store.getters.disputesTotal
@@ -107,6 +113,7 @@ export default {
       },
       set (size) {
         this.$store.commit('setDisputesSize', size)
+        this.getDisputes()
       }
     },
     currentPage: {
@@ -115,34 +122,40 @@ export default {
       },
       set (size) {
         this.$store.commit('setDisputesPage', size)
+        this.getDisputes()
       }
     }
-  },
-  created () {
-    this.getDisputes().then(() => {
-      this.$store.watch(state => state.disputeModule.query['page'], () => {
-        this.getDisputes()
-      })
-      this.$store.watch(state => state.disputeModule.query['size'], () => {
-        this.getDisputes()
-      })
-    })
   },
   methods: {
     getDisputes () {
       this.loadingDisputes = true
       return this.$store.dispatch('getDisputes').finally(() => {
         this.loadingDisputes = false
+        this.$nextTick(() => {
+          let main = this.$el.querySelector('.el-table__body-wrapper')
+          if (main) {
+            main.scrollTop = 0
+          }
+        })
       })
     },
-    handleChangeTab () {},
-    exportDisputes () {},
-    handleChangePagination () {
-      this.$nextTick(() => {
-        let main = this.$el.querySelector('.el-table__body-wrapper')
-        main.scrollTop = 0
-      })
-    }
+    handleChangeTab (tab) {
+      switch (tab) {
+        case '0':
+          this.$store.commit('setDisputesFilters', { status: ['ENGAGEMENT'] })
+          break;
+        case '1':
+          this.$store.commit('setDisputesFilters', { status: ['RUNNING'] })
+          break;
+        case '2':
+          this.$store.commit('setDisputesFilters', { status: ['ACCEPTED', 'CHECKOUT'] })
+          break;
+        default:
+        this.$store.commit('removeDisputesFilter', 'status')
+      }
+      this.getDisputes()
+    },
+    exportDisputes () {}
   }
 }
 </script>

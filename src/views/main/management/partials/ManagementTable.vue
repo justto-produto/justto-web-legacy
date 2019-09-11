@@ -136,7 +136,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="activeTab === '3'"
+      v-if="activeTab === '0'"
       :sortable="false"
       label="Status"
       prop="status"
@@ -198,7 +198,8 @@ export default {
   },
   methods: {
     tableRowClassName ({ row, rowIndex }) {
-      if (!row.visualized && ['1', '2'].includes(this.activeTab)) {
+      // if (row.visualized && ['1', '2'].includes(this.activeTab)) {
+      if (!row.visualized && ['0', '2'].includes(this.activeTab)) {
         return 'el-table__row--visualized-row'
       }
     },

@@ -7,15 +7,30 @@ const disputeMutations = {
     state.query.size = pageable.size
     state.query.total = pageable.totalElements
   },
+  clearDisputes (state) {
+    state.disputes = []
+  },
   setDisputesSize (state, size) {
     state.query.size = size
   },
   setDisputesPage (state, page) {
     state.query.page = page
   },
-
-
-
+  setDisputesFilters (state, filters) {
+    Object.assign(state.filters, filters)
+  },
+  removeDisputesFilter (state, filter) {
+    delete state.filters[filter]
+  },
+  clearDisputeFilters (state) {
+    state.filters = { status: ['ENGAGEMENT'] }
+  },
+  setDisputesTab (state, tab) {
+    state.tab = tab
+  },
+  clearDisputeTab (state, tab) {
+    state.tab = '0'
+  },
 
 
   SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
@@ -60,10 +75,8 @@ const disputeMutations = {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       Vue.delete(state.disputes, disputeIndex)
     })
-  }
-  // clearDisputes (state) {
-  //   state.disputes = []
-  // },
+  },
+
   // setDisputeTab (state, tab) {
   //   state.filters.tab = tab
   // },

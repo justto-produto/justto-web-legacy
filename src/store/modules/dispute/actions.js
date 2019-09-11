@@ -14,18 +14,22 @@ const disputeActions = {
         })
     })
   },
-  getDisputes ({ commit, state }, disputeFilterDTO) {
+  getDisputes ({ commit, state }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       const page = state.query.page - 1
-      axios.post('api/disputes/search?page=' + page + '&size=' + state.query.size, disputeFilterDTO)
-        .then(response => {
-          commit('setDisputes', response.data)
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
+      axios.post(
+        'api/disputes/search?page=' + page +
+        '&size=' + state.query.size, //+
+        // '&sort=visualized&visualized.dir=desc',
+        state.filters
+      ).then(response => {
+        commit('setDisputes', response.data)
+        resolve(response.data)
+      })
+      .catch(error => {
+        reject(error)
+      })
     })
   },
   // editRole ({ commit }, params) {

@@ -94,9 +94,9 @@ export default {
           Authorization: this.$store.getters.accountToken,
           Workspace: this.workspace
         }
-        this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.workspace + '/whatsapp' })
-        this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.workspace + '/dispute' })
-        this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.workspace + '/alert' })
+        // this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.workspace + '/whatsapp' })
+        // this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.workspace + '/dispute' })
+        // this.$socket.emit('subscribe', { headers, channel: '/topic/' + this.workspace + '/alert' })
       }
     }
   }
