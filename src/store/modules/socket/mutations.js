@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 const mutations = {
   // CHAT
   SOCKET_join (state, join) {

@@ -62,6 +62,7 @@ export default {
     return {
       isCollapse: true,
       workspace: '',
+      personId: '',
       headers: ''
     }
   },
@@ -75,7 +76,8 @@ export default {
     })
   },
   beforeMount () {
-    this.workspace = this.$store.getters.workspaceSubdomain
+    this.workspace = this.workspace
+    this.personId = this.$store.getters.loggedPersonId
     this.headers = {
       Authorization: this.$store.getters.accountToken,
       Workspace: this.workspace
@@ -84,9 +86,9 @@ export default {
   },
   beforeDestroy () {
     this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
-    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.workspacePerson.id + '/dispute' })
-    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.workspacePerson.id + '/alert' })
-    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.workspacePerson.id + '/summary' })
+    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
+    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/alert' })
+    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/summary' })
   },
   sockets: {
     reconnect () {
@@ -97,9 +99,9 @@ export default {
     subscribe () {
       if (this.workspace) {
         this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
-        this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.$store.getters.workspacePerson.id + '/dispute' })
+        this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
         this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/alert' })
-        this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.$store.getters.workspacePerson.id + '/summary' })
+        this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/summary' })
       }
     }
   }

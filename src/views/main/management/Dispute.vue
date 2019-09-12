@@ -453,8 +453,7 @@ export default {
   },
   created () {
     this.id = this.$route.params.id
-    this.$store.dispatch('getDispute', this.id);
-
+    this.$store.dispatch('getDispute', this.id)
     this.getOccurrences()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
@@ -524,7 +523,7 @@ export default {
     getOccurrences () {
       this.$socket.emit('subscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.workspacePerson.id + '/dispute/' + this.id + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
       this.loadingOccurrences = true
       this.$store.dispatch('loadDisputeOccurrences', this.id)

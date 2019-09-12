@@ -9,22 +9,22 @@ const disputeGetters = {
   disputeTab: state => state.tab,
   dispute: state => state.dispute,
   disputeHasFilters: state => state.hasFilters,
+  disputeStatuses: state => state.statuses,
   filterNotVisualizeds: state => (disputePhase) => {
-    let filteredSummarys = state.summaryNotVisualizeds.filter( s => s.disputePhase = disputePhase)
+    let filteredSummarys = state.summaryNotVisualizeds.filter(s => { s.disputePhase = disputePhase })
     if (filteredSummarys && filteredSummarys.length > 0) {
       return filteredSummarys[0].quantity
-    }
-    return 0;
+    } return 0
   },
-  disputeNotVisualizedEngajement : (state, getters) => {
-    return getters.filterNotVisualizeds('ENGAGEMENT');
+  disputeNotVisualizedEngajement: (state, getters) => {
+    return getters.filterNotVisualizeds('ENGAGEMENT')
   },
-  disputeNotVisualizedInteration : (state, getters) => {
-    return getters.filterNotVisualizeds('INTERACTION');
+  disputeNotVisualizedInteration: (state, getters) => {
+    return getters.filterNotVisualizeds('INTERACTION')
   },
-  disputeNotVisualizedNewDeal : (state, getters) => {
-    return getters.filterNotVisualizeds('NEW_DEAL');
-  },
+  disputeNotVisualizedNewDeal: (state, getters) => {
+    return getters.filterNotVisualizeds('NEW_DEAL')
+  }
 
 // disputeOccurrences: state => state.occurrence.sort((a, b) => {
 //   if (moment(a.createAt.dateTime).isAfter(b.createAt.dateTime)) return 1
@@ -35,7 +35,6 @@ const disputeGetters = {
 // disputeHasFilters: state => {
 //   return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm || !!state.filters.filterPersonId
 // },
-disputeStatuses: state => state.statuses,
 // disputeActiveTab: state => state.filters.tab,
 // disputesPerPage: state => state.filters.perPage
 // priorityOnly: state => state.filters.priorityOnly,

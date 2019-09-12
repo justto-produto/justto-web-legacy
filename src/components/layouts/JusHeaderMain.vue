@@ -83,8 +83,6 @@
 </template>
 
 <script>
-import { fuseSearchDisputes } from '@/plugins/jusUtils'
-
 export default {
   name: 'JusHeaderMain',
   components: {
@@ -144,7 +142,6 @@ export default {
     search (term, cb) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
-        // this.$store.commit('setDisputeQuery', { key: 'term', value: term })
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
           cb(response)
         })

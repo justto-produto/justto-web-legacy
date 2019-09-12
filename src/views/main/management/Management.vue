@@ -96,15 +96,6 @@ export default {
       disputeDebounce: ''
     }
   },
-  watch: {
-    term (term) {
-      clearTimeout(this.termDebounce)
-      this.termDebounce = setTimeout(() => {
-        this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
-        this.getDisputes()
-      }, 800)
-    }
-  },
   computed: {
     hasFilters () {
       return this.$store.getters.disputeHasFilters
@@ -153,6 +144,15 @@ export default {
       }
     }
   },
+  watch: {
+    term (term) {
+      clearTimeout(this.termDebounce)
+      this.termDebounce = setTimeout(() => {
+        this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
+        this.getDisputes()
+      }, 800)
+    }
+  },
   beforeCreate () {
     this.$store.watch(state => state.disputeModule.query.persons, persons => {
       this.getDisputes()
@@ -182,15 +182,19 @@ export default {
       switch (tab) {
         case '0':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: 'expirationDate,asc' })
           break
         case '1':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: 'visualized,asc' })
           break
         case '2':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: 'visualized,asc' })
           break
         default:
           this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: 'id,desc' })
       }
       this.getDisputes()
     },

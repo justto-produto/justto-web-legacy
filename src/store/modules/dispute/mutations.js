@@ -23,10 +23,10 @@ const disputeMutations = {
     state.query[params.key] = params.value
   },
   setSummaryNearExpirations (state, summarys) {
-    state.summaryNearExpirations = summarys;
+    state.summaryNearExpirations = summarys
   },
   setSummaryNotVisualizeds (state, summarys) {
-    state.summaryNotVisualizeds = summarys;
+    state.summaryNotVisualizeds = summarys
   },
   clearDisputeQuery (state) {
     const size = state.query.size
@@ -45,7 +45,7 @@ const disputeMutations = {
       total: 0
     }
   },
-  setDisputeHasFilters(state, bol) {
+  setDisputeHasFilters (state, bol) {
     state.hasFilters = bol
   },
   setDisputesTab (state, tab) {
@@ -72,8 +72,10 @@ const disputeMutations = {
     Vue.nextTick(() => {
       if (disputeWebsocketSummaryDto.type) {
         switch (disputeWebsocketSummaryDto.type) {
-          case 'DISPUTE_NEAR_EXPIRATION' : state.summaryNearExpirations = disputeWebsocketSummaryDto.summarys;
-          case 'DISPUTE_NOT_VISUALIZED' : state.summaryNotVisualizeds = disputeWebsocketSummaryDto.summarys;
+          case 'DISPUTE_NEAR_EXPIRATION' : state.summaryNearExpirations = disputeWebsocketSummaryDto.summarys
+            break
+          case 'DISPUTE_NOT_VISUALIZED' : state.summaryNotVisualizeds = disputeWebsocketSummaryDto.summarys
+            break
         }
       }
     })
@@ -84,9 +86,8 @@ const disputeMutations = {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       if (disputeIndex !== -1) {
         let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-        if (dispute.updatedAt && disputeChanged.updatedAt
-            && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-            Vue.set(state.disputes, disputeIndex, disputeChanged)
+        if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
+          Vue.set(state.disputes, disputeIndex, disputeChanged)
         } else {
           Vue.set(state.disputes, disputeIndex, disputeChanged)
         }
@@ -99,6 +100,9 @@ const disputeMutations = {
       Vue.delete(state.disputes, disputeIndex)
     })
   },
+  setDisputeStatuses (state, status) {
+    state.statuses[status.label] = status.value
+  }
   // setDisputeTab (state, tab) {
   //   state.filters.tab = tab
   // },
@@ -126,9 +130,6 @@ const disputeMutations = {
   //   state.filters.filterPersonId = id
   //   state.filters.filteredPerson = false
   // },
-  setDisputeStatuses (state, status) {
-    state.statuses[status.label] = status.value
-  },
   // setDisputesPerPage (state, disputesPerPage) {
   //   state.filters.perPage = disputesPerPage
   // }

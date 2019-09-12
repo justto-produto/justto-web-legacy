@@ -63,7 +63,7 @@
       "PAUSED": "pausado",
       "ENRICHED": "enriquecido",
       "CHECKOUT": "acordo sem dados bancários",
-      "REFUSED": "perdido",
+      "REFUSED": "recusado",
       "ARCHIVED": "arquivado",
       "SETTLED": "ganho",
       "UNSETTLED": "perdido",
