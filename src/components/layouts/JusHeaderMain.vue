@@ -144,8 +144,8 @@ export default {
     search (term, cb) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
-        this.$store.commit('setDisputeQuery', { key: 'term', value: term })
-        this.$store.dispatch('searchDisputes').finally((response) => {
+        // this.$store.commit('setDisputeQuery', { key: 'term', value: term })
+        this.$store.dispatch('searchDisputes', { key: 'term', value: term }).finally((response) => {
           this.dispute = response
         })
 
