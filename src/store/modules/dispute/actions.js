@@ -53,6 +53,17 @@ const disputeActions = {
       })
     })
   },
+  searchDisputes ({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/disputes/search' + queryBuilder(state.query)).then(response => {
+        resolve(response.data)
+      })
+      .catch(error => {
+        reject(error)
+      })
+    });
+  },
   editRole ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

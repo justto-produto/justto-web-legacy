@@ -1,6 +1,6 @@
 <template>
-  <div class="onboarding-invite-step">
-    <div class="onboarding-step-content">
+  <div class="onboarding-step-content">
+    <div class="onboarding-invite-step">
       <div class="onboarding-step-content__title">
         <h2>Adicione pessoas à sua equipe</h2>
         <p>
@@ -129,13 +129,15 @@ export default {
 <style lang="scss">
 .onboarding-invite-step {
   form {
-    max-width: 475px !important;
+    max-width: 554px !important;
     .el-select {
-      max-width: 128px !important;
+      max-width: 134px !important;
     }
   }
   ul{
     padding: 0;
+    max-height: 380px;
+    overflow-y: auto;
     margin: 10px 4px 40px;
     li{
       height: 28px;
@@ -144,19 +146,26 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      div {
+        display: flex;
+        align-items: center;
+      }
       .member-email{
         margin-left: 20px;
       }
-      .remove-member{
+      .remove-member {
         cursor: pointer;
         margin-left: 20px;
       }
     }
   }
   @media (max-width: 991px) {
+    form {
+      max-width: 100% !important;
+    }
     ul {
       max-height: 120px;
-      overflow: scroll;
+      overflow-y: auto;
       margin: 0;
     }
     li {

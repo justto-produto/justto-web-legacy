@@ -142,14 +142,23 @@ export default {
       }, 1000)
     },
     search (term, cb) {
-      let results = fuseSearchDisputes(this.$store.getters.disputes, term)
-      setTimeout(function () {
-        if (results && results.length) {
-          cb(results)
-        } else {
-          cb([0])
-        }
-      }, 500)
+      clearTimeout(this.termDebounce)
+      this.termDebounce = setTimeout(() => {
+        this.$store.commit('setDisputeQuery', { key: 'term', value: term })
+        this.$store.dispatch('searchDisputes').finally((response) => {
+          this.dispute = response
+        })
+
+      }, 800)
+
+      // let results = fuseSearchDisputes(this.$store.getters.disputes, term)
+      // setTimeout(function () {
+      //   if (results && results.length) {
+      //     cb(results)
+      //   } else {
+      //     cb([0])
+      //   }
+      // }, 500)
     }
   }
 }

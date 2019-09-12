@@ -90,7 +90,7 @@ export default {
 <style lang="scss">
   .onboarding-oab-step {
     max-width: 586px;
-    @media (min-width: 992px) {
+    @media (min-width: 991px) {
       form {
         display: flex;
       }
