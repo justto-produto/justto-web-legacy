@@ -5,7 +5,8 @@ const workspaceModule = {
     status: '',
     subdomain: '',
     profile: '',
-    members: []
+    members: [],
+    person: {}
   },
   mutations: {
     updateWorkspace (state, response) {
@@ -16,6 +17,7 @@ const workspaceModule = {
         state.name = response.workspace.name
         state.status = response.workspace.status
         state.id = response.workspace.id
+        state.person = response.person
       }
       if (response && response.profile) state.profile = response.profile
     },
@@ -243,7 +245,8 @@ const workspaceModule = {
     creatingWorkspace: state => state.status === 'CREATING',
     workspaceId: state => state.subdomain,
     workspaceSubdomain: state => state.subdomain,
-    workspaceMembers: state => state.members
+    workspaceMembers: state => state.members,
+    workspacePerson: state => state.person
   }
 }
 

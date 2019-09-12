@@ -79,8 +79,8 @@ export default {
   },
   beforeDestroy () {
     this.$socket.emit('unsubscribe', { channel: '/topic/' + this.workspace + '/whatsapp' })
-    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.workspace + '/dispute' })
-    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.workspace + '/alert' })
+    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.workspacePerson.id + '/dispute' })
+    this.$socket.emit('unsubscribe', { channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.workspacePerson.id + '/alert' })
   },
   sockets: {
     reconnect () {

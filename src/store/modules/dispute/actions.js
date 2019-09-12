@@ -24,8 +24,9 @@ const disputeActions = {
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id)
+      axios.get('api/disputes/' + id + '/vm')
         .then(response => {
+          commit('setDispute', response.data)
           resolve(response.data)
         })
         .catch(error => {
@@ -45,29 +46,29 @@ const disputeActions = {
       })
     })
   },
-  // editRole ({ commit }, params) {
-  //   return new Promise((resolve, reject) => {
-  //     // eslint-disable-next-line
-  //     axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
-  //       .then(response => {
-  //         resolve(response.data)
-  //       }).catch(error => {
-  //         reject(error.response)
-  //       })
-  //   })
-  // },
-  // removeRole ({ commit }, role) {
-  //   return new Promise((resolve, reject) => {
-  //     // eslint-disable-next-line
-  //     axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
-  //       .then(response => {
-  //         resolve(response.data)
-  //       })
-  //       .catch(error => {
-  //         reject(error)
-  //       })
-  //   })
-  // },
+  editRole ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error.response)
+        })
+    })
+  },
+  removeRole ({ commit }, role) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   // editCaseReason ({ commit }, params) {
   //   return new Promise((resolve, reject) => {
   //     // eslint-disable-next-line
@@ -94,19 +95,19 @@ const disputeActions = {
   //       })
   //   })
   // },
-  // getDisputeStatuses ({ commit }, status) {
-  //   return new Promise((resolve, reject) => {
-  //     // eslint-disable-next-line
-  //     axios.get('api/disputes/outcome-reasons/' + status)
-  //       .then(response => {
-  //         commit('setDisputeStatuses', { label: status, value: response.data })
-  //         resolve(response.data)
-  //       })
-  //       .catch(error => {
-  //         reject(error)
-  //       })
-  //   })
-  // },
+  getDisputeStatuses ({ commit }, status) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/disputes/outcome-reasons/' + status)
+        .then(response => {
+          commit('setDisputeStatuses', { label: status, value: response.data })
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   // sendBatchAction ({ commit }, body) {
   //   return new Promise((resolve, reject) => {
   //     // eslint-disable-next-line
@@ -213,28 +214,28 @@ const disputeActions = {
   //       })
   //   })
   // },
-  // disputeVisualized ({ commit }, disputeId) {
-  //   return new Promise((resolve, reject) => {
-  //     // eslint-disable-next-line
-  //     axios.patch('api/disputes/' + disputeId + '/visualized/')
-  //       .then(response => {
-  //         resolve(response.data)
-  //       }).catch(error => {
-  //         reject(error)
-  //       })
-  //   })
-  // },
-  // loadDisputeOccurrences ({ commit }, disputeId) {
-  //   return new Promise((resolve, reject) => {
-  //     // eslint-disable-next-line
-  //     axios.put('api/disputes/' + disputeId + '/occurrences/load')
-  //       .then(response => {
-  //         resolve(response.data)
-  //       }).catch(error => {
-  //         reject(error)
-  //       })
-  //   })
-  // }
+  disputeVisualized ({ commit }, disputeId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.patch('api/disputes/' + disputeId + '/visualized/')
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
+  loadDisputeOccurrences ({ commit }, disputeId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.put('api/disputes/' + disputeId + '/occurrences/load')
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  }
 }
 
 export default disputeActions

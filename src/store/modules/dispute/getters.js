@@ -5,7 +5,8 @@
 const disputeGetters = {
   disputes: state => state.disputes,
   disputeQuery: state => state.query,
-  disputeTab: state => state.tab
+  disputeTab: state => state.tab,
+  dispute: state => state.dispute,
 // disputeOccurrences: state => state.occurrence.sort((a, b) => {
 //   if (moment(a.createAt.dateTime).isAfter(b.createAt.dateTime)) return 1
 //   if (moment(a.createAt.dateTime).isBefore(b.createAt.dateTime)) return -1
@@ -15,7 +16,7 @@ const disputeGetters = {
 // disputeHasFilters: state => {
 //   return Object.keys(state.filters.terms).length > 0 || !!state.filters.filterTerm || !!state.filters.filterPersonId
 // },
-// disputeStatuses: state => state.statuses,
+disputeStatuses: state => state.statuses,
 // disputeActiveTab: state => state.filters.tab,
 // disputesPerPage: state => state.filters.perPage
 // priorityOnly: state => state.filters.priorityOnly,

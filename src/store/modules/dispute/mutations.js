@@ -6,6 +6,12 @@ const disputeMutations = {
     state.query.size = pageable.size
     state.query.total = pageable.totalElements
   },
+  setDispute (state, disputeVM) {
+    state.dispute = disputeVM
+  },
+  clearDisputeOccurrence (state) {
+    state.occurrence = []
+  },
   clearDisputes (state) {
     state.disputes = []
   },
@@ -55,7 +61,7 @@ const disputeMutations = {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       Vue.delete(state.disputes, disputeIndex)
     })
-  }
+  },
   // setDisputeTab (state, tab) {
   //   state.filters.tab = tab
   // },
@@ -83,9 +89,9 @@ const disputeMutations = {
   //   state.filters.filterPersonId = id
   //   state.filters.filteredPerson = false
   // },
-  // setDisputeStatuses (state, status) {
-  //   state.statuses[status.label] = status.value
-  // },
+  setDisputeStatuses (state, status) {
+    state.statuses[status.label] = status.value
+  },
   // setDisputesPerPage (state, disputesPerPage) {
   //   state.filters.perPage = disputesPerPage
   // }

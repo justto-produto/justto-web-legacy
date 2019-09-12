@@ -4,6 +4,9 @@ import getters from './getters'
 
 const dispute = {
   state: {
+    dispute: {
+      id: 0
+    },
     disputes: [],
     occurrence: [],
     tab: '0',
