@@ -1,15 +1,22 @@
 const FileSaver = require('file-saver')
+import moment from 'moment'
 import { getRoles } from '@/plugins/jusUtils'
 
 const queryBuilder = q => {
   let query = '?'
   console.log(q);
   for (let [key, value] of Object.entries(q)) {
-    if (['initialSize', 'total'].includes(key)) break
-    if (!value) break
+    if (['initialSize', 'total'].includes(key)) continue
+    if (!value) continue
     if (Array.isArray(value)) {
-      for (let v of value) {
-        query = query + key + '=' + v + '&'
+      if (!value.length) continue
+      if (['expirationDate', 'dealDate'].includes(key)) {
+        query = query + key + 'Start' + '=' + moment(value[0]).format('YYYY-MM-DDHH:mm:ss') + '&'
+        query = query + key + 'End' + '=' + moment(value[1]).format('YYYY-MM-DDHH:mm:ss') + '&'
+      } else {
+        for (let v of value) {
+          query = query + key + '=' + v + '&'
+        }
       }
     } else if (key === 'page') {
       query = query + key + '=' + (value - 1) + '&'

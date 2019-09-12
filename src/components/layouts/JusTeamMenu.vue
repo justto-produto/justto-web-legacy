@@ -33,9 +33,9 @@ export default {
   methods: {
     setFilterPersonId (id) {
       if (this.activePersonsIds.includes(id)) {
-        this.$store.commit('setDisputeQuery', { key: 'persons', value: [] })
+        this.$store.commit('updateDisputeQuery', { key: 'persons', value: [] })
       } else {
-        this.$store.commit('setDisputeQuery', { key: 'persons', value: [id] })
+        this.$store.commit('updateDisputeQuery', { key: 'persons', value: [id] })
       }
     }
   }

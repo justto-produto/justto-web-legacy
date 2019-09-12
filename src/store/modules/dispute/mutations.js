@@ -15,8 +15,28 @@ const disputeMutations = {
   clearDisputes (state) {
     state.disputes = []
   },
-  setDisputeQuery (state, params) {
+  setDisputeQuery (state, query) {
+    state.query = query
+  },
+  updateDisputeQuery (state, params) {
     state.query[params.key] = params.value
+  },
+  clearDisputeQuery (state) {
+    const size = state.query.size
+    state.query = {
+      status: [],
+      campaigns: [],
+      strategy: [],
+      persons: [],
+      dealDate: [],
+      expirationDate: [],
+      onlyFavorite: false,
+      page: 1,
+      size: size,
+      term: '',
+      initialSize: 20,
+      total: 0
+    }
   },
   setDisputesTab (state, tab) {
     state.tab = tab

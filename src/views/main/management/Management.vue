@@ -89,14 +89,15 @@ export default {
       loadingExport: false,
       filtersVisible: false,
       term: '',
-      termDebounce: ''
+      termDebounce: '',
+      disputeDebounce: ''
     }
   },
   watch: {
     term (term) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
-        this.$store.commit('setDisputeQuery', { key: 'term', value: term })
+        this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
         this.getDisputes()
       }, 800)
     }
@@ -131,9 +132,8 @@ export default {
         return this.$store.getters.disputeQuery.size
       },
       set (size) {
-        this.$store.commit('setDisputeQuery', { key: 'page', value: 1 })
-        this.$store.commit('setDisputeQuery', { key: 'size', value: size })
-        console.log('disputesPerPage')
+        this.$store.commit('updateDisputeQuery', { key: 'page', value: 1 })
+        this.$store.commit('updateDisputeQuery', { key: 'size', value: size })
         this.getDisputes()
       }
     },
@@ -142,46 +142,47 @@ export default {
         return this.$store.getters.disputeQuery.page
       },
       set (page) {
-        this.$store.commit('setDisputeQuery', { key: 'page', value: page })
-        console.log('currentPage')
+        this.$store.commit('updateDisputeQuery', { key: 'page', value: page })
         this.getDisputes()
       }
     }
   },
   beforeCreate () {
     this.$store.watch(state => state.disputeModule.query.persons, persons => {
-      console.log(persons)
       this.getDisputes()
     })
   },
   methods: {
     getDisputes () {
-      this.loadingDisputes = true
-      return this.$store.dispatch('getDisputes').finally(() => {
-        this.loadingDisputes = false
-        this.$nextTick(() => {
-          let main = this.$el.querySelector('.el-table__body-wrapper')
-          if (main) {
-            main.scrollTop = 0
-          }
+      clearTimeout(this.disputeDebounce)
+      this.disputeDebounce = setTimeout(() => {
+        this.loadingDisputes = true
+        return this.$store.dispatch('getDisputes').finally(() => {
+          this.loadingDisputes = false
+          this.$nextTick(() => {
+            let main = this.$el.querySelector('.el-table__body-wrapper')
+            if (main) {
+              main.scrollTop = 0
+            }
+          })
         })
-      })
+      }, 300)
     },
     handleChangeTab (tab) {
+      this.$store.commit('clearDisputeQuery')
       switch (tab) {
         case '0':
-          this.$store.commit('setDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })
           break
         case '1':
-          this.$store.commit('setDisputeQuery', { key: 'status', value: ['RUNNING'] })
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
           break
         case '2':
-          this.$store.commit('setDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
           break
         default:
-          this.$store.commit('setDisputeQuery', { key: 'status', value: [] })
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
       }
-      console.log('handleChangeTab')
       this.getDisputes()
     },
     exportDisputes () {}

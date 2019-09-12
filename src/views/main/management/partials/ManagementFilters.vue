@@ -10,7 +10,8 @@
           <el-col v-if="!loading" :span="12">
             <el-form-item label="Campanha">
               <el-select
-                v-model="filters.campaignName"
+                v-model="filters.campaigns"
+                multiple
                 data-testid="filter-campaign"
                 placeholder="Selecione uma opção"
                 clearable
@@ -18,7 +19,7 @@
                 <el-option
                   v-for="campaign in campaigns"
                   :key="campaign.id"
-                  :value="campaign.name"
+                  :value="campaign.id"
                   :label="campaign.name"/>
               </el-select>
             </el-form-item>
@@ -27,7 +28,8 @@
           <el-col v-if="!loading" :span="12">
             <el-form-item label="Estratégia">
               <el-select
-                v-model="filters.strategyName"
+                v-model="filters.strategy"
+                multiple
                 data-testid="filter-strategy"
                 placeholder="Selecione uma opção"
                 clearable
@@ -35,7 +37,7 @@
                 <el-option
                   v-for="strategy in strategies"
                   :key="strategy.id"
-                  :value="strategy.name"
+                  :value="strategy.id"
                   :label="strategy.name"/>
               </el-select>
             </el-form-item>
@@ -44,7 +46,7 @@
           <el-col v-if="isNewAgreements" :span="12">
             <el-form-item label="Data do acordo">
               <el-date-picker
-                v-model="filters.disputeDealDate"
+                v-model="filters.dealDate"
                 data-testid="filters-disputeexpirationdate"
                 type="daterange"
                 align="right"
@@ -54,11 +56,11 @@
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
-                @change="clearDisputeDealDate" />
+                @change="clearDealDate" />
             </el-form-item>
           </el-col>
           <!-- ÚLTIMA INTERAÇÃO -->
-          <el-col v-if="isInteration" :span="12">
+          <!-- <el-col v-if="isInteration" :span="12">
             <el-form-item label="Última interação">
               <el-date-picker
                 v-model="filters.lastInteractionDate"
@@ -72,9 +74,9 @@
                 end-placeholder="Data final"
                 @change="clearLastInteractionDate" />
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <!-- MEIO DE INTERAÇÃO -->
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item v-if="isInteration" label="Meio de interação">
               <el-select
                 v-model="filters.lastInteractionType"
@@ -89,7 +91,7 @@
                   :label="interaction.value"/>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <!-- STATUS -->
           <!-- <el-col v-if="isEngagement" :span="12">
             <el-form-item label="Status" class="management-filters__switch">
@@ -98,8 +100,8 @@
                 <el-switch v-model="filters.status" active-value="PAUSED" :inactive-value="false"/>
               </div>
               <el-radio-group v-model="filters.status">
-                <el-radio-button label="paused">Pausados</el-radio-button>
-                <el-radio-button label="active">Ativos</el-radio-button>
+                paused">Pausados
+                active">Ativos
               </el-radio-group>
             </el-form-item>
           </el-col> -->
@@ -127,7 +129,7 @@
                 <div>
                   <jus-icon icon="golden-star" /> Disputas favoritas
                 </div>
-                <el-switch v-model="filters.favorite" data-testid="filters-favorite" />
+                <el-switch v-model="filters.onlyFavorite" data-testid="filters-favorite" />
               </div>
             </el-form-item>
           </el-col>
@@ -164,16 +166,11 @@
           <!-- STATUS -->
           <el-col v-if="isAll" :span="24">
             <el-form-item label="Status">
-              <el-radio-group v-model="filters.status">
-                <el-radio-button label="ENGAGEMENT">Engajamento</el-radio-button>
-                <el-radio-button label="INTERACTIONS">Com interação</el-radio-button>
-                <el-radio-button label="ACCEPTED">Novos acordos</el-radio-button>
-                <el-radio-button label="SETTLED">Ganhos</el-radio-button>
-                <el-radio-button label="UNSETTLED">Perdidos</el-radio-button>
-                <el-radio-button label="EXPIRED">Expirados</el-radio-button>
-                <el-radio-button label="PENDING">Pendentes</el-radio-button>
-                <el-radio-button label="PAUSED">Pausados</el-radio-button>
-              </el-radio-group>
+              <el-checkbox-group v-model="filters.status">
+                <el-checkbox v-for="status in statuses" :label="status" :key="status">
+                  {{ $t('occurrence.type.' + status) | capitalize }}
+                </el-checkbox>
+              </el-checkbox-group>
             </el-form-item>
           </el-col>
           <!-- NEGOCIADORES -->
@@ -265,7 +262,7 @@ export default {
       return this.$store.getters.strategyList
     },
     campaigns () {
-      return this.$store.getters.activeCampaigns
+      return this.$store.getters.campaignList
     },
     interactions () {
       return [{
@@ -293,6 +290,22 @@ export default {
         case '3':
           return 'Todos'
       }
+    },
+    statuses () {
+      return [
+        'IMPORTED',
+        'ENRICHED',
+        'ENGAGEMENT',
+        'RUNNING',
+        'PENDING',
+        'ACCEPTED',
+        'CHECKOUT',
+        'EXPIRED',
+        'SETTLED',
+        'UNSETTLED',
+        'REFUSED',
+        'ARCHIVED'
+      ]
     }
   },
   beforeMount () {
@@ -305,31 +318,37 @@ export default {
     })
   },
   methods: {
+    applyFilters () {
+      this.$store.commit('setDisputeQuery', this.filters)
+      this.visibleFilters = false
+    },
     clearFilters () {
-      // this.$store.commit('clearDisputeFilters')
+      if (this.tabIndex === '3') {
+        this.filters.status = []
+      }
+      this.clearCampaign()
+      this.clearStrategy()
+      this.filters.onlyFavorite = false
+      this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
     },
     restoreFilters () {
-      this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeFilters))
+      this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
     },
     clearInteraction (value) {
       delete this.filters.lastInteractionType
     },
     clearStrategy () {
-      delete this.filters.strategyName
+      this.filters.strategy = []
     },
     clearCampaign () {
-      delete this.filters.campaignName
+      this.filters.campaigns = []
     },
     clearDisputestate () {
       delete this.filters.disputestate
     },
-    clearDisputeDealDate (value) {
-      if (value) {
-        this.filters.disputeDealDate = value
-      } else {
-        delete this.filters.disputeDealDate
-      }
+    clearDealDate (value) {
+      this.filters.dealDate = []
     },
     clearLastInteractionDate (value) {
       if (value) {
@@ -351,9 +370,6 @@ export default {
 
 <style lang="scss">
 .management-filters {
-  .el-form-item__content {
-    // max-height: 40px;
-  }
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
   }
@@ -375,6 +391,9 @@ export default {
     margin: 0 10px 10px 0;
     border: 1px solid #dcdfe6;
     border-radius: 2px;
+  }
+  .el-tag {
+    overflow: hidden;
   }
 }
 </style>
