@@ -148,17 +148,7 @@ export default {
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
           cb(response)
         })
-
       }, 800)
-
-      // let results = fuseSearchDisputes(this.$store.getters.disputes, term)
-      // setTimeout(function () {
-      //   if (results && results.length) {
-      //     cb(results)
-      //   } else {
-      //     cb([0])
-      //   }
-      // }, 500)
     }
   }
 }
