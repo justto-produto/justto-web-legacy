@@ -112,15 +112,15 @@ export default {
           action: action,
           selecteds: selecteds
         })
-        let self = this
+        this.$store.dispatch('getDisputes')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
           dangerouslyUseHTMLString: true,
           onClose () {
-            setTimeout(function () {
-              self.$jusNotification({
+            setTimeout(() => {
+              this.$jusNotification({
                 title: 'Fique atento!',
                 message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
                 Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
@@ -166,7 +166,7 @@ export default {
   display: flex;
   justify-content:space-between;
   align-items: center;
-  margin: -44px 22px 0;
+  margin: -44px 0px 0;
   transform: translateY(-100%);
   border-radius: 5px 5px 0 0;
   div {
@@ -174,8 +174,8 @@ export default {
   }
   &.active {
     box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.12);
-    margin: 0px 22px;
-    transform: translateY(0%);
+    margin: 0px;
+    transform: translateY(-29%);
   }
   i {
     cursor: pointer;

@@ -189,11 +189,20 @@ export default {
     disputes: {
       type: Array,
       default: () => []
+    },
+    selectedIds: {
+      type: Array,
+      default: () => []
     }
   },
-  data () {
-    return {
-      selectedIds: []
+  computed: {
+     selectedIdsComp: {
+      get () {
+        return this.selectedIds
+      },
+      set (ids) {
+        this.$emit('update:selectedIds', ids)
+      }
     }
   },
   methods: {
@@ -211,13 +220,17 @@ export default {
     handleSortChange (sort) {
 
     },
+    clearSelection () {
+      this.$refs.disputeTable.clearSelection()
+    },
     handleSelectionChange (selected) {
-      this.selectedIds = []
+      let ids = []
       for (let dispute of selected) {
         if (dispute && dispute.id) {
-          this.selectedIds.push(dispute.id)
+          ids.push(dispute.id)
         }
       }
+      this.selectedIdsComp = ids
     },
     openNewTab (disputeId) {
       let routeData = this.$router.resolve({ name: 'dispute', params: { id: disputeId } })
@@ -233,6 +246,7 @@ export default {
           aba: tab,
           action: label
         })
+        this.$store.dispatch('getDisputes')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Disputa ' + label + ' com sucesso.',

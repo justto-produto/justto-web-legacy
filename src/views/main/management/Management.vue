@@ -71,7 +71,7 @@
       <management-filters
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
-      <management-table :disputes="disputes" />
+      <management-table ref="managementTable" :disputes="disputes" :selected-ids.sync="selectedIds"/>
       <el-pagination
         :total.sync="disputesTotalLength"
         :page-size.sync="disputesPerPage"
@@ -185,16 +185,8 @@ export default {
         })
       }, 300)
     },
-    handleSelectionChange (selected) {
-      this.selectedIds = []
-      for (let dispute of selected) {
-        if (dispute && dispute.id) {
-          this.selectedIds.push(dispute.id)
-        }
-      }
-    },
     clearSelection () {
-      this.$refs.disputeTable.clearSelection()
+      this.$refs.managementTable.clearSelection()
     },
     handleChangeTab (tab) {
       this.$store.commit('clearDisputeQuery')
