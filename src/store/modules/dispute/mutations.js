@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import moment from 'moment'
 
 const disputeMutations = {
   setDisputes (state, pageable) {
@@ -10,7 +11,7 @@ const disputeMutations = {
     state.dispute = disputeVM
   },
   clearDisputeOccurrence (state) {
-    state.occurrence = []
+    state.occurrence.length = 0
   },
   clearDisputes (state) {
     state.disputes = []
@@ -20,6 +21,12 @@ const disputeMutations = {
   },
   updateDisputeQuery (state, params) {
     state.query[params.key] = params.value
+  },
+  setSummaryNearExpirations (state, summarys) {
+    state.summaryNearExpirations = summarys;
+  },
+  setSummaryNotVisualizeds (state, summarys) {
+    state.summaryNotVisualizeds = summarys;
   },
   clearDisputeQuery (state) {
     const size = state.query.size
@@ -50,34 +57,41 @@ const disputeMutations = {
   SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
     Vue.nextTick(() => {
       if (!newOccurrence.id) {
-        state.occurrence.list.push(newOccurrence)
+        state.occurrence.push(newOccurrence)
       } else {
-        let occurrenceIndex = state.occurrence.list.findIndex(d => newOccurrence.id === d.id)
+        let occurrenceIndex = state.occurrence.findIndex(d => newOccurrence.id === d.id)
         if (occurrenceIndex === -1) {
-          state.occurrence.list.push(newOccurrence)
+          state.occurrence.push(newOccurrence)
         } else {
-          Vue.set(state.occurrence.list, occurrenceIndex, newOccurrence)
+          Vue.set(state.occurrence, occurrenceIndex, newOccurrence)
         }
       }
     })
   },
-  SOCKET_ADD_DISPUTE ({ commit, rootState, state }, disputeChanged) {
-    // disputeChanged.disputeNextToExpire = moment(disputeChanged.expirationDate.dateTime).isBetween(moment(), moment().add(3, 'day'))
-    // Vue.nextTick(() => {
-    //   let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
-    //   if (disputeIndex === -1) {
-    //     state.disputes.push(disputeChanged)
-    //   } else {
-    //     let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-    //     if (dispute.updatedAt && disputeChanged.updatedAt) {
-    //       if (moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-    //         Vue.set(state.disputes, disputeIndex, disputeChanged)
-    //       }
-    //     } else {
-    //       Vue.set(state.disputes, disputeIndex, disputeChanged)
-    //     }
-    //   }
-    // })
+  SOCKET_ADD_DISPUTE_SUMMARY (state, disputeWebsocketSummaryDto) {
+    Vue.nextTick(() => {
+      if (disputeWebsocketSummaryDto.type) {
+        switch (disputeWebsocketSummaryDto.type) {
+          case 'DISPUTE_NEAR_EXPIRATION' : state.summaryNearExpirations = disputeWebsocketSummaryDto.summarys;
+          case 'DISPUTE_NOT_VISUALIZED' : state.summaryNotVisualizeds = disputeWebsocketSummaryDto.summarys;
+        }
+      }
+    })
+  },
+  SOCKET_ADD_DISPUTE (state, disputeChanged) {
+    disputeChanged.disputeNextToExpire = moment(disputeChanged.expirationDate.dateTime).isBetween(moment(), moment().add(3, 'day'))
+    Vue.nextTick(() => {
+      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
+      if (disputeIndex !== -1) {
+        let dispute = state.disputes.find(d => disputeChanged.id === d.id)
+        if (dispute.updatedAt && disputeChanged.updatedAt
+            && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
+            Vue.set(state.disputes, disputeIndex, disputeChanged)
+        } else {
+          Vue.set(state.disputes, disputeIndex, disputeChanged)
+        }
+      }
+    })
   },
   SOCKET_REMOVE_DISPUTE ({ commit, state }, disputeChanged) {
     Vue.nextTick(() => {

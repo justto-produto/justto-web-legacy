@@ -9,6 +9,8 @@ const dispute = {
     },
     disputes: [],
     occurrence: [],
+    summaryNearExpirations: [],
+    summaryNotVisualizeds: [],
     tab: '0',
     query: {
       status: ['ENGAGEMENT'],

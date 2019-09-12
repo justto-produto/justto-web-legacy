@@ -110,13 +110,13 @@ export default {
       return this.$store.getters.disputeHasFilters
     },
     engagementLength () {
-      return 0
+      return this.$store.getters.disputeNotVisualizedEngajement
     },
     interactionLength () {
-      return 0
+      return this.$store.getters.disputeNotVisualizedInteration
     },
     newDealsLength () {
-      return 0
+      return this.$store.getters.disputeNotVisualizedNewDeal
     },
     disputes () {
       return this.$store.getters.disputes
@@ -157,6 +157,8 @@ export default {
     this.$store.watch(state => state.disputeModule.query.persons, persons => {
       this.getDisputes()
     })
+    this.$store.dispatch('getNotVisualizeds')
+    this.$store.dispatch('getNearExpirations')
   },
   methods: {
     getDisputes () {

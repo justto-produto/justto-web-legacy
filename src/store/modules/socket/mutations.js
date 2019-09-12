@@ -30,7 +30,7 @@ const mutations = {
   },
   // OCCURRENCE
   clearDisputeOccurrence (state) {
-    state.occurrence.list = []
+    state.occurrence = []
   }
 }
 

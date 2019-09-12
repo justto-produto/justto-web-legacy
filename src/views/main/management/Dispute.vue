@@ -393,7 +393,7 @@ export default {
       return {}
     },
     occurrences () {
-      return this.$store.getters.disputeOccurrences
+      return this.$store.getters.occurrences
     },
     whatsappStatus () {
       return this.$store.getters.whatsappStatus

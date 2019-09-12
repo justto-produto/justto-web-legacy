@@ -76,6 +76,32 @@ const disputeActions = {
         })
     })
   },
+  getNotVisualizeds ({ commit }) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/disputes/summary/not-visualized')
+        .then(response => {
+          commit('setSummaryNotVisualizeds', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
+  getNearExpirations ({ commit }) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/disputes/summary/near-expiration')
+        .then(response => {
+          commit('setSummaryNearExpirations', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   // editCaseReason ({ commit }, params) {
   //   return new Promise((resolve, reject) => {
   //     // eslint-disable-next-line

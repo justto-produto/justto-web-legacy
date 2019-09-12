@@ -4,10 +4,28 @@
 
 const disputeGetters = {
   disputes: state => state.disputes,
+  occurrences: state => state.occurrence,
   disputeQuery: state => state.query,
   disputeTab: state => state.tab,
   dispute: state => state.dispute,
   disputeHasFilters: state => state.hasFilters,
+  filterNotVisualizeds: state => (disputePhase) => {
+    let filteredSummarys = state.summaryNotVisualizeds.filter( s => s.disputePhase = disputePhase)
+    if (filteredSummarys && filteredSummarys.length > 0) {
+      return filteredSummarys[0].quantity
+    }
+    return 0;
+  },
+  disputeNotVisualizedEngajement : (state, getters) => {
+    return getters.filterNotVisualizeds('ENGAGEMENT');
+  },
+  disputeNotVisualizedInteration : (state, getters) => {
+    return getters.filterNotVisualizeds('INTERACTION');
+  },
+  disputeNotVisualizedNewDeal : (state, getters) => {
+    return getters.filterNotVisualizeds('NEW_DEAL');
+  },
+
 // disputeOccurrences: state => state.occurrence.sort((a, b) => {
 //   if (moment(a.createAt.dateTime).isAfter(b.createAt.dateTime)) return 1
 //   if (moment(a.createAt.dateTime).isBefore(b.createAt.dateTime)) return -1

@@ -533,6 +533,7 @@ export default {
         cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('getDispute', this.dispute.id).then(disputeToEdit => {
+          debugger
           let promises = []
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
