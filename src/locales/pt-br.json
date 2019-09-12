@@ -63,7 +63,7 @@
       "PAUSED": "pausado",
       "ENRICHED": "enriquecido",
       "CHECKOUT": "acordo sem dados bancários",
-      "REFUSED": "perdido",
+      "REFUSED": "recusado",
       "ARCHIVED": "arquivado",
       "SETTLED": "ganho",
       "UNSETTLED": "perdido",
@@ -96,7 +96,7 @@
       "pagesize": " por página",
       "goto": "Ir para",
       "pageClassifier": "",
-      "total": "Total: {total}"
+      "total": "Total de disputas: {total}"
     }
   }
 }

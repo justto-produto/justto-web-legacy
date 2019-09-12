@@ -1,72 +1,100 @@
 import Vue from 'vue'
 import moment from 'moment'
-import { getDisputeVMList } from './model'
 
 const disputeMutations = {
-  setDisputes (state, disputes) {
-    state.disputes = getDisputeVMList(disputes)
+  setDisputes (state, pageable) {
+    state.disputes = pageable.content
+    state.query.size = pageable.size
+    state.query.total = pageable.totalElements
+  },
+  setDispute (state, disputeVM) {
+    state.dispute = disputeVM
+  },
+  clearDisputeOccurrence (state) {
+    state.occurrence.length = 0
   },
   clearDisputes (state) {
     state.disputes = []
   },
-  clearDisputeFilters (state) {
-    state.filters.terms = {}
+  setDisputeQuery (state, query) {
+    state.query = query
   },
-  setDisputeTab (state, tab) {
-    state.filters.tab = tab
+  updateDisputeQuery (state, params) {
+    state.query[params.key] = params.value
+  },
+  setSummaryNearExpirations (state, summarys) {
+    state.summaryNearExpirations = summarys
+  },
+  setSummaryNotVisualizeds (state, summarys) {
+    state.summaryNotVisualizeds = summarys
+  },
+  clearDisputeQuery (state) {
+    const size = state.query.size
+    state.query = {
+      status: [],
+      campaigns: [],
+      strategy: [],
+      persons: [],
+      dealDate: [],
+      expirationDate: [],
+      onlyFavorite: false,
+      page: 1,
+      size: size,
+      term: '',
+      initialSize: 20,
+      total: 0
+    }
+  },
+  setDisputeHasFilters (state, bol) {
+    state.hasFilters = bol
+  },
+  setDisputesTab (state, tab) {
+    state.tab = tab
   },
   clearDisputeTab (state, tab) {
-    state.filters.tab = '0'
+    state.tab = '0'
   },
-  setDisputeFilter (state, terms) {
-    state.filters.terms = terms
+  SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
+    Vue.nextTick(() => {
+      if (!newOccurrence.id) {
+        state.occurrence.push(newOccurrence)
+      } else {
+        let occurrenceIndex = state.occurrence.findIndex(d => newOccurrence.id === d.id)
+        if (occurrenceIndex === -1) {
+          state.occurrence.push(newOccurrence)
+        } else {
+          Vue.set(state.occurrence, occurrenceIndex, newOccurrence)
+        }
+      }
+    })
   },
-  setDisputeFilterTerm (state, term) {
-    state.filters.filterTerm = term
+  SOCKET_ADD_DISPUTE_SUMMARY (state, disputeWebsocketSummaryDto) {
+    Vue.nextTick(() => {
+      if (disputeWebsocketSummaryDto.type) {
+        switch (disputeWebsocketSummaryDto.type) {
+          case 'DISPUTE_NEAR_EXPIRATION' : state.summaryNearExpirations = disputeWebsocketSummaryDto.summarys
+            break
+          case 'DISPUTE_NOT_VISUALIZED' : state.summaryNotVisualizeds = disputeWebsocketSummaryDto.summarys
+            break
+        }
+      }
+    })
   },
-  clearDisputeFilterTerm (state, tab) {
-    state.filters.filterTerm = ''
-  },
-  changePriorityView (state) {
-    state.filters.priorityOnly = !state.filters.priorityOnly
-  },
-  setInitialLoad (state) {
-    state.initialLoad = true
-  },
-  clearInitialLoad (state) {
-    state.initialLoad = false
-  },
-  setDisputeSort (state, sort) {
-    state.filters.sort.prop = sort.prop
-    state.filters.sort.order = sort.order
-  },
-  clearDisputeSort (state) {
-    state.filters.sort.prop = null
-    state.filters.sort.order = null
-  },
-  setFilterPersonId (state, id) {
-    state.filters.filterPersonId = id
-    state.filters.filteredPerson = false
-  },
-  updateDispute (state, disputeChanged) {
+  SOCKET_ADD_DISPUTE (state, disputeChanged) {
     disputeChanged.disputeNextToExpire = moment(disputeChanged.expirationDate.dateTime).isBetween(moment(), moment().add(3, 'day'))
     Vue.nextTick(() => {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
-      if (disputeIndex === -1) {
-        state.disputes.push(disputeChanged)
-      } else {
+      if (disputeIndex !== -1) {
         let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-        if (dispute.updatedAt && disputeChanged.updatedAt) {
-          if (moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-            Vue.set(state.disputes, disputeIndex, disputeChanged)
-          }
+        if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
+          Vue.set(state.disputes, disputeIndex, disputeChanged)
         } else {
           Vue.set(state.disputes, disputeIndex, disputeChanged)
         }
       }
     })
   },
-  removeDisputeFromList (state, disputeChanged) {
+  SOCKET_REMOVE_DISPUTE ({ commit, state }, disputeChanged) {
     Vue.nextTick(() => {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       Vue.delete(state.disputes, disputeIndex)
@@ -74,10 +102,37 @@ const disputeMutations = {
   },
   setDisputeStatuses (state, status) {
     state.statuses[status.label] = status.value
-  },
-  setDisputesPerPage (state, disputesPerPage) {
-    state.filters.perPage = disputesPerPage
   }
+  // setDisputeTab (state, tab) {
+  //   state.filters.tab = tab
+  // },
+  // clearDisputeTab (state, tab) {
+  //   state.filters.tab = '0'
+  // },
+  // setDisputeFilterTerm (state, term) {
+  //   state.filters.filterTerm = term
+  // },
+  // clearDisputeFilterTerm (state, tab) {
+  //   state.filters.filterTerm = ''
+  // },
+  // changePriorityView (state) {
+  //   state.filters.priorityOnly = !state.filters.priorityOnly
+  // },
+  // setDisputeSort (state, sort) {
+  //   state.filters.sort.prop = sort.prop
+  //   state.filters.sort.order = sort.order
+  // },
+  // clearDisputeSort (state) {
+  //   state.filters.sort.prop = null
+  //   state.filters.sort.order = null
+  // },
+  // setFilterPersonId (state, id) {
+  //   state.filters.filterPersonId = id
+  //   state.filters.filteredPerson = false
+  // },
+  // setDisputesPerPage (state, disputesPerPage) {
+  //   state.filters.perPage = disputesPerPage
+  // }
 }
 
 export default disputeMutations

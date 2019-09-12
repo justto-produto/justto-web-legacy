@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 const mutations = {
   // CHAT
   SOCKET_join (state, join) {
@@ -29,22 +27,8 @@ const mutations = {
     state.whatsapp.number = message.phone
   },
   // OCCURRENCE
-  SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
-    Vue.nextTick(() => {
-      if (!newOccurrence.id) {
-        state.occurrence.list.push(newOccurrence)
-      } else {
-        let occurrenceIndex = state.occurrence.list.findIndex(d => newOccurrence.id === d.id)
-        if (occurrenceIndex === -1) {
-          state.occurrence.list.push(newOccurrence)
-        } else {
-          Vue.set(state.occurrence.list, occurrenceIndex, newOccurrence)
-        }
-      }
-    })
-  },
   clearDisputeOccurrence (state) {
-    state.occurrence.list = []
+    state.occurrence = []
   }
 }
 

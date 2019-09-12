@@ -508,7 +508,7 @@ export default {
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
       this.selectedNegotiatorId = this.dispute.negotiators[0].id || ''
       this.editDisputeDialogVisible = true
-      let dispute = Object.assign({}, this.dispute)
+      let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
@@ -532,7 +532,7 @@ export default {
         showCancelButton: true,
         cancelButtonText: 'Cancelar'
       }).then(() => {
-        this.$store.dispatch('getDispute', this.dispute.id).then(disputeToEdit => {
+        this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           let promises = []
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
@@ -559,6 +559,7 @@ export default {
           }
           Promise.all(promises).then(() => {
             this.editDisputeDialogVisible = false
+            this.$store.dispatch('getDispute', this.dispute.id)
             this.$jusNotification({
               title: 'Yay!',
               message: 'Os dados foram alterados com sucesso.',
@@ -619,6 +620,7 @@ export default {
           disputeId: this.dispute.id,
           disputeRole: roleToEdit
         }).then(responde => {
+          this.$store.dispatch('getDispute', this.dispute.id)
           this.$jusNotification({
             title: 'Yay!',
             message: 'Os dados foram alterados com sucesso.',

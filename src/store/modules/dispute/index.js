@@ -4,20 +4,29 @@ import getters from './getters'
 
 const dispute = {
   state: {
-    disputes: [],
-    initialLoad: false,
-    filters: {
-      tab: '0',
-      filterPersonId: 0,
-      terms: {},
-      filterTerm: '',
-      priorityOnly: false,
-      perPage: 20,
-      sort: {
-        prop: null,
-        order: null
-      }
+    dispute: {
+      id: 0
     },
+    disputes: [],
+    occurrence: [],
+    summaryNearExpirations: [],
+    summaryNotVisualizeds: [],
+    tab: '0',
+    query: {
+      status: ['ENGAGEMENT'],
+      campaigns: [],
+      strategy: [],
+      persons: [],
+      dealDate: [],
+      expirationDate: [],
+      onlyFavorite: false,
+      page: 1,
+      size: 20,
+      term: '',
+      initialSize: 20,
+      total: 0
+    },
+    hasFilters: false,
     statuses: {}
   },
   mutations: mutations,

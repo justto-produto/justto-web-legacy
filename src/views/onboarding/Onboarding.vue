@@ -217,7 +217,7 @@ export default {
     height: 100%;
     margin: 0 auto;
   }
-  .swiper-slide{
+  .swiper-slide {
     display: flex;
     align-items: center;
     padding: 120px;
@@ -249,9 +249,27 @@ export default {
   .el-alert {
     max-width: 400px;
   }
-  @media (max-width: 991px) {
+  @media (max-width: 1080px) {
     .swiper-slide {
+      padding: 60px;
+    }
+  }
+  @media (max-width: 991px) {
+    .el-button--previous-step {
+      z-index: 9 !important;
+      border-radius: 50% !important;
+      padding: 19px !important;
+      position: absolute !important;
+      bottom: 100px !important;
+      right: 20px !important;
+    }
+    .swiper-slide {
+      justify-content: center;
       padding: 40px;
+      .el-button--primary, .el-form {
+        width: 100%;
+        max-width: 100%;
+      }
     }
     .el-form-item {
       width: 100%;

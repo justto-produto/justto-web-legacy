@@ -393,22 +393,22 @@ export default {
       return {}
     },
     occurrences () {
-      return this.$store.getters.disputeOccurrences
+      return this.$store.getters.occurrences
     },
     whatsappStatus () {
       return this.$store.getters.whatsappStatus
     },
     validName () {
-      if (this.$store.getters.currentPersonName && this.$store.getters.currentPersonName !== this.$store.state.accountModule.email) {
+      if (this.$store.getters.loggedPersonName && this.$store.getters.loggedPersonName !== this.$store.state.accountModule.email) {
         return true
       } else {
-        if (!this.$store.getters.currentPersonName || (this.$store.getters.currentPersonName === this.$store.state.accountModule.email)) {
+        if (!this.$store.getters.loggedPersonName || (this.$store.getters.loggedPersonName === this.$store.state.accountModule.email)) {
           return false
         }
       }
     },
     dispute () {
-      return this.$store.getters.findDisputeById(this.id)
+      return this.$store.getters.dispute
     },
     filteredOccurrences () {
       if (this.searchTerm.trim()) {
@@ -440,7 +440,7 @@ export default {
       this.id = id
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute/' + oldId + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
       })
       this.unsubscribeOccurrences(oldId)
       this.getOccurrences()
@@ -453,6 +453,7 @@ export default {
   },
   created () {
     this.id = this.$route.params.id
+    this.$store.dispatch('getDispute', this.id)
     this.getOccurrences()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
@@ -471,7 +472,7 @@ export default {
       this.$store.commit('clearDisputeOccurrence')
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute/' + id + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
       })
     },
     canSettled () {
@@ -520,12 +521,9 @@ export default {
       this.showScheduled = value
     },
     getOccurrences () {
-      if (!this.$store.getters.disputeInitialLoad) {
-        this.$store.dispatch('loadDisputes', { id: this.id })
-      }
       this.$socket.emit('subscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/dispute/' + this.id + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
       this.loadingOccurrences = true
       this.$store.dispatch('loadDisputeOccurrences', this.id)
@@ -557,6 +555,9 @@ export default {
           cancelButtonText: 'Cancelar'
         }).then(() => {
           this.doAction(action)
+          setTimeout(() => {
+            this.$store.dispatch('getDispute', this.id)
+          }, 100)
         })
       }
     },

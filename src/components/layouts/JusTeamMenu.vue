@@ -9,7 +9,7 @@
         <el-tooltip :content="member.person.name" placement="right">
           <jus-avatar-user
             :name="member.person.name"
-            :active="filterPersonId === member.person.id"
+            :active="activePersonsIds.includes(member.person.id)"
             size="sm"
             shape="circle"
             class="el-menu__avatar" />
@@ -26,15 +26,17 @@ export default {
     members () {
       return this.$store.state.workspaceModule.members
     },
-    filterPersonId () {
-      return this.$store.getters.filterPersonId
+    activePersonsIds () {
+      return this.$store.getters.disputeQuery.persons
     }
   },
   methods: {
     setFilterPersonId (id) {
-      if (id === this.filterPersonId) {
-        this.$store.commit('setFilterPersonId', 0)
-      } else this.$store.commit('setFilterPersonId', id)
+      if (this.activePersonsIds.includes(id)) {
+        this.$store.commit('updateDisputeQuery', { key: 'persons', value: [] })
+      } else {
+        this.$store.commit('updateDisputeQuery', { key: 'persons', value: [id] })
+      }
     }
   }
 }

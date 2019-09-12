@@ -13,12 +13,9 @@
           <slot name="left-card"/>
         </el-card>
       </div>
-      <!-- ACTIONS SLOT -->
-      <slot name="actions"/>
       <!-- MAIN CARD SLOT -->
       <el-card
         v-loading="loadingMain"
-        :class="{'jus-main-view__loading-main': loadingMain}"
         element-loading-text="Carregando disputas..."
         class="jus-main-view__main-card">
         <slot name="main"/>
@@ -66,6 +63,7 @@ export default {
 <style lang="scss">
 .jus-main-view {
   height: calc(100% - 60px);
+  min-width: 1024px;
   &__title {
     margin: 40px 20px 0px;
     padding-bottom: 20px;
@@ -109,9 +107,6 @@ export default {
   }
   &--full-height {
     height: auto;
-  }
-  &__loading-main{
-    overflow: hidden;
   }
   &.fullScreen {
     height: 100%;

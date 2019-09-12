@@ -83,8 +83,6 @@
 </template>
 
 <script>
-import { fuseSearchDisputes } from '@/plugins/jusUtils'
-
 export default {
   name: 'JusHeaderMain',
   components: {
@@ -99,7 +97,7 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.getters.currentPersonName
+      return this.$store.getters.loggedPersonName
     },
     workspace () {
       return this.$store.state.workspaceModule.name
@@ -142,14 +140,12 @@ export default {
       }, 1000)
     },
     search (term, cb) {
-      let results = fuseSearchDisputes(this.$store.getters.disputes, term)
-      setTimeout(function () {
-        if (results && results.length) {
-          cb(results)
-        } else {
-          cb([0])
-        }
-      }, 500)
+      clearTimeout(this.termDebounce)
+      this.termDebounce = setTimeout(() => {
+        this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
+          cb(response)
+        })
+      }, 800)
     }
   }
 }

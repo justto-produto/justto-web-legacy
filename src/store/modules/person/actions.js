@@ -11,54 +11,6 @@ const actions = {
         })
     })
   },
-  removeRole ({ commit }, role) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
-  myPerson ({ commit }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/persons/my')
-        .then(response => {
-          commit('setCurrentPerson', response.data)
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
-  editRole ({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error.response)
-        })
-    })
-  },
-  // setPerson ({ commit }, person) {
-  //   return new Promise((resolve, reject) => {
-  //     // eslint-disable-next-line
-  //     axios.put('api/persons', person)
-  //       .then(response => {
-  //         commit('setCurrentPerson', response.data)
-  //         resolve(response.data)
-  //       }).catch(error => {
-  //         reject(error)
-  //       })
-  //   })
-  // },
   setPhone ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -76,7 +28,7 @@ const actions = {
       axios.put('api/persons/' + person.id + '/name', {
         name: person.name
       }).then(response => {
-        commit('setCurrentPerson', response.data)
+        commit('setLoggedPerson', response.data)
         resolve(response.data)
       }).catch(error => {
         reject(error)
