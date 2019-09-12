@@ -44,7 +44,6 @@ const disputeActions = {
       // eslint-disable-next-line
       axios.get('api/disputes/' + id)
         .then(response => {
-          commit('setDispute', response.data)
           resolve(response.data)
         })
         .catch(error => {

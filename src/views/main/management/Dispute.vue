@@ -440,7 +440,7 @@ export default {
       this.id = id
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.workspacePerson.id + '/dispute/' + oldId + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
       })
       this.unsubscribeOccurrences(oldId)
       this.getOccurrences()
@@ -472,7 +472,7 @@ export default {
       this.$store.commit('clearDisputeOccurrence')
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.workspacePerson.id + '/dispute/' + id + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
       })
     },
     canSettled () {
@@ -555,6 +555,9 @@ export default {
           cancelButtonText: 'Cancelar'
         }).then(() => {
           this.doAction(action)
+          setTimeout(() => {
+            this.$store.dispatch('getDispute', this.id)
+          }, 100)
         })
       }
     },

@@ -4,6 +4,10 @@
       <h1>Gerenciamento</h1>
     </template>
     <template slot="main">
+      <management-actions
+        :active="multiActive"
+        :selected-ids="selectedIds"
+        @disputes:clear="clearSelection"/>
       <div class="view-management__filters">
         <el-tabs
           ref="disputeTabs"
@@ -84,7 +88,8 @@ export default {
   name: 'Management',
   components: {
     ManagementFilters: () => import('./partials/ManagementFilters'),
-    ManagementTable: () => import('./partials/ManagementTable')
+    ManagementTable: () => import('./partials/ManagementTable'),
+    ManagementActions: () => import('./partials/ManagementActions')
   },
   data () {
     return {
@@ -93,7 +98,8 @@ export default {
       filtersVisible: false,
       term: '',
       termDebounce: '',
-      disputeDebounce: ''
+      disputeDebounce: '',
+      selectedIds: []
     }
   },
   computed: {
@@ -117,6 +123,9 @@ export default {
       set (tab) {
         this.$store.commit('setDisputesTab', tab)
       }
+    },
+    multiActive () {
+      return this.selectedIds.length >= 1
     },
     disputesTotalLength () {
       return this.$store.getters.disputeQuery.total
@@ -176,6 +185,17 @@ export default {
         })
       }, 300)
     },
+    handleSelectionChange (selected) {
+      this.selectedIds = []
+      for (let dispute of selected) {
+        if (dispute && dispute.id) {
+          this.selectedIds.push(dispute.id)
+        }
+      }
+    },
+    clearSelection () {
+      this.$refs.disputeTable.clearSelection()
+    },
     handleChangeTab (tab) {
       this.$store.commit('clearDisputeQuery')
       this.$store.commit('setDisputeHasFilters', false)
@@ -202,8 +222,7 @@ export default {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).then(response => {
         // eslint-disable-next-line
-        // window.open('/api/export/' + response)
-        window.analytics.track('Planilha de "' + this.activeTabLabel + '" exportada')
+        window.open('/api/export/' + response)
       }).finally(() => {
         this.loadingExport = false
       })
@@ -237,6 +256,7 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
+    position: relative;
   }
   .el-pagination {
     text-align: center;

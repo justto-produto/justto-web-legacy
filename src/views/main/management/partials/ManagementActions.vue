@@ -62,10 +62,6 @@ export default {
     selectedIds: {
       type: Array,
       default: () => []
-    },
-    tabLabel: {
-      type: String,
-      default: 'Revisão'
     }
   },
   data () {
@@ -114,8 +110,7 @@ export default {
         this.chooseUnsettledDialogVisible = false
         window.analytics.track(selecteds + ' ' + trackTitle, {
           action: action,
-          selecteds: selecteds,
-          tab: this.tabLabel
+          selecteds: selecteds
         })
         let self = this
         this.$jusNotification({

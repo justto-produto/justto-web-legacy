@@ -13,8 +13,6 @@
           <slot name="left-card"/>
         </el-card>
       </div>
-      <!-- ACTIONS SLOT -->
-      <slot name="actions"/>
       <!-- MAIN CARD SLOT -->
       <el-card
         v-loading="loadingMain"
