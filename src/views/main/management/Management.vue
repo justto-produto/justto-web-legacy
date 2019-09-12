@@ -1,5 +1,5 @@
 <template>
-  <jus-view-main class="view-management" :loading-main="loadingDisputes">
+  <jus-view-main :loading-main="loadingDisputes" class="view-management">
     <template slot="title">
       <h1>Gerenciamento</h1>
     </template>
@@ -14,30 +14,30 @@
             <span slot="label">
               Sem resposta
               <el-badge
-              :hidden="!engagementLength"
-              :value="engagementLength"
-              :max="99"
-              class="el-badge--absolute" />
+                :hidden="!engagementLength"
+                :value="engagementLength"
+                :max="99"
+                class="el-badge--absolute" />
             </span>
           </el-tab-pane>
           <el-tab-pane name="1">
             <span slot="label">
               Em negociação
               <el-badge
-              :hidden="!interactionLength"
-              :value="interactionLength"
-              :max="99"
-              class="el-badge--absolute" />
+                :hidden="!interactionLength"
+                :value="interactionLength"
+                :max="99"
+                class="el-badge--absolute" />
             </span>
           </el-tab-pane>
           <el-tab-pane name="2" label="Com Interação">
             <span slot="label">
               Proposta aceita
               <el-badge
-              :hidden="!newDealsLength"
-              :value="newDealsLength"
-              :max="99"
-              class="el-badge--absolute" />
+                :hidden="!newDealsLength"
+                :value="newDealsLength"
+                :max="99"
+                class="el-badge--absolute" />
             </span>
           </el-tab-pane>
           <el-tab-pane name="3" label="Com Interação">
@@ -45,7 +45,7 @@
           </el-tab-pane>
         </el-tabs>
         <div class="view-management__buttons">
-          <el-input prefix-icon="el-icon-search" />
+          <el-input v-model="term" clearable prefix-icon="el-icon-search" />
           <el-button plain @click="filtersVisible = true">
             <jus-icon :is-white="false" icon="filter" />
             Filtros
@@ -88,43 +88,71 @@ export default {
       loadingDisputes: false,
       loadingExport: false,
       filtersVisible: false,
-      initialDisputesPerPage: this.$store.getters.disputesInitialSize
+      term: '',
+      termDebounce: ''
+    }
+  },
+  watch: {
+    term (term) {
+      clearTimeout(this.termDebounce)
+      this.termDebounce = setTimeout(() => {
+        this.$store.commit('setDisputeQuery', { key: 'term', value: term })
+        this.getDisputes()
+      }, 800)
     }
   },
   computed: {
-    engagementLength () {},
-    interactionLength () {},
-    newDealsLength () {},
+    engagementLength () {
+      return 0
+    },
+    interactionLength () {
+      return 0
+    },
+    newDealsLength () {
+      return 0
+    },
     disputes () {
       return this.$store.getters.disputes
     },
     activeTab: {
-      get () { return this.$store.getters.disputeTab},
+      get () { return this.$store.getters.disputeTab },
       set (tab) {
         this.$store.commit('setDisputesTab', tab)
       }
     },
     disputesTotalLength () {
-      return this.$store.getters.disputesTotal
+      return this.$store.getters.disputeQuery.total
+    },
+    initialDisputesPerPage () {
+      return this.$store.getters.disputeQuery.initialSize
     },
     disputesPerPage: {
       get () {
-        return this.$store.getters.disputesSize
+        return this.$store.getters.disputeQuery.size
       },
       set (size) {
-        this.$store.commit('setDisputesSize', size)
+        this.$store.commit('setDisputeQuery', { key: 'page', value: 1 })
+        this.$store.commit('setDisputeQuery', { key: 'size', value: size })
+        console.log('disputesPerPage')
         this.getDisputes()
       }
     },
     currentPage: {
       get () {
-        return this.$store.getters.disputesPage
+        return this.$store.getters.disputeQuery.page
       },
-      set (size) {
-        this.$store.commit('setDisputesPage', size)
+      set (page) {
+        this.$store.commit('setDisputeQuery', { key: 'page', value: page })
+        console.log('currentPage')
         this.getDisputes()
       }
     }
+  },
+  beforeCreate () {
+    this.$store.watch(state => state.disputeModule.query.persons, persons => {
+      console.log(persons)
+      this.getDisputes()
+    })
   },
   methods: {
     getDisputes () {
@@ -142,17 +170,18 @@ export default {
     handleChangeTab (tab) {
       switch (tab) {
         case '0':
-          this.$store.commit('setDisputesFilters', { status: ['ENGAGEMENT'] })
-          break;
+          this.$store.commit('setDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })
+          break
         case '1':
-          this.$store.commit('setDisputesFilters', { status: ['RUNNING'] })
-          break;
+          this.$store.commit('setDisputeQuery', { key: 'status', value: ['RUNNING'] })
+          break
         case '2':
-          this.$store.commit('setDisputesFilters', { status: ['ACCEPTED', 'CHECKOUT'] })
-          break;
+          this.$store.commit('setDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
+          break
         default:
-        this.$store.commit('removeDisputesFilter', 'status')
+          this.$store.commit('setDisputeQuery', { key: 'status', value: [] })
       }
+      console.log('handleChangeTab')
       this.getDisputes()
     },
     exportDisputes () {}

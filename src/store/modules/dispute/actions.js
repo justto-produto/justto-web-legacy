@@ -1,6 +1,25 @@
 const FileSaver = require('file-saver')
 import { getRoles } from '@/plugins/jusUtils'
 
+const queryBuilder = q => {
+  let query = '?'
+  console.log(q);
+  for (let [key, value] of Object.entries(q)) {
+    if (['initialSize', 'total'].includes(key)) break
+    if (!value) break
+    if (Array.isArray(value)) {
+      for (let v of value) {
+        query = query + key + '=' + v + '&'
+      }
+    } else if (key === 'page') {
+      query = query + key + '=' + (value - 1) + '&'
+    } else {
+      query = query + key + '=' + value + '&'
+    }
+  }
+  return query
+}
+
 const disputeActions = {
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
@@ -17,13 +36,7 @@ const disputeActions = {
   getDisputes ({ commit, state }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      const page = state.query.page - 1
-      axios.post(
-        'api/disputes/search?page=' + page +
-        '&size=' + state.query.size, //+
-        // '&sort=visualized&visualized.dir=desc',
-        state.filters
-      ).then(response => {
+      axios.get('api/disputes/filter' + queryBuilder(state.query)).then(response => {
         commit('setDisputes', response.data)
         resolve(response.data)
       })
