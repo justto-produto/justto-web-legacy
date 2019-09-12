@@ -46,9 +46,12 @@
         </el-tabs>
         <div class="view-management__buttons">
           <el-input v-model="term" clearable prefix-icon="el-icon-search" />
-          <el-button plain @click="filtersVisible = true">
-            <jus-icon :is-white="false" icon="filter" />
-            Filtros
+          <el-button
+            :plain="!hasFilters"
+            :type="hasFilters ? 'primary' : ''"
+            @click="filtersVisible = true">
+            <jus-icon :is-white="hasFilters" icon="filter" data-testid="management-filterbtn" />
+            Filtrar
           </el-button>
           <el-button
             :loading="loadingExport"
@@ -103,6 +106,9 @@ export default {
     }
   },
   computed: {
+    hasFilters () {
+      return this.$store.getters.disputeHasFilters
+    },
     engagementLength () {
       return 0
     },
@@ -170,6 +176,7 @@ export default {
     },
     handleChangeTab (tab) {
       this.$store.commit('clearDisputeQuery')
+      this.$store.commit('setDisputeHasFilters', false)
       switch (tab) {
         case '0':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })

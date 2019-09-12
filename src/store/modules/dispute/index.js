@@ -24,6 +24,7 @@ const dispute = {
       initialSize: 20,
       total: 0
     },
+    hasFilters: false,
     statuses: {}
   },
   mutations: mutations,

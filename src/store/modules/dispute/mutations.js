@@ -38,6 +38,9 @@ const disputeMutations = {
       total: 0
     }
   },
+  setDisputeHasFilters(state, bol) {
+    state.hasFilters = bol
+  },
   setDisputesTab (state, tab) {
     state.tab = tab
   },

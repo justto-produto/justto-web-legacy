@@ -127,7 +127,7 @@
             <el-form-item label="Exibir somente:" class="management-filters__switch">
               <div>
                 <div>
-                  <jus-icon icon="golden-star" /> Disputas favoritas
+                  <jus-icon icon="golden-star" /> Somente favoritas
                 </div>
                 <el-switch v-model="filters.onlyFavorite" data-testid="filters-favorite" />
               </div>
@@ -319,6 +319,7 @@ export default {
   },
   methods: {
     applyFilters () {
+      this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
     },
@@ -329,6 +330,7 @@ export default {
       this.clearCampaign()
       this.clearStrategy()
       this.filters.onlyFavorite = false
+      this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
     },
