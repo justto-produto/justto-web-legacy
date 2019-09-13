@@ -186,10 +186,6 @@ export default {
       type: String,
       default: '0'
     },
-    disputes: {
-      type: Array,
-      default: () => []
-    },
     selectedIds: {
       type: Array,
       default: () => []
@@ -203,12 +199,15 @@ export default {
       set (ids) {
         this.$emit('update:selectedIds', ids)
       }
+    },
+    disputes () {
+      return this.$store.getters.disputes
     }
   },
   methods: {
     tableRowClassName ({ row, rowIndex }) {
       // if (row.visualized && ['1', '2'].includes(this.activeTab)) {
-      if (!row.visualized && ['0', '2'].includes(this.activeTab)) {
+      if (!row.visualized && ['0', '2'].includes(this.activeTab) || row.disputeNextToExpire && this.activeTab==0) {
         return 'el-table__row--visualized-row'
       }
     },

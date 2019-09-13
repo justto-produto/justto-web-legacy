@@ -10,20 +10,23 @@ const disputeGetters = {
   dispute: state => state.dispute,
   disputeHasFilters: state => state.hasFilters,
   disputeStatuses: state => state.statuses,
-  filterNotVisualizeds: state => (disputePhase) => {
-    let filteredSummarys = state.summaryNotVisualizeds.filter (s => s.disputePhase === disputePhase)
+  filterSummary: state => (disputePhase, summarys) => {
+    let filteredSummarys = summarys.filter (s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {
       return filteredSummarys[0].quantity
     } return 0
   },
+  disputeNearExpirationsEngajement: (state, getters) => {
+    return getters.filterSummary('ENGAGEMENT', state.summaryNearExpirations)
+  },
   disputeNotVisualizedEngajement: (state, getters) => {
-    return getters.filterNotVisualizeds('ENGAGEMENT')
+    return getters.filterSummary('ENGAGEMENT', state.summaryNotVisualizeds)
   },
   disputeNotVisualizedInteration: (state, getters) => {
-    return getters.filterNotVisualizeds('INTERACTION')
+    return getters.filterSummary('INTERACTION', state.summaryNotVisualizeds)
   },
   disputeNotVisualizedNewDeal: (state, getters) => {
-    return getters.filterNotVisualizeds('NEW_DEAL')
+    return getters.filterSummary('NEW_DEAL', state.summaryNotVisualizeds)
   }
 
 // disputeOccurrences: state => state.occurrence.sort((a, b) => {

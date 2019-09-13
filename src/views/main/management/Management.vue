@@ -107,7 +107,7 @@ export default {
       return this.$store.getters.disputeHasFilters
     },
     engagementLength () {
-      return this.$store.getters.disputeNotVisualizedEngajement
+      return this.$store.getters.disputeNearExpirationsEngajement
     },
     interactionLength () {
       return this.$store.getters.disputeNotVisualizedInteration

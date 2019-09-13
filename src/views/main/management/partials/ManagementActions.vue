@@ -118,16 +118,6 @@ export default {
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
           dangerouslyUseHTMLString: true,
-          onClose () {
-            setTimeout(() => {
-              this.$jusNotification({
-                title: 'Fique atento!',
-                message: `Algumas ações em lote podem demorar até serem executadas em nosso sistema.
-                Caso sua ação ainda não tenha refletido em seus casos, aguarde um pouco mais e utilize o botão de atualizar os casos.`,
-                type: 'info'
-              })
-            }, 300)
-          }
         })
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
