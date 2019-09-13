@@ -19,9 +19,6 @@ const disputeGetters = {
   disputeNearExpirationsEngajement: (state, getters) => {
     return getters.filterSummary('ENGAGEMENT', state.summaryNearExpirations)
   },
-  disputeNotVisualizedEngajement: (state, getters) => {
-    return getters.filterSummary('ENGAGEMENT', state.summaryNotVisualizeds)
-  },
   disputeNotVisualizedInteration: (state, getters) => {
     return getters.filterSummary('INTERACTION', state.summaryNotVisualizeds)
   },

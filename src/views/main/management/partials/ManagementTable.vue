@@ -176,6 +176,8 @@
 </template>
 
 <script>
+import { getLastInteraction, getLastInteractionIcon } from '@/plugins/jusUtils'
+
 export default {
   name: 'ManagementTable',
   components: {
@@ -205,6 +207,8 @@ export default {
     }
   },
   methods: {
+    getLastInteraction: (i) => getLastInteraction(i),
+    getLastInteractionIcon: (i) => getLastInteractionIcon(i),
     tableRowClassName ({ row, rowIndex }) {
       if (!row.visualized && ['1', '2'].includes(this.activeTab)) {
         return 'el-table__row--visualized-row'
@@ -244,7 +248,6 @@ export default {
           aba: tab,
           action: label
         })
-        this.$store.dispatch('getDisputes')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Disputa ' + label + ' com sucesso.',

@@ -110,12 +110,10 @@ export default {
       if (this.workspace) {
         this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
         this.subscriptions.length = 0
-
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/alert' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute/summary' })
-
         this.subscriptions.forEach(s => this.$socket.emit('subscribe', s))
       }
     }

@@ -74,7 +74,7 @@
       <management-filters
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
-      <management-table ref="managementTable" :selected-ids.sync="selectedIds"/>
+      <management-table ref="managementTable" :active-tab.sync="activeTab" :selected-ids.sync="selectedIds"/>
       <el-pagination
         :total.sync="disputesTotalLength"
         :page-size.sync="disputesPerPage"
@@ -215,10 +215,7 @@ export default {
     },
     exportDisputes () {
       this.loadingExport = true
-      this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).then(response => {
-        // eslint-disable-next-line
-        window.open('/api/export/' + response)
-      }).finally(() => {
+      this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).finally(() => {
         this.loadingExport = false
       })
     }
