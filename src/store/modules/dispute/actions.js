@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import moment from 'moment'
 const FileSaver = require('file-saver')
 let debounce
@@ -27,6 +28,24 @@ const queryBuilder = q => {
 }
 
 const disputeActions = {
+  SOCKET_ADD_DISPUTE ({ dispatch, state }, disputeChanged) {
+    Vue.nextTick(() => {
+      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
+      if (disputeIndex !== -1) {
+        let dispute = state.disputes.find(d => disputeChanged.id === d.id)
+        if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
+          Vue.set(state.disputes, disputeIndex, disputeChanged)
+        } else {
+          Vue.set(state.disputes, disputeIndex, disputeChanged)
+        }
+      } else {
+        clearTimeout(debounce)
+        debounce = setTimeout(() => {
+          dispatch('getDisputes')
+        }, 2000)
+      }
+    })
+  },
   SOCKET_REMOVE_DISPUTE ({ dispatch }) {
     clearTimeout(debounce)
     debounce = setTimeout(() => {

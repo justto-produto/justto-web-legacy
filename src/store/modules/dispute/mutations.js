@@ -80,20 +80,6 @@ const disputeMutations = {
       }
     })
   },
-  SOCKET_ADD_DISPUTE (state, disputeChanged) {
-    disputeChanged.disputeNextToExpire = moment(disputeChanged.expirationDate.dateTime).isBetween(moment(), moment().add(3, 'day'))
-    Vue.nextTick(() => {
-      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
-      if (disputeIndex !== -1) {
-        let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-        if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-          Vue.set(state.disputes, disputeIndex, disputeChanged)
-        } else {
-          Vue.set(state.disputes, disputeIndex, disputeChanged)
-        }
-      }
-    })
-  },
   setDisputeStatuses (state, status) {
     state.statuses[status.label] = status.value
   }

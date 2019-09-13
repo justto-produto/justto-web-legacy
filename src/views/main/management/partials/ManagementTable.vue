@@ -136,7 +136,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="activeTab === '0'"
+      v-if="activeTab === '3'"
       :sortable="false"
       label="Status"
       prop="status"
