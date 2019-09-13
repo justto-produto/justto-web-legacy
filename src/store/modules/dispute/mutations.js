@@ -68,13 +68,13 @@ const disputeMutations = {
       }
     })
   },
-  SOCKET_ADD_DISPUTE_SUMMARY (state, disputeWebsocketSummaryDto) {
+  SOCKET_ADD_DISPUTE_SUMARY (state, disputeWebsocketSummaryDto) {
     Vue.nextTick(() => {
       if (disputeWebsocketSummaryDto.type) {
         switch (disputeWebsocketSummaryDto.type) {
-          case 'DISPUTE_NEAR_EXPIRATION' : state.summaryNearExpirations = disputeWebsocketSummaryDto.summarys
+          case 'DISPUTE_NEAR_EXPIRATION' : state.summaryNearExpirations = disputeWebsocketSummaryDto.summaries
             break
-          case 'DISPUTE_NOT_VISUALIZED' : state.summaryNotVisualizeds = disputeWebsocketSummaryDto.summarys
+          case 'DISPUTE_NOT_VISUALIZED' : state.summaryNotVisualizeds = disputeWebsocketSummaryDto.summaries
             break
         }
       }

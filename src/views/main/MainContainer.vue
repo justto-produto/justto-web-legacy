@@ -60,10 +60,22 @@ export default {
   },
   data () {
     return {
+      subscriptions: [],
       isCollapse: true,
-      workspace: '',
-      personId: '',
-      headers: ''
+    }
+  },
+  computed:{
+    workspace () {
+      return this.$store.getters.workspaceSubdomain
+    },
+    personId () {
+      return this.$store.getters.loggedPersonId
+    },
+    headers () {
+      return {
+        Authorization: this.$store.getters.accountToken,
+        Workspace: this.workspace
+      }
     }
   },
   beforeCreate () {
@@ -76,32 +88,35 @@ export default {
     })
   },
   beforeMount () {
-    this.workspace = this.workspace
-    this.personId = this.$store.getters.loggedPersonId
-    this.headers = {
-      Authorization: this.$store.getters.accountToken,
-      Workspace: this.workspace
-    }
     this.subscribe()
   },
   beforeDestroy () {
-    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
-    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
-    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/alert' })
-    this.$socket.emit('unsubscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/summary' })
+    this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
+    this.subscriptions.length = 0
   },
   sockets: {
     reconnect () {
       this.subscribe()
     }
   },
+  watch: {
+    workspace (workspace) {
+      console.log("Alterando workspace para "+ workspace)
+      this.subscribe()
+    }
+  },
   methods: {
     subscribe () {
       if (this.workspace) {
-        this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
-        this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
-        this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/alert' })
-        this.$socket.emit('subscribe', { headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/summary' })
+        this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
+        this.subscriptions.length = 0
+
+        this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
+        this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
+        this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/alert' })
+        this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute/summary' })
+
+        this.subscriptions.forEach(s => this.$socket.emit('subscribe', s))
       }
     }
   }

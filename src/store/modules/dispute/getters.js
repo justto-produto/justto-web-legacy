@@ -11,7 +11,7 @@ const disputeGetters = {
   disputeHasFilters: state => state.hasFilters,
   disputeStatuses: state => state.statuses,
   filterNotVisualizeds: state => (disputePhase) => {
-    let filteredSummarys = state.summaryNotVisualizeds.filter(s => { s.disputePhase = disputePhase })
+    let filteredSummarys = state.summaryNotVisualizeds.filter (s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {
       return filteredSummarys[0].quantity
     } return 0
