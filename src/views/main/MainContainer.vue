@@ -101,7 +101,6 @@ export default {
   },
   watch: {
     workspace (workspace) {
-      console.log("Alterando workspace para "+ workspace)
       this.subscribe()
     }
   },
