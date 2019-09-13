@@ -21,6 +21,7 @@
                 :hidden="!engagementLength"
                 :value="engagementLength"
                 :max="99"
+                type="primary"
                 class="el-badge--absolute" />
             </span>
           </el-tab-pane>
@@ -31,6 +32,7 @@
                 :hidden="!interactionLength"
                 :value="interactionLength"
                 :max="99"
+                type="primary"
                 class="el-badge--absolute" />
             </span>
           </el-tab-pane>
@@ -41,6 +43,7 @@
                 :hidden="!newDealsLength"
                 :value="newDealsLength"
                 :max="99"
+                type="primary"
                 class="el-badge--absolute" />
             </span>
           </el-tab-pane>
@@ -71,7 +74,7 @@
       <management-filters
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
-      <management-table ref="managementTable" :disputes="disputes" :selected-ids.sync="selectedIds"/>
+      <management-table ref="managementTable" :selected-ids.sync="selectedIds"/>
       <el-pagination
         :total.sync="disputesTotalLength"
         :page-size.sync="disputesPerPage"

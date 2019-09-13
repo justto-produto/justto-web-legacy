@@ -94,12 +94,6 @@ const disputeMutations = {
       }
     })
   },
-  SOCKET_REMOVE_DISPUTE (state, disputeChanged) {
-    Vue.nextTick(() => {
-      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
-      Vue.delete(state.disputes, disputeIndex)
-    })
-  },
   setDisputeStatuses (state, status) {
     state.statuses[status.label] = status.value
   }

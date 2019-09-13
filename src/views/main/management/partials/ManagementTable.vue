@@ -206,8 +206,7 @@ export default {
   },
   methods: {
     tableRowClassName ({ row, rowIndex }) {
-      // if (row.visualized && ['1', '2'].includes(this.activeTab)) {
-      if (!row.visualized && ['0', '2'].includes(this.activeTab) || row.disputeNextToExpire && this.activeTab==0) {
+      if (!row.visualized && ['1', '2'].includes(this.activeTab)) {
         return 'el-table__row--visualized-row'
       }
     },

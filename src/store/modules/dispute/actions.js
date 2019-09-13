@@ -1,5 +1,6 @@
 import moment from 'moment'
 const FileSaver = require('file-saver')
+let debounce
 
 const queryBuilder = q => {
   let query = '?'
@@ -26,6 +27,12 @@ const queryBuilder = q => {
 }
 
 const disputeActions = {
+  SOCKET_REMOVE_DISPUTE ({ dispatch }) {
+    clearTimeout(debounce)
+    debounce = setTimeout(() => {
+      dispatch('getDisputes')
+    }, 2000)
+  },
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
