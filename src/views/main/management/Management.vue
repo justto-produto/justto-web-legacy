@@ -238,6 +238,7 @@ export default {
     }
     .el-input {
       width: 200px;
+      vertical-align: middle;
     }
     img {
       margin: -3px 0px;

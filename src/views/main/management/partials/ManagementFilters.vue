@@ -56,7 +56,7 @@
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
-                @change="clearDealDate" />
+                @change="changeDealDate" />
             </el-form-item>
           </el-col>
           <!-- ÚLTIMA INTERAÇÃO -->
@@ -119,7 +119,7 @@
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
-                @change="clearDisputeExpirationDate" />
+                @change="changeExpirationDate" />
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
@@ -329,6 +329,8 @@ export default {
       }
       this.clearCampaign()
       this.clearStrategy()
+      this.changeDealDate()
+      this.changeExpirationDate()
       this.filters.onlyFavorite = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
@@ -337,33 +339,37 @@ export default {
     restoreFilters () {
       this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
     },
-    clearInteraction (value) {
-      delete this.filters.lastInteractionType
-    },
+    // clearInteraction (value) {
+    //   delete this.filters.lastInteractionType
+    // },
     clearStrategy () {
       this.filters.strategy = []
     },
     clearCampaign () {
       this.filters.campaigns = []
     },
-    clearDisputestate () {
-      delete this.filters.disputestate
-    },
-    clearDealDate (value) {
-      this.filters.dealDate = []
-    },
-    clearLastInteractionDate (value) {
+    // clearDisputestate () {
+    //   delete this.filters.disputestate
+    // },
+    changeDealDate (value) {
       if (value) {
-        this.filters.lastInteractionDate = value
+        this.filters.dealDate = value
       } else {
-        delete this.filters.lastInteractionDate
+        this.filters.dealDate = []
       }
     },
-    clearDisputeExpirationDate (value) {
+    // clearLastInteractionDate (value) {
+    //   if (value) {
+    //     this.filters.lastInteractionDate = value
+    //   } else {
+    //     delete this.filters.lastInteractionDate
+    //   }
+    // },
+    changeExpirationDate (value) {
       if (value) {
         this.filters.expirationDate = value
       } else {
-        delete this.filters.expirationDate
+        this.filters.expirationDate = []
       }
     }
   }

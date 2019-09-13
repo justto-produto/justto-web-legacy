@@ -11,8 +11,8 @@ const queryBuilder = q => {
     if (Array.isArray(value)) {
       if (!value.length) continue
       if (['expirationDate', 'dealDate'].includes(key)) {
-        query = query + key + 'Start' + '=' + moment(value[0]).format('YYYY-MM-DDHH:mm:ss') + '&'
-        query = query + key + 'End' + '=' + moment(value[1]).format('YYYY-MM-DDHH:mm:ss') + '&'
+        query = query + key + 'Start' + '=' + moment(value[0]).add(1, 'd').startOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]') + '&'
+        query = query + key + 'End' + '=' + moment(value[1]).add(1, 'd').endOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]') + '&'
       } else {
         for (let v of value) {
           query = query + key + '=' + v + '&'
