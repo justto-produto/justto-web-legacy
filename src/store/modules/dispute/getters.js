@@ -13,7 +13,9 @@ const disputeGetters = {
   filterSummary: state => (disputePhase, summarys) => {
     let filteredSummarys = summarys.filter (s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {
-      return filteredSummarys[0].quantity
+      let counter = 0;
+      filteredSummarys.forEach( s => counter += s.quantity)
+      return counter
     } return 0
   },
   disputeNearExpirationsEngajement: (state, getters) => {
