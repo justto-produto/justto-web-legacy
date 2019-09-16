@@ -571,6 +571,9 @@ export default {
             this.editDisputeDialogLoading = false
           })
         })
+        .catch(() => {
+          this.$jusNotification({ type: 'error' })
+        })
       }).catch(() => {
         this.editDisputeDialogLoading = false
       })
