@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import moment from 'moment'
 
 const disputeMutations = {
   setDisputes (state, pageable) {
@@ -10,8 +9,11 @@ const disputeMutations = {
   setDispute (state, disputeVM) {
     state.dispute = disputeVM
   },
+  clearDispute (state) {
+    state.dispute = { id: 0 }
+  },
   clearDisputeOccurrence (state) {
-    state.occurrence.length = 0
+    state.occurrences.length = 0
   },
   clearDisputes (state) {
     state.disputes = []
@@ -54,16 +56,19 @@ const disputeMutations = {
   clearDisputeTab (state, tab) {
     state.tab = '0'
   },
+  setDisputeOccurrences (state, occurrences) {
+    if (occurrences && occurrences.length) state.occurrences = occurrences
+  },
   SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
     Vue.nextTick(() => {
       if (!newOccurrence.id) {
-        state.occurrence.push(newOccurrence)
+        state.occurrences.push(newOccurrence)
       } else {
-        let occurrenceIndex = state.occurrence.findIndex(d => newOccurrence.id === d.id)
+        let occurrenceIndex = state.occurrences.findIndex(d => newOccurrence.id === d.id)
         if (occurrenceIndex === -1) {
-          state.occurrence.push(newOccurrence)
+          state.occurrences.push(newOccurrence)
         } else {
-          Vue.set(state.occurrence, occurrenceIndex, newOccurrence)
+          Vue.set(state.occurrences, occurrenceIndex, newOccurrence)
         }
       }
     })

@@ -337,6 +337,7 @@
       </div>
       <dispute-overview
         v-if="dispute"
+        :loading.sync="loadingDispute"
         :dispute.sync="dispute"
         :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview" />
@@ -374,6 +375,7 @@ export default {
       unsettledType: null,
       typingTab: '1',
       loadingTextarea: false,
+      loadingDispute: false,
       loadingOccurrences: false,
       activeRoleId: 0
     }
@@ -447,7 +449,7 @@ export default {
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
       })
       this.unsubscribeOccurrences(oldId)
-      this.getOccurrences()
+      this.fetchData()
     },
     showSearch (value) {
       if (!value) {
@@ -457,8 +459,7 @@ export default {
   },
   created () {
     this.id = this.$route.params.id
-    this.$store.dispatch('getDispute', this.id)
-    this.getOccurrences()
+    this.fetchData()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
     } else {
@@ -524,18 +525,21 @@ export default {
     toggleShowSchedule (value) {
       this.showScheduled = value
     },
-    getOccurrences () {
+    fetchData () {
+      this.loadingDispute = true
+      this.loadingOccurrences = true
       this.$socket.emit('subscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
-      this.loadingOccurrences = true
-      this.$store.dispatch('loadDisputeOccurrences', this.id)
-        .catch(() => {
+      Promise.all([
+        this.$store.dispatch('getDispute', this.id),
+        this.$store.dispatch('getDisputeOccurrences', this.id)
+      ]).catch(() => {
           this.$jusNotification({ type: 'error' })
-        })
-        .finally(() => {
+        }).finally(() => {
           setTimeout(() => {
+            this.loadingDispute = false
             this.loadingOccurrences = false
           }, 500)
         })
@@ -559,9 +563,6 @@ export default {
           cancelButtonText: 'Cancelar'
         }).then(() => {
           this.doAction(action)
-          setTimeout(() => {
-            this.$store.dispatch('getDispute', this.id)
-          }, 100)
         })
       }
     },

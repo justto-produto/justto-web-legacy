@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="dispute-overview-view">
+  <div v-loading="loading" class="dispute-overview-view">
     <el-collapse value="1">
-      <el-collapse-item v-loading="loading" title="Informações gerais" name="1">
+      <el-collapse-item title="Informações gerais" name="1">
         <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Data da importação:</span>
           <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
@@ -71,7 +71,6 @@
     </el-collapse>
     <hr>
     <el-collapse
-      v-loading="loading"
       ref="roleCollapse"
       accordion
       class="el-collapse--bordered"

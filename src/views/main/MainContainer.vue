@@ -61,10 +61,10 @@ export default {
   data () {
     return {
       subscriptions: [],
-      isCollapse: true,
+      isCollapse: true
     }
   },
-  computed:{
+  computed: {
     workspace () {
       return this.$store.getters.workspaceSubdomain
     },
@@ -76,6 +76,11 @@ export default {
         Authorization: this.$store.getters.accountToken,
         Workspace: this.workspace
       }
+    }
+  },
+  watch: {
+    workspace (workspace) {
+      this.subscribe()
     }
   },
   beforeCreate () {
@@ -112,7 +117,7 @@ export default {
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/alert' })
-        this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute/summary' })
+        // this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute/summary' })
         this.subscriptions.forEach(s => this.$socket.emit('subscribe', s))
       }
     }

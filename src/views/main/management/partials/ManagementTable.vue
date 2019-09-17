@@ -194,7 +194,7 @@ export default {
     }
   },
   computed: {
-     selectedIdsComp: {
+    selectedIdsComp: {
       get () {
         return this.selectedIds
       },
