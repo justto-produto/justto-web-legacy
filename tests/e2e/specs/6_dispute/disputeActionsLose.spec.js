@@ -29,11 +29,11 @@ describe('Justto.App - Disputa: Ação Perder', function () {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
-      .click({force: true})
+      .click({ force: true })
 
     // Entra na disputa
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
-      .click({force: true})
+      .click({ force: true })
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')

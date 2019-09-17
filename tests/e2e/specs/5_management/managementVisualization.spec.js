@@ -32,7 +32,7 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
-      .click({force: true})
+      .click({ force: true })
 
     // Verifica se existem casos exibidos
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row')
@@ -42,7 +42,7 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
       .click()
 
       // Verifica se existem casos exibidos
-      cy.get('tbody>tr').first()
-        .should('be.visible')
+    cy.get('tbody>tr').first()
+      .should('be.visible')
   })
 })

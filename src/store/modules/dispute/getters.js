@@ -13,8 +13,8 @@ const disputeGetters = {
   filterSummary: state => (disputePhase, summarys) => {
     let filteredSummarys = summarys.filter(s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {
-      let counter = 0;
-      filteredSummarys.forEach( s => counter += s.quantity)
+      let counter = 0
+      filteredSummarys.forEach(s => (counter += s.quantity))
       return counter
     } return 0
   },

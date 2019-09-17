@@ -1,4 +1,4 @@
-//erro de getters, de resto ok
+// erro de getters, de resto ok
 
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import JusImportFeedbackCard from '@/components/layouts/JusImportFeedbackCard.vue'

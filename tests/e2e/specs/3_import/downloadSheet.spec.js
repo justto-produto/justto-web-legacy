@@ -32,7 +32,7 @@ describe('Justto.App - Planilha Modelo', function () {
 
     // Acessa a tela de gerenciamento
     cy.get('[data-testid=menu-import]')
-      .click({force: true})
+      .click({ force: true })
     // Sistema deve redirecionar para a página de Importação
     cy.url().should('include', '/#/import')
 

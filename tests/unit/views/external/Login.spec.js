@@ -17,7 +17,7 @@ describe('Login.vue', () => {
   let router = new VueRouter()
   beforeEach(() => {
     actions = {
-      logout: jest.fn(),
+      logout: jest.fn()
     }
     store = new Vuex.Store({
       actions,

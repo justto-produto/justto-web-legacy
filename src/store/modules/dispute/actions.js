@@ -189,18 +189,6 @@ const disputeActions = {
         })
     })
   },
-  getDisputeOccurrences ({ commit }, id) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/occurrences?sort=id,asc&size=100000')
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
   getDisputeStatuses ({ commit }, status) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

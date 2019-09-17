@@ -30,10 +30,10 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
-      .click({force: true})
+      .click({ force: true })
 
-    //// TODO: Tivemos que adiciocar um delay por causa da lentidão do sistema
-    cy.log("Aguarde carregar disputas")
+    /// / TODO: Tivemos que adiciocar um delay por causa da lentidão do sistema
+    cy.log('Aguarde carregar disputas')
     cy.wait(10000)
 
     // Seleciona primeira disputa

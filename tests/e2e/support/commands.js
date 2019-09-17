@@ -37,7 +37,7 @@ Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
         const dataTransfer = new DataTransfer()
         dataTransfer.items.add(testFile)
         el.files = dataTransfer.files
-        el.dispatchEvent(new Event('change', {bubbles: true}))
+        el.dispatchEvent(new Event('change', { bubbles: true }))
       })
   })
 })
@@ -56,14 +56,14 @@ Cypress.Commands.add('deleteWorkspace', (email, password, sub_domain) => {
   cy.request({
     url: '/api/accounts/token', // assuming you've exposed a seeds route
     method: 'POST',
-    body: loginDelete,
+    body: loginDelete
   })
-  .its('body')
-  .then((body) => {
-    cy.request({
-      url: '/api/disputes/workspace/' + sub_domain,
-      method: 'DELETE',
-      headers: 'Authorization: ' + body.token
+    .its('body')
+    .then((body) => {
+      cy.request({
+        url: '/api/disputes/workspace/' + sub_domain,
+        method: 'DELETE',
+        headers: 'Authorization: ' + body.token
+      })
     })
-  })
 })

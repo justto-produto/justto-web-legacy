@@ -3,7 +3,6 @@
 const login = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
 
-
 describe('Justto.App - Disputa: Notas', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
@@ -31,14 +30,14 @@ describe('Justto.App - Disputa: Notas', function () {
 
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
-    .contains('Todos')
-    .click({force: true})
+      .contains('Todos')
+      .click({ force: true })
   })
 
   it('Salvar Nota: Sucesso', function () {
     // Entra na disputa
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
-      .click({force: true})
+      .click({ force: true })
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
@@ -46,16 +45,16 @@ describe('Justto.App - Disputa: Notas', function () {
     // Entra na aba 'Notas'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Nota')
-      .click({force: true})
+      .click({ force: true })
 
-    function randomText(size) {
-      var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-      var result = '';
+    function randomText (size) {
+      var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
+      var result = ''
       for (var i = 0; i < size; i++) {
-        var n = Math.floor(Math.random() * caracters.length);
-        result += caracters.substring(n, n + 1);
+        var n = Math.floor(Math.random() * caracters.length)
+        result += caracters.substring(n, n + 1)
       }
-      return 'TST' + result;
+      return 'TST' + result
     }
     const message = randomText(12)
 
@@ -74,13 +73,13 @@ describe('Justto.App - Disputa: Notas', function () {
       .should('be.visible')
 
     // Nota deve aparecer entre as mensagens
-    cy.contains(message,  { timeout: 60000 })
+    cy.contains(message, { timeout: 60000 })
       .should('be.visible')
 
     // Caixa de nota deve estar visivel e amarela
     cy.get('[data-testid=message-box]')
       .should('be.visible')
-      .should('have.css', 'background-color', 'rgb(255, 235, 161)',)
+      .should('have.css', 'background-color', 'rgb(255, 235, 161)')
       .contains('Esta mensagem é visível somente aos negociadores.').last()
       .should('be.visible')
   })

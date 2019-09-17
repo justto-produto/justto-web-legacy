@@ -536,13 +536,13 @@ export default {
         this.$store.dispatch('getDispute', this.id),
         this.$store.dispatch('getDisputeOccurrences', this.id)
       ]).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          setTimeout(() => {
-            this.loadingDispute = false
-            this.loadingOccurrences = false
-          }, 500)
-        })
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        setTimeout(() => {
+          this.loadingDispute = false
+          this.loadingOccurrences = false
+        }, 500)
+      })
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {

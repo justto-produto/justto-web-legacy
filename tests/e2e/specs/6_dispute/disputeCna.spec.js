@@ -3,7 +3,6 @@
 const login = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
 
-
 describe('Justto.App - Disputa: Menssagens', function () {
   beforeEach('Login', function () {
     // Acessa a página inicial do Justto.App
@@ -31,8 +30,8 @@ describe('Justto.App - Disputa: Menssagens', function () {
 
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
-    .contains('Todos')
-    .click({force: true})
+      .contains('Todos')
+      .click({ force: true })
   })
 
   it('Envio de CNA: Parte não selecionada', function () {
@@ -50,10 +49,9 @@ describe('Justto.App - Disputa: Menssagens', function () {
 
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
-    .contains('Todos')
-    .click({force: true})
+      .contains('Todos')
+      .click({ force: true })
   })
-
 
   it('Envia de CNA: Sucesso', function () {
     // Entra na primeira disputa da lista
@@ -68,14 +66,14 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.get('[data-testid=select-cna]')
       .click()
 
-    function randomText(size) {
-      var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-      var result = '';
+    function randomText (size) {
+      var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
+      var result = ''
       for (var i = 0; i < size; i++) {
-        var n = Math.floor(Math.random() * caracters.length);
-        result += caracters.substring(n, n + 1);
+        var n = Math.floor(Math.random() * caracters.length)
+        result += caracters.substring(n, n + 1)
       }
-      return 'TST' + result;
+      return 'TST' + result
     }
     const message = randomText(12)
 

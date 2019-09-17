@@ -104,11 +104,6 @@ export default {
       this.subscribe()
     }
   },
-  watch: {
-    workspace (workspace) {
-      this.subscribe()
-    }
-  },
   methods: {
     subscribe () {
       if (this.workspace) {

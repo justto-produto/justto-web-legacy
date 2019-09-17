@@ -36,7 +36,7 @@ describe('Justto.App - Onboarding', function () {
     cy.get('[data-testid=teamname-next]')
       .click()
     cy.contains('Crie o seu espaço de trabalho na Justto')
-    .should('be.visible')
+      .should('be.visible')
   })
 
   const randomSubdomain = new Date().getTime().toString()
@@ -82,7 +82,6 @@ describe('Justto.App - Onboarding', function () {
       .type(subDomain)
       .should('have.value', subDomain)
 
-
     // Verifica se subdomínio digitado está disponível
     cy.contains('Subdomínio disponível.')
       .should('be.visible')
@@ -93,7 +92,7 @@ describe('Justto.App - Onboarding', function () {
 
     // Verifica próximo passo é 'Adicione pessoas à sua equipe'
     cy.contains('Adicione pessoas à sua equipe')
-      // .should('be.visible')
+    // .should('be.visible')
   })
 
   //

@@ -3,7 +3,6 @@ const login_unsynced = Cypress.env('not-configured-account-email')
 const password = Cypress.env('default-password  ')
 
 describe('Justto.App - Disputa: Menssagens', function () {
-
   it('Envio de Whatsapp: Desconectado', function () {
     // Acessa a página inicial do Justto.App
     cy.visit('/')
@@ -13,21 +12,20 @@ describe('Justto.App - Disputa: Menssagens', function () {
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-    .type(login_unconected)
-    .should('have.value', login_unconected)
+      .type(login_unconected)
+      .should('have.value', login_unconected)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-    .type(password)
-    .should('have.value', password)
+      .type(password)
+      .should('have.value', password)
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
-    .click()
+      .click()
 
     // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
-
 
     // Entra na primeira disputa da lista
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
