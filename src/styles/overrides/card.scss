@@ -95,3 +95,18 @@
     color: $--color-white;
   }
 }
+
+.el-card--occurrence {
+  border: 1px solid #9461f7;
+  .el-card__header {
+    padding: 14px;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #9461f7;
+    color: white;
+    border: none;
+  }
+  .el-card__body {
+    padding: 14px;
+  }
+}

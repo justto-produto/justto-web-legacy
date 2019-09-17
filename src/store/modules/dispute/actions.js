@@ -322,7 +322,8 @@ const disputeActions = {
   getDisputeOccurrences ({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + disputeId + '/occurrences?size=99999&sort=id,asc')
+      axios.get('https://a3e14757-3db5-4037-a0eb-b7c47aeea157.mock.pstmn.io/api/disputes/%7B%7Bdispute_id%7D%7D/occurrences?size=20&page=0')
+      // axios.get('api/disputes/' + disputeId + '/occurrences?size=99999&sort=id,asc')
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)
