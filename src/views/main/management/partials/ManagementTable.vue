@@ -212,8 +212,7 @@ export default {
     getLastInteraction: (i) => getLastInteraction(i),
     getInteractionIcon: (i) => getInteractionIcon(i),
     tableRowClassName ({ row, rowIndex }) {
-      if ((!row.visualized && ['1', '2'].includes(this.activeTab)) ||
-      (row.disputeNextToExpire && ['0'].includes(this.activeTab))) {
+      if (!row.visualized) {
         return 'el-table__row--visualized-row'
       }
     },

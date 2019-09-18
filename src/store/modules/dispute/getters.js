@@ -19,7 +19,9 @@ const disputeGetters = {
     } return 0
   },
   disputeNearExpirationsEngajement: (state, getters) => {
-    return getters.filterSummary('ENGAGEMENT', state.summaryNearExpirations)
+    let pending = getters.filterSummary('ENGAGEMENT', state.summaryNearExpirations)
+    pending += getters.filterSummary('OTHER', state.summaryNearExpirations)
+    return pending
   },
   disputeNotVisualizedInteration: (state, getters) => {
     return getters.filterSummary('INTERACTION', state.summaryNotVisualizeds)
