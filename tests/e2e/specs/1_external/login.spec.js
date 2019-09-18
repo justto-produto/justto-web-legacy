@@ -49,7 +49,7 @@ describe('Justto.App - Login', function () {
       .should('be.visible')
   })
 
-  it('Login: Email ou senha incorretos', function() {
+  it('Login: Email ou senha incorretos', function () {
     // Preenche campo 'Email' com email não existente
     cy.get('[data-testid=login-email]')
       .type(login)

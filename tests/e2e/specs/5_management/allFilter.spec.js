@@ -34,10 +34,10 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
-      .click({force: true})
+      .click({ force: true })
 
-    //// TODO: Tivemos que adiciocar um delay por causa da lentidão do sistema
-    cy.log("Aguarde carregar disputas")
+    /// / TODO: Tivemos que adiciocar um delay por causa da lentidão do sistema
+    cy.log('Aguarde carregar disputas')
     cy.wait(10000)
 
     // Seleciona botão 'Filtrar'
@@ -46,9 +46,9 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
 
     // Seleciona Campanha
     cy.get('[data-testid=filter-campaign]')
-    .click()
+      .click()
     cy.get('ul')
-    .contains(defaultCampaign)
+      .contains(defaultCampaign)
     // Seleciona Estratégia
     cy.get('[data-testid=filter-strategy]')
       .click()
@@ -65,15 +65,15 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
-      .click({force: true})
+      .click({ force: true })
 
     // Seleciona botão 'Filtrar'
     cy.get('[data-testid=management-filterbtn]')
       .click()
       // Seleciona Disputas Favoritas - Workspace bão tem disputas favoritadas
       // Esperado não retornar disputas
-      cy.get('[data-testid=filters-favorite]')
-        .click()
+    cy.get('[data-testid=filters-favorite]')
+      .click()
     // Seleciona o botão "Aplicar filtros"
     cy.get('[data-testid=filter-applyfilter]')
       .click()

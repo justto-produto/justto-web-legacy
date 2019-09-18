@@ -203,9 +203,7 @@ export default {
     if (this.mappedCampaign.respondent) {
       this.respondent = this.mappedCampaign.respondent
     }
-    if (this.mappedCampaign.deadline &&
-        this.$moment(new Date(this.mappedCampaign.deadline)).isValid() &&
-        (this.$moment(new Date(this.mappedCampaign.deadline)) >= this.$moment(new Date()))) {
+    if (this.mappedCampaign.deadline && this.$moment(new Date(this.mappedCampaign.deadline)).isValid()) {
       this.deadline = this.mappedCampaign.deadline
     }
   }

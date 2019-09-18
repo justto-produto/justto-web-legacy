@@ -117,7 +117,7 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         })
       }).catch(() => {
         this.$jusNotification({ type: 'error' })

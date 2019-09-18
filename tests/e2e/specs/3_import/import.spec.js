@@ -1,6 +1,6 @@
 const login = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
-const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 const fileInput = 'input[type=file]'
 
 describe('Justto.App - Planilha Modelo', function () {
@@ -53,7 +53,6 @@ describe('Justto.App - Planilha Modelo', function () {
 
     // Sstema deve redirecionar para a página de Nova Importação
     cy.url().should('include', '/new')
-
 
     // Verifica se aparecem os números de linha da planilha importada
     cy.get('[data-testid=import-checklines]')
@@ -108,7 +107,7 @@ describe('Justto.App - Planilha Modelo', function () {
     // .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
     cy.get('.el-select-dropdown__list')
       .contains('Trabalhista')
-      .click({force: true})
+      .click({ force: true })
 
     // Campo com data de pagamento deve estar visivel
     // cy.get('[data-testid=feedback-paymendate]')
@@ -189,7 +188,6 @@ describe('Justto.App - Planilha Modelo', function () {
     cy.get('[data-testid=import-feedback]')
       .should('be.visible')
 
-
     const campaings = ['Natura', 'Nestle', 'Garoto']
 
     campaings.forEach((campaing, index) => {
@@ -204,13 +202,13 @@ describe('Justto.App - Planilha Modelo', function () {
         .should('have.value', campaing)
 
       var strategy
-      switch(index) {
+      switch (index) {
         case 0: strategy = 'Indenizatório'
-          break;
+          break
         case 1: strategy = 'Indenizatório - Advogado'
-          break;
+          break
         case 2: strategy = 'Trabalhista'
-          break;
+          break
         default: strategy = 'Indenizatório - Advogado'
       }
 
@@ -221,7 +219,7 @@ describe('Justto.App - Planilha Modelo', function () {
       // .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
       cy.get('.el-select-dropdown__list')
         .contains(strategy)
-        .click({force: true})
+        .click({ force: true })
 
       // Campo com data de pagamento deve estar visivel
       // cy.get('[data-testid=feedback-paymendate]')

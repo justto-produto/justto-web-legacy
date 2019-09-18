@@ -110,7 +110,7 @@
         <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         <el-tooltip content="Negociação encerra nos próximos 3 dias">
           <i
-            v-if="disputeNextToExpire(scope.row.expirationDate)"
+            v-if="scope.row.disputeNextToExpire && scope.row.status !== 'EXPIRED'"
             class="management-table__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
         </el-tooltip>
       </template>
@@ -194,7 +194,7 @@ export default {
     }
   },
   computed: {
-     selectedIdsComp: {
+    selectedIdsComp: {
       get () {
         return this.selectedIds
       },
@@ -210,7 +210,7 @@ export default {
     getLastInteraction: (i) => getLastInteraction(i),
     getLastInteractionIcon: (i) => getLastInteractionIcon(i),
     tableRowClassName ({ row, rowIndex }) {
-      if (!row.visualized && ['1', '2'].includes(this.activeTab)) {
+      if (!row.visualized) {
         return 'el-table__row--visualized-row'
       }
     },

@@ -29,10 +29,18 @@ const queryBuilder = q => {
 
 const disputeActions = {
   SOCKET_ADD_DISPUTE ({ dispatch, state }, disputeChanged) {
-    Vue.nextTick(() => {
+    if (state.dispute.id === disputeChanged.id) {
+      state.dispute = disputeChanged
+    } else {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       if (disputeIndex !== -1) {
         let dispute = state.disputes.find(d => disputeChanged.id === d.id)
+        if (dispute.status !== disputeChanged.status) {
+          clearTimeout(debounce)
+          debounce = setTimeout(() => {
+            dispatch('getDisputes')
+          }, 2000)
+        }
         if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
           Vue.set(state.disputes, disputeIndex, disputeChanged)
         } else {
@@ -44,7 +52,7 @@ const disputeActions = {
           dispatch('getDisputes')
         }, 2000)
       }
-    })
+    }
   },
   SOCKET_REMOVE_DISPUTE ({ dispatch }) {
     clearTimeout(debounce)
@@ -54,6 +62,7 @@ const disputeActions = {
   },
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
+      commit('clearDispute')
       // eslint-disable-next-line
       axios.get('api/disputes/' + id + '/vm')
         .then(response => {
@@ -172,18 +181,6 @@ const disputeActions = {
       axios.put('api/disputes/' + params.disputeId + '/update-reason', {
         reason: params.reasonValue
       })
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
-  getDisputeOccurrences ({ commit }, id) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/occurrences?sort=id,asc&size=100000')
         .then(response => {
           resolve(response.data)
         })
@@ -316,6 +313,18 @@ const disputeActions = {
       // eslint-disable-next-line
       axios.patch('api/disputes/' + disputeId + '/visualized/')
         .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
+  getDisputeOccurrences ({ commit }, disputeId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/disputes/' + disputeId + '/occurrences?size=99999&sort=id,asc')
+        .then(response => {
+          commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)
         }).catch(error => {
           reject(error)

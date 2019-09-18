@@ -50,27 +50,27 @@ describe('Import.vue', () => {
   it('Somente arquivos xlsx, xls, csv e até 20 mb.', () => {
     const wrapper = shallowMount(Import, { store, localVue, router })
     expect(wrapper.vm.beforeUpload({
-      name: "teste.xlsx",
+      name: 'teste.xlsx',
       size: 200000000
     })).toBe(false)
     expect(wrapper.vm.beforeUpload({
-      name: "teste.xlsx",
+      name: 'teste.xlsx',
       size: 100
     })).toBe(true)
     expect(wrapper.vm.beforeUpload({
-      name: "teste.pdf",
+      name: 'teste.pdf',
       size: 100
     })).toBe(false)
     expect(wrapper.vm.beforeUpload({
-      name: "teste.exe",
+      name: 'teste.exe',
       size: 100
     })).toBe(false)
     expect(wrapper.vm.beforeUpload({
-      name: "teste.xls",
+      name: 'teste.xls',
       size: 100
     })).toBe(true)
     expect(wrapper.vm.beforeUpload({
-      name: "teste.csv",
+      name: 'teste.csv',
       size: 100
     })).toBe(true)
   })

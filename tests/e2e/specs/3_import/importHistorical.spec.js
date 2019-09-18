@@ -10,10 +10,10 @@ describe('Justto.App - Planilha Modelo', function () {
     switch (loop) {
       case 1:
         var login = loginEmptyHistorical
-        break;
+        break
       case 2:
         var login = loginHasHistorical
-        break;
+        break
       default:
     }
 

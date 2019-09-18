@@ -31,7 +31,7 @@ describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
   it('Gerenciamento: Novos Acordos - Exibição dos Casos', function () {
     // Seleciona a aba "Proposta aceita"
     cy.get('.el-tabs__nav > #tab-2')
-      .click({force: true})
+      .click({ force: true })
     // Verifica se existem casos exibidos
     cy.get('[class=el-table__body]').should('be.visible')
   })
@@ -39,7 +39,7 @@ describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
   it('Gerenciamento: Novos Acordos - Exibição dos Casos - Vazio', function () {
     // Seleciona a aba "Proposta aceita"
     cy.get('.el-tabs__nav > #tab-2')
-      .click({force: true})
+      .click({ force: true })
     // Verifica se mensagem "Não foram encontradas disputas" é exibida
     cy.contains('Não foram encontradas disputas')
       .should('be.visible')

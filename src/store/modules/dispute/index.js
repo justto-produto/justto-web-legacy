@@ -8,7 +8,7 @@ const dispute = {
       id: 0
     },
     disputes: [],
-    occurrence: [],
+    occurrences: [],
     summaryNearExpirations: [],
     summaryNotVisualizeds: [],
     tab: '0',

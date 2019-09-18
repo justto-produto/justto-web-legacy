@@ -61,10 +61,10 @@ export default {
   data () {
     return {
       subscriptions: [],
-      isCollapse: true,
+      isCollapse: true
     }
   },
-  computed:{
+  computed: {
     workspace () {
       return this.$store.getters.workspaceSubdomain
     },
@@ -76,6 +76,11 @@ export default {
         Authorization: this.$store.getters.accountToken,
         Workspace: this.workspace
       }
+    }
+  },
+  watch: {
+    workspace (workspace) {
+      this.subscribe()
     }
   },
   beforeCreate () {
@@ -96,11 +101,6 @@ export default {
   },
   sockets: {
     reconnect () {
-      this.subscribe()
-    }
-  },
-  watch: {
-    workspace (workspace) {
       this.subscribe()
     }
   },
