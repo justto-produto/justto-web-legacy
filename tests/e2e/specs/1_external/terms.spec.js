@@ -3,24 +3,18 @@ describe('Justto.App - Termos', function () {
     cy.visit('/')
 
     cy.get('[data-testid=contract-terms]')
-      .click()
+      .contains('Termos Gerais de Contratação')
+      .should('have.attr', 'href', 'https://justto.com.br/termos-de-contratacao/')
 
-    cy.visit('https://justto.com.br/termos-de-contratacao/')
-
-    cy.url().should('include', '/termos-de-contratacao/')
-
-    cy.contains('CONTRATO DE PRESTAÇÃO DE SERVIÇOS')
+    cy.request('https://justto.com.br/termos-de-contratacao/')
   })
   it('Termos de Uso', function () {
     cy.visit('/')
 
     cy.get('[data-testid=use-terms]')
-      .click()
+      .contains('Termos de Uso')
+      .should('have.attr', 'href', 'https://justto.com.br/termos-de-uso/')
 
-    cy.visit('https://justto.com.br/termos-de-uso/')
-
-    cy.url().should('include', '/termos-de-uso/')
-
-    cy.contains('Termos Gerais e Condições de Uso')
+    cy.request('https://justto.com.br/termos-de-uso/')
   })
 })
