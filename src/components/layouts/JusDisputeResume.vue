@@ -26,7 +26,7 @@
         </div>
         <div>
           Última interação:
-          <span v-if="dispute.lastInteractionDate">{{ getLastInteraction(dispute.lastInteractionDate.dateTime) }}</span>
+          <span v-if="dispute.lastInteraction">{{ getLastInteraction(dispute.lastInteraction.createAt.dateTime) }}</span>
         </div>
       </el-col>
       <el-col :span="8">
