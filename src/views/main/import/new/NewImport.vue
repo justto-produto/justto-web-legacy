@@ -85,14 +85,14 @@ export default {
       }
     },
     finalStep () {
-      var campaignsTrack = []
-      var allValid = false
-      var promises = []
+      let campaignsTrack = []
+      let allValid = true
+      let checked = false
+      let promises = []
       for (let mappedCampaign of this.mappedCampaigns) {
         let campaign = JSON.parse(JSON.stringify(mappedCampaign))
         if (this.checkValidCampaign(campaign)) {
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
-          // campaign.protocolDeadLine = 'P' + campaign.protocolDeadLine + 'D'
           campaignsTrack.push({
             name: campaign.name,
             strategy: campaign.strategy
@@ -104,13 +104,18 @@ export default {
           delete campaign.id
           delete campaign.updatedAt
           delete campaign.updatedBy
-          promises.push(this.$store.dispatch('createCampaign', campaign))
-          allValid = true
         } else {
           allValid = false
         }
+        checked = true
       }
-      if (allValid) {
+      if (checked && allValid) {
+        for (let mappedCampaign of this.mappedCampaigns) {
+          let campaign = JSON.parse(JSON.stringify(mappedCampaign))
+          if (this.checkValidCampaign(campaign)) {
+            promises.push(this.$store.dispatch('createCampaign', campaign))
+          }
+        }
         Promise.all(promises).then(() => {
           window.analytics.track('Configuração de campanha concluida', {
             campaign: campaignsTrack
