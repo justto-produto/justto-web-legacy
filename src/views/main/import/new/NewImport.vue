@@ -86,7 +86,7 @@ export default {
     },
     finalStep () {
       var campaignsTrack = []
-      var allValid = true
+      var allValid = false
       var promises = []
       for (let mappedCampaign of this.mappedCampaigns) {
         let campaign = JSON.parse(JSON.stringify(mappedCampaign))
