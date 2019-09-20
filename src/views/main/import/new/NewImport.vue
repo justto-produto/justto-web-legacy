@@ -108,15 +108,8 @@ export default {
         else {
           allValid = false
         }
-        checked = true
       }
-      if (checked && allValid) {
-        for (let mappedCampaign of this.mappedCampaigns) {
-          let campaign = JSON.parse(JSON.stringify(mappedCampaign))
-          if (this.checkValidCampaign(campaign)) {
-            promises.push(this.$store.dispatch('createCampaign', campaign))
-          }
-        }
+      if (allValid) {
         Promise.all(promises).then(() => {
           window.analytics.track('Configuração de campanha concluida', {
             campaign: campaignsTrack
