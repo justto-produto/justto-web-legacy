@@ -24,7 +24,7 @@
         </div>
         <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Classificação:</span>
-          <span>{{ dispute.classification | capitalize }}</span>
+          <span>{{ dispute.classification.name | capitalize }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
@@ -542,7 +542,7 @@ export default {
             if (this.selectedClaimantId) {
               promises.push(this.$store.dispatch('editDisputeOffer', {
                 disputeId: this.dispute.id,
-                objectId: this.dispute.objectId,
+                objectId: this.disputeToEdit.objects[0].id,
                 value: this.disputeForm.lastCounterOfferValue.toString(),
                 roleId: this.selectedClaimantId
               }))
@@ -551,7 +551,7 @@ export default {
           if (this.disputeForm.lastOfferValue !== this.dispute.lastOfferValue) {
             promises.push(this.$store.dispatch('editDisputeOffer', {
               disputeId: this.dispute.id,
-              objectId: this.dispute.objectId,
+              objectId: this.disputeToEdit.objects[0].id,
               value: this.disputeForm.lastOfferValue.toString(),
               roleId: this.selectedNegotiatorId
             }))

@@ -151,7 +151,6 @@
           :dispute-id="dispute ? dispute.id : 0"
           :occurrences="filteredOccurrences"
           :show-scheduled="showScheduled"
-          :current-tab="typingTab"
           :loading.sync="loadingOccurrences"
           data-testid="dispute-messages" />
         <div class="dispute-view__send-message">

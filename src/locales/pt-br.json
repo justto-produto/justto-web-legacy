@@ -91,6 +91,9 @@
     "dispute": "disputa",
     "respondentParty": "Réu"
   },
+  "NEGOTIATOR_REJECTED": "negada",
+  "NEGOTIATOR_PROPOSAL": "feita de",
+  "NEGOTIATOR_ACCEPTED": "aceita de",
   "el": {
     "pagination": {
       "pagesize": " por página",
