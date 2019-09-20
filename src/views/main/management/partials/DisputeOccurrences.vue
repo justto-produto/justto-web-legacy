@@ -1,43 +1,42 @@
 <template lang="html">
   <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
     <li
-      v-if="!loading && occurrences.length"
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
-        <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
-          {{ occurrence.description.replace('.', ':') }}
-        </el-card>
-        <el-card v-else-if="occurrence.type === 'LOG'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
-          {{ occurrence.description }}
-        </el-card>
-        <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
-          {{ occurrence.description }}
-        </el-card>
-        <div v-else-if="hideScheduled(occurrence)" class="dispute-view-occurrences__interaction" :class="occurrence.interaction ? occurrence.interaction.direction : ''">
-          <div class="dispute-view-occurrences__avatar">
-            <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
-            <span v-html="buildHour(occurrence)" />
-          </div>
-          <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" class="dispute-view-occurrences__card">
-            <div slot="header">
-              {{ buildName(occurrence) }}
-              <span class="divider">•</span>
-              <jus-icon :icon="buildIcon(occurrence)" />
-            </div>
-            <div>
-              <span v-html="buildContent(occurrence)" />
-              <div v-if="occurrence.interaction && occurrence.interaction.type === 'COMMUNICATION'">
-                <a href="#" @click.prevent="showMessageDialog(occurrence.interaction.message.messageId)">Ver mensagem</a>
-              </div>
-              <i v-show="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING'">
-                <br>
-                <jus-icon icon="clock" style="vertical-align: sub;"/>
-                Esta é uma mensagem agendada que ainda não foi entregue.
-              </i>
-            </div>
-          </el-card>
+      <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+        {{ occurrence.description.replace('.', ':') }}
+      </el-card>
+      <el-card v-else-if="occurrence.type === 'LOG'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+        {{ occurrence.description }}
+      </el-card>
+      <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+        {{ occurrence.description }}
+      </el-card>
+      <div v-else-if="hideScheduled(occurrence)" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
+        <div class="dispute-view-occurrences__avatar">
+          <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
+          <span v-html="buildHour(occurrence)" />
         </div>
+        <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" class="dispute-view-occurrences__card">
+          <div slot="header">
+            {{ buildName(occurrence) }}
+            <span class="divider">•</span>
+            <jus-icon :icon="buildIcon(occurrence)" />
+          </div>
+          <div>
+            <span v-html="buildContent(occurrence)" />
+            <div v-if="occurrence.interaction && occurrence.interaction.type === 'COMMUNICATION'">
+              <a href="#" @click.prevent="showMessageDialog(occurrence.interaction.message.messageId)">Ver mensagem</a>
+            </div>
+            <i v-show="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING'">
+              <br>
+              <jus-icon icon="clock" style="vertical-align: sub;"/>
+              Esta é uma mensagem agendada que ainda não foi entregue.
+            </i>
+          </div>
+        </el-card>
+      </div>
     </li>
     <li v-if="!loading && !occurrences.length" class="dispute-view-occurrences__empty">
       <jus-icon icon="empty-screen-filter" />
@@ -61,8 +60,7 @@
 </template>
 
 <script>
-import { isBase64 } from '@/plugins/jusUtils'
-
+// import { isBase64 } from '@/plugins/jusUtils'
 export default {
   name: 'DisputeOccurrences',
   props: {
@@ -96,8 +94,7 @@ export default {
       } else {
         if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING') {
           return false
-        }
-        else return true
+        } else return true
       }
     },
     showMessageDialog (messageId) {
@@ -181,45 +178,28 @@ export default {
         border: 1px solid #FFC5A5;
         .el-card__header {
           background-color: #FFC5A5;
-          font-weight: bold;
-          padding: 10px 20px;
-        }
-        .el-card__body {
-          padding: 10px 20px;
         }
       }
       .COMMUNICATION {
         background-color: $--color-cloudy-blue;
         .el-card__header {
-          font-weight: bold;
           padding: 10px 20px 0;
-        }
-        .el-card__body {
-          padding: 10px 20px;
         }
       }
       .NEGOTIATOR_REJECTED, .NEGOTIATOR_PROPOSAL, .NEGOTIATOR_ACCEPTED {
         border: 1px solid #FFC5A5;
         .el-card__header {
-          font-weight: bold;
           background-color: #FFC5A5;
-          padding: 10px 20px;
         }
         .el-card__body {
           font-weight: bold;
-          padding: 10px 20px;
           color: #FFC5A5;
         }
       }
       .NEGOTIATOR_CHECKOUT {
         border: 1px solid #B691FB;
         .el-card__header {
-          font-weight: bold;
           background-color: #B691FB;
-          padding: 10px 20px;
-        }
-        .el-card__body {
-          padding: 10px 20px;
         }
         strong {
           color: #B691FB;
@@ -234,32 +214,19 @@ export default {
       .COMMUNICATION {
         background-color: $--color-cloudy-blue;
         .el-card__header {
-          font-weight: bold;
           padding: 10px 20px 0;
-        }
-        .el-card__body {
-          padding: 10px 20px;
         }
         &.WHATSAPP {
           background-color: $--color-success-light-5;
           .el-card__header {
-            font-weight: bold;
             padding: 10px 20px 0;
-          }
-          .el-card__body {
-            padding: 10px 20px;
           }
         }
         &.EMAIL {
           border: 1px solid #FFC5A5;
           background-color: #fff;
           .el-card__header {
-            font-weight: bold;
             background-color: #FFC5A5;
-            padding: 10px 20px;
-          }
-          .el-card__body {
-            padding: 10px 20px;
           }
         }
       }
@@ -271,6 +238,8 @@ export default {
       border: 2px dashed #343c4b;
     }
     .el-card__header {
+      padding: 10px 20px;
+      font-weight: bold;
       border: 0;
       img {
         width: 15px;
@@ -280,6 +249,7 @@ export default {
       }
     }
     .el-card__body {
+      padding: 10px 20px;
     }
   }
   &__log {
