@@ -33,6 +33,11 @@ $--color-warning: #FFC900 !default;
 $--color-danger: #FF4B54 !default;
 $--color-info: #72cbff !default;
 
+$--color-success-light-5: mix($--color-white, $--color-success, 50%) !default;
+$--color-warning-light-5: mix($--color-white, $--color-warning, 50%) !default;
+$--color-danger-light-5: mix($--color-white, $--color-danger, 50%) !default;
+$--color-info-light-5: mix($--color-white, $--color-info, 50%) !default;
+
 $--color-success-light: mix($--color-white, $--color-success, 80%) !default;
 $--color-warning-light: mix($--color-white, $--color-warning, 80%) !default;
 $--color-danger-light: mix($--color-white, $--color-danger, 80%) !default;

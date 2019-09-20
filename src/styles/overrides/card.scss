@@ -78,35 +78,23 @@
 }
 
 .el-card--bg{
-  &-primary .el-card__body{
+  &-primary .el-card__body {
     background-image: linear-gradient(to right, $--color-primary-light-1, #4e00e6);
     color: $--color-white;
   }
-  &-secondary .el-card__body{
+  &-secondary .el-card__body {
     background-image: linear-gradient(to right, #ff813f, $--color-secondary);
     color: $--color-white;
   }
-  &-green .el-card__body{
+  &-green .el-card__body {
     background-image: linear-gradient(to right, #00b346, #46e986);
     color: $--color-white;
   }
-  &-blue .el-card__body{
+  &-blue .el-card__body {
     background-image: linear-gradient(to right, #008bdd, #72cbff);
     color: $--color-white;
   }
-}
-
-.el-card--occurrence {
-  border: 1px solid #9461f7;
-  .el-card__header {
-    padding: 14px;
-    font-size: 15px;
-    font-weight: bold;
-    background-color: #9461f7;
-    color: white;
-    border: none;
-  }
-  .el-card__body {
-    padding: 14px;
+  &-warning .el-card__body {
+    background-color: $--color-warning-light;
   }
 }

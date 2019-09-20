@@ -84,7 +84,7 @@
             </el-select>
           </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
+        <span slot="footer">
           <el-button @click="dialogMember = false">Cancelar</el-button>
           <el-button type="primary" @click="editMember">Salvar alterações</el-button>
         </span>
@@ -102,7 +102,7 @@
             <el-input v-model="profileForm.password" type="password" />
           </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
+        <span slot="footer">
           <el-button @click="cancelChangePassword">Cancelar</el-button>
           <el-button :disabled="!profileForm.password.length" type="primary" @click="updatePassword">
             Alterar

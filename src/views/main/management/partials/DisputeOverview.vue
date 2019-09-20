@@ -10,13 +10,13 @@
           <span class="title">Código:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.campaign" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Campanha:</span>
-          <span>{{ dispute.campaignName }}</span>
+          <span>{{ dispute.campaign.name }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.campaign" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
-          <span>{{ dispute.strategyName }}</span>
+          <span>{{ dispute.campaign.strategy }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
@@ -221,7 +221,7 @@
             <el-form-item label="Proposto por" prop="lastCounterOfferValue">
               <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta">
                 <el-option
-                  v-for="negotiator in dispute.negotiators"
+                  v-for="negotiator in []"
                   :key="negotiator.id"
                   :label="negotiator.name"
                   :value="negotiator.id" />
@@ -244,7 +244,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer">
         <el-button plain @click="editDisputeDialogVisible = false">Cancelar</el-button>
         <el-button :loading="editDisputeDialogLoading" type="primary" data-testid="confirm-edit-data" @click="editDispute()">Editar dados</el-button>
       </span>
@@ -376,7 +376,7 @@
           </el-table-column>
         </el-table>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer">
         <el-button plain @click="editRoleDialogVisible = false">Cancelar</el-button>
         <el-button :loading="editRoleDialogLoading" type="primary" data-testid="edit-data-part" @click="editRole">
           Editar dados
@@ -505,7 +505,7 @@ export default {
     openDisputeDialog () {
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
-      this.selectedNegotiatorId = this.dispute.negotiators[0].id || ''
+      this.selectedNegotiatorId = []
       this.editDisputeDialogVisible = true
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.disputeForm.id = dispute.id

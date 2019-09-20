@@ -112,7 +112,7 @@
               :label="type"
               :value="index"/>
           </el-select>
-          <span slot="footer" class="dialog-footer">
+          <span slot="footer">
             <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
             <el-button
               :disabled="!unsettledType"
@@ -141,7 +141,7 @@
               filter-placeholder="Buscar"
               filterable/>
           </el-form>
-          <span slot="footer" class="dialog-footer">
+          <span slot="footer">
             <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
             <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
           </span>
