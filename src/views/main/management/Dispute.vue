@@ -2,7 +2,6 @@
   <JusViewMain
     :loading-container="dispute && !dispute.id"
     full-screen
-    left-card-width="320"
     right-card-width="320"
     class="dispute-view">
     <template v-if="false" slot="title">
@@ -12,19 +11,6 @@
         </router-link>
         Disputa #{{ dispute.id }}
       </h1>
-    </template>
-    <!-- RESUMO DO CASO -->
-    <template v-if="false" slot="left-card">
-      <div class="dispute-view__section-title">
-        <h2>Resumo da disputa</h2>
-      </div>
-      <dispute-summary
-        v-if="dispute.strategy"
-        :key="componentKey"
-        :dispute="dispute"
-        :unsettled-types="unsettledTypes"
-        :show-scheduled.sync="showScheduled"
-        data-testid="dispute-summary" />
     </template>
     <!-- CHAT -->
     <template slot="main">
@@ -126,7 +112,7 @@
               :label="type"
               :value="index"/>
           </el-select>
-          <span slot="footer" class="dialog-footer">
+          <span slot="footer">
             <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
             <el-button
               :disabled="!unsettledType"
@@ -155,22 +141,22 @@
               filter-placeholder="Buscar"
               filterable/>
           </el-form>
-          <span slot="footer" class="dialog-footer">
+          <span slot="footer">
             <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
             <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
           </span>
         </el-dialog>
         <!-- MESSAGES -->
-        <dispute-messages
+        <dispute-occurrences
           :dispute-id="dispute ? dispute.id : 0"
-          :messages-prop="filteredOccurrences"
+          :occurrences="filteredOccurrences"
           :show-scheduled="showScheduled"
           :current-tab="typingTab"
           :loading.sync="loadingOccurrences"
           data-testid="dispute-messages" />
         <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
-            <el-tab-pane v-loading="loadingTextarea" label="Mensagem" name="1">
+            <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
                   <textarea
@@ -296,7 +282,7 @@
                 </div>
               </el-card>
             </el-tab-pane> -->
-            <el-tab-pane v-loading="loadingTextarea" label="Nota" name="3">
+            <el-tab-pane v-loading="loadingTextarea" label="Notas" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <textarea
                   v-model="newNote"
@@ -351,8 +337,7 @@ import { fuseSearchOccurrences } from '@/plugins/jusUtils'
 export default {
   name: 'Dispute',
   components: {
-    DisputeSummary: () => import('./partials/DisputeSummary'),
-    DisputeMessages: () => import('./partials/DisputeMessages'),
+    DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
     DisputeOverview: () => import('./partials/DisputeOverview')
   },
   data () {

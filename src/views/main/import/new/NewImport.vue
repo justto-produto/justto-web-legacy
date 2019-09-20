@@ -87,16 +87,15 @@ export default {
     finalStep () {
       let campaignsTrack = []
       let allValid = true
-      let checked = false
       let promises = []
       for (let mappedCampaign of this.mappedCampaigns) {
         let campaign = JSON.parse(JSON.stringify(mappedCampaign))
         if (this.checkValidCampaign(campaign)) {
-          campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           campaignsTrack.push({
             name: campaign.name,
             strategy: campaign.strategy
           })
+          campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           delete campaign.campaign
           delete campaign.rows
           delete campaign.createdAt
@@ -104,7 +103,9 @@ export default {
           delete campaign.id
           delete campaign.updatedAt
           delete campaign.updatedBy
-        } else {
+          promises.push(this.$store.dispatch('createCampaign', campaign))
+        }
+        else {
           allValid = false
         }
         checked = true

@@ -39,6 +39,17 @@ const message = {
             reject(error)
           })
       })
+    },
+    getOccurrenceMessage ({ commit }, messageId) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('api/messages/' + messageId)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

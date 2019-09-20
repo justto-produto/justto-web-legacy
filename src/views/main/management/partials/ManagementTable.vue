@@ -27,7 +27,7 @@
       prop="campaignName"
       label="Campanha"
       min-width="94px">
-      <template slot-scope="scope">{{ scope.row.campaignName | capitalize }}</template>
+      <template slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
     </el-table-column>
     <el-table-column
       :sortable="false"
@@ -80,12 +80,14 @@
       align="center">
       <template slot-scope="scope">
         <span class="position-relative">
-          <jus-icon :icon="getLastInteractionIcon(scope.row.lastInteractionType)" class="management-table__interaction-icon" />
+          <jus-icon v-if="scope.row.lastInteraction" :icon="getInteractionIcon(scope.row.lastInteraction)" class="management-table__interaction-icon" />
           <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
         </span>
-        <span v-if="scope.row.lastInteractionDate" style="margin-left: 4px;">
-          {{ getLastInteraction(scope.row.lastInteractionDate.dateTime) }}
-        </span>
+        <el-tooltip v-if="scope.row.lastInteraction" :content="scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY HH:mm:ss')">
+          <span style="margin-left: 4px;">
+            {{ getLastInteraction(scope.row.lastInteraction.createAt.dateTime) }}
+          </span>
+        </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column
@@ -176,7 +178,7 @@
 </template>
 
 <script>
-import { getLastInteraction, getLastInteractionIcon } from '@/plugins/jusUtils'
+import { getLastInteraction, getInteractionIcon } from '@/plugins/jusUtils'
 
 export default {
   name: 'ManagementTable',
@@ -208,7 +210,7 @@ export default {
   },
   methods: {
     getLastInteraction: (i) => getLastInteraction(i),
-    getLastInteractionIcon: (i) => getLastInteractionIcon(i),
+    getInteractionIcon: (i) => getInteractionIcon(i),
     tableRowClassName ({ row, rowIndex }) {
       if (!row.visualized) {
         return 'el-table__row--visualized-row'
