@@ -221,7 +221,7 @@
             <el-form-item label="Proposto por" prop="lastCounterOfferValue">
               <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta">
                 <el-option
-                  v-for="negotiator in []"
+                  v-for="negotiator in disputeNegotiations"
                   :key="negotiator.id"
                   :label="negotiator.name"
                   :value="negotiator.id" />
@@ -499,13 +499,19 @@ export default {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
+    },
+    disputeNegotiations () {
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR')
+      }
+      return []
     }
   },
   methods: {
     openDisputeDialog () {
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
-      this.selectedNegotiatorId = []
+      this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.editDisputeDialogVisible = true
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.disputeForm.id = dispute.id
@@ -542,16 +548,17 @@ export default {
             if (this.selectedClaimantId) {
               promises.push(this.$store.dispatch('editDisputeOffer', {
                 disputeId: this.dispute.id,
-                objectId: this.disputeToEdit.objects[0].id,
+                objectId: disputeToEdit.objects[0].id,
                 value: this.disputeForm.lastCounterOfferValue.toString(),
                 roleId: this.selectedClaimantId
               }))
             }
           }
+          console.log(this.selectedNegotiatorId)
           if (this.disputeForm.lastOfferValue !== this.dispute.lastOfferValue) {
             promises.push(this.$store.dispatch('editDisputeOffer', {
               disputeId: this.dispute.id,
-              objectId: this.disputeToEdit.objects[0].id,
+              objectId: disputeToEdit.objects[0].id,
               value: this.disputeForm.lastOfferValue.toString(),
               roleId: this.selectedNegotiatorId
             }))
@@ -564,7 +571,8 @@ export default {
               message: 'Os dados foram alterados com sucesso.',
               type: 'success'
             })
-          }).catch(() => {
+          }).catch((e) => {
+            console.log(e)
             this.$jusNotification({ type: 'error' })
           }).finally(() => {
             this.editDisputeDialogLoading = false
