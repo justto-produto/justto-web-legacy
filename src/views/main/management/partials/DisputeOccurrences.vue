@@ -5,16 +5,16 @@
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
-      <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
-        {{ occurrence.description.replace('.', ':') }}
-      </el-card>
+        <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+          {{ occurrence.description.replace('.', ':') }}
+        </el-card>
         <el-card v-else-if="occurrence.type === 'LOG'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
           {{ occurrence.description }}
         </el-card>
         <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
           {{ occurrence.description }}
         </el-card>
-        <div v-else class="dispute-view-occurrences__interaction" :class="occurrence.interaction ? occurrence.interaction.direction : ''">
+        <div v-else-if="hideScheduled(occurrence)" class="dispute-view-occurrences__interaction" :class="occurrence.interaction ? occurrence.interaction.direction : ''">
           <div class="dispute-view-occurrences__avatar">
             <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
             <span v-html="buildHour(occurrence)" />
@@ -87,6 +87,14 @@ export default {
     }
   },
   methods: {
+    hideScheduled (occurrence) {
+      if (this.showScheduled) {
+        return true
+      } else {
+        if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING') return false
+        else return true
+      }
+    },
     showMessageDialog (messageId) {
       this.messageDialogVisible = true
       this.message = ''

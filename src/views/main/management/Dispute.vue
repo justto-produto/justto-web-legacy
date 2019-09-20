@@ -78,7 +78,6 @@
           </el-tooltip>
           <el-tooltip content="Exibir/ocultar mensagens agendadas">
             <el-button :plain="!showScheduled" :type="showScheduled ? 'primary' : null" @click="toggleShowSchedule(!showScheduled)">
-              <!-- el-icon-chat-dot-square -->
               <jus-icon v-show="!showScheduled" icon="eye" />
               <jus-icon v-show="showScheduled" icon="eye-white" />
             </el-button>
