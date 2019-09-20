@@ -126,6 +126,13 @@ export default {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT') {
           return '<strong>Dados bancários alterados:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
         }
+        if (occurrence.interaction.type === 'NEGOTIATOR_PROPOSAL') {
+          let info = 'Proposta ' + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase()
+          if (occurrence.interaction.properties.NOTE) {
+            info += '<br><blockquote class="note">' + occurrence.interaction.properties.NOTE + '</blockquote>'
+          }
+          return info
+        }
         return 'Proposta ' + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase()
       }
       return occurrence.description
@@ -194,6 +201,11 @@ export default {
         .el-card__body {
           font-weight: bold;
           color: #FFC5A5;
+        }
+        .note {
+          font-weight: lighter;
+          font-style: italic;
+          color: #000;
         }
       }
       .NEGOTIATOR_CHECKOUT {
