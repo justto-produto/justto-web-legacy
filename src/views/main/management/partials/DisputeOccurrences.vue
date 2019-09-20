@@ -5,21 +5,21 @@
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
-      <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
-        {{ occurrence.description.replace('.', ':') }}
-      </el-card>
+        <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+          {{ occurrence.description.replace('.', ':') }}
+        </el-card>
         <el-card v-else-if="occurrence.type === 'LOG'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
           {{ occurrence.description }}
         </el-card>
-        <el-card v-else-if="occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+        <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
           {{ occurrence.description }}
         </el-card>
-        <div v-else class="dispute-view-occurrences__interaction" :class="occurrence.interaction.direction">
+        <div v-else-if="hideScheduled(occurrence)" class="dispute-view-occurrences__interaction" :class="occurrence.interaction ? occurrence.interaction.direction : ''">
           <div class="dispute-view-occurrences__avatar">
             <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
             <span v-html="buildHour(occurrence)" />
           </div>
-          <el-card :class="occurrence.interaction.type + ' ' + buildCommunicationType(occurrence)" class="dispute-view-occurrences__card">
+          <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" class="dispute-view-occurrences__card">
             <div slot="header">
               {{ buildName(occurrence) }}
               <span class="divider">•</span>
@@ -28,7 +28,7 @@
             </div>
             <div>
               <span v-html="buildContent(occurrence)" />
-              <div v-if="occurrence.interaction.type === 'COMMUNICATION'">
+              <div v-if="occurrence.interaction && occurrence.interaction.type === 'COMMUNICATION'">
                 <br>
                 <a href="#" @click.prevent="showMessageDialog(occurrence.interaction.message.messageId)">Ver mensagem</a>
               </div>
@@ -87,6 +87,14 @@ export default {
     }
   },
   methods: {
+    hideScheduled (occurrence) {
+      if (this.showScheduled) {
+        return true
+      } else {
+        if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING') return false
+        else return true
+      }
+    },
     showMessageDialog (messageId) {
       this.messageDialogVisible = true
       this.message = ''
@@ -98,22 +106,22 @@ export default {
         })
     },
     buildIcon (occurrence) {
-      if (occurrence.interaction.message && occurrence.interaction.message.communicationType) {
+      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType) {
         return occurrence.interaction.message.communicationType.toLowerCase()
       }
       return 'negotiation2'
       // return occurrence.description.substr(0, occurrence.description.indexOf(' ')).toLowerCase()
     },
     buildName (occurrence) {
-      if (occurrence.interaction.message && occurrence.interaction.message.parameters) {
+      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters) {
         return occurrence.interaction.message.parameters.SENDER_NAME ? occurrence.interaction.message.parameters.SENDER_NAME : occurrence.interaction.message.parameters.SENDER
       }
-      if (occurrence.interaction.properties) {
+      if (occurrence.interaction && occurrence.interaction.properties) {
         return occurrence.interaction.properties.PERSON_NAME
       }
     },
     buildContent (occurrence) {
-      if (Object.keys(occurrence.interaction.properties).length) {
+      if (occurrence.interaction && Object.keys(occurrence.interaction.properties).length) {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT') {
           return '<strong>Dados bancários alterados:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
         }
@@ -128,10 +136,10 @@ export default {
       if (occurrence.interaction && occurrence.interaction.message.scheduledTime.dateTime) {
         return this.$moment(occurrence.interaction.message.scheduledTime.dateTime).format('DD-MM[<br>]HH:mm')
       }
-      return this.$moment(occurrence.interaction.createAt.dateTime).format('DD-MM[<br>]HH:mm')
+      return this.$moment(occurrence.createAt.dateTime).format('DD-MM[<br>]HH:mm')
     },
     buildCommunicationType (occurrence) {
-      if (occurrence.interaction.message && occurrence.interaction.message.communicationType) {
+      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType) {
         return occurrence.interaction.message.communicationType
       }
       return occurrence.description.substr(0, occurrence.description.indexOf(' '))
