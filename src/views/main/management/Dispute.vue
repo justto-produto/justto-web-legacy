@@ -83,7 +83,7 @@
               <jus-icon v-show="showScheduled" icon="eye-white" />
             </el-button>
           </el-tooltip>
-          <div :class="{isVisible: showSearch}" class="dispute-view__search">
+          <div :class="{isVisible: showSearch}" class="dispute-view__search" @keydown.esc="showSearch = false">
             <el-input v-model="searchTerm" autofocus>
               <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
             </el-input>
