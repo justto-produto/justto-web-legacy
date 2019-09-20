@@ -19,7 +19,7 @@
             <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
             <span v-html="buildHour(occurrence)" />
           </div>
-          <el-card :class="occurrence.interaction ? occurrence.interaction.type : '' + ' ' + buildCommunicationType(occurrence)" class="dispute-view-occurrences__card">
+          <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" class="dispute-view-occurrences__card">
             <div slot="header">
               {{ buildName(occurrence) }}
               <span class="divider">•</span>
