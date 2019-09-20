@@ -3,7 +3,7 @@
     <li
       v-if="!loading && occurrences.length"
       v-for="(occurrence, index) in occurrences"
-      :key="occurrence.id + index"
+      :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
       <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
         {{ occurrence.description.replace('.', ':') }}
@@ -160,15 +160,13 @@ export default {
     width: 100%;
     &.INBOUND {
       .VISUALIZATION {
-        &.EMAIL {
-          border: 1px solid #FFC5A5;
-          .el-card__header {
-            background-color: #FFC5A5;
-            padding: 12px 20px;
-          }
-          .el-card__body {
-            padding: 10px 20px 20px;
-          }
+        border: 1px solid #FFC5A5;
+        .el-card__header {
+          background-color: #FFC5A5;
+          padding: 12px 20px;
+        }
+        .el-card__body {
+          padding: 10px 20px 20px;
         }
       }
       .NEGOTIATOR_REJECTED, .NEGOTIATOR_PROPOSAL, .NEGOTIATOR_ACCEPTED {

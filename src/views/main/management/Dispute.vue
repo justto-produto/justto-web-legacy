@@ -379,11 +379,7 @@ export default {
       return {}
     },
     occurrences () {
-      let sortedOccurrences = this.$store.getters.occurrences
-      sortedOccurrences.sort(function (o1, o2) {
-        return (o1.id < o2.id) ? -1 : 1
-      })
-      return sortedOccurrences
+      return this.$store.getters.occurrences
     },
     whatsappStatus () {
       return this.$store.getters.whatsappStatus

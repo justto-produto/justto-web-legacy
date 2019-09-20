@@ -64,10 +64,11 @@ const fuseSearchOccurrences = function (occurrences, term) {
     minMatchCharLength: 1,
     keys: [
       'description',
-      'code',
-      'message.content',
-      'message.sender',
-      'message.receiver'
+      'status',
+      'interaction.message.title',
+      'interaction.message.parameters.RECEIVER_NAME',
+      'interaction.message.parameters.SENDER_NAME',
+      'interaction.message.parameters.PERSON_NAME'
     ]
   })
   const list = fuse.search(term)
