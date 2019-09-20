@@ -134,7 +134,7 @@ export default {
       if (occurrence.executionDateTime) {
         return this.$moment(occurrence.executionDateTime.dateTime).format('DD-MM[<br>]HH:mm')
       }
-      if (occurrence.interaction && occurrence.interaction.message.scheduledTime.dateTime) {
+      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.scheduledTime && occurrence.interaction.message.scheduledTime.dateTime) {
         return this.$moment(occurrence.interaction.message.scheduledTime.dateTime).format('DD-MM[<br>]HH:mm')
       }
       return this.$moment(occurrence.createAt.dateTime).format('DD-MM[<br>]HH:mm')
@@ -258,6 +258,8 @@ export default {
     border: none;
     .el-card__body {
       padding: 8px 20px;
+      word-break: break-all;
+      text-align: center;
     }
   }
   &__avatar {
