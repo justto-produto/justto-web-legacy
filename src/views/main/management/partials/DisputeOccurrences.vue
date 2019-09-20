@@ -214,11 +214,7 @@ export default {
       .COMMUNICATION {
         background-color: $--color-cloudy-blue;
         .el-card__header {
-<<<<<<< HEAD
-          padding: 10px 20px 0;
-=======
           padding: 10px 20px;
->>>>>>> SAAS-741 Enxuga css e corrige eslint
         }
         &.WHATSAPP {
           background-color: $--color-success-light-5;
