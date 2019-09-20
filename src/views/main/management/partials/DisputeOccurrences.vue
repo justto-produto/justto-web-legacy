@@ -24,14 +24,17 @@
               {{ buildName(occurrence) }}
               <span class="divider">•</span>
               <jus-icon :icon="buildIcon(occurrence)" />
-              {{ occurrence.id }}
             </div>
             <div>
               <span v-html="buildContent(occurrence)" />
               <div v-if="occurrence.interaction && occurrence.interaction.type === 'COMMUNICATION'">
-                <br>
                 <a href="#" @click.prevent="showMessageDialog(occurrence.interaction.message.messageId)">Ver mensagem</a>
               </div>
+              <i v-show="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING'">
+                <br>
+                <jus-icon icon="clock" style="vertical-align: sub;"/>
+                Esta é uma mensagem agendada que ainda não foi entregue.
+              </i>
             </div>
           </el-card>
         </div>
@@ -91,7 +94,9 @@ export default {
       if (this.showScheduled) {
         return true
       } else {
-        if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING') return false
+        if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING') {
+          return false
+        }
         else return true
       }
     },
@@ -109,8 +114,7 @@ export default {
       if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType) {
         return occurrence.interaction.message.communicationType.toLowerCase()
       }
-      return 'negotiation2'
-      // return occurrence.description.substr(0, occurrence.description.indexOf(' ')).toLowerCase()
+      return ''
     },
     buildName (occurrence) {
       if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters) {
@@ -139,10 +143,16 @@ export default {
       return this.$moment(occurrence.createAt.dateTime).format('DD-MM[<br>]HH:mm')
     },
     buildCommunicationType (occurrence) {
-      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType) {
-        return occurrence.interaction.message.communicationType
+      let typeClass = ''
+      if (occurrence.interaction && occurrence.interaction.message) {
+        if (occurrence.interaction.message.communicationType) {
+          typeClass = occurrence.interaction.message.communicationType
+        }
+        if (occurrence.interaction.message.status) {
+          typeClass = typeClass + ' ' + occurrence.interaction.message.status
+        }
       }
-      return occurrence.description.substr(0, occurrence.description.indexOf(' '))
+      return typeClass
     }
   }
 }
@@ -171,10 +181,21 @@ export default {
         border: 1px solid #FFC5A5;
         .el-card__header {
           background-color: #FFC5A5;
-          padding: 12px 20px;
+          font-weight: bold;
+          padding: 10px 20px;
         }
         .el-card__body {
-          padding: 10px 20px 20px;
+          padding: 10px 20px;
+        }
+      }
+      .COMMUNICATION {
+        background-color: $--color-cloudy-blue;
+        .el-card__header {
+          font-weight: bold;
+          padding: 10px 20px 0;
+        }
+        .el-card__body {
+          padding: 10px 20px;
         }
       }
       .NEGOTIATOR_REJECTED, .NEGOTIATOR_PROPOSAL, .NEGOTIATOR_ACCEPTED {
@@ -182,11 +203,11 @@ export default {
         .el-card__header {
           font-weight: bold;
           background-color: #FFC5A5;
-          padding: 12px 20px;
+          padding: 10px 20px;
         }
         .el-card__body {
           font-weight: bold;
-          padding: 10px 20px 20px;
+          padding: 10px 20px;
           color: #FFC5A5;
         }
       }
@@ -195,10 +216,10 @@ export default {
         .el-card__header {
           font-weight: bold;
           background-color: #B691FB;
-          padding: 12px 20px;
+          padding: 10px 20px;
         }
         .el-card__body {
-          padding: 10px 20px 20px;
+          padding: 10px 20px;
         }
         strong {
           color: #B691FB;
@@ -211,14 +232,22 @@ export default {
         margin: 0 0 0 20px;
       }
       .COMMUNICATION {
+        background-color: $--color-cloudy-blue;
+        .el-card__header {
+          font-weight: bold;
+          padding: 10px 20px 0;
+        }
+        .el-card__body {
+          padding: 10px 20px;
+        }
         &.WHATSAPP {
           background-color: $--color-success-light-5;
           .el-card__header {
             font-weight: bold;
-            padding: 18px 20px 0;
+            padding: 10px 20px 0;
           }
           .el-card__body {
-            padding: 10px 20px 20px;
+            padding: 10px 20px;
           }
         }
         &.EMAIL {
@@ -227,10 +256,10 @@ export default {
           .el-card__header {
             font-weight: bold;
             background-color: #FFC5A5;
-            padding: 12px 20px;
+            padding: 10px 20px;
           }
           .el-card__body {
-            padding: 10px 20px 20px;
+            padding: 10px 20px;
           }
         }
       }
@@ -238,9 +267,11 @@ export default {
   }
   &__card {
     border-radius: 24px;
+    &.WAITING {
+      border: 2px dashed #343c4b;
+    }
     .el-card__header {
       border: 0;
-      font-size: 15px;
       img {
         width: 15px;
       }
@@ -249,7 +280,6 @@ export default {
       }
     }
     .el-card__body {
-      font-size: 16px;
     }
   }
   &__log {
