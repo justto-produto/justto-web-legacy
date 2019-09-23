@@ -119,7 +119,7 @@
         </div>
         <div v-show="role.roles.length > 1" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="titles in role.roles" :key="role.roles.index">
+            <li v-for="titles in roleTitleSort(role.roles)" :key="role.roles.index">
               <span>
                 {{ buildTitle(role.party, titles) }}
               </span>
@@ -508,9 +508,6 @@ export default {
         })
       } return []
     },
-    roleTitleSort (role) {
-
-    },
     disputeClaimants () {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
@@ -525,6 +522,14 @@ export default {
     }
   },
   methods: {
+    roleTitleSort (title) {
+      if (title) {
+        let sortedArray = title.slice(0) || []
+        return sortedArray.sort((a, b) => {
+          return (a[0] > b[0]) ? -1 : (a[0] < b[0]) ? 1 : 0
+        })
+      } return []
+    },
     openDisputeDialog () {
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
@@ -630,7 +635,7 @@ export default {
       this.editRoleDialogError = false
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
-      this.roleForm.title = this.buildTitle(role)
+      this.roleForm.title = this.buildTitle(role.party, role.roles[0])
       this.roleForm.documentNumber = this.$options.filters.cpfCnpjMask(this.roleForm.documentNumber)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },
