@@ -126,14 +126,9 @@ export default {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT') {
           return '<strong>Dados bancários alterados:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
         }
-        if (occurrence.interaction.type === 'NEGOTIATOR_PROPOSAL') {
-          let info = 'Proposta ' + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase()
-          if (occurrence.interaction.properties.NOTE) {
-            info += '<br><blockquote class="note">' + occurrence.interaction.properties.NOTE + '</blockquote>'
-          }
-          return info
+        if (occurrence.interaction.properties.VALUE) {
+          return 'Proposta ' + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase()
         }
-        return 'Proposta ' + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase()
       }
       return occurrence.description
     },

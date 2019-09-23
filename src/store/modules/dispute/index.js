@@ -12,6 +12,7 @@ const dispute = {
     summaryNearExpirations: [],
     summaryNotVisualizeds: [],
     tab: '0',
+    hasNew: false,
     query: {
       status: ['ENGAGEMENT'],
       campaigns: [],
