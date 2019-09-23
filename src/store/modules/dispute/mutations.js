@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import moment from 'moment'
 
 const disputeMutations = {
   setDisputes (state, pageable) {
@@ -18,6 +17,7 @@ const disputeMutations = {
   },
   clearDisputes (state) {
     state.disputes = []
+    state.hasNew = false
   },
   setDisputeQuery (state, query) {
     state.query = query
@@ -86,21 +86,11 @@ const disputeMutations = {
       }
     })
   },
-  SOCKET_ADD_DISPUTE (state, disputeChanged) {
-    Vue.nextTick(() => {
-      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
-      if (disputeIndex !== -1) {
-        let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-        if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-          Vue.set(state.disputes, disputeIndex, disputeChanged)
-        } else {
-          Vue.set(state.disputes, disputeIndex, disputeChanged)
-        }
-      }
-    })
-  },
   setDisputeStatuses (state, status) {
     state.statuses[status.label] = status.value
+  },
+  disputeSetHasNew (state, bol) {
+    state.hasNew = bol
   }
   // setDisputeTab (state, tab) {
   //   state.filters.tab = tab

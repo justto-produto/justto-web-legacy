@@ -10,6 +10,7 @@ const disputeGetters = {
   dispute: state => state.dispute,
   disputeHasFilters: state => state.hasFilters,
   disputeStatuses: state => state.statuses,
+  disputeHasNew: state => state.hasNew,
   filterSummary: state => (disputePhase, summarys) => {
     let filteredSummarys = summarys.filter(s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {
