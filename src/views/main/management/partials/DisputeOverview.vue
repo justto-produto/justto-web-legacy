@@ -109,10 +109,24 @@
           <span class="title">CPF/CNPJ:</span>
           <span>{{ role.documentNumber | cpfCnpjMask }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+
+        <div v-show="role.roles.length == 1" class="dispute-overview-view__info-line">
           Função:
-          <span>{{ buildTitle(role) }}</span>
+          <span>{{ buildTitle(role.party, role.roles[0]) }}</span>
         </div>
+        <div v-show="role.roles.length > 1" class="dispute-overview-view__info-line">
+          Função:
+        </div>
+        <div v-show="role.roles.length > 1" class="dispute-overview-view__info-list">
+          <ul>
+            <li v-for="titles in role.roles" :key="role.roles.index">
+              <span>
+                {{ buildTitle(role.party, titles) }}
+              </span>
+            </li>
+          </ul>
+        </div>
+
         <div v-show="role.phones.length" class="dispute-overview-view__info-line">
           Telefone(s):
         </div>
@@ -494,6 +508,9 @@ export default {
         })
       } return []
     },
+    roleTitleSort (role) {
+
+    },
     disputeClaimants () {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
@@ -585,9 +602,9 @@ export default {
         this.editDisputeDialogLoading = false
       })
     },
-    buildTitle (role) {
-      if (role.party === 'RESPONDENT') {
-        switch (role.roles[0]) {
+    buildTitle (party, titles) {
+      if (party === 'RESPONDENT') {
+        switch (titles) {
           case 'NEGOTIATOR':
             return 'Negociador'
           case 'PARTY':
@@ -596,9 +613,9 @@ export default {
             return 'Advogado do réu'
         }
       } else {
-        if (role.roles[0] === 'PARTY') {
+        if (titles === 'PARTY') {
           return 'Parte contrária'
-        } else if (role.roles[0] === 'LAWYER') {
+        } else if (titles === 'LAWYER') {
           return 'Advogado da parte'
         } else {
           return role.name
