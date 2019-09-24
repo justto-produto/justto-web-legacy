@@ -47,10 +47,6 @@ const workspaceModule = {
         // eslint-disable-next-line
         axios.get('api/workspaces/my')
           .then(response => {
-            if (response.data[0]) {
-              commit('updateWorkspace', response.data[0])
-              if (response.data[0].person) commit('setLoggedPerson', response.data[0].person)
-            }
             resolve(response.data)
           })
           .catch(error => {

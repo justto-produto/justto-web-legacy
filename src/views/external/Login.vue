@@ -7,12 +7,13 @@
       <el-main class="display-flex">
         <el-form
           v-loading="showLoading"
+          v-if="!workspaces.length"
           ref="loginForm"
           :model="loginForm"
           :rules="rules"
           label-position="top"
           class="external-view__form"
-          @submit.native.prevent="submitForm">
+          @submit.native.prevent="doLogin">
           <h1 class="external-view__title">Login</h1>
           <el-alert
             v-show="showError"
@@ -69,6 +70,34 @@
             <a href="register" data-testid="register" @click.prevent="$router.push('register')">Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
+        <el-form
+          v-loading="showLoading"
+          ref="workspaceForm"
+          :model="workspaceForm"
+          :rules="workspaceRules"
+          v-else
+          label-position="top"
+          class="external-view__form"
+          @submit.native.prevent="selectWorkspace">
+          <h1 class="external-view__title">Equipe</h1>
+          <p>Selecione uma de suas equipes de trabalho para entrar.</p>
+          <el-form-item label="Equipe" prop="selectedWorkspace">
+            <el-select v-model="workspaceForm.selectedWorkspaceIndex" placeholder="Selecione">
+              <el-option
+                v-for="(w, index) in workspaces"
+                :key="index"
+                :value="index"
+                :label="w.workspace.name" />
+            </el-select>
+          </el-form-item>
+          <el-button
+            native-type="submit"
+            class="external-view__submit"
+            type="primary"
+            data-testid="submit">
+            Selecionar e entrar
+          </el-button>
+        </el-form>
       </el-main>
     </el-container>
   </div>
@@ -82,6 +111,7 @@ export default {
   },
   data () {
     return {
+      workspaces: [],
       showPassword: false,
       showError: false,
       showSuccess: false,
@@ -99,6 +129,12 @@ export default {
         password: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ]
+      },
+      workspaceForm: {
+        selectedWorkspaceIndex: ''
+      },
+      workspaceRules: {
+        selectedWorkspaceIndex: [{ required: true, message: 'Campo obrigatório', trigger: ['blur', 'submit'] }]
       }
     }
   },
@@ -124,7 +160,7 @@ export default {
     }
   },
   methods: {
-    submitForm () {
+    doLogin () {
       this.$refs['loginForm'].validate(valid => {
         if (valid) {
           this.showError = false
@@ -134,23 +170,19 @@ export default {
               Promise.all([
                 this.$store.dispatch('myAccount'),
                 this.$store.dispatch('myWorkspace')
-              ]).then(() => {
+              ]).then(responses => {
                 window.analytics.identify(this.loginForm.email, {
                   action: 'LOGIN',
                   email: this.loginForm.email,
                   workspace: this.$store.getters.workspaceSubdomain
                 })
-                window.analytics.group(this.$store.getters.workspaceSubdomain)
-                if (this.$store.getters.workspaceSubdomain) {
-                  this.$store.dispatch('getWorkspaceMembers').then(() => {
-                    setTimeout(function () {
-                      this.$router.push('/management')
-                    }.bind(this), 1000)
-                  }).catch(() => this.mountError())
+                if (responses[1].length > 1) {
+                  this.showLoading = false
+                  this.workspaces = responses[1]
                 } else {
-                  this.$router.push('/management')
+                  this.getMembersAndRedirect(responses[1][0])
                 }
-              }).catch((error) => {
+              }).catch(error => {
                 console.error(error)
                 this.mountError()
               })
@@ -164,6 +196,24 @@ export default {
             })
         } else {
           return false
+        }
+      })
+    },
+    getMembersAndRedirect (workspace) {
+      this.$store.commit('updateWorkspace', workspace)
+      if (workspace.person) this.$store.commit('setLoggedPerson', workspace.person)
+      this.$store.dispatch('getWorkspaceMembers')
+        .then(() => {
+          this.$router.push('/management')
+        }).catch(error => {
+          console.error(error)
+          this.mountError()
+        })
+    },
+    selectWorkspace () {
+      this.$refs['workspaceForm'].validate(valid => {
+        if (valid) {
+          this.getMembersAndRedirect(this.workspaces[this.workspaceForm.selectedWorkspaceIndex])
         }
       })
     },
