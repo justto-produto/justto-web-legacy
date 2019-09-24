@@ -2,71 +2,70 @@
   <jus-view-main class="profile-view" right-card-width="550">
     <template slot="title">
       <h1>
-        <router-link to="/">
-          <jus-icon icon="back" />
-        </router-link>
-        Configurações de usuário
+        Configurações
       </h1>
     </template>
     <template slot="main">
       <div class="profile-view__container">
-        <el-form
-          ref="profileForm"
-          :model="profileForm"
-          :rules="profileFormRules"
-          label-position="top">
-          <el-form-item label="Nome">
-            <el-input v-model="person.name">
-              <el-button slot="append" @click="changeName">
-                Alterar
-              </el-button>
-            </el-input>
-          </el-form-item>
-          <el-form-item label="Email">
-            <el-input v-model="$store.state.accountModule.email" disabled />
-          </el-form-item>
-          <el-form-item label="Nova senha">
-            <el-input v-model="profileForm.newPassword" type="password">
-              <el-button slot="append" @click="passwordModal">Alterar</el-button>
-            </el-input>
-          </el-form-item>
-          <el-form-item label="Contato" prop="phone">
-            <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="profileForm.phone">
-              <el-button slot="append" @click="updatePhone">Alterar</el-button>
-            </el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-    </template>
-    <template slot="right-card">
-      <h2>Equipe</h2>
-      <el-form label-position="top" class="mt20 mb40">
-        <el-form-item label="Nome da equipe">
-          <el-input v-model="teamName">
-            <el-button slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
-          </el-input>
-        </el-form-item>
-      </el-form>
-      <el-divider/>
-      <div class="profile-view__team">
-        <h3>
-          Membros
-          <a href="#" @click.prevent="dialogInvite = true">
-            <jus-icon icon="add" />
-          </a>
-        </h3>
-        <div v-for="member in teamMembers" :key="member.id">
-          <div class="profile-view__members-list">
-            <div class="member">
-              <strong>{{ member.person.name }}: </strong>
-              <span> {{ $t('profile.' + member.profile) }}</span>
+        <el-row gutter="62">
+          <el-col :span="12">
+            <el-form
+              ref="profileForm"
+              :model="profileForm"
+              :rules="profileFormRules"
+              label-position="top">
+              <el-form-item label="Nome">
+                <el-input v-model="person.name">
+                  <el-button slot="append" @click="changeName">
+                    Alterar
+                  </el-button>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="Email">
+                <el-input v-model="$store.state.accountModule.email" disabled />
+              </el-form-item>
+              <el-form-item label="Nova senha">
+                <el-input v-model="profileForm.newPassword" type="password">
+                  <el-button slot="append" @click="passwordModal">Alterar</el-button>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="Contato" prop="phone">
+                <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="profileForm.phone">
+                  <el-button slot="append" @click="updatePhone">Alterar</el-button>
+                </el-input>
+              </el-form-item>
+            </el-form>
+          </el-col>
+          <el-col :span="12">
+            <div class="profile-view__team">
+              <el-form label-position="top" class="mt20 mb40">
+                <el-form-item label="Nome da equipe">
+                  <el-input v-model="teamName">
+                    <el-button slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
+                  </el-input>
+                </el-form-item>
+              </el-form>
+              <h5>
+                Membros
+                <a href="#" @click.prevent="dialogInvite = true">
+                  <jus-icon icon="add" />
+                </a>
+              </h5>
+              <div v-for="member in teamMembers" :key="member.id">
+                <div class="profile-view__members-list">
+                  <div class="member">
+                    <strong>{{ member.person.name }}: </strong>
+                    <span> {{ $t('profile.' + member.profile) }}</span>
+                  </div>
+                  <div class="actions">
+                    <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
+                    <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="actions">
-              <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
-              <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
-            </div>
-          </div>
-        </div>
+          </el-col>
+        </el-row>
       </div>
       <el-dialog
         v-if="currentEditMember.person"
@@ -137,6 +136,9 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+
+
+
     </template>
   </jus-view-main>
 </template>
@@ -429,9 +431,7 @@ export default {
     }
   }
   &__container {
-    max-width: 400px;
-    margin: auto;
-    margin-top: 20px;
+    margin: 40px 40px 20px;
   }
   &__synced-email {
     display: flex;
@@ -443,9 +443,15 @@ export default {
     }
   }
   &__team {
-    margin-top: 40px;
-    h3 a {
-      float: right;
+    margin-top: -10px;
+    h5 {
+      color: #adadad;
+      font-weight: normal;
+      line-height: 30px;
+      margin: 0;
+      a {
+        float: right;
+      }
     }
   }
   &__members-list {
@@ -492,6 +498,9 @@ export default {
     .el-select {
       width: 100%;
     }
+  }
+  img {
+    width: 16px;
   }
 }
 </style>

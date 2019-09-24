@@ -20,7 +20,7 @@
         </div>
         <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card">
           <div slot="header">
-            {{ buildName(occurrence) }} {{ occurrence.id }}
+            <span>{{ buildName(occurrence) }} {{ occurrence.id }}</span>
             <jus-icon :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
           </div>
           <div>
@@ -28,7 +28,7 @@
             <div v-if="occurrence.interaction && occurrence.interaction.type === 'COMMUNICATION'">
               <a href="#" @click.prevent="showMessageDialog(occurrence.interaction.message.messageId)">Ver mensagem</a>
             </div>
-            <i v-show="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING'">
+            <i v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING'">
               <br>
               <jus-icon icon="clock" style="width: 14px;margin-bottom: -1.2px;"/>
               Esta é uma mensagem agendada para
@@ -61,7 +61,6 @@
 </template>
 
 <script>
-// import { isBase64 } from '@/plugins/jusUtils'
 export default {
   name: 'DisputeOccurrences',
   props: {
@@ -133,10 +132,13 @@ export default {
     buildContent (occurrence) {
       if (occurrence.interaction && Object.keys(occurrence.interaction.properties).length) {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT') {
-          return '<strong>Dados bancários alterados:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
+          return '<strong>Dados bancários:</strong> <br>' +
+          'Nome: ' + occurrence.interaction.properties.PERSON_NAME + '<br>' +
+          occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
         }
         if (occurrence.interaction.properties.VALUE) {
-          return 'Proposta ' + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase()
+          let word = occurrence.interaction.type === 'NEGOTIATOR_PROPOSAL' ? 'Contraproposta ' : 'Proposta '
+          return word + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase()
         }
       }
       return occurrence.description
@@ -213,8 +215,6 @@ export default {
         background-color: #FFC5A5;
       }
       .el-card__body {
-        font-weight: bold;
-        color: #FFC5A5;
       }
       .note {
         font-weight: lighter;
@@ -227,9 +227,6 @@ export default {
       .el-card__header {
         background-color: #B691FB;
       }
-      strong {
-        color: #B691FB;
-      }
     }
     .el-card__header {
       padding: 10px 20px;
@@ -240,8 +237,10 @@ export default {
         display: flex;
         align-items: center;
       }
+      span {
+        margin-right: 8px;
+      }
       img {
-        margin-left: 8px;
         width: 15px;
         &.NEGOTIATOR {
           width: 18px;
@@ -250,6 +249,14 @@ export default {
     }
     .el-card__body {
       padding: 10px 20px;
+      strong {
+        margin-bottom: 8px;
+        display: inline-block;
+      }
+      a {
+        margin-top: 8px;
+        display: block;
+      }
     }
   }
   &__log {

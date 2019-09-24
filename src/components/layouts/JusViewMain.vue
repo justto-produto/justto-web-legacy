@@ -62,11 +62,10 @@ export default {
 
 <style lang="scss">
 .jus-main-view {
-  height: calc(100% - 60px);
+  height: calc(100% - 20px);
   min-width: 1024px;
   &__title {
-    margin: 40px 20px 0px;
-    padding-bottom: 20px;
+    margin: 20px 20px 0px 24px;
     h1 {
       font-weight: 500;
       margin: 20px 0 0;

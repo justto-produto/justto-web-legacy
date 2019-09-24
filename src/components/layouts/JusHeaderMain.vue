@@ -61,7 +61,7 @@
             </div>
             <router-link to="/profile">
               <el-dropdown-item divided>
-                Perfil
+                Configurações
               </el-dropdown-item>
             </router-link>
             <a href="http://ajuda.justto.com.br/" target="_blank">
