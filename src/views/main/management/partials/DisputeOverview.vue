@@ -119,9 +119,9 @@
         </div>
         <div v-show="role.roles.length > 1" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="titles in roleTitleSort(role.roles)" :key="role.roles.index">
+            <li v-for="title in roleTitleSort(role.roles)" :key="title.index">
               <span>
-                {{ buildTitle(role.party, titles) }}
+                {{ buildTitle(role.party, title) }}
               </span>
             </li>
           </ul>
@@ -607,9 +607,9 @@ export default {
         this.editDisputeDialogLoading = false
       })
     },
-    buildTitle (party, titles) {
+    buildTitle (party, title) {
       if (party === 'RESPONDENT') {
-        switch (titles) {
+        switch (title) {
           case 'NEGOTIATOR':
             return 'Negociador'
           case 'PARTY':
@@ -618,12 +618,12 @@ export default {
             return 'Advogado do réu'
         }
       } else {
-        if (titles === 'PARTY') {
+        if (title === 'PARTY') {
           return 'Parte contrária'
-        } else if (titles === 'LAWYER') {
+        } else if (title === 'LAWYER') {
           return 'Advogado da parte'
         } else {
-          return role.name
+          return ''
         }
       }
     },
