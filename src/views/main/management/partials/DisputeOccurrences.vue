@@ -1,5 +1,5 @@
 <template lang="html">
-  <ul v-loading="loading" v-chat-scroll="{always: true, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
+  <ul v-loading="loading" v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
     <li
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
@@ -7,7 +7,7 @@
       <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
         {{ occurrence.description.replace('.', ':') }}
       </el-card>
-      <el-card v-else-if="occurrence.type === 'LOG'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+      <el-card v-else-if="occurrence.type === 'LOG' || (occurrence.interaction && occurrence.interaction.type) === 'VISUALIZATION'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
         {{ occurrence.description }}
       </el-card>
       <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
@@ -18,11 +18,10 @@
           <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
           <span v-html="buildHour(occurrence)" />
         </div>
-        <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" class="dispute-view-occurrences__card">
+        <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card">
           <div slot="header">
-            {{ buildName(occurrence) }}
-            <span class="divider">•</span>
-            <jus-icon :icon="buildIcon(occurrence)" />
+            {{ buildName(occurrence) }} {{ occurrence.id }}
+            <jus-icon :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
           </div>
           <div>
             <span v-html="buildContent(occurrence)" />
@@ -31,8 +30,10 @@
             </div>
             <i v-show="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING'">
               <br>
-              <jus-icon icon="clock" style="vertical-align: sub;"/>
-              Esta é uma mensagem agendada que ainda não foi entregue.
+              <jus-icon icon="clock" style="width: 14px;margin-bottom: -1.2px;"/>
+              Esta é uma mensagem agendada para
+              {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
+              que ainda não foi entregue.
             </i>
           </div>
         </el-card>
@@ -109,16 +110,24 @@ export default {
     },
     buildIcon (occurrence) {
       if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType) {
-        return occurrence.interaction.message.communicationType.toLowerCase()
+        return occurrence.interaction.message.communicationType.toLowerCase().replace('_', '-')
+      }
+      if (occurrence.interaction && ['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_REJECTED', 'NEGOTIATOR_ACCEPTED', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type)) {
+        return 'justto'
       }
       return ''
     },
     buildName (occurrence) {
-      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters) {
-        return occurrence.interaction.message.parameters.SENDER_NAME ? occurrence.interaction.message.parameters.SENDER_NAME : occurrence.interaction.message.parameters.SENDER
+      if (occurrence.interaction &&
+        occurrence.interaction.message &&
+        occurrence.interaction.message.parameters &&
+        occurrence.interaction.message.parameters.SENDER_NAME) {
+        return occurrence.interaction.message.parameters.SENDER_NAME.toLowerCase()
       }
-      if (occurrence.interaction && occurrence.interaction.properties) {
-        return occurrence.interaction.properties.PERSON_NAME
+      if (occurrence.interaction &&
+        occurrence.interaction.properties &&
+        occurrence.interaction.properties.PERSON_NAME) {
+        return occurrence.interaction.properties.PERSON_NAME.toLowerCase()
       }
     },
     buildContent (occurrence) {
@@ -135,9 +144,6 @@ export default {
     buildHour (occurrence) {
       if (occurrence.executionDateTime) {
         return this.$moment(occurrence.executionDateTime.dateTime).format('DD-MM[<br>]HH:mm')
-      }
-      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.scheduledTime && occurrence.interaction.message.scheduledTime.dateTime) {
-        return this.$moment(occurrence.interaction.message.scheduledTime.dateTime).format('DD-MM[<br>]HH:mm')
       }
       return this.$moment(occurrence.createAt.dateTime).format('DD-MM[<br>]HH:mm')
     },
@@ -175,84 +181,71 @@ export default {
     margin: 20px 20px 0;
     display: flex;
     width: 100%;
-    &.INBOUND {
-      .VISUALIZATION {
-        border: 1px solid #FFC5A5;
-        .el-card__header {
-          background-color: #FFC5A5;
-        }
-      }
-      .COMMUNICATION {
-        background-color: $--color-cloudy-blue;
-        .el-card__header {
-          padding: 10px 20px 0;
-        }
-      }
-      .NEGOTIATOR_REJECTED, .NEGOTIATOR_PROPOSAL, .NEGOTIATOR_ACCEPTED {
-        border: 1px solid #FFC5A5;
-        .el-card__header {
-          background-color: #FFC5A5;
-        }
-        .el-card__body {
-          font-weight: bold;
-          color: #FFC5A5;
-        }
-        .note {
-          font-weight: lighter;
-          font-style: italic;
-          color: #000;
-        }
-      }
-      .NEGOTIATOR_CHECKOUT {
-        border: 1px solid #B691FB;
-        .el-card__header {
-          background-color: #B691FB;
-        }
-        strong {
-          color: #B691FB;
-        }
-      }
-    }
     &.OUTBOUND {
       flex-direction: row-reverse;
       .dispute-view-occurrences__avatar {
-        margin: 0 0 0 20px;
-      }
-      .COMMUNICATION {
-        background-color: $--color-cloudy-blue;
-        .el-card__header {
-          padding: 10px 20px;
-        }
-        &.WHATSAPP {
-          background-color: $--color-success-light-5;
-          .el-card__header {
-            padding: 10px 20px 0;
-          }
-        }
-        &.EMAIL {
-          border: 1px solid #FFC5A5;
-          background-color: #fff;
-          .el-card__header {
-            background-color: #FFC5A5;
-          }
-        }
+        margin: 0 0 0 12px;
       }
     }
   }
   &__card {
-    border-radius: 24px;
+    border-radius: 8px;
     &.WAITING {
       border: 2px dashed #343c4b;
+    }
+    &.COMMUNICATION {
+      .el-card__header {
+        padding: 10px 20px 0;
+      }
+      &.WHATSAPP {
+        background-color: $--color-success-light-5;
+      }
+      &.EMAIL {
+        background-color: $--color-cloudy-blue;
+      }
+      &.EMAIL_CNA {
+        background-color: #B6FFFB;
+      }
+    }
+    &.NEGOTIATOR_REJECTED, &.NEGOTIATOR_PROPOSAL, &.NEGOTIATOR_ACCEPTED {
+      border: 1px solid #FFC5A5;
+      .el-card__header {
+        background-color: #FFC5A5;
+      }
+      .el-card__body {
+        font-weight: bold;
+        color: #FFC5A5;
+      }
+      .note {
+        font-weight: lighter;
+        font-style: italic;
+        color: #000;
+      }
+    }
+    &.NEGOTIATOR_CHECKOUT {
+      border: 1px solid #B691FB;
+      .el-card__header {
+        background-color: #B691FB;
+      }
+      strong {
+        color: #B691FB;
+      }
     }
     .el-card__header {
       padding: 10px 20px;
       font-weight: bold;
       border: 0;
-      img {
-        width: 15px;
+      text-transform: capitalize;
+      > div {
+        display: flex;
+        align-items: center;
       }
-      .divider {
-        padding: 0 6px 0 3px;
+      img {
+        margin-left: 8px;
+        width: 15px;
+        &.NEGOTIATOR {
+          width: 18px;
+        }
       }
     }
     .el-card__body {
@@ -260,7 +253,7 @@ export default {
     }
   }
   &__log {
-    border-radius: 24px;
+    border-radius: 8px;
     margin: 20px 20px 0;
     border: none;
     .el-card__body {
@@ -270,14 +263,14 @@ export default {
     }
   }
   &__avatar {
-    margin: 0 20px 0 0;
+    margin: 0 12px 0 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: max-content;
+    text-align: center;
     span {
       font-size: 12px;
-      margin-top: 8px;
+      margin-top: 4px;
     }
   }
   &__empty {

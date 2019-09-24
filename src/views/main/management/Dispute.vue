@@ -193,7 +193,7 @@
                       </el-tooltip>
                       <el-tooltip content="Enviar CNA">
                         <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
-                          <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
+                          <jus-icon :is-active="messageType === 'cna'" icon="email-cna"/>
                         </a>
                       </el-tooltip>
                     </div>
