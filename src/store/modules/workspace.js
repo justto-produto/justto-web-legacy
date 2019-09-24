@@ -1,10 +1,15 @@
+const localWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
+const workspace = localWorkspace && localWorkspace.workspace ? localWorkspace.workspace : {}
+const profile = localWorkspace && localWorkspace.profile ? localWorkspace.profile : ''
+
 const workspaceModule = {
   state: {
-    id: '',
-    name: '',
-    status: '',
-    subdomain: '',
-    profile: '',
+    id: workspace.id,
+    name: workspace.name,
+    type: workspace.type,
+    status: workspace.status,
+    subdomain: workspace.subDomain,
+    profile: profile,
     members: []
   },
   mutations: {
@@ -14,8 +19,10 @@ const workspaceModule = {
         axios.defaults.headers.common['Workspace'] = response.workspace.subDomain
         state.subdomain = response.workspace.subDomain
         state.name = response.workspace.name
+        state.type = response.workspace.type
         state.status = response.workspace.status
         state.id = response.workspace.id
+        localStorage.setItem('jusworkspace', JSON.stringify(response))
       }
       if (response && response.profile) state.profile = response.profile
     },
@@ -25,6 +32,7 @@ const workspaceModule = {
         axios.defaults.headers.common['Workspace'] = response.subDomain
         state.subdomain = response.subDomain
         state.name = response.name
+        state.type = response.type
         state.status = response.status
         state.id = response.id
       }
@@ -32,6 +40,7 @@ const workspaceModule = {
     clearWorkspace (state) {
       state.id = ''
       state.name = ''
+      state.type = ''
       state.status = ''
       state.subdomain = ''
       state.profile = ''
