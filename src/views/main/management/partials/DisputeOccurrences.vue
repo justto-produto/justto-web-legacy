@@ -20,7 +20,7 @@
         </div>
         <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card">
           <div slot="header">
-            <span>{{ buildName(occurrence) }} {{ occurrence.id }}</span>
+            <span>{{ buildName(occurrence) }}</span>
             <jus-icon :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
           </div>
           <div>
@@ -132,9 +132,7 @@ export default {
     buildContent (occurrence) {
       if (occurrence.interaction && Object.keys(occurrence.interaction.properties).length) {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT') {
-          return '<strong>Dados bancários:</strong> <br>' +
-          'Nome: ' + occurrence.interaction.properties.PERSON_NAME + '<br>' +
-          occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
+          return '<strong>Dados bancários:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
         }
         if (occurrence.interaction.properties.VALUE) {
           let word = occurrence.interaction.type === 'NEGOTIATOR_PROPOSAL' ? 'Contraproposta ' : 'Proposta '
