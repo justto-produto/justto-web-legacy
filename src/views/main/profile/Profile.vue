@@ -7,8 +7,9 @@
     </template>
     <template slot="main">
       <div class="profile-view__container">
-        <el-row gutter="62">
+        <el-row :gutter="62">
           <el-col :span="12">
+            <h2>Perfil</h2>
             <el-form
               ref="profileForm"
               :model="profileForm"
@@ -37,8 +38,9 @@
             </el-form>
           </el-col>
           <el-col :span="12">
+            <h2>Equipe</h2>
             <div class="profile-view__team">
-              <el-form label-position="top" class="mt20 mb40">
+              <el-form label-position="top" class="mt20 mb20">
                 <el-form-item label="Nome da equipe">
                   <el-input v-model="teamName">
                     <el-button slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
@@ -431,7 +433,7 @@ export default {
     }
   }
   &__container {
-    margin: 40px 40px 20px;
+    margin: 20px 40px;
   }
   &__synced-email {
     display: flex;
@@ -443,7 +445,6 @@ export default {
     }
   }
   &__team {
-    margin-top: -10px;
     h5 {
       color: #adadad;
       font-weight: normal;
