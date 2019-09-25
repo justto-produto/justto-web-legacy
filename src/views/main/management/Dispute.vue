@@ -398,7 +398,7 @@ export default {
   },
   watch: {
     '$route.params.id': function (id, oldId) {
-      this.id = id
+      this.id = id.toString()
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
@@ -413,7 +413,7 @@ export default {
     }
   },
   created () {
-    this.id = this.$route.params.id
+    this.id = this.$route.params.id.toString()
     this.fetchData()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
@@ -429,7 +429,7 @@ export default {
   },
   methods: {
     unsubscribeOccurrences (id) {
-      this.$store.commit('clearDisputeOccurrence')
+      this.$store.commit('clearDisputeOccurrences')
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'

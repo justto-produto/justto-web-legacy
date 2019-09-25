@@ -89,10 +89,12 @@ export default {
   },
   mounted () {
     this.$store.commit('clearOccurrencesSize')
-    this.$store.commit('clearDisputeOccurrence')
-    this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(() => {
-      this.loading = false
-    })
+    this.$store.commit('clearDisputeOccurrences')
+    setTimeout(() => {
+      this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(() => {
+        this.loading = false
+      })
+    }, 200)
   },
   methods: {
     loadOccurrences ($state) {

@@ -83,7 +83,7 @@
           <jus-icon v-if="scope.row.lastInteraction" :icon="getInteractionIcon(scope.row.lastInteraction)" class="management-table__interaction-icon" />
           <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
         </span>
-        <el-tooltip v-if="scope.row.lastInteraction" :content="scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY HH:mm:ss')">
+        <el-tooltip v-if="scope.row.lastInteraction" :content="scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm')">
           <span style="margin-left: 4px;">
             {{ getLastInteraction(scope.row.lastInteraction.createAt.dateTime) }}
           </span>
@@ -269,9 +269,10 @@ export default {
 <style lang="scss">
 .management-table {
   &__interaction-icon {
-    vertical-align: text-top;
+    vertical-align: middle;
     margin-right: 4px;
-    max-height: 16px;
+    max-height: 18px;
+    max-width: 18px;
   }
   &__interaction-pulse {
     position: absolute;

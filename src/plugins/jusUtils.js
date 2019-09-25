@@ -113,7 +113,7 @@ const getInteractionIcon = function (interaction) {
     case 'VISUALIZATION':
       return 'eye'
     case 'NEGOTIATOR_ACCESS':
-      return 'access-justto'
+      return 'justto'
     case 'NEGOTIATOR_PROPOSAL':
       return 'proposal'
     case 'NEGOTIATOR_CHECKOUT':

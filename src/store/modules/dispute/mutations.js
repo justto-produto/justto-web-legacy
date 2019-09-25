@@ -12,7 +12,7 @@ const disputeMutations = {
   clearDispute (state) {
     state.dispute = { id: 0 }
   },
-  clearDisputeOccurrence (state) {
+  clearDisputeOccurrences (state) {
     state.occurrences.length = 0
   },
   clearDisputes (state) {
