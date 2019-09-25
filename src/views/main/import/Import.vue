@@ -49,7 +49,7 @@
           <el-button plain @click="removeFile">Remover arquivo</el-button>
           <el-button type="primary" data-testid="submit" @click="startImport">Próximo</el-button>
         </div>
-        <div v-if="!isSuccess" class="import-view__download">
+        <div v-else class="import-view__download">
           <el-button
             plain
             type="primary"
@@ -101,7 +101,6 @@
 const STATUS_INITIAL = 0
 const STATUS_SAVING = 1
 const STATUS_SUCCESS = 2
-const STATUS_FAILED = 3
 
 export default {
   name: 'Import',
@@ -122,9 +121,6 @@ export default {
     },
     isSuccess () {
       return this.currentStatus === STATUS_SUCCESS
-    },
-    isFailed () {
-      return this.currentStatus === STATUS_FAILED
     }
   },
   beforeMount () {
@@ -182,7 +178,7 @@ export default {
       }).catch(error => {
         this.handleError(error.response)
         this.removeFile()
-        this.currentStatus = STATUS_FAILED
+        this.currentStatus = STATUS_INITIAL
       })
     },
     handleError (error) {
@@ -194,6 +190,7 @@ export default {
         errorMessage.message = 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
         errorMessage.type = 'error'
       }
+      this.currentStatus = STATUS_INITIAL
       this.processingFile = false
       this.$jusNotification({
         title: 'Ops!',

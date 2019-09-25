@@ -37,7 +37,7 @@
           :label="type"
           :value="index" />
       </el-select>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer">
         <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!unsettledType"

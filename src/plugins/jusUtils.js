@@ -64,10 +64,11 @@ const fuseSearchOccurrences = function (occurrences, term) {
     minMatchCharLength: 1,
     keys: [
       'description',
-      'code',
-      'message.content',
-      'message.sender',
-      'message.receiver'
+      'status',
+      'interaction.message.title',
+      'interaction.message.parameters.RECEIVER_NAME',
+      'interaction.message.parameters.SENDER_NAME',
+      'interaction.message.parameters.PERSON_NAME'
     ]
   })
   const list = fuse.search(term)
@@ -93,22 +94,37 @@ const getLastInteraction = function (lastinteractiondate) {
   }
 }
 
-const getLastInteractionIcon = function (type) {
-  switch (type) {
-    case 'EMAIL_CNA':
-      return 'cna'
-    case 'EMAIL':
+const getInteractionIcon = function (interaction) {
+  switch (interaction.type) {
+    case 'COMMUNICATION': {
+      if (interaction.message) {
+        switch (interaction.message.type) {
+          case 'EMAIL': return 'email'
+          case 'EMAIL_CNA': return 'cna'
+          case 'SMS': return 'sms'
+          case 'CALL': return 'call'
+          case 'CHAT': return 'chat'
+          case 'TTS': return 'tts'
+          case 'DELAY': return 'delay'
+        }
+      }
       return 'email'
-    case 'WHATSAPP':
-      return 'whatsapp'
-    case 'SMS':
-      return 'sms'
-    case 'TTS':
-      return 'tts'
-    case 'NEGOTIATION':
+    }
+    case 'VISUALIZATION':
       return 'eye'
-    default:
-      return 'eye'
+    case 'NEGOTIATOR_ACCESS':
+      return 'justto'
+    case 'NEGOTIATOR_PROPOSAL':
+      return 'proposal'
+    case 'NEGOTIATOR_CHECKOUT':
+      return 'checkout'
+    case 'NEGOTIATOR_ACCEPTED':
+      return 'accepted-negotiation'
+    case 'NEGOTIATOR_REJECTED':
+      return 'rejected'
+    case 'CLICK':
+      return 'click'
+    default: return 'eye'
   }
 }
 
@@ -155,7 +171,7 @@ export {
   fuseSearchDisputes,
   fuseSearchOccurrences,
   getLastInteraction,
-  getLastInteractionIcon,
+  getInteractionIcon,
   getLastInteractionTooltip,
   isBase64,
   uuidv4

@@ -1,30 +1,24 @@
 .external-view {
   height: 100%;
-  
   main{
     background-color: #fff !important;
   }
-
   .external-view__title {
     margin-bottom: 40px;
   }
-
   .external-view__form {
     margin: auto;
     width: 440px;
     padding: 20px;
   }
-
   .external-view__submit {
     width: 100%;
   }
-
   .external-view__info {
     font-size: 12px;
     text-align: center;
     margin-top: 20px;
   }
-
   .external-view__show-password {
     vertical-align: text-bottom;
     margin-right: 6px;
@@ -35,9 +29,10 @@
       padding-left: 6px;
     }
   }
-
   .el-alert {
     margin-bottom: 10px;
   }
-
+  .el-select {
+    width: 100%;
+  }
 }

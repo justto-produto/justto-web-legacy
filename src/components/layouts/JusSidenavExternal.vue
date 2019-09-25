@@ -58,7 +58,7 @@
           </span>
         </el-collapse-item>
       </el-collapse>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer">
         <el-button type="primary" @click="modal = false">OK</el-button>
       </span>
     </el-dialog>

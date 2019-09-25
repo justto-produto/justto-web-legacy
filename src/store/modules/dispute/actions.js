@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import moment from 'moment'
 const FileSaver = require('file-saver')
-let debounce
 
 const queryBuilder = q => {
   let query = '?'
@@ -28,37 +27,31 @@ const queryBuilder = q => {
 }
 
 const disputeActions = {
-  SOCKET_ADD_DISPUTE ({ dispatch, state }, disputeChanged) {
+  SOCKET_ADD_DISPUTE ({ commit, state }, disputeChanged) {
     if (state.dispute.id === disputeChanged.id) {
       state.dispute = disputeChanged
     } else {
       let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       if (disputeIndex !== -1) {
         let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-        if (dispute.status !== disputeChanged.status) {
-          clearTimeout(debounce)
-          debounce = setTimeout(() => {
-            dispatch('getDisputes')
-          }, 2000)
-        }
-        if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-          Vue.set(state.disputes, disputeIndex, disputeChanged)
+        if (dispute.status !== disputeChanged.status && state.tab !== '3') {
+          commit('disputeSetHasNew', true)
         } else {
-          Vue.set(state.disputes, disputeIndex, disputeChanged)
+          if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
+            Vue.set(state.disputes, disputeIndex, disputeChanged)
+          } else {
+            Vue.set(state.disputes, disputeIndex, disputeChanged)
+          }
         }
       } else {
-        clearTimeout(debounce)
-        debounce = setTimeout(() => {
-          dispatch('getDisputes')
-        }, 2000)
+        if (state.query.status.includes(disputeChanged.status)) {
+          commit('disputeSetHasNew', true)
+        }
       }
     }
   },
-  SOCKET_REMOVE_DISPUTE ({ dispatch }) {
-    clearTimeout(debounce)
-    debounce = setTimeout(() => {
-      dispatch('getDisputes')
-    }, 2000)
+  SOCKET_REMOVE_DISPUTE ({ commit }) {
+    commit('disputeSetHasNew', true)
   },
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
@@ -91,6 +84,7 @@ const disputeActions = {
       // eslint-disable-next-line
       axios.get('api/disputes/filter' + queryBuilder(state.query)).then(response => {
         commit('setDisputes', response.data)
+        commit('disputeSetHasNew', false)
         resolve(response.data)
       }).catch(error => {
         reject(error)
@@ -319,10 +313,10 @@ const disputeActions = {
         })
     })
   },
-  getDisputeOccurrences ({ commit }, disputeId) {
+  getDisputeOccurrences ({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + disputeId + '/occurrences?size=99999&sort=id,asc')
+      axios.get('api/disputes/' + disputeId + '/occurrences?size=' + state.occurrencesSize + '&sort=createdAt,asc')
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)

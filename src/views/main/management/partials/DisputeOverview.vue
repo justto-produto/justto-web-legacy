@@ -10,13 +10,13 @@
           <span class="title">Código:</span>
           <span>{{ dispute.code }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.campaign" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Campanha:</span>
-          <span>{{ dispute.campaignName }}</span>
+          <span>{{ dispute.campaign.name }}</span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.campaign" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
-          <span>{{ dispute.strategyName }}</span>
+          <span>{{ dispute.campaign.strategy }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
@@ -24,7 +24,7 @@
         </div>
         <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Classificação:</span>
-          <span>{{ dispute.classification | capitalize }}</span>
+          <span>{{ dispute.classification.name | capitalize }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
@@ -109,10 +109,24 @@
           <span class="title">CPF/CNPJ:</span>
           <span>{{ role.documentNumber | cpfCnpjMask }}</span>
         </div>
-        <div class="dispute-overview-view__info-line">
+
+        <div v-show="role.roles.length == 1" class="dispute-overview-view__info-line">
           Função:
-          <span>{{ buildTitle(role) }}</span>
+          <span>{{ buildTitle(role.party, role.roles[0]) }}</span>
         </div>
+        <div v-show="role.roles.length > 1" class="dispute-overview-view__info-line">
+          Função:
+        </div>
+        <div v-show="role.roles.length > 1" class="dispute-overview-view__info-list">
+          <ul>
+            <li v-for="title in roleTitleSort(role.roles)" :key="title.index">
+              <span>
+                {{ buildTitle(role.party, title) }}
+              </span>
+            </li>
+          </ul>
+        </div>
+
         <div v-show="role.phones.length" class="dispute-overview-view__info-line">
           Telefone(s):
         </div>
@@ -221,7 +235,7 @@
             <el-form-item label="Proposto por" prop="lastCounterOfferValue">
               <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta">
                 <el-option
-                  v-for="negotiator in dispute.negotiators"
+                  v-for="negotiator in disputeNegotiations"
                   :key="negotiator.id"
                   :label="negotiator.name"
                   :value="negotiator.id" />
@@ -244,7 +258,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer">
         <el-button plain @click="editDisputeDialogVisible = false">Cancelar</el-button>
         <el-button :loading="editDisputeDialogLoading" type="primary" data-testid="confirm-edit-data" @click="editDispute()">Editar dados</el-button>
       </span>
@@ -376,7 +390,7 @@
           </el-table-column>
         </el-table>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span slot="footer">
         <el-button plain @click="editRoleDialogVisible = false">Cancelar</el-button>
         <el-button :loading="editRoleDialogLoading" type="primary" data-testid="edit-data-part" @click="editRole">
           Editar dados
@@ -499,13 +513,27 @@ export default {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
+    },
+    disputeNegotiations () {
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR')
+      }
+      return []
     }
   },
   methods: {
+    roleTitleSort (title) {
+      if (title) {
+        let sortedArray = title.slice(0) || []
+        return sortedArray.sort((a, b) => {
+          return (a[0] > b[0]) ? -1 : (a[0] < b[0]) ? 1 : 0
+        })
+      } return []
+    },
     openDisputeDialog () {
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
-      this.selectedNegotiatorId = this.dispute.negotiators[0].id || ''
+      this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.editDisputeDialogVisible = true
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.disputeForm.id = dispute.id
@@ -542,16 +570,17 @@ export default {
             if (this.selectedClaimantId) {
               promises.push(this.$store.dispatch('editDisputeOffer', {
                 disputeId: this.dispute.id,
-                objectId: this.dispute.objectId,
+                objectId: disputeToEdit.objects[0].id,
                 value: this.disputeForm.lastCounterOfferValue.toString(),
                 roleId: this.selectedClaimantId
               }))
             }
           }
+          console.log(this.selectedNegotiatorId)
           if (this.disputeForm.lastOfferValue !== this.dispute.lastOfferValue) {
             promises.push(this.$store.dispatch('editDisputeOffer', {
               disputeId: this.dispute.id,
-              objectId: this.dispute.objectId,
+              objectId: disputeToEdit.objects[0].id,
               value: this.disputeForm.lastOfferValue.toString(),
               roleId: this.selectedNegotiatorId
             }))
@@ -564,7 +593,8 @@ export default {
               message: 'Os dados foram alterados com sucesso.',
               type: 'success'
             })
-          }).catch(() => {
+          }).catch((e) => {
+            console.log(e)
             this.$jusNotification({ type: 'error' })
           }).finally(() => {
             this.editDisputeDialogLoading = false
@@ -577,9 +607,9 @@ export default {
         this.editDisputeDialogLoading = false
       })
     },
-    buildTitle (role) {
-      if (role.party === 'RESPONDENT') {
-        switch (role.roles[0]) {
+    buildTitle (party, title) {
+      if (party === 'RESPONDENT') {
+        switch (title) {
           case 'NEGOTIATOR':
             return 'Negociador'
           case 'PARTY':
@@ -588,12 +618,12 @@ export default {
             return 'Advogado do réu'
         }
       } else {
-        if (role.roles[0] === 'PARTY') {
+        if (title === 'PARTY') {
           return 'Parte contrária'
-        } else if (role.roles[0] === 'LAWYER') {
+        } else if (title === 'LAWYER') {
           return 'Advogado da parte'
         } else {
-          return role.name
+          return ''
         }
       }
     },
@@ -605,7 +635,7 @@ export default {
       this.editRoleDialogError = false
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
-      this.roleForm.title = this.buildTitle(role)
+      this.roleForm.title = this.buildTitle(role.party, role.roles[0])
       this.roleForm.documentNumber = this.$options.filters.cpfCnpjMask(this.roleForm.documentNumber)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },

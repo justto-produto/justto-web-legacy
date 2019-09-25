@@ -9,9 +9,12 @@ const dispute = {
     },
     disputes: [],
     occurrences: [],
+    occurrencesInitialSize: 10,
+    occurrencesSize: 10,
     summaryNearExpirations: [],
     summaryNotVisualizeds: [],
     tab: '0',
+    hasNew: false,
     query: {
       status: ['ENGAGEMENT'],
       campaigns: [],

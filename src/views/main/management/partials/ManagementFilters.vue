@@ -12,6 +12,7 @@
               <el-select
                 v-model="filters.campaigns"
                 multiple
+                filterable
                 data-testid="filter-campaign"
                 placeholder="Selecione uma opção"
                 clearable
@@ -30,6 +31,7 @@
               <el-select
                 v-model="filters.strategy"
                 multiple
+                filterable
                 data-testid="filter-strategy"
                 placeholder="Selecione uma opção"
                 clearable

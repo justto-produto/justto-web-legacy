@@ -25,10 +25,6 @@ const mutations = {
     state.whatsapp.qrCode = message.qrCode
     state.whatsapp.status = message.status
     state.whatsapp.number = message.phone
-  },
-  // OCCURRENCE
-  clearDisputeOccurrence (state) {
-    state.occurrence = []
   }
 }
 

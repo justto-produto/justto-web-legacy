@@ -2,7 +2,6 @@
   <JusViewMain
     :loading-container="dispute && !dispute.id"
     full-screen
-    left-card-width="320"
     right-card-width="320"
     class="dispute-view">
     <template v-if="false" slot="title">
@@ -12,19 +11,6 @@
         </router-link>
         Disputa #{{ dispute.id }}
       </h1>
-    </template>
-    <!-- RESUMO DO CASO -->
-    <template v-if="false" slot="left-card">
-      <div class="dispute-view__section-title">
-        <h2>Resumo da disputa</h2>
-      </div>
-      <dispute-summary
-        v-if="dispute.strategy"
-        :key="componentKey"
-        :dispute="dispute"
-        :unsettled-types="unsettledTypes"
-        :show-scheduled.sync="showScheduled"
-        data-testid="dispute-summary" />
     </template>
     <!-- CHAT -->
     <template slot="main">
@@ -85,19 +71,12 @@
               <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Buscar">
+          <!-- <el-tooltip content="Buscar">
             <el-button plain @click="showSearch = !showSearch">
               <jus-icon icon="search2"/>
             </el-button>
-          </el-tooltip>
-          <el-tooltip content="Exibir/ocultar mensagens agendadas">
-            <el-button :plain="!showScheduled" :type="showScheduled ? 'primary' : null" @click="toggleShowSchedule(!showScheduled)">
-              <!-- el-icon-chat-dot-square -->
-              <jus-icon v-show="!showScheduled" icon="eye" />
-              <jus-icon v-show="showScheduled" icon="eye-white" />
-            </el-button>
-          </el-tooltip>
-          <div :class="{isVisible: showSearch}" class="dispute-view__search">
+          </el-tooltip> -->
+          <div :class="{isVisible: showSearch}" class="dispute-view__search" @keydown.esc="showSearch = false">
             <el-input v-model="searchTerm" autofocus>
               <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
             </el-input>
@@ -126,7 +105,7 @@
               :label="type"
               :value="index"/>
           </el-select>
-          <span slot="footer" class="dialog-footer">
+          <span slot="footer">
             <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
             <el-button
               :disabled="!unsettledType"
@@ -155,22 +134,16 @@
               filter-placeholder="Buscar"
               filterable/>
           </el-form>
-          <span slot="footer" class="dialog-footer">
+          <span slot="footer">
             <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
             <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
           </span>
         </el-dialog>
         <!-- MESSAGES -->
-        <dispute-messages
-          :dispute-id="dispute ? dispute.id : 0"
-          :messages-prop="filteredOccurrences"
-          :show-scheduled="showScheduled"
-          :current-tab="typingTab"
-          :loading.sync="loadingOccurrences"
-          data-testid="dispute-messages" />
+        <dispute-occurrences :dispute-id="id" data-testid="dispute-messages" />
         <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
-            <el-tab-pane v-loading="loadingTextarea" label="Mensagem" name="1">
+            <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
                   <textarea
@@ -209,7 +182,7 @@
                       </el-tooltip>
                       <el-tooltip content="Enviar CNA">
                         <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
-                          <jus-icon :is-active="messageType === 'cna'" icon="cna"/>
+                          <jus-icon :is-active="messageType === 'cna'" icon="email-cna"/>
                         </a>
                       </el-tooltip>
                     </div>
@@ -296,7 +269,7 @@
                 </div>
               </el-card>
             </el-tab-pane> -->
-            <el-tab-pane v-loading="loadingTextarea" label="Nota" name="3">
+            <el-tab-pane v-loading="loadingTextarea" label="Notas" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <textarea
                   v-model="newNote"
@@ -346,13 +319,10 @@
 </template>
 
 <script>
-import { fuseSearchOccurrences } from '@/plugins/jusUtils'
-
 export default {
   name: 'Dispute',
   components: {
-    DisputeSummary: () => import('./partials/DisputeSummary'),
-    DisputeMessages: () => import('./partials/DisputeMessages'),
+    DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
     DisputeOverview: () => import('./partials/DisputeOverview')
   },
   data () {
@@ -365,7 +335,6 @@ export default {
       messageType: 'email',
       newMessage: '',
       newNote: '',
-      showScheduled: false,
       newChatMessage: '',
       componentKey: 0,
       disputeNegotiators: [],
@@ -376,7 +345,6 @@ export default {
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
-      loadingOccurrences: false,
       activeRoleId: 0
     }
   },
@@ -394,13 +362,6 @@ export default {
       }
       return {}
     },
-    occurrences () {
-      let sortedOccurrences = this.$store.getters.occurrences
-      sortedOccurrences.sort(function (o1, o2) {
-        return (o1.id < o2.id) ? -1 : 1
-      })
-      return sortedOccurrences
-    },
     whatsappStatus () {
       return this.$store.getters.whatsappStatus
     },
@@ -415,12 +376,6 @@ export default {
     },
     dispute () {
       return this.$store.getters.dispute
-    },
-    filteredOccurrences () {
-      if (this.searchTerm.trim()) {
-        return fuseSearchOccurrences(this.occurrences, this.searchTerm.trim())
-      }
-      return this.occurrences
     },
     isFavorite () {
       return this.dispute ? this.dispute.favorite : false
@@ -443,7 +398,7 @@ export default {
   },
   watch: {
     '$route.params.id': function (id, oldId) {
-      this.id = id
+      this.id = id.toString()
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
@@ -458,7 +413,7 @@ export default {
     }
   },
   created () {
-    this.id = this.$route.params.id
+    this.id = this.$route.params.id.toString()
     this.fetchData()
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
@@ -474,7 +429,7 @@ export default {
   },
   methods: {
     unsubscribeOccurrences (id) {
-      this.$store.commit('clearDisputeOccurrence')
+      this.$store.commit('clearDisputeOccurrences')
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
@@ -522,27 +477,20 @@ export default {
         })
       })
     },
-    toggleShowSchedule (value) {
-      this.showScheduled = value
-    },
     fetchData () {
       this.loadingDispute = true
-      this.loadingOccurrences = true
       this.$socket.emit('subscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
-      Promise.all([
-        this.$store.dispatch('getDispute', this.id),
-        this.$store.dispatch('getDisputeOccurrences', this.id)
-      ]).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        setTimeout(() => {
-          this.loadingDispute = false
-          this.loadingOccurrences = false
-        }, 500)
-      })
+      this.$store.dispatch('getDispute', this.id)
+        .catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          setTimeout(() => {
+            this.loadingDispute = false
+          }, 500)
+        })
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {

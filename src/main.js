@@ -71,12 +71,15 @@ Vue.component('JusStatusDot', JusStatusDot)
 
 Vue.config.productionTip = false
 
+if (store.getters.workspaceSubdomain) {
+  // eslint-disable-next-line
+  axios.defaults.headers.common['Workspace'] = store.getters.workspaceSubdomain
+}
+
 if (store.getters.isLoggedIn) {
-  Promise.all([store.dispatch('myAccount'), store.dispatch('myWorkspace')])
+  store.dispatch('myAccount')
     .then(responses => {
-      if (responses[1][0] && responses[1][0]['workspace']['subDomain']) {
-        store.dispatch('getWorkspaceMembers')
-      }
+      store.dispatch('getWorkspaceMembers')
     }).catch(() => {
       store.commit('logout')
     }).finally(() => {
