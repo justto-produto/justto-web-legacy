@@ -483,15 +483,14 @@ export default {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
-      Promise.all([
-        this.$store.dispatch('getDispute', this.id),
-      ]).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        setTimeout(() => {
-          this.loadingDispute = false
-        }, 500)
-      })
+      this.$store.dispatch('getDispute', this.id)
+        .catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          setTimeout(() => {
+            this.loadingDispute = false
+          }, 500)
+        })
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {

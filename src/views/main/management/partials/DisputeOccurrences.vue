@@ -1,6 +1,6 @@
 <template lang="html">
   <ul v-loading="loading" v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
-    <infinite-loading direction="top" @infinite="loadOccurrences" spinner="spiral" :distance="1">
+    <infinite-loading :distance="1" spinner="spiral" direction="top" @infinite="loadOccurrences">
       <div slot="no-more">Início das ocorrências</div>
     </infinite-loading>
     <li
@@ -75,16 +75,16 @@ export default {
       default: ''
     }
   },
-  computed: {
-    occurrences () {
-      return this.$store.getters.occurrences
-    }
-  },
   data () {
     return {
       loading: true,
       messageDialogVisible: false,
       message: ''
+    }
+  },
+  computed: {
+    occurrences () {
+      return this.$store.getters.occurrences
     }
   },
   mounted () {
