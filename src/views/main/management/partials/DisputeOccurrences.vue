@@ -1,5 +1,8 @@
 <template lang="html">
   <ul v-loading="loading" v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
+    <infinite-loading direction="top" @infinite="loadOccurrences" spinner="spiral" :distance="1">
+      <div slot="no-more">Início das ocorrências</div>
+    </infinite-loading>
     <li
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
@@ -13,7 +16,7 @@
       <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
         {{ occurrence.description }}
       </el-card>
-      <div v-else-if="hideScheduled(occurrence)" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
+      <div v-else :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
         <div class="dispute-view-occurrences__avatar">
           <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
           <span v-html="buildHour(occurrence)" />
@@ -61,41 +64,46 @@
 </template>
 
 <script>
+import InfiniteLoading from 'vue-infinite-loading'
+
 export default {
   name: 'DisputeOccurrences',
+  components: { InfiniteLoading },
   props: {
-    occurrences: {
-      type: Array,
-      default: () => []
-    },
-    showScheduled: {
-      type: Boolean,
-      default: false
-    },
-    loading: {
-      type: Boolean,
-      default: false
-    },
     disputeId: {
       type: Number,
       default: 0
     }
   },
+  computed: {
+    occurrences () {
+      return this.$store.getters.occurrences
+    }
+  },
   data () {
     return {
+      loading: true,
       messageDialogVisible: false,
       message: ''
     }
   },
+  mounted () {
+    this.$store.commit('clearOccurrencesSize')
+    this.$store.commit('clearDisputeOccurrence')
+    this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(() => {
+      this.loading = false
+    })
+  },
   methods: {
-    hideScheduled (occurrence) {
-      if (this.showScheduled) {
-        return true
-      } else {
-        if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING') {
-          return false
-        } else return true
-      }
+    loadOccurrences ($state) {
+      this.$store.commit('incrementOccurrencesSize')
+      this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(response => {
+        if (response.numberOfElements >= response.totalElements) {
+          $state.complete()
+        } else {
+          $state.loaded()
+        }
+      })
     },
     showMessageDialog (messageId) {
       this.messageDialogVisible = true
@@ -298,6 +306,16 @@ export default {
     .el-loading-parent--relative {
       height: 100%;
     }
+  }
+  .infinite-status-prompt {
+
+    padding-top: 30px !important;
+    color: $--color-text-secondary !important;
+    font-style: italic;
+  }
+  .loading-spiral {
+    border: 2px solid #9461f7 !important;
+    border-right-color: transparent !important;
   }
 }
 </style>

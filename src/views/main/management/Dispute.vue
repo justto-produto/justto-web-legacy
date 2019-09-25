@@ -71,17 +71,11 @@
               <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Buscar">
+          <!-- <el-tooltip content="Buscar">
             <el-button plain @click="showSearch = !showSearch">
               <jus-icon icon="search2"/>
             </el-button>
-          </el-tooltip>
-          <el-tooltip content="Exibir/ocultar mensagens agendadas">
-            <el-button :plain="!showScheduled" :type="showScheduled ? 'primary' : null" @click="toggleShowSchedule(!showScheduled)">
-              <jus-icon v-show="!showScheduled" icon="eye" />
-              <jus-icon v-show="showScheduled" icon="eye-white" />
-            </el-button>
-          </el-tooltip>
+          </el-tooltip> -->
           <div :class="{isVisible: showSearch}" class="dispute-view__search" @keydown.esc="showSearch = false">
             <el-input v-model="searchTerm" autofocus>
               <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
@@ -146,12 +140,7 @@
           </span>
         </el-dialog>
         <!-- MESSAGES -->
-        <dispute-occurrences
-          :dispute-id="dispute ? dispute.id : 0"
-          :occurrences="filteredOccurrences"
-          :show-scheduled="showScheduled"
-          :loading.sync="loadingOccurrences"
-          data-testid="dispute-messages" />
+        <dispute-occurrences :dispute-id="id" data-testid="dispute-messages" />
         <div class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
@@ -330,8 +319,6 @@
 </template>
 
 <script>
-import { fuseSearchOccurrences } from '@/plugins/jusUtils'
-
 export default {
   name: 'Dispute',
   components: {
@@ -348,7 +335,6 @@ export default {
       messageType: 'email',
       newMessage: '',
       newNote: '',
-      showScheduled: false,
       newChatMessage: '',
       componentKey: 0,
       disputeNegotiators: [],
@@ -359,7 +345,6 @@ export default {
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
-      loadingOccurrences: false,
       activeRoleId: 0
     }
   },
@@ -377,9 +362,6 @@ export default {
       }
       return {}
     },
-    occurrences () {
-      return this.$store.getters.occurrences
-    },
     whatsappStatus () {
       return this.$store.getters.whatsappStatus
     },
@@ -394,12 +376,6 @@ export default {
     },
     dispute () {
       return this.$store.getters.dispute
-    },
-    filteredOccurrences () {
-      if (this.searchTerm.trim()) {
-        return fuseSearchOccurrences(this.occurrences, this.searchTerm.trim())
-      }
-      return this.occurrences
     },
     isFavorite () {
       return this.dispute ? this.dispute.favorite : false
@@ -501,25 +477,19 @@ export default {
         })
       })
     },
-    toggleShowSchedule (value) {
-      this.showScheduled = value
-    },
     fetchData () {
       this.loadingDispute = true
-      this.loadingOccurrences = true
       this.$socket.emit('subscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
       Promise.all([
         this.$store.dispatch('getDispute', this.id),
-        this.$store.dispatch('getDisputeOccurrences', this.id)
       ]).catch(() => {
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
         setTimeout(() => {
           this.loadingDispute = false
-          this.loadingOccurrences = false
         }, 500)
       })
     },

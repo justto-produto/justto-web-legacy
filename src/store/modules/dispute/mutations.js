@@ -19,6 +19,12 @@ const disputeMutations = {
     state.disputes = []
     state.hasNew = false
   },
+  incrementOccurrencesSize (state) {
+    state.occurrencesSize = state.occurrencesSize + state.occurrencesInitialSize
+  },
+  clearOccurrencesSize (state) {
+    state.occurrencesSize = state.occurrencesInitialSize
+  },
   setDisputeQuery (state, query) {
     state.query = query
   },

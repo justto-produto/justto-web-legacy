@@ -9,6 +9,8 @@ const dispute = {
     },
     disputes: [],
     occurrences: [],
+    occurrencesInitialSize: 10,
+    occurrencesSize: 10,
     summaryNearExpirations: [],
     summaryNotVisualizeds: [],
     tab: '0',
