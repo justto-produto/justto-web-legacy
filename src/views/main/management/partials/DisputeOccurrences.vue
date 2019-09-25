@@ -71,8 +71,8 @@ export default {
   components: { InfiniteLoading },
   props: {
     disputeId: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -139,7 +139,7 @@ export default {
     },
     buildContent (occurrence) {
       if (occurrence.interaction && Object.keys(occurrence.interaction.properties).length) {
-        if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT') {
+        if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT' && occurrence.interaction.properties.BANK_INFO) {
           return '<strong>Dados bancários:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
         }
         if (occurrence.interaction.properties.VALUE) {
