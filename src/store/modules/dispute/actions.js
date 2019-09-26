@@ -316,7 +316,19 @@ const disputeActions = {
   getDisputeOccurrences ({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/disputes/' + disputeId + '/occurrences?size=' + state.occurrencesSize + '&sort=createdAt,asc')
+      axios.get('api/disputes/' + disputeId + '/occurrences?size=' + state.occurrencesSize + '&sort=createdAt,desc')
+        .then(response => {
+          commit('setDisputeOccurrences', response.data.content)
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
+  getDisputeNotes ({ commit, state }, disputeId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/disputes/' + disputeId + '/occurrences/type/NOTE')
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)

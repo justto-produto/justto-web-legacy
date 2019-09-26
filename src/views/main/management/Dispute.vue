@@ -140,9 +140,10 @@
           </span>
         </el-dialog>
         <!-- MESSAGES -->
-        <dispute-occurrences :dispute-id="id" data-testid="dispute-messages" />
+        <dispute-occurrences v-if="typingTab === '1'" :dispute-id="id" data-testid="dispute-messages" />
+        <dispute-notes v-else :dispute-id="id" />
         <div class="dispute-view__send-message">
-          <el-tabs ref="messageTab" v-model="typingTab" @tab-click="handleTabClick">
+          <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
@@ -323,6 +324,7 @@ export default {
   name: 'Dispute',
   components: {
     DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
+    DisputeNotes: () => import('./partials/DisputeNotes'),
     DisputeOverview: () => import('./partials/DisputeOverview')
   },
   data () {
@@ -496,6 +498,9 @@ export default {
       if (tab.name === '2' || tab.name === '3') {
         this.activeRoleId = 0
       }
+    },
+    handleBeforeLeaveTabs () {
+      this.$store.commit('clearOccurrencesSize')
     },
     setMessageType (type) {
       this.messageType = type

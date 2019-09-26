@@ -2,27 +2,25 @@
   <ul v-loading="loading" v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
     <infinite-loading :distance="1" spinner="spiral" direction="top" @infinite="loadOccurrences">
       <div slot="no-more">Início das ocorrências</div>
+      <div slot="no-results">Início das ocorrências</div>
     </infinite-loading>
     <li
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
-      <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
-        {{ occurrence.description.replace('.', ':') }}
-      </el-card>
-      <el-card v-else-if="occurrence.type === 'LOG' || (occurrence.interaction && occurrence.interaction.type) === 'VISUALIZATION'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+      <el-card v-if="occurrence.type === 'LOG' || (occurrence.interaction && occurrence.interaction.type) === 'VISUALIZATION'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
         {{ occurrence.description }}
       </el-card>
       <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
         {{ occurrence.description }}
       </el-card>
-      <div v-else :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
+      <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
         <div class="dispute-view-occurrences__avatar">
           <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
           <span v-html="buildHour(occurrence)" />
         </div>
         <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card">
-          <div slot="header">
+          <div v-if="!!buildName(occurrence)" slot="header">
             <span>{{ buildName(occurrence) }}</span>
             <jus-icon :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
           </div>
@@ -84,7 +82,7 @@ export default {
   },
   computed: {
     occurrences () {
-      return this.$store.getters.occurrences
+      return this.$store.getters.occurrences.reverse()
     }
   },
   mounted () {
@@ -200,6 +198,7 @@ export default {
   }
   &__card {
     border-radius: 8px;
+    height: fit-content;
     &.WAITING {
       border: 2px dashed #343c4b;
     }
