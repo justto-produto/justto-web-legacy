@@ -2,15 +2,15 @@ const email = Cypress.env('onboarding-email')
 const subDomain = Cypress.env('default-onboarding-sub-domain')
 const password = Cypress.env('default-password')
 describe('Justto.App - Onboarding', function () {
-  beforeEach(function () {
-    cy.deleteWorkspace(email, password, subDomain)
-    // cy.deleteWorkspace('admin')
-  })
+  // beforeEach(function () {
+  // cy.deleteWorkspace('admin')
+  // })
 
   it('Onboarding: Login', function () {
+    // cy.deleteWorkspace(email, password, subDomain)
+    cy.wait(1000)
     cy.visit('/#/login')
-    cy.url()
-      .should('include', '/#/login')
+    cy.url().should('include', '/#/login')
     cy.get('[data-testid=login-email]')
       .type(email)
       .should('have.value', email)

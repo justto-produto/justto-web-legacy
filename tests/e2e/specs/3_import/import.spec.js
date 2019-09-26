@@ -92,8 +92,8 @@ describe('Justto.App - Planilha Modelo', function () {
 
     // Preenche campo 'Nome do Reu'
     cy.get('[data-testid=feedback-respondent]')
-      .clear().type('Teste')
-      .should('have.value', 'Teste')
+      // .clear().type('Teste')
+      .should('not.have.value', '')
 
     // Preenche o campo 'Nome da Campanna'
     cy.get('[data-testid=feedback-campaignName]')
@@ -102,29 +102,28 @@ describe('Justto.App - Planilha Modelo', function () {
 
     // Seleciona  uma estratégia
     cy.get('[data-testid=feedback-strategy]')
-      .click()
+      .should('have.value', '')
+    //   .click()
     // .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
     // .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
-    cy.get('.el-select-dropdown__list')
-      .contains('Trabalhista')
-      .click({ force: true })
-
-    // Campo com data de pagamento deve estar visivel
-    // cy.get('[data-testid=feedback-paymendate]')
-    //   .should('be.visible')
+    // cy.get('.el-select-dropdown__list')
+    //   .contains('TRABALHISTA -  COM ADVOGADO')
+    //   .click({ force: true })
 
     // Seleciona uma data limite
     cy.get('[data-testid=feedback-datapicker]')
-      .click()
-      .trigger('keydown', { keyCode: 39, Which: 39 }) // Pressiona seta direita
-      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+      .should('have.value', '')
+    //   .click()
+    //   .trigger('keydown', { keyCode: 39, Which: 39 }) // Pressiona seta direita
+    //   .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
     // Seleciona um negociador
     cy.get('[data-testid=feedback-negotiators]')
-      .click()
-      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
-      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
-      .click()
+      .should('have.value', '')
+    //   .click()
+    //   .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+    //   .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+    //   .click()
 
     // Avança para proximo passo
     cy.get('[data-testid=start-negotiation]')
@@ -203,13 +202,13 @@ describe('Justto.App - Planilha Modelo', function () {
 
       var strategy
       switch (index) {
-        case 0: strategy = 'Indenizatório'
+        case 0: strategy = 'INDENIZATÓRIO - COM ADVOGADO (JEC, CíVEL)'
           break
-        case 1: strategy = 'Indenizatório - Advogado'
+        case 1: strategy = 'INDENIZATÓRIO - SEM ADVOGADO (PROCON, JEC)'
           break
-        case 2: strategy = 'Trabalhista'
+        case 2: strategy = 'TRABALHISTA -  COM ADVOGADO'
           break
-        default: strategy = 'Indenizatório - Advogado'
+        default: strategy = 'NDENIZATÓRIO - COM ADVOGADO (JEC, CíVEL)'
       }
 
       // Seleciona  uma estratégia

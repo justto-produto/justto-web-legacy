@@ -39,6 +39,7 @@ describe('Justto.App - Planilha Modelo', function () {
     // verifica se o botão está visível
     cy.get('[data-testid=download-model]')
       .should('be.visible')
+      .contains('Baixe a planilha modelo clicando aqui')
 
     // Verifica se link está disponível
     cy.request('/Planilha-Modelo-Justto.xlsx')
