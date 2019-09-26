@@ -110,20 +110,13 @@ const getInteractionIcon = function (interaction) {
       }
       return 'email'
     }
-    case 'VISUALIZATION':
-      return 'eye'
-    case 'NEGOTIATOR_ACCESS':
-      return 'justto'
-    case 'NEGOTIATOR_PROPOSAL':
-      return 'proposal'
-    case 'NEGOTIATOR_CHECKOUT':
-      return 'checkout'
-    case 'NEGOTIATOR_ACCEPTED':
-      return 'accepted-negotiation'
-    case 'NEGOTIATOR_REJECTED':
-      return 'rejected'
-    case 'CLICK':
-      return 'click'
+    case 'VISUALIZATION': return 'eye'
+    case 'NEGOTIATOR_ACCESS': return 'justto'
+    case 'NEGOTIATOR_PROPOSAL': return 'proposal'
+    case 'NEGOTIATOR_CHECKOUT': return 'checkout'
+    case 'NEGOTIATOR_ACCEPTED': return 'accepted-negotiation'
+    case 'NEGOTIATOR_REJECTED': return 'rejected'
+    case 'CLICK': return 'click'
     default: return 'eye'
   }
 }
