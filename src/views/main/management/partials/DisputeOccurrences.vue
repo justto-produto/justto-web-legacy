@@ -51,8 +51,15 @@
       <span slot="title">
         <h2>Mensagem</h2>
       </span>
-      <div v-loading="!message">
-        <span v-html="message"/>
+      <div v-loading="loadingMessage">
+        <span v-if="!message && !loadingMessage">
+          <el-alert
+            :closable="false"
+            type="error">
+           Não foi possível buscar o conteúdo na mensagem neste momento. Tente novamente ou entre em contato com o administrador do sistema.
+         </el-alert>
+        </span>
+        <span v-else v-html="message"/>
       </div>
       <span slot="footer">
         <el-button plain data-testid="close-button" @click="messageDialogVisible = false">Fechar</el-button>
@@ -77,6 +84,7 @@ export default {
     return {
       loading: true,
       messageDialogVisible: false,
+      loadingMessage: 'false',
       message: ''
     }
   },
@@ -108,11 +116,14 @@ export default {
     showMessageDialog (messageId) {
       this.messageDialogVisible = true
       this.message = ''
+      this.loadingMessage = true
       this.$store.dispatch('getOccurrenceMessage', messageId)
         .then(message => {
           this.message = message.content
         }).catch(error => {
           console.error(error)
+        }).finally (() => {
+          this.loadingMessage = false
         })
     },
     buildIcon (occurrence) {
@@ -303,7 +314,7 @@ export default {
     }
   }
   .el-dialog__body {
-    min-height: 200px;
+    min-height: 128px;
     .el-loading-parent--relative {
       height: 100%;
     }
