@@ -7,7 +7,6 @@
     height="100%"
     class="management-table el-table--disputes"
     @row-click="handleRowClick"
-    @sort-change="handleSortChange"
     @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="44px" />
     <el-table-column type="expand" width="20px">
@@ -27,7 +26,7 @@
       prop="campaignName"
       label="Campanha"
       min-width="94px">
-      <template slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
+      <template v-if="scope.row.campaign" slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
     </el-table-column>
     <el-table-column
       :sortable="false"
@@ -221,11 +220,11 @@ export default {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
-    handleSortChange (sort) {
-
-    },
     clearSelection () {
       this.$refs.disputeTable.clearSelection()
+    },
+    doLayout () {
+      this.$refs.disputeTable.doLayout()
     },
     handleSelectionChange (selected) {
       let ids = []

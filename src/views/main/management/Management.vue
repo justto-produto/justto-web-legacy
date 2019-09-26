@@ -197,6 +197,7 @@ export default {
             if (main) {
               main.scrollTop = 0
             }
+            this.$refs.managementTable.doLayout()
           })
         })
       }, 300)
