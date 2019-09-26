@@ -132,11 +132,17 @@ export default {
         }).catch(error => {
           this.messageError = true
           console.error(error)
-        }).finally (() => {
+        }).finally(() => {
           this.loadingMessage = false
         })
     },
     buildIcon (occurrence) {
+      if (occurrence.interaction && occurrence.interaction.type === 'CLICK') {
+        return 'click'
+      }
+      if (occurrence.interaction && occurrence.interaction.type === 'VISUALIZATION') {
+        return 'eye'
+      }
       if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType) {
         return occurrence.interaction.message.communicationType.toLowerCase().replace('_', '-')
       }
@@ -146,6 +152,14 @@ export default {
       return ''
     },
     buildName (occurrence) {
+      if (occurrence.interaction &&
+        occurrence.interaction.type &&
+        occurrence.interaction.message &&
+        occurrence.interaction.message.parameters &&
+        occurrence.interaction.message.parameters.RECEIVER_NAME &&
+        ['VISUALIZATION', 'CLICK'].includes(occurrence.interaction.type) ) {
+        return occurrence.interaction.message.parameters.RECEIVER_NAME
+      }
       if (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.parameters &&
