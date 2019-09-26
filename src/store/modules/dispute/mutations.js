@@ -54,6 +54,23 @@ const disputeMutations = {
       total: 0
     }
   },
+  clearDisputeQueryByTab (state) {
+    const size = state.query.size
+    state.query = {
+      status: [],
+      campaigns: [],
+      strategy: [],
+      persons: state.query.persons,
+      dealDate: [],
+      expirationDate: [],
+      onlyFavorite: false,
+      page: 1,
+      size: size,
+      term: state.query.term,
+      initialSize: 20,
+      total: 0
+    }
+  },
   setDisputeHasFilters (state, bol) {
     state.hasFilters = bol
   },

@@ -206,7 +206,7 @@ export default {
       this.$refs.managementTable.clearSelection()
     },
     handleChangeTab (tab) {
-      this.$store.commit('clearDisputeQuery')
+      this.$store.commit('clearDisputeQueryByTab')
       this.$store.commit('setDisputeHasFilters', false)
       switch (tab) {
         case '0':
