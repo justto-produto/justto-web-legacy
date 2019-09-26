@@ -52,11 +52,18 @@
         <h2>Mensagem</h2>
       </span>
       <div v-loading="loadingMessage">
-        <span v-if="!message && !loadingMessage">
-          <el-alert
-            :closable="false"
-            type="error">
-           Não foi possível buscar o conteúdo na mensagem neste momento. Tente novamente ou entre em contato com o administrador do sistema.
+        <span v-if="messageError && !loadingMessage">
+          <el-alert :closable="false" type="error">
+           <strong>Não foi possível buscar o conteúdo da mensagem neste momento.</strong>
+           <br><br>
+           Tente novamente ou entre em contato com o administrador do sistema.
+         </el-alert>
+        </span>
+        <span v-else-if="!message && !loadingMessage">
+          <el-alert :closable="false" type="warning">
+            <strong>Não foi possível exibir o conteúdo da mensagem.</strong>
+            <br><br>
+            Mídias de áudio ou vídeo ainda não estão disponíveis para visualização na plataforma Justto.
          </el-alert>
         </span>
         <span v-else v-html="message"/>
@@ -83,9 +90,10 @@ export default {
   data () {
     return {
       loading: true,
-      messageDialogVisible: false,
       loadingMessage: 'false',
-      message: ''
+      message: '',
+      messageError: false,
+      messageDialogVisible: false
     }
   },
   computed: {
@@ -117,10 +125,12 @@ export default {
       this.messageDialogVisible = true
       this.message = ''
       this.loadingMessage = true
+      this.messageError = false
       this.$store.dispatch('getOccurrenceMessage', messageId)
         .then(message => {
           this.message = message.content
         }).catch(error => {
+          this.messageError = true
           console.error(error)
         }).finally (() => {
           this.loadingMessage = false
@@ -328,6 +338,9 @@ export default {
   .loading-spiral {
     border: 2px solid #9461f7 !important;
     border-right-color: transparent !important;
+  }
+  .el-alert__description {
+    font-size: 14px;
   }
 }
 </style>
