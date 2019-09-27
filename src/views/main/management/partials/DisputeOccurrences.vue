@@ -36,7 +36,7 @@
               </span>
             </span>
             <br>
-            <i v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING'">
+            <i v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.type === 'SCHEDULER'">
               <br>
               <jus-icon icon="clock" style="width: 14px;margin-bottom: -1.2px;"/>
               Esta é uma mensagem agendada para
