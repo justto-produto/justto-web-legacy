@@ -101,5 +101,15 @@
       "pageClassifier": "",
       "total": "Total de disputas: {total}"
     }
+  },
+  "import" : {
+    "status" : {
+      "IN_QUEUE" : "Só subiu o arquivo",
+      "PROCESSING" : "Salvando dados da planilha",
+      "PROCESSED" : "Salvou dados da planilha",
+      "ERROR" : "Erro processando planilha",
+      "READY" : "Pronto para iniciar importação",
+      "FINISHED" : "Planilha importada"
+    }
   }
 }
