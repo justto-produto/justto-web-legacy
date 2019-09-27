@@ -304,10 +304,10 @@ export default {
   &__card {
     border-radius: 8px;
     height: fit-content;
-    &.WAITING {
+    &.SCHEDULER {
       border: 2px dashed #343c4b;
     }
-    &.COMMUNICATION, &.CLICK, &.VISUALIZATION {
+    &.COMMUNICATION, &.SCHEDULER {
       .el-card__header {
         padding: 10px 20px 0;
       }
