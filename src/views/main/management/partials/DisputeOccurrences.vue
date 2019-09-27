@@ -4,11 +4,15 @@
       <div slot="no-more">Início das ocorrências</div>
       <div slot="no-results">Início das ocorrências</div>
     </infinite-loading>
-    <li
-      v-for="(occurrence, index) in occurrences"
+    <div v-for="(datedOccurrence, date) in datedOccurrences">
+      <el-card class="dispute-view-occurrences__date el-card--bg-info" shadow="never">
+        {{ date }}
+      </el-card>
+      <li
+      v-for="(occurrence, index) in datedOccurrence"
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
-      <el-card v-if="occurrence.type === 'LOG' || (occurrence.interaction && occurrence.interaction.type) === 'VISUALIZATION'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+      <el-card v-if="occurrence.type === 'LOG'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
         {{ occurrence.description }}
       </el-card>
       <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
@@ -25,10 +29,13 @@
             <jus-icon :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
           </div>
           <div>
-            <span v-html="buildContent(occurrence)" />
-            <div v-if="occurrence.interaction && occurrence.interaction.type === 'COMMUNICATION'">
-              <a href="#" @click.prevent="showMessageDialog(occurrence.interaction.message.messageId)">Ver mensagem</a>
-            </div>
+            <span :ref="getMessageRef(occurrence)">
+              <span v-html="buildContent(occurrence)" />
+              <span v-if="showResume(occurrence)">
+                <a href="#" @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
+              </span>
+            </span>
+            <br>
             <i v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'WAITING'">
               <br>
               <jus-icon icon="clock" style="width: 14px;margin-bottom: -1.2px;"/>
@@ -40,10 +47,11 @@
         </el-card>
       </div>
     </li>
-    <li v-if="!loading && !occurrences.length" class="dispute-view-occurrences__empty">
+    </div>
+    <!-- <li v-if="!loading && !datedOccurrences.length" class="dispute-view-occurrences__empty">
       <jus-icon icon="empty-screen-filter" />
       Não foram encontradas ocorrências.
-    </li>
+    </li> -->
     <el-dialog
       :visible.sync="messageDialogVisible"
       data-testid="email-dialog"
@@ -54,17 +62,17 @@
       <div v-loading="loadingMessage">
         <span v-if="messageError && !loadingMessage">
           <el-alert :closable="false" type="error">
-           <strong>Não foi possível buscar o conteúdo da mensagem neste momento.</strong>
-           <br><br>
-           Tente novamente ou entre em contato com o administrador do sistema.
-         </el-alert>
+            <strong>Não foi possível buscar o conteúdo da mensagem neste momento.</strong>
+            <br><br>
+            Tente novamente ou entre em contato com o administrador do sistema.
+          </el-alert>
         </span>
         <span v-else-if="!message && !loadingMessage">
           <el-alert :closable="false" type="warning">
             <strong>Não foi possível exibir o conteúdo da mensagem.</strong>
             <br><br>
             Mídias de áudio ou vídeo ainda não estão disponíveis para visualização na plataforma Justto.
-         </el-alert>
+          </el-alert>
         </span>
         <span v-else v-html="message"/>
       </div>
@@ -93,12 +101,24 @@ export default {
       loadingMessage: 'false',
       message: '',
       messageError: false,
-      messageDialogVisible: false
+      messageDialogVisible: false,
+      showFullMessageList: [],
+      fullMessageBank: {}
     }
   },
   computed: {
-    occurrences () {
-      return this.$store.getters.occurrences.reverse()
+    datedOccurrences () {
+      let datedOccurrences = {}
+      this.$store.getters.occurrences.map(o => {
+        let currentDay = this.$moment(o.createAt.dateTime).format('DD/MM/YYYY')
+        if (o.type !== 'NOTE') {
+          if (!datedOccurrences.hasOwnProperty(currentDay)) {
+            datedOccurrences[currentDay] = []
+          }
+          datedOccurrences[currentDay].push(o)
+        }
+      })
+      return datedOccurrences
     }
   },
   mounted () {
@@ -121,6 +141,9 @@ export default {
         }
       })
     },
+    showFullMessage (occurrenceId) {
+      this.showFullMessageList.push(occurrenceId)
+    },
     showMessageDialog (messageId) {
       this.messageDialogVisible = true
       this.message = ''
@@ -135,6 +158,13 @@ export default {
         }).finally(() => {
           this.loadingMessage = false
         })
+    },
+    getMessageRef (occurrence) {
+      if (occurrence.interaction &&
+        occurrence.interaction.message &&
+        occurrence.interaction.message.messageId) {
+        return occurrence.id
+      }
     },
     buildIcon (occurrence) {
       if (occurrence.interaction && occurrence.interaction.type === 'CLICK') {
@@ -172,6 +202,13 @@ export default {
         return occurrence.interaction.properties.PERSON_NAME.toLowerCase()
       }
     },
+    getOccurrenceMessage (messageId, occurrenceId) {
+      this.$store.dispatch('getOccurrenceMessage', messageId).then(message => {
+        let ref = this.$refs[occurrenceId]
+        ref[0].innerHTML = message.content
+        this.fullMessageBank[occurrenceId] = message.content
+      })
+    },
     buildContent (occurrence) {
       if (occurrence.interaction && Object.keys(occurrence.interaction.properties).length) {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT' && occurrence.interaction.properties.BANK_INFO) {
@@ -182,13 +219,33 @@ export default {
           return word + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase()
         }
       }
+      if (Object.keys(this.fullMessageBank).includes(occurrence.id)) {
+        return this.fullMessageBank[occurrence.id]
+      }
+      if (this.showFullMessageList.includes(occurrence.id)) {
+        this.getOccurrenceMessage(occurrence.interaction.message.messageId, occurrence.id)
+        return ''
+      }
+      if (this.showResume(occurrence)) {
+        return occurrence.interaction.message.resume + '...'
+      }
       return occurrence.description
+    },
+    showResume (occurrence) {
+      if (!this.showFullMessageList.includes(occurrence.id) &&
+        occurrence.interaction &&
+        occurrence.interaction.message &&
+        // occurrence.interaction.message.communicationType === 'WHATSAPP' &&
+        occurrence.interaction.message.resume) {
+        return true
+      }
+      return false
     },
     buildHour (occurrence) {
       if (occurrence.executionDateTime) {
-        return this.$moment(occurrence.executionDateTime.dateTime).format('DD-MM[<br>]HH:mm')
+        return this.$moment(occurrence.executionDateTime.dateTime).format('HH:mm')
       }
-      return this.$moment(occurrence.createAt.dateTime).format('DD-MM[<br>]HH:mm')
+      return this.$moment(occurrence.createAt.dateTime).format('HH:mm')
     },
     buildCommunicationType (occurrence) {
       let typeClass = ''
@@ -221,13 +278,21 @@ export default {
     justify-content: center;
   }
   &__interaction {
-    margin: 20px 20px 0;
+    margin-top: 20px;
     display: flex;
     width: 100%;
     &.OUTBOUND {
       flex-direction: row-reverse;
+      .dispute-view-occurrences__card {
+        margin-left: 20px;
+      }
       .dispute-view-occurrences__avatar {
-        margin: 0 0 0 12px;
+        margin: 0 20px 0 12px;
+      }
+    }
+    &.INBOUND {
+      .dispute-view-occurrences__card {
+        margin-right: 20px;
       }
     }
   }
@@ -237,7 +302,7 @@ export default {
     &.WAITING {
       border: 2px dashed #343c4b;
     }
-    &.COMMUNICATION {
+    &.COMMUNICATION, &.CLICK, &.VISUALIZATION {
       .el-card__header {
         padding: 10px 20px 0;
       }
@@ -295,11 +360,11 @@ export default {
         margin-bottom: 8px;
         display: inline-block;
       }
-      a {
-        margin-top: 8px;
-        display: block;
-      }
     }
+  }
+  &__show-dialog {
+    margin-top: 8px;
+    display: block;
   }
   &__log {
     border-radius: 8px;
@@ -312,7 +377,7 @@ export default {
     }
   }
   &__avatar {
-    margin: 0 12px 0 0;
+    margin: 0 12px 0 20px;
     display: flex;
     flex-direction: column;
     width: max-content;
@@ -335,6 +400,15 @@ export default {
     img {
       margin-bottom: 20px;
       width: 60px;
+    }
+  }
+  &__date {
+    margin: auto;
+    margin-top: 20px;
+    width: fit-content;
+    border: 1px solid $--color-info-light;
+    .el-card__body {
+      padding: 10px;
     }
   }
   .el-dialog__body {

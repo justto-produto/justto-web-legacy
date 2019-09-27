@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     occurrences () {
-      return this.$store.getters.occurrences.reverse()
+      return this.$store.getters.occurrences
     }
   },
   mounted () {

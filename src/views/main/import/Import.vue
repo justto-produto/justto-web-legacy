@@ -183,7 +183,10 @@ export default {
     },
     handleError (error) {
       let errorMessage = {}
-      if (error.status === 400) {
+      if (error.status === 406) {
+        errorMessage.message = error.data.error
+        errorMessage.type = 'warning'
+      } else if (error.status === 400) {
         errorMessage.message = 'Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.'
         errorMessage.type = 'warning'
       } else {

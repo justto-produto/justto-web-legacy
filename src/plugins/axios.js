@@ -10,7 +10,7 @@ if (AUTH_TOKEN) {
 
 let config = {
   baseURL: process.env.VUE_APP_BASE_URL || location.origin,
-  timeout: 150 * 100000,
+  timeout: 60 * 1000,
   headers: {}
 }
 

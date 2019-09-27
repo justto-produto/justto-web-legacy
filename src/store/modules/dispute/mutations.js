@@ -81,7 +81,7 @@ const disputeMutations = {
     state.tab = '0'
   },
   setDisputeOccurrences (state, occurrences) {
-    if (occurrences && occurrences.length) state.occurrences = occurrences
+    if (occurrences && occurrences.length) state.occurrences = occurrences.reverse()
   },
   SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
     Vue.nextTick(() => {

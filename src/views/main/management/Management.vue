@@ -197,7 +197,7 @@ export default {
             if (main) {
               main.scrollTop = 0
             }
-            this.$refs.managementTable.doLayout()
+            if (this.$refs.managementTable) this.$refs.managementTable.doLayout()
           })
         })
       }, 300)
