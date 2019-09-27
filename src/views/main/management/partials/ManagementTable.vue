@@ -111,7 +111,7 @@
         <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         <el-tooltip content="Negociação encerra nos próximos 3 dias">
           <i
-            v-if="scope.row.disputeNextToExpire && scope.row.status !== 'EXPIRED'"
+            v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'"
             class="management-table__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
         </el-tooltip>
       </template>
@@ -259,7 +259,7 @@ export default {
       })
     },
     disputeNextToExpire (date) {
-      return this.$moment(date).isBetween(this.$moment(), this.$moment().add(3, 'day'))
+      return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
     }
   }
 }

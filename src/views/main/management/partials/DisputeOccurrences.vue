@@ -13,9 +13,11 @@
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
       <el-card v-if="occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK'].includes(occurrence.interaction.type))" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+        <jus-icon :icon="buildIcon(occurrence)" style="width: 14px;margin-right: 4px;margin-bottom: -1.2px;"/>
         {{ occurrence.description }}
       </el-card>
       <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+        <jus-icon :icon="buildIcon(occurrence)" style="width: 14px;margin-right: 4px;margin-bottom: -1.2px;"/>
         {{ occurrence.description }}
       </el-card>
       <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
@@ -36,10 +38,16 @@
               </span>
             </span>
             <br>
-            <i v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.type === 'SCHEDULER'">
+            <i v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'">
+              <br>
+              <i class="el-icon-close" style="width: 14px;margin-bottom: -1.2px;" />
+              Mensagem agendada para {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
+              <strong>CANCELADA</strong>.
+            </i>
+            <i v-else-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.type === 'SCHEDULER'">
               <br>
               <jus-icon icon="clock" style="width: 14px;margin-bottom: -1.2px;"/>
-              Esta é uma mensagem agendada para
+              Mensagem agendada para
               {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
               que ainda não foi entregue.
             </i>
@@ -178,6 +186,11 @@ export default {
       }
       if (occurrence.interaction && ['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_REJECTED', 'NEGOTIATOR_ACCEPTED', 'NEGOTIATOR_CHECKOUT'].includes(occurrence.interaction.type)) {
         return 'justto'
+      }
+      if (occurrence.type === 'LOG') {
+        if (occurrence.description.toLowerCase().includes('ganha')) return 'win'
+        if (occurrence.description.toLowerCase().includes('pausada')) return 'pause'
+        if (occurrence.description.toLowerCase().includes('perdida')) return 'lose'
       }
       return ''
     },
