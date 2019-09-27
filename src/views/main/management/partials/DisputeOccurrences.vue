@@ -226,8 +226,13 @@ export default {
         this.getOccurrenceMessage(occurrence.interaction.message.messageId, occurrence.id)
         return ''
       }
-      if (this.showResume(occurrence)) {
-        return occurrence.interaction.message.resume + '...'
+      if (occurrence.interaction &&
+        occurrence.interaction.message &&
+        occurrence.interaction.message.resume) {
+          if (this.showResume(occurrence)) {
+            return occurrence.interaction.message.resume + '...'
+          }
+          return occurrence.interaction.message.resume
       }
       return occurrence.description
     },
@@ -235,8 +240,8 @@ export default {
       if (!this.showFullMessageList.includes(occurrence.id) &&
         occurrence.interaction &&
         occurrence.interaction.message &&
-        // occurrence.interaction.message.communicationType === 'WHATSAPP' &&
-        occurrence.interaction.message.resume) {
+        occurrence.interaction.message.resume &&
+        occurrence.interaction.message.resume.length >= 140) {
         return true
       }
       return false
