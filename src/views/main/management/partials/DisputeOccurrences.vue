@@ -12,7 +12,7 @@
       v-for="(occurrence, index) in datedOccurrence"
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
-      <el-card v-if="occurrence.type === 'LOG'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+      <el-card v-if="occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK'].includes(occurrence.interaction.type))" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
         {{ occurrence.description }}
       </el-card>
       <el-card v-else-if="occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
