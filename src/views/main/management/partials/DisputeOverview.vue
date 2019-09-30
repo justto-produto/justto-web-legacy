@@ -499,6 +499,10 @@ export default {
     disputeRolesSort () {
       if (this.dispute.disputeRoles) {
         let sortedArray = this.dispute.disputeRoles.slice(0) || []
+        sortedArray = sortedArray.filter(dr => {
+          if (!dr.main && dr.party === 'RESPONDENT') return false
+          return true
+        })
         return sortedArray.sort((a, b) => {
           if (a.party === b.party) {
             return (a.roles[0] > b.roles[0]) ? -1 : (a.roles[0] < b.roles[0]) ? 1 : 0
