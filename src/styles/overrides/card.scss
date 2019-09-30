@@ -56,16 +56,6 @@
   }
 }
 
-.el-card--vertical-content {
-  .el-card__body {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
 .el-card--upload-progress {
   min-width: 400px !important;
 }

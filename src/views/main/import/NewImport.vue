@@ -44,9 +44,9 @@
 export default {
   name: 'NewImport',
   components: {
-    CheckLinesStep: () => import('./steps/CheckLinesStep'),
-    ColumnsStep: () => import('./steps/ColumnsStep'),
-    CampaignStep: () => import('./steps/CampaignStep')
+    CheckLinesStep: () => import('./partials/CheckLinesStep'),
+    ColumnsStep: () => import('./partials/ColumnsStep'),
+    CampaignStep: () => import('./partials/CampaignStep')
   },
   data () {
     return {
