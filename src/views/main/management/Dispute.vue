@@ -563,7 +563,7 @@ export default {
           setTimeout(() => {
             this.$jusNotification({
               title: 'Atenção!',
-              message: 'Enviamos para às contrapartes uma mensagem de encerramento de negociação.',
+              message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
               type: 'info',
               duration: 0
             })
