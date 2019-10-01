@@ -32,9 +32,9 @@ const router = new Router({
           }
         },
         {
-          name: 'importNew',
+          name: 'NewImport',
           path: 'import/new',
-          component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/new/NewImport'),
+          component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/NewImport'),
           meta: {
             requiresTrack: true
           }
