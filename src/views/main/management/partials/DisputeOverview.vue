@@ -462,6 +462,7 @@ export default {
         expirationDate: ''
       },
       roleForm: {},
+      originalRole: {},
       roleRules: {
         name: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
@@ -580,7 +581,6 @@ export default {
               }))
             }
           }
-          console.log(this.selectedNegotiatorId)
           if (this.disputeForm.lastOfferValue !== this.dispute.lastOfferValue) {
             promises.push(this.$store.dispatch('editDisputeOffer', {
               disputeId: this.dispute.id,
@@ -639,6 +639,7 @@ export default {
       this.editRoleDialogError = false
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
+      this.originalRole = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildTitle(role.party, role.roles[0])
       this.roleForm.documentNumber = this.$options.filters.cpfCnpjMask(this.roleForm.documentNumber)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
@@ -655,26 +656,31 @@ export default {
         this.$store.dispatch('editRole', {
           disputeId: this.dispute.id,
           disputeRole: roleToEdit
-        }).then(responde => {
+        }).then(() => {
           this.$store.dispatch('getDispute', this.dispute.id)
           this.$jusNotification({
             title: 'Yay!',
             message: 'Os dados foram alterados com sucesso.',
             type: 'success'
           })
-
-          // this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
-          //   confirmButtonText: 'Sim',
-          //   cancelButtonText: 'Não',
-          //   type: 'warning',
-          // cancelButtonClass: 'is-plain'
-          // }).then(() => {
-          //   this.$message({
-          //     type: 'success',
-          //     message: 'Delete completed'
-          //   })
-          // })
-
+          if (this.verifyChangedRoleData(this.roleForm, this.originalRole)) {
+            this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
+              confirmButtonText: 'Reengajar',
+              cancelButtonText: 'Cancelar',
+              type: 'warning',
+              cancelButtonClass: 'is-plain'
+            }).then(() => {
+              this.$store.dispatch('restartDisputeEngagement', {
+                disputeId: this.dispute.id, role: this.roleForm
+              }).then(() => {
+                this.$jusNotification({
+                  title: 'Yay!',
+                  message: 'Reengajamento realizado com sucesso.',
+                  type: 'success'
+                })
+              })
+            })
+          }
           this.editRoleDialogVisible = false
         }).catch(error => {
           this.editRoleDialogError = true
@@ -687,6 +693,26 @@ export default {
           this.editRoleDialogLoading = false
         })
       }
+    },
+    verifyChangedRoleData (editedRole, originalRole) {
+      let changed = false
+      if (editedRole.phones.length) {
+        if (originalRole.phones.length) {
+          editedRole.phones.forEach((phone, index) => {
+            let mappedPhones = originalRole.phones.map(phone => phone.number)
+            if (!mappedPhones.includes(phone.number)) changed = true
+          })
+        } else changed = true
+      }
+      if (editedRole.emails.length) {
+        if (originalRole.emails.length) {
+          editedRole.emails.forEach((phone, index) => {
+            let mappedEmails = originalRole.emails.map(email => email.address)
+            if (!mappedEmails.includes(phone.address)) changed = true
+          })
+        } else changed = true
+      }
+      return changed
     },
     addPhone () {
       let isValid = true
