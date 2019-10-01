@@ -46,7 +46,7 @@
           </label>
         </div>
         <div v-if="isSuccess" class="import-view__actions">
-          <el-button plain @click="removeFile">Remover arquivo</el-button>
+          <el-button plain @click="removeFile">Cancelar</el-button>
           <el-button type="primary" data-testid="submit" @click="startImport">Próximo</el-button>
         </div>
         <div v-else class="import-view__download">

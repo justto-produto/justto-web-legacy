@@ -662,6 +662,19 @@ export default {
             message: 'Os dados foram alterados com sucesso.',
             type: 'success'
           })
+
+          // this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
+          //   confirmButtonText: 'Sim',
+          //   cancelButtonText: 'Não',
+          //   type: 'warning',
+          // cancelButtonClass: 'is-plain'
+          // }).then(() => {
+          //   this.$message({
+          //     type: 'success',
+          //     message: 'Delete completed'
+          //   })
+          // })
+
           this.editRoleDialogVisible = false
         }).catch(error => {
           this.editRoleDialogError = true
@@ -724,9 +737,11 @@ export default {
       this.roleForm.oabs.splice(index, 1)
     },
     removeRole (role) {
-      this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja excluir esta parte?', 'Atenção!', {
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        type: 'warning',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         this.$store.dispatch('removeRole', {
           disputeId: role.id,

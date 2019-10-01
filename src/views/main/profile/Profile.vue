@@ -86,7 +86,7 @@
           </el-form-item>
         </el-form>
         <span slot="footer">
-          <el-button @click="dialogMember = false">Cancelar</el-button>
+          <el-button plain @click="dialogMember = false">Cancelar</el-button>
           <el-button type="primary" @click="editMember">Salvar alterações</el-button>
         </span>
       </el-dialog>
@@ -104,7 +104,7 @@
           </el-form-item>
         </el-form>
         <span slot="footer">
-          <el-button @click="cancelChangePassword">Cancelar</el-button>
+          <el-button plain @click="cancelChangePassword">Cancelar</el-button>
           <el-button :disabled="!profileForm.password.length" type="primary" @click="updatePassword">
             Alterar
           </el-button>
@@ -313,7 +313,8 @@ export default {
     removeEmail (id) {
       this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Excluir email', {
         confirmButtonText: 'Sim, remover',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         this.$store.commit('showLoading')
         this.$store.dispatch('removeInbox', id).then(() => {
@@ -334,9 +335,10 @@ export default {
       })
     },
     removeMember (id, name) {
-      this.$confirm('Tem certeza que deseja remover ' + name + ' da equipe?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja excluir ' + name + ' da equipe?', 'Atenção!', {
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
           window.analytics.track('Membro removido')

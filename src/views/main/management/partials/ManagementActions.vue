@@ -16,7 +16,7 @@
     </div>
     <el-dialog
       :visible.sync="chooseUnsettledDialogVisible"
-      title="Atenção!"
+      title="Perder"
       class="management-actions__unsettled-dialog"
       width="460px"
       data-testid="unsettled-dialog">
@@ -128,10 +128,12 @@ export default {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = ''
       } else {
-        this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+        this.$confirm('Tem certeza que deseja realizar esta ação em lote?', this.$t('action.' + action.toUpperCase()), {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar'
+          cancelButtonText: 'Cancelar',
+          type: 'warning',
+          cancelButtonClass: 'is-plain'
         }).then(() => {
           this.doAction(action)
         })

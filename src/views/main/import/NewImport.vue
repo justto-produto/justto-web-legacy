@@ -166,7 +166,8 @@ export default {
       this.$confirm('Tem certeza que deseja sair da importação? Todos os dados serão perdidos.', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancelar',
-        title: 'Atenção!'
+        title: 'Atenção!',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         next()
       })
