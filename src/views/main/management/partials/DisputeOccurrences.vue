@@ -198,6 +198,7 @@ export default {
         if (occurrence.description.toLowerCase().includes('pausada')) return 'pause'
         if (occurrence.description.toLowerCase().includes('perdido')) return 'lose'
         if (occurrence.description.toLowerCase().includes('reiniciou')) return 'refresh'
+        if (occurrence.description.toLowerCase().includes('retomada')) return 'start-again'
       }
       return ''
     },
