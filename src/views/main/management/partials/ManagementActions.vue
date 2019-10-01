@@ -119,6 +119,16 @@ export default {
           type: 'success',
           dangerouslyUseHTMLString: true
         })
+        if (action === 'PAUSED') {
+          setTimeout(() => {
+            this.$jusNotification({
+              title: 'Atenção!',
+              message: 'Enviamos para às contrapartes uma mensagem de encerramento de negociação.',
+              type: 'info',
+              duration: 0
+            })
+          }, 2000)
+        }
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       })

@@ -555,9 +555,20 @@ export default {
         })
         this.$jusNotification({
           title: 'Yay!',
-          message: 'Ação realizada com sucesso.',
+          dangerouslyUseHTMLString: true,
+          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success'
         })
+        if (action === 'paused') {
+          setTimeout(() => {
+            this.$jusNotification({
+              title: 'Atenção!',
+              message: 'Enviamos para às contrapartes uma mensagem de encerramento de negociação.',
+              type: 'info',
+              duration: 0
+            })
+          }, 2000)
+        }
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       }).finally(() => {

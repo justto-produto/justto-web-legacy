@@ -561,7 +561,10 @@ export default {
         ]),
         confirmButtonText: 'Continuar',
         showCancelButton: true,
-        cancelButtonText: 'Cancelar'
+        type: 'warning',
+        cancelButtonClass: 'is-plain',
+        cancelButtonText: 'Cancelar',
+
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           let promises = []
@@ -667,6 +670,7 @@ export default {
           //   confirmButtonText: 'Sim',
           //   cancelButtonText: 'Não',
           //   type: 'warning',
+
           // cancelButtonClass: 'is-plain'
           // }).then(() => {
           //   this.$message({
