@@ -152,7 +152,7 @@
           <ul>
             <li v-for="email in role.emails" :key="email.id">
               <span>
-                <el-checkbox v-model="email.selected" />
+                <el-checkbox v-model="email.selected" data-testid="checkbox-email"/>
                 {{ email.address }}
               </span>
               <div class="dispute-overview-view__list-actions">
@@ -201,7 +201,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="disputeUpperRange">
-              <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" />
+              <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" data-testid="bondary-input" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -209,12 +209,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
-              <money v-model="disputeForm.lastCounterOfferValue" v-bind="money" class="el-input__inner" />
+              <money v-model="disputeForm.lastCounterOfferValue" v-bind="money" class="el-input__inner" data-testid="counterproposal-value-input" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Proposto por" prop="lastCounterOfferValue">
-              <el-select v-model="selectedClaimantId" placeholder="Autor da contraproposta">
+              <el-select v-model="selectedClaimantId" placeholder="Autor da contraproposta" data-testid="counterproposal-claimant-input">
                 <el-option
                   v-for="claimant in disputeClaimants"
                   :key="claimant.id"
@@ -228,12 +228,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastOfferValue">
-              <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" />
+              <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" data-testid="proposal-value-input"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Proposto por" prop="lastCounterOfferValue">
-              <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta">
+              <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta" data-testid="proposal-negotiator-input">
                 <el-option
                   v-for="negotiator in disputeNegotiations"
                   :key="negotiator.id"
@@ -245,6 +245,7 @@
           <el-col :span="24">
             <el-form-item label="Fim da negociação" prop="expirationDate">
               <el-date-picker
+                data-testid="expiration-date-input"
                 v-model="disputeForm.expirationDate"
                 :clearable="false"
                 format="dd/MM/yyyy"
@@ -253,7 +254,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
-              <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description"/>
+              <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description-input"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -562,7 +563,8 @@ export default {
         confirmButtonText: 'Continuar',
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
-        customClass: 'edit-case-confirm'
+        confirmButtonClass: 'edit-case-confirm-button',
+        customClass: 'edit-case-confitm-dialog'
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           let promises = []

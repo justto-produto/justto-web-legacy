@@ -216,7 +216,7 @@
                       <el-button
                         :disabled="true"
                         type="primary"
-                        data-testid="submit-whats-disable"
+                        data-testid="submit-disable"
                         @click="sendMessage()">
                         Enviar
                       </el-button>
@@ -230,7 +230,7 @@
                   <div v-else>
                     <el-tooltip>
                       <div slot="content">
-                        <span v-if="!activeRole.personId">
+                        <span v-if="!activeRole.personId" data-testid="unselected-party">
                           Escolha um destinatário ao lado para receber sua mensagem
                         </span>
                         <span v-else>Enviar mensagem</span>

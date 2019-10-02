@@ -36,28 +36,30 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .click({ force: true })
   })
 
-  it('Envio de Email: Parte não selecionada', function () {
+  it('Envia de Email: Sucesso', function () {
     // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
       .click()
-
-    // Caixa de texto deve estar desabilitada, mensagem deve aparecer no lugar.
-    cy.get('[data-testid=unselected-party]')
-      .contains('Escolha um destinatário ao lado')
 
     // 'Enviar' deve estar desabilitado
     cy.get('[data-testid=submit-email]')
       .should('be.disabled')
-  })
-
-  it('Envia de Email: Sucesso', function () {
-    // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
-      .click()
 
     // Seleciona primeira parte do caso
-    cy.get('[data-testid=expand-party]').first()
+    cy.get('[data-testid=expand-party]').eq(1)
       .click()
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-disable]')
+      .should('be.disabled')
+
+    // Seleciona um email
+    cy.get('[data-testid=checkbox-email]').first()
+      .click()
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-email]')
+      .should('not.be.disabled')
 
     function randomText (size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
@@ -84,7 +86,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.contains('email enviado com sucesso.')
       .should('be.visible')
 
-    cy.wait(12000)
+    cy.wait(6000)
     // Caixas de nota devem aparecer
     cy.get('[data-testid=message-box]')
       .should('be.visible')
@@ -92,10 +94,6 @@ describe('Justto.App - Disputa: Menssagens', function () {
     // Clica em 'vusualizar email'
     cy.get('[data-testid=show-email]').last()
       .click({ force: true })
-
-    // Dialog de conteudo do email deve aparecer
-    cy.get('[data-testid=email-dialog]')
-      .should('be.visible')
 
     // Mensagem deve ser a enviada
     cy.contains(message)
