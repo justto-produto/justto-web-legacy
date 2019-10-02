@@ -561,7 +561,8 @@ export default {
         ]),
         confirmButtonText: 'Continuar',
         showCancelButton: true,
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        customClass: 'edit-case-confirm'
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           let promises = []

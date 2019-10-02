@@ -1,5 +1,7 @@
-const login = Cypress.env('import-actions-email')
-const password = Cypress.env('default-password')
+// const login = Cypress.env('import-actions-email')
+// const password = Cypress.env('default-password')
+const login = 'lucas@justto.com.br'
+const password = '123456'
 
 describe('Justto.App - Disputa: Edição do Caso', function () {
   it('Login', function () {
@@ -28,22 +30,20 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
   })
 
   it('Entra na disputa', function () {
+    // Entra na aba 'Todos'
+    cy.get('.el-tabs__nav > #tab-3')
+      .contains('Todos')
+      .click({ force: true })
+
     // clica no primeiro caso: index 0
-    cy.get('tbody>tr').first().click()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
+      .click({ force: true })
 
-    // Verifica se entrou na tela de Disputa
-    cy.contains('Resumo da disputa')
-      .should('be.visible')
-  })
-
-  it('Clica no botão Editar de Dados da disputa', function () {
     // Clica no botão "Editar"
     cy.get('[data-testid=edit-dispute]')
-      .click()
-
-    // Verifica se todos os 'spans' aparecem
-    cy.get('span').should('be.visible')
+    .click()
   })
+
 
   it('Altera dados e confirma a edição', function () {
     // Preenche o Campo de 'Descrição'
@@ -55,8 +55,13 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
       .should('be.visible')
       .click()
 
+    cy.get('.edit-case-confirm')
+      .contains('As novas informações vão sobrescrever as antigas.')
+
+
     // Verifica se mensagem de confirmação aparece
-    cy.contains('Os dados foram alterados com sucesso.')
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Os dados foram alterados com sucesso.')
       .should('be.visible')
   })
 })

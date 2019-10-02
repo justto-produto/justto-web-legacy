@@ -25,37 +25,31 @@ describe('Justto.App - Onboarding', function () {
   it('Onboarding: Vamos começar', function () {
     cy.get('[data-testid=lets-start]')
       .click()
-    cy.contains('Qual o nome da sua equipe?')
-      .should('be.visible')
   })
 
   it('Onboarding: Nome da Equipe', function () {
+    cy.contains('Qual o nome da sua equipe?')
+    .should('be.visible')
     cy.get('[data-testid=teamname-form]')
       .type('Teste Onboarding')
       .should('have.value', 'Teste Onboarding')
     cy.get('[data-testid=teamname-next]')
       .click()
-    cy.contains('Crie o seu espaço de trabalho na Justto')
-      .should('be.visible')
+    // cy.contains('Crie o seu espaço de trabalho na Justto')
+    //   .should('be.visible')
   })
 
   const randomSubdomain = new Date().getTime().toString()
 
-  // it('OnBoarding: Workspace em Formato Inválido', function () {
-  //   // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
-  //
-  //   cy.get('[data-testid=subdomain-form]')
-  //     .type(randomSubdomain + '@')
-  //     .should('have.value', randomSubdomain + '@')
-  //
-  //   // Seleciona Próximo
-  //   cy.get('[data-testid=subdomain-next]')
-  //     .click()
-  //
-  //   // Verifica se subdomínio digitado está disponível
-  //   cy.contains('Formato inválido')
-  //     .should('be.visible')
-  // })
+  it('OnBoarding: Whatsapp Step', function () {
+    // Verifica se o step é do WhatsApp
+    cy.contains('WhatsApp')
+      .should('be.visible')
+    cy.contains('Mais adiante você poderá ver as mensagens que nosso sistema enviará. Contudo, é importante que você sincronize o número que a sua equipe utiliza para fazer contato com as partes, para que as respostas sejam capturadas pela plataforma.')
+      .should('be.visible')
+    cy.get('[data-testid=next-whatsapp]')
+      .click()
+  })
   //
   // it('OnBoarding: Workspace Indisponivel', function () {
   //   // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
@@ -74,26 +68,26 @@ describe('Justto.App - Onboarding', function () {
   //     .should('be.visible')
   // })
 
-  it('OnBoarding: Workspace Sucesso', function () {
-    // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
-
-    cy.get('[data-testid=subdomain-form]')
-      .clear()
-      .type(subDomain)
-      .should('have.value', subDomain)
-
-    // Verifica se subdomínio digitado está disponível
-    cy.contains('Subdomínio disponível.')
-      .should('be.visible')
-
-    // Seleciona Próximo
-    cy.get('[data-testid=subdomain-next]')
-      .click()
-
-    // Verifica próximo passo é 'Adicione pessoas à sua equipe'
-    cy.contains('Adicione pessoas à sua equipe')
-    // .should('be.visible')
-  })
+  // it('OnBoarding: Workspace Sucesso', function () {
+  //   // Preenche campo de Workspace 'https://justto.app' com subdomínio 'teste-xxxxx'
+  //
+  //   cy.get('[data-testid=subdomain-form]')
+  //     .clear()
+  //     .type(subDomain)
+  //     .should('have.value', subDomain)
+  //
+  //   // Verifica se subdomínio digitado está disponível
+  //   cy.contains('Subdomínio disponível.')
+  //     .should('be.visible')
+  //
+  //   // Seleciona Próximo
+  //   cy.get('[data-testid=subdomain-next]')
+  //     .click()
+  //
+  //   // Verifica próximo passo é 'Adicione pessoas à sua equipe'
+  //   cy.contains('Adicione pessoas à sua equipe')
+  //   // .should('be.visible')
+  // })
 
   //
   // it('OnBoarding: Adicione Pessoas à sua Equipe, Válido', function () {
@@ -160,8 +154,8 @@ describe('Justto.App - Onboarding', function () {
   //   cy.get('[data-testid=invite-teammember]')
   //     .click()
   //
-  //   // Verifica se próximo passo é WhatsApp
-  //   cy.contains('WhatsApp').should('be.visible')
+    // Verifica se próximo passo é WhatsApp
+
   // })
   //
   // it('OnBoarding: Adicione Pessoas à sua Equipe, Inválido', function () {

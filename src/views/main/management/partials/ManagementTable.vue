@@ -6,6 +6,7 @@
     size="mini"
     height="100%"
     class="management-table el-table--disputes"
+    data-testid="dispute-index"
     @row-click="handleRowClick"
     @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="44px" />

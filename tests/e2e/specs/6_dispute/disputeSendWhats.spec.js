@@ -1,6 +1,6 @@
 const login_unconected = Cypress.env('not-editable-cases-email')
 const login_unsynced = Cypress.env('not-configured-account-email')
-const password = Cypress.env('default-password  ')
+const password = Cypress.env('default-password')
 
 describe('Justto.App - Disputa: Menssagens', function () {
   it('Envio de Whatsapp: Desconectado', function () {

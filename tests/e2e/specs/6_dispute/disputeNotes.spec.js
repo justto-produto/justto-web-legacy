@@ -1,7 +1,7 @@
-// const login = Cypress.env('editable-cases-email')
+const login = 'lucas@justto.com.br'
+const password = '123456'
+// const login = Cypress.env('import-actions-email')
 // const password = Cypress.env('default-password')
-const login = Cypress.env('import-actions-email')
-const password = Cypress.env('default-password')
 
 describe('Justto.App - Disputa: Notas', function () {
   beforeEach('Login', function () {
@@ -47,6 +47,9 @@ describe('Justto.App - Disputa: Notas', function () {
       .contains('Nota')
       .click({ force: true })
 
+    // cy.get('[data-testid=note-empty]')
+    //   .contains('Não foram encontradas notas.')
+
     function randomText (size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
       var result = ''
@@ -73,14 +76,12 @@ describe('Justto.App - Disputa: Notas', function () {
       .should('be.visible')
 
     // Nota deve aparecer entre as mensagens
-    cy.contains(message, { timeout: 60000 })
+    cy.contains('adicionou uma nota: ' + message, { timeout: 60000 })
       .should('be.visible')
 
     // Caixa de nota deve estar visivel e amarela
-    cy.get('[data-testid=message-box]')
+    cy.get('[data-testid=message-box] > div.el-card__body')
       .should('be.visible')
-      .should('have.css', 'background-color', 'rgb(255, 235, 161)')
-      .contains('Esta mensagem é visível somente aos negociadores.').last()
-      .should('be.visible')
+      .should('have.css', 'background-color', 'rgb(255, 244, 204)')
   })
 })

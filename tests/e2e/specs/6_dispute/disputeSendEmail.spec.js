@@ -1,7 +1,9 @@
 // const login = Cypress.env('editable-cases-email')
 // const password = Cypress.env('default-password')
-const login = Cypress.env('import-actions-email')
-const password = Cypress.env('default-password')
+// const login = Cypress.env('import-actions-email')
+// const password = Cypress.env('default-password')
+const login = 'lucas@justto.com.br'
+const password = '123456'
 
 describe('Justto.App - Disputa: Menssagens', function () {
   beforeEach('Login', function () {
