@@ -563,8 +563,7 @@ export default {
         showCancelButton: true,
         type: 'warning',
         cancelButtonClass: 'is-plain',
-        cancelButtonText: 'Cancelar',
-
+        cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           let promises = []
