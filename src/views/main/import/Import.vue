@@ -32,7 +32,10 @@
         <el-table-column label="Linhas" align="center">
           <template slot-scope="scope">{{ scope.row.rows }}</template>
         </el-table-column>
-        <el-table-column width="100" align="center" fixed="right" label="Baixar">
+        <el-table-column label="Quem importou" align="center">
+          <template slot-scope="scope">{{ scope.row.created_name }}({{ scope.row.created_by }})</template>
+        </el-table-column>
+        <el-table-column width="110" align="center" fixed="right" label="Baixar">
           <template slot-scope="scope">
             <a :href="scope.row.file_url" target="_blank">
               <jus-icon icon="download-sheet" />
