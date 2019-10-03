@@ -59,7 +59,7 @@ export default {
   beforeMount () {
     if (!this.$store.getters.strategyList.length) {
       this.loading = true
-      this.$store.dispatch('getStrategies').finally(() => {
+      this.$store.dispatch('getMyStrategies').finally(() => {
         this.loading = false
       })
     }
