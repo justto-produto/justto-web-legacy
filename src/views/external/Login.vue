@@ -179,6 +179,8 @@ export default {
                 if (responses[1].length > 1) {
                   this.showLoading = false
                   this.workspaces = responses[1]
+                } else if (responses[1].length === 0) {
+                  this.$router.push('/onboarding')
                 } else {
                   this.getMembersAndRedirect(responses[1][0])
                 }

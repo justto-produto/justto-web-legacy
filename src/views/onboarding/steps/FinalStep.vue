@@ -46,9 +46,8 @@ export default {
       this.$store.dispatch('readyWorkspace', this.$store.state.workspaceModule.subdomain)
         .then(() => {
           this.$store.dispatch('myWorkspace')
-            .then(() => {
-              window.analytics.track('Onboarding concluido')
-              this.$router.push('import')
+            .then((response) => {
+              this.$router.push('/login')
             })
             .catch(() => {
               this.showError = true
