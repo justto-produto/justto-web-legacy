@@ -13,18 +13,20 @@ const workspaceModule = {
     members: []
   },
   mutations: {
-    updateWorkspace (state, response) {
-      if (response && response.workspace) {
+    updateWorkspace (state, workspace) {
+      if (workspace) {
         // eslint-disable-next-line
-        axios.defaults.headers.common['Workspace'] = response.workspace.subDomain
-        state.subdomain = response.workspace.subDomain
-        state.name = response.workspace.name
-        state.type = response.workspace.type
-        state.status = response.workspace.status
-        state.id = response.workspace.id
-        localStorage.setItem('jusworkspace', JSON.stringify(response))
+        axios.defaults.headers.common['Workspace'] = workspace.subDomain
+        state.subdomain = workspace.subDomain
+        state.name = workspace.name
+        state.type = workspace.type
+        state.status = workspace.status
+        state.id = workspace.id
+        localStorage.setItem('jusworkspace', JSON.stringify(workspace))
       }
-      if (response && response.profile) state.profile = response.profile
+    },
+    updateProfile (state, profile) {
+      if (profile) state.profile = profile
     },
     addWorkspace (state, response) {
       if (response) {
