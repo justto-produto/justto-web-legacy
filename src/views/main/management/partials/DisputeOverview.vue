@@ -664,20 +664,6 @@ export default {
             message: 'Os dados foram alterados com sucesso.',
             type: 'success'
           })
-
-          // this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
-          //   confirmButtonText: 'Sim',
-          //   cancelButtonText: 'Não',
-          //   type: 'warning',
-
-          // cancelButtonClass: 'is-plain'
-          // }).then(() => {
-          //   this.$message({
-          //     type: 'success',
-          //     message: 'Delete completed'
-          //   })
-          // })
-
           this.editRoleDialogVisible = false
         }).catch(error => {
           this.editRoleDialogError = true

@@ -314,7 +314,8 @@ export default {
       this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Excluir email', {
         confirmButtonText: 'Sim, remover',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
+        type: 'warning',
       }).then(() => {
         this.$store.commit('showLoading')
         this.$store.dispatch('removeInbox', id).then(() => {
@@ -338,7 +339,8 @@ export default {
       this.$confirm('Tem certeza que deseja excluir ' + name + ' da equipe?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
+        type: 'warning',
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
           window.analytics.track('Membro removido')

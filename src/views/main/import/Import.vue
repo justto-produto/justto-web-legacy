@@ -180,9 +180,9 @@ export default {
       if (isLt20M && isValid) {
         const formData = new FormData()
         formData.append('file', file)
-        formData.append('id', this.$store.getters.loggedPersonId)
-        formData.append('name', this.$store.getters.loggedPersonName)
-        formData.append('email', this.$store.getters.accountEmail)
+        formData.append('created_person_id', this.$store.getters.loggedPersonId)
+        formData.append('created_name', this.$store.getters.loggedPersonName)
+        formData.append('created_by', this.$store.getters.accountEmail)
         this.saveFile(formData)
       } else {
         this.removeFile()

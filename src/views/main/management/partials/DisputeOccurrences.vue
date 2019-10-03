@@ -30,8 +30,8 @@
           </div>
           <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card">
             <div v-if="!!buildName(occurrence)" slot="header">
-              <span>{{ buildName(occurrence) }}</span>
               <jus-icon :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
+              <span>{{ buildName(occurrence) }}</span>
             </div>
             <div>
               <span :ref="getMessageRef(occurrence)">
@@ -376,7 +376,7 @@ export default {
         align-items: center;
       }
       span {
-        margin-right: 8px;
+        margin-left: 8px;
       }
       img {
         width: 15px;

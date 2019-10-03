@@ -163,10 +163,11 @@ export default {
     if (to.path === '/import/loading') {
       next()
     } else if (this.$store.getters.hasImportsFile) {
-      this.$confirm('Tem certeza que deseja sair da importação? Todos os dados serão perdidos.', 'Warning', {
-        confirmButtonText: 'OK',
+      this.$confirm('Tem certeza que deseja sair da importação? Todos os dados serão perdidos.', {
+        confirmButtonText: 'Sair',
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
+        type: 'warning',
         cancelButtonClass: 'is-plain'
       }).then(() => {
         next()
