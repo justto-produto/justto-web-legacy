@@ -26,23 +26,6 @@
           Disputa #{{ disputeId }}
         </h2>
       </div>
-      <div class="jus-header-main__whatsapp" @click="toggleWhatsapDialog">
-        <el-tooltip>
-          <div slot="content">
-            <span v-if="!isWhatsappConnected">
-              WhatsApp desconectado
-            </span>
-            <span v-else-if="!!whatsappNumber">
-              Conectado via: {{ whatsappNumber | phoneMask }}
-            </span>
-            <span v-else>
-              WhatsApp conectado
-            </span>
-          </div>
-          <jus-icon :icon="'whatsapp-' + (!isWhatsappConnected ? 'disconnected' : 'connected')" />
-        </el-tooltip>
-        <i v-if="!isWhatsappConnected" class="el-icon-warning el-icon-pulse el-icon-danger" />
-      </div>
       <div class="jus-header-main__info">
         <el-dropdown trigger="click" placement="bottom-start">
           <span class="el-dropdown-link">
