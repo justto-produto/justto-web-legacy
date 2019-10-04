@@ -108,12 +108,13 @@
       align="center"
       min-width="140px">
       <template slot-scope="scope">
-        <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         <el-tooltip content="Negociação encerra nos próximos 3 dias">
-          <i
-            v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'"
-            class="management-table__expiration-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+          <span v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'" class="management-table__expiration-icon position-relative">
+            <jus-icon icon="clock" />
+            <i class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+          </span>
         </el-tooltip>
+        <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -272,6 +273,15 @@ export default {
     margin-right: 4px;
     max-height: 18px;
     max-width: 18px;
+  }
+  &__expiration-icon {
+    margin-right: 6px;
+    img {
+      vertical-align: middle;
+      margin-right: 4px;
+      max-height: 16px;
+      max-width: 16px;
+    }
   }
   &__interaction-pulse {
     position: absolute;

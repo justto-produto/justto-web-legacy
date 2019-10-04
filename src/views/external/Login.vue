@@ -179,6 +179,8 @@ export default {
                 if (responses[1].length > 1) {
                   this.showLoading = false
                   this.workspaces = responses[1]
+                } else if (responses[1].length === 0) {
+                  this.$router.push('/onboarding')
                 } else {
                   this.getMembersAndRedirect(responses[1][0])
                 }
@@ -199,9 +201,10 @@ export default {
         }
       })
     },
-    getMembersAndRedirect (workspace) {
-      this.$store.commit('updateWorkspace', workspace)
-      if (workspace.person) this.$store.commit('setLoggedPerson', workspace.person)
+    getMembersAndRedirect (response) {
+      if (response.workspace) this.$store.commit('setWorkspace', response.workspace)
+      if (response.profile) this.$store.commit('setProfile', response.profile)
+      if (response.person) this.$store.commit('setLoggedPerson', response.person)
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
           this.$router.push('/management')

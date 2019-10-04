@@ -562,6 +562,8 @@ export default {
         ]),
         confirmButtonText: 'Continuar',
         showCancelButton: true,
+        type: 'warning',
+        cancelButtonClass: 'is-plain',
         cancelButtonText: 'Cancelar'
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {

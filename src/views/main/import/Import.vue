@@ -18,9 +18,15 @@
         <el-table-column label="Arquivo">
           <template slot-scope="scope">{{ scope.row.file_name }}</template>
         </el-table-column>
+        <el-table-column label="Importado por">
+          <template v-if="scope.row.created_name" slot-scope="scope">
+            {{ scope.row.created_name }}
+            <span v-if="scope.row.created_by">({{ scope.row.created_by }})</span>
+          </template>
+        </el-table-column>
         <el-table-column label="Data">
           <template slot-scope="scope">
-            {{ scope.row.date | moment('DD/MM/YYYY HH:mm') }}
+            {{ scope.row.date | moment('DD/MM/YYYY [às] HH:mm') }}
           </template>
         </el-table-column>
         <el-table-column label="Status">
@@ -29,10 +35,10 @@
             {{ $t('import.status.' + scope.row.status ) | capitalize }}
           </template>
         </el-table-column>
-        <el-table-column label="Linhas" align="center">
+        <el-table-column width="90" label="Linhas" align="center">
           <template slot-scope="scope">{{ scope.row.rows }}</template>
         </el-table-column>
-        <el-table-column width="100" align="center" fixed="right" label="Baixar">
+        <el-table-column width="90" align="center" label="Baixar">
           <template slot-scope="scope">
             <a :href="scope.row.file_url" target="_blank">
               <jus-icon icon="download-sheet" />
@@ -180,6 +186,9 @@ export default {
       if (isLt20M && isValid) {
         const formData = new FormData()
         formData.append('file', file)
+        formData.append('created_person_id', this.$store.getters.loggedPersonId)
+        formData.append('created_name', this.$store.getters.loggedPersonName)
+        formData.append('created_by', this.$store.getters.accountEmail)
         this.saveFile(formData)
       } else {
         this.removeFile()
@@ -244,6 +253,9 @@ export default {
   .el-table {
     img {
       width: 14px;
+    }
+    .cell {
+      word-break: break-all;
     }
   }
   &__action {

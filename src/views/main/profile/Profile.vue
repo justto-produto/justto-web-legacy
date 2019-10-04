@@ -65,6 +65,10 @@
                   </div>
                 </div>
               </div>
+              <br><br>
+              <el-button type="primary" @click="createWorkspace">
+                Criar nova Equipe
+              </el-button>
             </div>
           </el-col>
         </el-row>
@@ -209,6 +213,17 @@ export default {
     }
   },
   methods: {
+    createWorkspace () {
+      this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
+        confirmButtonText: 'Criar nova Equipe',
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('redirectNewWorkspaceTrue')
+        this.$router.push('onboarding')
+      })
+    },
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
         this.teamMembers = response
@@ -314,7 +329,8 @@ export default {
       this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Excluir email', {
         confirmButtonText: 'Sim, remover',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
+        type: 'warning'
       }).then(() => {
         this.$store.commit('showLoading')
         this.$store.dispatch('removeInbox', id).then(() => {
@@ -338,7 +354,8 @@ export default {
       this.$confirm('Tem certeza que deseja excluir ' + name + ' da equipe?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
+        type: 'warning'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
           window.analytics.track('Membro removido')

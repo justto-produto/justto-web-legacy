@@ -16,7 +16,7 @@
       label-position="top"
       @submit.native.prevent="submitForm">
       <el-form-item label="Equipe" prop="name">
-        <el-input v-model="nameForm.name" :disabled="$store.getters.creatingWorkspace" name="name" data-testid="teamname-form"/>
+        <el-input v-model="nameForm.name" :disabled="creatingWorkspace" name="name" data-testid="teamname-form"/>
       </el-form-item>
     </el-form>
     <el-button type="primary" data-testid="teamname-next" @click="submitForm">Próximo</el-button>
@@ -34,12 +34,20 @@ export default {
   data () {
     return {
       nameForm: {
-        name: this.$store.state.workspaceModule.name
+        name: ''
       },
       nameFormRules: {
         name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
     }
+  },
+  computed: {
+    creatingWorkspace () {
+      return this.$store.getters.creatingWorkspace
+    }
+  },
+  mounted () {
+    this.nameForm.name = this.creatingWorkspace ? this.$store.state.workspaceModule.name : ''
   },
   methods: {
     submitForm () {
