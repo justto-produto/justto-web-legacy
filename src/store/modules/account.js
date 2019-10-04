@@ -119,7 +119,6 @@ const account = {
       commit('clearWorkspace')
       commit('clearWhatsappSocket')
       commit('clearDisputes')
-      commit('clearDisputeQuery')
       commit('clearDisputeTab')
       localStorage.removeItem('justoken')
       // eslint-disable-next-line
