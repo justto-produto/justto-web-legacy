@@ -1,6 +1,8 @@
 <template>
   <div class="jus-sidenav-external">
-    <img class="jus-sidenav-external__logo" src="@/assets/logo.svg">
+    <a href="#" @click.prevent="$router.push('/login')">
+      <img class="jus-sidenav-external__logo" src="@/assets/logo.svg">
+    </a>
     <div v-if="showPlans" class="jus-sidenav-external__title">
       <div>
         <span>15</span>
