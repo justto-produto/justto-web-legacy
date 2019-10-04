@@ -1,6 +1,7 @@
 const localWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
-const workspace = localWorkspace && localWorkspace.workspace ? localWorkspace.workspace : {}
-const profile = localWorkspace && localWorkspace.profile ? localWorkspace.profile : ''
+const localProfile = localStorage.getItem('jusprofile')
+const workspace = localWorkspace ? localWorkspace : {}
+const profile = localWorkspace ? localProfile : ''
 
 const workspaceModule = {
   state: {
@@ -26,7 +27,10 @@ const workspaceModule = {
       }
     },
     updateProfile (state, profile) {
-      if (profile) state.profile = profile
+      if (profile) {
+        state.profile = profile
+        localStorage.setItem('jusprofile', profile)
+      }
     },
     addWorkspace (state, response) {
       if (response) {
