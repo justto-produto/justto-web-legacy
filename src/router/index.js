@@ -139,7 +139,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (Store.getters.isLoggedIn) {
       if (Store.getters.hasWorkspace) {
-        if (to.name === 'onboarding') {
+        if (to.name === 'onboarding' && !Store.getters.redirectNewWorkspace) {
           next('/')
         } else next()
       } else {

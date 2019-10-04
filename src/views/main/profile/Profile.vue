@@ -65,6 +65,10 @@
                   </div>
                 </div>
               </div>
+              <br><br>
+              <el-button type="primary" @click="createWorkspace">
+                Criar nova Equipe
+              </el-button>
             </div>
           </el-col>
         </el-row>
@@ -209,6 +213,17 @@ export default {
     }
   },
   methods: {
+    createWorkspace () {
+      this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
+        confirmButtonText: 'Criar nova Equipe',
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('redirectNewWorkspaceTrue')
+        this.$router.push('onboarding')
+      })
+    },
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
         this.teamMembers = response
