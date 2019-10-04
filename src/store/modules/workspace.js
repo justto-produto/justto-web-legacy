@@ -244,6 +244,19 @@ const workspaceModule = {
             reject(error)
           })
       })
+    },
+    getMyStrategies ({ commit }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('api/workspaces/strategies')
+          .then(response => {
+            commit('setStrategies', response.data)
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

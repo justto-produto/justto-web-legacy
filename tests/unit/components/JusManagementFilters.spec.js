@@ -15,7 +15,7 @@ describe('JusManagementFilters.vue', () => {
   beforeEach(() => {
     actions = {
       getCampaigns: jest.fn(),
-      getStrategies: jest.fn()
+      getMyStrategies: jest.fn()
     }
     store = new Vuex.Store({
       actions,
