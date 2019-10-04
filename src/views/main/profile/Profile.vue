@@ -315,7 +315,7 @@ export default {
         confirmButtonText: 'Sim, remover',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$store.commit('showLoading')
         this.$store.dispatch('removeInbox', id).then(() => {
@@ -340,7 +340,7 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
           window.analytics.track('Membro removido')

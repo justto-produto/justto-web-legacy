@@ -119,7 +119,7 @@ export default {
           type: 'success',
           dangerouslyUseHTMLString: true
         })
-        if (action === 'PAUSED') {
+        if (action === 'unsettled') {
           setTimeout(() => {
             this.$jusNotification({
               title: 'Atenção!',
