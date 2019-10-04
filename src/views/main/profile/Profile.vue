@@ -57,7 +57,7 @@
                 <div class="profile-view__members-list">
                   <div class="member">
                     <strong>{{ member.person.name }}: </strong>
-                    <span> {{ $t('profile.' + member.profile) }}</span>
+                    <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                   </div>
                   <div class="actions">
                     <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
@@ -169,7 +169,7 @@ export default {
       dialogPassword: false,
       dialogMember: false,
       dialogInvite: false,
-      roles: [{ key: 'NEGOTIATOR', value: 'Negociador' }, { key: 'ADMINISTRATOR', value: 'Administrador' }],
+      roles: [{ key: 'NEGOTIATOR', value: 'Negociador(a)' }, { key: 'ADMINISTRATOR', value: 'Administrador(a)' }],
       profileForm: {
         newPassword: '',
         password: '',
@@ -477,11 +477,6 @@ export default {
     margin-top: 10px;
     a + a {
       margin-left: 10px;
-    }
-    .member {
-      span {
-        text-transform: capitalize;
-      }
     }
   }
   .el-card__body {
