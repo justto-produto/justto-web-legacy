@@ -87,6 +87,7 @@ const disputeActions = {
         commit('disputeSetHasNew', false)
         resolve(response.data)
       }).catch(error => {
+        commit('clearDisputes')
         reject(error)
       })
     })

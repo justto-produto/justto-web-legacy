@@ -190,7 +190,9 @@ export default {
       clearTimeout(this.disputeDebounce)
       this.disputeDebounce = setTimeout(() => {
         this.loadingDisputes = true
-        return this.$store.dispatch('getDisputes').finally(() => {
+        return this.$store.dispatch('getDisputes').catch(error => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
           this.loadingDisputes = false
           this.$nextTick(() => {
             let main = this.$el.querySelector('.el-table__body-wrapper')
