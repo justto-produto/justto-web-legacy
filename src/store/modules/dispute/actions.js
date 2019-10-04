@@ -87,6 +87,7 @@ const disputeActions = {
         commit('disputeSetHasNew', false)
         resolve(response.data)
       }).catch(error => {
+        commit('clearDisputes')
         reject(error)
       })
     })
@@ -238,6 +239,17 @@ const disputeActions = {
           resolve(response.data)
         })
         .catch(error => {
+          reject(error)
+        })
+    })
+  },
+  restartDisputeRoleEngagement ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.patch('api/disputes/' + params.disputeId + '/restart-engagement/' + params.disputeRoleId)
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
           reject(error)
         })
     })

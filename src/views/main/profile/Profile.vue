@@ -57,7 +57,7 @@
                 <div class="profile-view__members-list">
                   <div class="member">
                     <strong>{{ member.person.name }}: </strong>
-                    <span> {{ $t('profile.' + member.profile) }}</span>
+                    <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                   </div>
                   <div class="actions">
                     <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
@@ -65,6 +65,10 @@
                   </div>
                 </div>
               </div>
+              <br><br>
+              <el-button type="primary" @click="createWorkspace">
+                Criar nova Equipe
+              </el-button>
             </div>
           </el-col>
         </el-row>
@@ -165,7 +169,7 @@ export default {
       dialogPassword: false,
       dialogMember: false,
       dialogInvite: false,
-      roles: [{ key: 'NEGOTIATOR', value: 'Negociador' }, { key: 'ADMINISTRATOR', value: 'Administrador' }],
+      roles: [{ key: 'NEGOTIATOR', value: 'Negociador(a)' }, { key: 'ADMINISTRATOR', value: 'Administrador(a)' }],
       profileForm: {
         newPassword: '',
         password: '',
@@ -209,6 +213,17 @@ export default {
     }
   },
   methods: {
+    createWorkspace () {
+      this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
+        confirmButtonText: 'Criar nova Equipe',
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('redirectNewWorkspaceTrue')
+        this.$router.push('onboarding')
+      })
+    },
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
         this.teamMembers = response
@@ -315,7 +330,7 @@ export default {
         confirmButtonText: 'Sim, remover',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$store.commit('showLoading')
         this.$store.dispatch('removeInbox', id).then(() => {
@@ -340,7 +355,7 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
           window.analytics.track('Membro removido')
@@ -462,11 +477,6 @@ export default {
     margin-top: 10px;
     a + a {
       margin-left: 10px;
-    }
-    .member {
-      span {
-        text-transform: capitalize;
-      }
     }
   }
   .el-card__body {

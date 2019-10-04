@@ -84,6 +84,7 @@ export default {
     }
   },
   beforeCreate () {
+    this.$store.commit('clearDisputeQuery')
     this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
       if (whatsapp.status === 'OFFLINE') {
         this.$store.dispatch('whatsappStart')

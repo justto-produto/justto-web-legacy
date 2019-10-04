@@ -559,7 +559,7 @@ export default {
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success'
         })
-        if (action === 'paused') {
+        if (action === 'unsettled') {
           setTimeout(() => {
             this.$jusNotification({
               title: 'Atenção!',

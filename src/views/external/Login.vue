@@ -202,12 +202,8 @@ export default {
       })
     },
     getMembersAndRedirect (response) {
-      if (response.workspace) {
-        this.$store.commit('updateWorkspace', response.workspace)
-      }
-      if (response.profile) {
-        this.$store.commit('updateProfile', response.profile)
-      }
+      if (response.workspace) this.$store.commit('setWorkspace', response.workspace)
+      if (response.profile) this.$store.commit('setProfile', response.profile)
       if (response.person) this.$store.commit('setLoggedPerson', response.person)
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {

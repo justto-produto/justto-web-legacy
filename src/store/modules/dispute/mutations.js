@@ -115,36 +115,6 @@ const disputeMutations = {
   disputeSetHasNew (state, bol) {
     state.hasNew = bol
   }
-  // setDisputeTab (state, tab) {
-  //   state.filters.tab = tab
-  // },
-  // clearDisputeTab (state, tab) {
-  //   state.filters.tab = '0'
-  // },
-  // setDisputeFilterTerm (state, term) {
-  //   state.filters.filterTerm = term
-  // },
-  // clearDisputeFilterTerm (state, tab) {
-  //   state.filters.filterTerm = ''
-  // },
-  // changePriorityView (state) {
-  //   state.filters.priorityOnly = !state.filters.priorityOnly
-  // },
-  // setDisputeSort (state, sort) {
-  //   state.filters.sort.prop = sort.prop
-  //   state.filters.sort.order = sort.order
-  // },
-  // clearDisputeSort (state) {
-  //   state.filters.sort.prop = null
-  //   state.filters.sort.order = null
-  // },
-  // setFilterPersonId (state, id) {
-  //   state.filters.filterPersonId = id
-  //   state.filters.filteredPerson = false
-  // },
-  // setDisputesPerPage (state, disputesPerPage) {
-  //   state.filters.perPage = disputesPerPage
-  // }
 }
 
 export default disputeMutations

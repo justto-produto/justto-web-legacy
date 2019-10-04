@@ -14,9 +14,7 @@ const NotificationMessage = {
       if (config.duration === undefined) {
         config.duration = 5000
       }
-      if (config.closeAll) {
-        Notification.closeAll()
-      }
+      Notification.closeAll()
       Notification(config)
     }
   }
