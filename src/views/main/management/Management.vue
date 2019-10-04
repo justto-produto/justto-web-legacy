@@ -167,6 +167,9 @@ export default {
         this.$store.commit('updateDisputeQuery', { key: 'page', value: page })
         this.getDisputes()
       }
+    },
+    persons () {
+      return this.$store.state.disputeModule.query.persons
     }
   },
   watch: {
@@ -176,12 +179,12 @@ export default {
         this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
         this.getDisputes()
       }, 800)
+    },
+    persons () {
+      this.getDisputes()
     }
   },
   beforeCreate () {
-    this.$store.watch(state => state.disputeModule.query.persons, persons => {
-      this.getDisputes()
-    })
     this.$store.dispatch('getNotVisualizeds')
     this.$store.dispatch('getNearExpirations')
   },
