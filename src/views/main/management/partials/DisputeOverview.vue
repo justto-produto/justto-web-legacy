@@ -672,8 +672,9 @@ export default {
               type: 'warning',
               cancelButtonClass: 'is-plain'
             }).then(() => {
-              this.$store.dispatch('restartDisputeEngagement', {
-                disputeId: this.dispute.id, role: this.roleForm
+              this.$store.dispatch('restartDisputeRoleEngagement', {
+                disputeId: this.dispute.id,
+                disputeRoleId: this.roleForm.id
               }).then(() => {
                 this.$jusNotification({
                   title: 'Yay!',

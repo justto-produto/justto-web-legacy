@@ -242,12 +242,10 @@ const disputeActions = {
         })
     })
   },
-  restartDisputeEngagement ({ commit }, params) {
+  restartDisputeRoleEngagement ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + params.disputeId + '/restart-engagement', {
-        role: params.role
-      })
+      axios.patch('api/disputes/' + params.disputeId + '/restart-engagement/' + params.disputeRoleId)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
