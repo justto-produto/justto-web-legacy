@@ -119,6 +119,7 @@ const account = {
       commit('clearWorkspace')
       commit('clearWhatsappSocket')
       commit('clearDisputes')
+      commit('clearDisputeTab')
       localStorage.removeItem('justoken')
       // eslint-disable-next-line
       delete axios.defaults.headers.common['Authorization']
@@ -166,7 +167,8 @@ const account = {
     accountToken: state => state.token,
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
-    accountId: state => state.id
+    accountId: state => state.id,
+    accountEmail: state => state.email
   }
 }
 

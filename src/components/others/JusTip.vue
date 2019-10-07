@@ -12,7 +12,8 @@ export default {
       this.$confirm('Essa é uma dica pra você ficar esperto ;)', 'Dica!', {
         distinguishCancelAndClose: true,
         confirmButtonText: 'Beleza',
-        cancelButtonText: 'Não exibir mais dicas'
+        cancelButtonText: 'Não exibir mais dicas',
+        cancelButtonClass: 'is-plain'
       }).catch(() => {
         this.$message({
           message: 'Ok'

@@ -463,6 +463,7 @@ export default {
         expirationDate: ''
       },
       roleForm: {},
+      originalRole: {},
       roleRules: {
         name: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
@@ -560,10 +561,11 @@ export default {
           h('br', null, null),
           h('div', null, 'Deseja continuar?')
         ]),
+        type: 'warning',
         confirmButtonText: 'Continuar',
-        showCancelButton: true,
-        cancelButtonText: 'Cancelar',
         confirmButtonClass: 'edit-case-confirm-button',
+        cancelButtonClass: 'is-plain',
+        showCancelButton: true,
         customClass: 'edit-case-confitm-dialog'
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
@@ -583,7 +585,6 @@ export default {
               }))
             }
           }
-          console.log(this.selectedNegotiatorId)
           if (this.disputeForm.lastOfferValue !== this.dispute.lastOfferValue) {
             promises.push(this.$store.dispatch('editDisputeOffer', {
               disputeId: this.dispute.id,
@@ -642,6 +643,7 @@ export default {
       this.editRoleDialogError = false
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
+      this.originalRole = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildTitle(role.party, role.roles[0])
       this.roleForm.documentNumber = this.$options.filters.cpfCnpjMask(this.roleForm.documentNumber)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
@@ -658,13 +660,32 @@ export default {
         this.$store.dispatch('editRole', {
           disputeId: this.dispute.id,
           disputeRole: roleToEdit
-        }).then(responde => {
+        }).then(() => {
           this.$store.dispatch('getDispute', this.dispute.id)
           this.$jusNotification({
             title: 'Yay!',
             message: 'Os dados foram alterados com sucesso.',
             type: 'success'
           })
+          if (this.verifyChangedRoleData(this.roleForm, this.originalRole)) {
+            this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
+              confirmButtonText: 'Reengajar',
+              cancelButtonText: 'Cancelar',
+              type: 'warning',
+              cancelButtonClass: 'is-plain'
+            }).then(() => {
+              this.$store.dispatch('restartDisputeRoleEngagement', {
+                disputeId: this.dispute.id,
+                disputeRoleId: this.roleForm.id
+              }).then(() => {
+                this.$jusNotification({
+                  title: 'Yay!',
+                  message: 'Reengajamento realizado com sucesso.',
+                  type: 'success'
+                })
+              })
+            })
+          }
           this.editRoleDialogVisible = false
         }).catch(error => {
           this.editRoleDialogError = true
@@ -677,6 +698,26 @@ export default {
           this.editRoleDialogLoading = false
         })
       }
+    },
+    verifyChangedRoleData (editedRole, originalRole) {
+      let changed = false
+      if (editedRole.phones.length) {
+        if (originalRole.phones.length) {
+          editedRole.phones.forEach((phone, index) => {
+            let mappedPhones = originalRole.phones.map(phone => phone.number)
+            if (!mappedPhones.includes(phone.number)) changed = true
+          })
+        } else changed = true
+      }
+      if (editedRole.emails.length) {
+        if (originalRole.emails.length) {
+          editedRole.emails.forEach((phone, index) => {
+            let mappedEmails = originalRole.emails.map(email => email.address)
+            if (!mappedEmails.includes(phone.address)) changed = true
+          })
+        } else changed = true
+      }
+      return changed
     },
     addPhone () {
       let isValid = true
@@ -727,9 +768,11 @@ export default {
       this.roleForm.oabs.splice(index, 1)
     },
     removeRole (role) {
-      this.$confirm('Tem certeza que deseja remover?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja excluir esta parte?', 'Atenção!', {
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        type: 'warning',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         this.$store.dispatch('removeRole', {
           disputeId: role.id,

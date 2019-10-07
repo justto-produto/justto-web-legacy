@@ -1,6 +1,7 @@
 const localWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
-const workspace = localWorkspace && localWorkspace.workspace ? localWorkspace.workspace : {}
-const profile = localWorkspace && localWorkspace.profile ? localWorkspace.profile : ''
+const localProfile = localStorage.getItem('jusprofile')
+const workspace = localWorkspace ? localWorkspace : {}
+const profile = localWorkspace ? localProfile : ''
 
 const workspaceModule = {
   state: {
@@ -10,31 +11,32 @@ const workspaceModule = {
     status: workspace.status,
     subdomain: workspace.subDomain,
     profile: profile,
-    members: []
+    members: [],
+    redirectNewWorkspace: false
   },
   mutations: {
-    updateWorkspace (state, response) {
-      if (response && response.workspace) {
-        // eslint-disable-next-line
-        axios.defaults.headers.common['Workspace'] = response.workspace.subDomain
-        state.subdomain = response.workspace.subDomain
-        state.name = response.workspace.name
-        state.type = response.workspace.type
-        state.status = response.workspace.status
-        state.id = response.workspace.id
-        localStorage.setItem('jusworkspace', JSON.stringify(response))
-      }
-      if (response && response.profile) state.profile = response.profile
+    redirectNewWorkspaceTrue (state) {
+      state.redirectNewWorkspace = true
     },
-    addWorkspace (state, response) {
-      if (response) {
+    redirectNewWorkspaceFalse (state) {
+      state.redirectNewWorkspace = false
+    },
+    setWorkspace (state, workspace) {
+      if (workspace) {
         // eslint-disable-next-line
-        axios.defaults.headers.common['Workspace'] = response.subDomain
-        state.subdomain = response.subDomain
-        state.name = response.name
-        state.type = response.type
-        state.status = response.status
-        state.id = response.id
+        axios.defaults.headers.common['Workspace'] = workspace.subDomain
+        state.subdomain = workspace.subDomain
+        state.name = workspace.name
+        state.type = workspace.type
+        state.status = workspace.status
+        state.id = workspace.id
+        localStorage.setItem('jusworkspace', JSON.stringify(workspace))
+      }
+    },
+    setProfile (state, profile) {
+      if (profile) {
+        state.profile = profile
+        localStorage.setItem('jusprofile', profile)
       }
     },
     clearWorkspace (state) {
@@ -45,6 +47,9 @@ const workspaceModule = {
       state.subdomain = ''
       state.profile = ''
       state.members = []
+      localStorage.removeItem('jusworkspace')
+      localStorage.removeItem('jusprofile')
+      localStorage.removeItem('jusperson')
     },
     setWorkspaceMembers (state, members) {
       state.members = members
@@ -79,7 +84,7 @@ const workspaceModule = {
         // eslint-disable-next-line
         axios.post('api/accounts/workspaces', object)
           .then(response => {
-            commit('addWorkspace', response.data)
+            commit('setWorkspace', response.data)
             resolve(response.data)
           }).catch(error => {
             reject(error)
@@ -91,7 +96,7 @@ const workspaceModule = {
         // eslint-disable-next-line
         axios.put('api/workspaces', nameOjb)
           .then(response => {
-            commit('updateWorkspace', response.data)
+            commit('setWorkspace', response.data)
             resolve(response.data)
           }).catch(error => {
             reject(error)
@@ -239,6 +244,19 @@ const workspaceModule = {
             reject(error)
           })
       })
+    },
+    getMyStrategies ({ commit }) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.get('api/workspaces/strategies')
+          .then(response => {
+            commit('setStrategies', response.data)
+            resolve(response.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {
@@ -248,7 +266,8 @@ const workspaceModule = {
     creatingWorkspace: state => state.status === 'CREATING',
     workspaceId: state => state.subdomain,
     workspaceSubdomain: state => state.subdomain,
-    workspaceMembers: state => state.members
+    workspaceMembers: state => state.members,
+    redirectNewWorkspace: state => state.redirectNewWorkspace
   }
 }
 

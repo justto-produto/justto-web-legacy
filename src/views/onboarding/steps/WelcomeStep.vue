@@ -7,7 +7,7 @@
       shape="circle"
       size="xl"/> -->
     <h1>
-      {{ name }}, bem-vindo(a) a Justto<br>
+      <span v-if="name">{{ name }}, b</span><span v-else>B</span>em-vindo(a) a Justto!<br>
       <span v-if="isGuest">
         Junte-se ao escritório {{ companyName }}.
       </span>
@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     name () {
-      return this.$store.state.accountModule.name
+      return this.$store.getters.loggedPersonName
     }
   },
   methods: {

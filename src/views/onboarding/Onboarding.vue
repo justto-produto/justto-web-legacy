@@ -135,6 +135,7 @@ export default {
     }
   },
   beforeCreate () {
+    this.$store.commit('redirectNewWorkspaceFalse')
     if (this.$store.state.workspaceModule.subdomain) {
       this.$store.dispatch('whatsappStart').then(() => {
         this.$socket.emit('subscribe', {

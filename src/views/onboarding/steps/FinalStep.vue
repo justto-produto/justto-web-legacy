@@ -1,7 +1,7 @@
 <template>
   <div class="onboarding-step-content">
     <h1>
-      Tudo pronto, {{ name }}!
+      Tudo pronto!
     </h1>
     <p v-if="!isGuest">
       Parabéns! Você configurou seu ambiente de trabalho na JUSTTO. Simples, não é mesmo? O próximo passo é inserir
@@ -35,20 +35,25 @@ export default {
       showError: false
     }
   },
-  computed: {
-    name () {
-      return this.$store.state.accountModule.name
-    }
-  },
   methods: {
     readyWorkspace: function () {
       this.showError = false
       this.$store.dispatch('readyWorkspace', this.$store.state.workspaceModule.subdomain)
         .then(() => {
+          delete axios.defaults.headers.common['Workspace']
           this.$store.dispatch('myWorkspace')
-            .then(() => {
-              window.analytics.track('Onboarding concluido')
-              this.$router.push('import')
+            .then(response => {
+              const currentWorkspace = response.find(w => {
+                if (w.workspace &&
+                  w.workspace.subDomain &&
+                  w.workspace.subDomain === this.$store.getters.workspaceSubdomain) {
+                  return true
+                }
+              })
+              localStorage.setItem('jusworkspace', JSON.stringify(currentWorkspace.workspace))
+              localStorage.setItem('jusprofile', currentWorkspace.profile)
+              localStorage.setItem('jusperson', JSON.stringify(currentWorkspace.person))
+              this.$router.go('/management')
             })
             .catch(() => {
               this.showError = true

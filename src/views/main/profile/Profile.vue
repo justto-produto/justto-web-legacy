@@ -57,7 +57,7 @@
                 <div class="profile-view__members-list">
                   <div class="member">
                     <strong>{{ member.person.name }}: </strong>
-                    <span> {{ $t('profile.' + member.profile) }}</span>
+                    <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                   </div>
                   <div class="actions">
                     <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
@@ -65,6 +65,10 @@
                   </div>
                 </div>
               </div>
+              <br><br>
+              <el-button type="primary" @click="createWorkspace">
+                Criar nova Equipe
+              </el-button>
             </div>
           </el-col>
         </el-row>
@@ -86,7 +90,7 @@
           </el-form-item>
         </el-form>
         <span slot="footer">
-          <el-button @click="dialogMember = false">Cancelar</el-button>
+          <el-button plain @click="dialogMember = false">Cancelar</el-button>
           <el-button type="primary" @click="editMember">Salvar alterações</el-button>
         </span>
       </el-dialog>
@@ -104,7 +108,7 @@
           </el-form-item>
         </el-form>
         <span slot="footer">
-          <el-button @click="cancelChangePassword">Cancelar</el-button>
+          <el-button plain @click="cancelChangePassword">Cancelar</el-button>
           <el-button :disabled="!profileForm.password.length" type="primary" @click="updatePassword">
             Alterar
           </el-button>
@@ -165,7 +169,7 @@ export default {
       dialogPassword: false,
       dialogMember: false,
       dialogInvite: false,
-      roles: [{ key: 'NEGOTIATOR', value: 'Negociador' }, { key: 'ADMINISTRATOR', value: 'Administrador' }],
+      roles: [{ key: 'NEGOTIATOR', value: 'Negociador(a)' }, { key: 'ADMINISTRATOR', value: 'Administrador(a)' }],
       profileForm: {
         newPassword: '',
         password: '',
@@ -209,6 +213,17 @@ export default {
     }
   },
   methods: {
+    createWorkspace () {
+      this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
+        confirmButtonText: 'Criar nova Equipe',
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('redirectNewWorkspaceTrue')
+        this.$router.push('onboarding')
+      })
+    },
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
         this.teamMembers = response
@@ -313,7 +328,9 @@ export default {
     removeEmail (id) {
       this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Excluir email', {
         confirmButtonText: 'Sim, remover',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        type: 'warning'
       }).then(() => {
         this.$store.commit('showLoading')
         this.$store.dispatch('removeInbox', id).then(() => {
@@ -334,9 +351,11 @@ export default {
       })
     },
     removeMember (id, name) {
-      this.$confirm('Tem certeza que deseja remover ' + name + ' da equipe?', 'Atenção!', {
+      this.$confirm('Tem certeza que deseja excluir ' + name + ' da equipe?', 'Atenção!', {
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        type: 'warning'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
           window.analytics.track('Membro removido')
@@ -458,11 +477,6 @@ export default {
     margin-top: 10px;
     a + a {
       margin-left: 10px;
-    }
-    .member {
-      span {
-        text-transform: capitalize;
-      }
     }
   }
   .el-card__body {

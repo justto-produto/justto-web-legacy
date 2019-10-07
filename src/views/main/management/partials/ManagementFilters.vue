@@ -314,7 +314,7 @@ export default {
     this.loading = true
     Promise.all([
       this.$store.dispatch('getCampaigns'),
-      this.$store.dispatch('getStrategies')
+      this.$store.dispatch('getMyStrategies')
     ]).finally(responses => {
       this.loading = false
     })

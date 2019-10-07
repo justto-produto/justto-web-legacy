@@ -84,7 +84,7 @@
         </div>
         <el-dialog
           :visible.sync="chooseUnsettledDialogVisible"
-          title="Atenção!"
+          title="Perder"
           class="dispute-view__choose-unsettled-dialog"
           width="460px"
           data-testid="choose-unsettled-dialog">
@@ -469,7 +469,9 @@ export default {
       this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonClass: 'confirm-remove-btn',
         confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        type: 'warning',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
@@ -509,11 +511,15 @@ export default {
       if (action === 'unsettled') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = null
+      } else if (action === 'favorite') {
+        this.doAction(action)
       } else {
-        this.$confirm('Tem certeza que deseja realizar esta ação?', 'Atenção!', {
+        this.$confirm('Tem certeza que deseja realizar ação?', this.$t('action.' + action.toUpperCase()), {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar'
+          cancelButtonText: 'Cancelar',
+          type: 'warning',
+          cancelButtonClass: 'is-plain'
         }).then(() => {
           this.doAction(action)
         })
@@ -549,9 +555,20 @@ export default {
         })
         this.$jusNotification({
           title: 'Yay!',
-          message: 'Ação realizada com sucesso.',
+          dangerouslyUseHTMLString: true,
+          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success'
         })
+        if (action === 'unsettled') {
+          setTimeout(() => {
+            this.$jusNotification({
+              title: 'Atenção!',
+              message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
+              type: 'info',
+              duration: 0
+            })
+          }, 2000)
+        }
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       }).finally(() => {

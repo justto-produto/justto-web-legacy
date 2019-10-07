@@ -30,8 +30,8 @@
           </div>
           <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card">
             <div v-if="!!buildName(occurrence)" slot="header">
-              <span>{{ buildName(occurrence) }}</span>
               <jus-icon :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
+              <span>{{ buildName(occurrence) }}</span>
             </div>
             <div>
               <span :ref="getMessageRef(occurrence)">
@@ -198,6 +198,7 @@ export default {
         if (occurrence.description.toLowerCase().includes('pausada')) return 'pause'
         if (occurrence.description.toLowerCase().includes('perdido')) return 'lose'
         if (occurrence.description.toLowerCase().includes('reiniciou')) return 'refresh'
+        if (occurrence.description.toLowerCase().includes('retomada')) return 'start-again'
       }
       return ''
     },
@@ -266,8 +267,7 @@ export default {
       if (!this.showFullMessageList.includes(occurrence.id) &&
         occurrence.interaction &&
         occurrence.interaction.message &&
-        occurrence.interaction.message.resume &&
-        occurrence.interaction.message.resume.length >= 140) {
+        occurrence.interaction.message.resume) {
         return true
       }
       return false
@@ -376,7 +376,7 @@ export default {
         align-items: center;
       }
       span {
-        margin-right: 8px;
+        margin-left: 8px;
       }
       img {
         width: 15px;
