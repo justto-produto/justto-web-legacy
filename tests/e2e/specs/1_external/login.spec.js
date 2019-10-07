@@ -1,5 +1,7 @@
-const login = Cypress.env('empty-account-email')
-const password = Cypress.env('default-password')
+// const login = Cypress.env('empty-account-email')
+// const password = Cypress.env('default-password')
+const login = 'guilherme@justto.com.br'
+const password = '@bundanc1A'
 
 describe('Justto.App - Login', function () {
   beforeEach('Login', function () {
@@ -22,7 +24,21 @@ describe('Justto.App - Login', function () {
       .should('have.value', password)
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
+      .click()
+
+    // Verifica se entrou na seleção de workspace
+    cy.contains('Selecione uma de suas equipes de trabalho para entrar')
+
+    // Seleciona um workspace
+    cy.get('[data-testid=select-werkspace]')
+      .click()
+      .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+      .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+
+
+    // Clica no botão "Selecionar e Entrar"
+    cy.get('[data-testid=submit-workspace]')
       .click()
 
     // Valida se acesso foi feito
@@ -41,7 +57,7 @@ describe('Justto.App - Login', function () {
       .should('have.value', 'password')
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
       .click()
 
     // Valida se login falhou
@@ -61,7 +77,7 @@ describe('Justto.App - Login', function () {
       .should('have.value', '123456')
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
       .click()
 
     // Valida se login falhou
