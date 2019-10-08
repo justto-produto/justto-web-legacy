@@ -22,7 +22,7 @@ describe('Justto.App - Disputa: Notas', function () {
       .should('have.value', password)
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
       .click()
 
     // Verifica se tela acessada é a de "Gerenciamento"
@@ -47,8 +47,8 @@ describe('Justto.App - Disputa: Notas', function () {
       .contains('Nota')
       .click({ force: true })
 
-    // cy.get('[data-testid=note-empty]')
-    //   .contains('Não foram encontradas notas.')
+    cy.get('[data-testid=note-empty]')
+      .contains('Não foram encontradas notas.')
 
     function randomText (size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'

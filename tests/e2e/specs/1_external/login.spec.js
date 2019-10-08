@@ -36,7 +36,6 @@ describe('Justto.App - Login', function () {
       .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
       .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
 
-
     // Clica no botão "Selecionar e Entrar"
     cy.get('[data-testid=submit-workspace]')
       .click()

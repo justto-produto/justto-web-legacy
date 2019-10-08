@@ -22,7 +22,7 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
       .should('have.value', password)
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
       .click()
 
     // Verifica se tela acessada é a de "Gerenciamento"
@@ -78,8 +78,8 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
 
     // Preenche o Campo de 'Descrição'
     cy.get('[data-testid=description-input]')
-      .clear().type('Descrição de testes')
-      .should('have.value', 'Descrição de testes')
+      .clear().type('Teste edição descrição')
+      .should('have.value', 'Teste edição descrição')
 
     // Verifica se o botão 'Editar dados' é visível e clica
     cy.get('[data-testid=confirm-edit-data]')
@@ -90,11 +90,30 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
       .contains('As novas informações vão sobrescrever as antigas.')
       .get('.edit-case-confirm-button')
       .click({ force: true })
+  })
 
-
+  it('Verifica se valores foram alterados' , function () {
     // Verifica se mensagem de confirmação aparece
     cy.get('.el-notification.success', { timeout: 60000 })
-      .contains('Os dados foram alterados com sucesso.')
-      .should('be.visible')
+    .contains('Os dados foram alterados com sucesso.')
+    .should('be.visible')
+
+    cy.wait(1000)
+
+    cy.get('[data-testid=overview-upperrange]')
+      .contains('R$ 4.000,00')
+
+    cy.get('[data-testid=overview-counterproposal]')
+      .contains('R$ 3.500,00')
+
+    cy.get('[data-testid=overview-proposal]')
+      .contains('R$ 2.000,00')
+
+    cy.get('[data-testid=overview-expirationdate]')
+      .contains('02/10/30')
+
+    cy.get('[data-testid=overview-description]')
+      .contains('Teste edição descrição')
+
   })
 })

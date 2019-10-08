@@ -24,7 +24,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .should('have.value', password)
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
       .click()
 
     // Verifica se tela acessada é a de "Gerenciamento"
@@ -41,12 +41,16 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
       .click()
 
+    // Verifica se inicio das disputas aparecem
+    cy.get('[data-testid=occurences-start]')
+      .contains('Início das ocorrências')
+
     // 'Enviar' deve estar desabilitado
     cy.get('[data-testid=submit-email]')
       .should('be.disabled')
 
     // Seleciona primeira parte do caso
-    cy.get('[data-testid=expand-party]').eq(1)
+    cy.get('[data-testid=expand-party]').first()
       .click()
 
     // 'Enviar' deve estar desabilitado
@@ -90,21 +94,15 @@ describe('Justto.App - Disputa: Menssagens', function () {
     // Caixas de nota devem aparecer
     cy.get('[data-testid=message-box]')
       .should('be.visible')
+      .should('have.css', 'background-color', 'rgb(209, 219, 226)')
 
     // Clica em 'vusualizar email'
     cy.get('[data-testid=show-email]').last()
       .click({ force: true })
 
     // Mensagem deve ser a enviada
-    cy.contains(message)
+    cy.get('[data-testid=message-box]')
+      .contains(message)
       .should('be.visible')
-
-    // Fecha dialog
-    cy.get('[data-testid=close-button]')
-      .click()
-
-    // Dialog deve desaparecer
-    cy.get('[data-testid=email-dialog]')
-      .should('not.be.visible')
   })
 })

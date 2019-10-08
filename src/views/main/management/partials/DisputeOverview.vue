@@ -28,11 +28,11 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
-          <span>{{ dispute.disputeUpperRange | currency }}</span>
+          <span data-testid="overview-upperrange">{{ dispute.disputeUpperRange | currency }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
-          <span>
+          <span data-testid="overview-counterproposal">
             <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">
               <jus-avatar-user :name="dispute.lastCounterOfferName" size="mini" />
             </el-tooltip>
@@ -47,7 +47,7 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Valor proposto:</span>
-          <span>
+          <span data-testid="overview-proposal">
             <el-tooltip v-if="dispute.lastOfferName" :content="'Proposto por: ' + dispute.lastOfferName">
               <jus-avatar-user :name="dispute.lastOfferName" size="mini" />
             </el-tooltip>
@@ -56,11 +56,11 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
-          <span v-if="dispute.expirationDate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+          <span v-if="dispute.expirationDate" data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </div>
         <div v-if="dispute.description && dispute.description.trim()" class="dispute-overview-view__info-textarea">
           Descrição:
-          <strong :class="{ 'right': dispute.description.length < 25 }">
+          <strong :class="{ 'right': dispute.description.length < 25 }" data-testid="overview-description">
             {{ dispute.description }}
           </strong>
         </div>

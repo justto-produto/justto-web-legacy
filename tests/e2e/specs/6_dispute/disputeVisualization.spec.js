@@ -22,7 +22,7 @@ describe('Justto.App - Disputa: Visualização', function () {
       .should('have.value', password)
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
       .click()
 
     // Verifica se tela acessada é a de "Gerenciamento"
