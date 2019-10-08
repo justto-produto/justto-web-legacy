@@ -202,8 +202,8 @@ export default {
         if (occurrence.description.toLowerCase().includes('reiniciou o engajamento')) return 'refresh'
         if (occurrence.description.toLowerCase().includes('disputa retomada')) return 'start-again'
         if (occurrence.description.toLowerCase().includes('disputa marcada como favorita')) return 'star'
-        if (occurrence.description.toLowerCase().includes('disputa expirou')) return 'star'
-        if (occurrence.description.toLowerCase().includes('disputa expirada')) return 'star'
+        if (occurrence.description.toLowerCase().includes('disputa expirou')) return 'calendar-clock'
+        if (occurrence.description.toLowerCase().includes('disputa expirada')) return 'calendar-clock'
       }
       return ''
     },
