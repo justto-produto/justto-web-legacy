@@ -53,11 +53,11 @@
               <jus-icon icon="pause"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Cancelar mensagens automáticas">
+          <!-- <el-tooltip content="Cancelar mensagens automáticas">
             <el-button plain data-testid="cancel-messages" @click="disputeAction('cancel-messages')">
               <jus-icon icon="justto"/>
             </el-button>
-          </el-tooltip>
+          </el-tooltip> -->
           <el-tooltip content="Alterar Negociador">
             <el-button plain @click="editNegotiator()">
               <jus-icon icon="delegate"/>
