@@ -20,7 +20,10 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
-          <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span>
+          <span>
+            {{ $t('occurrence.type.' + dispute.status) | capitalize }}
+            <span v-if="dispute.paused">(pausado)</span>
+          </span>
         </div>
         <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Classificação:</span>
@@ -803,16 +806,13 @@ export default {
     margin-top: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     .title {
       white-space: nowrap;
       margin-right: 10px;
     }
     span:last-child {
       font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      text-align: right;
     }
     a {
       line-height: 15px;
