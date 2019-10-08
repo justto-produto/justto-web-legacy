@@ -11,7 +11,7 @@
           popper-class="jus-header-main__autocomplete"
           placeholder="Busque aqui as suas disputas">
           <template slot-scope="{ item }">
-            <jus-dispute-resume v-if="item.id" :dispute="item" :disabled="item.isMy" />
+            <jus-dispute-resume v-if="item.id" :dispute="item" :disabled="item.isMy === false" />
             <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
               Não foram encontradas disputas para esta busca.
             </span>
