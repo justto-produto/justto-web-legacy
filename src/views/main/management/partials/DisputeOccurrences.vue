@@ -19,7 +19,9 @@
           shadow="never"
           class="dispute-view-occurrences__log el-card--bg-warning">
           <el-tooltip :disabled="!buildTooltip(occurrence)" :content="buildTooltip(occurrence)">
-            <jus-icon :icon="buildIcon(occurrence)" />
+            <span :class="{ 'dispute-view-occurrences__log-canceled': occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'}" class="dispute-view-occurrences__log-icon">
+              <jus-icon :icon="buildIcon(occurrence)" />
+            </span>
           </el-tooltip>
           {{ buildLogContent(occurrence) }}
         </el-card>
@@ -194,11 +196,14 @@ export default {
         return 'justto'
       }
       if (occurrence.type === 'LOG') {
-        if (occurrence.description.toLowerCase().includes('ganha')) return 'win'
-        if (occurrence.description.toLowerCase().includes('pausada')) return 'pause'
-        if (occurrence.description.toLowerCase().includes('perdido')) return 'lose'
-        if (occurrence.description.toLowerCase().includes('reiniciou')) return 'refresh'
-        if (occurrence.description.toLowerCase().includes('retomada')) return 'start-again'
+        if (occurrence.description.toLowerCase().includes('disputa dada como ganha')) return 'win'
+        if (occurrence.description.toLowerCase().includes('disputa pausada')) return 'pause'
+        if (occurrence.description.toLowerCase().includes('disputa alterada para perdido')) return 'lose'
+        if (occurrence.description.toLowerCase().includes('reiniciou o engajamento')) return 'refresh'
+        if (occurrence.description.toLowerCase().includes('disputa retomada')) return 'start-again'
+        if (occurrence.description.toLowerCase().includes('disputa marcada como favorita')) return 'star'
+        if (occurrence.description.toLowerCase().includes('disputa expirou')) return 'star'
+        if (occurrence.description.toLowerCase().includes('disputa expirada')) return 'star'
       }
       return ''
     },
@@ -242,8 +247,12 @@ export default {
           return '<strong>Dados bancários:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
         }
         if (occurrence.interaction.properties.VALUE) {
-          let word = occurrence.interaction.type === 'NEGOTIATOR_PROPOSAL' ? 'Contraproposta ' : 'Proposta '
-          return word + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase()
+          let content = occurrence.interaction.type === 'NEGOTIATOR_PROPOSAL' ? 'Contraproposta ' : 'Proposta '
+          content = content + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase() + '.'
+          if (occurrence.interaction.properties.NOTE) {
+            content = content + '<br>Nota: ' + occurrence.interaction.properties.NOTE
+          }
+          return content
         }
       }
       if (Object.keys(this.fullMessageBank).includes(occurrence.id.toString())) {
@@ -461,6 +470,25 @@ export default {
   }
   .el-alert__description {
     font-size: 14px;
+  }
+  &__log-canceled {
+    position: relative;
+    &:before {
+      content: "x";
+      color: #fff4cc;
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      height: 9px;
+      width: 10px;
+      font-size: 9px;
+      background-color: #5a5646;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-bottom: 1px;
+    }
   }
 }
 </style>
