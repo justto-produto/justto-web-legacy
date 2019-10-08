@@ -1,7 +1,5 @@
-const localWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
-const localProfile = localStorage.getItem('jusprofile')
-const workspace = localWorkspace ? localWorkspace : {}
-const profile = localWorkspace ? localProfile : ''
+const workspace = JSON.parse(localStorage.getItem('jusworkspace')) || {}
+const profile = localStorage.getItem('jusprofile') || ''
 
 const workspaceModule = {
   state: {

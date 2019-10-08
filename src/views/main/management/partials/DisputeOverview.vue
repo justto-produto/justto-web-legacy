@@ -22,7 +22,7 @@
           <span class="title">Status:</span>
           <span>
             {{ $t('occurrence.type.' + dispute.status) | capitalize }}
-            <span v-if="dispute.paused">(pausado)</span>
+            <span v-if="dispute.paused">(pausada)</span>
           </span>
         </div>
         <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">

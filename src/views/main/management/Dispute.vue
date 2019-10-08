@@ -142,12 +142,17 @@
         <!-- MESSAGES -->
         <dispute-occurrences v-if="typingTab === '1'" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
-        <div class="dispute-view__send-message">
+        <div
+          v-loading="dispute.paused"
+          element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
+          element-loading-spinner="el-icon-video-pause"
+          class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
                   <textarea
+                    v-if="validName && !dispute.paused"
                     v-model="newMessage"
                     rows="2"
                     data-testid="input-message"
@@ -167,26 +172,22 @@
                       Configure um nome em seu perfil
                     </div>
                   </el-tooltip>
-                  <div>
-                    <div>
-                      <el-tooltip content="Enviar e-mail">
-                        <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
-                          <jus-icon :is-active="messageType === 'email'" icon="email"/>
-                        </a>
-                      </el-tooltip>
-                      <el-tooltip content="Enviar Whatsapp">
-                        <a href="#" data-testid="select-whatsapp" @click.prevent="setMessageType('whatsapp')">
-                          <jus-icon
-                            :is-active="messageType === 'whatsapp'"
-                            icon="whatsapp"/>
-                        </a>
-                      </el-tooltip>
-                      <el-tooltip content="Enviar CNA">
-                        <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
-                          <jus-icon :is-active="messageType === 'cna'" icon="email-cna"/>
-                        </a>
-                      </el-tooltip>
-                    </div>
+                  <div v-else>
+                    <el-tooltip content="Enviar e-mail">
+                      <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
+                        <jus-icon :is-active="messageType === 'email'" icon="email"/>
+                      </a>
+                    </el-tooltip>
+                    <el-tooltip content="Enviar Whatsapp">
+                      <a href="#" data-testid="select-whatsapp" @click.prevent="setMessageType('whatsapp')">
+                        <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
+                      </a>
+                    </el-tooltip>
+                    <el-tooltip content="Enviar CNA">
+                      <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
+                        <jus-icon :is-active="messageType === 'cna'" icon="email-cna"/>
+                      </a>
+                    </el-tooltip>
                   </div>
                   <el-tooltip
                     v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'"
@@ -297,7 +298,7 @@
     <!-- DADOS DO CASO -->
     <template slot="right-card">
       <div class="dispute-view__section-title">
-        <h2>Dados da disputa</h2>
+        <h2>Disputa #{{ dispute.id }}</h2>
         <!-- <el-button plain>Exportar disputa</el-button> -->
         <el-tooltip content="Excluir disputa">
           <el-button
@@ -757,6 +758,14 @@ export default {
     }
     .el-tabs__nav-wrap::after {
       background-color: transparent;
+    }
+    .el-icon-video-pause {
+      display: none;
+    }
+    .el-loading-text {
+      color: #adadad;
+      font-size: 15px;
+      font-style: italic;
     }
   }
   &__show-scheduled {

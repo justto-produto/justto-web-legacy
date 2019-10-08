@@ -2,29 +2,21 @@
   <div>
     <el-header class="jus-header-main">
       <div class="jus-header-main__search">
-        <jus-icon v-if="!disputeId" icon="search" class="el-menu__icon-search" />
+        <jus-icon icon="search" class="el-menu__icon-search" />
         <el-autocomplete
-          v-if="!disputeId"
           v-model="dispute"
           :trigger-on-focus="false"
           :fetch-suggestions="search"
           :debounce="800"
+          popper-class="jus-header-main__autocomplete"
           placeholder="Busque aqui as suas disputas">
           <template slot-scope="{ item }">
-            <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
-              <jus-dispute-resume :dispute="item" />
-            </router-link>
+            <jus-dispute-resume v-if="item.id" :dispute="item" :disabled="item.isMy" />
             <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
               Não foram encontradas disputas para esta busca.
             </span>
           </template>
         </el-autocomplete>
-        <h2 v-else class="jus-header-main__title">
-          <router-link to="/management">
-            <jus-icon icon="back"/>
-          </router-link>
-          Disputa #{{ disputeId }}
-        </h2>
       </div>
       <div class="jus-header-main__info">
         <el-dropdown trigger="click" placement="bottom-start">
@@ -74,8 +66,7 @@ export default {
   },
   data () {
     return {
-      dispute: '',
-      disputeId: ''
+      dispute: ''
     }
   },
   computed: {
@@ -94,14 +85,6 @@ export default {
     whatsappNumber () {
       return this.$store.getters.whatsappNumber
     }
-  },
-  watch: {
-    '$route.params.id': function (id) {
-      this.disputeId = id
-    }
-  },
-  beforeMount () {
-    this.disputeId = this.$route.params.id
   },
   methods: {
     toggleWhatsapDialog () {
@@ -126,7 +109,11 @@ export default {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
-          cb(response)
+          if (response.length) {
+            cb(response)
+          } else {
+            cb([{}])
+          }
         })
       }, 800)
     }
@@ -199,6 +186,9 @@ export default {
       color: #666666;
       white-space: nowrap;
     }
+  }
+  &__autocomplete li {
+    cursor: default;
   }
 }
 </style>

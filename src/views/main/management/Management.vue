@@ -194,6 +194,7 @@ export default {
       this.disputeDebounce = setTimeout(() => {
         this.loadingDisputes = true
         return this.$store.dispatch('getDisputes').catch(error => {
+          console.error(error)
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.loadingDisputes = false
