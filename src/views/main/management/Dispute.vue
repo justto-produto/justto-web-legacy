@@ -43,14 +43,19 @@
               <jus-icon icon="refresh"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Retomar">
+          <el-tooltip v-if="isPaused" content="Retomar">
             <el-button plain data-testid="resume" @click="disputeAction('resume')">
               <jus-icon icon="start-again"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Pausar">
+          <el-tooltip v-else content="Pausar">
             <el-button plain data-testid="paused" @click="disputeAction('paused')">
               <jus-icon icon="pause"/>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="Cancelar mensagens automáticas">
+            <el-button plain data-testid="cancel-messages" @click="disputeAction('cancel-messages')">
+              <jus-icon icon="justto"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Alterar Negociador">
@@ -143,7 +148,8 @@
         <dispute-occurrences v-if="typingTab === '1'" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
         <div
-          v-loading="dispute.paused"
+          :key="loadingKey"
+          v-loading="isPaused"
           element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
           element-loading-spinner="el-icon-video-pause"
           class="dispute-view__send-message">
@@ -152,7 +158,7 @@
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
                   <textarea
-                    v-if="validName && !dispute.paused"
+                    v-if="validName && !isPaused"
                     v-model="newMessage"
                     rows="2"
                     data-testid="input-message"
@@ -348,7 +354,8 @@ export default {
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
-      activeRoleId: 0
+      activeRoleId: 0,
+      loadingKey: 0
     }
   },
   computed: {
@@ -379,6 +386,10 @@ export default {
     },
     dispute () {
       return this.$store.getters.dispute
+    },
+    isPaused () {
+      this.loadingKey = this.loadingKey + 1
+      return this.dispute ? this.dispute.paused : false
     },
     isFavorite () {
       return this.dispute ? this.dispute.favorite : false
@@ -570,6 +581,7 @@ export default {
             })
           }, 2000)
         }
+        this.fetchData()
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
