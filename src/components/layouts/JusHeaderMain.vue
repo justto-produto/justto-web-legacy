@@ -2,8 +2,9 @@
   <div>
     <el-header class="jus-header-main">
       <div class="jus-header-main__search">
-        <jus-icon icon="search" class="el-menu__icon-search" />
+        <jus-icon v-if="!disputeId" icon="search" class="el-menu__icon-search" />
         <el-autocomplete
+          v-if="!disputeId"
           v-model="dispute"
           :trigger-on-focus="false"
           :fetch-suggestions="search"
@@ -17,6 +18,12 @@
             </span>
           </template>
         </el-autocomplete>
+        <h2 v-else class="jus-header-main__title">
+          <router-link to="/management">
+            <jus-icon icon="back"/>
+          </router-link>
+          Disputa #{{ disputeId }}
+        </h2>
       </div>
       <div class="jus-header-main__info">
         <el-dropdown trigger="click" placement="bottom-start">
@@ -66,7 +73,8 @@ export default {
   },
   data () {
     return {
-      dispute: ''
+      dispute: '',
+      disputeId: ''
     }
   },
   computed: {
@@ -85,6 +93,14 @@ export default {
     whatsappNumber () {
       return this.$store.getters.whatsappNumber
     }
+  },
+  watch: {
+    '$route.params.id': function (id) {
+      this.disputeId = id
+    }
+  },
+  beforeMount () {
+    this.disputeId = this.$route.params.id
   },
   methods: {
     toggleWhatsapDialog () {
