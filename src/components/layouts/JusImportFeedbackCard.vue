@@ -149,7 +149,7 @@ export default {
   },
   computed: {
     strategies () {
-      return this.$store.getters.strategyList
+      return this.$store.getters.strategyList.filter(s => !s.archived)
     },
     negotiatorsList () {
       return this.$store.state.workspaceModule.members
