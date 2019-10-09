@@ -173,7 +173,7 @@
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
                     v-if="!validName"
-                    content="Atualize o nome no seu perfil para enviar mensagens">
+                    content="Atualize sue nome em suas configurações de perfil para enviar mensagens">
                     <div class="dispute-view__disabled-text">
                       Configure um nome em seu perfil
                     </div>
@@ -195,64 +195,36 @@
                       </a>
                     </el-tooltip>
                   </div>
-                  <el-tooltip
-                    v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'"
-                    content="Whatsapp desconectado">
-                    <div>
-                      <el-button
-                        :disabled="true"
-                        type="primary"
-                        data-testid="submit-whats-disable"
-                        @click="sendMessage()">
-                        Enviar
-                      </el-button>
-                    </div>
-                  </el-tooltip>
-                  <el-tooltip
-                    v-else-if="
-                      (activeRole.invalidEmail && messageType === 'email') ||
-                        (activeRole.invalidPhone && messageType === 'whatsapp') ||
-                        (activeRole.invalidOab && messageType === 'cna')
-                    ">
+                  <el-tooltip :key="buttonKey" :disabled="!validName || invalidReceiver === false">
                     <div slot="content">
-                      <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
-                      <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não selecionado/configurado</span>
-                      <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não selecionado/configurado</span>
+                      <span v-if="!activeRole.personId">
+                        Escolha um destinatário ao lado para receber sua mensagem
+                      </span>
+                      <span v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'">
+                        Whatsapp desconectado
+                      </span>
+                      <span v-else-if="invalidReceiver">
+                        <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
+                        <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não selecionado/configurado</span>
+                        <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não selecionado/configurado</span>
+                      </span>
                     </div>
-                    <div>
+                    <span v-if="validName">
                       <el-button
-                        :disabled="true"
+                        :disabled="invalidReceiver || !activeRole.personId "
                         type="primary"
-                        data-testid="submit-whats-disable"
+                        data-testid="submit-message"
                         @click="sendMessage()">
                         Enviar
                       </el-button>
-                    </div>
-                  </el-tooltip>
-                  <div v-else-if="!validName">
-                    <el-button type="primary" @click="$router.push('/profile')">
+                    </span>
+                    <el-button
+                      v-else
+                      type="primary"
+                      @click="$router.push('/profile')">
                       Configurações
                     </el-button>
-                  </div>
-                  <div v-else>
-                    <el-tooltip>
-                      <div slot="content">
-                        <span v-if="!activeRole.personId">
-                          Escolha um destinatário ao lado para receber sua mensagem
-                        </span>
-                        <span v-else>Enviar mensagem</span>
-                      </div>
-                      <div>
-                        <el-button
-                          :disabled="!activeRole.personId"
-                          type="primary"
-                          data-testid="submit-email"
-                          @click="sendMessage()">
-                          Enviar
-                        </el-button>
-                      </div>
-                    </el-tooltip>
-                  </div>
+                  </el-tooltip>
                 </div>
               </el-card>
             </el-tab-pane>
@@ -321,6 +293,7 @@
         :loading.sync="loadingDispute"
         :dispute.sync="dispute"
         :active-role-id.sync="activeRoleId"
+        @updateActiveRole="updateActiveRole"
         data-testid="dispute-overview" />
     </template>
   </JusViewMain>
@@ -346,6 +319,7 @@ export default {
       newNote: '',
       newChatMessage: '',
       componentKey: 0,
+      buttonKey: 0,
       disputeNegotiators: [],
       negotiatorsForm: {},
       negotiatorsRules: {},
@@ -355,23 +329,12 @@ export default {
       loadingTextarea: false,
       loadingDispute: false,
       activeRoleId: 0,
-      loadingKey: 0
+      loadingKey: 0,
+      activeRole: {},
+      invalidReceiver: undefined
     }
   },
   computed: {
-    activeRole () {
-      if (this.dispute && this.dispute.disputeRoles) {
-        const role = this.dispute.disputeRoles.find(d => d.id === this.activeRoleId)
-        if (role) {
-          return Object.assign(
-            role, {
-              invalidEmail: !role.emails.length || !role.emails.filter(e => e.selected).length,
-              invalidPhone: !role.phones.length || !role.phones.filter(e => e.selected).length,
-              invalidOab: !role.oabs.length || !role.oabs.filter(e => e.selected).length })
-        }
-      }
-      return {}
-    },
     whatsappStatus () {
       return this.$store.getters.whatsappStatus
     },
@@ -424,6 +387,9 @@ export default {
       if (!value) {
         this.searchTerm = ''
       }
+    },
+    activeRoleId (activeRoleId) {
+      this.updateActiveRole(activeRoleId)
     }
   },
   created () {
@@ -442,6 +408,33 @@ export default {
     this.unsubscribeOccurrences(this.id)
   },
   methods: {
+    updateActiveRole (activeRole) {
+      if (typeof activeRole === 'number') {
+        activeRole = this.$store.getters.disputeRoles.find(role => {
+          return role.id === activeRole
+        })
+      }
+      if (activeRole) {
+        this.activeRole = Object.assign(activeRole, {
+          invalidEmail: !activeRole.emails.length || !activeRole.emails.filter(e => e.selected === true).length,
+          invalidPhone: !activeRole.phones.length || !activeRole.phones.filter(e => e.selected === true).length,
+          invalidOab: !activeRole.oabs.length || !activeRole.oabs.filter(e => e.selected === true).length })
+      } else {
+        this.activeRole = {}
+      }
+      switch (this.messageType) {
+        case 'email':
+          this.invalidReceiver = this.activeRole.invalidEmail
+          break
+          case 'whatsapp':
+          this.invalidReceiver = this.activeRole.invalidPhone
+        break
+        case 'cna':
+          this.invalidReceiver = this.activeRole.invalidOab
+          break
+      }
+      this.$forceUpdate()
+    },
     unsubscribeOccurrences (id) {
       this.$store.commit('clearDisputeOccurrences')
       this.$socket.emit('unsubscribe', {

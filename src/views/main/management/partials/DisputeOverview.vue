@@ -137,7 +137,7 @@
           <ul>
             <li v-for="phone in role.phones" :key="phone.id">
               <span>
-                <el-checkbox v-model="phone.selected" />
+                <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role)" />
                 {{ phone.number | phoneMask }}
               </span>
               <div class="dispute-overview-view__list-actions">
@@ -155,7 +155,7 @@
           <ul>
             <li v-for="email in role.emails" :key="email.id">
               <span>
-                <el-checkbox v-model="email.selected" />
+                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role)" />
                 {{ email.address }}
               </span>
               <div class="dispute-overview-view__list-actions">
@@ -173,7 +173,7 @@
           <ul>
             <li v-for="oab in role.oabs" :key="oab.id">
               <div>
-                <el-checkbox v-model="oab.selected" />
+                <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role)" />
                 {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
               </div>
               <div class="dispute-overview-view__list-actions">
@@ -530,6 +530,16 @@ export default {
     }
   },
   methods: {
+    updateDisputeRole (role) {
+      let disputeRoles = this.dispute.disputeRoles.map(dr => {
+        if (dr.id === role.id) {
+          dr = role
+        }
+        return dr
+      })
+      this.$store.commit('setDisputeRoles', disputeRoles)
+      this.$emit('updateActiveRole', role)
+    },
     roleTitleSort (title) {
       if (title) {
         let sortedArray = title.slice(0) || []
