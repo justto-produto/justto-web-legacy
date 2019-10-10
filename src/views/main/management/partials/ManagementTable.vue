@@ -4,6 +4,7 @@
     :data="disputes"
     :row-class-name="tableRowClassName"
     size="mini"
+    empty-text=" "
     height="100%"
     class="management-table el-table--disputes"
     @row-click="handleRowClick"
@@ -167,8 +168,8 @@
         </el-button>
       </template>
     </el-table-column>
-    <template v-if="!$store.state.loading" slot="empty">
-      <span>
+    <template slot="empty">
+      <span v-if="!loadingDisputes">
         <jus-icon icon="empty-screen-filter" class="management-table__empty-table" data-testid="cases-empty-icon"/>
         <h4 data-testid="cases-empty-text">
           Não foram encontradas disputas para<br>os filtros selecionados.
@@ -194,6 +195,10 @@ export default {
     selectedIds: {
       type: Array,
       default: () => []
+    },
+    loadingDisputes: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -225,7 +230,7 @@ export default {
     getLastInteraction: (i) => getLastInteraction(i),
     getInteractionIcon: (i) => getInteractionIcon(i),
     tableRowClassName ({ row, rowIndex }) {
-      if (!row.visualized) {
+      if (!row.visualized && !this.tab0) {
         return 'el-table__row--visualized-row'
       }
     },
@@ -322,6 +327,9 @@ export default {
   &__empty-table {
     margin-top: 40px;
     width: 60px;
+  }
+  .el-table__empty-block {
+    width: auto !important;
   }
 }
 </style>
