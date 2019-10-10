@@ -254,7 +254,7 @@
                 <textarea
                   v-model="newNote"
                   rows="2"
-                  data-testid="input-nota"
+                  data-testid="input-note"
                   placeholder="Escreva alguma coisa"
                   class="el-textarea__inner"
                   @keydown.enter.exact.prevent

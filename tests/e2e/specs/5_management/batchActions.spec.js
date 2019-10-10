@@ -1,5 +1,7 @@
-const login = Cypress.env('import-actions-email')
-const password = Cypress.env('default-password')
+// const login = Cypress.env('import-actions-email')
+// const password = Cypress.env('default-password')
+const login = 'lucas@justto.com.br'
+const password = '123456'
 
 describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   beforeEach(function () {
@@ -21,7 +23,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .should('have.value', password)
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
       .click()
 
     // Verifica se tela acessada é a de "Gerenciamento"
@@ -32,12 +34,8 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .contains('Todos')
       .click({ force: true })
 
-    /// / TODO: Tivemos que adiciocar um delay por causa da lentidão do sistema
-    cy.log('Aguarde carregar disputas')
-    cy.wait(10000)
-
     // Seleciona primeira disputa
-    cy.get('tbody label[role=checkbox]', { timeout: 60000 }).first()
+    cy.get('tbody label', { timeout: 60000 }).first()
       .click()
 
     // Menu de ações deve estar visivel
@@ -49,8 +47,8 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   afterEach('Notificação de Sucesso', function () {
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success', { timeout: 60000 })
-      .contains('Yay!')
       .should('be.visible')
+      .contains('Yay!')
 
     // Modal de confirmação deve adesaparecer
     cy.get('.el-message-box')
@@ -125,14 +123,5 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
-
-    // Desseleciona disputa
-    cy.get('tbody label[role=checkbox]').first()
-      .click()
-
-    // Menu de ações deve estar visivel
-    cy.get('.management-actions')
-      .should('not.have.class', 'active')
-      .should('not.be.visible')
   })
 })

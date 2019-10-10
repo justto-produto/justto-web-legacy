@@ -46,7 +46,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .contains('Início das ocorrências')
 
     // 'Enviar' deve estar desabilitado
-    cy.get('[data-testid=submit-email]')
+    cy.get('[data-testid=submit-message]')
       .should('be.disabled')
 
     // Seleciona primeira parte do caso
@@ -54,7 +54,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .click()
 
     // 'Enviar' deve estar desabilitado
-    cy.get('[data-testid=submit-disable]')
+    cy.get('[data-testid=submit-message]')
       .should('be.disabled')
 
     // Seleciona um email
@@ -62,7 +62,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .click()
 
     // 'Enviar' deve estar desabilitado
-    cy.get('[data-testid=submit-email]')
+    cy.get('[data-testid=submit-message]')
       .should('not.be.disabled')
 
     function randomText (size) {
@@ -82,7 +82,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .should('have.value', message)
 
     // Envia mensagem
-    cy.get('[data-testid=submit-email]')
+    cy.get('[data-testid=submit-message]')
       .click()
 
     // Notificação de sucesso deve aparecer

@@ -153,7 +153,7 @@
           <ul>
             <li v-for="email in role.emails.filter(e => !e.archived)" :key="email.id">
               <span>
-                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role)" data-testid="checkbox-email />
+                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role)" data-testid="checkbox-email" />
                 {{ email.address }}
               </span>
               <div class="dispute-overview-view__list-actions">
@@ -171,7 +171,7 @@
           <ul>
             <li v-for="oab in role.oabs.filter(o => !o.archived)" :key="oab.id">
               <div>
-                <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role)" data-testid="checkbox-cna />
+                <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role)" data-testid="checkbox-cna" />
                 {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
               </div>
               <div class="dispute-overview-view__list-actions">
