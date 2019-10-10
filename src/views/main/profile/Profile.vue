@@ -226,7 +226,7 @@ export default {
     },
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
-        this.teamMembers = response
+        this.teamMembers = response.filter(r => !r.archived)
       })
     },
     changeName () {

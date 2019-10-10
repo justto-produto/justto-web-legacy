@@ -98,11 +98,11 @@
           <!-- <el-col v-if="isEngagement" :span="12">
             <el-form-item label="Status" class="management-filters__switch">
               <div>
-                <div>Pausados</div>
+                <div>Pausadas</div>
                 <el-switch v-model="filters.status" active-value="PAUSED" :inactive-value="false"/>
               </div>
               <el-radio-group v-model="filters.status">
-                paused">Pausados
+                paused">Pausadas
                 active">Ativos
               </el-radio-group>
             </el-form-item>
@@ -126,12 +126,24 @@
           </el-col>
           <!-- FAVORITOS -->
           <el-col :span="12">
-            <el-form-item label="Exibir somente:" class="management-filters__switch">
+            <el-form-item label="Exibir ocorrências:" class="management-filters__switch">
               <div>
                 <div>
-                  <jus-icon icon="golden-star" /> Somente favoritas
+                  <jus-icon icon="star" /> Somente favoritas
                 </div>
                 <el-switch v-model="filters.onlyFavorite" data-testid="filters-favorite" />
+              </div>
+              <div>
+                <div>
+                  <jus-icon icon="pause" /> Somente pausadas
+                </div>
+                <el-switch v-model="filters.onlyPaused" data-testid="filters-favorite" />
+              </div>
+              <div>
+                <div>
+                  <jus-icon icon="doc-clock" /> Somente arquivadas
+                </div>
+                <el-switch v-model="filters.showArchiveds" data-testid="filters-favorite" />
               </div>
             </el-form-item>
           </el-col>
@@ -334,6 +346,8 @@ export default {
       this.changeDealDate()
       this.changeExpirationDate()
       this.filters.onlyFavorite = false
+      this.filters.onlyPaused = false
+      this.filters.showArchiveds = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
@@ -384,12 +398,16 @@ export default {
     width: 100%;
   }
   &__switch {
-    .el-form-item__content > div {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      img {
-        vertical-align: text-top;
+    margin-bottom: 18px;
+    .el-form-item__content {
+      line-height: 22px;
+      > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        img {
+          width: 14px;
+        }
       }
     }
   }

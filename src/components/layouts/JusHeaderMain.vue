@@ -9,11 +9,10 @@
           :trigger-on-focus="false"
           :fetch-suggestions="search"
           :debounce="800"
+          popper-class="jus-header-main__autocomplete"
           placeholder="Busque aqui as suas disputas">
           <template slot-scope="{ item }">
-            <router-link v-if="item.id" :to="'/management/dispute/' + item.id">
-              <jus-dispute-resume :dispute="item" />
-            </router-link>
+            <jus-dispute-resume v-if="item.id" :dispute="item" :disabled="item.isMy === false" />
             <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
               Não foram encontradas disputas para esta busca.
             </span>
@@ -126,7 +125,11 @@ export default {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
-          cb(response)
+          if (response.length) {
+            cb(response)
+          } else {
+            cb([{}])
+          }
         })
       }, 800)
     }
@@ -199,6 +202,9 @@ export default {
       color: #666666;
       white-space: nowrap;
     }
+  }
+  &__autocomplete li {
+    cursor: default;
   }
 }
 </style>

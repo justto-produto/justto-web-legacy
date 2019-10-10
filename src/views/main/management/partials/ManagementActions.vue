@@ -89,9 +89,9 @@ export default {
       } else if (action === 'unsettled') {
         trackTitle = 'casos perdidos'
       } else if (action === 'PAUSED') {
-        trackTitle = 'casos pausados'
+        trackTitle = 'disputas pausadas'
       } else if (action === 'RESUME') {
-        trackTitle = 'casos despausados'
+        trackTitle = 'disputas retomadas'
       } else if (action === 'DELETE') {
         trackTitle = 'casos deletados'
       } else if (action === 'RESTART_ENGAGEMENT') {

@@ -1,11 +1,14 @@
 <template lang="html">
-  <div class="jus-dispute-resume">
+  <div :class="{ 'jus-dispute-resume__disabled': disabled }" class="jus-dispute-resume" @click="click">
     <h4 data-testid="dispute-title">
       Disputa #{{ dispute.id }} |
       Campanha: {{ dispute.campaignName | capitalize }} |
       Processo: {{ dispute.code }}
+      <div v-if="disabled">
+        Você não tem permissão para acessar esta disputa
+      </div>
     </h4>
-    <el-row data-testid="dipute-info">
+    <el-row :gutter="20" data-testid="dipute-info">
       <el-col :span="8">
         <div>Estratégia: {{ dispute.strategyName }}</div>
         <div>Status: <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span></div>
@@ -48,12 +51,19 @@ export default {
     dispute: {
       type: Object,
       default: () => {}
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     getLastInteraction: (i) => getLastInteraction(i),
     getClaimants (disputeRoles, party, role) {
       return getRoles(disputeRoles, party, role)
+    },
+    click () {
+      if (!this.disabled) this.$router.push('/management/dispute/' + this.dispute.id)
     }
   }
 }
@@ -64,6 +74,7 @@ export default {
   line-height: 20px;
   margin: 10px 20px;
   white-space: initial;
+  cursor: pointer;
   h4 {
     color: #9461f7;
     margin: 0;
@@ -72,6 +83,13 @@ export default {
   color: #adadad;
   span {
     text-transform: capitalize;
+  }
+  &__disabled {
+    cursor: default;
+    opacity: 0.3;
+    h4 > div {
+      color: red;
+    }
   }
 }
 </style>

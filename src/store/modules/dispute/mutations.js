@@ -9,6 +9,9 @@ const disputeMutations = {
   setDispute (state, disputeVM) {
     state.dispute = disputeVM
   },
+  setDisputeRoles (state, disputeRoles) {
+    state.dispute.disputeRoles = disputeRoles
+  },
   clearDispute (state) {
     state.dispute = { id: 0 }
   },

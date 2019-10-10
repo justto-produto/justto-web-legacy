@@ -43,16 +43,21 @@
               <jus-icon icon="refresh"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Retomar">
+          <el-tooltip v-if="isPaused" content="Retomar">
             <el-button plain data-testid="resume" @click="disputeAction('resume')">
               <jus-icon icon="start-again"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Pausar">
+          <el-tooltip v-else content="Pausar">
             <el-button plain data-testid="paused" @click="disputeAction('paused')">
               <jus-icon icon="pause"/>
             </el-button>
           </el-tooltip>
+          <!-- <el-tooltip content="Cancelar mensagens automáticas">
+            <el-button plain data-testid="cancel-messages" @click="disputeAction('cancel-messages')">
+              <jus-icon icon="justto"/>
+            </el-button>
+          </el-tooltip> -->
           <el-tooltip content="Alterar Negociador">
             <el-button plain @click="editNegotiator()">
               <jus-icon icon="delegate"/>
@@ -142,12 +147,18 @@
         <!-- MESSAGES -->
         <dispute-occurrences v-if="typingTab === '1'" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
-        <div class="dispute-view__send-message">
+        <div
+          :key="loadingKey"
+          v-loading="isPaused"
+          element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
+          element-loading-spinner="el-icon-video-pause"
+          class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <el-collapse-transition>
                   <textarea
+                    v-if="validName && !isPaused"
                     v-model="newMessage"
                     rows="2"
                     data-testid="input-message"
@@ -162,90 +173,58 @@
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
                     v-if="!validName"
-                    content="Atualize o nome no seu perfil para enviar mensagens">
+                    content="Atualize sue nome em suas configurações de perfil para enviar mensagens">
                     <div class="dispute-view__disabled-text">
                       Configure um nome em seu perfil
                     </div>
                   </el-tooltip>
-                  <div>
-                    <div>
-                      <el-tooltip content="Enviar e-mail">
-                        <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
-                          <jus-icon :is-active="messageType === 'email'" icon="email"/>
-                        </a>
-                      </el-tooltip>
-                      <el-tooltip content="Enviar Whatsapp">
-                        <a href="#" data-testid="select-whatsapp" @click.prevent="setMessageType('whatsapp')">
-                          <jus-icon
-                            :is-active="messageType === 'whatsapp'"
-                            icon="whatsapp"/>
-                        </a>
-                      </el-tooltip>
-                      <el-tooltip content="Enviar CNA">
-                        <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
-                          <jus-icon :is-active="messageType === 'cna'" icon="email-cna"/>
-                        </a>
-                      </el-tooltip>
-                    </div>
-                  </div>
-                  <el-tooltip
-                    v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'"
-                    content="Whatsapp desconectado">
-                    <div>
-                      <el-button
-                        :disabled="true"
-                        type="primary"
-                        data-testid="submit-whats-disable"
-                        @click="sendMessage()">
-                        Enviar
-                      </el-button>
-                    </div>
-                  </el-tooltip>
-                  <el-tooltip
-                    v-else-if="
-                      (activeRole.invalidEmail && messageType === 'email') ||
-                        (activeRole.invalidPhone && messageType === 'whatsapp') ||
-                        (activeRole.invalidOab && messageType === 'cna')
-                    ">
-                    <div slot="content">
-                      <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
-                      <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não selecionado/configurado</span>
-                      <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não selecionado/configurado</span>
-                    </div>
-                    <div>
-                      <el-button
-                        :disabled="true"
-                        type="primary"
-                        data-testid="submit-disable"
-                        @click="sendMessage()">
-                        Enviar
-                      </el-button>
-                    </div>
-                  </el-tooltip>
-                  <div v-else-if="!validName">
-                    <el-button type="primary" @click="$router.push('/profile')">
-                      Configurações
-                    </el-button>
-                  </div>
                   <div v-else>
-                    <el-tooltip>
-                      <div slot="content">
-                        <span v-if="!activeRole.personId" data-testid="unselected-party">
-                          Escolha um destinatário ao lado para receber sua mensagem
-                        </span>
-                        <span v-else>Enviar mensagem</span>
-                      </div>
-                      <div>
-                        <el-button
-                          :disabled="!activeRole.personId"
-                          type="primary"
-                          data-testid="submit-email"
-                          @click="sendMessage()">
-                          Enviar
-                        </el-button>
-                      </div>
+                    <el-tooltip content="Enviar e-mail">
+                      <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
+                        <jus-icon :is-active="messageType === 'email'" icon="email"/>
+                      </a>
+                    </el-tooltip>
+                    <el-tooltip content="Enviar Whatsapp">
+                      <a href="#" data-testid="select-whatsapp" @click.prevent="setMessageType('whatsapp')">
+                        <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
+                      </a>
+                    </el-tooltip>
+                    <el-tooltip content="Enviar CNA">
+                      <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
+                        <jus-icon :is-active="messageType === 'cna'" icon="email-cna"/>
+                      </a>
                     </el-tooltip>
                   </div>
+                  <el-tooltip :key="buttonKey" :disabled="!validName || invalidReceiver === false">
+                    <div slot="content">
+                      <span v-if="!activeRole.personId">
+                        Escolha um destinatário ao lado para receber sua mensagem
+                      </span>
+                      <span v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'">
+                        Whatsapp desconectado
+                      </span>
+                      <span v-else-if="invalidReceiver">
+                        <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
+                        <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não selecionado/configurado</span>
+                        <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não selecionado/configurado</span>
+                      </span>
+                    </div>
+                    <span v-if="validName">
+                      <el-button
+                        :disabled="invalidReceiver || !activeRole.personId "
+                        type="primary"
+                        data-testid="submit-message"
+                        @click="sendMessage()">
+                        Enviar
+                      </el-button>
+                    </span>
+                    <el-button
+                      v-else
+                      type="primary"
+                      @click="$router.push('/profile')">
+                      Configurações
+                    </el-button>
+                  </el-tooltip>
                 </div>
               </el-card>
             </el-tab-pane>
@@ -297,8 +276,8 @@
     <!-- DADOS DO CASO -->
     <template slot="right-card">
       <div class="dispute-view__section-title">
+        <!-- <h2>Disputa #{{ dispute.id }}</h2> -->
         <h2>Dados da disputa</h2>
-        <!-- <el-button plain>Exportar disputa</el-button> -->
         <el-tooltip content="Excluir disputa">
           <el-button
             plain
@@ -314,6 +293,7 @@
         :loading.sync="loadingDispute"
         :dispute.sync="dispute"
         :active-role-id.sync="activeRoleId"
+        @updateActiveRole="updateActiveRole"
         data-testid="dispute-overview" />
     </template>
   </JusViewMain>
@@ -339,6 +319,7 @@ export default {
       newNote: '',
       newChatMessage: '',
       componentKey: 0,
+      buttonKey: 0,
       disputeNegotiators: [],
       negotiatorsForm: {},
       negotiatorsRules: {},
@@ -347,23 +328,13 @@ export default {
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
-      activeRoleId: 0
+      activeRoleId: 0,
+      loadingKey: 0,
+      activeRole: {},
+      invalidReceiver: undefined
     }
   },
   computed: {
-    activeRole () {
-      if (this.dispute && this.dispute.disputeRoles) {
-        const role = this.dispute.disputeRoles.find(d => d.id === this.activeRoleId)
-        if (role) {
-          return Object.assign(
-            role, {
-              invalidEmail: !role.emails.length || !role.emails.filter(e => e.selected).length,
-              invalidPhone: !role.phones.length || !role.phones.filter(e => e.selected).length,
-              invalidOab: !role.oabs.length || !role.oabs.filter(e => e.selected).length })
-        }
-      }
-      return {}
-    },
     whatsappStatus () {
       return this.$store.getters.whatsappStatus
     },
@@ -378,6 +349,10 @@ export default {
     },
     dispute () {
       return this.$store.getters.dispute
+    },
+    isPaused () {
+      this.loadingKey = this.loadingKey + 1
+      return this.dispute ? this.dispute.paused : false
     },
     isFavorite () {
       return this.dispute ? this.dispute.favorite : false
@@ -412,6 +387,9 @@ export default {
       if (!value) {
         this.searchTerm = ''
       }
+    },
+    activeRoleId (activeRoleId) {
+      this.updateActiveRole(activeRoleId)
     }
   },
   created () {
@@ -430,6 +408,33 @@ export default {
     this.unsubscribeOccurrences(this.id)
   },
   methods: {
+    updateActiveRole (activeRole) {
+      if (typeof activeRole === 'number') {
+        activeRole = this.$store.getters.disputeRoles.find(role => {
+          return role.id === activeRole
+        })
+      }
+      if (activeRole) {
+        this.activeRole = Object.assign(activeRole, {
+          invalidEmail: !activeRole.emails.length || !activeRole.emails.filter(e => e.selected === true).length,
+          invalidPhone: !activeRole.phones.length || !activeRole.phones.filter(e => e.selected === true).length,
+          invalidOab: !activeRole.oabs.length || !activeRole.oabs.filter(e => e.selected === true).length })
+      } else {
+        this.activeRole = {}
+      }
+      switch (this.messageType) {
+        case 'email':
+          this.invalidReceiver = this.activeRole.invalidEmail
+          break
+          case 'whatsapp':
+          this.invalidReceiver = this.activeRole.invalidPhone
+        break
+        case 'cna':
+          this.invalidReceiver = this.activeRole.invalidOab
+          break
+      }
+      this.$forceUpdate()
+    },
     unsubscribeOccurrences (id) {
       this.$store.commit('clearDisputeOccurrences')
       this.$socket.emit('unsubscribe', {
@@ -569,6 +574,7 @@ export default {
             })
           }, 2000)
         }
+        this.fetchData()
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
@@ -757,6 +763,14 @@ export default {
     }
     .el-tabs__nav-wrap::after {
       background-color: transparent;
+    }
+    .el-icon-video-pause {
+      display: none;
+    }
+    .el-loading-text {
+      color: #adadad;
+      font-size: 15px;
+      font-style: italic;
     }
   }
   &__show-scheduled {

@@ -50,7 +50,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="activeTab !== '3'"
+      v-if="tab0 || tab1 || tab2"
       :sortable="false"
       label="Alçada máxima"
       align="center"
@@ -61,7 +61,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="activeTab === '0'"
+      v-if="tab0"
       :sortable="false"
       label="Valor proposto"
       prop="lastOfferValue"
@@ -72,7 +72,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="['1', '2'].includes(activeTab)"
+      v-if="tab1 || tab2"
       :sortable="false"
       prop="lastInteractionDate"
       label="Última interação"
@@ -91,7 +91,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="activeTab === '1'"
+      v-if="tab1"
       :sortable="false"
       label="Contraproposta"
       align="center"
@@ -102,7 +102,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="['0', '1', '3'].includes(activeTab)"
+      v-if="tab0 || tab1 || tab3"
       :sortable="false"
       prop="expirationDate"
       label="Fim da negociação"
@@ -119,7 +119,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="activeTab === '2'"
+      v-if="tab2"
       :sortable="false"
       label="Valor do acordo"
       prop="disputeDealValue"
@@ -128,7 +128,7 @@
       <template slot-scope="scope">{{ scope.row.disputeDealValue | currency }}</template>
     </el-table-column>
     <el-table-column
-      v-if="activeTab === '2'"
+      v-if="tab2"
       :sortable="false"
       prop="disputeDealDate"
       label="Data do acordo"
@@ -139,7 +139,7 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="activeTab === '3'"
+      v-if="tab3"
       :sortable="false"
       label="Status"
       prop="status"
@@ -147,6 +147,8 @@
       min-width="90px">
       <template slot-scope="scope">
         {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
+        <span v-if="scope.row.paused">(pausada)</span>
+        <span v-if="scope.row.archived">(arquivada)</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -207,6 +209,18 @@ export default {
     },
     disputes () {
       return this.$store.getters.disputes
+    },
+    tab0 () {
+      return this.activeTab === '0'
+    },
+    tab1 () {
+      return this.activeTab === '1'
+    },
+    tab2 () {
+      return this.activeTab === '2'
+    },
+    tab3 () {
+      return this.activeTab === '3'
     }
   },
   methods: {

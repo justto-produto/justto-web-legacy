@@ -85,13 +85,13 @@ export default {
   },
   beforeCreate () {
     this.$store.commit('clearDisputeQuery')
-    this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
-      if (whatsapp.status === 'OFFLINE') {
-        this.$store.dispatch('whatsappStart')
-      } else {
-        this.$store.commit('SOCKET_refresh', whatsapp)
-      }
-    })
+    // this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
+    //   if (whatsapp.status === 'OFFLINE') {
+    //     this.$store.dispatch('whatsappStart')
+    //   } else {
+    //     this.$store.commit('SOCKET_refresh', whatsapp)
+    //   }
+    // })
   },
   beforeMount () {
     this.subscribe()
@@ -110,7 +110,7 @@ export default {
       if (this.workspace) {
         this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
         this.subscriptions.length = 0
-        this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
+        // this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/whatsapp' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/alert' })
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute/summary' })
