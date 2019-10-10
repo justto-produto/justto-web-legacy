@@ -112,7 +112,6 @@
           <span class="title">CPF/CNPJ:</span>
           <span>{{ role.documentNumber | cpfCnpjMask }}</span>
         </div>
-
         <div v-show="role.roles.length == 1" class="dispute-overview-view__info-line">
           Função:
           <span>{{ buildTitle(role.party, role.roles[0]) }}</span>
@@ -129,13 +128,12 @@
             </li>
           </ul>
         </div>
-
         <div v-show="role.phones.length" class="dispute-overview-view__info-line">
           Telefone(s):
         </div>
         <div v-show="role.phones.length" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="phone in role.phones" :key="phone.id">
+            <li v-for="phone in role.phones.filter(p => !p.archived)" :key="phone.id">
               <span>
                 <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role)" />
                 {{ phone.number | phoneMask }}
@@ -153,7 +151,7 @@
         </div>
         <div v-show="role.emails.length" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="email in role.emails" :key="email.id">
+            <li v-for="email in role.emails.filter(e => !e.archived)" :key="email.id">
               <span>
                 <el-checkbox v-model="email.selected" @change="updateDisputeRole(role)" />
                 {{ email.address }}
@@ -171,7 +169,7 @@
         </div>
         <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="oab in role.oabs" :key="oab.id">
+            <li v-for="oab in role.oabs.filter(o => !o.archived)" :key="oab.id">
               <div>
                 <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role)" />
                 {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
@@ -505,6 +503,7 @@ export default {
         let sortedArray = this.dispute.disputeRoles.slice(0) || []
         sortedArray = sortedArray.filter(dr => {
           if (!dr.main && dr.party === 'RESPONDENT') return false
+          if (dr.archived) return false
           return true
         })
         return sortedArray.sort((a, b) => {
@@ -657,6 +656,9 @@ export default {
       this.originalRole = JSON.parse(JSON.stringify(role))
       this.roleForm.title = this.buildTitle(role.party, role.roles[0])
       this.roleForm.documentNumber = this.$options.filters.cpfCnpjMask(this.roleForm.documentNumber)
+      this.roleForm.emails = this.roleForm.emails.filter(f => !f.archived)
+      this.roleForm.oabs = this.roleForm.oabs.filter(f => !f.archived)
+      this.roleForm.phones = this.roleForm.phones.filter(f => !f.archived)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },
     editRole () {
