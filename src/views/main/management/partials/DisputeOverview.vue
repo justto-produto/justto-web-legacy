@@ -788,7 +788,7 @@ export default {
         cancelButtonClass: 'is-plain'
       }).then(() => {
         this.$store.dispatch('removeRole', {
-          disputeId: role.id,
+          disputeId: this.dispute.id,
           roleId: role.id
         }).then(response => {
           this.$jusNotification({
