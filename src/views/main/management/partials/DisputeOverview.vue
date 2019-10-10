@@ -80,8 +80,8 @@
       style="margin: 20px 0;"
       @change="handleChange">
       <el-collapse-item
-        v-for="role in disputeRolesSort"
-        :key="role.personId"
+        v-for="(role, index) in disputeRolesSort"
+        :key="role.personId + index"
         :name="role.id"
         data-testid="expand-party">
         <template slot="title">

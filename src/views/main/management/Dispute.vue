@@ -35,14 +35,6 @@
               <jus-icon icon="lose"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Reiniciar engajamento">
-            <el-button
-              plain
-              data-testid="restart-engagement"
-              @click="disputeAction('restart-engagement')">
-              <jus-icon icon="refresh"/>
-            </el-button>
-          </el-tooltip>
           <el-tooltip v-if="isPaused" content="Retomar">
             <el-button plain data-testid="resume" @click="disputeAction('resume')">
               <jus-icon icon="start-again"/>
@@ -53,9 +45,17 @@
               <jus-icon icon="pause"/>
             </el-button>
           </el-tooltip>
+          <el-tooltip content="Reiniciar engajamento">
+            <el-button
+              plain
+              data-testid="restart-engagement"
+              @click="disputeAction('restart-engagement')">
+              <jus-icon icon="refresh"/>
+            </el-button>
+          </el-tooltip>
           <el-tooltip content="Cancelar mensagens automáticas">
             <el-button plain data-testid="cancel-messages" @click="disputeAction('cancel-messages')">
-              <jus-icon icon="clock-alert"/>
+              <jus-icon icon="cancel-messages"/>
             </el-button>
           </el-tooltip>
           <el-tooltip content="Alterar Negociador">
