@@ -139,12 +139,6 @@
                 </div>
                 <el-switch v-model="filters.onlyPaused" data-testid="filters-favorite" />
               </div>
-              <div>
-                <div>
-                  <jus-icon icon="doc-clock" /> Somente arquivadas
-                </div>
-                <el-switch v-model="filters.showArchiveds" data-testid="filters-favorite" />
-              </div>
             </el-form-item>
           </el-col>
           <!-- ESTADO -->
@@ -347,7 +341,6 @@ export default {
       this.changeExpirationDate()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
-      this.filters.showArchiveds = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
