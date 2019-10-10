@@ -2,13 +2,16 @@
   <el-dialog :visible.sync="dialog" class="el-dialog--lg jus-engagements-dialog">
     <template slot="title">
       <h2>Estratégia de engajamento das partes</h2>
-      <p>
+      <p v-if="!isManual">
         Abaixo, você encontra as mensagens a serem enviadas para às partes das disputas contidas
         nesta Campanha. Com os dados da sua disputas, nosso sistema escolhe a melhor estratégia de
         engajamento para as suas disputas.
       </p>
     </template>
-    <el-collapse v-loading="$store.state.loading" class="jus-engagements-dialog__engagement el-collapse--bordered">
+    <p v-if="isManual">
+      Essa estratégia não possuí mensagens pré-definidas e não envia mensagens automáticas; Todas as mensagens devem ser enviadas manualmente pelo negociador usando a plataforma Justto 3DR.
+    </p>
+    <el-collapse v-else v-loading="$store.state.loading" class="jus-engagements-dialog__engagement el-collapse--bordered">
       <div v-for="step in strategyEngagements" :key="step.id">
         <div v-if="step.communicationType != 'DELAY'" class="jus-engagements-dialog__step">Envio</div>
         <el-collapse-item v-if="step.communicationType !== 'DELAY'">
@@ -39,6 +42,10 @@ export default {
     strategyId: {
       type: Number,
       default: 0
+    },
+    isManual: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -51,7 +58,7 @@ export default {
     dialogVisible (value) {
       if (value) {
         this.dialog = value
-        this.getEngagements()
+        if (!this.isManual) this.getEngagements()
       }
     },
     dialog (value) {
@@ -100,7 +107,6 @@ export default {
   }
   &__engagement {
     min-height: 100px;
-    padding-bottom: 40px;
     .el-collapse-item__header {
       height: 100%;
       line-height: inherit;
@@ -136,6 +142,9 @@ export default {
     :first-child {
       margin-right: 10px;
     }
+  }
+  .el-dialog__body {
+    padding: 10px 20px 40px;
   }
 }
 </style>

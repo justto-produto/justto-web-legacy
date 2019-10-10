@@ -105,6 +105,7 @@
     <jus-engagements-dialog
       :dialog-visible.sync="dialogVisible"
       :strategy-id="strategy.id"
+      :is-manual="strategy.triggerType === 'MANUAL'"
     />
   </div>
 </template>

@@ -14,7 +14,7 @@
           <span class="title">Campanha:</span>
           <span>{{ dispute.campaign.name }}</span>
         </div>
-        <div v-if="dispute.campaign" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.campaign && dispute.campaign.strategy" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
           <span>{{ dispute.campaign.strategy }}</span>
         </div>
