@@ -84,7 +84,8 @@
     "PAUSED": "pausar",
     "RESUME": "retomar",
     "CHANGE_NEGOTIATOR": "altera negociador",
-    "CHANGE_CAMPAIGN": "alterar campanha"
+    "CHANGE_CAMPAIGN": "alterar campanha",
+    "CANCEL-MESSAGES": "cancelar mensagens agendadas"
   },
   "fields": {
     "claimantParty": "Parte contrária",
