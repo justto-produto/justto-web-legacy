@@ -147,7 +147,6 @@
       <template slot-scope="scope">
         {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
         <span v-if="scope.row.paused">(pausada)</span>
-        <span v-if="scope.row.archived">(arquivada)</span>
       </template>
     </el-table-column>
     <el-table-column

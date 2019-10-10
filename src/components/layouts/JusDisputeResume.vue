@@ -5,7 +5,12 @@
       Campanha: {{ dispute.campaignName | capitalize }} |
       Processo: {{ dispute.code }}
       <div v-if="disabled">
-        Você não tem permissão para acessar esta disputa
+        <span v-if="archived">
+          Disputa excluída
+        </span>
+        <span v-else>
+          Você não tem permissão para acessar esta disputa
+        </span>
       </div>
     </h4>
     <el-row :gutter="20" data-testid="dipute-info">
@@ -51,10 +56,14 @@ export default {
     dispute: {
       type: Object,
       default: () => {}
+    }
+  },
+  computed: {
+    disabled () {
+      return this.dispute.isMy === false || this.dispute.archived === true
     },
-    disabled: {
-      type: Boolean,
-      default: false
+    archived () {
+      return this.dispute.archived
     }
   },
   methods: {
@@ -81,7 +90,7 @@ export default {
     margin-bottom: 5px;
   }
   color: #adadad;
-  span {
+  > div span {
     text-transform: capitalize;
   }
   &__disabled {

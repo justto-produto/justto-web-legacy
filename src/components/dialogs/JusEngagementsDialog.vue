@@ -11,7 +11,7 @@
     <p v-if="isManual">
       Essa estratégia não possuí mensagens pré-definidas e não envia mensagens automáticas; Todas as mensagens devem ser enviadas manualmente pelo negociador usando a plataforma Justto 3DR.
     </p>
-    <el-collapse v-else v-loading="$store.state.loading" class="jus-engagements-dialog__engagement el-collapse--bordered">
+    <el-collapse v-loading="$store.state.loading" v-else class="jus-engagements-dialog__engagement el-collapse--bordered">
       <div v-for="step in strategyEngagements" :key="step.id">
         <div v-if="step.communicationType != 'DELAY'" class="jus-engagements-dialog__step">Envio</div>
         <el-collapse-item v-if="step.communicationType !== 'DELAY'">

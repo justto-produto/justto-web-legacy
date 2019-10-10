@@ -148,8 +148,8 @@
         <dispute-occurrences v-if="typingTab === '1'" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
         <div
-          :key="loadingKey"
           v-loading="isPaused"
+          :key="loadingKey"
           element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
           element-loading-spinner="el-icon-video-pause"
           class="dispute-view__send-message">
@@ -293,8 +293,8 @@
         :loading.sync="loadingDispute"
         :dispute.sync="dispute"
         :active-role-id.sync="activeRoleId"
-        @updateActiveRole="updateActiveRole"
-        data-testid="dispute-overview" />
+        data-testid="dispute-overview"
+        @updateActiveRole="updateActiveRole" />
     </template>
   </JusViewMain>
 </template>
@@ -351,7 +351,6 @@ export default {
       return this.$store.getters.dispute
     },
     isPaused () {
-      this.loadingKey = this.loadingKey + 1
       return this.dispute ? this.dispute.paused : false
     },
     isFavorite () {
@@ -390,6 +389,9 @@ export default {
     },
     activeRoleId (activeRoleId) {
       this.updateActiveRole(activeRoleId)
+    },
+    isPaused () {
+      this.loadingKey = this.loadingKey + 1
     }
   },
   created () {
@@ -426,9 +428,9 @@ export default {
         case 'email':
           this.invalidReceiver = this.activeRole.invalidEmail
           break
-          case 'whatsapp':
+        case 'whatsapp':
           this.invalidReceiver = this.activeRole.invalidPhone
-        break
+          break
         case 'cna':
           this.invalidReceiver = this.activeRole.invalidOab
           break
@@ -493,8 +495,12 @@ export default {
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
       this.$store.dispatch('getDispute', this.id)
+        .then(dispute => {
+          if (dispute.archived) this.$router.push('/management')
+        })
         .catch(() => {
           this.$jusNotification({ type: 'error' })
+          this.$router.push('/management')
         }).finally(() => {
           setTimeout(() => {
             this.loadingDispute = false
