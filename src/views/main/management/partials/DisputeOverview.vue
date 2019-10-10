@@ -170,7 +170,7 @@
           <ul>
             <li v-for="oab in role.oabs" :key="oab.id">
               <div>
-                <el-checkbox v-model="oab.selected" />
+                <el-checkbox v-model="oab.selected" data-testid="checkbox-cna" />
                 {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
               </div>
               <div class="dispute-overview-view__list-actions">

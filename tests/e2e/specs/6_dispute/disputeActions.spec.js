@@ -1,5 +1,7 @@
-const login = Cypress.env('import-actions-email')
-const password = Cypress.env('default-password')
+// const login = Cypress.env('import-actions-email')
+// const password = Cypress.env('default-password')
+const login = 'lucas@justto.com.br'
+const password = '123456'
 
 describe('Justto.App - Disputa: Ações', function () {
   beforeEach('Login', function () {
@@ -20,7 +22,7 @@ describe('Justto.App - Disputa: Ações', function () {
       .should('have.value', password)
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
       .click()
 
     // Verifica se tela acessada é a de "Gerenciamento"
@@ -37,19 +39,7 @@ describe('Justto.App - Disputa: Ações', function () {
     cy.url().should('include', '/#/management/dispute/')
   })
 
-  afterEach('Notificação de Sucesso', function () {
-    // Notificação de sucesso deve aparecer
-    cy.get('.el-notification.success', { timeout: 60000 })
-      .contains('Ação realizada com sucesso.')
-      .should('be.visible')
-
-    // Modal de confirmação deve desaparecer
-    cy.get('.el-message-box')
-      .should('not.be.visible')
-  })
-
   it('Ação: Pausar', function () {
-    cy.wait(10000)
     // Clica em Pausar
     cy.get('[data-testid=paused]')
       .click()
@@ -61,6 +51,15 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
+
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Ação pausar realizada com sucesso.')
+      .should('be.visible')
+
+    // Modal de confirmação deve desaparecer
+    cy.get('.el-message-box')
+      .should('not.be.visible')
   })
 
   it('Ação: Retomar', function () {
@@ -75,6 +74,15 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
+
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Ação retomar realizada com sucesso.')
+      .should('be.visible')
+
+    // Modal de confirmação deve desaparecer
+    cy.get('.el-message-box')
+      .should('not.be.visible')
   })
 
   it('Ação: Ganhar', function () {
@@ -90,12 +98,32 @@ describe('Justto.App - Disputa: Ações', function () {
     cy.get('.confirm-action-btn')
       .click()
 
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Ação ganhar realizada com sucesso.')
+      .should('be.visible')
+
+    // Modal de confirmação deve desaparecer
+    cy.get('.el-message-box')
+      .should('not.be.visible')
+
     // Botão deve estar desabilitado
     cy.get('[data-testid=settled]')
       .should('be.disabled')
   })
 
   it('Ação: Favoritar', function () {
+    // Favorita/disfavorita caso
+    cy.get('[data-testid=favorite]')
+      .click()
+
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Ação favoritar realizada com sucesso.')
+      .should('be.visible')
+
+    cy.wait(5000)
+
     // Favorita/disfavorita caso
     cy.get('[data-testid=favorite]')
       .click()
@@ -107,6 +135,15 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
+
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Ação desfavoritar realizada com sucesso.')
+      .should('be.visible')
+
+    // Modal de confirmação deve desaparecer
+    cy.get('.el-message-box')
+      .should('not.be.visible')
   })
 
   it('Ação: Reiniciar Engajamento', function () {
@@ -121,5 +158,14 @@ describe('Justto.App - Disputa: Ações', function () {
     // Confirma a ação
     cy.get('.confirm-action-btn')
       .click()
+
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Ação reiniciar engajamento realizada com sucesso.')
+      .should('be.visible')
+
+    // Modal de confirmação deve desaparecer
+    cy.get('.el-message-box')
+      .should('not.be.visible')
   })
 })

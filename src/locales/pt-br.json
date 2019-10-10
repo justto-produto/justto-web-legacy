@@ -83,6 +83,8 @@
     "DELETE": "excluir",
     "PAUSED": "pausar",
     "RESUME": "retomar",
+    "FAVORITE": "favoritar",
+    "DISFAVOR": "desfavoritar",
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha"
   },

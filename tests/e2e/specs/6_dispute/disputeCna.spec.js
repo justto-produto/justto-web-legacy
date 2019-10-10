@@ -24,7 +24,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .should('have.value', password)
 
     // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
+    cy.get('[data-testid=submit-login]')
       .click()
 
     // Verifica se tela acessada é a de "Gerenciamento"
@@ -36,37 +36,34 @@ describe('Justto.App - Disputa: Menssagens', function () {
       .click({ force: true })
   })
 
-  it('Envio de CNA: Parte não selecionada', function () {
+  it('Envia de Email: Sucesso', function () {
     // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
       .click()
 
-    // Caixa de texto deve estar desabilitada, mensagem deve aparecer no lugar.
-    cy.get('[data-testid=unselected-party]')
-      .contains('Escolha um destinatário ao lado')
+    // Seleciona CNA
+    cy.get('[data-testid=select-cna]')
+          .click()
 
     // 'Enviar' deve estar desabilitado
     cy.get('[data-testid=submit-email]')
       .should('be.disabled')
 
-    // Entra na aba 'Todos'
-    cy.get('.el-tabs__nav > #tab-3')
-      .contains('Todos')
-      .click({ force: true })
-  })
-
-  it('Envia de CNA: Sucesso', function () {
-    // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
-      .click()
-
     // Seleciona primeira parte do caso
     cy.get('[data-testid=expand-party]').first()
       .click()
 
-    // Seleciona CNA
-    cy.get('[data-testid=select-cna]')
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-disable]')
+      .should('be.disabled')
+
+    // Seleciona um email
+    cy.get('[data-testid=checkbox-cna]').first()
       .click()
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-email]')
+      .should('not.be.disabled')
 
     function randomText (size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
@@ -90,32 +87,23 @@ describe('Justto.App - Disputa: Menssagens', function () {
 
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success', { timeout: 60000 })
-    cy.contains('email enviado com sucesso.')
+    cy.contains('cna enviado com sucesso.')
       .should('be.visible')
 
-    cy.wait(12000)
-    // Caixas de CNA devem aparecer
-    cy.get('[data-testid=message-box]')
-      .should('be.visible')
+    cy.wait(6000)
 
-    // // Clica em 'vusualizar email'
-    // cy.get('[data-testid=show-email]').last()
-    //   .click({force: true})
-    //
-    // // Dialog de conteudo do email deve aparecer
-    // cy.get('[data-testid=email-dialog]')
-    //   .should('be.visible')
+    // Caixas de nota devem aparecer
+    cy.get('[data-testid=message-box]').last()
+      .should('be.visible')
+      .should('have.css', 'background-color', 'rgb(182, 255, 251)')
+
+    // Clica em 'vusualizar email'
+    cy.get('[data-testid=show-email]').last()
+      .click({ force: true })
 
     // Mensagem deve ser a enviada
-    cy.contains(message)
+    cy.get('[data-testid=message-box]')
+      .contains(message)
       .should('be.visible')
-
-    // // Fecha dialog
-    // cy.get('[data-testid=close-button]')
-    //   .click()
-    //
-    // // Dialog deve desaparecer
-    // cy.get('[data-testid=email-dialog]')
-    //   .should('not.be.visible')
   })
 })

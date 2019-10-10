@@ -92,7 +92,7 @@ describe('Justto.App - Disputa: Menssagens', function () {
 
     cy.wait(6000)
     // Caixas de nota devem aparecer
-    cy.get('[data-testid=message-box]')
+    cy.get('[data-testid=message-box]').last()
       .should('be.visible')
       .should('have.css', 'background-color', 'rgb(209, 219, 226)')
 
