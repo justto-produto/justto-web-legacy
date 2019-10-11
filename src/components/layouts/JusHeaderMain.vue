@@ -14,7 +14,7 @@
           <template slot-scope="{ item }">
             <jus-dispute-resume v-if="item.id" :dispute="item" />
             <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
-              Não foram encontradas disputas para esta busca.
+              Não foram encontradas disputas para esta busca. Tente buscar pelo número do processo.
             </span>
           </template>
         </el-autocomplete>
