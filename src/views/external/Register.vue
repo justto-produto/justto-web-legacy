@@ -54,7 +54,9 @@
             Cadastrar
           </el-button>
           <el-row class="external-view__info">
-            Ao clicar no botão, eu concordo com os <a href="#"> Termos de Uso</a> e <a href="#">Política de Privacidade.</a>
+            Ao clicar no botão, eu concordo com os
+            <a href="https://justto.com.br/termos-de-uso/" target="_blank"> Termos de Uso</a> e
+            <a data-testid="contract-terms" href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Já possui conta? <a href="login" @click.prevent="$router.push('login')"> Clique aqui para acessar.</a>
           </el-row>
