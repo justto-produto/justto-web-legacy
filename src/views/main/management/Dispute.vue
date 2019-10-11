@@ -490,10 +490,14 @@ export default {
       })
       this.$store.dispatch('getDispute', this.id)
         .then(dispute => {
-          if (dispute.archived) this.$router.push('/management')
+          if (!dispute || dispute.archived) this.$router.push('/management')
         })
-        .catch(() => {
-          this.$jusNotification({ type: 'error' })
+        .catch(error => {
+          if (error.response.status === 401) {
+            this.$jusNotification({ type: '401' })
+          } else {
+            this.$jusNotification({ type: 'error' })
+          }
           this.$router.push('/management')
         }).finally(() => {
           setTimeout(() => {

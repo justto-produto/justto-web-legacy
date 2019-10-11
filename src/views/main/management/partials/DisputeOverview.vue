@@ -81,7 +81,7 @@
       @change="handleChange">
       <el-collapse-item
         v-for="(role, index) in disputeRolesSort"
-        :key="role.personId + index"
+        :key="`${index}-${role.personId}`"
         :name="role.id"
         data-testid="expand-party">
         <template slot="title">
@@ -121,7 +121,7 @@
         </div>
         <div v-show="role.roles.length > 1" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="(title, index) in roleTitleSort(role.roles)" :key="title.index + index">
+            <li v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
               <span>
                 {{ buildTitle(role.party, title) }}
               </span>
@@ -218,7 +218,7 @@
               <el-select v-model="selectedClaimantId" placeholder="Autor da contraproposta">
                 <el-option
                   v-for="(claimant, index) in disputeClaimants"
-                  :key="claimant.id + index"
+                  :key="`${index}-${claimant.id}`"
                   :label="claimant.name"
                   :value="claimant.id" />
               </el-select>
@@ -237,7 +237,7 @@
               <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta">
                 <el-option
                   v-for="(negotiator, index) in disputeNegotiations"
-                  :key="negotiator.id + index"
+                  :key="`${index}-${negotiator.id}`"
                   :label="negotiator.name"
                   :value="negotiator.id" />
               </el-select>
@@ -275,7 +275,7 @@
         v-show="editRoleDialogError"
         type="error"
         @close="editRoleDialogError = false">
-        <ul><li v-for="(error, index) in editRoleDialogErrorList" :key="error + index">
+        <ul><li v-for="(error, index) in editRoleDialogErrorList" :key="`${index}-${error}`">
           {{ error }}
         </li></ul>
       </el-alert>
@@ -300,7 +300,7 @@
             <el-select v-model="roleForm.state" placeholder="">
               <el-option
                 v-for="(state, index) in $store.state.statesList"
-                :key="state + index"
+                :key="`${index}-${state}`"
                 :label="state"
                 :value="state" />
             </el-select>
