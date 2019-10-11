@@ -9,11 +9,6 @@ const socketModule = {
       join: '',
       leave: '',
       message: ''
-    },
-    whatsapp: {
-      qrCode: '',
-      status: 'OFFLINE',
-      number: ''
     }
   },
   mutations: mutations,

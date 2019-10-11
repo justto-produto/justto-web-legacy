@@ -106,7 +106,7 @@ export default {
       return !!this.$route.query.invitedBy
     },
     showWhatsapp () {
-      return this.$store.getters.whatsappStatus !== 'OFFLINE'
+      return false
     },
     currentVisible () {
       if (this.isGuest) {

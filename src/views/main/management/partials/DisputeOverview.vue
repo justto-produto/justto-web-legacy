@@ -121,7 +121,7 @@
         </div>
         <div v-show="role.roles.length > 1" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="title in roleTitleSort(role.roles)" :key="title.index">
+            <li v-for="(title, index) in roleTitleSort(role.roles)" :key="title.index + index">
               <span>
                 {{ buildTitle(role.party, title) }}
               </span>
@@ -133,7 +133,7 @@
         </div>
         <div v-show="role.phones.length" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="phone in role.phones.filter(p => !p.archived)" :key="phone.id">
+            <li v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`">
               <span>
                 <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role)" />
                 {{ phone.number | phoneMask }}
@@ -151,7 +151,7 @@
         </div>
         <div v-show="role.emails.length" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="email in role.emails.filter(e => !e.archived)" :key="email.id">
+            <li v-for="(email, index) in role.emails.filter(e => !e.archived)" :key="`${index}-${email.id}`">
               <span>
                 <el-checkbox v-model="email.selected" @change="updateDisputeRole(role)" />
                 {{ email.address }}
@@ -169,7 +169,7 @@
         </div>
         <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
           <ul>
-            <li v-for="oab in role.oabs.filter(o => !o.archived)" :key="oab.id">
+            <li v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`">
               <div>
                 <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role)" />
                 {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
@@ -217,8 +217,8 @@
             <el-form-item label="Proposto por" prop="lastCounterOfferValue">
               <el-select v-model="selectedClaimantId" placeholder="Autor da contraproposta">
                 <el-option
-                  v-for="claimant in disputeClaimants"
-                  :key="claimant.id"
+                  v-for="(claimant, index) in disputeClaimants"
+                  :key="claimant.id + index"
                   :label="claimant.name"
                   :value="claimant.id" />
               </el-select>
@@ -236,8 +236,8 @@
             <el-form-item label="Proposto por" prop="lastCounterOfferValue">
               <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta">
                 <el-option
-                  v-for="negotiator in disputeNegotiations"
-                  :key="negotiator.id"
+                  v-for="(negotiator, index) in disputeNegotiations"
+                  :key="negotiator.id + index"
                   :label="negotiator.name"
                   :value="negotiator.id" />
               </el-select>
@@ -275,7 +275,7 @@
         v-show="editRoleDialogError"
         type="error"
         @close="editRoleDialogError = false">
-        <ul><li v-for="error in editRoleDialogErrorList" :key="error">
+        <ul><li v-for="(error, index) in editRoleDialogErrorList" :key="error + index">
           {{ error }}
         </li></ul>
       </el-alert>
@@ -299,8 +299,8 @@
           <el-form-item class="state" label="Estado" prop="state">
             <el-select v-model="roleForm.state" placeholder="">
               <el-option
-                v-for="state in $store.state.statesList"
-                :key="state"
+                v-for="(state, index) in $store.state.statesList"
+                :key="state + index"
                 :label="state"
                 :value="state" />
             </el-select>

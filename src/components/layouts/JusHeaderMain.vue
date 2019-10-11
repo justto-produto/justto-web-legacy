@@ -60,7 +60,6 @@
         </el-dropdown>
       </div>
     </el-header>
-    <jus-whatsapp />
   </div>
 </template>
 
@@ -68,7 +67,6 @@
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusWhatsapp: () => import('@/components/layouts/JusWhatsapp'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
   },
   data () {
@@ -86,12 +84,6 @@ export default {
     },
     appVersion () {
       return process.env.VUE_APP_VERSION
-    },
-    isWhatsappConnected () {
-      return this.$store.getters.whatsappStatus === 'CONNECTED'
-    },
-    whatsappNumber () {
-      return this.$store.getters.whatsappNumber
     }
   },
   watch: {
@@ -167,20 +159,6 @@ export default {
         font-size: 16px;
         opacity: .75;
       }
-    }
-  }
-  &__whatsapp {
-    position: relative;
-    margin: auto;
-    margin-right: 14px;
-    img {
-      width: 28px;
-      cursor: pointer;
-    }
-    .el-icon-warning {
-      position: absolute;
-      right: -4px;
-      bottom: 1px;
     }
   }
   &__info {

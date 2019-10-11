@@ -200,9 +200,6 @@
                       <span v-if="!activeRole.personId">
                         Escolha um destinatário ao lado para receber sua mensagem
                       </span>
-                      <span v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'">
-                        Whatsapp desconectado
-                      </span>
                       <span v-else-if="invalidReceiver">
                         <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
                         <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não selecionado/configurado</span>
@@ -335,9 +332,6 @@ export default {
     }
   },
   computed: {
-    whatsappStatus () {
-      return this.$store.getters.whatsappStatus
-    },
     validName () {
       if (this.$store.getters.loggedPersonName && this.$store.getters.loggedPersonName !== this.$store.state.accountModule.email) {
         return true
@@ -633,39 +627,31 @@ export default {
       }
     },
     sendMessage () {
-      if (this.messageType === 'whatsapp' && this.whatsappStatus !== 'CONNECTED') {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Seu Whatsapp não está conectado, por favor conecte-se para enviar esta mensagem',
-          type: 'warning'
-        })
-      } else {
-        if (this.newMessage.trim().replace('\n', '')) {
-          this.loadingTextarea = true
-          this.$store.dispatch('send' + this.messageType, {
-            to: [{
-              roleId: this.activeRole.id,
-              contactsId: this.getSelectedContacts({ type: this.messageType, role: this.activeRole })
-            }],
-            message: this.newMessage,
-            disputeId: this.dispute.id
-          }).then(() => {
-            window.analytics.track('Enviou mensagem via ' + this.messageType)
-            this.newMessage = ''
-            this.$jusNotification({
-              title: 'Yay!',
-              message: this.messageType + ' enviado com sucesso.',
-              type: 'success'
-            })
-            setTimeout(function () {
-              this.newMessage = ''
-            }.bind(this), 500)
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
-          }).finally(() => {
-            this.loadingTextarea = false
+      if (this.newMessage.trim().replace('\n', '')) {
+        this.loadingTextarea = true
+        this.$store.dispatch('send' + this.messageType, {
+          to: [{
+            roleId: this.activeRole.id,
+            contactsId: this.getSelectedContacts({ type: this.messageType, role: this.activeRole })
+          }],
+          message: this.newMessage,
+          disputeId: this.dispute.id
+        }).then(() => {
+          window.analytics.track('Enviou mensagem via ' + this.messageType)
+          this.newMessage = ''
+          this.$jusNotification({
+            title: 'Yay!',
+            message: this.messageType + ' enviado com sucesso.',
+            type: 'success'
           })
-        }
+          setTimeout(function () {
+            this.newMessage = ''
+          }.bind(this), 500)
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingTextarea = false
+        })
       }
     },
     sendNote () {

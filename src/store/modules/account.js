@@ -117,7 +117,6 @@ const account = {
     logout ({ commit }, options) {
       commit('logout')
       commit('clearWorkspace')
-      commit('clearWhatsappSocket')
       commit('clearDisputes')
       commit('clearDisputeTab')
       localStorage.removeItem('justoken')
