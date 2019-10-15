@@ -7,7 +7,7 @@ const NotificationMessage = {
       if (config.type === 'error') {
         config.title = config.title ? config.title : 'Ops!'
         config.message = config.message ? config.message : 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
-      } else if (config.type === '401') {
+      } else if (config.type === '403') {
         config.type = 'warning'
         config.title = config.title ? config.title : 'Ops!'
         config.message = config.message ? config.message : 'Você não tem permissão para acessar essa página. Entre em contato com o administrador do sistema.'

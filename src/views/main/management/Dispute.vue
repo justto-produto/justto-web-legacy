@@ -493,8 +493,8 @@ export default {
           if (!dispute || dispute.archived) this.$router.push('/management')
         })
         .catch(error => {
-          if (error.response.status === 401) {
-            this.$jusNotification({ type: '401' })
+          if (error.response.status === 403) {
+            this.$jusNotification({ type: '403' })
           } else {
             this.$jusNotification({ type: 'error' })
           }
