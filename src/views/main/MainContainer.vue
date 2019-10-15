@@ -85,6 +85,9 @@ export default {
   },
   beforeCreate () {
     this.$store.commit('clearDisputeQuery')
+    setInterval(() => {
+      this.$store.dispatch('getWhatsappStatus')
+    }, 60 * 3000)
   },
   beforeMount () {
     this.subscribe()

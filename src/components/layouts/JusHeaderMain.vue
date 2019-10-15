@@ -25,6 +25,23 @@
           Disputa #{{ disputeId }}
         </h2>
       </div>
+      <div class="jus-header-main__whatsapp">
+        <el-tooltip>
+          <div slot="content">
+            <span v-if="!isWhatsappConnected">
+              WhatsApp fora do ar, já estamos trabalhando na estabilização do serviço
+            </span>
+            <!-- <span v-else-if="!!whatsappNumber">
+              Conectado via: {{ whatsappNumber | phoneMask }}
+            </span> -->
+            <span v-else>
+              WhatsApp conectado
+            </span>
+          </div>
+          <jus-icon :icon="'whatsapp-' + (!isWhatsappConnected ? 'disconnected' : 'connected')" />
+        </el-tooltip>
+        <i v-if="!isWhatsappConnected" class="el-icon-warning el-icon-pulse el-icon-danger" />
+      </div>
       <div class="jus-header-main__info">
         <el-dropdown trigger="click" placement="bottom-start">
           <span class="el-dropdown-link">
@@ -84,6 +101,9 @@ export default {
     },
     appVersion () {
       return process.env.VUE_APP_VERSION
+    },
+    isWhatsappConnected () {
+      return this.$store.getters.whatsappConnected
     }
   },
   watch: {
@@ -183,6 +203,19 @@ export default {
   }
   &__autocomplete li {
     cursor: default;
+  }
+  &__whatsapp {
+    position: relative;
+    margin: auto;
+    margin-right: 14px;
+    img {
+      width: 28px;
+    }
+    .el-icon-warning {
+      position: absolute;
+      right: -4px;
+      bottom: 1px;
+    }
   }
 }
 </style>
