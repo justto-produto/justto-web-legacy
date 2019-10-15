@@ -33,8 +33,8 @@
           </el-button>
           <el-row class="external-view__info">
             Ao clicar no botão, eu concordo com os
-            <a href="#">Termos de Uso</a> e
-            <a href="#">Política de Privacidade.</a>
+            <a href="https://justto.com.br/termos-de-uso/" target="_blank">Termos de Uso</a> e
+            <a href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação.</a>
           </el-row>
         </el-form>
       </el-main>

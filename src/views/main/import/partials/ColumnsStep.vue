@@ -157,7 +157,7 @@ export default {
       claimantParties: [],
       claimantLawyers: [],
       respondentParties: [],
-      loadingTags: true,
+      loadingTags: false,
       errorColumns: false,
       errorTags: false,
       loading: false
@@ -173,7 +173,16 @@ export default {
       }
     }
   },
+  watch: {
+    loading (loading) {
+      if (!loading && !this.loadingTags) this.$store.dispatch('hideLoading')
+    },
+    loadingTags (loadingTags) {
+      if (!loadingTags && !this.loading) this.$store.dispatch('hideLoading')
+    }
+  },
   beforeMount () {
+    this.$store.dispatch('showLoading')
     if (!this.$store.state.importModule.map.length) {
       this.loading = true
       this.$store.dispatch('getImportsColumns').catch(() => {
@@ -182,6 +191,7 @@ export default {
         this.loading = false
       })
     }
+    this.loadingTags = true
     this.$store.dispatch('getImportsTags').then(tags => {
       this.loadingTags = false
       this.tags = tags

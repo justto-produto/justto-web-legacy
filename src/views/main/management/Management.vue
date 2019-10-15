@@ -74,7 +74,11 @@
       <management-filters
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
-      <management-table ref="managementTable" :active-tab.sync="activeTab" :selected-ids.sync="selectedIds"/>
+      <management-table
+        ref="managementTable"
+        :active-tab.sync="activeTab"
+        :selected-ids.sync="selectedIds"
+        :loading-disputes.sync="loadingDisputes" />
       <el-pagination
         :total.sync="disputesTotalLength"
         :page-size.sync="disputesPerPage"
@@ -190,9 +194,9 @@ export default {
   },
   methods: {
     getDisputes () {
+      this.loadingDisputes = true
       clearTimeout(this.disputeDebounce)
       this.disputeDebounce = setTimeout(() => {
-        this.loadingDisputes = true
         return this.$store.dispatch('getDisputes').catch(error => {
           console.error(error)
           this.$jusNotification({ type: 'error' })
@@ -212,6 +216,7 @@ export default {
       this.$refs.managementTable.clearSelection()
     },
     handleChangeTab (tab) {
+      this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
       this.$store.commit('setDisputeHasFilters', false)
       switch (tab) {

@@ -85,13 +85,9 @@ export default {
   },
   beforeCreate () {
     this.$store.commit('clearDisputeQuery')
-    // this.$store.dispatch('getWhatsappStatus').then((whatsapp) => {
-    //   if (whatsapp.status === 'OFFLINE') {
-    //     this.$store.dispatch('whatsappStart')
-    //   } else {
-    //     this.$store.commit('SOCKET_refresh', whatsapp)
-    //   }
-    // })
+    setInterval(() => {
+      this.$store.dispatch('getWhatsappStatus')
+    }, 60 * 3000)
   },
   beforeMount () {
     this.subscribe()

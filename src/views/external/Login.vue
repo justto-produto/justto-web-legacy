@@ -72,10 +72,10 @@
         </el-form>
         <el-form
           v-loading="showLoading"
+          v-else
           ref="workspaceForm"
           :model="workspaceForm"
           :rules="workspaceRules"
-          v-else
           label-position="top"
           class="external-view__form"
           @submit.native.prevent="selectWorkspace">

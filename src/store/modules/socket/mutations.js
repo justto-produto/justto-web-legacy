@@ -14,17 +14,6 @@ const mutations = {
   },
   clearTyping (state) {
     state.chat.typing = null
-  },
-  // WHATSAPP
-  clearWhatsappSocket (state) {
-    state.qrCode = ''
-    state.status = 'OFFLINE'
-    state.number = ''
-  },
-  SOCKET_refresh (state, message) {
-    state.whatsapp.qrCode = message.qrCode
-    state.whatsapp.status = message.status
-    state.whatsapp.number = message.phone
   }
 }
 

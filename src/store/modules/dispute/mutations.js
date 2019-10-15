@@ -41,17 +41,17 @@ const disputeMutations = {
     state.summaryNotVisualizeds = summarys
   },
   clearDisputeQuery (state) {
-    const size = state.query.size
     state.query = {
-      status: [],
+      status: ['ENGAGEMENT'],
+      sort: 'expirationDate,asc',
       campaigns: [],
       strategy: [],
       persons: [],
-      dealDate: [],
       expirationDate: [],
+      dealDate: [],
       onlyFavorite: false,
       page: 1,
-      size: size,
+      size: 20,
       term: '',
       initialSize: 20,
       total: 0

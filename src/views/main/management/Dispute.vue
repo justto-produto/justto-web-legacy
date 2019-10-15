@@ -35,14 +35,6 @@
               <jus-icon icon="lose"/>
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Reiniciar engajamento">
-            <el-button
-              plain
-              data-testid="restart-engagement"
-              @click="disputeAction('restart-engagement')">
-              <jus-icon icon="refresh"/>
-            </el-button>
-          </el-tooltip>
           <el-tooltip v-if="isPaused" content="Retomar">
             <el-button plain data-testid="resume" @click="disputeAction('resume')">
               <jus-icon icon="start-again"/>
@@ -53,11 +45,19 @@
               <jus-icon icon="pause"/>
             </el-button>
           </el-tooltip>
-          <!-- <el-tooltip content="Cancelar mensagens automáticas">
-            <el-button plain data-testid="cancel-messages" @click="disputeAction('cancel-messages')">
-              <jus-icon icon="justto"/>
+          <el-tooltip content="Reiniciar engajamento">
+            <el-button
+              plain
+              data-testid="restart-engagement"
+              @click="disputeAction('restart-engagement')">
+              <jus-icon icon="refresh"/>
             </el-button>
-          </el-tooltip> -->
+          </el-tooltip>
+          <el-tooltip content="Cancelar mensagens automáticas">
+            <el-button plain data-testid="cancel-messages" @click="disputeAction('cancel-messages')">
+              <jus-icon icon="cancel-messages"/>
+            </el-button>
+          </el-tooltip>
           <el-tooltip content="Alterar Negociador">
             <el-button plain @click="editNegotiator()">
               <jus-icon icon="delegate"/>
@@ -148,8 +148,8 @@
         <dispute-occurrences v-if="typingTab === '1'" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
         <div
-          :key="loadingKey"
           v-loading="isPaused"
+          :key="loadingKey"
           element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
           element-loading-spinner="el-icon-video-pause"
           class="dispute-view__send-message">
@@ -199,9 +199,6 @@
                     <div slot="content">
                       <span v-if="!activeRole.personId">
                         Escolha um destinatário ao lado para receber sua mensagem
-                      </span>
-                      <span v-if="messageType === 'whatsapp' && whatsappStatus !== 'CONNECTED'">
-                        Whatsapp desconectado
                       </span>
                       <span v-else-if="invalidReceiver">
                         <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
@@ -293,8 +290,8 @@
         :loading.sync="loadingDispute"
         :dispute.sync="dispute"
         :active-role-id.sync="activeRoleId"
-        @updateActiveRole="updateActiveRole"
-        data-testid="dispute-overview" />
+        data-testid="dispute-overview"
+        @updateActiveRole="updateActiveRole" />
     </template>
   </JusViewMain>
 </template>
@@ -335,9 +332,6 @@ export default {
     }
   },
   computed: {
-    whatsappStatus () {
-      return this.$store.getters.whatsappStatus
-    },
     validName () {
       if (this.$store.getters.loggedPersonName && this.$store.getters.loggedPersonName !== this.$store.state.accountModule.email) {
         return true
@@ -351,7 +345,6 @@ export default {
       return this.$store.getters.dispute
     },
     isPaused () {
-      this.loadingKey = this.loadingKey + 1
       return this.dispute ? this.dispute.paused : false
     },
     isFavorite () {
@@ -390,6 +383,9 @@ export default {
     },
     activeRoleId (activeRoleId) {
       this.updateActiveRole(activeRoleId)
+    },
+    isPaused () {
+      this.loadingKey = this.loadingKey + 1
     }
   },
   created () {
@@ -426,9 +422,9 @@ export default {
         case 'email':
           this.invalidReceiver = this.activeRole.invalidEmail
           break
-          case 'whatsapp':
+        case 'whatsapp':
           this.invalidReceiver = this.activeRole.invalidPhone
-        break
+          break
         case 'cna':
           this.invalidReceiver = this.activeRole.invalidOab
           break
@@ -493,8 +489,16 @@ export default {
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
       this.$store.dispatch('getDispute', this.id)
-        .catch(() => {
-          this.$jusNotification({ type: 'error' })
+        .then(dispute => {
+          if (!dispute || dispute.archived) this.$router.push('/management')
+        })
+        .catch(error => {
+          if (error.response.status === 403) {
+            this.$jusNotification({ type: '403' })
+          } else {
+            this.$jusNotification({ type: 'error' })
+          }
+          this.$router.push('/management')
         }).finally(() => {
           setTimeout(() => {
             this.loadingDispute = false
@@ -627,39 +631,31 @@ export default {
       }
     },
     sendMessage () {
-      if (this.messageType === 'whatsapp' && this.whatsappStatus !== 'CONNECTED') {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Seu Whatsapp não está conectado, por favor conecte-se para enviar esta mensagem',
-          type: 'warning'
-        })
-      } else {
-        if (this.newMessage.trim().replace('\n', '')) {
-          this.loadingTextarea = true
-          this.$store.dispatch('send' + this.messageType, {
-            to: [{
-              roleId: this.activeRole.id,
-              contactsId: this.getSelectedContacts({ type: this.messageType, role: this.activeRole })
-            }],
-            message: this.newMessage,
-            disputeId: this.dispute.id
-          }).then(() => {
-            window.analytics.track('Enviou mensagem via ' + this.messageType)
-            this.newMessage = ''
-            this.$jusNotification({
-              title: 'Yay!',
-              message: this.messageType + ' enviado com sucesso.',
-              type: 'success'
-            })
-            setTimeout(function () {
-              this.newMessage = ''
-            }.bind(this), 500)
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
-          }).finally(() => {
-            this.loadingTextarea = false
+      if (this.newMessage.trim().replace('\n', '')) {
+        this.loadingTextarea = true
+        this.$store.dispatch('send' + this.messageType, {
+          to: [{
+            roleId: this.activeRole.id,
+            contactsId: this.getSelectedContacts({ type: this.messageType, role: this.activeRole })
+          }],
+          message: this.newMessage,
+          disputeId: this.dispute.id
+        }).then(() => {
+          window.analytics.track('Enviou mensagem via ' + this.messageType)
+          this.newMessage = ''
+          this.$jusNotification({
+            title: 'Yay!',
+            message: this.messageType + ' enviado com sucesso.',
+            type: 'success'
           })
-        }
+          setTimeout(function () {
+            this.newMessage = ''
+          }.bind(this), 500)
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loadingTextarea = false
+        })
       }
     },
     sendNote () {

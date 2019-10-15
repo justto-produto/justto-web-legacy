@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading" class="campaign-step">
+  <div v-loading="$store.state.loading" class="campaign-step">
     <h2 class="new-import-view__title">Configuração de campanhas</h2>
     <p>
       O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de
@@ -52,15 +52,14 @@ export default {
   },
   data () {
     return {
-      loading: false,
       duplicatedDisputes: []
     }
   },
   beforeMount () {
     if (!this.$store.getters.strategyList.length) {
-      this.loading = true
+      this.$store.dispatch('showLoading')
       this.$store.dispatch('getMyStrategies').finally(() => {
-        this.loading = false
+        this.$store.dispatch('hideLoading')
       })
     }
     this.$store.dispatch('validateGeneseRunner').then(response => {
