@@ -8,6 +8,7 @@ describe('Justto.App - Termos', function () {
 
     cy.request('https://justto.com.br/termos-de-contratacao/')
   })
+  
   it('Termos de Uso', function () {
     cy.visit('/')
 

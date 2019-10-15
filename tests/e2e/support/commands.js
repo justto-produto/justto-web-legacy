@@ -42,28 +42,25 @@ Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
   })
 })
 
-Cypress.Commands.add('deleteWorkspace', (email, password, sub_domain) => {
-  // this is an example of skipping your UI and logging in programmatically
-  const homolUrl = Cypress.env('homolUrl')
-  // setup some basic types
-  // and user properties
-  const loginDelete = {
-    email: email,
-    password: password
-  }
-
-  // create the user first in the DB
-  cy.request({
-    url: '/api/accounts/token', // assuming you've exposed a seeds route
-    method: 'POST',
-    body: loginDelete
-  })
-    .its('body')
-    .then((body) => {
-      cy.request({
-        url: '/api/disputes/workspace/' + sub_domain,
-        method: 'DELETE',
-        headers: 'Authorization: ' + body.token
-      })
-    })
+Cypress.Commands.add('prepair_testes', (scene) => {
+  cy.request('POST', '/api/dispute/' + scene)
 })
+
+// Cypress.Commands.add('deleteWorkspace', (email, password, sub_domain) => {
+//
+//
+//   // create the user first in the DB
+//   cy.request({
+//     url: '/api/accounts/token', // assuming you've exposed a seeds route
+//     method: 'POST',
+//     body: loginDelete
+//   })
+//     .its('body')
+//     .then((body) => {
+//       cy.request({
+//         url: '/api/disputes/workspace/' + sub_domain,
+//         method: 'DELETE',
+//         headers: 'Authorization: ' + body.token
+//       })
+//     })
+// })

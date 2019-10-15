@@ -61,32 +61,4 @@ describe('Justto.App - Register', function () {
     cy.contains('Insira um e-mail válido')
       .should('be.visible')
   })
-
-  // it('Registro: Email já Existente', function () {
-  //   // Preenche o campo 'Nome'
-  //   cy.get('[data-testid=register-name]')
-  //     .type('Bruno Gatão')
-  //     .should('have.value', 'Bruno Gatão')
-  //
-  //   // Preenche   campo 'Email' com email não existente
-  //   cy.get('[data-testid=register-email]')
-  //     .type(randomEmail)
-  //     .should('have.value', randomEmail)
-  //
-  //   // Preenche o campo 'Senha'
-  //   cy.get('[data-testid=register-password')
-  //     .type('password')
-  //     .should('have.value', 'password')
-  //
-  //   // Clica no botão "Entrar"
-  //   cy.get('[data-testid=submit]')
-  //     .click()
-  //
-  //   // Valida se login falhou
-  //   cy.url().should('include', '/#/register')
-  //
-  //   // Verifica de menssagem de erro foi exibida
-  //   cy.contains('Já existe um usuário cadastrado com este e-mail.')
-  //     .should('be.visible')
-  // })
 })

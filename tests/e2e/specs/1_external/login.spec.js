@@ -1,7 +1,5 @@
-// const login = Cypress.env('empty-account-email')
-// const password = Cypress.env('default-password')
-const login = 'guilherme@justto.com.br'
-const password = '@bundanc1A'
+const login = Cypress.env('main-mail')
+const password = Cypress.env('main-pass')
 
 describe('Justto.App - Login', function () {
   beforeEach('Login', function () {
