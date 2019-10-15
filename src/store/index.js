@@ -9,6 +9,7 @@ import personModule from './modules/person/index'
 import disputeModule from './modules/dispute/index'
 import messageModule from './modules/message'
 import socketModule from './modules/socket/index'
+import whatsappModule from './modules/whatsapp'
 
 Vue.use(Vuex)
 
@@ -48,6 +49,7 @@ export default new Vuex.Store({
     personModule,
     disputeModule,
     messageModule,
-    socketModule
+    socketModule,
+    whatsappModule
   }
 })
