@@ -61,10 +61,16 @@
           <span class="title">Fim da negociação:</span>
           <span v-if="dispute.expirationDate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </div>
-        <div v-if="dispute.description && dispute.description.trim()" class="dispute-overview-view__info-textarea">
+        <div v-if="computedDescription" class="dispute-overview-view__info-textarea">
           Descrição:
-          <strong :class="{ 'right': dispute.description.length < 25 }">
-            {{ dispute.description }}
+          <strong :class="{ 'right': computedDescription.length < 25 }">
+            {{ computedDescription }}
+            <span v-if="dispute.description.length > 140">
+              <a href="#" class="dispute-overview-view__see-more" @click.prevent="descriptionCollapse = !descriptionCollapse">
+                {{ descriptionCollapse ? 'ver mais': 'ver menos' }}
+                <i :class="descriptionCollapse ? 'el-icon-arrow-down': 'el-icon-arrow-up'" />
+              </a>
+            </span>
           </strong>
         </div>
         <div class="dispute-overview-view__actions">
@@ -489,6 +495,7 @@ export default {
       editRoleDialogLoading: false,
       editRoleDialogError: false,
       editRoleDialogErrorList: [],
+      descriptionCollapse: true,
       money: {
         decimal: ',',
         thousands: '.',
@@ -498,6 +505,14 @@ export default {
     }
   },
   computed: {
+    computedDescription () {
+      if (this.dispute.description.length > 140) {
+        if (this.descriptionCollapse) {
+          return this.dispute.description.substring(0, 140) + '...'
+        }
+      }
+      return this.dispute.description
+    },
     disputeRolesSort () {
       if (this.dispute.disputeRoles) {
         let sortedArray = this.dispute.disputeRoles.slice(0) || []
@@ -884,6 +899,9 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  &__see-more {
+    white-space: nowrap;
   }
   &__oab-form {
     display: flex;
