@@ -8,12 +8,20 @@
           :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
       </el-input>
-      <el-input v-model="campaignName" data-testid="feedback-campaignName" placeholder="Dê um nome para a sua Campanha">
+      <el-input v-model="campaignName" class="select-strategy" data-testid="feedback-campaignName" placeholder="Dê um nome para a sua Campanha">
         <i
           slot="prefix"
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
       </el-input>
+      <div class="select-strategy__messages">
+        <div v-show="campaignNameDuplicated && campaignName !== ''">
+          Já existe uma campanha com este nome.
+          <a @click.prevent="showDuplicatedAlert(campaignName)">
+            Entenda melhor.
+          </a>
+        </div>
+      </div>
       <el-select
         ref="strategySelect"
         v-model="strategy"
@@ -34,7 +42,11 @@
           :value="strategy" />
       </el-select>
       <div class="select-strategy__messages">
-        <a v-show="strategy !== ''" @click.prevent="dialogVisible = true">Ver estratégia de engajamento das partes</a>
+        <div v-show="strategy !== ''">
+          <a @click.prevent="dialogVisible = true">
+            Ver estratégia de engajamento das partes
+          </a>
+        </div>
       </div>
       <!-- <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
         <div>
@@ -136,6 +148,8 @@ export default {
       paymentDeadLine: 1,
       campaignName: '',
       campaignTimeout: null,
+      campaignNameDebounce: 0,
+      campaignNameDuplicated: false,
       strategy: '',
       strategyId: '',
       dialogVisible: false,
@@ -176,6 +190,22 @@ export default {
     },
     campaignName (value) {
       this.mappedCampaign.name = value
+      if (value) {
+        clearTimeout(this.campaignNameDebounce)
+        this.campaignNameDebounce = setTimeout(() => {
+          this.$store.dispatch('getCampaignByName', value).then(response => {
+            this.campaignNameDuplicated = false
+            response.data.content.forEach(campaign => {
+              if (campaign.name.toLowerCase() === value) {
+                this.campaignNameDuplicated = true
+              }
+            })
+            // this.campaignNameDuplicated = response.data.content.length > 0
+          })
+        }, 800)
+      } else {
+        this.campaignNameDuplicated = false
+      }
     },
     strategy (value) {
       this.mappedCampaign.strategy = value.name
@@ -208,6 +238,17 @@ export default {
         this.$moment(new Date(this.mappedCampaign.deadline)).isValid() &&
         (this.$moment(new Date(this.mappedCampaign.deadline)) >= this.$moment(new Date()))) {
       this.deadline = this.mappedCampaign.deadline
+    }
+  },
+  methods: {
+    showDuplicatedAlert (campaignName) {
+      this.$alert('', {
+        title: 'Campanhas associadas',
+        message: `Já existe uma campanha com o nome <strong>${campaignName}</strong>.<br>
+        Ao importar novos casos para essa campanha as estratégias de comunicação definidas anteriormente não serão alteradas`,
+        confirmButtonText: 'OK',
+        dangerouslyUseHTMLString: true
+      })
     }
   }
 }
@@ -268,8 +309,8 @@ export default {
   }
   .select-strategy__messages {
     border-bottom: 1px solid #dcdfe6;
-    a {
-      display: block;
+    min-height: 1.3px;
+    > div {
       padding: 0px 0px 10px 16px;
     }
   }

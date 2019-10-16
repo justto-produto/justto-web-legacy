@@ -16,4 +16,9 @@
   &__btns {
     padding: 10px 15px 0px !important;
   }
+  &__message {
+    strong {
+      text-transform: uppercase;
+    }
+  }
 }

@@ -506,7 +506,7 @@ export default {
   },
   computed: {
     computedDescription () {
-      if (this.dispute.description.length > 140) {
+      if (this.dispute.description && this.dispute.description.length > 140) {
         if (this.descriptionCollapse) {
           return this.dispute.description.substring(0, 140) + '...'
         }
