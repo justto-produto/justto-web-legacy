@@ -1,5 +1,5 @@
-describe('Justto.app - Register', function () {
-  it('Confirmação de email: Sucesso', function () {
+describe('Register', function () {
+  it('Cadastro Ativado', function () {
     // Acessa link de validação (Link do email)
     cy.visit('/#/login?token=TSTAUTO')
 

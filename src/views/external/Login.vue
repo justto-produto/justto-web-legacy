@@ -87,7 +87,8 @@
                 v-for="(w, index) in workspaces"
                 :key="index"
                 :value="index"
-                :label="w.workspace.name" />
+                :label="w.workspace.name"
+                data-testid="select-workspace"/>
             </el-select>
           </el-form-item>
           <el-button

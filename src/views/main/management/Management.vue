@@ -18,6 +18,7 @@
             <span slot="label">
               Sem resposta
               <el-badge
+                data-testid="badge-tab0"
                 :hidden="!engagementLength"
                 :value="engagementLength"
                 :max="99"
@@ -29,6 +30,7 @@
             <span slot="label">
               Em negociação
               <el-badge
+                data-testid="badge-tab1"
                 :hidden="!interactionLength"
                 :value="interactionLength"
                 :max="99"
@@ -36,10 +38,11 @@
                 class="el-badge--absolute" />
             </span>
           </el-tab-pane>
-          <el-tab-pane name="2" label="Com Interação">
+          <el-tab-pane name="2" label="Com Interação" data-testid="tab-pproposal-accepted">
             <span slot="label">
               Proposta aceita
               <el-badge
+                data-testid="badge-tab2"
                 :hidden="!newDealsLength"
                 :value="newDealsLength"
                 :max="99"
@@ -80,6 +83,7 @@
         :selected-ids.sync="selectedIds"
         :loading-disputes.sync="loadingDisputes" />
       <el-pagination
+        data-testid="pagination"
         :total.sync="disputesTotalLength"
         :page-size.sync="disputesPerPage"
         :current-page.sync="currentPage"

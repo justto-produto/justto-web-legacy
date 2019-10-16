@@ -1,33 +1,14 @@
-// const login = Cypress.env('import-actions-email')
-// const password = Cypress.env('default-password')
-const login = 'lucas@justto.com.br'
-const password = '123456'
+const login = Cypress.env('main-email')
+const password = Cypress.env('main-password')
+const workspace = Cypress.env('main-workspace')
 
 describe('Justto.App - Gerenciamento: Ação em Lote', function () {
   beforeEach(function () {
     // Acessa a página inicial do Justto.App
-    // cy.visit('http://homol.justto.com.br')
-    cy.visit('/')
+    cy.access('/')
 
-    // Valida se o endereço redirecionado é o 'Login'
-    cy.url().should('include', '/#/login')
-
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type(login)
-      .should('have.value', login)
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type(password)
-      .should('have.value', password)
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit-login]')
-      .click()
-
-    // Verifica se tela acessada é a de "Gerenciamento"
-    cy.url().should('include', '/#/management')
+    // Faz login com 'acordo@justto.app'
+    cy.login(login, password, workspace)
 
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')

@@ -1,13 +1,10 @@
-describe('Justto.App - Nova Senha', function () {
+describe('Nova Senha', function () {
   beforeEach('Acessa', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/#/new-password/TSTAUTO')
-
-    // Sistema deve redirecionar para a página de Nova Senha
-    cy.url().should('include', '/#/new-password/TSTAUTO')
+    cy.access('/#/new-password/TSTAUTO')
   })
 
-  it('Nova Senha: Sucesso', function () {
+  it('Senha Alterada', function () {
     // Preenche o campo 'Senha'
     cy.get('[data-testid=new-password]')
       .type('password')
@@ -35,7 +32,7 @@ describe('Justto.App - Nova Senha', function () {
     cy.url().should('include', '/#/login')
   })
 
-  it('Nova Senha: Senhas não Correspondem', function () {
+  it('Senhas não Correspondem', function () {
     // Preenche o campo 'Senha'
     cy.get('[data-testid=new-password]')
       .type('password')

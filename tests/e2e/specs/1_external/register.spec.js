@@ -1,16 +1,17 @@
 describe('Justto.App - Register', function () {
   beforeEach('Acesso Registro', function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/')
+    cy.access('/')
 
     // Acessa a página de registro
-    cy.get('[data-testid=register]').click()
+    cy.get('[data-testid=register]')
+      .click()
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/register')
   })
 
-  const randomEmail = new Date().getTime() + '@teste2e.com'
+  const email = 'register@teste2e.com'
 
   it('Registro: Sucesso', function () {
     // Preenche o campo 'Nome'
@@ -20,8 +21,8 @@ describe('Justto.App - Register', function () {
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=register-email]')
-      .type(randomEmail)
-      .should('have.value', randomEmail)
+      .type(email)
+      .should('have.value', email)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=register-password]')

@@ -1,12 +1,8 @@
-const email = Cypress.env('main-mail')
+const email = Cypress.env('main-email')
 
-describe('Justto.app - Esqueci a Senha', function () {
+describe('Esqueci a Senha', function () {
   beforeEach('Acesso', function () {
-    // Acessa a página inicial do Justto.App
-    cy.visit('/')
-
-    // Sistema deve redirecionar para a página de Login
-    cy.url().should('include', '/#/login')
+    cy.access('/')
 
     // Acessa a página de Equeci minha Senha
     cy.get('[data-testid=forgot-password]')
@@ -16,7 +12,7 @@ describe('Justto.app - Esqueci a Senha', function () {
     cy.url().should('include', '/#/forgot-password')
   })
 
-  it('Esqueci minha Senha: Sucesso', function () {
+  it('Email Enviado', function () {
     // Digita um email válido existente
     cy.get('[data-testid=forgot-password-email]')
       .type(email)
@@ -31,7 +27,7 @@ describe('Justto.app - Esqueci a Senha', function () {
       .should('be.visible')
   })
 
-  it('Esqueci minha senha: Email Inválido', function () {
+  it('Email Inválido', function () {
     // Digita um email inválido
     cy.get('[data-testid=forgot-password-email]')
       .type('email inválido')

@@ -4,14 +4,10 @@
   "defaultCommandTimeout": 10000,
   "pluginsFile": "tests/e2e/plugins/index.js",
   "baseUrl": "http://localhost:8080/",
-  "homolUrl": "https://kubernetes.justto.com.br",
   "env": {
-
-    "default-password": "password",
-
-    "main-mail": "acordo@justto.app",
-    "main-pass": "@bundanc1A",
-
+    "main-email": "acordo@justto.app",
+    "main-password": "@bundanc1A",
+    "main-workspace": "Justto Teste",
 
     "onboarding-email": "teste.onboarding@justto.com.br",
     "onboarding-description": "",
