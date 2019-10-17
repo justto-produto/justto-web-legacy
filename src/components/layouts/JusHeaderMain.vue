@@ -56,15 +56,15 @@
               Versão {{ appVersion }}
             </div>
             <router-link to="/profile">
-              <el-dropdown-item divided>
+              <el-dropdown-item >
                 Configurações
               </el-dropdown-item>
             </router-link>
-            <a href="http://ajuda.justto.com.br/" target="_blank">
+            <!-- <a href="http://ajuda.justto.com.br/" target="_blank">
               <el-dropdown-item>
                 Central de ajuda
               </el-dropdown-item>
-            </a>
+            </a> -->
             <a href="#" @click="logout()">
               <el-dropdown-item divided>
                 Sair
