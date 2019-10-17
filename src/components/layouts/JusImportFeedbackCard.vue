@@ -196,7 +196,7 @@ export default {
           this.$store.dispatch('getCampaignByName', value).then(response => {
             this.campaignNameDuplicated = false
             response.data.content.forEach(campaign => {
-              if (campaign.name.toLowerCase() === value) {
+              if (campaign.name.toLowerCase() === value.toLowerCase()) {
                 this.campaignNameDuplicated = true
               }
             })
