@@ -109,7 +109,6 @@ describe('Ações da Disputa', function () {
       .contains('Engajamento')
   })
 
-
   it('Ação: Ganhar', function () {
     // Clica em Ganhar
     cy.get('[data-testid=settled]')

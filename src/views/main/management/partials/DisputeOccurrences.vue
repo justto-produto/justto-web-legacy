@@ -39,7 +39,7 @@
               <span :ref="getMessageRef(occurrence)">
                 <span v-html="buildContent(occurrence)" />
                 <span v-if="showResume(occurrence)">
-                  <a href="#" @click.prevent="showFullMessage(occurrence.id)" data-testid="show-email"> ver mais</a>
+                  <a href="#" data-testid="show-email" @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
                 </span>
               </span>
               <br>

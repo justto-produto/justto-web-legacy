@@ -18,10 +18,10 @@
             <span slot="label">
               Sem resposta
               <el-badge
-                data-testid="badge-tab0"
                 :hidden="!engagementLength"
                 :value="engagementLength"
                 :max="99"
+                data-testid="badge-tab0"
                 type="primary"
                 class="el-badge--absolute" />
             </span>
@@ -30,10 +30,10 @@
             <span slot="label">
               Em negociação
               <el-badge
-                data-testid="badge-tab1"
                 :hidden="!interactionLength"
                 :value="interactionLength"
                 :max="99"
+                data-testid="badge-tab1"
                 type="primary"
                 class="el-badge--absolute" />
             </span>
@@ -42,10 +42,10 @@
             <span slot="label">
               Proposta aceita
               <el-badge
-                data-testid="badge-tab2"
                 :hidden="!newDealsLength"
                 :value="newDealsLength"
                 :max="99"
+                data-testid="badge-tab2"
                 type="primary"
                 class="el-badge--absolute" />
             </span>
@@ -83,12 +83,12 @@
         :selected-ids.sync="selectedIds"
         :loading-disputes.sync="loadingDisputes" />
       <el-pagination
-        data-testid="pagination"
         :total.sync="disputesTotalLength"
         :page-size.sync="disputesPerPage"
         :current-page.sync="currentPage"
         :pager-count="15"
         :page-sizes="[initialDisputesPerPage, 30, 50, 100]"
+        data-testid="pagination"
         layout="total, prev, pager, next, sizes" />
       <div v-show="hasNew" class="el-notification info right" style="bottom: 100px;z-index: 1980;">
         <i class="el-notification__icon el-icon-info" />

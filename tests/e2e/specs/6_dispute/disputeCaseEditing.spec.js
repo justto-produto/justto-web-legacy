@@ -50,7 +50,7 @@ describe('Disputa', function () {
 
     // Clica no botão "Editar"
     cy.get('[data-testid=edit-dispute]')
-    .click()
+      .click()
 
     // Edita campo Alçada Máxima
     cy.get('[data-testid=bondary-input]')
@@ -107,8 +107,8 @@ describe('Disputa', function () {
 
     // Verifica se mensagem de confirmação aparece
     cy.get('.el-notification.success', { timeout: 60000 })
-    .contains('Os dados foram alterados com sucesso.')
-    .should('be.visible')
+      .contains('Os dados foram alterados com sucesso.')
+      .should('be.visible')
 
     // Verifica se valores correspondem
     cy.get('[data-testid=overview-upperrange]')

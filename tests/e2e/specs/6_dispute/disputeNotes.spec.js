@@ -55,7 +55,7 @@ describe('Disputa', function () {
 
     // Digita uma nota
     cy.get('[data-testid=input-note]')
-      .type(message, { force:true })
+      .type(message, { force: true })
       // .should('have.value', message)
 
     // Salva a nota

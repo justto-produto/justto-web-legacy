@@ -99,8 +99,8 @@
 </template>
 
 <script>
-  import { getLastInteraction, getInteractionIcon } from '@/plugins/jusUtils'
-  import i18n from '@/plugins/vueI18n.js'
+import { getLastInteraction, getInteractionIcon } from '@/plugins/jusUtils'
+import i18n from '@/plugins/vueI18n.js'
 const STATUS_INITIAL = 0
 const STATUS_SAVING = 1
 const STATUS_SUCCESS = 2

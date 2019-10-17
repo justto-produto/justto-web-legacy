@@ -29,7 +29,7 @@ describe('Justto.App - Onboarding', function () {
 
   it('Onboarding: Nome da Equipe', function () {
     cy.contains('Qual o nome da sua equipe?')
-    .should('be.visible')
+      .should('be.visible')
     cy.get('[data-testid=teamname-form]')
       .type('Teste Onboarding')
       .should('have.value', 'Teste Onboarding')
@@ -154,7 +154,7 @@ describe('Justto.App - Onboarding', function () {
   //   cy.get('[data-testid=invite-teammember]')
   //     .click()
   //
-    // Verifica se próximo passo é WhatsApp
+  // Verifica se próximo passo é WhatsApp
 
   // })
   //

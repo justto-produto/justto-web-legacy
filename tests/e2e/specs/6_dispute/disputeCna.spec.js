@@ -36,7 +36,7 @@ describe('Disputa', function () {
 
     // Seleciona CNA
     cy.get('[data-testid=select-cna]')
-      .click({ force:true })
+      .click({ force: true })
 
     // 'Enviar' deve estar desabilitado
     cy.get('[data-testid=submit-message]')
@@ -71,7 +71,7 @@ describe('Disputa', function () {
 
     // Digita mensagem
     cy.get('[data-testid=input-message]')
-      .type(message, { force:true })
+      .type(message, { force: true })
       // .should('have.value', message)
 
     // Envia mensagem

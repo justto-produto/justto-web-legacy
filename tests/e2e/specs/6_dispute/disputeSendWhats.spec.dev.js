@@ -33,7 +33,7 @@ describe('Envio de WhatsApp', function () {
 
     // Seleciona CNA
     cy.get('[data-testid=select-whatsapp]')
-      .click({ force:true })
+      .click({ force: true })
 
     // 'Enviar' deve estar desabilitado
     cy.get('[data-testid=submit-message]')
@@ -68,7 +68,7 @@ describe('Envio de WhatsApp', function () {
 
     // Digita mensagem
     cy.get('[data-testid=input-message]')
-      .type(message, { force:true })
+      .type(message, { force: true })
       // .should('have.value', message)
 
     // Envia mensagem

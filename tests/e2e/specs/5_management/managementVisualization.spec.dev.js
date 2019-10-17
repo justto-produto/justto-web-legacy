@@ -25,7 +25,7 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
       .should('be.visible', { timeout: 60000 })
 
     cy.get('.el-table__expand-icon').first()
-      .click({force: true})
+      .click({ force: true })
 
       // Verifica se existem casos exibidos
     cy.get('tbody>tr').first()
