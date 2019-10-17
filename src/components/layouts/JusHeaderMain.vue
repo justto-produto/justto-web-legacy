@@ -29,18 +29,15 @@
         <el-tooltip>
           <div slot="content">
             <span v-if="!isWhatsappConnected">
-              WhatsApp fora do ar, já estamos trabalhando na estabilização do serviço
+              WhatsApp fora do ar, já estamos trabalhando na estabilização do serviço.
             </span>
-            <!-- <span v-else-if="!!whatsappNumber">
-              Conectado via: {{ whatsappNumber | phoneMask }}
-            </span> -->
             <span v-else>
-              WhatsApp conectado
+              WhatsApp conectado.
             </span>
           </div>
           <jus-icon :icon="'whatsapp-' + (!isWhatsappConnected ? 'disconnected' : 'connected')" />
         </el-tooltip>
-        <i v-if="!isWhatsappConnected" class="el-icon-warning el-icon-pulse el-icon-danger" />
+        <!-- <i v-if="!isWhatsappConnected" class="el-icon-warning el-icon-pulse el-icon-danger" /> -->
       </div>
       <div class="jus-header-main__info">
         <el-dropdown trigger="click" placement="bottom-start">
