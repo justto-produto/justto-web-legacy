@@ -2,7 +2,7 @@ const login = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
-const name = Cypress.env('main-name')
+const user = Cypress.env('main-user')
 
 describe('Disputa', function () {
   before(function () {

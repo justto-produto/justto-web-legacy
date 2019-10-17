@@ -2,7 +2,7 @@ const login = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
-const name = Cypress.env('main-name')
+const user = Cypress.env('main-user')
 
 describe('Disputa', function () {
   before(function () {
@@ -34,13 +34,15 @@ describe('Disputa', function () {
     cy.get('.el-loading-mask')
       .should('not.be.visible')
 
+    cy.wait(1000)
+
     // Verifica se valores correspondem
     cy.get('[data-testid=overview-upperrange]')
-      .contains('R$ 27.000,00')
+      .contains('R$ 25.000,00')
     cy.get('[data-testid=overview-counterproposal]')
-      .contains('R$ 26.000,00')
+      .contains('R$ 35.000,00')
     cy.get('[data-testid=overview-proposal]')
-      .contains('R$ 15.000,00')
+      .contains('R$ 16.200,00')
     cy.get('[data-testid=overview-expirationdate]')
       .contains('30/12/98')
     cy.get('[data-testid=overview-description]')

@@ -2,7 +2,7 @@ const login = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
-const name = Cypress.env('main-name')
+const user = Cypress.env('main-user')
 
 describe('Disputa', function () {
   before(function () {
@@ -67,8 +67,10 @@ describe('Disputa', function () {
       .contains('Nota gravada com sucesso.')
       .should('be.visible')
 
+    cy.wait(500)
+
     // Nota deve aparecer entre as mensagens
-    cy.contains(name + ' dicionou uma nota: ' + message, { timeout: 60000 })
+    cy.contains(user + ' dicionou uma nota: ' + message, { timeout: 60000 })
       .should('be.visible')
 
     // Caixa de nota deve estar visivel e amarela
