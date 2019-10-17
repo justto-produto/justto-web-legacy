@@ -4,6 +4,7 @@ const workspace = Cypress.env('main-workspace')
 
 describe('Justto.App - Visualização de Gerenciamento', function () {
   before('Cena', function () {
+    // Requisição para Preparar ambiente
     cy.prepair_testes('PUT', 'prepare-management-test-e2e')
   })
 

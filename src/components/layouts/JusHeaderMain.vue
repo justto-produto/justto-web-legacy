@@ -18,7 +18,7 @@
             </span>
           </template>
         </el-autocomplete>
-        <h2 v-else class="jus-header-main__title">
+        <h2 v-else class="jus-header-main__title" data-testid="dispute-id">
           <router-link to="/management">
             <jus-icon icon="back"/>
           </router-link>

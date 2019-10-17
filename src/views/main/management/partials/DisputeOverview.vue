@@ -20,7 +20,7 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
-          <span>
+          <span data-testid="overview-status">
             {{ $t('occurrence.type.' + dispute.status) | capitalize }}
             <span v-if="dispute.paused">(pausada)</span>
           </span>

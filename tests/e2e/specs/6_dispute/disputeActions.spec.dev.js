@@ -1,39 +1,28 @@
-// const login = Cypress.env('import-actions-email')
-// const password = Cypress.env('default-password')
-const login = 'lucas@justto.com.br'
-const password = '123456'
+const login = Cypress.env('main-email')
+const password = Cypress.env('main-password')
+const workspace = Cypress.env('main-workspace')
+const dispute = Cypress.env('main-dispute')
+const name = Cypress.env('main-name')
 
-describe('Justto.App - Disputa: Ações', function () {
-  beforeEach('Login', function () {
-    // Acessa a página inicial do Justto.App
-    cy.visit('/')
+describe('Ações da Disputa', function () {
+  before(function () {
+    cy.prepair_testes('PUT', 'prepare-dispute-update-test-e2e')
+  })
 
-    // Redireciona para 'Login'
-    cy.url().should('include', '/#/login')
+  beforeEach(function () {
+    cy.access('/')
+    cy.login(login, password, workspace)
 
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type(login)
-      .should('have.value', login)
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type(password)
-      .should('have.value', password)
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit-login]')
-      .click()
-
-    // Verifica se tela acessada é a de "Gerenciamento"
-    cy.url().should('include', '/#/management')
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
       .click({ force: true })
-    // Entra na disputa
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
-      .click({ force: true })
+
+    // Entra na primeira disputa da lista
+    // cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
+      .contains('10908')
+      .click()
 
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
@@ -60,6 +49,10 @@ describe('Justto.App - Disputa: Ações', function () {
     // Modal de confirmação deve desaparecer
     cy.get('.el-message-box')
       .should('not.be.visible')
+
+    // Verifica se status da disputa foi alterados
+    cy.get('[data-testid=overview-status]')
+      .contains('Ganho (pausada)')
   })
 
   it('Ação: Retomar', function () {
@@ -83,7 +76,39 @@ describe('Justto.App - Disputa: Ações', function () {
     // Modal de confirmação deve desaparecer
     cy.get('.el-message-box')
       .should('not.be.visible')
+
+    // Verifica se status da disputa foi alterados
+    cy.get('[data-testid=overview-status]')
+      .contains('Ganho')
   })
+
+  it('Ação: Reiniciar Engajamento', function () {
+    // VClica em Reiniciar Engajamento
+    cy.get('[data-testid=restart-engagement]')
+      .click()
+
+    // Modal de confirmação deve aparecer
+    cy.get('.el-message-box')
+      .should('be.visible')
+
+    // Confirma a ação
+    cy.get('.confirm-action-btn')
+      .click()
+
+    // Notificação de sucesso deve aparecer
+    cy.get('.el-notification.success', { timeout: 60000 })
+      .contains('Ação reiniciar engajamento realizada com sucesso.')
+      .should('be.visible')
+
+    // Modal de confirmação deve desaparecer
+    cy.get('.el-message-box')
+      .should('not.be.visible')
+
+    // Verifica se status da disputa foi alterados
+    cy.get('[data-testid=overview-status]')
+      .contains('Engajamento')
+  })
+
 
   it('Ação: Ganhar', function () {
     // Clica em Ganhar
@@ -110,6 +135,10 @@ describe('Justto.App - Disputa: Ações', function () {
     // Botão deve estar desabilitado
     cy.get('[data-testid=settled]')
       .should('be.disabled')
+
+    // Verifica se status da disputa foi alterados
+    cy.get('[data-testid=overview-status]')
+      .contains('Ganho')
   })
 
   it('Ação: Favoritar', function () {
@@ -139,29 +168,6 @@ describe('Justto.App - Disputa: Ações', function () {
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success', { timeout: 60000 })
       .contains('Ação desfavoritar realizada com sucesso.')
-      .should('be.visible')
-
-    // Modal de confirmação deve desaparecer
-    cy.get('.el-message-box')
-      .should('not.be.visible')
-  })
-
-  it('Ação: Reiniciar Engajamento', function () {
-    // VClica em Reiniciar Engajamento
-    cy.get('[data-testid=restart-engagement]')
-      .click()
-
-    // Modal de confirmação deve aparecer
-    cy.get('.el-message-box')
-      .should('be.visible')
-
-    // Confirma a ação
-    cy.get('.confirm-action-btn')
-      .click()
-
-    // Notificação de sucesso deve aparecer
-    cy.get('.el-notification.success', { timeout: 60000 })
-      .contains('Ação reiniciar engajamento realizada com sucesso.')
       .should('be.visible')
 
     // Modal de confirmação deve desaparecer

@@ -1,56 +1,49 @@
-// const login = Cypress.env('editable-cases-email')
-// const password = Cypress.env('default-password')
-// const login = Cypress.env('import-actions-email')
-// const password = Cypress.env('default-password')
-const login = 'lucas@justto.com.br'
-const password = '123456'
+const login = Cypress.env('main-email')
+const password = Cypress.env('main-password')
+const workspace = Cypress.env('main-workspace')
+const dispute = Cypress.env('main-dispute')
+const name = Cypress.env('main-name')
 
-describe('Justto.App - Disputa: Menssagens', function () {
-  beforeEach('Login', function () {
+describe('Envio de CNA', function () {
+  before(function () {
+    // Requisição para Preparar ambiente
+    cy.prepair_testes('DELETE', 'delete-occorrences-dispute-update-test-e2e')
+  })
+
+  beforeEach(function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/#/login')
+    cy.access('/')
 
-    // Redireciona para 'Login'
-    cy.url().should('include', '/#/login')
+    // Faz login com 'acordo@justto.app'
+    cy.login(login, password, workspace)
+  })
 
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type(login)
-      .should('have.value', login)
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type(password)
-      .should('have.value', password)
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit-login]')
-      .click()
-
-    // Verifica se tela acessada é a de "Gerenciamento"
-    cy.url().should('include', '/#/management')
-
+  it('Envia de Email: Sucesso', function () {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
       .click({ force: true })
-  })
 
-  it('Envia de Email: Sucesso', function () {
     // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
+    // cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
+      .contains('10908')
       .click()
+
+    // Verifica se entrou na disputa 10908
+    cy.get('[data-testid=dispute-id]')
+      .contains('Disputa #' + dispute)
 
     // Seleciona CNA
     cy.get('[data-testid=select-cna]')
-          .click({ force:true })
+      .click({ force:true })
 
     // 'Enviar' deve estar desabilitado
     cy.get('[data-testid=submit-message]')
       .should('be.disabled')
 
     // Seleciona primeira parte do caso
-    cy.get('[data-testid=expand-party]').first()
+    cy.get('[data-testid=expand-party]').eq(1)
       .click()
 
     // 'Enviar' deve estar desabilitado
@@ -90,10 +83,8 @@ describe('Justto.App - Disputa: Menssagens', function () {
     cy.contains('cna enviado com sucesso.')
       .should('be.visible')
 
-    cy.wait(6000)
-
     // Caixas de nota devem aparecer
-    cy.get('[data-testid=message-box]').last()
+    cy.get('[data-testid=message-box]', { timeout: 60000 }).last()
       .should('be.visible')
       .should('have.css', 'background-color', 'rgb(182, 255, 251)')
 
