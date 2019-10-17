@@ -2,10 +2,11 @@ const login = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
-const user = Cypress.env('main-user')
+const name = Cypress.env('main-name')
 
-describe('Disputa', function () {
+describe('Envio de WhatsApp', function () {
   before(function () {
+    // Requisição para Preparar ambiente
     cy.prepair_testes('DELETE', 'delete-occorrences-dispute-update-test-e2e')
   })
 
@@ -14,13 +15,13 @@ describe('Disputa', function () {
     cy.login(login, password, workspace)
   })
 
-  it('Salvar Nota', function () {
+  it('Envia de Email: Sucesso', function () {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
       .click({ force: true })
 
-    // Entra na disputa
+    // Entra na primeira disputa da lista
     // cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
       .contains('10908')
@@ -30,17 +31,29 @@ describe('Disputa', function () {
     cy.get('[data-testid=dispute-id]')
       .contains('Disputa #' + dispute)
 
-    // Sistema deve redirecionar para a página de Registro
-    cy.url().should('include', '/#/management/dispute/')
-
-    // Entra na aba 'Notas'
-    cy.get('.el-tabs__nav > #tab-3')
-      .contains('Nota')
+    // Seleciona CNA
+    cy.get('[data-testid=select-whatsapp]')
       .click({ force: true })
 
-    // Valida notas vazias
-    cy.get('[data-testid=note-empty]')
-      .contains('Não foram encontradas notas.')
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-message]')
+      .should('be.disabled')
+
+    // Seleciona primeira parte do caso
+    cy.get('[data-testid=expand-party]').first()
+      .click()
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-message]')
+      .should('be.disabled')
+
+    // Seleciona um email
+    cy.get('[data-testid=checkbox-whatsapp]').first()
+      .click()
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-message]')
+      .should('not.be.disabled')
 
     function randomText (size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
@@ -53,29 +66,32 @@ describe('Disputa', function () {
     }
     const message = randomText(12)
 
-    // Digita uma nota
-    cy.get('[data-testid=input-note]')
+    // Digita mensagem
+    cy.get('[data-testid=input-message]')
       .type(message, { force: true })
       // .should('have.value', message)
 
-    // Salva a nota
-    cy.get('[data-testid=submit-note]')
+    // Envia mensagem
+    cy.get('[data-testid=submit-message]')
       .click()
 
-    // Notificação de sucesso deve desaparecer
+    // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success', { timeout: 60000 })
-      .contains('Nota gravada com sucesso.')
+    cy.contains('cna enviado com sucesso.')
       .should('be.visible')
 
-    cy.wait(500)
-
-    // Nota deve aparecer entre as mensagens
-    cy.contains(user + ' dicionou uma nota: ' + message, { timeout: 60000 })
+    // Caixas de nota devem aparecer
+    cy.get('[data-testid=message-box]', { timeout: 60000 }).last()
       .should('be.visible')
+      .should('have.css', 'background-color', 'rgb(182, 255, 251)')
 
-    // Caixa de nota deve estar visivel e amarela
-    cy.get('[data-testid=message-box] > div.el-card__body')
+    // Clica em 'vusualizar email'
+    cy.get('[data-testid=show-email]').last()
+      .click({ force: true })
+
+    // Mensagem deve ser a enviada
+    cy.get('[data-testid=message-box]')
+      .contains(message)
       .should('be.visible')
-      .should('have.css', 'background-color', 'rgb(255, 244, 204)')
   })
 })

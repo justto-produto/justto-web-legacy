@@ -1,8 +1,8 @@
 <template lang="html">
   <ul v-loading="loading" v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
     <infinite-loading :distance="1" spinner="spiral" direction="top" @infinite="loadOccurrences">
-      <div slot="no-more">Início das ocorrências</div>
-      <div slot="no-results">Início das ocorrências</div>
+      <div slot="no-more" data-testid="occurences-start">Início das ocorrências</div>
+      <div slot="no-results" data-testid="occurences-start">Início das ocorrências</div>
     </infinite-loading>
     <div v-for="(datedOccurrence, date, index) in datedOccurrences" :key="date + index">
       <el-card class="dispute-view-occurrences__date el-card--bg-info" shadow="never">
@@ -30,7 +30,7 @@
             <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
             <span v-html="buildHour(occurrence)" />
           </div>
-          <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card">
+          <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card" data-testid="message-box">
             <div v-if="!!buildName(occurrence)" slot="header">
               <jus-icon :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
               <span>{{ buildName(occurrence) }}</span>
@@ -39,7 +39,7 @@
               <span :ref="getMessageRef(occurrence)">
                 <span v-html="buildContent(occurrence)" />
                 <span v-if="showResume(occurrence)">
-                  <a href="#" @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
+                  <a href="#" data-testid="show-email" @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
                 </span>
               </span>
               <br>

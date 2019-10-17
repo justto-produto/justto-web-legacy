@@ -20,7 +20,7 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
-          <span>
+          <span data-testid="overview-status">
             {{ $t('occurrence.type.' + dispute.status) | capitalize }}
             <span v-if="dispute.paused">(pausada)</span>
           </span>
@@ -31,11 +31,11 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Alçada máxima:</span>
-          <span>{{ dispute.disputeUpperRange | currency }}</span>
+          <span data-testid="overview-upperrange">{{ dispute.disputeUpperRange | currency }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
-          <span>
+          <span data-testid="overview-counterproposal">
             <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">
               <jus-avatar-user :name="dispute.lastCounterOfferName" size="mini" />
             </el-tooltip>
@@ -50,7 +50,7 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Valor proposto:</span>
-          <span>
+          <span data-testid="overview-proposal">
             <el-tooltip v-if="dispute.lastOfferName" :content="'Proposto por: ' + dispute.lastOfferName">
               <jus-avatar-user :name="dispute.lastOfferName" size="mini" />
             </el-tooltip>
@@ -59,11 +59,11 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
-          <span v-if="dispute.expirationDate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+          <span v-if="dispute.expirationDate" data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </div>
         <div v-if="computedDescription" class="dispute-overview-view__info-textarea">
           Descrição:
-          <strong :class="{ 'right': computedDescription.length < 25 }">
+          <strong :class="{ 'right': computedDescription.length < 25 }" data-testid="overview-description">
             {{ computedDescription }}
             <span v-if="dispute.description.length > 140">
               <a href="#" class="dispute-overview-view__see-more" @click.prevent="descriptionCollapse = !descriptionCollapse">
@@ -159,7 +159,7 @@
           <ul>
             <li v-for="(email, index) in role.emails.filter(e => !e.archived)" :key="`${index}-${email.id}`">
               <span>
-                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role)" />
+                <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role)" />
                 {{ email.address }}
               </span>
               <div class="dispute-overview-view__list-actions">
@@ -177,7 +177,7 @@
           <ul>
             <li v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`">
               <div>
-                <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role)" />
+                <el-checkbox v-model="oab.selected" data-testid="checkbox-cna" @change="updateDisputeRole(role)" />
                 {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
               </div>
               <div class="dispute-overview-view__list-actions">
@@ -208,7 +208,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="disputeUpperRange">
-              <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" />
+              <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" data-testid="bondary-input" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -216,12 +216,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
-              <money v-model="disputeForm.lastCounterOfferValue" v-bind="money" class="el-input__inner" />
+              <money v-model="disputeForm.lastCounterOfferValue" v-bind="money" class="el-input__inner" data-testid="counterproposal-value-input" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Proposto por" prop="lastCounterOfferValue">
-              <el-select v-model="selectedClaimantId" placeholder="Autor da contraproposta">
+              <el-select v-model="selectedClaimantId" placeholder="Autor da contraproposta" data-testid="counterproposal-claimant-input">
                 <el-option
                   v-for="(claimant, index) in disputeClaimants"
                   :key="`${index}-${claimant.id}`"
@@ -235,12 +235,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastOfferValue">
-              <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" />
+              <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" data-testid="proposal-value-input"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Proposto por" prop="lastCounterOfferValue">
-              <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta">
+              <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta" data-testid="proposal-negotiator-input">
                 <el-option
                   v-for="(negotiator, index) in disputeNegotiations"
                   :key="`${index}-${negotiator.id}`"
@@ -254,13 +254,14 @@
               <el-date-picker
                 v-model="disputeForm.expirationDate"
                 :clearable="false"
+                data-testid="expiration-date-input"
                 format="dd/MM/yyyy"
                 type="date" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
-              <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description"/>
+              <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description-input"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -587,11 +588,12 @@ export default {
           h('br', null, null),
           h('div', null, 'Deseja continuar?')
         ]),
-        confirmButtonText: 'Continuar',
-        showCancelButton: true,
         type: 'warning',
+        confirmButtonText: 'Continuar',
+        confirmButtonClass: 'edit-case-confirm-button',
         cancelButtonClass: 'is-plain',
-        cancelButtonText: 'Cancelar'
+        showCancelButton: true,
+        customClass: 'edit-case-confitm-dialog'
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           let promises = []

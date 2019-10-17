@@ -9,7 +9,7 @@
       </p>
     </div>
     <jus-whatsapp :number.sync="number" />
-    <el-button type="primary" @click="nextStep()">Próximo</el-button>
+    <el-button type="primary" data-testid="next-whatsapp" @click="nextStep()">Próximo</el-button>
   </div>
 </template>
 

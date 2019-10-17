@@ -1,30 +1,14 @@
-const login = Cypress.env('import-actions-email')
-const password = Cypress.env('default-password')
+const login = Cypress.env('main-email')
+const password = Cypress.env('main-password')
+const workspace = Cypress.env('main-workspace')
+const dispute = Cypress.env('main-dispute')
+const name = Cypress.env('main-name')
 
 describe('Justto.App - Disputa: Ação Perder', function () {
-  beforeEach('Login', function () {
-    // Acessa a página inicial do Justto.App
-    cy.visit('/')
-
-    // Redireciona para 'Login'
-    cy.url().should('include', '/#/login')
-
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type(login)
-      .should('have.value', login)
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type(password)
-      .should('have.value', password)
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Verifica se tela acessada é a de "Gerenciamento"
-    cy.url().should('include', '/#/management')
+  beforeEach(function () {
+    cy.prepair_testes('PUT', '/prepare-dispute-update-test-e2e')
+    cy.access('/')
+    cy.login(login, password, workspace)
 
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')

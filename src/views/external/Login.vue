@@ -58,7 +58,7 @@
             native-type="submit"
             class="external-view__submit"
             type="primary"
-            data-testid="submit">
+            data-testid="submit-login">
             Entrar
           </el-button>
           <el-row class="external-view__info">
@@ -82,19 +82,20 @@
           <h1 class="external-view__title">Equipe</h1>
           <p>Selecione uma de suas equipes de trabalho para entrar.</p>
           <el-form-item label="Equipe" prop="selectedWorkspace">
-            <el-select v-model="workspaceForm.selectedWorkspaceIndex" placeholder="Selecione">
+            <el-select v-model="workspaceForm.selectedWorkspaceIndex" placeholder="Selecione" data-testid="select-werkspace">
               <el-option
                 v-for="(w, index) in workspaces"
                 :key="index"
                 :value="index"
-                :label="w.workspace.name" />
+                :label="w.workspace.name"
+                data-testid="select-workspace"/>
             </el-select>
           </el-form-item>
           <el-button
             native-type="submit"
             class="external-view__submit"
             type="primary"
-            data-testid="submit">
+            data-testid="submit-workspace">
             Selecionar e entrar
           </el-button>
         </el-form>

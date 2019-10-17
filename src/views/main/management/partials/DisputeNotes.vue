@@ -4,11 +4,11 @@
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
-      <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning">
+      <el-card v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__log el-card--bg-warning" data-testid="message-box">
         {{ occurrence.description.replace('.', ':') }}
       </el-card>
     </li>
-    <li v-if="!loading && !occurrences.length" class="dispute-view-occurrences__empty">
+    <li v-if="!loading && !occurrences.length" class="dispute-view-occurrences__empty" data-testid="note-empty">
       <jus-icon icon="empty-screen-filter" />
       Não foram encontradas notas.
     </li>

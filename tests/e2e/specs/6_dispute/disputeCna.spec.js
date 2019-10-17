@@ -1,70 +1,62 @@
-// const login = Cypress.env('editable-cases-email')
-// const password = Cypress.env('default-password')
-const login = Cypress.env('import-actions-email')
-const password = Cypress.env('default-password')
+const login = Cypress.env('main-email')
+const password = Cypress.env('main-password')
+const workspace = Cypress.env('main-workspace')
+const dispute = Cypress.env('main-dispute')
+const user = Cypress.env('main-user')
 
-describe('Justto.App - Disputa: Menssagens', function () {
-  beforeEach('Login', function () {
+describe('Disputa', function () {
+  before(function () {
+    // Requisição para Preparar ambiente
+    cy.prepair_testes('DELETE', 'delete-occorrences-dispute-update-test-e2e')
+  })
+
+  beforeEach(function () {
     // Acessa a página inicial do Justto.App
-    cy.visit('/#/login')
+    cy.access('/')
 
-    // Redireciona para 'Login'
-    cy.url().should('include', '/#/login')
+    // Faz login com 'acordo@justto.app'
+    cy.login(login, password, workspace)
+  })
 
-    // Preenche o campo 'Email'
-    cy.get('[data-testid=login-email]')
-      .type(login)
-      .should('have.value', login)
-
-    // Preenche o campo 'Senha'
-    cy.get('[data-testid=login-password]')
-      .type(password)
-      .should('have.value', password)
-
-    // Clica no botão "Entrar"
-    cy.get('[data-testid=submit]')
-      .click()
-
-    // Verifica se tela acessada é a de "Gerenciamento"
-    cy.url().should('include', '/#/management')
-
+  it('Envio de CNA', function () {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
       .click({ force: true })
-  })
 
-  it('Envio de CNA: Parte não selecionada', function () {
     // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
+    // cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
+    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
+      .contains('10908')
       .click()
 
-    // Caixa de texto deve estar desabilitada, mensagem deve aparecer no lugar.
-    cy.get('[data-testid=unselected-party]')
-      .contains('Escolha um destinatário ao lado')
-
-    // 'Enviar' deve estar desabilitado
-    cy.get('[data-testid=submit-email]')
-      .should('be.disabled')
-
-    // Entra na aba 'Todos'
-    cy.get('.el-tabs__nav > #tab-3')
-      .contains('Todos')
-      .click({ force: true })
-  })
-
-  it('Envia de CNA: Sucesso', function () {
-    // Entra na primeira disputa da lista
-    cy.get('[data-testid=dispute-index] tbody > tr.el-table__row').first()
-      .click()
-
-    // Seleciona primeira parte do caso
-    cy.get('[data-testid=expand-party]').first()
-      .click()
+    // Verifica se entrou na disputa 10908
+    cy.get('[data-testid=dispute-id]')
+      .contains('Disputa #' + dispute)
 
     // Seleciona CNA
     cy.get('[data-testid=select-cna]')
+      .click({ force: true })
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-message]')
+      .should('be.disabled')
+
+    // Seleciona primeira parte do caso
+    cy.get('[data-testid=expand-party]').eq(1)
       .click()
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-message]')
+      .should('be.disabled')
+
+    // Seleciona um email
+    cy.get('[data-testid=checkbox-cna]').first()
+      .click()
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-message]')
+      .should('not.be.disabled')
 
     function randomText (size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
@@ -79,41 +71,30 @@ describe('Justto.App - Disputa: Menssagens', function () {
 
     // Digita mensagem
     cy.get('[data-testid=input-message]')
-      .type(message)
-      .should('have.value', message)
+      .type(message, { force: true })
+      // .should('have.value', message)
 
     // Envia mensagem
-    cy.get('[data-testid=submit-email]')
+    cy.get('[data-testid=submit-message]')
       .click()
 
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success', { timeout: 60000 })
-    cy.contains('email enviado com sucesso.')
+    cy.contains('cna enviado com sucesso.')
       .should('be.visible')
 
-    cy.wait(12000)
-    // Caixas de CNA devem aparecer
-    cy.get('[data-testid=message-box]')
+    // Caixas de nota devem aparecer
+    cy.get('[data-testid=message-box]', { timeout: 60000 }).last()
       .should('be.visible')
+      .should('have.css', 'background-color', 'rgb(182, 255, 251)')
 
-    // // Clica em 'vusualizar email'
-    // cy.get('[data-testid=show-email]').last()
-    //   .click({force: true})
-    //
-    // // Dialog de conteudo do email deve aparecer
-    // cy.get('[data-testid=email-dialog]')
-    //   .should('be.visible')
+    // Clica em 'vusualizar email'
+    cy.get('[data-testid=show-email]').last()
+      .click({ force: true })
 
     // Mensagem deve ser a enviada
-    cy.contains(message)
+    cy.get('[data-testid=message-box]')
+      .contains(message)
       .should('be.visible')
-
-    // // Fecha dialog
-    // cy.get('[data-testid=close-button]')
-    //   .click()
-    //
-    // // Dialog deve desaparecer
-    // cy.get('[data-testid=email-dialog]')
-    //   .should('not.be.visible')
   })
 })

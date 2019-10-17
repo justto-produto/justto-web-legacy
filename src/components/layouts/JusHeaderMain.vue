@@ -18,7 +18,7 @@
             </span>
           </template>
         </el-autocomplete>
-        <h2 v-else class="jus-header-main__title">
+        <h2 v-else class="jus-header-main__title" data-testid="dispute-id">
           <router-link to="/management">
             <jus-icon icon="back"/>
           </router-link>
@@ -29,18 +29,15 @@
         <el-tooltip>
           <div slot="content">
             <span v-if="!isWhatsappConnected">
-              WhatsApp fora do ar, já estamos trabalhando na estabilização do serviço
+              WhatsApp fora do ar, já estamos trabalhando na estabilização do serviço.
             </span>
-            <!-- <span v-else-if="!!whatsappNumber">
-              Conectado via: {{ whatsappNumber | phoneMask }}
-            </span> -->
             <span v-else>
-              WhatsApp conectado
+              WhatsApp conectado.
             </span>
           </div>
           <jus-icon :icon="'whatsapp-' + (!isWhatsappConnected ? 'disconnected' : 'connected')" />
         </el-tooltip>
-        <i v-if="!isWhatsappConnected" class="el-icon-warning el-icon-pulse el-icon-danger" />
+        <!-- <i v-if="!isWhatsappConnected" class="el-icon-warning el-icon-pulse el-icon-danger" /> -->
       </div>
       <div class="jus-header-main__info">
         <el-dropdown trigger="click" placement="bottom-start">
@@ -59,15 +56,15 @@
               Versão {{ appVersion }}
             </div>
             <router-link to="/profile">
-              <el-dropdown-item divided>
+              <el-dropdown-item >
                 Configurações
               </el-dropdown-item>
             </router-link>
-            <a href="http://ajuda.justto.com.br/" target="_blank">
+            <!-- <a href="http://ajuda.justto.com.br/" target="_blank">
               <el-dropdown-item>
                 Central de ajuda
               </el-dropdown-item>
-            </a>
+            </a> -->
             <a href="#" @click="logout()">
               <el-dropdown-item divided>
                 Sair

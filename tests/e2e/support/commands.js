@@ -42,28 +42,71 @@ Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
   })
 })
 
-Cypress.Commands.add('deleteWorkspace', (email, password, sub_domain) => {
-  // this is an example of skipping your UI and logging in programmatically
-  const homolUrl = Cypress.env('homolUrl')
-  // setup some basic types
-  // and user properties
-  const loginDelete = {
-    email: email,
-    password: password
-  }
-
-  // create the user first in the DB
-  cy.request({
-    url: '/api/accounts/token', // assuming you've exposed a seeds route
-    method: 'POST',
-    body: loginDelete
-  })
-    .its('body')
-    .then((body) => {
-      cy.request({
-        url: '/api/disputes/workspace/' + sub_domain,
-        method: 'DELETE',
-        headers: 'Authorization: ' + body.token
-      })
-    })
+Cypress.Commands.add('prepair_testes', (method, end_point) => {
+  // Faz requisição para preparar ambiente especifico de teste
+  cy.request(method, 'https://justto.app/api/disputes/' + end_point)
 })
+
+Cypress.Commands.add('login', (email, password, workspace) => {
+  // Preenche o campo 'Email'
+  cy.get('[data-testid=login-email]')
+    .type(email)
+    .should('have.value', email)
+
+  // Preenche o campo 'Senha'
+  cy.get('[data-testid=login-password]')
+    .type(password)
+    .should('have.value', password)
+
+  // Clica no botão "Entrar"
+  cy.get('[data-testid=submit-login]')
+    .click()
+
+  // Verifica se entrou na seleção de workspace
+  cy.contains('Selecione uma de suas equipes de trabalho para entrar')
+
+  // Seleciona um workspace
+  cy.get('[data-testid=select-werkspace]')
+    .click()
+  cy.get('[data-testid=select-workspace]')
+    .contains(workspace)
+    .click()
+  // .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo
+  // .trigger('keydown', { keyCode: 13, Which: 13 }) // Pressiona Enter
+
+  // Clica no botão "Selecionar e Entrar"
+  cy.get('[data-testid=submit-workspace]')
+    .click()
+
+  // Valida se acesso foi feito
+  cy.url().should('include', '/#/management')
+})
+
+Cypress.Commands.add('access', (link) => {
+  let url = link === '/' ? '/#/login' : link
+
+  // Acessa a página inicial do Justto.App
+  cy.visit(link)
+
+  // Sistema deve redirecionar para a página de Login
+  cy.url().should('include', url)
+})
+
+// Cypress.Commands.add('deleteWorkspace', (email, password, sub_domain) => {
+//
+//
+//   // create the user first in the DB
+//   cy.request({
+//     url: '/api/accounts/token', // assuming you've exposed a seeds route
+//     method: 'POST',
+//     body: loginDelete
+//   })
+//     .its('body')
+//     .then((body) => {
+//       cy.request({
+//         url: '/api/disputes/workspace/' + sub_domain,
+//         method: 'DELETE',
+//         headers: 'Authorization: ' + body.token
+//       })
+//     })
+// })

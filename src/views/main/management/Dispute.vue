@@ -208,7 +208,7 @@
                     </div>
                     <span v-if="validName">
                       <el-button
-                        :disabled="invalidReceiver || !activeRole.personId "
+                        :disabled="invalidReceiver || !activeRole.personId"
                         type="primary"
                         data-testid="submit-message"
                         @click="sendMessage()">
@@ -251,7 +251,7 @@
                 <textarea
                   v-model="newNote"
                   rows="2"
-                  data-testid="input-nota"
+                  data-testid="input-note"
                   placeholder="Escreva alguma coisa"
                   class="el-textarea__inner"
                   @keydown.enter.exact.prevent
@@ -418,6 +418,10 @@ export default {
       } else {
         this.activeRole = {}
       }
+      this.updateInvalidReceiver()
+      this.$forceUpdate()
+    },
+    updateInvalidReceiver () {
       switch (this.messageType) {
         case 'email':
           this.invalidReceiver = this.activeRole.invalidEmail
@@ -429,7 +433,6 @@ export default {
           this.invalidReceiver = this.activeRole.invalidOab
           break
       }
-      this.$forceUpdate()
     },
     unsubscribeOccurrences (id) {
       this.$store.commit('clearDisputeOccurrences')
@@ -515,6 +518,7 @@ export default {
     },
     setMessageType (type) {
       this.messageType = type
+      this.updateInvalidReceiver()
     },
     disputeAction (action) {
       if (action === 'unsettled') {
@@ -615,9 +619,6 @@ export default {
         })
       }
     },
-    /*
-    * @params Object {type, role}
-    */
     getSelectedContacts (params) {
       switch (params.type) {
         case 'email':
@@ -631,7 +632,7 @@ export default {
       }
     },
     sendMessage () {
-      if (this.newMessage.trim().replace('\n', '')) {
+      if (this.newMessage.trim().replace('\n', '') && this.activeRole.personId && !this.invalidReceiver) {
         this.loadingTextarea = true
         this.$store.dispatch('send' + this.messageType, {
           to: [{

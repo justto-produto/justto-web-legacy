@@ -7,6 +7,7 @@
     empty-text=" "
     height="100%"
     class="management-table el-table--disputes"
+    data-testid="dispute-index"
     @row-click="handleRowClick"
     @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="44px" />
@@ -110,7 +111,7 @@
       min-width="140px">
       <template slot-scope="scope">
         <el-tooltip content="Negociação encerra nos próximos 3 dias">
-          <span v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'" class="management-table__expiration-icon position-relative">
+          <span v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'" data-testid="expiration-notify" class="management-table__expiration-icon position-relative">
             <jus-icon icon="clock" />
             <i class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
           </span>

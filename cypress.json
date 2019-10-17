@@ -4,28 +4,12 @@
   "defaultCommandTimeout": 10000,
   "pluginsFile": "tests/e2e/plugins/index.js",
   "baseUrl": "http://localhost:8080/",
-  "homolUrl": "https://kubernetes.justto.com.br",
   "env": {
-    "default-strategy": "Indenizatório",
-    "default-campaign": "Nestle",
-    "default-password": "password",
-    
-    "default-test-password": "123456",
-
-    "empty-account-email": "empty-account@justto.com.br",
-    "empty-account-description": "",
-
-    "not-editable-cases-email": "not-editable-cases@justto.com.br",
-    "not-editable-cases-description": "",
-
-    "editable-cases-email": "editable-cases@justto.com.br",
-    "editable-cases-description": "",
-
-    "not-configured-account-email": "not-configured-account@justto.com.br",
-    "not-configured-account-description": "",
-
-    "import-actions-email": "import-actions@justto.com.br",
-    "import-actions-description": "",
+    "main-email": "acordo@justto.app",
+    "main-password": "@bundanc1A",
+    "main-workspace": "Justto Teste",
+    "main-dispute": "10908",
+    "main-user": "Testes E2E",
 
     "onboarding-email": "teste.onboarding@justto.com.br",
     "onboarding-description": "",

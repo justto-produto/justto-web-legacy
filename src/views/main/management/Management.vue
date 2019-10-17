@@ -21,6 +21,7 @@
                 :hidden="!engagementLength"
                 :value="engagementLength"
                 :max="99"
+                data-testid="badge-tab0"
                 type="primary"
                 class="el-badge--absolute" />
             </span>
@@ -32,17 +33,19 @@
                 :hidden="!interactionLength"
                 :value="interactionLength"
                 :max="99"
+                data-testid="badge-tab1"
                 type="primary"
                 class="el-badge--absolute" />
             </span>
           </el-tab-pane>
-          <el-tab-pane name="2" label="Com Interação">
+          <el-tab-pane name="2" label="Com Interação" data-testid="tab-pproposal-accepted">
             <span slot="label">
               Proposta aceita
               <el-badge
                 :hidden="!newDealsLength"
                 :value="newDealsLength"
                 :max="99"
+                data-testid="badge-tab2"
                 type="primary"
                 class="el-badge--absolute" />
             </span>
@@ -85,6 +88,7 @@
         :current-page.sync="currentPage"
         :pager-count="15"
         :page-sizes="[initialDisputesPerPage, 30, 50, 100]"
+        data-testid="pagination"
         layout="total, prev, pager, next, sizes" />
       <div v-show="hasNew" class="el-notification info right" style="bottom: 100px;z-index: 1980;">
         <i class="el-notification__icon el-icon-info" />
