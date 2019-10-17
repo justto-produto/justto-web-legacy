@@ -1,6 +1,8 @@
-describe('Justto.App - Register', function () {
-  beforeEach('Acesso Registro', function () {
-    // Acessa a página inicial do Justto.App
+const email = Cypress.env('main-email')
+const email_register = 'register@justto.com.br'
+
+describe('Nova Conta', function () {
+  beforeEach(function () {
     cy.access('/')
 
     // Acessa a página de registro
@@ -11,9 +13,32 @@ describe('Justto.App - Register', function () {
     cy.url().should('include', '/#/register')
   })
 
-  const email = 'register@teste2e.com'
+  it('Sucesso', function () {
+    // Preenche o campo 'Nome'
+    cy.get('[data-testid=register-name]')
+      .type('Conta Teste')
+      .should('have.value', 'Conta Teste')
 
-  it('Registro: Sucesso', function () {
+    // Preenche o campo 'Email'
+    cy.get('[data-testid=register-email]')
+      .type(email_register)
+      .should('have.value', email_register)
+
+    // Preenche o campo 'Senha'
+    cy.get('[data-testid=register-password]')
+      .type('password')
+      .should('have.value', 'password')
+
+    // Clica no botão "Entrar"
+    cy.get('[data-testid=submit]')
+      .click()
+
+    // Valida se registro funcionou
+    cy.contains('Cadastro realizado com sucesso! Acesse seu email para prosseguir.')
+      .should('be.visible')
+  })
+
+  it('Sucesso', function () {
     // Preenche o campo 'Nome'
     cy.get('[data-testid=register-name]')
       .type('Conta Teste')
@@ -34,11 +59,11 @@ describe('Justto.App - Register', function () {
       .click()
 
     // Valida se registro funcionou
-    cy.contains('Cadastro realizado com sucesso! Acesse seu email para prosseguir.')
+    cy.contains('Já existe um usuário cadastrado com este e-mail.')
       .should('be.visible')
   })
 
-  it('Registro: Email Inválido', function () {
+  it('Email Inválido', function () {
     // Preenche o campo 'Nome'
     cy.get('[data-testid=register-name]')
       .type('Conta Teste')

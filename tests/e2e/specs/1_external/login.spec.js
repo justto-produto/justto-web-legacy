@@ -3,13 +3,11 @@ const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 
 describe('Login', function () {
-  beforeEach('Acesso', function () {
-    // Acessa a página inicial do Justto.App
+  beforeEach(function () {
     cy.access('/')
   })
 
   it('Multiplos Workspaces', function () {
-    // Faz login com 'acordo@justto.app'
     cy.login(email, password, workspace)
   })
 

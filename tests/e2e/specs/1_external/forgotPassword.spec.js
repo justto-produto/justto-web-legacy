@@ -1,7 +1,7 @@
 const email = Cypress.env('main-email')
 
 describe('Esqueci a Senha', function () {
-  beforeEach('Acesso', function () {
+  beforeEach(function () {
     cy.access('/')
 
     // Acessa a página de Equeci minha Senha

@@ -4,7 +4,7 @@ const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
 const name = Cypress.env('main-name')
 
-describe('Envio de Notas', function () {
+describe('Disputa', function () {
   before(function () {
     cy.prepair_testes('DELETE', 'delete-occorrences-dispute-update-test-e2e')
   })
@@ -14,7 +14,7 @@ describe('Envio de Notas', function () {
     cy.login(login, password, workspace)
   })
 
-  it('Salvar Nota: Sucesso', function () {
+  it('Salvar Nota', function () {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')

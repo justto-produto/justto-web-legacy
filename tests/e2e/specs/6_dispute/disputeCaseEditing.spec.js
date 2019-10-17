@@ -4,7 +4,7 @@ const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
 const name = Cypress.env('main-name')
 
-describe('Edição de Dispute', function () {
+describe('Disputa', function () {
   before(function () {
     cy.prepair_testes('PUT', 'prepare-dispute-update-test-e2e')
   })
@@ -14,7 +14,7 @@ describe('Edição de Dispute', function () {
     cy.login(login, password, workspace)
   })
 
-  it('Entra na disputa', function () {
+  it('Editação de Disputa', function () {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')

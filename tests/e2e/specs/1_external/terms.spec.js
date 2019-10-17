@@ -1,6 +1,5 @@
 describe('Termos', function () {
-  beforeEach('Acesso', function () {
-    // Acessa a página inicial do Justto.App
+  beforeEach(function () {
     cy.access('/')
   })
 

@@ -1,6 +1,5 @@
 describe('Nova Senha', function () {
-  beforeEach('Acessa', function () {
-    // Acessa a página inicial do Justto.App
+  beforeEach(function () {
     cy.access('/#/new-password/TSTAUTO')
   })
 
