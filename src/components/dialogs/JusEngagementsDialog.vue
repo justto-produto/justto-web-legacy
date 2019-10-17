@@ -73,7 +73,7 @@ export default {
         case 'EMAIL':
           return 'email'
         case 'EMAIL_CNA':
-          return 'cna'
+          return 'email-cna'
         case 'DELAY':
           return 'clock'
         default:

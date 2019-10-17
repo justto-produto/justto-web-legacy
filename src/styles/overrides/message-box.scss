@@ -9,12 +9,16 @@
   }
   &__title {
     font-weight: bold;
-    text-transform: capitalize;
   }
   &__main {
     padding: 10px 20px 30px !important;
   }
   &__btns {
     padding: 10px 15px 0px !important;
+  }
+  &__message {
+    strong {
+      text-transform: uppercase;
+    }
   }
 }
