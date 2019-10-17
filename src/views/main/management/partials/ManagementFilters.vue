@@ -316,16 +316,23 @@ export default {
       ]
     }
   },
-  beforeMount () {
-    this.loading = true
-    Promise.all([
-      this.$store.dispatch('getCampaigns'),
-      this.$store.dispatch('getMyStrategies')
-    ]).finally(responses => {
-      this.loading = false
-    })
+  watch: {
+    visibleFilters (value) {
+      if (value) {
+        this.fetchData()
+      }
+    }
   },
   methods: {
+    fetchData () {
+      this.loading = true
+      Promise.all([
+        this.$store.dispatch('getCampaigns'),
+        this.$store.dispatch('getMyStrategies')
+      ]).finally(responses => {
+        this.loading = false
+      })
+    },
     applyFilters () {
       this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputeQuery', this.filters)
