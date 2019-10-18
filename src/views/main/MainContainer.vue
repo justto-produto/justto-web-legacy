@@ -3,7 +3,7 @@
     <el-aside class="container-aside" width="auto">
       <div :class="{'aside-logo--colapsed': isCollapse}" class="aside-logo">
         <router-link to="/">
-          <img class="aside-logo__logo" src="@/assets/logo-small.svg" title="aaaaa">
+          <img class="aside-logo__logo" src="@/assets/logo-small.svg">
         </router-link>
       </div>
       <el-menu
