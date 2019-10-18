@@ -10,7 +10,7 @@ const whatsappModule = {
   actions: {
     getWhatsappStatus ({ commit }) {
       // eslint-disable-next-line
-      axios.get('http://api.service.chatpro.com.br:31855/api/v1/status',{
+      axios.get('https://api.service.chatpro.com.br:31855/api/v1/status',{
         headers: {
           'Authorization': '70b36901fd1a81771ae98f07d4d5eee051ee36ac'
         }
