@@ -256,7 +256,8 @@
                 :clearable="false"
                 data-testid="expiration-date-input"
                 format="dd/MM/yyyy"
-                type="date" />
+                type="date"
+                value-format="yyyy-MM-dd" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -597,9 +598,10 @@ export default {
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           let promises = []
+          debugger
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
-          if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).add(1, 'hour').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+          if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]23:00:00[Z]')
           if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
           promises.push(this.$store.dispatch('editDispute', disputeToEdit))
           if (this.disputeForm.lastCounterOfferValue !== this.dispute.lastCounterOfferValue) {
