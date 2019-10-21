@@ -34,6 +34,15 @@
           <span data-testid="overview-upperrange">{{ dispute.disputeUpperRange | currency }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+          <span class="title">Valor proposto:</span>
+          <span data-testid="overview-proposal">
+            <el-tooltip v-if="dispute.lastOfferName" :content="'Proposto por: ' + dispute.lastOfferName">
+              <jus-avatar-user :name="dispute.lastOfferName" size="mini" />
+            </el-tooltip>
+            {{ dispute.lastOfferValue | currency }}
+          </span>
+        </div>
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
           <span data-testid="overview-counterproposal">
             <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">
@@ -43,19 +52,10 @@
           </span>
         </div>
         <div
-          v-if="(dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED') && dispute.dealValue"
+          v-if="(dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED') && dispute.disputeDealValue"
           class="dispute-overview-view__info-line">
           <span class="title">Valor do acordo:</span>
           <span>{{ dispute.disputeDealValue | currency }}</span>
-        </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-          <span class="title">Valor proposto:</span>
-          <span data-testid="overview-proposal">
-            <el-tooltip v-if="dispute.lastOfferName" :content="'Proposto por: ' + dispute.lastOfferName">
-              <jus-avatar-user :name="dispute.lastOfferName" size="mini" />
-            </el-tooltip>
-            {{ dispute.lastOfferValue | currency }}
-          </span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Fim da negociação:</span>
