@@ -7,7 +7,7 @@
           <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-          <span class="title">Código:</span>
+          <span class="title">Processo:</span>
           <span>{{ dispute.code }}</span>
         </div>
         <div v-if="dispute.campaign" class="dispute-overview-view__info-line" data-testid="dispute-infoline">

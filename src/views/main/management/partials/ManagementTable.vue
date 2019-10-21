@@ -18,10 +18,10 @@
     </el-table-column>
     <el-table-column
       :sortable="false"
-      label="Disputa"
-      min-width="68px"
-      prop="id">
-      <template slot-scope="scope">#{{ scope.row.id }}</template>
+      label="Processo"
+      min-width="110px"
+      prop="code">
+      <template slot-scope="scope">{{ scope.row.code }}</template>
     </el-table-column>
     <el-table-column
       :sortable="false"
