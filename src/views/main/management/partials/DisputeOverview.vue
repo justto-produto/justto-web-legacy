@@ -599,7 +599,7 @@ export default {
           let promises = []
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
-          if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+          if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).add(1, 'hour').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
           if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
           promises.push(this.$store.dispatch('editDispute', disputeToEdit))
           if (this.disputeForm.lastCounterOfferValue !== this.dispute.lastCounterOfferValue) {
