@@ -124,6 +124,25 @@
                 @change="changeExpirationDate" />
             </el-form-item>
           </el-col>
+          <!-- RÉU -->
+          <el-col v-if="!loading && isAll" :span="12">
+            <el-form-item label="Réu">
+              <el-select
+                v-model="filters.respondent"
+                multiple
+                filterable
+                data-testid="filter-respondent"
+                placeholder="Selecione uma opção"
+                clearable
+                @clear="clearRespondent">
+                <el-option
+                  v-for="respondent in respondents"
+                  :key="respondent"
+                  :value="respondent"
+                  :label="respondent"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <!-- FAVORITOS -->
           <el-col :span="12">
             <el-form-item label="Exibir ocorrências:" class="management-filters__switch">
@@ -272,6 +291,9 @@ export default {
     campaigns () {
       return this.$store.getters.campaignList
     },
+    respondents () {
+      return this.$store.getters.respondents
+    },
     interactions () {
       return [{
         key: 'WHATSAPP',
@@ -328,7 +350,8 @@ export default {
       this.loading = true
       Promise.all([
         this.$store.dispatch('getCampaigns'),
-        this.$store.dispatch('getMyStrategies')
+        this.$store.dispatch('getMyStrategies'),
+        this.$store.dispatch('getRespondents')
       ]).finally(responses => {
         this.loading = false
       })
@@ -344,6 +367,7 @@ export default {
       }
       this.clearCampaign()
       this.clearStrategy()
+      this.clearRespondent()
       this.changeDealDate()
       this.changeExpirationDate()
       this.filters.onlyFavorite = false
@@ -360,6 +384,9 @@ export default {
     // },
     clearStrategy () {
       this.filters.strategy = []
+    },
+    clearRespondent () {
+      this.filters.respondent = []
     },
     clearCampaign () {
       this.filters.campaigns = []
