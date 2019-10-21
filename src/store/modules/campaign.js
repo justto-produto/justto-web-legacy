@@ -11,7 +11,7 @@ const campaign = {
     getCampaigns ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('api/campaigns')
+        axios.get('api/campaigns?size=999999')
           .then(response => {
             commit('setCampaigns', response.data.content)
             resolve(response)
