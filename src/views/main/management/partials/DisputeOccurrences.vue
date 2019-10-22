@@ -32,7 +32,7 @@
           </div>
           <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card" data-testid="message-box">
             <div v-if="!!buildName(occurrence)" slot="header">
-              <jus-icon :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
+              <jus-icon v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType !== 'UNKNOWN'" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
               <span>{{ buildName(occurrence) }}</span>
             </div>
             <div>
@@ -349,7 +349,7 @@ export default {
       &.WHATSAPP {
         background-color: $--color-success-light-5;
       }
-      &.EMAIL {
+      &.EMAIL, &.UNKNOWN {
         background-color: $--color-cloudy-blue;
       }
       &.EMAIL_CNA {
