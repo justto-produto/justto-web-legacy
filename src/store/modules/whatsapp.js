@@ -1,18 +1,37 @@
 const whatsappModule = {
   state: {
-    connected: false
+    reconectCounter: 0,
+    connected: undefined
   },
   mutations: {
     setStatus (state, connected) {
       state.connected = connected
+    },
+    addReconectCounter (state) {
+      state.reconectCounter = state.reconectCounter + 1
+    },
+    resetReconectCounter (state) {
+      state.reconectCounter = 0
     }
   },
   actions: {
-    getWhatsappStatus ({ commit }) {
-      var xmlHttp = new XMLHttpRequest()
-      xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-          commit('setStatus', xmlHttp.responseText)
+    getWhatsappStatus ({ commit, dispatch, state }) {
+      let xmlHttp = new XMLHttpRequest()
+      xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState === 4) {
+          if (xmlHttp.status === 200) {
+            commit('setStatus', true)
+          } else {
+            if (state.reconectCounter < 4) {
+              setTimeout(() => {
+                dispatch('getWhatsappStatus')
+              }, 4 * 1000)
+              commit('addReconectCounter')
+            } else {
+              commit('setStatus', false)
+              commit('resetReconectCounter')
+            }
+          }
         }
       }
       xmlHttp.open('GET', 'https://justto.app/api/v1/status', true)
@@ -20,7 +39,7 @@ const whatsappModule = {
     }
   },
   getters: {
-    whatsappConnected: state => state.connected
+    whatsappStatus: state => state.connected
   }
 }
 
