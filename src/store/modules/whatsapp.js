@@ -9,16 +9,14 @@ const whatsappModule = {
   },
   actions: {
     getWhatsappStatus ({ commit }) {
-      // eslint-disable-next-line
-      axios.get('https://api.service.chatpro.com.br:31855/api/v1/status',{
-        headers: {
-          'Authorization': '70b36901fd1a81771ae98f07d4d5eee051ee36ac'
+      var xmlHttp = new XMLHttpRequest()
+      xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+          commit('setStatus', xmlHttp.responseText)
         }
-      }).then(response => {
-        commit('setStatus', response.data.connected)
-      }).catch(error => {
-        commit('setStatus', error.response.data.connected)
-      })
+      }
+      xmlHttp.open('GET', 'https://justto.app/api/v1/status', true)
+      xmlHttp.send(null)
     }
   },
   getters: {

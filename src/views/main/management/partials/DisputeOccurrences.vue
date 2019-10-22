@@ -384,8 +384,10 @@ export default {
         display: flex;
         align-items: center;
       }
+      span {
+        margin-left: 8px;
+      }
       img {
-        margin-right: 8px;
         width: 15px;
       }
     }
