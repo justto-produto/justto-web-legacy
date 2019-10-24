@@ -15,7 +15,6 @@
                 filterable
                 data-testid="filter-campaign"
                 placeholder="Selecione uma opção"
-                clearable
                 @clear="clearCampaign">
                 <el-option
                   v-for="campaign in campaigns"
@@ -34,7 +33,6 @@
                 filterable
                 data-testid="filter-strategy"
                 placeholder="Selecione uma opção"
-                clearable
                 @clear="clearStrategy">
                 <el-option
                   v-for="strategy in strategies"
@@ -54,7 +52,6 @@
                 align="right"
                 format="dd/MM/yyyy"
                 unlink-panels
-                clearable
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
@@ -70,7 +67,6 @@
                 align="right"
                 format="dd/MM/yyyy"
                 unlink-panels
-                clearable
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
@@ -78,13 +74,13 @@
             </el-form-item>
           </el-col> -->
           <!-- MEIO DE INTERAÇÃO -->
-          <!-- <el-col :span="12">
+          <el-col :span="12">
             <el-form-item v-if="isInteration" label="Meio de interação">
               <el-select
                 v-model="filters.lastInteractionType"
                 data-testid="filter-setinteraction"
                 placeholder="Selecione uma opção"
-                clearable
+                multiple
                 @clear="clearInteraction">
                 <el-option
                   v-for="interaction in interactions"
@@ -93,7 +89,7 @@
                   :label="interaction.value"/>
               </el-select>
             </el-form-item>
-          </el-col> -->
+          </el-col>
           <!-- STATUS -->
           <!-- <el-col v-if="isEngagement" :span="12">
             <el-form-item label="Status" class="management-filters__switch">
@@ -117,7 +113,6 @@
                 align="right"
                 format="dd/MM/yyyy"
                 unlink-panels
-                clearable
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
@@ -137,7 +132,24 @@
                 <div>
                   <jus-icon icon="pause" /> Somente pausadas
                 </div>
-                <el-switch v-model="filters.onlyPaused" data-testid="filters-favorite" />
+                <el-switch v-model="filters.onlyPaused" data-testid="filters-only-paused" />
+              </div>
+            </el-form-item>
+          </el-col>
+          <!-- FAVORITOS -->
+          <el-col v-if="isInteration" :span="12">
+            <el-form-item label="Exibir ocorrências:" class="management-filters__switch management-filters__switch--invisible">
+              <div >
+                <div>
+                  <jus-icon icon="eye" /> Somente não visualizadas
+                </div>
+                <el-switch v-model="filters.onlyNotVisualized" data-testid="filters-only-not-visualized" />
+              </div>
+              <div>
+                <div>
+                  <jus-icon icon="proposal" /> Tem contraproposta
+                </div>
+                <el-switch v-model="filters.hasCounterproposal" data-testid="filters-has-counterproposal" />
               </div>
             </el-form-item>
           </el-col>
@@ -147,7 +159,6 @@
               <el-select
                 v-model="filters.disputestate"
                 placeholder="Selecione uma opção"
-                clearable
                 @clear="clearDisputestate">
                 <el-option v-for="state in $store.state.statesList" :key="state" :value="state"/>
               </el-select>
@@ -280,8 +291,8 @@ export default {
         key: 'EMAIL',
         value: 'Email'
       }, {
-        key: 'CNA',
-        value: 'CNA'
+        key: 'NEGOTIATOR_ACCESS',
+        value: 'Sistema Justto'
       }]
     },
     negotiatorsList () {
@@ -346,8 +357,11 @@ export default {
       this.clearStrategy()
       this.changeDealDate()
       this.changeExpirationDate()
+      this.clearInteraction()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
+      this.filters.onlyNotVisualized = false
+      this.filters.hasCounterproposal = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
@@ -355,9 +369,9 @@ export default {
     restoreFilters () {
       this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
     },
-    // clearInteraction (value) {
-    //   delete this.filters.lastInteractionType
-    // },
+    clearInteraction (value) {
+      delete this.filters.lastInteractionType
+    },
     clearStrategy () {
       this.filters.strategy = []
     },
@@ -408,6 +422,11 @@ export default {
         img {
           width: 14px;
         }
+      }
+    }
+    &.management-filters__switch--invisible {
+      .el-form-item__label {
+        opacity: 0;
       }
     }
   }
