@@ -49,7 +49,7 @@
               </el-form>
               <h5>
                 Membros
-                <a href="#" @click.prevent="dialogInvite = true">
+                <a v-if="$store.getters.isAdminProfile" href="#" @click.prevent="dialogInvite = true">
                   <jus-icon icon="add" />
                 </a>
               </h5>
@@ -59,7 +59,7 @@
                     <strong>{{ member.person.name }}: </strong>
                     <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                   </div>
-                  <div class="actions">
+                  <div v-if="$store.getters.isAdminProfile" class="actions">
                     <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
                     <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
                   </div>
@@ -477,6 +477,9 @@ export default {
     margin-top: 10px;
     a + a {
       margin-left: 10px;
+    }
+    .actions {
+      min-width: 42px;
     }
   }
   .el-card__body {

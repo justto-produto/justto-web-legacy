@@ -254,7 +254,8 @@ const workspaceModule = {
     workspaceId: state => state.subdomain,
     workspaceSubdomain: state => state.subdomain,
     workspaceMembers: state => state.members,
-    redirectNewWorkspace: state => state.redirectNewWorkspace
+    redirectNewWorkspace: state => state.redirectNewWorkspace,
+    isAdminProfile: state => state.profile === 'ADMINISTRATOR'
   }
 }
 

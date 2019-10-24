@@ -203,7 +203,9 @@ export default {
       this.disputeDebounce = setTimeout(() => {
         return this.$store.dispatch('getDisputes').catch(error => {
           console.error(error)
-          this.$jusNotification({ type: 'error' })
+          if (this.$store.getters.isLoggedIn) {
+            this.$jusNotification({ type: 'error' })
+          }
         }).finally(() => {
           this.loadingDisputes = false
           this.$nextTick(() => {
