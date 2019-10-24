@@ -20,9 +20,17 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
-          <span data-testid="overview-status">
-            {{ $t('occurrence.type.' + dispute.status) | capitalize }}
-            <span v-if="dispute.paused">(pausada)</span>
+          <el-tooltip v-if="dispute.status === 'PENDING'" content="Faltam dados de contato da parte ou do advogado da parte">
+            <span data-testid="overview-status">
+              {{ $t('occurrence.type.' + dispute.status) | capitalize }}
+              <span class="el-icon-question" />
+            </span>
+          </el-tooltip>
+          <span v-else>
+            <span data-testid="overview-status">
+              {{ $t('occurrence.type.' + dispute.status) | capitalize }}
+              <span v-if="dispute.paused">(pausada)</span>
+            </span>
           </span>
         </div>
         <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
