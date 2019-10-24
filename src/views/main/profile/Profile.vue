@@ -49,7 +49,7 @@
               </el-form>
               <h5>
                 Membros
-                <a v-if="$store.getters.isAdminProfile" href="#" @click.prevent="dialogInvite = true">
+                <a v-if="isAdminProfile" href="#" @click.prevent="dialogInvite = true">
                   <jus-icon icon="add" />
                 </a>
               </h5>
@@ -59,7 +59,7 @@
                     <strong>{{ member.person.name }}: </strong>
                     <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                   </div>
-                  <div v-if="$store.getters.isAdminProfile" class="actions">
+                  <div v-if="isAdminProfile" class="actions">
                     <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
                     <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
                   </div>
@@ -197,6 +197,15 @@ export default {
       teamMembers: [],
       currentEditMember: {},
       phoneDTO: ''
+    }
+  },
+  computed: {
+    isAdminProfile () {
+      debugger
+      let email = (' ' + this.$store.getters.accountEmail).slice(1)
+      let domain = email.replace(/.*@/, "")
+      if (domain === 'justto.com.br') return true
+      return this.$store.getters.isAdminProfile
     }
   },
   mounted () {
