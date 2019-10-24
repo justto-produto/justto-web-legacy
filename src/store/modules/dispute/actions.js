@@ -359,6 +359,18 @@ const disputeActions = {
           reject(error)
         })
     })
+  },
+  getRespondents ({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/disputes/respondent-names')
+        .then(response => {
+          commit('setRespondents', response.data)
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
   }
 }
 

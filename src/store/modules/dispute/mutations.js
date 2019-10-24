@@ -117,6 +117,9 @@ const disputeMutations = {
   },
   disputeSetHasNew (state, bol) {
     state.hasNew = bol
+  },
+  setRespondents (state, respondents) {
+    state.respondents = respondents
   }
 }
 
