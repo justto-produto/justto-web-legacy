@@ -98,7 +98,7 @@ const getInteractionIcon = function (interaction) {
   switch (interaction.type) {
     case 'COMMUNICATION': {
       if (interaction.message) {
-        switch (interaction.message.type) {
+        switch (interaction.message.communicationType) {
           case 'EMAIL': return 'email'
           case 'EMAIL_CNA': return 'email-cna'
           case 'SMS': return 'sms'
@@ -106,6 +106,7 @@ const getInteractionIcon = function (interaction) {
           case 'CHAT': return 'chat'
           case 'TTS': return 'tts'
           case 'DELAY': return 'delay'
+          case 'WHATSAPP': return 'whatsapp'
         }
       }
       return 'email'
