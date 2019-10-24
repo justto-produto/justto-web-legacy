@@ -21,7 +21,7 @@ describe('Ações da Disputa', function () {
     // Entra na primeira disputa da lista
     // cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
-      .contains('10908')
+      .contains('Teste e2e 021')
       .click()
 
     // Sistema deve redirecionar para a página de Registro
