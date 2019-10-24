@@ -20,9 +20,17 @@
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
-          <span data-testid="overview-status">
-            {{ $t('occurrence.type.' + dispute.status) | capitalize }}
-            <span v-if="dispute.paused">(pausada)</span>
+          <el-tooltip v-if="dispute.status === 'PENDING'" content="Faltam dados de contato da parte ou do advogado da parte">
+            <span data-testid="overview-status">
+              {{ $t('occurrence.type.' + dispute.status) | capitalize }}
+              <span class="el-icon-question" />
+            </span>
+          </el-tooltip>
+          <span v-else>
+            <span data-testid="overview-status">
+              {{ $t('occurrence.type.' + dispute.status) | capitalize }}
+              <span v-if="dispute.paused">(pausada)</span>
+            </span>
           </span>
         </div>
         <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
@@ -256,7 +264,8 @@
                 :clearable="false"
                 data-testid="expiration-date-input"
                 format="dd/MM/yyyy"
-                type="date" />
+                type="date"
+                value-format="yyyy-MM-dd" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -599,8 +608,8 @@ export default {
           let promises = []
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
-          if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
-          disputeToEdit.description = this.disputeForm.description
+          if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]23:00:00[Z]')
+          if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
           promises.push(this.$store.dispatch('editDispute', disputeToEdit))
           if (this.disputeForm.lastCounterOfferValue !== this.dispute.lastCounterOfferValue) {
             if (this.selectedClaimantId) {

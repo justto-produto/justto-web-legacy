@@ -23,7 +23,7 @@ describe('Disputa', function () {
     // clica no primeiro caso: index 0
     // cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
-      .contains('10908')
+      .contains('Teste e2e 021')
       .click()
 
     // Verifica se entrou na disputa 10908
