@@ -42,16 +42,13 @@
             <div class="profile-view__team">
               <el-form label-position="top" class="mt20 mb20">
                 <el-form-item label="Nome da equipe">
-                  <el-input v-model="teamName">
-                    <el-button slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
+                  <el-input v-model="teamName" :disabled="!isAdminProfile">
+                    <el-button v-if="isAdminProfile" slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
                   </el-input>
                 </el-form-item>
               </el-form>
               <h5>
                 Membros
-                <!-- <a v-if="isAdminProfile" href="#" @click.prevent="dialogInvite = true">
-                  <jus-icon icon="add" />
-                </a> -->
               </h5>
               <div v-for="member in teamMembers" :key="member.id">
                 <div class="profile-view__members-list">
