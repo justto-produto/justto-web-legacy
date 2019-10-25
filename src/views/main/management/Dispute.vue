@@ -145,7 +145,7 @@
           </span>
         </el-dialog>
         <!-- MESSAGES -->
-        <dispute-occurrences v-if="typingTab === '1'" :dispute-id="id" data-testid="dispute-messages" />
+        <dispute-occurrences ref="disputeOccurrences" v-if="typingTab === '1'" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
         <div
           v-loading="isPaused"
@@ -375,6 +375,7 @@ export default {
       })
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
+      this.$refs.disputeOccurrences.fetchData()
     },
     showSearch (value) {
       if (!value) {

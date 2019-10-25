@@ -131,15 +131,18 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('clearOccurrencesSize')
-    this.$store.commit('clearDisputeOccurrences')
-    setTimeout(() => {
-      this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(() => {
-        this.loading = false
-      })
-    }, 200)
+    this.fetchData ()
   },
   methods: {
+    fetchData () {
+      this.$store.commit('clearOccurrencesSize')
+      this.$store.commit('clearDisputeOccurrences')
+      setTimeout(() => {
+        this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(() => {
+          this.loading = false
+        })
+      }, 200)
+    },
     loadOccurrences ($state) {
       this.$store.commit('incrementOccurrencesSize')
       this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(response => {
