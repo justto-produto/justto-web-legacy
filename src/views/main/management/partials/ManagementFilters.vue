@@ -123,7 +123,7 @@
           <el-col v-if="!loading && isAll" :span="12">
             <el-form-item label="Réu">
               <el-select
-                v-model="filters.respondent"
+                v-model="filters.respondentNames"
                 multiple
                 filterable
                 data-testid="filter-respondent"
@@ -400,7 +400,7 @@ export default {
       this.filters.strategy = []
     },
     clearRespondent () {
-      this.filters.respondent = []
+      this.filters.respondentNames = []
     },
     clearCampaign () {
       this.filters.campaigns = []
