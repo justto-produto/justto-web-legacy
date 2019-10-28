@@ -83,6 +83,8 @@ describe('Disputa', function () {
     cy.contains('cna enviado com sucesso.')
       .should('be.visible')
 
+    cy.wait(1000)
+
     // Caixas de nota devem aparecer
     cy.get('[data-testid=message-box]', { timeout: 60000 }).last()
       .should('be.visible')

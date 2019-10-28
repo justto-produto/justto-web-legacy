@@ -138,6 +138,22 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <!-- IMPORTAÇÃO -->
+          <el-col :span="12">
+            <el-form-item label="Data da Importação">
+              <el-date-picker
+                v-model="filters.importDate"
+                data-testid="filters-disputeimportdate"
+                type="daterange"
+                align="right"
+                format="dd/MM/yyyy"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="Data inicial"
+                end-placeholder="Data final"
+                @change="changeImportDate" />
+            </el-form-item>
+          </el-col>
           <!-- FAVORITOS -->
           <el-col :span="12">
             <el-form-item label="Exibir ocorrências:" class="management-filters__switch">
@@ -381,6 +397,7 @@ export default {
       this.clearRespondent()
       this.changeDealDate()
       this.changeExpirationDate()
+      this.changeImportDate()
       this.clearInteraction()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
@@ -427,6 +444,13 @@ export default {
         this.filters.expirationDate = value
       } else {
         this.filters.expirationDate = []
+      }
+    },
+    changeImportDate (value) {
+      if (value) {
+        this.filters.importDate = value
+      } else {
+        this.filters.importDate = []
       }
     }
   }
