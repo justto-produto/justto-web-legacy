@@ -430,8 +430,15 @@ export default {
             this.inviteForm.email = ''
             this.inviteForm.profile = 'NEGOTIATOR'
             this.getMembers()
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
+          }).catch(error => {
+            if (error.code === 'ALREADY_EXISTS') {
+              this.$jusNotification({ type: 'error' })
+            } else {
+              this.$jusNotification({
+                message: 'E-mail já convidado para esta Equipe.',
+                type: 'warning'
+              })
+            }
           })
         } else {
           return false
