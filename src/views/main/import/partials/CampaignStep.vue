@@ -6,7 +6,7 @@
       disputas dentro da mesma importação com um réu em comum. Por isso, ao importar,
       o sistema automaticamente divide suas disputas em campanhas para que você possa
       configurá-las separadamente.
-      <br>
+      <br><br><br>
     </p>
     <el-alert v-if="duplicatedDisputes.length" type="error">
       <h2>Atenção!</h2>
