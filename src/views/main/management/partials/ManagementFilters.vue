@@ -19,7 +19,7 @@
                 <el-option
                   v-for="campaign in campaigns"
                   :key="campaign.id"
-                  :value="campaign.id"
+                  :value="campaign.name"
                   :label="campaign.name"/>
               </el-select>
             </el-form-item>
