@@ -102,14 +102,14 @@ const disputeActions = {
       })
     })
   },
-  exportDisputes ({ rootState }, disputeIds) {
+  exportDisputes ({ rootState, state }, disputeIds) {
     return new Promise((resolve, reject) => {
     // eslint-disable-next-line
-    axios.get('api/search/' + rootState.workspaceModule.id + '/v_el_disputes/export', {
-        responseType: 'arraybuffer',
-        query: { bool: { must: [{ terms: { disputeid: disputeIds } }] } } }).then(response => {
+    axios.post('api/disputes/export/', {
+      responseType: 'arraybuffer',
+      query: state.query
+    }).then(response => {
         const blob = new Blob([response.data], {
-          // type: 'application/vnd.ms-excel'
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         })
         let reg = /(?:filename\*?=)(?<filename>(['"])[\s\S]*?\2|[^;\n]*)/
