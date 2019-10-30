@@ -19,7 +19,7 @@
                 <el-option
                   v-for="campaign in campaigns"
                   :key="campaign.id"
-                  :value="campaign.id"
+                  :value="campaign.name"
                   :label="campaign.name"/>
               </el-select>
             </el-form-item>
@@ -73,23 +73,6 @@
                 @change="clearLastInteractionDate" />
             </el-form-item>
           </el-col> -->
-          <!-- MEIO DE INTERAÇÃO -->
-          <el-col :span="12">
-            <el-form-item v-if="isInteration" label="Meio de interação">
-              <el-select
-                v-model="filters.lastInteractionType"
-                data-testid="filter-setinteraction"
-                placeholder="Selecione uma opção"
-                multiple
-                @clear="clearInteraction">
-                <el-option
-                  v-for="interaction in interactions"
-                  :key="interaction.key"
-                  :value="interaction.key"
-                  :label="interaction.value"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
           <!-- STATUS -->
           <!-- <el-col v-if="isEngagement" :span="12">
             <el-form-item label="Status" class="management-filters__switch">
@@ -117,6 +100,22 @@
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
                 @change="changeExpirationDate" />
+            </el-form-item>
+          </el-col>
+          <!-- IMPORTAÇÃO -->
+          <el-col :span="12">
+            <el-form-item label="Data da Importação">
+              <el-date-picker
+                v-model="filters.importingDate"
+                data-testid="filters-disputeimportingDate"
+                type="daterange"
+                align="right"
+                format="dd/MM/yyyy"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="Data inicial"
+                end-placeholder="Data final"
+                @change="changeimportingDate" />
             </el-form-item>
           </el-col>
           <!-- RÉU -->
@@ -170,6 +169,23 @@
                 </div>
                 <el-switch v-model="filters.hasCounterproposal" data-testid="filters-has-counterproposal" />
               </div>
+            </el-form-item>
+          </el-col>
+          <!-- MEIO DE INTERAÇÃO -->
+          <el-col v-if="isInteration" :span="12">
+            <el-form-item label="Meio de interação">
+              <el-select
+                v-model="filters.lastInteractionType"
+                data-testid="filter-setinteraction"
+                placeholder="Selecione uma opção"
+                multiple
+                @clear="clearInteraction">
+                <el-option
+                  v-for="interaction in interactions"
+                  :key="interaction.key"
+                  :value="interaction.key"
+                  :label="interaction.value"/>
+              </el-select>
             </el-form-item>
           </el-col>
           <!-- ESTADO -->
@@ -381,6 +397,7 @@ export default {
       this.clearRespondent()
       this.changeDealDate()
       this.changeExpirationDate()
+      this.changeimportingDate()
       this.clearInteraction()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
@@ -428,6 +445,13 @@ export default {
       } else {
         this.filters.expirationDate = []
       }
+    },
+    changeimportingDate (value) {
+      if (value) {
+        this.filters.importingDate = value
+      } else {
+        this.filters.importingDate = []
+      }
     }
   }
 }
@@ -441,7 +465,7 @@ export default {
   &__switch {
     margin-bottom: 18px;
     .el-form-item__content {
-      line-height: 22px;
+      line-height: 24px;
       > div {
         display: flex;
         justify-content: space-between;
