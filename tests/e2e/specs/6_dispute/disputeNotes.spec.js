@@ -67,7 +67,7 @@ describe('Disputa', function () {
       .contains('Nota gravada com sucesso.')
       .should('be.visible')
 
-    cy.wait(500)
+    cy.wait(1000)
 
     // Nota deve aparecer entre as mensagens
     cy.contains(user + ' dicionou uma nota: ' + message, { timeout: 60000 })
