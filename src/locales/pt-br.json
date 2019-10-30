@@ -85,6 +85,7 @@
     "RESUME": "retomar",
     "FAVORITE": "favoritar",
     "DISFAVOR": "desfavoritar",
+    "ENRICH": "enriquecer",
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha",
     "CANCEL-MESSAGES": "cancelar mensagens agendadas"
