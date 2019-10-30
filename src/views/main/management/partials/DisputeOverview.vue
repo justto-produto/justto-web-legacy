@@ -213,6 +213,21 @@
         :model="disputeForm"
         label-position="top"
         @submit.native.prevent="editDispute">
+        <el-row v-if="dispute.campaign" :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="Estratégia" prop="disputeStrategy">
+              <el-select
+                v-model="dispute.campaign.strategyId"
+                placeholder="Escolha a nova estratégia">
+                <el-option
+                  v-for="strategy in strategies"
+                  :key="strategy.id"
+                  :value="strategy.id"
+                  :label="strategy.name"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="disputeUpperRange">
@@ -515,6 +530,9 @@ export default {
     }
   },
   computed: {
+    strategies () {
+      return this.$store.getters.strategyList
+    },
     computedDescription () {
       if (this.dispute.description && this.dispute.description.length > 140) {
         if (this.descriptionCollapse) {
@@ -577,6 +595,7 @@ export default {
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.editDisputeDialogVisible = true
+      this.$store.dispatch('getMyStrategies')
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
