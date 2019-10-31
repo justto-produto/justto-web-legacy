@@ -34,6 +34,18 @@ const actions = {
         reject(error)
       })
     })
+  },
+  searchPerson ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/persons/search', {
+        params
+      }).then(response => {
+        resolve(response.data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
   }
 }
 

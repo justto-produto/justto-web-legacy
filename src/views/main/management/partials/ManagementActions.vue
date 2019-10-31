@@ -49,8 +49,6 @@
         </el-button>
       </span>
     </el-dialog>
-
-
     <el-dialog
       :visible.sync="changeStrategyDialogVisible"
       title="Alterar estratégia"
@@ -109,6 +107,14 @@ export default {
       newStrategyId: ''
     }
   },
+  computed: {
+    selectedIdsLength () {
+      return this.selectedIds.length
+    },
+    strategies () {
+      return this.$store.getters.strategyList
+    }
+  },
   created () {
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
@@ -118,14 +124,6 @@ export default {
       })
     }
     this.$store.dispatch('getMyStrategies')
-  },
-  computed: {
-    selectedIdsLength () {
-      return this.selectedIds.length
-    },
-    strategies () {
-      return this.$store.getters.strategyList
-    }
   },
   methods: {
     doAction (action) {

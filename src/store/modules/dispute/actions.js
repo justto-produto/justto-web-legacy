@@ -371,6 +371,17 @@ const disputeActions = {
           reject(error)
         })
     })
+  },
+  newDisputeRole ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.post('api/disputes/' + params.disputeId + 'dispute-roles', params.disputeRole)
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
   }
 }
 

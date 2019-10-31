@@ -89,7 +89,7 @@
     <hr>
     <div class="dispute-overview-view__roles">
       Atores
-      <el-tooltip content="Adicionar ator">
+      <el-tooltip content="Cadastrar© ator">
         <a href="#" @click.prevent="newRoleDialogVisible = true">
           <jus-icon icon="add" />
         </a>
@@ -598,8 +598,6 @@ export default {
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
       this.selectedStrategyId = dispute.strategyId
-      console.log(dispute.strategyId);
-      console.log(dispute.strategyName);
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.editDisputeDialogVisible = true
       this.disputeForm.id = dispute.id
@@ -798,7 +796,6 @@ export default {
     removePhone (index) {
       this.roleForm.phones.splice(index, 1)
     },
-
     addEmail () {
       let isValid = true
       this.$refs.roleForm.validateField('email', errorMessage => {

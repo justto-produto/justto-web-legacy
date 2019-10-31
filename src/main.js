@@ -3,17 +3,6 @@ import App from '@/App.vue'
 import router from './router'
 import store from './store'
 
-// mask
-import VueTheMask from 'vue-the-mask'
-import money from 'v-money'
-Vue.use(VueTheMask)
-Vue.use(money, {
-  decimal: ',',
-  thousands: '.',
-  prefix: 'R$ ',
-  precision: 2
-})
-
 // plugin
 import i18n from '@/plugins/vueI18n'
 import '@/plugins/registerServiceWorker'
@@ -68,6 +57,8 @@ import '@/styles/overrides/upload.scss'
 import '@/styles/perfect-scroll.scss'
 
 // Global components
+import VueTheMask from 'vue-the-mask'
+import money from 'v-money'
 import JusIcon from '@/components/images/JusIcon'
 import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
@@ -79,6 +70,15 @@ Vue.component('JusAvatarUser', JusAvatarUser)
 Vue.component('JusViewMain', JusViewMain)
 Vue.component('JusButtonBack', JusButtonBack)
 Vue.component('JusStatusDot', JusStatusDot)
+
+// mask
+Vue.use(VueTheMask)
+Vue.use(money, {
+  decimal: ',',
+  thousands: '.',
+  prefix: 'R$ ',
+  precision: 2
+})
 
 Vue.config.productionTip = false
 
