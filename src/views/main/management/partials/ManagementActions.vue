@@ -64,7 +64,7 @@
         </p></div>
       </div>
       <el-select
-        v-model="newStrategy"
+        v-model="newStrategyId"
         data-testid="select-unsettled"
         placeholder="Escolha a nova estratégia">
         <el-option
@@ -76,17 +76,14 @@
       <span slot="footer">
         <el-button @click="changeStrategyDialogVisible = false">Cancelar</el-button>
         <el-button
-          :disabled="!newStrategy"
+          :disabled="!newStrategyId"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('change-strategy')">
+          @click.prevent="doAction('CHANGE_STRATEGY')">
           Continuar
         </el-button>
       </span>
     </el-dialog>
-
-
-
   </div>
 </template>
 
@@ -109,7 +106,7 @@ export default {
       changeStrategyDialogVisible: false,
       unsettledTypes: [],
       unsettledType: '',
-      newStrategy: undefined
+      newStrategyId: ''
     }
   },
   created () {
@@ -146,12 +143,17 @@ export default {
         trackTitle = 'casos deletados'
       } else if (action === 'RESTART_ENGAGEMENT') {
         trackTitle = 'engajamentos reiniciados'
+      } else if (action === 'CHANGE_STRATEGY') {
+        trackTitle = 'troca de estratégia'
       } else {
         trackTitle = 'Ação em massa realizada'
       }
       let params = {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds
+      }
+      if (action === 'CHANGE_STRATEGY') {
+        params['strategyId'] = this.newStrategyId
       }
       if (this.unsettledType) {
         params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
@@ -190,7 +192,7 @@ export default {
         this.unsettledType = ''
       } else if (action === 'CHANGE_STRATEGY') {
         this.changeStrategyDialogVisible = true
-        this.newStrategy = undefined
+        this.newStrategyId = ''
       } else {
         this.$confirm('Tem certeza que deseja realizar esta ação em lote?', this.$t('action.' + action.toUpperCase()), {
           confirmButtonClass: 'confirm-action-btn',

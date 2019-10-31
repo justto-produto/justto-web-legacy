@@ -14,9 +14,9 @@
           <span class="title">Campanha:</span>
           <span>{{ dispute.campaign.name }}</span>
         </div>
-        <div v-if="dispute.campaign && dispute.campaign.strategy" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.strategyName" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
-          <span>{{ dispute.campaign.strategy }}</span>
+          <span>{{ dispute.strategyName }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
@@ -213,17 +213,17 @@
         :model="disputeForm"
         label-position="top"
         @submit.native.prevent="editDispute">
-        <el-row v-if="dispute.campaign" :gutter="20">
+        <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="Estratégia" prop="disputeStrategy">
               <el-select
-                v-model="dispute.campaign.strategyId"
+                v-model="selectedStrategyId"
                 placeholder="Escolha a nova estratégia">
                 <el-option
-                  v-for="strategy in strategies"
-                  :key="strategy.id"
-                  :value="strategy.id"
-                  :label="strategy.name"/>
+                  v-for="(strategy, index) in strategies"
+                  :key="`${strategy.id}-${index}`"
+                  :label="strategy.name"
+                  :value="strategy.id" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -231,7 +231,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="Alçada máxima" prop="disputeUpperRange">
-              <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" data-testid="bondary-input" />
+              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -239,7 +239,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
-              <money v-model="disputeForm.lastCounterOfferValue" v-bind="money" class="el-input__inner" data-testid="counterproposal-value-input" />
+              <money v-model="disputeForm.lastCounterOfferValue" class="el-input__inner" data-testid="counterproposal-value-input" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -258,7 +258,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastOfferValue">
-              <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" data-testid="proposal-value-input"/>
+              <money v-model="disputeForm.lastOfferValue" class="el-input__inner" data-testid="proposal-value-input"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -429,19 +429,19 @@
         </el-button>
       </span>
     </el-dialog>
+    <dispute-add-role :visible.sync="newRoleDialogVisible" />
   </div>
 </template>
 
 <script>
-import { Money } from 'v-money'
-import { mask } from 'vue-the-mask'
 import { getRoles } from '@/plugins/jusUtils'
 import CPFCNPJ from 'cpf_cnpj'
 
 export default {
   name: 'DisputeOverview',
-  components: { Money },
-  directives: { mask },
+  components: {
+    DisputeAddRole: () => import('./DisputeAddRole')
+   },
   props: {
     loading: {
       default: false,
@@ -489,6 +489,7 @@ export default {
       activeId: 0,
       selectedClaimantId: '',
       selectedNegotiatorId: '',
+      selectedStrategyId: '',
       disputeForm: {
         description: '',
         expirationDate: ''
@@ -512,21 +513,14 @@ export default {
         oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
-      emailDialogVisible: false,
-      phoneDialogVisible: false,
+      newRoleDialogVisible: false,
       editDisputeDialogVisible: false,
       editDisputeDialogLoading: false,
       editRoleDialogVisible: false,
       editRoleDialogLoading: false,
       editRoleDialogError: false,
       editRoleDialogErrorList: [],
-      descriptionCollapse: true,
-      money: {
-        decimal: ',',
-        thousands: '.',
-        prefix: 'R$ ',
-        precision: 2
-      }
+      descriptionCollapse: true
     }
   },
   computed: {
@@ -591,12 +585,15 @@ export default {
       } return []
     },
     openDisputeDialog () {
-      this.editDisputeDialogLoading = false
-      this.selectedClaimantId = this.disputeClaimants[0].id || ''
-      this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
-      this.editDisputeDialogVisible = true
       this.$store.dispatch('getMyStrategies')
       let dispute = JSON.parse(JSON.stringify(this.dispute))
+      this.editDisputeDialogLoading = false
+      this.selectedClaimantId = this.disputeClaimants[0].id || ''
+      this.selectedStrategyId = dispute.strategyId
+      console.log(dispute.strategyId);
+      console.log(dispute.strategyName);
+      this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
+      this.editDisputeDialogVisible = true
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
@@ -625,6 +622,7 @@ export default {
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           let promises = []
+          if (this.selectedStrategyId) disputeToEdit.strategyId = this.selectedStrategyId
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
           if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]23:00:00[Z]')
@@ -932,6 +930,13 @@ export default {
   }
   &__see-more {
     white-space: nowrap;
+  }
+  &__roles {
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   &__oab-form {
     display: flex;
