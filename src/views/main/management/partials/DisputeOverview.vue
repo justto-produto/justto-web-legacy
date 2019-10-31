@@ -89,7 +89,7 @@
     <hr>
     <div class="dispute-overview-view__roles">
       Atores
-      <el-tooltip content="Cadastrar© ator">
+      <el-tooltip content="Cadastrar ator">
         <a href="#" @click.prevent="newRoleDialogVisible = true">
           <jus-icon icon="add" />
         </a>
@@ -437,6 +437,7 @@
         </el-button>
       </span>
     </el-dialog>
+    <dispute-add-role :visible.sync="newRoleDialogVisible" :dispute-id="dispute.id" />
   </div>
 </template>
 
@@ -446,6 +447,9 @@ import CPFCNPJ from 'cpf_cnpj'
 
 export default {
   name: 'DisputeOverview',
+  components: {
+    DisputeAddRole: () => import('./DisputeAddRole')
+  },
   props: {
     loading: {
       default: false,

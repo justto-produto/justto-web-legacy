@@ -375,7 +375,7 @@ const disputeActions = {
   newDisputeRole ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/disputes/' + params.disputeId + 'dispute-roles', params.disputeRole)
+      axios.post('api/disputes/' + params.disputeId + '/dispute-roles', params.role)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
