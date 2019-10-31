@@ -429,7 +429,6 @@
         </el-button>
       </span>
     </el-dialog>
-    <dispute-add-role :visible.sync="newRoleDialogVisible" />
   </div>
 </template>
 
@@ -439,9 +438,6 @@ import CPFCNPJ from 'cpf_cnpj'
 
 export default {
   name: 'DisputeOverview',
-  components: {
-    DisputeAddRole: () => import('./DisputeAddRole')
-   },
   props: {
     loading: {
       default: false,
