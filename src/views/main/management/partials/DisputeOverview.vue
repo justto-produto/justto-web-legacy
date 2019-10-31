@@ -586,16 +586,14 @@ export default {
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
       this.selectedStrategyId = dispute.strategyId
-      console.log(dispute.strategyId);
-      console.log(dispute.strategyName);
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
-      this.editDisputeDialogVisible = true
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
       this.disputeForm.lastCounterOfferValue = parseFloat(dispute.lastCounterOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
+      this.editDisputeDialogVisible = true
     },
     editDispute () {
       this.editDisputeDialogLoading = true
