@@ -3,6 +3,17 @@ import App from '@/App.vue'
 import router from './router'
 import store from './store'
 
+// mask
+import VueTheMask from 'vue-the-mask'
+import money from 'v-money'
+Vue.use(VueTheMask)
+Vue.use(money, {
+  decimal: ',',
+  thousands: '.',
+  prefix: 'R$ ',
+  precision: 2
+})
+
 // plugin
 import i18n from '@/plugins/vueI18n'
 import '@/plugins/registerServiceWorker'

@@ -88,13 +88,15 @@
     "ENRICH": "enriquecer",
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha",
-    "CANCEL-MESSAGES": "cancelar mensagens agendadas"
+    "CANCEL-MESSAGES": "cancelar mensagens agendadas",
+    "CHANGE_STRATEGY": "alterar estratégia"
   },
   "fields": {
     "claimantParty": "Parte contrária",
-    "claimantLawyer": "Advogado da parte",
+    "claimantLawyer": "Advogado(a) da parte",
     "dispute": "disputa",
-    "respondentParty": "Réu"
+    "respondentParty": "Réu",
+    "respondentLawyer": "Advogado(a) do Réu"
   },
   "NEGOTIATOR_REJECTED": "negada de",
   "NEGOTIATOR_PROPOSAL": "feita de",
