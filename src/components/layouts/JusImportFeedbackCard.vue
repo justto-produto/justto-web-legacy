@@ -213,7 +213,6 @@ export default {
       this.mappedCampaign.strategyId = value.id
     },
     deadline (value) {
-      debugger
       this.mappedCampaign.deadline = {
         dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       }
