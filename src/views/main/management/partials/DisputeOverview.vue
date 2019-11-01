@@ -87,14 +87,14 @@
       </el-collapse-item>
     </el-collapse>
     <hr>
-    <div class="dispute-overview-view__roles">
-      Atores
-      <el-tooltip content="Cadastrar ator">
+    <!-- <div class="dispute-overview-view__roles">
+      Partes
+      <el-tooltip content="Cadastrar parte">
         <a href="#" @click.prevent="newRoleDialogVisible = true">
           <jus-icon icon="add" />
         </a>
       </el-tooltip>
-    </div>
+    </div> -->
     <el-collapse
       ref="roleCollapse"
       accordion

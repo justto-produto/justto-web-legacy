@@ -2,7 +2,7 @@
   <el-dialog
     :close-on-click-modal="false"
     :visible.sync="dialogVisible"
-    title="Cadastrar ator"
+    title="Cadastrar parte"
     width="50%">
     <el-form
       v-loading="searchLoading || registerLoading"
@@ -376,7 +376,7 @@ export default {
           this.dialogVisible = false
           this.$jusNotification({
             title: 'Yay!',
-            message: 'Novo ator cadastrado com sucesso.',
+            message: 'Nova parte cadastrada com sucesso.',
             type: 'success'
           })
           this.$store.dispatch('getDispute', this.disputeId)
