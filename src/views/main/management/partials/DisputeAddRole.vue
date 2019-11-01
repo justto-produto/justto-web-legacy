@@ -373,6 +373,7 @@ export default {
         role.party = this.newRole.party.startsWith('respondent') ? 'RESPONDENT' : 'CLAIMANT'
         role.roles = [this.newRole.party.endsWith('Party') ? 'PARTY' : 'LAWYER']
         this.$store.dispatch('newDisputeRole', { role, disputeId }).then(response => {
+          this.dialogVisible = false
           this.$jusNotification({
             title: 'Yay!',
             message: 'Novo ator cadastrado com sucesso.',
