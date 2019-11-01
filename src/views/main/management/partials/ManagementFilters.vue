@@ -55,6 +55,7 @@
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
+                value-format="yyyy-MM-dd"
                 @change="changeDealDate" />
             </el-form-item>
           </el-col>
@@ -99,6 +100,7 @@
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
+                value-format="yyyy-MM-dd"
                 @change="changeExpirationDate" />
             </el-form-item>
           </el-col>
@@ -115,6 +117,7 @@
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
+                value-format="yyyy-MM-dd"
                 @change="changeimportingDate" />
             </el-form-item>
           </el-col>

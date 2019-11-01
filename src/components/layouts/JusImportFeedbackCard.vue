@@ -87,7 +87,8 @@
         type="date"
         format="dd-MM-yyyy"
         placeholder="Defina a data limite para a negociação"
-        data-testid="feedback-datapicker" />
+        data-testid="feedback-datapicker"
+        value-format="yyyy-MM-dd" />
       <el-select
         v-model="negotiatorIds"
         value-key="name"
@@ -213,7 +214,7 @@ export default {
     },
     deadline (value) {
       this.mappedCampaign.deadline = {
-        dateTime: this.$moment(value).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       }
     },
     negotiatorIds (value) {
