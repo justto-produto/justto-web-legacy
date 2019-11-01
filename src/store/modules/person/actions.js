@@ -46,6 +46,17 @@ const actions = {
         reject(error)
       })
     })
+  },
+  enrichPerson ({ commit }, personId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.patch('api/fusion-runner/persons/enrich/' + personId)
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
   }
 }
 

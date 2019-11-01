@@ -372,11 +372,16 @@ export default {
         if (this.newRole.personId) role.personId = this.newRole.personId
         role.party = this.newRole.party.startsWith('respondent') ? 'RESPONDENT' : 'CLAIMANT'
         role.roles = [this.newRole.party.endsWith('Party') ? 'PARTY' : 'LAWYER']
-        this.$store.dispatch('newDisputeRole', { role, disputeId }).then(() => {
+        this.$store.dispatch('newDisputeRole', { role, disputeId }).then(response => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Novo ator cadastrado com sucesso.',
             type: 'success'
+          })
+          this.$store.dispatch('enrichPerson', response.personId)
+          this.$store.dispatch('restartDisputeRoleEngagement', {
+            disputeId: this.disputeId,
+            disputeRoleId: response.id
           })
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
