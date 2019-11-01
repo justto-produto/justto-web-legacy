@@ -379,6 +379,7 @@ export default {
             message: 'Novo ator cadastrado com sucesso.',
             type: 'success'
           })
+          this.$store.dispatch('getDispute', this.disputeId)
           this.$store.dispatch('enrichPerson', response.personId)
           this.$store.dispatch('restartDisputeRoleEngagement', {
             disputeId: this.disputeId,
