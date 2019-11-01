@@ -50,7 +50,7 @@ const actions = {
   enrichPerson ({ commit }, personId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.patch('api/fusion-runner/persons/enrich/' + personId)
+      axios.patch('api/fusion-runner/enrich/person/' + personId)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
