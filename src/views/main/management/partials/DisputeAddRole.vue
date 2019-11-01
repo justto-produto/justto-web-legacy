@@ -5,7 +5,7 @@
     title="Cadastrar ator"
     width="50%">
     <el-form
-      v-loading="searchLoading"
+      v-loading="searchLoading || registerLoading"
       ref="newRole"
       :model="newRole"
       :rules="newRoleRules"
@@ -20,18 +20,18 @@
         </el-select>
       </el-form-item>
       <div v-if="!secondStep" class="dispute-add-role__search">
-        <el-form-item v-if="['claimantParty', 'respondentParty'].includes(newRole.party)" label="CPF/CNPJ">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" />
+        <el-form-item v-if="['claimantParty', 'respondentParty'].includes(newRole.party)" label="CPF/CNPJ" prop="documentNumber">
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" @keyup.enter.native="searchPerson" />
         </el-form-item>
         <el-row v-else-if="newRole.party" :gutter="20">
           <el-col :span="12">
-            <el-form-item class="oab" label="OAB" prop="oab">
-              <el-input v-model="newRole.oabNumber" />
+            <el-form-item class="oab" label="OAB" prop="oabNumber">
+              <el-input v-model="newRole.oabNumber" @keyup.enter.native="searchPerson" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item class="state" label="Estado" prop="state">
-              <el-select v-model="newRole.oabState" placeholder="UF" @change="searchPerson">
+            <el-form-item class="state" label="Estado" prop="oabState">
+              <el-select v-model="newRole.oabState" placeholder="UF">
                 <el-option
                   v-for="(state, index) in $store.state.statesList"
                   :key="`${index}-${state}`"
@@ -46,7 +46,7 @@
         </el-button>
       </div>
       <div v-else>
-        <el-form-item label="CPF/CNPJ">
+        <el-form-item label="CPF/CNPJ" prop="documentNumber">
           <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" />
         </el-form-item>
         <el-form-item label="Nome" prop="name">
@@ -153,7 +153,7 @@
     </el-form>
     <span slot="footer">
       <el-button plain @click="dialogVisible = false">Cancelar</el-button>
-      <el-button :disabled="!secondStep" type="primary" data-testid="confirm-edit-data" @click="registerRole">Cadastrar</el-button>
+      <el-button :disabled="!secondStep || registerLoading" type="primary" data-testid="confirm-edit-data" @click="registerRole">Cadastrar</el-button>
     </span>
   </el-dialog>
 </template>
@@ -205,6 +205,7 @@ export default {
     return {
       secondStep: false,
       searchLoading: false,
+      registerLoading: false,
       newRole: {
         name: ''
       },
@@ -214,16 +215,17 @@ export default {
           { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'submit' }
         ],
         phone: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
         ],
         email: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
         ],
-        documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }],
-        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        documentNumber: [
+          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+        ],
+        oabNumber: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        oabState: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
     }
   },
@@ -236,19 +238,16 @@ export default {
         this.$emit('update:visible', value)
       }
     },
-    // validToSearch () {
-    //   if (this.newRole.party) {
-    //     if (['claimantParty', 'respondentParty'].includes(this.newRole.party)) {
-    //       if (this.newRole.documentNumber && this.newRole.documentNumber.length > 12) return true
-    //       return false
-    //     } else {
-    //       if (this.newRole.oabNumber && this.newRole.oabNumber > 3 && this.newRole.oabState) return true
-    //       return false
-    //     }
-    //   }
-    //   return false
-    // },
-    roleParty: () => ['claimantParty', 'claimantLawyer', 'respondentParty', 'respondentLawyer']
+    roleParty: () => ['claimantParty', 'claimantLawyer', 'respondentParty', 'respondentLawyer'],
+    partySelected () {
+      if (this.newRole.party) {
+        if (['claimantParty', 'respondentParty'].includes(this.newRole.party)) {
+          return true
+        }
+        return false
+      }
+      return undefined
+    }
   },
   watch: {
     dialogVisible () {
@@ -260,15 +259,28 @@ export default {
   },
   methods: {
     searchPerson () {
-      this.newRole.oabs = []
-      this.newRole.emails = []
-      this.newRole.phones = []
-      let params = {}
-      if (this.newRole.oabNumber) params.oabNumber = this.newRole.oabNumber.replace(/\D/g, '')
-      if (this.newRole.oabState) params.oabState = this.newRole.oabState
-      if (this.newRole.documentNumber) params.document = this.newRole.documentNumber.replace(/\D/g, '')
-      this.searchLoading = true
-      this.$store.dispatch('searchPerson', params)
+      let isValid = true
+      let fields
+      if (this.partySelected === true) {
+        fields = ['documentNumber']
+      } else if (this.partySelected === false) {
+        fields = ['oabNumber', 'oabState']
+      } else {
+        return
+      }
+      this.$refs.newRole.validateField(fields, errorMessage => {
+        if (errorMessage) isValid = false
+      })
+      if (isValid) {
+        this.newRole.oabs = []
+        this.newRole.emails = []
+        this.newRole.phones = []
+        let params = {}
+        if (this.newRole.oabNumber) params.oabNumber = this.newRole.oabNumber.replace(/\D/g, '')
+        if (this.newRole.oabState) params.oabState = this.newRole.oabState
+        if (this.newRole.documentNumber) params.document = this.newRole.documentNumber.replace(/\D/g, '')
+        this.searchLoading = true
+        this.$store.dispatch('searchPerson', params)
         .then(response => {
           this.newRole.name = response.name
           this.newRole.personId = response.id
@@ -286,6 +298,7 @@ export default {
             this.searchLoading = false
           }.bind(this), 500)
         })
+      }
     },
     clearDocuments () {
       delete this.newRole.documentNumber
@@ -342,18 +355,35 @@ export default {
       this.newRole.emails.splice(index, 1)
     },
     registerRole () {
-      let role = {}
-      let disputeId = this.disputeId
-      role.main = true
-      if (this.newRole.documentNumber) role.documentNumber = this.newRole.documentNumber.replace(/\D/g, '')
-      if (this.newRole.oabs) role.oabs = this.newRole.oabs
-      if (this.newRole.emails) role.emails = this.newRole.emails
-      if (this.newRole.phones) role.phones = this.newRole.phones
-      if (this.newRole.name) role.name = this.newRole.name
-      if (this.newRole.personId) role.personId = this.newRole.personId
-      role.party = this.newRole.party.startsWith('respondent') ? 'RESPONDENT' : 'CLAIMANT'
-      role.roles = [this.newRole.party.endsWith('Party') ? 'PARTY' : 'LAWYER']
-      this.$store.dispatch('newDisputeRole', { role, disputeId })
+      let isValid = true
+      this.$refs.newRole.validateField(['documentNumber', 'name'], errorMessage => {
+        if (errorMessage) isValid = false
+      })
+      if (isValid) {
+        this.registerLoading = true
+        let role = {}
+        let disputeId = this.disputeId
+        role.main = true
+        if (this.newRole.documentNumber) role.documentNumber = this.newRole.documentNumber.replace(/\D/g, '')
+        if (this.newRole.oabs) role.oabs = this.newRole.oabs
+        if (this.newRole.emails) role.emails = this.newRole.emails
+        if (this.newRole.phones) role.phones = this.newRole.phones
+        if (this.newRole.name) role.name = this.newRole.name
+        if (this.newRole.personId) role.personId = this.newRole.personId
+        role.party = this.newRole.party.startsWith('respondent') ? 'RESPONDENT' : 'CLAIMANT'
+        role.roles = [this.newRole.party.endsWith('Party') ? 'PARTY' : 'LAWYER']
+        this.$store.dispatch('newDisputeRole', { role, disputeId }).then(response => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Novo ator cadastrado com sucesso.',
+            type: 'success'
+          })
+        }).catch(error => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.registerLoading = false
+        })
+      }
     }
   }
 }
