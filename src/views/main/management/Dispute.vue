@@ -145,7 +145,7 @@
           </span>
         </el-dialog>
         <!-- MESSAGES -->
-        <dispute-occurrences ref="disputeOccurrences" v-if="typingTab === '1'" :dispute-id="id" data-testid="dispute-messages" />
+        <dispute-occurrences v-if="typingTab === '1'" ref="disputeOccurrences" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
         <div
           v-loading="isPaused"

@@ -281,23 +281,23 @@ export default {
         if (this.newRole.documentNumber) params.document = this.newRole.documentNumber.replace(/\D/g, '')
         this.searchLoading = true
         this.$store.dispatch('searchPerson', params)
-        .then(response => {
-          this.newRole.name = response.name
-          this.newRole.personId = response.id
-          this.newRole.documentNumber = response.documentNumber
-          this.newRole.oabs = response.oabs
-          this.newRole.emails = response.emails
-          this.newRole.phones = response.phones
-          this.secondStep = true
-        })
-        .catch(error => {
-          if (error.response.status === 400) this.secondStep = true
-          console.error(error)
-        }).finally(() => {
-          setTimeout(function () {
-            this.searchLoading = false
-          }.bind(this), 500)
-        })
+          .then(response => {
+            this.newRole.name = response.name
+            this.newRole.personId = response.id
+            this.newRole.documentNumber = response.documentNumber
+            this.newRole.oabs = response.oabs
+            this.newRole.emails = response.emails
+            this.newRole.phones = response.phones
+            this.secondStep = true
+          })
+          .catch(error => {
+            if (error.response.status === 400) this.secondStep = true
+            console.error(error)
+          }).finally(() => {
+            setTimeout(function () {
+              this.searchLoading = false
+            }.bind(this), 500)
+          })
       }
     },
     clearDocuments () {
@@ -372,13 +372,13 @@ export default {
         if (this.newRole.personId) role.personId = this.newRole.personId
         role.party = this.newRole.party.startsWith('respondent') ? 'RESPONDENT' : 'CLAIMANT'
         role.roles = [this.newRole.party.endsWith('Party') ? 'PARTY' : 'LAWYER']
-        this.$store.dispatch('newDisputeRole', { role, disputeId }).then(response => {
+        this.$store.dispatch('newDisputeRole', { role, disputeId }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Novo ator cadastrado com sucesso.',
             type: 'success'
           })
-        }).catch(error => {
+        }).catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.registerLoading = false
