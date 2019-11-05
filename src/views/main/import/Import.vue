@@ -156,7 +156,7 @@ export default {
           return 'el-icon-folder-delete'
           break;
         case 'READY': case 'PROCESSING':
-          return ''
+          return 'el-icon-folder-remove'
           break;
         default:
           return 'el-icon-folder-delete'
