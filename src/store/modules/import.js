@@ -75,6 +75,7 @@ const imports = {
       })
     },
     uploadImportFile ({ commit }, file) {
+      debugger
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('api/imports/upload', file)

@@ -111,12 +111,12 @@
   },
   "import" : {
     "status" : {
-      "IN_QUEUE" : "não importada",
-      "PROCESSING" : "não importada",
-      "PROCESSED" : "não importada",
-      "ERROR" : "não importada",
-      "READY" : "não importada",
-      "FINISHED" : "importada"
+      "IN_QUEUE" : "falha na importação",
+      "READY" : "em processamento",
+      "PROCESSING" : "em processamento",
+      "PROCESSED" : "importação cancelada",
+      "FINISHED" : "planilha importada",
+      "ERROR" : "falha na importação"
     }
   }
 }
