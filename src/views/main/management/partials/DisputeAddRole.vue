@@ -3,7 +3,7 @@
     :close-on-click-modal="false"
     :visible.sync="dialogVisible"
     title="Cadastrar parte"
-    width="50%">
+    width="40%">
     <el-form
       v-loading="searchLoading || registerLoading"
       ref="newRole"
@@ -20,18 +20,18 @@
         </el-select>
       </el-form-item>
       <div v-if="!secondStep" class="dispute-add-role__search">
-        <el-form-item v-if="['claimantParty', 'respondentParty'].includes(newRole.party)" label="CPF/CNPJ" prop="documentNumber">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" @keyup.enter.native="searchPerson" />
+        <el-form-item v-if="['claimantParty', 'respondentParty'].includes(newRole.party)" label="CPF/CNPJ" prop="searchDocumentNumber">
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.searchDocumentNumber" />
         </el-form-item>
         <el-row v-else-if="newRole.party" :gutter="20">
           <el-col :span="12">
-            <el-form-item class="oab" label="OAB" prop="oabNumber">
-              <el-input v-model="newRole.oabNumber" @keyup.enter.native="searchPerson" />
+            <el-form-item class="oab" label="OAB" prop="searchOabNumber">
+              <el-input v-model="newRole.searchOabNumber" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item class="state" label="Estado" prop="oabState">
-              <el-select v-model="newRole.oabState" placeholder="UF">
+            <el-form-item class="state" label="Estado" prop="searchOabState">
+              <el-select v-model="newRole.searchOabState" placeholder="UF" filterable>
                 <el-option
                   v-for="(state, index) in $store.state.statesList"
                   :key="`${index}-${state}`"
@@ -46,8 +46,8 @@
         </el-button>
       </div>
       <div v-else>
-        <el-form-item label="CPF/CNPJ" prop="documentNumber">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" />
+        <el-form-item :rules="documentNumberRule" label="CPF/CNPJ" prop="documentNumber">
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" :disabled="disableDocumentNumber"/>
         </el-form-item>
         <el-form-item label="Nome" prop="name">
           <el-input v-model="newRole.name" />
@@ -160,6 +160,34 @@
 
 <script>
 import CPFCNPJ from 'cpf_cnpj'
+const validateName = (rule, value, callback) => {
+  if (value && value.length > 2) {
+    callback()
+  } else {
+    callback(new Error())
+  }
+}
+const validateCpf = (rule, value, callback) => {
+  if (!value) callback()
+  else if (value.length === 14) {
+    if (CPFCNPJ.CPF.isValid(value)) {
+      callback()
+    } else callback(new Error())
+  } else {
+    if (CPFCNPJ.CNPJ.isValid(value)) {
+      callback()
+    } else callback(new Error())
+  }
+}
+const validatePhone = (rule, value, callback) => {
+  if (value) {
+    if (value && value.length > 13) {
+      callback()
+    } else callback(new Error())
+  } else {
+    callback()
+  }
+}
 
 export default {
   name: 'DisputeAddRole',
@@ -171,43 +199,30 @@ export default {
     disputeId: {
       type: Number,
       default: 0
+    },
+    documentNumbers: {
+      type: Array,
+      default: () => []
+    },
+    oabs: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
-    const validateName = (rule, value, callback) => {
-      if (value && value.length > 2) {
-        callback()
-      } else {
-        callback(new Error())
-      }
-    }
-    const validateCpf = (rule, value, callback) => {
-      if (!value) callback()
-      if (value.length === 14) {
-        if (CPFCNPJ.CPF.isValid(value)) {
-          callback()
-        } else callback(new Error())
-      } else {
-        if (CPFCNPJ.CNPJ.isValid(value)) {
-          callback()
-        } else callback(new Error())
-      }
-    }
-    const validatePhone = (rule, value, callback) => {
-      if (value) {
-        if (value && value.length > 13) {
-          callback()
-        } else callback(new Error())
-      } else {
-        callback()
-      }
-    }
     return {
       secondStep: false,
       searchLoading: false,
       registerLoading: false,
+      disableDocumentNumber: false,
       newRole: {
-        name: ''
+        name: '',
+        phone: '',
+        email: '',
+        documentNumber: '',
+        searchDocumentNumber: '',
+        searchOabNumber: '',
+        searchOabState: ''
       },
       newRoleRules: {
         name: [
@@ -215,21 +230,33 @@ export default {
           { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'submit' }
         ],
         phone: [
-          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
+          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         email: [
-          { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
+          { type: 'email', message: 'E-mail inválido', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
-        documentNumber: [
+        oab: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+        ],
+        state: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+        ],
+        searchDocumentNumber: [
           { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
-        oabNumber: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        oabState: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        searchOabNumber: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        searchOabState: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
     }
   },
   computed: {
+    documentNumberRule () {
+      return { required: this.partySelected, message: 'Campo obrigatório', trigger: 'submit',
+    validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+    },
     dialogVisible: {
       get () {
         return this.visible
@@ -253,7 +280,11 @@ export default {
     dialogVisible () {
       this.secondStep = false
       this.newRole = {
-        name: ''
+        name: '',
+        searchDocumentNumber: '',
+        documentNumber: '',
+        searchOabState: '',
+        searchOabNumber: ''
       }
     }
   },
@@ -262,9 +293,9 @@ export default {
       let isValid = true
       let fields
       if (this.partySelected === true) {
-        fields = ['documentNumber']
+        fields = ['searchDocumentNumber']
       } else if (this.partySelected === false) {
-        fields = ['oabNumber', 'oabState']
+        fields = ['searchOabNumber', 'searchOabState']
       } else {
         return
       }
@@ -272,28 +303,72 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
+        this.searchLoading = true
+        this.disableDocumentNumber = false
         this.newRole.oabs = []
         this.newRole.emails = []
         this.newRole.phones = []
         let params = {}
-        if (this.newRole.oabNumber) params.oabNumber = this.newRole.oabNumber.replace(/\D/g, '')
-        if (this.newRole.oabState) params.oabState = this.newRole.oabState
-        if (this.newRole.documentNumber) params.document = this.newRole.documentNumber.replace(/\D/g, '')
-        this.searchLoading = true
+        if (this.newRole.searchDocumentNumber) {
+          if (this.documentNumbers.includes(this.newRole.searchDocumentNumber.replace(/\D/g, ''))) {
+            setTimeout(function () {
+              this.$jusNotification({
+                title: 'Ops!',
+                message: 'Parte já cadastrada nesta disputa.',
+                type: 'warning'
+              })
+              this.searchLoading = false
+            }.bind(this), 300)
+            return 0
+          } else {
+            params.document = this.newRole.searchDocumentNumber.replace(/\D/g, '')
+          }
+          this.newRole.documentNumber = this.newRole.searchDocumentNumber
+          this.disableDocumentNumber = true
+        } else if (this.newRole.searchOabNumber && this.newRole.searchOabState) {
+          if (this.oabs.includes(this.newRole.searchOabNumber.replace(/\D/g, '') + this.newRole.searchOabState)) {
+            setTimeout(function () {
+              this.$jusNotification({
+                title: 'Ops!',
+                message: 'Parte já cadastrada nesta disputa.',
+                type: 'warning'
+              })
+              this.searchLoading = false
+            }.bind(this), 300)
+            return 0
+          } else {
+            params.oabState = this.newRole.searchOabState
+            params.oabNumber = this.newRole.searchOabNumber.replace(/\D/g, '')
+          }
+        }
         this.$store.dispatch('searchPerson', params)
           .then(response => {
-            this.newRole.name = response.name
+            let self = this
+            this.$confirm('Já existe uma parte cadastrada com o documento acima. Deseja utilizar os dados existentes?', 'Parte já existente no sistema', {
+              confirmButtonText: 'Sim, utilizar',
+              cancelButtonText: 'Não, preencher novamente',
+              type: 'info',
+              cancelButtonClass: 'is-plain'
+            }).then(() => {
+              self.newRole.name = response.name
+              self.newRole.documentNumber = response.documentNumber
+              self.newRole.oabs = response.oabs
+              self.newRole.emails = response.emails
+              self.newRole.phones = response.phones
+            })
             this.newRole.personId = response.id
-            this.newRole.documentNumber = response.documentNumber
-            this.newRole.oabs = response.oabs
-            this.newRole.emails = response.emails
-            this.newRole.phones = response.phones
             this.secondStep = true
           })
           .catch(error => {
             if (error.response.status === 400) this.secondStep = true
             console.error(error)
           }).finally(() => {
+            if (this.newRole.searchOabNumber && this.newRole.searchOabState) {
+              this.newRole.oabs.push({
+                number: this.newRole.searchOabNumber,
+                state: this.newRole.searchOabState
+              })
+            }
             setTimeout(function () {
               this.searchLoading = false
             }.bind(this), 500)
@@ -301,10 +376,11 @@ export default {
       }
     },
     clearDocuments () {
-      delete this.newRole.documentNumber
-      delete this.newRole.oabNumber
-      delete this.newRole.oabState
-      delete this.newRole.name
+      this.newRole.searchDocumentNumber = ''
+      this.newRole.documentNumber = ''
+      this.newRole.searchOabState = ''
+      this.newRole.searchOabNumber = ''
+      this.newRole.name = ''
       this.secondStep = false
     },
     addOab () {
@@ -381,9 +457,22 @@ export default {
           })
           this.$store.dispatch('getDispute', this.disputeId)
           this.$store.dispatch('enrichPerson', response.personId)
-          this.$store.dispatch('restartDisputeRoleEngagement', {
-            disputeId: this.disputeId,
-            disputeRoleId: response.id
+          this.$confirm('Deseja já iniciar o engajamento para esta parte?', 'Atenção!', {
+            confirmButtonText: 'Eengajar',
+            cancelButtonText: 'Não',
+            type: 'info',
+            cancelButtonClass: 'is-plain'
+          }).then(() => {
+            this.$store.dispatch('restartDisputeRoleEngagement', {
+              disputeId: this.disputeId,
+              disputeRoleId: response.id
+            }).then(() => {
+              this.$jusNotification({
+                title: 'Yay!',
+                message: 'Engajamento realizado com sucesso.',
+                type: 'success'
+              })
+            })
           })
         }).catch(() => {
           this.$jusNotification({ type: 'error' })

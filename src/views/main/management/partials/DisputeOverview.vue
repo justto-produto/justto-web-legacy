@@ -87,14 +87,14 @@
       </el-collapse-item>
     </el-collapse>
     <hr>
-    <!-- <div class="dispute-overview-view__roles">
+    <div class="dispute-overview-view__roles">
       Partes
       <el-tooltip content="Cadastrar parte">
         <a href="#" @click.prevent="newRoleDialogVisible = true">
           <jus-icon icon="add" />
         </a>
       </el-tooltip>
-    </div> -->
+    </div>
     <el-collapse
       ref="roleCollapse"
       accordion
@@ -437,7 +437,11 @@
         </el-button>
       </span>
     </el-dialog>
-    <dispute-add-role :visible.sync="newRoleDialogVisible" :dispute-id="dispute.id" />
+    <dispute-add-role
+      :visible.sync="newRoleDialogVisible"
+      :dispute-id="dispute.id"
+      :document-numbers="documentNumbers"
+      :oabs= "oabs" />
   </div>
 </template>
 
@@ -559,6 +563,26 @@ export default {
           }
         })
       } return []
+    },
+    documentNumbers () {
+      if (this.disputeRolesSort && this.disputeRolesSort.length) {
+        return this.disputeRolesSort.map(role => {
+          if (role.documentNumber) return role.documentNumber
+        }).filter(role => !!role)
+      }
+      return []
+    },
+    oabs () {
+      if (this.disputeRolesSort && this.disputeRolesSort.length) {
+        let oabs = []
+        this.disputeRolesSort.map(role => {
+          if (role.oabs && role.oabs.length) {
+            role.oabs.map(oab => oabs.push(oab.number + oab.state))
+          }
+        })
+        return oabs
+      }
+      return []
     },
     disputeClaimants () {
       if (this.dispute && this.dispute.disputeRoles) {
