@@ -26,14 +26,17 @@ build:
         name: Run npm i
         code: |
           npm i
-          npm run release
-          export CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo $CURRENT_VERSION
     - script:
         name: Run Test E2E
         code: |
           echo 'npm run test:server'
-          npm run test:server
+          npx vue-cli-service test:e2e --headless --browser chrome
+    - script:
+        name: Run npm run release
+        code: |
+          npm run release
+          export CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo $CURRENT_VERSION
     - script:
         name: Update tag version
         code: |
