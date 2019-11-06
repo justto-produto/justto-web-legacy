@@ -29,7 +29,7 @@ build:
     - internal/docker-build:
         dockerfile: Dockerfile-test
         image-name: e2e-test
-        tag: $CURRENT_VERSION
+        tag: e2e-test
     - script:
         name: Run npm run release
         code: |
