@@ -4,7 +4,6 @@ build:
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: node:latest
-  docker: true
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
   # https://devcenter.wercker.com/development/steps/
@@ -27,11 +26,10 @@ build:
         name: Run npm i
         code: |
           npm i
-    - script:
-        name: Run Test E2E
-        code: |
-          echo 'docker build -f Dockerfile-test .'
-          docker build -f Dockerfile-test .
+    - internal/docker-build:
+        dockerfile: Dockerfile-test
+        image-name: e2e-test
+        tag: $CURRENT_VERSION
     - script:
         name: Run npm run release
         code: |
