@@ -106,16 +106,20 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
     // eslint-disable-next-line
     axios.post('api/disputes/export/', {
-      responseType: 'arraybuffer',
-      query: state.query
-    }).then(response => {
-        const blob = new Blob([response.data], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        })
-        let reg = /(?:filename\*?=)(?<filename>(['"])[\s\S]*?\2|[^;\n]*)/
-        let fileName = response.headers['content-disposition'].match(reg).groups.filename
-        FileSaver.saveAs(blob, fileName)
-        resolve(response)
+        responseType: 'arraybuffer',
+        query: state.query
+      }).then(response => {
+        this.$confirm('A planilha exportada tera ' + response.data + 'linhas')
+          .then(_ => {
+            const blob = new Blob([response.data], {
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            })
+            let reg = /(?:filename\*?=)(?<filename>(['"])[\s\S]*?\2|[^;\n]*)/
+            let fileName = response.headers['content-disposition'].match(reg).groups.filename
+            FileSaver.saveAs(blob, fileName)
+          })
+          .catch(_ => {})
+          .finally( => { resolve(response) })
       }).catch(error => {
         reject(error)
       })
