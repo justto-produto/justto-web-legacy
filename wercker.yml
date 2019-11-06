@@ -26,10 +26,11 @@ build:
         name: Run npm i
         code: |
           npm i
-    - internal/docker-build:
-        dockerfile: Dockerfile-test
-        image-name: e2e-test
-        tag: e2e-test
+#    - internal/docker-build:
+#        name: Run Test E2E
+#        dockerfile: Dockerfile-test
+#        image-name: e2e-test
+#        tag: e2e-test
     - script:
         name: Run npm run release
         code: |
