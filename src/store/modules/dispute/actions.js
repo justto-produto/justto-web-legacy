@@ -119,7 +119,7 @@ const disputeActions = {
             FileSaver.saveAs(blob, fileName)
           })
           .catch(_ => {})
-          .finally( => { resolve(response) })
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
