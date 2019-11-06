@@ -32,8 +32,8 @@ build:
     - script:
         name: Run Test E2E
         code: |
-          echo 'docker build -f Dockerfile-test .'
-          docker build -f Dockerfile-test .
+          echo 'npm run test:server'
+          npm run test:server
     - script:
         name: Update tag version
         code: |
