@@ -30,11 +30,17 @@ build:
           export CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo $CURRENT_VERSION
     - script:
+        name: Run Test E2E
+        code: |
+          echo 'docker build -f Dockerfile-test .'
+          docker build -f Dockerfile-test .
+    - script:
         name: Update tag version
         code: |
           git add .
           git commit -m 'Release da versao '${CURRENT_VERSION} || echo 'Nada a commitar.'
-          git push https://dev@justto.com.br:@bundanc1A@gitlab.com/Justto/front-end/justto-web.git refs/heads/release:refs/heads/release
+          git remote set-url origin https://dev@justto.com.br:@bundanc1A@gitlab.com/Justto/front-end/justto-web.git
+          git push origin release
     - script:
       name: Show and store last version in online key value service https://kvdb.io
       code: |
