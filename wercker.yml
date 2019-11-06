@@ -42,7 +42,7 @@ build:
         code: |
           git add .
           git commit -m 'Release da versao '${CURRENT_VERSION} || echo 'Nada a commitar.'
-          git remote set-url origin https://dev@justto.com.br:@bundanc1A@gitlab.com/Justto/front-end/justto-web.git
+          git remote set-url origin https://dev%40justto.com.br:%40bundanc1A@gitlab.com/Justto/front-end/justto-web.git
           git push origin release
     - script:
       name: Show and store last version in online key value service https://kvdb.io
@@ -50,17 +50,17 @@ build:
         export CURRENT_VERSION=$(cat /pipeline/cache/justtoweb.version)
         echo $CURRENT_VERSION
         curl https://kvdb.io/6cBnZtaENVZxPUqDci2Dgi/justtoweb-version -d $CURRENT_VERSION
-    - internal/docker-build:
-      dockerfile: DockerfileWercker
-      image-name: gcr.io/justto-ml/$PROJECT_NAME
-      tag: stable latest $CURRENT_VERSION
-    - internal/docker-push:
-      image-name: gcr.io/justto-ml/$PROJECT_NAME
-      repository: gcr.io/justto-ml/$PROJECT_NAME
-      tag: lates, stable, $CURRENT_VERSION
-      username: _json_key
-      password: $JUSTTO_ML_KEY
-      registry: https://gcr.io
+#    - internal/docker-build:
+#      dockerfile: DockerfileWercker
+#      image-name: gcr.io/justto-ml/$PROJECT_NAME
+#      tag: stable latest $CURRENT_VERSION
+#    - internal/docker-push:
+#      image-name: gcr.io/justto-ml/$PROJECT_NAME
+#      repository: gcr.io/justto-ml/$PROJECT_NAME
+#      tag: lates, stable, $CURRENT_VERSION
+#      username: _json_key
+#      password: $JUSTTO_ML_KEY
+#      registry: https://gcr.io
 #    - script:
 #      name: Start pipeline to deploy in kubernetes
 #      code: |
