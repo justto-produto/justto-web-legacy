@@ -9,9 +9,9 @@ const queryBuilder = q => {
     if (!value) continue
     if (Array.isArray(value)) {
       if (!value.length) continue
-      if (['expirationDate', 'dealDate'].includes(key)) {
-        query = query + key + 'Start' + '=' + moment(value[0]).startOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]') + '&'
-        query = query + key + 'End' + '=' + moment(value[1]).add(1, 'd').endOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]') + '&'
+      if (['expirationDate', 'dealDate', 'importingDate'].includes(key)) {
+        query = query + key + 'Start' + '=' + moment(value[0]).startOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') + '&'
+        query = query + key + 'End' + '=' + moment(value[1]).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') + '&'
       } else {
         for (let v of value) {
           query = query + key + '=' + v + '&'
@@ -366,6 +366,17 @@ const disputeActions = {
       axios.get('api/disputes/respondent-names')
         .then(response => {
           commit('setRespondents', response.data)
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
+  newDisputeRole ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.post('api/disputes/' + params.disputeId + '/dispute-roles', params.role)
+        .then(response => {
           resolve(response.data)
         }).catch(error => {
           reject(error)

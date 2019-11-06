@@ -31,7 +31,7 @@
         </el-table-column>
         <el-table-column label="Status">
           <template slot-scope="scope">
-            <i :class="scope.row.status === 'FINISHED' ? 'el-icon-folder-checked' : 'el-icon-folder-delete'" />
+            <i :class="setStatusIcon(scope.row.status)" />
             {{ $t('import.status.' + scope.row.status ) | capitalize }}
           </template>
         </el-table-column>
@@ -147,6 +147,21 @@ export default {
   beforeCreate () {
   },
   methods: {
+    setStatusIcon (status) {
+      switch (status) {
+        case 'FINISHED':
+          return 'el-icon-folder-checked'
+          break;
+        case 'ERROR': case 'IN_QUEUE': case 'PROCESSED':
+          return 'el-icon-folder-delete'
+          break;
+        case 'READY': case 'PROCESSING':
+          return 'el-icon-folder-remove'
+          break;
+        default:
+          return 'el-icon-folder-delete'
+      }
+    },
     startImport () {
       this.$router.push('/import/new')
       this.$store.dispatch('hideLoading')
