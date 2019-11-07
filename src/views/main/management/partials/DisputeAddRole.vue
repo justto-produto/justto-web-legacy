@@ -351,7 +351,7 @@ export default {
               cancelButtonClass: 'is-plain'
             }).then(() => {
               self.newRole.name = response.name
-              self.newRole.documentNumber = response.documentNumber
+              if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
               self.newRole.oabs = response.oabs
               self.newRole.emails = response.emails
               self.newRole.phones = response.phones
