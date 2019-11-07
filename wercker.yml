@@ -62,8 +62,6 @@ build:
               --header 'cache-control: no-cache' \
               --data '{"pipelineId": "5dc18143b7da88a8009460a3","branch": "prod", "message": "Deploying latest version to microservice '$PROJECT_NAME':'$CURRENT_VERSION'","envVars": [ {"key":"service_name","value":"'$PROJECT_NAME'" }]}'
 test-e2e:
-  # This references an OpenJDK container from the
-  # Docker Hub https://hub.docker.com/_/openjdk/
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
   box: node:latest
