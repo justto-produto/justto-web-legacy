@@ -46,7 +46,7 @@
         </el-button>
       </div>
       <div v-else>
-        <el-form-item :rules="documentNumberRule" label="CPF/CNPJ" prop="documentNumber">
+        <el-form-item label="CPF/CNPJ" prop="documentNumber">
           <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" :disabled="disableDocumentNumber"/>
         </el-form-item>
         <el-form-item label="Nome" prop="name">
@@ -243,6 +243,9 @@ export default {
         state: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
+        documentNumber: [
+          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+        ],
         searchDocumentNumber: [
           { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
@@ -253,10 +256,6 @@ export default {
     }
   },
   computed: {
-    documentNumberRule () {
-      return { required: this.partySelected, message: 'Campo obrigatório', trigger: 'submit',
-    validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
-    },
     dialogVisible: {
       get () {
         return this.visible
