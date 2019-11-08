@@ -15,12 +15,11 @@
                 filterable
                 data-testid="filter-campaign"
                 placeholder="Selecione uma opção"
-                clearable
                 @clear="clearCampaign">
                 <el-option
                   v-for="campaign in campaigns"
                   :key="campaign.id"
-                  :value="campaign.id"
+                  :value="campaign.name"
                   :label="campaign.name"/>
               </el-select>
             </el-form-item>
@@ -34,7 +33,6 @@
                 filterable
                 data-testid="filter-strategy"
                 placeholder="Selecione uma opção"
-                clearable
                 @clear="clearStrategy">
                 <el-option
                   v-for="strategy in strategies"
@@ -54,10 +52,10 @@
                 align="right"
                 format="dd/MM/yyyy"
                 unlink-panels
-                clearable
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
+                value-format="yyyy-MM-dd"
                 @change="changeDealDate" />
             </el-form-item>
           </el-col>
@@ -70,28 +68,10 @@
                 align="right"
                 format="dd/MM/yyyy"
                 unlink-panels
-                clearable
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
                 @change="clearLastInteractionDate" />
-            </el-form-item>
-          </el-col> -->
-          <!-- MEIO DE INTERAÇÃO -->
-          <!-- <el-col :span="12">
-            <el-form-item v-if="isInteration" label="Meio de interação">
-              <el-select
-                v-model="filters.lastInteractionType"
-                data-testid="filter-setinteraction"
-                placeholder="Selecione uma opção"
-                clearable
-                @clear="clearInteraction">
-                <el-option
-                  v-for="interaction in interactions"
-                  :key="interaction.key"
-                  :value="interaction.key"
-                  :label="interaction.value"/>
-              </el-select>
             </el-form-item>
           </el-col> -->
           <!-- STATUS -->
@@ -117,11 +97,47 @@
                 align="right"
                 format="dd/MM/yyyy"
                 unlink-panels
-                clearable
                 range-separator="-"
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
+                value-format="yyyy-MM-dd"
                 @change="changeExpirationDate" />
+            </el-form-item>
+          </el-col>
+          <!-- IMPORTAÇÃO -->
+          <el-col :span="12">
+            <el-form-item label="Data da Importação">
+              <el-date-picker
+                v-model="filters.importingDate"
+                data-testid="filters-disputeimportingDate"
+                type="daterange"
+                align="right"
+                format="dd/MM/yyyy"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="Data inicial"
+                end-placeholder="Data final"
+                value-format="yyyy-MM-dd"
+                @change="changeimportingDate" />
+            </el-form-item>
+          </el-col>
+          <!-- RÉU -->
+          <el-col v-if="!loading && isAll" :span="12">
+            <el-form-item label="Réu">
+              <el-select
+                v-model="filters.respondentNames"
+                multiple
+                filterable
+                data-testid="filter-respondent"
+                placeholder="Selecione uma opção"
+                clearable
+                @clear="clearRespondent">
+                <el-option
+                  v-for="respondent in respondents"
+                  :key="respondent"
+                  :value="respondent"
+                  :label="respondent"/>
+              </el-select>
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
@@ -137,8 +153,42 @@
                 <div>
                   <jus-icon icon="pause" /> Somente pausadas
                 </div>
-                <el-switch v-model="filters.onlyPaused" data-testid="filters-favorite" />
+                <el-switch v-model="filters.onlyPaused" data-testid="filters-only-paused" />
               </div>
+            </el-form-item>
+          </el-col>
+          <!-- FAVORITOS -->
+          <el-col v-if="isInteration" :span="12">
+            <el-form-item label="Exibir ocorrências:" class="management-filters__switch management-filters__switch--invisible">
+              <div >
+                <div>
+                  <jus-icon icon="eye" /> Somente não visualizadas
+                </div>
+                <el-switch v-model="filters.onlyNotVisualized" data-testid="filters-only-not-visualized" />
+              </div>
+              <div>
+                <div>
+                  <jus-icon icon="proposal" /> Tem contraproposta
+                </div>
+                <el-switch v-model="filters.hasCounterproposal" data-testid="filters-has-counterproposal" />
+              </div>
+            </el-form-item>
+          </el-col>
+          <!-- MEIO DE INTERAÇÃO -->
+          <el-col v-if="isInteration" :span="12">
+            <el-form-item label="Meio de interação">
+              <el-select
+                v-model="filters.lastInteractionType"
+                data-testid="filter-setinteraction"
+                placeholder="Selecione uma opção"
+                multiple
+                @clear="clearInteraction">
+                <el-option
+                  v-for="interaction in interactions"
+                  :key="interaction.key"
+                  :value="interaction.key"
+                  :label="interaction.value"/>
+              </el-select>
             </el-form-item>
           </el-col>
           <!-- ESTADO -->
@@ -147,7 +197,6 @@
               <el-select
                 v-model="filters.disputestate"
                 placeholder="Selecione uma opção"
-                clearable
                 @clear="clearDisputestate">
                 <el-option v-for="state in $store.state.statesList" :key="state" :value="state"/>
               </el-select>
@@ -272,6 +321,9 @@ export default {
     campaigns () {
       return this.$store.getters.campaignList
     },
+    respondents () {
+      return this.$store.getters.respondents
+    },
     interactions () {
       return [{
         key: 'WHATSAPP',
@@ -280,8 +332,8 @@ export default {
         key: 'EMAIL',
         value: 'Email'
       }, {
-        key: 'CNA',
-        value: 'CNA'
+        key: 'NEGOTIATOR_ACCESS',
+        value: 'Sistema Justto'
       }]
     },
     negotiatorsList () {
@@ -328,7 +380,8 @@ export default {
       this.loading = true
       Promise.all([
         this.$store.dispatch('getCampaigns'),
-        this.$store.dispatch('getMyStrategies')
+        this.$store.dispatch('getMyStrategies'),
+        this.$store.dispatch('getRespondents')
       ]).finally(responses => {
         this.loading = false
       })
@@ -344,10 +397,15 @@ export default {
       }
       this.clearCampaign()
       this.clearStrategy()
+      this.clearRespondent()
       this.changeDealDate()
       this.changeExpirationDate()
+      this.changeimportingDate()
+      this.clearInteraction()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
+      this.filters.onlyNotVisualized = false
+      this.filters.hasCounterproposal = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
@@ -355,11 +413,14 @@ export default {
     restoreFilters () {
       this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
     },
-    // clearInteraction (value) {
-    //   delete this.filters.lastInteractionType
-    // },
+    clearInteraction (value) {
+      delete this.filters.lastInteractionType
+    },
     clearStrategy () {
       this.filters.strategy = []
+    },
+    clearRespondent () {
+      this.filters.respondentNames = []
     },
     clearCampaign () {
       this.filters.campaigns = []
@@ -387,6 +448,13 @@ export default {
       } else {
         this.filters.expirationDate = []
       }
+    },
+    changeimportingDate (value) {
+      if (value) {
+        this.filters.importingDate = value
+      } else {
+        this.filters.importingDate = []
+      }
     }
   }
 }
@@ -400,7 +468,7 @@ export default {
   &__switch {
     margin-bottom: 18px;
     .el-form-item__content {
-      line-height: 22px;
+      line-height: 24px;
       > div {
         display: flex;
         justify-content: space-between;
@@ -408,6 +476,11 @@ export default {
         img {
           width: 14px;
         }
+      }
+    }
+    &.management-filters__switch--invisible {
+      .el-form-item__label {
+        opacity: 0;
       }
     }
   }

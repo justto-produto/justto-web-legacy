@@ -14,13 +14,9 @@
           <span class="title">Campanha:</span>
           <span>{{ dispute.campaign.name }}</span>
         </div>
-        <div v-if="dispute.campaign && dispute.campaign.strategy" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.strategyName" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
-<<<<<<< Updated upstream
-          <span>{{ dispute.campaign.strategy }}</span>
-=======
           <span data-testid="overview-strategy">{{ dispute.strategyName }}</span>
->>>>>>> Stashed changes
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
@@ -91,6 +87,14 @@
       </el-collapse-item>
     </el-collapse>
     <hr>
+    <div class="dispute-overview-view__roles">
+      Partes
+      <el-tooltip content="Cadastrar parte">
+        <a href="#" @click.prevent="newRoleDialogVisible = true">
+          <jus-icon icon="add" />
+        </a>
+      </el-tooltip>
+    </div>
     <el-collapse
       ref="roleCollapse"
       accordion
@@ -219,13 +223,11 @@
         @submit.native.prevent="editDispute">
         <el-row :gutter="20">
           <el-col :span="24">
-<<<<<<< Updated upstream
-=======
             <el-form-item label="Estratégia" prop="disputeStrategy">
               <el-select
                 v-model="selectedStrategyId"
                 placeholder="Escolha a nova estratégia"
-                data-testid="strategy-input">
+                data-testid="strategy-input">>
                 <el-option
                   v-for="(strategy, index) in strategies"
                   :key="`${strategy.id}-${index}`"
@@ -237,9 +239,8 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
->>>>>>> Stashed changes
             <el-form-item label="Alçada máxima" prop="disputeUpperRange">
-              <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" data-testid="bondary-input" />
+              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -247,7 +248,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
-              <money v-model="disputeForm.lastCounterOfferValue" v-bind="money" class="el-input__inner" data-testid="counterproposal-value-input" />
+              <money v-model="disputeForm.lastCounterOfferValue" class="el-input__inner" data-testid="counterproposal-value-input" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -266,7 +267,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastOfferValue">
-              <money v-model="disputeForm.lastOfferValue" v-bind="money" class="el-input__inner" data-testid="proposal-value-input"/>
+              <money v-model="disputeForm.lastOfferValue" class="el-input__inner" data-testid="proposal-value-input"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -336,7 +337,7 @@
             <el-input v-model="roleForm.oab" />
           </el-form-item>
           <el-form-item class="state" label="Estado" prop="state">
-            <el-select v-model="roleForm.state" placeholder="">
+            <el-select v-model="roleForm.state" filterable placeholder="">
               <el-option
                 v-for="(state, index) in $store.state.statesList"
                 :key="`${index}-${state}`"
@@ -437,19 +438,23 @@
         </el-button>
       </span>
     </el-dialog>
+    <dispute-add-role
+      :visible.sync="newRoleDialogVisible"
+      :dispute-id="dispute.id"
+      :document-numbers="documentNumbers"
+      :oabs= "oabs" />
   </div>
 </template>
 
 <script>
-import { Money } from 'v-money'
-import { mask } from 'vue-the-mask'
 import { getRoles } from '@/plugins/jusUtils'
 import CPFCNPJ from 'cpf_cnpj'
 
 export default {
   name: 'DisputeOverview',
-  components: { Money },
-  directives: { mask },
+  components: {
+    DisputeAddRole: () => import('./DisputeAddRole')
+  },
   props: {
     loading: {
       default: false,
@@ -497,6 +502,7 @@ export default {
       activeId: 0,
       selectedClaimantId: '',
       selectedNegotiatorId: '',
+      selectedStrategyId: '',
       disputeForm: {
         description: '',
         expirationDate: ''
@@ -520,24 +526,20 @@ export default {
         oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
-      emailDialogVisible: false,
-      phoneDialogVisible: false,
+      newRoleDialogVisible: false,
       editDisputeDialogVisible: false,
       editDisputeDialogLoading: false,
       editRoleDialogVisible: false,
       editRoleDialogLoading: false,
       editRoleDialogError: false,
       editRoleDialogErrorList: [],
-      descriptionCollapse: true,
-      money: {
-        decimal: ',',
-        thousands: '.',
-        prefix: 'R$ ',
-        precision: 2
-      }
+      descriptionCollapse: true
     }
   },
   computed: {
+    strategies () {
+      return this.$store.getters.strategyList
+    },
     computedDescription () {
       if (this.dispute.description && this.dispute.description.length > 140) {
         if (this.descriptionCollapse) {
@@ -562,6 +564,26 @@ export default {
           }
         })
       } return []
+    },
+    documentNumbers () {
+      if (this.disputeRolesSort && this.disputeRolesSort.length) {
+        return this.disputeRolesSort.map(role => {
+          if (role.documentNumber) return role.documentNumber
+        }).filter(role => !!role)
+      }
+      return []
+    },
+    oabs () {
+      if (this.disputeRolesSort && this.disputeRolesSort.length) {
+        let oabs = []
+        this.disputeRolesSort.map(role => {
+          if (role.oabs && role.oabs.length) {
+            role.oabs.map(oab => oabs.push(oab.number + oab.state))
+          }
+        })
+        return oabs
+      }
+      return []
     },
     disputeClaimants () {
       if (this.dispute && this.dispute.disputeRoles) {
@@ -596,17 +618,19 @@ export default {
       } return []
     },
     openDisputeDialog () {
+      this.$store.dispatch('getMyStrategies')
+      let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
+      this.selectedStrategyId = dispute.strategyId
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
-      this.editDisputeDialogVisible = true
-      let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
       this.disputeForm.lastCounterOfferValue = parseFloat(dispute.lastCounterOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
+      this.editDisputeDialogVisible = true
     },
     editDispute () {
       this.editDisputeDialogLoading = true
@@ -629,10 +653,11 @@ export default {
       }).then(() => {
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           let promises = []
+          if (this.selectedStrategyId) disputeToEdit.strategyId = this.selectedStrategyId
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].respondentBoundary.boundary = this.disputeForm.disputeUpperRange + ''
           if (this.disputeForm.disputeUpperRange) disputeToEdit.objects[0].boundarys[0].boundary = this.disputeForm.disputeUpperRange + ''
-          if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).format('YYYY-MM-DD[T]23:00:00[Z]')
-          if (this.disputeForm.description) disputeToEdit.description = this.disputeForm.description
+          if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+          disputeToEdit.description = this.disputeForm.description
           promises.push(this.$store.dispatch('editDispute', disputeToEdit))
           if (this.disputeForm.lastCounterOfferValue !== this.dispute.lastCounterOfferValue) {
             if (this.selectedClaimantId) {
@@ -787,25 +812,27 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        this.roleForm.phones.push({
-          number: this.roleForm.phone
+        let self = this
+        let isDuplicated = this.roleForm.phones.findIndex(p => {
+          const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
+          return number === self.roleForm.phone.replace(/\D/g, '')
         })
+        if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone })
         this.roleForm.phone = ''
       }
     },
     removePhone (index) {
       this.roleForm.phones.splice(index, 1)
     },
-
     addEmail () {
       let isValid = true
       this.$refs.roleForm.validateField('email', errorMessage => {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        this.roleForm.emails.push({
-          address: this.roleForm.email
-        })
+        let self = this
+        let isDuplicated = this.roleForm.emails.findIndex(e => e.address === self.roleForm.email)
+        if (isDuplicated < 0) this.roleForm.emails.push({ address: this.roleForm.email })
         this.roleForm.email = ''
       }
     },
@@ -818,10 +845,14 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        this.roleForm.oabs.push({
-          number: this.roleForm.oab,
-          state: this.roleForm.state
-        })
+        let self = this
+        let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
+        if (isDuplicated < 0) {
+          this.roleForm.oabs.push({
+            number: this.roleForm.oab,
+            state: this.roleForm.state
+          })
+        }
         this.roleForm.oab = ''
         this.roleForm.state = ''
       }
@@ -936,6 +967,13 @@ export default {
   }
   &__see-more {
     white-space: nowrap;
+  }
+  &__roles {
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   &__oab-form {
     display: flex;

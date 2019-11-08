@@ -1,7 +1,9 @@
 <template lang="html">
   <div>
     <div :class="{'active': active}" class="management-actions">
-      Disputas selecionadas: {{ selectedIds.length }}
+      <div class="management-actions__length">
+        <i class="el-icon-check" /> {{ selectedIdsLength }}
+      </div>
       <div>
         <el-button plain data-testid="batch-settled" @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
         <el-button plain data-testid="batch-unsettled" @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
@@ -9,15 +11,14 @@
         <el-button plain data-testid="batch-resume" @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
-        <!-- <el-button plain @click="sendBatchAction('CHANGE_NEGOTIATOR')">Alterar responsável</el-button> -->
-        <!-- <el-button plain @click="sendBatchAction('CHANGE_CAMPAIGN')">Alterar campanha</el-button> -->
+        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
     </div>
     <el-dialog
       :visible.sync="chooseUnsettledDialogVisible"
       title="Perder"
-      class="management-actions__unsettled-dialog"
+      class="management-actions__dialog"
       width="460px"
       data-testid="unsettled-dialog">
       <div class="el-message-box__content">
@@ -48,6 +49,39 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :visible.sync="changeStrategyDialogVisible"
+      title="Alterar estratégia"
+      class="management-actions__dialog"
+      width="460px"
+      data-testid="strategy-dialog">
+      <div class="el-message-box__content">
+        <div class="el-message-box__status el-icon-warning"/>
+        <div class="el-message-box__message"><p>
+          Tem certeza que deseja realizar esta ação?
+        </p></div>
+      </div>
+      <el-select
+        v-model="newStrategyId"
+        data-testid="select-unsettled"
+        placeholder="Escolha a nova estratégia">
+        <el-option
+          v-for="strategy in strategies"
+          :key="strategy.id"
+          :value="strategy.id"
+          :label="strategy.name"/>
+      </el-select>
+      <span slot="footer">
+        <el-button @click="changeStrategyDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :disabled="!newStrategyId"
+          type="primary"
+          class="confirm-action-unsettled"
+          @click.prevent="doAction('CHANGE_STRATEGY')">
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -67,8 +101,18 @@ export default {
   data () {
     return {
       chooseUnsettledDialogVisible: false,
+      changeStrategyDialogVisible: false,
       unsettledTypes: [],
-      unsettledType: ''
+      unsettledType: '',
+      newStrategyId: ''
+    }
+  },
+  computed: {
+    selectedIdsLength () {
+      return this.selectedIds.length
+    },
+    strategies () {
+      return this.$store.getters.strategyList
     }
   },
   created () {
@@ -79,10 +123,11 @@ export default {
         this.unsettledTypes = response
       })
     }
+    this.$store.dispatch('getMyStrategies')
   },
   methods: {
     doAction (action) {
-      let selecteds = this.selectedIds.length
+      let selecteds = this.selectedIdsLength
       let trackTitle
       if (action === 'SETTLED') {
         trackTitle = 'casos ganhos'
@@ -96,6 +141,8 @@ export default {
         trackTitle = 'casos deletados'
       } else if (action === 'RESTART_ENGAGEMENT') {
         trackTitle = 'engajamentos reiniciados'
+      } else if (action === 'CHANGE_STRATEGY') {
+        trackTitle = 'troca de estratégia'
       } else {
         trackTitle = 'Ação em massa realizada'
       }
@@ -103,11 +150,15 @@ export default {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds
       }
+      if (action === 'CHANGE_STRATEGY') {
+        params['strategyId'] = this.newStrategyId
+      }
       if (this.unsettledType) {
         params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseUnsettledDialogVisible = false
+        this.changeStrategyDialogVisible = false
         window.analytics.track(selecteds + ' ' + trackTitle, {
           action: action,
           selecteds: selecteds
@@ -137,6 +188,9 @@ export default {
       if (action === 'UNSETTLED') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = ''
+      } else if (action === 'CHANGE_STRATEGY') {
+        this.changeStrategyDialogVisible = true
+        this.newStrategyId = ''
       } else {
         this.$confirm('Tem certeza que deseja realizar esta ação em lote?', this.$t('action.' + action.toUpperCase()), {
           confirmButtonClass: 'confirm-action-btn',
@@ -185,7 +239,7 @@ export default {
   }
   button {
     height: 68px;
-    padding: 8px 20px;
+    padding: 8px 14px;
     border: 0;
     border-radius: 0;
     text-transform: uppercase;
@@ -193,7 +247,21 @@ export default {
       background-color: #fafafa !important;
     }
   }
-  &__unsettled-dialog {
+  &__length {
+    color: #9461f7;
+    font-weight: 500;
+    width: 42px;
+    justify-content: center;
+    align-items: center;
+    i {
+      margin-right: 4px;
+      font-weight: 600;
+    }
+  }
+  .el-icon-close {
+    width: 42px;
+  }
+  &__dialog {
     .el-message-box__content {
       padding: 10px 0;
     }

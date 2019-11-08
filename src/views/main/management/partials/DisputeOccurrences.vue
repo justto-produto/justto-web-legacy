@@ -27,37 +27,48 @@
         </el-card>
         <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
           <div class="dispute-view-occurrences__avatar">
-            <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
-            <span v-html="buildHour(occurrence)" />
+            <el-tooltip :content="buildName(occurrence).toUpperCase()">
+              <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
+            </el-tooltip>
+            <!-- <span v-html="buildHour(occurrence)" /> -->
           </div>
-          <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card" data-testid="message-box">
-            <div v-if="!!buildName(occurrence)" slot="header">
-              <jus-icon v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType !== 'UNKNOWN'" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
-              <span>{{ buildName(occurrence) }}</span>
-            </div>
-            <div>
-              <span :ref="getMessageRef(occurrence)">
-                <span v-html="buildContent(occurrence)" />
-                <span v-if="showResume(occurrence)">
-                  <a href="#" data-testid="show-email" @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
+          <div :class class="dispute-view-occurrences__card-box">
+            <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card" data-testid="message-box">
+              <!-- <div v-if="!!buildName(occurrence)" slot="header">
+                <jus-icon v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType !== 'UNKNOWN'" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
+                <span>{{ buildName(occurrence) }}</span>
+              </div> -->
+              <div>
+                <span :ref="getMessageRef(occurrence)">
+                  <span v-html="buildContent(occurrence)" />
+                  <span v-if="showResume(occurrence)">
+                    <a href="#" data-testid="show-email" @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
+                  </span>
                 </span>
-              </span>
-              <br>
-              <i v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'">
                 <br>
-                <i class="el-icon-close" style="width: 14px;margin-bottom: -1.2px;" />
-                Mensagem agendada para {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
-                <strong>CANCELADA</strong>.
-              </i>
-              <i v-else-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.type === 'SCHEDULER'">
-                <br>
-                <jus-icon icon="clock" style="width: 14px;margin-bottom: -1.2px;"/>
-                Mensagem agendada para
-                {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
-                que ainda não foi entregue.
-              </i>
+                <i v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'">
+                  <br>
+                  <i class="el-icon-close" style="width: 14px;margin-bottom: -1.2px;" />
+                  Mensagem agendada para {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
+                  <strong>CANCELADA</strong>.
+                </i>
+                <i v-else-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.type === 'SCHEDULER'">
+                  <br>
+                  <jus-icon icon="clock" style="width: 14px;margin-bottom: -1.2px;"/>
+                  Mensagem agendada para
+                  {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
+                  que ainda não foi entregue.
+                </i>
+              </div>
+            </el-card>
+            <div :class="(occurrence.interaction ? occurrence.interaction.direction : '')" class="dispute-view-occurrences__card-info">
+              <span v-html="buildHour(occurrence)" />
+              <div>•</div>
+              <jus-icon v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType !== 'UNKNOWN'" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
+              <div v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.message.receiver.length < 40">•</div>
+              <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.message.receiver.length < 40" v-html="occurrence.interaction.message.receiver" />
             </div>
-          </el-card>
+          </div>
         </div>
       </li>
     </div>
@@ -131,15 +142,18 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('clearOccurrencesSize')
-    this.$store.commit('clearDisputeOccurrences')
-    setTimeout(() => {
-      this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(() => {
-        this.loading = false
-      })
-    }, 200)
+    this.fetchData()
   },
   methods: {
+    fetchData () {
+      this.$store.commit('clearOccurrencesSize')
+      this.$store.commit('clearDisputeOccurrences')
+      setTimeout(() => {
+        this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(() => {
+          this.loading = false
+        })
+      }, 200)
+    },
     loadOccurrences ($state) {
       this.$store.commit('incrementOccurrencesSize')
       this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(response => {
@@ -276,7 +290,8 @@ export default {
       if (!this.showFullMessageList.includes(occurrence.id) &&
         occurrence.interaction &&
         occurrence.interaction.message &&
-        occurrence.interaction.message.resume) {
+        occurrence.interaction.message.resume &&
+        occurrence.interaction.message.resume.length >= 140) {
         return true
       }
       return false
@@ -324,7 +339,7 @@ export default {
     &.OUTBOUND {
       flex-direction: row-reverse;
       .dispute-view-occurrences__card {
-        margin-left: 20px;
+        margin-left: 8px;
       }
       .dispute-view-occurrences__avatar {
         margin: 0 20px 0 12px;
@@ -332,7 +347,7 @@ export default {
     }
     &.INBOUND {
       .dispute-view-occurrences__card {
-        margin-right: 20px;
+        margin-right: 8px;
       }
     }
   }
@@ -397,6 +412,25 @@ export default {
         margin-bottom: 8px;
         display: inline-block;
       }
+    }
+  }
+  &__card-box {
+    max-width: 60%;
+  }
+  &__card-info {
+    display: flex;
+    margin: 4px 22px 0 22px;
+    div {
+      margin: 0 4px;
+    }
+    img {
+      width: 16px;
+    }
+    span {
+      font-weight: 300;
+    }
+    &.OUTBOUND {
+      flex-direction: row-reverse;
     }
   }
   &__show-dialog {

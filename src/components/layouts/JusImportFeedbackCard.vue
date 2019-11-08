@@ -87,7 +87,8 @@
         type="date"
         format="dd-MM-yyyy"
         placeholder="Defina a data limite para a negociação"
-        data-testid="feedback-datapicker" />
+        data-testid="feedback-datapicker"
+        value-format="yyyy-MM-dd" />
       <el-select
         v-model="negotiatorIds"
         value-key="name"
@@ -113,6 +114,12 @@
           <span style="vertical-align: middle;margin-left: 10px;">{{ item.person.name }}</span>
         </el-option>
       </el-select>
+      <div class="jus-import-feedback-card__switch">
+        <div>
+          <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens somente em horário comercial
+        </div>
+        <el-switch v-model="businessHoursEngagement" />
+      </div>
     </el-card>
     <jus-engagements-dialog
       :dialog-visible.sync="dialogVisible"
@@ -155,6 +162,7 @@ export default {
       dialogVisible: false,
       deadline: null,
       negotiatorIds: [],
+      businessHoursEngagement: false,
       datePickerOptions: {
         disabledDate (date) {
           return date < new Date()
@@ -185,6 +193,9 @@ export default {
     }
   },
   watch: {
+    businessHoursEngagement (value) {
+      this.mappedCampaign.businessHoursEngagement = value
+    },
     respondent (value) {
       this.mappedCampaign.respondent = value
     },
@@ -213,7 +224,7 @@ export default {
     },
     deadline (value) {
       this.mappedCampaign.deadline = {
-        dateTime: this.$moment(value).format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
       }
     },
     negotiatorIds (value) {
@@ -229,6 +240,7 @@ export default {
   beforeMount () {
     this.initialCampaignName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
+    this.mappedCampaign.businessHoursEngagement = false
     // this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
     if (this.mappedCampaign.respondent) {
@@ -339,6 +351,18 @@ export default {
       border-right: 1px solid #dcdfe6 !important;
       border-top: 0 !important;
       border-bottom: 0 !important;
+    }
+  }
+  &__switch {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 13px;
+    border-bottom: 1px solid #dcdfe6;
+    .el-icon-circle-check-outline, .el-icon-circle-check {
+      font-size: 1.3rem;
+      margin-right: 9px;
     }
   }
   .el-select {

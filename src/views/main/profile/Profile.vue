@@ -49,7 +49,7 @@
               </el-form>
               <h5>
                 Membros
-                <a v-if="$store.getters.isAdminProfile" href="#" @click.prevent="dialogInvite = true">
+                <a v-if="isAdminProfile" href="#" @click.prevent="dialogInvite = true">
                   <jus-icon icon="add" />
                 </a>
               </h5>
@@ -59,7 +59,7 @@
                     <strong>{{ member.person.name }}: </strong>
                     <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                   </div>
-                  <div v-if="$store.getters.isAdminProfile" class="actions">
+                  <div v-if="isAdminProfile" class="actions">
                     <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
                     <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
                   </div>
@@ -197,6 +197,14 @@ export default {
       teamMembers: [],
       currentEditMember: {},
       phoneDTO: ''
+    }
+  },
+  computed: {
+    isAdminProfile () {
+      let email = (' ' + this.$store.getters.accountEmail).slice(1)
+      let domain = email.replace(/.*@/, '')
+      if (domain === 'justto.com.br') return true
+      return this.$store.getters.isAdminProfile
     }
   },
   mounted () {
@@ -422,8 +430,15 @@ export default {
             this.inviteForm.email = ''
             this.inviteForm.profile = 'NEGOTIATOR'
             this.getMembers()
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
+          }).catch(error => {
+            if (error.code === 'ALREADY_EXISTS') {
+              this.$jusNotification({ type: 'error' })
+            } else {
+              this.$jusNotification({
+                message: 'E-mail já convidado para esta Equipe.',
+                type: 'warning'
+              })
+            }
           })
         } else {
           return false

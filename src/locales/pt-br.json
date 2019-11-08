@@ -85,15 +85,18 @@
     "RESUME": "retomar",
     "FAVORITE": "favoritar",
     "DISFAVOR": "desfavoritar",
+    "ENRICH": "enriquecer",
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha",
-    "CANCEL-MESSAGES": "cancelar mensagens agendadas"
+    "CANCEL-MESSAGES": "cancelar mensagens agendadas",
+    "CHANGE_STRATEGY": "alterar estratégia"
   },
   "fields": {
     "claimantParty": "Parte contrária",
-    "claimantLawyer": "Advogado da parte",
+    "claimantLawyer": "Advogado(a) da parte",
     "dispute": "disputa",
-    "respondentParty": "Réu"
+    "respondentParty": "Réu",
+    "respondentLawyer": "Advogado(a) do Réu"
   },
   "NEGOTIATOR_REJECTED": "negada de",
   "NEGOTIATOR_PROPOSAL": "feita de",
@@ -108,12 +111,12 @@
   },
   "import" : {
     "status" : {
-      "IN_QUEUE" : "não importada",
-      "PROCESSING" : "não importada",
-      "PROCESSED" : "não importada",
-      "ERROR" : "não importada",
-      "READY" : "não importada",
-      "FINISHED" : "importada"
+      "IN_QUEUE" : "falha na importação",
+      "READY" : "em processamento",
+      "PROCESSING" : "em processamento",
+      "PROCESSED" : "importação cancelada",
+      "FINISHED" : "planilha importada",
+      "ERROR" : "falha na importação"
     }
   }
 }

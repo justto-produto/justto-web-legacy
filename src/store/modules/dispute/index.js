@@ -31,7 +31,8 @@ const dispute = {
       total: 0
     },
     hasFilters: false,
-    statuses: {}
+    statuses: {},
+    respondents: []
   },
   mutations: mutations,
   actions: actions,
