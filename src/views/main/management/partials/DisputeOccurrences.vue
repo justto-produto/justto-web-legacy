@@ -32,7 +32,7 @@
             </el-tooltip>
             <!-- <span v-html="buildHour(occurrence)" /> -->
           </div>
-          <div :class class="dispute-view-occurrences__card-box">
+          <div class="dispute-view-occurrences__card-box">
             <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card" data-testid="message-box">
               <!-- <div v-if="!!buildName(occurrence)" slot="header">
                 <jus-icon v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType !== 'UNKNOWN'" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
