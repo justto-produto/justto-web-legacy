@@ -121,6 +121,9 @@ describe('Disputa', function () {
     // Verifica se valores correspondem
     // cy.get('[data-testid=overview-strategy]')
       // .contains('Cobrança')
+
+    cy.wait(1000)
+
     cy.get('[data-testid=overview-upperrange]')
       .contains('R$ 4.000,00')
     cy.get('[data-testid=overview-counterproposal]')
