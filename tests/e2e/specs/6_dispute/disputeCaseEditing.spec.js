@@ -128,7 +128,7 @@ describe('Disputa', function () {
     cy.get('[data-testid=overview-proposal]')
       .contains('R$ 2.000,00')
     cy.get('[data-testid=overview-expirationdate]')
-      .contains('31/12/98')
+      .contains('01/01/99')
     cy.get('[data-testid=overview-description]')
       .contains('Teste edição descrição')
   })
