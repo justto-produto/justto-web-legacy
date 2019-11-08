@@ -336,7 +336,7 @@
             <el-input v-model="roleForm.oab" />
           </el-form-item>
           <el-form-item class="state" label="Estado" prop="state">
-            <el-select v-model="roleForm.state" placeholder="">
+            <el-select v-model="roleForm.state" filterable placeholder="">
               <el-option
                 v-for="(state, index) in $store.state.statesList"
                 :key="`${index}-${state}`"
@@ -811,9 +811,12 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        this.roleForm.phones.push({
-          number: this.roleForm.phone
+        let self = this
+        let isDuplicated = this.roleForm.phones.findIndex(p => {
+          const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
+          return number === self.roleForm.phone.replace(/\D/g, '')
         })
+        if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone })
         this.roleForm.phone = ''
       }
     },
@@ -826,9 +829,9 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        this.roleForm.emails.push({
-          address: this.roleForm.email
-        })
+        let self = this
+        let isDuplicated = this.roleForm.emails.findIndex(e => e.address === self.roleForm.email)
+        if (isDuplicated < 0) this.roleForm.emails.push({ address: this.roleForm.email })
         this.roleForm.email = ''
       }
     },
@@ -841,10 +844,14 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        this.roleForm.oabs.push({
-          number: this.roleForm.oab,
-          state: this.roleForm.state
-        })
+        let self = this
+        let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
+        if (isDuplicated < 0) {
+          this.roleForm.oabs.push({
+            number: this.roleForm.oab,
+            state: this.roleForm.state
+          })
+        }
         this.roleForm.oab = ''
         this.roleForm.state = ''
       }
