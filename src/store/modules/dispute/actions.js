@@ -105,16 +105,14 @@ const disputeActions = {
   exportDisputes ({ rootState, state }, disputeIds) {
     return new Promise((resolve, reject) => {
     // eslint-disable-next-line
-    axios.post('api/disputes/export/', {
-        responseType: 'arraybuffer',
-        query: state.query
+    axios.get('api/disputes/export'+ queryBuilder(state.query), {
+        responseType: 'arraybuffer'
       }).then(response => {
-        debugger
         const blob = new Blob([response.data], {
           // type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
           type: 'application/octet-stream'
         })
-        let fileName = new Date().getTime() + '.xls'
+        let fileName = new Date().getTime() + '.xlsx'
         FileSaver.saveAs(blob, fileName)
         resolve(response)
       }).catch(error => {
