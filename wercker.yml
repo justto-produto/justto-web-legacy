@@ -74,8 +74,6 @@ test-e2e:
     - script:
       name: Pull develop branch
       code: |
-        git checkout develop
-        git pull origin develop
         printenv
     - internal/docker-build:
         name: Run Test E2E
