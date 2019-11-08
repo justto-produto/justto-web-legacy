@@ -109,16 +109,13 @@ const disputeActions = {
         responseType: 'arraybuffer',
         query: state.query
       }).then(response => {
-        this.$confirm('A planilha exportada tera ' + response.data + 'linhas')
-          .then(_ => {
-            const blob = new Blob([response.data], {
-              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            })
-            let reg = /(?:filename\*?=)(?<filename>(['"])[\s\S]*?\2|[^;\n]*)/
-            let fileName = response.headers['content-disposition'].match(reg).groups.filename
-            FileSaver.saveAs(blob, fileName)
-          })
-          .catch(_ => {})
+        debugger
+        const blob = new Blob([response.data], {
+          // type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          type: 'application/octet-stream'
+        })
+        let fileName = new Date().getTime() + '.xls'
+        FileSaver.saveAs(blob, fileName)
         resolve(response)
       }).catch(error => {
         reject(error)
