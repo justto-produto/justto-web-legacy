@@ -31,7 +31,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item class="state" label="Estado" prop="searchOabState">
-              <el-select v-model="newRole.searchOabState" placeholder="UF" filterable>
+              <el-select v-model="newRole.searchOabState" placeholder="" filterable>
                 <el-option
                   v-for="(state, index) in $store.state.statesList"
                   :key="`${index}-${state}`"
@@ -46,7 +46,7 @@
         </el-button>
       </div>
       <div v-else>
-        <el-form-item :rules="documentNumberRule" label="CPF/CNPJ" prop="documentNumber">
+        <el-form-item label="CPF/CNPJ" prop="documentNumber">
           <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" :disabled="disableDocumentNumber"/>
         </el-form-item>
         <el-form-item label="Nome" prop="name">
@@ -115,7 +115,7 @@
             <el-input v-model="newRole.oab" />
           </el-form-item>
           <el-form-item class="state" label="Estado" prop="state">
-            <el-select v-model="newRole.state" placeholder="">
+            <el-select v-model="newRole.state" placeholder="" filterable>
               <el-option
                 v-for="(state, index) in $store.state.statesList"
                 :key="`${index}-${state}`"
@@ -243,6 +243,9 @@ export default {
         state: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
+        documentNumber: [
+          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+        ],
         searchDocumentNumber: [
           { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
@@ -253,10 +256,6 @@ export default {
     }
   },
   computed: {
-    documentNumberRule () {
-      return { required: this.partySelected, message: 'Campo obrigatório', trigger: 'submit',
-    validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
-    },
     dialogVisible: {
       get () {
         return this.visible
@@ -351,7 +350,7 @@ export default {
               cancelButtonClass: 'is-plain'
             }).then(() => {
               self.newRole.name = response.name
-              self.newRole.documentNumber = response.documentNumber
+              if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
               self.newRole.oabs = response.oabs
               self.newRole.emails = response.emails
               self.newRole.phones = response.phones
@@ -389,10 +388,14 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        this.newRole.oabs.push({
-          number: this.newRole.oab,
-          state: this.newRole.state
-        })
+        let self = this
+        let isDuplicated = this.newRole.oabs.findIndex(o => o.number === self.newRole.oab && o.state === self.newRole.state)
+        if (isDuplicated < 0) {
+          this.newRole.oabs.push({
+            number: this.newRole.oab,
+            state: this.newRole.state
+          })
+        }
         this.newRole.oab = ''
         this.newRole.state = ''
       }
@@ -406,9 +409,12 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        this.newRole.phones.push({
-          number: this.newRole.phone
+        let self = this
+        let isDuplicated = this.newRole.phones.findIndex(p => {
+          const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
+          return number.replace(/\D/g, '') === self.newRole.phone.replace(/\D/g, '')
         })
+        if (isDuplicated < 0) this.newRole.phones.push({ number: this.newRole.phone })
         this.newRole.phone = ''
       }
     },
@@ -421,9 +427,9 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        this.newRole.emails.push({
-          address: this.newRole.email
-        })
+        let self = this
+        let isDuplicated = this.newRole.emails.findIndex(e => e.address === self.newRole.email)
+        if (isDuplicated < 0) this.newRole.emails.push({ address: this.newRole.email })
         this.newRole.email = ''
       }
     },

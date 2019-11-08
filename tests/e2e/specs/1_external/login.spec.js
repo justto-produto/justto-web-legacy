@@ -14,8 +14,8 @@ describe('Login', function () {
   it('Single Workspace', function () {
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
-      .type('lucas@justto.com.br')
-      .should('have.value', 'lucas@justto.com.br')
+      .type('guilherme@justto.com.br')
+      .should('have.value', 'guilherme@justto.com.br')
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
