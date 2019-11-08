@@ -14,7 +14,7 @@ describe('Disputa', function () {
     cy.login(login, password, workspace)
   })
 
-  it('Editação de Disputa', function () {
+  it('Edição de Disputa', function () {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')

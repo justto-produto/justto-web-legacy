@@ -13,7 +13,7 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
     cy.login(login, password, workspace)
   })
 
-  it('Editação de Partes', function () {
+  it('Edição de Partes', function () {
 
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
