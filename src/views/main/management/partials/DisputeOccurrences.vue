@@ -63,8 +63,8 @@
             </el-card>
             <div :class="(occurrence.interaction ? occurrence.interaction.direction : '')" class="dispute-view-occurrences__card-info">
               <span v-html="buildHour(occurrence)" />
-              <div>•</div>
-              <jus-icon v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType !== 'UNKNOWN'" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
+              <div v-if="!!buildIcon(occurrence)">•</div>
+              <jus-icon v-if="!!buildIcon(occurrence)" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
               <div v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.message.receiver.length < 40">•</div>
               <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.message.receiver.length < 40" v-html="occurrence.interaction.message.receiver" />
             </div>
@@ -206,7 +206,7 @@ export default {
       if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType) {
         return occurrence.interaction.message.communicationType.toLowerCase().replace('_', '-')
       }
-      if (occurrence.interaction && ['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_REJECTED', 'NEGOTIATOR_ACCEPTED', 'NEGOTIATOR_CHECKOUT', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type)) {
+      if (occurrence.interaction && ['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_REJECTED', 'NEGOTIATOR_ACCEPTED', 'NEGOTIATOR_CHECKOUT', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type + '')) {
         return 'justto'
       }
       if (occurrence.type === 'LOG') {
