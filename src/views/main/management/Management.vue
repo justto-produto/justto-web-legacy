@@ -246,9 +246,22 @@ export default {
     },
     exportDisputes () {
       this.loadingExport = true
-      this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).finally(() => {
-        this.loadingExport = false
-      })
+      this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id))
+        .catch(error => {
+          if (error.response && error.response.status === 403) {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Alcançado o limite máximo de 500 casos por exportação. Entre em contato com o administrador do sistema para requisição de grandes exportações.',
+              type: 'warning',
+              duration: 0
+            })
+          } else {
+            this.$jusNotification({ type: 'error' })
+          }
+        })
+        .finally(() => {
+          this.loadingExport = false
+        })
     }
   }
 }
