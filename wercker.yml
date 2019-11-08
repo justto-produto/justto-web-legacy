@@ -21,7 +21,6 @@ build:
       code: |
         git checkout release
         git merge develop --commit -m "Merge com a develop para release"
-        printenv
     - script:
         name: Run npm i
         code: |
