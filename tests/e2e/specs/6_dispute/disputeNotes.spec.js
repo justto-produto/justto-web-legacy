@@ -67,10 +67,14 @@ describe('Disputa', function () {
       .contains('Nota gravada com sucesso.')
       .should('be.visible')
 
+<<<<<<< Updated upstream
     cy.wait(500)
+=======
+    // cy.wait(1000)
+>>>>>>> Stashed changes
 
     // Nota deve aparecer entre as mensagens
-    cy.contains(user + ' dicionou uma nota: ' + message, { timeout: 60000 })
+    cy.contains(user + ' adicionou uma nota: ' + message, { timeout: 60000 })
       .should('be.visible')
 
     // Caixa de nota deve estar visivel e amarela

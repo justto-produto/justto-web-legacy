@@ -79,6 +79,11 @@ describe('Disputa', function () {
     cy.contains('email enviado com sucesso.')
       .should('be.visible')
 
+<<<<<<< Updated upstream
+=======
+    // cy.wait(1000)
+
+>>>>>>> Stashed changes
     // Caixas de nota devem aparecer
     cy.get('[data-testid=message-box]', { timeout: 60000 }).last()
       .should('be.visible')

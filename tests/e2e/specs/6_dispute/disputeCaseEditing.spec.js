@@ -37,12 +37,14 @@ describe('Disputa', function () {
     cy.wait(1000)
 
     // Verifica se valores correspondem
+    // cy.get('[data-testid=overview-strategy]')
+      // .contains('Indenizatório')
     cy.get('[data-testid=overview-upperrange]')
       .contains('R$ 25.000,00')
     cy.get('[data-testid=overview-counterproposal]')
       .contains('R$ 35.000,00')
     cy.get('[data-testid=overview-proposal]')
-      .contains('R$ 16.200,00')
+      .contains('R$ 16.000,00')
     cy.get('[data-testid=overview-expirationdate]')
       .contains('30/12/98')
     cy.get('[data-testid=overview-description]')
@@ -51,6 +53,12 @@ describe('Disputa', function () {
     // Clica no botão "Editar"
     cy.get('[data-testid=edit-dispute]')
       .click()
+
+    // Edita campo Estrategia
+    // cy.get('[data-testid=strategy-input]')
+      // .click()
+      // .contains('Cobrança')
+      // .click()
 
     // Edita campo Alçada Máxima
     cy.get('[data-testid=bondary-input]')
@@ -111,6 +119,8 @@ describe('Disputa', function () {
       .should('be.visible')
 
     // Verifica se valores correspondem
+    // cy.get('[data-testid=overview-strategy]')
+      // .contains('Cobrança')
     cy.get('[data-testid=overview-upperrange]')
       .contains('R$ 4.000,00')
     cy.get('[data-testid=overview-counterproposal]')

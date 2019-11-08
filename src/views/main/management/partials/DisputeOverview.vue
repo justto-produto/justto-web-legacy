@@ -16,7 +16,11 @@
         </div>
         <div v-if="dispute.campaign && dispute.campaign.strategy" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Estratégia:</span>
+<<<<<<< Updated upstream
           <span>{{ dispute.campaign.strategy }}</span>
+=======
+          <span data-testid="overview-strategy">{{ dispute.strategyName }}</span>
+>>>>>>> Stashed changes
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Status:</span>
@@ -215,6 +219,25 @@
         @submit.native.prevent="editDispute">
         <el-row :gutter="20">
           <el-col :span="24">
+<<<<<<< Updated upstream
+=======
+            <el-form-item label="Estratégia" prop="disputeStrategy">
+              <el-select
+                v-model="selectedStrategyId"
+                placeholder="Escolha a nova estratégia"
+                data-testid="strategy-input">
+                <el-option
+                  v-for="(strategy, index) in strategies"
+                  :key="`${strategy.id}-${index}`"
+                  :label="strategy.name"
+                  :value="strategy.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+>>>>>>> Stashed changes
             <el-form-item label="Alçada máxima" prop="disputeUpperRange">
               <money v-model="disputeForm.disputeUpperRange" v-bind="money" class="el-input__inner" data-testid="bondary-input" />
             </el-form-item>
