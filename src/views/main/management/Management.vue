@@ -246,9 +246,22 @@ export default {
     },
     exportDisputes () {
       this.loadingExport = true
-      this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id)).finally(() => {
-        this.loadingExport = false
-      })
+      this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id))
+        .catch(error => {
+          if (error.response && error.response.status === 403) {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Tamanho da planilha é maior do que o suportado. Para exportar planilhas com mais de 500 disputas, entre em contato com o administrador do sistema.',
+              type: 'warning',
+              duration: 0
+            })
+          } else {
+            this.$jusNotification({ type: 'error' })
+          }
+        })
+        .finally(() => {
+          this.loadingExport = false
+        })
     }
   }
 }

@@ -21,7 +21,6 @@ build:
       code: |
         git checkout release
         git merge develop --commit -m "Merge com a develop para release"
-        printenv
     - script:
         name: Run npm i
         code: |
@@ -75,8 +74,6 @@ test-e2e:
     - script:
       name: Pull develop branch
       code: |
-        git checkout develop
-        git pull origin develop
         printenv
     - internal/docker-build:
         name: Run Test E2E
