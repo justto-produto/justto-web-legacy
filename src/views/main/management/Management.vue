@@ -251,7 +251,7 @@ export default {
           if (error.response && error.response.status === 403) {
             this.$jusNotification({
               title: 'Ops!',
-              message: 'Alcançado o limite máximo de 500 casos por exportação. Entre em contato com o administrador do sistema para requisição de grandes exportações.',
+              message: 'Tamanho da planilha é maior do que o suportado. Para exportar planilhas com mais de 500 disputas, entre em contato com o administrador do sistema.',
               type: 'warning',
               duration: 0
             })
