@@ -813,6 +813,8 @@ export default {
       })
       if (isValid) {
         let self = this
+        // this.roleForm.phone = this.roleForm.phone.replace(/ /g, '')
+        debugger
         let isDuplicated = this.roleForm.phones.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === self.roleForm.phone.replace(/\D/g, '')
@@ -826,6 +828,7 @@ export default {
     },
     addEmail () {
       let isValid = true
+      this.roleForm.email = this.roleForm.email.trim()
       this.$refs.roleForm.validateField('email', errorMessage => {
         if (errorMessage) isValid = false
       })
@@ -846,10 +849,11 @@ export default {
       })
       if (isValid) {
         let self = this
-        let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab.replace(' ', '') && o.state === self.roleForm.state)
+        this.roleForm.oab = this.roleForm.oab.replace(/ /g, '')
+        let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
         if (isDuplicated < 0) {
           this.roleForm.oabs.push({
-            number: this.roleForm.oab.replace(' ', ''),
+            number: this.roleForm.oab,
             state: this.roleForm.state
           })
         }
