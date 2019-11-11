@@ -66,7 +66,10 @@
               <div v-if="!!buildIcon(occurrence)">•</div>
               <jus-icon v-if="!!buildIcon(occurrence)" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
               <div v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.message.receiver.length < 40">•</div>
-              <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.message.receiver.length < 40" v-html="occurrence.interaction.message.receiver" />
+              <span
+                v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.message.receiver.length < 40">
+                Para: {{ occurrence.interaction.message.receiver | phoneMask }}
+              </span>
             </div>
           </div>
         </div>
@@ -415,11 +418,12 @@ export default {
     }
   }
   &__card-box {
-    max-width: 60%;
+    max-width: 70%;
   }
   &__card-info {
     display: flex;
     margin: 4px 22px 0 22px;
+    white-space: nowrap;
     div {
       margin: 0 4px;
     }
