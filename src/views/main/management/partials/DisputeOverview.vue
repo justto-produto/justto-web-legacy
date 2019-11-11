@@ -846,10 +846,10 @@ export default {
       })
       if (isValid) {
         let self = this
-        let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
+        let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab.replace(' ', '') && o.state === self.roleForm.state)
         if (isDuplicated < 0) {
           this.roleForm.oabs.push({
-            number: this.roleForm.oab,
+            number: this.roleForm.oab.replace(' ', ''),
             state: this.roleForm.state
           })
         }
