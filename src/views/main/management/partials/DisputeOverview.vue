@@ -814,7 +814,6 @@ export default {
       if (isValid) {
         let self = this
         this.roleForm.phone = this.roleForm.phone.replace(/ /g, '').replace(/\D/g, '')
-        debugger
         let isDuplicated = this.roleForm.phones.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === self.roleForm.phone
