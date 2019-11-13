@@ -159,35 +159,7 @@
 </template>
 
 <script>
-import CPFCNPJ from 'cpf_cnpj'
-const validateName = (rule, value, callback) => {
-  if (value && value.length > 2) {
-    callback()
-  } else {
-    callback(new Error())
-  }
-}
-const validateCpf = (rule, value, callback) => {
-  if (!value) callback()
-  else if (value.length === 14) {
-    if (CPFCNPJ.CPF.isValid(value)) {
-      callback()
-    } else callback(new Error())
-  } else {
-    if (CPFCNPJ.CNPJ.isValid(value)) {
-      callback()
-    } else callback(new Error())
-  }
-}
-const validatePhone = (rule, value, callback) => {
-  if (value) {
-    if (value && value.length > 13) {
-      callback()
-    } else callback(new Error())
-  } else {
-    callback()
-  }
-}
+import { validateName, validateCpf, validatePhone } from '@/utils/validations'
 
 export default {
   name: 'DisputeAddRole',
@@ -244,10 +216,10 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         documentNumber: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+          { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' }
         ],
         searchDocumentNumber: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
+          { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         searchOabNumber: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],

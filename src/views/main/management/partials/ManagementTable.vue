@@ -181,7 +181,7 @@
 </template>
 
 <script>
-import { getLastInteraction, getInteractionIcon } from '@/plugins/jusUtils'
+import { getLastInteraction, getInteractionIcon } from '@/utils/jusUtils'
 
 export default {
   name: 'ManagementTable',
