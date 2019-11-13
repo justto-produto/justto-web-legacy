@@ -57,7 +57,11 @@ const workspaceModule = {
     myWorkspace ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('api/workspaces/my')
+        axios.get('api/workspaces/my', {
+          headers: {
+            Workspace: ''
+          }
+        })
           .then(response => {
             resolve(response.data)
           })
@@ -251,7 +255,7 @@ const workspaceModule = {
       return state.status !== '' && state.status !== 'CREATING'
     },
     creatingWorkspace: state => state.status === 'CREATING',
-    workspaceId: state => state.subdomain,
+    workspaceId: state => state.id,
     workspaceSubdomain: state => state.subdomain,
     workspaceMembers: state => state.members,
     redirectNewWorkspace: state => state.redirectNewWorkspace,

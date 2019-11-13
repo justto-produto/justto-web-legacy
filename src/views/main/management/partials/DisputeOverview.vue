@@ -244,7 +244,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <h3>Contraproposta</h3>
+        <!-- <h3>Contraproposta</h3>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
@@ -262,7 +262,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
         <h3>Valor proposto</h3>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -463,8 +463,8 @@
 </template>
 
 <script>
-import { getRoles } from '@/plugins/jusUtils'
-import CPFCNPJ from 'cpf_cnpj'
+import { getRoles } from '@/utils/jusUtils'
+import { validateName, validateCpf, validatePhone } from '@/utils/validations'
 
 export default {
   name: 'DisputeOverview',
@@ -486,34 +486,6 @@ export default {
     }
   },
   data () {
-    const validateName = (rule, value, callback) => {
-      if (value && value.length > 2) {
-        callback()
-      } else {
-        callback(new Error())
-      }
-    }
-    const validateCpf = (rule, value, callback) => {
-      if (!value) callback()
-      if (value.length === 14) {
-        if (CPFCNPJ.CPF.isValid(value)) {
-          callback()
-        } else callback(new Error())
-      } else {
-        if (CPFCNPJ.CNPJ.isValid(value)) {
-          callback()
-        } else callback(new Error())
-      }
-    }
-    const validatePhone = (rule, value, callback) => {
-      if (value) {
-        if (value && value.length > 13) {
-          callback()
-        } else callback(new Error())
-      } else {
-        callback()
-      }
-    }
     return {
       activeId: 0,
       selectedClaimantId: '',
@@ -1029,9 +1001,6 @@ export default {
         margin-bottom: 20px;
       }
     }
-  }
-  .el-select, .el-date-editor, .el-radio-group {
-    width: 100%;
   }
   .el-dialog {
     min-width: 500px;

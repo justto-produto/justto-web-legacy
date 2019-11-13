@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { uuidv4 } from '@/plugins/jusUtils'
+import { uuidv4 } from '@/utils/jusUtils'
 
 export default {
   name: 'Onboarding',

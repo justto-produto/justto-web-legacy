@@ -175,35 +175,7 @@
 </template>
 
 <script>
-import CPFCNPJ from 'cpf_cnpj'
-const validateName = (rule, value, callback) => {
-  if (value && value.length > 2) {
-    callback()
-  } else {
-    callback(new Error())
-  }
-}
-const validateCpf = (rule, value, callback) => {
-  if (!value) callback()
-  else if (value.length === 14) {
-    if (CPFCNPJ.CPF.isValid(value)) {
-      callback()
-    } else callback(new Error())
-  } else {
-    if (CPFCNPJ.CNPJ.isValid(value)) {
-      callback()
-    } else callback(new Error())
-  }
-}
-const validatePhone = (rule, value, callback) => {
-  if (value) {
-    if (value && value.length > 13) {
-      callback()
-    } else callback(new Error())
-  } else {
-    callback()
-  }
-}
+import { validateName, validateCpf, validatePhone } from '@/utils/validations'
 
 export default {
   name: 'DisputeAddRole',
@@ -260,10 +232,10 @@ export default {
           { required: false, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         documentNumber: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+          { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' }
         ],
         searchDocumentNumber: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
+          { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         searchOabNumber: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -307,6 +279,7 @@ export default {
     searchPerson () {
       let isValid = true
       let fields
+      let searchAction
       if (this.partySelected === true) {
         fields = ['searchDocumentNumber']
       } else if (this.partySelected === false) {
@@ -337,6 +310,7 @@ export default {
             return 0
           } else {
             params.document = this.newRole.searchDocumentNumber.replace(/\D/g, '')
+            searchAction = 'searchPersonByDocument'
           }
           this.newRole.documentNumber = this.newRole.searchDocumentNumber
           this.disableDocumentNumber = true
@@ -354,28 +328,30 @@ export default {
           } else {
             params.oabState = this.newRole.searchOabState
             params.oabNumber = this.newRole.searchOabNumber.replace(/\D/g, '')
+            searchAction = 'searchPersonByOab'
           }
         }
-        this.$store.dispatch('searchPerson', params)
+        this.$store.dispatch(searchAction, params)
           .then(response => {
-            let self = this
-            this.$confirm('Já existe uma parte cadastrada com o documento acima. Deseja utilizar os dados existentes?', 'Parte já existente no sistema', {
-              confirmButtonText: 'Sim, utilizar',
-              cancelButtonText: 'Não, preencher novamente',
-              type: 'info',
-              cancelButtonClass: 'is-plain'
-            }).then(() => {
-              self.newRole.name = response.name
-              if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
-              self.newRole.oabs = response.oabs
-              self.newRole.emails = response.emails
-              self.newRole.phones = response.phones
-            })
-            this.newRole.personId = response.id
+            if (response) {
+              let self = this
+              this.$confirm('Já existem informações no sistema da parte a ser cadastrada. Deseja utilizar os dados existentes?', 'Parte encontrada no sistema', {
+                confirmButtonText: 'Sim, utilizar',
+                cancelButtonText: 'Não',
+                type: 'info',
+                cancelButtonClass: 'is-plain'
+              }).then(() => {
+                self.newRole.name = response.name
+                if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
+                self.newRole.oabs = response.oabs
+                self.newRole.emails = response.emails
+                self.newRole.phones = response.phones
+              })
+              this.newRole.personId = response.id
+            }
             this.secondStep = true
           })
           .catch(error => {
-            if (error.response.status === 400) this.secondStep = true
             console.error(error)
           }).finally(() => {
             if (this.newRole.searchOabNumber && this.newRole.searchOabState) {

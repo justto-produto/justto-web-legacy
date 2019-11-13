@@ -15,135 +15,8 @@
     <!-- CHAT -->
     <template slot="main">
       <div class="dispute-view__section-messages">
-        <!-- BUTTONS -->
-        <div class="dispute-view__actions">
-          <el-tooltip content="Ganhar">
-            <el-button
-              :disabled="!canSettled()"
-              plain
-              data-testid="settled"
-              @click="disputeAction('settled')">
-              <jus-icon icon="win"/>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip content="Perder">
-            <el-button
-              :disabled="!canUnsettled()"
-              plain
-              data-testid="unsettled"
-              @click="disputeAction('unsettled')">
-              <jus-icon icon="lose"/>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip v-if="isPaused" content="Retomar">
-            <el-button plain data-testid="resume" @click="disputeAction('resume')">
-              <jus-icon icon="start-again"/>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip v-else content="Pausar">
-            <el-button plain data-testid="paused" @click="disputeAction('paused')">
-              <jus-icon icon="pause"/>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip content="Reiniciar engajamento">
-            <el-button
-              plain
-              data-testid="restart-engagement"
-              @click="disputeAction('restart-engagement')">
-              <jus-icon icon="refresh"/>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip content="Cancelar mensagens automáticas">
-            <el-button plain data-testid="cancel-messages" @click="disputeAction('cancel-messages')">
-              <jus-icon icon="cancel-messages"/>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip content="Alterar Negociador">
-            <el-button plain @click="editNegotiator()">
-              <jus-icon icon="delegate"/>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip content="Enriquecer disputa">
-            <el-button plain @click="disputeAction('enrich')">
-              <jus-icon icon="enrich"/>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-            <el-button
-              plain
-              data-testid="favorite"
-              @click="disputeAction(isFavorite ? 'disfavor' : 'favorite')">
-              <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
-            </el-button>
-          </el-tooltip>
-          <!-- <el-tooltip content="Buscar">
-            <el-button plain @click="showSearch = !showSearch">
-              <jus-icon icon="search2"/>
-            </el-button>
-          </el-tooltip> -->
-          <div :class="{isVisible: showSearch}" class="dispute-view__search" @keydown.esc="showSearch = false">
-            <el-input v-model="searchTerm" autofocus>
-              <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
-            </el-input>
-          </div>
-        </div>
-        <el-dialog
-          :visible.sync="chooseUnsettledDialogVisible"
-          title="Perder"
-          class="dispute-view__choose-unsettled-dialog"
-          width="460px"
-          data-testid="choose-unsettled-dialog">
-          <div class="el-message-box__content">
-            <div class="el-message-box__status el-icon-warning"/>
-            <div class="el-message-box__message"><p>
-              Tem certeza que deseja realizar esta ação?
-            </p></div>
-          </div>
-          <el-select
-            v-loading="$store.state.loading"
-            v-model="unsettledType"
-            data-testid="select-unsettled"
-            placeholder="Escolha o motivo da perda">
-            <el-option
-              v-for="(type, index) in unsettledTypes"
-              :key="index"
-              :label="type"
-              :value="index"/>
-          </el-select>
-          <span slot="footer">
-            <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
-            <el-button
-              :disabled="!unsettledType"
-              type="primary"
-              class="confirm-action-unsettled"
-              @click.prevent="doAction('unsettled')">
-              Continuar
-            </el-button>
-          </span>
-        </el-dialog>
-        <el-dialog
-          :visible.sync="editNegotiatorDialogVisible"
-          title="Editar negociadores da disputa"
-          width="600px">
-          <el-form
-            ref="negotiatorsForm"
-            :model="negotiatorsForm"
-            :rules="negotiatorsRules"
-            label-position="top"
-            @submit.native.prevent="editNegotiator">
-            <el-transfer
-              :titles="['Workspace', 'Disputa']"
-              :button-texts="['Remover', 'Adcionar']"
-              :data="workspaceNegotiators"
-              v-model="disputeNegotiators"
-              filter-placeholder="Buscar"
-              filterable/>
-          </el-form>
-          <span slot="footer">
-            <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
-            <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
-          </span>
-        </el-dialog>
+        <!-- ACTIONS -->
+        <dispute-actions :dispute="dispute" :is-paused="isPaused" :is-favorite="isFavorite" />
         <!-- MESSAGES -->
         <dispute-occurrences v-if="typingTab === '1'" ref="disputeOccurrences" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
@@ -302,26 +175,18 @@ export default {
   components: {
     DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
     DisputeNotes: () => import('./partials/DisputeNotes'),
-    DisputeOverview: () => import('./partials/DisputeOverview')
+    DisputeOverview: () => import('./partials/DisputeOverview'),
+    DisputeActions: () => import('./partials/DisputeActions')
   },
   data () {
     return {
       id: 0,
-      editNegotiatorDialogVisible: false,
-      chooseUnsettledDialogVisible: false,
-      showSearch: false,
-      searchTerm: '',
       messageType: 'email',
       newMessage: '',
       newNote: '',
       newChatMessage: '',
       componentKey: 0,
       buttonKey: 0,
-      disputeNegotiators: [],
-      negotiatorsForm: {},
-      negotiatorsRules: {},
-      unsettledTypes: {},
-      unsettledType: null,
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
@@ -350,15 +215,6 @@ export default {
     isFavorite () {
       return this.dispute ? this.dispute.favorite : false
     },
-    workspaceNegotiators () {
-      return this.$store.state.workspaceModule.members.map(member => {
-        let newMember = {}
-        newMember.key = member.person.id
-        newMember.label = member.person.name
-        newMember.value = member
-        return newMember
-      })
-    },
     socketHeaders () {
       return {
         Authorization: this.$store.getters.accountToken,
@@ -376,11 +232,6 @@ export default {
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
       this.$refs.disputeOccurrences.fetchData()
-    },
-    showSearch (value) {
-      if (!value) {
-        this.searchTerm = ''
-      }
     },
     activeRoleId (activeRoleId) {
       this.updateActiveRole(activeRoleId)
@@ -442,34 +293,6 @@ export default {
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
       })
     },
-    canSettled () {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
-    },
-    canUnsettled () {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
-    },
-    editNegotiators () {
-      this.$store.dispatch('editNegotiators', {
-        negotiators: this.disputeNegotiators,
-        disputeId: this.dispute.id
-      }).then(() => {
-        window.analytics.track('Negociadores alterados')
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Negociadores editados com sucesso.',
-          type: 'success'
-        })
-        this.editNegotiatorDialogVisible = false
-      }).catch(() => this.$jusNotification({ type: 'error' }))
-    },
-    editNegotiator () {
-      this.disputeNegotiators = this.dispute.disputeRoles.filter((negotiator) => {
-        return negotiator.roles.includes('NEGOTIATOR') === true
-      }).map(member => {
-        return member.personId
-      })
-      this.editNegotiatorDialogVisible = true
-    },
     removeDispute () {
       this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonClass: 'confirm-remove-btn',
@@ -520,75 +343,6 @@ export default {
     setMessageType (type) {
       this.messageType = type
       this.updateInvalidReceiver()
-    },
-    disputeAction (action) {
-      if (action === 'unsettled') {
-        this.chooseUnsettledDialogVisible = true
-        this.unsettledType = null
-      } else if (action === 'favorite') {
-        this.doAction(action)
-      } else {
-        this.$confirm('Tem certeza que deseja realizar ação?', this.$t('action.' + action.toUpperCase()), {
-          confirmButtonClass: 'confirm-action-btn',
-          confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning',
-          cancelButtonClass: 'is-plain'
-        }).then(() => {
-          this.doAction(action)
-        })
-      }
-    },
-    doAction (action) {
-      let params = {
-        action: action,
-        disputeId: this.dispute.id
-      }
-      if (this.unsettledType) {
-        params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
-      }
-      this.$store.dispatch('sendDisputeAction', params).then(() => {
-        let trackTitle
-        if (action === 'unsettled') {
-          trackTitle = 'Disputa ganha'
-        } else if (action === 'settled') {
-          trackTitle = 'Disputa perdida'
-        } else if (action === 'paused') {
-          trackTitle = 'Disputa pausada'
-        } else if (action === 'resume') {
-          trackTitle = 'Disputa despausada'
-        } else if (action === 'favorite') {
-          trackTitle = 'Disputa favoritada'
-        } else if (action === 'disfavor') {
-          trackTitle = 'Disputa desfavoritada'
-        } else {
-          trackTitle = 'Status Modificado'
-        }
-        window.analytics.track(trackTitle, {
-          action: action
-        })
-        this.$jusNotification({
-          title: 'Yay!',
-          dangerouslyUseHTMLString: true,
-          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
-          type: 'success'
-        })
-        if (action === 'unsettled') {
-          setTimeout(() => {
-            this.$jusNotification({
-              title: 'Atenção!',
-              message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
-              type: 'info',
-              duration: 0
-            })
-          }, 2000)
-        }
-        this.fetchData()
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.chooseUnsettledDialogVisible = false
-      })
     },
     newLineMessage () {
       this.newMessage = `${this.newMessage}\n`
@@ -840,19 +594,6 @@ export default {
       height: 16px;
     }
   }
-  &__actions {
-    padding: 11px 20px;
-    box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
-    z-index: 1;
-    .el-button {
-      border-radius: 5px;
-      padding: 11px;
-    }
-    img {
-      width: 16px;
-      height: 16px;
-    }
-  }
   &__steps {
     padding: 20px 0;
     ul {
@@ -910,6 +651,12 @@ export default {
     img {
       margin-top: 1px;
     }
+  }
+  .el-select, .el-date-editor, .el-radio-group {
+    width: 100%;
+  }
+  &__counterproposal-dialog .el-form-item__error{
+    top: 11px !important;
   }
 }
 </style>

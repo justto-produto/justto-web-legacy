@@ -63,19 +63,14 @@
 </template>
 
 <script>
+import { validatePassword } from '@/utils/validations'
+
 export default {
   name: 'NewPassword',
   components: {
     JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
   },
   data () {
-    var validatePassword = (rule, value, callback) => {
-      if (value !== this.newPasswordForm.password) {
-        callback(new Error('Campos não correspondem'))
-      } else {
-        callback()
-      }
-    }
     return {
       showSuccess: false,
       showError: false,

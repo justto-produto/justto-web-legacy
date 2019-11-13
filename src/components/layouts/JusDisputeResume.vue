@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { getRoles, getLastInteraction } from '@/plugins/jusUtils'
+import { getRoles, getLastInteraction } from '@/utils/jusUtils'
 
 export default {
   name: 'JusDisputeResume',

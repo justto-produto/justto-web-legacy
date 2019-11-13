@@ -1,6 +1,6 @@
 // import moment from 'moment'
 // import i18n from '@/plugins/vueI18n.js'
-// import { fuseSearchDisputes } from '@/plugins/jusUtils'
+// import { fuseSearchDisputes } from '@/utils/jusUtils'
 
 const disputeGetters = {
   disputes: state => state.disputes,
