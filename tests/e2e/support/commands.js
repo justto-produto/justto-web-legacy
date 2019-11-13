@@ -66,7 +66,7 @@ Cypress.Commands.add('login', (email, password, workspace) => {
   cy.contains('Selecione uma de suas equipes de trabalho para entrar')
 
   // Seleciona um workspace
-  cy.get('[data-testid=select-werkspace]')
+  cy.get('[data-testid=select-workspace]')
     .click()
   cy.get('[data-testid=select-workspace]')
     .contains(workspace)

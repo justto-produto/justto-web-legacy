@@ -63,6 +63,11 @@
                 Configurações
               </el-dropdown-item>
             </router-link>
+            <a href="#" @click.prevent="changeWorkspace">
+              <el-dropdown-item>
+                Alterar equipe
+              </el-dropdown-item>
+            </a>
             <!-- <a href="http://ajuda.justto.com.br/" target="_blank">
               <el-dropdown-item>
                 Central de ajuda
@@ -75,6 +80,23 @@
             </a>
           </el-dropdown-menu>
         </el-dropdown>
+        <el-dialog
+          :visible.sync="changeWorkspaceDialogVisible"
+          title="Alterar Equipe"
+          width="30%">
+          <el-select v-model="selectedWorkspace" placeholder="Selecione" data-testid="select-workspace">
+            <el-option
+              v-for="(workspace, index) in workspaces"
+              :key="workspace.id"
+              :value="index"
+              :label="workspace.workspace.name"
+              data-testid="select-workspace"/>
+          </el-select>
+          <span slot="footer" class="dialog-footer">
+            <el-button plain @click="changeWorkspaceDialogVisible = false">Cancelar</el-button>
+            <el-button :disabled="selectedWorkspace === ''" type="primary" @click="goToWorkspace">Alterar</el-button>
+          </span>
+        </el-dialog>
       </div>
     </el-header>
   </div>
@@ -89,7 +111,10 @@ export default {
   data () {
     return {
       dispute: '',
-      disputeId: ''
+      disputeId: '',
+      workspaces: [],
+      selectedWorkspace: '',
+      changeWorkspaceDialogVisible: false
     }
   },
   computed: {
@@ -144,6 +169,35 @@ export default {
           }
         })
       }, 800)
+    },
+    changeWorkspace () {
+      this.$store.dispatch('myWorkspace').then(response => {
+        this.workspaces = response.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
+      })
+      this.selectedWorkspace = ''
+      this.changeWorkspaceDialogVisible = true
+    },
+    goToWorkspace () {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Alterando Equipe...'
+      })
+      const workspace = this.workspaces[this.selectedWorkspace]
+      if (workspace.workspace) this.$store.commit('setWorkspace', workspace.workspace)
+      if (workspace.profile) this.$store.commit('setProfile', workspace.profile)
+      if (workspace.person) this.$store.commit('setLoggedPerson', workspace.person)
+      this.$store.dispatch('getWorkspaceMembers')
+        .then(() => {
+          this.$router.go('/management')
+          this.changeWorkspaceDialogVisible = true
+        }).catch(error => {
+          this.$jusNotification({ type: 'error' })
+          console.error(error)
+        }).finally(() => {
+          setTimeout(() => {
+            loading.close()
+          }, 1000)
+        })
     }
   }
 }
@@ -216,6 +270,10 @@ export default {
       right: -4px;
       bottom: 1px;
     }
+  }
+  .el-select {
+    width: 100%;
+    margin: 20px 0;
   }
 }
 </style>
