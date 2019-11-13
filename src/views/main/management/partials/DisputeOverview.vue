@@ -350,7 +350,8 @@
                 v-for="(state, index) in $store.state.statesList"
                 :key="`${index}-${state}`"
                 :label="state"
-                :value="state" />
+                :value="state"
+                @blur="addOab(roleForm.personId, roleForm.oabs)"/>
             </el-select>
           </el-form-item>
           <el-button class="button" type="primary" @click="addOab(roleForm.personId, roleForm.oabs)">
@@ -860,7 +861,7 @@ export default {
     addOab () {
       let isValid = true
       this.$refs.roleForm.validateField(['oab', 'state'], errorMessage => {
-        if (errorMessage || !this.roleForm.oab.number || !this.roleForm.oab.state) isValid = false
+        if (errorMessage || !this.roleForm.oab || !this.roleForm.state) isValid = false
       })
       if (isValid) {
         let self = this

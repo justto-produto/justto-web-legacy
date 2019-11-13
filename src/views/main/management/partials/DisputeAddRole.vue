@@ -401,7 +401,7 @@ export default {
     addOab () {
       let isValid = true
       this.$refs.newRole.validateField(['oab', 'state'], errorMessage => {
-        if (errorMessage || !this.newRole.oab.number || !this.newRole.oab.state) isValid = false
+        if (errorMessage || !this.newRole.oab || !this.newRole.state) isValid = false
       })
       if (isValid) {
         let self = this
