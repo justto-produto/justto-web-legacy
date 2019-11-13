@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { validateSubdomainName, validateSubdomainAvailability } from '@/utils/validations'
+
 export default {
   props: {
     isGuest: {
@@ -40,37 +42,6 @@ export default {
     }
   },
   data () {
-    var validateSubdomainName = (rule, value, callback) => {
-      if (value.length < 3) {
-        callback(new Error('Necessário ao menos 3 caracteres.'))
-      }
-      if (/[^a-z0-9]/g.test(value)) {
-        this.isValid = false
-        callback(new Error('Formato inválido'))
-      } else {
-        this.isValid = true
-        callback()
-      }
-    }
-    var validateSubdomainAvailability = (rule, value, callback) => {
-      if (value.length >= 3) {
-        this.$store.dispatch('verifyAvailability', value)
-          .then(available => {
-            if (available) {
-              this.isAvailable = true
-              callback()
-            } else {
-              this.isAvailable = false
-              callback(new Error(' '))
-            }
-          })
-          .catch(error => {
-            callback(error)
-          })
-      } else {
-        this.isValid = false
-      }
-    }
     return {
       isAvailable: false,
       isValid: false,
