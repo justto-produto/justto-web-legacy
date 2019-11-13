@@ -131,7 +131,7 @@
               placeholder=""
               filterable
               @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
-              @blur="addOab(newRole.personId, newRole.oabs)">
+              @change="addOab(newRole.personId, newRole.oabs)">
               <el-option
                 v-for="(state, index) in $store.state.statesList"
                 :key="`${index}-${state}`"
