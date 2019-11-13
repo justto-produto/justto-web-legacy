@@ -35,16 +35,26 @@ const actions = {
       })
     })
   },
-  searchPerson ({ commit }, params) {
+  searchPersonByDocument ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('api/persons/search', {
-        params
-      }).then(response => {
-        resolve(response.data)
-      }).catch(error => {
-        reject(error)
-      })
+      axios.get('api/spider/person/' + params.document)
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
+  searchPersonByOab ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/spider/lawyer/' + params.oabNumber + '/' + params.oabState)
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
     })
   },
   enrichPerson ({ commit }, personId) {

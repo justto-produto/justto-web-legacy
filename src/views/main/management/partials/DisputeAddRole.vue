@@ -263,6 +263,7 @@ export default {
     searchPerson () {
       let isValid = true
       let fields
+      let searchAction
       if (this.partySelected === true) {
         fields = ['searchDocumentNumber']
       } else if (this.partySelected === false) {
@@ -293,6 +294,7 @@ export default {
             return 0
           } else {
             params.document = this.newRole.searchDocumentNumber.replace(/\D/g, '')
+            searchAction = 'searchPersonByDocument'
           }
           this.newRole.documentNumber = this.newRole.searchDocumentNumber
           this.disableDocumentNumber = true
@@ -310,28 +312,30 @@ export default {
           } else {
             params.oabState = this.newRole.searchOabState
             params.oabNumber = this.newRole.searchOabNumber.replace(/\D/g, '')
+            searchAction = 'searchPersonByOab'
           }
         }
-        this.$store.dispatch('searchPerson', params)
+        this.$store.dispatch(searchAction, params)
           .then(response => {
-            let self = this
-            this.$confirm('Já existe uma parte cadastrada com o documento acima. Deseja utilizar os dados existentes?', 'Parte já existente no sistema', {
-              confirmButtonText: 'Sim, utilizar',
-              cancelButtonText: 'Não, preencher novamente',
-              type: 'info',
-              cancelButtonClass: 'is-plain'
-            }).then(() => {
-              self.newRole.name = response.name
-              if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
-              self.newRole.oabs = response.oabs
-              self.newRole.emails = response.emails
-              self.newRole.phones = response.phones
-            })
-            this.newRole.personId = response.id
+            if (response) {
+              let self = this
+              this.$confirm('Já existem informações no sistema da parte a ser cadastrada. Deseja utilizar os dados existentes?', 'Parte encontrada no sistema', {
+                confirmButtonText: 'Sim, utilizar',
+                cancelButtonText: 'Não',
+                type: 'info',
+                cancelButtonClass: 'is-plain'
+              }).then(() => {
+                self.newRole.name = response.name
+                if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
+                self.newRole.oabs = response.oabs
+                self.newRole.emails = response.emails
+                self.newRole.phones = response.phones
+              })
+              this.newRole.personId = response.id
+            }
             this.secondStep = true
           })
           .catch(error => {
-            if (error.response.status === 400) this.secondStep = true
             console.error(error)
           }).finally(() => {
             if (this.newRole.searchOabNumber && this.newRole.searchOabState) {
