@@ -60,11 +60,11 @@
           <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
         </el-button>
       </el-tooltip>
-      <el-tooltip content="Contraproposta manual">
+      <!-- <el-tooltip content="Contraproposta manual">
         <el-button plain @click="counterproposalDialogVisible = true">
           <jus-icon icon="proposal"/>
         </el-button>
-      </el-tooltip>
+      </el-tooltip> -->
     </div>
     <el-dialog
       :visible.sync="chooseUnsettledDialogVisible"
