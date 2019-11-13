@@ -334,15 +334,23 @@
         </el-form-item>
         <div v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" class="dispute-overview-view__oab-form">
           <el-form-item class="oab" label="OAB" prop="oab">
-            <el-input v-model="roleForm.oab" />
+            <el-input
+              v-model="roleForm.oab"
+              @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
+              @blur="addOab(roleForm.personId, roleForm.oabs)"/>
           </el-form-item>
           <el-form-item class="state" label="Estado" prop="state">
-            <el-select v-model="roleForm.state" filterable placeholder="">
+            <el-select
+              v-model="roleForm.state"
+              placeholder=""
+              filterable
+              @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
+              @change="addOab(roleForm.personId, roleForm.oabs)">
               <el-option
                 v-for="(state, index) in $store.state.statesList"
                 :key="`${index}-${state}`"
                 :label="state"
-                :value="state" />
+                :value="state"/>
             </el-select>
           </el-form-item>
           <el-button class="button" type="primary" @click="addOab(roleForm.personId, roleForm.oabs)">
@@ -373,7 +381,11 @@
           </el-table-column>
         </el-table>
         <el-form-item label="Telefone" prop="phone">
-          <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="roleForm.phone" prop="phone">
+          <el-input
+            v-mask="['(##) ####-####', '(##) #####-####']"
+            v-model="roleForm.phone"
+            @keydown.enter.native="addPhone()"
+            @blur="addPhone()">
             <el-button slot="append" @click="addPhone()">
               <jus-icon icon="add-white" />
             </el-button>
@@ -402,7 +414,11 @@
           </el-table-column>
         </el-table>
         <el-form-item label="E-mail" prop="email">
-          <el-input v-model="roleForm.email" data-testid="input-email">
+          <el-input
+            v-model="roleForm.email"
+            data-testid="input-email"
+            @keydown.enter.native="addEmail()"
+            @blur="addEmail()">
             <el-button slot="append" data-testid="add-email" @click="addEmail()">
               <jus-icon icon="add-white" />
             </el-button>
@@ -487,16 +503,16 @@ export default {
           { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' }
         ],
         phone: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { required: false, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
         ],
         email: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { required: false, message: 'Campo obrigatório', trigger: 'submit' },
           { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
         ],
         documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }],
-        oab: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        state: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        oab: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
+        state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       newRoleDialogVisible: false,
       editDisputeDialogVisible: false,
@@ -781,13 +797,14 @@ export default {
     addPhone () {
       let isValid = true
       this.$refs.roleForm.validateField('phone', errorMessage => {
-        if (errorMessage) isValid = false
+        if (errorMessage || !this.roleForm.phone) isValid = false
       })
       if (isValid) {
         let self = this
+        this.roleForm.phone = this.roleForm.phone.replace(/ /g, '').replace(/\D/g, '')
         let isDuplicated = this.roleForm.phones.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
-          return number === self.roleForm.phone.replace(/\D/g, '')
+          return number === self.roleForm.phone
         })
         if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone })
         this.roleForm.phone = ''
@@ -798,8 +815,9 @@ export default {
     },
     addEmail () {
       let isValid = true
+      this.roleForm.email = this.roleForm.email.trim()
       this.$refs.roleForm.validateField('email', errorMessage => {
-        if (errorMessage) isValid = false
+        if (errorMessage || !this.roleForm.email) isValid = false
       })
       if (isValid) {
         let self = this
@@ -814,10 +832,11 @@ export default {
     addOab () {
       let isValid = true
       this.$refs.roleForm.validateField(['oab', 'state'], errorMessage => {
-        if (errorMessage) isValid = false
+        if (errorMessage || !this.roleForm.oab || !this.roleForm.state) isValid = false
       })
       if (isValid) {
         let self = this
+        this.roleForm.oab = this.roleForm.oab.replace(/ /g, '')
         let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
         if (isDuplicated < 0) {
           this.roleForm.oabs.push({
