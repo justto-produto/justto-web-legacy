@@ -393,6 +393,7 @@ export default {
       })
       if (isValid) {
         let self = this
+        this.newRole.oab = this.newRole.oab.replace(/ /g, '')
         let isDuplicated = this.newRole.oabs.findIndex(o => o.number === self.newRole.oab && o.state === self.newRole.state)
         if (isDuplicated < 0) {
           this.newRole.oabs.push({
@@ -414,9 +415,10 @@ export default {
       })
       if (isValid) {
         let self = this
+        this.newRole.phone = this.newRole.phone.replace(/ /g, '').replace(/\D/g, '')
         let isDuplicated = this.newRole.phones.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
-          return number.replace(/\D/g, '') === self.newRole.phone.replace(/\D/g, '')
+          return number.replace(/\D/g, '')
         })
         if (isDuplicated < 0) this.newRole.phones.push({ number: this.newRole.phone })
         this.newRole.phone = ''
@@ -427,6 +429,7 @@ export default {
     },
     addEmail () {
       let isValid = true
+      this.newRole.email = this.newRole.email.trim()
       this.$refs.newRole.validateField('email', errorMessage => {
         if (errorMessage) isValid = false
       })
