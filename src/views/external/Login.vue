@@ -82,7 +82,7 @@
           <h1 class="external-view__title">Equipe</h1>
           <p>Selecione uma de suas equipes de trabalho para entrar.</p>
           <el-form-item label="Equipe" prop="selectedWorkspace">
-            <el-select v-model="workspaceForm.selectedWorkspaceIndex" placeholder="Selecione" data-testid="select-werkspace">
+            <el-select v-model="workspaceForm.selectedWorkspaceIndex" placeholder="Selecione" data-testid="select-workspace">
               <el-option
                 v-for="(w, index) in workspaces"
                 :key="index"
