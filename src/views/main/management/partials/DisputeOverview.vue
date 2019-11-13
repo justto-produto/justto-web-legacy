@@ -244,7 +244,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <h3>Contraproposta</h3>
+        <!-- <h3>Contraproposta</h3>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
@@ -262,7 +262,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
         <h3>Valor proposto</h3>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -1010,9 +1010,6 @@ export default {
         margin-bottom: 20px;
       }
     }
-  }
-  .el-select, .el-date-editor, .el-radio-group {
-    width: 100%;
   }
   .el-dialog {
     min-width: 500px;

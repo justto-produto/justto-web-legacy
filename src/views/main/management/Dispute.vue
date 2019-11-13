@@ -76,17 +76,45 @@
               <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
             </el-button>
           </el-tooltip>
-          <!-- <el-tooltip content="Buscar">
-            <el-button plain @click="showSearch = !showSearch">
-              <jus-icon icon="search2"/>
+          <el-tooltip content="Contraproposta manual">
+            <el-button plain @click="counterproposalDialogVisible = true">
+              <jus-icon icon="proposal"/>
             </el-button>
-          </el-tooltip> -->
-          <div :class="{isVisible: showSearch}" class="dispute-view__search" @keydown.esc="showSearch = false">
-            <el-input v-model="searchTerm" autofocus>
-              <i slot="suffix" class="el-icon-close el-input__icon" @click="showSearch = false"/>
-            </el-input>
-          </div>
+          </el-tooltip>
         </div>
+        <el-dialog
+          :visible.sync="counterproposalDialogVisible"
+          title="Enviar contraproposta manual"
+          width="600px"
+          class="dispute-view__counterproposal-dialog">
+          <el-form
+            ref="counterOfferForm"
+            :model="counterOfferForm"
+            :rules="counterOfferFormRules">
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="Valor" prop="lastCounterOfferValue">
+                  <money v-model="counterOfferForm.lastCounterOfferValue" class="el-input__inner" data-testid="counterproposal-value-input" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="Proposto por" prop="selectedClaimantId">
+                  <el-select v-model="counterOfferForm.selectedClaimantId" placeholder="Autor da contraproposta" data-testid="counterproposal-claimant-input">
+                    <el-option
+                      v-for="(claimant, index) in disputeClaimants"
+                      :key="`${index}-${claimant.id}`"
+                      :label="claimant.name"
+                      :value="claimant.id" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+          <span slot="footer">
+            <el-button plain @click="counterproposalDialogOpen">Cancelar</el-button>
+            <el-button type="primary" @click.prevent="checkCounterproposal()">Enviar</el-button>
+          </span>
+        </el-dialog>
         <el-dialog
           :visible.sync="chooseUnsettledDialogVisible"
           title="Perder"
@@ -297,6 +325,8 @@
 </template>
 
 <script>
+import { getRoles } from '@/plugins/jusUtils'
+
 export default {
   name: 'Dispute',
   components: {
@@ -305,12 +335,18 @@ export default {
     DisputeOverview: () => import('./partials/DisputeOverview')
   },
   data () {
+    const validateZero = (rule, value, callback) => {
+      if (value && value !== 0) {
+        callback()
+      } else {
+        callback(new Error())
+      }
+    }
     return {
       id: 0,
       editNegotiatorDialogVisible: false,
       chooseUnsettledDialogVisible: false,
-      showSearch: false,
-      searchTerm: '',
+      counterproposalDialogVisible: false,
       messageType: 'email',
       newMessage: '',
       newNote: '',
@@ -328,7 +364,18 @@ export default {
       activeRoleId: 0,
       loadingKey: 0,
       activeRole: {},
-      invalidReceiver: undefined
+      invalidReceiver: undefined,
+      counterOfferForm: {
+        lastCounterOfferValue: '',
+        selectedClaimantId: ''
+      },
+      counterOfferFormRules: {
+        lastCounterOfferValue: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validateZero, message: 'Campo obrigatório', trigger: 'submit' }
+        ],
+        selectedClaimantId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      }
     }
   },
   computed: {
@@ -364,6 +411,12 @@ export default {
         Authorization: this.$store.getters.accountToken,
         Workspace: this.$store.getters.workspaceSubdomain
       }
+    },
+    disputeClaimants () {
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
+      }
+      return []
     }
   },
   watch: {
@@ -376,11 +429,6 @@ export default {
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
       this.$refs.disputeOccurrences.fetchData()
-    },
-    showSearch (value) {
-      if (!value) {
-        this.searchTerm = ''
-      }
     },
     activeRoleId (activeRoleId) {
       this.updateActiveRole(activeRoleId)
@@ -528,7 +576,8 @@ export default {
       } else if (action === 'favorite') {
         this.doAction(action)
       } else {
-        this.$confirm('Tem certeza que deseja realizar ação?', this.$t('action.' + action.toUpperCase()), {
+        let capAction = this.$t('action.' + action.toUpperCase())
+        this.$confirm('Tem certeza que deseja realizar ação?', capAction.charAt(0).toUpperCase() + capAction.slice(1), {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
@@ -695,6 +744,36 @@ export default {
           }
         })
       }
+    },
+    counterproposalDialogOpen () {
+      this.counterOfferForm.lastCounterOfferValue = ''
+      this.counterOfferForm.selectedClaimantId = ''
+      this.counterproposalDialogVisible = false
+      this.$refs.counterOfferForm.clearValidate()
+    },
+    checkCounterproposal () {
+      this.$refs.counterOfferForm.validate(valid => {
+        if (valid) {
+          if (this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange) {
+            this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
+              confirmButtonText: 'Enviar contraproposta',
+              cancelButtonText: 'Cancelar',
+              type: 'info',
+              cancelButtonClass: 'is-plain'
+            }).then(() => {
+              this.sendCounterproposal()
+            })
+          } else {
+            this.sendCounterproposal()
+          }
+          console.log(this.counterOfferForm)
+        } else {
+          return false
+        }
+      })
+    },
+    sendCounterproposal () {
+      alert()
     }
   }
 }
@@ -910,6 +989,12 @@ export default {
     img {
       margin-top: 1px;
     }
+  }
+  .el-select, .el-date-editor, .el-radio-group {
+    width: 100%;
+  }
+  &__counterproposal-dialog .el-form-item__error{
+    top: 11px !important;
   }
 }
 </style>

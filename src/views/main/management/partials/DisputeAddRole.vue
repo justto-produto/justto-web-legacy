@@ -244,10 +244,10 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         documentNumber: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+          { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' }
         ],
         searchDocumentNumber: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
+          { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         searchOabNumber: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
