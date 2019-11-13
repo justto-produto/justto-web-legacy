@@ -38,7 +38,11 @@
             </el-form>
           </el-col>
           <el-col :span="12">
-            <h2>Equipe</h2>
+            <h2>Equipe
+              <a v-if="isAdminProfile" href="#" @click.prevent="dialogInvite = true">
+                <jus-icon icon="add" />
+              </a>
+            </h2>
             <div class="profile-view__team">
               <el-form label-position="top" class="mt20 mb20">
                 <el-form-item label="Nome da equipe">
@@ -49,9 +53,9 @@
               </el-form>
               <h5>
                 Membros
-                <a v-if="isAdminProfile" href="#" @click.prevent="dialogInvite = true">
+                <!-- <a v-if="isAdminProfile" href="#" @click.prevent="dialogInvite = true">
                   <jus-icon icon="add" />
-                </a>
+                </a> -->
               </h5>
               <div v-for="member in teamMembers" :key="member.id">
                 <div class="profile-view__members-list">
@@ -65,11 +69,21 @@
                   </div>
                 </div>
               </div>
-              <br><br>
-              <el-button type="primary" @click="createWorkspace">
-                Criar nova Equipe
+              <el-button v-if="isAdminProfile" type="primary" @click="dialogInvite = true">
+                Convidar novo membro
               </el-button>
             </div>
+          </el-col>
+        </el-row>
+        <el-row v-if="isAdminProfile">
+          <el-col class="profile-view__new-workspace">
+            <h2>Criação de novas equipes</h2>
+            <p>
+              Se o seu escritório possui mais de uma célula de negociação, você pode criar uma nova equipe e se organizar melhor.
+            </p>
+            <el-button type="secondary" @click="createWorkspace">
+              Criar nova Equipe
+            </el-button>
           </el-col>
         </el-row>
       </div>
@@ -148,6 +162,7 @@
 
 <script>
 import { mask } from 'vue-the-mask'
+import { validatePhone } from '@/utils/validations'
 
 export default {
   name: 'Profile',
@@ -156,15 +171,6 @@ export default {
     JusWhatsapp: () => import('@/components/layouts/JusWhatsapp')
   },
   data () {
-    const validatePhone = (rule, value, callback) => {
-      if (value) {
-        if (value && value.length > 13) {
-          callback()
-        } else callback(new Error())
-      } else {
-        callback()
-      }
-    }
     return {
       dialogPassword: false,
       dialogMember: false,
@@ -481,9 +487,11 @@ export default {
       font-weight: normal;
       line-height: 30px;
       margin: 0;
-      a {
-        float: right;
-      }
+    }
+    button {
+      margin: auto;
+      width: 100%;
+      margin-top: 20px;
     }
   }
   &__members-list {
@@ -531,6 +539,15 @@ export default {
   }
   img {
     width: 16px;
+  }
+  &__new-workspace {
+    margin-top: 40px;
+    text-align: center;
+    p {
+      max-width: 500px;
+      margin: auto;
+      margin-bottom: 30px;
+    }
   }
 }
 </style>
