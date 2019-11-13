@@ -135,7 +135,6 @@ export default {
   left: 0px;
   z-index: 1;
   background-color: #ffffff;
-  box-shadow: 0px -12px 24px 0 rgba(37, 38, 94, 0.1);
   &:not(.aside-logo--colapsed) {
     .aside-logo__icon{
       float: right;
