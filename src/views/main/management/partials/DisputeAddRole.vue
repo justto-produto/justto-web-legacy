@@ -53,7 +53,7 @@
           <el-input v-model="newRole.name" />
         </el-form-item>
         <el-form-item label="Telefone" prop="phone">
-          <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="newRole.phone">
+          <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="newRole.phone" @keydown.enter.native="addPhone()">
             <el-button slot="append" @click="addPhone()">
               <jus-icon icon="add-white" />
             </el-button>
@@ -82,7 +82,7 @@
           </el-table-column>
         </el-table>
         <el-form-item label="E-mail" prop="email">
-          <el-input v-model="newRole.email" data-testid="input-email">
+          <el-input v-model="newRole.email" data-testid="input-email" @keydown.enter.native="addEmail()">
             <el-button slot="append" data-testid="add-email" @click="addEmail()">
               <jus-icon icon="add-white" />
             </el-button>
@@ -112,10 +112,14 @@
         </el-table>
         <div class="dispute-overview-view__oab-form">
           <el-form-item class="oab" label="OAB" prop="oab">
-            <el-input v-model="newRole.oab" />
+            <el-input v-model="newRole.oab" @keydown.enter.native="addOab(newRole.personId, newRole.oabs)" />
           </el-form-item>
           <el-form-item class="state" label="Estado" prop="state">
-            <el-select v-model="newRole.state" placeholder="" filterable>
+            <el-select
+              v-model="newRole.state"
+              placeholder=""
+              filterable
+              @keydown.enter.native="addOab(newRole.personId, newRole.oabs)">
               <el-option
                 v-for="(state, index) in $store.state.statesList"
                 :key="`${index}-${state}`"
