@@ -381,6 +381,20 @@ const disputeActions = {
           reject(error)
         })
     })
+  },
+  sendDisputeCounterProposal ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.post('api/disputes/' + params.disputeId + '/counter-proposal', {
+        attribute: { id: params.objectId },
+        role: { id: params.roleId },
+        value: params.value
+      }).then(response => {
+        resolve(response.data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
   }
 }
 

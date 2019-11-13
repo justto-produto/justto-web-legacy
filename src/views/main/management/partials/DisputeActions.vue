@@ -52,6 +52,11 @@
           <jus-icon icon="enrich"/>
         </el-button>
       </el-tooltip>
+      <el-tooltip content="Contraproposta manual">
+        <el-button :disabled="false" plain @click="counterproposalDialogVisible = true">
+          <jus-icon icon="proposal"/>
+        </el-button>
+      </el-tooltip>
       <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
         <el-button
           plain
@@ -60,11 +65,6 @@
           <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
         </el-button>
       </el-tooltip>
-      <!-- <el-tooltip content="Contraproposta manual">
-        <el-button plain @click="counterproposalDialogVisible = true">
-          <jus-icon icon="proposal"/>
-        </el-button>
-      </el-tooltip> -->
     </div>
     <el-dialog
       :visible.sync="chooseUnsettledDialogVisible"
@@ -129,6 +129,7 @@
       width="600px"
       class="dispute-view__counterproposal-dialog">
       <el-form
+        v-loading="counterproposalLoading"
         ref="counterOfferForm"
         :model="counterOfferForm"
         :rules="counterOfferFormRules">
@@ -139,8 +140,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Proposto por" prop="selectedClaimantId">
-              <el-select v-model="counterOfferForm.selectedClaimantId" placeholder="Autor da contraproposta" data-testid="counterproposal-claimant-input">
+            <el-form-item label="Proposto por" prop="selectedRoleId">
+              <el-select v-model="counterOfferForm.selectedRoleId" placeholder="Autor da contraproposta" data-testid="counterproposal-claimant-input">
                 <el-option
                   v-for="(claimant, index) in disputeClaimants"
                   :key="`${index}-${claimant.id}`"
@@ -153,7 +154,7 @@
       </el-form>
       <span slot="footer">
         <el-button plain @click="counterproposalDialogOpen">Cancelar</el-button>
-        <el-button type="primary" @click.prevent="checkCounterproposal()">Enviar</el-button>
+        <el-button :loading="counterproposalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar</el-button>
       </span>
     </el-dialog>
   </div>
@@ -189,16 +190,17 @@ export default {
       chooseUnsettledDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
+      counterproposalLoading: false,
       counterOfferForm: {
         lastCounterOfferValue: '',
-        selectedClaimantId: ''
+        selectedRoleId: ''
       },
       counterOfferFormRules: {
         lastCounterOfferValue: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateZero, message: 'Campo obrigatório', trigger: 'submit' }
         ],
-        selectedClaimantId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
     }
   },
@@ -207,6 +209,9 @@ export default {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
     },
     canUnsettled () {
+      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
+    },
+    canSendCounterproposal () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
     },
     workspaceNegotiators () {
@@ -300,7 +305,6 @@ export default {
             })
           }, 2000)
         }
-        this.fetchData()
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
@@ -331,7 +335,7 @@ export default {
     },
     counterproposalDialogOpen () {
       this.counterOfferForm.lastCounterOfferValue = ''
-      this.counterOfferForm.selectedClaimantId = ''
+      this.counterOfferForm.selectedRoleId = ''
       this.counterproposalDialogVisible = false
       this.$refs.counterOfferForm.clearValidate()
     },
@@ -350,14 +354,36 @@ export default {
           } else {
             this.sendCounterproposal()
           }
-          console.log(this.counterOfferForm)
         } else {
           return false
         }
       })
     },
     sendCounterproposal () {
-      alert()
+      this.counterproposalLoading = true
+      this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
+        this.$store.dispatch('sendDisputeCounterProposal', {
+          disputeId: this.dispute.id,
+          objectId: disputeToEdit.objects[0].id,
+          value: this.counterOfferForm.lastCounterOfferValue.toString(),
+          roleId: this.counterOfferForm.selectedRoleId
+        }).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Contraproposta enviada com sucesso.',
+            type: 'success'
+          })
+          this.counterproposalDialogVisible = false
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.counterproposalLoading = false
+        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+        this.counterproposalLoading = false
+        this.counterproposalDialogVisible = false
+      })
     }
   }
 }

@@ -90,6 +90,9 @@ export default {
       this.$store.dispatch('getWhatsappStatus')
     }, 60 * 1000)
   },
+  created () {
+    // onstorage(this)
+  },
   beforeMount () {
     this.subscribe()
   },
@@ -103,6 +106,9 @@ export default {
     }
   },
   methods: {
+    changeWorkspace () {
+      alert()
+    },
     subscribe () {
       if (this.workspace) {
         this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
@@ -116,6 +122,13 @@ export default {
     }
   }
 }
+
+window.onstorage = function (e) {
+  if (e.key === 'jusworkspace') {
+    window.location.reload(false)
+  }
+}
+
 </script>
 
 <style lang="scss">
