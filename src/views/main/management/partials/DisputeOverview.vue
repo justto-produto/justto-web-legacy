@@ -342,10 +342,12 @@
           <el-form-item class="state" label="Estado" prop="state">
             <el-select
               v-model="roleForm.state"
+              autocomplete="off"
               placeholder=""
               filterable
               @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
-              @change="addOab(roleForm.personId, roleForm.oabs)">
+              @change="addOab(roleForm.personId, roleForm.oabs)"
+              @blur="addOab(roleForm.personId, roleForm.oabs)">
               <el-option
                 v-for="(state, index) in $store.state.statesList"
                 :key="`${index}-${state}`"
