@@ -383,7 +383,21 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Contraproposta enviada com sucesso.',
-            type: 'success'
+            type: 'success',
+            onClose: () => {
+              setTimeout(() => {
+                this.$notify({
+                  title: 'Atenção!',
+                  message: 'A disputa foi movida para o status <strong>Proposta aceita</strong>.',
+                  type: 'info',
+                  customClass: 'info',
+                  position: 'bottom-right',
+                  offset: 84,
+                  duration: 0,
+                  dangerouslyUseHTMLString: true
+                })
+              }, 200)
+            }
           })
           this.counterproposalDialogVisible = false
         }).catch(() => {
