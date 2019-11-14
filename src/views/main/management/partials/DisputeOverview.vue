@@ -271,7 +271,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Proposto por" prop="lastCounterOfferValue">
+            <el-form-item label="Proposto por" prop="lastOfferValueName">
               <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta" data-testid="proposal-negotiator-input">
                 <el-option
                   v-for="(negotiator, index) in disputeNegotiations"
@@ -615,7 +615,7 @@ export default {
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
-      this.disputeForm.lastCounterOfferValue = parseFloat(dispute.lastCounterOfferValue)
+      // this.disputeForm.lastCounterOfferValue = parseFloat(dispute.lastCounterOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
       this.editDisputeDialogVisible = true
@@ -647,16 +647,16 @@ export default {
           if (this.disputeForm.expirationDate !== this.dispute.expirationDate) disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
           disputeToEdit.description = this.disputeForm.description
           promises.push(this.$store.dispatch('editDispute', disputeToEdit))
-          if (this.disputeForm.lastCounterOfferValue !== this.dispute.lastCounterOfferValue) {
-            if (this.selectedClaimantId) {
-              promises.push(this.$store.dispatch('editDisputeOffer', {
-                disputeId: this.dispute.id,
-                objectId: disputeToEdit.objects[0].id,
-                value: this.disputeForm.lastCounterOfferValue.toString(),
-                roleId: this.selectedClaimantId
-              }))
-            }
-          }
+          // if (this.disputeForm.lastCounterOfferValue !== this.dispute.lastCounterOfferValue) {
+          //   if (this.selectedClaimantId) {
+          //     promises.push(this.$store.dispatch('editDisputeOffer', {
+          //       disputeId: this.dispute.id,
+          //       objectId: disputeToEdit.objects[0].id,
+          //       value: this.disputeForm.lastCounterOfferValue.toString(),
+          //       roleId: this.selectedClaimantId
+          //     }))
+          //   }
+          // }
           if (this.disputeForm.lastOfferValue !== this.dispute.lastOfferValue) {
             promises.push(this.$store.dispatch('editDisputeOffer', {
               disputeId: this.dispute.id,
