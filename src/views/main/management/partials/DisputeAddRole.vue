@@ -131,6 +131,7 @@
               autocomplete="off"
               placeholder=""
               filterable
+              default-first-option="true"
               @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
               @change="addOab(roleForm.personId, roleForm.oabs)"
               @blur="addOab(newRole.personId, newRole.oabs)">
