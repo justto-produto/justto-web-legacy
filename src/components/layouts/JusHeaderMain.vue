@@ -63,7 +63,7 @@
                 Configurações
               </el-dropdown-item>
             </router-link>
-            <a href="#" @click.prevent="changeWorkspace">
+            <a v-if="workspaces.length" href="#" @click.prevent="changeWorkspace">
               <el-dropdown-item>
                 Alterar equipe
               </el-dropdown-item>
@@ -139,6 +139,9 @@ export default {
   },
   beforeMount () {
     this.disputeId = this.$route.params.id
+    this.$store.dispatch('myWorkspace').then(response => {
+      this.workspaces = response.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
+    })
   },
   methods: {
     toggleWhatsapDialog () {
