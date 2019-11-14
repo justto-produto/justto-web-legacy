@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
+  <el-dialog :close-on-click-modal="false" :visible.sync="whatsappVisible" width="400" style="padding-top: 40px;">
     <span slot="title">
       <h2>Whatsapp</h2>
     </span>

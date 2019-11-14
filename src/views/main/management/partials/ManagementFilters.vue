@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="visibleFilters" @open="restoreFilters()">
+  <el-dialog :close-on-click-modal="false" :visible.sync="visibleFilters" @open="restoreFilters()">
     <template slot="title">
       <h2>Filtrar {{ activeTabLabel }}</h2>
     </template>

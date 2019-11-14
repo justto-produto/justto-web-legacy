@@ -89,6 +89,7 @@
       </div>
       <el-dialog
         v-if="currentEditMember.person"
+        :close-on-click-modal="false"
         :title="currentEditMember.person.name"
         :visible.sync="dialogMember"
         width="400px">
@@ -109,6 +110,7 @@
         </span>
       </el-dialog>
       <el-dialog
+        :close-on-click-modal="false"
         :visible.sync="dialogPassword"
         :before-close="cancelChangePassword"
         title="Alterar senha"
@@ -129,6 +131,7 @@
         </span>
       </el-dialog>
       <el-dialog
+        :close-on-click-modal="false"
         :visible.sync="dialogInvite"
         class="profile-view__invite-dialog"
         title="Convide pessoas à sua equipe"

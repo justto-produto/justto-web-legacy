@@ -56,6 +56,7 @@
         </infinite-loading>
       </el-table>
       <el-dialog
+        :close-on-click-modal="false"
         :visible.sync="dialogVisible"
         class="import-view__dialog"
         title="Nova importação de disputas">

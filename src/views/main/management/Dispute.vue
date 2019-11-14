@@ -16,7 +16,11 @@
     <template slot="main">
       <div class="dispute-view__section-messages">
         <!-- ACTIONS -->
-        <dispute-actions :dispute="dispute" :is-paused="isPaused" :is-favorite="isFavorite" />
+        <dispute-actions
+          :dispute.sync="dispute"
+          :is-paused.sync="isPaused"
+          :is-favorite.sync="isFavorite"
+          @fetch-data="fetchData" />
         <!-- MESSAGES -->
         <dispute-occurrences v-if="typingTab === '1'" ref="disputeOccurrences" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />

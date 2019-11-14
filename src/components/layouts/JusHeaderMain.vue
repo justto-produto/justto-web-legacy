@@ -81,6 +81,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <el-dialog
+          :close-on-click-modal="false"
           :visible.sync="changeWorkspaceDialogVisible"
           title="Alterar Equipe"
           width="30%">

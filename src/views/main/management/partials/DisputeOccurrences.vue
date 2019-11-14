@@ -76,6 +76,7 @@
       </li>
     </div>
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="messageDialogVisible"
       data-testid="email-dialog"
       width="70%">

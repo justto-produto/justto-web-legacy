@@ -53,7 +53,7 @@
         </el-button>
       </el-tooltip>
       <el-tooltip content="Contraproposta manual">
-        <el-button :disabled="false" plain @click="counterproposalDialogVisible = true">
+        <el-button :disabled="!canSendCounterproposal" plain @click="counterproposalDialogOpen()">
           <jus-icon icon="proposal"/>
         </el-button>
       </el-tooltip>
@@ -67,6 +67,7 @@
       </el-tooltip>
     </div>
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="chooseUnsettledDialogVisible"
       title="Perder"
       class="dispute-view__choose-unsettled-dialog"
@@ -101,6 +102,7 @@
       </span>
     </el-dialog>
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="editNegotiatorDialogVisible"
       title="Editar negociadores da disputa"
       width="600px">
@@ -125,6 +127,7 @@
     </el-dialog>
     <el-dialog
       :visible.sync="counterproposalDialogVisible"
+      :close-on-click-modal="false"
       title="Enviar contraproposta manual"
       width="600px"
       class="dispute-view__counterproposal-dialog">
@@ -153,8 +156,8 @@
         </el-row>
       </el-form>
       <span slot="footer">
-        <el-button plain @click="counterproposalDialogOpen">Cancelar</el-button>
-        <el-button :loading="counterproposalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar</el-button>
+        <el-button plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="counterproposalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar contraproposta</el-button>
       </span>
     </el-dialog>
   </div>
@@ -212,7 +215,13 @@ export default {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
     },
     canSendCounterproposal () {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
+      if (this.dispute) {
+        if (this.isPaused) {
+          return false
+        } else if (this.dispute.status && ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'RUNNING', 'PENDING', 'REFUSED'].includes(this.dispute.status)) {
+          return true
+        } return false
+      } return false
     },
     workspaceNegotiators () {
       return this.$store.state.workspaceModule.members.map(member => {
@@ -305,6 +314,7 @@ export default {
             })
           }, 2000)
         }
+        this.$emit('fetch-data')
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
@@ -336,8 +346,10 @@ export default {
     counterproposalDialogOpen () {
       this.counterOfferForm.lastCounterOfferValue = ''
       this.counterOfferForm.selectedRoleId = ''
-      this.counterproposalDialogVisible = false
-      this.$refs.counterOfferForm.clearValidate()
+      this.counterproposalDialogVisible = true
+      if (this.$refs.counterOfferForm) {
+        this.$refs.counterOfferForm.clearValidate()
+      }
     },
     checkCounterproposal () {
       this.$refs.counterOfferForm.validate(valid => {

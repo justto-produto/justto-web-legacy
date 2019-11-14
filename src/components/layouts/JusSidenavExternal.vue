@@ -32,6 +32,7 @@
     </div> -->
     <el-dialog
       v-if="showPlans"
+      :close-on-click-modal="false"
       :title="modalType ? 'Indenizatório' : 'Cobrança'"
       :visible.sync="modal"
       width="600px">

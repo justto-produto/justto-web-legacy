@@ -16,6 +16,7 @@
       <i class="el-icon-close" @click="clearSelection()"/>
     </div>
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="chooseUnsettledDialogVisible"
       title="Perder"
       class="management-actions__dialog"
@@ -50,6 +51,7 @@
       </span>
     </el-dialog>
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="changeStrategyDialogVisible"
       title="Alterar estratégia"
       class="management-actions__dialog"
