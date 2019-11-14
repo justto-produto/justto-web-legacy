@@ -227,7 +227,7 @@
               <el-select
                 v-model="selectedStrategyId"
                 placeholder="Escolha a nova estratégia"
-                data-testid="strategy-input">>
+                data-testid="strategy-input">
                 <el-option
                   v-for="(strategy, index) in strategies"
                   :key="`${strategy.id}-${index}`"
