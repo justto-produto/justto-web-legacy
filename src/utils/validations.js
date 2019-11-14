@@ -8,14 +8,6 @@ const validateZero = (rule, value, callback) => {
   }
 }
 
-const validatePassword = (rule, value, callback) => {
-  if (value !== this.newPasswordForm.password) {
-    callback(new Error('Campos não correspondem'))
-  } else {
-    callback()
-  }
-}
-
 const validateName = (rule, value, callback) => {
   if (value && value.length > 2) {
     callback()
@@ -78,7 +70,6 @@ const validateSubdomainAvailability = (rule, value, callback) => {
 
 export {
   validateZero,
-  validatePassword,
   validateName,
   validateCpf,
   validatePhone,

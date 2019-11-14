@@ -41,8 +41,8 @@ describe('Disputa', function () {
       // .contains('Indenizatório')
     cy.get('[data-testid=overview-upperrange]')
       .contains('R$ 25.000,00')
-    cy.get('[data-testid=overview-counterproposal]')
-      .contains('R$ 35.000,00')
+    // cy.get('[data-testid=overview-counterproposal]')
+    //   .contains('R$ 35.000,00')
     cy.get('[data-testid=overview-proposal]')
       .contains('R$ 16.000,00')
     cy.get('[data-testid=overview-expirationdate]')
@@ -66,11 +66,11 @@ describe('Disputa', function () {
       .clear().type('400000')
       .should('have.value', 'R$ 4.000,00')
 
-    // Edita campo Contraproposta
-    cy.get('[data-testid=counterproposal-value-input]')
-      // .should('have.value', 'R$ 26.000,00')
-      .clear().type('350000')
-      .should('have.value', 'R$ 3.500,00')
+    // // Edita campo Contraproposta
+    // cy.get('[data-testid=counterproposal-value-input]')
+    //   // .should('have.value', 'R$ 26.000,00')
+    //   .clear().type('350000')
+    //   .should('have.value', 'R$ 3.500,00')
 
     // Edita autor da Contraproposta
     // cy.get('[data-testid=counterproposal-claimant-input]')
@@ -126,8 +126,8 @@ describe('Disputa', function () {
 
     cy.get('[data-testid=overview-upperrange]')
       .contains('R$ 4.000,00')
-    cy.get('[data-testid=overview-counterproposal]')
-      .contains('R$ 3.500,00')
+    // cy.get('[data-testid=overview-counterproposal]')
+    //   .contains('R$ 3.500,00')
     cy.get('[data-testid=overview-proposal]')
       .contains('R$ 2.000,00')
     cy.get('[data-testid=overview-expirationdate]')

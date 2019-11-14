@@ -68,7 +68,7 @@ Cypress.Commands.add('login', (email, password, workspace) => {
   // Seleciona um workspace
   cy.get('[data-testid=select-workspace]')
     .click()
-  cy.get('[data-testid=select-workspace]')
+  cy.get('[data-testid=select-workspace-item]')
     .contains(workspace)
     .click()
   // .trigger('keydown', { keyCode: 40, Which: 40 }) // Pressiona seta para baixo

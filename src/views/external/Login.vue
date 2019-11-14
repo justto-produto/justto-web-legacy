@@ -19,7 +19,7 @@
             v-show="showError"
             :title="errorMessage"
             type="error"
-            data-testid = "login-failure"
+            data-testid="login-failure"
             @close="showError = false"/>
           <el-alert
             v-show="showSuccess"
@@ -88,7 +88,7 @@
                 :key="index"
                 :value="index"
                 :label="w.workspace.name"
-                data-testid="select-workspace"/>
+                data-testid="select-workspace-item"/>
             </el-select>
           </el-form-item>
           <el-button
