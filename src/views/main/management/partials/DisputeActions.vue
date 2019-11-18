@@ -351,10 +351,13 @@ export default {
         this.$refs.counterOfferForm.clearValidate()
       }
     },
+    checkUpperRangeCounterOffer () {
+      return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
+    },
     checkCounterproposal () {
       this.$refs.counterOfferForm.validate(valid => {
         if (valid) {
-          if (this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange) {
+          if (this.checkUpperRangeCounterOffer()) {
             this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
               confirmButtonText: 'Enviar contraproposta',
               cancelButtonText: 'Cancelar',
@@ -385,10 +388,11 @@ export default {
             message: 'Contraproposta enviada com sucesso.',
             type: 'success',
             onClose: () => {
+              const action = this.checkUpperRangeCounterOffer() ? 'Em negociação' : 'Acordo'
               setTimeout(() => {
                 this.$notify({
                   title: 'Atenção!',
-                  message: 'A disputa foi movida para o status <strong>Proposta aceita</strong>.',
+                  message: 'A disputa foi movida para o status <strong>' + action + '</strong>.',
                   type: 'info',
                   customClass: 'info',
                   position: 'bottom-right',

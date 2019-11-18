@@ -38,11 +38,7 @@
             </el-form>
           </el-col>
           <el-col :span="12">
-            <h2>Equipe
-              <a v-if="isAdminProfile" href="#" @click.prevent="dialogInvite = true">
-                <jus-icon icon="add" />
-              </a>
-            </h2>
+            <h2>Equipe</h2>
             <div class="profile-view__team">
               <el-form label-position="top" class="mt20 mb20">
                 <el-form-item label="Nome da equipe">
