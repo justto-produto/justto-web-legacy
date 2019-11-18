@@ -258,7 +258,6 @@ export default {
       })
     }
     this.$store.dispatch('disputeVisualized', this.id)
-    this.initialTypingTab()
   },
   beforeDestroy () {
     this.unsubscribeOccurrences(this.id)
