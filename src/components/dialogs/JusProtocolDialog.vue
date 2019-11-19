@@ -53,6 +53,7 @@
       <el-button v-else plain @click="visible = false">Cancelar</el-button>
       <el-button v-if="step === 1" type="primary" @click="changewidth">Escolher destinatários</el-button>
       <el-button v-if="step === 2" type="primary" @click="changewidth">Enviar</el-button>
+      <el-button v-if="step === 3" icon="el-icon-download" type="primary" @click="step = 4">Baixar</el-button>
       <el-button v-if="step === 3" icon="el-icon-view" type="primary" @click="step = 4">Visualizar</el-button>
     </span>
   </el-dialog>
