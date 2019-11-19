@@ -25,17 +25,19 @@
         <dispute-occurrences v-if="typingTab === '1'" ref="disputeOccurrences" :dispute-id="id" data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
         <div
-          v-loading="isPaused"
           :key="loadingKey"
-          element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
-          element-loading-spinner="el-icon-video-pause"
           class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
-              <el-card shadow="always" class="dispute-view__send-message-box">
+              <el-card
+                v-loading="isPaused"
+                element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
+                element-loading-spinner="el-icon-video-pause"
+                class="dispute-view__send-message-box"
+                shadow="always">
                 <el-collapse-transition>
                   <textarea
-                    v-if="validName && !isPaused"
+                    v-if="validName"
                     v-model="newMessage"
                     rows="2"
                     data-testid="input-message"
@@ -242,6 +244,7 @@ export default {
     },
     isPaused () {
       this.loadingKey = this.loadingKey + 1
+      this.typingTab = this.isPaused ? '3' : '1'
     }
   },
   created () {
@@ -527,6 +530,8 @@ export default {
       color: #adadad;
       font-size: 15px;
       font-style: italic;
+      margin-top: 21px;
+      transform: translateY(-50%);
     }
   }
   &__show-scheduled {
