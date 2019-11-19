@@ -1,5 +1,5 @@
 <template>
-  <div ref='viewer' />
+  <div ref="viewer" />
 </template>
 
 <script>
@@ -24,6 +24,6 @@ export default {
 <style scoped>
 div {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 180px);
 }
 </style>

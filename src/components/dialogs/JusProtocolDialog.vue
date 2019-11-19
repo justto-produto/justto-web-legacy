@@ -3,6 +3,7 @@
     :visible.sync="visible"
     :title="title"
     :width="width"
+    :class="{ 'jus-protocol-dialog--full': step === 4 }"
     class="jus-protocol-dialog">
     <div v-if="step === 0" class="jus-protocol-dialog__model-choice">
       <el-button plain>
@@ -44,7 +45,7 @@
       </div>
     </div>
     <div v-if="step === 4">
-      <JusWebViewer url="https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf"/>
+      <jus-web-viewer url="https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf"/>
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button v-if="step === 3" icon="el-icon-delete" plain type="danger" @click="visible = false">Excluir</el-button>
@@ -110,6 +111,11 @@ export default {
 
 <style lang="scss">
 .jus-protocol-dialog {
+  &--full {
+    .el-dialog {
+      margin: 20px auto !important;
+    }
+  }
   &__model-choice {
     margin: 50px;
     display: flex;
