@@ -449,12 +449,25 @@ export default {
     .el-card__body {
       padding: 8px 20px;
       word-break: break-word;
-      text-align: center;
+    }
+    .el-card__header {
+      background-color: #fff4cc
     }
     img {
       width: 15px;
       margin-right: 3px;
       margin-bottom: -2.2px;
+    }
+  }
+  &__note {
+    border-radius: 8px;
+    margin: 20px 20px 0;
+    border: none;
+    display: flex;
+    width: 100%;
+    .el-card__body {
+      padding: 8px 20px;
+      word-break: break-word;
     }
   }
   &__avatar {
