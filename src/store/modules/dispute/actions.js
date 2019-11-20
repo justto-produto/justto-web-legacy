@@ -57,7 +57,7 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/' + id + '/vm')
+      axios.get('api/disputes/' + id + '/vm')
         .then(response => {
           commit('setDispute', response.data)
           resolve(response.data)
@@ -70,7 +70,7 @@ const disputeActions = {
   getDisputeDTO ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/' + id)
+      axios.get('api/disputes/' + id)
         .then(response => {
           resolve(response.data)
         })
@@ -82,7 +82,7 @@ const disputeActions = {
   getDisputes ({ commit, state }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/filter' + queryBuilder(state.query)).then(response => {
+      axios.get('api/disputes/filter' + queryBuilder(state.query)).then(response => {
         commit('setDisputes', response.data)
         commit('disputeSetHasNew', false)
         resolve(response.data)
@@ -95,7 +95,7 @@ const disputeActions = {
   searchDisputes ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/search?' + params.key + '=' + params.value).then(response => {
+      axios.get('api/disputes/search?' + params.key + '=' + params.value).then(response => {
         resolve(response.data)
       }).catch(error => {
         reject(error)
@@ -105,7 +105,7 @@ const disputeActions = {
   exportDisputes ({ rootState, state }, disputeIds) {
     return new Promise((resolve, reject) => {
     // eslint-disable-next-line
-    axios.get('https://f7c0b7ea.ngrok.io/api/disputes/export'+ queryBuilder(state.query), {
+    axios.get('api/disputes/export'+ queryBuilder(state.query), {
         responseType: 'arraybuffer'
       }).then(response => {
         const blob = new Blob([response.data], {
@@ -123,7 +123,7 @@ const disputeActions = {
   editRole ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('https://f7c0b7ea.ngrok.io/api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
+      axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -134,7 +134,7 @@ const disputeActions = {
   removeRole ({ commit }, role) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.delete('https://f7c0b7ea.ngrok.io/api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
+      axios.delete('api/disputes/' + role.disputeId + '/role/' + role.roleId, { disputeId: role.disputeId, id: role.roleId })
         .then(response => {
           resolve(response.data)
         })
@@ -146,7 +146,7 @@ const disputeActions = {
   getNotVisualizeds ({ commit }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/summary/not-visualized')
+      axios.get('api/disputes/summary/not-visualized')
         .then(response => {
           commit('setSummaryNotVisualizeds', response.data)
           resolve(response.data)
@@ -159,7 +159,7 @@ const disputeActions = {
   getNearExpirations ({ commit }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/summary/near-expiration')
+      axios.get('api/disputes/summary/near-expiration')
         .then(response => {
           commit('setSummaryNearExpirations', response.data)
           resolve(response.data)
@@ -172,7 +172,7 @@ const disputeActions = {
   editCaseReason ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('https://f7c0b7ea.ngrok.io/api/disputes/' + params.disputeId + '/update-reason', {
+      axios.put('api/disputes/' + params.disputeId + '/update-reason', {
         reason: params.reasonValue
       })
         .then(response => {
@@ -186,7 +186,7 @@ const disputeActions = {
   getDisputeStatuses ({ commit }, status) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/outcome-reasons/' + status)
+      axios.get('api/disputes/outcome-reasons/' + status)
         .then(response => {
           commit('setDisputeStatuses', { label: status, value: response.data })
           resolve(response.data)
@@ -199,7 +199,7 @@ const disputeActions = {
   sendBatchAction ({ commit }, body) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('https://f7c0b7ea.ngrok.io/api/disputes/actions/batch', body)
+      axios.put('api/disputes/actions/batch', body)
         .then(response => {
           resolve(response.data)
         })
@@ -211,7 +211,7 @@ const disputeActions = {
   sendDisputeNote ({ commit }, body) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('https://f7c0b7ea.ngrok.io/api/disputes/' + body.disputeId + '/note', body)
+      axios.post('api/disputes/' + body.disputeId + '/note', body)
         .then(response => {
           resolve(response.data)
         })
@@ -225,13 +225,13 @@ const disputeActions = {
       let request
       if (params.action === 'restart-engagement') {
         // eslint-disable-next-line
-        request = axios.patch('https://f7c0b7ea.ngrok.io/api/disputes/' + params.disputeId + '/' + params.action)
+        request = axios.patch('api/disputes/' + params.disputeId + '/' + params.action)
       } else if (params.action === 'enrich') {
         // eslint-disable-next-line
-        request = axios.patch('https://f7c0b7ea.ngrok.io/api/fusion-runner/enrich/' + params.disputeId)
+        request = axios.patch('api/fusion-runner/enrich/' + params.disputeId)
       } else {
         // eslint-disable-next-line
-        request = axios.put('https://f7c0b7ea.ngrok.io/api/disputes/' + params.disputeId + '/' + params.action, params.body)
+        request = axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)
       }
       request
         .then(response => {
@@ -245,7 +245,7 @@ const disputeActions = {
   restartDisputeRoleEngagement ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.patch('https://f7c0b7ea.ngrok.io/api/disputes/' + params.disputeId + '/restart-engagement/' + params.disputeRoleId)
+      axios.patch('api/disputes/' + params.disputeId + '/restart-engagement/' + params.disputeRoleId)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -256,7 +256,7 @@ const disputeActions = {
   editDispute ({ commit }, dispute) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('https://f7c0b7ea.ngrok.io/api/disputes/' + dispute.id + '/update', dispute)
+      axios.put('api/disputes/' + dispute.id + '/update', dispute)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -267,7 +267,7 @@ const disputeActions = {
   editDisputeOffer ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('https://f7c0b7ea.ngrok.io/api/disputes/' + params.disputeId + '/offer', {
+      axios.post('api/disputes/' + params.disputeId + '/offer', {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
         value: params.value
@@ -282,7 +282,7 @@ const disputeActions = {
   editNegotiators ({ commit }, negotiators) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('https://f7c0b7ea.ngrok.io/api/disputes/' + negotiators.disputeId + '/negotiators', {negotiatorsId: negotiators.negotiators})
+      axios.put('api/disputes/' + negotiators.disputeId + '/negotiators', {negotiatorsId: negotiators.negotiators})
         .then(response => {
           resolve(response.data)
         })
@@ -294,7 +294,7 @@ const disputeActions = {
   editDisputeReason ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('https://f7c0b7ea.ngrok.io/api/disputes/' + params.disputeId + '/update-reason/', params.body)
+      axios.put('api/disputes/' + params.disputeId + '/update-reason/', params.body)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -305,7 +305,7 @@ const disputeActions = {
   removeDispute ({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.delete('https://f7c0b7ea.ngrok.io/api/disputes/' + disputeId)
+      axios.delete('api/disputes/' + disputeId)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -316,7 +316,7 @@ const disputeActions = {
   disputeVisualized ({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.patch('https://f7c0b7ea.ngrok.io/api/disputes/' + disputeId + '/visualized/')
+      axios.patch('api/disputes/' + disputeId + '/visualized/')
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -327,7 +327,7 @@ const disputeActions = {
   getDisputeOccurrences ({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/' + disputeId + '/occurrences?size=' + state.occurrencesSize + '&sort=createdAt,desc&sort=id,desc')
+      axios.get('api/disputes/' + disputeId + '/occurrences?size=' + state.occurrencesSize + '&sort=createdAt,desc&sort=id,desc')
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)
@@ -339,7 +339,7 @@ const disputeActions = {
   getDisputeNotes ({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/' + disputeId + '/occurrences/type/NOTE')
+      axios.get('api/disputes/' + disputeId + '/occurrences/type/NOTE')
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)
@@ -351,7 +351,7 @@ const disputeActions = {
   loadDisputeOccurrences ({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('https://f7c0b7ea.ngrok.io/api/disputes/' + disputeId + '/occurrences/load')
+      axios.put('api/disputes/' + disputeId + '/occurrences/load')
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -362,7 +362,7 @@ const disputeActions = {
   getRespondents ({ commit, state }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('https://f7c0b7ea.ngrok.io/api/disputes/respondent-names')
+      axios.get('api/disputes/respondent-names')
         .then(response => {
           commit('setRespondents', response.data)
           resolve(response.data)
@@ -374,7 +374,7 @@ const disputeActions = {
   newDisputeRole ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('https://f7c0b7ea.ngrok.io/api/disputes/' + params.disputeId + '/dispute-roles', params.role)
+      axios.post('api/disputes/' + params.disputeId + '/dispute-roles', params.role)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -385,7 +385,7 @@ const disputeActions = {
   sendDisputeCounterProposal ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('https://f7c0b7ea.ngrok.io/api/disputes/' + params.disputeId + '/counter-proposal', {
+      axios.post('api/disputes/' + params.disputeId + '/counter-proposal', {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
         value: params.value
