@@ -358,6 +358,23 @@ export default {
   &__card {
     border-radius: 8px;
     height: fit-content;
+    &--note {
+      border-radius: 0px;
+      border: none;
+      position: relative;
+      // :before {
+      //   background: none repeat scroll 0 0 #f7ebc2;
+      //   border-color: #f7ebc2  #ffffff;
+      //   border-style: solid;
+      //   border-width: 14px 14px 0 0;
+      //   content: "";
+      //   display: block;
+      //   position: absolute;
+      //   right: 0;
+      //   bottom: 0;
+      //   width: 0;
+      // }
+    }
     &.SCHEDULER {
       border: 2px dashed #343c4b;
     }
@@ -460,6 +477,22 @@ export default {
       width: 15px;
       margin-right: 3px;
       margin-bottom: -2.2px;
+    }
+  }
+  &__note {
+    border-radius: 8px;
+    margin: 20px 20px 0;
+    border: none;
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    .el-card__body {
+      padding: 8px 20px;
+      word-break: break-word;
+      background-color: #f6f1ff;
+    }
+    .el-card__header {
+      background-color: #efe7ff;
     }
   }
   &__avatar {
