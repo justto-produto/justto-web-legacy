@@ -78,6 +78,6 @@ describe('Disputa', function () {
     // Caixa de nota deve estar visivel e amarela
     cy.get('[data-testid=message-box] > .dispute-view-occurrences__card-box > .dispute-view-occurrences__card > .el-card__body')
       .should('be.visible')
-      .should('have.css', 'background-color', 'rgb(249, 241, 255)')
+      .should('have.css', 'background-color', 'rgb(246, 241, 255)')
   })
 })

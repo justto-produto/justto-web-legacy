@@ -8,8 +8,8 @@
         <div class="dispute-view-occurrences__card-box">
           <el-card class="dispute-view-occurrences__card dispute-view-occurrences__card--note" shadow="never">
             <div slot="header">
-              <!-- <i class="el-icon-notebook-2 icon-slot"></i> -->
-              <!-- <span v-html="buildTitle(occurrence)" /> -->
+              <i class="el-icon-notebook-2" />
+              <span v-html="buildTitle(occurrence)" />
             </div>
             <span v-html="buildContent(occurrence)" />
           </el-card>
@@ -56,16 +56,19 @@ export default {
     }, 200)
   },
   methods: {
-    buildContent (occurrence) {
-      let descriptionDivided = occurrence.description.replace('.', '|').split('|')
-      return descriptionDivided[1]
+    splitText (description) {
+      return description.replace('.', '~|~').split('~|~')
     },
-    // buildTitle (occurrence) {
-      // let descriptionDivided = occurrence.description.replace('.', '|').split('|')
-      // return descriptionDivided[0]
-    // },
+    buildContent (occurrence) {
+      return this.splitText(occurrence.description)[1]
+    },
+    buildTitle (occurrence) {
+      // return this.splitText(occurrence.description)[2]
+      return 'Nota'
+    },
     buildSender (occurrence) {
-      let descriptionDivided = occurrence.description.replace(' adicionou uma nota.', '|').split('|')
+      // return this.splitText(occurrence.description)[0]
+      let descriptionDivided = occurrence.description.replace(' adicionou uma nota.', '~|~').split('~|~')
       return 'Adicionado por ' + descriptionDivided[0]
     },
     buildHour (occurrence) {
@@ -73,7 +76,7 @@ export default {
         return this.$moment(occurrence.executionDateTime.dateTime).format('HH:mm')
       }
       return this.$moment(occurrence.createAt.dateTime).format('HH:mm')
-    },
+    }
   }
 }
 </script>

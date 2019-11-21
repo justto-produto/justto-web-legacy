@@ -360,6 +360,20 @@ export default {
     height: fit-content;
     &--note {
       border-radius: 0px;
+      border: none;
+      position: relative;
+      // :before {
+      //   background: none repeat scroll 0 0 #f7ebc2;
+      //   border-color: #f7ebc2  #ffffff;
+      //   border-style: solid;
+      //   border-width: 14px 14px 0 0;
+      //   content: "";
+      //   display: block;
+      //   position: absolute;
+      //   right: 0;
+      //   bottom: 0;
+      //   width: 0;
+      // }
     }
     &.SCHEDULER {
       border: 2px dashed #343c4b;
@@ -472,10 +486,10 @@ export default {
     .el-card__body {
       padding: 8px 20px;
       word-break: break-word;
-      background-color: #f9f1ff;
+      background-color: #f6f1ff;
     }
     .el-card__header {
-      background-color: #f5e9ff;
+      background-color: #efe7ff;
     }
   }
   &__avatar {
