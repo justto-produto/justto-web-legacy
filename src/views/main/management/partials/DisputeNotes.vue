@@ -57,19 +57,21 @@ export default {
   },
   methods: {
     splitText (description) {
-      return description.replace('.', '~|~').split('~|~')
+      return description.replace(' adicionou uma nota.', '~|~').split('~|~')
     },
     buildContent (occurrence) {
       return this.splitText(occurrence.description)[1]
+      // let descriptionDivided = occurrence.description.replace(' adicionou uma nota.', '~|~').split('~|~')
+      // return descriptionDivided [1]
     },
     buildTitle (occurrence) {
       // return this.splitText(occurrence.description)[2]
       return 'Nota'
     },
     buildSender (occurrence) {
-      // return this.splitText(occurrence.description)[0]
-      let descriptionDivided = occurrence.description.replace(' adicionou uma nota.', '~|~').split('~|~')
-      return 'Adicionado por ' + descriptionDivided[0]
+      return 'Adicionado por ' + this.splitText(occurrence.description)[0]
+      // let descriptionDivided = occurrence.description.replace(' adicionou uma nota.', '~|~').split('~|~')
+      // return 'Adicionado por ' + descriptionDivided[0]
     },
     buildHour (occurrence) {
       if (occurrence.executionDateTime) {
