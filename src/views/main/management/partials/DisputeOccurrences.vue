@@ -23,7 +23,7 @@
               <jus-icon :icon="buildIcon(occurrence)" />
             </span>
           </el-tooltip>
-          {{ buildLogContent(occurrence) }}
+          <span v-html="buildLogContent(occurrence)" />
         </el-card>
         <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
           <div class="dispute-view-occurrences__avatar">
@@ -466,9 +466,12 @@ export default {
     .el-card__body {
       padding: 8px 20px;
       word-break: break-word;
-    }
-    .el-card__header {
-      background-color: #fff4cc
+      text-align: center;
+      br:first-child {
+        content: " ";
+        display: block;
+        margin: -7px 0;
+      }
     }
     img {
       width: 15px;
