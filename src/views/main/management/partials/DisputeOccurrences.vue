@@ -358,6 +358,9 @@ export default {
   &__card {
     border-radius: 8px;
     height: fit-content;
+    &--note {
+      border-radius: 0px;
+    }
     &.SCHEDULER {
       border: 2px dashed #343c4b;
     }
@@ -465,9 +468,14 @@ export default {
     border: none;
     display: flex;
     width: 100%;
+    flex-direction: row-reverse;
     .el-card__body {
       padding: 8px 20px;
       word-break: break-word;
+      background-color: #f9f1ff;
+    }
+    .el-card__header {
+      background-color: #f5e9ff;
     }
   }
   &__avatar {

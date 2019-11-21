@@ -4,12 +4,12 @@
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
-      <div v-if="occurrence.type === 'NOTE'" shadow="never" class="OUTBOUND dispute-view-occurrences__interaction dispute-view-occurrences__log el-card--bg-warning" data-testid="message-box">
+      <div v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__note" data-testid="message-box">
         <div class="dispute-view-occurrences__card-box">
-          <el-card class="dispute-view-occurrences__card" shadow="never">
+          <el-card class="dispute-view-occurrences__card dispute-view-occurrences__card--note" shadow="never">
             <div slot="header">
-              <i class="el-icon-notebook-2 icon-slot"></i>
-              <span v-html="buildTitle(occurrence)" />
+              <!-- <i class="el-icon-notebook-2 icon-slot"></i> -->
+              <!-- <span v-html="buildTitle(occurrence)" /> -->
             </div>
             <span v-html="buildContent(occurrence)" />
           </el-card>
@@ -60,14 +60,13 @@ export default {
       let descriptionDivided = occurrence.description.replace('.', '|').split('|')
       return descriptionDivided[1]
     },
-    buildTitle (occurrence) {
-      let descriptionDivided = occurrence.description.replace('.', '|').split('|')
-      return descriptionDivided[0]
-    },
-    buildSender (occurrence) {
+    // buildTitle (occurrence) {
       // let descriptionDivided = occurrence.description.replace('.', '|').split('|')
-      // return 'Adicionado por ' + descriptionDivided[0]
-      return 'Adicionado por Lucas Israel'
+      // return descriptionDivided[0]
+    // },
+    buildSender (occurrence) {
+      let descriptionDivided = occurrence.description.replace(' adicionou uma nota.', '|').split('|')
+      return 'Adicionado por ' + descriptionDivided[0]
     },
     buildHour (occurrence) {
       if (occurrence.executionDateTime) {
