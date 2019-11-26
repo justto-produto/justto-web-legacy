@@ -20,14 +20,14 @@
           class="dispute-view-occurrences__log el-card--bg-warning">
           <el-tooltip :disabled="!buildTooltip(occurrence)" :content="buildTooltip(occurrence)">
             <span :class="{ 'dispute-view-occurrences__log-canceled': occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'}" class="dispute-view-occurrences__log-icon">
-              <jus-icon :icon="buildIcon(occurrence)" />
+              <jus-icon :icon="buildIcon(occurrence)" :class="buildIcon(occurrence)"/>
             </span>
           </el-tooltip>
           <span v-html="buildLogContent(occurrence)" />
         </el-card>
         <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
           <div class="dispute-view-occurrences__avatar">
-            <el-tooltip :content="buildName(occurrence).toUpperCase()">
+            <el-tooltip :disabled="!buildName(occurrence)" :content="buildName(occurrence)">
               <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
             </el-tooltip>
             <!-- <span v-html="buildHour(occurrence)" /> -->
@@ -232,18 +232,18 @@ export default {
         occurrence.interaction.message.parameters &&
         occurrence.interaction.message.parameters.RECEIVER_NAME &&
         ['VISUALIZATION', 'CLICK'].includes(occurrence.interaction.type)) {
-        return occurrence.interaction.message.parameters.RECEIVER_NAME
+        return occurrence.interaction.message.parameters.RECEIVER_NAME.toUpperCase()
       }
       if (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.parameters &&
         occurrence.interaction.message.parameters.SENDER_NAME) {
-        return occurrence.interaction.message.parameters.SENDER_NAME.toLowerCase()
+        return occurrence.interaction.message.parameters.SENDER_NAME.toUpperCase()
       }
       if (occurrence.interaction &&
         occurrence.interaction.properties &&
         occurrence.interaction.properties.PERSON_NAME) {
-        return occurrence.interaction.properties.PERSON_NAME.toLowerCase()
+        return occurrence.interaction.properties.PERSON_NAME.toUpperCase()
       }
     },
     getOccurrenceMessage (messageId, occurrenceId) {
@@ -475,8 +475,10 @@ export default {
     }
     img {
       width: 15px;
-      margin-right: 3px;
-      margin-bottom: -2.2px;
+      margin-right: 5px;
+      &.justto {
+        height: 11px;
+      }
     }
   }
   &__note {
@@ -555,7 +557,7 @@ export default {
       color: #fff4cc;
       position: absolute;
       bottom: 0px;
-      right: 0px;
+      right: 2px;
       height: 9px;
       width: 10px;
       font-size: 9px;
