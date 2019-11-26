@@ -385,7 +385,7 @@ const disputeActions = {
   sendDisputeCounterProposal ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/disputes/' + params.disputeId + '/counter-proposal', {
+      axios.post('api/disputes/' + params.disputeId + '/counterproposal', {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
         value: params.value
