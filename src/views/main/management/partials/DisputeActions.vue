@@ -75,6 +75,7 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="chooseUnsettledDialogVisible"
+      append-to-body
       title="Perder"
       class="dispute-view__choose-unsettled-dialog"
       width="460px"
@@ -110,6 +111,7 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="editNegotiatorDialogVisible"
+      append-to-body
       title="Editar negociadores da disputa"
       width="600px">
       <el-form
@@ -134,6 +136,7 @@
     <el-dialog
       :visible.sync="counterproposalDialogVisible"
       :close-on-click-modal="false"
+      append-to-body
       title="Enviar contraproposta manual"
       width="600px"
       class="dispute-view__counterproposal-dialog">

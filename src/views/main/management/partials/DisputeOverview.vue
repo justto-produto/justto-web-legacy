@@ -216,6 +216,7 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="editDisputeDialogVisible"
+      append-to-body
       title="Editar disputa"
       width="50%">
       <el-form
@@ -291,6 +292,7 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="editRoleDialogVisible"
+      append-to-body
       width="40%">
       <span slot="title" class="el-dialog__title">
         Alterar dados de {{ roleForm.title }}
@@ -949,12 +951,10 @@ export default {
     font-size: 16px;
     margin-top: 20px;
     padding: 17px 16px 17px 15px;
+    color: #9461f7;
   }
   &__role-collapse {
     background-color: #fff;
-    .el-collapse-item__header, .el-collapse-item__wrap {
-      // background-color: #fff;
-    }
   }
   .el-input-group__append {
     border-color: #9462f7;
