@@ -616,6 +616,7 @@ export default {
   .jus-main-view__main-card {
     height: 100%;
     min-width: 532px;
+    z-index: 0;
     > .el-card__body {
       height: 100%;
       display: flex;
