@@ -154,7 +154,7 @@
     <!-- DADOS DO CASO -->
     <template slot="right-card">
       <div class="dispute-view__section-title">
-        <h2>Disputa #{{ dispute.id }}</h2>
+        <h2 data-testid="dispute-id">Disputa #{{ dispute.id }}</h2>
         <el-tooltip content="Excluir disputa">
           <el-button
             plain
