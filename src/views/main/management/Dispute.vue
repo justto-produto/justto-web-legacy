@@ -1,6 +1,7 @@
 <template>
   <JusViewMain
     :loading-container="dispute && !dispute.id"
+    :right-card-collapsed="isCollapsed"
     full-screen
     right-card-width="320"
     class="dispute-view">
@@ -20,6 +21,7 @@
           :dispute.sync="dispute"
           :is-paused.sync="isPaused"
           :is-favorite.sync="isFavorite"
+          :is-collapsed.sync="isCollapsed"
           @fetch-data="fetchData" />
         <!-- MESSAGES -->
         <dispute-occurrences v-if="typingTab === '1'" ref="disputeOccurrences" :dispute-id="id" data-testid="dispute-messages" />
@@ -152,16 +154,14 @@
     <!-- DADOS DO CASO -->
     <template slot="right-card">
       <div class="dispute-view__section-title">
-        <!-- <h2>Disputa #{{ dispute.id }}</h2> -->
-        <h2>Dados da disputa</h2>
+        <h2>Disputa #{{ dispute.id }}</h2>
         <el-tooltip content="Excluir disputa">
           <el-button
             plain
             class="right"
             data-testid="remove"
-            @click="removeDispute()">
-            <jus-icon icon="trash"/>
-          </el-button>
+            icon="el-icon-delete"
+            @click="removeDispute()" />
         </el-tooltip>
       </div>
       <dispute-overview
@@ -199,7 +199,8 @@ export default {
       activeRoleId: 0,
       loadingKey: 0,
       activeRole: {},
-      invalidReceiver: undefined
+      invalidReceiver: undefined,
+      isCollapsed: false
     }
   },
   computed: {
@@ -589,14 +590,14 @@ export default {
     margin: -20px -20px 0;
     border-bottom: 1px solid #eeeeee;
     h2 {
-      padding: 20px 0;
+      padding: 15px 0;
       font-weight: 500;
       display: block;
       margin: 0;
     }
     .el-button {
       border-radius: 5px;
-      padding: 11px;
+      padding: 10px;
     }
     img {
       width: 16px;
@@ -666,6 +667,9 @@ export default {
   }
   &__counterproposal-dialog .el-form-item__error{
     top: 11px !important;
+  }
+  .el-collapse-item__header, .el-collapse-item__wrap {
+    background-color: #ffffff00;
   }
 }
 </style>

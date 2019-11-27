@@ -65,6 +65,12 @@
           <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
         </el-button>
       </el-tooltip>
+      <el-tooltip :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'">
+        <el-button
+          :icon="collapsed ? 'el-icon-arrow-left' : 'el-icon-arrow-right'"
+          type="text"
+          @click="togleCollapsed" />
+      </el-tooltip>
     </div>
     <el-dialog
       :close-on-click-modal="false"
@@ -181,6 +187,10 @@ export default {
     isFavorite: {
       type: Boolean,
       default: false
+    },
+    isCollapsed: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -208,6 +218,14 @@ export default {
     }
   },
   computed: {
+    collapsed: {
+      get () {
+        return this.isCollapsed
+      },
+      set (value) {
+        this.$emit('update:isCollapsed', value)
+      }
+    },
     canSettled () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
     },
@@ -247,8 +265,6 @@ export default {
         this.unsettledTypes = response
       })
     }
-  },
-  mounted () {
   },
   methods: {
     disputeAction (action) {
@@ -414,6 +430,9 @@ export default {
         this.counterproposalLoading = false
         this.counterproposalDialogVisible = false
       })
+    },
+    togleCollapsed () {
+      this.collapsed = !this.collapsed
     }
   }
 }
@@ -422,12 +441,20 @@ export default {
 <style lang="scss">
 .dispute-view-actions {
   &__actions {
-    padding: 11px 20px;
+    padding: 11px 0px 11px 20px;
     box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
     z-index: 1;
     .el-button {
       border-radius: 5px;
       padding: 11px;
+      &.el-button--text {
+        color: #424242;
+        padding: 7px 10px 0;
+        float: right;
+        i {
+          font-size: 26px;
+        }
+      }
     }
     img {
       width: 16px;

@@ -23,6 +23,7 @@
       <!-- RIGHT CARD SLOT -->
       <div v-if="this.$slots['right-card']">
         <el-card
+          v-if="!rightCardCollapsed"
           :style="{width: rightCardWidth + 'px'}"
           class="jus-main-view__right-card">
           <slot name="right-card"/>
@@ -39,6 +40,10 @@ export default {
     rightCardWidth: {
       default: '300',
       type: String
+    },
+    rightCardCollapsed: {
+      default: false,
+      type: Boolean
     },
     leftCardWidth: {
       default: '300',
@@ -93,7 +98,9 @@ export default {
     margin-right: 20px;
   }
   &__right-card {
-    margin-left: 20px;
+    margin-top: 10px;
+    margin-left: -4px;
+    background-color: #F7F7F7;
   }
   &__left-card, &__right-card {
     display: flex;
@@ -113,7 +120,7 @@ export default {
       height: 100%;
     }
     .jus-main-view__right-card {
-      height: 100%;
+      height: calc(100% - 20px);
     }
   }
 }

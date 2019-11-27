@@ -556,8 +556,8 @@ export default {
       content: "x";
       color: #fff4cc;
       position: absolute;
-      bottom: 0px;
-      right: 2px;
+      bottom: 2px;
+      right: 4px;
       height: 9px;
       width: 10px;
       font-size: 9px;

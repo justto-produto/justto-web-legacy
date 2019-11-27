@@ -86,128 +86,131 @@
         </div>
       </el-collapse-item>
     </el-collapse>
-    <hr>
-    <div class="dispute-overview-view__roles">
-      Partes
-      <el-tooltip content="Cadastrar parte">
-        <a href="#" @click.prevent="newRoleDialogVisible = true">
-          <jus-icon icon="add" />
-        </a>
-      </el-tooltip>
-    </div>
-    <el-collapse
-      ref="roleCollapse"
-      accordion
-      class="el-collapse--bordered"
-      style="margin: 20px 0;"
-      @change="handleChange">
-      <el-collapse-item
-        v-for="(role, index) in disputeRolesSort"
-        :key="`${index}-${role.personId}`"
-        :name="role.id"
-        data-testid="expand-party">
-        <template slot="title">
-          <div class="dispute-overview-view__name">
-            {{ role.name }}
-          </div>
-        </template>
-        <!-- <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-          <span>Status:</span>
-          <el-popover
-            placement="top-end"
-            width="220"
-            trigger="hover">
-            <div class="dispute-overview-view__location">
-              <span>Localização</span>
-              -
-              <span>Aparelho</span>
-              -
-              <span>OS</span>
-              -
+    <el-collapse value="1">
+      <el-collapse-item title="Partes" name="1">
+        <el-collapse
+          ref="roleCollapse"
+          accordion
+          class="el-collapse--bordered"
+          style="margin: 20px 0 0"
+          @change="handleChange">
+          <el-collapse-item
+            v-for="(role, index) in disputeRolesSort"
+            :key="`${index}-${role.personId}`"
+            :name="role.id"
+            class="dispute-overview-view__role-collapse"
+            data-testid="expand-party">
+            <template slot="title">
+              <div class="dispute-overview-view__name">
+                {{ role.name }}
+              </div>
+            </template>
+            <!-- <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+              <span>Status:</span>
+              <el-popover
+                placement="top-end"
+                width="220"
+                trigger="hover">
+                <div class="dispute-overview-view__location">
+                  <span>Localização</span>
+                  -
+                  <span>Aparelho</span>
+                  -
+                  <span>OS</span>
+                  -
+                </div>
+                <span slot="reference">
+                  Offline
+                </span>
+              </el-popover>
+            </div> -->
+            <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
+              <span class="title">CPF/CNPJ:</span>
+              <span>{{ role.documentNumber | cpfCnpjMask }}</span>
             </div>
-            <span slot="reference">
-              Offline
-            </span>
-          </el-popover>
-        </div> -->
-        <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
-          <span class="title">CPF/CNPJ:</span>
-          <span>{{ role.documentNumber | cpfCnpjMask }}</span>
-        </div>
-        <div v-show="role.roles.length == 1" class="dispute-overview-view__info-line">
-          Função:
-          <span>{{ buildTitle(role.party, role.roles[0]) }}</span>
-        </div>
-        <div v-show="role.roles.length > 1" class="dispute-overview-view__info-line">
-          Função:
-        </div>
-        <div v-show="role.roles.length > 1" class="dispute-overview-view__info-list">
-          <ul>
-            <li v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
-              <span>
-                {{ buildTitle(role.party, title) }}
-              </span>
-            </li>
-          </ul>
-        </div>
-        <div v-show="role.phones.length" class="dispute-overview-view__info-line">
-          Telefone(s):
-        </div>
-        <div v-show="role.phones.length" class="dispute-overview-view__info-list">
-          <ul>
-            <li v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`">
-              <span>
-                <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role)" />
-                {{ phone.number | phoneMask }}
-              </span>
-              <div class="dispute-overview-view__list-actions">
-                <el-tooltip content="Telefone inválido">
-                  <jus-icon v-if="!phone.isValid" icon="warn-dark" />
-                </el-tooltip>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div v-show="role.emails.length" class="dispute-overview-view__info-line">
-          E-mail(s):
-        </div>
-        <div v-show="role.emails.length" class="dispute-overview-view__info-list">
-          <ul>
-            <li v-for="(email, index) in role.emails.filter(e => !e.archived)" :key="`${index}-${email.id}`">
-              <span>
-                <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role)" />
-                {{ email.address }}
-              </span>
-              <div class="dispute-overview-view__list-actions">
-                <el-tooltip content="E-mail inválido">
-                  <jus-icon v-if="!email.isValid" icon="warn-dark" />
-                </el-tooltip>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div v-show="role.oabs.length" class="dispute-overview-view__info-line">
-          OAB(s):
-        </div>
-        <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
-          <ul>
-            <li v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`">
-              <div>
-                <el-checkbox v-model="oab.selected" data-testid="checkbox-cna" @change="updateDisputeRole(role)" />
-                {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
-              </div>
-              <div class="dispute-overview-view__list-actions">
-                <el-tooltip content="OAB inválido">
-                  <jus-icon v-if="!oab.isValid" icon="warn-dark" />
-                </el-tooltip>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div class="dispute-overview-view__actions">
-          <el-button v-if="!role.roles.includes('NEGOTIATOR')" plain @click="removeRole(role)">Excluir</el-button>
-          <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
-        </div>
+            <div v-show="role.roles.length == 1" class="dispute-overview-view__info-line">
+              Função:
+              <span>{{ buildTitle(role.party, role.roles[0]) }}</span>
+            </div>
+            <div v-show="role.roles.length > 1" class="dispute-overview-view__info-line">
+              Função:
+            </div>
+            <div v-show="role.roles.length > 1" class="dispute-overview-view__info-list">
+              <ul>
+                <li v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
+                  <span>
+                    {{ buildTitle(role.party, title) }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div v-show="role.phones.length" class="dispute-overview-view__info-line">
+              Telefone(s):
+            </div>
+            <div v-show="role.phones.length" class="dispute-overview-view__info-list">
+              <ul>
+                <li v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`">
+                  <span>
+                    <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role)" />
+                    {{ phone.number | phoneMask }}
+                  </span>
+                  <div class="dispute-overview-view__list-actions">
+                    <el-tooltip content="Telefone inválido">
+                      <jus-icon v-if="!phone.isValid" icon="warn-dark" />
+                    </el-tooltip>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div v-show="role.emails.length" class="dispute-overview-view__info-line">
+              E-mail(s):
+            </div>
+            <div v-show="role.emails.length" class="dispute-overview-view__info-list">
+              <ul>
+                <li v-for="(email, index) in role.emails.filter(e => !e.archived)" :key="`${index}-${email.id}`">
+                  <span>
+                    <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role)" />
+                    {{ email.address }}
+                  </span>
+                  <div class="dispute-overview-view__list-actions">
+                    <el-tooltip content="E-mail inválido">
+                      <jus-icon v-if="!email.isValid" icon="warn-dark" />
+                    </el-tooltip>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div v-show="role.oabs.length" class="dispute-overview-view__info-line">
+              OAB(s):
+            </div>
+            <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
+              <ul>
+                <li v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`">
+                  <div>
+                    <el-checkbox v-model="oab.selected" data-testid="checkbox-cna" @change="updateDisputeRole(role)" />
+                    {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
+                  </div>
+                  <div class="dispute-overview-view__list-actions">
+                    <el-tooltip content="OAB inválido">
+                      <jus-icon v-if="!oab.isValid" icon="warn-dark" />
+                    </el-tooltip>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="dispute-overview-view__actions">
+              <el-button v-if="!role.roles.includes('NEGOTIATOR')" plain @click="removeRole(role)">Excluir</el-button>
+              <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
+            </div>
+          </el-collapse-item>
+          <el-button
+            class="dispute-overview-view__add-role"
+            plain
+            icon="el-icon-plus"
+            @click.prevent="newRoleDialogVisible = true">
+            Cadastrar parte
+          </el-button>
+        </el-collapse>
       </el-collapse-item>
     </el-collapse>
     <el-dialog
@@ -842,7 +845,7 @@ export default {
     float: initial !important;
   }
   .el-collapse-item__content {
-    padding-bottom: 15px;
+    padding-bottom: 20px;
   }
   &__info-line {
     margin-top: 10px;
@@ -918,13 +921,6 @@ export default {
   &__see-more {
     white-space: nowrap;
   }
-  &__roles {
-    font-size: 16px;
-    font-weight: 500;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
   &__oab-form {
     display: flex;
     width: 100%;
@@ -941,6 +937,23 @@ export default {
       margin-left: 16px;
       padding: 8px 20px;
       width: 62px;
+    }
+  }
+  &__add-role {
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    font-size: 16px;
+    margin-top: 20px;
+    padding: 17px 16px 17px 15px;
+  }
+  &__role-collapse {
+    background-color: #fff;
+    .el-collapse-item__header, .el-collapse-item__wrap {
+      // background-color: #fff;
     }
   }
   .el-input-group__append {
