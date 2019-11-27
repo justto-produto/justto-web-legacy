@@ -32,6 +32,17 @@ const strategy = {
             reject(error)
           })
       })
+    },
+    editStrategyTemplate ({ commit }, params) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.put('api/templates/', params)
+          .then(response => {
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {

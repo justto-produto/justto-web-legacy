@@ -5,25 +5,16 @@ const account = {
     id: '',
     name: '',
     email: '',
-    status: '',
     token: localStorage.getItem('justoken') || ''
   },
   mutations: {
-    authRequest (state) {
-      state.status = 'loading'
-    },
-    authSuccess (state, token) {
-      state.status = 'success'
+    setToken (state, token) {
       if (token) state.token = token
-    },
-    authError (state) {
-      state.status = 'error'
     },
     logout (state) {
       state.id = ''
       state.name = ''
       state.email = ''
-      state.status = ''
       state.token = ''
     },
     setUser (state, response) {
@@ -38,8 +29,8 @@ const account = {
         // eslint-disable-next-line
         axios.get('api/accounts/my')
           .then(response => {
-            resolve(response)
             commit('setUser', response.data)
+            resolve(response)
           })
           .catch(error => {
             reject(error)
@@ -75,7 +66,6 @@ const account = {
       // eslint-disable-next-line
       delete axios.defaults.headers.common['Workspace']
       return new Promise((resolve, reject) => {
-        commit('authRequest')
         // eslint-disable-next-line
         axios.post('api/accounts/token', credentials)
           .then(response => {
@@ -83,11 +73,10 @@ const account = {
             // eslint-disable-next-line
             axios.defaults.headers.common['Authorization'] = token
             localStorage.setItem('justoken', token)
-            commit('authSuccess', token)
+            commit('setToken', token)
             resolve(response)
           })
           .catch(error => {
-            commit('authError')
             localStorage.removeItem('justoken')
             reject(error)
           })
@@ -104,11 +93,10 @@ const account = {
             // eslint-disable-next-line
             axios.defaults.headers.common['Authorization'] = token
             localStorage.setItem('justoken', token)
-            commit('authSuccess', token)
+            commit('setToken', token)
             resolve(response)
           })
           .catch(error => {
-            commit('authError')
             localStorage.removeItem('justoken')
             reject(error)
           })
@@ -165,7 +153,6 @@ const account = {
   getters: {
     accountToken: state => state.token,
     isLoggedIn: state => !!state.token,
-    authStatus: state => state.status,
     accountId: state => state.id,
     accountEmail: state => state.email
   }
