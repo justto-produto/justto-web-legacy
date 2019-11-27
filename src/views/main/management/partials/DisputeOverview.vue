@@ -523,6 +523,7 @@ export default {
     disputeRolesSort () {
       if (this.dispute.disputeRoles) {
         let sortedArray = this.dispute.disputeRoles.slice(0) || []
+        sortedArray = sortedArray.filter(a => a.party !== 'IMPARTIAL')
         sortedArray = sortedArray.filter(dr => {
           if (!dr.main && dr.party === 'RESPONDENT') return false
           if (dr.archived) return false
