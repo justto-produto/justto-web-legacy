@@ -1,6 +1,11 @@
 <template lang="html">
   <div class="dispute-view-actions">
     <div class="dispute-view-actions__actions">
+      <el-tooltip content="Voltar">
+        <router-link to="/management">
+          <jus-icon class="back" icon="back"/>
+        </router-link>
+      </el-tooltip>
       <el-tooltip content="Ganhar">
         <el-button
           :disabled="!canSettled"
@@ -462,6 +467,10 @@ export default {
     img {
       width: 16px;
       height: 16px;
+    }
+    .back {
+      margin-right: 20px;
+      vertical-align: text-top;
     }
   }
 }
