@@ -2,9 +2,7 @@
   <div>
     <el-header class="jus-header-main">
       <div class="jus-header-main__search">
-        <jus-icon v-if="!disputeId" icon="search" class="el-menu__icon-search" />
         <el-autocomplete
-          v-if="!disputeId"
           v-model="dispute"
           :trigger-on-focus="false"
           :fetch-suggestions="search"
@@ -18,12 +16,6 @@
             </span>
           </template>
         </el-autocomplete>
-        <h2 v-else class="jus-header-main__title" data-testid="dispute-id">
-          <router-link to="/management">
-            <jus-icon icon="back"/>
-          </router-link>
-          Disputa #{{ disputeId }}
-        </h2>
       </div>
       <div class="jus-header-main__whatsapp">
         <el-tooltip>
@@ -112,7 +104,6 @@ export default {
   data () {
     return {
       dispute: '',
-      disputeId: '',
       workspaces: [],
       selectedWorkspace: '',
       changeWorkspaceDialogVisible: false
@@ -132,13 +123,7 @@ export default {
       return this.$store.getters.whatsappStatus
     }
   },
-  watch: {
-    '$route.params.id': function (id) {
-      this.disputeId = id
-    }
-  },
   beforeMount () {
-    this.disputeId = this.$route.params.id
     this.$store.dispatch('myWorkspace').then(response => {
       this.workspaces = response.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
     })

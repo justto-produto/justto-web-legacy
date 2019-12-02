@@ -2,8 +2,8 @@
   <div class="jus-team-menu">
     <div class="jus-team-menu__members">
       <a
-        v-for="(member, index) in members"
-        :key="member.id + index"
+        v-for="member in members"
+        :key="member.id + member.personId"
         class="jus-team-menu__member"
         @click.prevent="setFilterPersonId(member.person.id)">
         <el-tooltip :content="member.person.name" placement="right">

@@ -33,6 +33,8 @@ describe('Disputa', function () {
     // Sistema deve redirecionar para a página de Registro
     cy.url().should('include', '/#/management/dispute/')
 
+    cy.wait(1000)
+
     // Entra na aba 'Notas'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Nota')
@@ -70,12 +72,12 @@ describe('Disputa', function () {
     cy.wait(1000)
 
     // Nota deve aparecer entre as mensagens
-    cy.contains(user + ' adicionou uma nota: ' + message, { timeout: 60000 })
+    cy.contains(message, { timeout: 60000 })
       .should('be.visible')
 
     // Caixa de nota deve estar visivel e amarela
-    cy.get('[data-testid=message-box] > div.el-card__body')
+    cy.get('[data-testid=message-box] > .dispute-view-occurrences__card-box > .dispute-view-occurrences__card > .el-card__body')
       .should('be.visible')
-      .should('have.css', 'background-color', 'rgb(255, 244, 204)')
+      .should('have.css', 'background-color', 'rgb(246, 241, 255)')
   })
 })

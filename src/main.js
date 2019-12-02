@@ -5,7 +5,7 @@ import store from './store'
 
 // plugin
 import i18n from '@/plugins/vueI18n'
-import '@/plugins/registerServiceWorker'
+// import '@/plugins/registerServiceWorker'
 import '@/plugins/axios'
 import '@/plugins/element'
 import '@/plugins/awesomeSwiper'
@@ -81,7 +81,6 @@ Vue.use(money, {
 })
 
 Vue.config.productionTip = false
-Vue.prototype.$windowOn = window.on
 
 if (store.getters.workspaceSubdomain) {
   // eslint-disable-next-line

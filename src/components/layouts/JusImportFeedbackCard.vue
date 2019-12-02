@@ -282,20 +282,16 @@ export default {
   .el-autocomplete, .el-select, .el-input, .select-strategy__messages {
     width: 100%;
   }
-  .select-strategy{
-    .el-input__inner {
-      border: 0 !important;
-    }
-  }
-  .el-input__inner {
+  .el-card .el-input__inner {
     border-bottom: 1px solid #dcdfe6 !important;
     border-top: 0;
     border-left: 0;
     border-right: 0;
   }
-
-  .el-input__inner {
-    border-color: #dcdfe6 !important;
+  .select-strategy{
+    .el-input__inner {
+      border: 0 !important;
+    }
   }
   .el-input-number {
     margin: 0 8px;

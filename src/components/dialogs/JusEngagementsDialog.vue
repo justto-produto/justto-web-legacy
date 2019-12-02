@@ -1,34 +1,66 @@
 <template>
-  <el-dialog :close-on-click-modal="false" :visible.sync="dialog" class="el-dialog--lg jus-engagements-dialog">
-    <template slot="title">
-      <h2>Estratégia de engajamento das partes</h2>
-      <p v-if="!isManual">
-        Abaixo, você encontra as mensagens a serem enviadas para às partes das disputas contidas
-        nesta Campanha. Com os dados da sua disputas, nosso sistema escolhe a melhor estratégia de
-        engajamento para as suas disputas.
+  <div>
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialog" class="el-dialog--lg jus-engagements-dialog">
+      <template slot="title">
+        <h2>Estratégia de engajamento das partes</h2>
+        <p v-if="!isManual">
+          Abaixo, você encontra as mensagens a serem enviadas para às partes das disputas contidas
+          nesta Campanha. Com os dados da sua disputas, nosso sistema escolhe a melhor estratégia de
+          engajamento para as suas disputas.
+        </p>
+      </template>
+      <p v-if="isManual">
+        Essa estratégia não possuí mensagens pré-definidas e não envia mensagens automáticas; Todas as mensagens devem ser enviadas manualmente pelo negociador usando a plataforma Justto 3DR.
       </p>
-    </template>
-    <p v-if="isManual">
-      Essa estratégia não possuí mensagens pré-definidas e não envia mensagens automáticas; Todas as mensagens devem ser enviadas manualmente pelo negociador usando a plataforma Justto 3DR.
-    </p>
-    <el-collapse v-loading="$store.state.loading" v-else class="jus-engagements-dialog__engagement el-collapse--bordered">
-      <div v-for="step in strategyEngagements" :key="step.id">
-        <div v-if="step.communicationType != 'DELAY'" class="jus-engagements-dialog__step">Envio</div>
-        <el-collapse-item v-if="step.communicationType !== 'DELAY'">
-          <template slot="title">
-            <jus-icon :icon="getIcon(step.communicationType)"/> {{ step.name | capitalize }}
-          </template>
-          <div v-if="step.template">
-            <h3>{{ step.template.title }}</h3>
-            <span v-html="step.template.body" />
+      <el-collapse v-loading="$store.state.loading" v-else class="jus-engagements-dialog__engagement el-collapse--bordered">
+        <div v-for="step in strategyEngagements" :key="step.id">
+          <div v-if="step.communicationType != 'DELAY'" class="jus-engagements-dialog__step">Envio</div>
+          <el-collapse-item v-if="step.communicationType !== 'DELAY'">
+            <template slot="title">
+              <jus-icon :icon="getIcon(step.communicationType)"/> {{ step.name | capitalize }}
+            </template>
+            <div v-if="step.template">
+              <h3>{{ step.template.title }}</h3>
+              <span v-html="step.template.body" />
+              <el-button
+                v-if="isJusttoAdmin"
+                plain
+                style="margin: 12px auto; display: block"
+                @click="openEditDialog(step)">Editar template</el-button>
+            </div>
+          </el-collapse-item>
+          <div v-else class="jus-engagements-dialog__wait">
+            <jus-icon :icon="getIcon(step.communicationType)" is-active/> {{ step.name }}
           </div>
-        </el-collapse-item>
-        <div v-else class="jus-engagements-dialog__wait">
-          <jus-icon :icon="getIcon(step.communicationType)" is-active/> {{ step.name }}
         </div>
+      </el-collapse>
+    </el-dialog>
+    <el-dialog :visible.sync="editDialog" width="70%">
+      <div v-if="!preview">
+        <el-input v-if="communication.template" v-model="communication.template.title" :disabled="editDialogLoading" />
+        <br><br>
+        <el-input v-if="communication.template" v-model="communication.template.body" :disabled="editDialogLoading" class="jus-engagements-dialog__textarea" type="textarea" />
       </div>
-    </el-collapse>
-  </el-dialog>
+      <div v-else>
+        <h2 style="margin: 20px;">
+          {{ communication.template.title }}
+        </h2>
+        <br><br>
+        <span v-html="communication.template.body" />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          :disabled="editDialogLoading"
+          :icon="preview ? 'el-icon-edit' : 'el-icon-view'"
+          plain
+          @click="preview = !preview">
+          {{ preview ? 'Voltar' : 'Visualizar' }}
+        </el-button>
+        <el-button :disabled="editDialogLoading" plain @click="editDialog = false">Cancelar</el-button>
+        <el-button v-loading="editDialogLoading" type="primary" @click="editTemplate">Editar template</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -51,7 +83,26 @@ export default {
   data () {
     return {
       dialog: false,
-      strategyEngagements: []
+      strategyEngagements: [],
+      communication: '',
+      editDialog: false,
+      editDialogLoading: false,
+      editorKey: 0,
+      preview: false
+    }
+  },
+  computed: {
+    isJusttoAdmin () {
+      // 185 Gabi
+      // 338 Lilian
+      // 484 Henrique
+      // 293 Kelvin
+      // 200 Argel
+      // 198 Jesus
+      // 294 Lucas
+      // 234 Mateus
+      // 181 Michelle
+      return [185, 338, 484, 293, 200, 234, 198, 294].includes(this.$store.getters.accountId)
     }
   },
   watch: {
@@ -66,6 +117,31 @@ export default {
     }
   },
   methods: {
+    openEditDialog (step) {
+      this.editDialog = true
+      this.communication = step
+    },
+    editTemplate () {
+      this.editDialogLoading = true
+      this.$store.dispatch('editStrategyTemplate', {
+        id: this.communication.template.id,
+        contentType: 'TEXT',
+        title: this.communication.template.title,
+        body: this.communication.template.body
+      }).then(() => {
+        this.editDialog = false
+        this.getEngagements()
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Template editado com sucesso',
+          type: 'success'
+        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.editDialogLoading = false
+      })
+    },
     getIcon (communicationType) {
       switch (communicationType) {
         case 'WHATSAPP':
@@ -145,6 +221,10 @@ export default {
   }
   .el-dialog__body {
     padding: 10px 20px 40px;
+  }
+  &__textarea .el-textarea__inner {
+    height: 50vh;
+    resize: none;
   }
 }
 </style>
