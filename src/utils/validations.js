@@ -1,7 +1,6 @@
 import CPFCNPJ from 'cpf_cnpj'
 
 const validateZero = (rule, value, callback) => {
-  debugger
   if (value && value >= 0) {
     callback()
   } else {
