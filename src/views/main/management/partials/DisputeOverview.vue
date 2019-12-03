@@ -216,7 +216,6 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="editDisputeDialogVisible"
-      append-to-body
       title="Editar disputa"
       width="50%">
       <el-form
@@ -292,7 +291,6 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="editRoleDialogVisible"
-      append-to-body
       width="40%">
       <span slot="title" class="el-dialog__title">
         Alterar dados de {{ roleForm.title }}

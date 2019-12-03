@@ -258,7 +258,7 @@ export default {
         this.unsettledTypes = response
       })
     }
-    this.$store.dispatch('disputeVisualized', this.id)
+    this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
   },
   beforeDestroy () {
     this.unsubscribeOccurrences(this.id)

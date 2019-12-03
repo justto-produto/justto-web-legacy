@@ -62,6 +62,11 @@
           <jus-icon icon="proposal"/>
         </el-button>
       </el-tooltip>
+      <el-tooltip content="Marcar como não lida">
+        <el-button plain @click="setAsUnread()">
+          <jus-icon icon="unread"/>
+        </el-button>
+      </el-tooltip>
       <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
         <el-button
           plain
@@ -441,6 +446,15 @@ export default {
     },
     togleCollapsed () {
       this.collapsed = !this.collapsed
+    },
+    setAsUnread () {
+      this.$store.dispatch('disputeSetVisualized', {
+        visualized: false, disputeId: this.dispute.id
+      }).then(() => {
+        this.$router.push('/management')
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      })
     }
   }
 }

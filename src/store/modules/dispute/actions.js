@@ -313,10 +313,10 @@ const disputeActions = {
         })
     })
   },
-  disputeVisualized ({ commit }, disputeId) {
+  disputeSetVisualized ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.patch('api/disputes/' + disputeId + '/visualized/')
+      axios.patch('api/disputes/' + params.disputeId + '/visualized?visualized=' + params.visualized)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
