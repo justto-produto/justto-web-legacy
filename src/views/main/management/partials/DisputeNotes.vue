@@ -75,9 +75,9 @@ export default {
     },
     buildHour (occurrence) {
       if (occurrence.executionDateTime) {
-        return this.$moment(occurrence.executionDateTime.dateTime).format('HH:mm')
+        return this.$moment(occurrence.executionDateTime.dateTime).format('DD/MM/YYYY [às] HH:mm')
       }
-      return this.$moment(occurrence.createAt.dateTime).format('HH:mm')
+      return this.$moment(occurrence.createAt.dateTime).format('DD/MM/YYYY [às] HH:mm')
     }
   }
 }
