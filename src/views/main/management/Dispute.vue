@@ -45,11 +45,12 @@
                     data-testid="input-message"
                     placeholder="Escreva alguma coisa"
                     class="el-textarea__inner"
-                    @keydown.enter.exact.prevent
+                    @keydown.enter.alt.prevent
                     @keydown.enter.shift.prevent
+                    @keydown.enter.exact.prevent
                     @keydown.enter.alt="newLineMessage()"
                     @keydown.enter.shift="newLineMessage()"
-                    @keyup.enter.exact="sendMessage()"/>
+                    @keyup.enter.exact="sendMessage(true)"/>
                 </el-collapse-transition>
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
@@ -76,33 +77,54 @@
                       </a>
                     </el-tooltip>
                   </div>
-                  <el-tooltip :key="buttonKey" :disabled="!validName || invalidReceiver === false">
-                    <div slot="content">
-                      <span v-if="!activeRole.personId">
-                        Escolha um destinatário ao lado para receber sua mensagem
+                  <div>
+                    <el-tooltip :key="buttonKey" :disabled="!validName || invalidReceiver === false">
+                      <div slot="content">
+                        <span v-if="!activeRole.personId">
+                          Escolha um destinatário ao lado para receber sua mensagem
+                        </span>
+                        <span v-else-if="invalidReceiver">
+                          <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
+                          <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não selecionado/configurado</span>
+                          <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não selecionado/configurado</span>
+                        </span>
+                      </div>
+                      <span v-if="validName">
+                        <el-button
+                          :disabled="invalidReceiver || !activeRole.personId"
+                          type="primary"
+                          class="dispute-view__send"
+                          data-testid="submit-message"
+                          @click="sendMessage()">
+                          Enviar
+                        </el-button>
                       </span>
-                      <span v-else-if="invalidReceiver">
-                        <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
-                        <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não selecionado/configurado</span>
-                        <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não selecionado/configurado</span>
-                      </span>
-                    </div>
-                    <span v-if="validName">
                       <el-button
-                        :disabled="invalidReceiver || !activeRole.personId"
+                        v-else
+                        class="dispute-view__send"
                         type="primary"
-                        data-testid="submit-message"
-                        @click="sendMessage()">
-                        Enviar
+                        @click="$router.push('/profile')">
+                        Configurações
                       </el-button>
-                    </span>
-                    <el-button
-                      v-else
-                      type="primary"
-                      @click="$router.push('/profile')">
-                      Configurações
-                    </el-button>
-                  </el-tooltip>
+                    </el-tooltip>
+                    <el-popover trigger="click">
+                      <el-radio-group v-model="enterToSend" class="dispute-view__send-radio" @change="changeEnterToSend">
+                        <el-radio :label="0">
+                          Envia com Click
+                          <span>Clicar em <strong>Enviar</strong> enviará a mensagem</span>
+                        </el-radio>
+                        <el-radio :label="1">
+                          Envia com Enter
+                          <span>Pressionar <strong>Enter</strong> enviará a mensagem</span>
+                        </el-radio>
+                      </el-radio-group>
+                      <el-button
+                        slot="reference"
+                        class="dispute-view__more"
+                        type="text"
+                        icon="el-icon-more" />
+                    </el-popover>
+                  </div>
                 </div>
               </el-card>
             </el-tab-pane>
@@ -134,12 +156,7 @@
                   rows="2"
                   data-testid="input-note"
                   placeholder="Escreva alguma coisa"
-                  class="el-textarea__inner"
-                  @keydown.enter.exact.prevent
-                  @keydown.enter.shift.prevent
-                  @keydown.enter.alt="newLineNote()"
-                  @keydown.enter.shift="newLineNote()"
-                  @keydown.enter.exact="sendNote()"/>
+                  class="el-textarea__inner"/>
                 <div class="dispute-view__send-message-actions note">
                   <el-button type="primary" data-testid="submit-note" @click="sendNote()">
                     Salvar nota
@@ -200,7 +217,8 @@ export default {
       loadingKey: 0,
       activeRole: {},
       invalidReceiver: undefined,
-      isCollapsed: false
+      isCollapsed: false,
+      enterToSend: 0
     }
   },
   computed: {
@@ -259,6 +277,10 @@ export default {
       })
     }
     this.$store.dispatch('disputeVisualized', this.id)
+  },
+  beforeMount () {
+    const entertosend = parseInt(localStorage.getItem('jusentertosend'))
+    if (entertosend) this.enterToSend = entertosend
   },
   beforeDestroy () {
     this.unsubscribeOccurrences(this.id)
@@ -394,7 +416,22 @@ export default {
           return []
       }
     },
-    sendMessage () {
+    sendMessage (enterByKeyboard) {
+      if (enterByKeyboard) {
+        if (!this.enterToSend) {
+          this.newLineMessage()
+          return false
+        } else {
+          if (this.invalidReceiver === undefined) {
+            this.$jusNotification({
+              title: 'Atenção!',
+              message: 'Escolha um destinatário ao lado para receber sua mensagem.',
+              type: 'info'
+            })
+            return false
+          }
+        }
+      }
       if (this.newMessage.trim().replace('\n', '') && this.activeRole.personId && !this.invalidReceiver) {
         this.loadingTextarea = true
         this.$store.dispatch('send' + this.messageType, {
@@ -457,6 +494,9 @@ export default {
           }
         })
       }
+    },
+    changeEnterToSend (value) {
+      localStorage.setItem('jusentertosend', value)
     }
   }
 }
@@ -565,9 +605,6 @@ export default {
         margin-right: 11px;
       }
     }
-    .el-button {
-      padding: 8px 20px;
-    }
     &.note {
       justify-content: flex-end;
     }
@@ -654,6 +691,29 @@ export default {
     .el-select {
       margin: 10px 0;
       width: 100%;
+    }
+  }
+  &__more {
+    color: #343c4b;
+    transform: rotate(90deg);
+    margin-left: 12px;
+    margin-right: -6px;
+  }
+  &__send {
+    padding: 8px 20px;
+  }
+  &__send-radio {
+    .el-radio {
+      display: block;
+      margin-right: 0px;
+      & + .el-radio {
+        margin-top: 10px;
+      }
+      .el-radio__label span {
+        display: block;
+        margin-left: 28px;
+        font-size: 12px;
+      }
     }
   }
   .el-input-group__append {
