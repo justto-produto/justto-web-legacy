@@ -224,7 +224,7 @@ export default {
       counterOfferFormRules: {
         lastCounterOfferValue: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateZero, message: 'Campo obrigatório', trigger: 'submit' }
+          { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
         ],
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }

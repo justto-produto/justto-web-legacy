@@ -222,6 +222,7 @@
         v-loading="editDisputeDialogLoading"
         ref="disputeForm"
         :model="disputeForm"
+        :rules="disputeFormRules"
         label-position="top"
         @submit.native.prevent="editDispute">
         <el-row :gutter="20">
@@ -451,7 +452,7 @@
 
 <script>
 import { getRoles } from '@/utils/jusUtils'
-import { validateName, validateCpf, validatePhone } from '@/utils/validations'
+import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 export default {
   name: 'DisputeOverview',
@@ -480,7 +481,19 @@ export default {
       selectedStrategyId: '',
       disputeForm: {
         description: '',
-        expirationDate: ''
+        expirationDate: '',
+        disputeUpperRange: '',
+        lastOfferValue: ''
+      },
+      disputeFormRules: {
+        disputeUpperRange: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
+        ],
+        lastOfferValue: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
+        ]
       },
       roleForm: {},
       originalRole: {},
@@ -608,45 +621,10 @@ export default {
       this.editDisputeDialogVisible = true
     },
     editDispute () {
-      this.editDisputeDialogLoading = true
-      const h = this.$createElement
-      this.$msgbox({
-        title: 'Atenção!',
-        message: h('p', null, [
-          h('div', null, '- As novas informações vão sobrescrever as antigas.'),
-          this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
-            ? h('div', null, '- Alçada máxima está abaixo do valor proposto.') : null,
-          h('br', null, null),
-          h('div', null, 'Deseja continuar?')
-        ]),
-        type: 'warning',
-        confirmButtonText: 'Continuar',
-        confirmButtonClass: 'edit-case-confirm-button',
-        cancelButtonClass: 'is-plain',
-        showCancelButton: true,
-        customClass: 'edit-case-confitm-dialog'
-      }).then(() => {
-        let disputeToEdit = JSON.parse(JSON.stringify(this.dispute))
-        disputeToEdit.strategyId = this.selectedStrategyId
-        disputeToEdit.disputeUpperRange = this.disputeForm.disputeUpperRange
-        disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
-        disputeToEdit.description = this.disputeForm.description
-        disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
-        disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
-        this.$store.dispatch('editDispute', disputeToEdit).then(() => {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Os dados foram alterados com sucesso.',
-            type: 'success'
-          })
-          this.editDisputeDialogVisible = false
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.editDisputeDialogLoading = false
-        })
-      }).catch(() => {
-        this.editDisputeDialogLoading = false
+      this.$refs.disputeForm.validate(valid => {
+        if (valid) {
+          alert()
+        }
       })
     },
     buildTitle (party, title) {
