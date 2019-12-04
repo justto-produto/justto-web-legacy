@@ -118,6 +118,7 @@ export default {
   },
   methods: {
     openEditDialog (step) {
+      this.preview = false
       this.editDialog = true
       this.communication = step
     },

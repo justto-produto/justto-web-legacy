@@ -13,11 +13,6 @@
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="44px" />
-      <el-table-column type="expand" width="20px">
-        <template slot-scope="props">
-          <jus-dispute-resume :dispute="props.row" />
-        </template>
-      </el-table-column>
       <el-table-column
         :sortable="false"
         label="Processo"
@@ -196,7 +191,6 @@ import { getLastInteraction, getInteractionIcon } from '@/utils/jusUtils'
 export default {
   name: 'ManagementTable',
   components: {
-    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
   },
   props: {

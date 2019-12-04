@@ -17,7 +17,7 @@
           </template>
         </el-autocomplete>
       </div>
-      <div class="jus-header-main__whatsapp">
+      <!-- <div class="jus-header-main__whatsapp">
         <el-tooltip>
           <div slot="content">
             <span v-if="whatsappStatus === undefined">
@@ -32,8 +32,8 @@
           </div>
           <jus-icon :icon="'whatsapp-' + (whatsappStatus === undefined ? 'inactive' : !whatsappStatus ? 'disconnected' : 'connected')" />
         </el-tooltip>
-        <!-- <i v-if="!iswhatsappStatus" class="el-icon-warning el-icon-pulse el-icon-danger" /> -->
-      </div>
+        <i v-if="!iswhatsappStatus" class="el-icon-warning el-icon-pulse el-icon-danger" />
+      </div> -->
       <div class="jus-header-main__info">
         <el-dropdown trigger="click" placement="bottom-start">
           <span class="el-dropdown-link">
