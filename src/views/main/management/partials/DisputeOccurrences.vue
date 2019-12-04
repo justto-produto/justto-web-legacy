@@ -362,18 +362,20 @@ export default {
       border-radius: 0px;
       border: none;
       position: relative;
-      // :before {
-      //   background: none repeat scroll 0 0 #f7ebc2;
-      //   border-color: #f7ebc2  #ffffff;
-      //   border-style: solid;
-      //   border-width: 14px 14px 0 0;
-      //   content: "";
-      //   display: block;
-      //   position: absolute;
-      //   right: 0;
-      //   bottom: 0;
-      //   width: 0;
-      // }
+      .el-card__header {
+        padding: 8px 20px !important;
+      }
+      .el-card__body {
+        padding: 12px 20px !important;
+      }
+    }
+    &--note-header {
+      display: flex;
+      justify-content: flex-end;
+      i {
+        margin-left: 8px;
+        cursor: pointer;
+      }
     }
     &.SCHEDULER {
       border: 2px dashed #343c4b;

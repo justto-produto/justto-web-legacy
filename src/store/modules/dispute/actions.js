@@ -220,6 +220,18 @@ const disputeActions = {
         })
     })
   },
+  deleteDisputeNote ({ commit }, noteId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.delete('api/disputes/' + noteId)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   sendDisputeAction ({ commit }, params) {
     return new Promise((resolve, reject) => {
       let request
