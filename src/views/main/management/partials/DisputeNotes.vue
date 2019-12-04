@@ -6,10 +6,10 @@
       class="dispute-view-occurrences__occurrence">
       <div v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__note" data-testid="message-box">
         <div class="dispute-view-occurrences__card-box">
-          <el-card class="dispute-view-occurrences__card dispute-view-occurrences__card--note" shadow="never">
-            <div slot="header">
-              <i class="el-icon-notebook-2" />
-              <span v-html="buildTitle(occurrence)" />
+          <el-card class="dispute-view-occurrences__card dispute-view-occurrences__card--note" shadow="never" v-loading="noteLoading">
+            <div slot="header" class="dispute-view-occurrences__card--note-header">
+              <i class="el-icon-edit" @click="editNote(occurrence)" />
+              <i class="el-icon-delete" @click="removeNote(occurrence)" />
             </div>
             <span v-html="buildContent(occurrence)" />
           </el-card>
@@ -39,7 +39,8 @@ export default {
   },
   data () {
     return {
-      loading: true
+      loading: true,
+      noteLoading: false
     }
   },
   computed: {
@@ -61,23 +62,40 @@ export default {
     },
     buildContent (occurrence) {
       return this.splitText(occurrence.description)[1]
-      // let descriptionDivided = occurrence.description.replace(' adicionou uma nota.', '~|~').split('~|~')
-      // return descriptionDivided [1]
-    },
-    buildTitle (occurrence) {
-      // return this.splitText(occurrence.description)[2]
-      return 'Nota'
     },
     buildSender (occurrence) {
       return 'Adicionado por ' + this.splitText(occurrence.description)[0]
-      // let descriptionDivided = occurrence.description.replace(' adicionou uma nota.', '~|~').split('~|~')
-      // return 'Adicionado por ' + descriptionDivided[0]
     },
     buildHour (occurrence) {
       if (occurrence.executionDateTime) {
-        return this.$moment(occurrence.executionDateTime.dateTime).format('DD/MM/YYYY [às] HH:mm')
+        return this.$moment(occurrence.executionDateTime.dateTime).format('DD/MM/YY [às] HH:mm')
       }
-      return this.$moment(occurrence.createAt.dateTime).format('DD/MM/YYYY [às] HH:mm')
+      return this.$moment(occurrence.createAt.dateTime).format('DD/MM/YY [às] HH:mm')
+    },
+    editNote (occurrence) {
+
+    },
+    removeNote (occurrence) {
+      this.$confirm('Esta nota será deletada permanentemente. Deseja continuar?', 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancelar',
+          type: 'warning'
+        }).then(() => {
+          let noteId = occurrence.id
+          this.noteLoading = true
+          this.$store.dispatch('deleteDisputeNote', noteId).then(() => {
+            window.analytics.track('Nota removida')
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Nota removida com sucesso.',
+              type: 'success'
+            })
+          }).catch(() => {
+            this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.noteLoading = false
+          })
+        })
     }
   }
 }
