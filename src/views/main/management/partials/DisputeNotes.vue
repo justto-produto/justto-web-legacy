@@ -1,14 +1,24 @@
 <template lang="html">
-  <ul v-loading="loading" v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
+  <ul
+    v-loading="loading"
+    v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }"
+    class="dispute-view-occurrences">
     <li
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
       class="dispute-view-occurrences__occurrence">
-      <div v-if="occurrence.type === 'NOTE'" shadow="never" class="dispute-view-occurrences__note" data-testid="message-box">
+      <div
+        v-if="occurrence.type === 'NOTE'"
+        shadow="never"
+        class="dispute-view-occurrences__note"
+        data-testid="message-box">
         <div class="dispute-view-occurrences__card-box">
-          <el-card class="dispute-view-occurrences__card dispute-view-occurrences__card--note" shadow="never" v-loading="noteLoading">
+          <el-card
+            v-loading="noteLoading"
+            class="dispute-view-occurrences__card dispute-view-occurrences__card--note"
+            shadow="never">
             <div slot="header" class="dispute-view-occurrences__card--note-header">
-              <i class="el-icon-edit" @click="editNote(occurrence)" />
+              <i class="el-icon-edit" @click="openEditDialog(occurrence)" />
               <i class="el-icon-delete" @click="removeNote(occurrence)" />
             </div>
             <span v-html="buildContent(occurrence)" />
@@ -20,6 +30,15 @@
           </div>
         </div>
       </div>
+
+      <el-dialog :visible.sync="editDialog" width="60%" title="Editar Nota" append-to-body>
+        <el-input v-model="editingNoteContent" :disabled="editDialogLoading" class="dispute-view-occurrences__textarea" type="textarea" />
+        <span slot="footer" class="dialog-footer">
+          <el-button :disabled="editDialogLoading" plain @click="editDialog = false">Cancelar</el-button>
+          <el-button v-loading="editDialogLoading" type="primary" @click="editNote(editingNoteContent)">Editar nota</el-button>
+        </span>
+      </el-dialog>
+
     </li>
     <li v-if="!loading && !occurrences.length" class="dispute-view-occurrences__empty" data-testid="note-empty">
       <jus-icon icon="empty-screen-filter" />
@@ -40,7 +59,10 @@ export default {
   data () {
     return {
       loading: true,
-      noteLoading: false
+      noteLoading: false,
+      editDialog: false,
+      editDialogLoading: false,
+      editingNoteContent: {}
     }
   },
   computed: {
@@ -72,30 +94,47 @@ export default {
       }
       return this.$moment(occurrence.createAt.dateTime).format('DD/MM/YY [às] HH:mm')
     },
-    editNote (occurrence) {
-
+    openEditDialog (occurrence) {
+      this.editingNoteContent = this.buildContent(occurrence)
+      this.editDialog = true
+    },
+    editNote (noteContent) {
+      this.editDialogLoading = true
+      this.$store.dispatch('editDisputeNote', noteContent)
+        .then(() => {
+          this.editDialog = false
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Nota editada com sucesso.',
+            type: 'success'
+          })
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.editDialogLoading = false
+        })
     },
     removeNote (occurrence) {
       this.$confirm('Esta nota será deletada permanentemente. Deseja continuar?', 'Warning', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancelar',
-          type: 'warning'
-        }).then(() => {
-          let noteId = occurrence.id
-          this.noteLoading = true
-          this.$store.dispatch('deleteDisputeNote', noteId).then(() => {
-            window.analytics.track('Nota removida')
-            this.$jusNotification({
-              title: 'Yay!',
-              message: 'Nota removida com sucesso.',
-              type: 'success'
-            })
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
-          }).finally(() => {
-            this.noteLoading = false
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        let noteId = occurrence.id
+        this.noteLoading = true
+        this.$store.dispatch('deleteDisputeNote', noteId).then(() => {
+          window.analytics.track('Nota removida')
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Nota removida com sucesso.',
+            type: 'success'
           })
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.noteLoading = false
         })
+      })
     }
   }
 }

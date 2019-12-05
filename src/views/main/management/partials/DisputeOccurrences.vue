@@ -571,5 +571,9 @@ export default {
       padding-bottom: 1px;
     }
   }
+  &__textarea .el-textarea__inner {
+    height: 40vh;
+    resize: none;
+  }
 }
 </style>

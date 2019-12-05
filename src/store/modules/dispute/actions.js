@@ -232,6 +232,18 @@ const disputeActions = {
         })
     })
   },
+  editDisputeNote ({ commit }, noteId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.put('api/disputes/' + noteId)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   sendDisputeAction ({ commit }, params) {
     return new Promise((resolve, reject) => {
       let request
