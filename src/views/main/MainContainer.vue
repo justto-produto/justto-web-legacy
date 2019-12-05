@@ -85,13 +85,10 @@ export default {
   },
   beforeCreate () {
     this.$store.commit('clearDisputeQuery')
-    this.$store.dispatch('getWhatsappStatus')
-    setInterval(() => {
-      this.$store.dispatch('getWhatsappStatus')
-    }, 60 * 1000)
-  },
-  created () {
-    // onstorage(this)
+    // this.$store.dispatch('getWhatsappStatus')
+    // setInterval(() => {
+    //   this.$store.dispatch('getWhatsappStatus')
+    // }, 60 * 1000)
   },
   beforeMount () {
     this.subscribe()
@@ -120,12 +117,6 @@ export default {
         this.subscriptions.forEach(s => this.$socket.emit('subscribe', s))
       }
     }
-  }
-}
-
-window.onstorage = function (e) {
-  if (e.key === 'jusworkspace') {
-    window.location.reload(false)
   }
 }
 

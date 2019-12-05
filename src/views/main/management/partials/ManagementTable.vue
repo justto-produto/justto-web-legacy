@@ -1,6 +1,9 @@
 <template>
   <div style="height: 100%;">
-    <jus-protocol-dialog :protocol-dialog-visible.sync="protocolDialogVisible" :dispute-id="selectedDisputeId" />
+    <jus-protocol-dialog
+      :protocol-dialog-visible.sync="protocolDialogVisible"
+      :dispute-id="selectedDisputeId"
+      :dispute-roles="selectedDisputeRoles"/>
     <el-table
       ref="disputeTable"
       :data="disputes"
@@ -149,16 +152,17 @@
         </template>
       </el-table-column>
       <el-table-column
-        :width="tab2 ? '156px' : '76px'"
+        :width="tab2 && isHenrique ? '152px' : '76px'"
         class-name="management-table__row-actions"
         align="right">
         <template slot-scope="scope">
           <el-button
-            v-if="tab2"
+            v-if="tab2 && isHenrique"
+            :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)"
             plain
             size="mini"
-            class="management-table__protocol_button management-table__protocol_button--step-1"
-            @click="showProtocolModal(scope.row.id)">
+            class="management-table__protocol_button"
+            @click="showProtocolModal(scope.row)">
             Minuta
             <div><span/><span/><span/></div>
           </el-button>
@@ -188,7 +192,7 @@
 </template>
 
 <script>
-import { getLastInteraction, getInteractionIcon } from '@/utils/jusUtils'
+import { getLastInteraction, getInteractionIcon, getRoles } from '@/utils/jusUtils'
 
 export default {
   name: 'ManagementTable',
@@ -212,10 +216,17 @@ export default {
   data () {
     return {
       protocolDialogVisible: false,
-      selectedDisputeId: 0
+      selectedDisputeId: 0,
+      selectedDisputeRoles: []
     }
   },
   computed: {
+    isHenrique () {
+      if (this.$store.getters.loggedPersonId === 86376) {
+        return true
+      }
+      return false
+    },
     selectedIdsComp: {
       get () {
         return this.selectedIds
@@ -294,9 +305,19 @@ export default {
     disputeNextToExpire (date) {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
     },
-    showProtocolModal (disputeId) {
-      this.selectedDisputeId = disputeId
+    showProtocolModal (dispute) {
+      this.selectedDisputeId = dispute.id
+      this.selectedDisputeRoles = getRoles(dispute.disputeRoles, 'CLAIMANT')
       this.protocolDialogVisible = true
+    },
+    getDocumentStep (hasDocument, signStatus) {
+      if (hasDocument) {
+        if (signStatus) {
+          if (signStatus === 'SIGNING') {
+            return 2
+          } return 3
+        } return 1
+      } return 0
     }
   }
 }

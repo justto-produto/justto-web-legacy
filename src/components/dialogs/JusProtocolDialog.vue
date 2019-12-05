@@ -3,7 +3,7 @@
     :visible.sync="visible"
     :title="title"
     :width="width"
-    :class="{ 'jus-protocol-dialog--full': step === 4 }"
+    :class="{ 'jus-protocol-dialog--full': step === 1 }"
     class="jus-protocol-dialog">
     <div v-loading="loading">
       <div v-if="step === 0" class="jus-protocol-dialog__model-choice">
@@ -13,41 +13,48 @@
         </el-button>
       </div>
       <div v-if="step === 1">
-        <img src="@/assets/doc.png" style="width: 100%;">
+        <iframe :src="document.url" />
       </div>
       <div v-if="step === 2" class="jus-protocol-dialog__send-to">
         <p>Escolha um endereço de email para cada parte.</p>
-        <div v-for="(role, index) in roles" :key="index">
+        <div v-for="(role, index) in disputeRoles" v-if="role.emails.length" :key="index">
           <span class="jus-protocol-dialog__title">{{ role.name }}</span>
           <div v-for="(email, index) in role.emails" :key="index">
-            <input :name="role.name" :value="email" type="radio">{{ email }}
+            <!-- <el-radio v-model="radio" label="1"> -->
+            <input
+              v-model="emails[role.name]"
+              :name="role.name"
+              :value="email.address"
+              type="radio">
+            {{ email.address }}
           </div>
         </div>
+        <br>
       </div>
       <div v-if="step === 3">
-        <div v-for="(role, index) in roles" :key="index" class="jus-protocol-dialog__status">
-          <jus-avatar-user :name="role.name" size="sm" shape="circle" />
+        <div v-for="(signer, index) in signers" :key="index" class="jus-protocol-dialog__status">
+          <jus-avatar-user :name="signer.name" size="sm" shape="circle" />
           <div class="jus-protocol-dialog__status-role">
-            {{ role.name }}<br>
-            {{ role.emails[0] }}
+            {{ signer.name }}<br>
+            {{ signer.email }}
           </div>
           <div class="jus-protocol-dialog__status-icon">
-            <span v-if="index === 0">Assinado <jus-icon icon="success"/></span>
+            <span v-if="signer.signed">Assinado <jus-icon icon="success"/></span>
             <span v-else>Aguardando assinatura</span>
           </div>
         </div>
       </div>
       <div v-if="step === 4">
-        <jus-web-viewer url="https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf"/>
+        <jus-web-viewer url="https://justto.app/api/documents/download-signed/13619"/>
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button v-if="step === 3" icon="el-icon-delete" plain type="danger" @click="visible = false">Excluir</el-button>
-      <el-button v-if="step === 4" plain @click="step = 3">Voltar</el-button>
-      <el-button v-else plain @click="visible = false">Cancelar</el-button>
-      <el-button v-if="step === 1" type="primary" @click="changewidth">Escolher destinatários</el-button>
-      <el-button v-if="step === 2" type="primary" @click="changewidth">Enviar</el-button>
-      <el-button v-if="step === 3" icon="el-icon-download" type="primary" @click="step = 4">Baixar</el-button>
+      <el-button v-if="step !== 0" icon="el-icon-delete" plain type="danger" @click="deleteDocument">Excluir Minuna</el-button>
+      <el-button v-if="step !== 4" plain @click="visible = false">Cancelar</el-button>
+      <el-button v-if="[2, 4].includes(step)" plain @click="backToDocument">Voltar</el-button>
+      <el-button v-if="step === 1" type="primary" @click="step = 2">Escolher destinatários</el-button>
+      <el-button v-if="step === 2" type="primary" @click="chooseRecipients">Enviar para Assinatura</el-button>
+      <el-button v-loading="loadingDownload" v-if="step === 3" icon="el-icon-download" type="primary" @click="downloadDocument">Baixar</el-button>
       <el-button v-if="step === 3" icon="el-icon-view" type="primary" @click="step = 4">Visualizar</el-button>
     </span>
   </el-dialog>
@@ -67,14 +74,21 @@ export default {
     disputeId: {
       type: Number,
       default: 0
+    },
+    disputeRoles: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
     return {
       step: 0,
       loading: false,
+      loadingDownload: false,
       models: [],
-      document: {}
+      emails: {},
+      document: {},
+      signers: {}
     }
   },
   computed: {
@@ -91,21 +105,15 @@ export default {
         case 0: return 'Escolha um modelo para iniciar'
         case 1: return 'Visualização da Minuta'
         case 2: return 'Enviar Minuta'
-        case 3: return 'Minuta #25714089'
+        case 3: return this.document.name
         default: return ''
       }
     },
-    roles () {
-      return [
-        { name: 'Henrique Liberato', emails: ['dkeeler@mac.com', 'grady@me.com', 'storerm@comcast.net'] },
-        { name: 'Vilma Santos', emails: ['fallorn@hotmail.com', 'mmccool@msn.com', 'petersko@yahoo.ca'] }
-      ]
-    },
     width () {
-      if (this.step === 4) {
-        return '80%'
+      if ([1, 4].includes(this.step)) {
+        return '85%'
       }
-      return '50%'
+      return '60%'
     }
   },
   watch: {
@@ -113,6 +121,7 @@ export default {
       if (value) {
         this.loading = true
         this.step = 0
+        this.emails = {}
         this.getDocument()
       }
     }
@@ -122,6 +131,12 @@ export default {
       this.$store.dispatch('getDocumentByDisputeId', this.disputeId).then(document => {
         if (document) {
           this.document = document
+          this.signers = document.signedDocument.signers
+          if (document.signedDocument === null) {
+            this.step = 1
+          } else {
+            this.step = 3
+          }
           this.loading = false
         } else {
           this.getDocumentModels()
@@ -143,7 +158,88 @@ export default {
       })
     },
     selectModel (modelId) {
-      console.log(modelId)
+      this.loading = true
+      this.$store.dispatch('createDocumentByModel', {
+        disputeId: this.disputeId,
+        modelId
+      }).then(doc => {
+        this.document = doc
+        this.step = 1
+      }).catch(() => {
+        this.visible = false
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+    chooseRecipients () {
+      if (!Object.keys(this.emails).length) {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Selecione ao menos um email.',
+          type: 'warning'
+        })
+        return false
+      }
+      this.loading = true
+      let emails = []
+      for (let [key, value] of Object.entries(this.emails)) {
+        emails.push({
+          name: key,
+          email: value
+        })
+      }
+      this.$store.dispatch('setDocumentSigners', {
+        disputeId: this.disputeId, emails
+      }).then(doc => {
+        this.document = doc
+        this.step = 3
+        this.loading = false
+      }).catch(() => {
+        this.visible = false
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+    backToDocument () {
+      if (this.step === 4) {
+        this.step = 3
+      } else {
+        this.step = 1
+        this.emails = {}
+      }
+    },
+    downloadDocument () {
+      this.loadingDownload = true
+      this.$store.dispatch('downloadDocument', {
+        disputeId: this.disputeId,
+        name: this.document.name
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.loadingDownload = false
+      })
+    },
+    deleteDocument () {
+      this.$confirm('Tem certeza que deseja excluir?', {
+        confirmButtonText: 'Excluir',
+        cancelButtonText: 'Cancelar',
+        title: 'Atenção!',
+        type: 'danger',
+        cancelButtonClass: 'is-plain'
+      }).then(() => {
+        this.loading = true
+        this.$store.dispatch('deleteDocument', this.disputeId).then(() => {
+          this.step = 0
+          this.getDocumentModels()
+        }).catch(() => {
+          this.visible = false
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.loading = false
+        })
+      })
     }
   }
 }
@@ -154,6 +250,7 @@ export default {
   &--full {
     .el-dialog {
       margin: 20px auto !important;
+      height: calc(100% - 40px);
     }
   }
   &__model-choice {
@@ -193,7 +290,7 @@ export default {
   &__status {
     display: flex;
     align-items: center;
-    padding: 8px;
+    padding: 40px 8px;
     &:hover {
       background-color: #f6f6f6;
     }
@@ -211,10 +308,17 @@ export default {
     margin-left: 10px;
   }
   .el-dialog__body {
-    min-height: 30vh;
+    height: calc(100% - 144px);
+  }
+  .el-dialog__body > div > div, .el-dialog__body > div {
+    height: 100%;
   }
   .el-button--danger {
     float: left;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
   }
 }
 </style>
