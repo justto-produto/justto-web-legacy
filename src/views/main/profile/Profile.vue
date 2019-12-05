@@ -49,9 +49,6 @@
               </el-form>
               <h5>
                 Membros
-                <a v-if="isAdminProfile" href="#" @click.prevent="dialogInvite = true">
-                  <jus-icon icon="add" />
-                </a> -->
               </h5>
               <div v-for="member in teamMembers" :key="member.id">
                 <div class="profile-view__members-list">
@@ -207,7 +204,7 @@ export default {
   computed: {
     isAdminProfile () {
       let email = (' ' + this.$store.getters.accountEmail).slice(1)
-      let domain = email.replace(/.*@/, "")
+      let domain = email.replace(/.*@/, '')
       if (domain === 'justto.com.br') return true
       return this.$store.getters.isAdminProfile
     }
