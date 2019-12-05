@@ -128,7 +128,8 @@ export default {
         id: this.communication.template.id,
         contentType: 'TEXT',
         title: this.communication.template.title,
-        body: this.communication.template.body
+        body: this.communication.template.body,
+        protocolId: this.communication.template.protocolId
       }).then(() => {
         this.editDialog = false
         this.getEngagements()
