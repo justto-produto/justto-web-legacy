@@ -19,7 +19,6 @@ build:
     - script:
       name: Prepare release branch
       code: |
-        git fetch --all
         git checkout release
         git merge develop --commit -m "Merge com a develop para release"
     - script:
