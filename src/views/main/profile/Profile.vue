@@ -239,7 +239,9 @@ export default {
     },
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
-        this.teamMembers = response.filter(r => !r.archived)
+        this.teamMembers = response
+          .sort((a, b) => a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0)
+          .filter(r => !r.archived)
       })
     },
     changeName () {
