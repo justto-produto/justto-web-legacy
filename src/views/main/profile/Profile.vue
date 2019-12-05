@@ -239,7 +239,13 @@ export default {
     },
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
-        this.teamMembers = response.filter(r => !r.archived)
+        for (let person of response) {
+          let firstLetter = person.person.name.charAt(0)
+          person.person.name = person.person.name.replace(firstLetter, firstLetter.toUpperCase())
+        }
+        this.teamMembers = response
+          .sort((a, b) => a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0)
+          .filter(r => !r.archived)
       })
     },
     changeName () {
