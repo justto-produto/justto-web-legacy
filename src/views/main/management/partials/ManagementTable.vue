@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%;">
-    <jus-protocol-dialog :protocol-dialog-visible.sync="protocolDialogVisible" />
+    <jus-protocol-dialog :protocol-dialog-visible.sync="protocolDialogVisible" :dispute-id="selectedDisputeId" />
     <el-table
       ref="disputeTable"
       :data="disputes"
@@ -162,8 +162,10 @@
             v-if="tab2"
             plain
             size="mini"
-            @click="protocolDialogVisible = true">
+            class="management-table__protocol_button management-table__protocol_button--step-1"
+            @click="showProtocolModal(scope.row.id)">
             Minuta
+            <div><span/><span/><span/></div>
           </el-button>
           <el-button
             type="text"
@@ -215,7 +217,8 @@ export default {
   },
   data () {
     return {
-      protocolDialogVisible: false
+      protocolDialogVisible: false,
+      selectedDisputeId: 0
     }
   },
   computed: {
@@ -296,6 +299,10 @@ export default {
     },
     disputeNextToExpire (date) {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
+    },
+    showProtocolModal (disputeId) {
+      this.selectedDisputeId = disputeId
+      this.protocolDialogVisible = true
     }
   }
 }
@@ -339,6 +346,54 @@ export default {
   &__empty-table {
     margin-top: 40px;
     width: 60px;
+  }
+  &__protocol_button {
+    position: relative;
+    div {
+      display: flex;
+      position: absolute;
+      bottom: -1px;
+      left: -1px;
+      right: -1px;
+      span {
+        height: 3px;
+        border: 1px solid #dcdfe6;
+        width: 100%;
+        &:first-child {
+          border-radius: 0 0 0 1px;
+        }
+        &:last-child {
+          border-radius: 0 0 1px 0;
+        }
+      }
+    }
+    &:hover div span {
+      border: 1px solid #9461f7;
+    }
+  }
+  &__protocol_button--step-1 {
+    div {
+      span:first-child {
+        background-color: #9461f7;
+        border-color: #9461f7;
+      }
+    }
+  }
+  &__protocol_button--step-2 {
+    div {
+      span:first-child, span:nth-child(2) {
+        background-color: #9461f7;
+        border-color: #9461f7;
+      }
+    }
+  }
+  &__protocol_button--step-3 {
+    div {
+      span {
+        background-color: #9461f7;
+        border-color: #9461f7;
+      }
+    }
   }
   .el-table__empty-block {
     width: auto !important;
