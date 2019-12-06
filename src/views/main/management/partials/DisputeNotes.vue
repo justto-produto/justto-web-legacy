@@ -30,16 +30,14 @@
           </div>
         </div>
       </div>
-
-      <el-dialog :visible.sync="editDialog" width="60%" title="Editar Nota" append-to-body>
-        <el-input v-model="editingNoteContent" :disabled="editDialogLoading" class="dispute-view-occurrences__textarea" type="textarea" />
-        <span slot="footer" class="dialog-footer">
-          <el-button :disabled="editDialogLoading" plain @click="editDialog = false">Cancelar</el-button>
-          <el-button v-loading="editDialogLoading" type="primary" @click="editNote(editingNoteContent)">Editar nota</el-button>
-        </span>
-      </el-dialog>
-
     </li>
+    <el-dialog :visible.sync="editDialog" width="60%" title="Editar Nota" append-to-body>
+      <el-input v-model="editingNoteContent" :disabled="editDialogLoading" class="dispute-view-occurrences__textarea" type="textarea" />
+      <span slot="footer" class="dialog-footer">
+        <el-button :disabled="editDialogLoading" plain @click="editDialog = false">Cancelar</el-button>
+        <el-button v-loading="editDialogLoading" type="primary" @click="editNote(editingNoteContent)">Editar nota</el-button>
+      </span>
+    </el-dialog>
     <li v-if="!loading && !occurrences.length" class="dispute-view-occurrences__empty" data-testid="note-empty">
       <jus-icon icon="empty-screen-filter" />
       Não foram encontradas notas.
