@@ -89,7 +89,8 @@
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha",
     "CANCEL-MESSAGES": "cancelar mensagens agendadas",
-    "CHANGE_STRATEGY": "alterar estratégia"
+    "CHANGE_STRATEGY": "alterar estratégia",
+    "CHANGE_EXPIRATION": "alterar data limite"
   },
   "fields": {
     "claimantParty": "Parte contrária",
