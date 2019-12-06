@@ -13,7 +13,6 @@
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
         <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION')">{{ $t('action.CHANGE_EXPIRATION') }}</el-button>
-
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
     </div>
@@ -25,10 +24,12 @@
       width="460px"
       data-testid="unsettled-dialog">
       <div class="el-message-box__content">
-        <div class="el-message-box__status el-icon-warning"/>
-        <div class="el-message-box__message"><p>
-          Tem certeza que deseja realizar esta ação?
-        </p></div>
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
+        </div>
       </div>
       <el-select
         v-loading="$store.state.loading"
@@ -60,10 +61,12 @@
       width="460px"
       data-testid="strategy-dialog">
       <div class="el-message-box__content">
-        <div class="el-message-box__status el-icon-warning"/>
-        <div class="el-message-box__message"><p>
-          Tem certeza que deseja realizar esta ação?
-        </p></div>
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
+        </div>
       </div>
       <el-select
         v-model="newStrategyId"
@@ -96,9 +99,11 @@
       width="460px"
       data-testid="expiration-dialog">
       <div class="el-message-box__content">
-        <div class="el-message-box__status el-icon-warning" />
-        <div class="el-message-box__message">
-          <p>Tem certeza que deseja realizar esta ação?</p>
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
         </div>
       </div>
       <el-date-picker
@@ -184,7 +189,9 @@ export default {
       } else if (action === 'RESTART_ENGAGEMENT') {
         trackTitle = 'engajamentos reiniciados'
       } else if (action === 'CHANGE_STRATEGY') {
-        trackTitle = 'troca de estratégia'
+        trackTitle = 'troca de estratégias'
+      } else if (action === 'CHANGE_EXPIRATION') {
+        trackTitle = 'altera fim de negociações'
       } else {
         trackTitle = 'Ação em massa realizada'
       }
@@ -195,12 +202,16 @@ export default {
       if (action === 'CHANGE_STRATEGY') {
         params['strategyId'] = this.newStrategyId
       }
+      if (action === 'CHANGE_EXPIRATION') {
+        params['expirationDate'] = this.newExpirationDate
+      }
       if (this.unsettledType) {
         params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
+        this.changeExpirationDialogVisible = false
         window.analytics.track(selecteds + ' ' + trackTitle, {
           action: action,
           selecteds: selecteds
@@ -312,6 +323,9 @@ export default {
     }
     .el-select {
       margin: 10px 0;
+      width: 100%;
+    }
+    .el-date-editor.el-input {
       width: 100%;
     }
   }
