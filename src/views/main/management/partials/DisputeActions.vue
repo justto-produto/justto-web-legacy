@@ -91,10 +91,12 @@
       width="460px"
       data-testid="choose-unsettled-dialog">
       <div class="el-message-box__content">
-        <div class="el-message-box__status el-icon-warning"/>
-        <div class="el-message-box__message"><p>
-          Tem certeza que deseja realizar esta ação?
-        </p></div>
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
+        </div>
       </div>
       <el-select
         v-loading="$store.state.loading"
