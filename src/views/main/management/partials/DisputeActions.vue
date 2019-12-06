@@ -366,7 +366,7 @@ export default {
     },
     editNegotiator () {
       this.disputeNegotiators = this.dispute.disputeRoles.filter((negotiator) => {
-        return negotiator.roles.includes('NEGOTIATOR') === true
+        return negotiator.roles.includes('NEGOTIATOR') === true && negotiator.archived === false
       }).map(member => {
         return member.personId
       })
