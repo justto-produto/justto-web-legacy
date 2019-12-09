@@ -17,7 +17,7 @@ const dispute = {
     hasNew: false,
     query: {
       status: ['ENGAGEMENT'],
-      sort: 'expirationDate,asc',
+      sort: ['expirationDate,asc', 'favorite,desc'],
       campaigns: [],
       strategy: [],
       persons: [],

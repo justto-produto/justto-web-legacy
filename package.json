@@ -19,7 +19,9 @@
     "styleguide": "vue-styleguidist server --open",
     "styleguide:build": "vue-styleguidist build",
     "inspect": "vue-cli-service inspect",
-    "test:server": "npx vue-cli-service test:e2e --headless --browser chrome"
+    "test:server": "npx vue-cli-service test:e2e --headless --browser chrome",
+    "postinstall": "npm run download-webviewer",
+    "download-webviewer": "npx @pdftron/webviewer-downloader"
   },
   "dependencies": {
     "@vue/ui": "^0.5.6",

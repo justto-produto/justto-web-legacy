@@ -10,6 +10,7 @@ import disputeModule from './modules/dispute/index'
 import messageModule from './modules/message'
 import socketModule from './modules/socket/index'
 import whatsappModule from './modules/whatsapp'
+import documentModule from './modules/document'
 
 Vue.use(Vuex)
 
@@ -50,6 +51,7 @@ export default new Vuex.Store({
     disputeModule,
     messageModule,
     socketModule,
-    whatsappModule
+    whatsappModule,
+    documentModule
   }
 })
