@@ -12,7 +12,7 @@
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
-        <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION')">{{ $t('action.CHANGE_EXPIRATION') }}</el-button>
+        <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">{{ $t('action.CHANGE_EXPIRATION_DATE') }}</el-button>
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
     </div>
@@ -89,8 +89,6 @@
         </el-button>
       </span>
     </el-dialog>
-
-
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="changeExpirationDialogVisible"
@@ -119,14 +117,11 @@
           :disabled="!newExpirationDate"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('CHANGE_EXPIRATION')">
+          @click.prevent="doAction('CHANGE_EXPIRATION_DATE')">
           Continuar
         </el-button>
       </span>
     </el-dialog>
-
-
-
   </div>
 </template>
 
@@ -190,7 +185,7 @@ export default {
         trackTitle = 'engajamentos reiniciados'
       } else if (action === 'CHANGE_STRATEGY') {
         trackTitle = 'troca de estratégias'
-      } else if (action === 'CHANGE_EXPIRATION') {
+      } else if (action === 'CHANGE_EXPIRATION_DATE') {
         trackTitle = 'altera fim de negociações'
       } else {
         trackTitle = 'Ação em massa realizada'
@@ -202,8 +197,10 @@ export default {
       if (action === 'CHANGE_STRATEGY') {
         params['strategyId'] = this.newStrategyId
       }
-      if (action === 'CHANGE_EXPIRATION') {
-        params['expirationDate'] = this.newExpirationDate
+      if (action === 'CHANGE_EXPIRATION_DATE') {
+        params['expirationDate'] = {
+          dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        }
       }
       if (this.unsettledType) {
         params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
@@ -244,7 +241,7 @@ export default {
       } else if (action === 'CHANGE_STRATEGY') {
         this.changeStrategyDialogVisible = true
         this.newStrategyId = ''
-      } else if (action === 'CHANGE_EXPIRATION') {
+      } else if (action === 'CHANGE_EXPIRATION_DATE') {
         this.changeExpirationDialogVisible = true
         this.newExpirationDate = ''
       } else {
