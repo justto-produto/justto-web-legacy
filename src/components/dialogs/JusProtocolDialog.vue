@@ -101,12 +101,16 @@ export default {
       }
     },
     title () {
-      switch (this.step) {
-        case 0: return 'Escolha um modelo para iniciar'
-        case 1: return 'Visualização da Minuta'
-        case 2: return 'Enviar Minuta'
-        case 3: return this.document.name
-        default: return ''
+      if (this.loading) {
+        return 'Minuta'
+      } else {
+        switch (this.step) {
+          case 0: return 'Escolha um modelo para iniciar'
+          case 1: return 'Visualização da Minuta'
+          case 2: return 'Enviar Minuta'
+          case 3: return this.document.name
+          default: return ''
+        }
       }
     },
     width () {

@@ -152,12 +152,12 @@
         </template>
       </el-table-column>
       <el-table-column
-        :width="tab2 && isHenrique ? '152px' : '76px'"
+        :width="tab2 && isJusttoDev ? '152px' : '76px'"
         class-name="management-table__row-actions"
         align="right">
         <template slot-scope="scope">
           <el-button
-            v-if="tab2 && isHenrique"
+            v-if="tab2 && isJusttoDev"
             :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)"
             plain
             size="mini"
@@ -221,11 +221,8 @@ export default {
     }
   },
   computed: {
-    isHenrique () {
-      if (this.$store.getters.loggedPersonId === 86376) {
-        return true
-      }
-      return false
+    isJusttoDev () {
+      return [484, 293, 200, 234, 198, 294].includes(this.$store.getters.accountId)
     },
     selectedIdsComp: {
       get () {

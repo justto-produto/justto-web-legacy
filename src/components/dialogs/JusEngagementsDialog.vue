@@ -102,7 +102,7 @@ export default {
       // 294 Lucas
       // 234 Mateus
       // 181 Michelle
-      return [185, 338, 484, 293, 200, 234, 198, 294].includes(this.$store.getters.accountId)
+      return [185, 338, 484, 293, 200, 234, 198, 294, 181].includes(this.$store.getters.accountId)
     }
   },
   watch: {
