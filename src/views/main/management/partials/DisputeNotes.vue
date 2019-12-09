@@ -32,10 +32,10 @@
       </div>
     </li>
     <el-dialog :visible.sync="editDialog" width="60%" title="Editar Nota" append-to-body>
-      <el-input v-model="editingNoteContent" :disabled="editDialogLoading" class="dispute-view-occurrences__textarea" type="textarea" />
+      <el-input v-model="newNoteContent" :disabled="editDialogLoading" class="dispute-view-occurrences__textarea" type="textarea" />
       <span slot="footer" class="dialog-footer">
         <el-button :disabled="editDialogLoading" plain @click="editDialog = false">Cancelar</el-button>
-        <el-button v-loading="editDialogLoading" type="primary" @click="editNote(editingNoteContent)">Editar nota</el-button>
+        <el-button v-loading="editDialogLoading" type="primary" @click="editNote(newNoteContent)">Editar nota</el-button>
       </span>
     </el-dialog>
     <li v-if="!loading && !occurrences.length" class="dispute-view-occurrences__empty" data-testid="note-empty">
@@ -60,7 +60,7 @@ export default {
       noteLoading: false,
       editDialog: false,
       editDialogLoading: false,
-      editingNoteContent: {}
+      newNoteContent: {}
     }
   },
   computed: {
@@ -77,28 +77,44 @@ export default {
     }, 200)
   },
   methods: {
-    splitText (description) {
-      return description.replace(' adicionou uma nota.', '~|~').split('~|~')
+    splitModified (description) {
+      return description.split(' modificou uma nota. ')
+    },
+    splitNew (description) {
+      return description.split(' adicionou uma nota. ')
     },
     buildContent (occurrence) {
-      return this.splitText(occurrence.description)[1]
+      if (occurrence.updateAt) {
+        return this.splitModified(occurrence.description)[1]
+      }
+      return this.splitNew(occurrence.description)[1]
     },
     buildSender (occurrence) {
-      return 'Adicionado por ' + this.splitText(occurrence.description)[0]
+      if (occurrence.updateAt) {
+        return 'Modificado por ' + this.splitModified(occurrence.description)[0]
+      }
+      return 'Adicionado por ' + this.splitNew(occurrence.description)[0]
     },
     buildHour (occurrence) {
-      if (occurrence.executionDateTime) {
+      if (occurrence.updateAt) {
+        return this.$moment(occurrence.updateAt.dateTime).format('DD/MM/YY [às] HH:mm')
+      }
+      else if (occurrence.executionDateTime) {
         return this.$moment(occurrence.executionDateTime.dateTime).format('DD/MM/YY [às] HH:mm')
       }
       return this.$moment(occurrence.createAt.dateTime).format('DD/MM/YY [às] HH:mm')
     },
     openEditDialog (occurrence) {
-      this.editingNoteContent = this.buildContent(occurrence)
+      this.activeOccurrence = occurrence
+      this.newNoteContent = this.buildContent(occurrence)
       this.editDialog = true
     },
-    editNote (noteContent) {
+    editNote (newNoteContent) {
       this.editDialogLoading = true
-      this.$store.dispatch('editDisputeNote', noteContent)
+      this.$store.dispatch('editDisputeNote', {
+        newNoteContent: newNoteContent,
+        activeOccurrence: this.activeOccurrence
+      })
         .then(() => {
           this.editDialog = false
           this.$jusNotification({

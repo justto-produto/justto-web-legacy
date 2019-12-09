@@ -223,7 +223,7 @@ const disputeActions = {
   deleteDisputeNote ({ commit }, noteId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.delete('api/disputes/' + noteId)
+      axios.delete('api/disputes/note/' + noteId)
         .then(response => {
           resolve(response.data)
         })
@@ -232,10 +232,13 @@ const disputeActions = {
         })
     })
   },
-  editDisputeNote ({ commit }, noteId) {
+  editDisputeNote ({ commit }, note) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + noteId)
+      axios.put('api/disputes/note/' + note.activeOccurrence.id, {
+        note: note.newNoteContent,
+        disputeId: note.activeOccurrence.disputeId
+      })
         .then(response => {
           resolve(response.data)
         })
