@@ -4,6 +4,7 @@
     :title="title"
     :width="width"
     :class="{ 'jus-protocol-dialog--full': step === 1 }"
+    :fullscreen="step === 4"
     class="jus-protocol-dialog">
     <div v-loading="loading">
       <div v-if="step === 0" class="jus-protocol-dialog__model-choice">
@@ -55,13 +56,17 @@
         </div>
       </div>
       <div v-if="step === 4">
-        <jus-web-viewer url="https://justto.app/api/documents/download-signed/13619"/>
+        <object :data="pdfUrl" type="application/pdf">
+          <iframe :src="pdfUrl" width="100%" height="100%" />
+        </object>
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button v-if="step !== 0" icon="el-icon-delete" plain type="danger" @click="deleteDocument">Excluir Minuna</el-button>
+      <el-button v-if="![0, 4].includes(step)" icon="el-icon-delete" plain type="danger" @click="deleteDocument">Excluir Minuna</el-button>
       <el-button v-if="step !== 4" plain @click="visible = false">Cancelar</el-button>
-      <el-button v-if="[2, 4].includes(step)" plain @click="backToDocument">Voltar</el-button>
+      <el-button v-if="[2, 4].includes(step)" :class="{left: step === 4}" plain @click="backToDocument">
+        Voltar
+      </el-button>
       <el-button v-if="step === 1" type="primary" @click="step = 2">Definir assinantes da minuta</el-button>
       <el-button v-if="step === 2" :disabled="!hasEmails" type="primary" @click="chooseRecipients">Enviar para Assinatura</el-button>
       <el-button v-loading="loadingDownload" v-if="step === 3" icon="el-icon-download" type="primary" @click="downloadDocument">Baixar</el-button>
@@ -73,9 +78,6 @@
 <script>
 export default {
   name: 'JusProtocolDialog',
-  components: {
-    JusWebViewer: () => import('@/components/others/JusWebViewer')
-  },
   props: {
     protocolDialogVisible: {
       type: Boolean,
@@ -118,7 +120,8 @@ export default {
           case 0: return 'Escolha um modelo para iniciar'
           case 1: return 'Visualização da Minuta'
           case 2: return 'Enviar Minuta'
-          case 3: return this.document.name
+          case 3:
+          case 4: return this.document.name
           default: return ''
         }
       }
@@ -137,6 +140,11 @@ export default {
         })
       }
       return hasEmails
+    },
+    pdfUrl () {
+      if (this.disputeId) {
+        return 'https://justto.app/api/documents/download-signed/' + this.disputeId
+      }
     }
   },
   watch: {
@@ -351,6 +359,10 @@ export default {
   iframe {
     width: 100%;
     height: 100%;
+  }
+  object {
+    width: 100%;
+    height: 99%;
   }
 }
 </style>

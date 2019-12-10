@@ -6,7 +6,8 @@
       :dispute-roles.sync="selectedDisputeRoles" />
     <el-table
       ref="disputeTable"
-      :data="disputes"
+      :key="disputeKey"
+      :data.sync="disputes"
       :row-class-name="tableRowClassName"
       size="mini"
       empty-text=" "
@@ -158,13 +159,14 @@
         <template slot-scope="scope">
           <el-button
             v-if="tab2 && isJusttoDev"
-            :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)"
             plain
             size="mini"
             class="management-table__protocol_button"
             @click="showProtocolModal(scope.row)">
             Minuta
-            <div><span/><span/><span/></div>
+            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
+              <span/><span/><span/>
+            </div>
           </el-button>
           <el-button
             type="text"
@@ -218,7 +220,8 @@ export default {
     return {
       protocolDialogVisible: false,
       selectedDisputeId: 0,
-      selectedDisputeRoles: []
+      selectedDisputeRoles: [],
+      disputeKey: 0
     }
   },
   computed: {
@@ -249,6 +252,16 @@ export default {
       return this.activeTab === '3'
     }
   },
+  // watch: {
+  //   disputes: {
+  //     handler () {
+  //       console.log('doLayout')
+  //       this.doLayout()
+  //       this.disputeKey += 1
+  //     },
+  //     deep: true
+  //   }
+  // },
   methods: {
     getLastInteraction: (i) => getLastInteraction(i),
     getInteractionIcon: (i) => getInteractionIcon(i),
@@ -385,24 +398,20 @@ export default {
       border: 1px solid #9461f7;
     }
   }
-  &__protocol_button--step-1 {
-    div {
+  &__protocol_button--step {
+    &-1 {
       span:first-child {
         background-color: #9461f7;
         border-color: #9461f7;
       }
     }
-  }
-  &__protocol_button--step-2 {
-    div {
+    &-2 {
       span:first-child, span:nth-child(2) {
         background-color: #9461f7;
         border-color: #9461f7;
       }
     }
-  }
-  &__protocol_button--step-3 {
-    div {
+    &-3 {
       span {
         background-color: #9461f7;
         border-color: #9461f7;
