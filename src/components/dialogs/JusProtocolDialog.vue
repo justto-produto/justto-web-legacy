@@ -153,7 +153,7 @@ export default {
       })
     },
     getDocumentModels () {
-      this.loading = false
+      this.loading = true
       this.$store.dispatch('getDocumentModels').then(models => {
         this.models = models
         if (models && models.length === 1) {
