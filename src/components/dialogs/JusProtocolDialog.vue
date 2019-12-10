@@ -32,8 +32,8 @@
         </span>
         <span v-else>
           <h2>
-            Sem emails cadastrados! <br>
-            Vá até adispute e adicione e-mails
+            Sem e-mails cadastrados! <br>
+            Vá até a disputa e adicione e-mails
             <a href="#" @click.prevent="$router.push('management/dispute/' + disputeId)">
               clicando aqui.
             </a>
