@@ -2,8 +2,8 @@
   <div style="height: 100%;">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
-      :dispute-id="selectedDisputeId"
-      :dispute-roles="selectedDisputeRoles"/>
+      :dispute-id.sync="selectedDisputeId"
+      :dispute-roles.sync="selectedDisputeRoles" />
     <el-table
       ref="disputeTable"
       :data="disputes"
@@ -305,7 +305,8 @@ export default {
     },
     showProtocolModal (dispute) {
       this.selectedDisputeId = dispute.id
-      this.selectedDisputeRoles = getRoles(dispute.disputeRoles, 'CLAIMANT')
+      const roles = getRoles(dispute.disputeRoles, 'CLAIMANT')
+      this.selectedDisputeRoles = roles
       this.protocolDialogVisible = true
     },
     getDocumentStep (hasDocument, signStatus) {
