@@ -51,7 +51,7 @@
       <el-button v-if="step !== 0" icon="el-icon-delete" plain type="danger" @click="deleteDocument">Excluir Minuna</el-button>
       <el-button v-if="step !== 4" plain @click="visible = false">Cancelar</el-button>
       <el-button v-if="[2, 4].includes(step)" plain @click="backToDocument">Voltar</el-button>
-      <el-button v-if="step === 1" type="primary" @click="step = 2">Escolher destinatários</el-button>
+      <el-button v-if="step === 1" type="primary" @click="step = 2">Definir assinantes da minuta</el-button>
       <el-button v-if="step === 2" type="primary" @click="chooseRecipients">Enviar para Assinatura</el-button>
       <el-button v-loading="loadingDownload" v-if="step === 3" icon="el-icon-download" type="primary" @click="downloadDocument">Baixar</el-button>
       <el-button v-if="step === 3" icon="el-icon-view" type="primary" @click="step = 4">Visualizar</el-button>
