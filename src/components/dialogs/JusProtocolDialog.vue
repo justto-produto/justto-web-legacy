@@ -17,17 +17,28 @@
       </div>
       <div v-if="step === 2" class="jus-protocol-dialog__send-to">
         <p>Escolha um endereço de email para cada parte.</p>
-        <div v-for="(role, index) in disputeRoles" v-if="role.emails.length" :key="index">
-          <span class="jus-protocol-dialog__title">{{ role.name }}</span>
-          <div v-for="(email, index) in role.emails" :key="index">
-            <input
-              v-model="emails[role.name]"
-              :name="role.name"
-              :value="email.address"
-              type="radio" />
-            {{ email.address }}
+        <span v-if="hasEmails">
+          <div v-for="(role, index) in disputeRoles" :key="index">
+            <span class="jus-protocol-dialog__title">{{ role.name }}</span>
+            <div v-for="(email, index) in role.emails" :key="index">
+              <input
+                v-model="emails[role.name]"
+                :name="role.name"
+                :value="email.address"
+                type="radio">
+              {{ email.address }}
+            </div>
           </div>
-        </div>
+        </span>
+        <span v-else>
+          <h2>
+            Sem e-mails cadastrados! <br>
+            Vá até a disputa e adicione e-mails
+            <a href="#" @click.prevent="$router.push('management/dispute/' + disputeId)">
+              clicando aqui.
+            </a>
+          </h2>
+        </span>
         <br>
       </div>
       <div v-if="step === 3">
@@ -52,7 +63,7 @@
       <el-button v-if="step !== 4" plain @click="visible = false">Cancelar</el-button>
       <el-button v-if="[2, 4].includes(step)" plain @click="backToDocument">Voltar</el-button>
       <el-button v-if="step === 1" type="primary" @click="step = 2">Definir assinantes da minuta</el-button>
-      <el-button v-if="step === 2" type="primary" @click="chooseRecipients">Enviar para Assinatura</el-button>
+      <el-button v-if="step === 2" :disabled="!hasEmails" type="primary" @click="chooseRecipients">Enviar para Assinatura</el-button>
       <el-button v-loading="loadingDownload" v-if="step === 3" icon="el-icon-download" type="primary" @click="downloadDocument">Baixar</el-button>
       <el-button v-if="step === 3" icon="el-icon-view" type="primary" @click="step = 4">Visualizar</el-button>
     </span>
@@ -117,6 +128,15 @@ export default {
         return '85%'
       }
       return '60%'
+    },
+    hasEmails () {
+      let hasEmails = false
+      if (this.disputeRoles) {
+        this.disputeRoles.map(e => {
+          if (e.emails.length) hasEmails = true
+        })
+      }
+      return hasEmails
     }
   },
   watch: {
