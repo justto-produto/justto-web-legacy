@@ -25,7 +25,7 @@
               v-model="emails[role.name]"
               :name="role.name"
               :value="email.address"
-              type="radio">
+              type="radio" />
             {{ email.address }}
           </div>
         </div>
@@ -39,7 +39,7 @@
             {{ signer.email }}
           </div>
           <div class="jus-protocol-dialog__status-icon">
-            <span v-if="signer.signed">Assinado <jus-icon icon="success"/></span>
+            <span v-if="signer.signed">Assinado <jus-icon icon="success" /></span>
             <span v-else>Aguardando assinatura</span>
           </div>
         </div>
@@ -153,6 +153,7 @@ export default {
       })
     },
     getDocumentModels () {
+      this.loading = false
       this.$store.dispatch('getDocumentModels').then(models => {
         this.models = models
         if (models && models.length === 1) {
