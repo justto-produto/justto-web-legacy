@@ -252,16 +252,15 @@ export default {
       return this.activeTab === '3'
     }
   },
-  // watch: {
-  //   disputes: {
-  //     handler () {
-  //       console.log('doLayout')
-  //       this.doLayout()
-  //       this.disputeKey += 1
-  //     },
-  //     deep: true
-  //   }
-  // },
+  watch: {
+    disputes: {
+      handler () {
+        this.doLayout()
+        this.disputeKey += 1
+      },
+      deep: true
+    }
+  },
   methods: {
     getLastInteraction: (i) => getLastInteraction(i),
     getInteractionIcon: (i) => getInteractionIcon(i),
