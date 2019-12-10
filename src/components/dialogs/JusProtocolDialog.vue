@@ -20,7 +20,6 @@
         <div v-for="(role, index) in disputeRoles" v-if="role.emails.length" :key="index">
           <span class="jus-protocol-dialog__title">{{ role.name }}</span>
           <div v-for="(email, index) in role.emails" :key="index">
-            <!-- <el-radio v-model="radio" label="1"> -->
             <input
               v-model="emails[role.name]"
               :name="role.name"
@@ -52,7 +51,7 @@
       <el-button v-if="step !== 0" icon="el-icon-delete" plain type="danger" @click="deleteDocument">Excluir Minuna</el-button>
       <el-button v-if="step !== 4" plain @click="visible = false">Cancelar</el-button>
       <el-button v-if="[2, 4].includes(step)" plain @click="backToDocument">Voltar</el-button>
-      <el-button v-if="step === 1" type="primary" @click="step = 2">Definir assinantes da minuta</el-button>
+      <el-button v-if="step === 1" type="primary" @click="step = 2">Escolher destinatários</el-button>
       <el-button v-if="step === 2" type="primary" @click="chooseRecipients">Enviar para Assinatura</el-button>
       <el-button v-loading="loadingDownload" v-if="step === 3" icon="el-icon-download" type="primary" @click="downloadDocument">Baixar</el-button>
       <el-button v-if="step === 3" icon="el-icon-view" type="primary" @click="step = 4">Visualizar</el-button>
@@ -141,15 +140,16 @@ export default {
             this.signers = document.signedDocument.signers
             this.step = 3
           }
-          this.loading = false
         } else {
           this.getDocumentModels()
         }
       }).catch((e) => {
-        console.log(e)
+        console.error(e)
         this.visible = false
         this.loading = false
         this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.loading = false
       })
     },
     getDocumentModels () {
@@ -157,12 +157,12 @@ export default {
         this.models = models
         if (models && models.length === 1) {
           this.selectModel(models[0].id)
+        } else {
+          this.loading = false
         }
       }).catch(() => {
         this.visible = false
         this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.loading = false
       })
     },
     selectModel (modelId) {
@@ -239,13 +239,15 @@ export default {
       }).then(() => {
         this.loading = true
         this.$store.dispatch('deleteDocument', this.disputeId).then(() => {
-          this.step = 0
-          this.getDocumentModels()
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Minuta excluída com sucesso',
+            type: 'success'
+          })
         }).catch(() => {
-          this.visible = false
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
-          this.loading = false
+          this.visible = false
         })
       })
     }
