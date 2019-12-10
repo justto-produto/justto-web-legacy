@@ -154,6 +154,9 @@ export default {
     getDocumentModels () {
       this.$store.dispatch('getDocumentModels').then(models => {
         this.models = models
+        if (models.length === 1) {
+            this.selectModel(models[0].id)
+        }
       }).catch(() => {
         this.visible = false
         this.$jusNotification({ type: 'error' })
