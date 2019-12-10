@@ -43,7 +43,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.post('api/documents/signer/' + params.disputeId, params.emails).then(response => {
-        resolve(response)
+        resolve(response.data)
       }).catch(error => {
         reject(error)
       })

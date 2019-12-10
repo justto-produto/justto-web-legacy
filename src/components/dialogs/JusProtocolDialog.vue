@@ -98,7 +98,7 @@ export default {
       models: [],
       emails: {},
       document: {},
-      signers: {}
+      signers: ''
     }
   },
   computed: {
@@ -145,6 +145,7 @@ export default {
         this.loading = true
         this.step = 0
         this.emails = {}
+        this.signers = ''
         this.getDocument()
       }
     }
@@ -221,7 +222,7 @@ export default {
       this.$store.dispatch('setDocumentSigners', {
         disputeId: this.disputeId, emails
       }).then(doc => {
-        this.document = doc
+        this.signers = doc.signers
         this.step = 3
         this.loading = false
       }).catch(() => {
