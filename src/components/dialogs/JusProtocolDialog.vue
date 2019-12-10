@@ -135,17 +135,18 @@ export default {
       this.$store.dispatch('getDocumentByDisputeId', this.disputeId).then(document => {
         if (document) {
           this.document = document
-          this.signers = document.signedDocument.signers
           if (document.signedDocument === null) {
             this.step = 1
           } else {
+            this.signers = document.signedDocument.signers
             this.step = 3
           }
           this.loading = false
         } else {
           this.getDocumentModels()
         }
-      }).catch(() => {
+      }).catch((e) => {
+        console.log(e)
         this.visible = false
         this.loading = false
         this.$jusNotification({ type: 'error' })
