@@ -12,6 +12,7 @@
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
+        <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">{{ $t('action.CHANGE_EXPIRATION_DATE') }}</el-button>
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
     </div>
@@ -23,10 +24,12 @@
       width="460px"
       data-testid="unsettled-dialog">
       <div class="el-message-box__content">
-        <div class="el-message-box__status el-icon-warning"/>
-        <div class="el-message-box__message"><p>
-          Tem certeza que deseja realizar esta ação?
-        </p></div>
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
+        </div>
       </div>
       <el-select
         v-loading="$store.state.loading"
@@ -58,10 +61,12 @@
       width="460px"
       data-testid="strategy-dialog">
       <div class="el-message-box__content">
-        <div class="el-message-box__status el-icon-warning"/>
-        <div class="el-message-box__message"><p>
-          Tem certeza que deseja realizar esta ação?
-        </p></div>
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
+        </div>
       </div>
       <el-select
         v-model="newStrategyId"
@@ -80,6 +85,39 @@
           type="primary"
           class="confirm-action-unsettled"
           @click.prevent="doAction('CHANGE_STRATEGY')">
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="changeExpirationDialogVisible"
+      title="Alterar fim da negociação"
+      class="management-actions__dialog"
+      width="460px"
+      data-testid="expiration-dialog">
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
+        </div>
+      </div>
+      <el-date-picker
+        v-model="newExpirationDate"
+        :clearable="false"
+        data-testid="expiration-date-input"
+        format="dd/MM/yyyy"
+        type="date"
+        value-format="yyyy-MM-dd" />
+      <span slot="footer">
+        <el-button @click="changeExpirationDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :disabled="!newExpirationDate"
+          type="primary"
+          class="confirm-action-unsettled"
+          @click.prevent="doAction('CHANGE_EXPIRATION_DATE')">
           Continuar
         </el-button>
       </span>
@@ -104,9 +142,11 @@ export default {
     return {
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
+      changeExpirationDialogVisible: false,
       unsettledTypes: [],
       unsettledType: '',
-      newStrategyId: ''
+      newStrategyId: '',
+      newExpirationDate: ''
     }
   },
   computed: {
@@ -144,7 +184,9 @@ export default {
       } else if (action === 'RESTART_ENGAGEMENT') {
         trackTitle = 'engajamentos reiniciados'
       } else if (action === 'CHANGE_STRATEGY') {
-        trackTitle = 'troca de estratégia'
+        trackTitle = 'troca de estratégias'
+      } else if (action === 'CHANGE_EXPIRATION_DATE') {
+        trackTitle = 'altera fim de negociações'
       } else {
         trackTitle = 'Ação em massa realizada'
       }
@@ -155,12 +197,18 @@ export default {
       if (action === 'CHANGE_STRATEGY') {
         params['strategyId'] = this.newStrategyId
       }
+      if (action === 'CHANGE_EXPIRATION_DATE') {
+        params['expirationDate'] = {
+          dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        }
+      }
       if (this.unsettledType) {
         params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
+        this.changeExpirationDialogVisible = false
         window.analytics.track(selecteds + ' ' + trackTitle, {
           action: action,
           selecteds: selecteds
@@ -193,6 +241,9 @@ export default {
       } else if (action === 'CHANGE_STRATEGY') {
         this.changeStrategyDialogVisible = true
         this.newStrategyId = ''
+      } else if (action === 'CHANGE_EXPIRATION_DATE') {
+        this.changeExpirationDialogVisible = true
+        this.newExpirationDate = ''
       } else {
         this.$confirm('Tem certeza que deseja realizar esta ação em lote?', this.$t('action.' + action.toUpperCase()), {
           confirmButtonClass: 'confirm-action-btn',
@@ -269,6 +320,9 @@ export default {
     }
     .el-select {
       margin: 10px 0;
+      width: 100%;
+    }
+    .el-date-editor.el-input {
       width: 100%;
     }
   }

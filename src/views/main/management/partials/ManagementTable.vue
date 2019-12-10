@@ -197,6 +197,7 @@ import { getLastInteraction, getInteractionIcon, getRoles } from '@/utils/jusUti
 export default {
   name: 'ManagementTable',
   components: {
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
   },
   props: {
