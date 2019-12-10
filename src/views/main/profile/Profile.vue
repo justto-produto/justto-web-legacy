@@ -42,8 +42,8 @@
             <div class="profile-view__team">
               <el-form label-position="top" class="mt20 mb20">
                 <el-form-item label="Nome da equipe">
-                  <el-input v-model="teamName">
-                    <el-button slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
+                  <el-input v-model="teamName" :disabled="!isAdminProfile">
+                    <el-button v-if="isAdminProfile" slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -236,7 +236,9 @@ export default {
     },
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
-        this.teamMembers = response.filter(r => !r.archived)
+        this.teamMembers = response
+          .sort((a, b) => a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0)
+          .filter(r => !r.archived)
       })
     },
     changeName () {

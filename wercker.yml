@@ -10,7 +10,9 @@ build:
   steps:
     - script:
       name: Configure project informations
-      code: export PROJECT_NAME=justto-web
+      code: |
+        export PROJECT_NAME=justto-web
+        unset VUE_APP_BASE_URL
     - install-packages:
         packages: curl
     - script:

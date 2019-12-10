@@ -174,7 +174,7 @@ const workspaceModule = {
     getWorkspaceMembers ({ commit, dispatch }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('api/workspaces/members')
+        axios.get('api/workspaces/members?size=999&')
           .then(response => {
             var promises = []
             for (let member of response.data.content) {
