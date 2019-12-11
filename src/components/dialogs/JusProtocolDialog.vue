@@ -4,6 +4,7 @@
     :title="title"
     :width="width"
     :class="{ 'jus-protocol-dialog--full': step === 1 }"
+    :fullscreen="step === 4"
     class="jus-protocol-dialog">
     <div v-loading="loading">
       <div v-if="step === 0" class="jus-protocol-dialog__model-choice">
@@ -17,18 +18,28 @@
       </div>
       <div v-if="step === 2" class="jus-protocol-dialog__send-to">
         <p>Escolha um endereço de email para cada parte.</p>
-        <div v-for="(role, index) in disputeRoles" v-if="role.emails.length" :key="index">
-          <span class="jus-protocol-dialog__title">{{ role.name }}</span>
-          <div v-for="(email, index) in role.emails" :key="index">
-            <!-- <el-radio v-model="radio" label="1"> -->
-            <input
-              v-model="emails[role.name]"
-              :name="role.name"
-              :value="email.address"
-              type="radio">
-            {{ email.address }}
+        <span v-if="hasEmails">
+          <div v-for="(role, index) in disputeRoles" :key="index">
+            <span class="jus-protocol-dialog__title">{{ role.name }}</span>
+            <div v-for="(email, index) in role.emails" :key="index">
+              <input
+                v-model="emails[role.name]"
+                :name="role.name"
+                :value="email.address"
+                type="radio">
+              {{ email.address }}
+            </div>
           </div>
-        </div>
+        </span>
+        <span v-else>
+          <h2>
+            Sem e-mails cadastrados! <br>
+            Vá até a disputa e adicione e-mails
+            <a href="#" @click.prevent="$router.push('management/dispute/' + disputeId)">
+              clicando aqui.
+            </a>
+          </h2>
+        </span>
         <br>
       </div>
       <div v-if="step === 3">
@@ -39,21 +50,25 @@
             {{ signer.email }}
           </div>
           <div class="jus-protocol-dialog__status-icon">
-            <span v-if="signer.signed">Assinado <jus-icon icon="success"/></span>
+            <span v-if="signer.signed">Assinado <jus-icon icon="success" /></span>
             <span v-else>Aguardando assinatura</span>
           </div>
         </div>
       </div>
       <div v-if="step === 4">
-        <jus-web-viewer url="https://justto.app/api/documents/download-signed/13619"/>
+        <object :data="pdfUrl" type="application/pdf">
+          <iframe :src="pdfUrl" width="100%" height="100%" />
+        </object>
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button v-if="step !== 0" icon="el-icon-delete" plain type="danger" @click="deleteDocument">Excluir Minuna</el-button>
+      <el-button v-if="![0, 4].includes(step)" icon="el-icon-delete" plain type="danger" @click="deleteDocument">Excluir Minuna</el-button>
       <el-button v-if="step !== 4" plain @click="visible = false">Cancelar</el-button>
-      <el-button v-if="[2, 4].includes(step)" plain @click="backToDocument">Voltar</el-button>
-      <el-button v-if="step === 1" type="primary" @click="step = 2">Escolher destinatários</el-button>
-      <el-button v-if="step === 2" type="primary" @click="chooseRecipients">Enviar para Assinatura</el-button>
+      <el-button v-if="[2, 4].includes(step)" :class="{left: step === 4}" plain @click="backToDocument">
+        Voltar
+      </el-button>
+      <el-button v-if="step === 1" type="primary" @click="step = 2">Definir assinantes da minuta</el-button>
+      <el-button v-if="step === 2" :disabled="!hasEmails" type="primary" @click="chooseRecipients">Enviar para Assinatura</el-button>
       <el-button v-loading="loadingDownload" v-if="step === 3" icon="el-icon-download" type="primary" @click="downloadDocument">Baixar</el-button>
       <el-button v-if="step === 3" icon="el-icon-view" type="primary" @click="step = 4">Visualizar</el-button>
     </span>
@@ -63,9 +78,6 @@
 <script>
 export default {
   name: 'JusProtocolDialog',
-  components: {
-    JusWebViewer: () => import('@/components/others/JusWebViewer')
-  },
   props: {
     protocolDialogVisible: {
       type: Boolean,
@@ -88,7 +100,7 @@ export default {
       models: [],
       emails: {},
       document: {},
-      signers: {}
+      signers: ''
     }
   },
   computed: {
@@ -108,7 +120,8 @@ export default {
           case 0: return 'Escolha um modelo para iniciar'
           case 1: return 'Visualização da Minuta'
           case 2: return 'Enviar Minuta'
-          case 3: return this.document.name
+          case 3:
+          case 4: return this.document.name
           default: return ''
         }
       }
@@ -118,6 +131,20 @@ export default {
         return '85%'
       }
       return '60%'
+    },
+    hasEmails () {
+      let hasEmails = false
+      if (this.disputeRoles) {
+        this.disputeRoles.map(e => {
+          if (e.emails.length) hasEmails = true
+        })
+      }
+      return hasEmails
+    },
+    pdfUrl () {
+      if (this.disputeId) {
+        return 'https://justto.app/api/documents/download-signed/' + this.disputeId
+      }
     }
   },
   watch: {
@@ -126,6 +153,7 @@ export default {
         this.loading = true
         this.step = 0
         this.emails = {}
+        this.signers = ''
         this.getDocument()
       }
     }
@@ -135,30 +163,45 @@ export default {
       this.$store.dispatch('getDocumentByDisputeId', this.disputeId).then(document => {
         if (document) {
           this.document = document
-          this.signers = document.signedDocument.signers
           if (document.signedDocument === null) {
             this.step = 1
           } else {
+            this.signers = document.signedDocument.signers
             this.step = 3
           }
-          this.loading = false
         } else {
           this.getDocumentModels()
         }
-      }).catch(() => {
+      }).catch((e) => {
+        console.error(e)
         this.visible = false
         this.loading = false
-        this.$jusNotification({ type: 'error' })
-      })
-    },
-    getDocumentModels () {
-      this.$store.dispatch('getDocumentModels').then(models => {
-        this.models = models
-      }).catch(() => {
-        this.visible = false
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
         this.loading = false
+      })
+    },
+    getDocumentModels () {
+      this.loading = true
+      this.$store.dispatch('getDocumentModels').then(models => {
+        this.models = models
+        if (models && models.length === 1) {
+          this.selectModel(models[0].id)
+          this.$alert(
+            `Este é um modelo padrão disponibilizado pela Justto.
+            Fique à vontade para edita-lo de acordo com suas necessidades.`,
+            'Minuta padrão', {
+              confirmButtonText: 'Continuar',
+              dangerouslyUseHTMLString: true,
+              type: 'info'
+            }
+          )
+        } else {
+          this.loading = false
+        }
+      }).catch(() => {
+        this.visible = false
+        this.$jusNotification({ type: 'error' })
       })
     },
     selectModel (modelId) {
@@ -196,7 +239,7 @@ export default {
       this.$store.dispatch('setDocumentSigners', {
         disputeId: this.disputeId, emails
       }).then(doc => {
-        this.document = doc
+        this.signers = doc.signers
         this.step = 3
         this.loading = false
       }).catch(() => {
@@ -235,13 +278,15 @@ export default {
       }).then(() => {
         this.loading = true
         this.$store.dispatch('deleteDocument', this.disputeId).then(() => {
-          this.step = 0
-          this.getDocumentModels()
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Minuta excluída com sucesso',
+            type: 'success'
+          })
         }).catch(() => {
-          this.visible = false
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
-          this.loading = false
+          this.visible = false
         })
       })
     }
@@ -323,6 +368,10 @@ export default {
   iframe {
     width: 100%;
     height: 100%;
+  }
+  object {
+    width: 100%;
+    height: 99%;
   }
 }
 </style>
