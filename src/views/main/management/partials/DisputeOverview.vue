@@ -150,7 +150,7 @@
             <div v-show="role.phones.length" class="dispute-overview-view__info-list">
               <ul>
                 <li v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`">
-                  <span>
+                  <span :class="{'is-main': phone.isMain}">
                     <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role)" />
                     {{ phone.number | phoneMask }}
                   </span>
@@ -168,7 +168,7 @@
             <div v-show="role.emails.length" class="dispute-overview-view__info-list">
               <ul>
                 <li v-for="(email, index) in role.emails.filter(e => !e.archived)" :key="`${index}-${email.id}`">
-                  <span>
+                  <span :class="{'is-main': email.isMain}">
                     <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role)" />
                     {{ email.address }}
                   </span>
@@ -186,10 +186,10 @@
             <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
               <ul>
                 <li v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`">
-                  <div>
+                  <span :class="{'is-main': oab.isMain}">
                     <el-checkbox v-model="oab.selected" data-testid="checkbox-cna" @change="updateDisputeRole(role)" />
                     {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
-                  </div>
+                  </span>
                   <div class="dispute-overview-view__list-actions">
                     <el-tooltip content="OAB inválido">
                       <jus-icon v-if="!oab.isValid" icon="warn-dark" />
@@ -910,6 +910,9 @@ export default {
           text-overflow: ellipsis;
         }
       }
+    }
+    .is-main {
+      font-weight: bold;
     }
   }
   &__list-actions {
