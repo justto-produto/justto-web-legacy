@@ -187,6 +187,15 @@ export default {
         this.models = models
         if (models && models.length === 1) {
           this.selectModel(models[0].id)
+          this.$alert(
+            `Este é um modelo padrão disponibilizado pela Justto.
+            Fique à vontade para edita-lo de acordo com suas necessidades.`,
+            'Minuta padrão', {
+              confirmButtonText: 'Continuar',
+              dangerouslyUseHTMLString: true,
+              type: 'info'
+            }
+          )
         } else {
           this.loading = false
         }
