@@ -5,6 +5,7 @@ const workspaceModule = {
   state: {
     id: workspace.id,
     name: workspace.name,
+    teamName: workspace.teamName,
     type: workspace.type,
     status: workspace.status,
     subdomain: workspace.subDomain,
@@ -25,6 +26,7 @@ const workspaceModule = {
         axios.defaults.headers.common['Workspace'] = workspace.subDomain
         state.subdomain = workspace.subDomain
         state.name = workspace.name
+        state.teamName = workspace.teamName
         state.type = workspace.type
         state.status = workspace.status
         state.id = workspace.id
@@ -40,6 +42,7 @@ const workspaceModule = {
     clearWorkspace (state) {
       state.id = ''
       state.name = ''
+      state.teamName = ''
       state.type = ''
       state.status = ''
       state.subdomain = ''
@@ -256,6 +259,8 @@ const workspaceModule = {
     },
     creatingWorkspace: state => state.status === 'CREATING',
     workspaceId: state => state.id,
+    workspaceName: state => state.name,
+    workspaceTeamName: state => state.teamName,
     workspaceSubdomain: state => state.subdomain,
     workspaceMembers: state => state.members,
     redirectNewWorkspace: state => state.redirectNewWorkspace,

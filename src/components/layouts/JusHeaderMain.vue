@@ -42,7 +42,7 @@
               <div style="text-transform: capitalize;">
                 {{ name }}
               </div>
-              <span>{{ workspace }}</span>
+              <span>{{ teamName }}</span>
             </div>
             <jus-icon icon="expand-dropdown"/>
           </span>
@@ -76,13 +76,13 @@
           :close-on-click-modal="false"
           :visible.sync="changeWorkspaceDialogVisible"
           title="Alterar Equipe"
-          width="30%">
+          width="40%">
           <el-select v-model="selectedWorkspace" placeholder="Selecione" data-testid="select-workspace">
             <el-option
               v-for="(workspace, index) in workspaces"
               :key="workspace.id"
               :value="index"
-              :label="workspace.workspace.name"
+              :label="workspace.workspace.teamName"
               data-testid="select-workspace"/>
           </el-select>
           <span slot="footer" class="dialog-footer">
@@ -113,8 +113,8 @@ export default {
     name () {
       return this.$store.getters.loggedPersonName
     },
-    workspace () {
-      return this.$store.state.workspaceModule.name
+    teamName () {
+      return this.$store.getters.workspaceTeamName
     },
     appVersion () {
       return process.env.VUE_APP_VERSION
