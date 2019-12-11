@@ -72,7 +72,7 @@
             <h3>Alterar nome da empresa/escritório</h3>
             <el-alert
               :closable="false"
-              title="Nome que irá aparecer em todas as mensagens automáticas enviadas pela Justto."
+              title="Este nome irá aparecer em todas as mensagens automáticas enviadas pela Justto."
               type="info"
               show-icon />
             <br>
