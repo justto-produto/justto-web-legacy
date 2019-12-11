@@ -37,6 +37,12 @@
           <div class="profile-view__team">
             <el-form label-position="top">
               <h3>Alterar nome da Equipe</h3>
+              <el-alert
+                :closable="false"
+                title="Este nome NÃO irá aparecer nas mensagens automáticas. Utilize-o para organização interna."
+                type="info"
+                show-icon />
+              <br>
               <el-form-item label="Nome da equipe">
                 <el-input v-model="teamName">
                   <el-button slot="append" @click.prevent="changeTeamName">Alterar</el-button>
@@ -64,6 +70,12 @@
         <el-tab-pane label="Empresa" name="company">
           <div class="profile-view__company">
             <h3>Alterar nome da empresa/escritório</h3>
+            <el-alert
+              :closable="false"
+              title="Nome que irá aparecer em todas as mensagens automáticas enviadas pela Justto."
+              type="info"
+              show-icon />
+            <br>
             <el-form label-position="top">
               <el-form-item label="Nome da empresa/escritório">
                 <el-input v-model="companyName">
