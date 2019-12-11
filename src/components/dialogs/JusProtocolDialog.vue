@@ -5,6 +5,9 @@
     :width="width"
     :class="{ 'jus-protocol-dialog--full': step === 1 }"
     :fullscreen="step === 4"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="false"
     class="jus-protocol-dialog">
     <div v-loading="loading">
       <div v-if="step === 0" class="jus-protocol-dialog__model-choice">
@@ -62,15 +65,60 @@
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button v-if="![0, 4].includes(step)" icon="el-icon-delete" plain type="danger" @click="deleteDocument">Excluir Minuna</el-button>
-      <el-button v-if="step !== 4" plain @click="visible = false">Cancelar</el-button>
-      <el-button v-if="[2, 4].includes(step)" :class="{left: step === 4}" plain @click="backToDocument">
+      <el-button
+        v-if="![0, 4].includes(step)"
+        :disabled="loading"
+        icon="el-icon-delete"
+        plain
+        type="danger"
+        @click="deleteDocument">
+        Excluir Minuna
+      </el-button>
+      <el-button
+        v-if="step !== 4"
+        :disabled="loading"
+        plain
+        @click="visible = false">
+        Cancelar
+      </el-button>
+      <el-button
+        v-if="[2, 4].includes(step)"
+        :class="{left: step === 4}"
+        :disabled="loading"
+        plain
+        @click="backToDocument">
         Voltar
       </el-button>
-      <el-button v-if="step === 1" type="primary" @click="step = 2">Definir assinantes da minuta</el-button>
-      <el-button v-if="step === 2" :disabled="!hasEmails" type="primary" @click="chooseRecipients">Enviar para Assinatura</el-button>
-      <el-button v-loading="loadingDownload" v-if="step === 3" icon="el-icon-download" type="primary" @click="downloadDocument">Baixar</el-button>
-      <el-button v-if="step === 3" icon="el-icon-view" type="primary" @click="step = 4">Visualizar</el-button>
+      <el-button
+        v-if="step === 1"
+        :disabled="loading"
+        type="primary"
+        @click="step = 2">
+        Definir assinantes da minuta
+      </el-button>
+      <el-button
+        v-loading="loadingChooseRecipients"
+        v-if="step === 2"
+        :disabled="!hasEmails"
+        type="primary"
+        @click="chooseRecipients">
+        Enviar para Assinatura
+      </el-button>
+      <el-button
+        v-loading="loadingDownload"
+        v-if="step === 3"
+        icon="el-icon-download"
+        type="primary"
+        @click="downloadDocument">
+        Baixar
+      </el-button>
+      <el-button
+        v-if="step === 3"
+        icon="el-icon-view"
+        type="primary"
+        @click="step = 4">
+        Visualizar
+      </el-button>
     </span>
   </el-dialog>
 </template>
@@ -97,6 +145,7 @@ export default {
       step: 0,
       loading: false,
       loadingDownload: false,
+      loadingChooseRecipients: false,
       models: [],
       emails: {},
       document: {},
@@ -151,6 +200,8 @@ export default {
     visible (value) {
       if (value) {
         this.loading = true
+        this.loadingChooseRecipients = false
+        this.loadingDownload = false
         this.step = 0
         this.emails = {}
         this.signers = ''
@@ -187,15 +238,22 @@ export default {
         this.models = models
         if (models && models.length === 1) {
           this.selectModel(models[0].id)
-          this.$alert(
-            `Este é um modelo padrão disponibilizado pela Justto.
-            Fique à vontade para edita-lo de acordo com suas necessidades.`,
-            'Minuta padrão', {
-              confirmButtonText: 'Continuar',
-              dangerouslyUseHTMLString: true,
-              type: 'info'
-            }
-          )
+          const hideAlert = localStorage.getItem('jushidemodelalert')
+          if (!hideAlert) {
+            this.$confirm(
+              `Este é um modelo padrão disponibilizado pela Justto.
+              Fique à vontade para edita-lo de acordo com suas necessidades.`,
+              'Minuta padrão', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Não exibir mais esta mensagem',
+                cancelButtonClass: 'is-plain',
+                dangerouslyUseHTMLString: true,
+                type: 'info'
+              }
+            ).catch(() => {
+              localStorage.setItem('jushidemodelalert', true)
+            })
+          }
         } else {
           this.loading = false
         }
@@ -229,6 +287,7 @@ export default {
         return false
       }
       this.loading = true
+      this.loadingChooseRecipients = true
       let emails = []
       for (let [key, value] of Object.entries(this.emails)) {
         emails.push({
@@ -247,6 +306,7 @@ export default {
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
         this.loading = false
+        this.loadingChooseRecipients = false
       })
     },
     backToDocument () {
@@ -273,7 +333,7 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
-        type: 'danger',
+        type: 'warning',
         cancelButtonClass: 'is-plain'
       }).then(() => {
         this.loading = true
