@@ -3,8 +3,7 @@
     :visible.sync="visible"
     :title="title"
     :width="width"
-    :class="{ 'jus-protocol-dialog--full': step === 1 }"
-    :fullscreen="step === 4"
+    :class="{ 'jus-protocol-dialog--full': [1, 4].includes(step) }"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :show-close="false"
@@ -83,7 +82,6 @@
       </el-button>
       <el-button
         v-if="[2, 4].includes(step)"
-        :class="{left: step === 4}"
         :disabled="loading"
         plain
         @click="backToDocument">
