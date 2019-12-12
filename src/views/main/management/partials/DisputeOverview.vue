@@ -83,16 +83,28 @@
             </span>
           </strong>
         </div>
-        <div v-if="bankAccounts" class="dispute-overview-view__info-line">
-          <span class="title">Dados bancários:</span>
-          <span class="bank-info" v-for="bankAccount in bankAccounts">
-            <strong>Nome:</strong> {{ bankAccount.personName }} <br>
-            <strong>Documento:</strong> {{ bankAccount.personDocumentNumber | cpfCnpjMask }} <br>
-            <strong>Banco:</strong> {{ bankAccount.bank }} <br>
-            <strong>Agência:</strong> {{ bankAccount.agency }} <br>
-            <strong>Conta:</strong> {{ bankAccount.number }} <br>
-            <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
-          </span>
+        <div v-if="bankAccounts.length" class="dispute-overview-view__info-line">
+          <span class="title">Conta(s) bancária(s):</span>
+          <el-collapse value="0" @change="handleChange">
+            <el-collapse-item
+              v-for="(bankAccount, index) in bankAccounts"
+              :key="`${index}-${bankAccount.id}`"
+              :name="index">
+              <template slot="title">
+                <div>
+                  # {{ index + 1 }} {{ bankAccount.personName }}
+                </div>
+              </template>
+              <span class="bank-info">
+                <strong>Nome:</strong> {{ bankAccount.personName }} <br>
+                <strong>Documento:</strong> {{ bankAccount.personDocumentNumber | cpfCnpjMask }} <br>
+                <strong>Banco:</strong> {{ bankAccount.bank }} <br>
+                <strong>Agência:</strong> {{ bankAccount.agency }} <br>
+                <strong>Conta:</strong> {{ bankAccount.number }} <br>
+                <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
+              </span>
+            </el-collapse-item>
+          </el-collapse>
         </div>
         <div class="dispute-overview-view__actions">
           <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>
@@ -184,7 +196,7 @@
               </span>
             </div>
             <div v-show="bankAccounts.length" class="dispute-overview-view__info-line">
-              <span class="title">Dado(s) bancário(s):</span>
+              <span class="title">Conta(s) bancária(s):</span>
               <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
                 <i class="el-icon-question right" style="margin-top: 5px;" />
               </el-tooltip>
@@ -495,9 +507,6 @@
         :rules="addBankRules"
         label-position="top"
         @submit.native.prevent>
-
-
-
         <el-form-item label="Nome" prop="personName">
           <el-input v-model="addBankForm.personName" />
         </el-form-item>
@@ -531,9 +540,6 @@
               :value="type.type" />
           </el-select>
         </el-form-item>
-
-
-
       </el-form>
       <span slot="footer">
         <el-button plain @click="openAddBankDialogVisible = false">Cancelar</el-button>
@@ -986,7 +992,6 @@ export default {
     },
     addBankData () {
       this.$refs.addBankForm.validate(valid => {
-        console.log(valid);
         // if (isValid) {
         //   let self = this
         //   this.roleForm.oab = this.roleForm.oab.replace(/ /g, '')
@@ -1055,6 +1060,22 @@ export default {
         white-space: nowrap;
         overflow: hidden;
       }
+    }
+    .el-collapse {
+      margin-left: 12px;
+    }
+    .el-collapse-item__header {
+      font-size: 12px;
+      height: 28px;
+      line-height: 28px;
+      div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .el-collapse-item__content {
+      font-size: 12px;
     }
   }
   &__info-textarea {

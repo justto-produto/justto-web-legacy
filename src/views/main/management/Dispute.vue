@@ -363,7 +363,7 @@ export default {
             this.loadingDispute = false
           }, 500)
         })
-        this.bankAccounts = []
+      this.bankAccounts = []
       this.$store.dispatch('getDisputeBankAccounts', this.id).then(bankAccounts => {
         this.bankAccounts = bankAccounts
       })
