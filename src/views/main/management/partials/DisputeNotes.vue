@@ -19,7 +19,7 @@
             shadow="never">
             <div slot="header" class="dispute-view-occurrences__card--note-header">
               <i class="el-icon-edit" @click="openEditDialog(occurrence)" />
-              <i class="el-icon-delete" @click="removeNote(occurrence)" />
+              <i class="el-icon-delete" @click="removeNote(occurrence, index)" />
             </div>
             <span v-html="buildContent(occurrence)" />
           </el-card>
@@ -98,8 +98,7 @@ export default {
     buildHour (occurrence) {
       if (occurrence.updateAt) {
         return this.$moment(occurrence.updateAt.dateTime).format('DD/MM/YY [às] HH:mm')
-      }
-      else if (occurrence.executionDateTime) {
+      } else if (occurrence.executionDateTime) {
         return this.$moment(occurrence.executionDateTime.dateTime).format('DD/MM/YY [às] HH:mm')
       }
       return this.$moment(occurrence.createAt.dateTime).format('DD/MM/YY [às] HH:mm')
@@ -128,7 +127,7 @@ export default {
           this.editDialogLoading = false
         })
     },
-    removeNote (occurrence) {
+    removeNote (occurrence, index) {
       this.$confirm('Esta nota será deletada permanentemente. Deseja continuar?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancelar',
@@ -138,6 +137,7 @@ export default {
         this.noteLoading = true
         this.$store.dispatch('deleteDisputeNote', noteId).then(() => {
           window.analytics.track('Nota removida')
+          this.occurrences.splice(index, 1)
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota removida com sucesso.',
