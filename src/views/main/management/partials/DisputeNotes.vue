@@ -42,8 +42,8 @@
         </el-button>
         <el-button
           v-loading="editDialogLoading"
-          :disabled="!newNoteContent.trim()"
           type="primary"
+          :disabled="!this.newNoteContent.trim()"
           @click="editNote(newNoteContent)">
           Editar nota
         </el-button>
@@ -71,7 +71,7 @@ export default {
       noteLoading: false,
       editDialog: false,
       editDialogLoading: false,
-      newNoteContent: {}
+      newNoteContent: ''
     }
   },
   computed: {
