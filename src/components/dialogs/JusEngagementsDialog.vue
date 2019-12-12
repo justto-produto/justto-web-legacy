@@ -102,7 +102,7 @@ export default {
       // 294 Lucas
       // 234 Mateus
       // 181 Michelle
-      return [185, 338, 484, 293, 200, 234, 198, 294].includes(this.$store.getters.accountId)
+      return [185, 338, 484, 293, 200, 234, 198, 294, 181].includes(this.$store.getters.accountId)
     }
   },
   watch: {
@@ -128,7 +128,8 @@ export default {
         id: this.communication.template.id,
         contentType: 'TEXT',
         title: this.communication.template.title,
-        body: this.communication.template.body
+        body: this.communication.template.body,
+        protocolId: this.communication.template.protocolId
       }).then(() => {
         this.editDialog = false
         this.getEngagements()

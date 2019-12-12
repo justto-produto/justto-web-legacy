@@ -1,88 +1,99 @@
 <template lang="html">
-  <jus-view-main class="profile-view" right-card-width="550">
+  <jus-view-main :class="{'profile-view--user': !isAdminProfile}" class="profile-view" right-card-width="550">
     <template slot="title">
-      <h1>
-        Configurações
-      </h1>
+      <h1>Configurações</h1>
     </template>
     <template slot="main">
-      <div class="profile-view__container">
-        <el-row :gutter="62">
-          <el-col :span="12">
-            <h2>Perfil</h2>
-            <el-form
-              ref="profileForm"
-              :model="profileForm"
-              :rules="profileFormRules"
-              label-position="top">
-              <el-form-item label="Nome">
-                <el-input v-model="person.name">
-                  <el-button slot="append" @click="changeName">
-                    Alterar
-                  </el-button>
-                </el-input>
-              </el-form-item>
-              <el-form-item label="Email">
-                <el-input v-model="$store.state.accountModule.email" disabled />
-              </el-form-item>
-              <el-form-item label="Nova senha">
-                <el-input v-model="profileForm.newPassword" type="password">
-                  <el-button slot="append" @click="passwordModal">Alterar</el-button>
-                </el-input>
-              </el-form-item>
-              <el-form-item label="Contato" prop="phone">
-                <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="profileForm.phone">
-                  <el-button slot="append" @click="updatePhone">Alterar</el-button>
+      <el-tabs tab-position="top" value="profile">
+        <el-tab-pane label="Perfil" name="profile">
+          <el-form
+            ref="profileForm"
+            :model="profileForm"
+            :rules="profileFormRules"
+            label-position="top">
+            <el-form-item label="Nome">
+              <el-input v-model="person.name">
+                <el-button slot="append" @click="changeName">
+                  Alterar
+                </el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="Email">
+              <el-input v-model="$store.state.accountModule.email" disabled />
+            </el-form-item>
+            <el-form-item label="Nova senha">
+              <el-input v-model="profileForm.newPassword" type="password">
+                <el-button slot="append" @click="passwordModal">Alterar</el-button>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="Contato" prop="phone">
+              <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="profileForm.phone">
+                <el-button slot="append" @click="updatePhone">Alterar</el-button>
+              </el-input>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="Equipe" name="team">
+          <div class="profile-view__team">
+            <el-form label-position="top">
+              <h3>Alterar nome da Equipe</h3>
+              <el-alert
+                :closable="false"
+                title="Este nome NÃO irá aparecer nas mensagens automáticas. Utilize-o para organização interna."
+                type="info"
+                show-icon />
+              <br>
+              <el-form-item label="Nome da equipe">
+                <el-input v-model="teamName">
+                  <el-button slot="append" @click.prevent="changeTeamName">Alterar</el-button>
                 </el-input>
               </el-form-item>
             </el-form>
-          </el-col>
-          <el-col :span="12">
-            <h2>Equipe</h2>
-            <div class="profile-view__team">
-              <el-form label-position="top" class="mt20 mb20">
-                <el-form-item label="Nome da equipe">
-                  <el-input v-model="teamName">
-                    <el-button slot="append" @click.prevent="changeWorkspaceName">Alterar</el-button>
-                  </el-input>
-                </el-form-item>
-              </el-form>
-              <h5>
-                Membros
-                <!-- <a v-if="isAdminProfile" href="#" @click.prevent="dialogInvite = true">
-                  <jus-icon icon="add" />
-                </a> -->
-              </h5>
-              <div v-for="member in teamMembers" :key="member.id">
-                <div class="profile-view__members-list">
-                  <div class="member">
-                    <strong>{{ member.person.name }}: </strong>
-                    <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
-                  </div>
-                  <div v-if="isAdminProfile" class="actions">
-                    <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
-                    <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
-                  </div>
+            <h3 class="mt40 mb30">Membros da equipe</h3>
+            <div v-for="member in teamMembers" :key="member.id">
+              <div class="profile-view__members-list">
+                <div class="member">
+                  <strong>{{ member.person.name }}: </strong>
+                  <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
+                </div>
+                <div class="actions">
+                  <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
+                  <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
                 </div>
               </div>
-              <el-button v-if="isAdminProfile" type="primary" @click="dialogInvite = true">
-                Convidar novo membro
-              </el-button>
             </div>
-          </el-col>
-        </el-row>
-        <el-row v-if="isAdminProfile">
-          <el-col class="profile-view__new-workspace">
-            <h2>Criação de novas equipes</h2>
+            <el-button type="primary" @click="dialogInvite = true">
+              Convidar novo membro
+            </el-button>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="Empresa" name="company">
+          <div class="profile-view__company">
+            <h3>Alterar nome da empresa/escritório</h3>
+            <el-alert
+              :closable="false"
+              title="Este nome irá aparecer em todas as mensagens automáticas enviadas pela Justto."
+              type="info"
+              show-icon />
+            <br>
+            <el-form label-position="top">
+              <el-form-item label="Nome da empresa/escritório">
+                <el-input v-model="companyName">
+                  <el-button slot="append" @click.prevent="changeCompanyName">Alterar</el-button>
+                </el-input>
+              </el-form-item>
+            </el-form>
+            <h3 class="mt40">Criação de novas equipes</h3>
             <p>
-              Se o seu escritório possui mais de uma célula de negociação, você pode criar uma nova equipe e se organizar melhor.
+              Se o seu escritório possui mais de uma célula de negociação, você
+              pode criar uma nova equipe e se organizar melhor.
             </p>
             <el-button type="secondary" @click="createWorkspace">
               Criar nova Equipe
             </el-button>
-          </el-col>
-        </el-row>
-      </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
       <el-dialog
         v-if="currentEditMember.person"
         :close-on-click-modal="false"
@@ -199,6 +210,7 @@ export default {
       syncedEmails: [],
       person: {},
       teamName: '',
+      companyName: '',
       teamMembers: [],
       currentEditMember: {},
       phoneDTO: ''
@@ -215,7 +227,8 @@ export default {
   mounted () {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.getters.loggedPerson))
-    this.teamName = this.$store.state.workspaceModule.name + ''
+    this.teamName = this.$store.state.workspaceModule.teamName + ''
+    this.companyName = this.$store.state.workspaceModule.name + ''
     this.phoneDTO = this.$store.getters.loggedPersonPhone || {}
     if (this.phoneDTO && this.phoneDTO.number) {
       if (this.phoneDTO.number.length === 13) {
@@ -239,7 +252,9 @@ export default {
     },
     getMembers () {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
-        this.teamMembers = response.filter(r => !r.archived)
+        this.teamMembers = response
+          .sort((a, b) => a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0)
+          .filter(r => !r.archived)
       })
     },
     changeName () {
@@ -399,24 +414,6 @@ export default {
         this.$jusNotification({ type: 'error' })
       })
     },
-    changeWorkspaceName () {
-      if (this.teamName) {
-        this.$store.dispatch('editWorkpace', { name: this.teamName }).then(() => {
-          window.analytics.track('Nome da equipe alterado')
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Nome da equipe editada com sucesso.',
-            type: 'success'
-          })
-        })
-      } else {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Nome não pode ficar em branco.',
-          type: 'warning'
-        })
-      }
-    },
     inviteTeammate () {
       this.$refs['inviteForm'].validate((valid) => {
         if (valid) {
@@ -449,6 +446,48 @@ export default {
           return false
         }
       })
+    },
+    changeTeamName () {
+      if (this.teamName) {
+        this.$store.dispatch('editWorkpace', {
+          teamName: this.teamName,
+          name: this.companyName
+        }).then(() => {
+          window.analytics.track('Nome da equipe alterado')
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Nome da equipe alterado com sucesso.',
+            type: 'success'
+          })
+        })
+      } else {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Nome não pode ficar em branco.',
+          type: 'warning'
+        })
+      }
+    },
+    changeCompanyName () {
+      if (this.companyName) {
+        this.$store.dispatch('editWorkpace', {
+          teamName: this.teamName,
+          name: this.companyName
+        }).then(() => {
+          window.analytics.track('Nome do escritório/empresa alterado')
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Nome do escritório/empresa alterado com sucesso.',
+            type: 'success'
+          })
+        })
+      } else {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Nome não pode ficar em branco.',
+          type: 'warning'
+        })
+      }
     }
   }
 }
@@ -456,6 +495,17 @@ export default {
 
 <style lang="scss">
 .profile-view {
+  .el-tab-pane {
+    margin: auto;
+    margin-top: 20px;
+    max-width: 500px;
+  }
+  &--user {
+    .el-tabs__header {
+      display: none;
+    }
+  }
+
   &__invite-dialog {
     .el-button {
       float: right;
@@ -463,34 +513,15 @@ export default {
       margin-bottom: 40px;
     }
   }
-  &__sync-form {
-    .el-button {
-      width: 100%;
-    }
-  }
-  &__container {
-    margin: 20px 40px;
-  }
-  &__synced-email {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    padding: 10px 5px;
-    &:hover {
-      background-color: #eeeeee;
-    }
-  }
   &__team {
-    h5 {
-      color: #adadad;
-      font-weight: normal;
-      line-height: 30px;
-      margin: 0;
-    }
     button {
-      margin: auto;
       width: 100%;
-      margin-top: 20px;
+      margin-top: 40px;
+    }
+  }
+  &__company {
+    button {
+      width: 100%;
     }
   }
   &__members-list {
@@ -503,50 +534,17 @@ export default {
     .actions {
       min-width: 42px;
     }
-  }
-  .el-card__body {
-    position: relative;
-    height: fit-content;
-  }
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 120px;
-    height: 120px;
-    line-height: 120px;
-    text-align: center;
-  }
-  .avatar {
-    width: 120px;
-    height: 120px;
-    display: block;
+    img {
+      width: 16px;
+    }
   }
   .el-dialog {
     .el-select {
       width: 100%;
     }
   }
-  img {
-    width: 16px;
-  }
-  &__new-workspace {
-    margin-top: 40px;
-    text-align: center;
-    p {
-      max-width: 500px;
-      margin: auto;
-      margin-bottom: 30px;
-    }
+  p {
+    text-align: justify;
   }
 }
 </style>

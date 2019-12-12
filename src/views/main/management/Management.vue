@@ -228,19 +228,19 @@ export default {
       switch (tab) {
         case '0':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: 'expirationDate,asc' })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc', 'favorite,desc'] })
           break
         case '1':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: 'visualized,asc' })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'favorite,desc'] })
           break
         case '2':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: 'visualized,asc' })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'favorite,desc'] })
           break
         default:
           this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: 'id,desc' })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc', 'favorite,desc'] })
       }
       this.getDisputes()
     },

@@ -1,185 +1,207 @@
 <template>
-  <el-table
-    ref="disputeTable"
-    :data="disputes"
-    :row-class-name="tableRowClassName"
-    size="mini"
-    empty-text=" "
-    height="100%"
-    class="management-table el-table--disputes"
-    data-testid="dispute-index"
-    @row-click="handleRowClick"
-    @selection-change="handleSelectionChange">
-    <el-table-column type="selection" width="44px" />
-    <el-table-column
-      :sortable="false"
-      label="Processo"
-      min-width="110px"
-      prop="code">
-      <template slot-scope="scope">{{ scope.row.code }}</template>
-    </el-table-column>
-    <el-table-column
-      :sortable="false"
-      prop="campaignName"
-      label="Campanha"
-      min-width="94px">
-      <template v-if="scope.row.campaign" slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
-    </el-table-column>
-    <el-table-column
-      :sortable="false"
-      prop="firstClaimant"
-      min-width="140px"
-      class-name="text-ellipsis"
-      label="Parte(s) contrária(s)">
-      <template slot-scope="scope">
-        {{ scope.row.firstClaimant }}
-      </template>
-    </el-table-column>
-    <el-table-column
-      :sortable="false"
-      prop="firstClaimantLawyer"
-      class-name="text-ellipsis"
-      label="Advogado(s) da parte"
-      min-width="154px">
-      <template slot-scope="scope">
-        {{ scope.row.firstClaimantLawyer }}
-      </template>
-    </el-table-column>
-    <el-table-column
-      v-if="tab0 || tab1 || tab2"
-      :sortable="false"
-      label="Alçada máxima"
-      align="center"
-      prop="disputeUpperRange"
-      min-width="118px">
-      <template slot-scope="scope">
-        {{ scope.row.disputeUpperRange | currency }}
-      </template>
-    </el-table-column>
-    <el-table-column
-      v-if="tab0"
-      :sortable="false"
-      label="Valor proposto"
-      prop="lastOfferValue"
-      align="center"
-      min-width="114px">
-      <template slot-scope="scope">
-        {{ scope.row.lastOfferValue | currency }}
-      </template>
-    </el-table-column>
-    <el-table-column
-      v-if="tab1 || tab2"
-      :sortable="false"
-      prop="lastInteractionDate"
-      label="Última interação"
-      min-width="124px"
-      align="center">
-      <template slot-scope="scope">
-        <span class="position-relative">
-          <jus-icon v-if="scope.row.lastInteraction" :icon="getInteractionIcon(scope.row.lastInteraction)" class="management-table__interaction-icon" />
-          <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+  <div style="height: 100%;">
+    <jus-protocol-dialog
+      :protocol-dialog-visible.sync="protocolDialogVisible"
+      :dispute-id.sync="selectedDisputeId"
+      :dispute-roles.sync="selectedDisputeRoles" />
+    <el-table
+      ref="disputeTable"
+      :key="disputeKey"
+      :data.sync="disputes"
+      :row-class-name="tableRowClassName"
+      size="mini"
+      empty-text=" "
+      height="100%"
+      class="management-table el-table--disputes"
+      data-testid="dispute-index"
+      @row-click="handleRowClick"
+      @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="44px" />
+      <el-table-column
+        :sortable="false"
+        label="Processo"
+        min-width="100px"
+        prop="code">
+        <template slot-scope="scope">{{ scope.row.code }}</template>
+      </el-table-column>
+      <el-table-column
+        :sortable="false"
+        prop="campaignName"
+        label="Campanha"
+        min-width="94px">
+        <template v-if="scope.row.campaign" slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
+      </el-table-column>
+      <el-table-column
+        :sortable="false"
+        prop="firstClaimant"
+        min-width="140px"
+        class-name="text-ellipsis"
+        label="Parte(s) contrária(s)">
+        <template slot-scope="scope">
+          {{ scope.row.firstClaimant }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        :sortable="false"
+        prop="firstClaimantLawyer"
+        class-name="text-ellipsis"
+        label="Advogado(s) da parte"
+        min-width="154px">
+        <template slot-scope="scope">
+          {{ scope.row.firstClaimantLawyer }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab0 || tab1"
+        :sortable="false"
+        label="Alçada máxima"
+        align="center"
+        prop="disputeUpperRange"
+        min-width="118px">
+        <template slot-scope="scope">
+          {{ scope.row.disputeUpperRange | currency }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab0"
+        :sortable="false"
+        label="Valor proposto"
+        prop="lastOfferValue"
+        align="center"
+        min-width="114px">
+        <template slot-scope="scope">
+          {{ scope.row.lastOfferValue | currency }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab1 || tab2"
+        :sortable="false"
+        prop="lastInteractionDate"
+        label="Última interação"
+        min-width="124px"
+        align="center">
+        <template slot-scope="scope">
+          <span class="position-relative">
+            <jus-icon v-if="scope.row.lastInteraction" :icon="getInteractionIcon(scope.row.lastInteraction)" class="management-table__interaction-icon" />
+            <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+          </span>
+          <el-tooltip v-if="scope.row.lastInteraction" :content="scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm')">
+            <span style="margin-left: 4px;">
+              {{ getLastInteraction(scope.row.lastInteraction.createAt.dateTime) }}
+            </span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab1"
+        :sortable="false"
+        label="Contraproposta"
+        align="center"
+        prop="lastCounterOfferValue"
+        min-width="120px">
+        <template slot-scope="scope">
+          {{ scope.row.lastCounterOfferValue | currency }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab0 || tab1 || tab3"
+        :sortable="false"
+        prop="expirationDate"
+        label="Fim da negociação"
+        align="center"
+        min-width="140px">
+        <template slot-scope="scope">
+          <el-tooltip content="Negociação encerra nos próximos 3 dias">
+            <span v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'" data-testid="expiration-notify" class="management-table__expiration-icon position-relative">
+              <jus-icon icon="clock" />
+              <i class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+            </span>
+          </el-tooltip>
+          <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab2"
+        :sortable="false"
+        label="Valor do acordo"
+        prop="disputeDealValue"
+        align="center"
+        width="120px">
+        <template slot-scope="scope">{{ scope.row.disputeDealValue | currency }}</template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab2"
+        :sortable="false"
+        prop="disputeDealDate"
+        label="Data do acordo"
+        min-width="118px"
+        align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.disputeDealDate">{{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab3"
+        :sortable="false"
+        label="Status"
+        prop="status"
+        align="center"
+        min-width="90px">
+        <template slot-scope="scope">
+          {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
+          <span v-if="scope.row.paused">(pausada)</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :width="tab2 && isJusttoDev ? '152px' : '76px'"
+        class-name="management-table__row-actions"
+        align="right">
+        <template slot-scope="scope">
+          <el-button
+            v-if="tab2 && isJusttoDev"
+            plain
+            size="mini"
+            class="management-table__protocol_button"
+            @click="showProtocolModal(scope.row)">
+            Minuta
+            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
+              <span/><span/><span/>
+            </div>
+          </el-button>
+          <el-button
+            type="text"
+            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+          </el-button>
+          <el-button
+            title="Abrir disputa em uma nova aba"
+            type="text"
+            @click="openNewTab(scope.row.id)">
+            <jus-icon icon="external-link" />
+          </el-button>
+        </template>
+      </el-table-column>
+      <template slot="empty">
+        <span v-if="!loadingDisputes">
+          <jus-icon icon="empty-screen-filter" class="management-table__empty-table" data-testid="cases-empty-icon"/>
+          <h4 data-testid="cases-empty-text">
+            Não foram encontradas disputas para<br>os filtros selecionados.
+          </h4>
         </span>
-        <el-tooltip v-if="scope.row.lastInteraction" :content="scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm')">
-          <span style="margin-left: 4px;">
-            {{ getLastInteraction(scope.row.lastInteraction.createAt.dateTime) }}
-          </span>
-        </el-tooltip>
       </template>
-    </el-table-column>
-    <el-table-column
-      v-if="tab1"
-      :sortable="false"
-      label="Contraproposta"
-      align="center"
-      prop="lastCounterOfferValue"
-      min-width="120px">
-      <template slot-scope="scope">
-        {{ scope.row.lastCounterOfferValue | currency }}
-      </template>
-    </el-table-column>
-    <el-table-column
-      v-if="tab0 || tab1 || tab3"
-      :sortable="false"
-      prop="expirationDate"
-      label="Fim da negociação"
-      align="center"
-      min-width="140px">
-      <template slot-scope="scope">
-        <el-tooltip content="Negociação encerra nos próximos 3 dias">
-          <span v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'" data-testid="expiration-notify" class="management-table__expiration-icon position-relative">
-            <jus-icon icon="clock" />
-            <i class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
-          </span>
-        </el-tooltip>
-        <span v-if="scope.row.expirationDate">{{ scope.row.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      v-if="tab2"
-      :sortable="false"
-      label="Valor do acordo"
-      prop="disputeDealValue"
-      align="center"
-      width="120px">
-      <template slot-scope="scope">{{ scope.row.disputeDealValue | currency }}</template>
-    </el-table-column>
-    <el-table-column
-      v-if="tab2"
-      :sortable="false"
-      prop="disputeDealDate"
-      label="Data do acordo"
-      min-width="118px"
-      align="center">
-      <template slot-scope="scope">
-        <span v-if="scope.row.disputeDealDate">{{ scope.row.disputeDealDate.dateTime | moment('DD/MM/YY') }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      v-if="tab3"
-      :sortable="false"
-      label="Status"
-      prop="status"
-      align="center"
-      min-width="90px">
-      <template slot-scope="scope">
-        {{ $t('occurrence.type.' + scope.row.status) | capitalize }}
-        <span v-if="scope.row.paused">(pausada)</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      width="70px"
-      class-name="management-table__row-actions"
-      align="center">
-      <template slot-scope="scope">
-        <el-button
-          type="text"
-          @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-          <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-        </el-button>
-        <el-button
-          title="Abrir disputa em uma nova aba"
-          type="text"
-          @click="openNewTab(scope.row.id)">
-          <jus-icon icon="external-link" />
-        </el-button>
-      </template>
-    </el-table-column>
-    <template slot="empty">
-      <span v-if="!loadingDisputes">
-        <jus-icon icon="empty-screen-filter" class="management-table__empty-table" data-testid="cases-empty-icon"/>
-        <h4 data-testid="cases-empty-text">
-          Não foram encontradas disputas para<br>os filtros selecionados.
-        </h4>
-      </span>
-    </template>
-  </el-table>
+    </el-table>
+  </div>
 </template>
 
 <script>
-import { getLastInteraction, getInteractionIcon } from '@/utils/jusUtils'
+import { getLastInteraction, getInteractionIcon, getRoles } from '@/utils/jusUtils'
 
 export default {
   name: 'ManagementTable',
+  components: {
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
+    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
+  },
   props: {
     activeTab: {
       type: String,
@@ -194,7 +216,18 @@ export default {
       default: false
     }
   },
+  data () {
+    return {
+      protocolDialogVisible: false,
+      selectedDisputeId: 0,
+      selectedDisputeRoles: [],
+      disputeKey: 0
+    }
+  },
   computed: {
+    isJusttoDev () {
+      return [484, 293, 200, 234, 198, 294].includes(this.$store.getters.accountId)
+    },
     selectedIdsComp: {
       get () {
         return this.selectedIds
@@ -219,6 +252,15 @@ export default {
       return this.activeTab === '3'
     }
   },
+  watch: {
+    disputes: {
+      handler () {
+        this.doLayout()
+        this.disputeKey += 1
+      },
+      deep: true
+    }
+  },
   methods: {
     getLastInteraction: (i) => getLastInteraction(i),
     getInteractionIcon: (i) => getInteractionIcon(i),
@@ -228,7 +270,7 @@ export default {
       }
     },
     handleRowClick (row, column, event) {
-      if (row.id && event.target.tagName !== 'IMG') {
+      if (row.id && !['IMG', 'SPAN', 'BUTTON'].includes(event.target.tagName)) {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
@@ -272,6 +314,21 @@ export default {
     },
     disputeNextToExpire (date) {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
+    },
+    showProtocolModal (dispute) {
+      this.selectedDisputeId = dispute.id
+      const roles = getRoles(dispute.disputeRoles, 'CLAIMANT')
+      this.selectedDisputeRoles = roles
+      this.protocolDialogVisible = true
+    },
+    getDocumentStep (hasDocument, signStatus) {
+      if (hasDocument) {
+        if (signStatus) {
+          if (signStatus === 'SIGNING') {
+            return 2
+          } return 3
+        } return 1
+      } return 0
     }
   }
 }
@@ -308,18 +365,57 @@ export default {
       width: 20px;
       vertical-align: middle;
     }
-    > div {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      :last-child {
-        margin-left: 1px;
-      }
+    .el-button--text {
+      margin-left: 6px;
     }
   }
   &__empty-table {
     margin-top: 40px;
     width: 60px;
+  }
+  &__protocol_button {
+    position: relative;
+    div {
+      display: flex;
+      position: absolute;
+      bottom: -1px;
+      left: -1px;
+      right: -1px;
+      span {
+        height: 3px;
+        border: 1px solid #dcdfe6;
+        width: 100%;
+        &:first-child {
+          border-radius: 0 0 0 1px;
+        }
+        &:last-child {
+          border-radius: 0 0 1px 0;
+        }
+      }
+    }
+    &:hover div span {
+      border: 1px solid #9461f7;
+    }
+  }
+  &__protocol_button--step {
+    &-1 {
+      span:first-child {
+        background-color: #9461f7;
+        border-color: #9461f7;
+      }
+    }
+    &-2 {
+      span:first-child, span:nth-child(2) {
+        background-color: #9461f7;
+        border-color: #9461f7;
+      }
+    }
+    &-3 {
+      span {
+        background-color: #9461f7;
+        border-color: #9461f7;
+      }
+    }
   }
   .el-table__empty-block {
     width: auto !important;
