@@ -71,7 +71,7 @@
         plain
         type="danger"
         @click="deleteDocument">
-        Excluir Minuna
+        Excluir Minuta
       </el-button>
       <el-button
         v-if="step !== 4"
