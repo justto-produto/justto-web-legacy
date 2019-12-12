@@ -57,10 +57,8 @@
           </div>
         </div>
       </div>
-      <div v-if="step === 4">
-        <object :data="pdfUrl" type="application/pdf">
-          <iframe :src="pdfUrl" width="100%" height="100%" />
-        </object>
+      <div v-loading="loadingPdf" v-if="step === 4">
+        <object ref="pdfView" :data="pdfUrl" type="application/pdf" @load="loadingPdf = false" />
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -114,7 +112,7 @@
         v-if="step === 3"
         icon="el-icon-view"
         type="primary"
-        @click="step = 4">
+        @click="visualizePdf">
         Visualizar
       </el-button>
     </span>
@@ -142,6 +140,7 @@ export default {
     return {
       step: 0,
       loading: false,
+      loadingPdf: false,
       loadingDownload: false,
       loadingChooseRecipients: false,
       models: [],
@@ -347,6 +346,10 @@ export default {
           this.visible = false
         })
       })
+    },
+    visualizePdf () {
+      this.loadingPdf = true
+      this.step = 4
     }
   }
 }
