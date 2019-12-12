@@ -34,8 +34,19 @@
     <el-dialog :visible.sync="editDialog" width="60%" title="Editar Nota" append-to-body>
       <el-input v-model="newNoteContent" :disabled="editDialogLoading" class="dispute-view-occurrences__textarea" type="textarea" />
       <span slot="footer" class="dialog-footer">
-        <el-button :disabled="editDialogLoading" plain @click="editDialog = false">Cancelar</el-button>
-        <el-button v-loading="editDialogLoading" type="primary" @click="editNote(newNoteContent)">Editar nota</el-button>
+        <el-button
+          :disabled="editDialogLoading"
+          plain
+          @click="editDialog = false">
+          Cancelar
+        </el-button>
+        <el-button
+          v-loading="editDialogLoading"
+          :disabled="!newNoteContent.trim()"
+          type="primary"
+          @click="editNote(newNoteContent)">
+          Editar nota
+        </el-button>
       </span>
     </el-dialog>
     <li v-if="!loading && !occurrences.length" class="dispute-view-occurrences__empty" data-testid="note-empty">

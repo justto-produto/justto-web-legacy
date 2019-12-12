@@ -98,12 +98,6 @@ const disputeMutations = {
           Vue.set(state.occurrences, occurrenceIndex, newOccurrence)
         }
       }
-      // if (newOccurrence.type === 'NOTE' && newOccurrence.updateAt) {
-      //   commit('clearDisputeOccurrences')
-      //   setTimeout(() => {
-      //     dispatch('getDisputeNotes', newOccurrence.disputeId)
-      //   }, 200)
-      // }
     })
   },
   SOCKET_ADD_DISPUTE_SUMARY (state, disputeWebsocketSummaryDto) {
