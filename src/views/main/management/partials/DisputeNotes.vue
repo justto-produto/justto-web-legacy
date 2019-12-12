@@ -14,7 +14,7 @@
         data-testid="message-box">
         <div class="dispute-view-occurrences__card-box">
           <el-card
-            v-loading="noteLoading"
+            v-loading="noteLoading === occurrence.id"
             class="dispute-view-occurrences__card dispute-view-occurrences__card--note"
             shadow="never">
             <div slot="header" class="dispute-view-occurrences__card--note-header">
@@ -42,8 +42,8 @@
         </el-button>
         <el-button
           v-loading="editDialogLoading"
+          :disabled="!newNoteContent.trim()"
           type="primary"
-          :disabled="!this.newNoteContent.trim()"
           @click="editNote(newNoteContent)">
           Editar nota
         </el-button>
@@ -68,7 +68,7 @@ export default {
   data () {
     return {
       loading: true,
-      noteLoading: false,
+      noteLoading: 0,
       editDialog: false,
       editDialogLoading: false,
       newNoteContent: ''
@@ -145,7 +145,7 @@ export default {
         type: 'warning'
       }).then(() => {
         let noteId = occurrence.id
-        this.noteLoading = true
+        this.noteLoading = occurrence.id
         this.$store.dispatch('deleteDisputeNote', noteId).then(() => {
           window.analytics.track('Nota removida')
           this.occurrences.splice(index, 1)
@@ -157,7 +157,7 @@ export default {
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
-          this.noteLoading = false
+          this.noteLoading = 0
         })
       })
     }
