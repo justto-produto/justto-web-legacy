@@ -67,6 +67,18 @@ const disputeActions = {
         })
     })
   },
+  getDisputeBankAccounts ({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('http://b49fc37f.ngrok.io/api/disputes/' + id + '/bank-accounts')
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   getDisputeDTO ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

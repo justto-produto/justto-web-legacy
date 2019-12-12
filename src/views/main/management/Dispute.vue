@@ -186,6 +186,7 @@
         :loading.sync="loadingDispute"
         :dispute.sync="dispute"
         :active-role-id.sync="activeRoleId"
+        :bank-accounts.sync="bankAccounts"
         data-testid="dispute-overview"
         @updateActiveRole="updateActiveRole" />
     </template>
@@ -218,7 +219,8 @@ export default {
       activeRole: {},
       invalidReceiver: undefined,
       isCollapsed: false,
-      enterToSend: 0
+      enterToSend: 0,
+      bankAccounts: []
     }
   },
   computed: {
@@ -361,6 +363,10 @@ export default {
             this.loadingDispute = false
           }, 500)
         })
+        this.bankAccounts = []
+      this.$store.dispatch('getDisputeBankAccounts', this.id).then(bankAccounts => {
+        this.bankAccounts = bankAccounts
+      })
     },
     handleTabClick (tab) {
       if (tab.name === '2' || tab.name === '3') {
@@ -682,15 +688,6 @@ export default {
       .el-input {
         display: inline-block;
       }
-    }
-  }
-  &__choose-unsettled-dialog {
-    .el-message-box__content {
-      padding: 10px 0;
-    }
-    .el-select {
-      margin: 10px 0;
-      width: 100%;
     }
   }
   &__more {
