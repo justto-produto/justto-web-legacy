@@ -95,9 +95,8 @@
         Definir assinantes da minuta
       </el-button>
       <el-button
-        v-loading="loadingChooseRecipients"
         v-if="step === 2"
-        :disabled="!hasEmails"
+        :disabled="!hasEmails || loadingChooseRecipients"
         type="primary"
         @click="chooseRecipients">
         Enviar para Assinatura
@@ -160,17 +159,17 @@ export default {
       }
     },
     title () {
-      if (this.loading) {
-        return 'Minuta'
-      } else {
-        switch (this.step) {
-          case 0: return 'Escolha um modelo para iniciar'
-          case 1: return 'Visualização da Minuta'
-          case 2: return 'Enviar Minuta'
-          case 3:
-          case 4: return this.document.name
-          default: return ''
-        }
+      switch (this.step) {
+        case 0:
+          if (this.models.length > 1) {
+            return 'Escolha um modelo para iniciar'
+          }
+          return 'Gerando Minuta...'
+        case 1: return 'Visualização da Minuta'
+        case 2: return 'Enviar Minuta'
+        case 3:
+        case 4: return this.document.name
+        default: return 'Minuta'
       }
     },
     width () {
@@ -234,8 +233,25 @@ export default {
       this.loading = true
       this.$store.dispatch('getDocumentModels').then(models => {
         this.models = models
-        if (models && models.length === 1) {
-          this.selectModel(models[0].id)
+        if (models) {
+          this.selectModel({ modelId: models[0].id, unique: models.length === 1 })
+        } else {
+          this.loading = false
+        }
+      }).catch(() => {
+        this.visible = false
+        this.$jusNotification({ type: 'error' })
+      })
+    },
+    selectModel (params) {
+      this.loading = true
+      this.$store.dispatch('createDocumentByModel', {
+        disputeId: this.disputeId,
+        modelId: params.modelId
+      }).then(doc => {
+        this.document = doc
+        this.step = 1
+        if (params.unique) {
           const hideAlert = localStorage.getItem('jushidemodelalert')
           if (!hideAlert) {
             this.$confirm(
@@ -252,22 +268,7 @@ export default {
               localStorage.setItem('jushidemodelalert', true)
             })
           }
-        } else {
-          this.loading = false
         }
-      }).catch(() => {
-        this.visible = false
-        this.$jusNotification({ type: 'error' })
-      })
-    },
-    selectModel (modelId) {
-      this.loading = true
-      this.$store.dispatch('createDocumentByModel', {
-        disputeId: this.disputeId,
-        modelId
-      }).then(doc => {
-        this.document = doc
-        this.step = 1
       }).catch(() => {
         this.visible = false
         this.$jusNotification({ type: 'error' })
