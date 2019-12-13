@@ -23,6 +23,7 @@
         <span v-if="hasEmails">
           <div v-for="(role, index) in disputeRoles" :key="index">
             <span class="jus-protocol-dialog__title">{{ role.name }}</span>
+            <div style="margin-bottom: 12x;">{{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase())  }}</div>
             <div v-for="(email, index) in role.emails" :key="index">
               <input
                 v-model="emails[role.name]"
@@ -396,7 +397,8 @@ export default {
       margin-top: 10px;
     }
     p {
-      margin-top: 0;
+      margin-top: -14px;
+      margin-bottom: 32px;
     }
   }
   &__title {
