@@ -93,9 +93,8 @@
         Definir assinantes da minuta
       </el-button>
       <el-button
-        v-loading="loadingChooseRecipients"
         v-if="step === 2"
-        :disabled="!hasEmails"
+        :disabled="!hasEmails || loadingChooseRecipients"
         type="primary"
         @click="chooseRecipients">
         Enviar para Assinatura
@@ -298,9 +297,16 @@ export default {
         this.signers = doc.signers
         this.step = 3
         this.loading = false
-      }).catch(() => {
+      }).catch(e => {
         this.visible = false
-        this.$jusNotification({ type: 'error' })
+        if (e.response.data.reason.length) {
+          this.$jusNotification({
+            type: 'error',
+            message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
+          })
+        } else {
+          this.$jusNotification({ type: 'error' })
+        }
       }).finally(() => {
         this.loading = false
         this.loadingChooseRecipients = false
@@ -380,8 +386,8 @@ export default {
     }
   }
   &__send-to {
-    > div {
-      margin-top: 32px;
+    span > div {
+      margin-top: 24px;
       + div {
         margin-top: 18px;
       }
