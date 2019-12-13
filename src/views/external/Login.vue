@@ -81,8 +81,12 @@
           @submit.native.prevent="selectWorkspace">
           <h1 class="external-view__title">Equipe</h1>
           <p>Selecione uma de suas equipes de trabalho para entrar.</p>
-          <el-form-item label="Equipe" prop="selectedWorkspace">
-            <el-select v-model="workspaceForm.selectedWorkspaceIndex" placeholder="Selecione" data-testid="select-workspace">
+          <el-form-item label="Equipe" prop="selectedWorkspaceIndex">
+            <el-select
+              v-model="workspaceForm.selectedWorkspaceIndex"
+              placeholder="Selecione"
+              filterable
+              data-testid="select-workspace">
               <el-option
                 v-for="(w, index) in workspaces"
                 :key="index"
@@ -135,7 +139,8 @@ export default {
         selectedWorkspaceIndex: ''
       },
       workspaceRules: {
-        selectedWorkspaceIndex: [{ required: true, message: 'Campo obrigatório', trigger: ['blur', 'submit'] }]
+        selectedWorkspaceIndex:
+        [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
     }
   },
@@ -215,7 +220,7 @@ export default {
         })
     },
     selectWorkspace () {
-      this.$refs['workspaceForm'].validate(valid => {
+      this.$refs.workspaceForm.validate(valid => {
         if (valid) {
           this.getMembersAndRedirect(this.workspaces[this.workspaceForm.selectedWorkspaceIndex])
         }

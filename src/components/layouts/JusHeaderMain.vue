@@ -77,7 +77,11 @@
           :visible.sync="changeWorkspaceDialogVisible"
           title="Alterar Equipe"
           width="40%">
-          <el-select v-model="selectedWorkspace" placeholder="Selecione" data-testid="select-workspace">
+          <el-select
+            v-model="selectedWorkspace"
+            placeholder="Selecione"
+            filterable
+            data-testid="select-workspace">
             <el-option
               v-for="(workspace, index) in workspaces"
               :key="workspace.id"
