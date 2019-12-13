@@ -317,10 +317,7 @@ export default {
     },
     showProtocolModal (dispute) {
       this.selectedDisputeId = dispute.id
-      const roles = getRoles(dispute.disputeRoles, ['CLAIMANT', 'RESPONDENT']).filter(dr => {
-        return !dr.roles.includes('NEGOTIATOR')
-      })
-      this.selectedDisputeRoles = roles
+      this.selectedDisputeRoles = dispute.disputeRoles
       this.protocolDialogVisible = true
     },
     getDocumentStep (hasDocument, signStatus) {

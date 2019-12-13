@@ -97,7 +97,8 @@
     "claimantLawyer": "Advogado(a) da parte",
     "dispute": "disputa",
     "respondentParty": "Réu",
-    "respondentLawyer": "Advogado(a) do Réu"
+    "respondentLawyer": "Advogado(a) do Réu",
+    "respondentNegotiator": "Negociador"
   },
   "NEGOTIATOR_REJECTED": "negada de",
   "NEGOTIATOR_PROPOSAL": "feita de",

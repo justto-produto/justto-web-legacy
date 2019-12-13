@@ -22,16 +22,21 @@
         <p>Escolha um endereço de email para cada parte.</p>
         <span v-if="hasEmails">
           <div v-for="(role, index) in disputeRoles" :key="index">
-            <span class="jus-protocol-dialog__title">{{ role.name }}</span>
-            <div style="margin-bottom: 12x;">{{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase())  }}</div>
-            <div v-for="(email, index) in role.emails" :key="index">
-              <input
-                v-model="emails[role.name]"
-                :name="role.name"
-                :value="email.address"
-                type="radio">
-              {{ email.address }}
-            </div>
+            <span class="jus-protocol-dialog__title">{{ role.name.toUpperCase() }}</span>
+            <div style="margin-bottom: 6px; font-weight: bold; font-size: 12px;">{{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}</div>
+            <span v-if="role.emails.length">
+              <div v-for="(email, index) in role.emails" :key="index">
+                <input
+                  v-model="emails[role.name]"
+                  :name="role.name"
+                  :value="email.address"
+                  type="radio">
+                {{ email.address }}
+              </div>
+            </span>
+            <span v-else style="font-style: italic;">
+              Sem e-mails cadastrados para esta parte.
+            </span>
           </div>
         </span>
         <span v-else>
@@ -387,10 +392,10 @@ export default {
     }
   }
   &__send-to {
-    span > div {
+    > span > div {
       margin-top: 24px;
       + div {
-        margin-top: 18px;
+        margin-top: 22px;
       }
     }
     input {
