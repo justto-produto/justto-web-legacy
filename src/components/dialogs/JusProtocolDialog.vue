@@ -22,15 +22,21 @@
         <p>Escolha um endereço de email para cada parte.</p>
         <span v-if="hasEmails">
           <div v-for="(role, index) in disputeRoles" :key="index">
-            <span class="jus-protocol-dialog__title">{{ role.name }}</span>
-            <div v-for="(email, index) in role.emails" :key="index">
-              <input
-                v-model="emails[role.name]"
-                :name="role.name"
-                :value="email.address"
-                type="radio">
-              {{ email.address }}
-            </div>
+            <span class="jus-protocol-dialog__title">{{ role.name.toUpperCase() }}</span>
+            <div style="margin-bottom: 6px; font-weight: bold; font-size: 12px;">{{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}</div>
+            <span v-if="role.emails.length">
+              <div v-for="(email, index) in role.emails" :key="index">
+                <input
+                  v-model="emails[role.name]"
+                  :name="role.name"
+                  :value="email.address"
+                  type="radio">
+                {{ email.address }}
+              </div>
+            </span>
+            <span v-else style="font-style: italic;">
+              Sem e-mails cadastrados para esta parte.
+            </span>
           </div>
         </span>
         <span v-else>
@@ -57,10 +63,8 @@
           </div>
         </div>
       </div>
-      <div v-if="step === 4">
-        <object :data="pdfUrl" type="application/pdf">
-          <iframe :src="pdfUrl" width="100%" height="100%" />
-        </object>
+      <div v-loading="loadingPdf" v-if="step === 4">
+        <object ref="pdfView" :data="pdfUrl" type="application/pdf" @load="loadingPdf = false" />
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -71,7 +75,7 @@
         plain
         type="danger"
         @click="deleteDocument">
-        Excluir Minuna
+        Excluir Minuta
       </el-button>
       <el-button
         v-if="step !== 4"
@@ -113,7 +117,7 @@
         v-if="step === 3"
         icon="el-icon-view"
         type="primary"
-        @click="step = 4">
+        @click="visualizePdf">
         Visualizar
       </el-button>
     </span>
@@ -141,6 +145,7 @@ export default {
     return {
       step: 0,
       loading: false,
+      loadingPdf: false,
       loadingDownload: false,
       loadingChooseRecipients: false,
       models: [],
@@ -300,9 +305,16 @@ export default {
         this.signers = doc.signers
         this.step = 3
         this.loading = false
-      }).catch(() => {
+      }).catch(e => {
         this.visible = false
-        this.$jusNotification({ type: 'error' })
+        if (e.response.data.reason.length) {
+          this.$jusNotification({
+            type: 'error',
+            message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
+          })
+        } else {
+          this.$jusNotification({ type: 'error' })
+        }
       }).finally(() => {
         this.loading = false
         this.loadingChooseRecipients = false
@@ -348,6 +360,10 @@ export default {
           this.visible = false
         })
       })
+    },
+    visualizePdf () {
+      this.loadingPdf = true
+      this.step = 4
     }
   }
 }
@@ -378,17 +394,18 @@ export default {
     }
   }
   &__send-to {
-    > div {
-      margin-top: 32px;
+    > span > div {
+      margin-top: 24px;
       + div {
-        margin-top: 18px;
+        margin-top: 22px;
       }
     }
     input {
       margin-top: 10px;
     }
     p {
-      margin-top: 0;
+      margin-top: -14px;
+      margin-bottom: 32px;
     }
   }
   &__title {

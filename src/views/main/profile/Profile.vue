@@ -39,9 +39,12 @@
               <h3>Alterar nome da Equipe</h3>
               <el-alert
                 :closable="false"
-                title="Este nome NÃO irá aparecer nas mensagens automáticas. Utilize-o para organização interna."
                 type="info"
-                show-icon />
+                show-icon>
+                <span slot="title">
+                  Este nome <strong>NÃO</strong> irá aparecer nas mensagens automáticas. Utilize-o para organização interna.
+                </span>
+              </el-alert>
               <br>
               <el-form-item label="Nome da equipe">
                 <el-input v-model="teamName">
@@ -72,9 +75,12 @@
             <h3>Alterar nome da empresa/escritório</h3>
             <el-alert
               :closable="false"
-              title="Este nome irá aparecer em todas as mensagens automáticas enviadas pela Justto."
               type="info"
-              show-icon />
+              show-icon>
+              <span slot="title">
+                Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
+              </span>
+            </el-alert>
             <br>
             <el-form label-position="top">
               <el-form-item label="Nome da empresa/escritório">

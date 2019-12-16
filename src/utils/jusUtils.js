@@ -4,9 +4,15 @@ import moment from 'moment'
 const getRoles = function (disputeRoles, party, role) {
   let roles
   if (party) {
-    roles = disputeRoles.filter(disputeRole => {
-      return disputeRole.party === party
-    })
+    if (Array.isArray(party)) {
+      roles = disputeRoles.filter(disputeRole => {
+        return party.includes(disputeRole.party)
+      })
+    } else {
+      roles = disputeRoles.filter(disputeRole => {
+        return disputeRole.party === party
+      })
+    }
   }
   if (role) {
     roles = roles.filter(disputeRole => {
