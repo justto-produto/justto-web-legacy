@@ -135,7 +135,7 @@ const disputeActions = {
   editRole ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
+      axios.put('http://194ea5e6.ngrok.io/api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
         .then(response => {
           resolve(response.data)
         }).catch(error => {

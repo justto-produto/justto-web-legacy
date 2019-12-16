@@ -83,11 +83,11 @@
             </span>
           </strong>
         </div>
-        <div v-if="bankAccounts.length" class="dispute-overview-view__info-line">
+        <!-- <div v-if="dispute.bankAccounts && dispute.bankAccounts.length" class="dispute-overview-view__info-line">
           <span class="title">Conta(s) bancária(s):</span>
           <el-collapse value="0" @change="handleChange">
             <el-collapse-item
-              v-for="(bankAccount, index) in bankAccounts"
+              v-for="(bankAccount, index) in dispute.bankAccounts"
               :key="`${index}-${bankAccount.id}`"
               :name="index">
               <template slot="title">
@@ -105,7 +105,7 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-        </div>
+        </div> -->
         <div class="dispute-overview-view__actions">
           <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>
         </div>
@@ -218,7 +218,7 @@
                   <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
                 </el-checkbox>
               </span>
-            </div>
+            </div> -->
             <div class="dispute-overview-view__actions">
               <el-button v-if="!role.roles.includes('NEGOTIATOR')" plain @click="removeRole(role)">Excluir</el-button>
               <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
@@ -487,7 +487,7 @@
               </a>
             </template>
           </el-table-column>
-        </el-table>
+        </el-table> -->
       </el-form>
       <span slot="footer">
         <el-button plain @click="editRoleDialogVisible = false">Cancelar</el-button>
@@ -508,7 +508,7 @@
         label-position="top"
         @submit.native.prevent>
         <el-form-item label="Nome" prop="personName">
-          <el-input v-model="addBankForm.personName" />
+          <el-input v-model="addBankForm.name" />
         </el-form-item>
         <el-form-item label="Email" prop="email">
           <el-input v-model="addBankForm.email" />
@@ -568,14 +568,6 @@ export default {
       default: false,
       type: Boolean
     },
-    dispute: {
-      default: () => {},
-      type: Object
-    },
-    bankAccounts: {
-      default: () => [],
-      type: Array
-    },
     activeRoleId: {
       default: 0,
       type: Number
@@ -632,16 +624,16 @@ export default {
       descriptionCollapse: true,
       openAddBankDialogVisible: false,
       addBankForm: {
-        personName: '',
+        name: '',
         email: '',
-        documentNumber: '',
+        document: '',
         bank: '',
         agency: '',
         number: '',
         type: ''
       },
       addBankRules: {
-        personName: [
+        name: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' }
         ],
@@ -649,7 +641,7 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
         ],
-        documentNumber: [
+        document: [
           { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
@@ -661,6 +653,9 @@ export default {
     }
   },
   computed: {
+    dispute () {
+      return this.$store.getters.dispute
+    },
     strategies () {
       return this.$store.getters.strategyList
     },
