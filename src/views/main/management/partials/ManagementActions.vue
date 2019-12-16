@@ -9,10 +9,10 @@
         <el-button plain data-testid="batch-unsettled" @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
         <el-button plain data-testid="batch-paused" @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
         <el-button plain data-testid="batch-resume" @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
-        <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
         <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">{{ $t('action.CHANGE_EXPIRATION_DATE') }}</el-button>
+        <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
     </div>
@@ -150,8 +150,16 @@ export default {
     }
   },
   computed: {
+    selectedIdsComp: {
+      get () {
+        return this.selectedIds
+      },
+      set (ids) {
+        this.$emit('update:selectedIds', ids)
+      }
+    },
     selectedIdsLength () {
-      return this.selectedIds.length
+      return this.selectedIdsComp.length
     },
     strategies () {
       return this.$store.getters.strategyList
@@ -213,6 +221,7 @@ export default {
           action: action,
           selecteds: selecteds
         })
+        this.selectedIdsComp = []
         this.$store.dispatch('getDisputes')
         this.$jusNotification({
           title: 'Yay!',
@@ -292,7 +301,7 @@ export default {
   }
   button {
     height: 68px;
-    padding: 8px 14px;
+    padding: 8px 10px;
     border: 0;
     border-radius: 0;
     text-transform: uppercase;
