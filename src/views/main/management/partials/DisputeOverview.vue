@@ -195,13 +195,13 @@
                 </span>
               </span>
             </div>
-            <div v-show="bankAccounts.length" class="dispute-overview-view__info-line">
+            <div v-if="role.bankAccounts && role.bankAccounts.length" class="dispute-overview-view__info-line">
               <span class="title">Conta(s) bancária(s):</span>
               <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
                 <i class="el-icon-question right" style="margin-top: 5px;" />
               </el-tooltip>
               <span
-                v-for="(bankAccount, index) in bankAccounts.filter(b => !b.archived)"
+                v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
                 :key="`${index}-${bankAccount.id}`"
                 :class="{'is-main': bankAccount.isMain}"
                 style="margin: 0;">
@@ -209,7 +209,7 @@
                   v-model="bankAccount.selected"
                   border
                   class="bordered"
-                  @change="updateDisputeRole(role)">
+                  @change="updateDisputeBankAccounts(role)">
                   <strong>Nome:</strong> {{ bankAccount.personName }} <br>
                   <strong>Documento:</strong> {{ bankAccount.personDocumentNumber | cpfCnpjMask }} <br>
                   <strong>Banco:</strong> {{ bankAccount.bank }} <br>
@@ -467,13 +467,13 @@
           </a>
         </h4>
         <el-table
-          :data="roleForm.emails"
+          :data="roleForm.bankAccounts"
           :show-header="false"
           fit
           class="el-table--list">
           <el-table-column>
             <template slot-scope="scope">
-              {{ scope.row.address }}
+              {{ scope.row.personName }}
             </template>
           </el-table-column>
           <el-table-column
@@ -482,7 +482,7 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeEmail(scope.$index)">
+              <a href="#" @click.prevent="removeBankData(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </template>
@@ -514,7 +514,7 @@
           <el-input v-model="addBankForm.email" />
         </el-form-item>
         <el-form-item label="CPF ou CNPJ" prop="documentNumber">
-          <el-input v-model="addBankForm.documentNumber" />
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="addBankForm.documentNumber" />
         </el-form-item>
         <el-form-item label="Banco" prop="bank">
           <el-select v-model="addBankForm.bank" filterable placeholder="">
@@ -736,6 +736,9 @@ export default {
       })
       this.$store.commit('setDisputeRoles', disputeRoles)
       this.$emit('updateActiveRole', role)
+    },
+    updateDisputeBankAccounts (role) {
+      return 0
     },
     roleTitleSort (title) {
       if (title) {
@@ -992,20 +995,25 @@ export default {
     },
     addBankData () {
       this.$refs.addBankForm.validate(valid => {
-        // if (isValid) {
-        //   let self = this
-        //   this.roleForm.oab = this.roleForm.oab.replace(/ /g, '')
-        //   let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
-        //   if (isDuplicated < 0) {
-        //     this.roleForm.oabs.push({
-        //       number: this.roleForm.oab,
-        //       state: this.roleForm.state
-        //     })
-        //   }
-        //   this.roleForm.oab = ''
-        //   this.roleForm.state = ''
-        // }
+        if (valid) {
+          if (!this.roleForm.bankAccounts) {
+            this.roleForm.bankAccounts = []
+          }
+          let bankForm = JSON.parse(JSON.stringify(this.addBankForm))
+          this.roleForm.bankAccounts.push(bankForm)
+          this.addBankForm.personName = ''
+          this.addBankForm.email = ''
+          this.addBankForm.documentNumber = ''
+          this.addBankForm.bank = ''
+          this.addBankForm.agency = ''
+          this.addBankForm.number = ''
+          this.addBankForm.type = ''
+          this.openAddBankDialogVisible = false
+        }
       })
+    },
+    removeBankData (index) {
+      this.roleForm.bankAccounts.splice(index, 1)
     }
   }
 }

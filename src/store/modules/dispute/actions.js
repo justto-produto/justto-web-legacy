@@ -57,7 +57,7 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
       // eslint-disable-next-line
-      axios.get('api/disputes/' + id + '/vm')
+      axios.get('http://194ea5e6.ngrok.io/api/disputes/' + id + '/vm')
         .then(response => {
           commit('setDispute', response.data)
           resolve(response.data)
@@ -70,7 +70,7 @@ const disputeActions = {
   getDisputeBankAccounts ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('http://b49fc37f.ngrok.io/api/disputes/' + id + '/bank-accounts')
+      axios.get('http://194ea5e6.ngrok.io/api/disputes/' + id + '/bank-accounts')
         .then(response => {
           resolve(response.data)
         })
