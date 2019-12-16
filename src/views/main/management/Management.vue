@@ -6,7 +6,7 @@
     <template slot="main">
       <management-actions
         :active="multiActive"
-        :selected-ids="selectedIds"
+        :selected-ids.sync="selectedIds"
         @disputes:clear="clearSelection"/>
       <div class="view-management__filters">
         <el-tabs
