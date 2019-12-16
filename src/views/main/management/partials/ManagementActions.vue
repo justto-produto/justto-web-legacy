@@ -301,7 +301,7 @@ export default {
   }
   button {
     height: 68px;
-    padding: 8px 14px;
+    padding: 8px 10px;
     border: 0;
     border-radius: 0;
     text-transform: uppercase;
