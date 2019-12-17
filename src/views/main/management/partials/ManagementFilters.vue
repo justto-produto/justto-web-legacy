@@ -18,9 +18,9 @@
                 @clear="clearCampaign">
                 <el-option
                   v-for="campaign in campaigns"
-                  :key="campaign.id"
-                  :value="campaign.name"
-                  :label="campaign.name"/>
+                  :key="campaign"
+                  :value="campaign"
+                  :label="campaign"/>
               </el-select>
             </el-form-item>
           </el-col>
