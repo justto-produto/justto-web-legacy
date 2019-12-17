@@ -274,6 +274,7 @@ export default {
 
 <style lang="scss">
 .management-actions {
+  overflow-x: auto;
   position: absolute;
   left: 0;
   right: 0;
@@ -300,8 +301,9 @@ export default {
     text-align: right;
   }
   button {
+    margin-left: 0 !important;
     height: 68px;
-    padding: 8px 10px;
+    padding: 12px;
     border: 0;
     border-radius: 0;
     text-transform: uppercase;
