@@ -24,6 +24,7 @@
             </span>
           </el-tooltip>
           <span v-html="buildLogContent(occurrence)" />
+          <span class="dispute-view-occurrences__log-hour" v-html="buildHour(occurrence)" />
         </el-card>
         <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
           <div class="dispute-view-occurrences__avatar">
