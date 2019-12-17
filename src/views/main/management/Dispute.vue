@@ -287,7 +287,7 @@ export default {
   methods: {
     updateActiveRole (activeRole) {
       if (typeof activeRole === 'number') {
-        activeRole = this.$store.getters.disputeRoles.find(role => {
+        activeRole = this.dispute.disputeRoles.find(role => {
           return role.id === activeRole
         })
       }
@@ -347,6 +347,7 @@ export default {
       this.$store.dispatch('getDispute', this.id)
         .then(dispute => {
           if (!dispute || dispute.archived) this.$router.push('/management')
+          this.$store.dispatch('getDisputeBankAccounts', dispute.id)
         })
         .catch(error => {
           if (error.response.status === 403) {

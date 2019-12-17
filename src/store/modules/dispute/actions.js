@@ -27,29 +27,29 @@ const queryBuilder = q => {
 }
 
 const disputeActions = {
-  SOCKET_ADD_DISPUTE ({ commit, state }, disputeChanged) {
-    if (state.dispute.id === disputeChanged.id) {
-      state.dispute = disputeChanged
-    } else {
-      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
-      if (disputeIndex !== -1) {
-        let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-        if (dispute.status !== disputeChanged.status && state.tab !== '3') {
-          commit('disputeSetHasNew', true)
-        } else {
-          if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-            Vue.set(state.disputes, disputeIndex, disputeChanged)
-          } else {
-            Vue.set(state.disputes, disputeIndex, disputeChanged)
-          }
-        }
-      } else {
-        if (state.query.status.includes(disputeChanged.status)) {
-          commit('disputeSetHasNew', true)
-        }
-      }
-    }
-  },
+  // SOCKET_ADD_DISPUTE ({ commit, state }, disputeChanged) {
+  //   if (state.dispute.id === disputeChanged.id) {
+  //     state.dispute = disputeChanged
+  //   } else {
+  //     let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
+  //     if (disputeIndex !== -1) {
+  //       let dispute = state.disputes.find(d => disputeChanged.id === d.id)
+  //       if (dispute.status !== disputeChanged.status && state.tab !== '3') {
+  //         commit('disputeSetHasNew', true)
+  //       } else {
+  //         if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
+  //           Vue.set(state.disputes, disputeIndex, disputeChanged)
+  //         } else {
+  //           Vue.set(state.disputes, disputeIndex, disputeChanged)
+  //         }
+  //       }
+  //     } else {
+  //       if (state.query.status.includes(disputeChanged.status)) {
+  //         commit('disputeSetHasNew', true)
+  //       }
+  //     }
+  //   }
+  // },
   SOCKET_REMOVE_DISPUTE ({ commit }) {
     commit('disputeSetHasNew', true)
   },
@@ -57,7 +57,7 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
       // eslint-disable-next-line
-      axios.get('http://194ea5e6.ngrok.io/api/disputes/' + id + '/vm')
+      axios.get('http://13c05de3.ngrok.io/api/disputes/' + id + '/vm')
         .then(response => {
           commit('setDispute', response.data)
           resolve(response.data)
@@ -70,9 +70,34 @@ const disputeActions = {
   getDisputeBankAccounts ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get('http://194ea5e6.ngrok.io/api/disputes/' + id + '/bank-accounts')
+      axios.get('http://13c05de3.ngrok.io/api/disputes/' + id + '/bank-accounts')
         .then(response => {
+          commit('setDisputeBankAccounts', response.data)
           resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
+  linkDisputeBankAccounts ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.post('http://13c05de3.ngrok.io/api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
+  unlinkDisputeBankAccounts ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.delete('http://13c05de3.ngrok.io/api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
+        .then(() => {
+          resolve()
         })
         .catch(error => {
           reject(error)
@@ -135,7 +160,7 @@ const disputeActions = {
   editRole ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('http://194ea5e6.ngrok.io/api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
+      axios.put('http://13c05de3.ngrok.io/api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
         .then(response => {
           resolve(response.data)
         }).catch(error => {

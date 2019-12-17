@@ -83,21 +83,27 @@
             </span>
           </strong>
         </div>
-        <!-- <div v-if="dispute.bankAccounts && dispute.bankAccounts.length" class="dispute-overview-view__info-line">
+        <div v-if="disputeBankAccounts && disputeBankAccounts.length" class="dispute-overview-view__info-line">
           <span class="title">Conta(s) bancária(s):</span>
           <el-collapse value="0" @change="handleChange">
             <el-collapse-item
-              v-for="(bankAccount, index) in dispute.bankAccounts"
+              v-for="(bankAccount, index) in disputeBankAccounts"
               :key="`${index}-${bankAccount.id}`"
-              :name="index">
+              :name="index"
+              class="dispute-overview-view__bank-collapse">
               <template slot="title">
                 <div>
-                  # {{ index + 1 }} {{ bankAccount.personName }}
+                  {{ bankAccount.name }}
+                  <span>
+                    {{ bankAccount.bank }} <span v-if="bankAccount.agency">|</span>
+                    {{ bankAccount.agency }} <span v-if="bankAccount.number">|</span>
+                    {{ bankAccount.number }}
+                  </span>
                 </div>
               </template>
               <span class="bank-info">
-                <strong>Nome:</strong> {{ bankAccount.personName }} <br>
-                <strong>Documento:</strong> {{ bankAccount.personDocumentNumber | cpfCnpjMask }} <br>
+                <strong>Nome:</strong> {{ bankAccount.name }} <br>
+                <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
                 <strong>Banco:</strong> {{ bankAccount.bank }} <br>
                 <strong>Agência:</strong> {{ bankAccount.agency }} <br>
                 <strong>Conta:</strong> {{ bankAccount.number }} <br>
@@ -105,7 +111,7 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-        </div> -->
+        </div>
         <div class="dispute-overview-view__actions">
           <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>
         </div>
@@ -200,25 +206,23 @@
               <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
                 <i class="el-icon-question right" style="margin-top: 5px;" />
               </el-tooltip>
-              <span
-                v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
-                :key="`${index}-${bankAccount.id}`"
-                :class="{'is-main': bankAccount.isMain}"
-                style="margin: 0;">
+              <el-checkbox-group v-model="disputeBankAccountsIds">
                 <el-checkbox
-                  v-model="bankAccount.selected"
+                  v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
+                  :label="bankAccount.id"
+                  :key="`${index}-${bankAccount.id}`"
                   border
                   class="bordered"
-                  @change="updateDisputeBankAccounts(role)">
-                  <strong>Nome:</strong> {{ bankAccount.personName }} <br>
-                  <strong>Documento:</strong> {{ bankAccount.personDocumentNumber | cpfCnpjMask }} <br>
+                  @change="">
+                  <strong>Nome:</strong> {{ bankAccount.name }} <br>
+                  <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
                   <strong>Banco:</strong> {{ bankAccount.bank }} <br>
                   <strong>Agência:</strong> {{ bankAccount.agency }} <br>
                   <strong>Conta:</strong> {{ bankAccount.number }} <br>
                   <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
                 </el-checkbox>
-              </span>
-            </div> -->
+              </el-checkbox-group>
+            </div>
             <div class="dispute-overview-view__actions">
               <el-button v-if="!role.roles.includes('NEGOTIATOR')" plain @click="removeRole(role)">Excluir</el-button>
               <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
@@ -473,7 +477,10 @@
           class="el-table--list">
           <el-table-column>
             <template slot-scope="scope">
-              {{ scope.row.personName }}
+              {{ scope.row.name }}
+              <div style="font-size: 12px;">
+                {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
+              </div>
             </template>
           </el-table-column>
           <el-table-column
@@ -487,7 +494,7 @@
               </a>
             </template>
           </el-table-column>
-        </el-table> -->
+        </el-table>
       </el-form>
       <span slot="footer">
         <el-button plain @click="editRoleDialogVisible = false">Cancelar</el-button>
@@ -507,14 +514,14 @@
         :rules="addBankRules"
         label-position="top"
         @submit.native.prevent>
-        <el-form-item label="Nome" prop="personName">
+        <el-form-item label="Nome" prop="name">
           <el-input v-model="addBankForm.name" />
         </el-form-item>
         <el-form-item label="Email" prop="email">
           <el-input v-model="addBankForm.email" />
         </el-form-item>
-        <el-form-item label="CPF ou CNPJ" prop="documentNumber">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="addBankForm.documentNumber" />
+        <el-form-item label="CPF ou CNPJ" prop="document">
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="addBankForm.document" />
         </el-form-item>
         <el-form-item label="Banco" prop="bank">
           <el-select v-model="addBankForm.bank" filterable placeholder="">
@@ -656,6 +663,17 @@ export default {
     dispute () {
       return this.$store.getters.dispute
     },
+    disputeBankAccounts () {
+      return this.$store.getters.disputeBankAccounts
+    },
+    disputeBankAccountsIds: {
+      get () {
+        return this.$store.getters.disputeBankAccounts.map(dba => dba.id)
+      },
+      set (bankAccountId) {
+        this.updateDisputeBankAccounts(bankAccountId)
+      }
+    },
     strategies () {
       return this.$store.getters.strategyList
     },
@@ -732,8 +750,24 @@ export default {
       this.$store.commit('setDisputeRoles', disputeRoles)
       this.$emit('updateActiveRole', role)
     },
-    updateDisputeBankAccounts (role) {
-      return 0
+    updateDisputeBankAccounts (roleBankAccountIds) {
+      let action, bankAccountId
+      for (let roleAccount of roleBankAccountIds) {
+        if (!this.disputeBankAccountsIds.includes(roleAccount)) {
+          action = 'linkDisputeBankAccounts'
+          bankAccountId = roleAccount
+        }
+      }
+      for (let disputeAccount of this.disputeBankAccountsIds) {
+        if (!roleBankAccountIds.includes(disputeAccount)) {
+          action = 'unlinkDisputeBankAccounts'
+          bankAccountId = disputeAccount
+        }
+      }
+      this.$store.dispatch(action, {
+        disputeId: this.dispute.id,
+        bankAccountId
+      })
     },
     roleTitleSort (title) {
       if (title) {
@@ -996,9 +1030,9 @@ export default {
           }
           let bankForm = JSON.parse(JSON.stringify(this.addBankForm))
           this.roleForm.bankAccounts.push(bankForm)
-          this.addBankForm.personName = ''
+          this.addBankForm.name = ''
           this.addBankForm.email = ''
-          this.addBankForm.documentNumber = ''
+          this.addBankForm.document = ''
           this.addBankForm.bank = ''
           this.addBankForm.agency = ''
           this.addBankForm.number = ''
@@ -1019,9 +1053,6 @@ export default {
   margin-bottom: -20px;
   .jus-status-dot {
     float: initial !important;
-  }
-  .el-collapse-item__content {
-    padding-bottom: 20px;
   }
   &__info-line {
     > span:not(.title) {
@@ -1053,6 +1084,7 @@ export default {
       align-items: center;
       padding: 6px 11px;
       margin-top: 10px;
+      margin-left: 0 !important;
       .el-checkbox__input {
         vertical-align: super;
       }
@@ -1069,12 +1101,17 @@ export default {
     }
     .el-collapse-item__header {
       font-size: 12px;
-      height: 28px;
-      line-height: 28px;
-      div {
+      height: 38px;
+      div, span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        line-height: normal;
+      }
+      div > span {
+        font-size: 11px;
+        display: block;
+        color: #adadad;
       }
     }
     .el-collapse-item__content {
@@ -1155,6 +1192,16 @@ export default {
   &__role-collapse {
     background-color: #fff;
     font-size: 13px;
+  }
+  &__bank-collapse {
+    .el-collapse-item__wrap {
+      padding: 0 8px;
+      border-radius: 0;
+      border-left: 1px solid #9461f763;
+    }
+    .el-collapse-item__content {
+      padding-bottom: 0;
+    }
   }
   .el-input-group__append {
     border-color: #9462f7;
