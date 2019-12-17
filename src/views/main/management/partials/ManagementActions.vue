@@ -12,6 +12,7 @@
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
         <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">{{ $t('action.CHANGE_EXPIRATION_DATE') }}</el-button>
+        <el-button plain data-testid="batch-enrich" @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
@@ -192,9 +193,11 @@ export default {
       } else if (action === 'RESTART_ENGAGEMENT') {
         trackTitle = 'engajamentos reiniciados'
       } else if (action === 'CHANGE_STRATEGY') {
-        trackTitle = 'troca de estratégias'
+        trackTitle = 'estratégias alteradas'
       } else if (action === 'CHANGE_EXPIRATION_DATE') {
-        trackTitle = 'altera fim de negociações'
+        trackTitle = 'fim de negociações alterados'
+      } else if (action === 'ENRICH') {
+        trackTitle = 'disputas enriquecidas'
       } else {
         trackTitle = 'Ação em massa realizada'
       }
