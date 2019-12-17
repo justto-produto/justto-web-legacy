@@ -24,6 +24,7 @@
             </span>
           </el-tooltip>
           <span v-html="buildLogContent(occurrence)" />
+          <span class="dispute-view-occurrences__log-hour" v-html="buildHour(occurrence)" />
         </el-card>
         <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
           <div class="dispute-view-occurrences__avatar">
@@ -65,10 +66,16 @@
               <span v-html="buildHour(occurrence)" />
               <div v-if="!!buildIcon(occurrence)">•</div>
               <jus-icon v-if="!!buildIcon(occurrence)" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
-              <div v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.message.receiver.length < 40">•</div>
+              <div v-if="(occurrence.interaction && occurrence.interaction.message) && (occurrence.interaction.message.receiver || occurrence.interaction.message.parameters)">•</div>
               <span
-                v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.message.receiver.length < 40">
+                v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.direction === 'OUTBOUND'"
+                class="dispute-view-occurrences__for-to">
                 Para: {{ occurrence.interaction.message.receiver | phoneMask }}
+              </span>
+              <span
+                v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && occurrence.interaction.direction === 'INBOUND'"
+                class="dispute-view-occurrences__for-to">
+                Por: {{ occurrence.interaction.message.parameters.SENDER_NAME || occurrence.interaction.message.parameters.SENDER }}
               </span>
             </div>
           </div>
@@ -482,6 +489,19 @@ export default {
         height: 11px;
       }
     }
+  }
+  &__log-hour {
+    font-weight: 300;
+    float: right;
+    font-size: 11px;
+    margin-top: 3px;
+    margin-left: 10px;
+  }
+  &__for-to {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 40ch;
   }
   &__note {
     border-radius: 8px;
