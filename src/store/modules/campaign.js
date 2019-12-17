@@ -11,9 +11,9 @@ const campaign = {
     getCampaigns ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
-        axios.get('api/disputes/campaigns?size=999999')
+        axios.get('api/disputes/campaigns')
           .then(response => {
-            commit('setCampaigns', response.data.content)
+            commit('setCampaigns', response.data)
             resolve(response)
           })
           .catch(error => {
@@ -48,8 +48,8 @@ const campaign = {
   },
   getters: {
     campaignList: state => state.list.sort((a, b) => {
-      if (a.createdAt < b.createdAt) { return 1 }
-      if (a.createdAt > b.createdAt) { return -1 }
+      if (a < b) return 1
+      if (a > b) return -1
       return 0
     })
     // activeCampaigns: (state, getters) => {
