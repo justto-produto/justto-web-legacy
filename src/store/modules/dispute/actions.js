@@ -27,29 +27,29 @@ const queryBuilder = q => {
 }
 
 const disputeActions = {
-  // SOCKET_ADD_DISPUTE ({ commit, state }, disputeChanged) {
-  //   if (state.dispute.id === disputeChanged.id) {
-  //     state.dispute = disputeChanged
-  //   } else {
-  //     let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
-  //     if (disputeIndex !== -1) {
-  //       let dispute = state.disputes.find(d => disputeChanged.id === d.id)
-  //       if (dispute.status !== disputeChanged.status && state.tab !== '3') {
-  //         commit('disputeSetHasNew', true)
-  //       } else {
-  //         if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-  //           Vue.set(state.disputes, disputeIndex, disputeChanged)
-  //         } else {
-  //           Vue.set(state.disputes, disputeIndex, disputeChanged)
-  //         }
-  //       }
-  //     } else {
-  //       if (state.query.status.includes(disputeChanged.status)) {
-  //         commit('disputeSetHasNew', true)
-  //       }
-  //     }
-  //   }
-  // },
+  SOCKET_ADD_DISPUTE ({ commit, state }, disputeChanged) {
+    if (state.dispute.id === disputeChanged.id) {
+      state.dispute = disputeChanged
+    } else {
+      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
+      if (disputeIndex !== -1) {
+        let dispute = state.disputes.find(d => disputeChanged.id === d.id)
+        if (dispute.status !== disputeChanged.status && state.tab !== '3') {
+          commit('disputeSetHasNew', true)
+        } else {
+          if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
+            Vue.set(state.disputes, disputeIndex, disputeChanged)
+          } else {
+            Vue.set(state.disputes, disputeIndex, disputeChanged)
+          }
+        }
+      } else {
+        if (state.query.status.includes(disputeChanged.status)) {
+          commit('disputeSetHasNew', true)
+        }
+      }
+    }
+  },
   SOCKET_REMOVE_DISPUTE ({ commit }) {
     commit('disputeSetHasNew', true)
   },

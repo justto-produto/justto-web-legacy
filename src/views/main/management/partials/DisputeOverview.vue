@@ -212,8 +212,7 @@
                   :label="bankAccount.id"
                   :key="`${index}-${bankAccount.id}`"
                   border
-                  class="bordered"
-                  @change="">
+                  class="bordered">
                   <strong>Nome:</strong> {{ bankAccount.name }} <br>
                   <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
                   <strong>Banco:</strong> {{ bankAccount.bank }} <br>
