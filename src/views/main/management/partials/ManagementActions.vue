@@ -150,8 +150,16 @@ export default {
     }
   },
   computed: {
+    selectedIdsComp: {
+      get () {
+        return this.selectedIds
+      },
+      set (ids) {
+        this.$emit('update:selectedIds', ids)
+      }
+    },
     selectedIdsLength () {
-      return this.selectedIds.length
+      return this.selectedIdsComp.length
     },
     strategies () {
       return this.$store.getters.strategyList
@@ -213,6 +221,7 @@ export default {
           action: action,
           selecteds: selecteds
         })
+        this.selectedIdsComp = []
         this.$store.dispatch('getDisputes')
         this.$jusNotification({
           title: 'Yay!',
@@ -292,7 +301,7 @@ export default {
   }
   button {
     height: 68px;
-    padding: 8px 14px;
+    padding: 8px 10px;
     border: 0;
     border-radius: 0;
     text-transform: uppercase;
