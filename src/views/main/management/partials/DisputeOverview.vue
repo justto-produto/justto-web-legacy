@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-loading="loading" class="dispute-overview-view">
+  <div v-loading="loading || linkBankAccountLoading" class="dispute-overview-view">
     <el-collapse value="1">
       <el-collapse-item title="Informações gerais" name="1">
         <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline" style="margin: 0">
@@ -83,11 +83,11 @@
             </span>
           </strong>
         </div>
-        <div v-if="disputeBankAccounts && disputeBankAccounts.length" class="dispute-overview-view__info-line">
+        <div v-if="dispute.bankAccounts && dispute.bankAccounts.length" class="dispute-overview-view__info-line">
           <span class="title">Conta(s) bancária(s):</span>
-          <el-collapse value="0" @change="handleChange">
+          <el-collapse value="0">
             <el-collapse-item
-              v-for="(bankAccount, index) in disputeBankAccounts"
+              v-for="(bankAccount, index) in dispute.bankAccounts"
               :key="`${index}-${bankAccount.id}`"
               :name="index"
               class="dispute-overview-view__bank-collapse">
@@ -103,6 +103,7 @@
               </template>
               <span class="bank-info">
                 <strong>Nome:</strong> {{ bankAccount.name }} <br>
+                <strong>E-mail:</strong> {{ bankAccount.email }} <br>
                 <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
                 <strong>Banco:</strong> {{ bankAccount.bank }} <br>
                 <strong>Agência:</strong> {{ bankAccount.agency }} <br>
@@ -136,25 +137,6 @@
                 {{ role.name }}
               </div>
             </template>
-            <!-- <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-              <span>Status:</span>
-              <el-popover
-                placement="top-end"
-                width="220"
-                trigger="hover">
-                <div class="dispute-overview-view__location">
-                  <span>Localização</span>
-                  -
-                  <span>Aparelho</span>
-                  -
-                  <span>OS</span>
-                  -
-                </div>
-                <span slot="reference">
-                  Offline
-                </span>
-              </el-popover>
-            </div> -->
             <div class="dispute-overview-view__info-line" style="margin: 0">
               <span class="title">Função:</span>
               <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
@@ -214,6 +196,7 @@
                   border
                   class="bordered">
                   <strong>Nome:</strong> {{ bankAccount.name }} <br>
+                  <strong>E-mail:</strong> {{ bankAccount.email }} <br>
                   <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
                   <strong>Banco:</strong> {{ bankAccount.bank }} <br>
                   <strong>Agência:</strong> {{ bankAccount.agency }} <br>
@@ -488,7 +471,7 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeBankData(scope.$index)">
+              <a href="#" @click.prevent="removeBankData(scope.$index, scope.row.id)">
                 <jus-icon icon="trash" />
               </a>
             </template>
@@ -621,6 +604,7 @@ export default {
         state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       newRoleDialogVisible: false,
+      linkBankAccountLoading: false,
       editDisputeDialogVisible: false,
       editDisputeDialogLoading: false,
       editRoleDialogVisible: false,
@@ -655,7 +639,8 @@ export default {
         agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         number: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-      }
+      },
+      bankAccountIdstoUnlink: []
     }
   },
   computed: {
@@ -667,7 +652,10 @@ export default {
     },
     disputeBankAccountsIds: {
       get () {
-        return this.$store.getters.disputeBankAccounts.map(dba => dba.id)
+        if (this.dispute.bankAccounts || Array.isArray(this.dispute.bankAccounts)) {
+          return this.dispute.bankAccounts.map(dba => dba.id)
+        }
+        return []
       },
       set (bankAccountId) {
         this.updateDisputeBankAccounts(bankAccountId)
@@ -763,9 +751,22 @@ export default {
           bankAccountId = disputeAccount
         }
       }
+      this.linkBankAccountLoading = true
       this.$store.dispatch(action, {
         disputeId: this.dispute.id,
         bankAccountId
+      }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          dangerouslyUseHTMLString: true,
+          message: 'Conta bancária <strong>' + this.$t('bankAccount.' + action).toUpperCase() + '</strong> à disputa com sucesso.',
+          type: 'success'
+        })
+      }).catch(e => {
+        console.error(e)
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.linkBankAccountLoading = false
       })
     },
     roleTitleSort (title) {
@@ -861,6 +862,7 @@ export default {
       this.$emit('update:activeRoleId', this.activeId)
     },
     openRoleDialog (role) {
+      this.bankAccountIdstoUnlink = []
       this.editRoleDialogError = false
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
@@ -878,50 +880,73 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
-        delete roleToEdit.title
-        this.editRoleDialogLoading = true
-        this.$store.dispatch('editRole', {
-          disputeId: this.dispute.id,
-          disputeRole: roleToEdit
-        }).then(() => {
-          this.$store.dispatch('getDispute', this.dispute.id)
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Os dados foram alterados com sucesso.',
-            type: 'success'
-          })
-          if (this.verifyChangedRoleData(this.roleForm, this.originalRole)) {
-            this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
-              confirmButtonText: 'Reengajar',
-              cancelButtonText: 'Cancelar',
-              type: 'warning',
-              cancelButtonClass: 'is-plain'
-            }).then(() => {
-              this.$store.dispatch('restartDisputeRoleEngagement', {
+        if (this.bankAccountIdstoUnlink.length) {
+          this.linkBankAccountLoading = true
+          let promise = []
+          for (let id of this.bankAccountIdstoUnlink) {
+            promise.push(
+              this.$store.dispatch('unlinkDisputeBankAccounts', {
                 disputeId: this.dispute.id,
-                disputeRoleId: this.roleForm.id
-              }).then(() => {
-                this.$jusNotification({
-                  title: 'Yay!',
-                  message: 'Reengajamento realizado com sucesso.',
-                  type: 'success'
-                })
+                bankAccountId: id
+              })
+            )
+          }
+          Promise.all(promise).then(() => {
+            this.editRoleAction()
+          }).catch(e => {
+            console.log(e)
+            this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.linkBankAccountLoading = false
+          })
+        } else {
+          this.editRoleAction()
+        }
+      }
+    },
+    editRoleAction () {
+      let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
+      delete roleToEdit.title
+      this.editRoleDialogLoading = true
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: roleToEdit
+      }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Os dados foram alterados com sucesso.',
+          type: 'success'
+        })
+        if (this.verifyChangedRoleData(this.roleForm, this.originalRole)) {
+          this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
+            confirmButtonText: 'Reengajar',
+            cancelButtonText: 'Cancelar',
+            type: 'warning',
+            cancelButtonClass: 'is-plain'
+          }).then(() => {
+            this.$store.dispatch('restartDisputeRoleEngagement', {
+              disputeId: this.dispute.id,
+              disputeRoleId: this.roleForm.id
+            }).then(() => {
+              this.$jusNotification({
+                title: 'Yay!',
+                message: 'Reengajamento realizado com sucesso.',
+                type: 'success'
               })
             })
-          }
-          this.editRoleDialogVisible = false
-        }).catch(error => {
+          })
+        }
+        this.editRoleDialogVisible = false
+      }).catch(error => {
+        this.editRoleDialogError = true
+        this.editRoleDialogErrorList = []
+        if (error.status === 400) {
           this.editRoleDialogError = true
-          this.editRoleDialogErrorList = []
-          if (error.status === 400) {
-            this.editRoleDialogError = true
-            this.editRoleDialogErrorList.push(error.data.message)
-          } else this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.editRoleDialogLoading = false
-        })
-      }
+          this.editRoleDialogErrorList.push(error.data.message)
+        } else this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.editRoleDialogLoading = false
+      })
     },
     verifyChangedRoleData (editedRole, originalRole) {
       let changed = false
@@ -1040,7 +1065,8 @@ export default {
         }
       })
     },
-    removeBankData (index) {
+    removeBankData (index, id) {
+      this.bankAccountIdstoUnlink.push(id)
       this.roleForm.bankAccounts.splice(index, 1)
     }
   }

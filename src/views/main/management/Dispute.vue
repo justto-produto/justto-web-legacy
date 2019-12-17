@@ -347,7 +347,6 @@ export default {
       this.$store.dispatch('getDispute', this.id)
         .then(dispute => {
           if (!dispute || dispute.archived) this.$router.push('/management')
-          this.$store.dispatch('getDisputeBankAccounts', dispute.id)
         })
         .catch(error => {
           if (error.response.status === 403) {

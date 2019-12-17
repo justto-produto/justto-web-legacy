@@ -57,7 +57,7 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
       // eslint-disable-next-line
-      axios.get('http://13c05de3.ngrok.io/api/disputes/' + id + '/vm')
+      axios.get('api/disputes/' + id + '/vm')
         .then(response => {
           commit('setDispute', response.data)
           resolve(response.data)
@@ -67,23 +67,23 @@ const disputeActions = {
         })
     })
   },
-  getDisputeBankAccounts ({ commit }, id) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('http://13c05de3.ngrok.io/api/disputes/' + id + '/bank-accounts')
-        .then(response => {
-          commit('setDisputeBankAccounts', response.data)
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
-    })
-  },
+  // getDisputeBankAccounts ({ commit }, id) {
+  //   return new Promise((resolve, reject) => {
+  //     // eslint-disable-next-line
+  //     axios.get('api/disputes/' + id + '/bank-accounts')
+  //       .then(response => {
+  //         commit('setDisputeBankAccounts', response.data)
+  //         resolve(response.data)
+  //       })
+  //       .catch(error => {
+  //         reject(error)
+  //       })
+  //   })
+  // },
   linkDisputeBankAccounts ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('http://13c05de3.ngrok.io/api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
+      axios.post('api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
         .then(() => {
           resolve()
         })
@@ -95,7 +95,7 @@ const disputeActions = {
   unlinkDisputeBankAccounts ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.delete('http://13c05de3.ngrok.io/api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
+      axios.delete('api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
         .then(() => {
           resolve()
         })
@@ -160,7 +160,7 @@ const disputeActions = {
   editRole ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('http://13c05de3.ngrok.io/api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
+      axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
         .then(response => {
           resolve(response.data)
         }).catch(error => {

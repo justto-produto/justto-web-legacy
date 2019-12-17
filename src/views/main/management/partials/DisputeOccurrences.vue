@@ -526,6 +526,8 @@ export default {
     }
   }
   &__date {
+    position: sticky;
+    top: 12px;
     margin: auto;
     margin-top: 20px;
     width: fit-content;

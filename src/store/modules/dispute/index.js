@@ -7,7 +7,6 @@ const dispute = {
     dispute: {
       id: 0
     },
-    bankAccounts: {},
     disputes: [],
     occurrences: [],
     occurrencesInitialSize: 10,
