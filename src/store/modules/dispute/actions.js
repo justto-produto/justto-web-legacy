@@ -269,6 +269,18 @@ const disputeActions = {
         })
     })
   },
+  enrichDispute ({ commit }, disputeId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.patch('api/fusion-runner/enrich/' + disputeId)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   restartDisputeRoleEngagement ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

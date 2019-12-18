@@ -12,7 +12,7 @@
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
         <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">{{ $t('action.CHANGE_EXPIRATION_DATE') }}</el-button>
-        <el-button plain data-testid="batch-enrich" @click="enrichDisputed('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
+        <el-button plain data-testid="batch-enrich" @click="enrichDisputes('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
@@ -220,7 +220,7 @@ export default {
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
-        window.analytics.track(selecteds + ' ' + trackTitle, {
+        window.analytics.track(trackTitle, {
           action: action,
           selecteds: selecteds
         })
@@ -268,26 +268,25 @@ export default {
         })
       }
     },
-    enrichDisputed (action) {
+    enrichDisputes (action) {
       let selecteds = this.selectedIds
-      let errors = []
       let successes = []
-      for (selected of selecteds) {
-        this.$store.dispatch('', selected).then(response => {
+      let errors = []
+      for (let selected of selecteds) {
+        this.$store.dispatch('enrichDispute', selected).then(response => {
           successes.push(selected)
         }).catch(() => {
           errors.push(selected)
         })
       }
-      if (errors) {
-        window.analytics.track(selecteds + ' ' + 'disputas enriquecidas - ERROS', {
+      if (!errors.length) {
+        window.analytics.track('disputas enriquecidas - ERROS', {
           action: action,
           errors: errors
         })
         this.$jusNotification({ type: 'error' })
-      }
-      if (successes) {
-        window.analytics.track(selecteds + ' ' + 'disputas enriquecidas - SUCESSOS', {
+      } else if (!successes.length) {
+        window.analytics.track('disputas enriquecidas - SUCESSOS', {
           action: action,
           successes: successes
         })
@@ -295,6 +294,13 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
+          dangerouslyUseHTMLString: true
+        })
+      } else {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. <strong>' + errors.length + '</strong> disputas não foram enriquecidas',
+          type: 'warning',
           dangerouslyUseHTMLString: true
         })
       }
