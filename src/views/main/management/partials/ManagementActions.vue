@@ -279,13 +279,13 @@ export default {
           errors.push(selected)
         })
       }
-      if (!errors.length) {
+      if (!successes.length) {
         window.analytics.track('disputas enriquecidas - ERROS', {
           action: action,
           errors: errors
         })
         this.$jusNotification({ type: 'error' })
-      } else if (!successes.length) {
+      } else if (!errors.length) {
         window.analytics.track('disputas enriquecidas - SUCESSOS', {
           action: action,
           successes: successes
