@@ -186,6 +186,7 @@
         :loading.sync="loadingDispute"
         :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview"
+        @fetch-data="fetchData"
         @updateActiveRole="updateActiveRole" />
     </template>
   </JusViewMain>

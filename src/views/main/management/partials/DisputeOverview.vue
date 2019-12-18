@@ -544,6 +544,8 @@
 </template>
 
 <script>
+// TODO: REMOVER OS FETCHDATA ASSIM QUE O SOCKET ESTIVER FUNCIONANDO
+
 import { getRoles } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
@@ -762,6 +764,9 @@ export default {
           message: 'Conta bancária <strong>' + this.$t('bankAccount.' + action).toUpperCase() + '</strong> à disputa com sucesso.',
           type: 'success'
         })
+        setTimeout(function () {
+          this.$emit('fetch-data')
+        }.bind(this), 200)
       }).catch(e => {
         console.error(e)
         this.$jusNotification({ type: 'error' })
@@ -825,6 +830,9 @@ export default {
                 message: 'Os dados foram alterados com sucesso.',
                 type: 'success'
               })
+              setTimeout(function () {
+                this.$emit('fetch-data')
+              }.bind(this), 200)
               this.editDisputeDialogVisible = false
             }).catch(() => {
               this.$jusNotification({ type: 'error' })
@@ -937,6 +945,9 @@ export default {
           })
         }
         this.editRoleDialogVisible = false
+        setTimeout(function () {
+          this.$emit('fetch-data')
+        }.bind(this), 200)
       }).catch(error => {
         this.editRoleDialogError = true
         this.editRoleDialogErrorList = []
