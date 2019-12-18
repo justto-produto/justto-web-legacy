@@ -546,10 +546,14 @@ export default {
     }
   }
   &__date {
+    + .dispute-view-occurrences__occurrence {
+      margin-top: -16px;
+    }
     position: sticky;
     top: 12px;
     margin: auto;
     margin-top: 20px;
+    margin-bottom: 24px;
     width: fit-content;
     border: 1px solid $--color-info-light;
     .el-card__body {
