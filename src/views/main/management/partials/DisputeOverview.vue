@@ -71,17 +71,19 @@
           <span class="title">Fim da negociação:</span>
           <span v-if="dispute.expirationDate" data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </div>
-        <div v-if="computedDescription" class="dispute-overview-view__info-textarea">
-          Descrição:
-          <strong :class="{ 'right': computedDescription.length < 25 }" data-testid="overview-description">
-            {{ computedDescription }}
-            <span v-if="dispute.description.length > 140">
-              <a href="#" class="dispute-overview-view__see-more" @click.prevent="descriptionCollapse = !descriptionCollapse">
-                {{ descriptionCollapse ? 'ver mais': 'ver menos' }}
-                <i :class="descriptionCollapse ? 'el-icon-arrow-down': 'el-icon-arrow-up'" />
-              </a>
+        <div v-if="computedDescription" class="dispute-overview-view__info-line">
+          <span class="title">Descrição:</span>
+          <span>
+            <span :class="{ 'right': computedDescription.length < 25 }" data-testid="overview-description">
+              {{ computedDescription }}
+              <span v-if="dispute.description.length > 140">
+                <a href="#" class="dispute-overview-view__see-more" @click.prevent="descriptionCollapse = !descriptionCollapse">
+                  {{ descriptionCollapse ? 'ver mais': 'ver menos' }}
+                  <i :class="descriptionCollapse ? 'el-icon-arrow-down': 'el-icon-arrow-up'" />
+                </a>
+              </span>
             </span>
-          </strong>
+          </span>
         </div>
         <div v-if="dispute.bankAccounts && dispute.bankAccounts.length" class="dispute-overview-view__info-line">
           <span class="title">Conta(s) bancária(s):</span>
