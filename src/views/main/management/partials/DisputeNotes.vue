@@ -101,7 +101,7 @@ export default {
       return this.splitNew(occurrence.description)[1]
     },
     buildSender (occurrence) {
-      if (occurrence.updateAt || occurrence.description.split('modiaficou uma nota').length > 1) {
+      if (occurrence.updateAt) {
         return 'Modificado por ' + this.splitModified(occurrence.description)[0]
       }
       return 'Adicionado por ' + this.splitNew(occurrence.description)[0]

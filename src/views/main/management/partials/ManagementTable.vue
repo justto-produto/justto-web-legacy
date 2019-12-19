@@ -153,12 +153,12 @@
         </template>
       </el-table-column>
       <el-table-column
-        :width="tab2 && allowDocument ? '152px' : '76px'"
+        :width="tab2 ? '152px' : '76px'"
         class-name="management-table__row-actions"
         align="right">
         <template slot-scope="scope">
           <el-button
-            v-if="tab2 && allowDocument"
+            v-if="tab2"
             plain
             size="mini"
             class="management-table__protocol_button"
@@ -225,11 +225,11 @@ export default {
     }
   },
   computed: {
-    allowDocument () {
-      return [484, 293, 200, 234, 198, 294].includes(this.$store.getters.accountId) ||
-        [/* cabanellos */92, 227, 230, 229, 137, 182, 202,
-          /* vlm */228, 223, 220, 183, 206, 175, 169, 171].includes(this.$store.getters.workspaceId)
-    },
+    // allowDocument () {
+    //   return [484, 293, 200, 234, 198, 294].includes(this.$store.getters.accountId) ||
+    //     [/* cabanellos */92, 227, 230, 229, 137, 182, 202,
+    //       /* vlm */228, 223, 220, 183, 206, 175, 169, 171].includes(this.$store.getters.workspaceId)
+    // },
     selectedIdsComp: {
       get () {
         return this.selectedIds

@@ -58,9 +58,11 @@
         </el-button>
       </el-tooltip>
       <el-tooltip content="Contraproposta manual">
-        <el-button :disabled="!canSendCounterproposal" plain @click="counterproposalDialogOpen()">
-          <jus-icon icon="proposal"/>
-        </el-button>
+        <span>
+          <el-button :disabled="!canSendCounterproposal" plain @click="counterproposalDialogOpen()">
+            <jus-icon icon="proposal"/>
+          </el-button>
+        </span>
       </el-tooltip>
       <el-tooltip content="Marcar como não lida">
         <el-button plain @click="setAsUnread()">
@@ -87,7 +89,7 @@
       :visible.sync="chooseUnsettledDialogVisible"
       append-to-body
       title="Perder"
-      class="dispute-view__choose-unsettled-dialog"
+      class="dispute-view-actions__choose-unsettled-dialog"
       width="460px"
       data-testid="choose-unsettled-dialog">
       <div class="el-message-box__content">
@@ -110,7 +112,7 @@
           :value="index"/>
       </el-select>
       <span slot="footer">
-        <el-button @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+        <el-button plain @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!unsettledType"
           type="primary"
@@ -141,7 +143,7 @@
           filterable/>
       </el-form>
       <span slot="footer">
-        <el-button @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
+        <el-button plain @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
         <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
       </span>
     </el-dialog>
@@ -178,7 +180,7 @@
       </el-form>
       <span slot="footer">
         <el-button plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="counterproposalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar contraproposta</el-button>
+        <el-button :loading="counterproposalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar Contraproposta</el-button>
       </span>
     </el-dialog>
   </div>
@@ -216,6 +218,7 @@ export default {
       negotiatorsRules: {},
       disputeNegotiators: [],
       chooseUnsettledDialogVisible: false,
+      bankDataDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
       counterproposalLoading: false,
@@ -457,6 +460,12 @@ export default {
       }).catch(() => {
         this.$jusNotification({ type: 'error' })
       })
+    },
+    openBankDataDialog () {
+      this.bankDataDialogVisible = true
+    },
+    editDisputeBankData () {
+      this.bankDataDialogVisible = true
     }
   }
 }
@@ -488,6 +497,18 @@ export default {
       margin-right: 20px;
       vertical-align: text-top;
     }
+  }
+  &__choose-unsettled-dialog {
+    .el-message-box__content {
+      padding: 10px 0;
+    }
+    .el-select {
+      margin: 10px 0;
+      width: 100%;
+    }
+  }
+  .el-button + span, span + .el-button {
+    margin-left: 10px;
   }
 }
 </style>
