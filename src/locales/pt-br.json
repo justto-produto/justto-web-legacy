@@ -120,5 +120,9 @@
       "FINISHED" : "planilha importada",
       "ERROR" : "falha na importação"
     }
+  },
+  "bankAccount": {
+    "linkDisputeBankAccounts": "vinculada",
+    "unlinkDisputeBankAccounts": "desvinculada"
   }
 }

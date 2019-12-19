@@ -11,6 +11,7 @@ import messageModule from './modules/message'
 import socketModule from './modules/socket/index'
 import whatsappModule from './modules/whatsapp'
 import documentModule from './modules/document'
+import banksList from '@/utils/banksList'
 
 Vue.use(Vuex)
 
@@ -18,9 +19,11 @@ export default new Vuex.Store({
   state: {
     loading: false,
     whatsapDialog: false,
+    banksList: banksList,
     statesList: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
   },
   getters: {
+    banksList: state => state.banksList
   },
   mutations: {
     showLoading (state) {

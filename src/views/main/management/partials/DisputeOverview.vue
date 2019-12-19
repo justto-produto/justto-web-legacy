@@ -1,9 +1,9 @@
 <template lang="html">
-  <div v-loading="loading" class="dispute-overview-view">
+  <div v-loading="loading || linkBankAccountLoading" class="dispute-overview-view">
     <el-collapse value="1">
       <el-collapse-item title="Informações gerais" name="1">
-        <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-          <span class="title">Data da importação:</span>
+        <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline" style="margin: 0">
+          <span class="title">Data de importação:</span>
           <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
         </div>
         <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
@@ -23,7 +23,9 @@
           <el-tooltip v-if="dispute.status === 'PENDING'" content="Faltam dados de contato da parte ou do advogado da parte">
             <span data-testid="overview-status">
               {{ $t('occurrence.type.' + dispute.status) | capitalize }}
-              <span class="el-icon-question" />
+              <el-tooltip content="Selecione">
+                <span class="el-icon-question" />
+              </el-tooltip>
             </span>
           </el-tooltip>
           <span v-else>
@@ -69,17 +71,49 @@
           <span class="title">Fim da negociação:</span>
           <span v-if="dispute.expirationDate" data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </div>
-        <div v-if="computedDescription" class="dispute-overview-view__info-textarea">
-          Descrição:
-          <strong :class="{ 'right': computedDescription.length < 25 }" data-testid="overview-description">
-            {{ computedDescription }}
-            <span v-if="dispute.description.length > 140">
-              <a href="#" class="dispute-overview-view__see-more" @click.prevent="descriptionCollapse = !descriptionCollapse">
-                {{ descriptionCollapse ? 'ver mais': 'ver menos' }}
-                <i :class="descriptionCollapse ? 'el-icon-arrow-down': 'el-icon-arrow-up'" />
-              </a>
+        <div v-if="computedDescription" class="dispute-overview-view__info-line">
+          <span class="title">Descrição:</span>
+          <span>
+            <span :class="{ 'right': computedDescription.length < 25 }" data-testid="overview-description">
+              {{ computedDescription }}
+              <span v-if="dispute.description.length > 140">
+                <a href="#" class="dispute-overview-view__see-more" @click.prevent="descriptionCollapse = !descriptionCollapse">
+                  {{ descriptionCollapse ? 'ver mais': 'ver menos' }}
+                  <i :class="descriptionCollapse ? 'el-icon-arrow-down': 'el-icon-arrow-up'" />
+                </a>
+              </span>
             </span>
-          </strong>
+          </span>
+        </div>
+        <div v-if="dispute.bankAccounts && dispute.bankAccounts.length" class="dispute-overview-view__info-line">
+          <span class="title">Conta(s) bancária(s):</span>
+          <el-collapse value="0">
+            <el-collapse-item
+              v-for="(bankAccount, index) in dispute.bankAccounts"
+              :key="`${index}-${bankAccount.id}`"
+              :name="index"
+              class="dispute-overview-view__bank-collapse">
+              <template slot="title">
+                <div>
+                  {{ bankAccount.name }}
+                  <span>
+                    {{ bankAccount.bank }} <span v-if="bankAccount.agency">|</span>
+                    {{ bankAccount.agency }} <span v-if="bankAccount.number">|</span>
+                    {{ bankAccount.number }}
+                  </span>
+                </div>
+              </template>
+              <span class="bank-info">
+                <strong>Nome:</strong> {{ bankAccount.name }} <br>
+                <strong>E-mail:</strong> {{ bankAccount.email }} <br>
+                <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
+                <strong>Banco:</strong> {{ bankAccount.bank }} <br>
+                <strong>Agência:</strong> {{ bankAccount.agency }} <br>
+                <strong>Conta:</strong> {{ bankAccount.number }} <br>
+                <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
+              </span>
+            </el-collapse-item>
+          </el-collapse>
         </div>
         <div class="dispute-overview-view__actions">
           <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>
@@ -105,98 +139,73 @@
                 {{ role.name }}
               </div>
             </template>
-            <!-- <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-              <span>Status:</span>
-              <el-popover
-                placement="top-end"
-                width="220"
-                trigger="hover">
-                <div class="dispute-overview-view__location">
-                  <span>Localização</span>
-                  -
-                  <span>Aparelho</span>
-                  -
-                  <span>OS</span>
-                  -
-                </div>
-                <span slot="reference">
-                  Offline
-                </span>
-              </el-popover>
-            </div> -->
+            <div class="dispute-overview-view__info-line" style="margin: 0">
+              <span class="title">Função:</span>
+              <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
+                {{ buildTitle(role.party, title) }}
+              </span>
+            </div>
             <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
               <span class="title">CPF/CNPJ:</span>
               <span>{{ role.documentNumber | cpfCnpjMask }}</span>
             </div>
-            <div v-show="role.roles.length == 1" class="dispute-overview-view__info-line">
-              Função:
-              <span>{{ buildTitle(role.party, role.roles[0]) }}</span>
-            </div>
-            <div v-show="role.roles.length > 1" class="dispute-overview-view__info-line">
-              Função:
-            </div>
-            <div v-show="role.roles.length > 1" class="dispute-overview-view__info-list">
-              <ul>
-                <li v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
-                  <span>
-                    {{ buildTitle(role.party, title) }}
-                  </span>
-                </li>
-              </ul>
-            </div>
             <div v-show="role.phones.length" class="dispute-overview-view__info-line">
-              Telefone(s):
-            </div>
-            <div v-show="role.phones.length" class="dispute-overview-view__info-list">
-              <ul>
-                <li v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`">
-                  <span :class="{'is-main': phone.isMain}">
-                    <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role)" />
-                    {{ phone.number | phoneMask }}
-                  </span>
-                  <div class="dispute-overview-view__list-actions">
-                    <el-tooltip content="Telefone inválido">
-                      <jus-icon v-if="!phone.isValid" icon="warn-dark" />
-                    </el-tooltip>
-                  </div>
-                </li>
-              </ul>
+              <span class="title">Telefone(s):</span>
+              <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
+                <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role)" />
+                <span class="ellipsis">
+                  <span>{{ phone.number | phoneMask }}</span>
+                  <el-tooltip content="Telefone inválido">
+                    <jus-icon v-if="!phone.isValid" icon="warn-dark" />
+                  </el-tooltip>
+                </span>
+              </span>
             </div>
             <div v-show="role.emails.length" class="dispute-overview-view__info-line">
-              E-mail(s):
-            </div>
-            <div v-show="role.emails.length" class="dispute-overview-view__info-list">
-              <ul>
-                <li v-for="(email, index) in role.emails.filter(e => !e.archived)" :key="`${index}-${email.id}`">
-                  <span :class="{'is-main': email.isMain}">
-                    <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role)" />
-                    {{ email.address }}
-                  </span>
-                  <div class="dispute-overview-view__list-actions">
-                    <el-tooltip content="E-mail inválido">
-                      <jus-icon v-if="!email.isValid" icon="warn-dark" />
-                    </el-tooltip>
-                  </div>
-                </li>
-              </ul>
+              <span class="title">E-mail(s):</span>
+              <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
+                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role)" />
+                <span class="ellipsis">
+                  <span>{{ email.address }}</span>
+                  <el-tooltip content="Telefone inválido">
+                    <jus-icon v-if="!email.isValid" icon="warn-dark" />
+                  </el-tooltip>
+                </span>
+              </span>
             </div>
             <div v-show="role.oabs.length" class="dispute-overview-view__info-line">
-              OAB(s):
+              <span class="title">OAB(s):</span>
+              <span v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`" :class="{'is-main': oab.isMain}">
+                <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role)" />
+                <span class="ellipsis">
+                  <span>{{ oab.number + '-' + oab.state || '' }}</span>
+                  <el-tooltip content="OAB inválido">
+                    <jus-icon v-if="!oab.isValid" icon="warn-dark" />
+                  </el-tooltip>
+                </span>
+              </span>
             </div>
-            <div v-show="role.oabs.length" class="dispute-overview-view__info-list">
-              <ul>
-                <li v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`">
-                  <span :class="{'is-main': oab.isMain}">
-                    <el-checkbox v-model="oab.selected" data-testid="checkbox-cna" @change="updateDisputeRole(role)" />
-                    {{ oab.number }}<span v-if="oab.state">-{{ oab.state }}</span>
-                  </span>
-                  <div class="dispute-overview-view__list-actions">
-                    <el-tooltip content="OAB inválido">
-                      <jus-icon v-if="!oab.isValid" icon="warn-dark" />
-                    </el-tooltip>
-                  </div>
-                </li>
-              </ul>
+            <div v-if="role.bankAccounts && role.bankAccounts.length" class="dispute-overview-view__info-line">
+              <span class="title">Conta(s) bancária(s):</span>
+              <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
+                <i class="el-icon-question right" style="margin-top: 5px;" />
+              </el-tooltip>
+              <el-checkbox-group v-model="disputeBankAccountsIds">
+                <el-checkbox
+                  v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
+                  :label="bankAccount.id"
+                  :key="`${index}-${bankAccount.id}`"
+                  border
+                  class="bordered">
+                  <strong>Nome:</strong> {{ bankAccount.name }} <br>
+                  <strong>E-mail:</strong> {{ bankAccount.email }} <br>
+                  <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
+                  <strong>Banco:</strong> {{ bankAccount.bank }} <br>
+                  <strong>Agência:</strong> {{ bankAccount.agency }} <br>
+                  <strong>Conta:</strong> {{ bankAccount.number }} <br>
+                  <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
+                </el-checkbox>
+              </el-checkbox-group>
             </div>
             <div class="dispute-overview-view__actions">
               <el-button v-if="!role.roles.includes('NEGOTIATOR')" plain @click="removeRole(role)">Excluir</el-button>
@@ -353,7 +362,7 @@
           class="el-table--list">
           <el-table-column>
             <template slot-scope="scope">
-              {{ scope.row.number }} - {{ scope.row.state }}
+              {{ scope.row.number + '-' + scope.row.state || '' }}
             </template>
           </el-table-column>
           <el-table-column
@@ -434,12 +443,98 @@
             </template>
           </el-table-column>
         </el-table>
+        <h4>
+          Contas bancárias
+          <a
+            href="#"
+            style="float: right;width: 16px;margin-top: 1px;margin-right: 23px;"
+            @click.prevent="openAddBankDialogVisible = true">
+            <el-tooltip content="Adicionar conta bancária">
+              <jus-icon icon="add-bold"/>
+            </el-tooltip>
+          </a>
+        </h4>
+        <el-table
+          :data="roleForm.bankAccounts"
+          :show-header="false"
+          fit
+          class="el-table--list">
+          <el-table-column>
+            <template slot-scope="scope">
+              {{ scope.row.name }}
+              <div style="font-size: 12px;">
+                {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            align="right"
+            width="48px"
+            class-name="visible">
+            <template slot-scope="scope">
+              <a href="#" @click.prevent="removeBankData(scope.$index, scope.row.id)">
+                <jus-icon icon="trash" />
+              </a>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-form>
       <span slot="footer">
         <el-button plain @click="editRoleDialogVisible = false">Cancelar</el-button>
         <el-button :loading="editRoleDialogLoading" type="primary" data-testid="edit-data-part" @click="editRole">
           Editar dados
         </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="openAddBankDialogVisible"
+      title="Adicionar conta bancária"
+      width="40%">
+      <el-form
+        ref="addBankForm"
+        :model="addBankForm"
+        :rules="addBankRules"
+        label-position="top"
+        @submit.native.prevent>
+        <el-form-item label="Nome" prop="name">
+          <el-input v-model="addBankForm.name" />
+        </el-form-item>
+        <el-form-item label="Email" prop="email">
+          <el-input v-model="addBankForm.email" />
+        </el-form-item>
+        <el-form-item label="CPF ou CNPJ" prop="document">
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="addBankForm.document" />
+        </el-form-item>
+        <el-form-item label="Banco" prop="bank">
+          <el-select v-model="addBankForm.bank" filterable placeholder="">
+            <el-option
+              v-for="bank in banks"
+              :key="bank.code"
+              :label="bank.code + ' - ' + bank.name"
+              :value="bank.code + ' - ' + bank.name" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Agência" prop="agency">
+          <el-input v-model="addBankForm.agency" />
+        </el-form-item>
+        <el-form-item label="Número do Conta" prop="number">
+          <el-input v-model="addBankForm.number" />
+        </el-form-item>
+        <el-form-item label="Tipo de Conta" prop="type">
+          <el-select v-model="addBankForm.type" placeholder="" class="select">
+            <el-option
+              v-for="type in [{ label: 'Poupança', type: 'SAVING' },{ label: 'Corrente', type: 'CHECKING' }]"
+              :key="type.type"
+              :label="type.label"
+              :value="type.type" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button plain @click="openAddBankDialogVisible = false">Cancelar</el-button>
+        <el-button type="primary" @click="addBankData()">Adicionar</el-button>
       </span>
     </el-dialog>
     <dispute-add-role
@@ -451,6 +546,8 @@
 </template>
 
 <script>
+// TODO: REMOVER OS FETCHDATA ASSIM QUE O SOCKET ESTIVER FUNCIONANDO
+
 import { getRoles } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
@@ -463,10 +560,6 @@ export default {
     loading: {
       default: false,
       type: Boolean
-    },
-    dispute: {
-      default: () => {},
-      type: Object
     },
     activeRoleId: {
       default: 0,
@@ -515,16 +608,63 @@ export default {
         state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       newRoleDialogVisible: false,
+      linkBankAccountLoading: false,
       editDisputeDialogVisible: false,
       editDisputeDialogLoading: false,
       editRoleDialogVisible: false,
       editRoleDialogLoading: false,
       editRoleDialogError: false,
       editRoleDialogErrorList: [],
-      descriptionCollapse: true
+      descriptionCollapse: true,
+      openAddBankDialogVisible: false,
+      addBankForm: {
+        name: '',
+        email: '',
+        document: '',
+        bank: '',
+        agency: '',
+        number: '',
+        type: ''
+      },
+      addBankRules: {
+        name: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+        ],
+        document: [
+          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+        ],
+        bank: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        number: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      },
+      bankAccountIdstoUnlink: []
     }
   },
   computed: {
+    dispute () {
+      return this.$store.getters.dispute
+    },
+    disputeBankAccounts () {
+      return this.$store.getters.disputeBankAccounts
+    },
+    disputeBankAccountsIds: {
+      get () {
+        if (this.dispute.bankAccounts || Array.isArray(this.dispute.bankAccounts)) {
+          return this.dispute.bankAccounts.map(dba => dba.id)
+        }
+        return []
+      },
+      set (bankAccountId) {
+        this.updateDisputeBankAccounts(bankAccountId)
+      }
+    },
     strategies () {
       return this.$store.getters.strategyList
     },
@@ -585,6 +725,9 @@ export default {
         return getRoles(this.dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR')
       }
       return []
+    },
+    banks () {
+      return this.$store.getters.banksList
     }
   },
   methods: {
@@ -597,6 +740,41 @@ export default {
       })
       this.$store.commit('setDisputeRoles', disputeRoles)
       this.$emit('updateActiveRole', role)
+    },
+    updateDisputeBankAccounts (roleBankAccountIds) {
+      let action, bankAccountId
+      for (let roleAccount of roleBankAccountIds) {
+        if (!this.disputeBankAccountsIds.includes(roleAccount)) {
+          action = 'linkDisputeBankAccounts'
+          bankAccountId = roleAccount
+        }
+      }
+      for (let disputeAccount of this.disputeBankAccountsIds) {
+        if (!roleBankAccountIds.includes(disputeAccount)) {
+          action = 'unlinkDisputeBankAccounts'
+          bankAccountId = disputeAccount
+        }
+      }
+      this.linkBankAccountLoading = true
+      this.$store.dispatch(action, {
+        disputeId: this.dispute.id,
+        bankAccountId
+      }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          dangerouslyUseHTMLString: true,
+          message: 'Conta bancária <strong>' + this.$t('bankAccount.' + action).toUpperCase() + '</strong> à disputa com sucesso.',
+          type: 'success'
+        })
+        setTimeout(function () {
+          this.$emit('fetch-data')
+        }.bind(this), 200)
+      }).catch(e => {
+        console.error(e)
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.linkBankAccountLoading = false
+      })
     },
     roleTitleSort (title) {
       if (title) {
@@ -654,6 +832,9 @@ export default {
                 message: 'Os dados foram alterados com sucesso.',
                 type: 'success'
               })
+              setTimeout(function () {
+                this.$emit('fetch-data')
+              }.bind(this), 200)
               this.editDisputeDialogVisible = false
             }).catch(() => {
               this.$jusNotification({ type: 'error' })
@@ -691,6 +872,7 @@ export default {
       this.$emit('update:activeRoleId', this.activeId)
     },
     openRoleDialog (role) {
+      this.bankAccountIdstoUnlink = []
       this.editRoleDialogError = false
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
@@ -708,50 +890,76 @@ export default {
         if (errorMessage) isValid = false
       })
       if (isValid) {
-        let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
-        delete roleToEdit.title
-        this.editRoleDialogLoading = true
-        this.$store.dispatch('editRole', {
-          disputeId: this.dispute.id,
-          disputeRole: roleToEdit
-        }).then(() => {
-          this.$store.dispatch('getDispute', this.dispute.id)
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Os dados foram alterados com sucesso.',
-            type: 'success'
-          })
-          if (this.verifyChangedRoleData(this.roleForm, this.originalRole)) {
-            this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
-              confirmButtonText: 'Reengajar',
-              cancelButtonText: 'Cancelar',
-              type: 'warning',
-              cancelButtonClass: 'is-plain'
-            }).then(() => {
-              this.$store.dispatch('restartDisputeRoleEngagement', {
+        if (this.bankAccountIdstoUnlink.length) {
+          this.linkBankAccountLoading = true
+          let promise = []
+          for (let id of this.bankAccountIdstoUnlink) {
+            promise.push(
+              this.$store.dispatch('unlinkDisputeBankAccounts', {
                 disputeId: this.dispute.id,
-                disputeRoleId: this.roleForm.id
-              }).then(() => {
-                this.$jusNotification({
-                  title: 'Yay!',
-                  message: 'Reengajamento realizado com sucesso.',
-                  type: 'success'
-                })
+                bankAccountId: id
+              })
+            )
+          }
+          Promise.all(promise).then(() => {
+            this.editRoleAction()
+          }).catch(e => {
+            console.log(e)
+            this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.linkBankAccountLoading = false
+          })
+        } else {
+          this.editRoleAction()
+        }
+      }
+    },
+    editRoleAction () {
+      let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
+      delete roleToEdit.title
+      this.editRoleDialogLoading = true
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: roleToEdit
+      }).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Os dados foram alterados com sucesso.',
+          type: 'success'
+        })
+        if (this.verifyChangedRoleData(this.roleForm, this.originalRole)) {
+          this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
+            confirmButtonText: 'Reengajar',
+            cancelButtonText: 'Cancelar',
+            type: 'warning',
+            cancelButtonClass: 'is-plain'
+          }).then(() => {
+            this.$store.dispatch('restartDisputeRoleEngagement', {
+              disputeId: this.dispute.id,
+              disputeRoleId: this.roleForm.id
+            }).then(() => {
+              this.$jusNotification({
+                title: 'Yay!',
+                message: 'Reengajamento realizado com sucesso.',
+                type: 'success'
               })
             })
-          }
-          this.editRoleDialogVisible = false
-        }).catch(error => {
+          })
+        }
+        this.editRoleDialogVisible = false
+        setTimeout(function () {
+          this.$emit('fetch-data')
+        }.bind(this), 200)
+      }).catch(error => {
+        this.editRoleDialogError = true
+        this.editRoleDialogErrorList = []
+        if (error.status === 400) {
           this.editRoleDialogError = true
-          this.editRoleDialogErrorList = []
-          if (error.status === 400) {
-            this.editRoleDialogError = true
-            this.editRoleDialogErrorList.push(error.data.message)
-          } else this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.editRoleDialogLoading = false
-        })
-      }
+          this.editRoleDialogErrorList.push(error.data.message)
+        } else this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.editRoleDialogLoading = false
+      })
     },
     verifyChangedRoleData (editedRole, originalRole) {
       let changed = false
@@ -850,6 +1058,29 @@ export default {
           this.$jusNotification({ type: 'error' })
         })
       })
+    },
+    addBankData () {
+      this.$refs.addBankForm.validate(valid => {
+        if (valid) {
+          if (!this.roleForm.bankAccounts) {
+            this.roleForm.bankAccounts = []
+          }
+          let bankForm = JSON.parse(JSON.stringify(this.addBankForm))
+          this.roleForm.bankAccounts.push(bankForm)
+          this.addBankForm.name = ''
+          this.addBankForm.email = ''
+          this.addBankForm.document = ''
+          this.addBankForm.bank = ''
+          this.addBankForm.agency = ''
+          this.addBankForm.number = ''
+          this.addBankForm.type = ''
+          this.openAddBankDialogVisible = false
+        }
+      })
+    },
+    removeBankData (index, id) {
+      this.bankAccountIdstoUnlink.push(id)
+      this.roleForm.bankAccounts.splice(index, 1)
     }
   }
 }
@@ -861,23 +1092,68 @@ export default {
   .jus-status-dot {
     float: initial !important;
   }
-  .el-collapse-item__content {
-    padding-bottom: 20px;
-  }
   &__info-line {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
+    > span:not(.title) {
+      display: flex;
+      margin-left: 12px;
+    }
     .title {
-      white-space: nowrap;
-      margin-right: 10px;
+      font-weight: 600;
     }
-    span:last-child {
-      font-weight: 500;
-      text-align: right;
+    .ellipsis {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      span {
+        margin-left: 6px;
+        width: 164px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
-    a {
-      line-height: 15px;
+    .bank-info {
+      display: block !important
+    }
+    .bordered {
+      width: 100%;
+      height: auto;
+      display: flex;
+      align-items: center;
+      padding: 6px 11px;
+      margin-top: 10px;
+      margin-left: 0 !important;
+      .el-checkbox__input {
+        vertical-align: super;
+      }
+      .el-checkbox__label {
+        padding-left: 6px;
+        font-size: 13px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+    }
+    .el-collapse {
+      margin-left: 12px;
+    }
+    .el-collapse-item__header {
+      font-size: 12px;
+      height: 38px;
+      div, span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: normal;
+      }
+      div > span {
+        font-size: 11px;
+        display: block;
+        color: #adadad;
+      }
+    }
+    .el-collapse-item__content {
+      font-size: 12px;
     }
   }
   &__info-textarea {
@@ -893,26 +1169,6 @@ export default {
     display: flex;
     button {
       width: 100%;
-    }
-  }
-  &__info-list {
-    font-weight: 500;
-    ul {
-      margin-top: 4px;
-      padding-left: 0;
-      li {
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        span {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-    }
-    .is-main {
-      font-weight: bold;
     }
   }
   &__list-actions {
@@ -973,6 +1229,17 @@ export default {
   }
   &__role-collapse {
     background-color: #fff;
+    font-size: 13px;
+  }
+  &__bank-collapse {
+    .el-collapse-item__wrap {
+      padding: 0 8px;
+      border-radius: 0;
+      border-left: 1px solid #9461f763;
+    }
+    .el-collapse-item__content {
+      padding-bottom: 0;
+    }
   }
   .el-input-group__append {
     border-color: #9462f7;
