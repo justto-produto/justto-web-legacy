@@ -8,7 +8,6 @@ const disputeGetters = {
   disputeQuery: state => state.query,
   disputeTab: state => state.tab,
   dispute: state => state.dispute,
-  disputeRoles: state => state.dispute.disputeRoles,
   disputeHasFilters: state => state.hasFilters,
   disputeStatuses: state => state.statuses,
   disputeHasNew: state => state.hasNew,

@@ -67,6 +67,43 @@ const disputeActions = {
         })
     })
   },
+  // getDisputeBankAccounts ({ commit }, id) {
+  //   return new Promise((resolve, reject) => {
+  //     // eslint-disable-next-line
+  //     axios.get('api/disputes/' + id + '/bank-accounts')
+  //       .then(response => {
+  //         commit('setDisputeBankAccounts', response.data)
+  //         resolve(response.data)
+  //       })
+  //       .catch(error => {
+  //         reject(error)
+  //       })
+  //   })
+  // },
+  linkDisputeBankAccounts ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.post('api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
+  unlinkDisputeBankAccounts ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.delete('api/disputes/' + params.disputeId + '/bank-accounts/' + params.bankAccountId)
+        .then(() => {
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   getDisputeDTO ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

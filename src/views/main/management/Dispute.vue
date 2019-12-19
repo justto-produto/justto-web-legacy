@@ -184,9 +184,9 @@
       <dispute-overview
         v-if="dispute"
         :loading.sync="loadingDispute"
-        :dispute.sync="dispute"
         :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview"
+        @fetch-data="fetchData"
         @updateActiveRole="updateActiveRole" />
     </template>
   </JusViewMain>
@@ -288,7 +288,7 @@ export default {
   methods: {
     updateActiveRole (activeRole) {
       if (typeof activeRole === 'number') {
-        activeRole = this.$store.getters.disputeRoles.find(role => {
+        activeRole = this.dispute.disputeRoles.find(role => {
           return role.id === activeRole
         })
       }
@@ -682,15 +682,6 @@ export default {
       .el-input {
         display: inline-block;
       }
-    }
-  }
-  &__choose-unsettled-dialog {
-    .el-message-box__content {
-      padding: 10px 0;
-    }
-    .el-select {
-      margin: 10px 0;
-      width: 100%;
     }
   }
   &__more {
