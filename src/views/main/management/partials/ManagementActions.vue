@@ -270,40 +270,40 @@ export default {
     },
     enrichDisputes (action) {
       let selecteds = this.selectedIds
-      let successes = []
-      let errors = []
+      let successesList = []
+      let errorsList = []
       for (let selected of selecteds) {
         this.$store.dispatch('enrichDispute', selected).then(response => {
-          successes.push(selected)
+          successesList.push(selected)
         }).catch(() => {
-          errors.push(selected)
+          errorsList.push(selected)
         })
       }
-      if (!successes.length) {
-        window.analytics.track('disputas enriquecidas - ERROS', {
-          action: action,
-          errors: errors
-        })
-        this.$jusNotification({ type: 'error' })
-      } else if (!errors.length) {
-        window.analytics.track('disputas enriquecidas - SUCESSOS', {
-          action: action,
-          successes: successes
-        })
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
-          type: 'success',
-          dangerouslyUseHTMLString: true
-        })
-      } else {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. <strong>' + errors.length + '</strong> disputas não foram enriquecidas',
-          type: 'warning',
-          dangerouslyUseHTMLString: true
-        })
-      }
+      setTimeout(function () {
+        if (errorsList.length) {
+          window.analytics.track('disputas enriquecidas - ERROS', {
+            action: action,
+            errorsList: errorsList
+          })
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. <strong>' + errorsList.length + '</strong> de <strong>' + selecteds.length + '</strong> disputas não foram enriquecidas',
+            type: 'warning',
+            dangerouslyUseHTMLString: true
+          })
+        } else {
+          window.analytics.track('disputas enriquecidas - SUCESSOS', {
+            action: action,
+            successesList: successesList
+          })
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
+            type: 'success',
+            dangerouslyUseHTMLString: true
+          })
+        }
+      }.bind(this), 500)
       this.selectedIdsComp = []
       this.$store.dispatch('getDisputes')
     },
