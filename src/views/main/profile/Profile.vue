@@ -218,8 +218,7 @@ export default {
       teamName: '',
       companyName: '',
       teamMembers: [],
-      currentEditMember: {},
-      phoneDTO: ''
+      currentEditMember: {}
     }
   },
   computed: {
@@ -235,13 +234,11 @@ export default {
     this.person = JSON.parse(JSON.stringify(this.$store.getters.loggedPerson))
     this.teamName = this.$store.state.workspaceModule.teamName + ''
     this.companyName = this.$store.state.workspaceModule.name + ''
-    this.phoneDTO = this.$store.getters.loggedPersonPhone || {}
-    if (this.phoneDTO && this.phoneDTO.number) {
-      if (this.phoneDTO.number.length === 13) {
-        this.profileForm.phone = this.phoneDTO.number.substr(2)
-      } else {
-        this.profileForm.phone = this.phoneDTO.number
-      }
+    this.profileForm.phone = this.$store.getters.loggedPersonPhone ? this.$store.getters.loggedPersonPhone.number : ''
+    if (this.profileForm.phone && this.profileForm.phone.length === 13) {
+      this.profileForm.phone = this.profileForm.phone.substr(2)
+    } else {
+      this.profileForm.phone = this.profileForm.phone
     }
   },
   methods: {
@@ -298,12 +295,14 @@ export default {
     updatePhone () {
       this.$refs.profileForm.validateField('phone', errorMessage => {
         if (!errorMessage) {
-          this.phoneDTO.number = this.profileForm.phone
-          this.phoneDTO.isMain = true
-          this.$store.dispatch('setPhone', {
-            phoneDTO: this.phoneDTO,
+          this.$store.dispatch('setMainPhone', {
+            phoneDTO: { number: this.profileForm.phone },
             personId: this.person.id
-          }).then(response => {
+          }).then(phoneDTO => {
+            let person = JSON.parse(localStorage.getItem('jusperson'))
+            person.phones = [phoneDTO]
+            this.$store.commit('setLoggedPerson', person)
+            this.profileForm.phone = phoneDTO.number
             this.$jusNotification({
               title: 'Yay!',
               message: 'Telefone de contato alterado com sucesso.',

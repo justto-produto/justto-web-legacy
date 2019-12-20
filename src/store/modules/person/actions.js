@@ -11,10 +11,23 @@ const actions = {
         })
     })
   },
-  setPhone ({ commit }, params) {
+  refreshPerson ({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/persons/' + params.personId + '/phones', params.phoneDTO)
+      axios.get('api/persons/' + id)
+        .then(response => {
+          resolve(response.data)
+          commit('setLoggedPerson', response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
+  setMainPhone ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.post('api/persons/' + params.personId + '/phones/main', params.phoneDTO)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
