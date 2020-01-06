@@ -124,11 +124,13 @@
     </el-dialog>
     <el-dialog
       :close-on-click-modal="false"
+      :show-close="false"
       :visible.sync="editNegotiatorDialogVisible"
       append-to-body
       title="Editar negociadores da disputa"
       width="604px">
       <el-form
+        v-loading="editNegotiatorLoading"
         ref="negotiatorsForm"
         :model="negotiatorsForm"
         :rules="negotiatorsRules"
@@ -143,8 +145,8 @@
           filterable/>
       </el-form>
       <span slot="footer">
-        <el-button plain @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
+        <el-button :disabled="editNegotiatorLoading" plain @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="editNegotiatorLoading" type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -222,6 +224,7 @@ export default {
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
       counterproposalLoading: false,
+      editNegotiatorLoading: false,
       counterOfferForm: {
         lastCounterOfferValue: '',
         selectedRoleId: ''
@@ -356,6 +359,7 @@ export default {
       })
     },
     editNegotiators () {
+      this.editNegotiatorLoading = true
       this.$store.dispatch('editNegotiators', {
         negotiators: this.disputeNegotiators,
         disputeId: this.dispute.id
@@ -367,11 +371,16 @@ export default {
           type: 'success'
         })
         this.editNegotiatorDialogVisible = false
-      }).catch(() => this.$jusNotification({ type: 'error' }))
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.editNegotiatorLoading = false
+      })
     },
     editNegotiator () {
+      this.editNegotiatorLoading = false
       this.disputeNegotiators = this.dispute.disputeRoles.filter((negotiator) => {
-        return negotiator.roles.includes('NEGOTIATOR') === true && negotiator.archived === false
+        return negotiator.roles.includes('NEGOTIATOR') && !negotiator.archived
       }).map(member => {
         return member.personId
       })
