@@ -10,7 +10,7 @@
     class="jus-protocol-dialog">
     <div v-loading="loading">
       <div v-if="step === 0" class="jus-protocol-dialog__model-choice">
-        <el-button v-for="model in models" :key="model.id" plain @click="selectModel(model.id)">
+        <el-button v-for="model in models" :key="model.id" plain @click="selectModel({ modelId: model.id })">
           <h4>{{ model.name }}</h4>
           <jus-icon icon="doc" is-active />
         </el-button>
@@ -238,7 +238,7 @@ export default {
       this.loading = true
       this.$store.dispatch('getDocumentModels').then(models => {
         this.models = models
-        if (models) {
+        if (models.length && models.length === 1) {
           this.selectModel({ modelId: models[0].id, unique: models.length === 1 })
         } else {
           this.loading = false
