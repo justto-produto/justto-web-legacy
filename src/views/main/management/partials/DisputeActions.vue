@@ -127,7 +127,7 @@
       :visible.sync="editNegotiatorDialogVisible"
       append-to-body
       title="Editar negociadores da disputa"
-      width="600px">
+      width="604px">
       <el-form
         ref="negotiatorsForm"
         :model="negotiatorsForm"
@@ -136,7 +136,7 @@
         @submit.native.prevent="editNegotiator">
         <el-transfer
           :titles="['Workspace', 'Disputa']"
-          :button-texts="['Remover', 'Adcionar']"
+          :button-texts="['Remover', 'Aidcionar']"
           :data="workspaceNegotiators"
           v-model="disputeNegotiators"
           filter-placeholder="Buscar"
