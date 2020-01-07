@@ -138,7 +138,7 @@
         @submit.native.prevent="editNegotiator">
         <el-transfer
           :titles="['Workspace', 'Disputa']"
-          :button-texts="['Remover', 'Aidcionar']"
+          :button-texts="['Remover', 'Adicionar']"
           :data="workspaceNegotiators"
           v-model="disputeNegotiators"
           filter-placeholder="Buscar"
