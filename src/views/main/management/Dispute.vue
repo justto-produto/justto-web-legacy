@@ -218,7 +218,8 @@ export default {
       activeRole: {},
       invalidReceiver: undefined,
       isCollapsed: false,
-      enterToSend: 0
+      enterToSend: 0,
+      recentMessages: []
     }
   },
   computed: {
@@ -416,6 +417,11 @@ export default {
           return []
       }
     },
+    checkMessage (msm) {
+      for (let i = 0; i < this.recentMessages.length; i++) {
+        if (this.recentMessages[i].messageBody === msm) return true
+      }
+    },
     sendMessage (enterByKeyboard) {
       if (enterByKeyboard) {
         if (!this.enterToSend) {
@@ -430,6 +436,30 @@ export default {
             })
             return false
           }
+        }
+      }
+      if (this.messageType === 'whatsapp') {
+        var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
+        if (this.checkMessage(newMessageTrim)) {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Por favor, aguarde alguns segundos para enviar esta mensagem novamente.',
+            type: 'warning'
+          })
+          return false
+        } else {
+          this.recentMessages.push({
+            messageBody: newMessageTrim,
+            selfDestroy: () => (setTimeout(() => {
+              for (var i = 0; i < this.recentMessages.length; i++) {
+                if (newMessageTrim === this.recentMessages[i].messageBody) {
+                  this.recentMessages.splice(i, 1)
+                }
+              }
+            }, 30000))
+          })
+          let lastMessage = this.recentMessages.length - 1
+          this.recentMessages[lastMessage].selfDestroy()
         }
       }
       if (this.newMessage.trim().replace('\n', '') && this.activeRole.personId && !this.invalidReceiver) {
