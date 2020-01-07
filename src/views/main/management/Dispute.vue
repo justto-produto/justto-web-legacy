@@ -219,7 +219,7 @@ export default {
       invalidReceiver: undefined,
       isCollapsed: false,
       enterToSend: 0,
-      recentMessages: []
+      // recentMessages: []
     }
   },
   computed: {
@@ -246,6 +246,9 @@ export default {
         Authorization: this.$store.getters.accountToken,
         Workspace: this.$store.getters.workspaceSubdomain
       }
+    },
+    recentMessages () {
+      return this.$store.state.messageModule.recentMessages
     }
   },
   watch: {
@@ -448,7 +451,7 @@ export default {
           })
           return false
         } else {
-          this.recentMessages.push({
+          this.$store.state.messageModule.recentMessages.push({
             messageBody: newMessageTrim,
             selfDestroy: () => (setTimeout(() => {
               for (var i = 0; i < this.recentMessages.length; i++) {
@@ -459,7 +462,7 @@ export default {
             }, 30000))
           })
           let lastMessage = this.recentMessages.length - 1
-          this.recentMessages[lastMessage].selfDestroy()
+          this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
         }
       }
       if (this.newMessage.trim().replace('\n', '') && this.activeRole.personId && !this.invalidReceiver) {

@@ -1,5 +1,6 @@
 const message = {
   state: {
+    recentMessages: []
   },
   mutations: {
   },
