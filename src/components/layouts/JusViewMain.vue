@@ -1,9 +1,9 @@
 <template>
   <div :class="{'fullScreen': fullScreen}" class="jus-main-view">
     <!-- TITLE SLOT -->
-    <div v-if="this.$slots['title']" class="jus-main-view__title">
+    <!-- <div v-if="this.$slots['title']" class="jus-main-view__title">
       <slot name="title"/>
-    </div>
+    </div> -->
     <div v-loading="loadingContainer" class="jus-main-view__container">
       <!-- LEFT CARD SLOT -->
       <div v-if="this.$slots['left-card']">
@@ -67,23 +67,23 @@ export default {
 
 <style lang="scss">
 .jus-main-view {
-  height: calc(100% - 20px);
+  height: 100%;
   min-width: 1024px;
-  &__title {
-    margin: 20px 20px 0px 24px;
-    h1 {
-      font-weight: 500;
-      margin: 20px 0 0;
-      img {
-        margin: 0 10px 2px 0;
-      }
-    }
-  }
+  // &__title {
+  //   margin: 20px 20px 0px 24px;
+  //   h1 {
+  //     font-weight: 500;
+  //     margin: 20px 0 0;
+  //     img {
+  //       margin: 0 10px 2px 0;
+  //     }
+  //   }
+  // }
   &__container {
     overflow-x: auto;
     padding: 20px;
     display: flex;
-    height: calc(100% - 37px);
+    height: 100%;
     > .el-loading-mask {
       background-color: rgba(246, 245, 246, 0.89);
       margin: 20px;

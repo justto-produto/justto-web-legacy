@@ -1,8 +1,5 @@
 <template>
   <jus-view-main :loading-main="loadingDisputes" class="view-management">
-    <template slot="title">
-      <h1>Gerenciamento</h1>
-    </template>
     <template slot="main">
       <management-actions
         :active="multiActive"
@@ -77,6 +74,17 @@
       <management-filters
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
+      <div v-show="activeTab === '1'" style="margin: 10px 0;">
+        <el-button plain type="primary">
+          Com resposta
+        </el-button>
+        <el-button plain>
+          Contraproposta (até 20%)
+        </el-button>
+        <el-button plain>
+          Contraproposta (+20%)
+        </el-button>
+      </div>
       <management-table
         ref="managementTable"
         :active-tab.sync="activeTab"

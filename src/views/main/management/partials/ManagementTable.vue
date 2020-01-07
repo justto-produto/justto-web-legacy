@@ -19,6 +19,16 @@
       <el-table-column type="selection" width="44px" />
       <el-table-column
         :sortable="false"
+        min-width="66px"
+        align="center"
+        class-name="management-table__row-info">
+        <template slot-scope="scope">
+          <jus-icon :icon="'status-' + scope.row.id % 3" />
+          <jus-icon icon="justto" :is-active="!(scope.row.id % 2)" />
+        </template>
+      </el-table-column>
+      <el-table-column
+        :sortable="false"
         label="Processo"
         min-width="100px"
         prop="code">
@@ -368,6 +378,16 @@ export default {
     }
     .el-button--text {
       margin-left: 6px;
+    }
+  }
+  &__row-info {
+    img {
+      vertical-align: middle !important;
+      width: 22px;
+      & + img {
+        margin-left: 8px;
+        width: 15px;
+      }
     }
   }
   &__empty-table {
