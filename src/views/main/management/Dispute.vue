@@ -41,10 +41,12 @@
                   <textarea
                     v-if="validName"
                     v-model="newMessage"
-                    rows="2"
+                    :rows="1"
                     data-testid="input-message"
                     placeholder="Escreva alguma coisa"
                     class="el-textarea__inner"
+                    @blur="collapseTextarea()"
+                    @focus="expandTextarea()"
                     @keydown.enter.alt.prevent
                     @keydown.enter.shift.prevent
                     @keydown.enter.exact.prevent
@@ -93,7 +95,7 @@
                         <el-button
                           :disabled="invalidReceiver || !activeRole.personId"
                           type="primary"
-                          class="dispute-view__send"
+                          size="medium"
                           data-testid="submit-message"
                           @click="sendMessage()">
                           Enviar
@@ -101,8 +103,8 @@
                       </span>
                       <el-button
                         v-else
-                        class="dispute-view__send"
                         type="primary"
+                        size="medium"
                         @click="$router.push('/profile')">
                         Configurações
                       </el-button>
@@ -158,7 +160,11 @@
                   placeholder="Escreva alguma coisa"
                   class="el-textarea__inner"/>
                 <div class="dispute-view__send-message-actions note">
-                  <el-button type="primary" data-testid="submit-note" @click="sendNote()">
+                  <el-button
+                    size="medium"
+                    type="primary"
+                    data-testid="submit-note"
+                    @click="sendNote()">
                     Salvar nota
                   </el-button>
                 </div>
@@ -497,6 +503,10 @@ export default {
     },
     changeEnterToSend (value) {
       localStorage.setItem('jusentertosend', value)
+    },
+    expandTextarea () {
+    },
+    collapseTextarea () {
     }
   }
 }
@@ -556,7 +566,7 @@ export default {
     .el-tabs__header {
       width: fit-content;
       padding: 0 20px;
-      margin-bottom: 0;
+      margin-bottom: -10px;
     }
     .el-tabs__active-bar {
       width: 80px;
@@ -580,6 +590,7 @@ export default {
   }
   &__send-message-box {
     margin: 10px;
+    margin-top: 20px;
     border: 0;
     .el-textarea {
       padding-top: 10px;
@@ -589,17 +600,21 @@ export default {
       &__inner {
         resize: none;
         border: 0;
-        padding: 5px 0;
+        padding: 6px 0;
       }
+    }
+    > .el-card__body {
+      padding: 10px 10px 10px 20px;
     }
   }
   &__send-message-actions {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     img {
       margin-right: 10px;
       height: 20px;
+      vertical-align: middle;
       &:nth-child(2) {
         height: 19px;
         margin-right: 11px;
@@ -688,10 +703,6 @@ export default {
     color: #343c4b;
     transform: rotate(90deg);
     margin-left: 12px;
-    margin-right: -6px;
-  }
-  &__send {
-    padding: 8px 20px;
   }
   &__send-radio {
     .el-radio {
