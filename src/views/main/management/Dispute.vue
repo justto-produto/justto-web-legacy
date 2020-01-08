@@ -24,24 +24,38 @@
           :is-collapsed.sync="isCollapsed"
           @fetch-data="fetchData" />
         <!-- MESSAGES -->
-        <dispute-occurrences v-if="typingTab === '1'" ref="disputeOccurrences" :dispute-id="id" data-testid="dispute-messages" />
+        <dispute-occurrences
+          v-if="typingTab === '1'"
+          ref="disputeOccurrences"
+          :dispute-id="id"
+          :style="{ opacity: expandedMessageBox ? 0.2 : 1 }"
+          data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
-        <div
-          :key="loadingKey"
-          class="dispute-view__send-message">
+        <div :key="loadingKey" class="dispute-view__send-message">
           <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
               <el-card
                 v-loading="isPaused"
+                :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }"
                 element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
                 element-loading-spinner="el-icon-video-pause"
                 class="dispute-view__send-message-box"
                 shadow="always">
-                <el-collapse-transition>
+                <i
+                  v-if="expandedMessageBox"
+                  class="el-icon-arrow-down"
+                  style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
+                  @click="collapseTextarea()" />
+                <quill-editor
+                  v-model="newMessage"
+                  :options="editorOptions"
+                  @focus="expandTextarea()" />
+
+                <!-- <el-collapse-transition>
                   <textarea
                     v-if="validName"
                     v-model="newMessage"
-                    :rows="1"
+                    :rows="textareaRows"
                     data-testid="input-message"
                     placeholder="Escreva alguma coisa"
                     class="el-textarea__inner"
@@ -53,7 +67,7 @@
                     @keydown.enter.alt="newLineMessage()"
                     @keydown.enter.shift="newLineMessage()"
                     @keyup.enter.exact="sendMessage(true)"/>
-                </el-collapse-transition>
+                </el-collapse-transition> -->
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
                     v-if="!validName"
@@ -130,35 +144,14 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <!-- <el-tab-pane v-loading="loadingTextarea" label="Chat" name="2">
-              <el-card shadow="always" class="dispute-view__send-message-box">
-                <textarea
-                  v-model="newChatMessage"
-                  rows="3"
-                  data-testid="input-chat"
-                  placeholder="Escreva alguma coisa"
-                  class="el-textarea__inner"
-                  @input="sendTypeEvent()"
-                  @keydown.enter.alt="newLineChat()"
-                  @keydown.enter.shift="newLineChat()"
-                  @keydown.enter.exact.prevent
-                  @keydown.enter.shift.prevent
-                  @keydown.enter.exact="sendChatMessage()" />
-                <div class="dispute-view__send-message-actions note">
-                  <el-button type="primary" @click="sendChatMessage()">
-                    Enviar
-                  </el-button>
-                </div>
-              </el-card>
-            </el-tab-pane> -->
             <el-tab-pane v-loading="loadingTextarea" label="Notas" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <textarea
                   v-model="newNote"
-                  rows="2"
+                  rows="5"
                   data-testid="input-note"
                   placeholder="Escreva alguma coisa"
-                  class="el-textarea__inner"/>
+                  class="el-textarea__inner" />
                 <div class="dispute-view__send-message-actions note">
                   <el-button
                     size="medium"
@@ -199,13 +192,25 @@
 </template>
 
 <script>
+import Quill from 'quill'
+const SizeStyle = Quill.import('attributors/style/size')
+const AlignStyle = Quill.import('attributors/style/align')
+Quill.register(AlignStyle, true)
+Quill.register(SizeStyle, true)
+
+import { quillEditor } from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 export default {
   name: 'Dispute',
   components: {
     DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
     DisputeNotes: () => import('./partials/DisputeNotes'),
     DisputeOverview: () => import('./partials/DisputeOverview'),
-    DisputeActions: () => import('./partials/DisputeActions')
+    DisputeActions: () => import('./partials/DisputeActions'),
+    quillEditor
   },
   data () {
     return {
@@ -224,7 +229,21 @@ export default {
       activeRole: {},
       invalidReceiver: undefined,
       isCollapsed: false,
-      enterToSend: 0
+      enterToSend: 0,
+      expandedMessageBox: false,
+      editorOptions: {
+        placeholder: 'Escreva alguma coisa',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'align': [] }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['blockquote'],
+            ['clean']
+          ]
+        }
+      }
     }
   },
   computed: {
@@ -375,6 +394,7 @@ export default {
       if (tab.name === '2' || tab.name === '3') {
         this.activeRoleId = 0
       }
+      this.collapseTextarea()
     },
     handleBeforeLeaveTabs () {
       this.$store.commit('clearOccurrencesSize')
@@ -489,6 +509,7 @@ export default {
           })
           setTimeout(function () {
             this.newMessage = ''
+            this.expandedMessageBox = false
           }.bind(this), 500)
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
@@ -537,8 +558,10 @@ export default {
       localStorage.setItem('jusentertosend', value)
     },
     expandTextarea () {
+      this.expandedMessageBox = true
     },
     collapseTextarea () {
+      this.expandedMessageBox = false
     }
   }
 }
@@ -633,16 +656,30 @@ export default {
         resize: none;
         border: 0;
         padding: 6px 0;
+        margin-bottom: 10px;
       }
     }
     > .el-card__body {
+      position: relative;
       padding: 10px 10px 10px 20px;
+    }
+  }
+  &__send-message-expanded {
+    .quill-editor {
+      height: 100%;
+    }
+    .ql-toolbar {
+      display: inherit;
+    }
+    .ql-container {
+      height: calc(70vh - 200px);
     }
   }
   &__send-message-actions {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    margin-left: -2px;
     img {
       margin-right: 10px;
       height: 20px;
