@@ -454,10 +454,8 @@ export default {
     },
     checkMessage (newMessageTrim) {
       for (let i = 0; i < this.recentMessages.length; i++) {
-        // if (this.recentMessages[i].messageBody === newMessageTrim) return true
         let actuallyMessage = this.recentMessages[i].messageBody
         let similarity = Math.round(this.similarity(newMessageTrim, actuallyMessage) * 10000) / 100
-        console.log(similarity)
         if (similarity >= 75) return true
       }
     },
