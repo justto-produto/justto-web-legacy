@@ -247,7 +247,7 @@ export default {
       }
     },
     recentMessages () {
-      return this.$store.state.messageModule.recentMessages
+      return this.$store.getters.messageRecentMessages
     }
   },
   watch: {
