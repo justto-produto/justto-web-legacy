@@ -238,7 +238,6 @@ export default {
       this.loading = true
       this.$store.dispatch('getDocumentModels').then(models => {
         this.models = models
-        this.models.push(...models)
         if (models.length && models.length === 1) {
           this.selectModel({ modelId: models[0].id, unique: models.length === 1 })
         } else {
