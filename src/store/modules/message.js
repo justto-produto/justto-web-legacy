@@ -1,5 +1,6 @@
 const message = {
   state: {
+    recentMessages: []
   },
   mutations: {
   },
@@ -53,6 +54,7 @@ const message = {
     }
   },
   getters: {
+    messageRecentMessages: state => state.recentMessages
   }
 }
 
