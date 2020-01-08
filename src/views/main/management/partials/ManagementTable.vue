@@ -18,13 +18,31 @@
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="44px" />
       <el-table-column
+        v-if="tab1"
         :sortable="false"
         min-width="66px"
         align="center"
         class-name="management-table__row-info">
         <template slot-scope="scope">
-          <jus-icon :icon="'status-' + scope.row.id % 3" />
-          <jus-icon icon="justto" :is-active="!(scope.row.id % 2)" />
+          <el-tooltip :disabled="(scope.row.id % 3) !== 2" popper-class="info">
+            <div slot="content">
+              <strong>Última mensagem enviada</strong><br>
+              <jus-icon icon="email" is-white /> LUCAS@JUSTTO.COM.BR <br>
+              Total de leituras: 3 <br>
+              Última leitura: 07/01 às 17h38
+              <br><br>
+              <strong>Sumário de interações</strong><br>
+              Primeira interação: 02/01 às 11h22 <br>
+              Total de interações: 18
+            </div>
+            <jus-icon :icon="'status-' + scope.row.id % 3" />
+          </el-tooltip>
+          <el-tooltip :disabled="!!(scope.row.id % 2)">
+            <div slot="content">
+              Último acesso ao sistema Justto: 07/01 às 17h38
+            </div>
+            <jus-icon :is-active="!(scope.row.id % 2)" icon="justto" />
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column
