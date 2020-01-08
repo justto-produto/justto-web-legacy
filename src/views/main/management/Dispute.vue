@@ -193,6 +193,8 @@
 </template>
 
 <script>
+import { checkMessage } from '@/utils/levenshtein'
+
 export default {
   name: 'Dispute',
   components: {
@@ -419,46 +421,6 @@ export default {
           return []
       }
     },
-    similarity (s1, s2) {
-      let longer = s1
-      let shorter = s2
-      if (s1.length < s2.length) {
-        longer = s2
-        shorter = s1
-      }
-      let longerLength = longer.length
-      if (longerLength === 0) return 1.0
-      return (longerLength - this.editDistance(longer, shorter)) / parseFloat(longerLength)
-    },
-    editDistance (s1, s2) {
-      var costs = []
-      for (var i = 0; i <= s1.length; i++) {
-        var lastValue = i
-        for (var j = 0; j <= s2.length; j++) {
-          if (i === 0) costs[j] = j
-          else {
-            if (j > 0) {
-              var newValue = costs[j - 1]
-              if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
-                newValue = Math.min(Math.min(newValue, lastValue),
-                  costs[j]) + 1
-              }
-              costs[j - 1] = lastValue
-              lastValue = newValue
-            }
-          }
-        }
-        if (i > 0) costs[s2.length] = lastValue
-      }
-      return costs[s2.length]
-    },
-    checkMessage (newMessageTrim) {
-      for (let i = 0; i < this.recentMessages.length; i++) {
-        let actuallyMessage = this.recentMessages[i].messageBody
-        let similarity = Math.round(this.similarity(newMessageTrim, actuallyMessage) * 10000) / 100
-        if (similarity >= 75) return true
-      }
-    },
     sendMessage (enterByKeyboard) {
       if (enterByKeyboard) {
         if (!this.enterToSend) {
@@ -477,7 +439,7 @@ export default {
       }
       if (this.messageType === 'whatsapp') {
         var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
-        if (this.checkMessage(newMessageTrim)) {
+        if (checkMessage(newMessageTrim, this.recentMessages)) {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
