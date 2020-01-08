@@ -54,6 +54,7 @@ const message = {
     }
   },
   getters: {
+    messageRecentMessages: state => state.recentMessages
   }
 }
 

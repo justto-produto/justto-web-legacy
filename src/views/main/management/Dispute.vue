@@ -247,7 +247,7 @@ export default {
       }
     },
     recentMessages () {
-      return this.$store.state.messageModule.recentMessages
+      return this.$store.getters.messageRecentMessages
     }
   },
   watch: {
@@ -482,7 +482,7 @@ export default {
         if (this.checkMessage(newMessageTrim)) {
           this.$jusNotification({
             title: 'Ops!',
-            message: 'Por favor, aguarde alguns segundos para enviar esta mensagem novamente.',
+            message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
             type: 'warning'
           })
           return false
