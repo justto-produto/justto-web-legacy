@@ -245,6 +245,9 @@ export default {
         Authorization: this.$store.getters.accountToken,
         Workspace: this.$store.getters.workspaceSubdomain
       }
+    },
+    recentMessages () {
+      return this.$store.getters.messageRecentMessages
     }
   },
   watch: {
@@ -416,6 +419,11 @@ export default {
           return []
       }
     },
+    checkMessage (msm) {
+      for (let i = 0; i < this.recentMessages.length; i++) {
+        if (this.recentMessages[i].messageBody === msm) return true
+      }
+    },
     sendMessage (enterByKeyboard) {
       if (enterByKeyboard) {
         if (!this.enterToSend) {
@@ -430,6 +438,30 @@ export default {
             })
             return false
           }
+        }
+      }
+      if (this.messageType === 'whatsapp') {
+        var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
+        if (this.checkMessage(newMessageTrim)) {
+          this.$jusNotification({
+            title: 'Ops!',
+            message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
+            type: 'warning'
+          })
+          return false
+        } else {
+          this.$store.state.messageModule.recentMessages.push({
+            messageBody: newMessageTrim,
+            selfDestroy: () => (setTimeout(() => {
+              for (var i = 0; i < this.recentMessages.length; i++) {
+                if (newMessageTrim === this.recentMessages[i].messageBody) {
+                  this.recentMessages.splice(i, 1)
+                }
+              }
+            }, 30000))
+          })
+          let lastMessage = this.recentMessages.length - 1
+          this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
         }
       }
       if (this.newMessage.trim().replace('\n', '') && this.activeRole.personId && !this.invalidReceiver) {
