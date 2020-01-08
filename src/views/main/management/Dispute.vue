@@ -193,6 +193,8 @@
 </template>
 
 <script>
+import { checkMessage } from '@/utils/levenshtein'
+
 export default {
   name: 'Dispute',
   components: {
@@ -419,11 +421,6 @@ export default {
           return []
       }
     },
-    checkMessage (msm) {
-      for (let i = 0; i < this.recentMessages.length; i++) {
-        if (this.recentMessages[i].messageBody === msm) return true
-      }
-    },
     sendMessage (enterByKeyboard) {
       if (enterByKeyboard) {
         if (!this.enterToSend) {
@@ -442,7 +439,7 @@ export default {
       }
       if (this.messageType === 'whatsapp') {
         var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
-        if (this.checkMessage(newMessageTrim)) {
+        if (checkMessage(newMessageTrim, this.recentMessages)) {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
