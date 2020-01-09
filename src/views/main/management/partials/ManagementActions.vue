@@ -12,6 +12,7 @@
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
         <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">{{ $t('action.CHANGE_EXPIRATION_DATE') }}</el-button>
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
+        <el-button plain data-testid="batch-enrich" @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
@@ -192,9 +193,9 @@ export default {
       } else if (action === 'RESTART_ENGAGEMENT') {
         trackTitle = 'engajamentos reiniciados'
       } else if (action === 'CHANGE_STRATEGY') {
-        trackTitle = 'troca de estratégias'
+        trackTitle = 'estratégias alteradas'
       } else if (action === 'CHANGE_EXPIRATION_DATE') {
-        trackTitle = 'altera fim de negociações'
+        trackTitle = 'fim de negociações alterados'
       } else {
         trackTitle = 'Ação em massa realizada'
       }
@@ -217,7 +218,7 @@ export default {
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
-        window.analytics.track(selecteds + ' ' + trackTitle, {
+        window.analytics.track(trackTitle, {
           action: action,
           selecteds: selecteds
         })
@@ -261,9 +262,42 @@ export default {
           type: 'warning',
           cancelButtonClass: 'is-plain'
         }).then(() => {
-          this.doAction(action)
+          if (action === 'ENRICH') this.enrichDisputes(action)
+          else this.doAction(action)
         })
       }
+    },
+    enrichDisputes (action) {
+      let selecteds = this.selectedIds
+      let reengagement = []
+      for (let selected of selecteds) {
+        reengagement.push(
+          this.$store.dispatch('enrichDispute', selected)
+        )
+      }
+      Promise.all(reengagement).then(() => {
+        window.analytics.track('disputas enriquecidas - SUCESSOS', {
+          action: action
+        })
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
+          type: 'success',
+          dangerouslyUseHTMLString: true
+        })
+      }).catch(e => {
+        window.analytics.track('disputas enriquecidas - ERROS', {
+          action: action
+        })
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. Parece que algumas das disputas selecionadas não foram enriquecidas.',
+          type: 'warning',
+          dangerouslyUseHTMLString: true
+        })
+      })
+      this.selectedIdsComp = []
+      this.$store.dispatch('getDisputes')
     },
     clearSelection () {
       this.$emit('disputes:clear')
@@ -303,7 +337,8 @@ export default {
   button {
     margin-left: 0 !important;
     height: 68px;
-    padding: 12px;
+    padding: 8px;
+    font-size: 14px;
     border: 0;
     border-radius: 0;
     text-transform: uppercase;
@@ -314,6 +349,7 @@ export default {
   &__length {
     color: #9461f7;
     font-weight: 500;
+    font-size: 14px;
     width: 42px;
     justify-content: center;
     align-items: center;
@@ -323,7 +359,7 @@ export default {
     }
   }
   .el-icon-close {
-    width: 42px;
+    font-size: 16px;
   }
   &__dialog {
     .el-message-box__content {

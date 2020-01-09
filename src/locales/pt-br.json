@@ -76,8 +76,8 @@
     "ADMINISTRATOR": "administrador"
   },
   "action":{
-    "RESTART_ENGAGEMENT": "reiniciar engajamento",
-    "RESTART-ENGAGEMENT": "reiniciar engajamento",
+    "RESTART_ENGAGEMENT": "reengajar",
+    "RESTART-ENGAGEMENT": "reengajar",
     "SETTLED": "ganhar",
     "UNSETTLED": "perder",
     "DELETE": "excluir",
