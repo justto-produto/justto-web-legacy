@@ -47,13 +47,13 @@
                   @click="collapseTextarea()" />
                 <div v-if="validName" :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
                   <quill-editor
-                  v-if="messageType === 'email'"
-                  v-model="newMessage"
-                  :options="editorOptions"
-                  @focus="expandTextarea()" />
-                  <textarea
+                    v-if="messageType === 'email'"
                     v-model="newMessage"
+                    :options="editorOptions"
+                    @focus="expandTextarea()" />
+                  <textarea
                     v-else
+                    v-model="newMessage"
                     :rows="expandedMessageBox ? 10 : 1"
                     data-testid="input-message"
                     placeholder="Escreva alguma coisa"
