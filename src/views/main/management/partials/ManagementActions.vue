@@ -12,7 +12,7 @@
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
         <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">{{ $t('action.CHANGE_EXPIRATION_DATE') }}</el-button>
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
-        <el-button plain data-testid="batch-enrich" @click="enrichDisputes('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
+        <el-button plain data-testid="batch-enrich" @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
@@ -196,8 +196,6 @@ export default {
         trackTitle = 'estratégias alteradas'
       } else if (action === 'CHANGE_EXPIRATION_DATE') {
         trackTitle = 'fim de negociações alterados'
-      } else if (action === 'ENRICH') {
-        trackTitle = 'disputas enriquecidas'
       } else {
         trackTitle = 'Ação em massa realizada'
       }
@@ -264,46 +262,40 @@ export default {
           type: 'warning',
           cancelButtonClass: 'is-plain'
         }).then(() => {
-          this.doAction(action)
+          if (action === 'ENRICH') this.enrichDisputes(action)
+          else this.doAction(action)
         })
       }
     },
     enrichDisputes (action) {
       let selecteds = this.selectedIds
-      let successesList = []
-      let errorsList = []
+      let reengagement = []
       for (let selected of selecteds) {
-        this.$store.dispatch('enrichDispute', selected).then(response => {
-          successesList.push(selected)
-        }).catch(() => {
-          errorsList.push(selected)
-        })
+        reengagement.push(
+          this.$store.dispatch('enrichDispute', selected)
+        )
       }
-      setTimeout(function () {
-        if (errorsList.length) {
-          window.analytics.track('disputas enriquecidas - ERROS', {
-            action: action,
-            errorsList: errorsList
-          })
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. <strong>' + errorsList.length + '</strong> de <strong>' + selecteds.length + '</strong> disputas não foram enriquecidas',
-            type: 'warning',
-            dangerouslyUseHTMLString: true
-          })
-        } else {
-          window.analytics.track('disputas enriquecidas - SUCESSOS', {
-            action: action,
-            successesList: successesList
-          })
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
-            type: 'success',
-            dangerouslyUseHTMLString: true
-          })
-        }
-      }.bind(this), 500)
+      Promise.all(reengagement).then(() => {
+        window.analytics.track('disputas enriquecidas - SUCESSOS', {
+          action: action
+        })
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
+          type: 'success',
+          dangerouslyUseHTMLString: true
+        })
+      }).catch(e => {
+        window.analytics.track('disputas enriquecidas - ERROS', {
+          action: action
+        })
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. Parece que algumas das disputas selecionadas não foram enriquecidas.',
+          type: 'warning',
+          dangerouslyUseHTMLString: true
+        })
+      })
       this.selectedIdsComp = []
       this.$store.dispatch('getDisputes')
     },
@@ -345,7 +337,8 @@ export default {
   button {
     margin-left: 0 !important;
     height: 68px;
-    padding: 12px;
+    padding: 8px;
+    font-size: 13px;
     border: 0;
     border-radius: 0;
     text-transform: uppercase;
@@ -356,6 +349,7 @@ export default {
   &__length {
     color: #9461f7;
     font-weight: 500;
+    font-size: 13px;
     width: 42px;
     justify-content: center;
     align-items: center;
@@ -365,7 +359,7 @@ export default {
     }
   }
   .el-icon-close {
-    width: 42px;
+    font-size: 15px;
   }
   &__dialog {
     .el-message-box__content {
