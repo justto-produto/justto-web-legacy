@@ -192,16 +192,16 @@
 </template>
 
 <script>
+import { quillEditor } from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 import Quill from 'quill'
 const SizeStyle = Quill.import('attributors/style/size')
 const AlignStyle = Quill.import('attributors/style/align')
 Quill.register(AlignStyle, true)
 Quill.register(SizeStyle, true)
-
-import { quillEditor } from 'vue-quill-editor'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
 
 export default {
   name: 'Dispute',
@@ -672,7 +672,7 @@ export default {
       display: inherit;
     }
     .ql-container {
-      height: calc(70vh - 200px);
+      height: calc(60vh - 200px);
     }
   }
   &__send-message-actions {
