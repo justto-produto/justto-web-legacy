@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div style="height: calc(100% - 90px);">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id.sync="selectedDisputeId"
