@@ -55,6 +55,7 @@ import '@/styles/overrides/tag.scss'
 import '@/styles/overrides/upload.scss'
 
 import '@/styles/perfect-scroll.scss'
+import '@/styles/quill-editor.scss'
 
 // Global components
 import VueTheMask from 'vue-the-mask'

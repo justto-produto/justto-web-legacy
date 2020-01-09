@@ -438,6 +438,7 @@ export default {
     }
     .el-card__body {
       padding: 10px 20px;
+      word-break: break-all;
       strong {
         margin-bottom: 8px;
         display: inline-block;
