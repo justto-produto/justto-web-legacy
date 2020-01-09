@@ -26,20 +26,31 @@
         <template slot-scope="scope">
           <el-tooltip :disabled="(scope.row.id % 3) !== 2" popper-class="info">
             <div slot="content">
-              <strong>Última mensagem enviada</strong><br>
-              <jus-icon icon="email" is-white /> LUCAS@JUSTTO.COM.BR <br>
-              Total de leituras: 3 <br>
-              Última leitura: 07/01 às 17h38
-              <br><br>
-              <strong>Sumário de interações</strong><br>
-              Primeira interação: 02/01 às 11h22 <br>
-              Total de interações: 18
+              <strong>Última mensagem enviada:</strong><br><br>
+              <div v-if="scope.row.id % 2">
+                <div class="subtitle">
+                  <jus-icon icon="email" is-white />
+                  E-mail para:
+                </div>
+                LUCAS@JUSTTO.COM.BR <br>
+                Total de leituras: 3 <br>
+                Última leitura: 07/01 às 17h38
+              </div>
+              <div v-else>
+                <div class="subtitle">
+                  <jus-icon icon="whatsapp" is-white />
+                  Whatsapp para:
+                </div>
+                (12) 98888-8384 <br>
+                Última leitura: 07/01 às 17h38
+              </div>
             </div>
             <jus-icon :icon="'status-' + scope.row.id % 3" />
           </el-tooltip>
           <el-tooltip :disabled="!!(scope.row.id % 2)">
             <div slot="content">
-              Último acesso ao sistema Justto: 07/01 às 17h38
+              Último acesso ao sistema Justto: <br>
+              <strong>07/01 às 17h38</strong>
             </div>
             <jus-icon :is-active="!(scope.row.id % 2)" icon="justto" />
           </el-tooltip>
@@ -109,14 +120,37 @@
         min-width="124px"
         align="center">
         <template slot-scope="scope">
-          <span class="position-relative">
-            <jus-icon v-if="scope.row.lastInteraction" :icon="getInteractionIcon(scope.row.lastInteraction)" class="management-table__interaction-icon" />
-            <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
-          </span>
-          <el-tooltip v-if="scope.row.lastInteraction" :content="scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm')">
-            <span style="margin-left: 4px;">
-              {{ getLastInteraction(scope.row.lastInteraction.createAt.dateTime) }}
-            </span>
+          <el-tooltip v-if="scope.row.lastInteraction" popper-class="info">
+            <div slot="content">
+              <strong>Última interação:</strong><br><br>
+              <div v-if="scope.row.id % 3">
+                <div class="subtitle">
+                  <jus-icon icon="email" is-white />
+                  E-mail para:
+                </div>
+                LUCAS@JUSTTO.COM.BR <br>
+                {{ scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }} <br>
+              </div>
+              <div v-else>
+                <div class="subtitle">
+                  <jus-icon icon="whatsapp" is-white />
+                  Whatsapp para:
+                </div>
+                (12) 98888-8384 <br>
+                {{ scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }} <br>
+              </div>
+              <br>
+              <strong>Total de interações: 3</strong>
+            </div>
+            <div>
+              <span class="position-relative" style="vertical-align: text-bottom;">
+                <jus-icon v-if="scope.row.lastInteraction" :icon="getInteractionIcon(scope.row.lastInteraction)" class="management-table__interaction-icon" />
+                <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+              </span>
+              <span style="margin-left: 4px;">
+                {{ getLastInteraction(scope.row.lastInteraction.createAt.dateTime) }}
+              </span>
+            </div>
           </el-tooltip>
         </template>
       </el-table-column>
