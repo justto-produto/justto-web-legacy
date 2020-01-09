@@ -338,7 +338,7 @@ export default {
     margin-left: 0 !important;
     height: 68px;
     padding: 8px;
-    font-size: 13px;
+    font-size: 14px;
     border: 0;
     border-radius: 0;
     text-transform: uppercase;
@@ -349,7 +349,7 @@ export default {
   &__length {
     color: #9461f7;
     font-weight: 500;
-    font-size: 13px;
+    font-size: 14px;
     width: 42px;
     justify-content: center;
     align-items: center;
@@ -359,7 +359,7 @@ export default {
     }
   }
   .el-icon-close {
-    font-size: 15px;
+    font-size: 16px;
   }
   &__dialog {
     .el-message-box__content {
