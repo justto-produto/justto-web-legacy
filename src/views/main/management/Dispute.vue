@@ -36,7 +36,6 @@
             <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
               <el-card
                 v-loading="isPaused"
-                :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }"
                 element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
                 element-loading-spinner="el-icon-video-pause"
                 class="dispute-view__send-message-box"
@@ -46,28 +45,21 @@
                   class="el-icon-arrow-down"
                   style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
                   @click="collapseTextarea()" />
-                <quill-editor
+                <div v-if="validName" :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
+                  <quill-editor
+                  v-if="messageType === 'email'"
                   v-model="newMessage"
                   :options="editorOptions"
                   @focus="expandTextarea()" />
-
-                <!-- <el-collapse-transition>
                   <textarea
-                    v-if="validName"
                     v-model="newMessage"
-                    :rows="textareaRows"
+                    v-else
+                    :rows="expandedMessageBox ? 10 : 1"
                     data-testid="input-message"
                     placeholder="Escreva alguma coisa"
                     class="el-textarea__inner"
-                    @blur="collapseTextarea()"
-                    @focus="expandTextarea()"
-                    @keydown.enter.alt.prevent
-                    @keydown.enter.shift.prevent
-                    @keydown.enter.exact.prevent
-                    @keydown.enter.alt="newLineMessage()"
-                    @keydown.enter.shift="newLineMessage()"
-                    @keyup.enter.exact="sendMessage(true)"/>
-                </el-collapse-transition> -->
+                    @focus="expandTextarea()" />
+                </div>
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
                     v-if="!validName"
@@ -77,7 +69,7 @@
                     </div>
                   </el-tooltip>
                   <div v-else>
-                    <el-tooltip content="Enviar e-mail">
+                    <el-tooltip content="Enviar E-mail">
                       <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
                         <jus-icon :is-active="messageType === 'email'" icon="email"/>
                       </a>
@@ -123,23 +115,6 @@
                         Configurações
                       </el-button>
                     </el-tooltip>
-                    <el-popover trigger="click">
-                      <el-radio-group v-model="enterToSend" class="dispute-view__send-radio" @change="changeEnterToSend">
-                        <el-radio :label="0">
-                          Envia com Click
-                          <span>Clicar em <strong>Enviar</strong> enviará a mensagem</span>
-                        </el-radio>
-                        <el-radio :label="1">
-                          Envia com Enter
-                          <span>Pressionar <strong>Enter</strong> enviará a mensagem</span>
-                        </el-radio>
-                      </el-radio-group>
-                      <el-button
-                        slot="reference"
-                        class="dispute-view__more"
-                        type="text"
-                        icon="el-icon-more" />
-                    </el-popover>
                   </div>
                 </div>
               </el-card>
@@ -148,7 +123,7 @@
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <textarea
                   v-model="newNote"
-                  rows="5"
+                  rows="10"
                   data-testid="input-note"
                   placeholder="Escreva alguma coisa"
                   class="el-textarea__inner" />
@@ -229,7 +204,6 @@ export default {
       activeRole: {},
       invalidReceiver: undefined,
       isCollapsed: false,
-      enterToSend: 0,
       expandedMessageBox: false,
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
@@ -305,10 +279,6 @@ export default {
       })
     }
     this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
-  },
-  beforeMount () {
-    const entertosend = parseInt(localStorage.getItem('jusentertosend'))
-    if (entertosend) this.enterToSend = entertosend
   },
   beforeDestroy () {
     this.unsubscribeOccurrences(this.id)
@@ -403,9 +373,6 @@ export default {
       this.messageType = type
       this.updateInvalidReceiver()
     },
-    newLineMessage () {
-      this.newMessage = `${this.newMessage}\n`
-    },
     newLineChat () {
       this.newChatMessage = `${this.newChatMessage}\n`
     },
@@ -450,22 +417,7 @@ export default {
         if (this.recentMessages[i].messageBody === msm) return true
       }
     },
-    sendMessage (enterByKeyboard) {
-      if (enterByKeyboard) {
-        if (!this.enterToSend) {
-          this.newLineMessage()
-          return false
-        } else {
-          if (this.invalidReceiver === undefined) {
-            this.$jusNotification({
-              title: 'Atenção!',
-              message: 'Escolha um destinatário ao lado para receber sua mensagem.',
-              type: 'info'
-            })
-            return false
-          }
-        }
-      }
+    sendMessage () {
       if (this.messageType === 'whatsapp') {
         var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
         if (this.checkMessage(newMessageTrim)) {
@@ -553,9 +505,6 @@ export default {
           }
         })
       }
-    },
-    changeEnterToSend (value) {
-      localStorage.setItem('jusentertosend', value)
     },
     expandTextarea () {
       this.expandedMessageBox = true
@@ -656,7 +605,7 @@ export default {
         resize: none;
         border: 0;
         padding: 6px 0;
-        margin-bottom: 10px;
+        margin-bottom: -4px;
       }
     }
     > .el-card__body {
@@ -672,7 +621,7 @@ export default {
       display: inherit;
     }
     .ql-container {
-      height: calc(60vh - 200px);
+      height: 218px;
     }
   }
   &__send-message-actions {
@@ -696,6 +645,7 @@ export default {
   &__disabled-text {
     color: #adadad;
     cursor: default;
+    align-self: center;
   }
   &__back {
     margin-right: 10px;
@@ -765,25 +715,6 @@ export default {
       height: auto;
       .el-input {
         display: inline-block;
-      }
-    }
-  }
-  &__more {
-    color: #343c4b;
-    transform: rotate(90deg);
-    margin-left: 12px;
-  }
-  &__send-radio {
-    .el-radio {
-      display: block;
-      margin-right: 0px;
-      & + .el-radio {
-        margin-top: 10px;
-      }
-      .el-radio__label span {
-        display: block;
-        margin-left: 28px;
-        font-size: 12px;
       }
     }
   }
