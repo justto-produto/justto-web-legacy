@@ -167,6 +167,7 @@
 </template>
 
 <script>
+import { checkMessage } from '@/utils/levenshtein'
 import { quillEditor } from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -412,15 +413,25 @@ export default {
           return []
       }
     },
-    checkMessage (msm) {
-      for (let i = 0; i < this.recentMessages.length; i++) {
-        if (this.recentMessages[i].messageBody === msm) return true
+    sendMessage (enterByKeyboard) {
+      if (enterByKeyboard) {
+        if (!this.enterToSend) {
+          this.newLineMessage()
+          return false
+        } else {
+          if (this.invalidReceiver === undefined) {
+            this.$jusNotification({
+              title: 'Atenção!',
+              message: 'Escolha um destinatário ao lado para receber sua mensagem.',
+              type: 'info'
+            })
+            return false
+          }
+        }
       }
-    },
-    sendMessage () {
       if (this.messageType === 'whatsapp') {
         var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
-        if (this.checkMessage(newMessageTrim)) {
+        if (checkMessage(newMessageTrim, this.recentMessages)) {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
