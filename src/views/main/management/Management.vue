@@ -74,7 +74,7 @@
       <management-filters
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
-      <div v-show="activeTab === '1'" style="margin: 10px 0;">
+      <div v-show="activeTab === '1' && false" style="margin: 10px 0;">
         <el-button plain type="primary">
           Com resposta
         </el-button>
