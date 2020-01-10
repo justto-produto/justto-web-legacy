@@ -72,10 +72,17 @@
                 class="dispute-view-occurrences__for-to">
                 Para: {{ occurrence.interaction.message.receiver | phoneMask }}
               </span>
+              <!-- <el-tooltip :content="occurrence.interaction.message.parameters.SENDER" placement="bottom">
+                <span
+                  v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && occurrence.interaction.direction === 'INBOUND'"
+                  class="dispute-view-occurrences__for-to">
+                  Por: {{ occurrence.interaction.message.parameters.SENDER_NAME }}
+                </span>
+              </el-tooltip> -->
               <span
                 v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && occurrence.interaction.direction === 'INBOUND'"
                 class="dispute-view-occurrences__for-to">
-                Por: {{ occurrence.interaction.message.parameters.SENDER_NAME || occurrence.interaction.message.parameters.SENDER }}
+                Por: {{ occurrence.interaction.message.parameters.SENDER_NAME }} ({{ occurrence.interaction.message.parameters.SENDER }})
               </span>
             </div>
           </div>
@@ -497,12 +504,6 @@ export default {
     font-size: 11px;
     margin-top: 3px;
     margin-left: 10px;
-  }
-  &__for-to {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    max-width: 40ch;
   }
   &__note {
     border-radius: 8px;
