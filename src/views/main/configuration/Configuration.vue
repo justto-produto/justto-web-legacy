@@ -1,5 +1,5 @@
 <template lang="html">
-  <jus-view-main :class="{'profile-view--user': !isAdminProfile}" class="profile-view" right-card-width="550">
+  <jus-view-main :class="{'configuration-view--user': !isAdminProfile}" class="configuration-view" right-card-width="550">
     <template slot="title">
       <h1>Configurações</h1>
     </template>
@@ -34,7 +34,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="Equipe" name="team">
-          <div class="profile-view__team">
+          <div class="configuration-view__team">
             <el-form label-position="top">
               <h3>Alterar nome da Equipe</h3>
               <el-alert
@@ -54,7 +54,7 @@
             </el-form>
             <h3 class="mt40 mb30">Membros da equipe</h3>
             <div v-for="member in teamMembers" :key="member.id">
-              <div class="profile-view__members-list">
+              <div class="configuration-view__members-list">
                 <div class="member">
                   <strong>{{ member.person.name }}: </strong>
                   <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
@@ -71,7 +71,7 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="Empresa" name="company">
-          <div class="profile-view__company">
+          <div class="configuration-view__company">
             <h3>Alterar nome da empresa/escritório</h3>
             <el-alert
               :closable="false"
@@ -146,7 +146,7 @@
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="dialogInvite"
-        class="profile-view__invite-dialog"
+        class="configuration-view__invite-dialog"
         title="Convide pessoas à sua equipe"
         width="600px">
         <el-form
@@ -181,7 +181,7 @@ import { mask } from 'vue-the-mask'
 import { validatePhone } from '@/utils/validations'
 
 export default {
-  name: 'Profile',
+  name: 'Configuration',
   directives: { mask },
   components: {
     JusWhatsapp: () => import('@/components/layouts/JusWhatsapp')
@@ -499,7 +499,7 @@ export default {
 </script>
 
 <style lang="scss">
-.profile-view {
+.configuration-view {
   .el-tab-pane {
     margin: auto;
     margin-top: 20px;

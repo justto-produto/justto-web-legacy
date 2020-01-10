@@ -128,22 +128,30 @@ const getInteractionIcon = function (interaction) {
   }
 }
 
-const getLastInteractionTooltip = function (type) {
-  switch (type) {
-    case 'EMAIL_CNA':
-      return 'Última interação via CNA'
-    case 'EMAIL':
-      return 'Última interação via E-mail'
-    case 'WHATSAPP':
-      return 'Última interação via WhatsApp'
-    case 'SMS':
-      return 'Última interação via SMS'
-    case 'TTS':
-      return 'Última interação via WhatsApp'
-    case 'NEGOTIATION':
-      return 'Última visualização'
-    default:
-      return 'Última visualização'
+const getLastInteractionTooltip = function (interaction) {
+  switch (interaction.type) {
+    case 'COMMUNICATION': {
+      if (interaction.message) {
+        switch (interaction.message.communicationType) {
+          case 'EMAIL': return 'Via E-mail'
+          case 'EMAIL_CNA': return 'Via E-mail CNA'
+          case 'SMS': return 'Via SMS'
+          case 'CALL': return 'Via Call'
+          case 'CHAT': return 'Via Chat'
+          case 'TTS': return 'Via TTS'
+          case 'WHATSAPP': return 'Via Whatsapp'
+        }
+      }
+      return 'email'
+    }
+    case 'VISUALIZATION': return 'Visualização sistema Justto'
+    case 'NEGOTIATOR_ACCESS': return 'Acesso sistema Justto'
+    case 'NEGOTIATOR_PROPOSAL': return 'Proposta de acordo'
+    case 'NEGOTIATOR_CHECKOUT': return 'Aceite de acordo'
+    case 'NEGOTIATOR_ACCEPTED': return 'Aceite de negociação'
+    case 'NEGOTIATOR_REJECTED': return 'Rejeição de acordo'
+    case 'CLICK': return 'Click na mensagem'
+    default: return 'Visualização sistema Justto'
   }
 }
 

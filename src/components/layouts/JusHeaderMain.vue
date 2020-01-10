@@ -50,7 +50,7 @@
             <div class="jus-header-main__version">
               Versão {{ appVersion }}
             </div>
-            <router-link to="/profile">
+            <router-link to="/configuration">
               <el-dropdown-item >
                 Configurações
               </el-dropdown-item>

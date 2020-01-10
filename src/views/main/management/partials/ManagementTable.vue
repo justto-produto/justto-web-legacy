@@ -18,6 +18,45 @@
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="44px" />
       <el-table-column
+        v-if="tab1 && false"
+        :sortable="false"
+        min-width="66px"
+        align="center"
+        class-name="management-table__row-info">
+        <template slot-scope="scope">
+          <el-tooltip :disabled="(scope.row.id % 3) !== 2" popper-class="info">
+            <div slot="content">
+              <strong>Última mensagem enviada:</strong><br><br>
+              <div v-if="scope.row.id % 2">
+                <div class="subtitle">
+                  <jus-icon icon="email" is-white />
+                  E-mail para:
+                </div>
+                LUCAS@JUSTTO.COM.BR <br>
+                Total de leituras: 3 <br>
+                Última leitura: 07/01 às 17h38
+              </div>
+              <div v-else>
+                <div class="subtitle">
+                  <jus-icon icon="whatsapp" is-white />
+                  Whatsapp para:
+                </div>
+                (12) 98888-8384 <br>
+                Última leitura: 07/01 às 17h38
+              </div>
+            </div>
+            <jus-icon :icon="'status-' + scope.row.id % 3" />
+          </el-tooltip>
+          <el-tooltip :disabled="!!(scope.row.id % 2)">
+            <div slot="content">
+              Último acesso ao sistema Justto: <br>
+              <strong>07/01 às 17h38</strong>
+            </div>
+            <jus-icon :is-active="!(scope.row.id % 2)" icon="justto" />
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
         :sortable="false"
         label="Processo"
         min-width="100px"
@@ -81,14 +120,28 @@
         min-width="124px"
         align="center">
         <template slot-scope="scope">
-          <span class="position-relative">
-            <jus-icon v-if="scope.row.lastInteraction" :icon="getInteractionIcon(scope.row.lastInteraction)" class="management-table__interaction-icon" />
-            <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
-          </span>
-          <el-tooltip v-if="scope.row.lastInteraction" :content="scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm')">
-            <span style="margin-left: 4px;">
-              {{ getLastInteraction(scope.row.lastInteraction.createAt.dateTime) }}
-            </span>
+          <el-tooltip v-if="scope.row.lastInteraction" popper-class="info">
+            <div slot="content">
+              <strong>Última interação:</strong><br><br>
+              <div class="subtitle">
+                <jus-icon :icon="getInteractionIcon(scope.row.lastInteraction)" is-white />
+                {{ getLastInteractionTooltip(scope.row.lastInteraction) }}
+              </div>
+              <div v-if="scope.row.lastInteraction && scope.row.lastInteraction.message && scope.row.lastInteraction.message.sender">
+                {{ scope.row.lastInteraction.message.sender }}
+              </div>
+              {{ scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }} <br>
+              <!-- <br><strong>Total de interações: 3</strong> -->
+            </div>
+            <div>
+              <span class="position-relative" style="vertical-align: middle;">
+                <jus-icon v-if="scope.row.lastInteraction" :icon="getInteractionIcon(scope.row.lastInteraction)" class="management-table__interaction-icon" />
+                <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+              </span>
+              <span style="margin-left: 4px;">
+                {{ getLastInteraction(scope.row.lastInteraction.createAt.dateTime) }}
+              </span>
+            </div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -194,7 +247,7 @@
 </template>
 
 <script>
-import { getLastInteraction, getInteractionIcon } from '@/utils/jusUtils'
+import { getLastInteraction, getInteractionIcon, getLastInteractionTooltip } from '@/utils/jusUtils'
 
 export default {
   name: 'ManagementTable',
@@ -266,6 +319,7 @@ export default {
   methods: {
     getLastInteraction: (i) => getLastInteraction(i),
     getInteractionIcon: (i) => getInteractionIcon(i),
+    getLastInteractionTooltip: (i) => getLastInteractionTooltip(i),
     tableRowClassName ({ row, rowIndex }) {
       if (!row.visualized && !this.tab0) {
         return 'el-table__row--visualized-row'
@@ -368,6 +422,16 @@ export default {
     }
     .el-button--text {
       margin-left: 6px;
+    }
+  }
+  &__row-info {
+    img {
+      vertical-align: middle !important;
+      width: 22px;
+      & + img {
+        margin-left: 8px;
+        width: 15px;
+      }
     }
   }
   &__empty-table {

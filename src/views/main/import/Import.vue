@@ -1,8 +1,5 @@
 <template>
   <jus-view-main class="import-view">
-    <template slot="title">
-      <h1>Importação de disputas</h1>
-    </template>
     <template slot="main">
       <h2 class="import-view__action">
         Histórico de importações
@@ -275,6 +272,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-top: 0;
   }
   &__upload {
     display: none

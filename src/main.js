@@ -52,6 +52,7 @@ import '@/styles/overrides/select.scss'
 import '@/styles/overrides/steps.scss'
 import '@/styles/overrides/tabs.scss'
 import '@/styles/overrides/tag.scss'
+import '@/styles/overrides/tooltip.scss'
 import '@/styles/overrides/upload.scss'
 
 import '@/styles/perfect-scroll.scss'
