@@ -152,7 +152,7 @@
             <div v-show="role.phones.length" class="dispute-overview-view__info-line">
               <span class="title">Telefone(s):</span>
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
-                <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role)" />
+                <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role, index)" />
                 <span class="ellipsis">
                   <span>{{ phone.number | phoneMask }}</span>
                   <el-tooltip content="Telefone inválido">
@@ -731,7 +731,9 @@ export default {
     }
   },
   methods: {
-    updateDisputeRole (role) {
+    updateDisputeRole (role, index) {
+      role.phones.forEach(p => { p.selected = false })
+      role.phones[index].selected = true
       let disputeRoles = this.dispute.disputeRoles.map(dr => {
         if (dr.id === role.id) {
           dr = role
