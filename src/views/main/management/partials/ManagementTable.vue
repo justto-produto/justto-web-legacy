@@ -18,13 +18,13 @@
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="44px" />
       <el-table-column
-        v-if="tab1 && false"
+        v-if="tab1"
         :sortable="false"
         min-width="66px"
         align="center"
         class-name="management-table__row-info">
         <template slot-scope="scope">
-          <el-tooltip :disabled="(scope.row.id % 3) !== 2" popper-class="info">
+          <!-- <el-tooltip :disabled="(scope.row.id % 3) !== 2" popper-class="info">
             <div slot="content">
               <strong>Última mensagem enviada:</strong><br><br>
               <div v-if="scope.row.id % 2">
@@ -46,13 +46,23 @@
               </div>
             </div>
             <jus-icon :icon="'status-' + scope.row.id % 3" />
-          </el-tooltip>
-          <el-tooltip :disabled="!!(scope.row.id % 2)">
+          </el-tooltip> -->
+          <el-tooltip>
             <div slot="content">
-              Último acesso ao sistema Justto: <br>
-              <strong>07/01 às 17h38</strong>
+              <span v-if="scope.row.lastNegotiatorAccess">
+                Último acesso ao sistema Justto:<br><br>
+                <strong>
+                  <span v-if="scope.row.lastNegotiatorAccess.properties && scope.row.lastNegotiatorAccess.properties.PERSON_NAME">
+                    Por: {{ scope.row.lastNegotiatorAccess.properties.PERSON_NAME }} <br>
+                  </span>
+                  Em: {{ scope.row.lastNegotiatorAccess.createdAt | moment('DD/MM/YYYY [às] HH:mm') }}
+                </strong>
+              </span>
+              <span v-else>
+                Ainda não houveram acessos ao sistema Justto de Negociação
+              </span>
             </div>
-            <jus-icon :is-active="!(scope.row.id % 2)" icon="justto" />
+            <jus-icon :is-active="scope.row.lastNegotiatorAccess" icon="justto" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -278,11 +288,6 @@ export default {
     }
   },
   computed: {
-    // allowDocument () {
-    //   return [484, 293, 200, 234, 198, 294].includes(this.$store.getters.accountId) ||
-    //     [/* cabanellos */92, 227, 230, 229, 137, 182, 202,
-    //       /* vlm */228, 223, 220, 183, 206, 175, 169, 171].includes(this.$store.getters.workspaceId)
-    // },
     selectedIdsComp: {
       get () {
         return this.selectedIds
@@ -292,7 +297,13 @@ export default {
       }
     },
     disputes () {
-      return this.$store.getters.disputes
+      return this.$store.getters.disputes.map(d => {
+        d.lastNegotiatorAccess = {
+          createdAt: { dateTime: '2019-11-25T16:06:25Z' },
+          properties: { PERSON_NAME: 'Henrique Liberato' }
+        }
+        return d
+      })
     },
     tab0 () {
       return this.activeTab === '0'
