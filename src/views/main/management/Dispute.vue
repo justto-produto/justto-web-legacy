@@ -53,6 +53,7 @@
                     @focus="expandTextarea()" />
                   <textarea
                     v-else
+                    ref="messageTextArea"
                     v-model="newMessage"
                     :rows="expandedMessageBox ? 10 : 1"
                     data-testid="input-message"
@@ -161,7 +162,8 @@
         :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview"
         @fetch-data="fetchData"
-        @updateActiveRole="updateActiveRole" />
+        @updateActiveRole="updateActiveRole"
+        @selectPhoneNumber="selectPhoneNumber" />
     </template>
   </JusViewMain>
 </template>
@@ -200,6 +202,7 @@ export default {
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
+      selectedPhone: [],
       activeRoleId: 0,
       loadingKey: 0,
       activeRole: {},
@@ -285,6 +288,15 @@ export default {
     this.unsubscribeOccurrences(this.id)
   },
   methods: {
+    selectPhoneNumber (phone) {
+      if (phone.isValid) {
+        this.selectedPhone[0] = phone.id
+        if (phone.isMobile) {
+          this.setMessageType('whatsapp')
+          this.$nextTick(() => this.$refs.messageTextArea.focus())
+        }
+      }
+    },
     updateActiveRole (activeRole) {
       if (typeof activeRole === 'number') {
         activeRole = this.dispute.disputeRoles.find(role => {
@@ -294,7 +306,7 @@ export default {
       if (activeRole) {
         this.activeRole = Object.assign(activeRole, {
           invalidEmail: !activeRole.emails.length || !activeRole.emails.filter(e => e.selected === true).length,
-          invalidPhone: !activeRole.phones.length || !activeRole.phones.filter(e => e.selected === true).length,
+          invalidPhone: !this.selectedPhone.length,
           invalidOab: !activeRole.oabs.length || !activeRole.oabs.filter(e => e.selected === true).length })
       } else {
         this.activeRole = {}
@@ -408,7 +420,7 @@ export default {
         case 'cna':
           return params.role.oabs.filter(e => e.selected).map(e => e.id)
         case 'whatsapp':
-          return params.role.phones.filter(e => e.selected).map(e => e.id)
+          return this.selectedPhone
         default:
           return []
       }
