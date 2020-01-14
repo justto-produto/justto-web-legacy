@@ -732,8 +732,10 @@ export default {
   },
   methods: {
     updateDisputeRole (role, index) {
-      role.phones.forEach(p => { p.selected = false })
-      role.phones[index].selected = true
+      if (index && role.phones) {
+        role.phones.forEach(p => { p.selected = false })
+        role.phones[index].selected = true
+      }
       let disputeRoles = this.dispute.disputeRoles.map(dr => {
         if (dr.id === role.id) {
           dr = role
