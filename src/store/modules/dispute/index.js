@@ -23,6 +23,7 @@ const dispute = {
       persons: [],
       expirationDate: [],
       dealDate: [],
+      prescriptions: [],
       onlyFavorite: false,
       page: 1,
       size: 20,

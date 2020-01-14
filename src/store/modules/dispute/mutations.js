@@ -49,6 +49,7 @@ const disputeMutations = {
       persons: [],
       expirationDate: [],
       dealDate: [],
+      prescriptions: [],
       onlyFavorite: false,
       page: 1,
       size: 20,
@@ -66,6 +67,7 @@ const disputeMutations = {
       persons: state.query.persons,
       dealDate: [],
       expirationDate: [],
+      prescriptions: [],
       onlyFavorite: false,
       page: 1,
       size: size,
@@ -120,6 +122,12 @@ const disputeMutations = {
   },
   setRespondents (state, respondents) {
     state.respondents = respondents
+  },
+  addPrescription (state, prescription) {
+    state.query.prescriptions.push(prescription)
+  },
+  removePrescription (state, prescription) {
+    state.query.prescriptions.splice(state.query.prescriptions.indexOf(prescription), 1)
   }
 }
 
