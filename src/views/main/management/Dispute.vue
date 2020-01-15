@@ -307,7 +307,7 @@ export default {
         this.activeRole = {}
       }
       this.setMessageType(params.messageType)
-      this.$nextTick(() => this.$refs.messageTextArea.focus())
+      if (params.messageType === 'whatsapp') this.$nextTick(() => this.$refs.messageTextArea.focus())
       this.updateInvalidReceiver()
       this.$forceUpdate()
     },
