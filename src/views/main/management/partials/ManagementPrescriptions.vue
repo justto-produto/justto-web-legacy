@@ -1,12 +1,12 @@
 <template>
   <div class="management-prescriptions">
-    <el-button :type="hasAnswer ? 'primary' : ''" plain @click="handlePrescriptionClick('HASANSWER')">
+    <el-button :type="HAS_ANSWER ? 'primary' : ''" plain @click="handlePrescriptionClick('HAS_ANSWER')">
       Com resposta
     </el-button>
-    <el-button :type="counterproposalUpTo20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSALUPTO20')">
+    <el-button :type="COUNTERPROPOSAL_UP_TO_20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSAL_UP_TO_20')">
       Contraproposta (até 20%)
     </el-button>
-    <el-button :type="counterproposalOver20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSALOVER20')">
+    <el-button :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
       Contraproposta (+20%)
     </el-button>
   </div>
@@ -17,14 +17,14 @@
 export default {
   name: 'ManagementPrescriptions',
   computed: {
-    hasAnswer () {
-      return this.$store.getters.hasPrescription('HASANSWER')
+    HAS_ANSWER () {
+      return this.$store.getters.hasPrescription('HAS_ANSWER')
     },
-    counterproposalUpTo20 () {
-      return this.$store.getters.hasPrescription('COUNTERPROPOSALUPTO20')
+    COUNTERPROPOSAL_UP_TO_20 () {
+      return this.$store.getters.hasPrescription('COUNTERPROPOSAL_UP_TO_20')
     },
-    counterproposalOver20 () {
-      return this.$store.getters.hasPrescription('COUNTERPROPOSALOVER20')
+    COUNTERPROPOSAL_OVER_20 () {
+      return this.$store.getters.hasPrescription('COUNTERPROPOSAL_OVER_20')
     }
   },
   methods: {
