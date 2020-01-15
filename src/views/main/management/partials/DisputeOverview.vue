@@ -939,16 +939,16 @@ export default {
             type: 'warning',
             cancelButtonClass: 'is-plain'
           }).then(() => {
-            let addresses = []
-            for (let address of roleDataDifference) {
-              addresses.push(
-                this.$store.dispatch('restartAddressEngagement', {
+            let contacts = []
+            for (let contact of roleDataDifference) {
+              contacts.push(
+                this.$store.dispatch('restartEngagementByContact', {
                   disputeId: this.dispute.id,
-                  address: address.address || address.number
+                  contact: contact.address || contact.number
                 })
               )
             }
-            Promise.all(addresses).then(() => {
+            Promise.all(contacts).then(() => {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Reengajamento realizado com sucesso.',

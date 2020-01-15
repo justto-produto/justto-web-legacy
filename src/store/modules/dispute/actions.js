@@ -329,10 +329,10 @@ const disputeActions = {
         })
     })
   },
-  restartAddressEngagement ({ commit }, params) {
+  restartEngagementByContact ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.patch('/api/messages/engagement/' + params.disputeId + '/address/' + params.address)
+      axios.patch('/api/messages/engagement/' + params.disputeId + '/address/' + params.contact)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
