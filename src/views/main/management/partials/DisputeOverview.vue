@@ -152,19 +152,20 @@
             <div v-show="role.phones.length" class="dispute-overview-view__info-line">
               <span class="title">Telefone(s):</span>
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
-                <el-checkbox v-model="phone.selected" @change="updateDisputeRole(role, index)" />
-                <span class="ellipsis">
-                  <span>{{ phone.number | phoneMask }}</span>
-                  <el-tooltip content="Telefone inválido">
-                    <jus-icon v-if="!phone.isValid" icon="warn-dark" />
-                  </el-tooltip>
-                </span>
+                <el-radio v-model="selectedPhone" :label="phone.id" @change="selectPhoneNumber(phone), updateDisputeRole(role, 'whatsapp')">
+                  <span>
+                    <span>{{ phone.number | phoneMask }}</span>
+                    <el-tooltip content="Telefone inválido">
+                      <jus-icon v-if="!phone.isValid" icon="warn-dark" />
+                    </el-tooltip>
+                  </span>
+                </el-radio>
               </span>
             </div>
             <div v-show="role.emails.length" class="dispute-overview-view__info-line">
               <span class="title">E-mail(s):</span>
               <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
-                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role)" />
+                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
                   <el-tooltip content="Telefone inválido">
@@ -176,7 +177,7 @@
             <div v-show="role.oabs.length" class="dispute-overview-view__info-line">
               <span class="title">OAB(s):</span>
               <span v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`" :class="{'is-main': oab.isMain}">
-                <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role)" />
+                <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role, 'cna')" />
                 <span class="ellipsis">
                   <span>{{ oab.number + '-' + oab.state || '' }}</span>
                   <el-tooltip content="OAB inválido">
@@ -572,6 +573,7 @@ export default {
       selectedClaimantId: '',
       selectedNegotiatorId: '',
       selectedStrategyId: '',
+      selectedPhone: 0,
       disputeForm: {
         description: '',
         expirationDate: '',
@@ -731,19 +733,32 @@ export default {
     }
   },
   methods: {
-    updateDisputeRole (role, index) {
-      if (index && role.phones) {
-        role.phones.forEach(p => { p.selected = false })
-        role.phones[index].selected = true
-      }
+    updateDisputeRole (activeRole, messageType) {
       let disputeRoles = this.dispute.disputeRoles.map(dr => {
-        if (dr.id === role.id) {
-          dr = role
+        if (dr.id === activeRole.id) {
+          dr = activeRole
         }
         return dr
       })
+      switch (messageType) {
+        case 'email':
+          activeRole.oabs.forEach(o => { o.selected = false })
+          this.selectedPhone = 0
+          break
+        case 'whatsapp':
+          activeRole.emails.forEach(e => { e.selected = false })
+          activeRole.oabs.forEach(o => { o.selected = false })
+          break
+        case 'cna':
+          activeRole.emails.forEach(e => { e.selected = false })
+          this.selectedPhone = 0
+          break
+      }
       this.$store.commit('setDisputeRoles', disputeRoles)
-      this.$emit('updateActiveRole', role)
+      this.$emit('updateActiveRole', { activeRole, messageType })
+    },
+    selectPhoneNumber (phone) {
+      this.$emit('selectPhoneNumber', phone)
     },
     updateDisputeBankAccounts (roleBankAccountIds) {
       let action, bankAccountId
@@ -1118,6 +1133,19 @@ export default {
     }
     .bank-info {
       display: block !important
+    }
+    .el-radio {
+      width: 100%;
+      margin: 4px 0;
+      display: flex;
+      align-items: flex-start;
+    }
+    .el-radio__label {
+      padding-left: 6px;
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
     .bordered {
       width: 100%;
