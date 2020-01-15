@@ -278,14 +278,15 @@ export default {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT' && occurrence.interaction.properties.BANK_INFO) {
           return '<strong>Dados bancários:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
         }
-        if (occurrence.interaction.properties.VALUE) {
-          let content = occurrence.interaction.type === 'NEGOTIATOR_PROPOSAL' ? 'Contraproposta ' : 'Proposta '
-          content = content + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase() + '.'
-          if (occurrence.interaction.properties.NOTE) {
-            content = content + '<br>Nota: ' + occurrence.interaction.properties.NOTE
-          }
-          return content
-        }
+        return occurrence.description
+        // if (occurrence.interaction.properties.VALUE) {
+        //   let content = occurrence.interaction.type === 'NEGOTIATOR_PROPOSAL' ? 'Contraproposta ' : 'Proposta '
+        //   content = content + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase() + '.'
+        //   if (occurrence.interaction.properties.NOTE) {
+        //     content = content + '<br>Nota: ' + occurrence.interaction.properties.NOTE
+        //   }
+        //   return content
+        // }
       }
       if (Object.keys(this.fullMessageBank).includes(occurrence.id.toString())) {
         return this.fullMessageBank[occurrence.id]
