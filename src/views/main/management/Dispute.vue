@@ -48,6 +48,7 @@
                 <div v-if="validName" :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
                   <quill-editor
                     v-if="messageType === 'email'"
+                    ref="messageEditor"
                     v-model="newMessage"
                     :options="editorOptions"
                     @focus="expandTextarea()" />
@@ -289,28 +290,24 @@ export default {
   },
   methods: {
     selectPhoneNumber (phone) {
-      if (phone.isValid) {
-        this.selectedPhone[0] = phone.id
-        if (phone.isMobile) {
-          this.setMessageType('whatsapp')
-          this.$nextTick(() => this.$refs.messageTextArea.focus())
-        }
-      }
+      if (phone.isValid) this.selectedPhone[0] = phone.id
     },
-    updateActiveRole (activeRole) {
-      if (typeof activeRole === 'number') {
-        activeRole = this.dispute.disputeRoles.find(role => {
-          return role.id === activeRole
+    updateActiveRole (params) {
+      if (typeof params.activeRole === 'number') {
+        params.activeRole = this.dispute.disputeRoles.find(role => {
+          return role.id === params.activeRole
         })
       }
-      if (activeRole) {
-        this.activeRole = Object.assign(activeRole, {
-          invalidEmail: !activeRole.emails.length || !activeRole.emails.filter(e => e.selected === true).length,
-          invalidPhone: !this.selectedPhone.length,
-          invalidOab: !activeRole.oabs.length || !activeRole.oabs.filter(e => e.selected === true).length })
+      if (params.activeRole) {
+        this.activeRole = Object.assign(params.activeRole, {
+          invalidEmail: !params.activeRole.emails.length || !params.activeRole.emails.filter(e => e.selected === true).length,
+          invalidPhone: !this.selectedPhone.length || !this.selectedPhone[0].isValid || !this.selectedPhone[0].isMobile,
+          invalidOab: !params.activeRole.oabs.length || !params.activeRole.oabs.filter(e => e.selected === true).length })
       } else {
         this.activeRole = {}
       }
+      this.setMessageType(params.messageType)
+      this.$nextTick(() => this.$refs.messageTextArea.focus())
       this.updateInvalidReceiver()
       this.$forceUpdate()
     },
