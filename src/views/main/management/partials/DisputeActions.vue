@@ -294,6 +294,12 @@ export default {
         this.unsettledType = null
       } else if (action === 'favorite') {
         this.doAction(action)
+      } else if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
+        this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: 'OK',
+          type: 'warning'
+        })
       } else {
         let capAction = this.$t('action.' + action.toUpperCase())
         this.$confirm('Tem certeza que deseja realizar ação?', capAction.charAt(0).toUpperCase() + capAction.slice(1), {
