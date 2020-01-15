@@ -329,6 +329,16 @@ const disputeActions = {
         })
     })
   },
+  restartAddressEngagement ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      axios.patch('/api/messages/engagement/' + params.disputeId + '/address/' + params.address)
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
   editDispute ({ commit }, dispute) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
