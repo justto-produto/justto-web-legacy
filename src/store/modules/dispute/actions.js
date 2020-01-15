@@ -27,7 +27,7 @@ const queryBuilder = q => {
 }
 
 const disputeActions = {
-  SOCKET_ADD_DISPUTE ({ commit, state }, disputeChanged) {
+  SOCKET_ADD_DISPUTE ({ commit, state, rootState }, disputeChanged) {
     if (state.dispute.id === disputeChanged.id) {
       state.dispute = disputeChanged
     } else {
@@ -49,6 +49,7 @@ const disputeActions = {
         }
       }
     }
+    commit('deleteMessageResumeByDisputeId', disputeChanged.id)
   },
   SOCKET_REMOVE_DISPUTE ({ commit }) {
     commit('disputeSetHasNew', true)
@@ -67,19 +68,6 @@ const disputeActions = {
         })
     })
   },
-  // getDisputeBankAccounts ({ commit }, id) {
-  //   return new Promise((resolve, reject) => {
-  //     // eslint-disable-next-line
-  //     axios.get('api/disputes/' + id + '/bank-accounts')
-  //       .then(response => {
-  //         commit('setDisputeBankAccounts', response.data)
-  //         resolve(response.data)
-  //       })
-  //       .catch(error => {
-  //         reject(error)
-  //       })
-  //   })
-  // },
   linkDisputeBankAccounts ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -470,6 +458,18 @@ const disputeActions = {
       }).catch(error => {
         reject(error)
       })
+    })
+  },
+  getMessageSummary ({ commit }, messageId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/disputes/interactions/sent-message-summary/' + messageId)
+        .then(response => {
+          commit('setRespondents', response.data)
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
     })
   }
 }

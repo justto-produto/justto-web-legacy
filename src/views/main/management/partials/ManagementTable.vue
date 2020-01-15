@@ -20,49 +20,66 @@
       <el-table-column
         v-if="tab1"
         :sortable="false"
-        min-width="66px"
+        min-width="68px"
         align="center"
         class-name="management-table__row-info">
         <template slot-scope="scope">
-          <!-- <el-tooltip :disabled="(scope.row.id % 3) !== 2" popper-class="info">
-            <div slot="content">
-              <strong>Última mensagem enviada:</strong><br><br>
-              <div v-if="scope.row.id % 2">
-                <div class="subtitle">
-                  <jus-icon icon="email" is-white />
-                  E-mail para:
-                </div>
-                LUCAS@JUSTTO.COM.BR <br>
-                Total de leituras: 3 <br>
-                Última leitura: 07/01 às 17h38
-              </div>
-              <div v-else>
-                <div class="subtitle">
-                  <jus-icon icon="whatsapp" is-white />
-                  Whatsapp para:
-                </div>
-                (12) 98888-8384 <br>
-                Última leitura: 07/01 às 17h38
-              </div>
+          <el-popover
+            v-if="!!scope.row.lastOutboundInteraction"
+            trigger="hover"
+            popper-class="info"
+            @show="getMessageSummary(scope.row.lastOutboundInteraction, scope.row.id)"
+            @hide="messageSummary = {}">
+            <strong>Última mensagem enviada:</strong><br><br>
+            <div class="subtitle">
+              <jus-icon :icon="getInteractionIcon(scope.row.lastOutboundInteraction)" is-white />
+              {{ scope.row.lastOutboundInteraction.message.communicationType | capitalize }}
             </div>
-            <jus-icon :icon="'status-' + scope.row.id % 3" />
-          </el-tooltip> -->
+            <div v-if="scope.row.lastOutboundInteraction.message.sender">
+              De: {{ scope.row.lastOutboundInteraction.message.sender }}
+            </div>
+            <div v-if="scope.row.lastOutboundInteraction.message.receiver">
+              Para: {{ scope.row.lastOutboundInteraction.message.receiver }}
+            </div>
+            <div v-if="scope.row.lastOutboundInteraction.message.scheduledTime.dateTime">
+              Em: {{ scope.row.lastOutboundInteraction.message.scheduledTime.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+            </div>
+            <span v-if="scope.row.lastOutboundInteraction.message.parameters.READ_DATE && Object.keys(messageSummary).length">
+              <div v-if="messageSummary.countVisualization !== null">
+                Total de visualizações: {{ messageSummary.countVisualization }}
+              </div>
+              <div v-if="messageSummary.countClick !== null">
+                Total de clicks: {{ messageSummary.countClick }}
+              </div>
+              <div v-if="messageSummary.firstVisualizationDate !== null">
+                Primeira visualização: {{ messageSummary.firstVisualizationDate | moment('DD/MM/YYYY [às] HH:mm') }}
+              </div>
+              <div v-if="messageSummary.lastVisualizationDate !== null">
+                Última visualização: {{ messageSummary.lastVisualizationDate | moment('DD/MM/YYYY [às] HH:mm') }}
+              </div>
+              <div v-if="messageSummary.firstClickDate !== null">
+                Primeiro click: {{ messageSummary.firstClickDate | moment('DD/MM/YYYY [às] HH:mm') }}
+              </div>
+              <div v-if="messageSummary.lastClickDate !== null">
+                Último click: {{ messageSummary.lastClickDate | moment('DD/MM/YYYY [às] HH:mm') }}
+              </div>
+            </span>
+            <jus-icon slot="reference" :icon="'status-' + (scope.row.lastOutboundInteraction.message.parameters.READ_DATE ? 2 : 0)" />
+          </el-popover>
+          <span v-else style="color: #adadad;margin-right: 8px;font-size: 22px;vertical-align: sub;">-</span>
           <el-tooltip>
             <div slot="content">
-              <span v-if="scope.row.lastNegotiatorAccess">
-                Último acesso ao sistema Justto:<br><br>
-                <strong>
-                  <span v-if="scope.row.lastNegotiatorAccess.properties && scope.row.lastNegotiatorAccess.properties.PERSON_NAME">
-                    Por: {{ scope.row.lastNegotiatorAccess.properties.PERSON_NAME }} <br>
-                  </span>
-                  Em: {{ scope.row.lastNegotiatorAccess.createdAt | moment('DD/MM/YYYY [às] HH:mm') }}
-                </strong>
+              <span v-if="!!scope.row.lastNegotiatorAccess">
+                Último acesso ao sistema Justto: <strong>{{ scope.row.lastNegotiatorAccess.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
+                <!-- <span v-if="scope.row.lastNegotiatorAccess.properties && scope.row.lastNegotiatorAccess.properties.PERSON_NAME">
+                  Por: {{ scope.row.lastNegotiatorAccess.properties.PERSON_NAME }} <br>
+                </span> -->
               </span>
               <span v-else>
-                Ainda não houveram acessos ao sistema Justto de Negociação
+                Ainda não houve acesso ao sistema Justto de Negociação
               </span>
             </div>
-            <jus-icon :is-active="scope.row.lastNegotiatorAccess" icon="justto" />
+            <jus-icon :is-active="!!scope.row.lastNegotiatorAccess" icon="justto-access" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -141,7 +158,6 @@
                 {{ scope.row.lastInteraction.message.sender }}
               </div>
               {{ scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }} <br>
-              <!-- <br><strong>Total de interações: 3</strong> -->
             </div>
             <div>
               <span class="position-relative" style="vertical-align: middle;">
@@ -216,7 +232,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        :width="tab2 ? '152px' : '76px'"
+        :width="tab2 ? '152px' : '78px'"
         class-name="management-table__row-actions"
         align="right">
         <template slot-scope="scope">
@@ -284,7 +300,8 @@ export default {
       protocolDialogVisible: false,
       selectedDisputeId: 0,
       selectedDisputeRoles: [],
-      disputeKey: 0
+      disputeKey: 0,
+      messageSummary: {}
     }
   },
   computed: {
@@ -297,13 +314,7 @@ export default {
       }
     },
     disputes () {
-      return this.$store.getters.disputes.map(d => {
-        d.lastNegotiatorAccess = {
-          createdAt: { dateTime: '2019-11-25T16:06:25Z' },
-          properties: { PERSON_NAME: 'Henrique Liberato' }
-        }
-        return d
-      })
+      return this.$store.getters.disputes
     },
     tab0 () {
       return this.activeTab === '0'
@@ -395,6 +406,19 @@ export default {
           } return 3
         } return 1
       } return 0
+    },
+    getMessageSummary (lastOutboundInteraction, disputeId) {
+      if (lastOutboundInteraction.message && lastOutboundInteraction.message.parameters.READ_DATE) {
+        const messageResume = this.$store.getters.getMessageResumeByDisputeId(disputeId)
+        if (messageResume) {
+          this.messageSummary = messageResume.resume
+        } else {
+          this.$store.dispatch('getMessageSummary', lastOutboundInteraction.message.messageId).then(resume => {
+            this.$store.commit('addMessageResume', { resume, disputeId })
+            this.messageSummary = resume
+          })
+        }
+      }
     }
   }
 }
@@ -439,10 +463,10 @@ export default {
     img {
       vertical-align: middle !important;
       width: 22px;
-      & + img {
-        margin-left: 8px;
-        width: 15px;
-      }
+    }
+    span + img {
+      margin-left: 8px;
+      width: 16px;
     }
   }
   &__empty-table {
