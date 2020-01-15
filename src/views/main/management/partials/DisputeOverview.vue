@@ -152,7 +152,7 @@
             <div v-show="role.phones.length" class="dispute-overview-view__info-line">
               <span class="title">Telefone(s):</span>
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
-                <el-radio v-model="selectedPhone" :disabled="!phone.isValid" :label="phone.id" @change="selectPhoneNumber(phone), updateDisputeRole(role, 'whatsapp')">
+                <el-radio v-model="selectedPhone" :label="phone.id" @change="selectPhoneNumber(phone), updateDisputeRole(role, 'whatsapp')">
                   <span>
                     <span>{{ phone.number | phoneMask }}</span>
                     <el-tooltip content="Telefone inválido">
@@ -165,7 +165,7 @@
             <div v-show="role.emails.length" class="dispute-overview-view__info-line">
               <span class="title">E-mail(s):</span>
               <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
-                <el-checkbox v-model="email.selected" :disabled="!email.isValid" @change="updateDisputeRole(role, 'email')" />
+                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
                   <el-tooltip content="Telefone inválido">
@@ -177,7 +177,7 @@
             <div v-show="role.oabs.length" class="dispute-overview-view__info-line">
               <span class="title">OAB(s):</span>
               <span v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`" :class="{'is-main': oab.isMain}">
-                <el-checkbox v-model="oab.selected" :disabled="!oab.isValid" @change="updateDisputeRole(role, 'cna')" />
+                <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role, 'cna')" />
                 <span class="ellipsis">
                   <span>{{ oab.number + '-' + oab.state || '' }}</span>
                   <el-tooltip content="OAB inválido">
@@ -733,29 +733,29 @@ export default {
     }
   },
   methods: {
-    updateDisputeRole (role, messageType) {
+    updateDisputeRole (activeRole, messageType) {
       let disputeRoles = this.dispute.disputeRoles.map(dr => {
-        if (dr.id === role.id) {
-          dr = role
+        if (dr.id === activeRole.id) {
+          dr = activeRole
         }
         return dr
       })
       switch (messageType) {
         case 'email':
-          role.oabs.forEach(o => { o.selected = false })
+          activeRole.oabs.forEach(o => { o.selected = false })
           this.selectedPhone = 0
           break
         case 'whatsapp':
-          role.emails.forEach(e => { e.selected = false })
-          role.oabs.forEach(o => { o.selected = false })
+          activeRole.emails.forEach(e => { e.selected = false })
+          activeRole.oabs.forEach(o => { o.selected = false })
           break
         case 'cna':
-          role.emails.forEach(e => { e.selected = false })
+          activeRole.emails.forEach(e => { e.selected = false })
           this.selectedPhone = 0
           break
       }
       this.$store.commit('setDisputeRoles', disputeRoles)
-      this.$emit('updateActiveRole', { role, messageType })
+      this.$emit('updateActiveRole', { activeRole, messageType })
     },
     selectPhoneNumber (phone) {
       this.$emit('selectPhoneNumber', phone)
@@ -1136,7 +1136,7 @@ export default {
     }
     .el-radio {
       width: 100%;
-      margin-top: 8px;
+      margin: 4px 0;
       display: flex;
       align-items: flex-start;
     }

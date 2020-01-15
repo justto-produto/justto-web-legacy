@@ -203,7 +203,7 @@ export default {
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
-      selectedPhone: [],
+      selectedPhone: {},
       activeRoleId: 0,
       loadingKey: 0,
       activeRole: {},
@@ -290,18 +290,18 @@ export default {
   },
   methods: {
     selectPhoneNumber (phone) {
-      if (phone.isValid) this.selectedPhone[0] = phone.id
+      this.selectedPhone = phone
     },
     updateActiveRole (params) {
-      if (typeof params.activeRole === 'number') {
-        params.activeRole = this.dispute.disputeRoles.find(role => {
-          return role.id === params.activeRole
+      if (typeof params === 'number') {
+        params = this.dispute.disputeRoles.find(role => {
+          return role.id === params
         })
       }
       if (params.activeRole) {
         this.activeRole = Object.assign(params.activeRole, {
           invalidEmail: !params.activeRole.emails.length || !params.activeRole.emails.filter(e => e.selected === true).length,
-          invalidPhone: !this.selectedPhone.length || !this.selectedPhone[0].isValid || !this.selectedPhone[0].isMobile,
+          invalidPhone: !this.selectedPhone || !!this.selectedPhone.isValid,
           invalidOab: !params.activeRole.oabs.length || !params.activeRole.oabs.filter(e => e.selected === true).length })
       } else {
         this.activeRole = {}
@@ -417,7 +417,7 @@ export default {
         case 'cna':
           return params.role.oabs.filter(e => e.selected).map(e => e.id)
         case 'whatsapp':
-          return this.selectedPhone
+          return [this.selectedPhone.id]
         default:
           return []
       }
