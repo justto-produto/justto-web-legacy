@@ -116,7 +116,7 @@
         v-if="tab1 || tab2"
         :sortable="false"
         prop="lastInteractionDate"
-        label="Última interação"
+        label="Última mensagem"
         min-width="124px"
         align="center">
         <template slot-scope="scope">
