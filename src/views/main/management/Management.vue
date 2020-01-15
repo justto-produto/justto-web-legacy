@@ -74,17 +74,7 @@
       <management-filters
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
-      <div v-show="activeTab === '1' && false" style="margin: 10px 0;">
-        <el-button plain type="primary">
-          Com resposta
-        </el-button>
-        <el-button plain>
-          Contraproposta (até 20%)
-        </el-button>
-        <el-button plain>
-          Contraproposta (+20%)
-        </el-button>
-      </div>
+      <management-prescriptions v-show="activeTab === '1'" @management:getDisputes="getDisputes" />
       <management-table
         ref="managementTable"
         :active-tab.sync="activeTab"
@@ -118,7 +108,8 @@ export default {
   components: {
     ManagementFilters: () => import('./partials/ManagementFilters'),
     ManagementTable: () => import('./partials/ManagementTable'),
-    ManagementActions: () => import('./partials/ManagementActions')
+    ManagementActions: () => import('./partials/ManagementActions'),
+    ManagementPrescriptions: () => import('./partials/ManagementPrescriptions')
   },
   data () {
     return {
@@ -280,9 +271,6 @@ export default {
   &__filters {
     display: flex;
     justify-content: space-between;
-  }
-  &__tabs {
-
   }
   &__buttons {
     .el-input + button {
