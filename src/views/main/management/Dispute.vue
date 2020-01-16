@@ -348,8 +348,10 @@ export default {
   methods: {
     updateActiveRole (params) {
       if (typeof params === 'number') {
-        params = this.dispute.disputeRoles.find(role => {
-          return role.id === params
+        let disputeId = params
+        params = {}
+        params.activeRole = this.dispute.disputeRoles.find(role => {
+          return role.id === disputeId
         })
       }
       if (params.activeRole) {
@@ -361,17 +363,19 @@ export default {
         this.activeRole = {}
       }
       if (this.typingTab !== '1') this.typingTab = '1'
-      this.setMessageType(params.messageType)
-      switch (params.messageType) {
-        case 'whatsapp':
-        case 'cna':
-          this.$nextTick(() => this.$refs.messageTextArea.focus())
-          break
-        case 'email':
-          this.$nextTick(() => this.$refs.messageEditor.focus())
-          break
+      if (params.messageType) {
+        this.setMessageType(params.messageType)
+        switch (params.messageType) {
+          case 'whatsapp':
+          case 'cna':
+            this.$nextTick(() => this.$refs.messageTextArea.focus())
+            break
+          case 'email':
+            this.$nextTick(() => this.$refs.messageEditor.quill.focus())
+            break
+        }
+        this.$forceUpdate()
       }
-      this.$forceUpdate()
     },
     unsubscribeOccurrences (id) {
       this.$store.commit('clearDisputeOccurrences')

@@ -569,7 +569,6 @@ export default {
   },
   data () {
     return {
-      activeId: 0,
       selectedClaimantId: '',
       selectedNegotiatorId: '',
       selectedStrategyId: '',
@@ -893,8 +892,7 @@ export default {
       }
     },
     handleChange (val) {
-      this.activeId = val || 0
-      this.$emit('update:activeRoleId', this.activeId)
+      this.$emit('update:activeRoleId', val || 0)
     },
     openRoleDialog (role) {
       this.bankAccountIdstoUnlink = []
