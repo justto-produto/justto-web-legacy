@@ -32,6 +32,37 @@
           data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
+          <div v-show="selectedContacts && selectedContacts.length" class="dispute-view__send-to">
+            Destinatário(s):
+            <span v-for="(selected, index) in selectedContacts" :key="selected.id">
+              <span v-if="index === 0">
+                <span v-if="selected.number && selected.state">{{ selected.number + '-' + selected.state }}</span>
+                <span v-else-if="selected.number">{{ selected.number | phoneMask }}</span>
+                <span v-else-if="selected.address">{{ selected.address }}</span>
+              </span>
+            </span>
+            <el-tooltip v-if="selectedContacts.length > 1">
+              <div slot="content">
+                <span v-for="selected in selectedContacts" :key="selected.id">
+                  <div v-if="selected.number && selected.state">
+                    <jus-icon icon="email-cna" is-white style="width: 14px;vertical-align: top;" />
+                    {{ selected.number + '-' + selected.state }}
+                  </div>
+                  <div v-else-if="selected.number">
+                    <jus-icon icon="phone" is-white style="width: 14px;vertical-align: top;" />
+                    {{ selected.number | phoneMask }}
+                  </div>
+                  <div v-else-if="selected.address">
+                    <jus-icon icon="email" is-white style="width: 14px;vertical-align: top;" />
+                    {{ selected.address }}
+                  </div>
+                </span>
+              </div>
+              <span>
+                (+ {{ selectedContacts.length - 1 }})
+              </span>
+            </el-tooltip>
+          </div>
           <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
               <el-card
@@ -123,14 +154,21 @@
             </el-tab-pane>
             <el-tab-pane v-loading="loadingTextarea" label="Notas" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
+                <i
+                  v-if="expandedMessageBox"
+                  class="el-icon-arrow-down"
+                  style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
+                  @click="collapseTextarea()" />
                 <textarea
                   v-model="newNote"
-                  rows="10"
+                  :rows="expandedMessageBox ? 10 : 1"
                   data-testid="input-note"
                   placeholder="Escreva alguma coisa"
-                  class="el-textarea__inner" />
+                  class="el-textarea__inner"
+                  @focus="expandTextarea()" />
                 <div class="dispute-view__send-message-actions note">
                   <el-button
+                    :disabled="!newNote.trim().replace('\n', '')"
                     size="medium"
                     type="primary"
                     data-testid="submit-note"
@@ -163,8 +201,7 @@
         :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview"
         @fetch-data="fetchData"
-        @updateActiveRole="updateActiveRole"
-        @selectPhoneNumber="selectPhoneNumber" />
+        @updateActiveRole="updateActiveRole" />
     </template>
   </JusViewMain>
 </template>
@@ -203,11 +240,9 @@ export default {
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
-      selectedPhone: {},
       activeRoleId: 0,
       loadingKey: 0,
       activeRole: {},
-      invalidReceiver: undefined,
       isCollapsed: false,
       expandedMessageBox: false,
       editorOptions: {
@@ -252,6 +287,28 @@ export default {
     },
     recentMessages () {
       return this.$store.getters.messageRecentMessages
+    },
+    selectedContacts () {
+      switch (this.messageType) {
+        case 'email':
+          return this.activeRole.emails ? this.activeRole.emails.filter(e => e.selected) : []
+        case 'cna':
+          return this.activeRole.oabs ? this.activeRole.oabs.filter(e => e.selected) : []
+        case 'whatsapp':
+          return this.activeRole.phones ? this.activeRole.phones.filter(e => e.selected) : []
+        default:
+          return []
+      }
+    },
+    invalidReceiver () {
+      switch (this.messageType) {
+        case 'email':
+          return this.activeRole.invalidEmail
+        case 'whatsapp':
+          return this.activeRole.invalidPhone
+        case 'cna':
+          return this.activeRole.invalidOab
+      }
     }
   },
   watch: {
@@ -289,39 +346,35 @@ export default {
     this.unsubscribeOccurrences(this.id)
   },
   methods: {
-    selectPhoneNumber (phone) {
-      this.selectedPhone = phone
-    },
     updateActiveRole (params) {
       if (typeof params === 'number') {
-        params = this.dispute.disputeRoles.find(role => {
-          return role.id === params
+        let disputeId = params
+        params = {}
+        params.activeRole = this.dispute.disputeRoles.find(role => {
+          return role.id === disputeId
         })
       }
       if (params.activeRole) {
         this.activeRole = Object.assign(params.activeRole, {
           invalidEmail: !params.activeRole.emails.length || !params.activeRole.emails.filter(e => e.selected === true).length,
-          invalidPhone: !this.selectedPhone || !!this.selectedPhone.isValid,
+          invalidPhone: !params.activeRole.phones.length || !params.activeRole.phones.filter(e => e.selected === true).length,
           invalidOab: !params.activeRole.oabs.length || !params.activeRole.oabs.filter(e => e.selected === true).length })
       } else {
         this.activeRole = {}
       }
-      this.setMessageType(params.messageType)
-      if (params.messageType === 'whatsapp') this.$nextTick(() => this.$refs.messageTextArea.focus())
-      this.updateInvalidReceiver()
-      this.$forceUpdate()
-    },
-    updateInvalidReceiver () {
-      switch (this.messageType) {
-        case 'email':
-          this.invalidReceiver = this.activeRole.invalidEmail
-          break
-        case 'whatsapp':
-          this.invalidReceiver = this.activeRole.invalidPhone
-          break
-        case 'cna':
-          this.invalidReceiver = this.activeRole.invalidOab
-          break
+      if (this.typingTab !== '1') this.typingTab = '1'
+      if (params.messageType) {
+        this.setMessageType(params.messageType)
+        switch (params.messageType) {
+          case 'whatsapp':
+          case 'cna':
+            this.$nextTick(() => this.$refs.messageTextArea.focus())
+            break
+          case 'email':
+            this.$nextTick(() => this.$refs.messageEditor.quill.focus())
+            break
+        }
+        this.$forceUpdate()
       }
     },
     unsubscribeOccurrences (id) {
@@ -381,7 +434,6 @@ export default {
     },
     setMessageType (type) {
       this.messageType = type
-      this.updateInvalidReceiver()
     },
     newLineChat () {
       this.newChatMessage = `${this.newChatMessage}\n`
@@ -410,34 +462,7 @@ export default {
         })
       }
     },
-    getSelectedContacts (params) {
-      switch (params.type) {
-        case 'email':
-          return params.role.emails.filter(e => e.selected).map(e => e.id)
-        case 'cna':
-          return params.role.oabs.filter(e => e.selected).map(e => e.id)
-        case 'whatsapp':
-          return [this.selectedPhone.id]
-        default:
-          return []
-      }
-    },
-    sendMessage (enterByKeyboard) {
-      if (enterByKeyboard) {
-        if (!this.enterToSend) {
-          this.newLineMessage()
-          return false
-        } else {
-          if (this.invalidReceiver === undefined) {
-            this.$jusNotification({
-              title: 'Atenção!',
-              message: 'Escolha um destinatário ao lado para receber sua mensagem.',
-              type: 'info'
-            })
-            return false
-          }
-        }
-      }
+    sendMessage () {
       if (this.messageType === 'whatsapp') {
         var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
         if (checkMessage(newMessageTrim, this.recentMessages)) {
@@ -467,7 +492,7 @@ export default {
         this.$store.dispatch('send' + this.messageType, {
           to: [{
             roleId: this.activeRole.id,
-            contactsId: this.getSelectedContacts({ type: this.messageType, role: this.activeRole })
+            contactsId: this.selectedContacts.map(c => c.id)
           }],
           message: this.newMessage,
           disputeId: this.dispute.id
@@ -737,6 +762,11 @@ export default {
         display: inline-block;
       }
     }
+  }
+  &__send-to {
+    position: absolute;
+    right: 0;
+    padding: 11px 14px;
   }
   .el-input-group__append {
     border-color: #9462f7;
