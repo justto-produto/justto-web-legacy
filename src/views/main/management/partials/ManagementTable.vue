@@ -1,5 +1,5 @@
 <template>
-  <div style="height: calc(100% - 90px);">
+  <div :style="{ height: tab1 ? 'calc(100% - 148px)' : 'calc(100% - 90px)' }">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id.sync="selectedDisputeId"
@@ -30,19 +30,16 @@
             popper-class="info"
             @show="getMessageSummary(scope.row.lastOutboundInteraction, scope.row.id)"
             @hide="messageSummary = {}">
-            <strong>Última mensagem enviada:</strong><br><br>
-            <div class="subtitle">
+            <strong>
               <jus-icon :icon="getInteractionIcon(scope.row.lastOutboundInteraction)" is-white />
-              {{ scope.row.lastOutboundInteraction.message.communicationType | capitalize }}
-            </div>
+              Último {{ getLastInteractionTooltip(scope.row.lastOutboundInteraction) }}
+              em {{ scope.row.lastOutboundInteraction.message.scheduledTime.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+            </strong><br>
             <div v-if="scope.row.lastOutboundInteraction.message.sender">
-              De: {{ scope.row.lastOutboundInteraction.message.sender }}
+              De: {{ scope.row.lastOutboundInteraction.message.sender | phoneMask }}
             </div>
             <div v-if="scope.row.lastOutboundInteraction.message.receiver">
-              Para: {{ scope.row.lastOutboundInteraction.message.receiver }}
-            </div>
-            <div v-if="scope.row.lastOutboundInteraction.message.scheduledTime.dateTime">
-              Em: {{ scope.row.lastOutboundInteraction.message.scheduledTime.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+              Para: {{ scope.row.lastOutboundInteraction.message.receiver | phoneMask }}
             </div>
             <span v-if="scope.row.lastOutboundInteraction.message.parameters.READ_DATE && Object.keys(messageSummary).length">
               <div v-if="messageSummary.countVisualization !== null">
@@ -142,26 +139,26 @@
       <el-table-column
         v-if="tab1 || tab2"
         label="Última mensagem"
-        min-width="124px"
+        min-width="136px"
         align="center">
         <template slot-scope="scope">
           <el-tooltip v-if="scope.row.lastReceivedMessage" popper-class="info">
             <div slot="content">
-              <strong>Última mensagem:</strong><br><br>
-              <div class="subtitle">
+              <strong>
                 <jus-icon :icon="getInteractionIcon(scope.row.lastReceivedMessage)" is-white />
                 {{ getLastInteractionTooltip(scope.row.lastReceivedMessage) }}
-              </div>
+                recebido em
+                {{ scope.row.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+              </strong><br>
               <div v-if="scope.row.lastReceivedMessage && scope.row.lastReceivedMessage.message">
                 <span v-if="scope.row.lastReceivedMessage.message.sender">
                   De: {{ scope.row.lastReceivedMessage.message.sender | phoneMask }}
                 </span>
                 <br>
                 <span v-if="scope.row.lastReceivedMessage.message.resume" class="management-table__last-interaction-tooltip">
-                  Resumo: {{ scope.row.lastReceivedMessage.message.resume }}
+                  Resumo: {{ scope.row.lastReceivedMessage.message.resume }}...
                 </span>
               </div>
-              Em: {{ scope.row.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }} <br>
             </div>
             <div>
               <span class="position-relative" style="vertical-align: middle;">
