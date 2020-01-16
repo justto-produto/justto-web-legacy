@@ -141,31 +141,29 @@
       </el-table-column>
       <el-table-column
         v-if="tab1 || tab2"
-        :sortable="false"
-        prop="lastInteractionDate"
         label="Última mensagem"
         min-width="124px"
         align="center">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.lastInteraction" popper-class="info">
+          <el-tooltip v-if="scope.row.lastReceivedMessage" popper-class="info">
             <div slot="content">
               <strong>Última interação:</strong><br><br>
               <div class="subtitle">
-                <jus-icon :icon="getInteractionIcon(scope.row.lastInteraction)" is-white />
-                {{ getLastInteractionTooltip(scope.row.lastInteraction) }}
+                <jus-icon :icon="getInteractionIcon(scope.row.lastReceivedMessage)" is-white />
+                {{ getLastInteractionTooltip(scope.row.lastReceivedMessage) }}
               </div>
-              <div v-if="scope.row.lastInteraction && scope.row.lastInteraction.message && scope.row.lastInteraction.message.sender">
-                {{ scope.row.lastInteraction.message.sender }}
+              <div v-if="scope.row.lastReceivedMessage && scope.row.lastReceivedMessage.message && scope.row.lastReceivedMessage.message.sender">
+                {{ scope.row.lastReceivedMessage.message.sender }}
               </div>
-              {{ scope.row.lastInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }} <br>
+              {{ scope.row.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }} <br>
             </div>
             <div>
               <span class="position-relative" style="vertical-align: middle;">
-                <jus-icon v-if="scope.row.lastInteraction" :icon="getInteractionIcon(scope.row.lastInteraction)" class="management-table__interaction-icon" />
+                <jus-icon v-if="scope.row.lastReceivedMessage" :icon="getInteractionIcon(scope.row.lastReceivedMessage)" class="management-table__interaction-icon" />
                 <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </span>
               <span style="margin-left: 4px;">
-                {{ getLastInteraction(scope.row.lastInteraction.createAt.dateTime) }}
+                {{ getLastInteraction(scope.row.lastReceivedMessage.createAt.dateTime) }}
               </span>
             </div>
           </el-tooltip>
