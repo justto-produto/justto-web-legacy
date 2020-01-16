@@ -123,14 +123,21 @@
             </el-tab-pane>
             <el-tab-pane v-loading="loadingTextarea" label="Notas" name="3">
               <el-card shadow="always" class="dispute-view__send-message-box">
+                <i
+                  v-if="expandedMessageBox"
+                  class="el-icon-arrow-down"
+                  style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
+                  @click="collapseTextarea()" />
                 <textarea
                   v-model="newNote"
-                  rows="10"
+                  :rows="expandedMessageBox ? 10 : 2"
                   data-testid="input-note"
                   placeholder="Escreva alguma coisa"
-                  class="el-textarea__inner" />
+                  class="el-textarea__inner"
+                  @focus="expandTextarea()" />
                 <div class="dispute-view__send-message-actions note">
                   <el-button
+                    :disabled="!newNote.trim().replace('\n', '')"
                     size="medium"
                     type="primary"
                     data-testid="submit-note"
