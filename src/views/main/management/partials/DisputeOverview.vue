@@ -124,6 +124,7 @@
       <el-collapse-item title="Partes" name="1">
         <el-collapse
           ref="roleCollapse"
+          v-model="selectedRole"
           accordion
           class="el-collapse--bordered"
           style="margin: 20px 0 0"
@@ -665,6 +666,10 @@ export default {
       set (bankAccountId) {
         this.updateDisputeBankAccounts(bankAccountId)
       }
+    },
+    selectedRole: {
+      get () { return this.activeRoleId },
+      set () {}
     },
     strategies () {
       return this.$store.getters.strategyList
