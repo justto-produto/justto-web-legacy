@@ -1,8 +1,16 @@
 const message = {
   state: {
-    recentMessages: []
+    recentMessages: [],
+    messageResumes: []
   },
   mutations: {
+    addMessageResume (state, messageResume) {
+      state.messageResumes.push(messageResume)
+    },
+    deleteMessageResumeByDisputeId (state, disputeId) {
+      let index = state.messageResumes.findIndex(mr => mr.disputeId === disputeId)
+      if (index !== -1) state.messageResumes.splice(index, 1)
+    }
   },
   actions: {
     sendwhatsapp ({ commit }, body) {
@@ -54,7 +62,10 @@ const message = {
     }
   },
   getters: {
-    messageRecentMessages: state => state.recentMessages
+    messageRecentMessages: state => state.recentMessages,
+    getMessageResumeByDisputeId: state => (disputeId) => {
+      return state.messageResumes.find(mr => mr.disputeId === disputeId)
+    }
   }
 }
 
