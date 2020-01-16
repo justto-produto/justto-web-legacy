@@ -124,6 +124,7 @@
       <el-collapse-item title="Partes" name="1">
         <el-collapse
           ref="roleCollapse"
+          v-model="selectedRole"
           accordion
           class="el-collapse--bordered"
           style="margin: 20px 0 0"
@@ -152,7 +153,7 @@
             <div v-show="role.phones.length" class="dispute-overview-view__info-line">
               <span class="title">Telefone(s):</span>
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
-                <el-radio v-model="selectedPhone" :label="phone.id" @change="selectPhoneNumber(phone), updateDisputeRole(role, 'whatsapp')">
+                <el-radio v-model="selectedPhone" :label="phone.id" @change="updateDisputeRole(role, 'whatsapp')">
                   <span>
                     <span>{{ phone.number | phoneMask }}</span>
                     <el-tooltip content="Telefone inválido">
@@ -569,7 +570,6 @@ export default {
   },
   data () {
     return {
-      activeId: 0,
       selectedClaimantId: '',
       selectedNegotiatorId: '',
       selectedStrategyId: '',
@@ -667,6 +667,10 @@ export default {
         this.updateDisputeBankAccounts(bankAccountId)
       }
     },
+    selectedRole: {
+      get () { return this.activeRoleId },
+      set () {}
+    },
     strategies () {
       return this.$store.getters.strategyList
     },
@@ -743,22 +747,28 @@ export default {
       switch (messageType) {
         case 'email':
           activeRole.oabs.forEach(o => { o.selected = false })
+          activeRole.phones.forEach(o => { o.selected = false })
           this.selectedPhone = 0
           break
         case 'whatsapp':
+          activeRole.phones.forEach(o => { o.selected = false })
           activeRole.emails.forEach(e => { e.selected = false })
           activeRole.oabs.forEach(o => { o.selected = false })
+          activeRole.phones = activeRole.phones.map(p => {
+            if (p.id === this.selectedPhone) {
+              p.selected = true
+            }
+            return p
+          })
           break
         case 'cna':
           activeRole.emails.forEach(e => { e.selected = false })
+          activeRole.phones.forEach(o => { o.selected = false })
           this.selectedPhone = 0
           break
       }
       this.$store.commit('setDisputeRoles', disputeRoles)
       this.$emit('updateActiveRole', { activeRole, messageType })
-    },
-    selectPhoneNumber (phone) {
-      this.$emit('selectPhoneNumber', phone)
     },
     updateDisputeBankAccounts (roleBankAccountIds) {
       let action, bankAccountId
@@ -887,8 +897,7 @@ export default {
       }
     },
     handleChange (val) {
-      this.activeId = val || 0
-      this.$emit('update:activeRoleId', this.activeId)
+      this.$emit('update:activeRoleId', val || 0)
     },
     openRoleDialog (role) {
       this.bankAccountIdstoUnlink = []
