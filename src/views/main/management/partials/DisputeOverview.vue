@@ -747,14 +747,15 @@ export default {
           this.selectedPhone = 0
           break
         case 'whatsapp':
+          activeRole.phones.forEach(o => { o.selected = false })
+          activeRole.emails.forEach(e => { e.selected = false })
+          activeRole.oabs.forEach(o => { o.selected = false })
           activeRole.phones = activeRole.phones.map(p => {
             if (p.id === this.selectedPhone) {
               p.selected = true
             }
             return p
           })
-          activeRole.emails.forEach(e => { e.selected = false })
-          activeRole.oabs.forEach(o => { o.selected = false })
           break
         case 'cna':
           activeRole.emails.forEach(e => { e.selected = false })

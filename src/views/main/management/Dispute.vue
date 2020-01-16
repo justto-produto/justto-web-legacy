@@ -32,6 +32,37 @@
           data-testid="dispute-messages" />
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
+          <div v-show="selectedContacts && selectedContacts.length" class="dispute-view__send-to">
+            Destinatário(s):
+            <span v-for="(selected, index) in selectedContacts" :key="selected.id">
+              <span v-if="index === 0">
+                <span v-if="selected.number && selected.state">{{ selected.number + '-' + selected.state }}</span>
+                <span v-else-if="selected.number">{{ selected.number | phoneMask }}</span>
+                <span v-else-if="selected.address">{{ selected.address }}</span>
+              </span>
+            </span>
+            <el-tooltip v-if="selectedContacts.length > 1">
+              <div slot="content">
+                <span v-for="selected in selectedContacts" :key="selected.id">
+                  <div v-if="selected.number && selected.state">
+                    <jus-icon icon="email-cna" is-white style="width: 14px;vertical-align: top;" />
+                    {{ selected.number + '-' + selected.state }}
+                  </div>
+                  <div v-else-if="selected.number">
+                    <jus-icon icon="phone" is-white style="width: 14px;vertical-align: top;" />
+                    {{ selected.number | phoneMask }}
+                  </div>
+                  <div v-else-if="selected.address">
+                    <jus-icon icon="email" is-white style="width: 14px;vertical-align: top;" />
+                    {{ selected.address }}
+                  </div>
+                </span>
+              </div>
+              <span>
+                (+ {{ selectedContacts.length - 1 }})
+              </span>
+            </el-tooltip>
+          </div>
           <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
             <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
               <el-card
@@ -130,7 +161,7 @@
                   @click="collapseTextarea()" />
                 <textarea
                   v-model="newNote"
-                  :rows="expandedMessageBox ? 10 : 2"
+                  :rows="expandedMessageBox ? 10 : 1"
                   data-testid="input-note"
                   placeholder="Escreva alguma coisa"
                   class="el-textarea__inner"
@@ -260,11 +291,11 @@ export default {
     selectedContacts () {
       switch (this.messageType) {
         case 'email':
-          return this.activeRole.emails.filter(e => e.selected)
+          return this.activeRole.emails ? this.activeRole.emails.filter(e => e.selected) : []
         case 'cna':
-          return this.activeRole.oabs.filter(e => e.selected)
+          return this.activeRole.oabs ? this.activeRole.oabs.filter(e => e.selected) : []
         case 'whatsapp':
-          return this.activeRole.phones.filter(e => e.selected)
+          return this.activeRole.phones ? this.activeRole.phones.filter(e => e.selected) : []
         default:
           return []
       }
@@ -718,6 +749,11 @@ export default {
         display: inline-block;
       }
     }
+  }
+  &__send-to {
+    position: absolute;
+    right: 0;
+    padding: 11px 14px;
   }
   .el-input-group__append {
     border-color: #9462f7;

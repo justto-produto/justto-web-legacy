@@ -6,13 +6,12 @@
 .ql-toolbar {
   display: none;
   padding-left: 0 !important;
-  margin-left: -8px;
+  margin-left: -8px !important;
 }
 .ql-editor {
   padding: 12px 0px !important;
   &.ql-blank {
-    padding: 7px 0px 4px;
-    margin-bottom: 10px;
+    padding: 7px 0px 4px !important;
     &::before {
       left: 0 !important;
       font-style: normal !important;
