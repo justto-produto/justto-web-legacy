@@ -48,11 +48,13 @@
                 <div v-if="validName" :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
                   <quill-editor
                     v-if="messageType === 'email'"
+                    ref="messageEditor"
                     v-model="newMessage"
                     :options="editorOptions"
                     @focus="expandTextarea()" />
                   <textarea
                     v-else
+                    ref="messageTextArea"
                     v-model="newMessage"
                     :rows="expandedMessageBox ? 10 : 1"
                     data-testid="input-message"
@@ -161,7 +163,8 @@
         :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview"
         @fetch-data="fetchData"
-        @updateActiveRole="updateActiveRole" />
+        @updateActiveRole="updateActiveRole"
+        @selectPhoneNumber="selectPhoneNumber" />
     </template>
   </JusViewMain>
 </template>
@@ -200,6 +203,7 @@ export default {
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
+      selectedPhone: {},
       activeRoleId: 0,
       loadingKey: 0,
       activeRole: {},
@@ -285,20 +289,25 @@ export default {
     this.unsubscribeOccurrences(this.id)
   },
   methods: {
-    updateActiveRole (activeRole) {
-      if (typeof activeRole === 'number') {
-        activeRole = this.dispute.disputeRoles.find(role => {
-          return role.id === activeRole
+    selectPhoneNumber (phone) {
+      this.selectedPhone = phone
+    },
+    updateActiveRole (params) {
+      if (typeof params === 'number') {
+        params = this.dispute.disputeRoles.find(role => {
+          return role.id === params
         })
       }
-      if (activeRole) {
-        this.activeRole = Object.assign(activeRole, {
-          invalidEmail: !activeRole.emails.length || !activeRole.emails.filter(e => e.selected === true).length,
-          invalidPhone: !activeRole.phones.length || !activeRole.phones.filter(e => e.selected === true).length,
-          invalidOab: !activeRole.oabs.length || !activeRole.oabs.filter(e => e.selected === true).length })
+      if (params.activeRole) {
+        this.activeRole = Object.assign(params.activeRole, {
+          invalidEmail: !params.activeRole.emails.length || !params.activeRole.emails.filter(e => e.selected === true).length,
+          invalidPhone: !this.selectedPhone || !!this.selectedPhone.isValid,
+          invalidOab: !params.activeRole.oabs.length || !params.activeRole.oabs.filter(e => e.selected === true).length })
       } else {
         this.activeRole = {}
       }
+      this.setMessageType(params.messageType)
+      if (params.messageType === 'whatsapp') this.$nextTick(() => this.$refs.messageTextArea.focus())
       this.updateInvalidReceiver()
       this.$forceUpdate()
     },
@@ -408,7 +417,7 @@ export default {
         case 'cna':
           return params.role.oabs.filter(e => e.selected).map(e => e.id)
         case 'whatsapp':
-          return params.role.phones.filter(e => e.selected).map(e => e.id)
+          return [this.selectedPhone.id]
         default:
           return []
       }

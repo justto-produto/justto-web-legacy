@@ -329,6 +329,17 @@ const disputeActions = {
         })
     })
   },
+  restartEngagementByContact ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.patch('/api/messages/engagement/' + params.disputeId + '/address/' + params.contact)
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
   editDispute ({ commit }, dispute) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
