@@ -1,0 +1,18 @@
+.el-popover {
+  &.info {
+    background-color: #343c4b;
+    color: white;
+    border-color: #343c4b;
+    font-size: 12px;
+    padding: 10px;
+    img {
+      width: 14px;
+      margin-right: 4px;
+    }
+    .subtitle {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+  }
+}
