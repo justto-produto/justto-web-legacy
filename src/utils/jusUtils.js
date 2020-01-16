@@ -133,13 +133,13 @@ const getLastInteractionTooltip = function (interaction) {
     case 'COMMUNICATION': {
       if (interaction.message) {
         switch (interaction.message.communicationType) {
-          case 'EMAIL': return 'Via E-mail'
-          case 'EMAIL_CNA': return 'Via E-mail CNA'
-          case 'SMS': return 'Via SMS'
-          case 'CALL': return 'Via Call'
-          case 'CHAT': return 'Via Chat'
-          case 'TTS': return 'Via TTS'
-          case 'WHATSAPP': return 'Via Whatsapp'
+          case 'EMAIL': return 'E-mail'
+          case 'EMAIL_CNA': return 'E-mail CNA'
+          case 'SMS': return 'SMS'
+          case 'CALL': return 'Call'
+          case 'CHAT': return 'Chat'
+          case 'TTS': return 'TTS'
+          case 'WHATSAPP': return 'Whatsapp'
         }
       }
       return 'email'
