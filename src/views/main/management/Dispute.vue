@@ -163,8 +163,7 @@
         :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview"
         @fetch-data="fetchData"
-        @updateActiveRole="updateActiveRole"
-        @selectPhoneNumber="selectPhoneNumber" />
+        @updateActiveRole="updateActiveRole" />
     </template>
   </JusViewMain>
 </template>
@@ -203,11 +202,9 @@ export default {
       typingTab: '1',
       loadingTextarea: false,
       loadingDispute: false,
-      selectedPhone: {},
       activeRoleId: 0,
       loadingKey: 0,
       activeRole: {},
-      invalidReceiver: undefined,
       isCollapsed: false,
       expandedMessageBox: false,
       editorOptions: {
@@ -252,6 +249,28 @@ export default {
     },
     recentMessages () {
       return this.$store.getters.messageRecentMessages
+    },
+    selectedContacts () {
+      switch (this.messageType) {
+        case 'email':
+          return this.activeRole.emails.filter(e => e.selected)
+        case 'cna':
+          return this.activeRole.oabs.filter(e => e.selected)
+        case 'whatsapp':
+          return this.activeRole.phones.filter(e => e.selected)
+        default:
+          return []
+      }
+    },
+    invalidReceiver () {
+      switch (this.messageType) {
+        case 'email':
+          return this.activeRole.invalidEmail
+        case 'whatsapp':
+          return this.activeRole.invalidPhone
+        case 'cna':
+          return this.activeRole.invalidOab
+      }
     }
   },
   watch: {
@@ -289,9 +308,6 @@ export default {
     this.unsubscribeOccurrences(this.id)
   },
   methods: {
-    selectPhoneNumber (phone) {
-      this.selectedPhone = phone
-    },
     updateActiveRole (params) {
       if (typeof params === 'number') {
         params = this.dispute.disputeRoles.find(role => {
@@ -301,28 +317,14 @@ export default {
       if (params.activeRole) {
         this.activeRole = Object.assign(params.activeRole, {
           invalidEmail: !params.activeRole.emails.length || !params.activeRole.emails.filter(e => e.selected === true).length,
-          invalidPhone: !this.selectedPhone || !!this.selectedPhone.isValid,
+          invalidPhone: !params.activeRole.phones.length || !params.activeRole.phones.filter(e => e.selected === true).length,
           invalidOab: !params.activeRole.oabs.length || !params.activeRole.oabs.filter(e => e.selected === true).length })
       } else {
         this.activeRole = {}
       }
       this.setMessageType(params.messageType)
       if (params.messageType === 'whatsapp') this.$nextTick(() => this.$refs.messageTextArea.focus())
-      this.updateInvalidReceiver()
       this.$forceUpdate()
-    },
-    updateInvalidReceiver () {
-      switch (this.messageType) {
-        case 'email':
-          this.invalidReceiver = this.activeRole.invalidEmail
-          break
-        case 'whatsapp':
-          this.invalidReceiver = this.activeRole.invalidPhone
-          break
-        case 'cna':
-          this.invalidReceiver = this.activeRole.invalidOab
-          break
-      }
     },
     unsubscribeOccurrences (id) {
       this.$store.commit('clearDisputeOccurrences')
@@ -381,7 +383,6 @@ export default {
     },
     setMessageType (type) {
       this.messageType = type
-      this.updateInvalidReceiver()
     },
     newLineChat () {
       this.newChatMessage = `${this.newChatMessage}\n`
@@ -410,34 +411,7 @@ export default {
         })
       }
     },
-    getSelectedContacts (params) {
-      switch (params.type) {
-        case 'email':
-          return params.role.emails.filter(e => e.selected).map(e => e.id)
-        case 'cna':
-          return params.role.oabs.filter(e => e.selected).map(e => e.id)
-        case 'whatsapp':
-          return [this.selectedPhone.id]
-        default:
-          return []
-      }
-    },
-    sendMessage (enterByKeyboard) {
-      if (enterByKeyboard) {
-        if (!this.enterToSend) {
-          this.newLineMessage()
-          return false
-        } else {
-          if (this.invalidReceiver === undefined) {
-            this.$jusNotification({
-              title: 'Atenção!',
-              message: 'Escolha um destinatário ao lado para receber sua mensagem.',
-              type: 'info'
-            })
-            return false
-          }
-        }
-      }
+    sendMessage () {
       if (this.messageType === 'whatsapp') {
         var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
         if (checkMessage(newMessageTrim, this.recentMessages)) {
@@ -467,7 +441,7 @@ export default {
         this.$store.dispatch('send' + this.messageType, {
           to: [{
             roleId: this.activeRole.id,
-            contactsId: this.getSelectedContacts({ type: this.messageType, role: this.activeRole })
+            contactsId: this.selectedContacts.map(c => c.id)
           }],
           message: this.newMessage,
           disputeId: this.dispute.id
