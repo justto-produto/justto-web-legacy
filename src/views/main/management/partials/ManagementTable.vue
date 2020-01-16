@@ -147,15 +147,21 @@
         <template slot-scope="scope">
           <el-tooltip v-if="scope.row.lastReceivedMessage" popper-class="info">
             <div slot="content">
-              <strong>Última interação:</strong><br><br>
+              <strong>Última mensagem:</strong><br><br>
               <div class="subtitle">
                 <jus-icon :icon="getInteractionIcon(scope.row.lastReceivedMessage)" is-white />
                 {{ getLastInteractionTooltip(scope.row.lastReceivedMessage) }}
               </div>
-              <div v-if="scope.row.lastReceivedMessage && scope.row.lastReceivedMessage.message && scope.row.lastReceivedMessage.message.sender">
-                {{ scope.row.lastReceivedMessage.message.sender }}
+              <div v-if="scope.row.lastReceivedMessage && scope.row.lastReceivedMessage.message">
+                <span v-if="scope.row.lastReceivedMessage.message.sender">
+                  De: {{ scope.row.lastReceivedMessage.message.sender | phoneMask }}
+                </span>
+                <br>
+                <span v-if="scope.row.lastReceivedMessage.message.resume" class="management-table__last-interaction-tooltip">
+                  Resumo: {{ scope.row.lastReceivedMessage.message.resume }}
+                </span>
               </div>
-              {{ scope.row.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }} <br>
+              Em: {{ scope.row.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }} <br>
             </div>
             <div>
               <span class="position-relative" style="vertical-align: middle;">
@@ -494,6 +500,10 @@ export default {
     &:hover div span {
       border: 1px solid #9461f7;
     }
+  }
+  &__last-interaction-tooltip {
+    display: flex;
+    max-width: 400px;
   }
   &__protocol_button--step {
     &-1 {
