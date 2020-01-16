@@ -360,8 +360,17 @@ export default {
       } else {
         this.activeRole = {}
       }
+      if (this.typingTab !== '1') this.typingTab = '1'
       this.setMessageType(params.messageType)
-      if (params.messageType === 'whatsapp') this.$nextTick(() => this.$refs.messageTextArea.focus())
+      switch (params.messageType) {
+        case 'whatsapp':
+        case 'cna':
+          this.$nextTick(() => this.$refs.messageTextArea.focus())
+          break
+        case 'email':
+          this.$nextTick(() => this.$refs.messageEditor.focus())
+          break
+      }
       this.$forceUpdate()
     },
     unsubscribeOccurrences (id) {
