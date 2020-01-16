@@ -946,21 +946,35 @@ export default {
           message: 'Os dados foram alterados com sucesso.',
           type: 'success'
         })
-        if (this.verifyChangedRoleData(this.roleForm, this.originalRole)) {
+        let roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
+        if (roleDataDifference.length) {
           this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
             confirmButtonText: 'Reengajar',
             cancelButtonText: 'Cancelar',
             type: 'warning',
             cancelButtonClass: 'is-plain'
           }).then(() => {
-            this.$store.dispatch('restartDisputeRoleEngagement', {
-              disputeId: this.dispute.id,
-              disputeRoleId: this.roleForm.id
-            }).then(() => {
+            let contacts = []
+            for (let contact of roleDataDifference) {
+              contacts.push(
+                this.$store.dispatch('restartEngagementByContact', {
+                  disputeId: this.dispute.id,
+                  contact: contact.address || contact.number
+                })
+              )
+            }
+            Promise.all(contacts).then(() => {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Reengajamento realizado com sucesso.',
                 type: 'success'
+              })
+            }).catch(() => {
+              this.$jusNotification({
+                title: 'Ops!',
+                message: 'Parece que nem todos os contatos foram reengajados corretamente.',
+                type: 'warning',
+                dangerouslyUseHTMLString: true
               })
             })
           })
@@ -981,23 +995,20 @@ export default {
       })
     },
     verifyChangedRoleData (editedRole, originalRole) {
-      let changed = false
+      let changed = {}
       if (editedRole.phones.length) {
-        if (originalRole.phones.length) {
-          editedRole.phones.forEach((phone, index) => {
-            let mappedPhones = originalRole.phones.map(phone => phone.number)
-            if (!mappedPhones.includes(phone.number)) changed = true
-          })
-        } else changed = true
+        let mappedPhones = originalRole.phones.map(phone => phone.number)
+        changed.newPhones = editedRole.phones.filter(phone => {
+          if (!mappedPhones.includes(phone.number)) return phone.number
+        })
       }
       if (editedRole.emails.length) {
-        if (originalRole.emails.length) {
-          editedRole.emails.forEach((phone, index) => {
-            let mappedEmails = originalRole.emails.map(email => email.address)
-            if (!mappedEmails.includes(phone.address)) changed = true
-          })
-        } else changed = true
+        let mappedEmails = originalRole.emails.map(email => email.address)
+        changed.newEmails = editedRole.emails.filter(email => {
+          if (!mappedEmails.includes(email.address)) return email.address
+        })
       }
+      changed = changed.newPhones.concat(changed.newEmails)
       return changed
     },
     addPhone () {
