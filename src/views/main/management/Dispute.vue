@@ -348,6 +348,9 @@ export default {
   methods: {
     updateActiveRole (params) {
       if (typeof params === 'number') {
+        if (params === 0) {
+          this.expandedMessageBox = false
+        }
         let disputeId = params
         params = {}
         params.activeRole = this.dispute.disputeRoles.find(role => {
@@ -433,6 +436,7 @@ export default {
       this.$store.commit('clearOccurrencesSize')
     },
     setMessageType (type) {
+      this.messageType = ''
       this.messageType = type
     },
     newLineChat () {
