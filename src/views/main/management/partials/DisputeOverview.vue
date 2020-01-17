@@ -166,7 +166,7 @@
             <div v-show="role.emails.length" class="dispute-overview-view__info-line">
               <span class="title">E-mail(s):</span>
               <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
-                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role, 'email')" />
+                <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
                   <el-tooltip content="Telefone inválido">
