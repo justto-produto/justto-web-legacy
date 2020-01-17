@@ -82,6 +82,7 @@
                     ref="messageEditor"
                     v-model="newMessage"
                     :options="editorOptions"
+                    data-testid="email-editor"
                     @focus="expandTextarea()" />
                   <textarea
                     v-else
