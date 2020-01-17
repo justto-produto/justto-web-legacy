@@ -153,7 +153,7 @@
             <div v-show="role.phones.length" class="dispute-overview-view__info-line">
               <span class="title">Telefone(s):</span>
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
-                <el-radio v-model="selectedPhone" :label="phone.id" @change="updateDisputeRole(role, 'whatsapp')">
+                <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                   <span>
                     <span>{{ phone.number | phoneMask }}</span>
                     <el-tooltip content="Telefone inválido">
@@ -166,7 +166,7 @@
             <div v-show="role.emails.length" class="dispute-overview-view__info-line">
               <span class="title">E-mail(s):</span>
               <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
-                <el-checkbox v-model="email.selected" @change="updateDisputeRole(role, 'email')" />
+                <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
                   <el-tooltip content="Telefone inválido">
@@ -897,6 +897,15 @@ export default {
       }
     },
     handleChange (val) {
+      if (!val) {
+        this.selectedPhone = 0
+        this.dispute.disputeRoles.map(dr => {
+          dr.phones.forEach(p => { p.selected = false })
+          dr.emails.forEach(e => { e.selected = false })
+          dr.oabs.forEach(o => { o.selected = false })
+          return dr
+        })
+      }
       this.$emit('update:activeRoleId', val || 0)
     },
     openRoleDialog (role) {

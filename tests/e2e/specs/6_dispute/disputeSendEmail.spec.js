@@ -21,7 +21,6 @@ describe('Disputa', function () {
       .click({ force: true })
 
     // Entra na primeira disputa da lista
-    // cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
       .contains('Teste e2e 021')
       .click()
@@ -31,8 +30,8 @@ describe('Disputa', function () {
       .contains('Disputa #' + dispute)
 
     // Verifica se inicio das disputas aparecem
-    cy.get('[data-testid=occurences-start]')
-      .contains('Início das ocorrências')
+    // cy.get('[data-testid=occurences-start]')
+    //   .contains('Início das ocorrências')
 
     // 'Enviar' deve estar desabilitado
     cy.get('[data-testid=submit-message]')
@@ -46,14 +45,6 @@ describe('Disputa', function () {
     cy.get('[data-testid=submit-message]')
       .should('be.disabled')
 
-    // Seleciona um email
-    cy.get('[data-testid=checkbox-email]').first()
-      .click()
-
-    // 'Enviar' deve estar desabilitado
-    cy.get('[data-testid=submit-message]')
-      .should('not.be.disabled')
-
     function randomText (size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
       var result = ''
@@ -65,10 +56,22 @@ describe('Disputa', function () {
     }
     const message = randomText(12)
 
+    // Seleciona um email     // Digita mensagem
+    cy.get('[data-testid=checkbox-email]').first()
+      .click()
+
+    // 'Enviar' deve estar desabilitado
+    cy.get('[data-testid=submit-message]')
+      .should('not.be.disabled')
+
     // Digita mensagem
-    cy.get('[data-testid=input-message]')
+    cy.get('[data-testid=email-editor]')
+      .click()
       .type(message)
-      .should('have.value', message)
+
+    // Verifia se mensagem foi digitada
+    cy.get('[data-testid=email-editor]')
+      .contains(message)
 
     // Envia mensagem
     cy.get('[data-testid=submit-message]')
@@ -78,8 +81,6 @@ describe('Disputa', function () {
     cy.get('.el-notification.success', { timeout: 60000 })
     cy.contains('email enviado com sucesso.')
       .should('be.visible')
-
-    cy.wait(1000)
 
     // Caixas de nota devem aparecer
     cy.get('[data-testid=message-box]', { timeout: 60000 }).last()
