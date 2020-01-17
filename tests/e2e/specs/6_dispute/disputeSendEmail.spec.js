@@ -21,7 +21,6 @@ describe('Disputa', function () {
       .click({ force: true })
 
     // Entra na primeira disputa da lista
-    // cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
       .contains('Teste e2e 021')
       .click()
@@ -31,8 +30,8 @@ describe('Disputa', function () {
       .contains('Disputa #' + dispute)
 
     // Verifica se inicio das disputas aparecem
-    cy.get('[data-testid=occurences-start]')
-      .contains('Início das ocorrências')
+    // cy.get('[data-testid=occurences-start]')
+    //   .contains('Início das ocorrências')
 
     // 'Enviar' deve estar desabilitado
     cy.get('[data-testid=submit-message]')
