@@ -897,6 +897,15 @@ export default {
       }
     },
     handleChange (val) {
+      if (!val) {
+        this.selectedPhone = 0
+        this.dispute.disputeRoles.map(dr => {
+          dr.phones.forEach(p => { p.selected = false })
+          dr.emails.forEach(e => { e.selected = false })
+          dr.oabs.forEach(o => { o.selected = false })
+          return dr
+        })
+      }
       this.$emit('update:activeRoleId', val || 0)
     },
     openRoleDialog (role) {
