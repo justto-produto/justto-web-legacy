@@ -22,7 +22,6 @@ describe('Envio de WhatsApp', function () {
       .click({ force: true })
 
     // Entra na primeira disputa da lista
-    // cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 }).first()
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
       .contains('Teste e2e 021')
       .click()
@@ -31,29 +30,21 @@ describe('Envio de WhatsApp', function () {
     cy.get('[data-testid=dispute-id]')
       .contains('Disputa #' + dispute)
 
-    // Seleciona CNA
-    cy.get('[data-testid=select-whatsapp]')
-      .click({ force: true })
-
-    // 'Enviar' deve estar desabilitado
-    cy.get('[data-testid=submit-message]')
-      .should('be.disabled')
+    // // Seleciona Whatsapp
+    // cy.get('[data-testid=select-whatsapp]')
+    // .click({ force: true })
+    //
+    // // 'Enviar' deve estar desabilitado
+    // cy.get('[data-testid=submit-message]')
+    // .should('be.disabled')
+    //
+    // // Volta para email
+    // cy.get('[data-testid=select-email]')
+    // .click({ force: true })
 
     // Seleciona primeira parte do caso
     cy.get('[data-testid=expand-party]').first()
       .click()
-
-    // 'Enviar' deve estar desabilitado
-    cy.get('[data-testid=submit-message]')
-      .should('be.disabled')
-
-    // Seleciona um email
-    cy.get('[data-testid=checkbox-whatsapp]').first()
-      .click()
-
-    // 'Enviar' deve estar desabilitado
-    cy.get('[data-testid=submit-message]')
-      .should('not.be.disabled')
 
     function randomText (size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
@@ -66,10 +57,18 @@ describe('Envio de WhatsApp', function () {
     }
     const message = randomText(12)
 
+    // Seleciona um email
+    cy.get('[data-testid=radio-whatsapp]').first()
+      .click()
+
+    // 'Enviar' não deve estar desabilitado
+    cy.get('[data-testid=submit-message]')
+      .should('not.be.disabled')
+
     // Digita mensagem
     cy.get('[data-testid=input-message]')
-      .type(message, { force: true })
-      // .should('have.value', message)
+      .type(message)
+      .should('have.value', message)
 
     // Envia mensagem
     cy.get('[data-testid=submit-message]')
@@ -77,17 +76,13 @@ describe('Envio de WhatsApp', function () {
 
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success', { timeout: 60000 })
-    cy.contains('cna enviado com sucesso.')
+    cy.contains('whatsapp enviado com sucesso.')
       .should('be.visible')
 
     // Caixas de nota devem aparecer
     cy.get('[data-testid=message-box]', { timeout: 60000 }).last()
       .should('be.visible')
-      .should('have.css', 'background-color', 'rgb(182, 255, 251)')
-
-    // Clica em 'vusualizar email'
-    cy.get('[data-testid=show-email]').last()
-      .click({ force: true })
+      .should('have.css', 'background-color', 'rgb(163, 244, 195)')
 
     // Mensagem deve ser a enviada
     cy.get('[data-testid=message-box]')

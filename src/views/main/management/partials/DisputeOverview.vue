@@ -153,7 +153,7 @@
             <div v-show="role.phones.length" class="dispute-overview-view__info-line">
               <span class="title">Telefone(s):</span>
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
-                <el-radio v-model="selectedPhone" :label="phone.id" @change="updateDisputeRole(role, 'whatsapp')">
+                <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                   <span>
                     <span>{{ phone.number | phoneMask }}</span>
                     <el-tooltip content="Telefone inválido">
