@@ -21,6 +21,8 @@ build:
     - script:
       name: Prepare release branch
       code: |
+        git clean -fdx
+        git reset --hard
         git checkout release
         git merge develop --commit -m "Merge com a develop para release"
     - script:
