@@ -169,7 +169,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="Proposto por" prop="selectedRoleId">
-              <el-select v-model="counterOfferForm.selectedRoleId" placeholder="Autor da contraproposta" data-testid="counterproposal-claimant-input">
+              <el-select
+                v-model="counterOfferForm.selectedRoleId"
+                placeholder="Autor da contraproposta"
+                style="width: 100%;"
+                data-testid="counterproposal-claimant-input">
                 <el-option
                   v-for="(claimant, index) in disputeClaimants"
                   :key="`${index}-${claimant.id}`"
@@ -392,7 +396,7 @@ export default {
     },
     counterproposalDialogOpen () {
       this.counterOfferForm.lastCounterOfferValue = ''
-      this.counterOfferForm.selectedRoleId = ''
+      this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
       this.counterproposalDialogVisible = true
       if (this.$refs.counterOfferForm) {
         this.$refs.counterOfferForm.clearValidate()
