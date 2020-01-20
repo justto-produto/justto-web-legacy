@@ -394,7 +394,7 @@ export default {
     },
     counterproposalDialogOpen () {
       this.counterOfferForm.lastCounterOfferValue = ''
-      this.counterOfferForm.selectedRoleId = ''
+      this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
       this.counterproposalDialogVisible = true
       if (this.$refs.counterOfferForm) {
         this.$refs.counterOfferForm.clearValidate()
