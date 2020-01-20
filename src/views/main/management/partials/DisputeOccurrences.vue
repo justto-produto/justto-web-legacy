@@ -86,6 +86,11 @@
               </span>
             </div>
           </div>
+          <div v-if="showReply(occurrence)" class="dispute-view-occurrences__reply-email">
+            <a href="#" @click="startReply(occurrence)">
+              <jus-icon icon="reply" />
+            </a>
+          </div>
         </div>
       </li>
     </div>
@@ -332,6 +337,21 @@ export default {
         }
       }
       return typeClass
+    },
+    showReply (occurrence) {
+      if (occurrence.interaction &&
+        occurrence.interaction.message &&
+        occurrence.interaction.message.communicationType &&
+        occurrence.interaction.message.communicationType === 'EMAIL' &&
+        occurrence.interaction.direction === 'INBOUND') {
+        return true
+      }
+      return false
+    },
+    startReply (occurrence) {
+      let sender = occurrence.interaction.message.sender
+      let resume = occurrence.interaction.message.resume
+      this.$emit('dispute:reply', { sender, resume })
     }
   }
 }
@@ -446,7 +466,7 @@ export default {
     }
     .el-card__body {
       padding: 10px 20px;
-      word-break: break-all;
+      word-break: break-word;
       strong {
         margin-bottom: 8px;
         display: inline-block;
@@ -603,6 +623,13 @@ export default {
   &__textarea .el-textarea__inner {
     height: 40vh;
     resize: none;
+  }
+  &__reply-email {
+    align-self: center;
+    margin-bottom: 22px;
+    img {
+      width: 20px;
+    }
   }
 }
 </style>

@@ -29,7 +29,8 @@
           ref="disputeOccurrences"
           :dispute-id="id"
           :style="{ opacity: expandedMessageBox ? 0.2 : 1 }"
-          data-testid="dispute-messages" />
+          data-testid="dispute-messages"
+          @dispute:reply="startReply" />
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
           <div v-show="selectedContacts && selectedContacts.length" class="dispute-view__send-to">
@@ -246,6 +247,7 @@ export default {
       activeRole: {},
       isCollapsed: false,
       expandedMessageBox: false,
+      directEmailAddress: '',
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
         modules: {
@@ -290,6 +292,9 @@ export default {
       return this.$store.getters.messageRecentMessages
     },
     selectedContacts () {
+      if (this.directEmailAddress) {
+        return [{ id: 0, address: this.directEmailAddress }]
+      }
       switch (this.messageType) {
         case 'email':
           return this.activeRole.emails ? this.activeRole.emails.filter(e => e.selected) : []
@@ -347,6 +352,11 @@ export default {
     this.unsubscribeOccurrences(this.id)
   },
   methods: {
+    startReply (params) {
+      this.directEmailAddress = params.sender
+      this.$refs.messageEditor.quill.focus()
+      this.$refs.messageEditor.quill.setText('\n\n___________________\n' + params.resume)
+    },
     updateActiveRole (params) {
       if (typeof params === 'number') {
         if (params === 0) {
@@ -771,7 +781,7 @@ export default {
   &__send-to {
     position: absolute;
     right: 0;
-    padding: 11px 14px;
+    padding: 15px 14px;
   }
   .el-input-group__append {
     border-color: #9462f7;
