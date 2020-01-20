@@ -155,7 +155,7 @@
                   De: {{ scope.row.lastReceivedMessage.message.sender | phoneMask }}
                 </span>
                 <br>
-                <span v-if="scope.row.lastReceivedMessage.message.resume" v-html="'Resumo: ' + scope.row.lastReceivedMessage.message.resume" class="management-table__last-interaction-tooltip" />
+                <span v-if="scope.row.lastReceivedMessage.message.resume" class="management-table__last-interaction-tooltip" v-html="'Resumo: ' + scope.row.lastReceivedMessage.message.resume" />
               </div>
             </div>
             <div>
