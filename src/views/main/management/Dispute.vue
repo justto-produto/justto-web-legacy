@@ -134,7 +134,14 @@
                       </div>
                       <span v-if="validName">
                         <el-button
-                          :disabled="invalidReceiver || !activeRole.personId"
+                          v-if="!!directEmailAddress"
+                          size="medium"
+                          plain
+                          @click="cancelReplyDialog()">
+                          Cancelar resposta
+                        </el-button>
+                        <el-button
+                          :disabled="!(!(invalidReceiver || !activeRole.personId) || !!directEmailAddress)"
                           type="primary"
                           size="medium"
                           data-testid="submit-message"
@@ -329,7 +336,9 @@ export default {
       this.$refs.disputeOccurrences.fetchData()
     },
     activeRoleId (activeRoleId) {
-      this.updateActiveRole(activeRoleId)
+      if (activeRoleId !== -1) {
+        this.updateActiveRole(activeRoleId)
+      }
     },
     isPaused () {
       this.loadingKey = this.loadingKey + 1
@@ -353,11 +362,29 @@ export default {
   },
   methods: {
     startReply (params) {
+      this.activeRoleId = -1
       this.directEmailAddress = params.sender
       this.$refs.messageEditor.quill.focus()
       this.$refs.messageEditor.quill.setText('\n\n___________________\n' + params.resume)
     },
+    cancelReplyDialog () {
+      this.$confirm('Tem certeza que deseja sair da resposta?', {
+        confirmButtonText: 'Sair',
+        cancelButtonText: 'Permanecer',
+        title: 'Atenção!',
+        type: 'warning',
+        cancelButtonClass: 'is-plain'
+      }).then(() => {
+        this.cancelReply(true)
+      })
+    },
+    cancelReply (collapse) {
+      this.directEmailAddress = ''
+      this.$refs.messageEditor.quill.setText('')
+      if (collapse) this.collapseTextarea()
+    },
     updateActiveRole (params) {
+      this.cancelReply()
       if (typeof params === 'number') {
         if (params === 0) {
           this.expandedMessageBox = false
@@ -502,7 +529,7 @@ export default {
           this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
         }
       }
-      if (this.newMessage.trim().replace('\n', '') && this.activeRole.personId && !this.invalidReceiver) {
+      if (this.newMessage.trim().replace('\n', '')) {
         this.loadingTextarea = true
         this.$store.dispatch('send' + this.messageType, {
           to: [{

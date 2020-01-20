@@ -87,9 +87,11 @@
             </div>
           </div>
           <div v-if="showReply(occurrence)" class="dispute-view-occurrences__reply-email">
-            <a href="#" @click="startReply(occurrence)">
-              <jus-icon icon="reply" />
-            </a>
+            <el-tooltip content="Responder">
+              <a href="#" @click.prevent="startReply(occurrence)">
+                <jus-icon icon="reply" />
+              </a>
+            </el-tooltip>
           </div>
         </div>
       </li>
