@@ -83,16 +83,19 @@
                     v-model="newMessage"
                     :options="editorOptions"
                     data-testid="email-editor"
-                    @focus="expandTextarea()" />
-                  <textarea
+                    @focus="expandTextarea()"
+                    @blur="collapseTextarea()" />
+                  <el-input
                     v-else
                     ref="messageTextArea"
                     v-model="newMessage"
                     :rows="expandedMessageBox ? 10 : 1"
                     data-testid="input-message"
                     placeholder="Escreva alguma coisa"
+                    type="textarea"
                     class="el-textarea__inner"
-                    @focus="expandTextarea()" />
+                    @focus="expandTextarea()"
+                    @blur="collapseTextarea()" />
                 </div>
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
@@ -160,13 +163,14 @@
                   class="el-icon-arrow-down"
                   style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
                   @click="collapseTextarea()" />
-                <textarea
+                <el-input
                   v-model="newNote"
                   :rows="expandedMessageBox ? 10 : 1"
                   data-testid="input-note"
                   placeholder="Escreva alguma coisa"
-                  class="el-textarea__inner"
-                  @focus="expandTextarea()" />
+                  type="textarea"
+                  @focus="expandTextarea()"
+                  @blur="collapseTextarea()" />
                 <div class="dispute-view__send-message-actions note">
                   <el-button
                     :disabled="!newNote.trim().replace('\n', '')"
@@ -252,7 +256,6 @@ export default {
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
             [{ 'header': 1 }, { 'header': 2 }],
-            [{ 'align': [] }],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             ['blockquote'],
             ['clean']
@@ -350,7 +353,7 @@ export default {
     updateActiveRole (params) {
       if (typeof params === 'number') {
         if (params === 0) {
-          this.expandedMessageBox = false
+          this.collapseTextarea()
         }
         let disputeId = params
         params = {}
@@ -428,9 +431,7 @@ export default {
         })
     },
     handleTabClick (tab) {
-      if (tab.name === '2' || tab.name === '3') {
-        this.activeRoleId = 0
-      }
+      if (tab.name !== '1') this.activeRoleId = 0
       this.collapseTextarea()
     },
     handleBeforeLeaveTabs () {
@@ -511,7 +512,7 @@ export default {
           })
           setTimeout(function () {
             this.newMessage = ''
-            this.expandedMessageBox = false
+            this.collapseTextarea()
           }.bind(this), 500)
         }).catch(() => {
           this.$jusNotification({ type: 'error' })
@@ -646,17 +647,10 @@ export default {
     margin: 10px;
     margin-top: 20px;
     border: 0;
-    .el-textarea {
-      padding-top: 10px;
-      margin: -20px -20px 0;
-      display: block;
-      width: auto;
-      &__inner {
-        resize: none;
-        border: 0;
-        padding: 6px 0;
-        margin-bottom: -4px;
-      }
+    .el-textarea__inner {
+      resize: none;
+      border: 0;
+      padding: 3px 0 1px;
     }
     > .el-card__body {
       position: relative;
@@ -671,7 +665,8 @@ export default {
       display: inherit;
     }
     .ql-container {
-      height: 218px;
+      height: 208px;
+      margin-bottom: 10px;
     }
   }
   &__send-message-actions {
