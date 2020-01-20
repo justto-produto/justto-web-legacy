@@ -257,6 +257,7 @@ const workspaceModule = {
     hasWorkspace: state => {
       return state.status !== '' && state.status !== 'CREATING'
     },
+    workspaceMembers: state => state.members,
     creatingWorkspace: state => state.status === 'CREATING',
     workspaceId: state => state.id,
     workspaceName: state => state.name,
