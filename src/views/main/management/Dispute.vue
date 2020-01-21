@@ -33,7 +33,7 @@
           @dispute:reply="startReply" />
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
-          <div v-show="selectedContacts && selectedContacts.length" class="dispute-view__send-to">
+          <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
             Destinatário(s):
             <span v-for="(selected, index) in selectedContacts" :key="selected.id">
               <span v-if="index === 0">
@@ -171,14 +171,15 @@
                   class="el-icon-arrow-down"
                   style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
                   @click="collapseTextarea()" />
-                <el-input
-                  v-model="newNote"
-                  :rows="expandedMessageBox ? 10 : 1"
-                  data-testid="input-note"
-                  placeholder="Escreva alguma coisa"
-                  type="textarea"
-                  @focus="expandTextarea()"
-                  @blur="collapseTextarea()" />
+                <div :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
+                  <quill-editor
+                    ref="messageEditor"
+                    v-model="newNote"
+                    :options="editorOptions"
+                    data-testid="input-note"
+                    @focus="expandTextarea()"
+                    @blur="collapseTextarea()" />
+                </div>
                 <div class="dispute-view__send-message-actions note">
                   <el-button
                     :disabled="!newNote.trim().replace('\n', '')"
@@ -325,6 +326,9 @@ export default {
         case 'cna':
           return this.activeRole.invalidOab
       }
+    },
+    newMessageTrim () {
+      return this.newMessage.toLowerCase().trim().replace('\n', '')
     }
   },
   watch: {
@@ -365,13 +369,15 @@ export default {
   },
   methods: {
     startReply (params) {
-      this.activeRoleId = -1
-      this.directEmailAddress = params.sender
-      this.$refs.messageEditor.quill.focus()
-      this.$refs.messageEditor.quill.setText('\n\n___________________\n' + params.resume)
+      this.setMessageType('email').then(() => {
+        this.expandTextarea()
+        this.activeRoleId = -1
+        this.directEmailAddress = params.sender
+        this.$refs.messageEditor.quill.setText('\n\n___________________\n' + params.resume)
+      })
     },
     cancelReplyDialog () {
-      this.$confirm('Tem certeza que deseja sair da resposta?', {
+      this.$confirm('Tem certeza que deseja sair? A mensagem será perdida.', {
         confirmButtonText: 'Sair',
         cancelButtonText: 'Permanecer',
         title: 'Atenção!',
@@ -386,11 +392,51 @@ export default {
       this.$refs.messageEditor.quill.setText('')
       if (collapse) this.collapseTextarea()
     },
+    setMessageType (type) {
+      return new Promise((resolve, reject) => {
+        if (this.newMessageTrim) {
+          this.$confirm('Tem certeza que deseja sair? A mensagem será perdida.', {
+            confirmButtonText: 'Sair',
+            cancelButtonText: 'Permanecer',
+            title: 'Atenção!',
+            type: 'warning',
+            cancelButtonClass: 'is-plain'
+          }).then(() => {
+            resolve(this.changeMessageType(type))
+          }).catch(e => {
+            reject(e)
+          })
+        } else {
+          resolve(this.changeMessageType(type))
+        }
+      })
+    },
+    changeMessageType (type) {
+      return new Promise((resolve) => {
+        this.newMessage = ''
+        this.messageType = ''
+        this.messageType = type
+        setTimeout(() => {
+          switch (type) {
+            case 'whatsapp':
+            case 'cna':
+              this.$nextTick(() => this.$refs.messageTextArea.focus())
+              break
+            case 'email':
+              this.$nextTick(() => this.$refs.messageEditor.quill.focus())
+              break
+          }
+          this.$forceUpdate()
+          resolve()
+        }, 200)
+      })
+    },
     updateActiveRole (params) {
-      this.cancelReply()
       if (typeof params === 'number') {
         if (params === 0) {
           this.collapseTextarea()
+        } else {
+          this.expandTextarea()
         }
         let disputeId = params
         params = {}
@@ -407,18 +453,8 @@ export default {
         this.activeRole = {}
       }
       if (this.typingTab !== '1') this.typingTab = '1'
-      if (params.messageType) {
+      if (params.messageType && params.messageType !== this.messageType) {
         this.setMessageType(params.messageType)
-        switch (params.messageType) {
-          case 'whatsapp':
-          case 'cna':
-            this.$nextTick(() => this.$refs.messageTextArea.focus())
-            break
-          case 'email':
-            this.$nextTick(() => this.$refs.messageEditor.quill.focus())
-            break
-        }
-        this.$forceUpdate()
       }
     },
     unsubscribeOccurrences (id) {
@@ -474,41 +510,9 @@ export default {
     handleBeforeLeaveTabs () {
       this.$store.commit('clearOccurrencesSize')
     },
-    setMessageType (type) {
-      this.messageType = ''
-      this.messageType = type
-    },
-    newLineChat () {
-      this.newChatMessage = `${this.newChatMessage}\n`
-    },
-    newLineNote () {
-      this.newNote = `${this.newNote}\n`
-    },
-    sendChatMessage () {
-      this.loadingTextarea = true
-      if (this.newChatMessage.trim().replace('\n', '')) {
-        this.$store.dispatch('sendMessageEvent', {
-          id: this.dispute.id,
-          data: {
-            value: this.newChatMessage,
-            sender: {
-              personId: this.$store.getters.personId,
-              name: this.$store.getters.personName
-            }
-          }
-        }).then(() => {
-          this.newChatMessage = ''
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.loadingTextarea = false
-        })
-      }
-    },
     sendMessage () {
       if (this.messageType === 'whatsapp') {
-        var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
-        if (checkMessage(newMessageTrim, this.recentMessages)) {
+        if (checkMessage(this.newMessageTrim, this.recentMessages)) {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
@@ -517,10 +521,10 @@ export default {
           return false
         } else {
           this.$store.state.messageModule.recentMessages.push({
-            messageBody: newMessageTrim,
+            messageBody: this.newMessageTrim,
             selfDestroy: () => (setTimeout(() => {
               for (var i = 0; i < this.recentMessages.length; i++) {
-                if (newMessageTrim === this.recentMessages[i].messageBody) {
+                if (this.newMessageTrim === this.recentMessages[i].messageBody) {
                   this.recentMessages.splice(i, 1)
                 }
               }
@@ -530,7 +534,7 @@ export default {
           this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
         }
       }
-      if (this.newMessage.trim().replace('\n', '')) {
+      if (this.newMessageTrim) {
         this.loadingTextarea = true
         this.$store.dispatch('send' + this.messageType, {
           to: [{
@@ -576,21 +580,6 @@ export default {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.loadingTextarea = false
-        })
-      }
-    },
-    sendTypeEvent () {
-      if (this.newChatMessage.trim().replace('\n', '')) {
-        this.$socket.emit('send', {
-          channel: '/disputes/' + this.dispute.id,
-          event: 'type',
-          data: {
-            value: this.newChatMessage,
-            sender: {
-              personId: this.$store.getters.personId,
-              name: this.$store.getters.personName
-            }
-          }
         })
       }
     },
