@@ -178,7 +178,7 @@
                     :options="editorOptions"
                     data-testid="input-note"
                     @focus="expandTextarea()"
-                    @blur="collapseTextarea()" />
+                    @blur="collapseTextarea(true)" />
                 </div>
                 <div class="dispute-view__send-message-actions note">
                   <el-button
@@ -505,6 +505,7 @@ export default {
     },
     handleTabClick (tab) {
       if (tab.name !== '1') this.activeRoleId = 0
+      this.typingTab = tab.name
       this.collapseTextarea()
     },
     handleBeforeLeaveTabs () {
@@ -586,8 +587,14 @@ export default {
     expandTextarea () {
       this.expandedMessageBox = true
     },
-    collapseTextarea () {
-      this.expandedMessageBox = false
+    collapseTextarea (timeout) {
+      if (timeout) {
+        setTimeout(() => {
+          this.expandedMessageBox = false
+        }, 100)
+      } else {
+        this.expandedMessageBox = false
+      }
     }
   }
 }
