@@ -368,7 +368,7 @@ export default {
     startReply (params) {
       this.setMessageType('email').then(() => {
         this.expandTextarea()
-        this.activeRoleId = -1
+        this.activeRoleId = 0
         this.directEmailAddress = params.sender
         this.$refs.messageEditor.quill.setText('\n\n___________________\n' + params.resume)
       })
@@ -399,6 +399,7 @@ export default {
             type: 'warning',
             cancelButtonClass: 'is-plain'
           }).then(() => {
+            this.cancelReply(true)
             resolve(this.changeMessageType(type))
           }).catch(e => {
             reject(e)
@@ -432,8 +433,6 @@ export default {
       if (typeof params === 'number') {
         if (params === 0) {
           this.collapseTextarea()
-        } else {
-          this.expandTextarea()
         }
         let disputeId = params
         params = {}
@@ -450,9 +449,7 @@ export default {
         this.activeRole = {}
       }
       if (this.typingTab !== '1') this.typingTab = '1'
-      if (params.messageType && params.messageType !== this.messageType) {
-        this.setMessageType(params.messageType)
-      }
+      if (params.messageType) this.setMessageType(params.messageType)
     },
     unsubscribeOccurrences (id) {
       this.$store.commit('clearDisputeOccurrences')
@@ -502,8 +499,8 @@ export default {
     },
     handleTabClick (tab) {
       if (tab.name !== '1') this.activeRoleId = 0
-      this.typingTab = tab.name
       this.collapseTextarea()
+      this.typingTab = tab.name
     },
     handleBeforeLeaveTabs () {
       this.$store.commit('clearOccurrencesSize')
