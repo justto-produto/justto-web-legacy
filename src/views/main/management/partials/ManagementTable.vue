@@ -5,10 +5,12 @@
       :dispute-id.sync="selectedDisputeId"
       :dispute-roles.sync="selectedDisputeRoles" />
     <el-table
+      v-loading="responseBoxLoading"
       ref="disputeTable"
       :key="disputeKey"
       :data.sync="disputes"
       :row-class-name="tableRowClassName"
+      element-loading-text="Enviando mensagem..."
       size="mini"
       empty-text=" "
       height="100%"
@@ -144,7 +146,7 @@
         <template slot-scope="scope">
           <el-popover
             v-if="scope.row.lastReceivedMessage"
-            trigger="click"
+            trigger="hover"
             popper-class="el-popover--dark"
             @after-enter="startResponseBox(scope.row.id)"
             @hide="hideResponseBox(scope.row.id)">
@@ -295,13 +297,13 @@
       class="management-table__response-dialog"
       title="Enviar mensagem">
       <quill-editor
-        v-if="responseDialogVisible"
         v-loading="responseBoxLoading"
+        v-if="responseDialogVisible"
         ref="messageEditor"
         v-model="emailMessage"
         :options="editorOptions" />
       <span slot="footer" class="dialog-footer">
-        <el-button :disabled="responseBoxLoading" @click="responseDialogVisible = false" plain>Cancelar</el-button>
+        <el-button :disabled="responseBoxLoading" plain @click="responseDialogVisible = false">Cancelar</el-button>
         <el-button
           :loading="responseBoxLoading"
           type="primary"
@@ -436,7 +438,7 @@ export default {
       this.emailMessage = this.message + ''
     },
     sendMessage (dispute) {
-      if (this.message.trim().replace('\n', '')) {
+      if (this.message.trim().replace('\n', '') || this.emailMessage.trim().replace('\n', '')) {
         this.responseBoxLoading = true
         this.$store.dispatch('send' + dispute.lastReceivedMessage.message.communicationType.toLowerCase(), {
           to: [{ address: dispute.lastReceivedMessage.message.sender }],
@@ -448,7 +450,7 @@ export default {
           this.responseDialogVisible = false
           this.$jusNotification({
             title: 'Yay!',
-            message: 'Email enviado com sucesso.',
+            message: 'Mensagem enviada com sucesso.',
             type: 'success'
           })
         }).catch(() => {
@@ -467,7 +469,7 @@ export default {
       }
     },
     handleRowClick (row, column, event) {
-      if (row.id && !['IMG', 'SPAN', 'BUTTON'].includes(event.target.tagName) && !this.responseBoxVisible) {
+      if (row.id && !['IMG', 'SPAN', 'BUTTON'].includes(event.target.tagName)) {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
