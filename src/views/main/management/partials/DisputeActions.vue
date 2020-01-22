@@ -267,11 +267,11 @@ export default {
       } return false
     },
     workspaceNegotiators () {
-      return this.$store.state.workspaceModule.members.map(member => {
+      return this.$store.getters.workspaceMembers.map(member => {
         let newMember = {}
         newMember.key = member.person.id
         newMember.label = member.person.name
-        newMember.value = member
+        newMember.value = member.person.id
         return newMember
       })
     },
@@ -389,11 +389,9 @@ export default {
     },
     editNegotiator () {
       this.editNegotiatorLoading = false
-      this.disputeNegotiators = this.dispute.disputeRoles.filter((negotiator) => {
-        return negotiator.roles.includes('NEGOTIATOR') && !negotiator.archived
-      }).map(member => {
-        return member.personId
-      })
+      this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
+        return member.roles.includes('NEGOTIATOR') && !member.archived
+      }).map(member => member.personId)
       this.editNegotiatorDialogVisible = true
     },
     counterproposalDialogOpen () {
