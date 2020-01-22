@@ -74,8 +74,7 @@
                 shadow="always">
                 <i
                   v-if="expandedMessageBox"
-                  class="el-icon-arrow-down"
-                  style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
+                  class="el-icon-arrow-down dispute-view__collapse-message-box"
                   @click="collapseTextarea()" />
                 <div v-if="validName" :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
                   <quill-editor
@@ -168,12 +167,10 @@
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <i
                   v-if="expandedMessageBox"
-                  class="el-icon-arrow-down"
-                  style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
+                  class="el-icon-arrow-down dispute-view__collapse-message-box"
                   @click="collapseTextarea()" />
                 <div :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
                   <quill-editor
-                    ref="messageEditor"
                     v-model="newNote"
                     :options="editorOptions"
                     data-testid="input-note"
@@ -537,16 +534,25 @@ export default {
       }
       if (this.newMessageTrim) {
         this.loadingTextarea = true
-        this.$store.dispatch('send' + this.messageType, {
-          to: [{
+        let to = []
+        if (this.directEmailAddress) {
+          to.push({
+            address: this.directEmailAddress
+          })
+        } else {
+          to.push({
             roleId: this.activeRole.id,
             contactsId: this.selectedContacts.map(c => c.id)
-          }],
+          })
+        }
+        this.$store.dispatch('send' + this.messageType, {
+          to,
           message: this.newMessage,
           disputeId: this.dispute.id
         }).then(() => {
           window.analytics.track('Enviou mensagem via ' + this.messageType)
           this.newMessage = ''
+          this.cancelReply(true)
           this.$jusNotification({
             title: 'Yay!',
             message: this.messageType + ' enviado com sucesso.',
@@ -800,6 +806,14 @@ export default {
     position: absolute;
     right: 0;
     padding: 15px 14px;
+  }
+  &__collapse-message-box {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 22px;
+    cursor:pointer;
+    z-index: 1;
   }
   .el-input-group__append {
     border-color: #9462f7;
