@@ -142,7 +142,8 @@ export default {
       this.$confirm('Esta nota será deletada permanentemente. Deseja continuar?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancelar',
-        type: 'warning'
+        type: 'warning',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         let noteId = occurrence.id
         this.noteLoading = occurrence.id
