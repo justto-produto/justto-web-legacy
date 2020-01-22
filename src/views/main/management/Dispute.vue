@@ -448,7 +448,7 @@ export default {
       } else {
         this.activeRole = {}
       }
-      if (this.typingTab !== '1') this.typingTab = '1'
+      if (this.typingTab !== '1' && params.activeRole) this.typingTab = '1'
       if (params.messageType) this.setMessageType(params.messageType)
     },
     unsubscribeOccurrences (id) {
