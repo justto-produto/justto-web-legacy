@@ -144,10 +144,10 @@
         <template slot-scope="scope">
           <el-popover
             v-if="scope.row.lastReceivedMessage"
-            trigger="hover"
+            trigger="click"
             popper-class="el-popover--dark"
-            @show="startResponseBox(scope.row.id)"
-            @after-leave="hideResponseBox(scope.row.id)">
+            @after-enter="startResponseBox(scope.row.id)"
+            @hide="hideResponseBox(scope.row.id)">
             <div>
               <strong>
                 <jus-icon :icon="getInteractionIcon(scope.row.lastReceivedMessage)" is-white />
@@ -161,19 +161,19 @@
                 </span>
                 <br>
                 <span
-                v-if="scope.row.lastReceivedMessage.message.resume"
-                class="management-table__last-interaction-tooltip"
-                v-html="'Resumo: ' + scope.row.lastReceivedMessage.message.resume + (scope.row.lastReceivedMessage.message.resume.length > 139 ? '...' : '')" />
+                  v-if="scope.row.lastReceivedMessage.message.resume"
+                  class="management-table__last-interaction-tooltip"
+                  v-html="'Resumo: ' + scope.row.lastReceivedMessage.message.resume + (scope.row.lastReceivedMessage.message.resume.length > 139 ? '...' : '')" />
               </div>
               <div class="" style="width: 100%;text-align: right;min-width:300px">
                 <el-button v-if="!responseBoxVisible" size="mini" icon="el-icon-s-promotion" style="margin-top: 10px;" @click="showResponseBox(scope.row.id)">Responder</el-button>
                 <div v-else>
-                  <el-button type="text" size="mini" icon="el-icon-top-right" @click="openResponseDialog(scope.row.lastReceivedMessage)">
+                  <el-button type="text" size="mini" icon="el-icon-top-right" @click="openResponseDialog(scope.row)">
                     Expandir
                   </el-button>
                   <el-input v-model="message" type="textarea" rows="4" placeholder="Escreva alguma coisa" style="padding-bottom: 10px" />
                   <el-button size="mini" @click="hideResponseBox(scope.row.id, true)">Cancelar</el-button>
-                  <el-button size="mini" icon="el-icon-s-promotion" @click="sendMessage()">Enviar</el-button>
+                  <el-button size="mini" icon="el-icon-s-promotion" @click="sendMessage(scope.row)">Enviar</el-button>
                 </div>
               </div>
             </div>
@@ -288,25 +288,51 @@
       </template>
     </el-table>
     <el-dialog
-    title="Enviar mensagem"
-    :visible.sync="responseDialogVisible">
-    <span>This is a message</span>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="responseDialogVisible = false">Cancel</el-button>
-      <el-button type="primary" @click="responseDialogVisible = false">Confirm</el-button>
-    </span>
-  </el-dialog>
+      :visible.sync="responseDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      class="management-table__response-dialog"
+      title="Enviar mensagem">
+      <quill-editor
+        v-if="responseDialogVisible"
+        v-loading="responseBoxLoading"
+        ref="messageEditor"
+        v-model="emailMessage"
+        :options="editorOptions" />
+      <span slot="footer" class="dialog-footer">
+        <el-button :disabled="responseBoxLoading" @click="responseDialogVisible = false" plain>Cancelar</el-button>
+        <el-button
+          :loading="responseBoxLoading"
+          type="primary"
+          icon="el-icon-s-promotion"
+          @click="sendMessage(responseRowToEdit)">
+          Enviar
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getLastInteraction, getInteractionIcon, getLastInteractionTooltip } from '@/utils/jusUtils'
+import { quillEditor } from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import Quill from 'quill'
+const SizeStyle = Quill.import('attributors/style/size')
+const AlignStyle = Quill.import('attributors/style/align')
+Quill.register(AlignStyle, true)
+Quill.register(SizeStyle, true)
 
 export default {
   name: 'ManagementTable',
   components: {
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
-    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
+    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
+    quillEditor
   },
   props: {
     activeTab: {
@@ -330,10 +356,24 @@ export default {
       disputeKey: 0,
       messageSummary: {},
       message: '',
+      emailMessage: '',
       messageCache: {},
       responseBoxVisible: false,
       responseBoxLoading: false,
-      responseDialogVisible: false
+      responseDialogVisible: false,
+      responseRowToEdit: 0,
+      editorOptions: {
+        placeholder: 'Escreva alguma coisa',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['blockquote'],
+            ['clean']
+          ]
+        }
+      }
     }
   },
   computed: {
@@ -373,12 +413,10 @@ export default {
   methods: {
     startResponseBox (id) {
       this.message = ''
-      setTimeout(() => {
-        if (this.messageCache[id]) {
-          this.message = this.messageCache[id]
-          this.responseBoxVisible = true
-        }
-      }, 100)
+      if (this.messageCache[id]) {
+        this.message = this.messageCache[id]
+        this.responseBoxVisible = true
+      }
     },
     showResponseBox (id) {
       this.responseBoxVisible = true
@@ -386,23 +424,38 @@ export default {
     hideResponseBox (id, cancel) {
       if (cancel) {
         delete this.messageCache[id]
-      }
-      else if (this.message) {
+      } else if (this.message) {
         this.messageCache[id] = this.message
       }
       this.message = ''
       this.responseBoxVisible = false
     },
-    openResponseDialog(lastReceivedMessage) {
+    openResponseDialog (row) {
+      this.responseRowToEdit = row
       this.responseDialogVisible = true
+      this.emailMessage = this.message + ''
     },
-    sendMessage () {
+    sendMessage (dispute) {
       if (this.message.trim().replace('\n', '')) {
         this.responseBoxLoading = true
-        setTimeout(() => {
-          alert('mensagem enviada com sucesso')
+        this.$store.dispatch('send' + dispute.lastReceivedMessage.message.communicationType.toLowerCase(), {
+          to: [{ address: dispute.lastReceivedMessage.message.sender }],
+          message: this.message,
+          disputeId: dispute.id
+        }).then(() => {
+          this.message = ''
+          this.emailMessage = ''
+          this.responseDialogVisible = false
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Email enviado com sucesso.',
+            type: 'success'
+          })
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
           this.responseBoxLoading = false
-        }, 1500)
+        })
       }
     },
     getLastInteraction: (i) => getLastInteraction(i),
@@ -589,6 +642,15 @@ export default {
   }
   .el-table__empty-block {
     width: auto !important;
+  }
+  &__response-dialog {
+    .quill-editor {
+      min-height: 300px;
+      height: 30vh;
+    }
+    .ql-toolbar {
+      display: inherit !important;
+    }
   }
 }
 </style>

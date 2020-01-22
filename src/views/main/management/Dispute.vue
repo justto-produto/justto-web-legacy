@@ -658,9 +658,6 @@ export default {
     }
   }
   &__send-message-expanded {
-    .quill-editor {
-      height: 100%;
-    }
     .ql-toolbar {
       display: inherit;
     }
