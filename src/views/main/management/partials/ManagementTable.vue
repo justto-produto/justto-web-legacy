@@ -146,32 +146,35 @@
             v-if="scope.row.lastReceivedMessage"
             trigger="hover"
             popper-class="el-popover--dark"
-            @after-leave="hideResponseBox()">
-            <strong>
-              <jus-icon :icon="getInteractionIcon(scope.row.lastReceivedMessage)" is-white />
-              {{ getLastInteractionTooltip(scope.row.lastReceivedMessage) }}
-              recebido em
-              {{ scope.row.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
-            </strong><br>
-            <div v-if="scope.row.lastReceivedMessage && scope.row.lastReceivedMessage.message">
-              <span v-if="scope.row.lastReceivedMessage.message.sender">
-                De: {{ scope.row.lastReceivedMessage.message.sender | phoneMask }}
-              </span>
-              <br>
-              <span
+            @show="startResponseBox(scope.row.id)"
+            @after-leave="hideResponseBox(scope.row.id)">
+            <div>
+              <strong>
+                <jus-icon :icon="getInteractionIcon(scope.row.lastReceivedMessage)" is-white />
+                {{ getLastInteractionTooltip(scope.row.lastReceivedMessage) }}
+                recebido em
+                {{ scope.row.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+              </strong><br>
+              <div v-if="scope.row.lastReceivedMessage && scope.row.lastReceivedMessage.message">
+                <span v-if="scope.row.lastReceivedMessage.message.sender">
+                  De: {{ scope.row.lastReceivedMessage.message.sender | phoneMask }}
+                </span>
+                <br>
+                <span
                 v-if="scope.row.lastReceivedMessage.message.resume"
                 class="management-table__last-interaction-tooltip"
                 v-html="'Resumo: ' + scope.row.lastReceivedMessage.message.resume + (scope.row.lastReceivedMessage.message.resume.length > 139 ? '...' : '')" />
-            </div>
-            <div class="" style="width: 100%;text-align: right;">
-              <el-button v-if="!responseBoxVisible" size="mini" icon="el-icon-s-promotion" style="margin-top: 10px;" @click="showResponseBox(scope.row.id)">Responder</el-button>
-              <div v-else>
-                <el-button type="text" size="mini" icon="el-icon-top-right">
-                  Expandir
-                </el-button>
-                <el-input v-model="message" type="textarea" rows="4" placeholder="Escreva alguma coisa" style="padding-bottom: 10px" />
-                <el-button size="mini" @click="hideResponseBox()">Cancelar</el-button>
-                <el-button size="mini" icon="el-icon-s-promotion">Enviar</el-button>
+              </div>
+              <div class="" style="width: 100%;text-align: right;min-width:300px">
+                <el-button v-if="!responseBoxVisible" size="mini" icon="el-icon-s-promotion" style="margin-top: 10px;" @click="showResponseBox(scope.row.id)">Responder</el-button>
+                <div v-else>
+                  <el-button type="text" size="mini" icon="el-icon-top-right" @click="openResponseDialog(scope.row.lastReceivedMessage)">
+                    Expandir
+                  </el-button>
+                  <el-input v-model="message" type="textarea" rows="4" placeholder="Escreva alguma coisa" style="padding-bottom: 10px" />
+                  <el-button size="mini" @click="hideResponseBox(scope.row.id, true)">Cancelar</el-button>
+                  <el-button size="mini" icon="el-icon-s-promotion" @click="sendMessage()">Enviar</el-button>
+                </div>
               </div>
             </div>
             <div slot="reference">
@@ -184,32 +187,6 @@
               </span>
             </div>
           </el-popover>
-          <!-- <el-tooltip v-if="scope.row.lastReceivedMessage" popper-class="el-popover--dark">
-            <div slot="content">
-              <strong>
-                <jus-icon :icon="getInteractionIcon(scope.row.lastReceivedMessage)" is-white />
-                {{ getLastInteractionTooltip(scope.row.lastReceivedMessage) }}
-                recebido em
-                {{ scope.row.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
-              </strong><br>
-              <div v-if="scope.row.lastReceivedMessage && scope.row.lastReceivedMessage.message">
-                <span v-if="scope.row.lastReceivedMessage.message.sender">
-                  De: {{ scope.row.lastReceivedMessage.message.sender | phoneMask }}
-                </span>
-                <br>
-                <span v-if="scope.row.lastReceivedMessage.message.resume" class="management-table__last-interaction-tooltip" v-html="'Resumo: ' + scope.row.lastReceivedMessage.message.resume" />
-              </div>
-            </div>
-            <div>
-              <span class="position-relative" style="vertical-align: middle;">
-                <jus-icon v-if="scope.row.lastReceivedMessage" :icon="getInteractionIcon(scope.row.lastReceivedMessage)" class="management-table__interaction-icon" />
-                <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
-              </span>
-              <span style="margin-left: 4px;">
-                {{ getLastInteraction(scope.row.lastReceivedMessage.createAt.dateTime) }}
-              </span>
-            </div>
-          </el-tooltip> -->
         </template>
       </el-table-column>
       <el-table-column
@@ -310,6 +287,15 @@
         </span>
       </template>
     </el-table>
+    <el-dialog
+    title="Enviar mensagem"
+    :visible.sync="responseDialogVisible">
+    <span>This is a message</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="responseDialogVisible = false">Cancel</el-button>
+      <el-button type="primary" @click="responseDialogVisible = false">Confirm</el-button>
+    </span>
+  </el-dialog>
   </div>
 </template>
 
@@ -344,7 +330,10 @@ export default {
       disputeKey: 0,
       messageSummary: {},
       message: '',
-      responseBoxVisible: false
+      messageCache: {},
+      responseBoxVisible: false,
+      responseBoxLoading: false,
+      responseDialogVisible: false
     }
   },
   computed: {
@@ -382,11 +371,39 @@ export default {
     }
   },
   methods: {
+    startResponseBox (id) {
+      this.message = ''
+      setTimeout(() => {
+        if (this.messageCache[id]) {
+          this.message = this.messageCache[id]
+          this.responseBoxVisible = true
+        }
+      }, 100)
+    },
     showResponseBox (id) {
       this.responseBoxVisible = true
     },
-    hideResponseBox () {
+    hideResponseBox (id, cancel) {
+      if (cancel) {
+        delete this.messageCache[id]
+      }
+      else if (this.message) {
+        this.messageCache[id] = this.message
+      }
+      this.message = ''
       this.responseBoxVisible = false
+    },
+    openResponseDialog(lastReceivedMessage) {
+      this.responseDialogVisible = true
+    },
+    sendMessage () {
+      if (this.message.trim().replace('\n', '')) {
+        this.responseBoxLoading = true
+        setTimeout(() => {
+          alert('mensagem enviada com sucesso')
+          this.responseBoxLoading = false
+        }, 1500)
+      }
     },
     getLastInteraction: (i) => getLastInteraction(i),
     getInteractionIcon: (i) => getInteractionIcon(i),
@@ -397,7 +414,7 @@ export default {
       }
     },
     handleRowClick (row, column, event) {
-      if (row.id && !['IMG', 'SPAN', 'BUTTON'].includes(event.target.tagName)) {
+      if (row.id && !['IMG', 'SPAN', 'BUTTON'].includes(event.target.tagName) && !this.responseBoxVisible) {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
