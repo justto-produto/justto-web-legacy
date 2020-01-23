@@ -296,19 +296,29 @@
       :show-close="false"
       class="management-table__response-dialog"
       title="Enviar mensagem">
-      <quill-editor
-        v-loading="responseBoxLoading"
-        v-if="responseDialogVisible"
-        ref="messageEditor"
-        v-model="emailMessage"
-        :options="editorOptions" />
+      <div v-if="Object.keys(responseRow).length">
+        Processo <b>{{ responseRow.code }}</b><br>
+        Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b><br>
+        Alçada máxima é de <b>{{ responseRow.disputeUpperRange | currency }}</b><br>
+        E última proposta foi de <b>{{ responseRow.lastOfferValue | currency }}</b><br>
+        <br>
+        Destinatário: <b>{{ responseRow.lastReceivedMessage.message.sender | phoneMask }}</b>
+        <br><br>
+        <quill-editor
+          v-loading="responseBoxLoading"
+          v-if="responseDialogVisible"
+          ref="messageEditor"
+          v-model="emailMessage"
+          :class="{ 'show-toolbar': responseRow.lastReceivedMessage.message.communicationType === 'EMAIL' }"
+          :options="editorOptions" />
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button :disabled="responseBoxLoading" plain @click="responseDialogVisible = false">Cancelar</el-button>
         <el-button
           :loading="responseBoxLoading"
           type="primary"
           icon="el-icon-s-promotion"
-          @click="sendMessage(responseRowToEdit)">
+          @click="sendMessage(responseRow)">
           Enviar
         </el-button>
       </span>
@@ -363,7 +373,7 @@ export default {
       responseBoxVisible: false,
       responseBoxLoading: false,
       responseDialogVisible: false,
-      responseRowToEdit: 0,
+      responseRow: {},
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
         modules: {
@@ -433,7 +443,7 @@ export default {
       this.responseBoxVisible = false
     },
     openResponseDialog (row) {
-      this.responseRowToEdit = row
+      this.responseRow = row
       this.responseDialogVisible = true
       this.emailMessage = this.message + ''
     },
@@ -647,11 +657,14 @@ export default {
   }
   &__response-dialog {
     .quill-editor {
+      background-color: #eaeaed;
+      padding: 0 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
       min-height: 300px;
       height: 30vh;
-    }
-    .ql-toolbar {
-      display: inherit !important;
+      &.show-toolbar .ql-toolbar {
+        display: inherit !important;
+      }
     }
   }
 }
