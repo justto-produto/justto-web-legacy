@@ -294,13 +294,25 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :show-close="false"
-      class="management-table__response-dialog"
-      title="Enviar mensagem">
+      :title="`Resposta ao processo ${responseRow.code}`"
+      class="management-table__response-dialog">
       <div v-if="Object.keys(responseRow).length">
-        Processo <b>{{ responseRow.code }}</b><br>
-        Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b><br>
-        Alçada máxima é de <b>{{ responseRow.disputeUpperRange | currency }}</b><br>
-        E última proposta foi de <b>{{ responseRow.lastOfferValue | currency }}</b><br>
+        Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b>.
+        <br>
+        Alçada máxima é de <b>{{ responseRow.disputeUpperRange | currency }}</b>
+        <br>
+        Última proposta foi de <b>{{ responseRow.lastOfferValue | currency }}</b>
+        <br>
+        <span v-if="responseRow.lastCounterOfferValue">
+          Contra proposta de <b>{{ responseRow.lastCounterOfferValue | currency }}</b>
+        </span>
+        <span v-else>
+          <b>Ainda não houveram contrapropostas</b>
+        </span>
+        <br><br>
+        Resposta via:
+        <jus-icon :icon="responseRow.lastReceivedMessage.message.communicationType.toLowerCase()" />
+        <b>{{ responseRow.lastReceivedMessage.message.communicationType.toLowerCase() | capitalize }}</b>
         <br>
         Destinatário: <b>{{ responseRow.lastReceivedMessage.message.sender | phoneMask }}</b>
         <br><br>
@@ -665,6 +677,10 @@ export default {
       &.show-toolbar .ql-toolbar {
         display: inherit !important;
       }
+    }
+    img {
+      width: 14px;
+      margin: 0 4px 0 2px;
     }
   }
 }
