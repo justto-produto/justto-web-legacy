@@ -860,6 +860,9 @@ export default {
             disputeToEdit.description = this.disputeForm.description
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
+            let currentDate = this.dispute.expirationDate.dateTime
+            let newDate = disputeToEdit.expirationDate.dateTime
+            let today = this.$moment()
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               this.$jusNotification({
                 title: 'Yay!',
@@ -870,6 +873,25 @@ export default {
                 this.$emit('fetch-data')
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
+              if (this.$moment(currentDate).isBefore(today) && this.$moment(newDate).isSameOrAfter(today)) {
+                this.$confirm('A data de expiração foi alterada. Deseja reiniciar o engajamento para esta disputa?', 'Atenção!', {
+                  confirmButtonText: 'Reengajar',
+                  cancelButtonText: 'Cancelar',
+                  cancelButtonClass: 'is-plain',
+                  type: 'warning'
+                }).then(() => {
+                  this.$store.dispatch('sendDisputeAction', {
+                    action: 'restart-engagement',
+                    disputeId: this.dispute.id
+                  }).then(() => {
+                    this.$jusNotification({
+                      title: 'Yay!',
+                      message: 'Reengajamento realizado com sucesso.',
+                      type: 'success'
+                    })
+                  })
+                })
+              }
             }).catch(() => {
               this.$jusNotification({ type: 'error' })
             }).finally(() => {
