@@ -307,7 +307,7 @@
           Contra proposta de <b>{{ responseRow.lastCounterOfferValue | currency }}</b>
         </span>
         <span v-else>
-          <b>Ainda não houveram contrapropostas</b>
+          <b>Ainda não houve contraproposta</b>
         </span>
         <br><br>
         Resposta via:
