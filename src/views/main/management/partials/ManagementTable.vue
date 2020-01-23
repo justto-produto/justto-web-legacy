@@ -51,16 +51,16 @@
                 Total de clicks: {{ messageSummary.countClick }}
               </div>
               <div v-if="messageSummary.firstVisualizationDate !== null">
-                Primeira visualização: {{ messageSummary.firstVisualizationDate | moment('DD/MM/YYYY [às] HH:mm') }}
+                Primeira visualização: {{ messageSummary.firstVisualizationDate.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
               </div>
               <div v-if="messageSummary.lastVisualizationDate !== null">
-                Última visualização: {{ messageSummary.lastVisualizationDate | moment('DD/MM/YYYY [às] HH:mm') }}
+                Última visualização: {{ messageSummary.lastVisualizationDate.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
               </div>
               <div v-if="messageSummary.firstClickDate !== null">
-                Primeiro click: {{ messageSummary.firstClickDate | moment('DD/MM/YYYY [às] HH:mm') }}
+                Primeiro click: {{ messageSummary.firstClickDate.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
               </div>
               <div v-if="messageSummary.lastClickDate !== null">
-                Último click: {{ messageSummary.lastClickDate | moment('DD/MM/YYYY [às] HH:mm') }}
+                Último click: {{ messageSummary.lastClickDate.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
               </div>
             </span>
             <jus-icon slot="reference" :icon="'status-' + (scope.row.lastOutboundInteraction.message.parameters.READ_DATE ? 2 : 0)" />
