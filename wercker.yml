@@ -64,23 +64,23 @@ build:
               --header 'Content-Type: application/json' \
               --header 'cache-control: no-cache' \
               --data '{"pipelineId": "5dc18143b7da88a8009460a3","branch": "prod", "message": "Deploying latest version to microservice '$PROJECT_NAME':'$CURRENT_VERSION'","envVars": [ {"key":"service_name","value":"'$PROJECT_NAME'" }]}'
-test-e2e:
-  # Read more about containers on our dev center
-  # https://devcenter.wercker.com/overview-and-core-concepts/containers/
-  box: node:latest
-  # Steps make up the actions in your pipeline
-  # Read more about steps on our dev center:
-  # https://devcenter.wercker.com/development/steps/
-  steps:
-    - script:
-      name: Configure git
-      code: git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
-    - script:
-      name: Pull develop branch
-      code: |
-        printenv
-    - internal/docker-build:
-        name: Run Test E2E
-        dockerfile: Dockerfile-test
-        image-name: e2e-test
-        tag: e2e-test
+# test-e2e:
+#   # Read more about containers on our dev center
+#   # https://devcenter.wercker.com/overview-and-core-concepts/containers/
+#   box: node:latest
+#   # Steps make up the actions in your pipeline
+#   # Read more about steps on our dev center:
+#   # https://devcenter.wercker.com/development/steps/
+#   steps:
+#     - script:
+#       name: Configure git
+#       code: git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
+#     - script:
+#       name: Pull develop branch
+#       code: |
+#         printenv
+#     - internal/docker-build:
+#         name: Run Test E2E
+#         dockerfile: Dockerfile-test
+#         image-name: e2e-test
+#         tag: e2e-test
