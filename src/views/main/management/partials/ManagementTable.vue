@@ -320,7 +320,7 @@
           v-loading="responseBoxLoading"
           v-if="responseDialogVisible"
           ref="messageEditor"
-          v-model="emailMessage"
+          v-model="richMessage"
           :class="{ 'show-toolbar': responseRow.lastReceivedMessage.message.communicationType === 'EMAIL' }"
           :options="editorOptions" />
       </div>
@@ -380,7 +380,7 @@ export default {
       disputeKey: 0,
       messageSummary: {},
       message: '',
-      emailMessage: '',
+      richMessage: '',
       messageCache: {},
       responseBoxVisible: false,
       responseBoxLoading: false,
@@ -457,18 +457,20 @@ export default {
     openResponseDialog (row) {
       this.responseRow = row
       this.responseDialogVisible = true
-      this.emailMessage = this.message + ''
+      this.richMessage = this.message + ''
     },
     sendMessage (dispute) {
-      if (this.message.trim().replace('\n', '') || this.emailMessage.trim().replace('\n', '')) {
+      if (this.message.trim().replace('\n', '') || this.richMessage.trim().replace('\n', '')) {
+        debugger
+        let message = this.richMessage ? this.richMessage : this.message
         this.responseBoxLoading = true
         this.$store.dispatch('send' + dispute.lastReceivedMessage.message.communicationType.toLowerCase(), {
           to: [{ address: dispute.lastReceivedMessage.message.sender }],
-          message: this.message,
+          message,
           disputeId: dispute.id
         }).then(() => {
           this.message = ''
-          this.emailMessage = ''
+          this.richMessage = ''
           this.responseDialogVisible = false
           this.$jusNotification({
             title: 'Yay!',
