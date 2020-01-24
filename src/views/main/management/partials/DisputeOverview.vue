@@ -669,7 +669,7 @@ export default {
     },
     selectedRole: {
       get () { return this.activeRoleId },
-      set () {}
+      set (newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) }
     },
     strategies () {
       return this.$store.getters.strategyList
@@ -734,6 +734,11 @@ export default {
     },
     banks () {
       return this.$store.getters.banksList
+    }
+  },
+  watch: {
+    activeRoleId: function (newActiveRole) {
+      if (newActiveRole === 0) this.handleChange('')
     }
   },
   methods: {
@@ -921,14 +926,13 @@ export default {
     handleChange (val) {
       if (!val) {
         this.selectedPhone = 0
-        this.dispute.disputeRoles.map(dr => {
+        this.dispute.disputeRoles.forEach(dr => {
           dr.phones.forEach(p => { p.selected = false })
           dr.emails.forEach(e => { e.selected = false })
           dr.oabs.forEach(o => { o.selected = false })
           return dr
         })
       }
-      this.$emit('update:activeRoleId', val || 0)
     },
     openRoleDialog (role) {
       this.bankAccountIdstoUnlink = []
