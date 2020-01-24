@@ -16,4 +16,4 @@ COPY babel.config.js babel.config.js
 ENV VUE_APP_BASE_URL=https://justto.app
 
 # rerun E2E tests only if any of the previous files change
-RUN npx vue-cli-service test:e2e --headless --browser chrome
+# RUN npx vue-cli-service test:e2e --headless --browser chrome
