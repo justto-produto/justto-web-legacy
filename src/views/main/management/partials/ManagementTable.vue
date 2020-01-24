@@ -5,10 +5,12 @@
       :dispute-id.sync="selectedDisputeId"
       :dispute-roles.sync="selectedDisputeRoles" />
     <el-table
+      v-loading="responseBoxLoading"
       ref="disputeTable"
       :key="disputeKey"
       :data.sync="disputes"
       :row-class-name="tableRowClassName"
+      element-loading-text="Enviando mensagem..."
       size="mini"
       empty-text=" "
       height="100%"
@@ -27,7 +29,7 @@
           <el-popover
             v-if="!!scope.row.lastOutboundInteraction"
             trigger="hover"
-            popper-class="info"
+            popper-class="el-popover--dark"
             @show="getMessageSummary(scope.row.lastOutboundInteraction, scope.row.id)"
             @hide="messageSummary = {}">
             <strong>
@@ -142,8 +144,13 @@
         min-width="136px"
         align="center">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.lastReceivedMessage" popper-class="info">
-            <div slot="content">
+          <el-popover
+            v-if="scope.row.lastReceivedMessage"
+            trigger="hover"
+            popper-class="el-popover--dark"
+            @after-enter="startResponseBox(scope.row.id)"
+            @hide="hideResponseBox(scope.row.id)">
+            <div>
               <strong>
                 <jus-icon :icon="getInteractionIcon(scope.row.lastReceivedMessage)" is-white />
                 {{ getLastInteractionTooltip(scope.row.lastReceivedMessage) }}
@@ -155,10 +162,24 @@
                   De: {{ scope.row.lastReceivedMessage.message.sender | phoneMask }}
                 </span>
                 <br>
-                <span v-if="scope.row.lastReceivedMessage.message.resume" class="management-table__last-interaction-tooltip" v-html="'Resumo: ' + scope.row.lastReceivedMessage.message.resume" />
+                <span
+                  v-if="scope.row.lastReceivedMessage.message.resume"
+                  class="management-table__last-interaction-tooltip"
+                  v-html="'Resumo: ' + scope.row.lastReceivedMessage.message.resume + (scope.row.lastReceivedMessage.message.resume.length > 139 ? '...' : '')" />
+              </div>
+              <div class="" style="width: 100%;text-align: right;min-width:300px">
+                <el-button v-if="!responseBoxVisible" size="mini" icon="el-icon-s-promotion" style="margin-top: 10px;" @click="showResponseBox(scope.row.id)">Responder</el-button>
+                <div v-else>
+                  <el-button type="text" size="mini" icon="el-icon-top-right" @click="openResponseDialog(scope.row)">
+                    Expandir
+                  </el-button>
+                  <el-input v-model="message" type="textarea" rows="4" placeholder="Escreva alguma coisa" style="padding-bottom: 10px" />
+                  <el-button size="mini" @click="hideResponseBox(scope.row.id, true)">Cancelar</el-button>
+                  <el-button size="mini" icon="el-icon-s-promotion" @click="sendMessage(scope.row)">Enviar</el-button>
+                </div>
               </div>
             </div>
-            <div>
+            <div slot="reference">
               <span class="position-relative" style="vertical-align: middle;">
                 <jus-icon v-if="scope.row.lastReceivedMessage" :icon="getInteractionIcon(scope.row.lastReceivedMessage)" class="management-table__interaction-icon" />
                 <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
@@ -167,7 +188,7 @@
                 {{ getLastInteraction(scope.row.lastReceivedMessage.createAt.dateTime) }}
               </span>
             </div>
-          </el-tooltip>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column
@@ -268,17 +289,74 @@
         </span>
       </template>
     </el-table>
+    <el-dialog
+      :visible.sync="responseDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      :title="`Resposta ao processo ${responseRow.code}`"
+      class="management-table__response-dialog">
+      <div v-if="Object.keys(responseRow).length">
+        Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b>.
+        <br>
+        Alçada máxima é de <b>{{ responseRow.disputeUpperRange | currency }}</b>
+        <br>
+        Última proposta foi de <b>{{ responseRow.lastOfferValue | currency }}</b>
+        <br>
+        <span v-if="responseRow.lastCounterOfferValue">
+          Contra proposta de <b>{{ responseRow.lastCounterOfferValue | currency }}</b>
+        </span>
+        <span v-else>
+          <b>Ainda não houve contraproposta</b>
+        </span>
+        <br><br>
+        Resposta via:
+        <jus-icon :icon="responseRow.lastReceivedMessage.message.communicationType.toLowerCase()" />
+        <b>{{ responseRow.lastReceivedMessage.message.communicationType.toLowerCase() | capitalize }}</b>
+        <br>
+        Destinatário: <b>{{ responseRow.lastReceivedMessage.message.sender | phoneMask }}</b>
+        <br><br>
+        <quill-editor
+          v-loading="responseBoxLoading"
+          v-if="responseDialogVisible"
+          ref="messageEditor"
+          v-model="emailMessage"
+          :class="{ 'show-toolbar': responseRow.lastReceivedMessage.message.communicationType === 'EMAIL' }"
+          :options="editorOptions" />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button :disabled="responseBoxLoading" plain @click="responseDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="responseBoxLoading"
+          type="primary"
+          icon="el-icon-s-promotion"
+          @click="sendMessage(responseRow)">
+          Enviar
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getLastInteraction, getInteractionIcon, getLastInteractionTooltip } from '@/utils/jusUtils'
+import { quillEditor } from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import Quill from 'quill'
+const SizeStyle = Quill.import('attributors/style/size')
+const AlignStyle = Quill.import('attributors/style/align')
+Quill.register(AlignStyle, true)
+Quill.register(SizeStyle, true)
 
 export default {
   name: 'ManagementTable',
   components: {
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
-    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
+    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
+    quillEditor
   },
   props: {
     activeTab: {
@@ -300,7 +378,26 @@ export default {
       selectedDisputeId: 0,
       selectedDisputeRoles: [],
       disputeKey: 0,
-      messageSummary: {}
+      messageSummary: {},
+      message: '',
+      emailMessage: '',
+      messageCache: {},
+      responseBoxVisible: false,
+      responseBoxLoading: false,
+      responseDialogVisible: false,
+      responseRow: {},
+      editorOptions: {
+        placeholder: 'Escreva alguma coisa',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['blockquote'],
+            ['clean']
+          ]
+        }
+      }
     }
   },
   computed: {
@@ -338,6 +435,53 @@ export default {
     }
   },
   methods: {
+    startResponseBox (id) {
+      this.message = ''
+      if (this.messageCache[id]) {
+        this.message = this.messageCache[id]
+        this.responseBoxVisible = true
+      }
+    },
+    showResponseBox (id) {
+      this.responseBoxVisible = true
+    },
+    hideResponseBox (id, cancel) {
+      if (cancel) {
+        delete this.messageCache[id]
+      } else if (this.message) {
+        this.messageCache[id] = this.message
+      }
+      this.message = ''
+      this.responseBoxVisible = false
+    },
+    openResponseDialog (row) {
+      this.responseRow = row
+      this.responseDialogVisible = true
+      this.emailMessage = this.message + ''
+    },
+    sendMessage (dispute) {
+      if (this.message.trim().replace('\n', '') || this.emailMessage.trim().replace('\n', '')) {
+        this.responseBoxLoading = true
+        this.$store.dispatch('send' + dispute.lastReceivedMessage.message.communicationType.toLowerCase(), {
+          to: [{ address: dispute.lastReceivedMessage.message.sender }],
+          message: this.message,
+          disputeId: dispute.id
+        }).then(() => {
+          this.message = ''
+          this.emailMessage = ''
+          this.responseDialogVisible = false
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Mensagem enviada com sucesso.',
+            type: 'success'
+          })
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.responseBoxLoading = false
+        })
+      }
+    },
     getLastInteraction: (i) => getLastInteraction(i),
     getInteractionIcon: (i) => getInteractionIcon(i),
     getLastInteractionTooltip: (i) => getLastInteractionTooltip(i),
@@ -522,6 +666,22 @@ export default {
   }
   .el-table__empty-block {
     width: auto !important;
+  }
+  &__response-dialog {
+    .quill-editor {
+      background-color: #eaeaed;
+      padding: 0 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+      min-height: 300px;
+      height: 30vh;
+      &.show-toolbar .ql-toolbar {
+        display: inherit !important;
+      }
+    }
+    img {
+      width: 14px;
+      margin: 0 4px 0 2px;
+    }
   }
 }
 </style>

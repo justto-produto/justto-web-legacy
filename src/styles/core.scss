@@ -5,141 +5,109 @@ html {
   font-size: 14px;
   color: $--color-text-regular;
 }
-
 * {
   font-family: 'Montserrat', sans-serif !important;
   box-sizing: border-box;
   outline: none;
 }
-
 body, html, #app, section:not(.ps-container) {
   height: 100%;
   margin: 0;
   background-color: $--background-color-base;
 }
-
 h1 {
   font-size: 30px;
 }
-
 h2 {
   font-size: 20px;
 }
-
 h3 {
   font-size: 16px;
 }
-
 h4 {
   font-size: 14px;
 }
-
 h5 {
   font-size: 12px;
 }
-
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   margin: 20px 0;
 }
-
 hr {
   border: solid 0.6px #eeeeee;
 }
-
 a {
   cursor: pointer;
 }
-
 .my20 {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-
 .mt20 {
   margin-top: 20px;
 }
-
 .mt40 {
   margin-top: 40px;
 }
-
 .mb10 {
   margin-bottom: 10px;
 }
-
 .mb20 {
   margin-bottom: 20px;
 }
-
 .mb30 {
   margin-bottom: 30px;
 }
-
 .mb40 {
   margin-bottom: 40px;
 }
-
 .overflow-hidden {
   overflow: hidden;
 }
-
 .display-flex {
   display: flex !important;
 }
-
 .align-center {
   align-items: center !important;
 }
-
 .justify-center {
   justify-content: center !important;
 }
-
 .position-relative {
   position: relative !important;
 }
-
 .position-absolute {
   position: absolute !important;
 }
-
 .border-bottom {
   border-bottom: solid 1px #eeeeee;
 }
-
 .border-top-bottom {
   border-top: solid 1px #eeeeee;
   border-bottom: solid 1px #eeeeee;
 }
-
 .h100 {
   height: 100%
 }
-
 .w100 {
   width: 100%;
 }
-
 .visible > * {
   visibility: visible !important;
 }
-
 .left {
   float: left;
 }
 .right {
   float: right;
 }
-
 ::placeholder {
   font-weight: 300 !important;
 }
-
 .text-right {
   text-align: right;
 }
-
 @keyframes dots {
   0%, 20% {
     color: rgba(0,0,0,0);
@@ -164,7 +132,6 @@ a {
       .5em 0 0 #adadad;
   }
 }
-
 @keyframes throbber-fade {
   0%,to {
     opacity: .3
