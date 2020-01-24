@@ -461,7 +461,6 @@ export default {
     },
     sendMessage (dispute) {
       if (this.message.trim().replace('\n', '') || this.richMessage.trim().replace('\n', '')) {
-        debugger
         let message = this.richMessage ? this.richMessage : this.message
         this.responseBoxLoading = true
         this.$store.dispatch('send' + dispute.lastReceivedMessage.message.communicationType.toLowerCase(), {
