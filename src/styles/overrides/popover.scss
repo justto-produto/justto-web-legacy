@@ -1,5 +1,5 @@
 .el-popover {
-  &.info {
+  &--dark {
     background-color: #343c4b;
     color: white;
     border-color: #343c4b;
@@ -13,6 +13,12 @@
       display: flex;
       align-items: center;
       margin-bottom: 4px;
+    }
+    .popper__arrow {
+      border-bottom-color: #343b4b !important;
+      &::after {
+        border-bottom-color: #343b4b !important;
+      }
     }
   }
 }

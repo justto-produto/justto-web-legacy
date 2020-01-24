@@ -29,10 +29,11 @@
           ref="disputeOccurrences"
           :dispute-id="id"
           :style="{ opacity: expandedMessageBox ? 0.2 : 1 }"
-          data-testid="dispute-messages" />
+          data-testid="dispute-messages"
+          @dispute:reply="startReply" />
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
-          <div v-show="selectedContacts && selectedContacts.length" class="dispute-view__send-to">
+          <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
             Destinatário(s):
             <span v-for="(selected, index) in selectedContacts" :key="selected.id">
               <span v-if="index === 0">
@@ -73,8 +74,7 @@
                 shadow="always">
                 <i
                   v-if="expandedMessageBox"
-                  class="el-icon-arrow-down"
-                  style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
+                  class="el-icon-arrow-down dispute-view__collapse-message-box"
                   @click="collapseTextarea()" />
                 <div v-if="validName" :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
                   <quill-editor
@@ -136,7 +136,14 @@
                       </div>
                       <span v-if="validName">
                         <el-button
-                          :disabled="invalidReceiver || !activeRole.personId"
+                          v-if="!!directEmailAddress"
+                          size="medium"
+                          plain
+                          @click="cancelReplyDialog()">
+                          Cancelar resposta
+                        </el-button>
+                        <el-button
+                          :disabled="!(!(invalidReceiver || !activeRole.personId) || !!directEmailAddress)"
                           type="primary"
                           size="medium"
                           data-testid="submit-message"
@@ -160,17 +167,16 @@
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <i
                   v-if="expandedMessageBox"
-                  class="el-icon-arrow-down"
-                  style="position: absolute;right: 20px;top: 20px;font-size: 22px;cursor:pointer"
+                  class="el-icon-arrow-down dispute-view__collapse-message-box"
                   @click="collapseTextarea()" />
-                <el-input
-                  v-model="newNote"
-                  :rows="expandedMessageBox ? 10 : 1"
-                  data-testid="input-note"
-                  placeholder="Escreva alguma coisa"
-                  type="textarea"
-                  @focus="expandTextarea()"
-                  @blur="collapseTextarea()" />
+                <div :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
+                  <quill-editor
+                    v-model="newNote"
+                    :options="editorOptions"
+                    data-testid="input-note"
+                    @focus="expandTextarea()"
+                    @blur="collapseTextarea(true)" />
+                </div>
                 <div class="dispute-view__send-message-actions note">
                   <el-button
                     :disabled="!newNote.trim().replace('\n', '')"
@@ -250,6 +256,7 @@ export default {
       activeRole: {},
       isCollapsed: false,
       expandedMessageBox: false,
+      directEmailAddress: '',
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
         modules: {
@@ -293,6 +300,9 @@ export default {
       return this.$store.getters.messageRecentMessages
     },
     selectedContacts () {
+      if (this.directEmailAddress) {
+        return [{ id: 0, address: this.directEmailAddress }]
+      }
       switch (this.messageType) {
         case 'email':
           return this.activeRole.emails ? this.activeRole.emails.filter(e => e.selected) : []
@@ -313,6 +323,9 @@ export default {
         case 'cna':
           return this.activeRole.invalidOab
       }
+    },
+    newMessageTrim () {
+      return this.newMessage.toLowerCase().trim().replace('\n', '')
     }
   },
   watch: {
@@ -327,7 +340,9 @@ export default {
       this.$refs.disputeOccurrences.fetchData()
     },
     activeRoleId (activeRoleId) {
-      this.updateActiveRole(activeRoleId)
+      if (activeRoleId !== -1) {
+        this.updateActiveRole(activeRoleId)
+      }
     },
     isPaused () {
       this.loadingKey = this.loadingKey + 1
@@ -350,6 +365,70 @@ export default {
     this.unsubscribeOccurrences(this.id)
   },
   methods: {
+    startReply (params) {
+      this.setMessageType('email').then(() => {
+        this.expandTextarea()
+        this.activeRoleId = 0
+        this.directEmailAddress = params.sender
+        this.$refs.messageEditor.quill.setText('\n\n___________________\n' + params.resume)
+      })
+    },
+    cancelReplyDialog () {
+      this.$confirm('Tem certeza que deseja sair? A mensagem será perdida.', {
+        confirmButtonText: 'Sair',
+        cancelButtonText: 'Permanecer',
+        title: 'Atenção!',
+        type: 'warning',
+        cancelButtonClass: 'is-plain'
+      }).then(() => {
+        this.cancelReply(true)
+      })
+    },
+    cancelReply (collapse) {
+      this.directEmailAddress = ''
+      this.$refs.messageEditor.quill.setText('')
+      if (collapse) this.collapseTextarea()
+    },
+    setMessageType (type) {
+      return new Promise((resolve, reject) => {
+        if (this.newMessageTrim) {
+          this.$confirm('Tem certeza que deseja sair? A mensagem será perdida.', {
+            confirmButtonText: 'Sair',
+            cancelButtonText: 'Permanecer',
+            title: 'Atenção!',
+            type: 'warning',
+            cancelButtonClass: 'is-plain'
+          }).then(() => {
+            this.cancelReply(true)
+            resolve(this.changeMessageType(type))
+          }).catch(e => {
+            reject(e)
+          })
+        } else {
+          resolve(this.changeMessageType(type))
+        }
+      })
+    },
+    changeMessageType (type) {
+      return new Promise((resolve) => {
+        this.newMessage = ''
+        this.messageType = ''
+        this.messageType = type
+        setTimeout(() => {
+          switch (type) {
+            case 'whatsapp':
+            case 'cna':
+              this.$nextTick(() => this.$refs.messageTextArea.focus())
+              break
+            case 'email':
+              this.$nextTick(() => this.$refs.messageEditor.quill.focus())
+              break
+          }
+          this.$forceUpdate()
+          resolve()
+        }, 200)
+      })
+    },
     updateActiveRole (params) {
       if (typeof params === 'number') {
         if (params === 0) {
@@ -369,20 +448,8 @@ export default {
       } else {
         this.activeRole = {}
       }
-      if (this.typingTab !== '1') this.typingTab = '1'
-      if (params.messageType) {
-        this.setMessageType(params.messageType)
-        switch (params.messageType) {
-          case 'whatsapp':
-          case 'cna':
-            this.$nextTick(() => this.$refs.messageTextArea.focus())
-            break
-          case 'email':
-            this.$nextTick(() => this.$refs.messageEditor.quill.focus())
-            break
-        }
-        this.$forceUpdate()
-      }
+      if (this.typingTab !== '1' && params.activeRole) this.typingTab = '1'
+      if (params.messageType) this.setMessageType(params.messageType)
     },
     unsubscribeOccurrences (id) {
       this.$store.commit('clearDisputeOccurrences')
@@ -433,45 +500,14 @@ export default {
     handleTabClick (tab) {
       if (tab.name !== '1') this.activeRoleId = 0
       this.collapseTextarea()
+      this.typingTab = tab.name
     },
     handleBeforeLeaveTabs () {
       this.$store.commit('clearOccurrencesSize')
     },
-    setMessageType (type) {
-      this.messageType = ''
-      this.messageType = type
-    },
-    newLineChat () {
-      this.newChatMessage = `${this.newChatMessage}\n`
-    },
-    newLineNote () {
-      this.newNote = `${this.newNote}\n`
-    },
-    sendChatMessage () {
-      this.loadingTextarea = true
-      if (this.newChatMessage.trim().replace('\n', '')) {
-        this.$store.dispatch('sendMessageEvent', {
-          id: this.dispute.id,
-          data: {
-            value: this.newChatMessage,
-            sender: {
-              personId: this.$store.getters.personId,
-              name: this.$store.getters.personName
-            }
-          }
-        }).then(() => {
-          this.newChatMessage = ''
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.loadingTextarea = false
-        })
-      }
-    },
     sendMessage () {
       if (this.messageType === 'whatsapp') {
-        var newMessageTrim = this.newMessage.toLowerCase().trim().replace('\n', '')
-        if (checkMessage(newMessageTrim, this.recentMessages)) {
+        if (checkMessage(this.newMessageTrim, this.recentMessages)) {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
@@ -480,10 +516,10 @@ export default {
           return false
         } else {
           this.$store.state.messageModule.recentMessages.push({
-            messageBody: newMessageTrim,
+            messageBody: this.newMessageTrim,
             selfDestroy: () => (setTimeout(() => {
               for (var i = 0; i < this.recentMessages.length; i++) {
-                if (newMessageTrim === this.recentMessages[i].messageBody) {
+                if (this.newMessageTrim === this.recentMessages[i].messageBody) {
                   this.recentMessages.splice(i, 1)
                 }
               }
@@ -493,18 +529,27 @@ export default {
           this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
         }
       }
-      if (this.newMessage.trim().replace('\n', '') && this.activeRole.personId && !this.invalidReceiver) {
+      if (this.newMessageTrim) {
         this.loadingTextarea = true
-        this.$store.dispatch('send' + this.messageType, {
-          to: [{
+        let to = []
+        if (this.directEmailAddress) {
+          to.push({
+            address: this.directEmailAddress
+          })
+        } else {
+          to.push({
             roleId: this.activeRole.id,
             contactsId: this.selectedContacts.map(c => c.id)
-          }],
+          })
+        }
+        this.$store.dispatch('send' + this.messageType, {
+          to,
           message: this.newMessage,
           disputeId: this.dispute.id
         }).then(() => {
           window.analytics.track('Enviou mensagem via ' + this.messageType)
           this.newMessage = ''
+          this.cancelReply(true)
           this.$jusNotification({
             title: 'Yay!',
             message: this.messageType + ' enviado com sucesso.',
@@ -542,26 +587,17 @@ export default {
         })
       }
     },
-    sendTypeEvent () {
-      if (this.newChatMessage.trim().replace('\n', '')) {
-        this.$socket.emit('send', {
-          channel: '/disputes/' + this.dispute.id,
-          event: 'type',
-          data: {
-            value: this.newChatMessage,
-            sender: {
-              personId: this.$store.getters.personId,
-              name: this.$store.getters.personName
-            }
-          }
-        })
-      }
-    },
     expandTextarea () {
       this.expandedMessageBox = true
     },
-    collapseTextarea () {
-      this.expandedMessageBox = false
+    collapseTextarea (timeout) {
+      if (timeout) {
+        setTimeout(() => {
+          this.expandedMessageBox = false
+        }, 100)
+      } else {
+        this.expandedMessageBox = false
+      }
     }
   }
 }
@@ -658,9 +694,6 @@ export default {
     }
   }
   &__send-message-expanded {
-    .quill-editor {
-      height: 100%;
-    }
     .ql-toolbar {
       display: inherit;
     }
@@ -766,7 +799,15 @@ export default {
   &__send-to {
     position: absolute;
     right: 0;
-    padding: 11px 14px;
+    padding: 15px 14px;
+  }
+  &__collapse-message-box {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 22px;
+    cursor:pointer;
+    z-index: 1;
   }
   .el-input-group__append {
     border-color: #9462f7;

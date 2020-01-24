@@ -669,7 +669,7 @@ export default {
     },
     selectedRole: {
       get () { return this.activeRoleId },
-      set () {}
+      set (newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) }
     },
     strategies () {
       return this.$store.getters.strategyList
@@ -734,6 +734,11 @@ export default {
     },
     banks () {
       return this.$store.getters.banksList
+    }
+  },
+  watch: {
+    activeRoleId: function (newActiveRole) {
+      if (newActiveRole === 0) this.handleChange('')
     }
   },
   methods: {
@@ -855,6 +860,9 @@ export default {
             disputeToEdit.description = this.disputeForm.description
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
+            let currentDate = this.dispute.expirationDate.dateTime
+            let newDate = disputeToEdit.expirationDate.dateTime
+            let today = this.$moment()
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               this.$jusNotification({
                 title: 'Yay!',
@@ -865,6 +873,25 @@ export default {
                 this.$emit('fetch-data')
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
+              if (this.$moment(currentDate).isBefore(today) && this.$moment(newDate).isSameOrAfter(today)) {
+                this.$confirm('A data de expiração foi alterada. Deseja reiniciar o engajamento para esta disputa?', 'Atenção!', {
+                  confirmButtonText: 'Reengajar',
+                  cancelButtonText: 'Cancelar',
+                  cancelButtonClass: 'is-plain',
+                  type: 'warning'
+                }).then(() => {
+                  this.$store.dispatch('sendDisputeAction', {
+                    action: 'restart-engagement',
+                    disputeId: this.dispute.id
+                  }).then(() => {
+                    this.$jusNotification({
+                      title: 'Yay!',
+                      message: 'Reengajamento realizado com sucesso.',
+                      type: 'success'
+                    })
+                  })
+                })
+              }
             }).catch(() => {
               this.$jusNotification({ type: 'error' })
             }).finally(() => {
@@ -899,14 +926,13 @@ export default {
     handleChange (val) {
       if (!val) {
         this.selectedPhone = 0
-        this.dispute.disputeRoles.map(dr => {
+        this.dispute.disputeRoles.forEach(dr => {
           dr.phones.forEach(p => { p.selected = false })
           dr.emails.forEach(e => { e.selected = false })
           dr.oabs.forEach(o => { o.selected = false })
           return dr
         })
       }
-      this.$emit('update:activeRoleId', val || 0)
     },
     openRoleDialog (role) {
       this.bankAccountIdstoUnlink = []
