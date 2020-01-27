@@ -103,9 +103,6 @@ export default {
     }
   },
   methods: {
-    changeWorkspace () {
-      alert()
-    },
     subscribe () {
       if (this.workspace) {
         this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))

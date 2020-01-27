@@ -157,7 +157,7 @@
                   <span>
                     <span>{{ phone.number | phoneMask }}</span>
                     <el-tooltip content="Telefone inválido">
-                      <jus-icon v-if="!phone.isValid" icon="warn-dark" />
+                      <jus-icon v-show="!phone.isValid" icon="warn-dark" />
                     </el-tooltip>
                   </span>
                 </el-radio>
@@ -169,8 +169,8 @@
                 <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
-                  <el-tooltip content="Telefone inválido">
-                    <jus-icon v-if="!email.isValid" icon="warn-dark" />
+                  <el-tooltip content="E-mail inválido">
+                    <jus-icon v-show="!email.isValid" icon="warn-dark" />
                   </el-tooltip>
                 </span>
               </span>
@@ -182,7 +182,7 @@
                 <span class="ellipsis">
                   <span>{{ oab.number + '-' + oab.state || '' }}</span>
                   <el-tooltip content="OAB inválido">
-                    <jus-icon v-if="!oab.isValid" icon="warn-dark" />
+                    <jus-icon v-show="!oab.isValid" icon="warn-dark" />
                   </el-tooltip>
                 </span>
               </span>
@@ -209,8 +209,8 @@
                 </el-checkbox>
               </el-checkbox-group>
             </div>
-            <div class="dispute-overview-view__actions">
-              <el-button v-if="!role.roles.includes('NEGOTIATOR')" plain @click="removeRole(role)">Excluir</el-button>
+            <div v-if="!role.roles.includes('NEGOTIATOR')" class="dispute-overview-view__actions">
+              <el-button plain @click="removeRole(role)">Excluir</el-button>
               <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
             </div>
           </el-collapse-item>
