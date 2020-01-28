@@ -35,7 +35,7 @@
             <strong>
               <jus-icon :icon="getInteractionIcon(scope.row.lastOutboundInteraction)" is-white />
               Último {{ getLastInteractionTooltip(scope.row.lastOutboundInteraction) }}
-              em {{ scope.row.lastOutboundInteraction.message.scheduledTime.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+              em {{ scope.row.lastOutboundInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
             </strong><br>
             <div v-if="scope.row.lastOutboundInteraction.message.sender">
               De: {{ scope.row.lastOutboundInteraction.message.sender | phoneMask }}
