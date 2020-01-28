@@ -138,9 +138,6 @@ export default {
     justify-content: space-between;
     margin-top: 0;
   }
-  &__upload {
-    display: none
-  }
   .el-card__body {
     height: 100%;
     display: flex;

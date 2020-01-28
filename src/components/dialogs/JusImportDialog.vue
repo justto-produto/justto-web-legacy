@@ -33,7 +33,7 @@
         id="fileupload"
         ref="fileupload"
         type="file"
-        class="import-view__upload"
+        class="jus-import-dialog__upload"
         @change="handleFile($event)">
     </label>
     <span slot="footer" class="dialog-footer">
@@ -179,6 +179,9 @@ export default {
   }
   .el-card__body > div{
     text-align: center;
+  }
+  &__upload {
+    display: none
   }
 }
 </style>
