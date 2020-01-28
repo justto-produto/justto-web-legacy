@@ -289,6 +289,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
+            <el-form-item label="Classificação" prop="classification">
+              <el-input v-model="disputeForm.classification" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
               <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description-input"/>
             </el-form-item>
@@ -325,8 +330,8 @@
         <el-form-item label="Nome" prop="name">
           <el-input v-model="roleForm.name" autofocus="" />
         </el-form-item>
-        <el-form-item label="CPF/CNPJ" prop="documentNumber">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="roleForm.documentNumber" />
+        <el-form-item :rules="validateDocumentNumber" label="CPF/CNPJ" prop="documentNumber">
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="roleForm.documentNumber" @change="documentNumberHasChanged = true" />
         </el-form-item>
         <div v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" class="dispute-overview-view__oab-form">
           <el-form-item class="oab" label="OAB" prop="oab">
@@ -578,7 +583,8 @@ export default {
         description: '',
         expirationDate: '',
         disputeUpperRange: '',
-        lastOfferValue: ''
+        lastOfferValue: '',
+        classification: ''
       },
       disputeFormRules: {
         disputeUpperRange: [
@@ -605,7 +611,6 @@ export default {
           { required: false, message: 'Campo obrigatório', trigger: 'submit' },
           { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
         ],
-        documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }],
         oab: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
         state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
       },
@@ -646,10 +651,17 @@ export default {
         number: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
-      bankAccountIdstoUnlink: []
+      bankAccountIdstoUnlink: [],
+      documentNumberHasChanged: false
     }
   },
   computed: {
+    validateDocumentNumber () {
+      if (this.documentNumberHasChanged) {
+        return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+      }
+      return []
+    },
     dispute () {
       return this.$store.getters.dispute
     },
@@ -819,6 +831,7 @@ export default {
       } return []
     },
     openDisputeDialog () {
+      this.documentNumberHasChanged = false
       this.$store.dispatch('getMyStrategies')
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
@@ -830,6 +843,7 @@ export default {
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
+      this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -858,6 +872,7 @@ export default {
             disputeToEdit.disputeUpperRange = this.disputeForm.disputeUpperRange
             disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
             disputeToEdit.description = this.disputeForm.description
+            disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             let currentDate = this.dispute.expirationDate.dateTime
@@ -1067,7 +1082,7 @@ export default {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === self.roleForm.phone
         })
-        if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone })
+        if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone, isMain: true })
         this.roleForm.phone = ''
       }
     },

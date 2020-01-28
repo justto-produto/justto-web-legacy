@@ -410,7 +410,7 @@ export default {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number.replace(/\D/g, '')
         })
-        if (isDuplicated < 0) this.newRole.phones.push({ number: this.newRole.phone })
+        if (isDuplicated < 0) this.newRole.phones.push({ number: this.newRole.phone, isMain: true })
         this.newRole.phone = ''
       }
     },
