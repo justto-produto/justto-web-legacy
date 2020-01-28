@@ -60,15 +60,23 @@
             <jus-icon :is-white="hasFilters" icon="filter" data-testid="management-filterbtn" />
             Filtrar
           </el-button>
-          <el-button
-            :loading="loadingExport"
-            :disabled="disputes.length === 0"
-            plain
-            icon="el-icon-download"
-            data-testid="export-disputes"
-            @click="exportDisputes">
-            Exportar
-          </el-button>
+          <el-tooltip content="Importar disputas">
+            <el-button
+              plain
+              @click="importDialogVisible = true">
+              <jus-icon icon="import" style="width: 20px;" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="Exportar disputas">
+            <el-button
+              :loading="loadingExport"
+              :disabled="disputes.length === 0"
+              plain
+              icon="el-icon-download"
+              data-testid="export-disputes"
+              @click="exportDisputes" />
+          </el-tooltip>
+          <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
         </div>
       </div>
       <management-filters
@@ -109,7 +117,8 @@ export default {
     ManagementFilters: () => import('./partials/ManagementFilters'),
     ManagementTable: () => import('./partials/ManagementTable'),
     ManagementActions: () => import('./partials/ManagementActions'),
-    ManagementPrescriptions: () => import('./partials/ManagementPrescriptions')
+    ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
+    JusImportDialog: () => import('@/components/dialogs/JusImportDialog')
   },
   data () {
     return {
@@ -119,7 +128,8 @@ export default {
       term: '',
       termDebounce: '',
       disputeDebounce: '',
-      selectedIds: []
+      selectedIds: [],
+      importDialogVisible: false
     }
   },
   computed: {

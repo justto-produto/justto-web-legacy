@@ -5,7 +5,7 @@
         Histórico de importações
         <div>
           <el-button plain @click="downloadModel()">Baixar planilha modelo</el-button>
-          <el-button type="primary" @click="dialogVisible = true">Nova importação de disputas</el-button>
+          <el-button type="primary" @click="importDialogVisible = true">Nova importação de disputas</el-button>
         </div>
       </h2>
       <el-table
@@ -52,83 +52,30 @@
           <div slot="no-results" />
         </infinite-loading>
       </el-table>
-      <el-dialog
-        :close-on-click-modal="false"
-        :visible.sync="dialogVisible"
-        class="import-view__dialog"
-        title="Nova importação de disputas">
-        <label for="fileupload" @dragover.prevent @drop.prevent="handleFile($event)">
-          <el-card class="el-card--dashed-hover" shadow="never">
-            <div v-if="isInitial">
-              <jus-icon icon="upload-file" />
-              <div>
-                <br>
-                Clique aqui e importe sua planilha nos<br> formatos XLSX, CSV ou XLS.
-              </div>
-            </div>
-            <div v-if="isSaving">
-              <br><br>
-              <div v-loading="true" class="import-view__loading" />
-              <div>
-                <br><br><br>
-                Carregando...
-              </div>
-            </div>
-            <div v-if="isSuccess">
-              <jus-icon icon="spreadsheet-xlsx" />
-              <div>
-                <br><br>
-                {{ uploadedFile.file_name }}
-              </div>
-            </div>
-          </el-card>
-          <input
-            id="fileupload"
-            ref="fileupload"
-            type="file"
-            class="import-view__upload"
-            @change="handleFile($event)">
-        </label>
-        <span slot="footer" class="dialog-footer">
-          <el-button plain @click="closeDialog">Cancelar</el-button>
-          <el-button :disabled="!isSuccess" type="primary" @click="startImport">Importar</el-button>
-        </span>
-      </el-dialog>
+      <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
     </template>
   </jus-view-main>
 </template>
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-const STATUS_INITIAL = 0
-const STATUS_SAVING = 1
-const STATUS_SUCCESS = 2
 
 export default {
   name: 'Import',
-  components: { InfiniteLoading },
+  components: {
+    InfiniteLoading,
+    JusImportDialog: () => import('@/components/dialogs/JusImportDialog')
+  },
   data () {
     return {
       importsHistory: [],
       page: 1,
-      dialogVisible: false,
-      currentStatus: 0,
-      uploadedFile: null,
-      uploadError: null
+      importDialogVisible: false
     }
   },
   computed: {
     importsHistoryPaged () {
       return this.importsHistory.slice(0, this.page * 20)
-    },
-    isInitial () {
-      return this.currentStatus === STATUS_INITIAL
-    },
-    isSaving () {
-      return this.currentStatus === STATUS_SAVING
-    },
-    isSuccess () {
-      return this.currentStatus === STATUS_SUCCESS
     }
   },
   beforeMount () {
@@ -141,8 +88,6 @@ export default {
         })
       }
     })
-  },
-  beforeCreate () {
   },
   methods: {
     setStatusIcon (status) {
@@ -157,10 +102,6 @@ export default {
           return 'el-icon-folder-delete'
       }
     },
-    startImport () {
-      this.$router.push('/import/new')
-      this.$store.dispatch('hideLoading')
-    },
     infiniteHandler ($state) {
       setTimeout(() => {
         this.page = this.page + 1
@@ -170,83 +111,6 @@ export default {
           $state.loaded()
         }
       }, 600)
-    },
-    handleFile (e) {
-      this.$notify.closeAll()
-      const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0]
-      const isLt20M = file.size / 1024 / 1024 < 20
-      const isValid =
-        file.name.toLowerCase().endsWith('.xlsx') ||
-        file.name.toLowerCase().endsWith('.xls') ||
-        file.name.toLowerCase().endsWith('.csv')
-      if (!isValid) {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Arquivo em formato inválido.',
-          type: 'warning'
-        })
-      }
-      if (!isLt20M) {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Arquivo não pode ultrapassar 20MB.',
-          type: 'warning'
-        })
-      }
-      if (isLt20M && isValid) {
-        const formData = new FormData()
-        formData.append('file', file)
-        formData.append('created_person_id', this.$store.getters.loggedPersonId)
-        formData.append('created_name', this.$store.getters.loggedPersonName)
-        formData.append('created_by', this.$store.getters.accountEmail)
-        this.saveFile(formData)
-      } else {
-        this.removeFile()
-      }
-    },
-    saveFile (formData) {
-      this.currentStatus = STATUS_SAVING
-      this.$store.dispatch('uploadImportFile', formData).then(response => {
-        this.currentStatus = STATUS_SUCCESS
-        this.uploadedFile = response
-        this.$store.commit('setImportsFile', response)
-      }).catch(error => {
-        this.handleError(error.response)
-        this.removeFile()
-        this.currentStatus = STATUS_INITIAL
-      })
-    },
-    handleError (error) {
-      let errorMessage = {}
-      if (error.status === 406) {
-        errorMessage.message = error.data.error
-        errorMessage.type = 'warning'
-      } else if (error.data.error) {
-        errorMessage.message = 'Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.'
-        errorMessage.type = 'warning'
-      } else {
-        errorMessage.message = 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
-        errorMessage.type = 'error'
-      }
-      this.currentStatus = STATUS_INITIAL
-      this.$jusNotification({
-        title: 'Ops!',
-        message: errorMessage.message,
-        type: errorMessage.type
-      })
-    },
-    closeDialog () {
-      this.dialogVisible = false
-      this.removeFile()
-    },
-    removeFile () {
-      const input = this.$refs.fileupload
-      input.type = 'text'
-      input.type = 'file'
-      this.$store.commit('removeImportsFile')
-      this.currentStatus = STATUS_INITIAL
-      this.uploadedFile = null
-      this.uploadError = null
     },
     downloadModel () {
       window.analytics.track('Planilha modelo baixada')
@@ -276,18 +140,6 @@ export default {
   }
   &__upload {
     display: none
-  }
-  &__dialog {
-    .el-card {
-      padding: 30px;
-      margin: 20px 0;
-    }
-    img {
-      width: 60px;
-    }
-    .el-card__body > div{
-      text-align: center;
-    }
   }
   .el-card__body {
     height: 100%;
