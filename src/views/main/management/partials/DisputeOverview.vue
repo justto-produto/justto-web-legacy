@@ -988,7 +988,6 @@ export default {
       let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
       delete roleToEdit.title
       this.editRoleDialogLoading = true
-      roleToEdit.documentNumber = '36517617899'
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
         disputeRole: roleToEdit
