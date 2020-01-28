@@ -1067,7 +1067,7 @@ export default {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === self.roleForm.phone
         })
-        if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone })
+        if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone, isMain: true })
         this.roleForm.phone = ''
       }
     },
