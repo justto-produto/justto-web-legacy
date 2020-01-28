@@ -836,7 +836,7 @@ export default {
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
-      this.disputeForm.classification = dispute.classification.name
+      this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -865,7 +865,8 @@ export default {
             disputeToEdit.disputeUpperRange = this.disputeForm.disputeUpperRange
             disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
             disputeToEdit.description = this.disputeForm.description
-            disputeToEdit.classification.name = this.disputeForm.classification
+            debugger
+            disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             let currentDate = this.dispute.expirationDate.dateTime
