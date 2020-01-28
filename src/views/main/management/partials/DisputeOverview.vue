@@ -330,8 +330,8 @@
         <el-form-item label="Nome" prop="name">
           <el-input v-model="roleForm.name" autofocus="" />
         </el-form-item>
-        <el-form-item label="CPF/CNPJ" prop="documentNumber">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="roleForm.documentNumber" />
+        <el-form-item :rules="validateDocumentNumber" label="CPF/CNPJ" prop="documentNumber">
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="roleForm.documentNumber" @change="documentNumberHasChanged = true" />
         </el-form-item>
         <div v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" class="dispute-overview-view__oab-form">
           <el-form-item class="oab" label="OAB" prop="oab">
@@ -611,7 +611,6 @@ export default {
           { required: false, message: 'Campo obrigatório', trigger: 'submit' },
           { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
         ],
-        documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }],
         oab: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
         state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
       },
@@ -652,10 +651,17 @@ export default {
         number: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
-      bankAccountIdstoUnlink: []
+      bankAccountIdstoUnlink: [],
+      documentNumberHasChanged: false
     }
   },
   computed: {
+    validateDocumentNumber () {
+      if (this.documentNumberHasChanged) {
+        return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+      }
+      return []
+    },
     dispute () {
       return this.$store.getters.dispute
     },
@@ -825,6 +831,7 @@ export default {
       } return []
     },
     openDisputeDialog () {
+      this.documentNumberHasChanged = false
       this.$store.dispatch('getMyStrategies')
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
