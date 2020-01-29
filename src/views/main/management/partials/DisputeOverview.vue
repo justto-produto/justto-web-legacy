@@ -1043,8 +1043,6 @@ export default {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
-        this.editRoleDialogError = true
-        this.editRoleDialogErrorList = []
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
