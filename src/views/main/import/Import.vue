@@ -5,7 +5,10 @@
         Histórico de importações
         <div>
           <el-button plain @click="downloadModel()">Baixar planilha modelo</el-button>
-          <el-button type="primary" @click="importDialogVisible = true">Nova importação de disputas</el-button>
+          <el-button type="primary" @click="importDialogVisible = true">
+            <jus-icon icon="upload-file" is-white style="width: 17px;vertical-align: top;margin-right: 4px;" />
+            Nova importação de disputas
+          </el-button>
         </div>
       </h2>
       <el-table

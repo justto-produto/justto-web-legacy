@@ -64,7 +64,7 @@
             <el-button
               plain
               @click="importDialogVisible = true">
-              <jus-icon icon="import" style="width: 20px;" />
+              <jus-icon icon="upload-file" style="width: 20px;" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Exportar disputas">

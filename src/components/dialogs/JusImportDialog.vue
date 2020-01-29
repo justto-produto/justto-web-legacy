@@ -7,7 +7,7 @@
     <label for="fileupload" @dragover.prevent @drop.prevent="handleFile($event)">
       <el-card class="el-card--dashed-hover" shadow="never">
         <div v-if="isInitial">
-          <jus-icon icon="upload-file" />
+          <jus-icon icon="upload-file" is-active />
           <div>
             <br>
             Clique aqui e importe sua planilha nos<br> formatos XLSX, CSV ou XLS.
@@ -173,6 +173,7 @@ export default {
   .el-card {
     padding: 30px;
     margin: 20px 0;
+    cursor: pointer;
   }
   img {
     width: 60px;
