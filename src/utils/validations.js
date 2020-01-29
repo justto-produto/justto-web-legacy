@@ -68,11 +68,26 @@ const validateSubdomainAvailability = (rule, value, callback) => {
   }
 }
 
+const validateObjectEmail = (rule, value, callback) => {
+  let email = value[Object.keys(value)[0]]
+  if (email) {
+    let re = /\S+@\S+\.\S+/
+    if (re.test(email)) {
+      callback()
+    } else {
+      callback(new Error('Insira um e-mail válido'))
+    }
+  } else {
+    callback(new Error('Campo obrigatório'))
+  }
+}
+
 export {
   validateZero,
   validateName,
   validateCpf,
   validatePhone,
   validateSubdomainName,
-  validateSubdomainAvailability
+  validateSubdomainAvailability,
+  validateObjectEmail
 }
