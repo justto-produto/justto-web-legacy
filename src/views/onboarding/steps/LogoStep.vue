@@ -18,7 +18,7 @@
         drag
         class="el-upload--logo">
         <img v-if="imageUrl" :src="imageUrl" class="uploaded-logo">
-        <jus-icon v-else icon="upload-file" class="el-icon-upload"/>
+        <jus-icon v-else icon="upload-file" is-active class="el-icon-upload"/>
         <div>
           <div class="el-upload__text">Arraste aqui ou <em>escolha um arquivo do seu computador</em></div>
         </div>
