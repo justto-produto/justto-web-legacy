@@ -45,7 +45,7 @@
               @click="showAddEmail(role.name)">
               Adicionar e-mail
             </el-button>
-            <el-form ref="emailForm" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role.name, index)">
+            <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role.name, index)">
               <el-form-item v-show="role.show" :key="formKey" prop="email">
                 <el-input v-model="emailForm.email[role.name]" placeholder="Adicionar e-mail" size="small" @blur="clearValidate(index)">
                   <el-button slot="append" icon="el-icon-plus" @click="addEmail(role.name, index)" />
@@ -277,7 +277,9 @@ export default {
       this.formKey += 1
     },
     addEmail (name, formIndex) {
-      this.$refs.emailForm[formIndex].validate(valid => {
+      debugger
+      let emailForm = 'emailForm' + formIndex
+      this.$refs[emailForm][0].validate(valid => {
         if (valid) {
           if (this.emailForm.email[name]) {
             let index = this.roles.findIndex(r => r.name === name)
