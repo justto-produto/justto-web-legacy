@@ -339,7 +339,12 @@
 </template>
 
 <script>
-import { getLastInteraction, getInteractionIcon, getLastInteractionTooltip } from '@/utils/jusUtils'
+import {
+  getLastInteraction,
+  getInteractionIcon,
+  getLastInteractionTooltip,
+  getDocumentStep
+} from '@/utils/jusUtils'
 import { quillEditor } from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -486,6 +491,7 @@ export default {
     getLastInteraction: (i) => getLastInteraction(i),
     getInteractionIcon: (i) => getInteractionIcon(i),
     getLastInteractionTooltip: (i) => getLastInteractionTooltip(i),
+    getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
     tableRowClassName ({ row, rowIndex }) {
       if (!row.visualized && !this.tab0) {
         return 'el-table__row--visualized-row'
@@ -541,15 +547,6 @@ export default {
       this.selectedDisputeId = dispute.id
       this.selectedDisputeRoles = dispute.disputeRoles
       this.protocolDialogVisible = true
-    },
-    getDocumentStep (hasDocument, signStatus) {
-      if (hasDocument) {
-        if (signStatus) {
-          if (signStatus === 'SIGNING') {
-            return 2
-          } return 3
-        } return 1
-      } return 0
     },
     getMessageSummary (lastOutboundInteraction, disputeId) {
       if (lastOutboundInteraction.message && lastOutboundInteraction.message.parameters.READ_DATE) {
