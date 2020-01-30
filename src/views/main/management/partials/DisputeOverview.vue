@@ -243,6 +243,7 @@
       :visible.sync="namesakeDialogVisible"
       title="Corrigir homônimo"
       width="70%">
+      <p>Selecione um dos registros abaixo para correção de homônimo e enriquecimento da parte.</p>
       <div v-loading="namesakeDialogLoading">
         <div v-show="selectedNamesake">
           <p>Pessoa selecionada:</p>
@@ -265,7 +266,7 @@
         </el-table>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button :disabled="namesakeDialogLoading" @click="namesakeDialogVisible = false">Cancelar</el-button>
+        <el-button :disabled="namesakeDialogLoading" plain @click="namesakeDialogVisible = false">Cancelar</el-button>
         <el-button :loading="namesakeDialogLoading" :disabled="!selectedNamesake" type="primary" @click="selectNamesake()">Corrigir</el-button>
       </span>
     </el-dialog>
