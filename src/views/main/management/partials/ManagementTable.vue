@@ -280,6 +280,45 @@
           </el-button>
         </template>
       </el-table-column>
+      <el-table-column class-name="teste" width="1">
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+          </el-button>
+          <el-button
+            type="text"
+            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+          </el-button>
+          <el-button
+            type="text"
+            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+          </el-button>
+          <el-button
+            type="text"
+            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+          </el-button>
+          <el-button
+            type="text"
+            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+          </el-button>
+          <el-button
+            type="text"
+            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+          </el-button>
+          <el-button
+            type="text"
+            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
+            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+          </el-button>
+        </template>
+      </el-table-column>
       <template slot="empty">
         <span v-if="!loadingDisputes">
           <jus-icon icon="empty-screen-filter" class="management-table__empty-table" data-testid="cases-empty-icon"/>
@@ -682,6 +721,22 @@ export default {
     img {
       width: 14px;
       margin: 0 4px 0 2px;
+    }
+  }
+  .teste {
+    position: relative;
+    .cell {
+      display: none;
+    }
+  }
+  tr:hover {
+    .teste .cell{
+      padding-left: 28px;
+      background: linear-gradient(to right, rgba(246,246,246,0) 0%, rgba(246,246,246,1) 10%);
+      position: absolute;
+      display: flex;
+      right: 0;
+      top: 2px;
     }
   }
 }
