@@ -122,8 +122,6 @@
         </el-button>
       </span>
     </el-dialog>
-
-
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="insertSettledValueDialogVisible"
@@ -142,7 +140,7 @@
       </div>
       <el-form>
         <el-form-item label="Valor do acordo:" >
-          <money v-model="settledValue" class="el-input__inner"  data-testid="proposal-value-input"/>
+          <money v-model="settledValue" class="el-input__inner" data-testid="proposal-value-input" />
         </el-form-item>
       </el-form>
       <span slot="footer">
@@ -156,8 +154,6 @@
         </el-button>
       </span>
     </el-dialog>
-
-
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -390,7 +386,7 @@ export default {
       if (action === 'unsettled' && this.unsettledType) {
         params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
       }
-      if (action === 'settled'  && this.settledValue) {
+      if (action === 'settled' && this.settledValue) {
         const h = this.$createElement
         let detailsMessage = [
           h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
@@ -417,7 +413,7 @@ export default {
           h('p', null, [
             h('b', null, 'Valor do acordo: '),
             h('span', null, this.$options.filters.currency(this.settledValue))
-          ]),
+          ])
         ]
         this.$msgbox({
           title: 'Ganhar',
