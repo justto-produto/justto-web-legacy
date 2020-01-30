@@ -386,7 +386,7 @@ export default {
     },
     cancelReply (collapse) {
       this.directEmailAddress = ''
-      this.$refs.messageEditor.quill.setText('')
+      if (this.$refs.messageEditor) this.$refs.messageEditor.quill.setText('')
       if (collapse) this.collapseTextarea()
     },
     setMessageType (type) {
@@ -559,7 +559,8 @@ export default {
             this.newMessage = ''
             this.collapseTextarea()
           }.bind(this), 500)
-        }).catch(() => {
+        }).catch(e => {
+          console.error(e)
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.loadingTextarea = false
