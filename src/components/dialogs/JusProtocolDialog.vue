@@ -47,7 +47,7 @@
             </el-button>
             <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role.name, index)">
               <el-form-item v-show="role.show" :key="formKey" prop="email">
-                <el-input v-model="emailForm.email[role.name]" placeholder="Adicionar e-mail" size="small" @blur="clearValidate(index)">
+                <el-input v-model="emailForm.email[role.name]" placeholder="Adicionar e-mail" size="small" @input="clearValidate(index)">
                   <el-button slot="append" icon="el-icon-plus" @click="addEmail(role.name, index)" />
                 </el-input>
               </el-form-item>
@@ -62,15 +62,14 @@
           hide-required-asterisk
           class="new-role"
           @submit.native.prevent="addRole()">
-          <el-button v-show="!showARoleButton" :key="formKey" type="text" icon="el-icon-plus" @click="showAddRole()">
+          <el-button v-show="!showARoleButton" type="text" icon="el-icon-plus" @click="showAddRole()">
             Adicionar nova parte
           </el-button>
           <el-form-item
             v-show="showARoleButton"
-            :key="formKey"
             label="Adicionar nova parte"
             prop="role">
-            <el-input v-model="roleForm.role" placeholder="Nome" @blur="clearValidate()">
+            <el-input v-model="roleForm.role" placeholder="Nome" @input="clearValidate()">
               <el-button slot="append" icon="el-icon-plus" @click="addRole()" />
             </el-input>
           </el-form-item>
@@ -121,7 +120,7 @@
         v-if="step === 1"
         :disabled="loading"
         type="primary"
-        @click="step = 2">
+        @click="step = 2, hideForms()">
         Definir assinantes da minuta
       </el-button>
       <el-button
@@ -257,10 +256,16 @@ export default {
         this.emailForm.email = {}
         this.getDocument()
         this.roleForm.role = ''
+        this.showARoleButton = false
       }
     }
   },
   methods: {
+    hideForms () {
+      this.roles.map(r => { r.show = false })
+      this.showARoleButton = false
+      this.formKey += 1
+    },
     addRole () {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
@@ -277,9 +282,8 @@ export default {
       this.formKey += 1
     },
     addEmail (name, formIndex) {
-      debugger
-      let emailForm = 'emailForm' + formIndex
-      this.$refs[emailForm][0].validate(valid => {
+      let emailForm = this.$refs['emailForm' + formIndex][0]
+      emailForm.validate(valid => {
         if (valid) {
           if (this.emailForm.email[name]) {
             let index = this.roles.findIndex(r => r.name === name)
@@ -297,8 +301,11 @@ export default {
       })
     },
     showAddEmail (name) {
-      let index = this.roles.findIndex(r => r.name === name)
-      this.roles[index].show = true
+      this.roles.map(r => {
+        if (r.name === name) r.show = true
+        else r.show = false
+      })
+      this.showARoleButton = false
       this.formKey += 1
     },
     removeEmail (email, name) {
@@ -309,8 +316,9 @@ export default {
       }
     },
     clearValidate (formIndex) {
-      if (formIndex) {
-        this.$refs.emailForm[formIndex].clearValidate()
+      let emailForm = this.$refs['emailForm' + formIndex][0]
+      if (formIndex && emailForm) {
+        emailForm.clearValidate()
       } else {
         this.$refs.roleForm.clearValidate()
       }
