@@ -122,6 +122,42 @@
         </el-button>
       </span>
     </el-dialog>
+
+
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="insertSettledValueDialogVisible"
+      append-to-body
+      title="Ganhar"
+      class="dispute-view-actions__choose-unsettled-dialog"
+      width="460px"
+      data-testid="choose-unsettled-dialog">
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
+        </div>
+      </div>
+      <el-form>
+        <el-form-item label="Valor do acordo:" >
+          <money v-model="settledValue" class="el-input__inner"  data-testid="proposal-value-input"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button plain @click="insertSettledValueDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :disabled="!settledValue"
+          type="primary"
+          class="confirm-action-unsettled"
+          @click.prevent="doAction('settled')">
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
+
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -218,6 +254,7 @@ export default {
   },
   data () {
     return {
+      settledValue: 0,
       unsettledType: null,
       unsettledTypes: {},
       negotiatorsForm: {},
@@ -227,6 +264,7 @@ export default {
       bankDataDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
+      insertSettledValueDialogVisible: false,
       counterproposalLoading: false,
       editNegotiatorLoading: false,
       counterOfferForm: {
@@ -298,6 +336,10 @@ export default {
         this.unsettledType = null
       } else if (action === 'favorite') {
         this.doAction(action)
+      // } else if (action === 'settled' && this.dispute.status === 'RUNNING') {
+      } else if (action === 'settled') {
+        this.insertSettledValueDialogVisible = true
+        this.settledValue = 0
       } else if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
         this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
           dangerouslyUseHTMLString: true,
@@ -322,9 +364,48 @@ export default {
         action: action,
         disputeId: this.dispute.id
       }
-      if (this.unsettledType) {
+      if (action === 'unsettled' && this.unsettledType) {
         params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
       }
+      if (action === 'settled' && this.settledValue) {
+        const h = this.$createElement;
+        this.$msgbox({
+          title: 'Ganhar',
+          message: h('div', null, [
+            h('p', null, [
+              h('b', null, 'Nº da disputa: '),
+              h('span', null, this.dispute.id)
+            ]),
+            h('p', null, [
+              h('b', null, 'Nº do processo: '),
+              h('span', null, this.dispute.code)
+            ]),
+            h('p', null, [
+              h('b', null, 'Ráu: '),
+              h('span', null, 'Lucas Israel')
+            ]),
+            h('p', null, [
+              h('b', null, 'Autor: '),
+              h('span', null, 'Guilherme Rios')
+            ]),
+            h('p', null, [
+              h('b', null, 'Advogado do autor: '),
+              h('span', null, 'Henrique Liberato')
+            ]),
+            h('p', null, [
+              h('b', null, 'Valor do acordo: '),
+              h('span', null, this.$options.filters.currency(this.settledValue))
+            ]),
+          ]),
+          showCancelButton: true,
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning'
+        }).then(() => {
+          params['body'] = { 'value': this.settledValue }
+        })
+      }
+      return false
       this.$store.dispatch('sendDisputeAction', params).then(() => {
         let trackTitle
         if (action === 'unsettled') {
@@ -373,6 +454,7 @@ export default {
         }
       }).finally(() => {
         this.chooseUnsettledDialogVisible = false
+        this.insertSettledValueDialogVisible = false
       })
     },
     editNegotiators () {
