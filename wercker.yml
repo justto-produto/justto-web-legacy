@@ -39,6 +39,7 @@ build:
         name: Update tag version
         code: |
           git remote set-url origin https://dev%40justto.com.br:%40bundanc1A@gitlab.com/Justto/front-end/justto-web.git
+          git pull origin release
           git add .
           git commit -m 'Release da versao '${CURRENT_VERSION} || echo 'Nada a commitar.'
           git push origin release
