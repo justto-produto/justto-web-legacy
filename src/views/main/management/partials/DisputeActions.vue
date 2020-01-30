@@ -149,7 +149,7 @@
           :disabled="!settledValue"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('settled')">
+          @click.prevent="showDisputeResume('settled')">
           Continuar
         </el-button>
       </span>
@@ -387,44 +387,7 @@ export default {
         params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
       }
       if (action === 'settled' && this.settledValue) {
-        const h = this.$createElement
-        let detailsMessage = [
-          h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
-          h('p', null, [
-            h('b', null, 'Nº da disputa: '),
-            h('span', null, '#' + this.dispute.id)
-          ]),
-          h('p', null, [
-            h('b', null, 'Nº do processo: '),
-            h('span', null, this.dispute.code)
-          ]),
-          h('p', null, [
-            h('b', null, 'Réu(s): '),
-            h('span', null, this.respondentsResume.toUpperCase() || ' - ')
-          ]),
-          h('p', null, [
-            h('b', null, 'Autor(es): '),
-            h('span', null, this.authorsResume.toUpperCase() || ' - ')
-          ]),
-          h('p', null, [
-            h('b', null, 'Advogado(s) do autor(es): '),
-            h('span', null, this.lawyersResume.toUpperCase() || ' - ')
-          ]),
-          h('p', null, [
-            h('b', null, 'Valor do acordo: '),
-            h('span', null, this.$options.filters.currency(this.settledValue))
-          ])
-        ]
-        this.$msgbox({
-          title: 'Ganhar',
-          message: h('div', null, detailsMessage),
-          showCancelButton: true,
-          confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning'
-        }).then(() => {
-          params['body'] = { 'value': this.settledValue }
-        })
+        params['body'] = { 'value': this.settledValue }
       }
       this.$store.dispatch('sendDisputeAction', params).then(() => {
         let trackTitle
@@ -475,6 +438,43 @@ export default {
       }).finally(() => {
         this.chooseUnsettledDialogVisible = false
         this.insertSettledValueDialogVisible = false
+      })
+    },
+    showDisputeResume (action) {
+      const h = this.$createElement
+      let detailsMessage = [
+        h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
+        h('p', null, [
+          h('b', null, 'Nº da disputa: '),
+          h('span', null, '#' + this.dispute.id)
+        ]),
+        h('p', null, [
+          h('b', null, 'Nº do processo: '),
+          h('span', null, this.dispute.code)
+        ]),
+        h('p', null, [
+          h('b', null, 'Réu(s): '),
+          h('span', null, this.respondentsResume.toUpperCase() || ' - ')
+        ]),
+        h('p', null, [
+          h('b', null, 'Autor(es): '),
+          h('span', null, this.authorsResume.toUpperCase() || ' - ')
+        ]),
+        h('p', null, [
+          h('b', null, 'Advogado(s) do autor(es): '),
+          h('span', null, this.lawyersResume.toUpperCase() || ' - ')
+        ]),
+        h('p', null, [
+          h('b', null, 'Valor do acordo: '),
+          h('span', null, this.$options.filters.currency(this.settledValue))
+        ])
+      ]
+      this.$confirm(h('div', null, detailsMessage), 'Ganhar', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.doAction(action)
       })
     },
     editNegotiators () {
