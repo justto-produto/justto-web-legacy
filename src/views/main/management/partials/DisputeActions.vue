@@ -320,13 +320,28 @@ export default {
       return []
     },
     authorsResume () {
-      return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'PARTY')
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'PARTY').map(role => {
+          return role.name
+        }).join(', ')
+      }
+      return []
     },
     lawyersResume () {
-      return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'LAWYER')
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'LAWYER').map(role => {
+          return role.name
+        }).join(', ')
+      }
+      return []
     },
     respondentsResume () {
-      return getRoles(this.dispute.disputeRoles, 'RESPONDENT')
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'RESPONDENT').map(role => {
+          return role.name
+        }).join(', ')
+      }
+      return []
     }
   },
   created () {
@@ -345,8 +360,7 @@ export default {
         this.unsettledType = null
       } else if (action === 'favorite') {
         this.doAction(action)
-      // } else if (action === 'settled' && this.dispute.status === 'RUNNING') {
-      } else if (action === 'settled') {
+      } else if (action === 'settled' && !this.dispute.disputeDealValue) {
         this.insertSettledValueDialogVisible = true
         this.settledValue = 0
       } else if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
@@ -376,32 +390,29 @@ export default {
       if (action === 'unsettled' && this.unsettledType) {
         params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
       }
-      if (action === 'settled' && this.settledValue) {
+      if (action === 'settled'  && this.settledValue) {
         const h = this.$createElement
-        let claimantsResume = []
-        this.disputeClaimants.forEach(c => {
-          claimantsResume.push(c.name)
-        })
         let detailsMessage = [
+          h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
           h('p', null, [
             h('b', null, 'Nº da disputa: '),
-            h('span', null, this.dispute.id)
+            h('span', null, '#' + this.dispute.id)
           ]),
           h('p', null, [
             h('b', null, 'Nº do processo: '),
             h('span', null, this.dispute.code)
           ]),
           h('p', null, [
+            h('b', null, 'Réu(s): '),
+            h('span', null, this.respondentsResume.toUpperCase() || ' - ')
+          ]),
+          h('p', null, [
             h('b', null, 'Autor(es): '),
-            h('span', null, claimantsResume)
+            h('span', null, this.authorsResume.toUpperCase() || ' - ')
           ]),
           h('p', null, [
-            h('b', null, 'Réu: '),
-            h('span', null, 'Lucas Israel')
-          ]),
-          h('p', null, [
-            h('b', null, 'Advogado(s) do autor: '),
-            h('span', null, 'Henrique Liberato')
+            h('b', null, 'Advogado(s) do autor(es): '),
+            h('span', null, this.lawyersResume.toUpperCase() || ' - ')
           ]),
           h('p', null, [
             h('b', null, 'Valor do acordo: '),
@@ -419,7 +430,6 @@ export default {
           params['body'] = { 'value': this.settledValue }
         })
       }
-      return false
       this.$store.dispatch('sendDisputeAction', params).then(() => {
         let trackTitle
         if (action === 'unsettled') {
