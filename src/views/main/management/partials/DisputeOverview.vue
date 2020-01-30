@@ -136,10 +136,22 @@
             class="dispute-overview-view__role-collapse"
             data-testid="expand-party">
             <template slot="title">
+              <i v-if="role.personProperties.NAMESAKE && isJusttoCs" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
               <div class="dispute-overview-view__name">
                 {{ role.name }}
               </div>
             </template>
+            <p v-if="role.personProperties.NAMESAKE && isJusttoCs" style="margin-top: 0">
+              Esta parte não foi enriquecida corretamente devido à existência de homônimos.
+            </p>
+            <el-button
+              v-if="role.personProperties.NAMESAKE && isJusttoCs"
+              :loading="namesakeButtonLoading"
+              type="warning"
+              style="width: 100%; margin-bottom: 14px;"
+              @click="namesakeDialog(role.name, role.personId)">
+              Tratar homônimos
+            </el-button>
             <div class="dispute-overview-view__info-line" style="margin: 0">
               <span class="title">Função:</span>
               <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
@@ -224,6 +236,39 @@
         </el-collapse>
       </el-collapse-item>
     </el-collapse>
+    <el-dialog
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      :visible.sync="namesakeDialogVisible"
+      title="Corrigir homônimo"
+      width="70%">
+      <div v-loading="namesakeDialogLoading">
+        <div v-show="selectedNamesake">
+          <p>Pessoa selecionada:</p>
+          <div v-show="selectedNamesake.name">Nome: <b>{{ selectedNamesake.name }}</b></div>
+          <div v-show="selectedNamesake.document">Documento: <b>{{ selectedNamesake.document }}</b></div>
+          <div v-show="selectedNamesake.city">Cidade: <b>{{ selectedNamesake.city }}</b></div>
+          <div v-show="selectedNamesake.uf">UF: <b>{{ selectedNamesake.uf }}</b></div>
+          <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth }}</b></div>
+        </div>
+        <el-table
+          :data="namesakeList"
+          highlight-current-row
+          style="width: 100%"
+          @current-change="handleCurrentChange">
+          <el-table-column label="Nome" prop="name" />
+          <el-table-column label="Documento" prop="document" />
+          <el-table-column label="Cidade" prop="city" />
+          <el-table-column label="UF" prop="uf" />
+          <el-table-column label="Nascimento" prop="dateOfBirth" />
+        </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button :disabled="namesakeDialogLoading" @click="namesakeDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="namesakeDialogLoading" :disabled="!selectedNamesake" type="primary" @click="selectNamesake()">Corrigir</el-button>
+      </span>
+    </el-dialog>
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="editDisputeDialogVisible"
@@ -575,6 +620,12 @@ export default {
   },
   data () {
     return {
+      namesakeList: [],
+      namesakeDialogVisible: false,
+      namesakeDialogLoading: false,
+      namesakeButtonLoading: false,
+      selectedNamesake: '',
+      selectedNamesakePersonId: '',
       selectedClaimantId: '',
       selectedNegotiatorId: '',
       selectedStrategyId: '',
@@ -656,6 +707,9 @@ export default {
     }
   },
   computed: {
+    isJusttoCs () {
+      return this.$store.getters.isJusttoAdmin
+    },
     validateDocumentNumber () {
       if (this.documentNumberHasChanged) {
         return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
@@ -754,6 +808,46 @@ export default {
     }
   },
   methods: {
+    selectNamesake () {
+      if (this.selectedNamesake) {
+        this.namesakeDialogLoading = true
+        // eslint-disable-next-line
+        axios.patch(`api/fusion-runner/set-document/person/${this.selectedNamesakePersonId}/${this.selectedNamesake.document}`)
+          .then(() => {
+            this.namesakeDialogVisible = false
+            this.namesakeDialogLoading = false
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Homônimo tratado com sucesso.',
+              type: 'success'
+            })
+          })
+          .catch(error => {
+            console.error(error)
+            this.$jusNotification({ type: 'error' })
+          })
+      }
+    },
+    handleCurrentChange (val) {
+      this.selectedNamesake = val
+    },
+    namesakeDialog (name, personId) {
+      this.selectedNamesakePersonId = personId
+      this.namesakeButtonLoading = true
+      // eslint-disable-next-line
+      axios.get('api/spider/search/name/' + name)
+        .then(response => {
+          this.namesakeDialogVisible = true
+          this.namesakeList = response.data
+        })
+        .catch(error => {
+          console.error(error)
+          this.$jusNotification({ type: 'error' })
+        })
+        .finally(() => {
+          this.namesakeButtonLoading = false
+        })
+    },
     updateDisputeRole (activeRole, messageType) {
       let disputeRoles = this.dispute.disputeRoles.map(dr => {
         if (dr.id === activeRole.id) {
@@ -1351,6 +1445,7 @@ export default {
   .el-collapse--bordered {
     .el-collapse-item {
       box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+      position: relative;
       &.is-active {
         border: 2px solid #9461f7;
       }
@@ -1363,6 +1458,16 @@ export default {
     min-width: 500px;
     h3 {
       margin-bottom: 10px;
+    }
+  }
+  .el-table__body tr.current-row > td {
+    border-top: 1px solid #9461f7;
+    border-bottom: 1px solid #9461f7;
+    &:first-child {
+      border-left: 1px solid #9461f7
+    }
+    &:last-child {
+      border-right: 1px solid #9461f7
     }
   }
 }
