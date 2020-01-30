@@ -30,7 +30,9 @@
           :dispute-id="id"
           :style="{ opacity: expandedMessageBox ? 0.2 : 1 }"
           data-testid="dispute-messages"
-          @dispute:reply="startReply" />
+          @dispute:reply="startReply">
+          <dispute-tips />
+        </dispute-occurrences>
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
           <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
@@ -237,6 +239,7 @@ export default {
     DisputeNotes: () => import('./partials/DisputeNotes'),
     DisputeOverview: () => import('./partials/DisputeOverview'),
     DisputeActions: () => import('./partials/DisputeActions'),
+    DisputeTips: () => import('./partials/DisputeTips'),
     quillEditor
   },
   data () {
