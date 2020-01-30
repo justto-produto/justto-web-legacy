@@ -7,6 +7,7 @@
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :show-close="false"
+    append-to-body
     class="jus-protocol-dialog">
     <div v-loading="loading">
       <div v-if="step === 0" class="jus-protocol-dialog__model-choice">

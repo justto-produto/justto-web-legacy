@@ -1,26 +1,5 @@
 @import '../colors';
 
-.el-steps--wizard {
-  width: 140px;
-  min-height: 32px;
-  margin: auto;
-  margin-top: 15px;
-  .el-step__icon.is-text {
-    padding: 14px;
-  }
-  .el-step__line {
-    background-color: #fff;
-    top: 16px !important;
-  }
-  .el-step__head.is-process, .el-step__head.is-wait {
-    color: #adadad !important;
-    border-color: white !important;
-  }
-  .el-step__icon {
-    z-index: 0;
-  }
-}
-
 .el-steps--circle {
   .el-step__icon-inner:not(.is-status) {
     display: none;
