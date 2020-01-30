@@ -318,6 +318,15 @@ export default {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
+    },
+    authorsResume () {
+      return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'PARTY')
+    },
+    lawyersResume () {
+      return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'LAWYER')
+    },
+    respondentsResume () {
+      return getRoles(this.dispute.disputeRoles, 'RESPONDENT')
     }
   },
   created () {
@@ -368,35 +377,40 @@ export default {
         params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
       }
       if (action === 'settled' && this.settledValue) {
-        const h = this.$createElement;
+        const h = this.$createElement
+        let claimantsResume = []
+        this.disputeClaimants.forEach(c => {
+          claimantsResume.push(c.name)
+        })
+        let detailsMessage = [
+          h('p', null, [
+            h('b', null, 'Nº da disputa: '),
+            h('span', null, this.dispute.id)
+          ]),
+          h('p', null, [
+            h('b', null, 'Nº do processo: '),
+            h('span', null, this.dispute.code)
+          ]),
+          h('p', null, [
+            h('b', null, 'Autor(es): '),
+            h('span', null, claimantsResume)
+          ]),
+          h('p', null, [
+            h('b', null, 'Réu: '),
+            h('span', null, 'Lucas Israel')
+          ]),
+          h('p', null, [
+            h('b', null, 'Advogado(s) do autor: '),
+            h('span', null, 'Henrique Liberato')
+          ]),
+          h('p', null, [
+            h('b', null, 'Valor do acordo: '),
+            h('span', null, this.$options.filters.currency(this.settledValue))
+          ]),
+        ]
         this.$msgbox({
           title: 'Ganhar',
-          message: h('div', null, [
-            h('p', null, [
-              h('b', null, 'Nº da disputa: '),
-              h('span', null, this.dispute.id)
-            ]),
-            h('p', null, [
-              h('b', null, 'Nº do processo: '),
-              h('span', null, this.dispute.code)
-            ]),
-            h('p', null, [
-              h('b', null, 'Ráu: '),
-              h('span', null, 'Lucas Israel')
-            ]),
-            h('p', null, [
-              h('b', null, 'Autor: '),
-              h('span', null, 'Guilherme Rios')
-            ]),
-            h('p', null, [
-              h('b', null, 'Advogado do autor: '),
-              h('span', null, 'Henrique Liberato')
-            ]),
-            h('p', null, [
-              h('b', null, 'Valor do acordo: '),
-              h('span', null, this.$options.filters.currency(this.settledValue))
-            ]),
-          ]),
+          message: h('div', null, detailsMessage),
           showCancelButton: true,
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
