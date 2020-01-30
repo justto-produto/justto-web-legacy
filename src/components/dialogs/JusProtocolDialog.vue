@@ -20,35 +20,60 @@
       </div>
       <div v-if="step === 2" class="jus-protocol-dialog__send-to">
         <p>Escolha um endereço de email para cada parte.</p>
-        <span v-if="hasEmails">
-          <div v-for="(role, index) in disputeRoles" :key="index">
-            <span class="jus-protocol-dialog__title">{{ role.name.toUpperCase() }}</span>
-            <div style="margin-bottom: 6px; font-weight: bold; font-size: 12px;">{{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}</div>
-            <span v-if="role.emails.length">
-              <div v-for="(email, index) in role.emails" :key="index">
-                <input
-                  v-model="emails[role.name]"
-                  :name="role.name"
-                  :value="email.address"
-                  type="radio">
-                {{ email.address }}
-              </div>
-            </span>
-            <span v-else style="font-style: italic;">
-              Sem e-mails cadastrados para esta parte.
-            </span>
+        <div v-for="(role, index) in roles" :key="index">
+          <span class="title">{{ role.name.toUpperCase() }}</span>
+          <div v-if="role.party" class="subtitle">
+            {{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}
           </div>
-        </span>
-        <span v-else>
-          <h2>
-            Sem e-mails cadastrados! <br>
-            Vá até a disputa e adicione e-mails
-            <a href="#" @click.prevent="$router.push('management/dispute/' + disputeId)">
-              clicando aqui.
-            </a>
-          </h2>
-        </span>
-        <br>
+          <div v-for="(email, index) in role.emails" :key="index" class="line">
+            <input
+              v-model="emails[role.name]"
+              :name="role.name"
+              :value="email.address"
+              :class="{ 'mt10': index === 0 }"
+              type="radio">
+            {{ email.address }}
+            <el-button v-if="email.canDelete" size="mini" type="text" icon="el-icon-delete" @click="removeEmail(email.address, role.name)" />
+          </div>
+          <div>
+            <el-button
+              v-show="!role.show"
+              :key="formKey"
+              type="text"
+              icon="el-icon-plus"
+              class="add-email"
+              @click="showAddEmail(role.name)">
+              Adicionar e-mail
+            </el-button>
+            <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role.name, index)">
+              <el-form-item v-show="role.show" :key="formKey" prop="email">
+                <el-input v-model="emailForm.email[role.name]" placeholder="Adicionar e-mail" size="small" @input="clearValidate(index)">
+                  <el-button slot="append" icon="el-icon-plus" @click="addEmail(role.name, index)" />
+                </el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+        <el-form
+          ref="roleForm"
+          :model="roleForm"
+          :rules="roleFormRules"
+          label-position="top"
+          hide-required-asterisk
+          class="new-role"
+          @submit.native.prevent="addRole()">
+          <el-button v-show="!showARoleButton" type="text" icon="el-icon-plus" @click="showAddRole()">
+            Adicionar nova parte
+          </el-button>
+          <el-form-item
+            v-show="showARoleButton"
+            label="Adicionar nova parte"
+            prop="role">
+            <el-input v-model="roleForm.role" placeholder="Nome" @input="clearValidate()">
+              <el-button slot="append" icon="el-icon-plus" @click="addRole()" />
+            </el-input>
+          </el-form-item>
+        </el-form>
       </div>
       <div v-if="step === 3">
         <div v-for="(signer, index) in signers" :key="index" class="jus-protocol-dialog__status">
@@ -95,7 +120,7 @@
         v-if="step === 1"
         :disabled="loading"
         type="primary"
-        @click="step = 2">
+        @click="step = 2, hideForms()">
         Definir assinantes da minuta
       </el-button>
       <el-button
@@ -125,6 +150,8 @@
 </template>
 
 <script>
+import { validateObjectEmail } from '@/utils/validations'
+
 export default {
   name: 'JusProtocolDialog',
   props: {
@@ -151,7 +178,25 @@ export default {
       models: [],
       emails: {},
       document: {},
-      signers: ''
+      signers: '',
+      formKey: 0,
+      roles: [],
+      showARoleButton: false,
+      roleForm: {
+        role: ''
+      },
+      roleFormRules: {
+        role: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+      },
+      emailForm: {
+        email: {}
+      },
+      emailFormRules: {
+        email: [
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validateObjectEmail, trigger: 'submit' }
+        ]
+      }
     }
   },
   computed: {
@@ -185,8 +230,8 @@ export default {
     },
     hasEmails () {
       let hasEmails = false
-      if (this.disputeRoles) {
-        this.disputeRoles.map(e => {
+      if (this.roles) {
+        this.roles.map(e => {
           if (e.emails.length) hasEmails = true
         })
       }
@@ -207,11 +252,77 @@ export default {
         this.step = 0
         this.emails = {}
         this.signers = ''
+        this.roles = JSON.parse(JSON.stringify(this.disputeRoles))
+        this.emailForm.email = {}
         this.getDocument()
+        this.roleForm.role = ''
+        this.showARoleButton = false
       }
     }
   },
   methods: {
+    hideForms () {
+      this.roles.map(r => { r.show = false })
+      this.showARoleButton = false
+      this.formKey += 1
+    },
+    addRole () {
+      this.$refs.roleForm.validate(valid => {
+        if (valid) {
+          let name = this.roleForm.role.toUpperCase()
+          this.roles.push({ name, emails: [] })
+          this.roleForm.role = ''
+          this.showARoleButton = false
+          this.formKey += 1
+        }
+      })
+    },
+    showAddRole () {
+      this.showARoleButton = true
+      this.formKey += 1
+    },
+    addEmail (name, formIndex) {
+      let emailForm = this.$refs['emailForm' + formIndex][0]
+      emailForm.validate(valid => {
+        if (valid) {
+          if (this.emailForm.email[name]) {
+            let index = this.roles.findIndex(r => r.name === name)
+            if (index > -1) {
+              this.roles[index].emails.push({
+                address: this.emailForm.email[name],
+                canDelete: true
+              })
+              this.emailForm.email = {}
+              this.roles[index].show = false
+              this.formKey += 1
+            }
+          }
+        }
+      })
+    },
+    showAddEmail (name) {
+      this.roles.map(r => {
+        if (r.name === name) r.show = true
+        else r.show = false
+      })
+      this.showARoleButton = false
+      this.formKey += 1
+    },
+    removeEmail (email, name) {
+      let index = this.roles.findIndex(r => r.name === name)
+      if (index > -1) {
+        let emailIndex = this.roles[index].emails.findIndex(e => e.address === email)
+        this.roles[index].emails.splice(emailIndex, 1)
+      }
+    },
+    clearValidate (formIndex) {
+      let emailForm = this.$refs['emailForm' + formIndex][0]
+      if (formIndex && emailForm) {
+        emailForm.clearValidate()
+      } else {
+        this.$refs.roleForm.clearValidate()
+      }
+    },
     getDocument () {
       this.$store.dispatch('getDocumentByDisputeId', this.disputeId).then(document => {
         if (document) {
@@ -402,23 +513,48 @@ export default {
     }
   }
   &__send-to {
-    > span > div {
-      margin-top: 24px;
-      + div {
-        margin-top: 22px;
-      }
-    }
-    input {
-      margin-top: 10px;
+    > div {
+      margin-top: 12px;
     }
     p {
       margin-top: -14px;
       margin-bottom: 32px;
     }
-  }
-  &__title {
-    color: #adadad;
-    font-weight: 700;
+    .title {
+      color: #adadad;
+      font-weight: 700;
+    }
+    .subtitle {
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .el-input {
+      margin-top: 8px;
+    }
+    .line {
+      padding: 4px 8px;
+      button {
+        display: none;
+      }
+      &:hover {
+        background-color: #f6f6f6;
+        button {
+          display: initial;
+          float: right;
+          padding: 0;
+          padding-top: 0px;
+          color: #FF4B54;
+          font-size: 16px;
+        }
+      }
+    }
+    .new-role {
+      margin: 20px 0;
+    }
+    .add-email {
+      font-size: 12px;
+      margin-left: 9px;
+    }
   }
   &__status {
     display: flex;
@@ -445,6 +581,7 @@ export default {
   }
   .el-dialog__body > div > div, .el-dialog__body > div {
     height: 100%;
+    margin-bottom: 20px;
   }
   .el-button--danger {
     float: left;
