@@ -145,7 +145,6 @@
                           Cancelar resposta
                         </el-button>
                         <el-button
-                          :disabled="!(!(invalidReceiver || !activeRole.personId) || !!directEmailAddress)"
                           type="primary"
                           size="medium"
                           data-testid="submit-message"
@@ -532,7 +531,10 @@ export default {
           this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
         }
       }
-      if (this.newMessageTrim) {
+      if (!this.newMessageTrim) {
+        return false
+      }
+      if (this.selectedContacts.map(c => c.id).length) {
         this.loadingTextarea = true
         let to = []
         if (this.directEmailAddress) {
@@ -567,6 +569,12 @@ export default {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.loadingTextarea = false
+        })
+      } else {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Selecione ao menos um contato para envio.',
+          type: 'warning'
         })
       }
     },
