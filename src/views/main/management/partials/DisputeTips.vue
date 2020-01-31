@@ -8,7 +8,7 @@
     <div class="content">
       <el-steps :active="documentStep" align-center process-status="wait">
         <el-step title="Criação" description="Criação e edição da minuta" icon="el-icon-document" />
-        <el-step title="Envio" description="Envio para assinatura das partes" icon="el-icon-upload" />
+        <el-step title="Envio" description="Envio para assinatura das partes" icon="el-icon-s-promotion" />
         <el-step title="Assinaturas" description="Todas as assinaturas coletadas" icon="el-icon-edit" />
       </el-steps>
     </div>
