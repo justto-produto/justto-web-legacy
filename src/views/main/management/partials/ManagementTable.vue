@@ -252,6 +252,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="false"
         :width="tab2 ? '152px' : '78px'"
         class-name="management-table__row-actions"
         align="right">
@@ -288,34 +289,20 @@
             <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
           </el-button>
           <el-button
-            type="text"
-            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+            type="text">
+            <jus-icon icon="unread"/>
           </el-button>
           <el-button
-            type="text"
-            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+            type="text">
+            <jus-icon icon="proposal" style="width: 22px;"/>
           </el-button>
           <el-button
-            type="text"
-            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+            type="text">
+            <jus-icon icon="refresh"/>
           </el-button>
           <el-button
-            type="text"
-            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-          </el-button>
-          <el-button
-            type="text"
-            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-          </el-button>
-          <el-button
-            type="text"
-            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
+            type="text">
+            <jus-icon icon="pause"/>
           </el-button>
         </template>
       </el-table-column>
@@ -727,6 +714,9 @@ export default {
     position: relative;
     .cell {
       display: none;
+      img {
+        width: 18px;
+      }
     }
   }
   tr:hover {
@@ -736,7 +726,7 @@ export default {
       position: absolute;
       display: flex;
       right: 0;
-      top: 2px;
+      top: 0;
     }
   }
 }
