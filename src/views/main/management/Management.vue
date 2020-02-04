@@ -63,7 +63,7 @@
           <el-tooltip content="Importar disputas">
             <el-button
               plain
-              @click="importDialogVisible = true">
+              @click="showImportDialog">
               <jus-icon icon="upload-file" style="width: 20px;" />
             </el-button>
           </el-tooltip>
@@ -171,6 +171,8 @@ export default {
         return this.$store.getters.disputeQuery.size
       },
       set (size) {
+        // SEGMENT TRACK
+        this.$jusSegment(`Alterada Paginação para ${size} itens`)
         this.$store.commit('updateDisputeQuery', { key: 'page', value: 1 })
         this.$store.commit('updateDisputeQuery', { key: 'size', value: size })
         this.getDisputes()
@@ -193,6 +195,7 @@ export default {
     term (term) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
+        this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}`})
         this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
         this.getDisputes()
       }, 800)
@@ -275,6 +278,11 @@ export default {
         .finally(() => {
           this.loadingExport = false
         })
+    },
+    showImportDialog () {
+      // SEGMENT TRACK
+      this.$jusSegment('Botão importação rápida')
+      this.importDialogVisible = true
     }
   }
 }

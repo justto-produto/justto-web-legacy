@@ -155,6 +155,8 @@ export default {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
+          // SEGMENT TRACK
+          this.$jusSegment('Busca global de disputas', { description: `Termo utilizado: ${term}`})
           if (response.length) {
             cb(response)
           } else {
