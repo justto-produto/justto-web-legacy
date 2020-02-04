@@ -217,7 +217,7 @@ export default {
       },
       newRoleRules: {
         name: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { required: false, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'submit' }
         ],
         phone: [
