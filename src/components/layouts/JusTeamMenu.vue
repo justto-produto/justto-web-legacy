@@ -5,7 +5,7 @@
         v-for="member in members"
         :key="member.id + member.personId"
         class="jus-team-menu__member"
-        @click.prevent="setFilterPersonId(member.person.id)">
+        @click.prevent="setFilterPersonId(member.person.id, member.person.name)">
         <el-tooltip :content="member.person.name" placement="right">
           <jus-avatar-user
             :name="member.person.name"
@@ -31,10 +31,12 @@ export default {
     }
   },
   methods: {
-    setFilterPersonId (id) {
+    setFilterPersonId (id, name) {
       if (this.activePersonsIds.includes(id)) {
         this.$store.commit('updateDisputeQuery', { key: 'persons', value: [] })
       } else {
+        // SEGMENT TRACK
+        this.$jusSegment('track', { id: 'Filtro por negociador', name })
         this.$store.commit('updateDisputeQuery', { key: 'persons', value: [id] })
       }
     }
