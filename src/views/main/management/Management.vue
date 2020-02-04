@@ -256,6 +256,10 @@ export default {
     exportDisputes () {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id))
+        .then(() => {
+          // SEGMENT TRACK
+          this.$jusSegment('Exportar disputas')
+        })
         .catch(error => {
           if (error.response && error.response.status === 403) {
             this.$jusNotification({

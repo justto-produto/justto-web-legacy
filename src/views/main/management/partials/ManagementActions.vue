@@ -127,6 +127,8 @@
 </template>
 
 <script>
+import { getTracktitleByAction } from '@/utils/jusUtils'
+
 export default {
   name: 'ManagementActions',
   props: {
@@ -179,26 +181,6 @@ export default {
   methods: {
     doAction (action) {
       let selecteds = this.selectedIdsLength
-      let trackTitle
-      if (action === 'SETTLED') {
-        trackTitle = 'casos ganhos'
-      } else if (action === 'unsettled') {
-        trackTitle = 'casos perdidos'
-      } else if (action === 'PAUSED') {
-        trackTitle = 'disputas pausadas'
-      } else if (action === 'RESUME') {
-        trackTitle = 'disputas retomadas'
-      } else if (action === 'DELETE') {
-        trackTitle = 'casos deletados'
-      } else if (action === 'RESTART_ENGAGEMENT') {
-        trackTitle = 'Reiniciar engajamento'
-      } else if (action === 'CHANGE_STRATEGY') {
-        trackTitle = 'estratégias alteradas'
-      } else if (action === 'CHANGE_EXPIRATION_DATE') {
-        trackTitle = 'fim de negociações alterados'
-      } else {
-        trackTitle = 'Ação em massa realizada'
-      }
       let params = {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds
@@ -226,6 +208,8 @@ export default {
           type: 'success',
           dangerouslyUseHTMLString: true
         })
+        // SEGMENT TRACK
+        this.$jusSegment(getTracktitleByAction(action, true), { amount: this.selectedIds.length })
         if (action === 'unsettled') {
           setTimeout(() => {
             this.$jusNotification({

@@ -9,12 +9,12 @@ const JusSegment = {
     }
     Vue.prototype.$jusSegment = (event, prop) => {
       let proprieties = {
-        userId: prop && prop.userId ? prop.userId : store.getters.accountEmail,
-        workspace: prop && prop.workspace ? prop.workspace : store.getters.workspaceName,
-        team: prop && prop.team ? prop.team : store.getters.workspaceTeamName,
-        source: 'front',
-        description: prop && prop.description ? prop.description : ''
+        userId: store.getters.accountEmail,
+        workspace: store.getters.workspaceName,
+        team: store.getters.workspaceTeamName,
+        source: 'front'
       }
+      Object.assign(proprieties, prop)
       window.analytics.track(event, proprieties, () => {
         if (process.env.NODE_ENV === 'development') {
           console.table(new SegmentLog(event, proprieties))

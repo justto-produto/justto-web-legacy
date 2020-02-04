@@ -183,6 +183,26 @@ const getDocumentStep = function (hasDocument, signStatus) {
   } return 0
 }
 
+const getTracktitleByAction = function (action, batch) {
+  action = action.toUpperCase().replace('-', '_')
+  let title
+  if (action === 'SETTLED') title = 'Ação marcar como disputa GANHA'
+  else if (action === 'UNSETTLED') title =  'Ação marcar disputa como PERDIDA'
+  else if (action === 'PAUSED') title =  'Ação marcar disputa como PAUSADA'
+  else if (action === 'RESUME') title =  'Ação marcar disputa como RETOMADA'
+  else if (action === 'FAVORITE') title =  'Ação marcar disputa como FAVORITA'
+  else if (action === 'DISFAVOR') title =  'Ação remover disputa como FAVORITA'
+  else if (action === 'RESTART_ENGAGEMENT') title =  'Ação REINICIAR ENGAJAMENTO'
+  else if (action === 'ENRICH') title =  'Ação ENRIQUECIMENTO'
+  else if (action === 'CHANGE_EXPIRATION_DATE') title =  'Ação ALTERAR DATA LIMITE'
+  else if (action === 'DELETE') title =  'Ação EXCLUIR'
+  else if (action === 'CHANGE_STRATEGY') title =  'Ação ALTERAR FIM DA NEGOCIAÇÃO'
+  else title =  `Ação ${action} realizada`
+  if (batch) title+= ' em massa'
+  else title+= ' manual'
+  return title
+}
+
 export {
   getRoles,
   getFirstRole,
@@ -193,5 +213,6 @@ export {
   getLastInteractionTooltip,
   isBase64,
   uuidv4,
-  getDocumentStep
+  getDocumentStep,
+  getTracktitleByAction
 }

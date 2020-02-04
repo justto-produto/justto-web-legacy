@@ -552,7 +552,12 @@ export default {
           message: this.newMessage,
           disputeId: this.dispute.id
         }).then(() => {
-          window.analytics.track('Enviou mensagem via ' + this.messageType)
+          // SEGMENT TRACK
+          if (this.directEmailAddress) {
+            this.$jusSegment(`Envio de ${this.messageType} via resposta rápida`)
+          } else {
+            this.$jusSegment(`Envio de ${this.messageType} manual`)
+          }
           this.newMessage = ''
           this.cancelReply(true)
           this.$jusNotification({

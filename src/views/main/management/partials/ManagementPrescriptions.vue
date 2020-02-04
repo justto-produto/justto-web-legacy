@@ -29,8 +29,25 @@ export default {
   },
   methods: {
     handlePrescriptionClick (prescription) {
-      if (this[prescription]) this.$store.commit('removePrescription', prescription)
-      else this.$store.commit('addPrescription', prescription)
+      if (this[prescription]) {
+        this.$store.commit('removePrescription', prescription)
+      } else {
+        this.$store.commit('addPrescription', prescription)
+        // SEGMENT TRACK
+        switch (prescription) {
+          case 'HAS_ANSWER':
+            this.$jusSegment('Filtro botão COM RESPOSTA')
+            break;
+          case 'COUNTERPROPOSAL_UP_TO_20':
+            this.$jusSegment('filtro botão CONTRAPROPOSTA ATÉ 20%')
+            break;
+          case 'COUNTERPROPOSAL_OVER_20':
+            this.$jusSegment('filtro botão CONTRAPROPOSTA ACIMA 20%')
+            break;
+          default:
+
+        }
+      }
       this.$emit('management:getDisputes')
     }
   }
