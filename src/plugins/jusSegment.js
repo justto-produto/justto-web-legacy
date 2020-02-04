@@ -1,18 +1,23 @@
 import Vue from 'vue'
+import store from '@/store'
 
 const JusSegment = {
   install (Vue, options) {
-    function SegmentLog (method, identifier, args) {
-      this.method = method
-      this.args = args
-      this.identifier = identifier
+    function SegmentLog (event, proprieties) {
+      this.event = event
+      this.proprieties = proprieties
     }
-    Vue.prototype.$jusSegment = (method, args) => {
-      let identifier = args.id
-      delete args.id
-      window.analytics[method](identifier, args, () => {
+    Vue.prototype.$jusSegment = (event, prop) => {
+      let proprieties = {
+        userId: prop && prop.userId ? prop.userId : store.getters.accountEmail,
+        workspace: prop && prop.workspace ? prop.workspace : store.getters.workspaceName,
+        team: prop && prop.team ? prop.team : store.getters.workspaceTeamName,
+        source: 'front',
+        description: prop && prop.description ? prop.description : ''
+      }
+      window.analytics.track(event, proprieties, () => {
         if (process.env.NODE_ENV === 'development') {
-          console.table(new SegmentLog(method, identifier, args))
+          console.table(new SegmentLog(event, proprieties))
         }
       })
     }

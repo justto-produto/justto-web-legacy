@@ -71,6 +71,8 @@ export default {
           this.showLoading = true
           this.$store.dispatch('forgotPassword', this.forgotForm.email)
             .then(() => {
+              // SEGMENT TRACK
+              this.$jusSegment('Reset de senha', { userId: this.forgotForm.email })
               this.showSuccess = true
               this.forgotForm.email = ''
               this.showLoading = false

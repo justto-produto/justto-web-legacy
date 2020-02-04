@@ -425,8 +425,10 @@ export default {
           this.$store.dispatch('inviteTeammates', [{
             email: this.inviteForm.email,
             profile: this.inviteForm.profile
-            // profile: 'NEGOTIATOR'
           }]).then(response => {
+            this.$jusSegment('Convite de novo membro', {
+              description: `Usuário convidado: ${this.inviteForm.email} como ${this.inviteForm.profile}`
+            })
             window.analytics.track('Novo usuário convidado')
             this.$jusNotification({
               title: 'Yay!',

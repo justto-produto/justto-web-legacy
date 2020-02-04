@@ -36,7 +36,7 @@ export default {
         this.$store.commit('updateDisputeQuery', { key: 'persons', value: [] })
       } else {
         // SEGMENT TRACK
-        this.$jusSegment('track', { id: 'Filtro por negociador', name })
+        this.$jusSegment('Filtro por negociador', { description: `Alterado filtro de negociador para ${name}` })
         this.$store.commit('updateDisputeQuery', { key: 'persons', value: [id] })
       }
     }

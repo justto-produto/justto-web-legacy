@@ -339,12 +339,14 @@ export default {
           trackTitle = 'Disputa favoritada'
         } else if (action === 'disfavor') {
           trackTitle = 'Disputa desfavoritada'
+        } else if (action === 'restart-engagement') {
+          trackTitle = 'Reiniciar engajamento'
+        }else if (action === 'enrich') {
+          trackTitle = 'Enriquecimento manual'
         } else {
           trackTitle = 'Status Modificado'
         }
-        window.analytics.track(trackTitle, {
-          action: action
-        })
+        this.$jusSegment(trackTitle, { disputeId: params.disputeId })
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,

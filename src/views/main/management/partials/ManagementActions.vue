@@ -191,7 +191,7 @@ export default {
       } else if (action === 'DELETE') {
         trackTitle = 'casos deletados'
       } else if (action === 'RESTART_ENGAGEMENT') {
-        trackTitle = 'engajamentos reiniciados'
+        trackTitle = 'Reiniciar engajamento'
       } else if (action === 'CHANGE_STRATEGY') {
         trackTitle = 'estratégias alteradas'
       } else if (action === 'CHANGE_EXPIRATION_DATE') {
@@ -218,10 +218,6 @@ export default {
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
-        window.analytics.track(trackTitle, {
-          action: action,
-          selecteds: selecteds
-        })
         this.selectedIdsComp = []
         this.$store.dispatch('getDisputes')
         this.$jusNotification({
@@ -283,6 +279,7 @@ export default {
         )
       }
       Promise.all(reengagement).then(() => {
+        this.$jusSegment('Reiniciar engajamento em massa')
         window.analytics.track('disputas enriquecidas - SUCESSOS', {
           action: action
         })
@@ -293,9 +290,6 @@ export default {
           dangerouslyUseHTMLString: true
         })
       }).catch(e => {
-        window.analytics.track('disputas enriquecidas - ERROS', {
-          action: action
-        })
         this.$jusNotification({
           title: 'Ops!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. Parece que algumas das disputas selecionadas não foram enriquecidas.',

@@ -178,11 +178,7 @@ export default {
                 this.$store.dispatch('myWorkspace')
               ]).then(responses => {
                 // SEGMENT TRACK
-                this.$jusSegment('identify', {
-                  id: responses[0].data.id,
-                  email: responses[0].data.email,
-                  name: responses[0].data.name
-                })
+                this.$jusSegment('Usuário logado')
                 if (responses[1].length > 1) {
                   this.showLoading = false
                   this.workspaces = responses[1]
@@ -210,10 +206,9 @@ export default {
     },
     getMembersAndRedirect (response) {
       // SEGMENT TRACK
-      this.$jusSegment('group', {
-        id: response.workspace.subDomain,
-        name: response.workspace.name,
-        teamName: response.workspace.teamName
+      this.$jusSegment('Seleção de Workspace', {
+        workspace: response.workspace.name,
+        team: response.workspace.teamName
       })
       if (response.workspace) this.$store.commit('setWorkspace', response.workspace)
       if (response.profile) this.$store.commit('setProfile', response.profile)
