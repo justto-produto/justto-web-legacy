@@ -195,7 +195,7 @@ export default {
     term (term) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
-        this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}`})
+        this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
         this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
         this.getDisputes()
       }, 800)

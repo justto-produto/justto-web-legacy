@@ -180,7 +180,6 @@ export default {
   },
   methods: {
     doAction (action) {
-      let selecteds = this.selectedIdsLength
       let params = {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds

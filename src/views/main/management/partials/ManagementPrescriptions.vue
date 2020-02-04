@@ -10,7 +10,6 @@
       Contraproposta (+20%)
     </el-button>
   </div>
-
 </template>
 
 <script>
@@ -37,15 +36,13 @@ export default {
         switch (prescription) {
           case 'HAS_ANSWER':
             this.$jusSegment('Filtro botão COM RESPOSTA')
-            break;
+            break
           case 'COUNTERPROPOSAL_UP_TO_20':
             this.$jusSegment('filtro botão CONTRAPROPOSTA ATÉ 20%')
-            break;
+            break
           case 'COUNTERPROPOSAL_OVER_20':
             this.$jusSegment('filtro botão CONTRAPROPOSTA ACIMA 20%')
-            break;
-          default:
-
+            break
         }
       }
       this.$emit('management:getDisputes')
