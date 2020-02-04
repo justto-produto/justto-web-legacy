@@ -1077,7 +1077,6 @@ export default {
           Promise.all(promise).then(() => {
             this.editRoleAction()
           }).catch(e => {
-            console.log(e)
             this.$jusNotification({ type: 'error' })
           }).finally(() => {
             this.linkBankAccountLoading = false
@@ -1138,6 +1137,7 @@ export default {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
+        console.log(error)
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
@@ -1160,11 +1160,12 @@ export default {
           if (!mappedEmails.includes(email.address)) return email.address
         })
       }
-      changed = changed.newPhones.concat(changed.newEmails)
+      changed = { ...changed.newPhones, ...changed.newEmails }
       return changed
     },
     addPhone () {
       let isValid = true
+      this.roleForm.phone = this.roleForm.phone.trim()
       this.$refs.roleForm.validateField('phone', errorMessage => {
         if (errorMessage || !this.roleForm.phone) isValid = false
       })
