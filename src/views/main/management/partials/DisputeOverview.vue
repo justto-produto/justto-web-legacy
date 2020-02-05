@@ -258,20 +258,20 @@
             <span>Cidade: </span>
             <el-select v-model="cityFilter" clearable filterable default-first-option>
               <el-option
-              v-for="city in cityList"
-              :key="city"
-              :label="city"
-              :value="city" />
+                v-for="city in cityList"
+                :key="city"
+                :label="city"
+                :value="city" />
             </el-select>
           </div>
           <div class="dispute-overview-view__namesake-filter">
             <span>UF: </span>
             <el-select v-model="ufFilter" clearable filterable default-first-option>
               <el-option
-              v-for="uf in ufList"
-              :key="uf"
-              :label="uf"
-              :value="uf" />
+                v-for="uf in ufList"
+                :key="uf"
+                :label="uf"
+                :value="uf" />
             </el-select>
           </div>
         </div>
