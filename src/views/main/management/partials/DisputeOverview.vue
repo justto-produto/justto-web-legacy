@@ -253,8 +253,30 @@
           <div v-show="selectedNamesake.uf">UF: <b>{{ selectedNamesake.uf }}</b></div>
           <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth }}</b></div>
         </div>
+        <div class="dispute-overview-view__namesake-filters">
+          <div class="dispute-overview-view__namesake-filter">
+            <span>Cidade: </span>
+            <el-select v-model="cityFilter" clearable filterable default-first-option>
+              <el-option
+              v-for="city in cityList"
+              :key="city"
+              :label="city"
+              :value="city" />
+            </el-select>
+          </div>
+          <div class="dispute-overview-view__namesake-filter">
+            <span>UF: </span>
+            <el-select v-model="ufFilter" clearable filterable default-first-option>
+              <el-option
+              v-for="uf in ufList"
+              :key="uf"
+              :label="uf"
+              :value="uf" />
+            </el-select>
+          </div>
+        </div>
         <el-table
-          :data="namesakeList"
+          :data="filteredNamesakeList"
           highlight-current-row
           style="width: 100%"
           @current-change="handleCurrentChange">
@@ -704,10 +726,29 @@ export default {
         type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       bankAccountIdstoUnlink: [],
-      documentNumberHasChanged: false
+      documentNumberHasChanged: false,
+      cityFilter: null,
+      ufFilter: null
     }
   },
   computed: {
+    ufList () {
+      let ufList = this.namesakeList.map(namesake => namesake.uf)
+      return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
+    },
+    cityList () {
+      let cityList = this.namesakeList.map(namesake => namesake.city)
+      return cityList.filter((city, i) => city !== null && cityList.indexOf(city) === i)
+    },
+    filteredNamesakeList () {
+      if (this.ufFilter === '') this.ufFilter = null
+      if (this.cityFilter === '') this.cityFilter = null
+      if (this.ufFilter || this.cityFilter) {
+        return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter && namesake.city === this.cityFilter)
+      } else {
+        return this.namesakeList
+      }
+    },
     isJusttoCs () {
       return this.$store.getters.isJusttoAdmin
     },
@@ -1438,6 +1479,27 @@ export default {
     }
     .el-collapse-item__content {
       padding-bottom: 0;
+    }
+  }
+  &__namesake-filters {
+    display: flex;
+    margin-top: 20px;
+  }
+  &__namesake-filter {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    span {
+      margin-right: 8px;
+      font-weight: bold;
+      color: #adadad;
+    }
+    .el-select {
+      display: flex;
+      flex: 1;
+    }
+    &:last-child {
+      margin-left: 12px;
     }
   }
   .el-input-group__append {
