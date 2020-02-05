@@ -238,8 +238,6 @@
     </el-collapse>
     <el-dialog
       :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      :show-close="false"
       :visible.sync="namesakeDialogVisible"
       title="Corrigir homônimo"
       width="70%">
