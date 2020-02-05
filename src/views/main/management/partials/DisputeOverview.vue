@@ -136,16 +136,16 @@
             class="dispute-overview-view__role-collapse"
             data-testid="expand-party">
             <template slot="title">
-              <i v-if="role.personProperties.NAMESAKE && !role.documentNumber && isJusttoCs" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
+              <i v-if="showNamesake(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
               <div class="dispute-overview-view__name">
                 {{ role.name }}
               </div>
             </template>
-            <p v-if="role.personProperties.NAMESAKE && !role.documentNumber && isJusttoCs" style="margin-top: 0">
+            <p v-if="showNamesake(role)" style="margin-top: 0">
               Esta parte não foi enriquecida corretamente devido à existência de homônimos.
             </p>
             <el-button
-              v-if="role.personProperties.NAMESAKE && !role.documentNumber && isJusttoCs"
+              v-if="showNamesake(role)"
               :loading="namesakeButtonLoading"
               type="warning"
               style="width: 100%; margin-bottom: 14px;"
@@ -809,11 +809,14 @@ export default {
     }
   },
   methods: {
+    showNamesake (role) {
+      return role.personProperties.NAMESAKE && !role.documentNumber && role.party === 'CLAIMANT' && this.isJusttoCs
+    },
     selectNamesake () {
       if (this.selectedNamesake) {
         this.namesakeDialogLoading = true
         // eslint-disable-next-line
-        axios.patch(`api/fusion-runner/set-document/person/${this.selectedNamesakePersonId}/${this.selectedNamesake.document}`)
+        axios.patch(`api/fusion-runner/set-document/person/${this.selectedNamesakePersonId}/${this.selectedNamesake.document}/${this.dispute.id}`)
           .then(() => {
             this.namesakeDialogVisible = false
             this.namesakeDialogLoading = false
