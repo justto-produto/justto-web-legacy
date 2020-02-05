@@ -741,10 +741,12 @@ export default {
       return cityList.filter((city, i) => city !== null && cityList.indexOf(city) === i)
     },
     filteredNamesakeList () {
-      if (this.ufFilter === '') this.ufFilter = null
-      if (this.cityFilter === '') this.cityFilter = null
-      if (this.ufFilter || this.cityFilter) {
+      if (this.ufFilter && this.cityFilter) {
         return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter && namesake.city === this.cityFilter)
+      } else if (this.ufFilter) {
+        return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter)
+      } else if (this.cityFilter) {
+        return this.namesakeList.filter(namesake => namesake.city === this.cityFilter)
       } else {
         return this.namesakeList
       }
