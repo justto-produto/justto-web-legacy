@@ -136,16 +136,16 @@
             class="dispute-overview-view__role-collapse"
             data-testid="expand-party">
             <template slot="title">
-              <i v-if="role.personProperties.NAMESAKE && isJusttoCs" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
+              <i v-if="role.personProperties.NAMESAKE && !role.documentNumber && isJusttoCs" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
               <div class="dispute-overview-view__name">
                 {{ role.name }}
               </div>
             </template>
-            <p v-if="role.personProperties.NAMESAKE && isJusttoCs" style="margin-top: 0">
+            <p v-if="role.personProperties.NAMESAKE && !role.documentNumber && isJusttoCs" style="margin-top: 0">
               Esta parte não foi enriquecida corretamente devido à existência de homônimos.
             </p>
             <el-button
-              v-if="role.personProperties.NAMESAKE && isJusttoCs"
+              v-if="role.personProperties.NAMESAKE && !role.documentNumber && isJusttoCs"
               :loading="namesakeButtonLoading"
               type="warning"
               style="width: 100%; margin-bottom: 14px;"
