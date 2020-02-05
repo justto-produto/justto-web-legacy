@@ -30,7 +30,9 @@
           :dispute-id="id"
           :style="{ opacity: expandedMessageBox ? 0.2 : 1 }"
           data-testid="dispute-messages"
-          @dispute:reply="startReply" />
+          @dispute:reply="startReply">
+          <dispute-tips />
+        </dispute-occurrences>
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
           <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
@@ -143,7 +145,6 @@
                           Cancelar resposta
                         </el-button>
                         <el-button
-                          :disabled="!(!(invalidReceiver || !activeRole.personId) || !!directEmailAddress)"
                           type="primary"
                           size="medium"
                           data-testid="submit-message"
@@ -237,6 +238,7 @@ export default {
     DisputeNotes: () => import('./partials/DisputeNotes'),
     DisputeOverview: () => import('./partials/DisputeOverview'),
     DisputeActions: () => import('./partials/DisputeActions'),
+    DisputeTips: () => import('./partials/DisputeTips'),
     quillEditor
   },
   data () {
@@ -529,7 +531,10 @@ export default {
           this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
         }
       }
-      if (this.newMessageTrim) {
+      if (!this.newMessageTrim) {
+        return false
+      }
+      if (this.selectedContacts.map(c => c.id).length) {
         this.loadingTextarea = true
         let to = []
         if (this.directEmailAddress) {
@@ -564,6 +569,12 @@ export default {
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.loadingTextarea = false
+        })
+      } else {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Selecione ao menos um contato para envio.',
+          type: 'warning'
         })
       }
     },

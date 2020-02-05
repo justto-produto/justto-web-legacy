@@ -173,6 +173,16 @@ const uuidv4 = function () {
   })
 }
 
+const getDocumentStep = function (hasDocument, signStatus) {
+  if (hasDocument) {
+    if (signStatus) {
+      if (signStatus === 'SIGNING') {
+        return 2
+      } return 3
+    } return 1
+  } return 0
+}
+
 export {
   getRoles,
   getFirstRole,
@@ -182,5 +192,6 @@ export {
   getInteractionIcon,
   getLastInteractionTooltip,
   isBase64,
-  uuidv4
+  uuidv4,
+  getDocumentStep
 }
