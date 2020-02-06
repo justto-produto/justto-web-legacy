@@ -128,13 +128,6 @@ export default {
       return ''
     }
   },
-  watch: {
-    '$store.state.socketModule.whatsapp.status': function () {
-      if (this.$store.state.socketModule.whatsapp.status === 'CONNECTED') {
-        window.analytics.track('Whatsapp sincronizado')
-      }
-    }
-  },
   methods: {
     sendMessage () {
       this.$refs['numberForm'].validate(valid => {

@@ -148,7 +148,8 @@ export default {
         let noteId = occurrence.id
         this.noteLoading = occurrence.id
         this.$store.dispatch('deleteDisputeNote', noteId).then(() => {
-          window.analytics.track('Nota removida')
+          // SEGMENT TRACK
+          this.$jusSegment('Nota removida')
           this.occurrences.splice(index, 1)
           this.$jusNotification({
             title: 'Yay!',

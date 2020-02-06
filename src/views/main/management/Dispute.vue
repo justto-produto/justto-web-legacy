@@ -31,7 +31,9 @@
           :style="{ opacity: expandedMessageBox ? 0.2 : 1 }"
           :typing-tab.sync="typingTab"
           data-testid="dispute-messages"
-          @dispute:reply="startReply" />
+          @dispute:reply="startReply">
+          <dispute-tips />
+        </dispute-occurrences>
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
           <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
@@ -144,7 +146,6 @@
                           Cancelar resposta
                         </el-button>
                         <el-button
-                          :disabled="!(!(invalidReceiver || !activeRole.personId) || !!directEmailAddress)"
                           type="primary"
                           size="medium"
                           data-testid="submit-message"
@@ -239,6 +240,7 @@ export default {
     DisputeNotes: () => import('./partials/DisputeNotes'),
     DisputeOverview: () => import('./partials/DisputeOverview'),
     DisputeActions: () => import('./partials/DisputeActions'),
+    DisputeTips: () => import('./partials/DisputeTips'),
     quillEditor
   },
   data () {
@@ -388,7 +390,7 @@ export default {
     },
     cancelReply (collapse) {
       this.directEmailAddress = ''
-      this.$refs.messageEditor.quill.setText('')
+      if (this.$refs.messageEditor) this.$refs.messageEditor.quill.setText('')
       if (collapse) this.collapseTextarea()
     },
     setMessageType (type) {
@@ -531,7 +533,10 @@ export default {
           this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
         }
       }
-      if (this.newMessageTrim) {
+      if (!this.newMessageTrim) {
+        return false
+      }
+      if (this.selectedContacts.map(c => c.id).length) {
         this.loadingTextarea = true
         let to = []
         if (this.directEmailAddress) {
@@ -549,7 +554,12 @@ export default {
           message: this.newMessage,
           disputeId: this.dispute.id
         }).then(() => {
-          window.analytics.track('Enviou mensagem via ' + this.messageType)
+          // SEGMENT TRACK
+          if (this.directEmailAddress) {
+            this.$jusSegment(`Envio de ${this.messageType} via resposta rápida`)
+          } else {
+            this.$jusSegment(`Envio de ${this.messageType} manual`)
+          }
           this.newMessage = ''
           this.cancelReply(true)
           this.$jusNotification({
@@ -561,10 +571,17 @@ export default {
             this.newMessage = ''
             this.collapseTextarea()
           }.bind(this), 500)
-        }).catch(() => {
+        }).catch(e => {
+          console.error(e)
           this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.loadingTextarea = false
+        })
+      } else {
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Selecione ao menos um contato para envio.',
+          type: 'warning'
         })
       }
     },
@@ -575,7 +592,8 @@ export default {
           note: this.newNote,
           disputeId: this.dispute.id
         }).then(() => {
-          window.analytics.track('Nova nota gravada')
+          // SEGMENT TRACK
+          this.$jusSegment('Nova nota salva')
           this.newNote = ''
           this.$jusNotification({
             title: 'Yay!',

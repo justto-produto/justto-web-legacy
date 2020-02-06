@@ -127,6 +127,8 @@
 </template>
 
 <script>
+import { getTracktitleByAction } from '@/utils/jusUtils'
+
 export default {
   name: 'ManagementActions',
   props: {
@@ -178,27 +180,6 @@ export default {
   },
   methods: {
     doAction (action) {
-      let selecteds = this.selectedIdsLength
-      let trackTitle
-      if (action === 'SETTLED') {
-        trackTitle = 'casos ganhos'
-      } else if (action === 'unsettled') {
-        trackTitle = 'casos perdidos'
-      } else if (action === 'PAUSED') {
-        trackTitle = 'disputas pausadas'
-      } else if (action === 'RESUME') {
-        trackTitle = 'disputas retomadas'
-      } else if (action === 'DELETE') {
-        trackTitle = 'casos deletados'
-      } else if (action === 'RESTART_ENGAGEMENT') {
-        trackTitle = 'engajamentos reiniciados'
-      } else if (action === 'CHANGE_STRATEGY') {
-        trackTitle = 'estratégias alteradas'
-      } else if (action === 'CHANGE_EXPIRATION_DATE') {
-        trackTitle = 'fim de negociações alterados'
-      } else {
-        trackTitle = 'Ação em massa realizada'
-      }
       let params = {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds
@@ -218,10 +199,6 @@ export default {
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
-        window.analytics.track(trackTitle, {
-          action: action,
-          selecteds: selecteds
-        })
         this.selectedIdsComp = []
         this.$store.dispatch('getDisputes')
         this.$jusNotification({
@@ -230,6 +207,8 @@ export default {
           type: 'success',
           dangerouslyUseHTMLString: true
         })
+        // SEGMENT TRACK
+        this.$jusSegment(getTracktitleByAction(action, true), { amount: this.selectedIds.length })
         if (action === 'unsettled') {
           setTimeout(() => {
             this.$jusNotification({
@@ -240,8 +219,15 @@ export default {
             })
           }, 2000)
         }
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
+      }).catch(e => {
+        if (e.response.data.reason.length) {
+          this.$jusNotification({
+            type: 'error',
+            message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
+          })
+        } else {
+          this.$jusNotification({ type: 'error' })
+        }
       })
     },
     sendBatchAction (action) {
@@ -276,9 +262,7 @@ export default {
         )
       }
       Promise.all(reengagement).then(() => {
-        window.analytics.track('disputas enriquecidas - SUCESSOS', {
-          action: action
-        })
+        this.$jusSegment('Reiniciar engajamento em massa')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
@@ -286,9 +270,6 @@ export default {
           dangerouslyUseHTMLString: true
         })
       }).catch(e => {
-        window.analytics.track('disputas enriquecidas - ERROS', {
-          action: action
-        })
         this.$jusNotification({
           title: 'Ops!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. Parece que algumas das disputas selecionadas não foram enriquecidas.',

@@ -136,10 +136,22 @@
             class="dispute-overview-view__role-collapse"
             data-testid="expand-party">
             <template slot="title">
+              <i v-if="showNamesake(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
               <div class="dispute-overview-view__name">
                 {{ role.name }}
               </div>
             </template>
+            <p v-if="showNamesake(role)" style="margin-top: 0">
+              Esta parte não foi enriquecida corretamente devido à existência de homônimos.
+            </p>
+            <el-button
+              v-if="showNamesake(role)"
+              :loading="namesakeButtonLoading"
+              type="warning"
+              style="width: 100%; margin-bottom: 14px;"
+              @click="namesakeDialog(role.name, role.personId)">
+              Tratar homônimos
+            </el-button>
             <div class="dispute-overview-view__info-line" style="margin: 0">
               <span class="title">Função:</span>
               <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
@@ -226,6 +238,60 @@
     </el-collapse>
     <el-dialog
       :close-on-click-modal="false"
+      :visible.sync="namesakeDialogVisible"
+      title="Corrigir homônimo"
+      width="70%">
+      <p>Selecione um dos registros abaixo para correção de homônimo e enriquecimento da parte.</p>
+      <div v-loading="namesakeDialogLoading">
+        <div v-show="selectedNamesake">
+          <p>Pessoa selecionada:</p>
+          <div v-show="selectedNamesake.name">Nome: <b>{{ selectedNamesake.name }}</b></div>
+          <div v-show="selectedNamesake.document">Documento: <b>{{ selectedNamesake.document }}</b></div>
+          <div v-show="selectedNamesake.city">Cidade: <b>{{ selectedNamesake.city }}</b></div>
+          <div v-show="selectedNamesake.uf">UF: <b>{{ selectedNamesake.uf }}</b></div>
+          <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth }}</b></div>
+        </div>
+        <div class="dispute-overview-view__namesake-filters">
+          <div class="dispute-overview-view__namesake-filter">
+            <span>Cidade: </span>
+            <el-select v-model="cityFilter" clearable filterable default-first-option>
+              <el-option
+                v-for="city in cityList"
+                :key="city"
+                :label="city"
+                :value="city" />
+            </el-select>
+          </div>
+          <div class="dispute-overview-view__namesake-filter">
+            <span>UF: </span>
+            <el-select v-model="ufFilter" clearable filterable default-first-option>
+              <el-option
+                v-for="uf in ufList"
+                :key="uf"
+                :label="uf"
+                :value="uf" />
+            </el-select>
+          </div>
+        </div>
+        <el-table
+          :data="filteredNamesakeList"
+          highlight-current-row
+          style="width: 100%"
+          @current-change="handleCurrentChange">
+          <el-table-column label="Nome" prop="name" />
+          <el-table-column label="Documento" prop="document" />
+          <el-table-column label="Cidade" prop="city" />
+          <el-table-column label="UF" prop="uf" />
+          <el-table-column label="Nascimento" prop="dateOfBirth" />
+        </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button :disabled="namesakeDialogLoading" plain @click="namesakeDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="namesakeDialogLoading" :disabled="!selectedNamesake" type="primary" @click="selectNamesake()">Corrigir</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="editDisputeDialogVisible"
       title="Editar disputa"
       width="50%">
@@ -289,6 +355,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
+            <el-form-item label="Classificação" prop="classification">
+              <el-input v-model="disputeForm.classification" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
               <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description-input"/>
             </el-form-item>
@@ -325,8 +396,8 @@
         <el-form-item label="Nome" prop="name">
           <el-input v-model="roleForm.name" autofocus="" />
         </el-form-item>
-        <el-form-item label="CPF/CNPJ" prop="documentNumber">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="roleForm.documentNumber" />
+        <el-form-item :rules="validateDocumentNumber" label="CPF/CNPJ" prop="documentNumber">
+          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="roleForm.documentNumber" @change="documentNumberHasChanged = true" />
         </el-form-item>
         <div v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" class="dispute-overview-view__oab-form">
           <el-form-item class="oab" label="OAB" prop="oab">
@@ -338,10 +409,10 @@
           <el-form-item class="state" label="Estado" prop="state">
             <el-select
               v-model="roleForm.state"
+              :default-first-option="true"
               autocomplete="off"
               placeholder=""
               filterable
-              default-first-option="true"
               @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
               @change="addOab(roleForm.personId, roleForm.oabs)"
               @blur="addOab(roleForm.personId, roleForm.oabs)">
@@ -570,6 +641,12 @@ export default {
   },
   data () {
     return {
+      namesakeList: [],
+      namesakeDialogVisible: false,
+      namesakeDialogLoading: false,
+      namesakeButtonLoading: false,
+      selectedNamesake: '',
+      selectedNamesakePersonId: '',
       selectedClaimantId: '',
       selectedNegotiatorId: '',
       selectedStrategyId: '',
@@ -578,7 +655,8 @@ export default {
         description: '',
         expirationDate: '',
         disputeUpperRange: '',
-        lastOfferValue: ''
+        lastOfferValue: '',
+        classification: ''
       },
       disputeFormRules: {
         disputeUpperRange: [
@@ -605,7 +683,6 @@ export default {
           { required: false, message: 'Campo obrigatório', trigger: 'submit' },
           { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
         ],
-        documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }],
         oab: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
         state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
       },
@@ -646,10 +723,41 @@ export default {
         number: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
-      bankAccountIdstoUnlink: []
+      bankAccountIdstoUnlink: [],
+      documentNumberHasChanged: false,
+      cityFilter: null,
+      ufFilter: null
     }
   },
   computed: {
+    ufList () {
+      let ufList = this.namesakeList.map(namesake => namesake.uf)
+      return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
+    },
+    cityList () {
+      let cityList = this.namesakeList.map(namesake => namesake.city)
+      return cityList.filter((city, i) => city !== null && cityList.indexOf(city) === i)
+    },
+    filteredNamesakeList () {
+      if (this.ufFilter && this.cityFilter) {
+        return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter && namesake.city === this.cityFilter)
+      } else if (this.ufFilter) {
+        return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter)
+      } else if (this.cityFilter) {
+        return this.namesakeList.filter(namesake => namesake.city === this.cityFilter)
+      } else {
+        return this.namesakeList
+      }
+    },
+    isJusttoCs () {
+      return this.$store.getters.isJusttoAdmin
+    },
+    validateDocumentNumber () {
+      if (this.documentNumberHasChanged) {
+        return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+      }
+      return []
+    },
     dispute () {
       return this.$store.getters.dispute
     },
@@ -742,6 +850,49 @@ export default {
     }
   },
   methods: {
+    showNamesake (role) {
+      return role.personProperties.NAMESAKE && !role.documentNumber && role.party === 'CLAIMANT' && this.isJusttoCs
+    },
+    selectNamesake () {
+      if (this.selectedNamesake) {
+        this.namesakeDialogLoading = true
+        // eslint-disable-next-line
+        axios.patch(`api/fusion-runner/set-document/person/${this.selectedNamesakePersonId}/${this.selectedNamesake.document}/${this.dispute.id}`)
+          .then(() => {
+            this.namesakeDialogVisible = false
+            this.namesakeDialogLoading = false
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Homônimo tratado com sucesso.',
+              type: 'success'
+            })
+          })
+          .catch(error => {
+            console.error(error)
+            this.$jusNotification({ type: 'error' })
+          })
+      }
+    },
+    handleCurrentChange (val) {
+      this.selectedNamesake = val
+    },
+    namesakeDialog (name, personId) {
+      this.selectedNamesakePersonId = personId
+      this.namesakeButtonLoading = true
+      // eslint-disable-next-line
+      axios.get('api/spider/search/name/' + name)
+        .then(response => {
+          this.namesakeDialogVisible = true
+          this.namesakeList = response.data
+        })
+        .catch(error => {
+          console.error(error)
+          this.$jusNotification({ type: 'error' })
+        })
+        .finally(() => {
+          this.namesakeButtonLoading = false
+        })
+    },
     updateDisputeRole (activeRole, messageType) {
       let disputeRoles = this.dispute.disputeRoles.map(dr => {
         if (dr.id === activeRole.id) {
@@ -819,6 +970,7 @@ export default {
       } return []
     },
     openDisputeDialog () {
+      this.documentNumberHasChanged = false
       this.$store.dispatch('getMyStrategies')
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
@@ -830,6 +982,7 @@ export default {
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
+      this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -858,12 +1011,15 @@ export default {
             disputeToEdit.disputeUpperRange = this.disputeForm.disputeUpperRange
             disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
             disputeToEdit.description = this.disputeForm.description
+            disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
             let today = this.$moment()
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
+              // SEGMENT TRACK
+              this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Os dados foram alterados com sucesso.',
@@ -967,7 +1123,6 @@ export default {
           Promise.all(promise).then(() => {
             this.editRoleAction()
           }).catch(e => {
-            console.log(e)
             this.$jusNotification({ type: 'error' })
           }).finally(() => {
             this.linkBankAccountLoading = false
@@ -985,6 +1140,8 @@ export default {
         disputeId: this.dispute.id,
         disputeRole: roleToEdit
       }).then(() => {
+        // SEGMENT TRACK
+        this.$jusSegment('Editar partes da disputa', { description: `Usuário ${roleToEdit.name} alterado` })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Os dados foram alterados com sucesso.',
@@ -1028,8 +1185,7 @@ export default {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
-        this.editRoleDialogError = true
-        this.editRoleDialogErrorList = []
+        console.log(error)
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
@@ -1052,11 +1208,12 @@ export default {
           if (!mappedEmails.includes(email.address)) return email.address
         })
       }
-      changed = changed.newPhones.concat(changed.newEmails)
+      changed = { ...changed.newPhones, ...changed.newEmails }
       return changed
     },
     addPhone () {
       let isValid = true
+      this.roleForm.phone = this.roleForm.phone.trim()
       this.$refs.roleForm.validateField('phone', errorMessage => {
         if (errorMessage || !this.roleForm.phone) isValid = false
       })
@@ -1067,7 +1224,7 @@ export default {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === self.roleForm.phone
         })
-        if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone })
+        if (isDuplicated < 0) this.roleForm.phones.push({ number: this.roleForm.phone, isMain: true })
         this.roleForm.phone = ''
       }
     },
@@ -1328,6 +1485,27 @@ export default {
       padding-bottom: 0;
     }
   }
+  &__namesake-filters {
+    display: flex;
+    margin-top: 20px;
+  }
+  &__namesake-filter {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    span {
+      margin-right: 8px;
+      font-weight: bold;
+      color: #adadad;
+    }
+    .el-select {
+      display: flex;
+      flex: 1;
+    }
+    &:last-child {
+      margin-left: 12px;
+    }
+  }
   .el-input-group__append {
     border-color: #9462f7;
     background-color: #9462f7;
@@ -1338,6 +1516,7 @@ export default {
   .el-collapse--bordered {
     .el-collapse-item {
       box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+      position: relative;
       &.is-active {
         border: 2px solid #9461f7;
       }
@@ -1350,6 +1529,16 @@ export default {
     min-width: 500px;
     h3 {
       margin-bottom: 10px;
+    }
+  }
+  .el-table__body tr.current-row > td {
+    border-top: 1px solid #9461f7;
+    border-bottom: 1px solid #9461f7;
+    &:first-child {
+      border-left: 1px solid #9461f7
+    }
+    &:last-child {
+      border-right: 1px solid #9461f7
     }
   }
 }

@@ -154,7 +154,13 @@ const account = {
     accountToken: state => state.token,
     isLoggedIn: state => !!state.token,
     accountId: state => state.id,
-    accountEmail: state => state.email
+    accountEmail: state => state.email,
+    isJusttoAdmin: state => {
+      if (state.email.endsWith('@justto.com.br')) {
+        return true
+      }
+      return false
+    }
   }
 }
 

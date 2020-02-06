@@ -112,6 +112,9 @@
         <el-button plain data-testid="close-button" @click="messageDialogVisible = false">Fechar</el-button>
       </span>
     </el-dialog>
+    <div style="margin-top: 20px">
+      <slot />
+    </div>
   </ul>
 </template>
 
@@ -367,7 +370,6 @@ export default {
   padding: 0;
   margin: 0;
   height: 100%;
-  padding-bottom: 20px;
   &__occurrence {
     display: flex;
     justify-content: center;

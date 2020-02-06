@@ -60,15 +60,23 @@
             <jus-icon :is-white="hasFilters" icon="filter" data-testid="management-filterbtn" />
             Filtrar
           </el-button>
-          <el-button
-            :loading="loadingExport"
-            :disabled="disputes.length === 0"
-            plain
-            icon="el-icon-download"
-            data-testid="export-disputes"
-            @click="exportDisputes">
-            Exportar
-          </el-button>
+          <el-tooltip content="Importar disputas">
+            <el-button
+              plain
+              @click="showImportDialog">
+              <jus-icon icon="upload-file" style="width: 20px;" />
+            </el-button>
+          </el-tooltip>
+          <el-tooltip content="Exportar disputas">
+            <el-button
+              :loading="loadingExport"
+              :disabled="disputes.length === 0"
+              plain
+              icon="el-icon-download"
+              data-testid="export-disputes"
+              @click="exportDisputes" />
+          </el-tooltip>
+          <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
         </div>
       </div>
       <management-filters
@@ -109,7 +117,8 @@ export default {
     ManagementFilters: () => import('./partials/ManagementFilters'),
     ManagementTable: () => import('./partials/ManagementTable'),
     ManagementActions: () => import('./partials/ManagementActions'),
-    ManagementPrescriptions: () => import('./partials/ManagementPrescriptions')
+    ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
+    JusImportDialog: () => import('@/components/dialogs/JusImportDialog')
   },
   data () {
     return {
@@ -119,7 +128,8 @@ export default {
       term: '',
       termDebounce: '',
       disputeDebounce: '',
-      selectedIds: []
+      selectedIds: [],
+      importDialogVisible: false
     }
   },
   computed: {
@@ -161,6 +171,8 @@ export default {
         return this.$store.getters.disputeQuery.size
       },
       set (size) {
+        // SEGMENT TRACK
+        this.$jusSegment(`Alterada Paginação para ${size} itens`)
         this.$store.commit('updateDisputeQuery', { key: 'page', value: 1 })
         this.$store.commit('updateDisputeQuery', { key: 'size', value: size })
         this.getDisputes()
@@ -183,6 +195,7 @@ export default {
     term (term) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
+        this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
         this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
         this.getDisputes()
       }, 800)
@@ -246,6 +259,10 @@ export default {
     exportDisputes () {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id))
+        .then(() => {
+          // SEGMENT TRACK
+          this.$jusSegment('Exportar disputas')
+        })
         .catch(error => {
           if (error.response && error.response.status === 403) {
             this.$jusNotification({
@@ -261,6 +278,11 @@ export default {
         .finally(() => {
           this.loadingExport = false
         })
+    },
+    showImportDialog () {
+      // SEGMENT TRACK
+      this.$jusSegment('Botão importação rápida')
+      this.importDialogVisible = true
     }
   }
 }
@@ -277,7 +299,7 @@ export default {
       margin-left: 10px;
     }
     .el-input {
-      width: 200px;
+      width: 180px;
       vertical-align: middle;
     }
     img {
