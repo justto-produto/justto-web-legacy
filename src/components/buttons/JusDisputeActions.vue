@@ -224,6 +224,41 @@
         <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar Contraproposta</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="insertSettledValueDialogVisible"
+      append-to-body
+      title="Ganhar"
+      class="dispute-view-actions__choose-unsettled-dialog"
+      width="460px"
+      data-testid="choose-unsettled-dialog">
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
+        </div>
+      </div>
+      <el-form>
+        <el-form-item label="Valor do acordo:" >
+          <money v-model="settledValue" class="el-input__inner" data-testid="proposal-value-input" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button :disabled="modalLoading" plain @click="insertSettledValueDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="modalLoading"
+          :disabled="!settledValue"
+          type="primary"
+          class="confirm-action-unsettled"
+          @click.prevent="showDisputeResume('settled')">
+          Continuar
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -249,6 +284,7 @@ export default {
   },
   data () {
     return {
+      settledValue: 0,
       unsettledType: null,
       unsettledTypes: {},
       negotiatorsForm: {},
@@ -257,6 +293,7 @@ export default {
       chooseUnsettledDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
+      insertSettledValueDialogVisible: false,
       modalLoading: false,
       counterOfferForm: {
         lastCounterOfferValue: '',
@@ -309,6 +346,30 @@ export default {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
+    },
+    authorsResume () {
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'PARTY').map(role => {
+          return role.name
+        }).join(', ')
+      }
+      return []
+    },
+    lawyersResume () {
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'LAWYER').map(role => {
+          return role.name
+        }).join(', ')
+      }
+      return []
+    },
+    respondentsResume () {
+      if (this.dispute && this.dispute.disputeRoles) {
+        return getRoles(this.dispute.disputeRoles, 'RESPONDENT').map(role => {
+          return role.name
+        }).join(', ')
+      }
+      return []
     }
   },
   created () {
@@ -327,6 +388,9 @@ export default {
         this.unsettledType = null
       } else if (action === 'favorite') {
         this.doAction(action)
+      } else if (action === 'settled' && !this.dispute.disputeDealValue) {
+        this.insertSettledValueDialogVisible = true
+        this.settledValue = 0
       } else if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
         this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
           dangerouslyUseHTMLString: true,
@@ -355,6 +419,9 @@ export default {
       }
       if (this.unsettledType) {
         params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
+      }
+      if (action === 'settled' && this.settledValue) {
+        params.value = this.settledValue
       }
       if (this.tableActions && action !== 'unsettled') {
         this.$jusNotification({
@@ -398,6 +465,7 @@ export default {
         }
       }).finally(() => {
         this.chooseUnsettledDialogVisible = false
+        this.insertSettledValueDialogVisible = false
         this.modalLoading = false
       })
     },
@@ -524,7 +592,44 @@ export default {
     openNewTab () {
       let routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
       window.open(routeData.href, '_blank')
-    }
+    },
+    showDisputeResume (action) {
+      const h = this.$createElement
+      let detailsMessage = [
+        h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
+        h('p', null, [
+          h('b', null, 'Nº da disputa: '),
+          h('span', null, '#' + this.dispute.id)
+        ]),
+        h('p', null, [
+          h('b', null, 'Nº do processo: '),
+          h('span', null, this.dispute.code)
+        ]),
+        h('p', null, [
+          h('b', null, 'Réu(s): '),
+          h('span', null, this.respondentsResume.toUpperCase() || ' - ')
+        ]),
+        h('p', null, [
+          h('b', null, 'Autor(es): '),
+          h('span', null, this.authorsResume.toUpperCase() || ' - ')
+        ]),
+        h('p', null, [
+          h('b', null, 'Advogado(s) do autor(es): '),
+          h('span', null, this.lawyersResume.toUpperCase() || ' - ')
+        ]),
+        h('p', null, [
+          h('b', null, 'Valor do acordo: '),
+          h('span', null, this.$options.filters.currency(this.settledValue))
+        ])
+      ]
+      this.$confirm(h('div', null, detailsMessage), 'Ganhar', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.doAction(action)
+      })
+    },
   }
 }
 </script>
