@@ -9,8 +9,10 @@
     <el-button :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
       Contraproposta (+20%)
     </el-button>
+    <el-button :type="ONLY_VISUALIZED ? 'primary' : ''" plain @click="handlePrescriptionClick('ONLY_VISUALIZED')">
+      Somente visualizados
+    </el-button>
   </div>
-
 </template>
 
 <script>
@@ -25,12 +27,30 @@ export default {
     },
     COUNTERPROPOSAL_OVER_20 () {
       return this.$store.getters.hasPrescription('COUNTERPROPOSAL_OVER_20')
+    },
+    ONLY_VISUALIZED () {
+      return this.$store.getters.hasPrescription('ONLY_VISUALIZED')
     }
   },
   methods: {
     handlePrescriptionClick (prescription) {
-      if (this[prescription]) this.$store.commit('removePrescription', prescription)
-      else this.$store.commit('addPrescription', prescription)
+      if (this[prescription]) {
+        this.$store.commit('removePrescription', prescription)
+      } else {
+        this.$store.commit('addPrescription', prescription)
+        // SEGMENT TRACK
+        switch (prescription) {
+          case 'HAS_ANSWER':
+            this.$jusSegment('Filtro botão COM RESPOSTA')
+            break
+          case 'COUNTERPROPOSAL_UP_TO_20':
+            this.$jusSegment('filtro botão CONTRAPROPOSTA ATÉ 20%')
+            break
+          case 'COUNTERPROPOSAL_OVER_20':
+            this.$jusSegment('filtro botão CONTRAPROPOSTA ACIMA 20%')
+            break
+        }
+      }
       this.$emit('management:getDisputes')
     }
   }
