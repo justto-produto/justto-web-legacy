@@ -280,7 +280,6 @@ const disputeActions = {
         request = axios.patch('api/disputes/' + params.disputeId + '/' + params.action)
       } else if (params.action === 'settled') {
         // eslint-disable-next-line
-        debugger
         request = axios.put(`api/disputes/${params.disputeId}/settled?value=${params.value}`)
       } else if (params.action === 'enrich') {
         // eslint-disable-next-line

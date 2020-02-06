@@ -629,7 +629,7 @@ export default {
       }).then(() => {
         this.doAction(action)
       })
-    },
+    }
   }
 }
 </script>
