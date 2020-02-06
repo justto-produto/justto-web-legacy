@@ -384,10 +384,10 @@ export default {
         disputeId: this.dispute.id
       }
       if (action === 'unsettled' && this.unsettledType) {
-        params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
+        params['body'] = { reason: this.unsettledTypes[this.unsettledType] }
       }
       if (action === 'settled' && this.settledValue) {
-        params['body'] = { 'value': this.settledValue }
+        params.value = this.settledValue
       }
       this.$store.dispatch('sendDisputeAction', params).then(() => {
         // SEGMENT TRACK
