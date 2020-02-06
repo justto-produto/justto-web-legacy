@@ -390,6 +390,30 @@ export default {
       this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
+      // SEGMENT TRACK
+      if (this.filters.status) {
+        if (this.filters.status.includes('EXPIRED')) {
+          this.$jusSegment('Filtro por status expirado')
+        }
+        if (this.filters.status.includes('PENDING')) {
+          this.$jusSegment('Filtro por status pendente')
+        }
+        if (this.filters.status.includes('CHECKOUT')) {
+          this.$jusSegment('Filtro por status acordo')
+        }
+      }
+      if (this.filters.hasCounterproposal) {
+        this.$jusSegment('Filtro por status com contraproposta')
+      }
+      if (this.filters.hasCounterproposal) {
+        this.$jusSegment('Filtro por status com contraproposta')
+      }
+      if (this.filters.importingDate && this.filters.importingDate.length) {
+        this.$jusSegment('Filtro por data importação')
+      }
+      if (this.filters.expirationDate && this.filters.expirationDate.length) {
+        this.$jusSegment('Filtro por data fim negociação')
+      }
     },
     clearFilters () {
       if (this.tabIndex === '3') {

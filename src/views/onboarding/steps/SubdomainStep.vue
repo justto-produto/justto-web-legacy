@@ -94,7 +94,6 @@ export default {
       if (!this.creatingWorkspace) {
         this.$refs['subdomainForm'].validate(valid => {
           if (valid) {
-            window.analytics.track('Workspace criado', { subdomain: this.subdomainForm.subdomain })
             this.$emit('onboarding:createSubdomain', { subdomain: this.subdomainForm.subdomain })
           } else {
             return false

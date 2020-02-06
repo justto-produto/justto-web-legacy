@@ -92,7 +92,6 @@ export default {
           this.$store.dispatch('showLoading')
           this.$store.dispatch('syncInbox', this.syncForm)
             .then(response => {
-              window.analytics.track('Emails sincronizados', { emails: this.syncForm.email })
               this.showSuccess = true
               this.synced = true
               this.$store.dispatch('myAccount')
@@ -107,7 +106,6 @@ export default {
       })
     },
     nextStep () {
-      window.analytics.track('Pulada a sincronização de email')
       this.$emit('onboarding:step:next')
     }
   }

@@ -136,16 +136,16 @@
             class="dispute-overview-view__role-collapse"
             data-testid="expand-party">
             <template slot="title">
-              <i v-if="role.personProperties.NAMESAKE && isJusttoCs" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
+              <i v-if="showNamesake(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
               <div class="dispute-overview-view__name">
                 {{ role.name }}
               </div>
             </template>
-            <p v-if="role.personProperties.NAMESAKE && isJusttoCs" style="margin-top: 0">
+            <p v-if="showNamesake(role)" style="margin-top: 0">
               Esta parte não foi enriquecida corretamente devido à existência de homônimos.
             </p>
             <el-button
-              v-if="role.personProperties.NAMESAKE && isJusttoCs"
+              v-if="showNamesake(role)"
               :loading="namesakeButtonLoading"
               type="warning"
               style="width: 100%; margin-bottom: 14px;"
@@ -238,8 +238,6 @@
     </el-collapse>
     <el-dialog
       :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      :show-close="false"
       :visible.sync="namesakeDialogVisible"
       title="Corrigir homônimo"
       width="70%">
@@ -253,8 +251,30 @@
           <div v-show="selectedNamesake.uf">UF: <b>{{ selectedNamesake.uf }}</b></div>
           <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth }}</b></div>
         </div>
+        <div class="dispute-overview-view__namesake-filters">
+          <div class="dispute-overview-view__namesake-filter">
+            <span>Cidade: </span>
+            <el-select v-model="cityFilter" clearable filterable default-first-option>
+              <el-option
+                v-for="city in cityList"
+                :key="city"
+                :label="city"
+                :value="city" />
+            </el-select>
+          </div>
+          <div class="dispute-overview-view__namesake-filter">
+            <span>UF: </span>
+            <el-select v-model="ufFilter" clearable filterable default-first-option>
+              <el-option
+                v-for="uf in ufList"
+                :key="uf"
+                :label="uf"
+                :value="uf" />
+            </el-select>
+          </div>
+        </div>
         <el-table
-          :data="namesakeList"
+          :data="filteredNamesakeList"
           highlight-current-row
           style="width: 100%"
           @current-change="handleCurrentChange">
@@ -389,10 +409,10 @@
           <el-form-item class="state" label="Estado" prop="state">
             <el-select
               v-model="roleForm.state"
+              :default-first-option="true"
               autocomplete="off"
               placeholder=""
               filterable
-              default-first-option="true"
               @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
               @change="addOab(roleForm.personId, roleForm.oabs)"
               @blur="addOab(roleForm.personId, roleForm.oabs)">
@@ -704,10 +724,31 @@ export default {
         type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       bankAccountIdstoUnlink: [],
-      documentNumberHasChanged: false
+      documentNumberHasChanged: false,
+      cityFilter: null,
+      ufFilter: null
     }
   },
   computed: {
+    ufList () {
+      let ufList = this.namesakeList.map(namesake => namesake.uf)
+      return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
+    },
+    cityList () {
+      let cityList = this.namesakeList.map(namesake => namesake.city)
+      return cityList.filter((city, i) => city !== null && cityList.indexOf(city) === i)
+    },
+    filteredNamesakeList () {
+      if (this.ufFilter && this.cityFilter) {
+        return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter && namesake.city === this.cityFilter)
+      } else if (this.ufFilter) {
+        return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter)
+      } else if (this.cityFilter) {
+        return this.namesakeList.filter(namesake => namesake.city === this.cityFilter)
+      } else {
+        return this.namesakeList
+      }
+    },
     isJusttoCs () {
       return this.$store.getters.isJusttoAdmin
     },
@@ -809,11 +850,14 @@ export default {
     }
   },
   methods: {
+    showNamesake (role) {
+      return role.personProperties.NAMESAKE && !role.documentNumber && role.party === 'CLAIMANT' && this.isJusttoCs
+    },
     selectNamesake () {
       if (this.selectedNamesake) {
         this.namesakeDialogLoading = true
         // eslint-disable-next-line
-        axios.patch(`api/fusion-runner/set-document/person/${this.selectedNamesakePersonId}/${this.selectedNamesake.document}`)
+        axios.patch(`api/fusion-runner/set-document/person/${this.selectedNamesakePersonId}/${this.selectedNamesake.document}/${this.dispute.id}`)
           .then(() => {
             this.namesakeDialogVisible = false
             this.namesakeDialogLoading = false
@@ -974,6 +1018,8 @@ export default {
             let newDate = disputeToEdit.expirationDate.dateTime
             let today = this.$moment()
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
+              // SEGMENT TRACK
+              this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Os dados foram alterados com sucesso.',
@@ -1077,7 +1123,6 @@ export default {
           Promise.all(promise).then(() => {
             this.editRoleAction()
           }).catch(e => {
-            console.log(e)
             this.$jusNotification({ type: 'error' })
           }).finally(() => {
             this.linkBankAccountLoading = false
@@ -1095,6 +1140,8 @@ export default {
         disputeId: this.dispute.id,
         disputeRole: roleToEdit
       }).then(() => {
+        // SEGMENT TRACK
+        this.$jusSegment('Editar partes da disputa', { description: `Usuário ${roleToEdit.name} alterado` })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Os dados foram alterados com sucesso.',
@@ -1138,6 +1185,7 @@ export default {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
+        console.log(error)
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
@@ -1160,11 +1208,12 @@ export default {
           if (!mappedEmails.includes(email.address)) return email.address
         })
       }
-      changed = changed.newPhones.concat(changed.newEmails)
+      changed = { ...changed.newPhones, ...changed.newEmails }
       return changed
     },
     addPhone () {
       let isValid = true
+      this.roleForm.phone = this.roleForm.phone.trim()
       this.$refs.roleForm.validateField('phone', errorMessage => {
         if (errorMessage || !this.roleForm.phone) isValid = false
       })
@@ -1434,6 +1483,27 @@ export default {
     }
     .el-collapse-item__content {
       padding-bottom: 0;
+    }
+  }
+  &__namesake-filters {
+    display: flex;
+    margin-top: 20px;
+  }
+  &__namesake-filter {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    span {
+      margin-right: 8px;
+      font-weight: bold;
+      color: #adadad;
+    }
+    .el-select {
+      display: flex;
+      flex: 1;
+    }
+    &:last-child {
+      margin-left: 12px;
     }
   }
   .el-input-group__append {

@@ -112,6 +112,7 @@ const imports = {
     }
   },
   getters: {
+    importedFileName: state => state.file.file_name,
     hasImportsFile: state => {
       return state.file !== undefined
     }

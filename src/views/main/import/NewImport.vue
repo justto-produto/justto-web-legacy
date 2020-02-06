@@ -65,13 +65,11 @@ export default {
     nextStep () {
       if (this.activeStep === 1) {
         this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
-          window.analytics.track('Mapeamento concluido')
+          // SEGMENT TRACK
+          this.$jusSegment('Importação 3/4 Mapeamento concluido', {
+            fileName: this.$store.getters.importedFileName
+          })
           this.mappedCampaigns = response
-        })
-      } else if (this.activeStep === 0) {
-        window.analytics.track('Importação Iniciada', {
-          action: 'Planilha Importada',
-          lines: this.$store.state.importModule.file.rows
         })
       }
       this.activeStep += 1
@@ -114,11 +112,9 @@ export default {
           promises.push(this.$store.dispatch('createCampaign', campaign))
         }
         Promise.all(promises).then(() => {
-          window.analytics.track('Configuração de campanha concluida', {
-            campaign: campaignsTrack
-          })
-          window.analytics.track('Importação Concluída', {
-            campaign: campaignsTrack
+          // SEGMENT TRACK
+          this.$jusSegment('Importação 4/4 Importação Concluída', {
+            fileName: this.$store.getters.importedFileName
           })
           this.$store.dispatch('startGeneseRunner').finally(() => {
             this.$store.commit('removeImportsFile')
