@@ -164,6 +164,18 @@ export default {
         datedOccurrences[currentDay].push(o)
       })
       return datedOccurrences
+    },
+    fetchAction () {
+      if (this.typingTab === '1') {
+        return 'getDisputeCommunications'
+      } else {
+        return 'getDisputeOccurrences'
+      }
+    }
+  },
+  watch: {
+    typingTab () {
+      this.fetchData()
     }
   },
   mounted () {
@@ -174,14 +186,14 @@ export default {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
       setTimeout(() => {
-        this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(() => {
+        this.$store.dispatch(this.fetchAction, this.disputeId).then(() => {
           this.loading = false
         })
       }, 200)
     },
     loadOccurrences ($state) {
       this.$store.commit('incrementOccurrencesSize')
-      this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(response => {
+      this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
         if (response.numberOfElements >= response.totalElements) {
           $state.complete()
         } else {

@@ -32,7 +32,7 @@
           :typing-tab.sync="typingTab"
           data-testid="dispute-messages"
           @dispute:reply="startReply">
-          <dispute-tips />
+          <dispute-tips v-if="typingTab === '1'" />
         </dispute-occurrences>
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
