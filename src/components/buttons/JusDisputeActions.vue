@@ -91,7 +91,7 @@
         <jus-icon icon="unread"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip content="Abrir disputa em nova aba">
+    <el-tooltip v-if="tableActions" content="Abrir disputa em nova aba">
       <el-button
         type="text"
         @click="openNewTab()">
