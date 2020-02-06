@@ -10,12 +10,13 @@
       :key="disputeKey"
       :data.sync="disputes"
       :row-class-name="tableRowClassName"
-      element-loading-text="Enviando mensagem..."
+      :element-loading-text="responseBoxLoading ? 'Enviando mensagem...' : 'Atualizando informações...'"
       size="mini"
       empty-text=" "
       height="100%"
       class="management-table el-table--disputes"
       data-testid="dispute-index"
+      @cell-mouse-enter="cellMouseEnter"
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="44px" />
@@ -70,9 +71,6 @@
             <div slot="content">
               <span v-if="!!scope.row.lastNegotiatorAccess">
                 Último acesso ao sistema Justto: <strong>{{ scope.row.lastNegotiatorAccess.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}</strong>
-                <!-- <span v-if="scope.row.lastNegotiatorAccess.properties && scope.row.lastNegotiatorAccess.properties.PERSON_NAME">
-                  Por: {{ scope.row.lastNegotiatorAccess.properties.PERSON_NAME }} <br>
-                </span> -->
               </span>
               <span v-else>
                 Ainda não houve acesso ao sistema Justto de Negociação
@@ -80,6 +78,24 @@
             </div>
             <jus-icon :is-active="!!scope.row.lastNegotiatorAccess" icon="justto-access" />
           </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab2"
+        width="110px"
+        class-name="management-table__row-actions"
+        align="right">
+        <template slot-scope="scope">
+          <el-button
+            plain
+            size="mini"
+            class="management-table__protocol_button"
+            @click="showProtocolModal(scope.row)">
+            Minuta
+            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
+              <span/><span/><span/>
+            </div>
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -251,59 +267,12 @@
           <span v-if="scope.row.paused">(pausada)</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="false"
-        :width="tab2 ? '152px' : '78px'"
-        class-name="management-table__row-actions"
-        align="right">
+      <el-table-column class-name="hidden-actions" width="1px">
         <template slot-scope="scope">
-          <el-button
-            v-if="tab2"
-            plain
-            size="mini"
-            class="management-table__protocol_button"
-            @click="showProtocolModal(scope.row)">
-            Minuta
-            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
-              <span/><span/><span/>
-            </div>
-          </el-button>
-          <el-button
-            type="text"
-            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-          </el-button>
-          <el-button
-            title="Abrir disputa em uma nova aba"
-            type="text"
-            @click="openNewTab(scope.row.id)">
-            <jus-icon icon="external-link" />
-          </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="teste" width="1">
-        <template slot-scope="scope">
-          <el-button
-            type="text"
-            @click="setFavorite(scope.row.favorite ? 'disfavor' : 'favorite', scope.row.id, 'ENGAJAMENTO')">
-            <jus-icon :icon="scope.row.favorite ? 'golden-star' : 'star'" />
-          </el-button>
-          <el-button
-            type="text">
-            <jus-icon icon="unread"/>
-          </el-button>
-          <el-button
-            type="text">
-            <jus-icon icon="proposal" style="width: 22px;"/>
-          </el-button>
-          <el-button
-            type="text">
-            <jus-icon icon="refresh"/>
-          </el-button>
-          <el-button
-            type="text">
-            <jus-icon icon="pause"/>
-          </el-button>
+          <jus-dispute-actions
+            v-if="disputeActionsRow === scope.row.id"
+            :dispute="scope.row"
+            table-actions />
         </template>
       </el-table-column>
       <template slot="empty">
@@ -385,6 +354,7 @@ Quill.register(SizeStyle, true)
 export default {
   name: 'ManagementTable',
   components: {
+    JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
     quillEditor
@@ -405,6 +375,7 @@ export default {
   },
   data () {
     return {
+      disputeActionsRow: 0,
       protocolDialogVisible: false,
       selectedDisputeId: 0,
       selectedDisputeRoles: [],
@@ -466,6 +437,9 @@ export default {
     }
   },
   methods: {
+    cellMouseEnter (row, column, cell, event) {
+      this.disputeActionsRow = row.id
+    },
     startResponseBox (id) {
       this.message = ''
       if (this.messageCache[id]) {
@@ -542,25 +516,6 @@ export default {
         }
       }
       this.selectedIdsComp = ids
-    },
-    openNewTab (disputeId) {
-      let routeData = this.$router.resolve({ name: 'dispute', params: { id: disputeId } })
-      window.open(routeData.href, '_blank')
-    },
-    setFavorite (action, id, tab) {
-      let label = action === 'favorite' ? 'favoritada' : 'removida de favoritos'
-      this.$store.dispatch('sendDisputeAction', {
-        action: action,
-        disputeId: id
-      }).then(() => {
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Disputa ' + label + ' com sucesso.',
-          type: 'success'
-        })
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      })
     },
     disputeNextToExpire (date) {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
@@ -703,24 +658,24 @@ export default {
       margin: 0 4px 0 2px;
     }
   }
-  .teste {
+  th.hidden-actions {
     position: relative;
+  }
+  td.hidden-actions {
     .cell {
       display: none;
-      img {
-        width: 18px;
-      }
     }
   }
   tr:hover {
-    .teste .cell{
-      padding-left: 28px;
-      background: linear-gradient(to right, rgba(246,246,246,0) 0%, rgba(246,246,246,1) 10%);
-      position: absolute;
-      display: flex;
-      right: 0;
-      top: 0;
+    td.hidden-actions .cell{
+      display: contents;
     }
+  }
+  th.gutter {
+    display: table-cell !important;
+  }
+  td {
+    height: 46px;
   }
 }
 </style>

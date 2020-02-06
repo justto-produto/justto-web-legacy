@@ -17,12 +17,7 @@
     <template slot="main">
       <div class="dispute-view__section-messages">
         <!-- ACTIONS -->
-        <dispute-actions
-          :dispute.sync="dispute"
-          :is-paused.sync="isPaused"
-          :is-favorite.sync="isFavorite"
-          :is-collapsed.sync="isCollapsed"
-          @fetch-data="fetchData" />
+        <jus-dispute-actions :dispute="dispute" :is-collapsed.sync="isCollapsed" @fetch-data="fetchData" />
         <!-- MESSAGES -->
         <dispute-occurrences
           v-if="typingTab === '1'"
@@ -237,7 +232,7 @@ export default {
     DisputeOccurrences: () => import('./partials/DisputeOccurrences'),
     DisputeNotes: () => import('./partials/DisputeNotes'),
     DisputeOverview: () => import('./partials/DisputeOverview'),
-    DisputeActions: () => import('./partials/DisputeActions'),
+    JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     DisputeTips: () => import('./partials/DisputeTips'),
     quillEditor
   },
