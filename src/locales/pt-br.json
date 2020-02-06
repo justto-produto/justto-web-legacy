@@ -68,14 +68,16 @@
       "SETTLED": "ganho",
       "UNSETTLED": "perdido",
       "RUNNING": "em negociação",
-      "EXPIRED": "expirado"
+      "EXPIRED": "expirado",
+      "FAVORITE": "favoritar",
+      "DISFAVOR": "desfavoritar"
     }
   },
   "profile": {
     "NEGOTIATOR": "negociador",
     "ADMINISTRATOR": "administrador"
   },
-  "action":{
+  "action": {
     "RESTART_ENGAGEMENT": "reengajar",
     "RESTART-ENGAGEMENT": "reengajar",
     "SETTLED": "ganhar",
