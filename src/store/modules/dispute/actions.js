@@ -278,7 +278,7 @@ const disputeActions = {
       if (params.action === 'restart-engagement') {
         // eslint-disable-next-line
         request = axios.patch('api/disputes/' + params.disputeId + '/' + params.action)
-      } else if (params.action === 'settled') {
+      } else if (params.action === 'settled' && params.value) {
         // eslint-disable-next-line
         request = axios.put(`api/disputes/${params.disputeId}/settled?value=${params.value}`)
       } else if (params.action === 'enrich') {
