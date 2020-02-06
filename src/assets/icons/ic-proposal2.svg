@@ -1,0 +1,33 @@
+<svg width="557" height="564" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="566" width="559" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <style transform="matrix(246.05920858357516,0,0,246.05920858357516,0,0) " type="text/css">.st0{fill:none;stroke:#000000;stroke-width:0.75;}
+	.st1{fill:none;stroke:#000000;stroke-width:0.5;}
+	.st2{fill-rule:evenodd;clip-rule:evenodd;}</style>
+  <g stroke="null" id="svg_18">
+   <g stroke="null" transform="matrix(41.850496015703754,0,0,41.850496015703754,-1062.4504440674991,-980.0740933243742) " id="svg_5">
+    <path stroke="null" id="svg_6" d="m35.8468,30.005784l-0.6,3.8l-7.8,-1.3l0.8,-4.7l4.6,0.8" class="st1"/>
+    <path stroke="null" id="svg_7" d="m27.5468,31.205784c0.7,0.1 1.2,0.8 1.1,1.5" class="st1"/>
+    <path stroke="null" id="svg_8" d="m33.8468,33.605784c0.1,-0.7 0.8,-1.2 1.6,-1.1" class="st1"/>
+    <path stroke="null" id="svg_9" d="m29.3468,28.005784c-0.1,0.7 -0.7,1.2 -1.4,1" class="st1"/>
+    <path stroke="null" id="svg_10" d="m34.6468,30.405784c1,0 1.8,-0.8 1.8,-1.8s-0.8,-1.8 -1.8,-1.8c-1,0 -1.8,0.8 -1.8,1.8s0.8,1.8 1.8,1.8z" class="st1"/>
+    <path stroke="null" id="svg_11" d="m36.5468,25.605784c2.5,2.5 2.5,6.6 0,9.1c-2.5,2.5 -6.6,2.5 -9.1,0c-2.4,-2.6 -2.4,-6.6 0.1,-9.1c2.5,-2.5 6.5,-2.5 9,0l0,0z" class="st1"/>
+    <path stroke="null" id="svg_12" d="m30.9468,31.405784c0.2,0.2 0.4,0.4 0.7,0.4c0.3,0.1 0.7,-0.1 0.7,-0.4c0.1,-0.3 -0.2,-0.5 -0.5,-0.7c-0.4,-0.1 -0.6,-0.3 -0.6,-0.6c0.1,-0.3 0.4,-0.5 0.8,-0.4c0.2,0 0.4,0.2 0.5,0.4" class="st1"/>
+    <path stroke="null" id="svg_13" d="m32.0468,29.405784l0,0.3" class="st1"/>
+    <path stroke="null" id="svg_14" d="m31.5468,31.905784l0,0.3" class="st1"/>
+    <path stroke="null" id="svg_15" d="m34.2468,29.005784c0.1,0.1 0.3,0.2 0.4,0.2c0.2,0 0.4,-0.1 0.4,-0.3c0,-0.2 -0.2,-0.3 -0.4,-0.3c-0.2,-0.1 -0.4,-0.1 -0.4,-0.3c0,-0.2 0.2,-0.3 0.4,-0.3c0.1,0 0.3,0.1 0.3,0.2" class="st1"/>
+    <path stroke="null" id="svg_16" d="m34.6468,27.805784l0,0.2" class="st1"/>
+    <path stroke="null" id="svg_17" d="m34.6468,29.205784l0,0.2" class="st1"/>
+   </g>
+  </g>
+ </g>
+</svg>

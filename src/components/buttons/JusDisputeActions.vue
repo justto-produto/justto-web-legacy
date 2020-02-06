@@ -1,95 +1,127 @@
 <template lang="html">
-  <div class="dispute-view-actions">
-    <div class="dispute-view-actions__actions">
-      <el-tooltip content="Voltar">
-        <router-link to="/management">
-          <jus-icon class="back" icon="back"/>
-        </router-link>
-      </el-tooltip>
-      <el-tooltip content="Ganhar">
-        <el-button
-          :disabled="!canSettled"
-          plain
-          data-testid="settled"
-          @click="disputeAction('settled')">
-          <jus-icon icon="win"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip content="Perder">
-        <el-button
-          :disabled="!canUnsettled"
-          plain
-          data-testid="unsettled"
-          @click="disputeAction('unsettled')">
-          <jus-icon icon="lose"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip v-if="isPaused" content="Retomar">
-        <el-button plain data-testid="resume" @click="disputeAction('resume')">
-          <jus-icon icon="start-again"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip v-else content="Pausar">
-        <el-button plain data-testid="paused" @click="disputeAction('paused')">
-          <jus-icon icon="pause"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip content="Reiniciar engajamento">
-        <el-button
-          plain
-          data-testid="restart-engagement"
-          @click="disputeAction('restart-engagement')">
-          <jus-icon icon="refresh"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip content="Cancelar mensagens automáticas">
-        <el-button plain data-testid="cancel-messages" @click="disputeAction('cancel-messages')">
-          <jus-icon icon="cancel-messages"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip content="Alterar Negociador">
-        <el-button plain @click="editNegotiator()">
-          <jus-icon icon="delegate"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip content="Enriquecer disputa">
-        <el-button plain @click="disputeAction('enrich')">
-          <jus-icon icon="enrich"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip content="Contraproposta manual">
-        <span>
-          <el-button :disabled="!canSendCounterproposal" plain @click="counterproposalDialogOpen()">
-            <jus-icon icon="proposal"/>
-          </el-button>
-        </span>
-      </el-tooltip>
-      <el-tooltip content="Marcar como não lida">
-        <el-button plain @click="setAsUnread()">
-          <jus-icon icon="unread"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip :content="isFavorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-        <el-button
-          plain
-          data-testid="favorite"
-          @click="disputeAction(isFavorite ? 'disfavor' : 'favorite')">
-          <jus-icon :icon="isFavorite ? 'golden-star' : 'star'"/>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'">
-        <el-button
-          :icon="collapsed ? 'el-icon-arrow-left' : 'el-icon-arrow-right'"
-          type="text"
-          @click="togleCollapsed" />
-      </el-tooltip>
-    </div>
+  <div :class="tableActions ? 'jus-dispute-actions--table' : 'jus-dispute-actions--dispute'" class="jus-dispute-actions">
+    <el-tooltip v-if="!tableActions" content="Voltar">
+      <router-link to="/management">
+        <jus-icon class="back" icon="back"/>
+      </router-link>
+    </el-tooltip>
+    <el-tooltip v-if="canSettled" content="Ganhar">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        data-testid="settled"
+        @click="disputeAction('settled')">
+        <jus-icon icon="win"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="canUnsettled" content="Perder">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        data-testid="unsettled"
+        @click="disputeAction('unsettled')">
+        <jus-icon icon="lose"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="dispute.paused" content="Retomar">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        data-testid="resume"
+        @click="disputeAction('resume')">
+        <jus-icon icon="start-again"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-else content="Pausar">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        data-testid="paused"
+        @click="disputeAction('paused')">
+        <jus-icon icon="pause"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip content="Reiniciar engajamento">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        data-testid="restart-engagement"
+        @click="disputeAction('restart-engagement')">
+        <jus-icon icon="refresh"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="!tableActions" content="Cancelar mensagens automáticas">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        data-testid="cancel-messages"
+        @click="disputeAction('cancel-messages')">
+        <jus-icon icon="cancel-messages"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="!tableActions" content="Alterar Negociador">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="editNegotiator()">
+        <jus-icon icon="delegate"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="!tableActions" content="Enriquecer disputa">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="disputeAction('enrich')">
+        <jus-icon icon="enrich"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip content="Contraproposta manual">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="counterproposalDialogOpen()">
+        <jus-icon icon="proposal2" />
+      </el-button>
+    </el-tooltip>
+    <el-tooltip content="Marcar como não lida">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="setAsUnread()">
+        <jus-icon icon="unread"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="tableActions" content="Abrir disputa em nova aba">
+      <el-button
+        type="text"
+        @click="openNewTab()">
+        <jus-icon icon="external-link" />
+      </el-button>
+    </el-tooltip>
+    <el-tooltip :content="dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        data-testid="favorite"
+        @click="disputeAction(dispute.favorite ? 'disfavor' : 'favorite')">
+        <jus-icon :icon="dispute.favorite ? 'golden-star' : 'star'"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="!tableActions" :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'">
+      <el-button
+        :plain="!tableActions"
+        :icon="collapsed ? 'el-icon-arrow-left' : 'el-icon-arrow-right'"
+        type="text"
+        @click="togleCollapsed" />
+    </el-tooltip>
     <el-dialog
       :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
       :visible.sync="chooseUnsettledDialogVisible"
       append-to-body
       title="Perder"
-      class="dispute-view-actions__choose-unsettled-dialog"
+      class="jus-dispute-actions__choose-unsettled-dialog"
       width="460px"
       data-testid="choose-unsettled-dialog">
       <div class="el-message-box__content">
@@ -101,7 +133,6 @@
         </div>
       </div>
       <el-select
-        v-loading="$store.state.loading"
         v-model="unsettledType"
         data-testid="select-unsettled"
         placeholder="Escolha o motivo da perda">
@@ -112,8 +143,9 @@
           :value="index"/>
       </el-select>
       <span slot="footer">
-        <el-button plain @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+        <el-button :disabled="modalLoading" plain @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
         <el-button
+          :loading="modalLoading"
           :disabled="!unsettledType"
           type="primary"
           class="confirm-action-unsettled"
@@ -124,45 +156,14 @@
     </el-dialog>
     <el-dialog
       :close-on-click-modal="false"
-      :visible.sync="insertSettledValueDialogVisible"
-      append-to-body
-      title="Ganhar"
-      class="dispute-view-actions__choose-unsettled-dialog"
-      width="460px"
-      data-testid="choose-unsettled-dialog">
-      <div class="el-message-box__content">
-        <div class="el-message-box__container">
-          <div class="el-message-box__status el-icon-warning"/>
-          <div class="el-message-box__message">
-            <p>Tem certeza que deseja realizar esta ação?</p>
-          </div>
-        </div>
-      </div>
-      <el-form>
-        <el-form-item label="Valor do acordo:" >
-          <money v-model="settledValue" class="el-input__inner" data-testid="proposal-value-input" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer">
-        <el-button plain @click="insertSettledValueDialogVisible = false">Cancelar</el-button>
-        <el-button
-          :disabled="!settledValue"
-          type="primary"
-          class="confirm-action-unsettled"
-          @click.prevent="showDisputeResume('settled')">
-          Continuar
-        </el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      :close-on-click-modal="false"
       :show-close="false"
+      :close-on-press-escape="false"
       :visible.sync="editNegotiatorDialogVisible"
       append-to-body
       title="Editar negociadores da disputa"
       width="604px">
       <el-form
-        v-loading="editNegotiatorLoading"
+        v-loading="modalLoading"
         ref="negotiatorsForm"
         :model="negotiatorsForm"
         :rules="negotiatorsRules"
@@ -177,19 +178,21 @@
           filterable/>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="editNegotiatorLoading" plain @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="editNegotiatorLoading" type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
+        <el-button :disabled="modalLoading" plain @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
       :visible.sync="counterproposalDialogVisible"
       :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
       append-to-body
       title="Enviar contraproposta manual"
       width="600px"
       class="dispute-view__counterproposal-dialog">
       <el-form
-        v-loading="counterproposalLoading"
+        v-loading="modalLoading"
         ref="counterOfferForm"
         :model="counterOfferForm"
         :rules="counterOfferFormRules">
@@ -217,8 +220,43 @@
         </el-row>
       </el-form>
       <span slot="footer">
-        <el-button plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="counterproposalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar Contraproposta</el-button>
+        <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar Contraproposta</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="insertSettledValueDialogVisible"
+      append-to-body
+      title="Ganhar"
+      class="dispute-view-actions__choose-unsettled-dialog"
+      width="460px"
+      data-testid="choose-unsettled-dialog">
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja realizar esta ação?</p>
+          </div>
+        </div>
+      </div>
+      <el-form>
+        <el-form-item label="Valor do acordo:" >
+          <money v-model="settledValue" class="el-input__inner" data-testid="proposal-value-input" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
+        <el-button :disabled="modalLoading" plain @click="insertSettledValueDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="modalLoading"
+          :disabled="!settledValue"
+          type="primary"
+          class="confirm-action-unsettled"
+          @click.prevent="showDisputeResume('settled')">
+          Continuar
+        </el-button>
       </span>
     </el-dialog>
   </div>
@@ -229,17 +267,13 @@ import { validateZero } from '@/utils/validations'
 import { getRoles, getTracktitleByAction } from '@/utils/jusUtils'
 
 export default {
-  name: 'DisputeActions',
+  name: 'JusDisputeActions',
   props: {
     dispute: {
       type: Object,
       default: () => {}
     },
-    isPaused: {
-      type: Boolean,
-      default: false
-    },
-    isFavorite: {
+    tableActions: {
       type: Boolean,
       default: false
     },
@@ -257,12 +291,10 @@ export default {
       negotiatorsRules: {},
       disputeNegotiators: [],
       chooseUnsettledDialogVisible: false,
-      bankDataDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
       insertSettledValueDialogVisible: false,
-      counterproposalLoading: false,
-      editNegotiatorLoading: false,
+      modalLoading: false,
       counterOfferForm: {
         lastCounterOfferValue: '',
         selectedRoleId: ''
@@ -293,7 +325,7 @@ export default {
     },
     canSendCounterproposal () {
       if (this.dispute) {
-        if (this.isPaused) {
+        if (this.dispute.paused) {
           return false
         } else if (this.dispute.status && ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'RUNNING', 'PENDING', 'REFUSED'].includes(this.dispute.status)) {
           return true
@@ -379,26 +411,38 @@ export default {
       }
     },
     doAction (action) {
+      this.modalLoading = true
+      let translatedAction = this.$t('action.' + action.toUpperCase())
       let params = {
         action: action,
         disputeId: this.dispute.id
       }
-      if (action === 'unsettled' && this.unsettledType) {
-        params['body'] = { reason: this.unsettledTypes[this.unsettledType] }
+      if (this.unsettledType) {
+        params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
       }
       if (action === 'settled' && this.settledValue) {
         params.value = this.settledValue
       }
-      this.$store.dispatch('sendDisputeAction', params).then(() => {
-        // SEGMENT TRACK
-        this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
+      if (this.tableActions && action !== 'unsettled') {
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
-          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
+          message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
           type: 'success'
         })
-        if (action === 'unsettled') {
+      }
+      this.$store.dispatch('sendDisputeAction', params).then(() => {
+        // SEGMENT TRACK
+        this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
+        if (!this.tableActions || action === 'unsettled') {
+          this.$jusNotification({
+            title: 'Yay!',
+            dangerouslyUseHTMLString: true,
+            message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
+            type: 'success'
+          })
+        }
+        if (action === 'unsettled' && !this.tableActions) {
           setTimeout(() => {
             this.$jusNotification({
               title: 'Atenção!',
@@ -408,9 +452,10 @@ export default {
             })
           }, 2000)
         }
-        this.$emit('fetch-data')
+        if (!this.tableActions) this.$emit('fetch-data')
       }).catch(e => {
-        if (e.response.data.reason.length) {
+        console.error(e)
+        if (e.response && e.response.data.reason.length) {
           this.$jusNotification({
             type: 'error',
             message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
@@ -421,7 +466,132 @@ export default {
       }).finally(() => {
         this.chooseUnsettledDialogVisible = false
         this.insertSettledValueDialogVisible = false
+        this.modalLoading = false
       })
+    },
+    editNegotiators () {
+      this.modalLoading = true
+      this.$store.dispatch('editNegotiators', {
+        negotiators: this.disputeNegotiators,
+        disputeId: this.dispute.id
+      }).then(() => {
+        // SEGMENT TRACK
+        this.$jusSegment('Negociadores alterados')
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Negociadores editados com sucesso.',
+          type: 'success'
+        })
+        this.editNegotiatorDialogVisible = false
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      }).finally(() => {
+        this.modalLoading = false
+      })
+    },
+    editNegotiator () {
+      this.modalLoading = false
+      this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
+        return member.roles.includes('NEGOTIATOR') && !member.archived
+      }).map(member => member.personId)
+      this.editNegotiatorDialogVisible = true
+    },
+    counterproposalDialogOpen () {
+      if (this.canSendCounterproposal) {
+        this.counterOfferForm.lastCounterOfferValue = ''
+        this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
+        this.counterproposalDialogVisible = true
+        if (this.$refs.counterOfferForm) {
+          this.$refs.counterOfferForm.clearValidate()
+        }
+      } else {
+        this.$jusNotification({
+          title: 'Atenção!',
+          message: `Não é possível enviar contraproposta manual devido ao seu status
+          ${this.$t('occurrence.type.' + this.dispute.status.toUpperCase())}.`,
+          type: 'warning'
+        })
+      }
+    },
+    checkUpperRangeCounterOffer () {
+      return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
+    },
+    checkCounterproposal () {
+      this.$refs.counterOfferForm.validate(valid => {
+        if (valid) {
+          if (this.checkUpperRangeCounterOffer()) {
+            this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
+              confirmButtonText: 'Enviar contraproposta',
+              cancelButtonText: 'Cancelar',
+              type: 'info',
+              cancelButtonClass: 'is-plain'
+            }).then(() => {
+              this.sendCounterproposal()
+            })
+          } else {
+            this.sendCounterproposal()
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    sendCounterproposal () {
+      this.modalLoading = true
+      this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
+        this.$store.dispatch('sendDisputeCounterProposal', {
+          disputeId: this.dispute.id,
+          objectId: disputeToEdit.objects[0].id,
+          value: this.counterOfferForm.lastCounterOfferValue.toString(),
+          roleId: this.counterOfferForm.selectedRoleId
+        }).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Contraproposta enviada com sucesso.',
+            type: 'success',
+            onClose: () => {
+              const action = this.checkUpperRangeCounterOffer() ? 'Em negociação' : 'Acordo'
+              setTimeout(() => {
+                this.$notify({
+                  title: 'Atenção!',
+                  message: 'A disputa foi movida para o status <strong>' + action + '</strong>.',
+                  type: 'info',
+                  customClass: 'info',
+                  position: 'bottom-right',
+                  offset: 84,
+                  duration: 0,
+                  dangerouslyUseHTMLString: true
+                })
+              }, 200)
+            }
+          })
+          this.counterproposalDialogVisible = false
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.modalLoading = false
+        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+        this.modalLoading = false
+        this.counterproposalDialogVisible = false
+      })
+    },
+    togleCollapsed () {
+      this.collapsed = !this.collapsed
+    },
+    setAsUnread () {
+      this.$store.dispatch('disputeSetVisualized', {
+        visualized: false, disputeId: this.dispute.id
+      }).then(() => {
+        this.$router.push('/management')
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      })
+    },
+    openNewTab () {
+      let routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
+      window.open(routeData.href, '_blank')
     },
     showDisputeResume (action) {
       const h = this.$createElement
@@ -459,131 +629,27 @@ export default {
       }).then(() => {
         this.doAction(action)
       })
-    },
-    editNegotiators () {
-      this.editNegotiatorLoading = true
-      this.$store.dispatch('editNegotiators', {
-        negotiators: this.disputeNegotiators,
-        disputeId: this.dispute.id
-      }).then(() => {
-        // SEGMENT TRACK
-        this.$jusSegment('Negociadores alterados')
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Negociadores editados com sucesso.',
-          type: 'success'
-        })
-        this.editNegotiatorDialogVisible = false
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.editNegotiatorLoading = false
-      })
-    },
-    editNegotiator () {
-      this.editNegotiatorLoading = false
-      this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
-        return member.roles.includes('NEGOTIATOR') && !member.archived
-      }).map(member => member.personId)
-      this.editNegotiatorDialogVisible = true
-    },
-    counterproposalDialogOpen () {
-      this.counterOfferForm.lastCounterOfferValue = ''
-      this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
-      this.counterproposalDialogVisible = true
-      if (this.$refs.counterOfferForm) {
-        this.$refs.counterOfferForm.clearValidate()
-      }
-    },
-    checkUpperRangeCounterOffer () {
-      return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
-    },
-    checkCounterproposal () {
-      this.$refs.counterOfferForm.validate(valid => {
-        if (valid) {
-          if (this.checkUpperRangeCounterOffer()) {
-            this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
-              confirmButtonText: 'Enviar contraproposta',
-              cancelButtonText: 'Cancelar',
-              type: 'info',
-              cancelButtonClass: 'is-plain'
-            }).then(() => {
-              this.sendCounterproposal()
-            })
-          } else {
-            this.sendCounterproposal()
-          }
-        } else {
-          return false
-        }
-      })
-    },
-    sendCounterproposal () {
-      this.counterproposalLoading = true
-      this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
-        this.$store.dispatch('sendDisputeCounterProposal', {
-          disputeId: this.dispute.id,
-          objectId: disputeToEdit.objects[0].id,
-          value: this.counterOfferForm.lastCounterOfferValue.toString(),
-          roleId: this.counterOfferForm.selectedRoleId
-        }).then(() => {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Contraproposta enviada com sucesso.',
-            type: 'success',
-            onClose: () => {
-              const action = this.checkUpperRangeCounterOffer() ? 'Em negociação' : 'Acordo'
-              setTimeout(() => {
-                this.$notify({
-                  title: 'Atenção!',
-                  message: 'A disputa foi movida para o status <strong>' + action + '</strong>.',
-                  type: 'info',
-                  customClass: 'info',
-                  position: 'bottom-right',
-                  offset: 84,
-                  duration: 0,
-                  dangerouslyUseHTMLString: true
-                })
-              }, 200)
-            }
-          })
-          this.counterproposalDialogVisible = false
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.counterproposalLoading = false
-        })
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-        this.counterproposalLoading = false
-        this.counterproposalDialogVisible = false
-      })
-    },
-    togleCollapsed () {
-      this.collapsed = !this.collapsed
-    },
-    setAsUnread () {
-      this.$store.dispatch('disputeSetVisualized', {
-        visualized: false, disputeId: this.dispute.id
-      }).then(() => {
-        this.$router.push('/management')
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      })
-    },
-    openBankDataDialog () {
-      this.bankDataDialogVisible = true
-    },
-    editDisputeBankData () {
-      this.bankDataDialogVisible = true
     }
   }
 }
 </script>
 
 <style lang="scss">
-.dispute-view-actions {
-  &__actions {
+.jus-dispute-actions {
+  &__choose-unsettled-dialog {
+    .el-message-box__content {
+      padding: 10px 0;
+    }
+    .el-select {
+      margin: 10px 0;
+      width: 100%;
+    }
+  }
+  img {
+    width: 16px;
+    height: 16px;
+  }
+  &--dispute {
     padding: 11px 0px 11px 20px;
     box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
     z-index: 1;
@@ -599,26 +665,22 @@ export default {
         }
       }
     }
-    img {
-      width: 16px;
-      height: 16px;
-    }
     .back {
       margin-right: 20px;
       vertical-align: text-top;
     }
-  }
-  &__choose-unsettled-dialog {
-    .el-message-box__content {
-      padding: 10px 0;
-    }
-    .el-select {
-      margin: 10px 0;
-      width: 100%;
+    .el-button + span, span + .el-button {
+      margin-left: 10px;
     }
   }
-  .el-button + span, span + .el-button {
-    margin-left: 10px;
+  &--table {
+    background: linear-gradient(to right, rgba(246,246,246,0) 0%, rgba(246,246,246,1) 10%);
+    padding: 0 20px 0 28px;
+    position: absolute;
+    display: flex;
+    height: 100%;
+    right: 0;
+    top: 0;
   }
 }
 </style>
