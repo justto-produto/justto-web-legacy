@@ -14,8 +14,7 @@
         class="dispute-view-occurrences__occurrence">
         <el-card
           v-if="occurrence.type === 'LOG' ||
-            (occurrence.interaction && ['VISUALIZATION', 'CLICK'].includes(occurrence.interaction.type)) ||
-          (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS')"
+          (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
           shadow="never"
           class="dispute-view-occurrences__log el-card--bg-warning">
           <el-tooltip :disabled="!buildTooltip(occurrence)" :content="buildTooltip(occurrence)">
@@ -31,14 +30,9 @@
             <el-tooltip :disabled="!buildName(occurrence)" :content="buildName(occurrence)">
               <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
             </el-tooltip>
-            <!-- <span v-html="buildHour(occurrence)" /> -->
           </div>
           <div class="dispute-view-occurrences__card-box">
             <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card" data-testid="message-box">
-              <!-- <div v-if="!!buildName(occurrence)" slot="header">
-                <jus-icon v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType !== 'UNKNOWN'" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
-                <span>{{ buildName(occurrence) }}</span>
-              </div> -->
               <div>
                 <span :ref="getMessageRef(occurrence)">
                   <span v-html="buildContent(occurrence)" />
@@ -72,13 +66,6 @@
                 class="dispute-view-occurrences__for-to">
                 Para: {{ occurrence.interaction.message.receiver | phoneMask }}
               </span>
-              <!-- <el-tooltip :content="occurrence.interaction.message.parameters.SENDER" placement="bottom">
-                <span
-                  v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && occurrence.interaction.direction === 'INBOUND'"
-                  class="dispute-view-occurrences__for-to">
-                  Por: {{ occurrence.interaction.message.parameters.SENDER_NAME }}
-                </span>
-              </el-tooltip> -->
               <span
                 v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && occurrence.interaction.direction === 'INBOUND'"
                 class="dispute-view-occurrences__for-to">
@@ -141,6 +128,10 @@ export default {
     disputeId: {
       type: String,
       default: ''
+    },
+    typingTab: {
+      type: String,
+      default: '1'
     }
   },
   data () {
@@ -157,16 +148,34 @@ export default {
   computed: {
     datedOccurrences () {
       let datedOccurrences = {}
+      let self = this
       this.$store.getters.occurrences.map(o => {
-        let currentDay = this.$moment(o.createAt.dateTime).format('DD/MM/YYYY')
-        if (o.type !== 'NOTE') {
-          if (!datedOccurrences.hasOwnProperty(currentDay)) {
-            datedOccurrences[currentDay] = []
-          }
-          datedOccurrences[currentDay].push(o)
+        if (o.type === 'NOTE') return 0
+        if (self.typingTab === '1' && (
+          ['NOTE', 'LOG'].includes(o.type) ||
+          (o.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(o.interaction.type))
+        )) {
+          return 0
         }
+        let currentDay = this.$moment(o.createAt.dateTime).format('DD/MM/YYYY')
+        if (!datedOccurrences.hasOwnProperty(currentDay)) {
+          datedOccurrences[currentDay] = []
+        }
+        datedOccurrences[currentDay].push(o)
       })
       return datedOccurrences
+    },
+    fetchAction () {
+      if (this.typingTab === '1') {
+        return 'getDisputeCommunications'
+      } else {
+        return 'getDisputeOccurrences'
+      }
+    }
+  },
+  watch: {
+    typingTab () {
+      this.fetchData()
     }
   },
   mounted () {
@@ -177,14 +186,14 @@ export default {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
       setTimeout(() => {
-        this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(() => {
+        this.$store.dispatch(this.fetchAction, this.disputeId).then(() => {
           this.loading = false
         })
       }, 200)
     },
     loadOccurrences ($state) {
       this.$store.commit('incrementOccurrencesSize')
-      this.$store.dispatch('getDisputeOccurrences', this.disputeId).then(response => {
+      this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
         if (response.numberOfElements >= response.totalElements) {
           $state.complete()
         } else {
@@ -219,7 +228,7 @@ export default {
     },
     buildTooltip (occurrence) {
       let text = ''
-      if (occurrence.interaction && occurrence.interaction.properties && occurrence.interaction.properties.DEVICE) {
+      if (occurrence.interaction && occurrence.interaction.parameters && occurrence.interaction.parameters.DEVICE) {
         text = text + 'Dispositivo: ' + occurrence.interaction.properties.DEVICE
       }
       return text
@@ -231,8 +240,10 @@ export default {
       if (occurrence.interaction && occurrence.interaction.type === 'VISUALIZATION') {
         return 'eye'
       }
-      if (occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.communicationType) {
-        return occurrence.interaction.message.communicationType.toLowerCase().replace('_', '-')
+      if (occurrence.interaction && occurrence.interaction.message && !!occurrence.interaction.message.communicationType) {
+        let icon = occurrence.interaction.message.communicationType
+        icon += ''
+        return icon.replace('_', '-').toLowerCase()
       }
       if (occurrence.interaction && ['NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_REJECTED', 'NEGOTIATOR_ACCEPTED', 'NEGOTIATOR_CHECKOUT', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type + '')) {
         return 'justto'
