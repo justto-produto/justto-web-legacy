@@ -12,6 +12,7 @@ import '@/plugins/awesomeSwiper'
 import '@/plugins/moment'
 import '@/plugins/chatScroll'
 import '@/plugins/jusNotification'
+import '@/plugins/jusSegment'
 import '@/plugins/socket'
 // import '@/plugins/sentry'
 

@@ -409,10 +409,10 @@
           <el-form-item class="state" label="Estado" prop="state">
             <el-select
               v-model="roleForm.state"
+              :default-first-option="true"
               autocomplete="off"
               placeholder=""
               filterable
-              default-first-option="true"
               @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
               @change="addOab(roleForm.personId, roleForm.oabs)"
               @blur="addOab(roleForm.personId, roleForm.oabs)">
@@ -1018,6 +1018,8 @@ export default {
             let newDate = disputeToEdit.expirationDate.dateTime
             let today = this.$moment()
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
+              // SEGMENT TRACK
+              this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Os dados foram alterados com sucesso.',
@@ -1138,6 +1140,8 @@ export default {
         disputeId: this.dispute.id,
         disputeRole: roleToEdit
       }).then(() => {
+        // SEGMENT TRACK
+        this.$jusSegment('Editar partes da disputa', { description: `Usuário ${roleToEdit.name} alterado` })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Os dados foram alterados com sucesso.',

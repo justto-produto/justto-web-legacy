@@ -128,10 +128,10 @@
           <el-form-item class="state" label="Estado" prop="state">
             <el-select
               v-model="newRole.state"
+              :default-first-option="true"
               autocomplete="off"
               placeholder=""
               filterable
-              default-first-option="true"
               @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
               @change="addOab(roleForm.personId, roleForm.oabs)"
               @blur="addOab(newRole.personId, newRole.oabs)">
@@ -452,6 +452,8 @@ export default {
         role.party = this.newRole.party.startsWith('respondent') ? 'RESPONDENT' : 'CLAIMANT'
         role.roles = [this.newRole.party.endsWith('Party') ? 'PARTY' : 'LAWYER']
         this.$store.dispatch('newDisputeRole', { role, disputeId }).then(response => {
+          // SEGMENT TRACK
+          this.$jusSegment('Cadastrar nova parte', { description: `Nome: ${role.name}, documento: ${role.documentNumber}` })
           this.dialogVisible = false
           this.$jusNotification({
             title: 'Yay!',

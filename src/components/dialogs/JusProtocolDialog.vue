@@ -386,6 +386,8 @@ export default {
             })
           }
         }
+        // SEGMENT TRACK
+        this.$jusSegment('Geração de minuta', { description: `Minuta gerada: ${this.document.name}` })
       }).catch(() => {
         this.visible = false
         this.$jusNotification({ type: 'error' })

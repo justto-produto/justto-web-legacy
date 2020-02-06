@@ -113,7 +113,6 @@ export default {
       this.$store.dispatch('showLoading')
       this.$store.dispatch('inviteTeammates', this.teamMembersForm.teamMembers)
         .then(() => {
-          window.analytics.track('Pessoas convidadas á equipe', { members: this.teamMembersForm.teamMembers })
           this.$emit('onboarding:step:next')
         })
         .catch(() => {

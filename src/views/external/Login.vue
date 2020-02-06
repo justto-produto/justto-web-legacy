@@ -177,11 +177,8 @@ export default {
                 this.$store.dispatch('myAccount'),
                 this.$store.dispatch('myWorkspace')
               ]).then(responses => {
-                window.analytics.identify(this.loginForm.email, {
-                  action: 'LOGIN',
-                  email: this.loginForm.email,
-                  workspace: this.$store.getters.workspaceSubdomain
-                })
+                // SEGMENT TRACK
+                this.$jusSegment('Usuário logado')
                 if (responses[1].length > 1) {
                   this.showLoading = false
                   this.workspaces = responses[1]
@@ -208,6 +205,11 @@ export default {
       })
     },
     getMembersAndRedirect (response) {
+      // SEGMENT TRACK
+      this.$jusSegment('Seleção de Workspace', {
+        workspace: response.workspace.name,
+        team: response.workspace.teamName
+      })
       if (response.workspace) this.$store.commit('setWorkspace', response.workspace)
       if (response.profile) this.$store.commit('setProfile', response.profile)
       if (response.person) this.$store.commit('setLoggedPerson', response.person)

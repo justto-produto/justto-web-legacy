@@ -13,7 +13,7 @@
       </el-steps>
     </div>
     <div class="action">
-      <el-button type="primary" @click="protocolDialogVisible = true">
+      <el-button type="primary" @click="showOrotocolDialog()">
         Gerenciar minuta
       </el-button>
     </div>
@@ -49,6 +49,11 @@ export default {
     }
   },
   methods: {
+    showOrotocolDialog () {
+      // SEGMENT TRACK
+      this.$jusSegment('Gerenciar minuta dentro do ticket view', { disputeId: this.dispute.id })
+      this.protocolDialogVisible = true
+    }
   }
 }
 </script>

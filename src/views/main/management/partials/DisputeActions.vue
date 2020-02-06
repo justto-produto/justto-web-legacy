@@ -194,7 +194,7 @@
 
 <script>
 import { validateZero } from '@/utils/validations'
-import { getRoles } from '@/utils/jusUtils'
+import { getRoles, getTracktitleByAction } from '@/utils/jusUtils'
 
 export default {
   name: 'DisputeActions',
@@ -326,25 +326,8 @@ export default {
         params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
       }
       this.$store.dispatch('sendDisputeAction', params).then(() => {
-        let trackTitle
-        if (action === 'unsettled') {
-          trackTitle = 'Disputa ganha'
-        } else if (action === 'settled') {
-          trackTitle = 'Disputa perdida'
-        } else if (action === 'paused') {
-          trackTitle = 'Disputa pausada'
-        } else if (action === 'resume') {
-          trackTitle = 'Disputa despausada'
-        } else if (action === 'favorite') {
-          trackTitle = 'Disputa favoritada'
-        } else if (action === 'disfavor') {
-          trackTitle = 'Disputa desfavoritada'
-        } else {
-          trackTitle = 'Status Modificado'
-        }
-        window.analytics.track(trackTitle, {
-          action: action
-        })
+        // SEGMENT TRACK
+        this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
@@ -381,7 +364,8 @@ export default {
         negotiators: this.disputeNegotiators,
         disputeId: this.dispute.id
       }).then(() => {
-        window.analytics.track('Negociadores alterados')
+        // SEGMENT TRACK
+        this.$jusSegment('Negociadores alterados')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Negociadores editados com sucesso.',

@@ -116,7 +116,8 @@ export default {
       }, 600)
     },
     downloadModel () {
-      window.analytics.track('Planilha modelo baixada')
+      // SEGMENT TRACK
+      this.$jusSegment('Baixar planilha modelo')
       window.open('Planilha-Modelo-Justto.xlsx', '_blank')
     }
   }
