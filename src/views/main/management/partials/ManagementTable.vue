@@ -527,10 +527,6 @@ export default {
         action: action,
         disputeId: id
       }).then(() => {
-        window.analytics.track('Caso em "' + tab + '" ' + label, {
-          aba: tab,
-          action: label
-        })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Disputa ' + label + ' com sucesso.',

@@ -364,7 +364,8 @@ export default {
         negotiators: this.disputeNegotiators,
         disputeId: this.dispute.id
       }).then(() => {
-        window.analytics.track('Negociadores alterados')
+        // SEGMENT TRACK
+        this.$jusSegment('Negociadores alterados')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Negociadores editados com sucesso.',

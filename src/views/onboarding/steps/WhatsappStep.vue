@@ -25,7 +25,6 @@ export default {
   },
   methods: {
     nextStep () {
-      window.analytics.track('Pulada a sincronização de WhatsApp')
       this.$emit('onboarding:step:next')
     }
   }

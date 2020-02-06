@@ -265,7 +265,8 @@ export default {
         if (this.person.name.length > 2) {
           this.$store.dispatch('changePersonName', this.person)
             .then(response => {
-              window.analytics.track('Nome alterado')
+              // SEGMENT TRACK
+              this.$jusSegment('Nome do usuário alterado', { userId: this.forgotForm.email })
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Nome alterado com sucesso.',
@@ -339,7 +340,8 @@ export default {
         password: this.profileForm.newPassword,
         oldPassword: this.profileForm.password
       }).then(() => {
-        window.analytics.track('Senha alterada')
+        // SEGMENT TRACK
+        this.$jusSegment('Senha do usuário alterada')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Senha alterada com sucesso.',
@@ -358,31 +360,6 @@ export default {
         }
       })
     },
-    removeEmail (id) {
-      this.$confirm('Tem certeza que deseja remover este email sincronizado?', 'Excluir email', {
-        confirmButtonText: 'Sim, remover',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        type: 'warning'
-      }).then(() => {
-        this.$store.commit('showLoading')
-        this.$store.dispatch('removeInbox', id).then(() => {
-          window.analytics.track('Email removido')
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Email removido com sucesso.',
-            type: 'success'
-          })
-          var self = this
-          setTimeout(function () {
-            self.$store.commit('hideLoading')
-          }, 1000)
-        }).catch(() => {
-          this.$store.commit('hideLoading')
-          this.$jusNotification({ type: 'error' })
-        })
-      })
-    },
     removeMember (id, name) {
       this.$confirm('Tem certeza que deseja excluir ' + name + ' da equipe?', 'Atenção!', {
         confirmButtonText: 'Excluir',
@@ -391,7 +368,8 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
-          window.analytics.track('Membro removido')
+          // SEGMENT TRACK
+          this.$jusSegment('Membro removido do workspace', { description: `ID ${id}, nome ${name}` })
           this.getMembers()
           this.$jusNotification({
             title: 'Yay!',
@@ -429,7 +407,6 @@ export default {
             this.$jusSegment('Convite de novo membro', {
               description: `Usuário convidado: ${this.inviteForm.email} como ${this.inviteForm.profile}`
             })
-            window.analytics.track('Novo usuário convidado')
             this.$jusNotification({
               title: 'Yay!',
               message: 'Convite enviado com sucesso.',
@@ -460,7 +437,8 @@ export default {
           teamName: this.teamName,
           name: this.companyName
         }).then(() => {
-          window.analytics.track('Nome da equipe alterado')
+          // SEGMENT TRACK
+          this.$jusSegment('Nome da equipe alterado')
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nome da equipe alterado com sucesso.',
@@ -481,7 +459,8 @@ export default {
           teamName: this.teamName,
           name: this.companyName
         }).then(() => {
-          window.analytics.track('Nome do escritório/empresa alterado')
+          // SEGMENT TRACK
+          this.$jusSegment('Nome do escritório/empresa alterado')
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nome do escritório/empresa alterado com sucesso.',

@@ -263,9 +263,6 @@ export default {
       }
       Promise.all(reengagement).then(() => {
         this.$jusSegment('Reiniciar engajamento em massa')
-        window.analytics.track('disputas enriquecidas - SUCESSOS', {
-          action: action
-        })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',

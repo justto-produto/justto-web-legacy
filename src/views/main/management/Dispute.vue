@@ -590,7 +590,8 @@ export default {
           note: this.newNote,
           disputeId: this.dispute.id
         }).then(() => {
-          window.analytics.track('Nova nota gravada')
+          // SEGMENT TRACK
+          this.$jusSegment('Nova nota salva')
           this.newNote = ''
           this.$jusNotification({
             title: 'Yay!',
