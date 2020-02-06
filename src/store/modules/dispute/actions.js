@@ -414,7 +414,7 @@ const disputeActions = {
   getDisputeCommunications ({ commit, state }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.get(`api/disputes/${disputeId}/occurrences/communications?size=${state.occurrencesSize}&sort=createdAt,desc&sort=id,desc`)
+      axios.get(`api/disputes/${disputeId}/occurrences/type/INTERACTION?size=${state.occurrencesSize}&sort=createdAt,desc&sort=id,desc`)
         .then(response => {
           commit('setDisputeOccurrences', response.data.content)
           resolve(response.data)
