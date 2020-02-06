@@ -9,6 +9,9 @@
     <el-button :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
       Contraproposta (+20%)
     </el-button>
+    <el-button :type="ONLY_VISUALIZED ? 'primary' : ''" plain @click="handlePrescriptionClick('ONLY_VISUALIZED')">
+      Somente visualizados
+    </el-button>
   </div>
 </template>
 
@@ -24,6 +27,9 @@ export default {
     },
     COUNTERPROPOSAL_OVER_20 () {
       return this.$store.getters.hasPrescription('COUNTERPROPOSAL_OVER_20')
+    },
+    ONLY_VISUALIZED () {
+      return this.$store.getters.hasPrescription('ONLY_VISUALIZED')
     }
   },
   methods: {
