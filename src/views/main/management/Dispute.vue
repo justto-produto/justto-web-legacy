@@ -20,13 +20,14 @@
         <jus-dispute-actions :dispute="dispute" :is-collapsed.sync="isCollapsed" @fetch-data="fetchData" />
         <!-- MESSAGES -->
         <dispute-occurrences
-          v-if="typingTab === '1'"
+          v-if="['1', '3'].includes(typingTab)"
           ref="disputeOccurrences"
           :dispute-id="id"
           :style="{ opacity: expandedMessageBox ? 0.2 : 1 }"
+          :typing-tab.sync="typingTab"
           data-testid="dispute-messages"
           @dispute:reply="startReply">
-          <dispute-tips />
+          <dispute-tips v-if="typingTab === '1'" />
         </dispute-occurrences>
         <dispute-notes v-else :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
@@ -62,7 +63,7 @@
             </el-tooltip>
           </div>
           <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
-            <el-tab-pane v-loading="loadingTextarea" label="Ocorrências" name="1">
+            <el-tab-pane v-loading="loadingTextarea" label="Comunicação" name="1">
               <el-card
                 v-loading="isPaused"
                 element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
@@ -159,7 +160,7 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <el-tab-pane v-loading="loadingTextarea" label="Notas" name="3">
+            <el-tab-pane v-loading="loadingTextarea" label="Notas" name="2">
               <el-card shadow="always" class="dispute-view__send-message-box">
                 <i
                   v-if="expandedMessageBox"
@@ -185,6 +186,7 @@
                 </div>
               </el-card>
             </el-tab-pane>
+            <el-tab-pane label="Ocorrências" name="3" style="padding: 10px;" />
           </el-tabs>
         </div>
       </div>
@@ -343,7 +345,7 @@ export default {
     },
     isPaused () {
       this.loadingKey = this.loadingKey + 1
-      this.typingTab = this.isPaused ? '3' : '1'
+      this.typingTab = this.isPaused ? '2' : '1'
     }
   },
   created () {
@@ -495,7 +497,7 @@ export default {
         })
     },
     handleTabClick (tab) {
-      if (tab.name !== '1') this.activeRoleId = 0
+      if (!['1', '3'].includes(tab.name)) this.activeRoleId = 0
       this.collapseTextarea()
       this.typingTab = tab.name
     },
