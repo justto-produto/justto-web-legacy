@@ -84,6 +84,8 @@ export default {
   },
   methods: {
     startImport () {
+      // SEGMENT TRACK
+      this.$jusSegment('Importação 2/4 Importação iniciada', { fileName: this.uploadedFile.file_name })
       this.$router.push('/import/new')
       this.$store.dispatch('hideLoading')
     },
@@ -116,6 +118,8 @@ export default {
         formData.append('created_name', this.$store.getters.loggedPersonName)
         formData.append('created_by', this.$store.getters.accountEmail)
         this.saveFile(formData)
+        // SEGMENT TRACK
+        this.$jusSegment('Importação 1/4 Ulpoad concluido', { fileName: file.name })
       } else {
         this.removeFile()
       }

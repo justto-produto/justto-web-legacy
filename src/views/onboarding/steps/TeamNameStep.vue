@@ -53,7 +53,6 @@ export default {
     submitForm () {
       this.$refs['nameForm'].validate(valid => {
         if (valid) {
-          window.analytics.track('Equipe nomeada', { team: this.nameForm.name })
           this.$emit('onboarding:createSubdomain', { team: this.nameForm.name })
         } else {
           return false

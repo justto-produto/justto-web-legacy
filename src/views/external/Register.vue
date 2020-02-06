@@ -117,10 +117,10 @@ export default {
           self.showLoading = true
           this.$store.dispatch('register', this.registerForm)
             .then(() => {
-              window.analytics.track('NOVO CADASTRO', {
-                action: 'REGISTER',
-                name: this.registerForm.name,
-                email: this.registerForm.email
+              // SEGMENT TRACK
+              this.$jusSegment('Cadastro de novo usuário', {
+                userId: this.registerForm.email,
+                name: this.registerForm.name
               })
               self.showSuccess = true
               self.registerForm.name = ''

@@ -137,10 +137,6 @@ export default {
       this.$store.commit('toggleWhatsapDialog')
     },
     logout () {
-      window.analytics.track('Logout realizado', {
-        workspace: this.workspace,
-        username: this.name
-      })
       setTimeout(() => {
         this.$store.dispatch('logout')
       }, 500)
@@ -155,6 +151,8 @@ export default {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
+          // SEGMENT TRACK
+          this.$jusSegment('Busca global de disputas', { description: `Termo utilizado: ${term}` })
           if (response.length) {
             cb(response)
           } else {
@@ -175,12 +173,17 @@ export default {
         lock: true,
         text: 'Alterando Equipe...'
       })
-      const workspace = this.workspaces[this.selectedWorkspace]
+      let workspace = this.workspaces[this.selectedWorkspace]
+      let oldWorkspace = this.$store.getters.workspaceTeamName
       if (workspace.workspace) this.$store.commit('setWorkspace', workspace.workspace)
       if (workspace.profile) this.$store.commit('setProfile', workspace.profile)
       if (workspace.person) this.$store.commit('setLoggedPerson', workspace.person)
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
+          // SEGMENT TRACK
+          this.$jusSegment('Troca de time/workspace', {
+            description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}`
+          })
           this.$router.go('/management')
           this.changeWorkspaceDialogVisible = true
         }).catch(error => {
