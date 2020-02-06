@@ -75,7 +75,7 @@
         <jus-icon icon="enrich"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip content="Contraproposta manual">
+    <el-tooltip v-if="canSendCounterproposal" content="Contraproposta manual">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -83,7 +83,7 @@
         <jus-icon icon="proposal2" />
       </el-button>
     </el-tooltip>
-    <el-tooltip content="Marcar como não lida">
+    <el-tooltip v-if="canMarkAsNotRead" content="Marcar como não lida">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -331,6 +331,9 @@ export default {
           return true
         } return false
       } return false
+    },
+    canMarkAsNotRead () {
+      return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
     },
     workspaceNegotiators () {
       return this.$store.getters.workspaceMembers.map(member => {
