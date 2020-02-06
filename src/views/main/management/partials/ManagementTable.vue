@@ -81,24 +81,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab2"
-        width="110px"
-        class-name="management-table__row-actions"
-        align="right">
-        <template slot-scope="scope">
-          <el-button
-            plain
-            size="mini"
-            class="management-table__protocol_button"
-            @click="showProtocolModal(scope.row)">
-            Minuta
-            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
-              <span/><span/><span/>
-            </div>
-          </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column
         :sortable="false"
         label="Processo"
         min-width="100px"
@@ -205,6 +187,25 @@
               </span>
             </div>
           </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="tab2"
+        label="Minuta"
+        width="110px"
+        class-name="management-table__row-actions"
+        align="center">
+        <template slot-scope="scope">
+          <el-button
+            plain
+            size="mini"
+            class="management-table__protocol_button"
+            @click="showProtocolModal(scope.row)">
+            Minuta
+            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
+              <span/><span/><span/>
+            </div>
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column
