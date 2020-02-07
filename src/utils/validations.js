@@ -17,14 +17,8 @@ const validateName = (rule, value, callback) => {
 }
 
 const validateCpf = (rule, value, callback) => {
-  if (!value || !Object.keys(value).length) {
-    callback()
-    return 0
-  }
-  if (value instanceof Object) {
-    value = value[Object.keys(value)[0]]
-  }
-  if (value.length === 14) {
+  if (!value) callback()
+  else if (value.length === 14) {
     if (CPFCNPJ.CPF.isValid(value)) {
       callback()
     } else callback(new Error())
