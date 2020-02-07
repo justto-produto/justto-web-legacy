@@ -21,6 +21,19 @@ const JusSegment = {
         }
       })
     }
+    Vue.prototype.$jusSegmentPage = (page) => {
+      let proprieties = {
+        userId: store.getters.accountEmail,
+        workspace: store.getters.workspaceName,
+        team: store.getters.workspaceTeamName,
+        source: 'front'
+      }
+      window.analytics.page(page, () => {
+        if (process.env.NODE_ENV === 'development') {
+          console.table(new SegmentLog(page, proprieties))
+        }
+      })
+    }
   }
 }
 

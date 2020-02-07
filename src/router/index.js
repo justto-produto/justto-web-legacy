@@ -168,7 +168,17 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
   if (to.matched.some(record => record.meta.requiresTrack)) {
-    window.analytics.page(to.name)
+    let proprieties = {
+      userId: Store.getters.accountEmail,
+      workspace: Store.getters.workspaceName,
+      team: Store.getters.workspaceTeamName,
+      source: 'front'
+    }
+    window.analytics.page(to.name, proprieties, () => {
+      if (process.env.NODE_ENV === 'development') {
+        console.table({ page: to.name, proprieties })
+      }
+    })
   }
   if (to.name === 'onboarding' || to.name === 'login' || to.name === 'register' || to.name === 'forgot-password') {
     document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width,initial-scale=1.0')
