@@ -29,7 +29,7 @@
           @dispute:reply="startReply">
           <dispute-tips v-if="typingTab === '1'" />
         </dispute-occurrences>
-        <dispute-notes v-else :dispute-id="id" />
+        <dispute-notes v-else-if="typingTab === '2'" :dispute-id="id" />
         <div :key="loadingKey" class="dispute-view__send-message">
           <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
             Destinatário(s):
