@@ -32,7 +32,7 @@
             </el-tooltip>
           </div>
           <div class="dispute-view-occurrences__card-box">
-            <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence)" shadow="never" class="dispute-view-occurrences__card" data-testid="message-box">
+            <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')" shadow="never" class="dispute-view-occurrences__card" data-testid="message-box">
               <div>
                 <span :ref="getMessageRef(occurrence)">
                   <span v-html="buildContent(occurrence)" />
@@ -47,7 +47,7 @@
                   Mensagem agendada para {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
                   <strong>CANCELADA</strong>.
                 </i>
-                <i v-else-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.type === 'SCHEDULER'">
+                <i v-else-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.type === 'SCHEDULER' && occurrence.interaction.message.status === 'WAITING'">
                   <br>
                   <jus-icon icon="clock" style="width: 14px;margin-bottom: -1.2px;"/>
                   Mensagem agendada para
@@ -427,7 +427,7 @@ export default {
         cursor: pointer;
       }
     }
-    &.SCHEDULER {
+    &.WAITING, &.CANCELED {
       border: 2px dashed #343c4b;
     }
     &.COMMUNICATION, &.SCHEDULER {
