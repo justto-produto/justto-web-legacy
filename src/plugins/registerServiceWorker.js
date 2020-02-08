@@ -2,8 +2,8 @@
 
 import { register } from 'register-service-worker'
 
-if (true) {
-  register(`${process.env.BASE_URL}service-worker.js`, {
+if ('serviceWorker' in navigator) {
+  register(`${process.env.BASE_URL}serviceWorker.js`, {
     ready () {
       console.log(
         'App is being served from cache by a service worker.\n' +
