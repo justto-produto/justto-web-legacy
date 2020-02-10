@@ -166,10 +166,10 @@
               <span class="title">Telefone(s):</span>
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                 <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
-                  <span class="phone-number">
+                  <span class="ellipsis">
                     <span>{{ phone.number | phoneMask }}</span>
-                    <el-tooltip v-show="!phone.isValid" content="Telefone inválido">
-                      <jus-icon class="invalid-phone-icon" icon="warn-dark" />
+                    <el-tooltip content="Telefone inválido">
+                      <jus-icon v-show="!phone.isValid" class="invalid-contact-icon" icon="warn-dark" />
                     </el-tooltip>
                   </span>
                 </el-radio>
@@ -182,7 +182,7 @@
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
                   <el-tooltip content="E-mail inválido">
-                    <jus-icon v-show="!email.isValid" icon="warn-dark" />
+                    <jus-icon v-show="!email.isValid" class="invalid-contact-icon" icon="warn-dark" />
                   </el-tooltip>
                 </span>
               </span>
@@ -194,7 +194,7 @@
                 <span class="ellipsis">
                   <span>{{ oab.number + '-' + oab.state || '' }}</span>
                   <el-tooltip content="OAB inválido">
-                    <jus-icon v-show="!oab.isValid" icon="warn-dark" />
+                    <jus-icon v-show="!oab.isValid" class="invalid-contact-icon" icon="warn-dark" />
                   </el-tooltip>
                 </span>
               </span>
@@ -1333,21 +1333,17 @@ export default {
     }
     .ellipsis {
       display: flex;
-      justify-content: space-between;
+      align-items: center;
       width: 100%;
       span {
         margin-left: 6px;
-        width: 164px;
+        max-width: 164px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
     }
-    .phone-number {
-      display: flex;
-      align-items: center;
-    }
-    .invalid-phone-icon {
+    .invalid-contact-icon {
       margin-left: 6px;
     }
     .bank-info {
