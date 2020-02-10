@@ -443,6 +443,9 @@ export default {
       &.EMAIL_CNA {
         background-color: #B6FFFB;
       }
+      &.SMS {
+        background-color: #f3f3f3;
+      }
     }
     &.NEGOTIATOR_REJECTED, &.NEGOTIATOR_PROPOSAL, &.NEGOTIATOR_ACCEPTED {
       border: 1px solid #FFC5A5;
