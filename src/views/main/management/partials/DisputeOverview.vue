@@ -246,7 +246,7 @@
         <div v-show="selectedNamesake">
           <p>Pessoa selecionada:</p>
           <div v-show="selectedNamesake.name">Nome: <b>{{ selectedNamesake.name }}</b></div>
-          <div v-show="selectedNamesake.document">Documento: <b>{{ selectedNamesake.document }}</b></div>
+          <div v-show="selectedNamesake.document">Documento: <b>{{ selectedNamesake.document | cpfCnpjMask }}</b></div>
           <div v-show="selectedNamesake.city">Cidade: <b>{{ selectedNamesake.city }}</b></div>
           <div v-show="selectedNamesake.uf">UF: <b>{{ selectedNamesake.uf }}</b></div>
           <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth }}</b></div>
@@ -274,19 +274,22 @@
           </div>
         </div>
         <el-table
+          class="dispute-overview-view__namesake-table"
           :data="filteredNamesakeList"
           highlight-current-row
           style="width: 100%"
           @current-change="handleCurrentChange">
           <el-table-column label="Nome" prop="name" />
-          <el-table-column label="Documento" prop="document" />
+          <el-table-column label="Documento" prop="document" width="160px">
+            <template slot-scope="scope">{{ scope.row.document | cpfCnpjMask }}</template>
+          </el-table-column>
           <el-table-column label="Cidade" prop="city" />
-          <el-table-column label="UF" prop="uf" />
-          <el-table-column label="Nascimento" prop="dateOfBirth" />
+          <el-table-column label="UF" prop="uf" width="70px" />
+          <el-table-column label="Nascimento" prop="dateOfBirth" width="140px" />
         </el-table>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button :disabled="namesakeDialogLoading" plain @click="namesakeDialogVisible = false">Cancelar</el-button>
+      <span slot="footer">
+        <el-button :disabled="namesakeDialogLoading" plain @click="closeNamesakes">Cancelar</el-button>
         <el-button :loading="namesakeDialogLoading" :disabled="!selectedNamesake" type="primary" @click="selectNamesake()">Corrigir</el-button>
       </span>
     </el-dialog>
@@ -852,6 +855,13 @@ export default {
   methods: {
     showNamesake (role) {
       return role.personProperties.NAMESAKE && !role.documentNumber && role.party === 'CLAIMANT' && this.isJusttoCs
+    },
+    closeNamesakes () {
+      this.namesakeDialogVisible = false
+      this.selectedNamesake = ''
+      this.selectedNamesakePersonId = ''
+      this.cityFilter = null
+      this.ufFilter = null
     },
     selectNamesake () {
       if (this.selectedNamesake) {
@@ -1485,25 +1495,30 @@ export default {
       padding-bottom: 0;
     }
   }
+  &__namesake-table {
+    margin-bottom: 20px;
+  }
   &__namesake-filters {
     display: flex;
-    margin-top: 20px;
+    margin-top: 40px;
+    margin-bottom: 20px;
   }
   &__namesake-filter {
     display: flex;
     align-items: center;
-    width: 50%;
     span {
       margin-right: 8px;
-      font-weight: bold;
-      color: #adadad;
     }
     .el-select {
       display: flex;
       flex: 1;
     }
+    &:first-child {
+      width: 65%;
+    }
     &:last-child {
-      margin-left: 12px;
+      width: 35%;
+      margin-left: 20px;
     }
   }
   .el-input-group__append {
