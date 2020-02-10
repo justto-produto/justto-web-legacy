@@ -169,7 +169,7 @@
                   <span class="ellipsis">
                     <span>{{ phone.number | phoneMask }}</span>
                     <el-tooltip content="Telefone inválido">
-                      <jus-icon v-show="!phone.isValid" class="invalid-contact-icon" icon="warn-dark" />
+                      <jus-icon v-show="!phone.isValid" icon="warn-dark" />
                     </el-tooltip>
                   </span>
                 </el-radio>
@@ -182,7 +182,7 @@
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
                   <el-tooltip content="E-mail inválido">
-                    <jus-icon v-show="!email.isValid" class="invalid-contact-icon" icon="warn-dark" />
+                    <jus-icon v-show="!email.isValid" icon="warn-dark" />
                   </el-tooltip>
                 </span>
               </span>
@@ -194,7 +194,7 @@
                 <span class="ellipsis">
                   <span>{{ oab.number + '-' + oab.state || '' }}</span>
                   <el-tooltip content="OAB inválido">
-                    <jus-icon v-show="!oab.isValid" class="invalid-contact-icon" icon="warn-dark" />
+                    <jus-icon v-show="!oab.isValid" icon="warn-dark" />
                   </el-tooltip>
                 </span>
               </span>
@@ -1337,14 +1337,12 @@ export default {
       width: 100%;
       span {
         margin-left: 6px;
+        margin-right: 6px;
         max-width: 164px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-    }
-    .invalid-contact-icon {
-      margin-left: 6px;
     }
     .bank-info {
       display: block !important
