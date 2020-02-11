@@ -444,7 +444,7 @@ export default {
         background-color: #B6FFFB;
       }
       &.SMS {
-        background-color: #f3f3f3;
+        background-color: #ececec;
       }
     }
     &.NEGOTIATOR_REJECTED, &.NEGOTIATOR_PROPOSAL, &.NEGOTIATOR_ACCEPTED {
