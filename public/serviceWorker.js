@@ -50,6 +50,7 @@ self.addEventListener('activate', function(event) {
   );
 });
 
+/*
 self.addEventListener('fetch', function(event) {
   console.log('Handling fetch event for', event.request.url);
 
@@ -109,14 +110,4 @@ self.addEventListener('fetch', function(event) {
     })
   );
 });
-
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker.register(`${process.env.BASE_URL}service-worker.js`)
-//       .then((reg) => {
-//         console.log('Service Worker Registrado com sucesso', reg)
-//       }).catch((err) => {
-//         console.log('Deu merda aqui', err)
-//       })
-//   })
-// }
+*/
