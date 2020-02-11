@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ height: tab1 ? 'calc(100% - 148px)' : 'calc(100% - 90px)' }">
+  <div :style="{ height: tab1 || tab3 ? 'calc(100% - 148px)' : 'calc(100% - 90px)' }">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id.sync="selectedDisputeId"

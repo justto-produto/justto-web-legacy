@@ -82,7 +82,7 @@
       <management-filters
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
-      <management-prescriptions v-show="activeTab === '1'" @management:getDisputes="getDisputes" />
+      <management-prescriptions v-show="activeTab === '1' || activeTab === '3'" :activeTab="activeTab" @management:getDisputes="getDisputes" />
       <management-table
         ref="managementTable"
         :active-tab.sync="activeTab"
