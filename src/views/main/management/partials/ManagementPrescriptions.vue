@@ -15,10 +15,10 @@
       </el-button>
     </div>
     <div v-if="activeTab === '3'">
-      <el-button :type="HAS_ANSWER ? 'primary' : ''" plain @click="handlePrescriptionClick('PENDING')">
+      <el-button :type="PENDING ? 'primary' : ''" plain @click="handlePrescriptionClick('PENDING')">
         Pendentes
       </el-button>
-      <el-button :type="COUNTERPROPOSAL_UP_TO_20 ? 'primary' : ''" plain @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
+      <el-button :type="UNSETTLED_WITH_MESSAGES ? 'primary' : ''" plain @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
         Perdidos com Mensagem
       </el-button>
     </div>
