@@ -274,8 +274,8 @@
           </div>
         </div>
         <el-table
-          class="dispute-overview-view__namesake-table"
           :data="filteredNamesakeList"
+          class="dispute-overview-view__namesake-table"
           highlight-current-row
           style="width: 100%"
           @current-change="handleCurrentChange">
@@ -884,7 +884,9 @@ export default {
       }
     },
     handleCurrentChange (val) {
-      this.selectedNamesake = val
+      if (val) {
+        this.selectedNamesake = val
+      }
     },
     namesakeDialog (name, personId) {
       this.selectedNamesakePersonId = personId
