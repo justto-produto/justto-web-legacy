@@ -287,7 +287,7 @@
       <infinite-loading
         v-if="disputes.length >= 20"
         slot="append"
-        :distance="1"
+        :distance="20"
         spinner="spiral"
         force-use-infinite-wrapper=".el-table__body-wrapper"
         @infinite="infiniteHandler">
@@ -555,6 +555,10 @@ export default {
       this.$store.dispatch('getDisputes', true).then(response => {
         if (response.numberOfElements) {
           $state.loaded()
+          this.$nextTick(() => {
+            let main = this.$el.querySelector('.el-table__body-wrapper')
+            if (main) main.scrollTop = main.scrollHeight - (main.clientHeight * 3)
+          })
         } else {
           $state.complete()
         }

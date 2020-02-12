@@ -8,7 +8,7 @@ const disputeMutations = {
   },
   addDisputes (state, pageable) {
     if (pageable.content && pageable.content.length) {
-      state.disputes = [...state.disputes, ...pageable.content]
+      state.disputes.push(...pageable.content)
       state.query.size = pageable.size
       state.query.total = pageable.totalElements
     }
@@ -37,9 +37,11 @@ const disputeMutations = {
   },
   setDisputeQuery (state, query) {
     state.query = query
+    state.query.page = 1
   },
   updateDisputeQuery (state, params) {
     state.query[params.key] = params.value
+    state.query.page = 1
   },
   addDisputeQueryPage (state) {
     state.query.page += 1
@@ -132,9 +134,11 @@ const disputeMutations = {
   },
   addPrescription (state, prescription) {
     state.query.prescriptions.push(prescription)
+    state.query.page = 1
   },
   removePrescription (state, prescription) {
     state.query.prescriptions.splice(state.query.prescriptions.indexOf(prescription), 1)
+    state.query.page = 1
   }
 }
 
