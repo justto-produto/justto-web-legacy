@@ -284,6 +284,16 @@
           </h4>
         </span>
       </template>
+      <infinite-loading
+        v-if="disputes.length >= 20"
+        slot="append"
+        :distance="1"
+        spinner="spiral"
+        force-use-infinite-wrapper=".el-table__body-wrapper"
+        @infinite="infiniteHandler">
+        <div slot="no-more" data-testid="occurences-start">Início das ocorrências</div>
+        <div slot="no-results" data-testid="occurences-start">Início das ocorrências</div>
+      </infinite-loading>
     </el-table>
     <el-dialog
       :visible.sync="responseDialogVisible"
@@ -358,6 +368,7 @@ export default {
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
+    InfiniteLoading: () => import('vue-infinite-loading'),
     quillEditor
   },
   props: {
@@ -538,6 +549,16 @@ export default {
           })
         }
       }
+    },
+    infiniteHandler ($state) {
+      this.$store.commit('addDisputeQueryPage')
+      this.$store.dispatch('getDisputes', true).then(response => {
+        if (response.numberOfElements) {
+          $state.loaded()
+        } else {
+          $state.complete()
+        }
+      })
     }
   }
 }

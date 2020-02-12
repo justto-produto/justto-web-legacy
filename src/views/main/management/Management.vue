@@ -87,15 +87,16 @@
         ref="managementTable"
         :active-tab.sync="activeTab"
         :selected-ids.sync="selectedIds"
-        :loading-disputes.sync="loadingDisputes" />
-      <el-pagination
+        :loading-disputes.sync="loadingDisputes"
+        @getDisputes="getDisputes" />
+      <!-- <el-pagination
         :total.sync="disputesTotalLength"
         :page-size.sync="disputesPerPage"
         :current-page.sync="currentPage"
         :pager-count="15"
         :page-sizes="[initialDisputesPerPage, 30, 50, 100]"
         data-testid="pagination"
-        layout="total, prev, pager, next, sizes" />
+        layout="total, prev, pager, next, sizes" /> -->
       <div v-show="hasNew" class="el-notification info right" style="bottom: 100px;z-index: 1980;">
         <i class="el-notification__icon el-icon-info" />
         <div class="el-notification__group is-with-icon">
@@ -160,33 +161,30 @@ export default {
     multiActive () {
       return this.selectedIds.length >= 1
     },
-    disputesTotalLength () {
-      return this.$store.getters.disputeQuery.total
-    },
-    initialDisputesPerPage () {
-      return this.$store.getters.disputeQuery.initialSize
-    },
-    disputesPerPage: {
-      get () {
-        return this.$store.getters.disputeQuery.size
-      },
-      set (size) {
-        // SEGMENT TRACK
-        this.$jusSegment(`Alterada Paginação para ${size} itens`)
-        this.$store.commit('updateDisputeQuery', { key: 'page', value: 1 })
-        this.$store.commit('updateDisputeQuery', { key: 'size', value: size })
-        this.getDisputes()
-      }
-    },
-    currentPage: {
-      get () {
-        return this.$store.getters.disputeQuery.page
-      },
-      set (page) {
-        this.$store.commit('updateDisputeQuery', { key: 'page', value: page })
-        this.getDisputes()
-      }
-    },
+    // disputesTotalLength () {
+    //   return this.$store.getters.disputeQuery.total
+    // },
+    // disputesPerPage: {
+    //   get () {
+    //     return this.$store.getters.disputeQuery.size
+    //   },
+    //   set (size) {
+    //     // SEGMENT TRACK
+    //     this.$jusSegment(`Alterada Paginação para ${size} itens`)
+    //     this.$store.commit('updateDisputeQuery', { key: 'page', value: 1 })
+    //     this.$store.commit('updateDisputeQuery', { key: 'size', value: size })
+    //     this.getDisputes()
+    //   }
+    // },
+    // currentPage: {
+    //   get () {
+    //     return this.$store.getters.disputeQuery.page
+    //   },
+    //   set (page) {
+    //     this.$store.commit('updateDisputeQuery', { key: 'page', value: page })
+    //     this.getDisputes()
+    //   }
+    // },
     persons () {
       return this.$store.state.disputeModule.query.persons
     }
@@ -207,6 +205,9 @@ export default {
   beforeCreate () {
     this.$store.dispatch('getNotVisualizeds')
     this.$store.dispatch('getNearExpirations')
+  },
+  created () {
+    this.getDisputes()
   },
   methods: {
     getDisputes () {
