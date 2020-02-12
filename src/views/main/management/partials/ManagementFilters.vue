@@ -357,7 +357,6 @@ export default {
         'ENRICHED',
         'ENGAGEMENT',
         'RUNNING',
-        'PENDING',
         'ACCEPTED',
         'CHECKOUT',
         'EXPIRED',
