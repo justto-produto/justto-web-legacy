@@ -72,7 +72,6 @@
                   :class="{ 'dispute-view__send-message-expanded': expandedMessageBox, 'show-toolbar': messageType === 'email' }">
                   <quill-editor
                     ref="messageEditor"
-                    v-model="newMessage"
                     :options="editorOptions"
                     data-testid="email-editor"
                     @focus="expandTextarea()"
@@ -138,7 +137,7 @@
                 </el-tooltip>
                 <div :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
                   <quill-editor
-                    v-model="newNote"
+                    ref="noteEditor"
                     :options="editorOptions"
                     data-testid="input-note"
                     @focus="expandTextarea()"
@@ -211,8 +210,6 @@ export default {
     return {
       id: 0,
       messageType: 'email',
-      newMessage: '',
-      newNote: '',
       newChatMessage: '',
       componentKey: 0,
       buttonKey: 0,
@@ -288,8 +285,12 @@ export default {
           return this.activeRole.invalidPhone
       }
     },
-    newMessageTrim () {
-      return this.newMessage.toLowerCase().trim().replace('\n', '')
+    quillMessage () {
+      if (this.messageType === 'email') {
+        return this.$refs.messageEditor.quill.container.firstChild.innerHTML
+      } else {
+        return this.$refs.messageEditor.quill.getText()
+      }
     }
   },
   watch: {
@@ -332,7 +333,9 @@ export default {
     startReply (params) {
       let messageType = params.type.toLowerCase()
       this.setMessageType(messageType)
-      if (messageType === 'email') this.$refs.messageEditor.quill.setText('\n\n___________________\n' + params.resume)
+      if (messageType === 'email') {
+        this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + params.resume)
+      }
       this.expandTextarea()
       this.activeRoleId = 0
       this.directContactAddress = params.sender
@@ -424,10 +427,12 @@ export default {
       this.$store.commit('clearOccurrencesSize')
     },
     sendMessage () {
+      if (!this.$refs.messageEditor.quill.getText().trim()) {
+        return false
+      }
       if (this.selectedContacts.map(c => c.id).length) {
-        let message
         if (this.messageType === 'whatsapp') {
-          if (checkMessage(this.newMessageTrim, this.recentMessages)) {
+          if (checkMessage(this.quillMessage, this.recentMessages)) {
             this.$jusNotification({
               title: 'Ops!',
               message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
@@ -436,10 +441,10 @@ export default {
             return false
           } else {
             this.$store.state.messageModule.recentMessages.push({
-              messageBody: this.newMessageTrim,
+              messageBody: this.quillMessage,
               selfDestroy: () => (setTimeout(() => {
                 for (var i = 0; i < this.recentMessages.length; i++) {
-                  if (this.newMessageTrim === this.recentMessages[i].messageBody) {
+                  if (this.quillMessage === this.recentMessages[i].messageBody) {
                     this.recentMessages.splice(i, 1)
                   }
                 }
@@ -447,11 +452,7 @@ export default {
             })
             let lastMessage = this.recentMessages.length - 1
             this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
-            message = this.$refs.messageEditor.quill.getText()
           }
-        }
-        if (!this.newMessageTrim) {
-          return false
         }
         this.loadingTextarea = true
         let to = []
@@ -467,7 +468,7 @@ export default {
         }
         this.$store.dispatch('send' + this.messageType, {
           to,
-          message: message || this.newMessage,
+          message: this.quillMessage,
           disputeId: this.dispute.id
         }).then(() => {
           // SEGMENT TRACK
@@ -476,15 +477,14 @@ export default {
           } else {
             this.$jusSegment(`Envio de ${this.messageType} manual`)
           }
-          this.newMessage = ''
           this.$jusNotification({
             title: 'Yay!',
             message: this.messageType + ' enviado com sucesso.',
             type: 'success'
           })
           setTimeout(function () {
-            this.newMessage = ''
-          }.bind(this), 500)
+            this.$refs.messageEditor.quill.deleteText(0,9999999999)
+          }.bind(this), 200)
         }).catch(e => {
           console.error(e)
           this.$jusNotification({ type: 'error' })
@@ -501,15 +501,16 @@ export default {
       }
     },
     sendNote () {
-      if (this.newNote.trim().replace('\n', '')) {
+      let note = this.$refs.noteEditor.quill.getText()
+      if (note.trim()) {
         this.loadingTextarea = true
         this.$store.dispatch('sendDisputeNote', {
-          note: this.newNote,
+          note,
           disputeId: this.dispute.id
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nova nota salva')
-          this.newNote = ''
+          this.$refs.noteEditor.quill.deleteText(0,9999999999)
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota gravada com sucesso.',
