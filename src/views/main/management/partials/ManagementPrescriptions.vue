@@ -1,27 +1,23 @@
 <template>
-  <div  class="management-prescriptions">
-    <div v-if="activeTab === '1'">
-      <el-button :type="HAS_ANSWER ? 'primary' : ''" plain @click="handlePrescriptionClick('HAS_ANSWER')">
-        Com resposta
-      </el-button>
-      <el-button :type="COUNTERPROPOSAL_UP_TO_20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSAL_UP_TO_20')">
-        Contraproposta (até 20%)
-      </el-button>
-      <el-button :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
-        Contraproposta (+20%)
-      </el-button>
-      <el-button :type="ONLY_VISUALIZED ? 'primary' : ''" plain @click="handlePrescriptionClick('ONLY_VISUALIZED')">
-        Somente visualizados
-      </el-button>
-    </div>
-    <div v-if="activeTab === '3'">
-      <el-button :type="PENDING ? 'primary' : ''" plain @click="handlePrescriptionClick('PENDING')">
-        Pendentes
-      </el-button>
-      <el-button :type="UNSETTLED_WITH_MESSAGES ? 'primary' : ''" plain @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
-        Perdidos com Mensagem
-      </el-button>
-    </div>
+  <div class="management-prescriptions">
+    <el-button v-show="tab1" :type="HAS_ANSWER ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('HAS_ANSWER')">
+      Com resposta
+    </el-button>
+    <el-button v-show="tab1" :type="COUNTERPROPOSAL_UP_TO_20 ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('COUNTERPROPOSAL_UP_TO_20')">
+      Contraproposta (até 20%)
+    </el-button>
+    <el-button v-show="tab1" :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
+      Contraproposta (+20%)
+    </el-button>
+    <el-button v-show="tab1" :type="ONLY_VISUALIZED ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_VISUALIZED')">
+      Somente visualizados
+    </el-button>
+    <el-button v-show="tab3" :type="PENDING ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('PENDING')">
+      Pendentes
+    </el-button>
+    <el-button v-show="tab3" :type="UNSETTLED_WITH_MESSAGES ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
+      Perdidos com Mensagem
+    </el-button>
   </div>
 </template>
 
@@ -52,11 +48,22 @@ export default {
     },
     UNSETTLED_WITH_MESSAGES () {
       return this.$store.getters.hasPrescription('UNSETTLED_WITH_MESSAGES')
+    },
+    tab0 () {
+      return this.activeTab === '0'
+    },
+    tab1 () {
+      return this.activeTab === '1'
+    },
+    tab2 () {
+      return this.activeTab === '2'
+    },
+    tab3 () {
+      return this.activeTab === '3'
     }
   },
   methods: {
     handlePrescriptionClick (prescription) {
-
       if (this[prescription]) {
         this.$store.commit('removePrescription', prescription)
       } else {
