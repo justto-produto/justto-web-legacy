@@ -23,7 +23,6 @@
           v-if="['1', '3'].includes(typingTab)"
           ref="disputeOccurrences"
           :dispute-id="id"
-          :style="{ opacity: expandedMessageBox ? 0.2 : 1 }"
           :typing-tab.sync="typingTab"
           data-testid="dispute-messages"
           @dispute:reply="startReply">
@@ -35,19 +34,14 @@
             Destinatário(s):
             <span v-for="(selected, index) in selectedContacts" :key="selected.id">
               <span v-if="index === 0">
-                <span v-if="selected.number && selected.state">{{ selected.number + '-' + selected.state }}</span>
-                <span v-else-if="selected.number">{{ selected.number | phoneMask }}</span>
-                <span v-else-if="selected.address">{{ selected.address }}</span>
+                <span v-if="selected.number">{{ selected.number | phoneMask }}</span>
+                <span v-else-if="selected.address">{{ selected.address | phoneMask }}</span>
               </span>
             </span>
             <el-tooltip v-if="selectedContacts.length > 1">
               <div slot="content">
                 <span v-for="selected in selectedContacts" :key="selected.id">
-                  <div v-if="selected.number && selected.state">
-                    <jus-icon icon="email-cna" is-white style="width: 14px;vertical-align: top;" />
-                    {{ selected.number + '-' + selected.state }}
-                  </div>
-                  <div v-else-if="selected.number">
+                  <div v-if="selected.number">
                     <jus-icon icon="phone" is-white style="width: 14px;vertical-align: top;" />
                     {{ selected.number | phoneMask }}
                   </div>
@@ -70,36 +64,25 @@
                 element-loading-spinner="el-icon-video-pause"
                 class="dispute-view__send-message-box"
                 shadow="always">
-                <i
-                  v-if="expandedMessageBox"
-                  class="el-icon-arrow-down dispute-view__collapse-message-box"
-                  @click="collapseTextarea()" />
-                <div v-if="validName" :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
+                <el-tooltip v-if="expandedMessageBox && validName" content="Recolher caixa de mensagem">
+                  <i class="el-icon-arrow-down dispute-view__collapse-message-box" @click="collapseTextarea()" />
+                </el-tooltip>
+                <div
+                  v-if="validName"
+                  :class="{ 'dispute-view__send-message-expanded': expandedMessageBox, 'show-toolbar': messageType === 'email' }">
                   <quill-editor
-                    v-if="messageType === 'email'"
                     ref="messageEditor"
-                    v-model="newMessage"
                     :options="editorOptions"
                     data-testid="email-editor"
                     @focus="expandTextarea()"
-                    @blur="collapseTextarea()" />
-                  <el-input
-                    v-else
-                    ref="messageTextArea"
-                    v-model="newMessage"
-                    :rows="expandedMessageBox ? 10 : 1"
-                    data-testid="input-message"
-                    placeholder="Escreva alguma coisa"
-                    type="textarea"
-                    class="el-textarea__inner"
-                    @focus="expandTextarea()"
-                    @blur="collapseTextarea()" />
+                    @blur="collapseTextarea() "/>
                 </div>
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
                     v-if="!validName"
                     content="Atualize sue nome em suas configurações de perfil para enviar mensagens">
                     <div class="dispute-view__disabled-text">
+                      <jus-icon icon="warn-dark" style="vertical-align: bottom;" />
                       Configure um nome em seu perfil
                     </div>
                   </el-tooltip>
@@ -114,11 +97,6 @@
                         <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
                       </a>
                     </el-tooltip>
-                    <el-tooltip content="Enviar CNA">
-                      <a href="#" data-testid="select-cna" @click.prevent="setMessageType('cna')">
-                        <jus-icon :is-active="messageType === 'cna'" icon="email-cna"/>
-                      </a>
-                    </el-tooltip>
                   </div>
                   <div>
                     <el-tooltip :key="buttonKey" :disabled="!validName || invalidReceiver === false">
@@ -129,23 +107,15 @@
                         <span v-else-if="invalidReceiver">
                           <span v-if="messageType === 'email'">Email(s) do destinatário selecionado não selecionado/configurado</span>
                           <span v-if="messageType === 'whatsapp'">Telefone(s) do destinatário selecionado não selecionado/configurado</span>
-                          <span v-if="messageType === 'cna'">OAB(s) do destinatário selecionado não selecionado/configurado</span>
                         </span>
                       </div>
                       <span v-if="validName">
-                        <el-button
-                          v-if="!!directEmailAddress"
-                          size="medium"
-                          plain
-                          @click="cancelReplyDialog()">
-                          Cancelar resposta
-                        </el-button>
                         <el-button
                           type="primary"
                           size="medium"
                           data-testid="submit-message"
                           @click="sendMessage()">
-                          Enviar
+                          Enviar mensagem
                         </el-button>
                       </span>
                       <el-button
@@ -162,21 +132,19 @@
             </el-tab-pane>
             <el-tab-pane v-loading="loadingTextarea" label="Notas" name="2">
               <el-card shadow="always" class="dispute-view__send-message-box">
-                <i
-                  v-if="expandedMessageBox"
-                  class="el-icon-arrow-down dispute-view__collapse-message-box"
-                  @click="collapseTextarea()" />
+                <el-tooltip v-if="expandedMessageBox" content="Recolher caixa de mensagem">
+                  <i class="el-icon-arrow-down dispute-view__collapse-message-box" @click="collapseTextarea()" />
+                </el-tooltip>
                 <div :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
                   <quill-editor
-                    v-model="newNote"
+                    ref="noteEditor"
                     :options="editorOptions"
                     data-testid="input-note"
                     @focus="expandTextarea()"
-                    @blur="collapseTextarea(true)" />
+                    @blur="collapseTextarea() "/>
                 </div>
                 <div class="dispute-view__send-message-actions note">
                   <el-button
-                    :disabled="!newNote.trim().replace('\n', '')"
                     size="medium"
                     type="primary"
                     data-testid="submit-note"
@@ -242,8 +210,6 @@ export default {
     return {
       id: 0,
       messageType: 'email',
-      newMessage: '',
-      newNote: '',
       newChatMessage: '',
       componentKey: 0,
       buttonKey: 0,
@@ -255,7 +221,7 @@ export default {
       activeRole: {},
       isCollapsed: false,
       expandedMessageBox: false,
-      directEmailAddress: '',
+      directContactAddress: '',
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
         modules: {
@@ -299,14 +265,12 @@ export default {
       return this.$store.getters.messageRecentMessages
     },
     selectedContacts () {
-      if (this.directEmailAddress) {
-        return [{ id: 0, address: this.directEmailAddress }]
+      if (this.directContactAddress) {
+        return [{ id: 0, address: this.directContactAddress }]
       }
       switch (this.messageType) {
         case 'email':
           return this.activeRole.emails ? this.activeRole.emails.filter(e => e.selected) : []
-        case 'cna':
-          return this.activeRole.oabs ? this.activeRole.oabs.filter(e => e.selected) : []
         case 'whatsapp':
           return this.activeRole.phones ? this.activeRole.phones.filter(e => e.selected) : []
         default:
@@ -319,12 +283,14 @@ export default {
           return this.activeRole.invalidEmail
         case 'whatsapp':
           return this.activeRole.invalidPhone
-        case 'cna':
-          return this.activeRole.invalidOab
       }
     },
-    newMessageTrim () {
-      return this.newMessage.toLowerCase().trim().replace('\n', '')
+    quillMessage () {
+      if (this.messageType === 'email') {
+        return this.$refs.messageEditor.quill.container.firstChild.innerHTML
+      } else {
+        return this.$refs.messageEditor.quill.getText()
+      }
     }
   },
   watch: {
@@ -365,74 +331,23 @@ export default {
   },
   methods: {
     startReply (params) {
-      this.setMessageType('email').then(() => {
-        this.expandTextarea()
-        this.activeRoleId = 0
-        this.directEmailAddress = params.sender
-        this.$refs.messageEditor.quill.setText('\n\n___________________\n' + params.resume)
-      })
-    },
-    cancelReplyDialog () {
-      this.$confirm('Tem certeza que deseja sair? A mensagem será perdida.', {
-        confirmButtonText: 'Sair',
-        cancelButtonText: 'Permanecer',
-        title: 'Atenção!',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
-      }).then(() => {
-        this.cancelReply(true)
-      })
-    },
-    cancelReply (collapse) {
-      this.directEmailAddress = ''
-      if (this.$refs.messageEditor) this.$refs.messageEditor.quill.setText('')
-      if (collapse) this.collapseTextarea()
+      let messageType = params.type.toLowerCase()
+      this.setMessageType(messageType)
+      if (messageType === 'email') {
+        this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + params.resume)
+      }
+      this.expandTextarea()
+      this.activeRoleId = 0
+      this.directContactAddress = params.sender
     },
     setMessageType (type) {
-      return new Promise((resolve, reject) => {
-        if (this.newMessageTrim) {
-          this.$confirm('Tem certeza que deseja sair? A mensagem será perdida.', {
-            confirmButtonText: 'Sair',
-            cancelButtonText: 'Permanecer',
-            title: 'Atenção!',
-            type: 'warning',
-            cancelButtonClass: 'is-plain'
-          }).then(() => {
-            this.cancelReply(true)
-            resolve(this.changeMessageType(type))
-          }).catch(e => {
-            reject(e)
-          })
-        } else {
-          resolve(this.changeMessageType(type))
-        }
-      })
-    },
-    changeMessageType (type) {
-      return new Promise((resolve) => {
-        this.newMessage = ''
-        this.messageType = ''
-        this.messageType = type
-        setTimeout(() => {
-          switch (type) {
-            case 'whatsapp':
-            case 'cna':
-              this.$nextTick(() => this.$refs.messageTextArea.focus())
-              break
-            case 'email':
-              this.$nextTick(() => this.$refs.messageEditor.quill.focus())
-              break
-          }
-          this.$forceUpdate()
-          resolve()
-        }, 200)
-      })
+      this.removeReply()
+      this.messageType = ''
+      this.messageType = type
+      this.$nextTick(() => this.$refs.messageEditor.quill.focus())
     },
     updateActiveRole (params) {
       if (typeof params === 'number') {
-        if (params === 0) {
-          this.collapseTextarea()
-        }
         let disputeId = params
         params = {}
         params.activeRole = this.dispute.disputeRoles.find(role => {
@@ -449,6 +364,14 @@ export default {
       }
       if (this.typingTab !== '1' && params.activeRole) this.typingTab = '1'
       if (params.messageType) this.setMessageType(params.messageType)
+    },
+    removeReply () {
+      this.directContactAddress = ''
+      let message = this.$refs.messageEditor.quill.getText()
+      let messageIndex = message.indexOf('\n\n___________________')
+      if (messageIndex !== -1) {
+        this.$refs.messageEditor.quill.setText(message.substring(messageIndex, 0))
+      }
     },
     unsubscribeOccurrences (id) {
       this.$store.commit('clearDisputeOccurrences')
@@ -498,45 +421,44 @@ export default {
     },
     handleTabClick (tab) {
       if (!['1', '3'].includes(tab.name)) this.activeRoleId = 0
-      this.collapseTextarea()
       this.typingTab = tab.name
     },
     handleBeforeLeaveTabs () {
       this.$store.commit('clearOccurrencesSize')
     },
     sendMessage () {
-      if (this.messageType === 'whatsapp') {
-        if (checkMessage(this.newMessageTrim, this.recentMessages)) {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
-            type: 'warning'
-          })
-          return false
-        } else {
-          this.$store.state.messageModule.recentMessages.push({
-            messageBody: this.newMessageTrim,
-            selfDestroy: () => (setTimeout(() => {
-              for (var i = 0; i < this.recentMessages.length; i++) {
-                if (this.newMessageTrim === this.recentMessages[i].messageBody) {
-                  this.recentMessages.splice(i, 1)
-                }
-              }
-            }, 30000))
-          })
-          let lastMessage = this.recentMessages.length - 1
-          this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
-        }
-      }
-      if (!this.newMessageTrim) {
+      if (!this.$refs.messageEditor.quill.getText().trim()) {
         return false
       }
       if (this.selectedContacts.map(c => c.id).length) {
+        if (this.messageType === 'whatsapp') {
+          if (checkMessage(this.quillMessage, this.recentMessages)) {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
+              type: 'warning'
+            })
+            return false
+          } else {
+            this.$store.state.messageModule.recentMessages.push({
+              messageBody: this.quillMessage,
+              selfDestroy: () => (setTimeout(() => {
+                for (var i = 0; i < this.recentMessages.length; i++) {
+                  if (this.quillMessage === this.recentMessages[i].messageBody) {
+                    this.recentMessages.splice(i, 1)
+                  }
+                }
+              }, 30000))
+            })
+            let lastMessage = this.recentMessages.length - 1
+            this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
+          }
+        }
         this.loadingTextarea = true
         let to = []
-        if (this.directEmailAddress) {
+        if (this.directContactAddress) {
           to.push({
-            address: this.directEmailAddress
+            address: this.directContactAddress
           })
         } else {
           to.push({
@@ -546,26 +468,23 @@ export default {
         }
         this.$store.dispatch('send' + this.messageType, {
           to,
-          message: this.newMessage,
+          message: this.quillMessage,
           disputeId: this.dispute.id
         }).then(() => {
           // SEGMENT TRACK
-          if (this.directEmailAddress) {
+          if (this.directContactAddress) {
             this.$jusSegment(`Envio de ${this.messageType} via resposta rápida`)
           } else {
             this.$jusSegment(`Envio de ${this.messageType} manual`)
           }
-          this.newMessage = ''
-          this.cancelReply(true)
           this.$jusNotification({
             title: 'Yay!',
             message: this.messageType + ' enviado com sucesso.',
             type: 'success'
           })
           setTimeout(function () {
-            this.newMessage = ''
-            this.collapseTextarea()
-          }.bind(this), 500)
+            this.$refs.messageEditor.quill.deleteText(0,9999999999)
+          }.bind(this), 200)
         }).catch(e => {
           console.error(e)
           this.$jusNotification({ type: 'error' })
@@ -575,21 +494,23 @@ export default {
       } else {
         this.$jusNotification({
           title: 'Ops!',
-          message: 'Selecione ao menos um contato para envio.',
+          dangerouslyUseHTMLString: true,
+          message: `Selecione ao menos um contato do tipo <b>${this.messageType.toUpperCase()}</b> para envio.`,
           type: 'warning'
         })
       }
     },
     sendNote () {
-      if (this.newNote.trim().replace('\n', '')) {
+      let note = this.$refs.noteEditor.quill.getText()
+      if (note.trim()) {
         this.loadingTextarea = true
         this.$store.dispatch('sendDisputeNote', {
-          note: this.newNote,
+          note,
           disputeId: this.dispute.id
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nova nota salva')
-          this.newNote = ''
+          this.$refs.noteEditor.quill.deleteText(0,9999999999)
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota gravada com sucesso.',
@@ -605,14 +526,8 @@ export default {
     expandTextarea () {
       this.expandedMessageBox = true
     },
-    collapseTextarea (timeout) {
-      if (timeout) {
-        setTimeout(() => {
-          this.expandedMessageBox = false
-        }, 100)
-      } else {
-        this.expandedMessageBox = false
-      }
+    collapseTextarea () {
+      this.expandedMessageBox = false
     }
   }
 }
@@ -709,8 +624,10 @@ export default {
     }
   }
   &__send-message-expanded {
-    .ql-toolbar {
-      display: inherit;
+    &.show-toolbar {
+      .ql-toolbar {
+        display: inherit;
+      }
     }
     .ql-container {
       height: 208px;

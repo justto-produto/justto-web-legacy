@@ -358,7 +358,7 @@ export default {
       if (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
-        occurrence.interaction.message.communicationType === 'EMAIL' &&
+        ['EMAIL', 'WHATSAPP'].includes(occurrence.interaction.message.communicationType) &&
         occurrence.interaction.direction === 'INBOUND') {
         return true
       }
@@ -367,7 +367,8 @@ export default {
     startReply (occurrence) {
       let sender = occurrence.interaction.message.sender
       let resume = occurrence.interaction.message.resume
-      this.$emit('dispute:reply', { sender, resume })
+      let type = occurrence.interaction.message.communicationType
+      this.$emit('dispute:reply', { sender, resume, type })
     }
   }
 }
