@@ -237,6 +237,8 @@ export default {
       this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
       this.$store.commit('setDisputeHasFilters', false)
+      // SEGMENT TRACK
+      this.$jusSegment(`Navegação na aba ${this.$t('tab.' + tab).toUpperCase()}`)
       switch (tab) {
         case '0':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })
