@@ -82,9 +82,9 @@
       <management-filters
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
-      <div style="min-height: 60px;position: relative;">
+      <div style="min-height: 44px;position: relative;">
         <management-prescriptions v-show="activeTab === '1' || activeTab === '3'" :active-tab="activeTab" @management:getDisputes="getDisputes" />
-        <div v-show="disputesTotalLength" style="right: 0px;position: absolute;top: 21px;">
+        <div v-show="disputesTotalLength" style="right: 0px;position: absolute;top: 13px;">
           Disputas: {{ disputes.length }} de {{ disputesTotalLength }}
         </div>
       </div>

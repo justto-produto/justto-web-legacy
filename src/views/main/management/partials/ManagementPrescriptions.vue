@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss">
 .management-prescriptions {
-  margin: 10px 0;
+  margin: 6px 0;
   .el-button--primary.is-plain:focus {
     color: #9461f7;
     background: #f4effe;
