@@ -1359,6 +1359,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
+      width: 100%;
     }
     .bordered {
       width: 100%;
