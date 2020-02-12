@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ height: tab1 ? 'calc(100% - 148px)' : 'calc(100% - 90px)' }">
+  <div :style="{ height: tab1 ? 'calc(100% - 118px)' : 'calc(100% - 60px)' }">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id.sync="selectedDisputeId"
@@ -291,8 +291,8 @@
         spinner="spiral"
         force-use-infinite-wrapper=".el-table__body-wrapper"
         @infinite="infiniteHandler">
-        <div slot="no-more" data-testid="occurences-start">Início das ocorrências</div>
-        <div slot="no-results" data-testid="occurences-start">Início das ocorrências</div>
+        <div slot="no-more">Fim das disputas</div>
+        <div slot="no-results">Fim das disputas</div>
       </infinite-loading>
     </el-table>
     <el-dialog
@@ -698,6 +698,12 @@ export default {
   }
   td {
     height: 46px;
+  }
+  .infinite-loading-container {
+    font-style: italic;
+    margin: 20px 0 10px;
+    color: #adadad;
+    font-size: 1rem;
   }
 }
 </style>
