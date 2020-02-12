@@ -88,12 +88,17 @@ const disputeMutations = {
   setDisputeOccurrences (state, occurrences) {
     if (occurrences && occurrences.length) state.occurrences = occurrences.reverse()
   },
+  addLoadingOccurrence (state, occurrence) {
+    state.occurrences.push(occurrence)
+  },
   SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
     Vue.nextTick(() => {
       if (!newOccurrence.id) {
         state.occurrences.push(newOccurrence)
       } else {
-        let occurrenceIndex = state.occurrences.findIndex(d => newOccurrence.id === d.id)
+        let occurrenceIndex = state.occurrences.findIndex(d => {
+          return newOccurrence.id === d.id || newOccurrence.externalIdentification === d.externalIdentification
+        })
         if (occurrenceIndex === -1) {
           state.occurrences.push(newOccurrence)
         } else {

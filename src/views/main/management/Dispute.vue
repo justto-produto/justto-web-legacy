@@ -465,6 +465,13 @@ export default {
             contactsId: this.selectedContacts.map(c => c.id)
           })
         }
+        for (var contact of this.selectedContacts) {
+          this.addLoadingOccurrence({
+            message: this.$refs.messageEditor.quill.getText(),
+            type: this.messageType,
+            receiver: this.messageType === 'email' ? contact.address : contact.phone
+          })
+        }
         this.$store.dispatch('send' + this.messageType, {
           to,
           message: message || this.newMessage,
@@ -499,6 +506,13 @@ export default {
           type: 'warning'
         })
       }
+    },
+    addLoadingOccurrence (params) {
+      this.$store.commit('addLoadingOccurrence', Object.assign({
+        externalIdentification: +new Date(),
+        sender: this.$store.getters.loggedPersonName,
+        createAt: { dateTime: this.$moment() }
+      }, params))
     },
     sendNote () {
       if (this.newNote.trim().replace('\n', '')) {

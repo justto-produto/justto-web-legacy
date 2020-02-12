@@ -27,14 +27,16 @@ const message = {
     },
     sendemail ({ commit }, body) {
       return new Promise((resolve, reject) => {
+        resolve()
+
         // eslint-disable-next-line
-        axios.post('api/messages/send/email', body)
-          .then(response => {
-            resolve(response.data)
-          })
-          .catch(error => {
-            reject(error)
-          })
+        // axios.post('api/messages/send/email', body)
+        //   .then(response => {
+        //     resolve(response.data)
+        //   })
+        //   .catch(error => {
+        //     reject(error)
+        //   })
       })
     },
     sendcna ({ commit }, body) {
