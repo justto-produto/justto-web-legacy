@@ -56,6 +56,7 @@ export default {
   },
   methods: {
     handlePrescriptionClick (prescription) {
+
       if (this[prescription]) {
         this.$store.commit('removePrescription', prescription)
       } else {
