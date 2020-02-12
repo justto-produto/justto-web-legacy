@@ -5,7 +5,7 @@ const FileSaver = require('file-saver')
 const queryBuilder = q => {
   let query = '?'
   for (let [key, value] of Object.entries(q)) {
-    if (['initialSize', 'total'].includes(key)) continue
+    if (['total'].includes(key)) continue
     if (!value) continue
     if (Array.isArray(value)) {
       if (!value.length) continue
@@ -104,12 +104,16 @@ const disputeActions = {
         })
     })
   },
-  getDisputes ({ commit, state }) {
+  getDisputes ({ commit, state }, pageable) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/disputes/filter' + queryBuilder(state.query)).then(response => {
-        commit('setDisputes', response.data)
-        commit('disputeSetHasNew', false)
+        if (pageable) {
+          commit('addDisputes', response.data)
+        } else {
+          commit('setDisputes', response.data)
+          commit('disputeSetHasNew', false)
+        }
         resolve(response.data)
       }).catch(error => {
         commit('clearDisputes')
