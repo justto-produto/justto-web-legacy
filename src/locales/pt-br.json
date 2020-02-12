@@ -126,5 +126,11 @@
   "bankAccount": {
     "linkDisputeBankAccounts": "vinculada",
     "unlinkDisputeBankAccounts": "desvinculada"
+  },
+  "tab": {
+    "0": "sem resposta",
+    "1": "em negociação",
+    "2": "proposta aceita",
+    "3": "todos"
   }
 }
