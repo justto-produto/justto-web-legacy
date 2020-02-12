@@ -14,11 +14,7 @@ const queryBuilder = q => {
         query = query + key + 'End' + '=' + moment(value[1]).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') + '&'
       } else {
         for (let v of value) {
-          if (v === 'PENDING' && key === 'prescriptions') {
-            query = query + 'status' + '=' + v + '&'
-          } else {
-            query = query + key + '=' + v + '&'
-          }
+          query = query + key + '=' + v + '&'
         }
       }
     } else if (key === 'page') {
