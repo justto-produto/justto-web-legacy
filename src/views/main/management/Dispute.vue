@@ -483,7 +483,7 @@ export default {
             type: 'success'
           })
           setTimeout(function () {
-            this.$refs.messageEditor.quill.deleteText(0,9999999999)
+            this.$refs.messageEditor.quill.deleteText(0, 9999999999)
           }.bind(this), 200)
         }).catch(e => {
           console.error(e)
@@ -510,7 +510,7 @@ export default {
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nova nota salva')
-          this.$refs.noteEditor.quill.deleteText(0,9999999999)
+          this.$refs.noteEditor.quill.deleteText(0, 9999999999)
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota gravada com sucesso.',
