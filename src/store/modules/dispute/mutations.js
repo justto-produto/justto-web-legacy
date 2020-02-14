@@ -106,7 +106,11 @@ const disputeMutations = {
         state.occurrences.push(newOccurrence)
       } else {
         let occurrenceIndex = state.occurrences.findIndex(d => {
-          return newOccurrence.id === d.id || newOccurrence.externalIdentification === d.externalIdentification
+          let externalId
+          try {
+            externalId = parseInt(newOccurrence.interaction.message.parameters.MESSAGE_ID)
+          } catch (e) {}
+          return newOccurrence.id === d.id || (d.externalIdentification && externalId === d.externalIdentification)
         })
         if (occurrenceIndex === -1) {
           state.occurrences.push(newOccurrence)
