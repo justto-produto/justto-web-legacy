@@ -70,7 +70,7 @@
                 </el-tooltip>
                 <div
                   v-if="validName"
-                  :class="{ 'dispute-view__send-message-expanded': expandedMessageBox, 'show-toolbar': messageType === 'email' }">
+                  :class="{ 'dispute-view__send-message-expanded': expandedMessageBox && !isPaused, 'show-toolbar': messageType === 'email' }">
                   <quill-editor
                     ref="messageEditor"
                     :options="editorOptions"
