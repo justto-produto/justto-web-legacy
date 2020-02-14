@@ -12,8 +12,30 @@
         v-for="(occurrence, index) in datedOccurrence"
         :key="index + new Date().getTime()"
         class="dispute-view-occurrences__occurrence">
+        <div v-if="!occurrence.id" class="dispute-view-occurrences__interaction OUTBOUND LOADING">
+          <div class="dispute-view-occurrences__avatar">
+            <el-tooltip :content="occurrence.sender">
+              <jus-avatar-user :name="occurrence.sender" shape="circle" size="sm" />
+            </el-tooltip>
+          </div>
+          <div class="dispute-view-occurrences__card-box">
+            <el-card :class="occurrence.type.toUpperCase()" shadow="never" class="dispute-view-occurrences__card COMMUNICATION" data-testid="message-box">
+              <span v-html="occurrence.message" />
+            </el-card>
+            <div class="dispute-view-occurrences__card-info">
+              Para: {{ occurrence.receiver | phoneMask }}
+              <div> • </div>
+              <jus-icon :icon="occurrence.type" />
+              <div> • </div>
+              {{ occurrence.createAt.dateTime | moment('HH:mm') }}
+            </div>
+          </div>
+          <div class="dispute-view-occurrences__side-icon">
+            <i class="el-icon-loading" />
+          </div>
+        </div>
         <el-card
-          v-if="occurrence.type === 'LOG' ||
+          v-else-if="occurrence.type === 'LOG' ||
           (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
           shadow="never"
           class="dispute-view-occurrences__log el-card--bg-warning">
@@ -73,7 +95,7 @@
               </span>
             </div>
           </div>
-          <div v-if="showReply(occurrence)" class="dispute-view-occurrences__reply-email">
+          <div v-if="showReply(occurrence)" class="dispute-view-occurrences__side-icon">
             <el-tooltip content="Responder">
               <a href="#" @click.prevent="startReply(occurrence)">
                 <jus-icon icon="reply" />
@@ -405,6 +427,9 @@ export default {
         margin-right: 8px;
       }
     }
+    &.LOADING {
+      opacity: 0.5;
+    }
   }
   &__card {
     border-radius: 8px;
@@ -643,7 +668,7 @@ export default {
     height: 40vh;
     resize: none;
   }
-  &__reply-email {
+  &__side-icon {
     align-self: center;
     margin-bottom: 22px;
     img {

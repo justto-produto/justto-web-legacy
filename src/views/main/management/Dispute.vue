@@ -466,10 +466,20 @@ export default {
             contactsId: this.selectedContacts.map(c => c.id)
           })
         }
+        let externalIdentification = +new Date()
+        for (var contact of this.selectedContacts) {
+          this.addLoadingOccurrence({
+            message: this.$refs.messageEditor.quill.getText(),
+            type: this.messageType,
+            receiver: this.messageType === 'email' ? contact.address : contact.phone,
+            externalIdentification
+          })
+        }
         this.$store.dispatch('send' + this.messageType, {
           to,
           message: this.quillMessage,
-          disputeId: this.dispute.id
+          disputeId: this.dispute.id,
+          externalIdentification
         }).then(() => {
           // SEGMENT TRACK
           if (this.directContactAddress) {
@@ -499,6 +509,12 @@ export default {
           type: 'warning'
         })
       }
+    },
+    addLoadingOccurrence (params) {
+      this.$store.commit('addLoadingOccurrence', Object.assign({
+        sender: this.$store.getters.loggedPersonName,
+        createAt: { dateTime: this.$moment() }
+      }, params))
     },
     sendNote () {
       let note = this.$refs.noteEditor.quill.getText()
