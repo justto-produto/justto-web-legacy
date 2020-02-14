@@ -62,6 +62,7 @@
                 v-loading="isPaused"
                 element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
                 element-loading-spinner="el-icon-video-pause"
+                element-loading-background="#fff"
                 class="dispute-view__send-message-box"
                 shadow="always">
                 <el-tooltip v-if="expandedMessageBox && validName" content="Recolher caixa de mensagem">
@@ -69,7 +70,7 @@
                 </el-tooltip>
                 <div
                   v-if="validName"
-                  :class="{ 'dispute-view__send-message-expanded': expandedMessageBox, 'show-toolbar': messageType === 'email' }">
+                  :class="{ 'dispute-view__send-message-expanded': expandedMessageBox && !isPaused, 'show-toolbar': messageType === 'email' }">
                   <quill-editor
                     ref="messageEditor"
                     :options="editorOptions"
@@ -308,10 +309,6 @@ export default {
       if (activeRoleId !== -1) {
         this.updateActiveRole(activeRoleId)
       }
-    },
-    isPaused () {
-      this.loadingKey = this.loadingKey + 1
-      this.typingTab = this.isPaused ? '2' : '1'
     }
   },
   created () {
