@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ height: tab1 ? 'calc(100% - 148px)' : 'calc(100% - 90px)' }">
+  <div style="height: calc(100% - 114px)">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id.sync="selectedDisputeId"
@@ -284,6 +284,16 @@
           </h4>
         </span>
       </template>
+      <infinite-loading
+        v-if="disputes.length >= 20"
+        slot="append"
+        :distance="20"
+        spinner="spiral"
+        force-use-infinite-wrapper=".el-table__body-wrapper"
+        @infinite="infiniteHandler">
+        <div slot="no-more">Fim das disputas</div>
+        <div slot="no-results">Fim das disputas</div>
+      </infinite-loading>
     </el-table>
     <el-dialog
       :visible.sync="responseDialogVisible"
@@ -358,6 +368,7 @@ export default {
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
+    InfiniteLoading: () => import('vue-infinite-loading'),
     quillEditor
   },
   props: {
@@ -538,6 +549,20 @@ export default {
           })
         }
       }
+    },
+    infiniteHandler ($state) {
+      this.$store.commit('addDisputeQueryPage')
+      this.$store.dispatch('getDisputes', true).then(response => {
+        if (response.numberOfElements) {
+          $state.loaded()
+          this.$nextTick(() => {
+            let main = this.$el.querySelector('.el-table__body-wrapper')
+            if (main) main.scrollTop = main.scrollHeight - (main.clientHeight * 3)
+          })
+        } else {
+          $state.complete()
+        }
+      })
     }
   }
 }
@@ -677,6 +702,12 @@ export default {
   }
   td {
     height: 46px;
+  }
+  .infinite-loading-container {
+    font-style: italic;
+    margin: 20px 0 10px;
+    color: #adadad;
+    font-size: 1rem;
   }
 }
 </style>

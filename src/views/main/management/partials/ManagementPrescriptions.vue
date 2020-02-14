@@ -1,16 +1,22 @@
 <template>
   <div class="management-prescriptions">
-    <el-button :type="HAS_ANSWER ? 'primary' : ''" plain @click="handlePrescriptionClick('HAS_ANSWER')">
+    <el-button v-show="tab1" :type="HAS_ANSWER ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('HAS_ANSWER')">
       Com resposta
     </el-button>
-    <el-button :type="COUNTERPROPOSAL_UP_TO_20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSAL_UP_TO_20')">
+    <el-button v-show="tab1" :type="COUNTERPROPOSAL_UP_TO_20 ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('COUNTERPROPOSAL_UP_TO_20')">
       Contraproposta (até 20%)
     </el-button>
-    <el-button :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''" plain @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
+    <el-button v-show="tab1" :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
       Contraproposta (+20%)
     </el-button>
-    <el-button :type="ONLY_VISUALIZED ? 'primary' : ''" plain @click="handlePrescriptionClick('ONLY_VISUALIZED')">
+    <el-button v-show="tab1" :type="ONLY_VISUALIZED ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_VISUALIZED')">
       Somente visualizados
+    </el-button>
+    <el-button v-show="tab3" :type="PENDING ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('PENDING')">
+      Pendentes
+    </el-button>
+    <el-button v-show="tab3" :type="UNSETTLED_WITH_MESSAGES ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
+      Perdidos com Mensagem
     </el-button>
   </div>
 </template>
@@ -18,6 +24,12 @@
 <script>
 export default {
   name: 'ManagementPrescriptions',
+  props: {
+    activeTab: {
+      default: '1',
+      type: String
+    }
+  },
   computed: {
     HAS_ANSWER () {
       return this.$store.getters.hasPrescription('HAS_ANSWER')
@@ -30,6 +42,24 @@ export default {
     },
     ONLY_VISUALIZED () {
       return this.$store.getters.hasPrescription('ONLY_VISUALIZED')
+    },
+    PENDING () {
+      return this.$store.getters.hasPrescription('PENDING')
+    },
+    UNSETTLED_WITH_MESSAGES () {
+      return this.$store.getters.hasPrescription('UNSETTLED_WITH_MESSAGES')
+    },
+    tab0 () {
+      return this.activeTab === '0'
+    },
+    tab1 () {
+      return this.activeTab === '1'
+    },
+    tab2 () {
+      return this.activeTab === '2'
+    },
+    tab3 () {
+      return this.activeTab === '3'
     }
   },
   methods: {
@@ -49,6 +79,15 @@ export default {
           case 'COUNTERPROPOSAL_OVER_20':
             this.$jusSegment('filtro botão CONTRAPROPOSTA ACIMA 20%')
             break
+          case 'ONLY_VISUALIZED':
+            this.$jusSegment('filtro botão APENAS VISIALIZADOS')
+            break
+          case 'PENDING':
+            this.$jusSegment('filtro botão PENDENTES')
+            break
+          case 'UNSETTLED_WITH_MESSAGES':
+            this.$jusSegment('filtro botão PERDIDOS COM MENSAGEM')
+            break
         }
       }
       this.$emit('management:getDisputes')
@@ -59,7 +98,7 @@ export default {
 
 <style lang="scss">
 .management-prescriptions {
-  margin: 10px 0;
+  margin: 6px 0;
   .el-button--primary.is-plain:focus {
     color: #9461f7;
     background: #f4effe;

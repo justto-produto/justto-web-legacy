@@ -6,6 +6,13 @@ const disputeMutations = {
     state.query.size = pageable.size
     state.query.total = pageable.totalElements
   },
+  addDisputes (state, pageable) {
+    if (pageable.content && pageable.content.length) {
+      state.disputes.push(...pageable.content)
+      state.query.size = pageable.size
+      state.query.total = pageable.totalElements
+    }
+  },
   setDispute (state, disputeVM) {
     state.dispute = disputeVM
   },
@@ -30,9 +37,14 @@ const disputeMutations = {
   },
   setDisputeQuery (state, query) {
     state.query = query
+    state.query.page = 1
   },
   updateDisputeQuery (state, params) {
     state.query[params.key] = params.value
+    state.query.page = 1
+  },
+  addDisputeQueryPage (state) {
+    state.query.page += 1
   },
   setSummaryNearExpirations (state, summarys) {
     state.summaryNearExpirations = summarys
@@ -54,12 +66,10 @@ const disputeMutations = {
       page: 1,
       size: 20,
       term: '',
-      initialSize: 20,
       total: 0
     }
   },
   clearDisputeQueryByTab (state) {
-    const size = state.query.size
     state.query = {
       status: [],
       campaigns: [],
@@ -70,9 +80,8 @@ const disputeMutations = {
       prescriptions: [],
       onlyFavorite: false,
       page: 1,
-      size: size,
+      size: 20,
       term: state.query.term,
-      initialSize: 20,
       total: 0
     }
   },
@@ -130,9 +139,11 @@ const disputeMutations = {
   },
   addPrescription (state, prescription) {
     state.query.prescriptions.push(prescription)
+    state.query.page = 1
   },
   removePrescription (state, prescription) {
     state.query.prescriptions.splice(state.query.prescriptions.indexOf(prescription), 1)
+    state.query.page = 1
   }
 }
 

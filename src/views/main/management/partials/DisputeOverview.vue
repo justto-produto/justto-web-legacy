@@ -166,7 +166,7 @@
               <span class="title">Telefone(s):</span>
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                 <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
-                  <span>
+                  <span class="ellipsis">
                     <span>{{ phone.number | phoneMask }}</span>
                     <el-tooltip content="Telefone inválido">
                       <jus-icon v-show="!phone.isValid" icon="warn-dark" />
@@ -1345,11 +1345,12 @@ export default {
     }
     .ellipsis {
       display: flex;
-      justify-content: space-between;
+      align-items: center;
       width: 100%;
       span {
         margin-left: 6px;
-        width: 164px;
+        margin-right: 6px;
+        max-width: 164px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1370,6 +1371,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
+      width: 100%;
     }
     .bordered {
       width: 100%;

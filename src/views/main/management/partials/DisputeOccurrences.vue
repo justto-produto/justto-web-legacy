@@ -175,7 +175,7 @@ export default {
         if (o.type === 'NOTE') return 0
         if (self.typingTab === '1' && (
           ['NOTE', 'LOG'].includes(o.type) ||
-          (o.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(o.interaction.type))
+          (o.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS', 'SCHEDULER'].includes(o.interaction.type))
         )) {
           return 0
         }
