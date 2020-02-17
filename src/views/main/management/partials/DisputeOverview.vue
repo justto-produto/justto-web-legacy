@@ -1207,7 +1207,10 @@ export default {
       })
     },
     verifyChangedRoleData (editedRole, originalRole) {
-      let changed = []
+      let changed = {
+        newPhones: [],
+        newEmails: []
+      }
       if (editedRole.phones.length) {
         let mappedPhones = originalRole.phones.map(phone => phone.number)
         changed.newPhones = editedRole.phones.filter(phone => {
@@ -1220,8 +1223,7 @@ export default {
           if (!mappedEmails.includes(email.address)) return email.address
         })
       }
-      changed = [ ...changed.newPhones, ...changed.newEmails ]
-      return changed
+      return [ ...changed.newPhones, ...changed.newEmails ]
     },
     addPhone () {
       let isValid = true
