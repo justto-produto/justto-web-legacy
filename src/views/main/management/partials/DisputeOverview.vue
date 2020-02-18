@@ -850,6 +850,11 @@ export default {
   watch: {
     activeRoleId: function (newActiveRole) {
       if (newActiveRole === 0) this.handleChange('')
+    },
+    filteredNamesakeList: function (newFilteredNamesakes) {
+      if (!newFilteredNamesakes.includes(this.selectedNamesake)) {
+        this.selectedNamesake = ''
+      }
     }
   },
   methods: {
