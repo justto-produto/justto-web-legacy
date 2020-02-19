@@ -102,6 +102,15 @@
             data-testid="submit-workspace">
             Selecionar e entrar
           </el-button>
+          <br><br>
+          <el-button
+            v-if="$store.getters.isJusttoAdmin"
+            class="external-view__submit"
+            type="secondary"
+            icon="el-icon-setting"
+            @click="$router.push('settings')">
+            Painel administrativo
+          </el-button>
         </el-form>
       </el-main>
     </el-container>

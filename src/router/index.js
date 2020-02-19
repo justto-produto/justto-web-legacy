@@ -10,7 +10,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "mainContainer" */ '@/views/main/MainContainer'),
       meta: {
         requiresAuth: true,
-        requiresTrack: false
+        trackPage: false
       },
       children: [
         {
@@ -20,7 +20,7 @@ const router = new Router({
           redirect: 'management',
           component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard'),
           meta: {
-            requiresTrack: true,
+            trackPage: true,
             title: 'Justto - Dashboard'
           }
         },
@@ -29,7 +29,7 @@ const router = new Router({
           path: 'import',
           component: () => import(/* webpackChunkName: "importIndex" */ '@/views/main/import/Import'),
           meta: {
-            requiresTrack: true,
+            trackPage: true,
             title: 'Justto - Importação'
           }
         },
@@ -38,7 +38,7 @@ const router = new Router({
           path: 'import/new',
           component: () => import(/* webpackChunkName: "importNew" */ '@/views/main/import/NewImport'),
           meta: {
-            requiresTrack: true,
+            trackPage: true,
             title: 'Justto - Nova importação'
           }
         },
@@ -47,7 +47,7 @@ const router = new Router({
           path: 'import/loading',
           component: () => import(/* webpackChunkName: "importLoading" */ '@/views/main/import/Loading'),
           meta: {
-            requiresTrack: true,
+            trackPage: true,
             title: 'Justto - Carregando...'
           }
         },
@@ -56,7 +56,7 @@ const router = new Router({
           path: '/management',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Management'),
           meta: {
-            requiresTrack: true,
+            trackPage: true,
             title: 'Justto - Gerenciamento'
           }
         },
@@ -72,7 +72,7 @@ const router = new Router({
           path: 'management/dispute/:id',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/management/Dispute'),
           meta: {
-            requiresTrack: true,
+            trackPage: true,
             title: 'Justto - Disputa'
           }
         },
@@ -81,7 +81,7 @@ const router = new Router({
           path: 'configuration',
           component: () => import(/* webpackChunkName: "managementIndex" */ '@/views/main/configuration/Configuration'),
           meta: {
-            requiresTrack: true,
+            trackPage: true,
             title: 'Justto - Configurações'
           }
         }
@@ -92,7 +92,7 @@ const router = new Router({
       path: '/login',
       component: () => import(/* webpackChunkName: "externalIndex" */ '@/views/external/Login'),
       meta: {
-        requiresTrack: true,
+        trackPage: true,
         title: 'Justto - Login'
       }
     },
@@ -101,7 +101,7 @@ const router = new Router({
       path: '/register',
       component: () => import(/* webpackChunkName: "register" */ '@/views/external/Register'),
       meta: {
-        requiresTrack: true,
+        trackPage: true,
         title: 'Justto - Cadastre-se'
       }
     },
@@ -110,7 +110,7 @@ const router = new Router({
       path: '/forgot-password',
       component: () => import(/* webpackChunkName: "forgotPassword" */ '@/views/external/ForgotPassword'),
       meta: {
-        requiresTrack: true,
+        trackPage: true,
         title: 'Justto - Recuperar senha'
       }
     },
@@ -119,7 +119,7 @@ const router = new Router({
       path: '/new-password/:token',
       component: () => import(/* webpackChunkName: "newPassword" */ '@/views/external/NewPassword'),
       meta: {
-        requiresTrack: true,
+        trackPage: true,
         title: 'Justto - Nova senha'
       }
     },
@@ -129,8 +129,17 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/Onboarding'),
       meta: {
         requiresAuth: true,
-        requiresTrack: true,
+        trackPage: true,
         title: 'Justto - Onboarding'
+      }
+    },
+    {
+      name: 'settings',
+      path: '/settings',
+      component: () => import(/* webpackChunkName: "newPassword" */ '@/views/external/Settings'),
+      meta: {
+        trackPage: true,
+        title: 'Justto - Configurações do sistema'
       }
     },
     {
@@ -138,7 +147,7 @@ const router = new Router({
       path: '/error',
       component: () => import(/* webpackChunkName: "jusError" */ '@/components/layouts/JusError'),
       meta: {
-        requiresTrack: false,
+        trackPage: false,
         title: 'Justto - Ops!'
       }
     },
@@ -167,7 +176,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  if (to.matched.some(record => record.meta.requiresTrack)) {
+  if (to.matched.some(record => record.meta.trackPage)) {
     let proprieties = {
       userId: Store.getters.accountEmail,
       workspace: Store.getters.workspaceName,
