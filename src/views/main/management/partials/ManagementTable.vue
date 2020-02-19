@@ -197,22 +197,10 @@
         align="center">
         <template slot-scope="scope">
           <el-button
-            v-if="getDocumentStep(scope.row.hasDocument, scope.row.signStatus) !== 0"
             plain
             size="mini"
             class="management-table__protocol_button"
             @click="showProtocolModal(scope.row)">
-            Minuta
-            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
-              <span/><span/><span/>
-            </div>
-          </el-button>
-          <el-button
-            v-else
-            plain
-            size="mini"
-            class="management-table__protocol_button"
-            @click="showsDenidedService()">
             Minuta
             <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
               <span/><span/><span/>
@@ -461,11 +449,6 @@ export default {
     }
   },
   methods: {
-    showsDenidedService () {
-      this.$alert('', 'Serviço temporariamente indisponível', {
-        confirmButtonText: 'OK',
-      })
-    },
     cellMouseEnter (row, column, cell, event) {
       this.disputeActionsRow = row.id
     },
@@ -550,9 +533,13 @@ export default {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
     },
     showProtocolModal (dispute) {
-      this.selectedDisputeId = dispute.id
-      this.selectedDisputeRoles = dispute.disputeRoles
-      this.protocolDialogVisible = true
+      if (this.getDocumentStep(dispute.hasDocument, dispute.signStatus) === 0) {
+        this.$alert('Este serviço está temporariamente indisponível', 'Ops!', { confirmButtonText: 'OK', })
+      } else {
+        this.selectedDisputeId = dispute.id
+        this.selectedDisputeRoles = dispute.disputeRoles
+        this.protocolDialogVisible = true
+      }
     },
     getMessageSummary (lastOutboundInteraction, disputeId) {
       if (lastOutboundInteraction.message && lastOutboundInteraction.message.parameters.READ_DATE) {
