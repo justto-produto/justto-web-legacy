@@ -197,10 +197,22 @@
         align="center">
         <template slot-scope="scope">
           <el-button
+            v-if="getDocumentStep(scope.row.hasDocument, scope.row.signStatus) !== 0"
             plain
             size="mini"
             class="management-table__protocol_button"
             @click="showProtocolModal(scope.row)">
+            Minuta
+            <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
+              <span/><span/><span/>
+            </div>
+          </el-button>
+          <el-button
+            v-else
+            plain
+            size="mini"
+            class="management-table__protocol_button"
+            @click="showsDenidedService()">
             Minuta
             <div :class="'management-table__protocol_button--step-' + getDocumentStep(scope.row.hasDocument, scope.row.signStatus)">
               <span/><span/><span/>
@@ -449,6 +461,11 @@ export default {
     }
   },
   methods: {
+    showsDenidedService () {
+      this.$alert('', 'Serviço temporariamente indisponível', {
+        confirmButtonText: 'OK',
+      })
+    },
     cellMouseEnter (row, column, cell, event) {
       this.disputeActionsRow = row.id
     },

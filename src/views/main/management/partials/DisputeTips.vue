@@ -13,7 +13,10 @@
       </el-steps>
     </div>
     <div class="action">
-      <el-button type="primary" @click="showOrotocolDialog()">
+      <el-button v-if="documentStep !== 0" type="primary" @click="showOrotocolDialog()">
+        Gerenciar minuta
+      </el-button>
+      <el-button v-else type="primary" @click="showsDenidedService()">
         Gerenciar minuta
       </el-button>
     </div>
@@ -49,6 +52,11 @@ export default {
     }
   },
   methods: {
+    showsDenidedService () {
+      this.$alert('', 'Serviço temporariamente indisponível', {
+        confirmButtonText: 'OK',
+      })
+    },
     showOrotocolDialog () {
       // SEGMENT TRACK
       this.$jusSegment('Gerenciar minuta dentro do ticket view', { disputeId: this.dispute.id })
