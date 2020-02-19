@@ -75,7 +75,7 @@
         <jus-icon icon="enrich"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="canSendCounterproposal" content="Contraproposta manual">
+    <el-tooltip content="Contraproposta manual">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -323,15 +323,6 @@ export default {
     canUnsettled () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
     },
-    canSendCounterproposal () {
-      if (this.dispute) {
-        if (this.dispute.paused) {
-          return false
-        } else if (this.dispute.status && ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'RUNNING', 'PENDING', 'REFUSED'].includes(this.dispute.status)) {
-          return true
-        } return false
-      } return false
-    },
     canMarkAsNotRead () {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
     },
@@ -500,20 +491,11 @@ export default {
       this.editNegotiatorDialogVisible = true
     },
     counterproposalDialogOpen () {
-      if (this.canSendCounterproposal) {
-        this.counterOfferForm.lastCounterOfferValue = ''
-        this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
-        this.counterproposalDialogVisible = true
-        if (this.$refs.counterOfferForm) {
-          this.$refs.counterOfferForm.clearValidate()
-        }
-      } else {
-        this.$jusNotification({
-          title: 'Atenção!',
-          message: `Não é possível enviar contraproposta manual devido ao seu status
-          ${this.$t('occurrence.type.' + this.dispute.status.toUpperCase())}.`,
-          type: 'warning'
-        })
+      this.counterOfferForm.lastCounterOfferValue = ''
+      this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
+      this.counterproposalDialogVisible = true
+      if (this.$refs.counterOfferForm) {
+        this.$refs.counterOfferForm.clearValidate()
       }
     },
     checkUpperRangeCounterOffer () {
