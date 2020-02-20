@@ -12,13 +12,13 @@
         </template>
         <template slot-scope="props">
           <el-tooltip content="Visualizar">
-            <el-button size="mini" type="primary" icon="el-icon-search" />
+            <el-button size="mini" type="" icon="el-icon-search" />
           </el-tooltip>
           <el-tooltip content="Editar">
-            <el-button size="mini" type="primary" icon="el-icon-edit" />
+            <el-button size="mini" type="" icon="el-icon-edit" />
           </el-tooltip>
           <el-tooltip content="Excluir">
-            <el-button size="mini" type="danger" icon="el-icon-delete" />
+            <el-button size="mini" type="danger" plain icon="el-icon-delete" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -49,10 +49,10 @@
         </vue-nestable>
         <div class="panel-strategy-view__add">
           <el-select v-model="selectedStep" @change="selectedValue = ''">
-            <el-option :key="step.id" v-for="step in strategySteps" :label="step.name" :value="step.id" />
+            <el-option v-for="step in strategySteps" :key="step.id" :label="step.name" :value="step.id" />
           </el-select>
           <el-select v-model="selectedValue">
-            <el-option :key="index" v-for="(value, index) in selectedValues" :label="value" :value="value" />
+            <el-option v-for="(value, index) in selectedValues" :key="index" :label="value" :value="value" />
           </el-select>
           <el-button size="mini" type="primary" icon="el-icon-plus" @click="addStep" />
         </div>

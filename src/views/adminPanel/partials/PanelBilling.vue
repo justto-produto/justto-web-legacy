@@ -3,9 +3,10 @@
     <el-table :data="filteredAccounts" width="100%">
       <el-table-column type="expand" fixed="left" width="50px">
         <template slot-scope="props">
-          <el-table :data="props.row.accounts" size="small" width="100%">
-            <el-table-column prop="name" label="Nome"/>
+          <el-table :data="props.row.workspaces" size="small" width="100%">
+            <el-table-column prop="name" label="Workspace"/>
             <el-table-column prop="teamName" label="Nome de Exibição"/>
+            <el-table-column prop="status" label="Status"/>
             <el-table-column align="right" fixed="right">
               <template slot-scope="props">
                 <el-button type="text" icon="el-icon-delete" style="color: #FF4B54"/>
@@ -27,13 +28,13 @@
         </template>
         <template slot-scope="props">
           <el-tooltip content="Adicionar usuário">
-            <el-button size="mini" type="success" icon="el-icon-plus" />
+            <el-button size="mini" type="" plain icon="el-icon-plus" />
           </el-tooltip>
           <el-tooltip content="Editar">
-            <el-button size="mini" type="primary" icon="el-icon-edit" />
+            <el-button size="mini" type="" plain icon="el-icon-edit" />
           </el-tooltip>
           <el-tooltip content="Excluir">
-            <el-button size="mini" type="danger" icon="el-icon-delete" />
+            <el-button size="mini" type="danger" plain icon="el-icon-delete" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -52,13 +53,13 @@ export default {
         status: 'Ativo',
         contract: 'Empresa',
         plan: '8, 12, 1000',
-        workspaces: [{ name: 'Cetelem', teamName: 'Cetelem' }, { name: 'Claro', teamName: 'Claro' }, { name: 'Dell', teamName:  'Dell' }]
+        workspaces: [{ name: 'Cetelem', teamName: 'Cetelem', status: 'Ativo' }, { name: 'Claro', teamName: 'Claro', status: 'Ativo' }, { name: 'Dell', teamName: 'Dell', status: 'Inativo' }]
       }, {
         name: 'Mediato',
         status: 'Inativo',
         contract: 'Escritório',
         plan: '4, 8, 500',
-        workspaces: [{ name: 'Via Varejo', teamName: 'Via Varejo' }, { name: 'Whirepool', teamName: 'Whirepool' }]
+        workspaces: [{ name: 'Via Varejo', teamName: 'Via Varejo', status: 'Ativo' }, { name: 'Whirepool', teamName: 'Whirepool', status: 'Inativo' }]
       }]
     }
   },
