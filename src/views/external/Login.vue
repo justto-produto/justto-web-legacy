@@ -107,8 +107,8 @@
             v-if="$store.getters.isJusttoAdmin"
             class="external-view__submit"
             type="secondary"
-            icon="el-icon-setting"
-            @click="$router.push('settings')">
+            icon="el-icon-s-operation"
+            @click="$router.push('admin-panel')">
             Painel administrativo
           </el-button>
         </el-form>

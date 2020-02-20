@@ -134,9 +134,9 @@ const router = new Router({
       }
     },
     {
-      name: 'settings',
-      path: '/settings',
-      component: () => import(/* webpackChunkName: "newPassword" */ '@/views/external/Settings'),
+      name: 'admin-panel',
+      path: '/admin-panel',
+      component: () => import(/* webpackChunkName: "adminPanel" */ '@/views/adminPanel/AdminPanel'),
       meta: {
         trackPage: true,
         title: 'Justto - Configurações do sistema'

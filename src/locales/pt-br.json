@@ -132,5 +132,13 @@
     "1": "em negociação",
     "2": "proposta aceita",
     "3": "todos"
+  },
+  "panel": {
+    "0": "Dashboard",
+    "1": "Equipes",
+    "2": "Usuários",
+    "3": "Estratégias",
+    "4": "Minutas",
+    "5": "Cobrança"
   }
 }
