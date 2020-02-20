@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="panel-billing-view">
-    <el-table :data="filteredWorkspaces" width="100%">
+    <el-table :data="filteredAccounts" width="100%">
       <el-table-column type="expand" fixed="left" width="50px">
         <template slot-scope="props">
-          <el-table :data="props.row.workspaces" size="small" width="100%">
+          <el-table :data="props.row.accounts" size="small" width="100%">
             <el-table-column prop="name" label="Nome"/>
             <el-table-column prop="teamName" label="Nome de Exibição"/>
             <el-table-column align="right" fixed="right">
@@ -16,6 +16,8 @@
       </el-table-column>
       <el-table-column prop="name" label="Nome"/>
       <el-table-column prop="status" label="Status"/>
+      <el-table-column prop="contract" label="Contrato"/>
+      <el-table-column prop="plan" label="Plano"/>
       <el-table-column fixed="right" align="right">
         <template slot="header" slot-scope="scope">
           <el-input
@@ -45,20 +47,24 @@ export default {
   data () {
     return {
       search: '',
-      workspaces: [{
+      accounts: [{
         name: 'Cabanellos',
         status: 'Ativo',
+        contract: 'Empresa',
+        plan: '8, 12, 1000',
         workspaces: [{ name: 'Cetelem', teamName: 'Cetelem' }, { name: 'Claro', teamName: 'Claro' }, { name: 'Dell', teamName:  'Dell' }]
       }, {
         name: 'Mediato',
         status: 'Inativo',
+        contract: 'Escritório',
+        plan: '4, 8, 500',
         workspaces: [{ name: 'Via Varejo', teamName: 'Via Varejo' }, { name: 'Whirepool', teamName: 'Whirepool' }]
       }]
     }
   },
   computed: {
-    filteredWorkspaces () {
-      return this.workspaces.filter(data => {
+    filteredAccounts () {
+      return this.accounts.filter(data => {
         return !this.search ||
           data.name.toLowerCase().includes(this.search.toLowerCase()) ||
           data.teamName.toLowerCase().includes(this.search.toLowerCase())
