@@ -15,7 +15,7 @@
             <el-button size="mini" type="" icon="el-icon-search" />
           </el-tooltip>
           <el-tooltip content="Editar">
-            <el-button size="mini" type="" icon="el-icon-edit" />
+            <el-button size="mini" type="" icon="el-icon-edit" @click="editStrategy" />
           </el-tooltip>
           <el-tooltip content="Excluir">
             <el-button size="mini" type="danger" plain icon="el-icon-delete" />
@@ -132,7 +132,7 @@ export default {
     }
   },
   methods: {
-    add () {
+    editStrategy () {
       this.dialogVisible = true
       // this.steps = []
       this.selectedStep = ''

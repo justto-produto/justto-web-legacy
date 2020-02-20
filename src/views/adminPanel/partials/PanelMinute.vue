@@ -11,14 +11,11 @@
             placeholder="Buscar"/>
         </template>
         <template slot-scope="props">
-          <el-tooltip content="Adicionar usuário">
-            <el-button size="mini" type="success" icon="el-icon-plus" />
-          </el-tooltip>
           <el-tooltip content="Editar">
-            <el-button size="mini" type="primary" icon="el-icon-edit" />
+            <el-button size="mini" type="" icon="el-icon-edit" />
           </el-tooltip>
           <el-tooltip content="Excluir">
-            <el-button size="mini" type="danger" icon="el-icon-delete" />
+            <el-button size="mini" type="danger" plain icon="el-icon-delete" />
           </el-tooltip>
         </template>
       </el-table-column>
