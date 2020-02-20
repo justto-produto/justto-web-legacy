@@ -33,7 +33,7 @@
         <h1>
           {{ $t('panel.' + menuIndex) }}
           <el-button
-            v-if="['1', '2', '3', '4'].includes(menuIndex)"
+            v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
             type="success"
             icon="el-icon-plus"
             style="float: right;"
