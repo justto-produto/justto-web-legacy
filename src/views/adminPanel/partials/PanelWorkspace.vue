@@ -3,11 +3,15 @@
     <el-table :data="filteredWorkspaces" width="100%">
       <el-table-column type="expand" fixed="left" width="50px">
         <template slot-scope="props">
-          <el-table :data="props.row.users" size="small" row-class-name="warning-row">
+          <el-table :data="props.row.users" size="small" width="100%">
             <el-table-column prop="name" label="Nome"/>
             <el-table-column prop="email" label="E-mail"/>
-            <el-table-column align="right">
-              <el-button type="text" icon="el-icon-delete"/>
+            <el-table-column prop="email" label="E-mail"/>
+            <el-table-column prop="email" label="E-mail"/>
+            <el-table-column align="right" fixed="right">
+              <template slot-scope="props">
+                <el-button type="text" icon="el-icon-delete" style="color: #FF4B54"/>
+              </template>
             </el-table-column>
           </el-table>
         </template>
@@ -71,8 +75,11 @@ export default {
 
 <style lang="scss">
 .panel-workspace-view {
-  .el-table__expanded-cell[class*=cell] {
-    padding: 10px 0px 10px 31px;
+  .el-table__expanded-cell {
+    padding: 10px 0px 10px 50px;
+    .hover-row td {
+      background-color: #fff !important;
+    }
     th {
       background-color: #f7f7f7;
     }
