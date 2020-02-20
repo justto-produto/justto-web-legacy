@@ -180,8 +180,10 @@ export default {
     margin: 40px;
   }
   &__content {
+    width: calc(100% - 28px);
     align-self: flex-start;
     margin-left: 14px;
+    margin-right: 14px;
     margin-bottom: auto;
     margin-top: 134px;
   }

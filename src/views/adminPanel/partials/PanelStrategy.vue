@@ -35,16 +35,16 @@
         </el-form-item>
       </el-form>
       <p>Estratégia de engajamento</p>
-      <el-card>
+      <el-card shadow="never">
         <vue-nestable v-model="steps">
           <div slot="placeholder" />
           <vue-nestable-handle
             slot-scope="{ item }"
             :item="item">
-            <b>{{ item.step }}</b>
-            -
-            <i>{{ item.value }}</i>
-            <i class="el-icon-s-grid" />
+            <i class="el-icon-s-grid" style="margin-right: 8px" />
+            <b style="margin-right: 4px">{{ item.step }}</b>
+            {{ ` - ${item.value}` }}
+            <el-button size="mini" type="text" icon="el-icon-delete" style="color: #FF4B54" />
           </vue-nestable-handle>
         </vue-nestable>
         <div class="panel-strategy-view__add">
@@ -58,7 +58,7 @@
         </div>
       </el-card>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancelar</el-button>
+        <el-button plain @click="dialogVisible = false">Cancelar</el-button>
         <el-button type="primary" @click="dialogVisible = false">Adicionar</el-button>
       </span>
     </el-dialog>
@@ -156,7 +156,7 @@ export default {
     display: flex;
     margin-top: 20px;
     > * + * {
-      margin-left: 20px;
+      margin-left: 10px;
     }
     .el-select {
       width: 100%;
