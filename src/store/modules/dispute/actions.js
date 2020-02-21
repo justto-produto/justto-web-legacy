@@ -131,17 +131,21 @@ const disputeActions = {
       })
     })
   },
-  exportDisputes ({ rootState, state }, disputeIds) {
+  exportDisputes ({ rootState, state }, colums) {
     return new Promise((resolve, reject) => {
-    // eslint-disable-next-line
-    axios.get('api/disputes/export'+ queryBuilder(state.query), {
-        responseType: 'arraybuffer'
+      let stringColums = colums.toString()
+      // eslint-disable-next-line
+      axios.get('https://2ab3731a.ngrok.io/api/disputes/export'+ queryBuilder(state.query) + 'fileFormat=CSV&columnToExport=' + stringColums, {
+        responseType: 'arraybuffer',
+        ContentType: 'application/json; charset=utf-8'
       }).then(response => {
-        const blob = new Blob([response.data], {
-          // type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-          type: 'application/octet-stream'
+        const blob = new Blob([
+          new Uint8Array([0xEF, 0xBB, 0xBF]),
+          response.data
+        ], {
+          type: 'text/plain;charset=utf-8'
         })
-        let fileName = new Date().getTime() + '.xlsx'
+        let fileName = new Date().getTime() + '.csv'
         FileSaver.saveAs(blob, fileName)
         resolve(response)
       }).catch(error => {

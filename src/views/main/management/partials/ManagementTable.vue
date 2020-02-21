@@ -534,7 +534,7 @@ export default {
     },
     showProtocolModal (dispute) {
       if (this.getDocumentStep(dispute.hasDocument, dispute.signStatus) === 0) {
-        this.$alert('Este serviço está temporariamente indisponível', 'Ops!', { confirmButtonText: 'OK', })
+        this.$alert('Este serviço está temporariamente indisponível', 'Ops!', { confirmButtonText: 'OK' })
       } else {
         this.selectedDisputeId = dispute.id
         this.selectedDisputeRoles = dispute.disputeRoles
