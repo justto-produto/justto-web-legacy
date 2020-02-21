@@ -109,10 +109,15 @@
         class="view-management__export-dialog"
         title="Exportar disputas"
         width="50%">
-        <p>Selecione e ordene as colunas desejadas para exportação:</p><br>
+        <p>Selecione e ordene as colunas desejadas para exportação:</p>
+        <div class="view-management__export-dialog-options">
+          <el-input v-model="columnsFilter" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
+          <!-- <el-button size="small" @click="invertSelectionColumns">{{ selectedColumnsLenght < filteredColumns.length ? 'Selecionar tudo' : 'Deselecionar tudo' }}</el-button>
+          <span>{{ selectedColumnsLenght }} Colunas selecionadas</span> -->
+        </div>
         <el-tree
           ref="tree"
-          :data="colums"
+          :data="filteredColumns"
           :allow-drop="allowDrop"
           node-key="label"
           draggable
@@ -150,13 +155,13 @@ export default {
       loadingExport: false,
       filtersVisible: false,
       term: '',
+      columnsFilter: '',
       termDebounce: '',
       disputeDebounce: '',
       selectedIds: [],
       importDialogVisible: false,
       exportDisputesDialog: false,
-      selectedColums: [],
-      colums: [
+      columns: [
         { label: 'DISPUTE_CODE' },
         { label: 'CAMPAIGN' },
         { label: 'STRATEGY' },
@@ -193,6 +198,15 @@ export default {
     }
   },
   computed: {
+    // selectedColumnsLenght () {
+    //   let selectedCols = this.$refs.tree.getCheckedKeys()
+    //   return selectedCols.length
+    // },
+    filteredColumns () {
+      return this.columns.filter(c => {
+        return this.$t(c.label).toLowerCase().includes(this.columnsFilter.toLowerCase())
+      })
+    },
     hasFilters () {
       return this.$store.getters.disputeHasFilters
     },
@@ -248,6 +262,13 @@ export default {
     this.getDisputes()
   },
   methods: {
+    // invertSelectionColumns () {
+    //   if (this.selectedColumnsLenght < this.filteredColumns.length) {
+    //     this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
+    //   } else {
+    //     this.$refs.tree.setCheckedKeys([])
+    //   }
+    // },
     nodeDragEnd (draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
         this.$refs.tree.setChecked(draggingNode.data.label, draggingNode.checked)
@@ -310,12 +331,12 @@ export default {
     },
     showExportDisputesDialog () {
       this.exportDisputesDialog = true
-      const jusexportcolums = JSON.parse(localStorage.getItem('jusexportcolums'))
+      const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
       setTimeout(() => {
-        if (jusexportcolums) {
-          this.$refs.tree.setCheckedKeys(jusexportcolums)
+        if (jusexportcolumns) {
+          this.$refs.tree.setCheckedKeys(jusexportcolumns)
         } else {
-          this.$refs.tree.setCheckedKeys(this.colums.map(c => c.label))
+          this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
         }
       }, 200)
     },
@@ -325,7 +346,7 @@ export default {
         .then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Exportar disputas')
-          localStorage.setItem('jusexportcolums', JSON.stringify(this.$refs.tree.getCheckedKeys()))
+          localStorage.setItem('jusexportcolumns', JSON.stringify(this.$refs.tree.getCheckedKeys()))
         })
         .catch(error => {
           console.error(error)
@@ -390,6 +411,18 @@ export default {
         float: right;
         margin-top: 2px;
         margin-right: 20px;
+      }
+    }
+    &-options {
+      margin-bottom: 10px;
+      .el-input {
+        width: 220px;
+        margin-right: 10px;
+      }
+      > span {
+        margin-top: 8px;
+        float: right;
+
       }
     }
   }
