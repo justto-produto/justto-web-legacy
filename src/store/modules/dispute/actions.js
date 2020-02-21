@@ -135,7 +135,7 @@ const disputeActions = {
     return new Promise((resolve, reject) => {
       let stringColums = colums.toString()
       // eslint-disable-next-line
-      axios.get('https://2ab3731a.ngrok.io/api/disputes/export'+ queryBuilder(state.query) + 'fileFormat=CSV&columnToExport=' + stringColums, {
+      axios.get('api/disputes/export'+ queryBuilder(state.query) + 'fileFormat=CSV&columnToExport=' + stringColums, {
         responseType: 'arraybuffer',
         ContentType: 'application/json; charset=utf-8'
       }).then(response => {
