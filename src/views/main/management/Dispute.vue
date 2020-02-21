@@ -285,13 +285,6 @@ export default {
         case 'whatsapp':
           return this.activeRole.invalidPhone
       }
-    },
-    quillMessage () {
-      if (this.messageType === 'email') {
-        return this.$refs.messageEditor.quill.container.firstChild.innerHTML
-      } else {
-        return this.$refs.messageEditor.quill.getText()
-      }
     }
   },
   watch: {
@@ -427,9 +420,11 @@ export default {
       if (!this.$refs.messageEditor.quill.getText().trim()) {
         return false
       }
+      let quillMessage = this.messageType === 'email'
+        ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
       if (this.selectedContacts.map(c => c.id).length) {
         if (this.messageType === 'whatsapp') {
-          if (checkMessage(this.quillMessage, this.recentMessages)) {
+          if (checkMessage(quillMessage, this.recentMessages)) {
             this.$jusNotification({
               title: 'Ops!',
               message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
@@ -438,10 +433,10 @@ export default {
             return false
           } else {
             this.$store.state.messageModule.recentMessages.push({
-              messageBody: this.quillMessage,
+              messageBody: quillMessage,
               selfDestroy: () => (setTimeout(() => {
                 for (var i = 0; i < this.recentMessages.length; i++) {
-                  if (this.quillMessage === this.recentMessages[i].messageBody) {
+                  if (quillMessage === this.recentMessages[i].messageBody) {
                     this.recentMessages.splice(i, 1)
                   }
                 }
@@ -474,7 +469,7 @@ export default {
         }
         this.$store.dispatch('send' + this.messageType, {
           to,
-          message: this.quillMessage,
+          message: quillMessage,
           disputeId: this.dispute.id,
           externalIdentification
         }).then(() => {
