@@ -69,12 +69,11 @@
           </el-tooltip>
           <el-tooltip content="Exportar disputas">
             <el-button
-              :loading="loadingExport"
               :disabled="disputes.length === 0"
               plain
               icon="el-icon-download"
               data-testid="export-disputes"
-              @click="exportDisputes" />
+              @click="showExportDisputesDialog" />
           </el-tooltip>
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
         </div>
@@ -103,6 +102,34 @@
           </div>
         </div>
       </div>
+      <el-dialog
+        :close-on-click-modal="false"
+        :visible.sync="exportDisputesDialog"
+        append-to-body
+        class="view-management__export-dialog"
+        title="Exportar disputas"
+        width="50%">
+        <p>Selecione e ordene as colunas desejadas para exportação:</p><br>
+        <el-tree
+          ref="tree"
+          :data="colums"
+          :allow-drop="allowDrop"
+          node-key="label"
+          draggable
+          show-checkbox
+          @node-drag-end="nodeDragEnd">
+          <span slot-scope="{ node, data }" class="custom-tree-node">
+            <span>{{ $t(node.label) | capitalize }}</span>
+            <i class="el-icon-rank" />
+          </span>
+        </el-tree>
+        <span slot="footer">
+          <el-button :disabled="loadingExport" plain @click="exportDisputesDialog = false">Cancelar</el-button>
+          <el-button :loading="loadingExport" type="primary" @click.prevent="exportDisputes">
+            Exportar
+          </el-button>
+        </span>
+      </el-dialog>
     </template>
   </jus-view-main>
 </template>
@@ -126,7 +153,43 @@ export default {
       termDebounce: '',
       disputeDebounce: '',
       selectedIds: [],
-      importDialogVisible: false
+      importDialogVisible: false,
+      exportDisputesDialog: false,
+      selectedColums: [],
+      colums: [
+        { label: 'DISPUTE_CODE' },
+        { label: 'CAMPAIGN' },
+        { label: 'STRATEGY' },
+        { label: 'CLASSIFICATION' },
+        { label: 'CLASSIFICATION_DETAIL' },
+        { label: 'DISPUTE_ORG' },
+        { label: 'EXPIRATION_DATE' },
+        { label: 'DESCRIPTION' },
+        { label: 'PAUSED' },
+        { label: 'FAVORITE' },
+        { label: 'VISUALIZED' },
+        { label: 'STATUS' },
+        { label: 'FIRST_INTERACTION_DATE' },
+        { label: 'LAST_INTERACTION_DATE' },
+        { label: 'UPPER_RANGE' },
+        { label: 'REQUESTED_VALUE' },
+        { label: 'PROPOSAL_VALUE' },
+        { label: 'COUNTER_PROPOSAL_VALUE' },
+        { label: 'OWNER_PROPOSAL' },
+        { label: 'OWNER_COUNTER_PROPOSAL' },
+        { label: 'HAS_DOCUMENT' },
+        { label: 'SIGNED_DOCUMENT_STATUS' },
+        { label: 'LAST_NEGOTIATOR_ACCESS_DATE' },
+        { label: 'IMPORT_DATE' },
+        { label: 'CONCLUSION_DESCRIPTION' },
+        { label: 'CONCLUSION_REASONS' },
+        { label: 'LAST_OFFER_VALUE' },
+        { label: 'PARTY_NAMES' },
+        { label: 'PARTY_DOCUMENTS' },
+        { label: 'LAWYER_PARTY_NAMES' },
+        { label: 'LAWYER_PARTY_DOCUMENTS' },
+        { label: 'RESPONDENT_NAMES' }
+      ]
     }
   },
   computed: {
@@ -185,6 +248,17 @@ export default {
     this.getDisputes()
   },
   methods: {
+    nodeDragEnd (draggingNode, dropNode, dropType, ev) {
+      setTimeout(() => {
+        this.$refs.tree.setChecked(draggingNode.data.label, draggingNode.checked)
+      }, 100)
+    },
+    allowDrop (draggingNode, dropNode, type) {
+      if (type === 'prev') {
+        return true
+      }
+      return false
+    },
     getDisputes () {
       this.loadingDisputes = true
       clearTimeout(this.disputeDebounce)
@@ -234,14 +308,27 @@ export default {
       }
       this.getDisputes()
     },
+    showExportDisputesDialog () {
+      this.exportDisputesDialog = true
+      const jusexportcolums = JSON.parse(localStorage.getItem('jusexportcolums'))
+      setTimeout(() => {
+        if (jusexportcolums) {
+          this.$refs.tree.setCheckedKeys(jusexportcolums)
+        } else {
+          this.$refs.tree.setCheckedKeys(this.colums.map(c => c.label))
+        }
+      }, 200)
+    },
     exportDisputes () {
       this.loadingExport = true
-      this.$store.dispatch('exportDisputes', this.disputes.map(d => d.id))
+      this.$store.dispatch('exportDisputes', this.$refs.tree.getCheckedKeys())
         .then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Exportar disputas')
+          localStorage.setItem('jusexportcolums', JSON.stringify(this.$refs.tree.getCheckedKeys()))
         })
         .catch(error => {
+          console.error(error)
           if (error.response && error.response.status === 403) {
             this.$jusNotification({
               title: 'Ops!',
@@ -255,6 +342,7 @@ export default {
         })
         .finally(() => {
           this.loadingExport = false
+          this.exportDisputesDialog = false
         })
     },
     showImportDialog () {
@@ -294,6 +382,16 @@ export default {
   .el-pagination {
     text-align: center;
     margin-top: 10px;
+  }
+  &__export-dialog {
+    .custom-tree-node {
+      width: 100%;
+      i {
+        float: right;
+        margin-top: 2px;
+        margin-right: 20px;
+      }
+    }
   }
 }
 </style>
