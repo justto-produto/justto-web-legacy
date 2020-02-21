@@ -112,8 +112,8 @@
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
           <el-input v-model="columnsFilter" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
-          <!-- <el-button size="small" @click="invertSelectionColumns">{{ selectedColumnsLenght < filteredColumns.length ? 'Selecionar tudo' : 'Deselecionar tudo' }}</el-button>
-          <span>{{ selectedColumnsLenght }} Colunas selecionadas</span> -->
+          <el-button size="small" @click="invertSelectionColumns">{{ selectedColumnsLength < filteredColumns.length ? 'Selecionar tudo' : 'Deselecionar tudo' }}</el-button>
+          <span>{{ selectedColumnsLength }} Colunas selecionadas</span>
         </div>
         <el-tree
           ref="tree"
@@ -198,10 +198,12 @@ export default {
     }
   },
   computed: {
-    // selectedColumnsLenght () {
-    //   let selectedCols = this.$refs.tree.getCheckedKeys()
-    //   return selectedCols.length
-    // },
+    selectedColumnsLength () {
+      if (this.$refs.tree && this.$refs.tree.getCheckedKeys()) {
+        let selectedCols = this.$refs.tree.getCheckedKeys()
+        return selectedCols.length
+      } else return 0
+    },
     filteredColumns () {
       return this.columns.filter(c => {
         return this.$t(c.label).toLowerCase().includes(this.columnsFilter.toLowerCase())
@@ -262,13 +264,15 @@ export default {
     this.getDisputes()
   },
   methods: {
-    // invertSelectionColumns () {
-    //   if (this.selectedColumnsLenght < this.filteredColumns.length) {
-    //     this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
-    //   } else {
-    //     this.$refs.tree.setCheckedKeys([])
-    //   }
-    // },
+    invertSelectionColumns () {
+      debugger
+      let selCols = this.$refs.tree.getCheckedKeys()
+      if (selCols.length < this.filteredColumns.length) {
+        this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
+      } else {
+        this.$refs.tree.setCheckedKeys([])
+      }
+    },
     nodeDragEnd (draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
         this.$refs.tree.setChecked(draggingNode.data.label, draggingNode.checked)
@@ -416,13 +420,12 @@ export default {
     &-options {
       margin-bottom: 10px;
       .el-input {
-        width: 220px;
+        width: 200px;
         margin-right: 10px;
       }
       > span {
         margin-top: 8px;
         float: right;
-
       }
     }
   }
