@@ -14,23 +14,25 @@
       </p>
       <el-collapse v-loading="$store.state.loading" v-else class="jus-engagements-dialog__engagement el-collapse--bordered">
         <div v-for="step in strategyEngagements" :key="step.id">
-          <div v-if="step.communicationType != 'DELAY'" class="jus-engagements-dialog__step">Envio</div>
-          <el-collapse-item v-if="step.communicationType !== 'DELAY'">
-            <template slot="title">
-              <jus-icon :icon="getIcon(step.communicationType)"/> {{ step.name | capitalize }}
-            </template>
-            <div v-if="step.template">
-              <h3>{{ step.template.title }}</h3>
-              <span v-html="step.template.body" />
-              <el-button
-                v-if="isJusttoAdmin"
-                plain
-                style="margin: 12px auto; display: block"
-                @click="openEditDialog(step)">Editar template</el-button>
-            </div>
-          </el-collapse-item>
-          <div v-else class="jus-engagements-dialog__wait">
-            <jus-icon :icon="getIcon(step.communicationType)" is-active/> {{ step.name }}
+          <div v-if="!step.archived">
+              <div v-if="step.communicationType != 'DELAY'" class="jus-engagements-dialog__step">Envio</div>
+              <el-collapse-item v-if="step.communicationType !== 'DELAY'">
+                  <template slot="title">
+                      <jus-icon :icon="getIcon(step.communicationType)"/> {{ step.name | capitalize }}
+                  </template>
+                  <div v-if="step.template">
+                      <h3>{{ step.template.title }}</h3>
+                      <span v-html="step.template.body" />
+                      <el-button
+                              v-if="isJusttoAdmin"
+                              plain
+                              style="margin: 12px auto; display: block"
+                              @click="openEditDialog(step)">Editar template</el-button>
+                  </div>
+              </el-collapse-item>
+              <div v-else class="jus-engagements-dialog__wait">
+                  <jus-icon :icon="getIcon(step.communicationType)" is-active/> {{ step.name }}
+              </div>
           </div>
         </div>
       </el-collapse>
