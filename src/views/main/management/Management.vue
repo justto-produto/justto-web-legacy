@@ -193,7 +193,8 @@ export default {
         { label: 'PARTY_DOCUMENTS' },
         { label: 'LAWYER_PARTY_NAMES' },
         { label: 'LAWYER_PARTY_DOCUMENTS' },
-        { label: 'RESPONDENT_NAMES' }
+        { label: 'RESPONDENT_NAMES' },
+        { label: 'NEGOTIATOR_NAMES' }
       ]
     }
   },
