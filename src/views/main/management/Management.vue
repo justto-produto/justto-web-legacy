@@ -111,9 +111,8 @@
         width="50%">
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
+          <el-checkbox :indeterminate="isIndeterminate" v-model="allColumnsSelected" @change="invertSelectionColumns">Nome ({{ selectedColumnsLength }} de {{ filteredColumns.length }})</el-checkbox>
           <el-input v-model="columnsFilter" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
-          <el-button size="small" @click="invertSelectionColumns">{{ selectedColumnsLength < filteredColumns.length ? 'Selecionar tudo' : 'Deselecionar tudo' }}</el-button>
-          <span>{{ selectedColumnsLength }} Colunas selecionadas</span>
         </div>
         <el-tree
           ref="tree"
@@ -122,10 +121,12 @@
           node-key="label"
           draggable
           show-checkbox
+          @check="handlerChangeTree"
           @node-drag-end="nodeDragEnd">
           <span slot-scope="{ node, data }" class="custom-tree-node">
             <span>{{ $t(node.label) | capitalize }}</span>
-            <i class="el-icon-rank" />
+            <jus-icon class="drag-icon" icon="menu-hamburger"/>
+            <!-- <i class="el-icon-rank" /> -->
           </span>
         </el-tree>
         <span slot="footer">
@@ -161,6 +162,9 @@ export default {
       selectedIds: [],
       importDialogVisible: false,
       exportDisputesDialog: false,
+      allColumnsSelected: true,
+      isIndeterminate: false,
+      selectedColumnsLength: 0,
       columns: [
         { label: 'DISPUTE_CODE' },
         { label: 'CAMPAIGN' },
@@ -198,12 +202,6 @@ export default {
     }
   },
   computed: {
-    selectedColumnsLength () {
-      if (this.$refs.tree && this.$refs.tree.getCheckedKeys()) {
-        let selectedCols = this.$refs.tree.getCheckedKeys()
-        return selectedCols.length
-      } else return 0
-    },
     filteredColumns () {
       return this.columns.filter(c => {
         return this.$t(c.label).toLowerCase().includes(this.columnsFilter.toLowerCase())
@@ -229,9 +227,7 @@ export default {
     },
     activeTab: {
       get () { return this.$store.getters.disputeTab },
-      set (tab) {
-        this.$store.commit('setDisputesTab', tab)
-      }
+      set (tab) { this.$store.commit('setDisputesTab', tab) }
     },
     multiActive () {
       return this.selectedIds.length >= 1
@@ -264,14 +260,20 @@ export default {
     this.getDisputes()
   },
   methods: {
-    invertSelectionColumns () {
-      debugger
-      let selCols = this.$refs.tree.getCheckedKeys()
-      if (selCols.length < this.filteredColumns.length) {
+    handlerChangeTree (val, obj) {
+      let checkedNodes = obj.checkedNodes.length
+      this.allColumnsSelected = checkedNodes === this.filteredColumns.length
+      this.isIndeterminate = checkedNodes > 0 && checkedNodes < this.filteredColumns.length
+      this.selectedColumnsLength = checkedNodes
+    },
+    invertSelectionColumns (val) {
+      if (val) {
         this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
       } else {
         this.$refs.tree.setCheckedKeys([])
       }
+      this.selectedColumnsLength = this.$refs.tree.getCheckedKeys().length
+      this.isIndeterminate = false
     },
     nodeDragEnd (draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
@@ -342,6 +344,7 @@ export default {
         } else {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
         }
+        this.selectedColumnsLength = this.$refs.tree.getCheckedKeys().length
       }, 200)
     },
     exportDisputes () {
@@ -411,21 +414,28 @@ export default {
   &__export-dialog {
     .custom-tree-node {
       width: 100%;
-      i {
+      .drag-icon {
+        z-index: -99;
+        width: 18px;
         float: right;
-        margin-top: 2px;
         margin-right: 20px;
       }
     }
     &-options {
-      margin-bottom: 10px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       .el-input {
         width: 200px;
         margin-right: 10px;
       }
-      > span {
-        margin-top: 8px;
-        float: right;
+      .el-checkbox {
+        margin-left: 24px;
+        font-weight: 500;
+        &__label {
+          color: #343c4b !important;
+        }
       }
     }
   }
