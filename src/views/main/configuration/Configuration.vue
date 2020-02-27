@@ -99,6 +99,15 @@
             </el-button>
           </div>
         </el-tab-pane>
+        <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="minute" class="configuration-view__minute">
+          <span slot="label">
+            <el-tooltip content="Somentes administradores Justto">
+              <i class="el-icon-lock"/>
+            </el-tooltip>
+            Minuta
+          </span>
+          <panel-minute />
+        </el-tab-pane>
       </el-tabs>
       <el-dialog
         v-if="currentEditMember.person"
@@ -184,7 +193,7 @@ export default {
   name: 'Configuration',
   directives: { mask },
   components: {
-    JusWhatsapp: () => import('@/components/layouts/JusWhatsapp')
+    PanelMinute: () => import('@/views/adminPanel/partials/PanelMinute')
   },
   data () {
     return {
@@ -531,6 +540,9 @@ export default {
   }
   p {
     text-align: justify;
+  }
+  &__minute  {
+    max-width: none !important;
   }
 }
 </style>
