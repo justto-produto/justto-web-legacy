@@ -178,6 +178,11 @@ export default {
               this.fetchMinutes()
             }).catch(error => {
               console.error(error)
+              this.$jusNotification({
+                title: 'Ops!',
+                message: 'Houve uma falha ao adicionar minuta. Certifique-se de que o documento adicionado é público.',
+                type: 'warning'
+              })
             }).finally(() => {
               instance.confirmButtonLoading = false
             })
