@@ -856,7 +856,6 @@ export default {
   },
   methods: {
     showNamesake (role) {
-
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
     closeNamesakes () {
