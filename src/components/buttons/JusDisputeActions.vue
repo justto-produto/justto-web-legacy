@@ -199,7 +199,11 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
-              <money v-model="counterOfferForm.lastCounterOfferValue" class="el-input__inner" data-testid="counterproposal-value-input" />
+              <money
+                v-model="counterOfferForm.lastCounterOfferValue"
+                class="el-input__inner"
+                data-testid="counterproposal-value-input"
+                maxlength="16" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -491,6 +495,20 @@ export default {
       this.editNegotiatorDialogVisible = true
     },
     counterproposalDialogOpen () {
+      if (this.dispute.paused) {
+        this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning',
+        }).then(() => {
+          this.doAction('resume')
+          this.openCounterproposalDialog()
+        })
+      } else {
+        this.openCounterproposalDialog()
+      }
+    },
+    openCounterproposalDialog () {
       this.counterOfferForm.lastCounterOfferValue = ''
       this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
       this.counterproposalDialogVisible = true
