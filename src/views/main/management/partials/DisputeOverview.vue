@@ -856,7 +856,8 @@ export default {
   },
   methods: {
     showNamesake (role) {
-      return role.personProperties.NAMESAKE && !role.documentNumber && role.party === 'CLAIMANT'
+
+      return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
     closeNamesakes () {
       this.namesakeDialogVisible = false
