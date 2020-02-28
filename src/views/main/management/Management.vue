@@ -112,9 +112,10 @@
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
           <el-checkbox :indeterminate="isIndeterminate" v-model="allColumnsSelected" @change="invertSelectionColumns">Nome do campo ({{ selectedColumnsLength }} de {{ filteredColumns.length }})</el-checkbox>
-          <el-input v-model="filterQuerie" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
+          <el-input v-model="searchQuery" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
         </div>
-          <el-tree
+        <!-- <el-divider/> -->
+        <el-tree
           ref="tree"
           :data="filteredColumns"
           :allow-drop="allowDrop"
@@ -124,7 +125,7 @@
           @check="handlerChangeTree"
           @node-drag-end="nodeDragEnd">
           <span slot-scope="{ node, data }" class="custom-tree-node">
-            <span>{{ $t(node.label) | capitalize }}</span>
+            <span v-html="$options.filters.highlight($options.filters.capitalize($t(node.label)), searchQuery)" />
             <jus-icon class="drag-icon" icon="menu-hamburger"/>
             <!-- <i class="el-icon-rank" /> -->
           </span>
@@ -141,6 +142,8 @@
 </template>
 
 <script>
+import '@/filters/highlight'
+
 export default {
   name: 'Management',
   components: {
@@ -156,7 +159,6 @@ export default {
       loadingExport: false,
       filtersVisible: false,
       term: '',
-      filterQuerie: '',
       termDebounce: '',
       disputeDebounce: '',
       selectedIds: [],
@@ -164,7 +166,8 @@ export default {
       exportDisputesDialog: false,
       allColumnsSelected: true,
       isIndeterminate: false,
-      filterQuerie: '',
+      filterQuery: '',
+      searchQuery: '',
       selectedColumnsLength: 0,
       columns: [
         { label: 'DISPUTE_CODE' },
@@ -205,7 +208,7 @@ export default {
   computed: {
     filteredColumns () {
       return this.columns.filter(c => {
-        return this.$t(c.label).toLowerCase().includes(this.filterQuerie.toLowerCase())
+        return this.$t(c.label).toLowerCase().includes(this.filterQuery.toLowerCase())
       })
     },
     hasFilters () {
@@ -440,5 +443,8 @@ export default {
       }
     }
   }
+}
+.highlight {
+  background: yellow;
 }
 </style>
