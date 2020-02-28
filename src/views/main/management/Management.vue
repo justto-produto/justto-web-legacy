@@ -111,10 +111,10 @@
         width="50%">
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="allColumnsSelected" @change="invertSelectionColumns">Nome ({{ selectedColumnsLength }} de {{ filteredColumns.length }})</el-checkbox>
-          <el-input v-model="columnsFilter" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
+          <el-checkbox :indeterminate="isIndeterminate" v-model="allColumnsSelected" @change="invertSelectionColumns">Nome do campo ({{ selectedColumnsLength }} de {{ filteredColumns.length }})</el-checkbox>
+          <el-input v-model="filterQuerie" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
         </div>
-        <el-tree
+          <el-tree
           ref="tree"
           :data="filteredColumns"
           :allow-drop="allowDrop"
@@ -156,7 +156,7 @@ export default {
       loadingExport: false,
       filtersVisible: false,
       term: '',
-      columnsFilter: '',
+      filterQuerie: '',
       termDebounce: '',
       disputeDebounce: '',
       selectedIds: [],
@@ -164,6 +164,7 @@ export default {
       exportDisputesDialog: false,
       allColumnsSelected: true,
       isIndeterminate: false,
+      filterQuerie: '',
       selectedColumnsLength: 0,
       columns: [
         { label: 'DISPUTE_CODE' },
@@ -204,7 +205,7 @@ export default {
   computed: {
     filteredColumns () {
       return this.columns.filter(c => {
-        return this.$t(c.label).toLowerCase().includes(this.columnsFilter.toLowerCase())
+        return this.$t(c.label).toLowerCase().includes(this.filterQuerie.toLowerCase())
       })
     },
     hasFilters () {
