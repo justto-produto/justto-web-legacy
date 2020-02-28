@@ -112,7 +112,7 @@
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
           <el-checkbox :indeterminate="isIndeterminate" v-model="allColumnsSelected" @change="invertSelectionColumns">Nome do campo ({{ selectedColumnsLength }} de {{ filteredColumns.length }})</el-checkbox>
-          <el-input v-model="searchQuery" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
+          <el-input v-model="filterQuery" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
         </div>
         <!-- <el-divider/> -->
         <el-tree
