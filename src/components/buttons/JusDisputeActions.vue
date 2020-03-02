@@ -225,7 +225,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="Nota" prop="note">
-              <el-input type="textarea" rows="4" v-model="counterOfferForm.note" />
+              <el-input v-model="counterOfferForm.note" type="textarea" rows="4" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -593,7 +593,6 @@ export default {
           })
           this.counterproposalDialogVisible = false
         }).catch(() => {
-          debugger
           this.$jusNotification({
             title: 'Ops!',
             message: 'A disputa não está em negoiação',
