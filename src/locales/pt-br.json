@@ -173,5 +173,9 @@
   "LAWYER_PARTY_NAMES": "Nome dos advogados da parte",
   "LAWYER_PARTY_DOCUMENTS": "Documento dos advogados da parte",
   "RESPONDENT_NAMES": "Réu",
-  "NEGOTIATOR_NAMES": "Negociador"
+  "NEGOTIATOR_NAMES": "Negociador",
+  "LAST_SEND_MESSAGE": "Última mensagem enviada",
+  "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
+  "LAST_NOTE": "Última nota",
+  "CONCLUSION_DATE": "Data de conclusão"
 }
