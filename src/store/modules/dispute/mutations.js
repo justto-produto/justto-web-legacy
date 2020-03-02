@@ -30,7 +30,7 @@ const disputeMutations = {
     state.hasNew = false
   },
   incrementOccurrencesSize (state) {
-    state.occurrencesSize = state.occurrencesSize + state.occurrencesInitialSize
+    state.occurrencesSize = state.occurrencesSize + 10
   },
   clearOccurrencesSize (state) {
     state.occurrencesSize = state.occurrencesInitialSize
