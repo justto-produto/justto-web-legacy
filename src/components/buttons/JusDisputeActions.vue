@@ -218,6 +218,13 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row gutter="20">
+          <el-col :span="24">
+            <el-form-item label="Nota" prop="note">
+              <el-input type="textarea" rows="4" v-model="counterOfferForm.note" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
@@ -297,7 +304,8 @@ export default {
       modalLoading: false,
       counterOfferForm: {
         lastCounterOfferValue: '',
-        selectedRoleId: ''
+        selectedRoleId: '',
+        note: ''
       },
       counterOfferFormRules: {
         lastCounterOfferValue: [
@@ -528,7 +536,8 @@ export default {
           disputeId: this.dispute.id,
           objectId: disputeToEdit.objects[0].id,
           value: this.counterOfferForm.lastCounterOfferValue.toString(),
-          roleId: this.counterOfferForm.selectedRoleId
+          roleId: this.counterOfferForm.selectedRoleId,
+          note: this.counterOfferForm.note
         }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
