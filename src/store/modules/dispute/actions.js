@@ -486,7 +486,8 @@ const disputeActions = {
       axios.post('api/disputes/' + params.disputeId + '/counterproposal', {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
-        value: params.value
+        value: params.value,
+        note: params.note
       }).then(response => {
         resolve(response.data)
       }).catch(error => {
