@@ -82,7 +82,7 @@
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
       <div style="min-height: 44px;position: relative;">
-        <management-prescriptions v-show="activeTab === '1' || activeTab === '3'" :active-tab="activeTab" @management:getDisputes="getDisputes" />
+        <management-prescriptions v-show="activeTab !== '2'" :active-tab="activeTab" @management:getDisputes="getDisputes" />
         <div v-show="disputesTotalLength" style="right: 0px;position: absolute;top: 13px;">
           Exibindo {{ disputes.length }} de {{ disputesTotalLength }} disputa<span v-show="disputesTotalLength > 1">s</span>
         </div>
@@ -201,7 +201,8 @@ export default {
         { label: 'PARTY_DOCUMENTS' },
         { label: 'LAWYER_PARTY_NAMES' },
         { label: 'LAWYER_PARTY_DOCUMENTS' },
-        { label: 'RESPONDENT_NAMES' }
+        { label: 'RESPONDENT_NAMES' },
+        { label: 'NEGOTIATOR_NAMES' }
       ]
     }
   },

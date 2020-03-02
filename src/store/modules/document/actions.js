@@ -59,6 +59,26 @@ const actions = {
       })
     })
   },
+  addModel ({ commit }, url) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.post(`api/documents/model?url=${url}`,  {}).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deleteModel ({ commit }, modelId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.delete('api/documents/model/' + modelId).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   downloadDocument ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

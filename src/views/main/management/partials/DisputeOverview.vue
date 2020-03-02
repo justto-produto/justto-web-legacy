@@ -752,9 +752,6 @@ export default {
         return this.namesakeList
       }
     },
-    isJusttoCs () {
-      return this.$store.getters.isJusttoAdmin
-    },
     validateDocumentNumber () {
       if (this.documentNumberHasChanged) {
         return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
@@ -859,7 +856,7 @@ export default {
   },
   methods: {
     showNamesake (role) {
-      return role.personProperties.NAMESAKE && !role.documentNumber && role.party === 'CLAIMANT' && this.isJusttoCs
+      return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
     closeNamesakes () {
       this.namesakeDialogVisible = false
