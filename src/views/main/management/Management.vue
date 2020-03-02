@@ -96,10 +96,11 @@
       <div v-show="hasNew" class="el-notification info right" style="bottom: 100px;z-index: 1980;">
         <i class="el-notification__icon el-icon-info" />
         <div class="el-notification__group is-with-icon">
-          <h2 class="el-notification__title">Há atualizações nas disputas</h2>
+          <h2 class="el-notification__title" >Há atualizações nas<br>disputas</h2>
           <div class="el-notification__content">
             <a href="#" @click.prevent="getDisputes">Clique aqui para recarregar</a>
           </div>
+          <div class="el-notification__closeBtn el-icon-close" @click="$store.commit('disputeSetHasNew', false)" />
         </div>
       </div>
       <el-dialog
