@@ -199,7 +199,11 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
-              <money v-model="counterOfferForm.lastCounterOfferValue" class="el-input__inner" data-testid="counterproposal-value-input" />
+              <money
+                v-model="counterOfferForm.lastCounterOfferValue"
+                class="el-input__inner"
+                data-testid="counterproposal-value-input"
+                maxlength="16" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -405,62 +409,66 @@ export default {
       }
     },
     doAction (action) {
-      this.modalLoading = true
-      let translatedAction = this.$t('action.' + action.toUpperCase())
-      let params = {
-        action: action,
-        disputeId: this.dispute.id
-      }
-      if (this.unsettledType) {
-        params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
-      }
-      if (action === 'settled' && this.settledValue) {
-        params.value = this.settledValue
-      }
-      if (this.tableActions && action !== 'unsettled') {
-        this.$jusNotification({
-          title: 'Yay!',
-          dangerouslyUseHTMLString: true,
-          message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
-          type: 'success'
-        })
-      }
-      this.$store.dispatch('sendDisputeAction', params).then(() => {
-        // SEGMENT TRACK
-        this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
-        if (!this.tableActions || action === 'unsettled') {
+      return new Promise((resolve, reject) => {
+        this.modalLoading = true
+        let translatedAction = this.$t('action.' + action.toUpperCase())
+        let params = {
+          action: action,
+          disputeId: this.dispute.id
+        }
+        if (this.unsettledType) {
+          params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
+        }
+        if (action === 'settled' && this.settledValue) {
+          params.value = this.settledValue
+        }
+        if (this.tableActions && action !== 'unsettled') {
           this.$jusNotification({
             title: 'Yay!',
             dangerouslyUseHTMLString: true,
-            message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
+            message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
             type: 'success'
           })
         }
-        if (action === 'unsettled' && !this.tableActions) {
-          setTimeout(() => {
+        this.$store.dispatch('sendDisputeAction', params).then(() => {
+          // SEGMENT TRACK
+          resolve()
+          this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
+          if (!this.tableActions || action === 'unsettled') {
             this.$jusNotification({
-              title: 'Atenção!',
-              message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
-              type: 'info',
-              duration: 0
+              title: 'Yay!',
+              dangerouslyUseHTMLString: true,
+              message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
+              type: 'success'
             })
-          }, 2000)
-        }
-        if (!this.tableActions) this.$emit('fetch-data')
-      }).catch(e => {
-        console.error(e)
-        if (e.response && e.response.data.reason.length) {
-          this.$jusNotification({
-            type: 'error',
-            message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
-          })
-        } else {
-          this.$jusNotification({ type: 'error' })
-        }
-      }).finally(() => {
-        this.chooseUnsettledDialogVisible = false
-        this.insertSettledValueDialogVisible = false
-        this.modalLoading = false
+          }
+          if (action === 'unsettled' && !this.tableActions) {
+            setTimeout(() => {
+              this.$jusNotification({
+                title: 'Atenção!',
+                message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
+                type: 'info',
+                duration: 0
+              })
+            }, 2000)
+          }
+          if (!this.tableActions) this.$emit('fetch-data')
+        }).catch(e => {
+          reject(e)
+          console.error(e)
+          if (e.response && e.response.data.reason.length) {
+            this.$jusNotification({
+              type: 'error',
+              message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
+            })
+          } else {
+            this.$jusNotification({ type: 'error' })
+          }
+        }).finally(() => {
+          this.chooseUnsettledDialogVisible = false
+          this.insertSettledValueDialogVisible = false
+          this.modalLoading = false
+        })
       })
     },
     editNegotiators () {
@@ -491,6 +499,30 @@ export default {
       this.editNegotiatorDialogVisible = true
     },
     counterproposalDialogOpen () {
+      if (this.dispute.paused) {
+        this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
+          confirmButtonText: 'Retomar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true
+              this.doAction('resume').then(() => {
+                this.openCounterproposalDialog()
+              }).finally(() => {
+                done()
+                instance.confirmButtonLoading = false
+              })
+            } else {
+              done()
+            }
+          }
+        })
+      } else {
+        this.openCounterproposalDialog()
+      }
+    },
+    openCounterproposalDialog () {
       this.counterOfferForm.lastCounterOfferValue = ''
       this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
       this.counterproposalDialogVisible = true
