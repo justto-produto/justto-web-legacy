@@ -174,7 +174,6 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             this.$store.dispatch('addModel', instance.inputValue).then(response => {
-              done()
               this.fetchMinutes()
             }).catch(error => {
               console.error(error)
@@ -184,6 +183,7 @@ export default {
                 type: 'warning'
               })
             }).finally(() => {
+              done()
               instance.confirmButtonLoading = false
             })
           } else {
