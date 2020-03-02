@@ -44,7 +44,12 @@ const disputeMutations = {
     state.query.page = 1
   },
   addDisputeQueryPage (state) {
-    state.query.page += 1
+    if (state.query.page === 1) {
+      state.query.size = 5
+      state.query.page = 5
+    } else {
+      state.query.page += 1
+    }
   },
   setSummaryNearExpirations (state, summarys) {
     state.summaryNearExpirations = summarys
