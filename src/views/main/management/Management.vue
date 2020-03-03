@@ -177,7 +177,7 @@ export default {
         { label: 'STATUS' },
         { label: 'FIRST_INTERACTION_DATE' },
         { label: 'LAST_INTERACTION_DATE' },
-        { label: 'LAST_SEND_MESSAGE' },
+        { label: 'LAST_SENT_MESSAGE' },
         { label: 'LAST_RECEIVED_MESSAGE' },
         { label: 'LAST_NOTE' },
         { label: 'UPPER_RANGE' },
