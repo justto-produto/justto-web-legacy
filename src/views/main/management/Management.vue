@@ -191,7 +191,7 @@ export default {
         { label: 'LAST_NEGOTIATOR_ACCESS_DATE' },
         { label: 'IMPORT_DATE' },
         { label: 'CONCLUSION_DESCRIPTION' },
-        { label: 'CONCLUSION_DATE' },
+        // { label: 'CONCLUSION_DATE' },
         { label: 'CONCLUSION_REASONS' },
         { label: 'LAST_OFFER_VALUE' },
         { label: 'PARTY_NAMES' },
