@@ -222,13 +222,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <!-- <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="Nota" prop="note">
               <el-input v-model="counterOfferForm.note" type="textarea" rows="4" />
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
@@ -568,8 +568,8 @@ export default {
           disputeId: this.dispute.id,
           objectId: disputeToEdit.objects[0].id,
           value: this.counterOfferForm.lastCounterOfferValue.toString(),
-          roleId: this.counterOfferForm.selectedRoleId,
-          note: this.counterOfferForm.note
+          roleId: this.counterOfferForm.selectedRoleId
+          // note: this.counterOfferForm.note
         }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
@@ -593,11 +593,7 @@ export default {
           })
           this.counterproposalDialogVisible = false
         }).catch(() => {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'A disputa não está em negoiação',
-            type: 'error'
-          })
+          this.$jusNotification({ type: 'error' })
         }).finally(() => {
           this.modalLoading = false
         })
