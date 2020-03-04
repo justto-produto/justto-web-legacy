@@ -14,9 +14,16 @@
       <ul v-for="(d, index) in duplicatedDisputes" :key="d.code + index">
         <li>
           {{ d.code }} - Disputa
-          <span v-if="d.status === 'DUPLICATE' || d.status === 'DUPLICATE_AND_EXPIRED'">
+          <span v-if="d.status === 'DUPLICATE'">
             <strong>não será importada</strong> por duplicidade
             (campanha {{ d.duplicatedBy.campaignName }}).
+          </span>
+          <span v-if="d.status === 'DUPLICATED_DISPUTE' || d.status === 'DUPLICATE_AND_EXPIRED'">
+            <strong>não será importada</strong> por duplicidade no sistema
+            (campanha {{ d.duplicatedBy.campaignName }}).
+          </span>
+          <span v-if="d.status === 'DUPLICATED_ROW'">
+            <strong>será importada apenas 1 vez</strong> pois está duplicada na planilha.
           </span>
           <span v-if="d.status === 'EXPIRED'">
             <strong>será importada</strong> com data já expirada
