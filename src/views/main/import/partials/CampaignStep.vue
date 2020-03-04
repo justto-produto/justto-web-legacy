@@ -18,6 +18,14 @@
             <strong>não será importada</strong> por duplicidade
             (campanha {{ d.duplicatedBy.campaignName }}).
           </span>
+          <span v-if="d.status === 'DUPLICATED_ROW'">
+            <strong>não será importada</strong>, por duplicidade na planilha
+            (campanha {{ d.duplicatedBy.campaignName }}).
+          </span>
+          <span v-if="d.status === 'DUPLICATED_DISPUTE'">
+            <strong>não será importada</strong>, por duplicidade no sistema
+            (campanha {{ d.duplicatedBy.campaignName }}).
+          </span>
           <span v-if="d.status === 'EXPIRED'">
             <strong>será importada</strong> com data já expirada
             ({{ d.expirationDate.dateTime | moment('DD/MM/YY') }}).
