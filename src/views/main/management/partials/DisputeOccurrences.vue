@@ -1,6 +1,6 @@
 <template lang="html">
-  <ul v-loading="loading" v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
-    <infinite-loading :distance="1" spinner="spiral" direction="top" @infinite="loadOccurrences">
+  <ul v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
+    <infinite-loading :identifier="infiniteId" :distance="10" spinner="spiral" direction="top" @infinite="loadOccurrences">
       <div slot="no-more" data-testid="occurences-start">Início das ocorrências</div>
       <div slot="no-results" data-testid="occurences-start">Início das ocorrências</div>
     </infinite-loading>
@@ -158,13 +158,13 @@ export default {
   },
   data () {
     return {
-      loading: true,
       loadingMessage: 'false',
       message: '',
       messageError: false,
       messageDialogVisible: false,
       showFullMessageList: [],
-      fullMessageBank: {}
+      fullMessageBank: {},
+      infiniteId: +new Date()
     }
   },
   computed: {
@@ -197,30 +197,33 @@ export default {
   },
   watch: {
     typingTab () {
-      this.fetchData()
+      this.clearOccurrences()
+      this.infiniteId += 1
     }
   },
+  created () {
+    this.clearOccurrences()
+  },
   mounted () {
-    this.fetchData()
+    setTimeout(() => {
+      if (!Object.keys(this.datedOccurrences).length) {
+        this.infiniteId += 1
+      }
+    }, 700)
   },
   methods: {
-    fetchData () {
+    clearOccurrences () {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
-      setTimeout(() => {
-        this.$store.dispatch(this.fetchAction, this.disputeId).then(() => {
-          this.loading = false
-        })
-      }, 200)
     },
     loadOccurrences ($state) {
-      this.$store.commit('incrementOccurrencesSize')
       this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
         if (response.numberOfElements >= response.totalElements) {
           $state.complete()
         } else {
           $state.loaded()
         }
+        this.$store.commit('incrementOccurrencesSize')
       })
     },
     showFullMessage (occurrenceId) {
