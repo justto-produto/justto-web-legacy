@@ -117,7 +117,7 @@
             <div>{{CLAIMANT_LAWYER_OABS}}</div>
           </div>
           <div>
-            <span>Responsável pela assinatura eletrônica</span>
+            <span>Assinador eletrônico do documento</span>
             <!-- eslint-disable-next-line -->
             <div>{{ACTIVE_SIGNER}}</div>
           </div>
