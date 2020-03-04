@@ -302,7 +302,6 @@ export default {
             if (main) {
               main.scrollTop = 0
             }
-            if (this.$refs.managementTable) this.$refs.managementTable.doLayout()
           })
         })
       }, 300)
@@ -333,6 +332,7 @@ export default {
           this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc', 'favorite,desc'] })
       }
+      this.$refs.managementTable.disputeKey += 1
       this.getDisputes()
     },
     showExportDisputesDialog () {
