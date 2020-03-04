@@ -24,6 +24,9 @@
     <el-button v-show="tab3" :type="UNSETTLED_WITH_MESSAGES ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
       Perdidos com Mensagem
     </el-button>
+    <el-button v-show="tab0 || tab3" :type="NAMESAKE ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('NAMESAKE')">
+      Homônimos
+    </el-button>
   </div>
 </template>
 
@@ -60,6 +63,9 @@ export default {
     },
     UNSETTLED_WITH_MESSAGES () {
       return this.$store.getters.hasPrescription('UNSETTLED_WITH_MESSAGES')
+    },
+    NAMESAKE () {
+      return this.$store.getters.hasPrescription('NAMESAKE')
     },
     tab0 () {
       return this.activeTab === '0'
@@ -106,6 +112,10 @@ export default {
           case 'UNSETTLED_WITH_MESSAGES':
             this.$jusSegment('filtro botão PERDIDOS COM MENSAGEM')
             break
+          case 'NAMESAKE':
+            this.$jusSegment('filtro botão HOMÔNIMOS')
+            break
+
         }
       }
       this.$emit('management:getDisputes')
