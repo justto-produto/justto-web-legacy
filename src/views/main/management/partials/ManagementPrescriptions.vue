@@ -115,7 +115,6 @@ export default {
           case 'NAMESAKE':
             this.$jusSegment('filtro botão HOMÔNIMOS')
             break
-
         }
       }
       this.$emit('management:getDisputes')
