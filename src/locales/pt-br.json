@@ -163,7 +163,7 @@
   "OWNER_COUNTER_PROPOSAL": "Contraproposta por",
   "HAS_DOCUMENT": "Possui minuta",
   "SIGNED_DOCUMENT_STATUS": "Status de assinatura",
-  "LAST_NEGOTIATOR_ACCESS_DATE": "Data último acesso negociador",
+  "LAST_NEGOTIATOR_ACCESS_DATE": "Último acesso da parte na plataforma JUSTTO",
   "IMPORT_DATE": "Data de importação",
   "CONCLUSION_DESCRIPTION": "Descrição da conclusão",
   "CONCLUSION_REASONS": "Motivo da conclusão",
@@ -173,5 +173,9 @@
   "LAWYER_PARTY_NAMES": "Nome dos advogados da parte",
   "LAWYER_PARTY_DOCUMENTS": "Documento dos advogados da parte",
   "RESPONDENT_NAMES": "Réu",
-  "NEGOTIATOR_NAMES": "Negociador"
+  "NEGOTIATOR_NAMES": "Negociador",
+  "LAST_SENT_MESSAGE": "Última mensagem enviada",
+  "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
+  "LAST_NOTE": "Última nota",
+  "CONCLUSION_DATE": "Data do acordo"
 }
