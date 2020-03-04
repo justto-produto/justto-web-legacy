@@ -1,6 +1,6 @@
 .el-message-box {
   &:not(.el-message-box--center) {
-    padding: 20px 0px 30px !important;
+    padding: 10px 0px 20px !important;
   }
   .el-button {
     padding: 10px 20px;
@@ -22,4 +22,9 @@
       text-transform: uppercase;
     }
   }
+  // &__status {
+  //   top: 0;
+  //   transform: translateY(50%);
+  // }
+
 }
