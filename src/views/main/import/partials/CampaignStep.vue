@@ -23,7 +23,7 @@
             (campanha {{ d.duplicatedBy.campaignName }}).
           </span>
           <span v-if="d.status === 'DUPLICATED_ROW'">
-            <strong>será importada apenas 1 vez</strong> mas, está duplicado na planilha.
+            <strong>será importada apenas 1 vez</strong> pois está duplicada na planilha.
           </span>
           <span v-if="d.status === 'EXPIRED'">
             <strong>será importada</strong> com data já expirada
