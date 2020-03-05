@@ -38,7 +38,7 @@ describe('Disputa', function () {
 
     // Verifica se valores correspondem
     // cy.get('[data-testid=overview-strategy]')
-      // .contains('Indenizatório')
+    // .contains('Indenizatório')
     cy.get('[data-testid=overview-upperrange]')
       .contains('R$ 25.000,00')
     // cy.get('[data-testid=overview-counterproposal]')

@@ -1,0 +1,38 @@
+.el-slider {
+  &__am1-bar {
+    position: absolute;
+    margin-top: 20px;
+    text-align: center;
+    div {
+      margin: 4px 0;
+      height: 4px;
+      background-color: #46E986;
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+  }
+  &__am2-bar {
+    position: absolute;
+    margin-top: 134px;
+    text-align: center;
+    div {
+      margin: 4px 0;
+      height: 4px;
+      background-color: #FFC900;
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+  }
+  &__diff-bar {
+    position: absolute;
+    margin-top: 40px;
+    text-align: center;
+    div {
+      margin: 4px 0;
+      height: 4px;
+      background-color: #72cbff;
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+  }
+}
