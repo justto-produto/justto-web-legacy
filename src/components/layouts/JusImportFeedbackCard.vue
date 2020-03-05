@@ -299,7 +299,6 @@ export default {
         title: title,
         message: message,
         confirmButtonText: 'Entendi',
-        type: 'info',
         showClose: false,
         dangerouslyUseHTMLString: true
       })
