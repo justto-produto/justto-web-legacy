@@ -323,16 +323,16 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="Alçada máxima" prop="disputeUpperRange">
-              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" />
+            <el-form-item :rules="validateDisputeUpperRange" label="Alçada máxima" prop="disputeUpperRange">
+              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" @change.native="disputeUpperRangeHasChanged = true"/>
             </el-form-item>
           </el-col>
         </el-row>
         <h3>Valor proposto</h3>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="Valor" prop="lastOfferValue">
-              <money v-model="disputeForm.lastOfferValue" class="el-input__inner" data-testid="proposal-value-input"/>
+            <el-form-item :rules="validateLastOfferValue" label="Valor" prop="lastOfferValue">
+              <money v-model="disputeForm.lastOfferValue" class="el-input__inner" data-testid="proposal-value-input" @change.native="lastOfferValueHasChanged = true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -662,14 +662,8 @@ export default {
         classification: ''
       },
       disputeFormRules: {
-        disputeUpperRange: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
-        ],
-        lastOfferValue: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
-        ]
+        disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       roleForm: {},
       originalRole: {},
@@ -728,6 +722,8 @@ export default {
       },
       bankAccountIdstoUnlink: [],
       documentNumberHasChanged: false,
+      disputeUpperRangeHasChanged: false,
+      lastOfferValueHasChanged: false,
       cityFilter: null,
       ufFilter: null
     }
@@ -755,6 +751,18 @@ export default {
     validateDocumentNumber () {
       if (this.documentNumberHasChanged) {
         return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+      }
+      return []
+    },
+    validateDisputeUpperRange () {
+      if (this.disputeUpperRangeHasChanged) {
+        return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
+      }
+      return []
+    },
+    validateLastOfferValue () {
+      if (this.lastOfferValueHasChanged) {
+        return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
     },
@@ -984,6 +992,8 @@ export default {
       } return []
     },
     openDisputeDialog () {
+      this.disputeUpperRangeHasChanged = false
+      this.lastOfferValueHasChanged = false
       this.documentNumberHasChanged = false
       this.$store.dispatch('getMyStrategies')
       let dispute = JSON.parse(JSON.stringify(this.dispute))
