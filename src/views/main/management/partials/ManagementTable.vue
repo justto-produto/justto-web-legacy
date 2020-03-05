@@ -508,9 +508,6 @@ export default {
     clearSelection () {
       this.$refs.disputeTable.clearSelection()
     },
-    doLayout () {
-      this.$refs.disputeTable.doLayout()
-    },
     handleSelectionChange (selected) {
       let ids = []
       for (let dispute of selected) {
