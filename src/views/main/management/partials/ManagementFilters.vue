@@ -316,10 +316,8 @@ export default {
       switch (this.tabIndex) {
         case '2':
           return 'Data do acordo'
-          break
         case '3':
           return 'Data de Finalização (ganho/perdido)'
-          break
       }
     },
     isAll () {
