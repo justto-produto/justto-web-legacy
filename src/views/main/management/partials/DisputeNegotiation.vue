@@ -20,6 +20,8 @@ export default {
   },
   data () {
     return {
+      offers: [],
+      boundaries: [],
       value: [{
         label: '1P',
         value: this.dispute.lastOfferValue,
@@ -36,6 +38,12 @@ export default {
         }
       }
     }
+  },
+  mounted () {
+    this.$store.dispatch('getDisputeDTO', this.dispute.id).then(response => {
+      this.offers = response.objects[0].offers
+      this.boundaries = response.objects[0].boundarys
+    })
   }
 }
 </script>
