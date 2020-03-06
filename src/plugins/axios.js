@@ -21,6 +21,12 @@ _axios.isCancel = axios.isCancel
 
 _axios.interceptors.request.use(
   function (config) {
+    let storageWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
+    if (store.getters.isLoggedIn && store.getters.hasWorkspace && storageWorkspace && storageWorkspace.subDomain) {
+      if (config.headers.common.Workspace !== storageWorkspace.subDomain) {
+        window.location.reload()
+      }
+    }
     return config
   },
   function (error) {

@@ -35,6 +35,9 @@
         <i v-if="!iswhatsappStatus" class="el-icon-warning el-icon-pulse el-icon-danger" />
       </div> -->
       <div class="jus-header-main__info">
+        <el-tooltip v-if="$store.getters.isJusttoAdmin" content="Modo anônimo">
+          <el-switch v-model="ghostMode" />
+        </el-tooltip>
         <el-dropdown trigger="click" placement="bottom-start">
           <span class="el-dropdown-link">
             <jus-avatar-user :name="name" size="sm" />
@@ -125,6 +128,14 @@ export default {
     },
     whatsappStatus () {
       return this.$store.getters.whatsappStatus
+    },
+    ghostMode: {
+      get () {
+        return this.$store.getters.ghostMode
+      },
+      set (value) {
+        this.$store.commit('setGhostMode', value)
+      }
     }
   },
   beforeMount () {
@@ -232,6 +243,11 @@ export default {
     }
   }
   &__info {
+    display: flex;
+    align-items: center;
+    .el-switch {
+      margin-right: 20px;
+    }
     .el-dropdown-link {
       display: flex;
       align-items: center;

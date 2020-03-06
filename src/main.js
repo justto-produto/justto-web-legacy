@@ -57,9 +57,11 @@ import '@/styles/overrides/tabs.scss'
 import '@/styles/overrides/tag.scss'
 import '@/styles/overrides/tooltip.scss'
 import '@/styles/overrides/upload.scss'
-
 import '@/styles/perfect-scroll.scss'
 import '@/styles/quill-editor.scss'
+
+// utils
+import { validateWorkspace } from '@/utils/validateWorkspace'
 
 // Global components
 import VueTheMask from 'vue-the-mask'
@@ -112,4 +114,5 @@ function initVue () {
     i18n,
     render: h => h(App)
   }).$mount('#app')
+  validateWorkspace()
 }

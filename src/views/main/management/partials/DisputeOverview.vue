@@ -297,7 +297,7 @@
       :close-on-click-modal="false"
       :visible.sync="editDisputeDialogVisible"
       title="Editar disputa"
-      width="50%">
+      width="60%">
       <el-form
         v-loading="editDisputeDialogLoading"
         ref="disputeForm"
@@ -306,7 +306,7 @@
         label-position="top"
         @submit.native.prevent="editDispute">
         <el-row :gutter="20">
-          <el-col :span="24">
+          <el-col :span="19">
             <el-form-item label="Estratégia" prop="disputeStrategy">
               <el-select
                 v-model="selectedStrategyId"
@@ -320,19 +320,28 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="5">
+            <el-form-item prop="sendMessageToParty" class="dispute-overview-view__message-to-party">
+              <span slot="label">
+                Engajar autor
+                <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
+              </span>
+              <el-switch v-model="disputeForm.sendMessageToParty" />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="Alçada máxima" prop="disputeUpperRange">
-              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" />
+            <el-form-item :rules="validateDisputeUpperRange" label="Alçada máxima" prop="disputeUpperRange">
+              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" @change.native="disputeUpperRangeHasChanged = true"/>
             </el-form-item>
           </el-col>
         </el-row>
         <h3>Valor proposto</h3>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="Valor" prop="lastOfferValue">
-              <money v-model="disputeForm.lastOfferValue" class="el-input__inner" data-testid="proposal-value-input"/>
+            <el-form-item :rules="validateLastOfferValue" label="Valor" prop="lastOfferValue">
+              <money v-model="disputeForm.lastOfferValue" class="el-input__inner" data-testid="proposal-value-input" @change.native="lastOfferValueHasChanged = true"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -367,6 +376,12 @@
               <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description-input"/>
             </el-form-item>
           </el-col>
+          <!-- <div>
+            <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens para a parte
+            <el-tooltip content="Clique para entender melhor">
+
+            </el-tooltip>
+          </div> -->
         </el-row>
       </el-form>
       <span slot="footer">
@@ -622,9 +637,7 @@
 </template>
 
 <script>
-// TODO: REMOVER OS FETCHDATA ASSIM QUE O SOCKET ESTIVER FUNCIONANDO
-
-import { getRoles } from '@/utils/jusUtils'
+import { getRoles, helpBox } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 export default {
@@ -659,17 +672,12 @@ export default {
         expirationDate: '',
         disputeUpperRange: '',
         lastOfferValue: '',
-        classification: ''
+        classification: '',
+        sendMessageToParty: ''
       },
       disputeFormRules: {
-        disputeUpperRange: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
-        ],
-        lastOfferValue: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
-        ]
+        disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       roleForm: {},
       originalRole: {},
@@ -728,6 +736,8 @@ export default {
       },
       bankAccountIdstoUnlink: [],
       documentNumberHasChanged: false,
+      disputeUpperRangeHasChanged: false,
+      lastOfferValueHasChanged: false,
       cityFilter: null,
       ufFilter: null
     }
@@ -755,6 +765,18 @@ export default {
     validateDocumentNumber () {
       if (this.documentNumberHasChanged) {
         return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
+      }
+      return []
+    },
+    validateDisputeUpperRange () {
+      if (this.disputeUpperRangeHasChanged) {
+        return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
+      }
+      return []
+    },
+    validateLastOfferValue () {
+      if (this.lastOfferValueHasChanged) {
+        return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
     },
@@ -855,6 +877,7 @@ export default {
     }
   },
   methods: {
+    showHelpBox: (i) => helpBox(i),
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
@@ -984,6 +1007,8 @@ export default {
       } return []
     },
     openDisputeDialog () {
+      this.disputeUpperRangeHasChanged = false
+      this.lastOfferValueHasChanged = false
       this.documentNumberHasChanged = false
       this.$store.dispatch('getMyStrategies')
       let dispute = JSON.parse(JSON.stringify(this.dispute))
@@ -997,6 +1022,7 @@ export default {
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
+      this.disputeForm.sendMessageToParty = dispute.sendMessageToParty
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -1028,6 +1054,7 @@ export default {
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
+            disputeToEdit.sendMessageToParty = this.disputeForm.sendMessageToParty
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
             let today = this.$moment()
@@ -1527,6 +1554,12 @@ export default {
     &:last-child {
       width: 35%;
       margin-left: 20px;
+    }
+  }
+  &__message-to-party {
+    text-align: center;
+    .el-form-item__content {
+      text-align: center;
     }
   }
   .el-input-group__append {

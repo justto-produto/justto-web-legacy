@@ -1,6 +1,7 @@
 @import '../colors';
 
 .el-dialog {
+  margin-top: 10vh !important;
   &__body {
     word-break: break-word;
   }
