@@ -6,7 +6,7 @@
         :key="member.id + member.personId"
         class="jus-team-menu__member"
         @click.prevent="setFilterPersonId(member.person.id, member.person.name)">
-        <el-tooltip :content="member.person.name" placement="right">
+        <el-tooltip :content="member.person.name">
           <jus-avatar-user
             :name="member.person.name"
             :active="activePersonsIds.includes(member.person.id)"

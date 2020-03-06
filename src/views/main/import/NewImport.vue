@@ -130,6 +130,11 @@ export default {
           type: 'warning'
         })
       }
+      let range = this.mappedCampaigns.length - 1
+      localStorage.setItem('jusfeedbackpreferences', JSON.stringify({
+        businessHoursEngagement: this.mappedCampaigns[range].businessHoursEngagement,
+        sendMessageToParty: this.mappedCampaigns[range].sendMessageToParty
+      }))
     },
     checkValidCampaign (campaign) {
       if (
