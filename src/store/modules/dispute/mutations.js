@@ -43,6 +43,10 @@ const disputeMutations = {
     state.query[params.key] = params.value
     state.query.page = 1
   },
+  resetDisputeQueryPage (state) {
+    state.query.page = 1
+    state.query.size = 20
+  },
   addDisputeQueryPage (state) {
     if (state.query.page === 1) {
       state.query.size = 5

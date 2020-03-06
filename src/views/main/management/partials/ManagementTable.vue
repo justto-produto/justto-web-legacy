@@ -439,6 +439,9 @@ export default {
       return this.activeTab === '3'
     }
   },
+  beforeCreate () {
+    this.$store.commit('resetDisputeQueryPage')
+  },
   methods: {
     cellMouseEnter (row, column, cell, event) {
       this.disputeActionsRow = row.id
