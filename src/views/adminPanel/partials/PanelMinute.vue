@@ -87,7 +87,7 @@
             <div>{{VALUE_TO_DEPOSIT}}</div>
           </div>
           <div>
-            <span>Número da disputa</span>
+            <span>Número do processo</span>
             <!-- eslint-disable-next-line -->
             <div>{{DISPUTE_CODE}}</div>
           </div>
