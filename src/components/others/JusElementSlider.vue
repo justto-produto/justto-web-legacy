@@ -5,7 +5,7 @@
     :aria-valuemax="max"
     :aria-orientation="vertical ? 'vertical': 'horizontal'"
     :aria-disabled="sliderDisabled"
-    class="el-slider"
+    class="el-slider el-slider--negotiation"
     role="slider">
     <el-input-number
       v-if="showInput && !range"
@@ -40,7 +40,9 @@
         class="el-slider__am1-bar">
         R$ {{ amValue }}
         <div />
-        <i class="el-icon-bottom" /> {{ Math.round(((amValue) * 100) / markList[0].point) }}%
+        <i v-if="amValue => markList[0].point" class="el-icon-top" />
+        <i v-else class="el-icon-bottom" />
+        {{ Math.round(((amValue) * 100) / markList[0].point) }}%
       </div>
       <div
         :style="am2BarStyle"
@@ -64,7 +66,7 @@
         :tooltip-class="tooltipClass"/>
       <div
         v-for="(item, key) in stops"
-        v-if="showStops"
+        v-show="showStops"
         :key="key"
         :style="getStopStyle(item)"
         class="el-slider__stop"/>
@@ -144,7 +146,10 @@ export default {
       type: Boolean,
       default: true
     },
-    formatTooltip: Function,
+    formatTooltip: {
+      type: Function,
+      default: undefined
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -158,17 +163,25 @@ export default {
       default: false
     },
     height: {
-      type: String
+      type: String,
+      default: ''
     },
     debounce: {
       type: Number,
       default: 300
     },
     label: {
-      type: String
+      type: String,
+      default: ''
     },
-    tooltipClass: String,
-    marks: Object
+    tooltipClass: {
+      type: String,
+      default: ''
+    },
+    marks: {
+      type: Object,
+      default: () => {}
+    }
   },
   data () {
     return {
@@ -183,10 +196,10 @@ export default {
   },
   computed: {
     amValue () {
-      return this.markList[0].point - this.maxValue
+      return Math.abs(this.markList[0].point - this.maxValue)
     },
     am2Value () {
-      return this.markList[0].point - this.minValue
+      return Math.abs(this.markList[0].point - this.minValue)
     },
     diffValue () {
       return Math.abs(this.firstValue - this.secondValue)
@@ -294,9 +307,9 @@ export default {
   watch: {
     value (val, oldVal) {
       if (this.dragging ||
-          Array.isArray(val) &&
+          (Array.isArray(val) &&
           Array.isArray(oldVal) &&
-          val.every((item, index) => item === oldVal[index])) {
+          val.every((item, index) => item === oldVal[index]))) {
         return
       }
       this.setValues()
@@ -417,16 +430,16 @@ export default {
       this.$refs[button].setPosition(percent)
     },
     onSliderClick (event) {
-      if (this.sliderDisabled || this.dragging) return
-      this.resetSize()
-      if (this.vertical) {
-        const sliderOffsetBottom = this.$refs.slider.getBoundingClientRect().bottom
-        this.setPosition((sliderOffsetBottom - event.clientY) / this.sliderSize * 100)
-      } else {
-        const sliderOffsetLeft = this.$refs.slider.getBoundingClientRect().left
-        this.setPosition((event.clientX - sliderOffsetLeft) / this.sliderSize * 100)
-      }
-      this.emitChange()
+      // if (this.sliderDisabled || this.dragging) return
+      // this.resetSize()
+      // if (this.vertical) {
+      //   const sliderOffsetBottom = this.$refs.slider.getBoundingClientRect().bottom
+      //   this.setPosition((sliderOffsetBottom - event.clientY) / this.sliderSize * 100)
+      // } else {
+      //   const sliderOffsetLeft = this.$refs.slider.getBoundingClientRect().left
+      //   this.setPosition((event.clientX - sliderOffsetLeft) / this.sliderSize * 100)
+      // }
+      // this.emitChange()
     },
     resetSize () {
       if (this.$refs.slider) {

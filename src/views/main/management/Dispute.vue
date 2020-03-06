@@ -31,8 +31,7 @@
         <dispute-notes v-else-if="typingTab === '2'" :dispute-id="id" />
         <dispute-negotiation
           v-else-if="typingTab === '4'"
-          :dispute="dispute"
-          />
+          :dispute="dispute"/>
         <div :key="loadingKey" class="dispute-view__send-message">
           <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
             Destinatário(s):

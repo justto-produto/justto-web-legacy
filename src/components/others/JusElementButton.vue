@@ -40,7 +40,7 @@ export default {
     },
     object: {
       type: Object,
-      default: () => {},
+      default: () => {}
     }
   },
   data () {
@@ -83,7 +83,7 @@ export default {
       return this.$parent.formatTooltip instanceof Function
     },
     formatValue () {
-      return this.enableFormat && this.$parent.formatTooltip(this.value) || this.value
+      return (this.enableFormat && this.$parent.formatTooltip(this.value)) || this.value
     },
     wrapperStyle () {
       return this.vertical ? { bottom: this.currentPosition } : { left: this.currentPosition }
