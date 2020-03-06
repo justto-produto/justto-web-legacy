@@ -252,8 +252,8 @@ export default {
   },
   beforeMount () {
     const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
-    this.businessHoursEngagement = preferences.businessHoursEngagement
-    this.sendMessageToParty = preferences.sendMessageToParty
+    this.businessHoursEngagement = preferences.businessHoursEngagement || true
+    this.sendMessageToParty = preferences.sendMessageToParty || false
     this.initialCampaignName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
