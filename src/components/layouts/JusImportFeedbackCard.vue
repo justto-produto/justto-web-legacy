@@ -125,7 +125,7 @@
       </div>
       <div class="jus-import-feedback-card__switch">
         <div>
-          <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens para a parte
+          <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens para o autor
           <el-tooltip content="Clique para entender melhor">
             <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
           </el-tooltip>
