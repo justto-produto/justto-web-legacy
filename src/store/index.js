@@ -15,15 +15,22 @@ import banksList from '@/utils/banksList'
 
 Vue.use(Vuex)
 
+let ghostMode = localStorage.getItem('jusghostmode')
+if (ghostMode) {
+  ghostMode = ghostMode === 'true' || ghostMode === true
+}
+
 export default new Vuex.Store({
   state: {
     loading: false,
     whatsapDialog: false,
     banksList: banksList,
+    ghostMode: ghostMode,
     statesList: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
   },
   getters: {
-    banksList: state => state.banksList
+    banksList: state => state.banksList,
+    ghostMode: state => state.ghostMode
   },
   mutations: {
     showLoading (state) {
@@ -34,6 +41,10 @@ export default new Vuex.Store({
     },
     toggleWhatsapDialog (state) {
       state.whatsapDialog = !state.whatsapDialog
+    },
+    setGhostMode (state, value) {
+      state.ghostMode = value
+      localStorage.setItem('jusghostmode', value)
     }
   },
   actions: {

@@ -314,7 +314,9 @@ export default {
         this.unsettledTypes = response
       })
     }
-    this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
+    if (!(this.$store.getters.isJusttoAdmin && this.$store.getters.ghostMode)) {
+      this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
+    }
   },
   beforeDestroy () {
     this.unsubscribeOccurrences(this.id)
