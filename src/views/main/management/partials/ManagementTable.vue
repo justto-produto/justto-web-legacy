@@ -439,15 +439,6 @@ export default {
       return this.activeTab === '3'
     }
   },
-  watch: {
-    disputes: {
-      handler () {
-        this.doLayout()
-        this.disputeKey += 1
-      },
-      deep: true
-    }
-  },
   methods: {
     cellMouseEnter (row, column, cell, event) {
       this.disputeActionsRow = row.id
@@ -517,9 +508,6 @@ export default {
     clearSelection () {
       this.$refs.disputeTable.clearSelection()
     },
-    doLayout () {
-      this.$refs.disputeTable.doLayout()
-    },
     handleSelectionChange (selected) {
       let ids = []
       for (let dispute of selected) {
@@ -555,10 +543,6 @@ export default {
       this.$store.dispatch('getDisputes', true).then(response => {
         if (response.numberOfElements) {
           $state.loaded()
-          this.$nextTick(() => {
-            let main = this.$el.querySelector('.el-table__body-wrapper')
-            if (main) main.scrollTop = main.scrollHeight - (main.clientHeight * 3)
-          })
         } else {
           $state.complete()
         }

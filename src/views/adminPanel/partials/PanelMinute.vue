@@ -87,7 +87,7 @@
             <div>{{VALUE_TO_DEPOSIT}}</div>
           </div>
           <div>
-            <span>Código da disputa</span>
+            <span>Número da disputa</span>
             <!-- eslint-disable-next-line -->
             <div>{{DISPUTE_CODE}}</div>
           </div>
@@ -117,7 +117,7 @@
             <div>{{CLAIMANT_LAWYER_OABS}}</div>
           </div>
           <div>
-            <span>Responsável pela assinatura eletrônica</span>
+            <span>Assinador eletrônico do documento</span>
             <!-- eslint-disable-next-line -->
             <div>{{ACTIVE_SIGNER}}</div>
           </div>
