@@ -112,14 +112,15 @@
         width="50%">
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="allColumnsSelected" @change="invertSelectionColumns">Nome do campo ({{ selectedColumnsLength }} de {{ filteredColumns.length }})</el-checkbox>
+          <el-checkbox :indeterminate="isIndeterminate" v-model="isSelectedAllColumns" @change="invertSelectionColumns">Nome do campo ({{ checkedNodes.length }} de {{ columns.length }})</el-checkbox>
           <el-input v-model="filterQuery" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
         </div>
         <!-- <el-divider/> -->
         <el-tree
           ref="tree"
-          :data="filteredColumns"
+          :data="columns"
           :allow-drop="allowDrop"
+          :filter-node-method="filterColumns"
           node-key="label"
           draggable
           show-checkbox
@@ -165,11 +166,12 @@ export default {
       selectedIds: [],
       importDialogVisible: false,
       exportDisputesDialog: false,
-      allColumnsSelected: true,
+      isSelectedAllColumns: true,
       isIndeterminate: false,
+      checkedNodes: [],
       filterQuery: '',
       searchQuery: '',
-      selectedColumnsLength: 0,
+      filteredNodes: {},
       columns: [
         { label: 'DISPUTE_CODE' },
         { label: 'CAMPAIGN' },
@@ -212,11 +214,6 @@ export default {
     }
   },
   computed: {
-    filteredColumns () {
-      return this.columns.filter(c => {
-        return this.$t(c.label).toLowerCase().includes(this.filterQuery.toLowerCase())
-      })
-    },
     hasFilters () {
       return this.$store.getters.disputeHasFilters
     },
@@ -260,6 +257,9 @@ export default {
     },
     persons () {
       this.getDisputes()
+    },
+    filterQuery (val) {
+      this.$refs.tree.filter(val)
     }
   },
   beforeCreate () {
@@ -268,21 +268,26 @@ export default {
   },
   created () {
     this.getDisputes()
+    this.filteredNodes = this.columns
   },
   methods: {
-    handlerChangeTree (val, obj) {
-      let checkedNodes = obj.checkedNodes.length
-      this.allColumnsSelected = checkedNodes === this.filteredColumns.length
-      this.isIndeterminate = checkedNodes > 0 && checkedNodes < this.filteredColumns.length
-      this.selectedColumnsLength = checkedNodes
+    filterColumns (value, data) {
+      if (!value) return true
+      return this.$t(data.label).toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
-    invertSelectionColumns (val) {
-      if (val) {
+    handlerChangeTree (value, obj) {
+      debugger
+      let checkedNodes = obj.checkedNodes.length
+      let nodesLength = this.filteredNodes.length
+      this.isSelectedAllColumns = checkedNodes === nodesLength
+      this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
+    },
+    invertSelectionColumns (value) {
+      if (value) {
         this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
       } else {
         this.$refs.tree.setCheckedKeys([])
       }
-      this.selectedColumnsLength = this.$refs.tree.getCheckedKeys().length
       this.isIndeterminate = false
     },
     nodeDragEnd (draggingNode, dropNode, dropType, ev) {
@@ -354,7 +359,6 @@ export default {
         } else {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
         }
-        this.selectedColumnsLength = this.$refs.tree.getCheckedKeys().length
       }, 200)
     },
     exportDisputes () {
