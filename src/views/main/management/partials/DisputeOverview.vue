@@ -297,7 +297,7 @@
       :close-on-click-modal="false"
       :visible.sync="editDisputeDialogVisible"
       title="Editar disputa"
-      width="60%">
+      width="50%">
       <el-form
         v-loading="editDisputeDialogLoading"
         ref="disputeForm"
@@ -306,7 +306,7 @@
         label-position="top"
         @submit.native.prevent="editDispute">
         <el-row :gutter="20">
-          <el-col :span="19">
+          <el-col :span="24">
             <el-form-item label="Estratégia" prop="disputeStrategy">
               <el-select
                 v-model="selectedStrategyId"
@@ -320,10 +320,10 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item prop="sendMessageToParty" class="dispute-overview-view__message-to-party">
+          <el-col :span="24">
+            <el-form-item prop="sendMessageToParty">
               <span slot="label">
-                Engajar autor
+                Engajar autor caso advogado nao possua contatos válidos
                 <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
               </span>
               <el-switch v-model="disputeForm.sendMessageToParty" />
@@ -1554,12 +1554,6 @@ export default {
     &:last-child {
       width: 35%;
       margin-left: 20px;
-    }
-  }
-  &__message-to-party {
-    text-align: center;
-    .el-form-item__content {
-      text-align: center;
     }
   }
   .el-input-group__append {
