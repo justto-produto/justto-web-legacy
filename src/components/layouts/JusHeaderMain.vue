@@ -35,7 +35,7 @@
         <i v-if="!iswhatsappStatus" class="el-icon-warning el-icon-pulse el-icon-danger" />
       </div> -->
       <div class="jus-header-main__info">
-        <el-dropdown trigger="click" placement="bottom-start">
+        <el-dropdown trigger="click">
           <span class="el-dropdown-link">
             <jus-avatar-user :name="name" size="sm" />
             <div class="jus-header-main__name">

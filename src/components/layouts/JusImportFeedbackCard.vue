@@ -117,7 +117,7 @@
       <div class="jus-import-feedback-card__switch">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens somente em horário comercial
-          <el-tooltip content="Clique para entender melhor" placement="top">
+          <el-tooltip content="Clique para entender melhor">
             <i class="el-icon-question" @click="showHelpBox('businessHoursEngagement')" />
           </el-tooltip>
         </div>
@@ -126,7 +126,7 @@
       <div class="jus-import-feedback-card__switch">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens para a parte
-          <el-tooltip content="Clique para entender melhor" placement="top">
+          <el-tooltip content="Clique para entender melhor">
             <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
           </el-tooltip>
         </div>
@@ -142,6 +142,8 @@
 </template>
 
 <script>
+import { helpBox } from '@/utils/jusUtils'
+
 export default {
   name: 'JusImportFeedbackCard',
   components: {
@@ -163,7 +165,6 @@ export default {
       initialCampaignName: '',
       mappedName: '',
       respondent: '',
-      // protocolDeadLine: 1,
       paymentDeadLine: 1,
       campaignName: '',
       campaignTimeout: null,
@@ -227,7 +228,6 @@ export default {
                 this.campaignNameDuplicated = true
               }
             })
-            // this.campaignNameDuplicated = response.data.content.length > 0
           })
         }, 800)
       } else {
@@ -246,9 +246,6 @@ export default {
     negotiatorIds (value) {
       this.mappedCampaign.negotiatorIds = value
     },
-    // protocolDeadLine (value) {
-    //   this.mappedCampaign.protocolDeadLine = value
-    // },
     paymentDeadLine (value) {
       this.mappedCampaign.paymentDeadLine = value
     }
@@ -282,27 +279,7 @@ export default {
         dangerouslyUseHTMLString: true
       })
     },
-    showHelpBox (option) {
-      let message = ''
-      let title = ''
-      switch (option) {
-        case 'businessHoursEngagement':
-          title = 'Enviar mensagens somente em horário comercial'
-          message = 'As mensagens agendadas podem ser enviadas a qualquer momento do dia, durante os sete dias da semana. Com está opção, o envio será feito apenas dentro do horário comercial.'
-          break
-        case 'sendMessageToParty':
-          title = 'Enviar mensagens para o autor'
-          message = 'Por padrão o sistema não irá enviar mensagens para o autor se houver advogado, mas se o advogado não possuir contatos válidos para enviarmos mensagens, você pode utilizar esta opção para contactar o autor.'
-          break
-      }
-      this.$msgbox({
-        title: title,
-        message: message,
-        confirmButtonText: 'Entendi',
-        showClose: false,
-        dangerouslyUseHTMLString: true
-      })
-    }
+    showHelpBox: (i) => helpBox(i)
   }
 }
 </script>
