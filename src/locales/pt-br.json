@@ -163,7 +163,7 @@
   "HAS_DOCUMENT": "Possui minuta",
   "SIGNED_DOCUMENT_STATUS": "Status de assinatura",
   "LAST_NEGOTIATOR_ACCESS_DATE": "Último acesso do autor na plataforma JUSTTO",
-  "LAST_NEGOTIATOR_DISPUTE_ACCESS_DATE" :"Último acesso do negociador na disputa",
+  "LAST_VISUALIZATION_BY_NEGOTIATOR" :"Último acesso do negociador na disputa",
   "IMPORT_DATE": "Data de importação",
   "CONCLUSION_DESCRIPTION": "Descrição da conclusão",
   "CONCLUSION_REASONS": "Motivo da perda",
