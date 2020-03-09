@@ -64,7 +64,6 @@
       "ENRICHED": "enriquecida",
       "CHECKOUT": "acordo",
       "REFUSED": "recusada",
-      "ARCHIVED": "arquivado",
       "SETTLED": "ganho",
       "UNSETTLED": "perdido",
       "RUNNING": "em negociação",
