@@ -45,7 +45,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button  plain @click="blacklistDialogVisible = false">Cancelar</el-button>
+        <el-button plain @click="blacklistDialogVisible = false">Cancelar</el-button>
         <el-button type="primary" @click="blacklistDialogVisible = false">Adicionar</el-button>
       </span>
     </el-dialog>

@@ -44,7 +44,7 @@
           :value="index" />
       </el-select>
       <span slot="footer">
-        <el-button @click="chooseUnsettledDialogVisible = false" plain>Cancelar</el-button>
+        <el-button plain @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!unsettledType"
           type="primary"
@@ -80,7 +80,7 @@
           :label="strategy.name"/>
       </el-select>
       <span slot="footer">
-        <el-button @click="changeStrategyDialogVisible = false" plain>Cancelar</el-button>
+        <el-button plain @click="changeStrategyDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!newStrategyId"
           type="primary"
@@ -113,7 +113,7 @@
         type="date"
         value-format="yyyy-MM-dd" />
       <span slot="footer">
-        <el-button @click="changeExpirationDialogVisible = false" plain>Cancelar</el-button>
+        <el-button plain @click="changeExpirationDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!newExpirationDate"
           type="primary"
