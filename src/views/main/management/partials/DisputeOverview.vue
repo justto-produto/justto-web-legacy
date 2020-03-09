@@ -297,16 +297,18 @@
       :close-on-click-modal="false"
       :visible.sync="editDisputeDialogVisible"
       title="Editar disputa"
-      width="50%">
+      width="70%">
       <el-form
         v-loading="editDisputeDialogLoading"
         ref="disputeForm"
         :model="disputeForm"
         :rules="disputeFormRules"
         label-position="top"
+        style="padding: 0 20px"
         @submit.native.prevent="editDispute">
+        <h3>Engajamento</h3>
         <el-row :gutter="20">
-          <el-col :span="24">
+          <el-col :span="19">
             <el-form-item label="Estratégia" prop="disputeStrategy">
               <el-select
                 v-model="selectedStrategyId"
@@ -320,31 +322,25 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item prop="sendMessageToParty">
+          <el-col :span="5">
+            <el-form-item prop="sendMessageToParty" style="text-align: center">
               <span slot="label">
-                Engajar autor caso advogado nao possua contatos válidos
+                Engajar autor
                 <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
               </span>
               <el-switch v-model="disputeForm.sendMessageToParty" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item :rules="validateDisputeUpperRange" label="Alçada máxima" prop="disputeUpperRange">
-              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" @change.native="disputeUpperRangeHasChanged = true"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <!-- <el-divider /> -->
         <h3>Valor proposto</h3>
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item :rules="validateLastOfferValue" label="Valor" prop="lastOfferValue">
               <money v-model="disputeForm.lastOfferValue" class="el-input__inner" data-testid="proposal-value-input" @change.native="lastOfferValueHasChanged = true"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="16">
             <el-form-item label="Proposto por" prop="lastOfferValueName">
               <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta" data-testid="proposal-negotiator-input">
                 <el-option
@@ -355,7 +351,16 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+        </el-row>
+        <!-- <el-divider /> -->
+        <h3>Outras configurações</h3>
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-form-item :rules="validateDisputeUpperRange" label="Alçada máxima" prop="disputeUpperRange">
+              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" @change.native="disputeUpperRangeHasChanged = true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="Fim da negociação" prop="expirationDate">
               <el-date-picker
                 v-model="disputeForm.expirationDate"
@@ -366,22 +371,16 @@
                 value-format="yyyy-MM-dd" />
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="8">
             <el-form-item label="Classificação" prop="classification">
               <el-input v-model="disputeForm.classification" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="Descrição" prop="description">
-              <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description-input"/>
+              <el-input v-model="disputeForm.description" type="textarea" rows="3" data-testid="description-input"/>
             </el-form-item>
           </el-col>
-          <!-- <div>
-            <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens para a parte
-            <el-tooltip content="Clique para entender melhor">
-
-            </el-tooltip>
-          </div> -->
         </el-row>
       </el-form>
       <span slot="footer">
