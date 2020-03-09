@@ -112,7 +112,7 @@
         width="50%">
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="isSelectedAllColumns" @change="invertSelectionColumns">Nome do campo ({{ checkedNodes.length }} de {{ columns.length }})</el-checkbox>
+          <el-checkbox :indeterminate="isIndeterminate" v-model="isSelectedAllColumns" @change="invertSelectionColumns">Nome do campo ({{ checkedNodes }} de {{ columns.length }})</el-checkbox>
           <el-input v-model="filterQuery" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
         </div>
         <!-- <el-divider/> -->
@@ -168,7 +168,7 @@ export default {
       exportDisputesDialog: false,
       isSelectedAllColumns: true,
       isIndeterminate: false,
-      checkedNodes: [],
+      checkedNodes: 0,
       filterQuery: '',
       searchQuery: '',
       filteredNodes: {},
@@ -269,6 +269,7 @@ export default {
   created () {
     this.getDisputes()
     this.filteredNodes = this.columns
+    this.checkedNodes = this.columns.length
   },
   methods: {
     filterColumns (value, data) {
@@ -276,11 +277,11 @@ export default {
       return this.$t(data.label).toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
     handlerChangeTree (value, obj) {
-      debugger
       let checkedNodes = obj.checkedNodes.length
       let nodesLength = this.filteredNodes.length
       this.isSelectedAllColumns = checkedNodes === nodesLength
       this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
+      this.checkedNodes = checkedNodes
     },
     invertSelectionColumns (value) {
       if (value) {
@@ -289,6 +290,7 @@ export default {
         this.$refs.tree.setCheckedKeys([])
       }
       this.isIndeterminate = false
+      this.checkedNodes = this.$refs.tree.getCheckedKeys().length
     },
     nodeDragEnd (draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
