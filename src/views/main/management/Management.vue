@@ -272,25 +272,46 @@ export default {
     this.checkedNodes = this.columns.length
   },
   methods: {
+    // updateSelectAll (obj) {
+    //   setTimeout(function () {
+    //     let obj = this.$refs.tree.getCheckedKeys()
+    //     let checkedNodes = this.filteredNodes.filter(n => obj.includes(n.label)).length
+    //     let nodesLength = this.filteredNodes.length
+    //     this.isSelectedAllColumns = checkedNodes === nodesLength
+    //     this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
+    //     this.checkedNodes = obj.length
+    //   }.bind(this), 200)
+    // },
     filterColumns (value, data) {
+      this.filteredNodes = this.columns.filter(c => {
+        return this.$t(c.label).toLowerCase().includes(value.toLowerCase())
+      })
+      this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
+      // this.updateSelectAll(this.$refs.tree.getCheckedKeys())
       if (!value) return true
       return this.$t(data.label).toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
     handlerChangeTree (value, obj) {
-      let checkedNodes = obj.checkedNodes.length
-      let nodesLength = this.filteredNodes.length
-      this.isSelectedAllColumns = checkedNodes === nodesLength
-      this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
-      this.checkedNodes = checkedNodes
+      // this.updateSelectAll(obj.checkedKeys)
+      setTimeout(function () {
+        let checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.label)).length
+        let nodesLength = this.filteredNodes.length
+        this.isSelectedAllColumns = checkedNodes === nodesLength
+        this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
+        this.checkedNodes = obj.checkedKeys.length
+      }.bind(this), 200)
     },
     invertSelectionColumns (value) {
       if (value) {
-        this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
+        let allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.label)]
+        this.$refs.tree.setCheckedKeys(allNodesSelected)
       } else {
-        this.$refs.tree.setCheckedKeys([])
+        let filteredKeys = this.columns.filter(c => !this.filteredNodes.includes(c))
+        this.$refs.tree.setCheckedKeys(filteredKeys.map(c => c.label))
       }
       this.isIndeterminate = false
-      this.checkedNodes = this.$refs.tree.getCheckedKeys().length
+      this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
+      // this.updateSelectAll(this.$refs.tree.getCheckedKeys())
     },
     nodeDragEnd (draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
