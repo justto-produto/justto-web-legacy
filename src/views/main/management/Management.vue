@@ -127,7 +127,7 @@
           @check="handlerChangeTree"
           @node-drag-end="nodeDragEnd">
           <span slot-scope="{ node, data }" class="custom-tree-node">
-            <span v-html="$options.filters.highlight($options.filters.capitalize($t(node.label)), searchQuery)" />
+            <span>{{ $t(node.label) | capitalize }}</span>
             <jus-icon class="drag-icon" icon="menu-hamburger"/>
             <!-- <i class="el-icon-rank" /> -->
           </span>
@@ -144,8 +144,6 @@
 </template>
 
 <script>
-import '@/filters/highlight'
-
 export default {
   name: 'Management',
   components: {
@@ -170,7 +168,6 @@ export default {
       isIndeterminate: false,
       checkedNodes: 0,
       filterQuery: '',
-      searchQuery: '',
       filteredNodes: {},
       columns: [
         { label: 'DISPUTE_CODE' },
@@ -272,27 +269,15 @@ export default {
     this.checkedNodes = this.columns.length
   },
   methods: {
-    // updateSelectAll (obj) {
-    //   setTimeout(function () {
-    //     let obj = this.$refs.tree.getCheckedKeys()
-    //     let checkedNodes = this.filteredNodes.filter(n => obj.includes(n.label)).length
-    //     let nodesLength = this.filteredNodes.length
-    //     this.isSelectedAllColumns = checkedNodes === nodesLength
-    //     this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
-    //     this.checkedNodes = obj.length
-    //   }.bind(this), 200)
-    // },
     filterColumns (value, data) {
       this.filteredNodes = this.columns.filter(c => {
         return this.$t(c.label).toLowerCase().includes(value.toLowerCase())
       })
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
-      // this.updateSelectAll(this.$refs.tree.getCheckedKeys())
       if (!value) return true
       return this.$t(data.label).toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
     handlerChangeTree (value, obj) {
-      // this.updateSelectAll(obj.checkedKeys)
       setTimeout(function () {
         let checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.label)).length
         let nodesLength = this.filteredNodes.length
@@ -311,7 +296,6 @@ export default {
       }
       this.isIndeterminate = false
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
-      // this.updateSelectAll(this.$refs.tree.getCheckedKeys())
     },
     nodeDragEnd (draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
@@ -476,8 +460,5 @@ export default {
       }
     }
   }
-}
-.highlight {
-  background: yellow;
 }
 </style>
