@@ -371,8 +371,7 @@ export default {
         'EXPIRED',
         'SETTLED',
         'UNSETTLED',
-        'REFUSED',
-        'ARCHIVED'
+        'REFUSED'
       ]
     }
   },
