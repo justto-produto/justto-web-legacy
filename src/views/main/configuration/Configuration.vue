@@ -99,6 +99,15 @@
             </el-button>
           </div>
         </el-tab-pane>
+        <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="blacklist" class="configuration-view__blacklist">
+          <span slot="label">
+            <el-tooltip content="Somentes administradores Justto">
+              <i class="el-icon-lock"/>
+            </el-tooltip>
+            Blacklist
+          </span>
+          <configuration-blacklist />
+        </el-tab-pane>
         <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="minute" class="configuration-view__minute">
           <span slot="label">
             <el-tooltip content="Somentes administradores Justto">
@@ -193,6 +202,7 @@ export default {
   name: 'Configuration',
   directives: { mask },
   components: {
+    ConfigurationBlacklist: () => import('./partials/ConfigurationBlacklist'),
     PanelMinute: () => import('@/views/adminPanel/partials/PanelMinute')
   },
   data () {
@@ -494,7 +504,9 @@ export default {
   .el-tab-pane {
     margin: auto;
     margin-top: 20px;
-    max-width: 500px;
+    &:not(.configuration-view__minute):not(.configuration-view__blacklist) {
+      max-width: 500px;
+    }
   }
   &--user {
     .el-tabs__header {
@@ -541,9 +553,6 @@ export default {
   }
   p {
     text-align: justify;
-  }
-  &__minute  {
-    max-width: none !important;
   }
 }
 </style>
