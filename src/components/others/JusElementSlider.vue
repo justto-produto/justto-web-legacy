@@ -26,7 +26,7 @@
       :style="runwayStyle"
       class="el-slider__runway"
       @click="onSliderClick">
-      <div
+      <!-- <div
         :style="barStyle"
         class="el-slider__diff-bar">
         R$ {{ diffValue }}
@@ -50,15 +50,16 @@
         R$ {{ am2Value }}
         <div />
         <i class="el-icon-bottom" /> {{ Math.round(((am2Value) * 100) / markList[0].point) }}%
-      </div>
+      </div> -->
       <JusElementButton
         ref="button1"
+        v-if="firstValue"
         :vertical="vertical"
         v-model="firstValue"
         :object="firstObj"
         :tooltip-class="tooltipClass"/>
       <JusElementButton
-        v-if="range"
+        v-if="range && secondValue"
         ref="button2"
         v-model="secondValue"
         :vertical="vertical"

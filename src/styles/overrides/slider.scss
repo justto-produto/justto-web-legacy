@@ -1,4 +1,5 @@
 .el-slider {
+  width: 100%;
   &--negotiation {
     .el-slider__runway {
       cursor: unset;
@@ -47,8 +48,12 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        span {
+        span:first-child {
           align-self: center;
+        }
+        span:last-child {
+          transform: rotate(45deg);
+          padding-left: 32px;
         }
         :first-child {
           color: white;
