@@ -311,6 +311,7 @@ export default {
     getDisputes () {
       this.loadingDisputes = true
       clearTimeout(this.disputeDebounce)
+      this.$store.commit('resetDisputeQueryPage')
       this.disputeDebounce = setTimeout(() => {
         return this.$store.dispatch('getDisputes').catch(error => {
           console.error(error)
