@@ -75,12 +75,20 @@
         <jus-icon icon="enrich"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip content="Contraproposta manual">
+    <el-tooltip v-if="canSendCounterproposal" content="Contraproposta manual">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         @click="counterproposalDialogOpen()">
         <jus-icon icon="proposal2" />
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="!canSendCounterproposal" content="Retornar para negociação">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="moveToRunning()">
+        <jus-icon icon="move-to-running" />
       </el-button>
     </el-tooltip>
     <el-tooltip v-if="canMarkAsNotRead" content="Marcar como não lida">
@@ -338,6 +346,9 @@ export default {
     canMarkAsNotRead () {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
     },
+    canSendCounterproposal () {
+      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)
+    },
     workspaceNegotiators () {
       return this.$store.getters.workspaceMembers.map(member => {
         let newMember = {}
@@ -529,6 +540,24 @@ export default {
       } else {
         this.openCounterproposalDialog()
       }
+    },
+    moveToRunning () {
+      this.$confirm('Esta disputa não está em negociação, deseja voltar para negociação?', 'Ops!', {
+        confirmButtonText: 'Retornar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            this.doAction('movetorunning').finally(() => {
+              done()
+              instance.confirmButtonLoading = false
+            })
+          } else {
+            done()
+          }
+        }
+      })
     },
     openCounterproposalDialog () {
       this.counterOfferForm.lastCounterOfferValue = ''
