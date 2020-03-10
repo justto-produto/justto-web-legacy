@@ -366,6 +366,7 @@ export default {
         } else {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
         }
+        this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       }, 200)
     },
     exportDisputes () {
