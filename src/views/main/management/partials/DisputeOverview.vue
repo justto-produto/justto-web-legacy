@@ -304,7 +304,6 @@
         :model="disputeForm"
         :rules="disputeFormRules"
         label-position="top"
-        style="padding: 0 20px"
         @submit.native.prevent="editDispute">
         <h3>Engajamento</h3>
         <el-row :gutter="20">
@@ -377,7 +376,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="Descrição" prop="description">
+            <el-form-item label="Descrição" prop="description"  style="margin: 0">
               <el-input v-model="disputeForm.description" type="textarea" rows="3" data-testid="description-input"/>
             </el-form-item>
           </el-col>

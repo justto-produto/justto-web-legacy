@@ -155,7 +155,6 @@
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="dialogInvite"
-        class="configuration-view__invite-dialog"
         title="Convide pessoas à sua equipe"
         width="600px">
         <el-form
@@ -176,10 +175,10 @@
                 :value="role.key" />
             </el-select>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" native-type="submit">Convidar</el-button>
-          </el-form-item>
         </el-form>
+        <span slot="footer">
+          <el-button type="primary" @click="inviteTeammate">Convidar</el-button>
+        </span>
       </el-dialog>
     </template>
   </jus-view-main>
@@ -502,13 +501,6 @@ export default {
     }
   }
 
-  &__invite-dialog {
-    .el-button {
-      float: right;
-      margin-top: 10px;
-      margin-bottom: 40px;
-    }
-  }
   &__team {
     button {
       width: 100%;
