@@ -320,6 +320,15 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item prop="sendMessageToParty">
+              <span slot="label">
+                Engajar autor caso advogado nao possua contatos válidos
+                <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
+              </span>
+              <el-switch v-model="disputeForm.sendMessageToParty" />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
@@ -367,6 +376,12 @@
               <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description-input"/>
             </el-form-item>
           </el-col>
+          <!-- <div>
+            <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens para a parte
+            <el-tooltip content="Clique para entender melhor">
+
+            </el-tooltip>
+          </div> -->
         </el-row>
       </el-form>
       <span slot="footer">
@@ -622,9 +637,7 @@
 </template>
 
 <script>
-// TODO: REMOVER OS FETCHDATA ASSIM QUE O SOCKET ESTIVER FUNCIONANDO
-
-import { getRoles } from '@/utils/jusUtils'
+import { getRoles, helpBox } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 export default {
@@ -659,7 +672,8 @@ export default {
         expirationDate: '',
         disputeUpperRange: '',
         lastOfferValue: '',
-        classification: ''
+        classification: '',
+        sendMessageToParty: ''
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -863,6 +877,7 @@ export default {
     }
   },
   methods: {
+    showHelpBox: (i) => helpBox(i),
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
@@ -1007,6 +1022,7 @@ export default {
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
+      this.disputeForm.sendMessageToParty = dispute.sendMessageToParty
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -1038,6 +1054,7 @@ export default {
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
+            disputeToEdit.sendMessageToParty = this.disputeForm.sendMessageToParty
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
             let today = this.$moment()

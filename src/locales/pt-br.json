@@ -64,7 +64,6 @@
       "ENRICHED": "enriquecida",
       "CHECKOUT": "acordo",
       "REFUSED": "recusada",
-      "ARCHIVED": "arquivado",
       "SETTLED": "ganho",
       "UNSETTLED": "perdido",
       "RUNNING": "em negociação",
@@ -163,11 +162,12 @@
   "OWNER_COUNTER_PROPOSAL": "Contraproposta por",
   "HAS_DOCUMENT": "Possui minuta",
   "SIGNED_DOCUMENT_STATUS": "Status de assinatura",
-  "LAST_NEGOTIATOR_ACCESS_DATE": "Último acesso da parte na plataforma JUSTTO",
+  "LAST_NEGOTIATOR_ACCESS_DATE": "Último acesso do autor na plataforma JUSTTO",
+  "LAST_VISUALIZATION_BY_NEGOTIATOR" :"Último acesso do negociador na disputa",
   "IMPORT_DATE": "Data de importação",
   "CONCLUSION_DESCRIPTION": "Descrição da conclusão",
-  "CONCLUSION_REASONS": "Motivo da conclusão",
-  "LAST_OFFER_VALUE": "Última oferta",
+  "CONCLUSION_REASONS": "Motivo da perda",
+  "LAST_OFFER_VALUE": "Valor do acordo",
   "PARTY_NAMES": "Nome das partes",
   "PARTY_DOCUMENTS": "Documento das partes",
   "LAWYER_PARTY_NAMES": "Nome dos advogados da parte",
@@ -177,5 +177,5 @@
   "LAST_SENT_MESSAGE": "Última mensagem enviada",
   "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
   "LAST_NOTE": "Última nota",
-  "CONCLUSION_DATE": "Data do acordo"
+  "CONCLUSION_DATE": "Data de conclusão"
 }

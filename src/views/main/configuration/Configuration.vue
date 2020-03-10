@@ -275,13 +275,14 @@ export default {
           this.$store.dispatch('changePersonName', this.person)
             .then(response => {
               // SEGMENT TRACK
-              this.$jusSegment('Nome do usuário alterado', { userId: this.forgotForm.email })
+              this.$jusSegment('Nome do usuário alterado')
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Nome alterado com sucesso.',
                 type: 'success'
               })
-            }).catch(() => {
+            }).catch(e => {
+              console.error(e)
               this.$jusNotification({ type: 'error' })
             })
         } else {

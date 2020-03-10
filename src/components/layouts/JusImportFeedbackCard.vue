@@ -117,8 +117,20 @@
       <div class="jus-import-feedback-card__switch">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens somente em horário comercial
+          <el-tooltip content="Clique para entender melhor">
+            <i class="el-icon-question" @click="showHelpBox('businessHoursEngagement')" />
+          </el-tooltip>
         </div>
         <el-switch v-model="businessHoursEngagement" />
+      </div>
+      <div class="jus-import-feedback-card__switch">
+        <div>
+          <i class="el-icon-circle-check el-input__icon--success" />Engajar autor caso advogado nao possua contatos válidos
+          <el-tooltip content="Clique para entender melhor">
+            <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
+          </el-tooltip>
+        </div>
+        <el-switch v-model="sendMessageToParty" />
       </div>
     </el-card>
     <jus-engagements-dialog
@@ -130,6 +142,8 @@
 </template>
 
 <script>
+import { helpBox } from '@/utils/jusUtils'
+
 export default {
   name: 'JusImportFeedbackCard',
   components: {
@@ -151,7 +165,6 @@ export default {
       initialCampaignName: '',
       mappedName: '',
       respondent: '',
-      // protocolDeadLine: 1,
       paymentDeadLine: 1,
       campaignName: '',
       campaignTimeout: null,
@@ -162,7 +175,8 @@ export default {
       dialogVisible: false,
       deadline: null,
       negotiatorIds: [],
-      businessHoursEngagement: false,
+      businessHoursEngagement: true,
+      sendMessageToParty: false,
       datePickerOptions: {
         disabledDate (date) {
           return date < new Date()
@@ -196,6 +210,9 @@ export default {
     businessHoursEngagement (value) {
       this.mappedCampaign.businessHoursEngagement = value
     },
+    sendMessageToParty (value) {
+      this.mappedCampaign.sendMessageToParty = value
+    },
     respondent (value) {
       this.mappedCampaign.respondent = value
     },
@@ -211,7 +228,6 @@ export default {
                 this.campaignNameDuplicated = true
               }
             })
-            // this.campaignNameDuplicated = response.data.content.length > 0
           })
         }, 800)
       } else {
@@ -230,17 +246,18 @@ export default {
     negotiatorIds (value) {
       this.mappedCampaign.negotiatorIds = value
     },
-    // protocolDeadLine (value) {
-    //   this.mappedCampaign.protocolDeadLine = value
-    // },
     paymentDeadLine (value) {
       this.mappedCampaign.paymentDeadLine = value
     }
   },
   beforeMount () {
+    const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
+    this.businessHoursEngagement = preferences.businessHoursEngagement || true
+    this.sendMessageToParty = preferences.sendMessageToParty || false
     this.initialCampaignName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
-    this.mappedCampaign.businessHoursEngagement = false
+    this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
+    this.mappedCampaign.sendMessageToParty = this.sendMessageToParty
     // this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
     if (this.mappedCampaign.respondent) {
@@ -261,7 +278,8 @@ export default {
         confirmButtonText: 'OK',
         dangerouslyUseHTMLString: true
       })
-    }
+    },
+    showHelpBox: (i) => helpBox(i)
   }
 }
 </script>
@@ -271,9 +289,7 @@ export default {
 
 .jus-import-feedback-card {
   width: 100%;
-  &+.jus-import-feedback-card {
-    margin-top: 30px;
-  }
+  margin-top: 30px;
   .el-tag--mapped-campaign-tag {
     margin-bottom: 10px;
     text-align: center;
@@ -327,6 +343,9 @@ export default {
       margin-left: 5px;
     }
   }
+  .el-icon-question {
+    cursor: pointer;
+  }
   &__sufix {
     width: 218px;
     display: inline-block;
@@ -369,5 +388,8 @@ export default {
       background-color: $--color-text-secondary;
     }
   }
+}
+.el-message-box__title {
+  text-transform: none;
 }
 </style>
