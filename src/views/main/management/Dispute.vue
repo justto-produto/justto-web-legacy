@@ -297,12 +297,7 @@ export default {
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
       this.$refs.disputeOccurrences.fetchData()
-    },
-    // activeRoleId (activeRoleId) {
-    //   if (activeRoleId !== -1) {
-    //     this.updateActiveRole(activeRoleId)
-    //   }
-    // }
+    }
   },
   created () {
     this.id = this.$route.params.id.toString()

@@ -384,7 +384,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="Descrição" prop="description"  style="margin: 0">
+            <el-form-item label="Descrição" prop="description" style="margin: 0">
               <el-input v-model="disputeForm.description" type="textarea" rows="3" data-testid="description-input"/>
             </el-form-item>
           </el-col>
@@ -724,7 +724,7 @@ export default {
       },
       addBankRules: {
         name: [
-          { required: false, message: 'Campo obrigatório', trigger: 'submit' },
+          { required: false, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         email: [
           { type: 'email', required: false, message: 'Insira um e-mail válido', trigger: 'submit' }
@@ -888,7 +888,7 @@ export default {
     openAddBankDialog () {
       this.addBankForm.name = this.roleForm.name
       if (this.roleForm.emails.filter(f => f.isValid && !f.archived && f.isMain).length) {
-        this.addBankForm.email =  this.roleForm.emails.filter(f => !f.archived && f.isMain)[0].address
+        this.addBankForm.email = this.roleForm.emails.filter(f => !f.archived && f.isMain)[0].address
       } else if (this.roleForm.emails.filter(f => f.isValid && !f.archived).length) {
         this.addBankForm.email = this.roleForm.emails.filter(f => !f.archived)[0].address
       } else {

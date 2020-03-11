@@ -240,7 +240,7 @@
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar Contraproposta</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Atualizar contraproposta</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -575,7 +575,7 @@ export default {
         if (valid) {
           if (this.checkUpperRangeCounterOffer()) {
             this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
-              confirmButtonText: 'Enviar contraproposta',
+              confirmButtonText: 'Continuar',
               cancelButtonText: 'Cancelar',
               type: 'info',
               cancelButtonClass: 'is-plain'
