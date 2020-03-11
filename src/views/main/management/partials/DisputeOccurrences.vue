@@ -545,6 +545,7 @@ export default {
     display: block;
   }
   &__log {
+    display: inline-block;
     border-radius: 8px;
     margin: 20px 20px 0;
     border: none;
