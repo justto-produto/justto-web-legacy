@@ -1,19 +1,23 @@
 <template lang="html">
-  <div class="configuration-blacklist-view">
-    <el-table v-loading="loadingBlacklist" :data="filteredBlacklist" width="100%">
-      <el-table-column prop="contact" label="Termo bloqueado"/>
+  <div class="configuration-blackList-view">
+    <el-table :data="filteredBlackList" width="100%">
+      <el-table-column label="Termo bloqueado">
+        <template slot-scope="props">
+          {{ props.row }}
+        </template>
+      </el-table-column>
       <el-table-column align="right" width="400px">
         <template slot="header" slot-scope="scope">
           <el-input
             v-model="search"
             placeholder="Buscar"/>
-          <el-button type="primary" icon="el-icon-plus" @click="blacklistDialogVisible = true">
+          <el-button type="primary" icon="el-icon-plus" @click="blackListDialogVisible = true">
             Adicionar
           </el-button>
         </template>
         <template slot-scope="props">
           <el-tooltip content="Excluir">
-            <el-button size="mini" type="danger" plain icon="el-icon-delete" @click="deleteBlacklist(props.row.id)" />
+            <el-button size="mini" type="danger" plain icon="el-icon-delete" @click="deleteBlackList(props.row)" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -22,8 +26,8 @@
       :close-on-click-modal="false"
       :show-close="false"
       :close-on-press-escape="false"
-      :visible.sync="blacklistDialogVisible"
-      title="Adicionar à blacklist"
+      :visible.sync="blackListDialogVisible"
+      title="Adicionar à blackList"
       label-position="top"
       width="40%">
       <el-alert type="info">
@@ -39,14 +43,19 @@
         <b>1199020</b> bloqueará Whatsapp para todos os números iniciados com <i>1199020</i>, como <i>(11) 99020 9246</i>.
         <br>
       </el-alert>
-      <el-form :model="blacklistForm">
-        <el-form-item label="Termo a ser bloqueado">
-          <el-input v-model="blacklistForm.contact" />
+      <el-form
+        ref="blackListForm"
+        :model="blackListForm"
+        :rules="blackListRules"
+        label-position="top"
+        @submit.native.prevent="addBlackList">
+        <el-form-item label="Termo a ser bloqueado" prop="contact">
+          <el-input v-model="blackListForm.contact" />
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button plain @click="blacklistDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="blacklistDialogVisible = false">Adicionar</el-button>
+        <el-button plain @click="blackListDialogVisible = false">Cancelar</el-button>
+        <el-button type="primary" @click="addBlackList">Adicionar</el-button>
       </span>
     </el-dialog>
   </div>
@@ -54,88 +63,47 @@
 
 <script>
 export default {
-  name: 'ConfigurationBlacklist',
+  name: 'ConfigurationBlackList',
   data () {
     return {
-      loadingBlacklist: true,
-      blacklistDialogVisible: false,
+      blackListDialogVisible: false,
       search: '',
-      blacklist: [{
-        id: 1,
-        contact: 'a@a.com'
-      }, {
-        id: 2,
-        contact: '(12) 988888384'
-      }, {
-        id: 3,
-        contact: 'b@b.com'
-      }],
-      blacklistForm: { contact: '' }
+      blackListForm: { contact: '' },
+      blackListRules: { contact: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }] }
     }
   },
   computed: {
-    filteredBlacklist () {
-      return this.blacklist.filter(minute => {
-        if (!minute.contact) {
+    filteredBlackList () {
+      return this.$store.getters.workspaceBlackList.filter(minute => {
+        if (!minute) {
           return false
         }
-        return !this.search || minute.contact.toLowerCase().includes(this.search.toLowerCase())
+        return !this.search || minute.toLowerCase().includes(this.search.toLowerCase())
       })
     }
   },
-  mounted () {
-    // this.fetchMinutes()
-    setTimeout(() => {
-      this.loadingBlacklist = false
-    }, 1000)
-  },
   methods: {
-    fetchBlacklist () {
-      // this.loadingBlacklist = true
-      // this.$store.dispatch('getDocumentModels').then(response => {
-      //   this.minutes = response
-      // }).catch(error => {
-      //   console.error(error)
-      // }).finally(() => {
-      //   this.loadingBlacklist = false
-      // })
-    },
-    addBlacklist () {
-      this.$prompt('Insira a URL (Google Docs) do documento:', 'Adicionar minuta', {
-        confirmButtonText: 'Adicionar',
-        cancelButtonText: 'Cancelar',
-        cancelButtonClass: 'is-plain',
-        inputPattern: /.*docs\.google\.com.*/,
-        inputErrorMessage: 'URL inválida',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true
-            this.$store.dispatch('addModel', instance.inputValue).then(response => {
-              this.fetchMinutes()
-            }).catch(error => {
-              console.error(error)
-              this.$jusNotification({
-                title: 'Ops!',
-                message: 'Houve uma falha ao adicionar minuta. Certifique-se de que o documento adicionado é público.',
-                type: 'warning'
-              })
-            }).finally(() => {
-              done()
-              instance.confirmButtonLoading = false
+    addBlackList () {
+      this.$refs.blackListForm.validate(valid => {
+        if (valid) {
+          let blackList = [...this.$store.getters.workspaceBlackList]
+          blackList.push(this.blackListForm.contact)
+          this.$store.dispatch('patchBlackList', blackList).then(response => {
+            this.blackListDialogVisible = false
+            this.blackListForm.contact = ''
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Termo adicionado na blackList com sucesso',
+              type: 'success'
             })
-          } else {
-            done()
-          }
+          }).catch(error => {
+            console.error(error)
+            this.$jusNotification({ type: 'error' })
+          })
         }
-      }).then(({ value }) => {
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Minuta adicionada com sucesso',
-          type: 'success'
-        })
       })
     },
-    deleteBlacklist (modelId) {
+    deleteBlackList (term) {
       this.$confirm('Tem certeza que deseja excluir?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
@@ -144,7 +112,9 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
-            this.$store.dispatch('deleteModel', modelId).then(response => {
+            let blackList = [...this.$store.getters.workspaceBlackList]
+            blackList = blackList.filter(a => a !== term)
+            this.$store.dispatch('patchBlackList', blackList).then(response => {
               done()
               this.fetchMinutes()
             }).catch(error => {
@@ -169,7 +139,7 @@ export default {
 </script>
 
 <style lang="scss">
-.configuration-blacklist-view {
+.configuration-blackList-view {
   th.is-right .cell {
     display: flex;
   }
