@@ -55,7 +55,7 @@
       "COMMUNICATION": "comunicação",
       "LOG": "registro",
       "INTERACTION": "interação",
-      "ENGAGEMENT": "engajamento",
+      "ENGAGEMENT": "sem resposta",
       "INTERACTIONS": "interações",
       "PENDING": "pendente",
       "IMPORTED": "importada",
@@ -78,7 +78,6 @@
   },
   "action": {
     "RESTART_ENGAGEMENT": "reengajar",
-    "RESTART-ENGAGEMENT": "reengajar",
     "SETTLED": "ganhar",
     "UNSETTLED": "perder",
     "DELETE": "excluir",
@@ -89,7 +88,7 @@
     "ENRICH": "enriquecer",
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha",
-    "CANCEL-MESSAGES": "cancelar mensagens agendadas",
+    "CANCEL_MESSAGES": "cancelar mensagens agendadas",
     "CHANGE_STRATEGY": "alterar estratégia",
     "CHANGE_EXPIRATION_DATE": "alterar data limite",
     "RENEGOTIATE": "retornar para negociação"

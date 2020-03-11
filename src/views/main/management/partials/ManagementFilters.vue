@@ -4,7 +4,7 @@
       <h2>Filtrar {{ activeTabLabel }}</h2>
     </template>
     <div class="management-filters">
-      <el-form v-loading="loading" :model="filters" label-position="top">
+      <el-form v-loading="loading" :model="filters" label-position="top" style="margin-bottom: -22px;">
         <el-row :gutter="20">
           <!--  CAMPANHA -->
           <el-col v-if="!loading" :span="12">
