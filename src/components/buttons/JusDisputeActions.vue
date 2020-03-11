@@ -87,7 +87,7 @@
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="moveToRunning()">
+        @click="renegotiateDialogOpen()">
         <jus-icon icon="move-to-running" />
       </el-button>
     </el-tooltip>
@@ -541,15 +541,15 @@ export default {
         this.openCounterproposalDialog()
       }
     },
-    moveToRunning () {
+    renegotiateDialogOpen () {
       this.$confirm('Esta disputa não está em negociação, deseja voltar para negociação?', 'Ops!', {
-        confirmButtonText: 'Retornar',
+        confirmButtonText: 'Confirmar',
         cancelButtonText: 'Cancelar',
         type: 'warning',
         beforeClose: (action, instance, done) => {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
-            this.doAction('movetorunning').finally(() => {
+            this.doAction('renegotiate').finally(() => {
               done()
               instance.confirmButtonLoading = false
             })
