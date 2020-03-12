@@ -63,7 +63,7 @@
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="editNegotiator()">
+        @click="disputeAction('edit-negotiators')">
         <jus-icon icon="delegate"/>
       </el-button>
     </el-tooltip>
@@ -87,7 +87,7 @@
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="renegotiateDialogOpen()">
+        @click="disputeAction('renegotiate')">
         <jus-icon icon="move-to-running" />
       </el-button>
     </el-tooltip>
@@ -157,7 +157,7 @@
           :disabled="!unsettledType"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('unsettled')">
+          @click.prevent="unsettledDispute('unsettled')">
           Continuar
         </el-button>
       </span>
@@ -349,6 +349,9 @@ export default {
     canSendCounterproposal () {
       return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)
     },
+    checkUpperRangeCounterOffer () {
+      return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
+    },
     workspaceNegotiators () {
       return this.$store.getters.workspaceMembers.map(member => {
         let newMember = {}
@@ -400,11 +403,49 @@ export default {
   },
   methods: {
     disputeAction (action) {
+      switch (action) {
+        case 'settled':
+
+          break
+        case 'unsettled':
+
+          break
+        case 'resume':
+
+          break
+        case 'paused':
+
+          break
+        case 'restart-engagement':
+        this.restatrEngagement(action)
+          break
+        case 'cancel-messages':
+
+          break
+        case 'edit-negotiators':
+
+          break
+        case 'enrich':
+
+          break
+        case 'renegotiate':
+          this.renegotiateDialogOpen()
+          break
+        case '':
+
+          break
+        case 'favorite':
+
+          break
+        case 'disfavor':
+
+          break
+        default:
+
+      }
       if (action === 'unsettled') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = null
-      } else if (action === 'favorite') {
-        this.doAction(action)
       } else if (action === 'settled' && !this.dispute.disputeDealValue) {
         this.insertSettledValueDialogVisible = true
         this.settledValue = 0
@@ -427,6 +468,57 @@ export default {
         })
       }
     },
+
+    doAction (action, params, confirm) {
+      return new Promise((resolve, reject) => {
+
+      })
+    },
+
+    restartEngagement (action) {
+      if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
+        this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: 'OK',
+          type: 'warning'
+        })
+      } else {
+        this.doAction(action)
+      }
+    },
+    enrich () {
+      return new Promise((resolve, reject) => {
+        
+      })
+    },
+
+
+
+
+    setAsUnread () {
+      this.$store.dispatch('disputeSetVisualized', {
+        visualized: false,
+        disputeId: this.dispute.id
+      }).then(() => {
+        this.$router.push('/management')
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+      })
+    },
+    openNewTab () {
+      let routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
+      window.open(routeData.href, '_blank')
+    },
+    togleCollapsed () {
+      this.collapsed = !this.collapsed
+    },
+
+
+
+
+
+
+
     doAction (action) {
       return new Promise((resolve, reject) => {
         this.modalLoading = true
@@ -517,6 +609,32 @@ export default {
       }).map(member => member.personId)
       this.editNegotiatorDialogVisible = true
     },
+    isPausedDispute () {
+      return new Promise((resolve, reject) => {
+        if (this.dispute.paused) {
+          this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
+            confirmButtonText: 'Retomar',
+            cancelButtonText: 'Cancelar',
+            type: 'warning',
+            beforeClose: (action, instance, done) => {
+              if (action === 'confirm') {
+                instance.confirmButtonLoading = true
+                this.doAction('resume').then(() => {
+
+                }).finally(() => {
+                  done()
+                  instance.confirmButtonLoading = false
+                })
+              } else {
+                done()
+              }
+            }
+          })
+        } else {
+          this.openCounterproposalDialog()
+        }
+      })
+    },
     counterproposalDialogOpen () {
       if (this.dispute.paused) {
         this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
@@ -559,6 +677,13 @@ export default {
         }
       })
     },
+    unsettledDispute (action) {
+      if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
+        this.openCounterproposalDialog()
+      } else {
+        this.doAction(action)
+      }
+    },
     openCounterproposalDialog () {
       this.counterOfferForm.lastCounterOfferValue = ''
       this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
@@ -567,13 +692,10 @@ export default {
         this.$refs.counterOfferForm.clearValidate()
       }
     },
-    checkUpperRangeCounterOffer () {
-      return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
-    },
     checkCounterproposal () {
       this.$refs.counterOfferForm.validate(valid => {
         if (valid) {
-          if (this.checkUpperRangeCounterOffer()) {
+          if (this.checkUpperRangeCounterOffer) {
             this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
               confirmButtonText: 'Continuar',
               cancelButtonText: 'Cancelar',
@@ -613,7 +735,7 @@ export default {
             message: 'Contraproposta enviada com sucesso.',
             type: 'success',
             onClose: () => {
-              const action = this.checkUpperRangeCounterOffer() ? 'Em negociação' : 'Acordo'
+              const action = this.checkUpperRangeCounterOffer ? 'Em negociação' : 'Acordo'
               setTimeout(() => {
                 this.$notify({
                   title: 'Atenção!',
@@ -640,22 +762,7 @@ export default {
         this.counterproposalDialogVisible = false
       })
     },
-    togleCollapsed () {
-      this.collapsed = !this.collapsed
-    },
-    setAsUnread () {
-      this.$store.dispatch('disputeSetVisualized', {
-        visualized: false, disputeId: this.dispute.id
-      }).then(() => {
-        this.$router.push('/management')
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      })
-    },
-    openNewTab () {
-      let routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
-      window.open(routeData.href, '_blank')
-    },
+
     showDisputeResume (action) {
       const h = this.$createElement
       let detailsMessage = [
