@@ -78,6 +78,7 @@
   },
   "action": {
     "RESTART_ENGAGEMENT": "reengajar",
+    "RESTART-ENGAGEMENT": "reengajar",
     "SETTLED": "ganhar",
     "UNSETTLED": "perder",
     "DELETE": "excluir",
