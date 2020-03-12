@@ -417,7 +417,7 @@ export default {
 
           break
         case 'restart-engagement':
-        this.restatrEngagement(action)
+          this.restatrEngagement(action)
           break
         case 'cancel-messages':
 
@@ -488,7 +488,7 @@ export default {
     },
     enrich () {
       return new Promise((resolve, reject) => {
-        
+
       })
     },
 
