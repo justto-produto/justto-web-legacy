@@ -34,8 +34,8 @@
         <i v-if="firstValue <= secondValue" class="el-icon-top" />
         <i v-else class="el-icon-bottom" />
         {{ Math.round(((diffValue) * 100) / markList[0].point) }}%
-      </div>
-      <div
+      </div> -->
+      <!-- <div
         :style="amBarStyle"
         class="el-slider__am1-bar">
         R$ {{ amValue }}
@@ -43,8 +43,8 @@
         <i v-if="amValue => markList[0].point" class="el-icon-top" />
         <i v-else class="el-icon-bottom" />
         {{ Math.round(((amValue) * 100) / markList[0].point) }}%
-      </div>
-      <div
+      </div> -->
+      <!-- <div
         :style="am2BarStyle"
         class="el-slider__am2-bar">
         R$ {{ am2Value }}
@@ -52,8 +52,8 @@
         <i class="el-icon-bottom" /> {{ Math.round(((am2Value) * 100) / markList[0].point) }}%
       </div> -->
       <JusElementButton
-        ref="button1"
         v-if="firstValue"
+        ref="button1"
         :vertical="vertical"
         v-model="firstValue"
         :object="firstObj"
@@ -75,16 +75,38 @@
         <div>
           <div
             v-for="(item, key) in markList"
-            :style="getStopStyle(item.position)"
             :key="key"
+            :style="getStopStyle(item.position)"
             class="el-slider__stop el-slider__marks-stop"/>
         </div>
         <div class="el-slider__marks">
-          <JusElementMarker
-            v-for="(item, key) in markList"
-            :mark="item.mark"
-            :key="key"
-            :style="getStopStyle(item.position)"/>
+          <div v-for="(item, key) in markList" :key="key" class="hover">
+            <JusElementMarker
+              :mark="item.mark"
+              :style="getStopStyle(item.position, item.mark.zIndex)"/>
+            <div v-if="item.mark.details" :style="getStopStyle(item.position)" class="details">
+              <b>Data</b>
+              <div>{{ item.mark.details.createAt.dateTime | moment('DD/MM/YY') }}</div>
+              <b>Nome</b>
+              <div>{{ item.mark.details.role.name }}</div>
+              <b>Função</b>
+              <div>{{ buildRoleTitle(item.mark.details.role.party, item.mark.details.role.roles[0]) }}</div>
+              <b>Valor</b>
+              <div>{{ item.mark.details.value | currency }}</div>
+            </div>
+            <div
+              v-if="item.mark.details"
+              :style="diffToAmBarStyle(item)"
+              class="el-slider__diff-bar el-slider__bar bar">
+              <div :class="{ 'collapse': ((diffToAmBar(item) * 100) / amMark.point) < 18}">
+                <i v-if="item.point >= amMark.point" class="el-icon-top" />
+                <i v-else class="el-icon-bottom" />
+                {{ Math.round(((diffToAmBar(item)) * 100) / amMark.point) }}%
+                <br>
+                R$ {{ diffToAmBar(item) }}
+              </div>
+            </div>
+          </div>
         </div>
       </template>
     </div>
@@ -96,6 +118,7 @@ import JusElementButton from './JusElementButton.vue'
 import JusElementMarker from './JusElementMarker'
 import ElInputNumber from 'element-ui/packages/input-number'
 import Emitter from 'element-ui/src/mixins/emitter'
+import { buildRoleTitle } from '@/utils/jusUtils'
 
 export default {
   name: 'JusElementSlider',
@@ -196,15 +219,15 @@ export default {
     }
   },
   computed: {
-    amValue () {
-      return Math.abs(this.markList[0].point - this.maxValue)
-    },
-    am2Value () {
-      return Math.abs(this.markList[0].point - this.minValue)
-    },
-    diffValue () {
-      return Math.abs(this.firstValue - this.secondValue)
-    },
+    // amValue () {
+    //   return Math.abs(this.markList[0].point - this.maxValue)
+    // },
+    // am2Value () {
+    //   return Math.abs(this.markList[0].point - this.minValue)
+    // },
+    // diffValue () {
+    //   return Math.abs(this.firstValue - this.secondValue)
+    // },
     stops () {
       if (!this.showStops || this.min > this.max) return []
       if (this.step === 0) {
@@ -247,28 +270,28 @@ export default {
     maxValue () {
       return Math.max(this.firstValue, this.secondValue)
     },
-    barSize () {
-      return this.range
-        ? `${100 * (this.maxValue - this.minValue) / (this.max - this.min)}%`
-        : `${100 * (this.firstValue - this.min) / (this.max - this.min)}%`
-    },
-    amBarSize () {
-      return `${100 * (this.markList[0].point - this.maxValue) / (this.max - this.min)}%`
-    },
-    am2BarSize () {
-      return `${100 * (this.markList[0].point - this.minValue) / (this.max - this.min)}%`
-    },
-    barStart () {
-      return this.range
-        ? `${100 * (this.minValue - this.min) / (this.max - this.min)}%`
-        : '0%'
-    },
-    amBarStart () {
-      return `${100 * (this.maxValue - this.min) / (this.max - this.min)}%`
-    },
-    am2BarStart () {
-      return `${100 * (this.minValue - this.min) / (this.max - this.min)}%`
-    },
+    // barSize () {
+    //   return this.range
+    //     ? `${100 * (this.maxValue - this.minValue) / (this.max - this.min)}%`
+    //     : `${100 * (this.firstValue - this.min) / (this.max - this.min)}%`
+    // },
+    // amBarSize () {
+    //   return `${100 * (this.markList[0].point - this.maxValue) / (this.max - this.min)}%`
+    // },
+    // am2BarSize () {
+    //   return `${100 * (this.markList[0].point - this.minValue) / (this.max - this.min)}%`
+    // },
+    // barStart () {
+    //   return this.range
+    //     ? `${100 * (this.minValue - this.min) / (this.max - this.min)}%`
+    //     : '0%'
+    // },
+    // amBarStart () {
+    //   return `${100 * (this.maxValue - this.min) / (this.max - this.min)}%`
+    // },
+    // am2BarStart () {
+    //   return `${100 * (this.minValue - this.min) / (this.max - this.min)}%`
+    // },
     precision () {
       let precisions = [this.min, this.max, this.step].map(item => {
         let decimal = ('' + item).split('.')[1]
@@ -279,30 +302,36 @@ export default {
     runwayStyle () {
       return this.vertical ? { height: this.height } : {}
     },
-    barStyle () {
-      return this.vertical
-        ? {
-          height: this.barSize,
-          bottom: this.barStart
-        } : {
-          width: this.barSize,
-          left: this.barStart
-        }
-    },
-    amBarStyle () {
-      return {
-        width: this.amBarSize,
-        left: this.amBarStart
-      }
-    },
-    am2BarStyle () {
-      return {
-        width: this.am2BarSize,
-        left: this.am2BarStart
-      }
-    },
+    // barStyle () {
+    //   return this.vertical
+    //     ? {
+    //       height: this.barSize,
+    //       bottom: this.barStart
+    //     } : {
+    //       width: this.barSize,
+    //       left: this.barStart
+    //     }
+    // },
+    // amBarStyle () {
+    //   return {
+    //     width: this.amBarSize,
+    //     left: this.amBarStart
+    //   }
+    // },
+    // am2BarStyle () {
+    //   return {
+    //     width: this.am2BarSize,
+    //     left: this.am2BarStart
+    //   }
+    // },
     sliderDisabled () {
       return this.disabled || (this.elForm || {}).disabled
+    },
+    amMark () {
+      for (const value of Object.values(this.markList)) {
+        if (value.mark && !value.mark.details) return value
+      }
+      return 0
     }
   },
   watch: {
@@ -340,9 +369,9 @@ export default {
     }
   },
   mounted () {
-    let valuetext
+    // let valuetext
     if (this.range) {
-      if (Array.isArray(this.value)) {
+      if (Array.isArray(this.value) && this.value.length) {
         this.firstValue = Math.max(this.min, this.value[0].value)
         this.firstObj = this.value[0]
         this.secondValue = Math.min(this.max, this.value[1].value)
@@ -352,7 +381,7 @@ export default {
         this.secondValue = this.max
       }
       this.oldValue = [this.firstValue, this.secondValue]
-      valuetext = `${this.firstValue}-${this.secondValue}`
+      // valuetext = `${this.firstValue}-${this.secondValue}`
     } else {
       if (typeof this.value !== 'number' || isNaN(this.value)) {
         this.firstValue = this.min
@@ -360,10 +389,10 @@ export default {
         this.firstValue = Math.min(this.max, Math.max(this.min, this.value))
       }
       this.oldValue = this.firstValue
-      valuetext = this.firstValue
+      // valuetext = this.firstValue
     }
-    this.$el.setAttribute('aria-valuetext', valuetext)
-    this.$el.setAttribute('aria-label', this.label ? this.label : `slider between ${this.min} and ${this.max}`)
+    // this.$el.setAttribute('aria-valuetext', valuetext)
+    // this.$el.setAttribute('aria-label', this.label ? this.label : `slider between ${this.min} and ${this.max}`)
     this.resetSize()
     window.addEventListener('resize', this.resetSize)
   },
@@ -371,6 +400,24 @@ export default {
     window.removeEventListener('resize', this.resetSize)
   },
   methods: {
+    buildRoleTitle: (...i) => buildRoleTitle(...i),
+    diffToAmBar (item) {
+      return Math.abs(this.amMark.point - item.point)
+    },
+    diffToAmBarStyle (item) {
+      let barSize
+      let barStart
+      barSize = `${Math.abs(100 * (this.amMark.point - item.point) / (this.max - this.min))}%`
+      if (item.point < this.amMark.point) {
+        barStart = `${item.position}%`
+      } else {
+        barStart = `${this.amMark.position}%`
+      }
+      return {
+        width: barSize,
+        left: barStart
+      }
+    },
     valueChanged () {
       if (this.range) {
         return ![this.minValue, this.maxValue]
@@ -452,8 +499,11 @@ export default {
         this.$emit('change', this.range ? [this.minValue, this.maxValue] : this.value)
       })
     },
-    getStopStyle (position) {
-      return this.vertical ? { 'bottom': position + '%' } : { 'left': position + '%' }
+    getStopStyle (position, zIndex) {
+      return {
+        'left': position + '%',
+        'z-index': zIndex
+      }
     }
   }
 }
