@@ -10,7 +10,7 @@
       range />
     <div class="subtitle">
       <span>AM:</span> <b>Alçada máxima</b>
-      <div v-for="sub in subtitles" :key="sub.label">
+      <div v-for="(sub, index) in subtitles" :key="index + sub.label">
         <span>{{ sub.label }}:</span> <b>{{ sub.value }}</b>
       </div>
     </div>
@@ -122,7 +122,7 @@ export default {
   justify-content: space-around;
   align-items: center;
   height: 100%;
-  margin: 60px 50px 20px;
+  margin: 60px 60px 20px;
   .subtitle {
     align-self: flex-start;
     margin-top: 80px;
