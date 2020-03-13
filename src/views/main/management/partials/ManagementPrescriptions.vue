@@ -82,6 +82,7 @@ export default {
   },
   methods: {
     handlePrescriptionClick (prescription) {
+      this.$store.commit('resetDisputeQueryPage')
       if (this[prescription]) {
         this.$store.commit('removePrescription', prescription)
       } else {

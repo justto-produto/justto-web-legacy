@@ -99,6 +99,15 @@
             </el-button>
           </div>
         </el-tab-pane>
+        <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="blacklist" class="configuration-view__blacklist">
+          <span slot="label">
+            <el-tooltip content="Somentes administradores Justto">
+              <i class="el-icon-lock"/>
+            </el-tooltip>
+            Blacklist
+          </span>
+          <configuration-blacklist />
+        </el-tab-pane>
         <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="minute" class="configuration-view__minute">
           <span slot="label">
             <el-tooltip content="Somentes administradores Justto">
@@ -155,7 +164,6 @@
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="dialogInvite"
-        class="configuration-view__invite-dialog"
         title="Convide pessoas à sua equipe"
         width="600px">
         <el-form
@@ -176,10 +184,10 @@
                 :value="role.key" />
             </el-select>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" native-type="submit">Convidar</el-button>
-          </el-form-item>
         </el-form>
+        <span slot="footer">
+          <el-button type="primary" @click="inviteTeammate">Convidar</el-button>
+        </span>
       </el-dialog>
     </template>
   </jus-view-main>
@@ -193,6 +201,7 @@ export default {
   name: 'Configuration',
   directives: { mask },
   components: {
+    ConfigurationBlacklist: () => import('./partials/ConfigurationBlacklist'),
     PanelMinute: () => import('@/views/adminPanel/partials/PanelMinute')
   },
   data () {
@@ -275,13 +284,14 @@ export default {
           this.$store.dispatch('changePersonName', this.person)
             .then(response => {
               // SEGMENT TRACK
-              this.$jusSegment('Nome do usuário alterado', { userId: this.forgotForm.email })
+              this.$jusSegment('Nome do usuário alterado')
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Nome alterado com sucesso.',
                 type: 'success'
               })
-            }).catch(() => {
+            }).catch(e => {
+              console.error(e)
               this.$jusNotification({ type: 'error' })
             })
         } else {
@@ -493,7 +503,9 @@ export default {
   .el-tab-pane {
     margin: auto;
     margin-top: 20px;
-    max-width: 500px;
+    &:not(.configuration-view__minute):not(.configuration-view__blacklist) {
+      max-width: 500px;
+    }
   }
   &--user {
     .el-tabs__header {
@@ -501,13 +513,6 @@ export default {
     }
   }
 
-  &__invite-dialog {
-    .el-button {
-      float: right;
-      margin-top: 10px;
-      margin-bottom: 40px;
-    }
-  }
   &__team {
     button {
       width: 100%;
@@ -540,9 +545,6 @@ export default {
   }
   p {
     text-align: justify;
-  }
-  &__minute  {
-    max-width: none !important;
   }
 }
 </style>

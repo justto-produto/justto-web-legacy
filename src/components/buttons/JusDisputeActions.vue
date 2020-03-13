@@ -75,12 +75,20 @@
         <jus-icon icon="enrich"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip content="Contraproposta manual">
+    <el-tooltip v-if="canSendCounterproposal" content="Contraproposta manual">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         @click="counterproposalDialogOpen()">
         <jus-icon icon="proposal2" />
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="!canSendCounterproposal" content="Retornar para negociação">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="renegotiateDialogOpen()">
+        <jus-icon icon="move-to-running" />
       </el-button>
     </el-tooltip>
     <el-tooltip v-if="canMarkAsNotRead" content="Marcar como não lida">
@@ -232,7 +240,7 @@
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar Contraproposta</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Atualizar contraproposta</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -337,6 +345,9 @@ export default {
     },
     canMarkAsNotRead () {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
+    },
+    canSendCounterproposal () {
+      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)
     },
     workspaceNegotiators () {
       return this.$store.getters.workspaceMembers.map(member => {
@@ -530,6 +541,24 @@ export default {
         this.openCounterproposalDialog()
       }
     },
+    renegotiateDialogOpen () {
+      this.$confirm('Esta disputa não está em negociação, deseja voltar para negociação?', 'Ops!', {
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            this.doAction('renegotiate').finally(() => {
+              done()
+              instance.confirmButtonLoading = false
+            })
+          } else {
+            done()
+          }
+        }
+      })
+    },
     openCounterproposalDialog () {
       this.counterOfferForm.lastCounterOfferValue = ''
       this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
@@ -546,7 +575,7 @@ export default {
         if (valid) {
           if (this.checkUpperRangeCounterOffer()) {
             this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
-              confirmButtonText: 'Enviar contraproposta',
+              confirmButtonText: 'Continuar',
               cancelButtonText: 'Cancelar',
               type: 'info',
               cancelButtonClass: 'is-plain'

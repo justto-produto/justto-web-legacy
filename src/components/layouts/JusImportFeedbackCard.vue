@@ -125,7 +125,7 @@
       </div>
       <div class="jus-import-feedback-card__switch">
         <div>
-          <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens para a parte
+          <i class="el-icon-circle-check el-input__icon--success" />Engajar autor caso advogado nao possua contatos válidos
           <el-tooltip content="Clique para entender melhor">
             <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
           </el-tooltip>
@@ -252,8 +252,8 @@ export default {
   },
   beforeMount () {
     const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
-    this.businessHoursEngagement = preferences.businessHoursEngagement
-    this.sendMessageToParty = preferences.sendMessageToParty
+    this.businessHoursEngagement = preferences.businessHoursEngagement || true
+    this.sendMessageToParty = preferences.sendMessageToParty || false
     this.initialCampaignName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement

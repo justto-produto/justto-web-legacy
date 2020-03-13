@@ -27,7 +27,7 @@
         <h2>Variáveis disponíveis</h2>
         <span v-pre class="list">
           <div>
-            <span>Nome da parte contrária</span>
+            <span>Nome do autor</span>
             <!-- eslint-disable-next-line -->
             <div>{{CLAIMANT}}</div>
           </div>
@@ -42,37 +42,37 @@
             <div>{{NEGOTIATOR_NAME}}</div>
           </div>
           <div>
-            <span>Data de assinatura</span>
+            <span>Data na assinatura do contrato</span>
             <!-- eslint-disable-next-line -->
             <div>{{SIGN_DATE}}</div>
           </div>
           <div>
-            <span>Cidade de assinatura</span>
+            <span>Cidade na assinatura do contrato</span>
             <!-- eslint-disable-next-line -->
             <div>{{SIGN_CITY}}</div>
           </div>
           <div>
-            <span>Conta bancária</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{BANK_ACCOUNT}}</div>
-          </div>
-          <div>
-            <span>Agência bancária</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{BANK_AGENCY}}</div>
-          </div>
-          <div>
-            <span>Nome do banco</span>
+            <span>Nome do banco para depósito</span>
             <!-- eslint-disable-next-line -->
             <div>{{BANK_NAME}}</div>
           </div>
           <div>
-            <span>Nome do favorecido</span>
+            <span>Agência do banco para depósito</span>
+            <!-- eslint-disable-next-line -->
+            <div>{{BANK_AGENCY}}</div>
+          </div>
+          <div>
+            <span>Conta bancária para depósito</span>
+            <!-- eslint-disable-next-line -->
+            <div>{{BANK_ACCOUNT}}</div>
+          </div>
+          <div>
+            <span>Nome do favorecido para depósito</span>
             <!-- eslint-disable-next-line -->
             <div>{{BANK_DEPOSIT_NAME}}</div>
           </div>
           <div>
-            <span>Documento do favorecido</span>
+            <span>Documento do favorecido para depósito</span>
             <!-- eslint-disable-next-line -->
             <div>{{BANK_DEPOSIT_DOCUMENT}}</div>
           </div>
@@ -82,17 +82,17 @@
             <div>{{DAYS_TO_DEPOSIT}}</div>
           </div>
           <div>
-            <span>Valor de depósito</span>
+            <span>Valor a ser depositado (valor do acordo)</span>
             <!-- eslint-disable-next-line -->
             <div>{{VALUE_TO_DEPOSIT}}</div>
           </div>
           <div>
-            <span>Número da disputa</span>
+            <span>Número do processo</span>
             <!-- eslint-disable-next-line -->
             <div>{{DISPUTE_CODE}}</div>
           </div>
           <div>
-            <span>Vara</span>
+            <span>Comarca</span>
             <!-- eslint-disable-next-line -->
             <div>{{DISPUTE_ORG}}</div>
           </div>
@@ -117,7 +117,7 @@
             <div>{{CLAIMANT_LAWYER_OABS}}</div>
           </div>
           <div>
-            <span>Assinador eletrônico do documento</span>
+            <span>Nome do assinador eletrônico do documento (ex: jurista, clicksign)</span>
             <!-- eslint-disable-next-line -->
             <div>{{ACTIVE_SIGNER}}</div>
           </div>

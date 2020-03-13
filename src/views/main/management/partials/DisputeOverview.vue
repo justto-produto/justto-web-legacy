@@ -95,7 +95,7 @@
               class="dispute-overview-view__bank-collapse">
               <template slot="title">
                 <div>
-                  {{ bankAccount.name }}
+                  {{ bankAccount.name || bankAccount.document | cpfCnpjMask }}
                   <span>
                     {{ bankAccount.bank }} <span v-if="bankAccount.agency">|</span>
                     {{ bankAccount.agency }} <span v-if="bankAccount.number">|</span>
@@ -104,8 +104,12 @@
                 </div>
               </template>
               <span class="bank-info">
-                <strong>Nome:</strong> {{ bankAccount.name }} <br>
-                <strong>E-mail:</strong> {{ bankAccount.email }} <br>
+                <span v-show="bankAccount.name">
+                  <strong>Nome:</strong> {{ bankAccount.name }} <br>
+                </span>
+                <span v-show="bankAccount.email">
+                  <strong>E-mail:</strong> {{ bankAccount.email }} <br>
+                </span>
                 <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
                 <strong>Banco:</strong> {{ bankAccount.bank }} <br>
                 <strong>Agência:</strong> {{ bankAccount.agency }} <br>
@@ -211,8 +215,12 @@
                   :key="`${index}-${bankAccount.id}`"
                   border
                   class="bordered">
-                  <strong>Nome:</strong> {{ bankAccount.name }} <br>
-                  <strong>E-mail:</strong> {{ bankAccount.email }} <br>
+                  <span v-show="bankAccount.name">
+                    <strong>Nome:</strong> {{ bankAccount.name }} <br>
+                  </span>
+                  <span v-show="bankAccount.email">
+                    <strong>E-mail:</strong> {{ bankAccount.email }} <br>
+                  </span>
                   <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
                   <strong>Banco:</strong> {{ bankAccount.bank }} <br>
                   <strong>Agência:</strong> {{ bankAccount.agency }} <br>
@@ -297,7 +305,7 @@
       :close-on-click-modal="false"
       :visible.sync="editDisputeDialogVisible"
       title="Editar disputa"
-      width="60%">
+      width="70%">
       <el-form
         v-loading="editDisputeDialogLoading"
         ref="disputeForm"
@@ -305,6 +313,7 @@
         :rules="disputeFormRules"
         label-position="top"
         @submit.native.prevent="editDispute">
+        <h3>Engajamento</h3>
         <el-row :gutter="20">
           <el-col :span="19">
             <el-form-item label="Estratégia" prop="disputeStrategy">
@@ -321,7 +330,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item prop="sendMessageToParty" class="dispute-overview-view__message-to-party">
+            <el-form-item prop="sendMessageToParty" style="text-align: center">
               <span slot="label">
                 Engajar autor
                 <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
@@ -330,21 +339,15 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item :rules="validateDisputeUpperRange" label="Alçada máxima" prop="disputeUpperRange">
-              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" @change.native="disputeUpperRangeHasChanged = true"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <!-- <el-divider /> -->
         <h3>Valor proposto</h3>
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item :rules="validateLastOfferValue" label="Valor" prop="lastOfferValue">
               <money v-model="disputeForm.lastOfferValue" class="el-input__inner" data-testid="proposal-value-input" @change.native="lastOfferValueHasChanged = true"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="16">
             <el-form-item label="Proposto por" prop="lastOfferValueName">
               <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta" data-testid="proposal-negotiator-input">
                 <el-option
@@ -355,7 +358,16 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+        </el-row>
+        <!-- <el-divider /> -->
+        <h3>Outras configurações</h3>
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-form-item :rules="validateDisputeUpperRange" label="Alçada máxima" prop="disputeUpperRange">
+              <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" @change.native="disputeUpperRangeHasChanged = true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="Fim da negociação" prop="expirationDate">
               <el-date-picker
                 v-model="disputeForm.expirationDate"
@@ -366,22 +378,16 @@
                 value-format="yyyy-MM-dd" />
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="8">
             <el-form-item label="Classificação" prop="classification">
               <el-input v-model="disputeForm.classification" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="Descrição" prop="description">
-              <el-input v-model="disputeForm.description" type="textarea" rows="4" data-testid="description-input"/>
+            <el-form-item label="Descrição" prop="description" style="margin: 0">
+              <el-input v-model="disputeForm.description" type="textarea" rows="3" data-testid="description-input"/>
             </el-form-item>
           </el-col>
-          <!-- <div>
-            <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens para a parte
-            <el-tooltip content="Clique para entender melhor">
-
-            </el-tooltip>
-          </div> -->
         </el-row>
       </el-form>
       <span slot="footer">
@@ -539,7 +545,7 @@
           <a
             href="#"
             style="float: right;width: 16px;margin-top: 1px;margin-right: 23px;"
-            @click.prevent="openAddBankDialogVisible = true">
+            @click.prevent="openAddBankDialog()">
             <el-tooltip content="Adicionar conta bancária">
               <jus-icon icon="add-bold"/>
             </el-tooltip>
@@ -580,7 +586,7 @@
     </el-dialog>
     <el-dialog
       :close-on-click-modal="false"
-      :visible.sync="openAddBankDialogVisible"
+      :visible.sync="addBankDialogVisible"
       title="Adicionar conta bancária"
       width="40%">
       <el-form
@@ -624,7 +630,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button plain @click="openAddBankDialogVisible = false">Cancelar</el-button>
+        <el-button plain @click="addBankDialogVisible = false">Cancelar</el-button>
         <el-button type="primary" @click="addBankData()">Adicionar</el-button>
       </span>
     </el-dialog>
@@ -706,7 +712,7 @@ export default {
       editRoleDialogError: false,
       editRoleDialogErrorList: [],
       descriptionCollapse: true,
-      openAddBankDialogVisible: false,
+      addBankDialogVisible: false,
       addBankForm: {
         name: '',
         email: '',
@@ -718,16 +724,14 @@ export default {
       },
       addBankRules: {
         name: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' }
+          { required: false, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         email: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+          { type: 'email', required: false, message: 'Insira um e-mail válido', trigger: 'submit' }
         ],
         document: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
         ],
         bank: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -880,6 +884,18 @@ export default {
     showHelpBox: (i) => helpBox(i),
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
+    },
+    openAddBankDialog () {
+      this.addBankForm.name = this.roleForm.name
+      if (this.roleForm.emails.filter(f => f.isValid && !f.archived && f.isMain).length) {
+        this.addBankForm.email = this.roleForm.emails.filter(f => !f.archived && f.isMain)[0].address
+      } else if (this.roleForm.emails.filter(f => f.isValid && !f.archived).length) {
+        this.addBankForm.email = this.roleForm.emails.filter(f => !f.archived)[0].address
+      } else {
+        this.addBankForm.email = ''
+      }
+      this.addBankForm.document = this.roleForm.document
+      this.addBankDialogVisible = true
     },
     closeNamesakes () {
       this.namesakeDialogVisible = false
@@ -1348,7 +1364,7 @@ export default {
           this.addBankForm.agency = ''
           this.addBankForm.number = ''
           this.addBankForm.type = ''
-          this.openAddBankDialogVisible = false
+          this.addBankDialogVisible = false
         }
       })
     },
@@ -1554,12 +1570,6 @@ export default {
     &:last-child {
       width: 35%;
       margin-left: 20px;
-    }
-  }
-  &__message-to-party {
-    text-align: center;
-    .el-form-item__content {
-      text-align: center;
     }
   }
   .el-input-group__append {

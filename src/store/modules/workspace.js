@@ -11,7 +11,8 @@ const workspaceModule = {
     subdomain: workspace.subDomain,
     profile: profile,
     members: [],
-    redirectNewWorkspace: false
+    redirectNewWorkspace: false,
+    blackList: workspace.blackList
   },
   mutations: {
     redirectNewWorkspaceTrue (state) {
@@ -30,6 +31,7 @@ const workspaceModule = {
         state.type = workspace.type
         state.status = workspace.status
         state.id = workspace.id
+        state.blackList = workspace.blackList
         localStorage.setItem('jusworkspace', JSON.stringify(workspace))
       }
     },
@@ -47,6 +49,7 @@ const workspaceModule = {
       state.status = ''
       state.subdomain = ''
       state.profile = ''
+      state.blackList = []
       state.members = []
       localStorage.removeItem('jusworkspace')
       localStorage.removeItem('jusprofile')
@@ -54,6 +57,9 @@ const workspaceModule = {
     },
     setWorkspaceMembers (state, members) {
       state.members = members
+    },
+    setBlackList (state, blackList) {
+      state.blackList = blackList
     }
   },
   actions: {
@@ -251,6 +257,18 @@ const workspaceModule = {
             reject(error)
           })
       })
+    },
+    patchBlackList ({ commit }, blackList) {
+      return new Promise((resolve, reject) => {
+        // eslint-disable-next-line
+        axios.patch('api/workspaces/blacklist', blackList)
+          .then(response => {
+            commit('setBlackList', response.data)
+            resolve(response.data)
+          }).catch(error => {
+            reject(error)
+          })
+      })
     }
   },
   getters: {
@@ -264,7 +282,8 @@ const workspaceModule = {
     workspaceSubdomain: state => state.subdomain,
     workspaceMembers: state => state.members,
     redirectNewWorkspace: state => state.redirectNewWorkspace,
-    isAdminProfile: state => state.profile === 'ADMINISTRATOR'
+    isAdminProfile: state => state.profile === 'ADMINISTRATOR',
+    workspaceBlackList: state => state.blackList
   }
 }
 
