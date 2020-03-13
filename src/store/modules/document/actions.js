@@ -42,7 +42,7 @@ const actions = {
   setDocumentSigners ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/documents/signer/' + params.disputeId, params.recipients).then(response => {
+      axios.post('api/documents/signer/' + params.disputeId, params.emails).then(response => {
         resolve(response.data)
       }).catch(error => {
         reject(error)

@@ -159,7 +159,7 @@
             <div class="dispute-overview-view__info-line" style="margin: 0">
               <span class="title">Função:</span>
               <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
-                {{ buildTitle(role.party, title) }}
+                {{ buildRoleTitle(role.party, title) }}
               </span>
             </div>
             <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
@@ -643,7 +643,7 @@
 </template>
 
 <script>
-import { getRoles, helpBox } from '@/utils/jusUtils'
+import { getRoles, helpBox, buildRoleTitle } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 export default {
@@ -881,6 +881,7 @@ export default {
     }
   },
   methods: {
+    buildRoleTitle: (...i) => buildRoleTitle(...i),
     showHelpBox: (i) => helpBox(i),
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
@@ -1116,26 +1117,6 @@ export default {
         }
       })
     },
-    buildTitle (party, title) {
-      if (party === 'RESPONDENT') {
-        switch (title) {
-          case 'NEGOTIATOR':
-            return 'Negociador'
-          case 'PARTY':
-            return 'Réu'
-          case 'LAWYER':
-            return 'Advogado do réu'
-        }
-      } else {
-        if (title === 'PARTY') {
-          return 'Parte contrária'
-        } else if (title === 'LAWYER') {
-          return 'Advogado da parte'
-        } else {
-          return ''
-        }
-      }
-    },
     handleChange (val) {
       if (!val) {
         this.selectedPhone = 0
@@ -1153,7 +1134,7 @@ export default {
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
       this.originalRole = JSON.parse(JSON.stringify(role))
-      this.roleForm.title = this.buildTitle(role.party, role.roles[0])
+      this.roleForm.title = this.buildRoleTitle(role.party, role.roles[0])
       this.roleForm.documentNumber = this.$options.filters.cpfCnpjMask(this.roleForm.documentNumber)
       this.roleForm.emails = this.roleForm.emails.filter(f => !f.archived)
       this.roleForm.oabs = this.roleForm.oabs.filter(f => !f.archived)
