@@ -178,5 +178,10 @@
   "LAST_SENT_MESSAGE": "Última mensagem enviada",
   "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
   "LAST_NOTE": "Última nota",
-  "CONCLUSION_DATE": "Data de conclusão"
+  "CONCLUSION_DATE": "Data de conclusão",
+  "workspace":{
+    "READY": "ativo",
+    "CREATING": "em criação",
+    "DISABLED": "inativo"
+  }
 }

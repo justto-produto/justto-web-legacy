@@ -98,9 +98,23 @@ export default {
     height: 100%
   }
   .el-col.content {
-    padding: 40px;
+    h1 {
+      margin-left: 40px;
+    }
+    padding: 40px 0 30px;
     display: flex;
     flex-direction: column;
+  }
+  .el-backtop {
+    right: 100px !important;
+    bottom: 30px !important;
+  }
+  .el-pagination {
+    text-align: center;
+    margin-top: 38px;
+  }
+  .el-select {
+    width: 100%;
   }
 }
 </style>

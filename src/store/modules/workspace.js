@@ -234,17 +234,6 @@ const workspaceModule = {
           })
       })
     },
-    removeInbox ({ commit }, id) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.delete('api/workspaces/inboxes/' + id)
-          .then(response => {
-            resolve(response)
-          }).catch(error => {
-            reject(error)
-          })
-      })
-    },
     getMyStrategies ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -268,6 +257,47 @@ const workspaceModule = {
           }).catch(error => {
             reject(error)
           })
+      })
+    },
+    adminWorkspaces ({ commit }, params) {
+      return new Promise((resolve, reject) => {
+        let headers = {}
+        if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
+        // eslint-disable-next-line
+        axios({
+          ...headers,
+          ...{
+            url: params.url || `api/workspaces/${params.workspaceId || ''}`,
+            method: params.method,
+            params: params.params,
+            data: params.data
+          }
+        }).then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    adminWorkspaceUsers ({ commit }, params) {
+      return new Promise((resolve, reject) => {
+        let headers = {}
+        if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
+        const config = {
+          ...headers,
+          ...{
+            url: params.url || `api/workspaces${params.workspaceId ? '/' + params.workspaceId : ''}/members/${params.userId || ''}`,
+            method: params.method,
+            params: params.params,
+            data: params.data
+          }
+        }
+        // eslint-disable-next-line
+        axios(config).then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
       })
     }
   },
