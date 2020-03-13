@@ -80,7 +80,7 @@ export default {
             } else {
               countCP += 1
               if (offer.value === '3050') {
-                offer.value = '2900'
+                offer.value = '2700'
               }
               this.marks[parseFloat(offer.value)] = {
                 label: this.$createElement('div', [this.$createElement('span', `CP${countCP} ${this.$options.filters.moment(offer.createAt.dateTime, 'DD/MM')}`), this.$createElement('span', `R$ ${parseInt(offer.value)}`)]),
@@ -121,7 +121,7 @@ export default {
   justify-content: space-around;
   align-items: center;
   height: 100%;
-  margin: 60px 30px 20px;
+  margin: 60px 50px 20px;
   .subtitle {
     align-self: flex-start;
     margin-top: 80px;

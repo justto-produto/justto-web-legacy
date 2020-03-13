@@ -1,56 +1,14 @@
 <template>
   <div
     :class="{ 'is-vertical': vertical, 'el-slider--with-input': showInput }"
-    :aria-valuemin="min"
-    :aria-valuemax="max"
-    :aria-orientation="vertical ? 'vertical': 'horizontal'"
-    :aria-disabled="sliderDisabled"
     class="el-slider el-slider--negotiation"
     role="slider">
-    <el-input-number
-      v-if="showInput && !range"
-      ref="input"
-      v-model="firstValue"
-      :step="step"
-      :disabled="sliderDisabled"
-      :controls="showInputControls"
-      :min="min"
-      :max="max"
-      :debounce="debounce"
-      :size="inputSize"
-      class="el-slider__input"
-      @change="emitChange"/>
     <div
       ref="slider"
       :class="{ 'show-input': showInput, 'disabled': sliderDisabled }"
       :style="runwayStyle"
       class="el-slider__runway"
       @click="onSliderClick">
-      <!-- <div
-        :style="barStyle"
-        class="el-slider__diff-bar">
-        R$ {{ diffValue }}
-        <div />
-        <i v-if="firstValue <= secondValue" class="el-icon-top" />
-        <i v-else class="el-icon-bottom" />
-        {{ Math.round(((diffValue) * 100) / markList[0].point) }}%
-      </div> -->
-      <!-- <div
-        :style="amBarStyle"
-        class="el-slider__am1-bar">
-        R$ {{ amValue }}
-        <div />
-        <i v-if="amValue => markList[0].point" class="el-icon-top" />
-        <i v-else class="el-icon-bottom" />
-        {{ Math.round(((amValue) * 100) / markList[0].point) }}%
-      </div> -->
-      <!-- <div
-        :style="am2BarStyle"
-        class="el-slider__am2-bar">
-        R$ {{ am2Value }}
-        <div />
-        <i class="el-icon-bottom" /> {{ Math.round(((am2Value) * 100) / markList[0].point) }}%
-      </div> -->
       <JusElementButton
         v-if="firstValue"
         ref="button1"
@@ -98,7 +56,7 @@
               v-if="item.mark.details"
               :style="diffToAmBarStyle(item)"
               class="el-slider__diff-bar el-slider__bar bar">
-              <div :class="{ 'collapse': ((diffToAmBar(item) * 100) / amMark.point) < 18}">
+              <div :class="{ 'collapse': ((diffToAmBar(item) * 100) / amMark.point) < 18, 'reverse': (amMark.point >= item.point) }">
                 <i v-if="item.point >= amMark.point" class="el-icon-top" />
                 <i v-else class="el-icon-bottom" />
                 {{ Math.round(((diffToAmBar(item)) * 100) / amMark.point) }}%
@@ -369,7 +327,6 @@ export default {
     }
   },
   mounted () {
-    // let valuetext
     if (this.range) {
       if (Array.isArray(this.value) && this.value.length) {
         this.firstValue = Math.max(this.min, this.value[0].value)
@@ -381,7 +338,6 @@ export default {
         this.secondValue = this.max
       }
       this.oldValue = [this.firstValue, this.secondValue]
-      // valuetext = `${this.firstValue}-${this.secondValue}`
     } else {
       if (typeof this.value !== 'number' || isNaN(this.value)) {
         this.firstValue = this.min
@@ -389,10 +345,7 @@ export default {
         this.firstValue = Math.min(this.max, Math.max(this.min, this.value))
       }
       this.oldValue = this.firstValue
-      // valuetext = this.firstValue
     }
-    // this.$el.setAttribute('aria-valuetext', valuetext)
-    // this.$el.setAttribute('aria-label', this.label ? this.label : `slider between ${this.min} and ${this.max}`)
     this.resetSize()
     window.addEventListener('resize', this.resetSize)
   },
@@ -493,11 +446,6 @@ export default {
       if (this.$refs.slider) {
         this.sliderSize = this.$refs.slider[`client${this.vertical ? 'Height' : 'Width'}`]
       }
-    },
-    emitChange () {
-      this.$nextTick(() => {
-        this.$emit('change', this.range ? [this.minValue, this.maxValue] : this.value)
-      })
     },
     getStopStyle (position, zIndex) {
       return {
