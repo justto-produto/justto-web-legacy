@@ -1,6 +1,7 @@
 <template lang="html">
   <div v-loading="loading" class="dispute-view-negotiation">
     <JusElementSlider
+      v-if="!loading"
       :key="sliderKey"
       v-model="value"
       :min="min"
@@ -79,9 +80,9 @@ export default {
               this.subtitles.push({ label: `P${countP}`, value: `Proposta ${countP}` })
             } else {
               countCP += 1
-              if (offer.value === '3050') {
-                offer.value = '2700'
-              }
+              // if (offer.value === '3050') {
+              //   offer.value = '2700'
+              // }
               this.marks[parseFloat(offer.value)] = {
                 label: this.$createElement('div', [this.$createElement('span', `CP${countCP} ${this.$options.filters.moment(offer.createAt.dateTime, 'DD/MM')}`), this.$createElement('span', `R$ ${parseInt(offer.value)}`)]),
                 details: offer,

@@ -56,7 +56,7 @@
               v-if="item.mark.details"
               :style="diffToAmBarStyle(item)"
               class="el-slider__diff-bar el-slider__bar bar">
-              <div :class="{ 'collapse': ((diffToAmBar(item) * 100) / amMark.point) < 18, 'reverse': (amMark.point >= item.point) }">
+              <div :class="{ 'reverse': (amMark.point >= item.point) }" class="collapse">
                 <i v-if="item.point >= amMark.point" class="el-icon-top" />
                 <i v-else class="el-icon-bottom" />
                 {{ Math.round(((diffToAmBar(item)) * 100) / amMark.point) }}%

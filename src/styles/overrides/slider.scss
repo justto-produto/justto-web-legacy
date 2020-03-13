@@ -4,7 +4,8 @@
     .el-slider__runway {
       cursor: unset;
       height: 200px;
-      background-color: #f1f1f1;
+      box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
+      background: radial-gradient(circle, #f1f1f1 0%, rgba(255, 147, 0, 0.05) 100%), #f1f1f1;
     }
     .el-slider__stop {
       left: 100%;

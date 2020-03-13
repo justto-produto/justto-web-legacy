@@ -159,7 +159,7 @@
               </el-card>
             </el-tab-pane>
             <el-tab-pane label="Ocorrências" name="3" style="padding: 10px;" />
-            <el-tab-pane label="Negociação" name="4" style="padding: 10px;" />
+            <el-tab-pane v-if="this.$store.getters.isJusttoAdmin" label="Negociação" name="4" style="padding: 10px;" />
           </el-tabs>
         </div>
       </div>
