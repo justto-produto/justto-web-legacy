@@ -2,6 +2,27 @@ import Fuse from 'fuse.js'
 import moment from 'moment'
 import { MessageBox } from 'element-ui'
 
+const buildRoleTitle = function (party, title) {
+  if (party === 'RESPONDENT') {
+    switch (title) {
+      case 'NEGOTIATOR':
+        return 'Negociador'
+      case 'PARTY':
+        return 'Réu'
+      case 'LAWYER':
+        return 'Advogado do réu'
+    }
+  } else {
+    if (title === 'PARTY') {
+      return 'Parte contrária'
+    } else if (title === 'LAWYER') {
+      return 'Advogado da parte'
+    } else {
+      return ''
+    }
+  }
+}
+
 const getRoles = function (disputeRoles, party, role) {
   let roles
   if (party) {
@@ -227,6 +248,7 @@ const helpBox = function (option) {
 }
 
 export {
+  buildRoleTitle,
   helpBox,
   getRoles,
   getFirstRole,

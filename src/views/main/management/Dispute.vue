@@ -29,6 +29,9 @@
           <dispute-tips v-if="typingTab === '1'" />
         </dispute-occurrences>
         <dispute-notes v-else-if="typingTab === '2'" :dispute-id="id" />
+        <dispute-negotiation
+          v-else-if="typingTab === '4'"
+          :dispute="dispute"/>
         <div :key="loadingKey" class="dispute-view__send-message">
           <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
             Destinatário(s):
@@ -156,6 +159,7 @@
               </el-card>
             </el-tab-pane>
             <el-tab-pane label="Ocorrências" name="3" style="padding: 10px;" />
+            <el-tab-pane v-if="this.$store.getters.isJusttoAdmin" label="Negociação" name="4" style="padding: 10px;" />
           </el-tabs>
         </div>
       </div>
@@ -205,6 +209,7 @@ export default {
     DisputeOverview: () => import('./partials/DisputeOverview'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     DisputeTips: () => import('./partials/DisputeTips'),
+    DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     quillEditor
   },
   data () {
