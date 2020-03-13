@@ -16,7 +16,7 @@
       <slot />
     </div>
     <div v-if="showExit" class="jus-sidenav-external__exit">
-      <a href="#">Sair</a>
+      <a href="#" @click="$router.push('login')">Sair</a>
     </div>
     <!-- <el-dialog
       v-if="showPlans"

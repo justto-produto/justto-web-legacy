@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="panel-user-view">
-    <el-table :data="filteredUsers" width="100%">
+    <img src="./icon.png">
+    <!-- <el-table :data="filteredUsers" width="100%">
       <el-table-column prop="name" label="Nome"/>
       <el-table-column prop="status" label="Status"/>
       <el-table-column fixed="right" align="right">
@@ -22,7 +23,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-    </el-table>
+    </el-table> -->
   </div>
 </template>
 
@@ -53,6 +54,9 @@ export default {
 
 <style lang="scss">
 .panel-user-view {
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 </style>
