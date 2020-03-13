@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="panel-billing-view">
-    <el-table :data="filteredAccounts" width="100%">
+    <img src="./icon.png">
+    <!-- <el-table :data="filteredAccounts" width="100%">
       <el-table-column type="expand" fixed="left" width="50px">
         <template slot-scope="props">
           <el-table :data="props.row.workspaces" size="small" width="100%">
@@ -38,7 +39,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-    </el-table>
+    </el-table> -->
   </div>
 </template>
 
@@ -77,6 +78,10 @@ export default {
 
 <style lang="scss">
 .panel-billing-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   .el-table__expanded-cell {
     padding: 10px 0px 10px 50px;
     .hover-row td {

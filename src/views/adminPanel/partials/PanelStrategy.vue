@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="panel-strategy-view">
-    <el-table :data="filteredStrategies" width="100%">
+    <img src="./icon.png">
+    <!-- <el-table :data="filteredStrategies" width="100%">
       <el-table-column prop="name" label="Nome"/>
       <el-table-column prop="status" label="Status"/>
       <el-table-column fixed="right" align="right">
@@ -61,7 +62,7 @@
         <el-button plain @click="dialogVisible = false">Cancelar</el-button>
         <el-button type="primary" @click="dialogVisible = false">Adicionar</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -152,6 +153,10 @@ export default {
 <style lang="scss">
 @import '@/styles/nestable.scss';
 .panel-strategy-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   &__add {
     display: flex;
     margin-top: 20px;

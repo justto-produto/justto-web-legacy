@@ -1,6 +1,6 @@
 <template lang="html">
   <el-row class="admin-panel-view">
-    <el-col :md="left" class="hidden-sm-and-down" style="transition: width ease 1s;">
+    <el-col :span="left" style="transition: width ease 1s;">
       <jus-sidenav-external show-exit>
         <el-menu
           default-active="0"
@@ -29,17 +29,17 @@
       </jus-sidenav-external>
     </el-col>
     <transition name="swiper-fade">
-      <el-col v-if="right > 0" :md="right" class="content">
+      <el-col v-if="right > 0" :span="right" class="content">
         <h1>
           {{ $t('panel.' + menuIndex) }}
-          <el-button
+          <!-- <el-button
             v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
             type="primary"
             icon="el-icon-plus"
             style="float: right;"
             @click="add">
             Adicionar
-          </el-button>
+          </el-button> -->
         </h1>
         <panel-dashboard v-if="menuIndex === '0'" ref="panel0"/>
         <panel-workspace v-if="menuIndex === '1'" ref="panel1"/>
@@ -73,10 +73,10 @@ export default {
   },
   created () {
     setTimeout(function () {
-      this.left = 4
+      this.left = 5
     }.bind(this), 400)
     setTimeout(function () {
-      this.right = 20
+      this.right = 19
     }.bind(this), 1200)
   },
   methods: {
@@ -98,9 +98,23 @@ export default {
     height: 100%
   }
   .el-col.content {
-    padding: 40px;
+    h1 {
+      margin-left: 40px;
+    }
+    padding: 40px 0 30px;
     display: flex;
     flex-direction: column;
+  }
+  .el-backtop {
+    right: 100px !important;
+    bottom: 30px !important;
+  }
+  .el-pagination {
+    text-align: center;
+    margin-top: 38px;
+  }
+  .el-select {
+    width: 100%;
   }
 }
 </style>
