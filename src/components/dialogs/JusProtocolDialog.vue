@@ -139,13 +139,13 @@
         @click="downloadDocument">
         Baixar
       </el-button>
-      <el-button
+      <!-- <el-button
         v-if="step === 3"
         icon="el-icon-view"
         type="primary"
         @click="visualizePdf">
         Visualizar
-      </el-button>
+      </el-button> -->
     </span>
   </el-dialog>
 </template>
@@ -215,7 +215,7 @@ export default {
           if (this.models.length > 1) {
             return 'Escolha um modelo para iniciar'
           }
-          return 'Gerando Minuta...'
+          return 'Carregando...'
         case 1: return 'Visualização da Minuta'
         case 2: return 'Enviar Minuta'
         case 3:
@@ -227,7 +227,7 @@ export default {
       if ([1, 4].includes(this.step)) {
         return '85%'
       }
-      return '60%'
+      return '70%'
     },
     hasEmails () {
       let hasEmails = false
@@ -486,9 +486,8 @@ export default {
 <style lang="scss">
 .jus-protocol-dialog {
   &--full {
-    .el-dialog {
-      margin: 20px auto !important;
-      height: calc(100% - 40px);
+    .el-dialog__body {
+      height: calc(100vh - 284px);
     }
   }
   &__model-choice {
@@ -578,9 +577,6 @@ export default {
   }
   &__status-role {
     margin-left: 10px;
-  }
-  .el-dialog__body {
-    height: calc(100% - 144px);
   }
   .el-dialog__body > div > div, .el-dialog__body > div {
     height: 100%;
