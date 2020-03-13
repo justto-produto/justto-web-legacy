@@ -5,7 +5,19 @@
   "dispute": {
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
-    "description": "descrição"
+    "description": "descrição",
+    "status": {
+      "ACCEPTED": "aceita",
+      "CHECKOUT": "sem dados bancarios",
+      "ENGAGEMENT": "sem resposta da parte",
+      "ENRICHED": "enriquecida",
+      "EXPIRED": "expirada",
+      "IMPORTED": "importada",
+      "PENDING": "pendente",
+      "REFUSED": "com proposta recusada",
+      "RUNNING": "em negociação",
+      "SETTLED": "ganha"
+    }
   },
   "expirationDate": {
     "dateTime": "fim da negociação"

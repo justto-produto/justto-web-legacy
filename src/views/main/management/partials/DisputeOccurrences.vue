@@ -79,6 +79,10 @@
               </div>
             </el-card>
             <div :class="(occurrence.interaction ? occurrence.interaction.direction : '')" class="dispute-view-occurrences__card-info">
+              <el-tooltip :content="buildStatusTooltip(occurrence)">
+                <jus-icon :icon="buildStatusIcon(occurrence)"/>
+              </el-tooltip>
+              <div>•</div>
               <span v-html="buildHour(occurrence)" />
               <div v-if="!!buildIcon(occurrence)">•</div>
               <jus-icon v-if="!!buildIcon(occurrence)" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
@@ -360,6 +364,14 @@ export default {
         return true
       }
       return false
+    },
+    buildStatusIcon (occurrence) {
+      if (occurrence.status) {
+        return occurrence.status.toLowerCase()
+      }
+    },
+    buildStatusTooltip (occurrence) {
+      return 'No momento desta ocorrência, esta disputa estava ' + this.$t('dispute.status.' + occurrence.status)
     },
     buildHour (occurrence) {
       if (occurrence.executionDateTime) {
