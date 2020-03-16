@@ -1,7 +1,6 @@
 <template lang="html">
   <div class="panel-minute-view">
-    <img src="./icon.png">
-    <!-- <el-table v-loading="loadingMinutes" :data="filteredMinutes" width="100%">
+    <el-table v-loading="loadingMinutes" :data="filteredMinutes" width="100%">
       <el-table-column prop="name" label="Nome"/>
       <el-table-column align="right" width="400px">
         <template slot="header" slot-scope="scope">
@@ -29,102 +28,83 @@
         <span v-pre class="list">
           <div>
             <span>Nome do autor</span>
-
             <div>{{CLAIMANT}}</div>
           </div>
           <div>
             <span>Nome do réu</span>
-
             <div>{{RESPONDENT}}</div>
           </div>
           <div>
             <span>Nome do negociador</span>
-
             <div>{{NEGOTIATOR_NAME}}</div>
           </div>
           <div>
             <span>Data na assinatura do contrato</span>
-
             <div>{{SIGN_DATE}}</div>
           </div>
           <div>
             <span>Cidade na assinatura do contrato</span>
-
             <div>{{SIGN_CITY}}</div>
           </div>
           <div>
             <span>Nome do banco para depósito</span>
-
             <div>{{BANK_NAME}}</div>
           </div>
           <div>
             <span>Agência do banco para depósito</span>
-
             <div>{{BANK_AGENCY}}</div>
           </div>
           <div>
             <span>Conta bancária para depósito</span>
-
             <div>{{BANK_ACCOUNT}}</div>
           </div>
           <div>
             <span>Nome do favorecido para depósito</span>
-
             <div>{{BANK_DEPOSIT_NAME}}</div>
           </div>
           <div>
             <span>Documento do favorecido para depósito</span>
-
             <div>{{BANK_DEPOSIT_DOCUMENT}}</div>
           </div>
           <div>
             <span>Dias para depósito</span>
-
             <div>{{DAYS_TO_DEPOSIT}}</div>
           </div>
           <div>
             <span>Valor a ser depositado (valor do acordo)</span>
-
             <div>{{VALUE_TO_DEPOSIT}}</div>
           </div>
           <div>
             <span>Número do processo</span>
-
             <div>{{DISPUTE_CODE}}</div>
           </div>
           <div>
             <span>Comarca</span>
-
             <div>{{DISPUTE_ORG}}</div>
           </div>
           <div>
             <span>Nome do advogado do réu</span>
-
             <div>{{RESPONDENT_LAWYER_NAME}}</div>
           </div>
           <div>
             <span>OAB do advogado do réu</span>
-
             <div>{{RESPONDENT_LAWYER_OABS}}</div>
           </div>
           <div>
             <span>Nome do advogado da parte</span>
-
             <div>{{CLAIMANT_LAWYER_NAME}}</div>
           </div>
           <div>
             <span>OAB do advogado da parte</span>
-
             <div>{{CLAIMANT_LAWYER_OABS}}</div>
           </div>
           <div>
             <span>Nome do assinador eletrônico do documento (ex: jurista, clicksign)</span>
-
             <div>{{ACTIVE_SIGNER}}</div>
           </div>
         </span>
       </el-card>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -151,7 +131,7 @@ export default {
     }
   },
   mounted () {
-    // this.fetchMinutes()
+    this.fetchMinutes()
   },
   methods: {
     fetchMinutes () {
