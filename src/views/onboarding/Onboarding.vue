@@ -42,11 +42,6 @@
               <invite-step v-if="currentVisible === 'invite'" @onboarding:step:next="nextStep"/>
             </transition>
           </swiper-slide>
-          <swiper-slide v-if="showWhatsapp">
-            <transition name="el-fade-in-linear">
-              <whatsapp-step v-if="currentVisible === 'whatsapp'" @onboarding:step:next="nextStep"/>
-            </transition>
-          </swiper-slide>
           <swiper-slide>
             <transition name="el-fade-in-linear">
               <final-step v-if="currentVisible === 'final'" :is-guest="isGuest"/>
@@ -79,7 +74,6 @@ export default {
     JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
     WelcomeStep: () => import('./steps/WelcomeStep'),
     OabStep: () => import('./steps/OabStep'),
-    WhatsappStep: () => import('./steps/WhatsappStep'),
     TeamNameStep: () => import('./steps/TeamNameStep'),
     LogoStep: () => import('./steps/LogoStep'),
     InviteStep: () => import('./steps/InviteStep'),
@@ -105,16 +99,13 @@ export default {
     isGuest () {
       return !!this.$route.query.invitedBy
     },
-    showWhatsapp () {
-      return false
-    },
     currentVisible () {
       if (this.isGuest) {
         switch (this.currentStep) {
           case 0:
             return 'welcome'
           case 1:
-            return this.showWhatsapp ? 'whatsapp' : 'final'
+            return 'final'
           case 2:
             return 'final'
         }
@@ -127,7 +118,7 @@ export default {
           case 2:
             return 'invite'
           case 3:
-            return this.showWhatsapp ? 'whatsapp' : 'final'
+            return 'final'
           case 4:
             return 'final'
         }

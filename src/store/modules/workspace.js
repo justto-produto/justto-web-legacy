@@ -114,7 +114,7 @@ const workspaceModule = {
           })
       })
     },
-    inviteTeammates ({ commit, state }, teammates) {
+    inviteTeammates ({ state }, teammates) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('api/accounts/workspaces/invite-teammates/' + state.subdomain, teammates)

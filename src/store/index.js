@@ -9,7 +9,6 @@ import personModule from './modules/person/index'
 import disputeModule from './modules/dispute/index'
 import messageModule from './modules/message'
 import socketModule from './modules/socket/index'
-import whatsappModule from './modules/whatsapp'
 import documentModule from './modules/document'
 import banksList from '@/utils/banksList'
 
@@ -23,7 +22,6 @@ if (ghostMode) {
 export default new Vuex.Store({
   state: {
     loading: false,
-    whatsapDialog: false,
     banksList: banksList,
     ghostMode: ghostMode,
     statesList: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
@@ -38,9 +36,6 @@ export default new Vuex.Store({
     },
     hideLoading (state) {
       state.loading = false
-    },
-    toggleWhatsapDialog (state) {
-      state.whatsapDialog = !state.whatsapDialog
     },
     setGhostMode (state, value) {
       state.ghostMode = value
@@ -65,7 +60,6 @@ export default new Vuex.Store({
     disputeModule,
     messageModule,
     socketModule,
-    whatsappModule,
     documentModule
   }
 })
