@@ -5,7 +5,19 @@
   "dispute": {
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
-    "description": "descrição"
+    "description": "descrição",
+    "status": {
+      "ACCEPTED": "aceita",
+      "CHECKOUT": "sem dados bancarios",
+      "ENGAGEMENT": "sem resposta da parte",
+      "ENRICHED": "enriquecida",
+      "EXPIRED": "expirada",
+      "IMPORTED": "importada",
+      "PENDING": "pendente",
+      "REFUSED": "com proposta recusada",
+      "RUNNING": "em negociação",
+      "SETTLED": "ganha"
+    }
   },
   "expirationDate": {
     "dateTime": "fim da negociação"
@@ -55,7 +67,7 @@
       "COMMUNICATION": "comunicação",
       "LOG": "registro",
       "INTERACTION": "interação",
-      "ENGAGEMENT": "engajamento",
+      "ENGAGEMENT": "sem resposta",
       "INTERACTIONS": "interações",
       "PENDING": "pendente",
       "IMPORTED": "importada",
@@ -64,7 +76,6 @@
       "ENRICHED": "enriquecida",
       "CHECKOUT": "acordo",
       "REFUSED": "recusada",
-      "ARCHIVED": "arquivado",
       "SETTLED": "ganho",
       "UNSETTLED": "perdido",
       "RUNNING": "em negociação",
@@ -90,9 +101,10 @@
     "ENRICH": "enriquecer",
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha",
-    "CANCEL-MESSAGES": "cancelar mensagens agendadas",
+    "CANCEL_MESSAGES": "cancelar mensagens agendadas",
     "CHANGE_STRATEGY": "alterar estratégia",
-    "CHANGE_EXPIRATION_DATE": "alterar data limite"
+    "CHANGE_EXPIRATION_DATE": "alterar data limite",
+    "RENEGOTIATE": "retornar para negociação"
   },
   "fields": {
     "claimantParty": "Parte contrária",
@@ -133,6 +145,14 @@
     "2": "proposta aceita",
     "3": "todos"
   },
+  "panel": {
+    "0": "Painel administrativo",
+    "1": "Equipes",
+    "2": "Usuários",
+    "3": "Estratégias",
+    "4": "Minutas",
+    "5": "Cobrança"
+  },
   "DISPUTE_CODE": "Nº Processo",
   "CAMPAIGN": "Campanha",
   "STRATEGY": "Estratégia",
@@ -155,15 +175,25 @@
   "OWNER_COUNTER_PROPOSAL": "Contraproposta por",
   "HAS_DOCUMENT": "Possui minuta",
   "SIGNED_DOCUMENT_STATUS": "Status de assinatura",
-  "LAST_NEGOTIATOR_ACCESS_DATE": "Data último acesso negociador",
+  "LAST_NEGOTIATOR_ACCESS_DATE": "Último acesso do autor na plataforma JUSTTO",
+  "LAST_VISUALIZATION_BY_NEGOTIATOR" :"Último acesso do negociador na disputa",
   "IMPORT_DATE": "Data de importação",
   "CONCLUSION_DESCRIPTION": "Descrição da conclusão",
-  "CONCLUSION_REASONS": "Motivo da conclusão",
-  "LAST_OFFER_VALUE": "Última oferta",
+  "CONCLUSION_REASONS": "Motivo da perda",
+  "LAST_OFFER_VALUE": "Valor do acordo",
   "PARTY_NAMES": "Nome das partes",
   "PARTY_DOCUMENTS": "Documento das partes",
   "LAWYER_PARTY_NAMES": "Nome dos advogados da parte",
   "LAWYER_PARTY_DOCUMENTS": "Documento dos advogados da parte",
   "RESPONDENT_NAMES": "Réu",
-  "NEGOTIATOR_NAMES": "Negociador"
+  "NEGOTIATOR_NAMES": "Negociador",
+  "LAST_SENT_MESSAGE": "Última mensagem enviada",
+  "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
+  "LAST_NOTE": "Última nota",
+  "CONCLUSION_DATE": "Data de conclusão",
+  "workspace":{
+    "READY": "ativo",
+    "CREATING": "em criação",
+    "DISABLED": "inativo"
+  }
 }

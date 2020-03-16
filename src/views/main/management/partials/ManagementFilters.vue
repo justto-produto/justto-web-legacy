@@ -4,7 +4,7 @@
       <h2>Filtrar {{ activeTabLabel }}</h2>
     </template>
     <div class="management-filters">
-      <el-form v-loading="loading" :model="filters" label-position="top">
+      <el-form v-loading="loading" :model="filters" label-position="top" style="margin-bottom: -22px;">
         <el-row :gutter="20">
           <!--  CAMPANHA -->
           <el-col v-if="!loading" :span="12">
@@ -44,7 +44,7 @@
           </el-col>
           <!-- DATA DO ACORDO -->
           <el-col v-if="isNewAgreements" :span="12">
-            <el-form-item label="Data do acordo">
+            <el-form-item :label="isNewAgreementsLabel">
               <el-date-picker
                 v-model="filters.dealDate"
                 data-testid="filters-disputeexpirationdate"
@@ -89,7 +89,7 @@
           </el-col> -->
           <!-- FIM DA NEGOCIAÇÃO -->
           <el-col :span="12">
-            <el-form-item label="Fim da negociação">
+            <el-form-item label="Data limite para negociar">
               <el-date-picker
                 v-model="filters.expirationDate"
                 data-testid="filters-disputeexpirationdate"
@@ -310,7 +310,15 @@ export default {
       return this.tabIndex === '1'
     },
     isNewAgreements () {
-      return this.tabIndex === '2'
+      return this.tabIndex === '2' || this.tabIndex === '3'
+    },
+    isNewAgreementsLabel () {
+      switch (this.tabIndex) {
+        case '2':
+          return 'Data do acordo'
+        case '3':
+          return 'Data de Finalização (ganho/perdido)'
+      }
     },
     isAll () {
       return this.tabIndex === '3'
@@ -363,8 +371,7 @@ export default {
         'EXPIRED',
         'SETTLED',
         'UNSETTLED',
-        'REFUSED',
-        'ARCHIVED'
+        'REFUSED'
       ]
     }
   },
@@ -488,6 +495,9 @@ export default {
 .management-filters {
   .el-select, .el-date-editor, .el-radio-group {
     width: 100%;
+  }
+  .el-form-item__content {
+    line-height: 36px;
   }
   &__switch {
     margin-bottom: 18px;

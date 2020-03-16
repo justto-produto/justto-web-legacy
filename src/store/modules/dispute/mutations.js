@@ -30,7 +30,7 @@ const disputeMutations = {
     state.hasNew = false
   },
   incrementOccurrencesSize (state) {
-    state.occurrencesSize = state.occurrencesSize + state.occurrencesInitialSize
+    state.occurrencesSize = state.occurrencesSize + 10
   },
   clearOccurrencesSize (state) {
     state.occurrencesSize = state.occurrencesInitialSize
@@ -43,8 +43,17 @@ const disputeMutations = {
     state.query[params.key] = params.value
     state.query.page = 1
   },
+  resetDisputeQueryPage (state) {
+    state.query.page = 1
+    state.query.size = 20
+  },
   addDisputeQueryPage (state) {
-    state.query.page += 1
+    if (state.query.page === 1) {
+      state.query.size = 5
+      state.query.page = 5
+    } else {
+      state.query.page += 1
+    }
   },
   setSummaryNearExpirations (state, summarys) {
     state.summaryNearExpirations = summarys

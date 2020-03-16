@@ -439,14 +439,8 @@ export default {
       return this.activeTab === '3'
     }
   },
-  watch: {
-    disputes: {
-      handler () {
-        this.doLayout()
-        this.disputeKey += 1
-      },
-      deep: true
-    }
+  beforeCreate () {
+    this.$store.commit('resetDisputeQueryPage')
   },
   methods: {
     cellMouseEnter (row, column, cell, event) {
@@ -517,9 +511,6 @@ export default {
     clearSelection () {
       this.$refs.disputeTable.clearSelection()
     },
-    doLayout () {
-      this.$refs.disputeTable.doLayout()
-    },
     handleSelectionChange (selected) {
       let ids = []
       for (let dispute of selected) {
@@ -533,13 +524,9 @@ export default {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
     },
     showProtocolModal (dispute) {
-      if (this.getDocumentStep(dispute.hasDocument, dispute.signStatus) === 0) {
-        this.$alert('Este serviço está temporariamente indisponível', 'Ops!', { confirmButtonText: 'OK' })
-      } else {
-        this.selectedDisputeId = dispute.id
-        this.selectedDisputeRoles = dispute.disputeRoles
-        this.protocolDialogVisible = true
-      }
+      this.selectedDisputeId = dispute.id
+      this.selectedDisputeRoles = dispute.disputeRoles
+      this.protocolDialogVisible = true
     },
     getMessageSummary (lastOutboundInteraction, disputeId) {
       if (lastOutboundInteraction.message && lastOutboundInteraction.message.parameters.READ_DATE) {
@@ -559,10 +546,6 @@ export default {
       this.$store.dispatch('getDisputes', true).then(response => {
         if (response.numberOfElements) {
           $state.loaded()
-          this.$nextTick(() => {
-            let main = this.$el.querySelector('.el-table__body-wrapper')
-            if (main) main.scrollTop = main.scrollHeight - (main.clientHeight * 3)
-          })
         } else {
           $state.complete()
         }

@@ -283,7 +283,7 @@ const disputeActions = {
   sendDisputeAction ({ commit }, params) {
     return new Promise((resolve, reject) => {
       let request
-      if (params.action === 'restart-engagement') {
+      if (params.action === 'restart-engagement' || params.action === 'renegotiate') {
         // eslint-disable-next-line
         request = axios.patch('api/disputes/' + params.disputeId + '/' + params.action)
       } else if (params.action === 'settled' && params.value) {
@@ -486,7 +486,8 @@ const disputeActions = {
       axios.post('api/disputes/' + params.disputeId + '/counterproposal', {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
-        value: params.value
+        value: params.value,
+        note: params.note
       }).then(response => {
         resolve(response.data)
       }).catch(error => {

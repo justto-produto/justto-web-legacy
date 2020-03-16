@@ -82,7 +82,7 @@
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
       <div style="min-height: 44px;position: relative;">
-        <management-prescriptions v-show="activeTab === '1' || activeTab === '3'" :active-tab="activeTab" @management:getDisputes="getDisputes" />
+        <management-prescriptions v-show="activeTab !== '2'" :active-tab="activeTab" @management:getDisputes="getDisputes" />
         <div v-show="disputesTotalLength" style="right: 0px;position: absolute;top: 13px;">
           Exibindo {{ disputes.length }} de {{ disputesTotalLength }} disputa<span v-show="disputesTotalLength > 1">s</span>
         </div>
@@ -96,10 +96,11 @@
       <div v-show="hasNew" class="el-notification info right" style="bottom: 100px;z-index: 1980;">
         <i class="el-notification__icon el-icon-info" />
         <div class="el-notification__group is-with-icon">
-          <h2 class="el-notification__title">Há atualizações nas disputas</h2>
+          <h2 class="el-notification__title" >Há atualizações nas<br>disputas</h2>
           <div class="el-notification__content">
             <a href="#" @click.prevent="getDisputes">Clique aqui para recarregar</a>
           </div>
+          <div class="el-notification__closeBtn el-icon-close" @click="$store.commit('disputeSetHasNew', false)" />
         </div>
       </div>
       <el-dialog
@@ -111,21 +112,24 @@
         width="50%">
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
-          <el-input v-model="columnsFilter" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
-          <!-- <el-button size="small" @click="invertSelectionColumns">{{ selectedColumnsLenght < filteredColumns.length ? 'Selecionar tudo' : 'Deselecionar tudo' }}</el-button>
-          <span>{{ selectedColumnsLenght }} Colunas selecionadas</span> -->
+          <el-checkbox :indeterminate="isIndeterminate" v-model="isSelectedAllColumns" @change="invertSelectionColumns">Nome do campo ({{ checkedNodes }} de {{ columns.length }})</el-checkbox>
+          <el-input v-model="filterQuery" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
         </div>
+        <!-- <el-divider/> -->
         <el-tree
           ref="tree"
-          :data="filteredColumns"
+          :data="columns"
           :allow-drop="allowDrop"
+          :filter-node-method="filterColumns"
           node-key="label"
           draggable
           show-checkbox
+          @check="handlerChangeTree"
           @node-drag-end="nodeDragEnd">
           <span slot-scope="{ node, data }" class="custom-tree-node">
             <span>{{ $t(node.label) | capitalize }}</span>
-            <i class="el-icon-rank" />
+            <jus-icon class="drag-icon" icon="menu-hamburger"/>
+            <!-- <i class="el-icon-rank" /> -->
           </span>
         </el-tree>
         <span slot="footer">
@@ -155,12 +159,16 @@ export default {
       loadingExport: false,
       filtersVisible: false,
       term: '',
-      columnsFilter: '',
       termDebounce: '',
       disputeDebounce: '',
       selectedIds: [],
       importDialogVisible: false,
       exportDisputesDialog: false,
+      isSelectedAllColumns: true,
+      isIndeterminate: false,
+      checkedNodes: 0,
+      filterQuery: '',
+      filteredNodes: {},
       columns: [
         { label: 'DISPUTE_CODE' },
         { label: 'CAMPAIGN' },
@@ -176,6 +184,9 @@ export default {
         { label: 'STATUS' },
         { label: 'FIRST_INTERACTION_DATE' },
         { label: 'LAST_INTERACTION_DATE' },
+        { label: 'LAST_SENT_MESSAGE' },
+        { label: 'LAST_RECEIVED_MESSAGE' },
+        { label: 'LAST_NOTE' },
         { label: 'UPPER_RANGE' },
         { label: 'REQUESTED_VALUE' },
         { label: 'PROPOSAL_VALUE' },
@@ -187,6 +198,7 @@ export default {
         { label: 'LAST_NEGOTIATOR_ACCESS_DATE' },
         { label: 'IMPORT_DATE' },
         { label: 'CONCLUSION_DESCRIPTION' },
+        { label: 'CONCLUSION_DATE' },
         { label: 'CONCLUSION_REASONS' },
         { label: 'LAST_OFFER_VALUE' },
         { label: 'PARTY_NAMES' },
@@ -199,15 +211,6 @@ export default {
     }
   },
   computed: {
-    // selectedColumnsLenght () {
-    //   let selectedCols = this.$refs.tree.getCheckedKeys()
-    //   return selectedCols.length
-    // },
-    filteredColumns () {
-      return this.columns.filter(c => {
-        return this.$t(c.label).toLowerCase().includes(this.columnsFilter.toLowerCase())
-      })
-    },
     hasFilters () {
       return this.$store.getters.disputeHasFilters
     },
@@ -228,9 +231,7 @@ export default {
     },
     activeTab: {
       get () { return this.$store.getters.disputeTab },
-      set (tab) {
-        this.$store.commit('setDisputesTab', tab)
-      }
+      set (tab) { this.$store.commit('setDisputesTab', tab) }
     },
     multiActive () {
       return this.selectedIds.length >= 1
@@ -253,6 +254,9 @@ export default {
     },
     persons () {
       this.getDisputes()
+    },
+    filterQuery (val) {
+      this.$refs.tree.filter(val)
     }
   },
   beforeCreate () {
@@ -261,15 +265,38 @@ export default {
   },
   created () {
     this.getDisputes()
+    this.filteredNodes = this.columns
+    this.checkedNodes = this.columns.length
   },
   methods: {
-    // invertSelectionColumns () {
-    //   if (this.selectedColumnsLenght < this.filteredColumns.length) {
-    //     this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
-    //   } else {
-    //     this.$refs.tree.setCheckedKeys([])
-    //   }
-    // },
+    filterColumns (value, data) {
+      this.filteredNodes = this.columns.filter(c => {
+        return this.$t(c.label).toLowerCase().includes(value.toLowerCase())
+      })
+      this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
+      if (!value) return true
+      return this.$t(data.label).toLowerCase().indexOf(value.toLowerCase()) !== -1
+    },
+    handlerChangeTree (value, obj) {
+      setTimeout(function () {
+        let checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.label)).length
+        let nodesLength = this.filteredNodes.length
+        this.isSelectedAllColumns = checkedNodes === nodesLength
+        this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
+        this.checkedNodes = obj.checkedKeys.length
+      }.bind(this), 200)
+    },
+    invertSelectionColumns (value) {
+      if (value) {
+        let allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.label)]
+        this.$refs.tree.setCheckedKeys(allNodesSelected)
+      } else {
+        let filteredKeys = this.columns.filter(c => !this.filteredNodes.includes(c))
+        this.$refs.tree.setCheckedKeys(filteredKeys.map(c => c.label))
+      }
+      this.isIndeterminate = false
+      this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
+    },
     nodeDragEnd (draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
         this.$refs.tree.setChecked(draggingNode.data.label, draggingNode.checked)
@@ -284,6 +311,7 @@ export default {
     getDisputes () {
       this.loadingDisputes = true
       clearTimeout(this.disputeDebounce)
+      this.$store.commit('resetDisputeQueryPage')
       this.disputeDebounce = setTimeout(() => {
         return this.$store.dispatch('getDisputes').catch(error => {
           console.error(error)
@@ -297,7 +325,6 @@ export default {
             if (main) {
               main.scrollTop = 0
             }
-            if (this.$refs.managementTable) this.$refs.managementTable.doLayout()
           })
         })
       }, 300)
@@ -328,6 +355,7 @@ export default {
           this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc', 'favorite,desc'] })
       }
+      this.$refs.managementTable.disputeKey += 1
       this.getDisputes()
     },
     showExportDisputesDialog () {
@@ -339,6 +367,7 @@ export default {
         } else {
           this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
         }
+        this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       }, 200)
     },
     exportDisputes () {
@@ -408,22 +437,28 @@ export default {
   &__export-dialog {
     .custom-tree-node {
       width: 100%;
-      i {
+      .drag-icon {
+        z-index: -99;
+        width: 18px;
         float: right;
-        margin-top: 2px;
         margin-right: 20px;
       }
     }
     &-options {
-      margin-bottom: 10px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       .el-input {
-        width: 220px;
+        width: 200px;
         margin-right: 10px;
       }
-      > span {
-        margin-top: 8px;
-        float: right;
-
+      .el-checkbox {
+        margin-left: 24px;
+        font-weight: 500;
+        &__label {
+          color: #343c4b !important;
+        }
       }
     }
   }

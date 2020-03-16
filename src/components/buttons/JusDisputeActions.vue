@@ -75,12 +75,20 @@
         <jus-icon icon="enrich"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip content="Contraproposta manual">
+    <el-tooltip v-if="canSendCounterproposal" content="Contraproposta manual">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         @click="counterproposalDialogOpen()">
         <jus-icon icon="proposal2" />
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="!canSendCounterproposal" content="Retornar para negociação">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="renegotiateDialogOpen()">
+        <jus-icon icon="move-to-running" />
       </el-button>
     </el-tooltip>
     <el-tooltip v-if="canMarkAsNotRead" content="Marcar como não lida">
@@ -199,7 +207,11 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
-              <money v-model="counterOfferForm.lastCounterOfferValue" class="el-input__inner" data-testid="counterproposal-value-input" />
+              <money
+                v-model="counterOfferForm.lastCounterOfferValue"
+                class="el-input__inner"
+                data-testid="counterproposal-value-input"
+                maxlength="16" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -218,10 +230,17 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="Nota" prop="note">
+              <el-input v-model="counterOfferForm.note" type="textarea" rows="4" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Enviar Contraproposta</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Atualizar contraproposta</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -297,7 +316,8 @@ export default {
       modalLoading: false,
       counterOfferForm: {
         lastCounterOfferValue: '',
-        selectedRoleId: ''
+        selectedRoleId: '',
+        note: ''
       },
       counterOfferFormRules: {
         lastCounterOfferValue: [
@@ -325,6 +345,9 @@ export default {
     },
     canMarkAsNotRead () {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
+    },
+    canSendCounterproposal () {
+      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)
     },
     workspaceNegotiators () {
       return this.$store.getters.workspaceMembers.map(member => {
@@ -405,62 +428,66 @@ export default {
       }
     },
     doAction (action) {
-      this.modalLoading = true
-      let translatedAction = this.$t('action.' + action.toUpperCase())
-      let params = {
-        action: action,
-        disputeId: this.dispute.id
-      }
-      if (this.unsettledType) {
-        params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
-      }
-      if (action === 'settled' && this.settledValue) {
-        params.value = this.settledValue
-      }
-      if (this.tableActions && action !== 'unsettled') {
-        this.$jusNotification({
-          title: 'Yay!',
-          dangerouslyUseHTMLString: true,
-          message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
-          type: 'success'
-        })
-      }
-      this.$store.dispatch('sendDisputeAction', params).then(() => {
-        // SEGMENT TRACK
-        this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
-        if (!this.tableActions || action === 'unsettled') {
+      return new Promise((resolve, reject) => {
+        this.modalLoading = true
+        let translatedAction = this.$t('action.' + action.toUpperCase())
+        let params = {
+          action: action,
+          disputeId: this.dispute.id
+        }
+        if (this.unsettledType) {
+          params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
+        }
+        if (action === 'settled' && this.settledValue) {
+          params.value = this.settledValue
+        }
+        if (this.tableActions && action !== 'unsettled') {
           this.$jusNotification({
             title: 'Yay!',
             dangerouslyUseHTMLString: true,
-            message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
+            message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
             type: 'success'
           })
         }
-        if (action === 'unsettled' && !this.tableActions) {
-          setTimeout(() => {
+        this.$store.dispatch('sendDisputeAction', params).then(() => {
+          // SEGMENT TRACK
+          resolve()
+          this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
+          if (!this.tableActions || action === 'unsettled') {
             this.$jusNotification({
-              title: 'Atenção!',
-              message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
-              type: 'info',
-              duration: 0
+              title: 'Yay!',
+              dangerouslyUseHTMLString: true,
+              message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
+              type: 'success'
             })
-          }, 2000)
-        }
-        if (!this.tableActions) this.$emit('fetch-data')
-      }).catch(e => {
-        console.error(e)
-        if (e.response && e.response.data.reason.length) {
-          this.$jusNotification({
-            type: 'error',
-            message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
-          })
-        } else {
-          this.$jusNotification({ type: 'error' })
-        }
-      }).finally(() => {
-        this.chooseUnsettledDialogVisible = false
-        this.insertSettledValueDialogVisible = false
-        this.modalLoading = false
+          }
+          if (action === 'unsettled' && !this.tableActions) {
+            setTimeout(() => {
+              this.$jusNotification({
+                title: 'Atenção!',
+                message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
+                type: 'info',
+                duration: 0
+              })
+            }, 2000)
+          }
+          if (!this.tableActions) this.$emit('fetch-data')
+        }).catch(e => {
+          reject(e)
+          console.error(e)
+          if (e.response && e.response.data.reason.length) {
+            this.$jusNotification({
+              type: 'error',
+              message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
+            })
+          } else {
+            this.$jusNotification({ type: 'error' })
+          }
+        }).finally(() => {
+          this.chooseUnsettledDialogVisible = false
+          this.insertSettledValueDialogVisible = false
+          this.modalLoading = false
+        })
       })
     },
     editNegotiators () {
@@ -491,6 +518,48 @@ export default {
       this.editNegotiatorDialogVisible = true
     },
     counterproposalDialogOpen () {
+      if (this.dispute.paused) {
+        this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
+          confirmButtonText: 'Retomar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true
+              this.doAction('resume').then(() => {
+                this.openCounterproposalDialog()
+              }).finally(() => {
+                done()
+                instance.confirmButtonLoading = false
+              })
+            } else {
+              done()
+            }
+          }
+        })
+      } else {
+        this.openCounterproposalDialog()
+      }
+    },
+    renegotiateDialogOpen () {
+      this.$confirm('Esta disputa não está em negociação, deseja voltar para negociação?', 'Ops!', {
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            this.doAction('renegotiate').finally(() => {
+              done()
+              instance.confirmButtonLoading = false
+            })
+          } else {
+            done()
+          }
+        }
+      })
+    },
+    openCounterproposalDialog () {
       this.counterOfferForm.lastCounterOfferValue = ''
       this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
       this.counterproposalDialogVisible = true
@@ -506,7 +575,7 @@ export default {
         if (valid) {
           if (this.checkUpperRangeCounterOffer()) {
             this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
-              confirmButtonText: 'Enviar contraproposta',
+              confirmButtonText: 'Continuar',
               cancelButtonText: 'Cancelar',
               type: 'info',
               cancelButtonClass: 'is-plain'
@@ -528,8 +597,17 @@ export default {
           disputeId: this.dispute.id,
           objectId: disputeToEdit.objects[0].id,
           value: this.counterOfferForm.lastCounterOfferValue.toString(),
-          roleId: this.counterOfferForm.selectedRoleId
+          roleId: this.counterOfferForm.selectedRoleId,
+          note: this.counterOfferForm.note
         }).then(() => {
+          if (this.counterOfferForm.note) {
+            let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
+            let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
+            this.$store.dispatch('sendDisputeNote', {
+              note,
+              disputeId: this.dispute.id
+            })
+          }
           this.$jusNotification({
             title: 'Yay!',
             message: 'Contraproposta enviada com sucesso.',

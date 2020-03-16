@@ -59,7 +59,7 @@
         </div>
       </el-col>
     </transition>
-    <el-tooltip :open-delay="800" placement="left" content="Voltar">
+    <el-tooltip :open-delay="800" content="Voltar">
       <el-button
         :disabled="currentStep === 0"
         class="el-button--previous-step"

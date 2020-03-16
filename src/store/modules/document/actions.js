@@ -42,7 +42,7 @@ const actions = {
   setDocumentSigners ({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.post('api/documents/signer/' + params.disputeId, params.recipients).then(response => {
+      axios.post('api/documents/signer/' + params.disputeId, params.emails).then(response => {
         resolve(response.data)
       }).catch(error => {
         reject(error)
@@ -53,6 +53,26 @@ const actions = {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.delete('api/documents/' + disputeId).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  addModel ({ commit }, url) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.post(`api/documents/model?url=${url}`,  {}).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  deleteModel ({ commit }, modelId) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.delete('api/documents/model/' + modelId).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

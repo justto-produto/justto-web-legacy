@@ -1,7 +1,5 @@
 <template>
-  <div class="dispute-view-messages">
-
-  </div>
+  <div class="dispute-view-messages"/>
 </template>
 
 <script>
@@ -12,6 +10,6 @@ export default {
 
 <style lang="scss">
 .dispute-view-messages {
-  
+
 }
 </style>

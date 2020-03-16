@@ -1,6 +1,6 @@
 .el-message-box {
   &:not(.el-message-box--center) {
-    padding: 20px 0px 30px !important;
+    padding: 10px 0px 20px !important;
   }
   .el-button {
     padding: 10px 20px;
@@ -9,7 +9,6 @@
   }
   &__title {
     font-weight: bold;
-    text-transform: capitalize;
   }
   &__main {
     padding: 10px 20px 30px !important;

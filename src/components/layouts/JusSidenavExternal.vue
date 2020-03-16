@@ -12,25 +12,13 @@
         Máximo de <br>100 disputas
       </div>
     </div>
-    <!-- <div v-if="showPlans" class="jus-sidenav-external__divider">
-      Após período de teste
-      <div />
+    <div class="jus-sidenav-external__content">
+      <slot />
     </div>
-    <div v-if="showPlans" class="jus-sidenav-external__price">
-      <span>R$ 250</span>
-      <span>ao mês</span>
+    <div v-if="showExit" class="jus-sidenav-external__exit">
+      <a href="#" @click="$router.push('login')">Sair</a>
     </div>
-    <div v-if="showPlans" class="jus-sidenav-external__plans">
-      <el-button plain @click="showModal(1)">
-        <div>+ R$ 18</div>
-        Por disputa com interação<br>(carteira indenizatória)
-      </el-button>
-      <el-button plain @click="showModal(0)">
-        <div>+ R$ 35</div>
-        Por disputa com interação<br>(carteira de cobrança)
-      </el-button>
-    </div> -->
-    <el-dialog
+    <!-- <el-dialog
       v-if="showPlans"
       :close-on-click-modal="false"
       :title="modalType ? 'Indenizatório' : 'Cobrança'"
@@ -64,7 +52,7 @@
       <span slot="footer">
         <el-button type="primary" @click="modal = false">OK</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -74,6 +62,10 @@ export default {
   name: 'JusSidenavexternal',
   props: {
     showPlans: {
+      type: Boolean,
+      default: false
+    },
+    showExit: {
       type: Boolean,
       default: false
     }
@@ -95,7 +87,6 @@ export default {
 
 <style lang="scss">
 .jus-sidenav-external {
-  padding: 0 40px;
   height: 100%;
   background-color: #f7f7f7;
   display: flex;
@@ -103,10 +94,15 @@ export default {
   justify-content: center;
   align-items: center;
   &__title {
+    padding: 0 40px;
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    div + div {
+      margin-left: 15%;
+      margin-right: 12px;
+    }
     div {
       font-size: 20px;
       &:first-child {
@@ -180,11 +176,27 @@ export default {
       }
     }
   }
-  &__logo{
+  slot {
+    margin: 40px;
+  }
+  &__content {
+    width: calc(100% - 28px);
+    align-self: flex-start;
+    margin-left: 14px;
+    margin-right: 14px;
+    margin-bottom: auto;
+    margin-top: 134px;
+  }
+  &__logo, &__exit{
     margin: 40px;
     position: absolute;
-    top: 0;
     left: 0;
+  }
+  &__logo{
+    top: 0;
+  }
+  &__exit {
+    bottom: 0;
   }
   .el-collapse {
     margin: 20px 0;

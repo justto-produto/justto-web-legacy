@@ -1,5 +1,11 @@
 <template>
   <div class="management-prescriptions">
+    <el-button v-show="tab0" :type="ONLY_SMS_ENGAGEMENT ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_SMS_ENGAGEMENT')">
+      Engajamento com SMS
+    </el-button>
+    <el-button v-show="tab0" :type="ONLY_EMAIL_ENGAGEMENT ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_EMAIL_ENGAGEMENT')">
+      Engajamento com Email
+    </el-button>
     <el-button v-show="tab1" :type="HAS_ANSWER ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('HAS_ANSWER')">
       Com resposta
     </el-button>
@@ -18,6 +24,9 @@
     <el-button v-show="tab3" :type="UNSETTLED_WITH_MESSAGES ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
       Perdidos com Mensagem
     </el-button>
+    <el-button v-show="tab0 || tab3" :type="NAMESAKE ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('NAMESAKE')">
+      Homônimos
+    </el-button>
   </div>
 </template>
 
@@ -31,6 +40,12 @@ export default {
     }
   },
   computed: {
+    ONLY_SMS_ENGAGEMENT () {
+      return this.$store.getters.hasPrescription('ONLY_SMS_ENGAGEMENT')
+    },
+    ONLY_EMAIL_ENGAGEMENT () {
+      return this.$store.getters.hasPrescription('ONLY_EMAIL_ENGAGEMENT')
+    },
     HAS_ANSWER () {
       return this.$store.getters.hasPrescription('HAS_ANSWER')
     },
@@ -49,6 +64,9 @@ export default {
     UNSETTLED_WITH_MESSAGES () {
       return this.$store.getters.hasPrescription('UNSETTLED_WITH_MESSAGES')
     },
+    NAMESAKE () {
+      return this.$store.getters.hasPrescription('NAMESAKE')
+    },
     tab0 () {
       return this.activeTab === '0'
     },
@@ -64,12 +82,19 @@ export default {
   },
   methods: {
     handlePrescriptionClick (prescription) {
+      this.$store.commit('resetDisputeQueryPage')
       if (this[prescription]) {
         this.$store.commit('removePrescription', prescription)
       } else {
         this.$store.commit('addPrescription', prescription)
         // SEGMENT TRACK
         switch (prescription) {
+          case 'ONLY_SMS_ENGAGEMENT':
+            this.$jusSegment('Filtro botão ENGAJAMENTO COM SMS')
+            break
+          case 'ONLY_EMAIL_ENGAGEMENT':
+            this.$jusSegment('Filtro botão ENGAJAMENTO COM EMAIL')
+            break
           case 'HAS_ANSWER':
             this.$jusSegment('Filtro botão COM RESPOSTA')
             break
@@ -87,6 +112,9 @@ export default {
             break
           case 'UNSETTLED_WITH_MESSAGES':
             this.$jusSegment('filtro botão PERDIDOS COM MENSAGEM')
+            break
+          case 'NAMESAKE':
+            this.$jusSegment('filtro botão HOMÔNIMOS')
             break
         }
       }

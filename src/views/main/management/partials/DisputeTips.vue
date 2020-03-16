@@ -50,13 +50,9 @@ export default {
   },
   methods: {
     showProtocolDialog () {
-      if (this.documentStep === 0) {
-        this.$alert('Este serviço está temporariamente indisponível', 'Ops!', { confirmButtonText: 'OK' })
-      } else {
-        // SEGMENT TRACK
-        this.$jusSegment('Gerenciar minuta dentro do ticket view', { disputeId: this.dispute.id })
-        this.protocolDialogVisible = true
-      }
+      // SEGMENT TRACK
+      this.$jusSegment('Gerenciar minuta dentro do ticket view', { disputeId: this.dispute.id })
+      this.protocolDialogVisible = true
     }
   }
 }

@@ -1,5 +1,27 @@
 import Fuse from 'fuse.js'
 import moment from 'moment'
+import { MessageBox } from 'element-ui'
+
+const buildRoleTitle = function (party, title) {
+  if (party === 'RESPONDENT') {
+    switch (title) {
+      case 'NEGOTIATOR':
+        return 'Negociador'
+      case 'PARTY':
+        return 'Réu'
+      case 'LAWYER':
+        return 'Advogado do réu'
+    }
+  } else {
+    if (title === 'PARTY') {
+      return 'Parte contrária'
+    } else if (title === 'LAWYER') {
+      return 'Advogado da parte'
+    } else {
+      return ''
+    }
+  }
+}
 
 const getRoles = function (disputeRoles, party, role) {
   let roles
@@ -203,7 +225,31 @@ const getTracktitleByAction = function (action, batch) {
   return title
 }
 
+const helpBox = function (option) {
+  let message = ''
+  let title = ''
+  switch (option) {
+    case 'businessHoursEngagement':
+      title = 'Enviar mensagens somente em horário comercial'
+      message = 'As mensagens agendadas podem ser enviadas a qualquer momento do dia, durante os sete dias da semana. Com está opção, o envio será feito apenas dentro do horário comercial.'
+      break
+    case 'sendMessageToParty':
+      title = 'Enviar mensagens para o autor'
+      message = 'Por padrão o sistema não irá enviar mensagens para o autor se houver advogado, mas se o advogado não possuir contatos válidos para enviarmos mensagens, você pode utilizar esta opção para contactar o autor.'
+      break
+  }
+  MessageBox({
+    title: title,
+    message: message,
+    confirmButtonText: 'Entendi',
+    showClose: false,
+    dangerouslyUseHTMLString: true
+  })
+}
+
 export {
+  buildRoleTitle,
+  helpBox,
   getRoles,
   getFirstRole,
   fuseSearchDisputes,
