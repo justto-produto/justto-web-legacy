@@ -64,7 +64,7 @@ build:
               --header 'Authorization: Bearer a495c40616638e2bf882a68f3ee3db8a451f6604eeae242eb8039d4f8edd06bd' \
               --header 'Content-Type: application/json' \
               --header 'cache-control: no-cache' \
-              --data '{"pipelineId": "5dc18143b7da88a8009460a3","branch": "prod", "message": "Deploying latest version to microservice '$PROJECT_NAME':'$CURRENT_VERSION'","envVars": [ {"key":"service_name","value":"'$PROJECT_NAME'" }]}'
+              --data '{"pipelineId": "5dc18143b7da88a8009460a3","branch": "prod", "message": "Deploying latest version to microservice '$PROJECT_NAME':'$CURRENT_VERSION'","envVars": [ {"key":"service_name","value":"'$PROJECT_NAME'" }, {"key":"new_image","value":"'$CURRENT_VERSION'"}]}'
 test-e2e:
   # Read more about containers on our dev center
   # https://devcenter.wercker.com/overview-and-core-concepts/containers/

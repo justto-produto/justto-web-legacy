@@ -99,13 +99,7 @@
             </el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="blacklist" class="configuration-view__blacklist">
-          <span slot="label">
-            <el-tooltip content="Somentes administradores Justto">
-              <i class="el-icon-lock"/>
-            </el-tooltip>
-            Blacklist
-          </span>
+        <el-tab-pane label="Blacklist" name="blacklist" class="configuration-view__blacklist">
           <configuration-blacklist />
         </el-tab-pane>
         <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="minute" class="configuration-view__minute">
