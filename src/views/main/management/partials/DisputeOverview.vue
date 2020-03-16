@@ -888,6 +888,7 @@ export default {
     },
     openAddBankDialog () {
       this.addBankForm.name = this.roleForm.name
+      this.addBankForm.document = this.roleForm.documentNumber
       if (this.roleForm.emails.filter(f => f.isValid && !f.archived && f.isMain).length) {
         this.addBankForm.email = this.roleForm.emails.filter(f => !f.archived && f.isMain)[0].address
       } else if (this.roleForm.emails.filter(f => f.isValid && !f.archived).length) {
@@ -895,7 +896,6 @@ export default {
       } else {
         this.addBankForm.email = ''
       }
-      this.addBankForm.document = this.roleForm.document
       this.addBankDialogVisible = true
     },
     closeNamesakes () {
