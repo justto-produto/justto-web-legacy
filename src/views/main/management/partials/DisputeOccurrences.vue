@@ -47,7 +47,7 @@
           <span v-html="buildLogContent(occurrence)" />
           <span class="dispute-view-occurrences__log-hour" v-html="buildHour(occurrence)" />
         </el-card>
-        <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
+        <div v-else-if="occurrence.type !== 'NOTE'" :class="getDirection(occurrence.interaction)" class="dispute-view-occurrences__interaction">
           <div class="dispute-view-occurrences__avatar">
             <el-tooltip :disabled="!buildName(occurrence)" :content="buildName(occurrence)">
               <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
@@ -288,6 +288,13 @@ export default {
         if (occurrence.description.toLowerCase().includes('disputa expirada')) return 'calendar-clock'
       }
       return ''
+    },
+    getDirection (interaction) {
+      if (!interaction) return ''
+      if (interaction.type === 'NEGOTIATOR_PROPOSAL')
+        if (!interaction.properties.DEVICE) return 'OUTBOUND'
+        else return interaction.direction
+      else return interaction.direction
     },
     buildName (occurrence) {
       if (occurrence.interaction &&
