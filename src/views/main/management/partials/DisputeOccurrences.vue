@@ -214,15 +214,8 @@ export default {
       this.infiniteId += 1
     }
   },
-  created () {
-    this.clearOccurrences()
-  },
   mounted () {
-    setTimeout(() => {
-      if (!Object.keys(this.datedOccurrences).length) {
-        this.infiniteId += 1
-      }
-    }, 700)
+    this.clearOccurrences()
   },
   methods: {
     clearOccurrences () {
@@ -231,12 +224,12 @@ export default {
     },
     loadOccurrences ($state) {
       this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
-        if (response.numberOfElements >= response.totalElements) {
+        if (response.last) {
           $state.complete()
         } else {
           $state.loaded()
+          this.$store.commit('incrementOccurrencesSize')
         }
-        this.$store.commit('incrementOccurrencesSize')
       })
     },
     showFullMessage (occurrenceId) {

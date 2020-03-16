@@ -1,4 +1,5 @@
 import router from '@/router'
+import axiosDispatcher from '@/store/axiosDispatcher.js'
 
 const account = {
   state: {
@@ -24,17 +25,10 @@ const account = {
     }
   },
   actions: {
-    myAccount ({ commit }) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.get('api/accounts/my')
-          .then(response => {
-            commit('setUser', response.data)
-            resolve(response)
-          })
-          .catch(error => {
-            reject(error)
-          })
+    myAccount () {
+      return axiosDispatcher({
+        url: 'api/accounts/my',
+        mutation: 'setUser'
       })
     },
     register ({ commit }, loginForm) {

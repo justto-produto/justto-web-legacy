@@ -22,6 +22,7 @@
         <dispute-occurrences
           v-if="['1', '3'].includes(typingTab)"
           ref="disputeOccurrences"
+          :key="disputeOccurrencesKey"
           :dispute-id="id"
           :typing-tab.sync="typingTab"
           data-testid="dispute-messages"
@@ -215,6 +216,7 @@ export default {
   data () {
     return {
       id: 0,
+      disputeOccurrencesKey: (new Date()).getTime(),
       messageType: 'email',
       newChatMessage: '',
       componentKey: 0,
@@ -301,7 +303,7 @@ export default {
       })
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
-      this.$refs.disputeOccurrences.fetchData()
+      this.disputeOccurrencesKey += 1
     }
   },
   created () {
@@ -317,6 +319,11 @@ export default {
     if (!(this.$store.getters.isJusttoAdmin && this.$store.getters.ghostMode)) {
       this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
     }
+  },
+  mounted () {
+    setTimeout(() => {
+      this.disputeOccurrencesKey += 1
+    }, 800)
   },
   beforeDestroy () {
     this.unsubscribeOccurrences(this.id)
