@@ -291,10 +291,10 @@ export default {
     },
     getDirection (interaction) {
       if (!interaction) return ''
-      if (interaction.type === 'NEGOTIATOR_PROPOSAL')
+      if (interaction.type === 'NEGOTIATOR_PROPOSAL') {
         if (!interaction.properties.DEVICE) return 'OUTBOUND'
         else return interaction.direction
-      else return interaction.direction
+      } else return interaction.direction
     },
     buildName (occurrence) {
       if (occurrence.interaction &&
