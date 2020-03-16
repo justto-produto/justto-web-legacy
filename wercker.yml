@@ -6,6 +6,7 @@ build:
   box: node:latest
   # Steps make up the actions in your pipeline
   # Read more about steps on our dev center:
+  # Teste novo deploy
   # https://devcenter.wercker.com/development/steps/
   steps:
     - script:
