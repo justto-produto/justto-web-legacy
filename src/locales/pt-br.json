@@ -16,7 +16,8 @@
       "PENDING": "pendente",
       "REFUSED": "com proposta recusada",
       "RUNNING": "em negociação",
-      "SETTLED": "ganha"
+      "SETTLED": "ganha",
+      "UNSETTLED": "perdida"
     }
   },
   "expirationDate": {

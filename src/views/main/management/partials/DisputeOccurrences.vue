@@ -45,7 +45,16 @@
             </span>
           </el-tooltip>
           <span v-html="buildLogContent(occurrence)" />
-          <span class="dispute-view-occurrences__log-hour" v-html="buildHour(occurrence)" />
+          <span class="dispute-view-occurrences__log-info">
+
+            <span v-html="buildHour(occurrence)" />
+            <div>•</div>
+            <el-tooltip :content="buildStatusTooltip(occurrence)">
+              <jus-icon :icon="buildStatusIcon(occurrence)"/>
+            </el-tooltip>
+          </span>
+
+
         </el-card>
         <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
           <div class="dispute-view-occurrences__avatar">
@@ -579,12 +588,22 @@ export default {
       }
     }
   }
-  &__log-hour {
-    font-weight: 300;
+  &__log-info {
+    display: flex;
     float: right;
     font-size: 11px;
-    margin-top: 3px;
+    margin-top: 4px;
     margin-left: 10px;
+    div {
+      font-weight: 500;
+      margin: 0 4px;
+    }
+    img {
+      width: 16px;
+    }
+    span {
+      font-weight: 300;
+    }
   }
   &__note {
     border-radius: 8px;
