@@ -13,7 +13,7 @@
           <el-menu-item index="1">
             <i class="el-icon-s-cooperation" /> Equipes
           </el-menu-item>
-          <el-menu-item index="2">
+          <!-- <el-menu-item index="2">
             <i class="el-icon-user-solid" /> Usuários
           </el-menu-item>
           <el-menu-item index="3">
@@ -24,7 +24,7 @@
           </el-menu-item>
           <el-menu-item index="5">
             <i class="el-icon-s-finance" /> Cobrança
-          </el-menu-item>
+          </el-menu-item> -->
         </el-menu>
       </jus-sidenav-external>
     </el-col>
