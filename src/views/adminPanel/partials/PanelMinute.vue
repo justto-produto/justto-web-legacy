@@ -28,79 +28,79 @@
         <span v-pre class="list">
           <div>
             <span>Nome do autor</span>
-            <div>{{CLAIMANT}}</div>
+            <div>{{ CLAIMANT }}</div>
           </div>
           <div>
             <span>Nome do réu</span>
-            <div>{{RESPONDENT}}</div>
+            <div>{{ RESPONDENT }}</div>
           </div>
           <div>
             <span>Nome do negociador</span>
-            <div>{{NEGOTIATOR_NAME}}</div>
+            <div>{{ NEGOTIATOR_NAME }}</div>
           </div>
           <div>
             <span>Data na assinatura do contrato</span>
-            <div>{{SIGN_DATE}}</div>
+            <div>{{ SIGN_DATE }}</div>
           </div>
           <div>
             <span>Cidade na assinatura do contrato</span>
-            <div>{{SIGN_CITY}}</div>
+            <div>{{ SIGN_CITY }}</div>
           </div>
           <div>
             <span>Nome do banco para depósito</span>
-            <div>{{BANK_NAME}}</div>
+            <div>{{ BANK_NAME }}</div>
           </div>
           <div>
             <span>Agência do banco para depósito</span>
-            <div>{{BANK_AGENCY}}</div>
+            <div>{{ BANK_AGENCY }}</div>
           </div>
           <div>
             <span>Conta bancária para depósito</span>
-            <div>{{BANK_ACCOUNT}}</div>
+            <div>{{ BANK_ACCOUNT }}</div>
           </div>
           <div>
             <span>Nome do favorecido para depósito</span>
-            <div>{{BANK_DEPOSIT_NAME}}</div>
+            <div>{{ BANK_DEPOSIT_NAME }}</div>
           </div>
           <div>
             <span>Documento do favorecido para depósito</span>
-            <div>{{BANK_DEPOSIT_DOCUMENT}}</div>
+            <div>{{ BANK_DEPOSIT_DOCUMENT }}</div>
           </div>
           <div>
             <span>Dias para depósito</span>
-            <div>{{DAYS_TO_DEPOSIT}}</div>
+            <div>{{ DAYS_TO_DEPOSIT }}</div>
           </div>
           <div>
             <span>Valor a ser depositado (valor do acordo)</span>
-            <div>{{VALUE_TO_DEPOSIT}}</div>
+            <div>{{ VALUE_TO_DEPOSIT }}</div>
           </div>
           <div>
             <span>Número do processo</span>
-            <div>{{DISPUTE_CODE}}</div>
+            <div>{{ DISPUTE_CODE }}</div>
           </div>
           <div>
             <span>Comarca</span>
-            <div>{{DISPUTE_ORG}}</div>
+            <div>{{ DISPUTE_ORG }}</div>
           </div>
           <div>
             <span>Nome do advogado do réu</span>
-            <div>{{RESPONDENT_LAWYER_NAME}}</div>
+            <div>{{ RESPONDENT_LAWYER_NAME }}</div>
           </div>
           <div>
             <span>OAB do advogado do réu</span>
-            <div>{{RESPONDENT_LAWYER_OABS}}</div>
+            <div>{{ RESPONDENT_LAWYER_OABS }}</div>
           </div>
           <div>
             <span>Nome do advogado da parte</span>
-            <div>{{CLAIMANT_LAWYER_NAME}}</div>
+            <div>{{ CLAIMANT_LAWYER_NAME }}</div>
           </div>
           <div>
             <span>OAB do advogado da parte</span>
-            <div>{{CLAIMANT_LAWYER_OABS}}</div>
+            <div>{{ CLAIMANT_LAWYER_OABS }}</div>
           </div>
           <div>
             <span>Nome do assinador eletrônico do documento (ex: jurista, clicksign)</span>
-            <div>{{ACTIVE_SIGNER}}</div>
+            <div>{{ ACTIVE_SIGNER }}</div>
           </div>
         </span>
       </el-card>
