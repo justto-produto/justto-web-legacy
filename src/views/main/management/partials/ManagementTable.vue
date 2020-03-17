@@ -444,6 +444,12 @@ export default {
     }
   },
   watch: {
+    disputes: {
+      handler () {
+        this.$refs.disputeTable.doLayout()
+      },
+      deep: true
+    },
     loadingDisputes (value) {
       if (!value) {
         clearTimeout(this.showEmptyDebounce)
