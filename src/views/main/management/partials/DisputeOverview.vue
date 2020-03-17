@@ -146,15 +146,23 @@
               </div>
             </template>
             <p v-if="showNamesake(role)" style="margin-top: 0">
-              Esta parte não foi enriquecida corretamente devido à existência de homônimos.
+              <span v-if="namesakeProcessing">
+                <i class="el-icon-warning"/>
+                Documento correto enviado para tratamento no sistema. Isso pode levar algum tempo.
+              </span>
+              <span v-else>
+                Esta parte não foi enriquecida corretamente devido à existência de homônimos.
+              </span>
             </p>
             <el-button
               v-if="showNamesake(role)"
-              :loading="namesakeButtonLoading"
+              :loading="namesakeButtonLoading || namesakeProcessing"
               type="warning"
               style="width: 100%; margin-bottom: 14px;"
               @click="namesakeDialog(role.name, role.personId)">
-              Tratar homônimos
+              <span v-if="namesakeProcessing">Tratando</span>
+              <span v-else>Tratar</span>
+              homônimos
             </el-button>
             <div class="dispute-overview-view__info-line" style="margin: 0">
               <span class="title">Função:</span>
@@ -247,7 +255,7 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="namesakeDialogVisible"
-      title="Corrigir homônimo"
+      title="Tratar homônimo"
       width="70%">
       <p>Selecione um dos registros abaixo para correção de homônimo e enriquecimento da parte.</p>
       <div v-loading="namesakeDialogLoading">
@@ -257,7 +265,7 @@
           <div v-show="selectedNamesake.document">Documento: <b>{{ selectedNamesake.document | cpfCnpjMask }}</b></div>
           <div v-show="selectedNamesake.city">Cidade: <b>{{ selectedNamesake.city }}</b></div>
           <div v-show="selectedNamesake.uf">UF: <b>{{ selectedNamesake.uf }}</b></div>
-          <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth }}</b></div>
+          <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth | moment('DD/MM/YYYY') }}</b></div>
         </div>
         <div class="dispute-overview-view__namesake-filters">
           <div class="dispute-overview-view__namesake-filter">
@@ -298,7 +306,7 @@
       </div>
       <span slot="footer">
         <el-button :disabled="namesakeDialogLoading" plain @click="closeNamesakes">Cancelar</el-button>
-        <el-button :loading="namesakeDialogLoading" :disabled="!selectedNamesake" type="primary" @click="selectNamesake()">Corrigir</el-button>
+        <el-button :loading="namesakeDialogLoading" :disabled="!selectedNamesake" type="primary" @click="selectNamesake()">Tratar</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -667,6 +675,7 @@ export default {
       namesakeDialogVisible: false,
       namesakeDialogLoading: false,
       namesakeButtonLoading: false,
+      namesakeProcessing: false,
       selectedNamesake: '',
       selectedNamesakePersonId: '',
       selectedClaimantId: '',
@@ -913,9 +922,10 @@ export default {
           .then(() => {
             this.namesakeDialogVisible = false
             this.namesakeDialogLoading = false
+            this.namesakeProcessing = true
             this.$jusNotification({
               title: 'Yay!',
-              message: 'Homônimo tratado com sucesso.',
+              message: 'Homônimo enviado para tratamento com sucesso.',
               type: 'success'
             })
           })
@@ -1358,6 +1368,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .dispute-overview-view {
   margin-bottom: -20px;
   .jus-status-dot {
@@ -1587,6 +1599,9 @@ export default {
     &:last-child {
       border-right: 1px solid #9461f7
     }
+  }
+  .el-icon-warning {
+    color: $--color-warning
   }
 }
 </style>
