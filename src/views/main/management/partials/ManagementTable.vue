@@ -277,12 +277,14 @@
         </template>
       </el-table-column>
       <template slot="empty">
-        <span v-if="!loadingDisputes">
-          <jus-icon icon="empty-screen-filter" class="management-table__empty-table" data-testid="cases-empty-icon"/>
-          <h4 data-testid="cases-empty-text">
-            Não foram encontradas disputas para<br>os filtros selecionados.
-          </h4>
-        </span>
+        <transition name="el-fade-in-linear">
+          <span v-show="showEmpty">
+            <jus-icon icon="empty-screen-filter" class="management-table__empty-table" data-testid="cases-empty-icon"/>
+            <h4 data-testid="cases-empty-text">
+              Não foram encontradas disputas para<br>os filtros selecionados.
+            </h4>
+          </span>
+        </transition>
       </template>
       <infinite-loading
         v-if="disputes.length >= 20"
@@ -387,6 +389,8 @@ export default {
   },
   data () {
     return {
+      showEmpty: false,
+      showEmptyDebounce: '',
       disputeActionsRow: 0,
       protocolDialogVisible: false,
       selectedDisputeId: 0,
@@ -437,6 +441,16 @@ export default {
     },
     tab3 () {
       return this.activeTab === '3'
+    }
+  },
+  watch: {
+    loadingDisputes (value) {
+      if (!value) {
+        clearTimeout(this.showEmptyDebounce)
+        this.showEmptyDebounce = setTimeout(() => {
+          this.showEmpty = true
+        }, 2000)
+      }
     }
   },
   beforeCreate () {
