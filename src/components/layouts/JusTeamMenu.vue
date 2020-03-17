@@ -27,7 +27,7 @@ export default {
       return this.$store.state.workspaceModule.members
     },
     activePersonsIds () {
-      return this.$store.getters.disputeQuery.persons
+      return this.$store.getters.disputeQuery.persons || []
     }
   },
   methods: {
