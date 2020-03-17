@@ -27,7 +27,7 @@ const queryBuilder = q => {
 }
 
 const disputeActions = {
-  SOCKET_ADD_DISPUTE ({ commit, state, rootState }, disputeChanged) {
+  SOCKET_ADD_DISPUTE ({ commit, state }, disputeChanged) {
     if (state.dispute.id === disputeChanged.id) {
       state.dispute = disputeChanged
     } else {
@@ -37,11 +37,7 @@ const disputeActions = {
         if (dispute.status !== disputeChanged.status && state.tab !== '3') {
           commit('disputeSetHasNew', true)
         } else {
-          if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-            Vue.set(state.disputes, disputeIndex, disputeChanged)
-          } else {
-            Vue.set(state.disputes, disputeIndex, disputeChanged)
-          }
+          Vue.set(state.disputes, disputeIndex, disputeChanged)
         }
       } else {
         if (state.query.status.includes(disputeChanged.status)) {
@@ -51,8 +47,8 @@ const disputeActions = {
     }
     commit('deleteMessageResumeByDisputeId', disputeChanged.id)
   },
-  SOCKET_REMOVE_DISPUTE ({ commit }) {
-    commit('disputeSetHasNew', true)
+  SOCKET_REMOVE_DISPUTE ({ commit, dispatch }) {
+    dispatch('getDisputes')
   },
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
@@ -105,6 +101,7 @@ const disputeActions = {
     })
   },
   getDisputes ({ commit, state }, pageable) {
+    state.loading = true
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/disputes/filter' + queryBuilder(state.query)).then(response => {
@@ -118,6 +115,8 @@ const disputeActions = {
       }).catch(error => {
         commit('clearDisputes')
         reject(error)
+      }).finally(() => {
+        state.loading = false
       })
     })
   },

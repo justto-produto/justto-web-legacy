@@ -3,6 +3,7 @@
 // import { fuseSearchDisputes } from '@/utils/jusUtils'
 
 const disputeGetters = {
+  loadingDisputes: state => state.loading,
   disputes: state => state.disputes,
   occurrences: state => state.occurrences,
   disputeQuery: state => state.query,
