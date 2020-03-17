@@ -185,6 +185,10 @@
                 <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
+                  <el-tooltip content="Este e-mail não recebera mensagens automáticas">
+                    <!-- <jus-icon v-show="!email.isMain" icon="rejected" /> -->
+                    <i class="el-icon-remove-outline" style="color: #FF4B54"></i>
+                  </el-tooltip>
                   <el-tooltip content="E-mail inválido">
                     <jus-icon v-show="!email.isValid" icon="warn-dark" />
                   </el-tooltip>
@@ -525,13 +529,18 @@
           class="el-table--list">
           <el-table-column>
             <template slot-scope="scope">
-              {{ scope.row.address }}
+              <!-- <el-checkbox>
+              </el-checkbox> -->
+                <a href="#">
+                  <i class="el-icon-toilet-paper"></i>
+                </a>
+                {{ scope.row.address }}
             </template>
           </el-table-column>
           <el-table-column
             fixed="right"
             align="right"
-            width="48px"
+            width="100px"
             class-name="visible">
             <template slot-scope="scope">
               <a href="#" @click.prevent="removeEmail(scope.$index)">
