@@ -26,12 +26,25 @@
           <div v-if="role.party" class="subtitle">
             {{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}
           </div>
-          <div v-for="(email, index) in role.emails" :key="index" class="line">
+          <div v-if="role.documentNumber" :key="formKey" class="subtitle">{{ role.documentNumber | cpfCnpjMask }}</div>
+          <el-form v-else :ref="'documentForm' + index" :model="documentForm" :rules="documentFormRules" @submit.native.prevent="addDocument(role, index)">
+            <el-form-item :key="formKey" prop="document" style="margin-bottom: 0px;">
+              <el-input
+                v-mask="['###.###.###-##', '##.###.###/####-##']"
+                v-model="documentForm.document[index]"
+                placeholder="Informe o CPF da parte para selecionar e-mail de assinatura"
+                size="small"
+                @input="clearValidate(index)">
+                <el-button slot="append" icon="el-icon-plus" @click="addDocument(role, index)" />
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <div v-for="(email, index) in role.emails" :key="index" :class="{ 'mt10': index === 0 }" class="line">
             <input
-              v-model="emails[role.name]"
+              v-model="recipients[role.name]"
               :name="role.name"
-              :value="email.address"
-              :class="{ 'mt10': index === 0 }"
+              :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address }"
+              :disabled="!role.documentNumber"
               type="radio">
             {{ email.address }}
             <el-button v-if="email.canDelete" size="mini" type="text" icon="el-icon-delete" @click="removeEmail(email.address, role.name)" />
@@ -139,19 +152,19 @@
         @click="downloadDocument">
         Baixar
       </el-button>
-      <!-- <el-button
-        v-if="step === 3"
+      <el-button
+        v-if="false && step === 3"
         icon="el-icon-view"
         type="primary"
         @click="visualizePdf">
         Visualizar
-      </el-button> -->
+      </el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import { validateObjectEmail } from '@/utils/validations'
+import { validateObjectEmail, validateCpf } from '@/utils/validations'
 
 export default {
   name: 'JusProtocolDialog',
@@ -196,6 +209,15 @@ export default {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateObjectEmail, trigger: 'submit' }
+        ]
+      },
+      documentForm: {
+        document: {}
+      },
+      documentFormRules: {
+        document: [
+          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ]
       }
     }
@@ -251,7 +273,7 @@ export default {
         this.loadingChooseRecipients = false
         this.loadingDownload = false
         this.step = 0
-        this.emails = {}
+        this.recipients = {}
         this.signers = ''
         this.roles = JSON.parse(JSON.stringify(this.disputeRoles))
         this.emailForm.email = {}
@@ -262,6 +284,15 @@ export default {
     }
   },
   methods: {
+    addDocument (role, formIndex) {
+      let documentForm = this.$refs['documentForm' + formIndex][0]
+      documentForm.validate(valid => {
+        if (valid) {
+          role.documentNumber = this.documentForm.document[formIndex]
+          this.formKey += 1
+        }
+      })
+    },
     hideForms () {
       this.roles.map(r => { r.show = false })
       this.showARoleButton = false
@@ -317,12 +348,16 @@ export default {
       }
     },
     clearValidate (formIndex) {
-      let emailForm = this.$refs['emailForm' + formIndex][0]
-      if (formIndex && emailForm) {
-        emailForm.clearValidate()
-      } else {
-        this.$refs.roleForm.clearValidate()
+      let roleform = this.$refs.roleForm
+      let documentForm
+      let emailForm
+      if (formIndex) {
+        documentForm = this.$refs['documentForm' + formIndex]
+        emailForm = this.$refs['emailForm' + formIndex]
       }
+      if (roleform) roleform.clearValidate()
+      if (documentForm) documentForm[0].clearValidate()
+      if (emailForm) emailForm[0].clearValidate()
     },
     getDocument () {
       this.$store.dispatch('getDocumentByDisputeId', this.disputeId).then(document => {
@@ -396,7 +431,7 @@ export default {
       })
     },
     chooseRecipients () {
-      if (!Object.keys(this.emails).length) {
+      if (!Object.keys(this.recipients).length) {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Selecione ao menos um email.',
@@ -406,15 +441,16 @@ export default {
       }
       this.loading = true
       this.loadingChooseRecipients = true
-      let emails = []
-      for (let [key, value] of Object.entries(this.emails)) {
-        emails.push({
-          name: key,
-          email: value
+      let recipients = []
+      for (let recipient of Object.values(this.recipients)) {
+        recipients.push({
+          name: recipient.name,
+          email: recipient.email,
+          documentNumber: recipient.documentNumber
         })
       }
       this.$store.dispatch('setDocumentSigners', {
-        disputeId: this.disputeId, emails
+        disputeId: this.disputeId, recipients
       }).then(doc => {
         this.signers = doc.signers
         this.step = 3
@@ -439,7 +475,7 @@ export default {
         this.step = 3
       } else {
         this.step = 1
-        this.emails = {}
+        this.recipients = {}
       }
     },
     downloadDocument () {
@@ -486,8 +522,10 @@ export default {
 <style lang="scss">
 .jus-protocol-dialog {
   &--full {
-    .el-dialog__body {
-      height: calc(100vh - 284px);
+    .el-dialog {
+      .el-dialog__body {
+        height: calc(100vh - 284px);
+      }
     }
   }
   &__model-choice {
@@ -544,7 +582,7 @@ export default {
           display: initial;
           float: right;
           padding: 0;
-          padding-top: 0px;
+          padding-top: 2px;
           color: #FF4B54;
           font-size: 16px;
         }
