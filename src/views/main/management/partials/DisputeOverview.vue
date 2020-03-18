@@ -52,7 +52,7 @@
             {{ dispute.lastOfferValue | currency }}
           </span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.lastCounterOfferValue > 0" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
           <span data-testid="overview-counterproposal">
             <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">
