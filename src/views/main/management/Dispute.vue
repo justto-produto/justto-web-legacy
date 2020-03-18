@@ -673,7 +673,7 @@ export default {
   &__send-message-expanded {
     &.show-toolbar {
       .ql-toolbar {
-        display: inherit;
+        visibility: visible;
       }
     }
     .ql-container {

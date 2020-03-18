@@ -157,12 +157,11 @@
             <el-button
               v-if="showNamesake(role)"
               :loading="namesakeButtonLoading || namesakeProcessing"
-              type="warning"
+              :type="namesakeProcessing ? 'success' : 'warning'"
               style="width: 100%; margin-bottom: 14px;"
               @click="namesakeDialog(role.name, role.personId)">
-              <span v-if="namesakeProcessing">Tratando</span>
-              <span v-else>Tratar</span>
-              homônimos
+              <span v-if="namesakeProcessing">Enriquecendo</span>
+              <span v-else>Tratar homônimos</span>
             </el-button>
             <div class="dispute-overview-view__info-line" style="margin: 0">
               <span class="title">Função:</span>
