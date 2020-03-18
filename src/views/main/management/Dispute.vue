@@ -15,7 +15,7 @@
     </template>
     <!-- CHAT -->
     <template slot="main">
-      <div class="dispute-view__section-messages">
+      <div :class="{ 'dispute-view__send-message-full-expanded': expandedFullMessageBox && !isPaused }" class="dispute-view__section-messages">
         <!-- ACTIONS -->
         <jus-dispute-actions :dispute="dispute" :is-collapsed.sync="isCollapsed" @fetch-data="fetchData" />
         <!-- MESSAGES -->
@@ -69,12 +69,18 @@
                 element-loading-background="#fff"
                 class="dispute-view__send-message-box"
                 shadow="always">
-                <el-tooltip v-if="expandedMessageBox && validName" content="Recolher caixa de mensagem">
-                  <i class="el-icon-arrow-down dispute-view__collapse-message-box" @click="collapseTextarea()" />
-                </el-tooltip>
+                <div v-if="expandedMessageBox && validName" class="dispute-view__collapse-message-box">
+                  <el-tooltip v-if="!expandedFullMessageBox" content="Expandir caixa de mensagem">
+                    <i class="el-icon-d-arrow-left" style="transform: rotate(90deg);" @click="expandFullTextarea()" />
+                  </el-tooltip>
+                  <el-tooltip content="Recolher caixa de mensagem">
+                    <i class="el-icon-arrow-down" @click="collapseTextarea(true)" />
+                  </el-tooltip>
+                </div>
                 <div
                   v-if="validName"
-                  :class="{ 'dispute-view__send-message-expanded': expandedMessageBox && !isPaused, 'show-toolbar': messageType === 'email' }">
+                  :class="{ 'dispute-view__send-message-expanded': expandedMessageBox && !isPaused, 'show-toolbar': messageType === 'email' }
+                  ">
                   <quill-editor
                     ref="messageEditor"
                     :options="editorOptions"
@@ -137,9 +143,14 @@
             </el-tab-pane>
             <el-tab-pane v-loading="loadingTextarea" label="Notas" name="2">
               <el-card shadow="always" class="dispute-view__send-message-box">
-                <el-tooltip v-if="expandedMessageBox" content="Recolher caixa de mensagem">
-                  <i class="el-icon-arrow-down dispute-view__collapse-message-box" @click="collapseTextarea()" />
-                </el-tooltip>
+                <div v-if="expandedMessageBox && validName" class="dispute-view__collapse-message-box">
+                  <el-tooltip v-if="!expandedFullMessageBox" content="Expandir caixa de mensagem">
+                    <i class="el-icon-d-arrow-left" style="transform: rotate(90deg);" @click="expandFullTextarea()" />
+                  </el-tooltip>
+                  <el-tooltip content="Recolher caixa de mensagem">
+                    <i class="el-icon-arrow-down" @click="collapseTextarea(true)" />
+                  </el-tooltip>
+                </div>
                 <div :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
                   <quill-editor
                     ref="noteEditor"
@@ -229,6 +240,7 @@ export default {
       activeRole: {},
       isCollapsed: false,
       expandedMessageBox: false,
+      expandedFullMessageBox: false,
       directContactAddress: '',
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
@@ -420,6 +432,10 @@ export default {
     },
     handleTabClick (tab) {
       if (!['1', '3'].includes(tab.name)) this.activeRoleId = 0
+      if (tab.name === '3') {
+        this.expandedFullMessageBox = false
+        this.expandedMessageBox = false
+      }
       this.typingTab = tab.name
     },
     handleBeforeLeaveTabs () {
@@ -543,8 +559,18 @@ export default {
     expandTextarea () {
       this.expandedMessageBox = true
     },
-    collapseTextarea () {
-      this.expandedMessageBox = false
+    expandFullTextarea () {
+      this.expandedFullMessageBox = true
+    },
+    collapseTextarea (force) {
+      if (force) {
+        this.expandedFullMessageBox = false
+        this.expandedMessageBox = false
+      } else {
+        setTimeout(() => {
+          if (!this.expandedFullMessageBox) this.expandedMessageBox = false
+        }, 100)
+      }
     }
   }
 }
@@ -640,6 +666,10 @@ export default {
       padding: 10px 10px 10px 20px;
     }
   }
+  .ql-container {
+    height: 29px;
+    margin-bottom: 10px;
+  }
   &__send-message-expanded {
     &.show-toolbar {
       .ql-toolbar {
@@ -648,7 +678,18 @@ export default {
     }
     .ql-container {
       height: 208px;
-      margin-bottom: 10px;
+    }
+  }
+  &__send-message-full-expanded  {
+    .dispute-view__send-message-expanded {
+      height: calc(100vh - 218px);
+    }
+    .dispute-view-occurrences, .jus-dispute-actions  {
+      display: none;
+    }
+    .ql-container {
+      height: 100%;
+      padding-bottom: 50px;
     }
   }
   &__send-message-actions {
@@ -757,6 +798,9 @@ export default {
     font-size: 22px;
     cursor:pointer;
     z-index: 1;
+    .el-tooltip + .el-tooltip  {
+      margin-left: 8px;
+    }
   }
   .el-input-group__append {
     border-color: #9462f7;
