@@ -670,10 +670,17 @@ export default {
     height: 29px;
     margin-bottom: 10px;
   }
+  .ql-toolbar {
+    display: none;
+  }
   &__send-message-expanded {
+    .ql-toolbar {
+      display: inherit;
+    }
     &.show-toolbar {
       .ql-toolbar {
         visibility: visible;
+        display: inherit;
       }
     }
     .ql-container {
