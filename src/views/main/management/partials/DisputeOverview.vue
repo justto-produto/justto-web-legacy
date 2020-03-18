@@ -187,7 +187,8 @@
                   <span>{{ email.address }}</span>
                   <el-tooltip content="Este e-mail não recebera mensagens automáticas">
                     <!-- <jus-icon v-show="!email.isMain" icon="rejected" /> -->
-                    <i class="el-icon-remove-outline" style="color: #FF4B54"></i>
+                    <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
+                    <!-- <i class="el-icon-remove-outline" style="color: #FF4B54"></i> -->
                   </el-tooltip>
                   <el-tooltip content="E-mail inválido">
                     <jus-icon v-show="!email.isValid" icon="warn-dark" />
@@ -529,10 +530,11 @@
           class="el-table--list">
           <el-table-column>
             <template slot-scope="scope">
-              <!-- <el-checkbox>
-              </el-checkbox> -->
-                <a href="#">
-                  <i class="el-icon-toilet-paper"></i>
+                <a v-if="scope.row.isMain" href="#">
+                  <jus-icon icon="not-main-email" />
+                </a>
+                <a v-else href="#">
+                  <jus-icon icon="not-main-email-active" />
                 </a>
                 {{ scope.row.address }}
             </template>
@@ -540,7 +542,7 @@
           <el-table-column
             fixed="right"
             align="right"
-            width="100px"
+            width="48px"
             class-name="visible">
             <template slot-scope="scope">
               <a href="#" @click.prevent="removeEmail(scope.$index)">
@@ -1383,11 +1385,11 @@ export default {
     .ellipsis {
       display: flex;
       align-items: center;
-      width: 100%;
+      width: 96%;
       span {
         margin-left: 6px;
         margin-right: 6px;
-        max-width: 164px;
+        max-width: 176px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
