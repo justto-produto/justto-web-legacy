@@ -185,14 +185,14 @@
                 <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
-                  <el-tooltip content="Este e-mail não recebera mensagens automáticas">
-                    <!-- <jus-icon v-show="!email.isMain" icon="rejected" /> -->
-                    <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
-                    <!-- <i class="el-icon-remove-outline" style="color: #FF4B54"></i> -->
-                  </el-tooltip>
-                  <el-tooltip content="E-mail inválido">
-                    <jus-icon v-show="!email.isValid" icon="warn-dark" />
-                  </el-tooltip>
+                  <div>
+                    <el-tooltip content="Este e-mail não recebera mensagens automáticas">
+                      <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
+                    </el-tooltip>
+                    <el-tooltip content="E-mail inválido">
+                      <jus-icon v-show="!email.isValid" icon="warn-dark" />
+                    </el-tooltip>
+                  </div>
                 </span>
               </span>
             </div>
@@ -530,21 +530,26 @@
           class="el-table--list">
           <el-table-column>
             <template slot-scope="scope">
-                <a v-if="scope.row.isMain" href="#">
-                  <jus-icon icon="not-main-email" />
-                </a>
-                <a v-else href="#">
-                  <jus-icon icon="not-main-email-active" />
-                </a>
-                {{ scope.row.address }}
+              {{ scope.row.address }}
             </template>
           </el-table-column>
           <el-table-column
             fixed="right"
             align="right"
-            width="48px"
-            class-name="visible">
+            width="auto"
+            class-name="visible slot-scope">
             <template slot-scope="scope">
+              <el-tooltip :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <span class="dispute-overview-view__jus-switch">
+                  <el-switch
+                    v-model="scope.row.isMain"
+                    inactive-color="#ff4949" />
+                  <a href="#" @click.prevent="scope.row.isMain = !scope.row.isMain">
+                    <jus-icon v-if="scope.row.isMain" icon="email-active" />
+                    <jus-icon v-else icon="not-main-email-active" />
+                  </a>
+                </span>
+              </el-tooltip>
               <a href="#" @click.prevent="removeEmail(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
@@ -1385,14 +1390,22 @@ export default {
     .ellipsis {
       display: flex;
       align-items: center;
-      width: 96%;
+      justify-content: space-between;
+      max-width: 189px;
+      width: 100%;
       span {
         margin-left: 6px;
-        margin-right: 6px;
-        max-width: 176px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+      div {
+        display: flex;
+        align-items: center;
+        margin-left: 4px;
+        img {
+          margin-left: 2px;
+        }
       }
     }
     .bank-info {
@@ -1564,6 +1577,14 @@ export default {
       margin-left: 20px;
     }
   }
+  &__jus-switch {
+    display: flex;
+    margin-right: 16px;
+    img {
+      width: 20px;
+      margin-left: 2px;
+    }
+  }
   .el-input-group__append {
     border-color: #9462f7;
     background-color: #9462f7;
@@ -1598,6 +1619,10 @@ export default {
     &:last-child {
       border-right: 1px solid #9461f7
     }
+  }
+  .slot-scope .cell {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>
