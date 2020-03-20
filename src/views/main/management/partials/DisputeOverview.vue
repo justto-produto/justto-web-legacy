@@ -1413,7 +1413,7 @@ export default {
       align-items: flex-start;
     }
     .el-radio__label {
-      padding-left: 6px;
+      padding-left: 0px;
       font-size: 13px;
       text-overflow: ellipsis;
       white-space: nowrap;
