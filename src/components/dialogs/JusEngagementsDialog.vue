@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :close-on-click-modal="false" :visible.sync="dialog" class="jus-engagements-dialog">
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialog" width="80%" class="jus-engagements-dialog">
       <template slot="title">
         <h2>Estratégia de engajamento das partes</h2>
         <p v-if="!isManual">
