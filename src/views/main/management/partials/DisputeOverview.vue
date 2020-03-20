@@ -178,7 +178,9 @@
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                 <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                   <span class="ellipsis">
-                    <span>{{ phone.number | phoneMask }}</span>
+                    <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
+                      <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ phone.number | phoneMask }}</span>
+                    </el-tooltip>
                     <el-tooltip content="Telefone inválido">
                       <jus-icon v-show="!phone.isValid" icon="warn-dark" />
                     </el-tooltip>
@@ -191,7 +193,9 @@
               <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
                 <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
-                  <span>{{ email.address }}</span>
+                  <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
+                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
+                  </el-tooltip>
                   <el-tooltip content="E-mail inválido">
                     <jus-icon v-show="!email.isValid" icon="warn-dark" />
                   </el-tooltip>
@@ -894,6 +898,9 @@ export default {
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
+    buildContactStatus (contact) {
+      return contact.source === 'ENRICHMENT' ? 'Este contato foi enriquecido pelo sistema Justto' : 'Este contato foi adicionado manualmente'
+    },
     openAddBankDialog () {
       this.addBankForm.name = this.roleForm.name
       this.addBankForm.document = this.roleForm.documentNumber
@@ -1405,7 +1412,7 @@ export default {
       align-items: flex-start;
     }
     .el-radio__label {
-      padding-left: 6px;
+      padding-left: 0px;
       font-size: 13px;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -1537,6 +1544,9 @@ export default {
     .el-collapse-item__content {
       padding-bottom: 0;
     }
+  }
+  &__is-enriched {
+    font-style: italic;
   }
   &__namesake-table {
     margin-bottom: 20px;
