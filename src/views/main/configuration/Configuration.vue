@@ -481,10 +481,13 @@ export default {
     },
     changeTeamName () {
       if (this.teamName) {
-        this.$store.dispatch('editWorkpace', {
+        this.$store.dispatch('changeTeamName', {
           teamName: this.teamName,
-          name: this.companyName
+          id: this.$store.getters.workspaceId
         }).then(() => {
+          const workspace = this.$store.getters.workspace
+          workspace.teamName = this.teamName
+          this.$store.commit('setWorkspace', workspace)
           // SEGMENT TRACK
           this.$jusSegment('Nome da equipe alterado')
           this.$jusNotification({
@@ -492,6 +495,9 @@ export default {
             message: 'Nome da equipe alterado com sucesso.',
             type: 'success'
           })
+        }).catch(error => {
+          console.error(error)
+          this.$jusNotification({ type: 'error' })
         })
       } else {
         this.$jusNotification({

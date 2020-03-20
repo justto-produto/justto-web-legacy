@@ -1,3 +1,5 @@
+import axiosDispatcher from '@/store/axiosDispatcher.js'
+
 const workspace = JSON.parse(localStorage.getItem('jusworkspace')) || {}
 const profile = localStorage.getItem('jusprofile') || ''
 
@@ -24,7 +26,7 @@ const workspaceModule = {
     setWorkspace (state, workspace) {
       if (workspace) {
         // eslint-disable-next-line
-        axios.defaults.headers.common['Workspace'] = workspace.subDomain
+        axios.defaults.headers.common['Workspace'] = workspace.subDomain || workspace.subdomain
         state.subdomain = workspace.subDomain
         state.name = workspace.name
         state.teamName = workspace.teamName
@@ -112,6 +114,13 @@ const workspaceModule = {
           }).catch(error => {
             reject(error)
           })
+      })
+    },
+    changeTeamName ({ commit }, data) {
+      return axiosDispatcher({
+        url: '/api/workspaces/teamName',
+        method: 'patch',
+        data
       })
     },
     inviteTeammates ({ state }, teammates) {
@@ -302,6 +311,7 @@ const workspaceModule = {
     }
   },
   getters: {
+    workspace: state => state,
     hasWorkspace: state => {
       return state.status !== '' && state.status !== 'CREATING'
     },
