@@ -179,7 +179,7 @@
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                 <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                   <span class="ellipsis">
-                    <el-tooltip open-delay="500" :content="buildContactStatus(phone)">
+                    <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
                       <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ phone.number | phoneMask }}</span>
                     </el-tooltip>
                     <el-tooltip content="Telefone inválido">
@@ -194,8 +194,8 @@
               <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
                 <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
-                  <el-tooltip open-delay="500" :content="buildContactStatus(email)">
-                    <span  :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
+                  <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
+                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
                   </el-tooltip>
                   <el-tooltip content="E-mail inválido">
                     <jus-icon v-show="!email.isValid" icon="warn-dark" />
