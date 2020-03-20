@@ -15,7 +15,8 @@
     </template>
     <!-- CHAT -->
     <template slot="main">
-      <div class="dispute-view__section-messages">
+      <div ref="sectionMessages" class="dispute-view__section-messages">
+        <vue-draggable-resizable v-if="typingTab !== '3'" ref="resizable" :handles="['tm']" :y="y" @dragging="onDrag" />
         <!-- ACTIONS -->
         <jus-dispute-actions :dispute="dispute" :is-collapsed.sync="isCollapsed" @fetch-data="fetchData" />
         <!-- MESSAGES -->
@@ -33,7 +34,7 @@
         <dispute-negotiation
           v-else-if="typingTab === '4'"
           :dispute="dispute"/>
-        <div :key="loadingKey" class="dispute-view__send-message">
+        <div :style="{ height: (typingTab !== '3' ? (sendMessageHeight + 'px') : '50px') }" class="dispute-view__send-message">
           <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
             Destinatário(s):
             <span v-for="(selected, index) in selectedContacts" :key="selected.id">
@@ -69,18 +70,14 @@
                 element-loading-background="#fff"
                 class="dispute-view__send-message-box"
                 shadow="always">
-                <el-tooltip v-if="expandedMessageBox && validName" content="Recolher caixa de mensagem">
-                  <i class="el-icon-arrow-down dispute-view__collapse-message-box" @click="collapseTextarea()" />
-                </el-tooltip>
                 <div
                   v-if="validName"
-                  :class="{ 'dispute-view__send-message-expanded': expandedMessageBox && !isPaused, 'show-toolbar': messageType === 'email' }">
+                  :class="{ 'show-toolbar': messageType === 'email' }"
+                  class="dispute-view__quill">
                   <quill-editor
                     ref="messageEditor"
                     :options="editorOptions"
-                    data-testid="email-editor"
-                    @focus="expandTextarea()"
-                    @blur="collapseTextarea() "/>
+                    data-testid="email-editor"/>
                 </div>
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
@@ -137,16 +134,12 @@
             </el-tab-pane>
             <el-tab-pane v-loading="loadingTextarea" label="Notas" name="2">
               <el-card shadow="always" class="dispute-view__send-message-box">
-                <el-tooltip v-if="expandedMessageBox" content="Recolher caixa de mensagem">
-                  <i class="el-icon-arrow-down dispute-view__collapse-message-box" @click="collapseTextarea()" />
-                </el-tooltip>
-                <div :class="{ 'dispute-view__send-message-expanded': expandedMessageBox }">
+                <div class="dispute-view__quill">
                   <quill-editor
                     ref="noteEditor"
                     :options="editorOptions"
-                    data-testid="input-note"
-                    @focus="expandTextarea()"
-                    @blur="collapseTextarea() "/>
+                    class="dispute-view__quill-note"
+                    data-testid="input-note" />
                 </div>
                 <div class="dispute-view__send-message-actions note">
                   <el-button
@@ -211,10 +204,13 @@ export default {
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
+    VueDraggableResizable: () => import('vue-draggable-resizable'),
     quillEditor
   },
   data () {
     return {
+      y: 0,
+      sendMessageHeight: 208,
       id: 0,
       disputeOccurrencesKey: (new Date()).getTime(),
       messageType: 'email',
@@ -225,10 +221,8 @@ export default {
       loadingTextarea: false,
       loadingDispute: false,
       activeRoleId: 0,
-      loadingKey: 0,
       activeRole: {},
       isCollapsed: false,
-      expandedMessageBox: false,
       directContactAddress: '',
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
@@ -304,6 +298,9 @@ export default {
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
       this.disputeOccurrencesKey += 1
+    },
+    y (y) {
+      this.sendMessageHeight = this.$refs.sectionMessages.offsetHeight - this.y
     }
   },
   created () {
@@ -323,19 +320,40 @@ export default {
   mounted () {
     setTimeout(() => {
       this.disputeOccurrencesKey += 1
+      const offsetHeight = parseInt(localStorage.getItem('jusoffsetheight'))
+      if (offsetHeight) {
+        this.y = offsetHeight
+      } else {
+        this.y = this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight
+      }
     }, 800)
   },
   beforeDestroy () {
     this.unsubscribeOccurrences(this.id)
   },
   methods: {
+    onDrag: function (x, y) {
+      let minTop = this.$refs.sectionMessages.offsetHeight - 208
+      let maxTop = 64
+      if (y > minTop) {
+        this.$refs.resizable.top = minTop
+        this.$refs.resizable.y = minTop
+        this.y = minTop
+      } else if (y < maxTop) {
+        this.$refs.resizable.top = maxTop
+        this.$refs.resizable.y = maxTop
+        this.y = maxTop
+      } else {
+        this.y = y
+      }
+      localStorage.setItem('jusoffsetheight', this.y)
+    },
     startReply (params) {
       let messageType = params.type.toLowerCase()
       this.setMessageType(messageType)
       if (messageType === 'email') {
         this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + params.resume)
       }
-      this.expandTextarea()
       this.activeRoleId = 0
       this.directContactAddress = params.sender
     },
@@ -539,12 +557,6 @@ export default {
           this.loadingTextarea = false
         })
       }
-    },
-    expandTextarea () {
-      this.expandedMessageBox = true
-    },
-    collapseTextarea () {
-      this.expandedMessageBox = false
     }
   }
 }
@@ -552,51 +564,11 @@ export default {
 
 <style lang="scss">
 .dispute-view {
-  &__list {
-    margin: 20 0px;
-    padding-left: 2px;
-    li {
-      margin-top: 12px;
-      list-style: none;
-      :first-child {
-        margin-right: 10px;
-      }
-      :last-child {
-        vertical-align: text-top;
-        float: right;
-      }
-    }
-  }
   &__section-messages {
     display: flex;
     flex-direction: column;
     height: 100%;
-  }
-  &__content {
-    margin-left: 20px;
     position: relative;
-    &:before {
-      content: '';
-      position: absolute;
-      left: 10px;
-      top: 20px;
-      width: 0;
-      height: 0;
-      border: 17px solid transparent;
-      border-right-color: #ffffff;
-      border-left: 0;
-      margin-top: -17px;
-      margin-left: -17px;
-    }
-    span {
-      margin-top: 10px;
-    }
-  }
-  &__content-info {
-    margin-top: 10px;
-    img {
-      width: 16px;
-    }
   }
   &__send-message {
     position: relative;
@@ -622,6 +594,33 @@ export default {
       margin-top: 21px;
       transform: translateY(-50%);
     }
+    .el-tabs, .el-tab-pane, .el-card__body {
+      height: 100%;
+    }
+    .el-tabs__content, .dispute-view__send-message-box, .ql-container, .quill-editor {
+      height: calc(100% - 30px);
+    }
+    .ql-container {
+      margin-bottom: 10px;
+    }
+    .ql-toolbar {
+      display: none;
+    }
+  }
+  &__quill {
+    height: calc(100% - 37px);
+    &.show-toolbar {
+      .ql-toolbar {
+        display: inherit;
+      }
+    }
+  }
+  &__quill-note {
+    height: 100% !important;
+    .ql-container {
+      height: calc(100% - 20px);
+      margin: 0 !important;
+    }
   }
   &__show-scheduled {
     margin-top: 10px;
@@ -636,19 +635,9 @@ export default {
       padding: 3px 0 1px;
     }
     > .el-card__body {
-      position: relative;
       padding: 10px 10px 10px 20px;
-    }
-  }
-  &__send-message-expanded {
-    &.show-toolbar {
-      .ql-toolbar {
-        display: inherit;
-      }
-    }
-    .ql-container {
-      height: 208px;
-      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
     }
   }
   &__send-message-actions {
@@ -750,14 +739,6 @@ export default {
     right: 0;
     padding: 15px 14px;
   }
-  &__collapse-message-box {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    font-size: 22px;
-    cursor:pointer;
-    z-index: 1;
-  }
   .el-input-group__append {
     border-color: #9462f7;
     background-color: #9462f7;
@@ -773,6 +754,17 @@ export default {
   }
   .el-collapse-item__header, .el-collapse-item__wrap {
     background-color: #ffffff00;
+  }
+  .draggable.resizable {
+    z-index: 9 !important;
+    width: 100% !important;
+    height: 5px !important;
+    left: 0 !important;
+    right: 0 !important;
+    // border: 1px solid gray;
+    &:hover {
+      cursor: ns-resize;
+    }
   }
 }
 </style>
