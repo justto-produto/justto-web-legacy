@@ -160,7 +160,7 @@
               :type="namesakeProcessing ? 'success' : 'warning'"
               style="width: 100%; margin-bottom: 14px;"
               @click="namesakeDialog(role.name, role.personId)">
-              <span v-if="namesakeProcessing">Enriquecendo</span>
+              <span v-if="namesakeProcessing">Enriquecendo...</span>
               <span v-else>Tratar homônimos</span>
             </el-button>
             <div class="dispute-overview-view__info-line" style="margin: 0">
