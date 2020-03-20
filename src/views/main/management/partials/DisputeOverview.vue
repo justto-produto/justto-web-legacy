@@ -172,9 +172,14 @@
                 <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                   <span class="ellipsis">
                     <span>{{ phone.number | phoneMask }}</span>
-                    <el-tooltip content="Telefone inválido">
-                      <jus-icon v-show="!phone.isValid" icon="warn-dark" />
-                    </el-tooltip>
+                    <div class="">
+                      <el-tooltip content="Este número não recebera mensagens automáticas">
+                        <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
+                      </el-tooltip>
+                      <el-tooltip content="Telefone inválido">
+                        <jus-icon v-show="!phone.isValid" icon="warn-dark" />
+                      </el-tooltip>
+                    </div>
                   </span>
                 </el-radio>
               </span>
@@ -503,9 +508,20 @@
           <el-table-column
             fixed="right"
             align="right"
-            width="48px"
-            class-name="visible">
+            width="110px"
+            class-name="visible slot-scope">
             <template slot-scope="scope">
+              <el-tooltip :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <span class="dispute-overview-view__jus-switch">
+                  <el-switch
+                    v-model="scope.row.isMain"
+                    inactive-color="#ff4949" />
+                  <a href="#" @click.prevent="scope.row.isMain = !scope.row.isMain">
+                    <jus-icon v-if="scope.row.isMain" icon="phone-active" />
+                    <jus-icon v-else icon="not-main-phonel-active" />
+                  </a>
+                </span>
+              </el-tooltip>
               <a href="#" @click.prevent="removePhone(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
@@ -536,7 +552,7 @@
           <el-table-column
             fixed="right"
             align="right"
-            width="auto"
+            width="110px"
             class-name="visible slot-scope">
             <template slot-scope="scope">
               <el-tooltip :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
