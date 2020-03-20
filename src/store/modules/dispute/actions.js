@@ -102,7 +102,7 @@ const disputeActions = {
     })
   },
   getDisputes ({ commit, state }, pageable) {
-    state.loading = true
+    if (!pageable) state.loading = true
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/disputes/filter' + queryBuilder(state.query)).then(response => {
