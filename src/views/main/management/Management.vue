@@ -96,7 +96,7 @@
       <div v-show="hasNew" class="el-notification info right" style="bottom: 100px;z-index: 1980;">
         <i class="el-notification__icon el-icon-info" />
         <div class="el-notification__group is-with-icon">
-          <h2 class="el-notification__title" >Há atualizações nas<br>disputas</h2>
+          <h2 class="el-notification__title">Há atualizações nas<br>disputas</h2>
           <div class="el-notification__content">
             <a href="#" @click.prevent="getDisputes">Clique aqui para recarregar</a>
           </div>
@@ -115,7 +115,6 @@
           <el-checkbox :indeterminate="isIndeterminate" v-model="isSelectedAllColumns" @change="invertSelectionColumns">Nome do campo ({{ checkedNodes }} de {{ columns.length }})</el-checkbox>
           <el-input v-model="filterQuery" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
         </div>
-        <!-- <el-divider/> -->
         <el-tree
           ref="tree"
           :data="columns"
@@ -129,7 +128,6 @@
           <span slot-scope="{ node, data }" class="custom-tree-node">
             <span>{{ $t(node.label) | capitalize }}</span>
             <jus-icon class="drag-icon" icon="menu-hamburger"/>
-            <!-- <i class="el-icon-rank" /> -->
           </span>
         </el-tree>
         <span slot="footer">
@@ -155,7 +153,6 @@ export default {
   },
   data () {
     return {
-      loadingDisputes: false,
       loadingExport: false,
       filtersVisible: false,
       term: '',
@@ -211,6 +208,9 @@ export default {
     }
   },
   computed: {
+    loadingDisputes () {
+      return this.$store.getters.loadingDisputes
+    },
     hasFilters () {
       return this.$store.getters.disputeHasFilters
     },
@@ -309,7 +309,6 @@ export default {
       return false
     },
     getDisputes () {
-      this.loadingDisputes = true
       clearTimeout(this.disputeDebounce)
       this.$store.commit('resetDisputeQueryPage')
       this.disputeDebounce = setTimeout(() => {
@@ -319,7 +318,6 @@ export default {
             this.$jusNotification({ type: 'error' })
           }
         }).finally(() => {
-          this.loadingDisputes = false
           this.$nextTick(() => {
             let main = this.$el.querySelector('.el-table__body-wrapper')
             if (main) {
@@ -333,6 +331,7 @@ export default {
       this.$refs.managementTable.clearSelection()
     },
     handleChangeTab (tab) {
+      this.$refs.managementTable.showEmpty = false
       this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
       this.$store.commit('setDisputeHasFilters', false)

@@ -280,6 +280,7 @@ export default {
         this.getDocument()
         this.roleForm.role = ''
         this.showARoleButton = false
+        this.documentForm.document = {}
       }
     }
   },

@@ -45,7 +45,7 @@ _axios.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.response.status === 401) {
+    if (error.response.status === 401 && !error.response.config.url.includes('update-password')) {
       store.dispatch('logout')
     }
     return Promise.reject(error)
