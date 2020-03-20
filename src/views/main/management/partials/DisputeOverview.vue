@@ -181,7 +181,7 @@
                   <span class="ellipsis">
                     <span>{{ phone.number | phoneMask }}</span>
                     <div class="">
-                      <el-tooltip content="Este número não recebera mensagens automáticas">
+                      <el-tooltip content="Este número não receberá mensagens automáticas">
                         <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
                       </el-tooltip>
                       <el-tooltip content="Telefone inválido">
@@ -199,7 +199,7 @@
                 <span class="ellipsis">
                   <span>{{ email.address }}</span>
                   <div>
-                    <el-tooltip content="Este e-mail não recebera mensagens automáticas">
+                    <el-tooltip content="Este e-mail não receberá mensagens automáticas">
                       <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
                     </el-tooltip>
                     <el-tooltip content="E-mail inválido">
@@ -486,9 +486,11 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeOab(scope.$index)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removeOab(scope.$index)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -516,23 +518,21 @@
           <el-table-column
             fixed="right"
             align="right"
-            width="110px"
+            width="114px"
             class-name="visible slot-scope">
             <template slot-scope="scope">
-              <el-tooltip :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
-                <span class="dispute-overview-view__jus-switch">
-                  <el-switch
-                    v-model="scope.row.isMain"
-                    inactive-color="#ff4949" />
-                  <a href="#" @click.prevent="scope.row.isMain = !scope.row.isMain">
-                    <jus-icon v-if="scope.row.isMain" icon="phone-active" />
-                    <jus-icon v-else icon="not-main-phone-active" />
-                  </a>
+              <el-tooltip :open-delay="500" :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <span class="dispute-overview-view__switch-main">
+                  <jus-icon v-if="scope.row.isMain" icon="phone-active" />
+                  <jus-icon v-else icon="not-main-phone-active" />
+                  <el-switch v-model="scope.row.isMain" />
                 </span>
               </el-tooltip>
-              <a href="#" @click.prevent="removePhone(scope.$index)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removePhone(scope.$index)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -560,23 +560,21 @@
           <el-table-column
             fixed="right"
             align="right"
-            width="110px"
+            width="114px"
             class-name="visible slot-scope">
             <template slot-scope="scope">
-              <el-tooltip :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
-                <span class="dispute-overview-view__jus-switch">
-                  <el-switch
-                    v-model="scope.row.isMain"
-                    inactive-color="#ff4949" />
-                  <a href="#" @click.prevent="scope.row.isMain = !scope.row.isMain">
-                    <jus-icon v-if="scope.row.isMain" icon="email-active" />
-                    <jus-icon v-else icon="not-main-email-active" />
-                  </a>
+              <el-tooltip :open-delay="500" :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <span class="dispute-overview-view__switch-main">
+                  <jus-icon v-if="scope.row.isMain" icon="email-active" />
+                  <jus-icon v-else icon="not-main-email-active" />
+                  <el-switch v-model="scope.row.isMain" />
                 </span>
               </el-tooltip>
-              <a href="#" @click.prevent="removeEmail(scope.$index)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removeEmail(scope.$index)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -610,9 +608,11 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeBankData(scope.$index, scope.row.id)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removeBankData(scope.$index, scope.row.id)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -1605,12 +1605,13 @@ export default {
       margin-left: 20px;
     }
   }
-  &__jus-switch {
+  &__switch-main {
     display: flex;
-    margin-right: 16px;
+    align-items: center;
+    margin-right: 22px;
     img {
-      width: 20px;
-      margin-left: 2px;
+      width: 18px;
+      margin-right: 6px;
     }
   }
   .el-input-group__append {
