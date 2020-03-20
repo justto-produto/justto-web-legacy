@@ -56,6 +56,15 @@
   }
 }
 
+.el-input-group__append {
+  position: relative;
+  .float-button {
+    position: absolute;
+    left: -16px;
+    top: 7px;
+  }
+}
+
 @media (max-width: 991px) {
   .el-button--previous-step {
     padding: 8px !important;
