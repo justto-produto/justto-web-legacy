@@ -34,7 +34,7 @@
         <dispute-negotiation
           v-else-if="typingTab === '4'"
           :dispute="dispute"/>
-        <div :style="{ height: (typingTab !== '3' ? (sendMessageHeight + 'px') : '50px') }" class="dispute-view__send-message">
+        <div :style="{ height: sendMessageHeightComputed }" class="dispute-view__send-message">
           <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
             Destinatário(s):
             <span v-for="(selected, index) in selectedContacts" :key="selected.id">
@@ -124,7 +124,7 @@
                         v-else
                         type="primary"
                         size="medium"
-                        @click="$router.push('/profile')">
+                        @click="$router.push('/configuration')">
                         Configurações
                       </el-button>
                     </el-tooltip>
@@ -239,6 +239,16 @@ export default {
     }
   },
   computed: {
+    sendMessageHeightComputed () {
+      switch (this.typingTab) {
+        case '1':
+          return this.validName ? (this.sendMessageHeight + 'px') : '115px'
+        case '2':
+          return this.sendMessageHeight + 'px'
+        default:
+          return '50px'
+      }
+    },
     validName () {
       if (this.$store.getters.loggedPersonName && this.$store.getters.loggedPersonName !== this.$store.state.accountModule.email) {
         return true
