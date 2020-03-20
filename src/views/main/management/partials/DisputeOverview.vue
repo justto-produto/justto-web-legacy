@@ -518,7 +518,7 @@
                     inactive-color="#ff4949" />
                   <a href="#" @click.prevent="scope.row.isMain = !scope.row.isMain">
                     <jus-icon v-if="scope.row.isMain" icon="phone-active" />
-                    <jus-icon v-else icon="not-main-phonel-active" />
+                    <jus-icon v-else icon="not-main-phone-active" />
                   </a>
                 </span>
               </el-tooltip>
