@@ -200,7 +200,6 @@ export default {
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
         this.selectedIdsComp = []
-        this.$store.dispatch('getDisputes')
         this.$jusNotification({
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',

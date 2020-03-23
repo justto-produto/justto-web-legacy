@@ -109,6 +109,7 @@ const disputeActions = {
         if (pageable) {
           commit('addDisputes', response.data)
         } else {
+          commit('resetDisputeQueryPage')
           commit('setDisputes', response.data)
           commit('disputeSetHasNew', false)
         }
