@@ -172,6 +172,7 @@ export default {
       this.loading = true
       this.$store.dispatch('adminWorkspaces', { method: 'get', params: { size: 99999 } }).then(response => {
         this.workspaces = response.content
+        this.tableKey += 1
       }).catch(error => {
         console.error(error)
         this.$jusNotification({ type: 'error' })
@@ -278,6 +279,7 @@ export default {
             method: 'put',
             data: this.workspaceForm
           }).then(() => {
+            this.fetchData()
             this.$jusNotification({
               title: 'Yay!',
               message: 'Equipe editada com sucesso.',
