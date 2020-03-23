@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import moment from 'moment'
 const FileSaver = require('file-saver')
+let removeDebounce = 0
 
 const queryBuilder = q => {
   let query = '?'
@@ -48,8 +49,11 @@ const disputeActions = {
     }
     commit('deleteMessageResumeByDisputeId', disputeChanged.id)
   },
-  SOCKET_REMOVE_DISPUTE ({ commit, dispatch }) {
-    dispatch('getDisputes')
+  SOCKET_REMOVE_DISPUTE ({ dispatch }) {
+    clearTimeout(removeDebounce)
+    removeDebounce = setTimeout(() => {
+      dispatch('getDisputes', true)
+    }, 1000)
   },
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
@@ -104,12 +108,12 @@ const disputeActions = {
   getDisputes ({ commit, state }, pageable) {
     if (!pageable) state.loading = true
     return new Promise((resolve, reject) => {
+      if (!pageable) commit('resetDisputeQueryPage')
       // eslint-disable-next-line
       axios.get('api/disputes/filter' + queryBuilder(state.query)).then(response => {
         if (pageable) {
           commit('addDisputes', response.data)
         } else {
-          commit('resetDisputeQueryPage')
           commit('setDisputes', response.data)
           commit('disputeSetHasNew', false)
         }
