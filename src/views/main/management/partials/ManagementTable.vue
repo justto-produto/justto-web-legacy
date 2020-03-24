@@ -563,11 +563,11 @@ export default {
     },
     infiniteHandler ($state) {
       this.$store.commit('addDisputeQueryPage')
-      this.$store.dispatch('getDisputes', true).then(response => {
-        if (response.numberOfElements) {
-          $state.loaded()
-        } else {
+      this.$store.dispatch('getDisputes', 'nextPage').then(response => {
+        if (response.last) {
           $state.complete()
+        } else {
+          $state.loaded()
         }
       })
     }
