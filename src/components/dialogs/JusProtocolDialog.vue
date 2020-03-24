@@ -1,166 +1,204 @@
 <template lang="html">
-  <el-dialog
-    :visible.sync="visible"
-    :title="title"
-    :width="width"
-    :class="{ 'jus-protocol-dialog--full': [1, 4].includes(step) }"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-    :show-close="false"
-    append-to-body
-    class="jus-protocol-dialog">
-    <div v-loading="loading">
-      <div v-if="step === 0" class="jus-protocol-dialog__model-choice">
-        <el-button v-for="model in models" :key="model.id" plain @click="selectModel({ modelId: model.id })">
-          <h4>{{ model.name }}</h4>
-          <jus-icon icon="doc" is-active />
-        </el-button>
-      </div>
-      <div v-if="step === 1">
-        <iframe :src="document.url" />
-      </div>
-      <div v-if="step === 2" class="jus-protocol-dialog__send-to">
-        <p>Escolha um endereço de email para cada parte.</p>
-        <div v-for="(role, index) in roles" :key="index">
-          <span class="title">{{ role.name.toUpperCase() }}</span>
-          <div v-if="role.party" class="subtitle">
-            {{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}
-          </div>
-          <div v-if="role.documentNumber" :key="formKey" class="subtitle">{{ role.documentNumber | cpfCnpjMask }}</div>
-          <el-form v-else :ref="'documentForm' + index" :model="documentForm" :rules="documentFormRules" @submit.native.prevent="addDocument(role, index)">
-            <el-form-item :key="formKey" prop="document" style="margin-bottom: 0px;">
-              <el-input
-                v-mask="['###.###.###-##', '##.###.###/####-##']"
-                v-model="documentForm.document[index]"
-                placeholder="Informe o CPF da parte para selecionar e-mail de assinatura"
-                size="small"
-                @input="clearValidate(index)">
-                <el-button slot="append" icon="el-icon-plus" @click="addDocument(role, index)" />
-              </el-input>
-            </el-form-item>
-          </el-form>
-          <div v-for="(email, index) in role.emails" :key="index" :class="{ 'mt10': index === 0 }" class="line">
-            <input
-              v-model="recipients[role.name]"
-              :name="role.name"
-              :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address }"
-              :disabled="!role.documentNumber"
-              type="radio">
-            {{ email.address }}
-            <el-button v-if="email.canDelete" size="mini" type="text" icon="el-icon-delete" @click="removeEmail(email.address, role.name)" />
-          </div>
-          <div>
-            <el-button
-              v-show="!role.show"
-              :key="formKey"
-              type="text"
-              icon="el-icon-plus"
-              class="add-email"
-              @click="showAddEmail(role.name)">
-              Adicionar e-mail
-            </el-button>
-            <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role.name, index)">
-              <el-form-item v-show="role.show" :key="formKey" prop="email">
-                <el-input v-model="emailForm.email[role.name]" placeholder="Adicionar e-mail" size="small" @input="clearValidate(index)">
-                  <el-button slot="append" icon="el-icon-plus" @click="addEmail(role.name, index)" />
+  <div>
+    <el-dialog
+      :visible.sync="visible"
+      :title="title"
+      :width="width"
+      :class="{ 'jus-protocol-dialog--full': [1, 4].includes(step) }"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      append-to-body
+      class="jus-protocol-dialog">
+      <div v-loading="loading">
+        <!-- ESCOLHA DE TEMPLATE -->
+        <div v-if="step === 0" class="jus-protocol-dialog__model-choice">
+          <el-button v-for="model in models" :key="model.id" plain @click="selectModel({ modelId: model.id })">
+            <h4>{{ model.name }}</h4>
+            <jus-icon icon="doc" is-active />
+          </el-button>
+        </div>
+        <!-- EDIÇÃO DE TEMPLATE -->
+        <div v-if="step === 1">
+          <iframe :src="document.url" />
+        </div>
+        <!-- ESCOLHA DE EMAILS PARA ASSINATURA -->
+        <div v-if="step === 2" class="jus-protocol-dialog__send-to">
+          <p>Escolha um endereço de email para cada parte.</p>
+          <div v-for="(role, index) in roles" :key="index">
+            <span class="title">{{ role.name.toUpperCase() }}</span>
+            <div v-if="role.party" class="subtitle">
+              {{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}
+            </div>
+            <div v-if="role.documentNumber" :key="formKey" class="subtitle">{{ role.documentNumber | cpfCnpjMask }}</div>
+            <el-form v-else :ref="'documentForm' + index" :model="documentForm" :rules="documentFormRules" @submit.native.prevent="addDocument(role, index)">
+              <el-form-item :key="formKey" prop="document" style="margin-bottom: 0px;">
+                <el-input
+                  v-mask="['###.###.###-##', '##.###.###/####-##']"
+                  v-model="documentForm.document[index]"
+                  placeholder="Informe o CPF da parte para selecionar e-mail de assinatura"
+                  size="small"
+                  @input="clearValidate(index)">
+                  <el-button slot="append" icon="el-icon-plus" @click="addDocument(role, index)" />
                 </el-input>
               </el-form-item>
             </el-form>
+            <div v-for="(email, index) in role.emails" :key="index" :class="{ 'mt10': index === 0 }" class="line">
+              <el-tooltip :disabled="!!role.documentNumber" content="Cadastre o CPF da parte para selecionar um e-mail">
+                <span><input
+                  v-model="recipients[role.name]"
+                  :name="role.name"
+                  :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address }"
+                  :disabled="!role.documentNumber"
+                  type="radio"></span>
+              </el-tooltip>
+              {{ email.address }}
+              <el-button v-if="email.canDelete" size="mini" type="text" icon="el-icon-delete" @click="removeEmail(email.address, role.name)" />
+            </div>
+            <div>
+              <el-button
+                v-show="!role.show"
+                :key="formKey"
+                type="text"
+                icon="el-icon-plus"
+                class="add-email"
+                @click="showAddEmail(role.name)">
+                Adicionar e-mail
+              </el-button>
+              <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role.name, index)">
+                <el-form-item v-show="role.show" :key="formKey" prop="email">
+                  <el-input v-model="emailForm.email[role.name]" placeholder="Adicionar e-mail" size="small" @input="clearValidate(index)">
+                    <el-button slot="append" icon="el-icon-plus" @click="addEmail(role.name, index)" />
+                  </el-input>
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+          <el-form
+            ref="roleForm"
+            :model="roleForm"
+            :rules="roleFormRules"
+            label-position="top"
+            hide-required-asterisk
+            class="new-role"
+            @submit.native.prevent="addRole()">
+            <el-button v-show="!showARoleButton" type="text" icon="el-icon-plus" @click="showAddRole()">
+              Adicionar nova parte
+            </el-button>
+            <el-form-item
+              v-show="showARoleButton"
+              label="Adicionar nova parte"
+              prop="role">
+              <el-input v-model="roleForm.role" placeholder="Nome" @input="clearValidate()">
+                <el-button slot="append" icon="el-icon-plus" @click="addRole()" />
+              </el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <!-- FEEDBACK DE ASSINATURAS -->
+        <div v-if="step === 3">
+          <div v-for="(signer, index) in signers" :key="index" class="jus-protocol-dialog__status">
+            <jus-avatar-user :name="signer.name" size="sm" shape="circle" />
+            <div class="jus-protocol-dialog__status-role">
+              {{ signer.name }}<br>
+              {{ signer.email }}
+            </div>
+            <div class="jus-protocol-dialog__status-icon">
+              <span v-if="signer.signed">Assinado <jus-icon icon="success" /></span>
+              <span v-else>Aguardando assinatura</span>
+            </div>
           </div>
         </div>
-        <el-form
-          ref="roleForm"
-          :model="roleForm"
-          :rules="roleFormRules"
-          label-position="top"
-          hide-required-asterisk
-          class="new-role"
-          @submit.native.prevent="addRole()">
-          <el-button v-show="!showARoleButton" type="text" icon="el-icon-plus" @click="showAddRole()">
-            Adicionar nova parte
-          </el-button>
-          <el-form-item
-            v-show="showARoleButton"
-            label="Adicionar nova parte"
-            prop="role">
-            <el-input v-model="roleForm.role" placeholder="Nome" @input="clearValidate()">
-              <el-button slot="append" icon="el-icon-plus" @click="addRole()" />
-            </el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-if="step === 3">
-        <div v-for="(signer, index) in signers" :key="index" class="jus-protocol-dialog__status">
-          <jus-avatar-user :name="signer.name" size="sm" shape="circle" />
-          <div class="jus-protocol-dialog__status-role">
-            {{ signer.name }}<br>
-            {{ signer.email }}
-          </div>
-          <div class="jus-protocol-dialog__status-icon">
-            <span v-if="signer.signed">Assinado <jus-icon icon="success" /></span>
-            <span v-else>Aguardando assinatura</span>
-          </div>
+        <!-- VISUALIZAÇÃO DA MINUTA -->
+        <div v-loading="loadingPdf" v-if="step === 4">
+          <object ref="pdfView" :data="pdfUrl" type="application/pdf" @load="loadingPdf = false" />
         </div>
       </div>
-      <div v-loading="loadingPdf" v-if="step === 4">
-        <object ref="pdfView" :data="pdfUrl" type="application/pdf" @load="loadingPdf = false" />
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          v-if="![0, 4].includes(step)"
+          :disabled="loading"
+          icon="el-icon-delete"
+          plain
+          type="danger"
+          @click="deleteDocument">
+          Excluir Minuta
+        </el-button>
+        <el-button
+          v-if="step !== 4"
+          :disabled="loading"
+          plain
+          @click="visible = false">
+          Cancelar
+        </el-button>
+        <el-button
+          v-if="[2, 4].includes(step)"
+          :disabled="loading"
+          plain
+          @click="backToDocument">
+          Voltar
+        </el-button>
+        <el-button
+          v-if="step === 1"
+          :disabled="loading"
+          type="primary"
+          @click="step = 2, hideForms()">
+          Definir assinantes da minuta
+        </el-button>
+        <el-button
+          v-if="step === 2"
+          :disabled="!hasEmails || loadingChooseRecipients"
+          type="primary"
+          @click="confirmChooseRecipients">
+          Enviar para Assinatura
+        </el-button>
+        <el-button
+          v-loading="loadingDownload"
+          v-if="step === 3"
+          icon="el-icon-download"
+          type="primary"
+          @click="downloadDocument">
+          Baixar
+        </el-button>
+        <el-button
+          v-if="false && step === 3"
+          icon="el-icon-view"
+          type="primary"
+          @click="visualizePdf">
+          Visualizar
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      :visible.sync="confirmChooseRecipientsVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      title="Confirmar partes para assinatura"
+      width="50%"
+      append-to-body>
+      <el-alert type="info" title="Faltando algum assinante?" class="mb40">
+        Cada parte assinante precisa ter o CPF cadastrado e um E-MAIL selecionado. Certifique-se na
+        tela anterior se todas as partes para assinatura estão corretamente preenchidas.
+      </el-alert>
+      <div v-for="recipient of recipients" :key="recipient.name" class="jus-protocol-dialog__confirm-recipients">
+        <jus-avatar-user :name="recipient.name" size="sm" shape="circle" />
+        <div>
+          <b>{{ recipient.name }}</b><br>
+          <b>{{ recipient.documentNumber | cpfCnpjMask }}</b><br>
+          {{ recipient.email }}
+        </div>
       </div>
-    </div>
-    <span slot="footer" class="dialog-footer">
-      <el-button
-        v-if="![0, 4].includes(step)"
-        :disabled="loading"
-        icon="el-icon-delete"
-        plain
-        type="danger"
-        @click="deleteDocument">
-        Excluir Minuta
-      </el-button>
-      <el-button
-        v-if="step !== 4"
-        :disabled="loading"
-        plain
-        @click="visible = false">
-        Cancelar
-      </el-button>
-      <el-button
-        v-if="[2, 4].includes(step)"
-        :disabled="loading"
-        plain
-        @click="backToDocument">
-        Voltar
-      </el-button>
-      <el-button
-        v-if="step === 1"
-        :disabled="loading"
-        type="primary"
-        @click="step = 2, hideForms()">
-        Definir assinantes da minuta
-      </el-button>
-      <el-button
-        v-if="step === 2"
-        :disabled="!hasEmails || loadingChooseRecipients"
-        type="primary"
-        @click="chooseRecipients">
-        Enviar para Assinatura
-      </el-button>
-      <el-button
-        v-loading="loadingDownload"
-        v-if="step === 3"
-        icon="el-icon-download"
-        type="primary"
-        @click="downloadDocument">
-        Baixar
-      </el-button>
-      <el-button
-        v-if="false && step === 3"
-        icon="el-icon-view"
-        type="primary"
-        @click="visualizePdf">
-        Visualizar
-      </el-button>
-    </span>
-  </el-dialog>
+      <span slot="footer" class="dialog-footer">
+        <el-button plain @click="confirmChooseRecipientsVisible = false">
+          Cancelar
+        </el-button>
+        <el-button type="primary" @click="chooseRecipients">
+          Confirmar e enviar
+        </el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -189,8 +227,10 @@ export default {
       loadingPdf: false,
       loadingDownload: false,
       loadingChooseRecipients: false,
+      confirmChooseRecipientsVisible: false,
       models: [],
       emails: {},
+      recipients: {},
       document: {},
       signers: '',
       formKey: 0,
@@ -431,7 +471,7 @@ export default {
         this.loading = false
       })
     },
-    chooseRecipients () {
+    confirmChooseRecipients () {
       if (!Object.keys(this.recipients).length) {
         this.$jusNotification({
           title: 'Ops!',
@@ -439,9 +479,14 @@ export default {
           type: 'warning'
         })
         return false
+      } else {
+        this.confirmChooseRecipientsVisible = true
       }
+    },
+    chooseRecipients () {
       this.loading = true
       this.loadingChooseRecipients = true
+      this.confirmChooseRecipientsVisible = false
       let recipients = []
       for (let recipient of Object.values(this.recipients)) {
         recipients.push({
@@ -616,6 +661,18 @@ export default {
   }
   &__status-role {
     margin-left: 10px;
+  }
+  &__confirm-recipients {
+    display: flex;
+    > div:last-child {
+      margin-left: 14px;
+      > b:first-child {
+        color: #adadad;
+      }
+    }
+    &+ .jus-protocol-dialog__confirm-recipients {
+      margin-top: 20px;
+    }
   }
   .el-dialog__body > div > div, .el-dialog__body > div {
     height: 100%;
