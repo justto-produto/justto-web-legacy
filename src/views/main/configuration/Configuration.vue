@@ -154,14 +154,23 @@
           :rules="profileFormRules"
           label-position="top">
           <el-form-item label="Nova senha">
-            <el-input v-model="profileForm.newPassword" type="password" disabled />
+            <el-input v-model="profileForm.newPassword" :type="passwordType" disabled>
+              <el-button slot="append" @click="showPassword = !showPassword">
+                <jus-icon :icon="showPassword ? 'hide' : 'eye'" class="show-password" />
+              </el-button>
+            </el-input>
           </el-form-item>
-          <el-form-item label="Confirme a senha atual" prop="password">
+          <el-form-item label="Confirme a nova senha" prop="newPasswordConfirm">
+            <el-input v-model="profileForm.newPasswordConfirm" :type="passwordType" auto-complete="new-password" @keyup.enter.native="updatePassword">
+              <el-button slot="append" @click="showPassword = !showPassword">
+                <jus-icon :icon="showPassword ? 'hide' : 'eye'" class="show-password" />
+              </el-button>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="Senha atual" prop="password">
             <el-input v-model="profileForm.password" :type="passwordType" auto-complete="new-password" @keyup.enter.native="updatePassword">
               <el-button slot="append" @click="showPassword = !showPassword">
-                <jus-icon
-                  :icon="showPassword ? 'hide' : 'eye'"
-                  class="show-password" />
+                <jus-icon :icon="showPassword ? 'hide' : 'eye'" class="show-password" />
               </el-button>
             </el-input>
           </el-form-item>
@@ -226,6 +235,7 @@ export default {
       roles: [{ key: 'NEGOTIATOR', value: 'Negociador(a)' }, { key: 'ADMINISTRATOR', value: 'Administrador(a)' }],
       profileForm: {
         newPassword: '',
+        newPasswordConfirm: '',
         password: '',
         phone: ''
       },
@@ -234,9 +244,8 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
         ],
-        password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-        ]
+        password: [ { required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        newPasswordConfirm: [ { required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       inviteForm: {
         email: '',
@@ -360,6 +369,7 @@ export default {
             type: 'warning'
           })
         } else {
+          this.profileForm.newPasswordConfirm = ''
           this.profileForm.password = ''
           this.dialogPassword = true
         }
@@ -372,8 +382,16 @@ export default {
       }
     },
     updatePassword () {
-      this.$refs.profileForm.validateField('password', errorMessage => {
+      this.$refs.profileForm.validateField(['password', 'newPasswordConfirm'], errorMessage => {
         if (!errorMessage) {
+          if (this.profileForm.newPassword !== this.profileForm.newPasswordConfirm) {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Senha de confirmação não corresponde à nova senha.',
+              type: 'warning'
+            })
+            return false
+          }
           this.loadingUpdatePassword = true
           this.$store.dispatch('updatePassword', {
             password: this.profileForm.newPassword,
@@ -388,6 +406,7 @@ export default {
             })
             this.profileForm.password = ''
             this.profileForm.newPassword = ''
+            this.profileForm.newPasswordConfirm = ''
             this.dialogPassword = false
           }).catch(error => {
             if (error.response.status === 401) {
