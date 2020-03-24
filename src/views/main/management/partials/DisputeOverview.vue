@@ -1424,6 +1424,8 @@ export default {
     .ellipsis {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      max-width: 189px;
       width: 100%;
       span {
         margin-left: 6px;
@@ -1432,6 +1434,14 @@ export default {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+      div {
+        display: flex;
+        align-items: center;
+        margin-left: 4px;
+        img {
+          margin-left: 2px;
+        }
       }
     }
     .bank-info {
@@ -1444,7 +1454,7 @@ export default {
       align-items: flex-start;
     }
     .el-radio__label {
-      padding-left: 0px;
+      padding-left: 6px;
       font-size: 13px;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -1577,9 +1587,6 @@ export default {
       padding-bottom: 0;
     }
   }
-  &__is-enriched {
-    font-style: italic;
-  }
   &__namesake-table {
     margin-bottom: 20px;
   }
@@ -1608,11 +1615,12 @@ export default {
   }
   &__switch-main {
     display: flex;
-    align-items: center;
-    margin-right: 22px;
+    margin-top: 1px;
+    margin-right: 16px;
     img {
       width: 18px;
-      margin-right: 6px;
+      margin-top: -2px;
+      margin-right: 2px;
     }
   }
   .el-input-group__append {
@@ -1649,6 +1657,10 @@ export default {
     &:last-child {
       border-right: 1px solid #9461f7
     }
+  }
+  .slot-scope .cell {
+    display: flex;
+    justify-content: flex-end;
   }
   .el-icon-warning {
     color: $--color-warning

@@ -315,7 +315,7 @@ export default {
         this.step = 0
         this.recipients = {}
         this.signers = ''
-        this.roles = JSON.parse(JSON.stringify(this.disputeRoles))
+        this.roles = JSON.parse(JSON.stringify(this.disputeRoles.filter(r => !r.documentNumber || r.documentNumber.length !== 14)))
         this.emailForm.email = {}
         this.getDocument()
         this.roleForm.role = ''
