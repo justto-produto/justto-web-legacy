@@ -310,9 +310,8 @@ export default {
     },
     getDisputes () {
       clearTimeout(this.disputeDebounce)
-      this.$store.commit('resetDisputeQueryPage')
       this.disputeDebounce = setTimeout(() => {
-        return this.$store.dispatch('getDisputes').catch(error => {
+        return this.$store.dispatch('getDisputes', 'resetPages').catch(error => {
           console.error(error)
           if (this.$store.getters.isLoggedIn) {
             this.$jusNotification({ type: 'error' })
