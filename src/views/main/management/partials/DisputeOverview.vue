@@ -157,12 +157,11 @@
             <el-button
               v-if="showNamesake(role)"
               :loading="namesakeButtonLoading || namesakeProcessing"
-              type="warning"
+              :type="namesakeProcessing ? 'success' : 'warning'"
               style="width: 100%; margin-bottom: 14px;"
               @click="namesakeDialog(role.name, role.personId)">
-              <span v-if="namesakeProcessing">Tratando</span>
-              <span v-else>Tratar</span>
-              homônimos
+              <span v-if="namesakeProcessing">Enriquecendo...</span>
+              <span v-else>Tratar homônimos</span>
             </el-button>
             <div class="dispute-overview-view__info-line" style="margin: 0">
               <span class="title">Função:</span>
@@ -179,7 +178,9 @@
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                 <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                   <span class="ellipsis">
-                    <span>{{ phone.number | phoneMask }}</span>
+                    <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
+                      <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ phone.number | phoneMask }}</span>
+                    </el-tooltip>
                     <div class="">
                       <el-tooltip content="Este número não receberá mensagens automáticas">
                         <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
@@ -197,7 +198,9 @@
               <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
                 <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
-                  <span>{{ email.address }}</span>
+                  <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
+                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
+                  </el-tooltip>
                   <div>
                     <el-tooltip content="Este e-mail não receberá mensagens automáticas">
                       <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
@@ -927,6 +930,9 @@ export default {
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
+    buildContactStatus (contact) {
+      return contact.source === 'ENRICHMENT' ? 'Este contato foi enriquecido pelo sistema Justto' : 'Este contato foi adicionado manualmente'
+    },
     openAddBankDialog () {
       this.addBankForm.name = this.roleForm.name
       this.addBankForm.document = this.roleForm.documentNumber
@@ -1418,22 +1424,14 @@ export default {
     .ellipsis {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      max-width: 189px;
       width: 100%;
       span {
         margin-left: 6px;
+        margin-right: 6px;
+        max-width: 164px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-      }
-      div {
-        display: flex;
-        align-items: center;
-        margin-left: 4px;
-        img {
-          margin-left: 2px;
-        }
       }
     }
     .bank-info {
@@ -1446,7 +1444,7 @@ export default {
       align-items: flex-start;
     }
     .el-radio__label {
-      padding-left: 6px;
+      padding-left: 0px;
       font-size: 13px;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -1579,6 +1577,9 @@ export default {
       padding-bottom: 0;
     }
   }
+  &__is-enriched {
+    font-style: italic;
+  }
   &__namesake-table {
     margin-bottom: 20px;
   }
@@ -1648,10 +1649,6 @@ export default {
     &:last-child {
       border-right: 1px solid #9461f7
     }
-  }
-  .slot-scope .cell {
-    display: flex;
-    justify-content: flex-end;
   }
   .el-icon-warning {
     color: $--color-warning
