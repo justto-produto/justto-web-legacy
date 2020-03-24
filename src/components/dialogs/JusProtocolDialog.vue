@@ -191,7 +191,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button plain @click="confirmChooseRecipientsVisible = false">
-          Cancelar
+          Voltar
         </el-button>
         <el-button type="primary" @click="chooseRecipients">
           Confirmar e enviar
