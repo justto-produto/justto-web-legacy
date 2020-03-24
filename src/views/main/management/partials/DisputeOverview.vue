@@ -181,9 +181,14 @@
                     <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
                       <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ phone.number | phoneMask }}</span>
                     </el-tooltip>
-                    <el-tooltip content="Telefone inválido">
-                      <jus-icon v-show="!phone.isValid" icon="warn-dark" />
-                    </el-tooltip>
+                    <div class="">
+                      <el-tooltip content="Este número não receberá mensagens automáticas">
+                        <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
+                      </el-tooltip>
+                      <el-tooltip content="Telefone inválido">
+                        <jus-icon v-show="!phone.isValid" icon="warn-dark" />
+                      </el-tooltip>
+                    </div>
                   </span>
                 </el-radio>
               </span>
@@ -196,9 +201,14 @@
                   <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
                     <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
                   </el-tooltip>
-                  <el-tooltip content="E-mail inválido">
-                    <jus-icon v-show="!email.isValid" icon="warn-dark" />
-                  </el-tooltip>
+                  <div>
+                    <el-tooltip content="Este e-mail não receberá mensagens automáticas">
+                      <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
+                    </el-tooltip>
+                    <el-tooltip content="E-mail inválido">
+                      <jus-icon v-show="!email.isValid" icon="warn-dark" />
+                    </el-tooltip>
+                  </div>
                 </span>
               </span>
             </div>
@@ -489,9 +499,11 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeOab(scope.$index)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removeOab(scope.$index)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -519,12 +531,21 @@
           <el-table-column
             fixed="right"
             align="right"
-            width="48px"
-            class-name="visible">
+            width="114px"
+            class-name="visible slot-scope">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removePhone(scope.$index)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <span class="dispute-overview-view__switch-main">
+                  <jus-icon v-if="scope.row.isMain" icon="phone-active" />
+                  <jus-icon v-else icon="not-main-phone-active" />
+                  <el-switch v-model="scope.row.isMain" />
+                </span>
+              </el-tooltip>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removePhone(scope.$index)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -552,12 +573,21 @@
           <el-table-column
             fixed="right"
             align="right"
-            width="48px"
-            class-name="visible">
+            width="114px"
+            class-name="visible slot-scope">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeEmail(scope.$index)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <span class="dispute-overview-view__switch-main">
+                  <jus-icon v-if="scope.row.isMain" icon="email-active" />
+                  <jus-icon v-else icon="not-main-email-active" />
+                  <el-switch v-model="scope.row.isMain" />
+                </span>
+              </el-tooltip>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removeEmail(scope.$index)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -591,9 +621,11 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeBankData(scope.$index, scope.row.id)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removeBankData(scope.$index, scope.row.id)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -1586,20 +1618,13 @@ export default {
       margin-left: 20px;
     }
   }
-  &__select-switch {
+  &__switch-main {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    .content  {
-      width: 100%;
-      > div {
-        font-weight: 600;
-      }
-    }
-    p {
-      font-style: italic;
-      font-size: 12px;
-      margin: 6px 20px 0 0;
+    margin-right: 22px;
+    img {
+      width: 18px;
+      margin-right: 6px;
     }
   }
   .el-input-group__append {
