@@ -63,7 +63,8 @@
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="disputeAction('edit-negotiators')">
+        @click="openEditNegotiatorsDialog()">
+        <!-- @click="disputeAction('edit-negotiators')"> -->
         <jus-icon icon="delegate"/>
       </el-button>
     </el-tooltip>
@@ -122,6 +123,8 @@
         type="text"
         @click="togleCollapsed" />
     </el-tooltip>
+
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -162,6 +165,8 @@
         </el-button>
       </span>
     </el-dialog>
+
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -187,9 +192,11 @@
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('edit-negotiators', disputeNegotiators)">Editar dados</el-button>
       </span>
     </el-dialog>
+
+
     <el-dialog
       :visible.sync="counterproposalDialogVisible"
       :close-on-click-modal="false"
@@ -243,6 +250,8 @@
         <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Atualizar contraproposta</el-button>
       </span>
     </el-dialog>
+
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -278,6 +287,8 @@
         </el-button>
       </span>
     </el-dialog>
+
+
   </div>
 </template>
 
@@ -402,7 +413,7 @@ export default {
     }
   },
   methods: {
-    disputeAction (action) {
+    disputeAction (action, additionParams) {
       switch (action) {
         case 'settled':
 
@@ -411,90 +422,99 @@ export default {
 
           break
         case 'resume':
-
+          this.doAction(action)
           break
         case 'paused':
-
+          this.doAction(action)
           break
         case 'restart-engagement':
-          this.restatrEngagement(action)
+          this.restartEngagement(action).then(() => {
+            this.doAction(action)
+          })
           break
         case 'cancel-messages':
-
+          this.doAction(action)
           break
         case 'edit-negotiators':
-
+          additionParams = { negotiatorsId: additionParams }
+          this.doAction(action, additionParams)
           break
         case 'enrich':
-
+          this.doAction(action)
           break
         case 'renegotiate':
-          this.renegotiateDialogOpen()
+          this.doAction(action)
           break
-        case '':
+        case 'make-counterproposal':
 
           break
         case 'favorite':
-
+          this.doAction(action)
           break
         case 'disfavor':
-
+          this.doAction(action)
           break
         default:
 
       }
-      if (action === 'unsettled') {
-        this.chooseUnsettledDialogVisible = true
-        this.unsettledType = null
-      } else if (action === 'settled' && !this.dispute.disputeDealValue) {
-        this.insertSettledValueDialogVisible = true
-        this.settledValue = 0
-      } else if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
-        this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: 'OK',
-          type: 'warning'
-        })
-      } else {
-        let capAction = this.$t('action.' + action.toUpperCase())
-        this.$confirm('Tem certeza que deseja realizar ação?', capAction.charAt(0).toUpperCase() + capAction.slice(1), {
-          confirmButtonClass: 'confirm-action-btn',
-          confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning',
-          cancelButtonClass: 'is-plain'
-        }).then(() => {
-          this.doAction(action)
-        })
-      }
+
+
+    //
+    //   if (action === 'unsettled') {
+    //     this.chooseUnsettledDialogVisible = true
+    //     this.unsettledType = null
+    //   } else if (action === 'settled' && !this.dispute.disputeDealValue) {
+    //     this.insertSettledValueDialogVisible = true
+    //     this.settledValue = 0
+    //   } else if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
+    //     this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
+    //       dangerouslyUseHTMLString: true,
+    //       confirmButtonText: 'OK',
+    //       type: 'warning'
+    //     })
+    //   } else {
+    //     let capAction = this.$t('action.' + action.toUpperCase())
+    //     this.$confirm('Tem certeza que deseja realizar ação?', capAction.charAt(0).toUpperCase() + capAction.slice(1), {
+    //       confirmButtonClass: 'confirm-action-btn',
+    //       confirmButtonText: 'Continuar',
+    //       cancelButtonText: 'Cancelar',
+    //       type: 'warning',
+    //       cancelButtonClass: 'is-plain'
+    //     }).then(() => {
+    //       this.doAction(action)
+    //     })
+    //   }
     },
 
-    doAction (action, params, confirm) {
+    doAction (action, additionParams) {
       return new Promise((resolve, reject) => {
+        debugger
+        let params = { action: action, disputeId: this.dispute.id }
+        if (additionParams) params = {...params, ...additionParams}
 
+        this.$store.dispatch('sendDisputeAction', params).then(() => {
+          resolve()
+        }).catch(e => {
+          reject(e)
+        })
       })
     },
+
 
     restartEngagement (action) {
-      if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
-        this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: 'OK',
-          type: 'warning'
-        })
-      } else {
-        this.doAction(action)
-      }
-    },
-    enrich () {
       return new Promise((resolve, reject) => {
-
+        if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
+          this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
+            dangerouslyUseHTMLString: true,
+            confirmButtonText: 'OK',
+            type: 'warning'
+          })
+          reject()
+        } else {
+          resolve()
+        }
       })
     },
-
-
-
-
     setAsUnread () {
       this.$store.dispatch('disputeSetVisualized', {
         visualized: false,
@@ -518,250 +538,233 @@ export default {
 
 
 
-
-    doAction (action) {
-      return new Promise((resolve, reject) => {
-        this.modalLoading = true
-        let translatedAction = this.$t('action.' + action.toUpperCase())
-        let params = {
-          action: action,
-          disputeId: this.dispute.id
-        }
-        if (this.unsettledType) {
-          params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
-        }
-        if (action === 'settled' && this.settledValue) {
-          params.value = this.settledValue
-        }
-        if (this.tableActions && action !== 'unsettled') {
-          this.$jusNotification({
-            title: 'Yay!',
-            dangerouslyUseHTMLString: true,
-            message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
-            type: 'success'
-          })
-        }
-        this.$store.dispatch('sendDisputeAction', params).then(() => {
-          // SEGMENT TRACK
-          resolve()
-          this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
-          if (!this.tableActions || action === 'unsettled') {
-            this.$jusNotification({
-              title: 'Yay!',
-              dangerouslyUseHTMLString: true,
-              message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
-              type: 'success'
-            })
-          }
-          if (action === 'unsettled' && !this.tableActions) {
-            setTimeout(() => {
-              this.$jusNotification({
-                title: 'Atenção!',
-                message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
-                type: 'info',
-                duration: 0
-              })
-            }, 2000)
-          }
-          if (!this.tableActions) this.$emit('fetch-data')
-        }).catch(e => {
-          reject(e)
-          console.error(e)
-          if (e.response && e.response.data.reason.length) {
-            this.$jusNotification({
-              type: 'error',
-              message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
-            })
-          } else {
-            this.$jusNotification({ type: 'error' })
-          }
-        }).finally(() => {
-          this.chooseUnsettledDialogVisible = false
-          this.insertSettledValueDialogVisible = false
-          this.modalLoading = false
-        })
-      })
-    },
-    editNegotiators () {
-      this.modalLoading = true
-      this.$store.dispatch('editNegotiators', {
-        negotiators: this.disputeNegotiators,
-        disputeId: this.dispute.id
-      }).then(() => {
-        // SEGMENT TRACK
-        this.$jusSegment('Negociadores alterados')
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Negociadores editados com sucesso.',
-          type: 'success'
-        })
-        this.editNegotiatorDialogVisible = false
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.modalLoading = false
-      })
-    },
-    editNegotiator () {
+    openEditNegotiatorsDialog () {
       this.modalLoading = false
       this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
         return member.roles.includes('NEGOTIATOR') && !member.archived
       }).map(member => member.personId)
       this.editNegotiatorDialogVisible = true
     },
-    isPausedDispute () {
-      return new Promise((resolve, reject) => {
-        if (this.dispute.paused) {
-          this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
-            confirmButtonText: 'Retomar',
-            cancelButtonText: 'Cancelar',
-            type: 'warning',
-            beforeClose: (action, instance, done) => {
-              if (action === 'confirm') {
-                instance.confirmButtonLoading = true
-                this.doAction('resume').then(() => {
+    // doAction (action) {
+    //   return new Promise((resolve, reject) => {
+    //     this.modalLoading = true
+    //     let translatedAction = this.$t('action.' + action.toUpperCase())
+    //     let params = {
+    //       action: action,
+    //       disputeId: this.dispute.id
+    //     }
+    //     if (this.unsettledType) {
+    //       params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
+    //     }
+    //     if (action === 'settled' && this.settledValue) {
+    //       params.value = this.settledValue
+    //     }
+    //     if (this.tableActions && action !== 'unsettled') {
+    //       this.$jusNotification({
+    //         title: 'Yay!',
+    //         dangerouslyUseHTMLString: true,
+    //         message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
+    //         type: 'success'
+    //       })
+    //     }
+    //     this.$store.dispatch('sendDisputeAction', params).then(() => {
+    //       resolve()
+    //       // SEGMENT TRACK
+    //       this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
+    //       if (!this.tableActions || action === 'unsettled') {
+    //         this.$jusNotification({
+    //           title: 'Yay!',
+    //           dangerouslyUseHTMLString: true,
+    //           message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
+    //           type: 'success'
+    //         })
+    //       }
+    //       if (action === 'unsettled' && !this.tableActions) {
+    //         setTimeout(() => {
+    //           this.$jusNotification({
+    //             title: 'Atenção!',
+    //             message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
+    //             type: 'info',
+    //             duration: 0
+    //           })
+    //         }, 2000)
+    //       }
+    //       if (!this.tableActions) this.$emit('fetch-data')
+    //     }).catch(e => {
+    //       reject(e)
+    //       console.error(e)
+    //       if (e.response && e.response.data.reason.length) {
+    //         this.$jusNotification({
+    //           type: 'error',
+    //           message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
+    //         })
+    //       } else {
+    //         this.$jusNotification({ type: 'error' })
+    //       }
+    //     }).finally(() => {
+    //       this.chooseUnsettledDialogVisible = false
+    //       this.insertSettledValueDialogVisible = false
+    //       this.modalLoading = false
+    //     })
+    //   })
+    // },
+    //
+    //
 
-                }).finally(() => {
-                  done()
-                  instance.confirmButtonLoading = false
-                })
-              } else {
-                done()
-              }
-            }
-          })
-        } else {
-          this.openCounterproposalDialog()
-        }
-      })
-    },
-    counterproposalDialogOpen () {
-      if (this.dispute.paused) {
-        this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
-          confirmButtonText: 'Retomar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true
-              this.doAction('resume').then(() => {
-                this.openCounterproposalDialog()
-              }).finally(() => {
-                done()
-                instance.confirmButtonLoading = false
-              })
-            } else {
-              done()
-            }
-          }
-        })
-      } else {
-        this.openCounterproposalDialog()
-      }
-    },
-    renegotiateDialogOpen () {
-      this.$confirm('Esta disputa não está em negociação, deseja voltar para negociação?', 'Ops!', {
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar',
-        type: 'warning',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true
-            this.doAction('renegotiate').finally(() => {
-              done()
-              instance.confirmButtonLoading = false
-            })
-          } else {
-            done()
-          }
-        }
-      })
-    },
-    unsettledDispute (action) {
-      if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
-        this.openCounterproposalDialog()
-      } else {
-        this.doAction(action)
-      }
-    },
-    openCounterproposalDialog () {
-      this.counterOfferForm.lastCounterOfferValue = ''
-      this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
-      this.counterproposalDialogVisible = true
-      if (this.$refs.counterOfferForm) {
-        this.$refs.counterOfferForm.clearValidate()
-      }
-    },
-    checkCounterproposal () {
-      this.$refs.counterOfferForm.validate(valid => {
-        if (valid) {
-          if (this.checkUpperRangeCounterOffer) {
-            this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
-              confirmButtonText: 'Continuar',
-              cancelButtonText: 'Cancelar',
-              type: 'info',
-              cancelButtonClass: 'is-plain'
-            }).then(() => {
-              this.sendCounterproposal()
-            })
-          } else {
-            this.sendCounterproposal()
-          }
-        } else {
-          return false
-        }
-      })
-    },
-    sendCounterproposal () {
-      this.modalLoading = true
-      this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
-        this.$store.dispatch('sendDisputeCounterProposal', {
-          disputeId: this.dispute.id,
-          objectId: disputeToEdit.objects[0].id,
-          value: this.counterOfferForm.lastCounterOfferValue.toString(),
-          roleId: this.counterOfferForm.selectedRoleId,
-          note: this.counterOfferForm.note
-        }).then(() => {
-          if (this.counterOfferForm.note) {
-            let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-            let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
-            this.$store.dispatch('sendDisputeNote', {
-              note,
-              disputeId: this.dispute.id
-            })
-          }
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Contraproposta enviada com sucesso.',
-            type: 'success',
-            onClose: () => {
-              const action = this.checkUpperRangeCounterOffer ? 'Em negociação' : 'Acordo'
-              setTimeout(() => {
-                this.$notify({
-                  title: 'Atenção!',
-                  message: 'A disputa foi movida para o status <strong>' + action + '</strong>.',
-                  type: 'info',
-                  customClass: 'info',
-                  position: 'bottom-right',
-                  offset: 84,
-                  duration: 0,
-                  dangerouslyUseHTMLString: true
-                })
-              }, 200)
-            }
-          })
-          this.counterproposalDialogVisible = false
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.modalLoading = false
-        })
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-        this.modalLoading = false
-        this.counterproposalDialogVisible = false
-      })
-    },
+    //
+    // isPausedDispute () {
+    //   return new Promise((resolve, reject) => {
+    //     if (this.dispute.paused) {
+    //       this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
+    //         confirmButtonText: 'Retomar',
+    //         cancelButtonText: 'Cancelar',
+    //         type: 'warning',
+    //         beforeClose: (action, instance, done) => {
+    //           if (action === 'confirm') {
+    //             instance.confirmButtonLoading = true
+    //             this.doAction('resume').then(() => {
+    //
+    //             }).finally(() => {
+    //               done()
+    //               instance.confirmButtonLoading = false
+    //             })
+    //           } else {
+    //             done()
+    //           }
+    //         }
+    //       })
+    //     } else {
+    //       this.openCounterproposalDialog()
+    //     }
+    //   })
+    // },
+    // counterproposalDialogOpen () {
+    //   if (this.dispute.paused) {
+    //     this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
+    //       confirmButtonText: 'Retomar',
+    //       cancelButtonText: 'Cancelar',
+    //       type: 'warning',
+    //       beforeClose: (action, instance, done) => {
+    //         if (action === 'confirm') {
+    //           instance.confirmButtonLoading = true
+    //           this.doAction('resume').then(() => {
+    //             this.openCounterproposalDialog()
+    //           }).finally(() => {
+    //             done()
+    //             instance.confirmButtonLoading = false
+    //           })
+    //         } else {
+    //           done()
+    //         }
+    //       }
+    //     })
+    //   } else {
+    //     this.openCounterproposalDialog()
+    //   }
+    // },
+    // renegotiateDialogOpen () {
+    //   this.$confirm('Esta disputa não está em negociação, deseja voltar para negociação?', 'Ops!', {
+    //     confirmButtonText: 'Confirmar',
+    //     cancelButtonText: 'Cancelar',
+    //     type: 'warning',
+    //     beforeClose: (action, instance, done) => {
+    //       if (action === 'confirm') {
+    //         instance.confirmButtonLoading = true
+    //         this.doAction('renegotiate').finally(() => {
+    //           done()
+    //           instance.confirmButtonLoading = false
+    //         })
+    //       } else {
+    //         done()
+    //       }
+    //     }
+    //   })
+    // },
+    // unsettledDispute (action) {
+    //   if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
+    //     this.openCounterproposalDialog()
+    //   } else {
+    //     this.doAction(action)
+    //   }
+    // },
+    // openCounterproposalDialog () {
+    //   this.counterOfferForm.lastCounterOfferValue = ''
+    //   this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
+    //   this.counterproposalDialogVisible = true
+    //   if (this.$refs.counterOfferForm) {
+    //     this.$refs.counterOfferForm.clearValidate()
+    //   }
+    // },
+    // checkCounterproposal () {
+    //   this.$refs.counterOfferForm.validate(valid => {
+    //     if (valid) {
+    //       if (this.checkUpperRangeCounterOffer) {
+    //         this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
+    //           confirmButtonText: 'Continuar',
+    //           cancelButtonText: 'Cancelar',
+    //           type: 'info',
+    //           cancelButtonClass: 'is-plain'
+    //         }).then(() => {
+    //           this.sendCounterproposal()
+    //         })
+    //       } else {
+    //         this.sendCounterproposal()
+    //       }
+    //     } else {
+    //       return false
+    //     }
+    //   })
+    // },
+    // sendCounterproposal () {
+    //   this.modalLoading = true
+    //   this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
+    //     this.$store.dispatch('sendDisputeCounterProposal', {
+    //       disputeId: this.dispute.id,
+    //       objectId: disputeToEdit.objects[0].id,
+    //       value: this.counterOfferForm.lastCounterOfferValue.toString(),
+    //       roleId: this.counterOfferForm.selectedRoleId,
+    //       note: this.counterOfferForm.note
+    //     }).then(() => {
+    //       if (this.counterOfferForm.note) {
+    //         let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
+    //         let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
+    //         this.$store.dispatch('sendDisputeNote', {
+    //           note,
+    //           disputeId: this.dispute.id
+    //         })
+    //       }
+    //       this.$jusNotification({
+    //         title: 'Yay!',
+    //         message: 'Contraproposta enviada com sucesso.',
+    //         type: 'success',
+    //         onClose: () => {
+    //           const action = this.checkUpperRangeCounterOffer ? 'Em negociação' : 'Acordo'
+    //           setTimeout(() => {
+    //             this.$notify({
+    //               title: 'Atenção!',
+    //               message: 'A disputa foi movida para o status <strong>' + action + '</strong>.',
+    //               type: 'info',
+    //               customClass: 'info',
+    //               position: 'bottom-right',
+    //               offset: 84,
+    //               duration: 0,
+    //               dangerouslyUseHTMLString: true
+    //             })
+    //           }, 200)
+    //         }
+    //       })
+    //       this.counterproposalDialogVisible = false
+    //     }).catch(() => {
+    //       this.$jusNotification({ type: 'error' })
+    //     }).finally(() => {
+    //       this.modalLoading = false
+    //     })
+    //   }).catch(() => {
+    //     this.$jusNotification({ type: 'error' })
+    //     this.modalLoading = false
+    //     this.counterproposalDialogVisible = false
+    //   })
+    // },
 
     showDisputeResume (action) {
       const h = this.$createElement
