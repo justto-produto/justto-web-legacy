@@ -244,8 +244,8 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
         ],
-        password: [ { required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        newPasswordConfirm: [ { required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        password: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        newPasswordConfirm: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       inviteForm: {
         email: '',
