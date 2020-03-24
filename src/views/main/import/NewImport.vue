@@ -197,6 +197,7 @@ export default {
 }
 .new-import-view__content {
   margin-top: 32px;
+  width: 80%;
   >p, h4 {
     text-align: center;
   }

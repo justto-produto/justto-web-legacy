@@ -326,7 +326,7 @@
         @submit.native.prevent="editDispute">
         <h3>Engajamento</h3>
         <el-row :gutter="20">
-          <el-col :span="19">
+          <el-col :span="24">
             <el-form-item label="Estratégia" prop="disputeStrategy">
               <el-select
                 v-model="selectedStrategyId"
@@ -340,17 +340,27 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item prop="sendMessageToParty" style="text-align: center">
-              <span slot="label">
-                Engajar autor
-                <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
-              </span>
-              <el-switch v-model="disputeForm.sendMessageToParty" />
-            </el-form-item>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24" class="dispute-overview-view__select-switch">
+            <div class="content">
+              <div>Engajar autor se não tiver advogado</div>
+              <p>
+                Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
+              </p>
+            </div>
+            <el-switch v-model="disputeForm.contactPartyWhenNoLowyer" />
+          </el-col>
+          <el-col :span="24" class="dispute-overview-view__select-switch">
+            <div class="content">
+              <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
+              <p>
+                Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contactado.
+              </p>
+            </div>
+            <el-switch v-model="disputeForm.contactPartyWhenInvalidLowyer" />
           </el-col>
         </el-row>
-        <!-- <el-divider /> -->
         <h3>Valor proposto</h3>
         <el-row :gutter="20">
           <el-col :span="8">
@@ -654,7 +664,7 @@
 </template>
 
 <script>
-import { getRoles, helpBox, buildRoleTitle } from '@/utils/jusUtils'
+import { getRoles, buildRoleTitle } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 export default {
@@ -691,7 +701,8 @@ export default {
         disputeUpperRange: '',
         lastOfferValue: '',
         classification: '',
-        sendMessageToParty: ''
+        contactPartyWhenNoLowyer: '',
+        contactPartyWhenInvalidLowyer: ''
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -894,7 +905,6 @@ export default {
   },
   methods: {
     buildRoleTitle: (...i) => buildRoleTitle(...i),
-    showHelpBox: (i) => helpBox(i),
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
@@ -1055,7 +1065,8 @@ export default {
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
-      this.disputeForm.sendMessageToParty = dispute.sendMessageToParty
+      this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
+      this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -1087,7 +1098,8 @@ export default {
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
-            disputeToEdit.sendMessageToParty = this.disputeForm.sendMessageToParty
+            disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
+            disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
             let today = this.$moment()
@@ -1572,6 +1584,22 @@ export default {
     &:last-child {
       width: 35%;
       margin-left: 20px;
+    }
+  }
+  &__select-switch {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    .content  {
+      width: 100%;
+      > div {
+        font-weight: 600;
+      }
+    }
+    p {
+      font-style: italic;
+      font-size: 12px;
+      margin: 6px 20px 0 0;
     }
   }
   .el-input-group__append {
