@@ -3,7 +3,7 @@ import moment from 'moment'
 const FileSaver = require('file-saver')
 let removeDebounce = 0
 
-const queryBuilder = q => {
+const queryBuilder = (q, command, disputesLength) => {
   let query = '?'
   for (let [key, value] of Object.entries(q)) {
     if (['total'].includes(key)) continue
@@ -20,7 +20,9 @@ const queryBuilder = q => {
         }
       }
     } else if (key === 'page') {
-      query = query + key + '=' + (value - 1) + '&'
+      query = query + key + '=' + ((command === 'update' ? 1 : value) - 1) + '&'
+    } else if (key === 'size') {
+      query = query + key + '=' + (command === 'update' ? disputesLength : value) + '&'
     } else {
       query = query + key + '=' + value + '&'
     }
@@ -52,7 +54,7 @@ const disputeActions = {
   SOCKET_REMOVE_DISPUTE ({ dispatch }) {
     clearTimeout(removeDebounce)
     removeDebounce = setTimeout(() => {
-      dispatch('getDisputes', true)
+      dispatch('getDisputes', 'update')
     }, 1000)
   },
   getDispute ({ commit }, id) {
@@ -105,13 +107,13 @@ const disputeActions = {
         })
     })
   },
-  getDisputes ({ commit, state }, pageable) {
-    if (!pageable) state.loading = true
+  getDisputes ({ commit, state }, command) {
     return new Promise((resolve, reject) => {
-      if (!pageable) commit('resetDisputeQueryPage')
+      if (command !== 'nextPage') state.loading = true
+      if (command === 'resetPages') commit('resetDisputeQueryPage')
       // eslint-disable-next-line
-      axios.get('api/disputes/filter' + queryBuilder(state.query)).then(response => {
-        if (pageable) {
+      axios.get('api/disputes/filter' + queryBuilder(state.query, command, state.disputes.length)).then(response => {
+        if (command === 'nextPage') {
           commit('addDisputes', response.data)
         } else {
           commit('setDisputes', response.data)

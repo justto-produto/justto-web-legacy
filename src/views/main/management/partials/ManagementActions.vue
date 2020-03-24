@@ -277,7 +277,6 @@ export default {
         })
       })
       this.selectedIdsComp = []
-      this.$store.dispatch('getDisputes')
     },
     clearSelection () {
       this.$emit('disputes:clear')
