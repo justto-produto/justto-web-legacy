@@ -115,22 +115,34 @@
         </el-option>
       </el-select>
       <div class="jus-import-feedback-card__switch">
-        <div>
-          <i class="el-icon-circle-check el-input__icon--success" />Enviar mensagens somente em horário comercial
-          <el-tooltip content="Clique para entender melhor">
-            <i class="el-icon-question" @click="showHelpBox('businessHoursEngagement')" />
-          </el-tooltip>
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
+          <div>Enviar mensagens somente em horário comercial</div>
+          <p>
+            Deixando <b>selecionada</b> esta opção, iremos agendar o envio das mensagens somente dentro do horário comercial.
+          </p>
         </div>
         <el-switch v-model="businessHoursEngagement" />
       </div>
       <div class="jus-import-feedback-card__switch">
-        <div>
-          <i class="el-icon-circle-check el-input__icon--success" />Engajar autor caso advogado nao possua contatos válidos
-          <el-tooltip content="Clique para entender melhor">
-            <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
-          </el-tooltip>
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
+          <div>Engajar autor se não tiver advogado</div>
+          <p>
+            Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
+          </p>
         </div>
-        <el-switch v-model="sendMessageToParty" />
+        <el-switch v-model="contactPartyWhenNoLowyer" />
+      </div>
+      <div class="jus-import-feedback-card__switch">
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
+          <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
+          <p>
+            Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contactado.
+          </p>
+        </div>
+        <el-switch v-model="contactPartyWhenInvalidLowyer" />
       </div>
     </el-card>
     <jus-engagements-dialog
@@ -142,7 +154,6 @@
 </template>
 
 <script>
-import { helpBox } from '@/utils/jusUtils'
 
 export default {
   name: 'JusImportFeedbackCard',
@@ -176,7 +187,8 @@ export default {
       deadline: null,
       negotiatorIds: [],
       businessHoursEngagement: true,
-      sendMessageToParty: false,
+      contactPartyWhenNoLowyer: false,
+      contactPartyWhenInvalidLowyer: false,
       datePickerOptions: {
         disabledDate (date) {
           return date < new Date()
@@ -210,8 +222,11 @@ export default {
     businessHoursEngagement (value) {
       this.mappedCampaign.businessHoursEngagement = value
     },
-    sendMessageToParty (value) {
-      this.mappedCampaign.sendMessageToParty = value
+    contactPartyWhenNoLowyer (value) {
+      this.mappedCampaign.contactPartyWhenNoLowyer = value
+    },
+    contactPartyWhenInvalidLowyer (value) {
+      this.mappedCampaign.contactPartyWhenInvalidLowyer = value
     },
     respondent (value) {
       this.mappedCampaign.respondent = value
@@ -253,12 +268,13 @@ export default {
   beforeMount () {
     const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
     this.businessHoursEngagement = preferences.businessHoursEngagement || true
-    this.sendMessageToParty = preferences.sendMessageToParty || false
+    this.contactPartyWhenNoLowyer = preferences.contactPartyWhenNoLowyer || false
+    this.contactPartyWhenInvalidLowyer = preferences.contactPartyWhenInvalidLowyer || false
     this.initialCampaignName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
-    this.mappedCampaign.sendMessageToParty = this.sendMessageToParty
-    // this.mappedCampaign.protocolDeadLine = this.protocolDeadLine
+    this.mappedCampaign.contactPartyWhenNoLowyer = this.contactPartyWhenNoLowyer
+    this.mappedCampaign.contactPartyWhenInvalidLowyer = this.contactPartyWhenInvalidLowyer
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
     if (this.mappedCampaign.respondent) {
       this.respondent = this.mappedCampaign.respondent
@@ -278,8 +294,8 @@ export default {
         confirmButtonText: 'OK',
         dangerouslyUseHTMLString: true
       })
-    },
-    showHelpBox: (i) => helpBox(i)
+    }
+    // showHelpBox: (i) => helpBox(i)
   }
 }
 </script>
@@ -369,12 +385,18 @@ export default {
     }
   }
   &__switch {
-    display: flex;
     width: 100%;
-    justify-content: space-between;
-    align-items: center;
+    display: flex;
     padding: 12px 13px;
     border-bottom: 1px solid #dcdfe6;
+    .content  {
+      width: 100%;
+    }
+    p {
+      font-style: italic;
+      font-size: 12px;
+      margin: 6px 20px 0 0;
+    }
     .el-icon-circle-check-outline, .el-icon-circle-check {
       font-size: 1.3rem;
       margin-right: 9px;
