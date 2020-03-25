@@ -421,8 +421,13 @@ export default {
 
           break
         case 'unsettled':
-          message = ''
-
+          if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
+            this.disputeAction('make-counterproposal')
+          } else {
+            message = ''
+            // additionParams = { body:  }
+            this.doAction(action, additionParams)
+          }
           break
         case 'resume':
           message = ''
@@ -466,8 +471,11 @@ export default {
           }
           break
         case 'send-counterproposal':
-          if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
-            this.sendCounterproposal()
+          if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE') {
+            this.sendCounterproposal().then(() => {
+              message = ''
+              this.doAction('unsettled')
+            })
           } else {
             this.checkCounterproposal().then(() => {
               this.sendCounterproposal()
@@ -491,9 +499,11 @@ export default {
     //   if (action === 'unsettled') {
     //     this.chooseUnsettledDialogVisible = true
     //     this.unsettledType = null
+    //
     //   } else if (action === 'settled' && !this.dispute.disputeDealValue) {
     //     this.insertSettledValueDialogVisible = true
     //     this.settledValue = 0
+    //
     //   } else {
     //     let capAction = this.$t('action.' + action.toUpperCase())
     //     this.$confirm('Tem certeza que deseja realizar ação?', capAction.charAt(0).toUpperCase() + capAction.slice(1), {
