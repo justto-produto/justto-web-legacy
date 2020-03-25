@@ -674,58 +674,36 @@ export default {
         })
       })
     },
-    //
     sendCounterproposal () {
-      this.modalLoading = true
-      this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
-        this.$store.dispatch('sendDisputeCounterProposal', {
-          disputeId: this.dispute.id,
-          objectId: disputeToEdit.objects[0].id,
-          value: this.counterOfferForm.lastCounterOfferValue.toString(),
-          roleId: this.counterOfferForm.selectedRoleId,
-          note: this.counterOfferForm.note
-        }).then(() => {
-          if (this.counterOfferForm.note) {
-            let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-            let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
-            this.$store.dispatch('sendDisputeNote', {
-              note,
-              disputeId: this.dispute.id
-            })
-          }
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Contraproposta enviada com sucesso.',
-            type: 'success',
-            onClose: () => {
-              const action = this.checkUpperRangeCounterOffer ? 'Em negociação' : 'Acordo'
-              setTimeout(() => {
-                this.$notify({
-                  title: 'Atenção!',
-                  message: 'A disputa foi movida para o status <strong>' + action + '</strong>.',
-                  type: 'info',
-                  customClass: 'info',
-                  position: 'bottom-right',
-                  offset: 84,
-                  duration: 0,
-                  dangerouslyUseHTMLString: true
-                })
-              }, 200)
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
+          this.$store.dispatch('sendDisputeCounterProposal', {
+            disputeId: this.dispute.id,
+            objectId: disputeToEdit.objects[0].id,
+            value: this.counterOfferForm.lastCounterOfferValue.toString(),
+            roleId: this.counterOfferForm.selectedRoleId,
+            note: this.counterOfferForm.note
+          }).then(() => {
+            if (this.counterOfferForm.note) {
+              let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
+              let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
+              this.$store.dispatch('sendDisputeNote', {
+                note,
+                disputeId: this.dispute.id
+              })
+              .then(() => { resolve() })
+              .catch(e => { reject(e) })
+            } else {
+              resolve()
             }
+          }).catch(() => {
+            reject()
+          }).catch(e => {
+            reject(e)
           })
-          this.counterproposalDialogVisible = false
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.modalLoading = false
         })
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-        this.modalLoading = false
-        this.counterproposalDialogVisible = false
       })
     },
-
     showDisputeResume (action) {
       const h = this.$createElement
       let detailsMessage = [
