@@ -1637,7 +1637,6 @@ export default {
   }
   &__select-switch {
     display: flex;
-    align-items: center;
     padding-left: 14px !important;
     margin: 4px 0 20px;
     .content  {
