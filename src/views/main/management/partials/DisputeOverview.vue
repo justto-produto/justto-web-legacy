@@ -1627,6 +1627,10 @@ export default {
       margin-right: 6px;
     }
   }
+  &__select-switch {
+    display: flex;
+    align-items: center;
+  }
   .el-input-group__append {
     border-color: #9462f7;
     background-color: #9462f7;
