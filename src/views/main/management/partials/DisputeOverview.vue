@@ -1637,13 +1637,13 @@ export default {
   }
   &__select-switch {
     display: flex;
-    align-items: center;
     padding-left: 14px !important;
     margin: 4px 0 20px;
     .content  {
       width: 100%;
       div {
         font-weight: 600;
+        padding-top: 2px;
       }
       p {
         font-style: italic;
