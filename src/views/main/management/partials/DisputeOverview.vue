@@ -1638,6 +1638,19 @@ export default {
   &__select-switch {
     display: flex;
     align-items: center;
+    padding-left: 14px !important;
+    margin: 4px 0 20px;
+    .content  {
+      width: 100%;
+      div {
+        font-weight: 600;
+      }
+      p {
+        font-style: italic;
+        font-size: 12px;
+        margin: 6px 20px 0 0;
+      }
+    }
   }
   .el-input-group__append {
     border-color: #9462f7;
