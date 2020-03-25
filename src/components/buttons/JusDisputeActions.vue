@@ -160,7 +160,7 @@
           :disabled="!unsettledType"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="unsettledDispute('unsettled')">
+          @click.prevent="disputeAction('send-unsettled')">
           Continuar
         </el-button>
       </span>
@@ -421,12 +421,20 @@ export default {
 
           break
         case 'unsettled':
+          this.unsettledType = null
+          this.chooseUnsettledDialogVisible = true
+          break
+        case 'send-unsettled':
           if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
             this.disputeAction('make-counterproposal')
           } else {
             message = ''
-            // additionParams = { body:  }
-            this.doAction(action, additionParams)
+            additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] }}
+            this.doAction('unsettled', additionParams).then(() => {
+              this.chooseUnsettledDialogVisible = false
+            }).finally(() => {
+              this.unsettledType = null
+            })
           }
           break
         case 'resume':
@@ -450,7 +458,9 @@ export default {
         case 'edit-negotiators':
           message = ''
           additionParams = { negotiatorsId: additionParams }
-          this.doAction(action, additionParams)
+          this.doAction(action, additionParams).then(() => {
+            this.editNegotiatorDialogVisible = false
+          })
           break
         case 'enrich':
           message = ''
@@ -474,7 +484,10 @@ export default {
           if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE') {
             this.sendCounterproposal().then(() => {
               message = ''
-              this.doAction('unsettled')
+              additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] }}
+              this.doAction('unsettled', additionParams).finally(() => {
+                this.unsettledType = null
+              })
             })
           } else {
             this.checkCounterproposal().then(() => {
@@ -562,7 +575,6 @@ export default {
     togleCollapsed () {
       this.collapsed = !this.collapsed
     },
-
 
 
 
@@ -701,10 +713,16 @@ export default {
                 note,
                 disputeId: this.dispute.id
               })
-              .then(() => { resolve() })
-              .catch(e => { reject(e) })
+              .then(() => {
+                resolve()
+                this.counterproposalDialogVisible = false
+              })
+              .catch(e => {
+                reject(e)
+              })
             } else {
               resolve()
+              this.counterproposalDialogVisible = false
             }
           }).catch(() => {
             reject()
