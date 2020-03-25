@@ -80,7 +80,7 @@
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="counterproposalDialogOpen()">
+        @click="disputeAction('make-counterproposal')">
         <jus-icon icon="proposal2" />
       </el-button>
     </el-tooltip>
@@ -247,7 +247,7 @@
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Atualizar contraproposta</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('send-counterproposal')">Atualizar contraproposta</el-button>
       </span>
     </el-dialog>
 
@@ -414,44 +414,72 @@ export default {
   },
   methods: {
     disputeAction (action, additionParams) {
+      let message
       switch (action) {
         case 'settled':
+          message = ''
 
           break
         case 'unsettled':
+          message = ''
 
           break
         case 'resume':
+          message = ''
           this.doAction(action)
           break
         case 'paused':
+          message = ''
           this.doAction(action)
           break
         case 'restart-engagement':
           this.restartEngagement(action).then(() => {
+            message = ''
             this.doAction(action)
           })
           break
         case 'cancel-messages':
+          message = ''
           this.doAction(action)
           break
         case 'edit-negotiators':
+          message = ''
           additionParams = { negotiatorsId: additionParams }
           this.doAction(action, additionParams)
           break
         case 'enrich':
+          message = ''
           this.doAction(action)
           break
         case 'renegotiate':
+          message = ''
           this.doAction(action)
           break
         case 'make-counterproposal':
-
+          if (this.dispute.paused) {
+            message = ''
+            this.doAction('resume').then(() => {
+              this.openCounterproposalDialog()
+            })
+          } else {
+            this.openCounterproposalDialog()
+          }
+          break
+        case 'send-counterproposal':
+          if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
+            this.sendCounterproposal()
+          } else {
+            this.checkCounterproposal().then(() => {
+              this.sendCounterproposal()
+            })
+          }
           break
         case 'favorite':
+          message = ''
           this.doAction(action)
           break
         case 'disfavor':
+          message = ''
           this.doAction(action)
           break
         default:
@@ -466,12 +494,6 @@ export default {
     //   } else if (action === 'settled' && !this.dispute.disputeDealValue) {
     //     this.insertSettledValueDialogVisible = true
     //     this.settledValue = 0
-    //   } else if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
-    //     this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
-    //       dangerouslyUseHTMLString: true,
-    //       confirmButtonText: 'OK',
-    //       type: 'warning'
-    //     })
     //   } else {
     //     let capAction = this.$t('action.' + action.toUpperCase())
     //     this.$confirm('Tem certeza que deseja realizar ação?', capAction.charAt(0).toUpperCase() + capAction.slice(1), {
@@ -488,10 +510,8 @@ export default {
 
     doAction (action, additionParams) {
       return new Promise((resolve, reject) => {
-        debugger
         let params = { action: action, disputeId: this.dispute.id }
         if (additionParams) params = {...params, ...additionParams}
-
         this.$store.dispatch('sendDisputeAction', params).then(() => {
           resolve()
         }).catch(e => {
@@ -545,6 +565,15 @@ export default {
       }).map(member => member.personId)
       this.editNegotiatorDialogVisible = true
     },
+    openCounterproposalDialog () {
+      this.counterOfferForm.lastCounterOfferValue = ''
+      this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
+      this.counterproposalDialogVisible = true
+      if (this.$refs.counterOfferForm) {
+        this.$refs.counterOfferForm.clearValidate()
+      }
+    },
+
     // doAction (action) {
     //   return new Promise((resolve, reject) => {
     //     this.modalLoading = true
@@ -611,83 +640,13 @@ export default {
     //
     //
 
-    //
-    // isPausedDispute () {
-    //   return new Promise((resolve, reject) => {
-    //     if (this.dispute.paused) {
-    //       this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
-    //         confirmButtonText: 'Retomar',
-    //         cancelButtonText: 'Cancelar',
-    //         type: 'warning',
-    //         beforeClose: (action, instance, done) => {
-    //           if (action === 'confirm') {
-    //             instance.confirmButtonLoading = true
-    //             this.doAction('resume').then(() => {
-    //
-    //             }).finally(() => {
-    //               done()
-    //               instance.confirmButtonLoading = false
-    //             })
-    //           } else {
-    //             done()
-    //           }
-    //         }
-    //       })
-    //     } else {
-    //       this.openCounterproposalDialog()
-    //     }
-    //   })
-    // },
-    // counterproposalDialogOpen () {
-    //   if (this.dispute.paused) {
-    //     this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
-    //       confirmButtonText: 'Retomar',
-    //       cancelButtonText: 'Cancelar',
-    //       type: 'warning',
-    //       beforeClose: (action, instance, done) => {
-    //         if (action === 'confirm') {
-    //           instance.confirmButtonLoading = true
-    //           this.doAction('resume').then(() => {
-    //             this.openCounterproposalDialog()
-    //           }).finally(() => {
-    //             done()
-    //             instance.confirmButtonLoading = false
-    //           })
-    //         } else {
-    //           done()
-    //         }
-    //       }
-    //     })
-    //   } else {
-    //     this.openCounterproposalDialog()
-    //   }
-    // },
-    // renegotiateDialogOpen () {
-    //   this.$confirm('Esta disputa não está em negociação, deseja voltar para negociação?', 'Ops!', {
-    //     confirmButtonText: 'Confirmar',
-    //     cancelButtonText: 'Cancelar',
-    //     type: 'warning',
-    //     beforeClose: (action, instance, done) => {
-    //       if (action === 'confirm') {
-    //         instance.confirmButtonLoading = true
-    //         this.doAction('renegotiate').finally(() => {
-    //           done()
-    //           instance.confirmButtonLoading = false
-    //         })
-    //       } else {
-    //         done()
-    //       }
-    //     }
-    //   })
-    // },
+
     // unsettledDispute (action) {
     //   if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
     //     this.openCounterproposalDialog()
     //   } else {
     //     this.doAction(action)
-    //   }
-    // },
-    // openCounterproposalDialog () {
+    //   }    // openCounterproposalDialog () {
     //   this.counterOfferForm.lastCounterOfferValue = ''
     //   this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
     //   this.counterproposalDialogVisible = true
@@ -695,76 +654,77 @@ export default {
     //     this.$refs.counterOfferForm.clearValidate()
     //   }
     // },
-    // checkCounterproposal () {
-    //   this.$refs.counterOfferForm.validate(valid => {
-    //     if (valid) {
-    //       if (this.checkUpperRangeCounterOffer) {
-    //         this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
-    //           confirmButtonText: 'Continuar',
-    //           cancelButtonText: 'Cancelar',
-    //           type: 'info',
-    //           cancelButtonClass: 'is-plain'
-    //         }).then(() => {
-    //           this.sendCounterproposal()
-    //         })
-    //       } else {
-    //         this.sendCounterproposal()
-    //       }
-    //     } else {
-    //       return false
-    //     }
-    //   })
     // },
-    // sendCounterproposal () {
-    //   this.modalLoading = true
-    //   this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
-    //     this.$store.dispatch('sendDisputeCounterProposal', {
-    //       disputeId: this.dispute.id,
-    //       objectId: disputeToEdit.objects[0].id,
-    //       value: this.counterOfferForm.lastCounterOfferValue.toString(),
-    //       roleId: this.counterOfferForm.selectedRoleId,
-    //       note: this.counterOfferForm.note
-    //     }).then(() => {
-    //       if (this.counterOfferForm.note) {
-    //         let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-    //         let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
-    //         this.$store.dispatch('sendDisputeNote', {
-    //           note,
-    //           disputeId: this.dispute.id
-    //         })
-    //       }
-    //       this.$jusNotification({
-    //         title: 'Yay!',
-    //         message: 'Contraproposta enviada com sucesso.',
-    //         type: 'success',
-    //         onClose: () => {
-    //           const action = this.checkUpperRangeCounterOffer ? 'Em negociação' : 'Acordo'
-    //           setTimeout(() => {
-    //             this.$notify({
-    //               title: 'Atenção!',
-    //               message: 'A disputa foi movida para o status <strong>' + action + '</strong>.',
-    //               type: 'info',
-    //               customClass: 'info',
-    //               position: 'bottom-right',
-    //               offset: 84,
-    //               duration: 0,
-    //               dangerouslyUseHTMLString: true
-    //             })
-    //           }, 200)
-    //         }
-    //       })
-    //       this.counterproposalDialogVisible = false
-    //     }).catch(() => {
-    //       this.$jusNotification({ type: 'error' })
-    //     }).finally(() => {
-    //       this.modalLoading = false
-    //     })
-    //   }).catch(() => {
-    //     this.$jusNotification({ type: 'error' })
-    //     this.modalLoading = false
-    //     this.counterproposalDialogVisible = false
-    //   })
-    // },
+
+    checkCounterproposal () {
+      return new Promise((resolve, reject) => {
+        this.$refs.counterOfferForm.validate(valid => {
+          if (valid) {
+            if (this.checkUpperRangeCounterOffer) {
+              this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Cancelar',
+                cancelButtonClass: 'is-plain',
+                type: 'info'
+              })
+              .then(() => { resolve() })
+              .catch(e => { reject() })
+            } else { resolve() }
+          } else { reject() }
+        })
+      })
+    },
+    //
+    sendCounterproposal () {
+      this.modalLoading = true
+      this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
+        this.$store.dispatch('sendDisputeCounterProposal', {
+          disputeId: this.dispute.id,
+          objectId: disputeToEdit.objects[0].id,
+          value: this.counterOfferForm.lastCounterOfferValue.toString(),
+          roleId: this.counterOfferForm.selectedRoleId,
+          note: this.counterOfferForm.note
+        }).then(() => {
+          if (this.counterOfferForm.note) {
+            let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
+            let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
+            this.$store.dispatch('sendDisputeNote', {
+              note,
+              disputeId: this.dispute.id
+            })
+          }
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Contraproposta enviada com sucesso.',
+            type: 'success',
+            onClose: () => {
+              const action = this.checkUpperRangeCounterOffer ? 'Em negociação' : 'Acordo'
+              setTimeout(() => {
+                this.$notify({
+                  title: 'Atenção!',
+                  message: 'A disputa foi movida para o status <strong>' + action + '</strong>.',
+                  type: 'info',
+                  customClass: 'info',
+                  position: 'bottom-right',
+                  offset: 84,
+                  duration: 0,
+                  dangerouslyUseHTMLString: true
+                })
+              }, 200)
+            }
+          })
+          this.counterproposalDialogVisible = false
+        }).catch(() => {
+          this.$jusNotification({ type: 'error' })
+        }).finally(() => {
+          this.modalLoading = false
+        })
+      }).catch(() => {
+        this.$jusNotification({ type: 'error' })
+        this.modalLoading = false
+        this.counterproposalDialogVisible = false
+      })
+    },
 
     showDisputeResume (action) {
       const h = this.$createElement
