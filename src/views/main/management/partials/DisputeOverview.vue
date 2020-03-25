@@ -1643,6 +1643,7 @@ export default {
       width: 100%;
       div {
         font-weight: 600;
+        padding-top: 2px;
       }
       p {
         font-style: italic;
