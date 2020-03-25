@@ -133,7 +133,8 @@ export default {
       let range = this.mappedCampaigns.length - 1
       localStorage.setItem('jusfeedbackpreferences', JSON.stringify({
         businessHoursEngagement: this.mappedCampaigns[range].businessHoursEngagement,
-        sendMessageToParty: this.mappedCampaigns[range].sendMessageToParty
+        contactPartyWhenNoLowyer: this.mappedCampaigns[range].contactPartyWhenNoLowyer,
+        contactPartyWhenInvalidLowyer: this.mappedCampaigns[range].contactPartyWhenInvalidLowyer
       }))
     },
     checkValidCampaign (campaign) {
@@ -197,6 +198,7 @@ export default {
 }
 .new-import-view__content {
   margin-top: 32px;
+  width: 80%;
   >p, h4 {
     text-align: center;
   }
