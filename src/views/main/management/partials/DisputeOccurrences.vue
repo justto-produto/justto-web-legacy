@@ -51,6 +51,16 @@
             <el-tooltip :content="buildStatusTooltip(occurrence)">
               <jus-icon :icon="buildStatusIcon(occurrence)"/>
             </el-tooltip>
+            <el-tooltip v-if="occurrence.merged">
+              <div slot="content">
+                <div v-for="merged in occurrence.merged" :key="merged.id + new Date().getTime()">
+                  Às {{ buildHour(merged) }}
+                </div>
+              </div>
+              <span>
+                (+{{ occurrence.merged.length }})
+              </span>
+            </el-tooltip>
           </span>
         </el-card>
         <div v-else-if="occurrence.type !== 'NOTE'" :class="getDirection(occurrence.interaction)" class="dispute-view-occurrences__interaction">
@@ -85,6 +95,27 @@
               </div>
             </el-card>
             <div :class="(occurrence.interaction ? occurrence.interaction.direction : '')" class="dispute-view-occurrences__card-info">
+              <el-tooltip v-if="occurrence.merged">
+                <div slot="content">
+                  <div v-for="merged in occurrence.merged" :key="merged.id + merged.id + new Date().getTime()">
+                    {{ buildHour(merged) + ' - ' }}
+                    <span
+                      v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && merged.interaction.direction === 'OUTBOUND'"
+                      class="dispute-view-occurrences__for-to">
+                      Para: {{ merged.interaction.message.receiver | phoneMask }}
+                    </span>
+                    <span
+                      v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && merged.interaction.direction === 'INBOUND'"
+                      class="dispute-view-occurrences__for-to">
+                      Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
+                    </span>
+                  </div>
+                </div>
+                <span>
+                  (+{{ occurrence.merged.length }} )
+                </span>
+              </el-tooltip>
+              <div v-if="occurrence.merged">•</div>
               <el-tooltip :content="buildStatusTooltip(occurrence)">
                 <jus-icon :icon="buildStatusIcon(occurrence)"/>
               </el-tooltip>
@@ -194,8 +225,6 @@ export default {
       filteredOccurrences.forEach((fo, index) => {
         let previous = filteredOccurrences[previousOccurrenceIndex]
         if (previous && this.buildContent(fo) === this.buildContent(previous)) {
-          console.log(this.buildContent(fo));
-          console.log(this.buildContent(previous));
           if (!previous.merged) previous.merged = []
           previous.merged.push(fo)
           fo.toDelete = true
@@ -345,7 +374,7 @@ export default {
     buildContent (occurrence) {
       if (!occurrence) return ''
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
-        if (occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
+        if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
           return 'Disputa visualizada'
         }
         return occurrence.description
