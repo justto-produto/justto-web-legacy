@@ -45,9 +45,15 @@
             </span>
           </el-tooltip>
           <span v-html="buildLogContent(occurrence)" />
-          <span class="dispute-view-occurrences__log-hour" v-html="buildHour(occurrence)" />
+          <span class="dispute-view-occurrences__log-info">
+            <span v-html="buildHour(occurrence)" />
+            <div>•</div>
+            <el-tooltip :content="buildStatusTooltip(occurrence)">
+              <jus-icon :icon="buildStatusIcon(occurrence)"/>
+            </el-tooltip>
+          </span>
         </el-card>
-        <div v-else-if="occurrence.type !== 'NOTE'" :class="occurrence.interaction ? occurrence.interaction.direction : ''" class="dispute-view-occurrences__interaction">
+        <div v-else-if="occurrence.type !== 'NOTE'" :class="getDirection(occurrence.interaction)" class="dispute-view-occurrences__interaction">
           <div class="dispute-view-occurrences__avatar">
             <el-tooltip :disabled="!buildName(occurrence)" :content="buildName(occurrence)">
               <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
@@ -79,6 +85,10 @@
               </div>
             </el-card>
             <div :class="(occurrence.interaction ? occurrence.interaction.direction : '')" class="dispute-view-occurrences__card-info">
+              <el-tooltip :content="buildStatusTooltip(occurrence)">
+                <jus-icon :icon="buildStatusIcon(occurrence)"/>
+              </el-tooltip>
+              <div>•</div>
               <span v-html="buildHour(occurrence)" />
               <div v-if="!!buildIcon(occurrence)">•</div>
               <jus-icon v-if="!!buildIcon(occurrence)" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
@@ -201,15 +211,8 @@ export default {
       this.infiniteId += 1
     }
   },
-  created () {
-    this.clearOccurrences()
-  },
   mounted () {
-    setTimeout(() => {
-      if (!Object.keys(this.datedOccurrences).length) {
-        this.infiniteId += 1
-      }
-    }, 700)
+    this.clearOccurrences()
   },
   methods: {
     clearOccurrences () {
@@ -218,12 +221,12 @@ export default {
     },
     loadOccurrences ($state) {
       this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
-        if (response.numberOfElements >= response.totalElements) {
+        if (response.last) {
           $state.complete()
         } else {
           $state.loaded()
+          this.$store.commit('incrementOccurrencesSize')
         }
-        this.$store.commit('incrementOccurrencesSize')
       })
     },
     showFullMessage (occurrenceId) {
@@ -284,6 +287,13 @@ export default {
         if (occurrence.description.toLowerCase().includes('disputa expirada')) return 'calendar-clock'
       }
       return ''
+    },
+    getDirection (interaction) {
+      if (!interaction) return ''
+      if (interaction.type === 'NEGOTIATOR_PROPOSAL') {
+        if (!interaction.properties.DEVICE) return 'OUTBOUND'
+        else return interaction.direction
+      } else return interaction.direction
     },
     buildName (occurrence) {
       if (occurrence.interaction &&
@@ -360,6 +370,14 @@ export default {
         return true
       }
       return false
+    },
+    buildStatusIcon (occurrence) {
+      if (occurrence.status) {
+        return occurrence.status.toLowerCase()
+      }
+    },
+    buildStatusTooltip (occurrence) {
+      return 'No momento desta ocorrência, esta disputa estava ' + this.$t('dispute.status.' + occurrence.status)
     },
     buildHour (occurrence) {
       if (occurrence.executionDateTime) {
@@ -567,12 +585,22 @@ export default {
       }
     }
   }
-  &__log-hour {
-    font-weight: 300;
+  &__log-info {
+    display: flex;
     float: right;
     font-size: 11px;
-    margin-top: 3px;
+    margin-top: 4px;
     margin-left: 10px;
+    div {
+      font-weight: 500;
+      margin: 0 4px;
+    }
+    img {
+      width: 16px;
+    }
+    span {
+      font-weight: 300;
+    }
   }
   &__note {
     border-radius: 8px;

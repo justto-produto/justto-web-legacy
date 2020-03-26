@@ -144,9 +144,6 @@ export default {
     })
   },
   methods: {
-    toggleWhatsapDialog () {
-      this.$store.commit('toggleWhatsapDialog')
-    },
     logout () {
       setTimeout(() => {
         this.$store.dispatch('logout')

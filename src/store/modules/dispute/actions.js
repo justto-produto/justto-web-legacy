@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import moment from 'moment'
 const FileSaver = require('file-saver')
+let removeDebounce = 0
 
-const queryBuilder = q => {
+const queryBuilder = (q, command, disputesLength) => {
   let query = '?'
   for (let [key, value] of Object.entries(q)) {
     if (['total'].includes(key)) continue
@@ -10,15 +11,18 @@ const queryBuilder = q => {
     if (Array.isArray(value)) {
       if (!value.length) continue
       if (['expirationDate', 'dealDate', 'importingDate'].includes(key)) {
-        query = query + key + 'Start' + '=' + moment(value[0]).startOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') + '&'
-        query = query + key + 'End' + '=' + moment(value[1]).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') + '&'
+        let startDate = moment(value[0]).startOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        let endDate = moment(value[1]).endOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        query = `${query}${key}Start=${startDate}&${key}End=${endDate}&`
       } else {
         for (let v of value) {
           query = query + key + '=' + v + '&'
         }
       }
     } else if (key === 'page') {
-      query = query + key + '=' + (value - 1) + '&'
+      query = query + key + '=' + ((command === 'update' ? 1 : value) - 1) + '&'
+    } else if (key === 'size') {
+      query = query + key + '=' + (command === 'update' ? disputesLength : value) + '&'
     } else {
       query = query + key + '=' + value + '&'
     }
@@ -27,7 +31,7 @@ const queryBuilder = q => {
 }
 
 const disputeActions = {
-  SOCKET_ADD_DISPUTE ({ commit, state, rootState }, disputeChanged) {
+  SOCKET_ADD_DISPUTE ({ commit, state }, disputeChanged) {
     if (state.dispute.id === disputeChanged.id) {
       state.dispute = disputeChanged
     } else {
@@ -37,11 +41,7 @@ const disputeActions = {
         if (dispute.status !== disputeChanged.status && state.tab !== '3') {
           commit('disputeSetHasNew', true)
         } else {
-          if (dispute.updatedAt && disputeChanged.updatedAt && moment(dispute.updatedAt.dateTime).isSameOrBefore(moment(disputeChanged.updatedAt.dateTime))) {
-            Vue.set(state.disputes, disputeIndex, disputeChanged)
-          } else {
-            Vue.set(state.disputes, disputeIndex, disputeChanged)
-          }
+          Vue.set(state.disputes, disputeIndex, disputeChanged)
         }
       } else {
         if (state.query.status.includes(disputeChanged.status)) {
@@ -51,8 +51,11 @@ const disputeActions = {
     }
     commit('deleteMessageResumeByDisputeId', disputeChanged.id)
   },
-  SOCKET_REMOVE_DISPUTE ({ commit }) {
-    commit('disputeSetHasNew', true)
+  SOCKET_REMOVE_DISPUTE ({ dispatch }) {
+    clearTimeout(removeDebounce)
+    removeDebounce = setTimeout(() => {
+      dispatch('getDisputes', 'update')
+    }, 1000)
   },
   getDispute ({ commit }, id) {
     return new Promise((resolve, reject) => {
@@ -104,11 +107,13 @@ const disputeActions = {
         })
     })
   },
-  getDisputes ({ commit, state }, pageable) {
+  getDisputes ({ commit, state }, command) {
     return new Promise((resolve, reject) => {
+      if (command !== 'nextPage') state.loading = true
+      if (command === 'resetPages') commit('resetDisputeQueryPage')
       // eslint-disable-next-line
-      axios.get('api/disputes/filter' + queryBuilder(state.query)).then(response => {
-        if (pageable) {
+      axios.get('api/disputes/filter' + queryBuilder(state.query, command, state.disputes.length)).then(response => {
+        if (command === 'nextPage') {
           commit('addDisputes', response.data)
         } else {
           commit('setDisputes', response.data)
@@ -118,6 +123,8 @@ const disputeActions = {
       }).catch(error => {
         commit('clearDisputes')
         reject(error)
+      }).finally(() => {
+        state.loading = false
       })
     })
   },

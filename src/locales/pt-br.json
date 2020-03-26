@@ -5,7 +5,20 @@
   "dispute": {
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
-    "description": "descrição"
+    "description": "descrição",
+    "status": {
+      "ACCEPTED": "aceita",
+      "CHECKOUT": "sem dados bancarios",
+      "ENGAGEMENT": "sem resposta da parte",
+      "ENRICHED": "enriquecida",
+      "EXPIRED": "expirada",
+      "IMPORTED": "importada",
+      "PENDING": "pendente",
+      "REFUSED": "com proposta recusada",
+      "RUNNING": "em negociação",
+      "SETTLED": "ganha",
+      "UNSETTLED": "perdida"
+    }
   },
   "expirationDate": {
     "dateTime": "fim da negociação"
@@ -90,6 +103,7 @@
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha",
     "CANCEL_MESSAGES": "cancelar mensagens agendadas",
+    "CANCEL-MESSAGES": "cancelar mensagens agendadas",
     "CHANGE_STRATEGY": "alterar estratégia",
     "CHANGE_EXPIRATION_DATE": "alterar data limite",
     "RENEGOTIATE": "retornar para negociação",
@@ -179,5 +193,10 @@
   "LAST_SENT_MESSAGE": "Última mensagem enviada",
   "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
   "LAST_NOTE": "Última nota",
-  "CONCLUSION_DATE": "Data de conclusão"
+  "CONCLUSION_DATE": "Data de conclusão",
+  "workspace":{
+    "READY": "ativo",
+    "CREATING": "em criação",
+    "DISABLED": "inativo"
+  }
 }

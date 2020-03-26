@@ -14,16 +14,15 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
   })
 
   it('Edição de Partes', function () {
-
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
-    .contains('Todos')
-    .click({ force: true })
+      .contains('Todos')
+      .click({ force: true })
 
     // clica no primeiro caso: index 0
     cy.get('[data-testid=dispute-index] tbody > tr.el-table__row', { timeout: 60000 })
-    .contains('Teste e2e 021')
-    .click()
+      .contains('Teste e2e 021')
+      .click()
 
     // Verifica se entrou na disputa 10908
     cy.get('[data-testid=dispute-id]')
@@ -67,7 +66,5 @@ describe('Justto.App - Disputa: Edição do Caso', function () {
 
     // Verifica se aparece somente um email
     cy.get('.cell:contains("testes@testes.com")').should('length', 2)
-
   })
-
 })

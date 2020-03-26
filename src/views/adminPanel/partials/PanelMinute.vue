@@ -27,99 +27,80 @@
         <h2>Variáveis disponíveis</h2>
         <span v-pre class="list">
           <div>
-            <span>Nome da parte contrária</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{CLAIMANT}}</div>
+            <span>Nome do autor</span>
+            <div>{{ CLAIMANT }}</div>
           </div>
           <div>
             <span>Nome do réu</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{RESPONDENT}}</div>
+            <div>{{ RESPONDENT }}</div>
           </div>
           <div>
             <span>Nome do negociador</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{NEGOTIATOR_NAME}}</div>
+            <div>{{ NEGOTIATOR_NAME }}</div>
           </div>
           <div>
-            <span>Data de assinatura</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{SIGN_DATE}}</div>
+            <span>Data na assinatura do contrato</span>
+            <div>{{ SIGN_DATE }}</div>
           </div>
           <div>
-            <span>Cidade de assinatura</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{SIGN_CITY}}</div>
+            <span>Cidade na assinatura do contrato</span>
+            <div>{{ SIGN_CITY }}</div>
           </div>
           <div>
-            <span>Conta bancária</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{BANK_ACCOUNT}}</div>
+            <span>Nome do banco para depósito</span>
+            <div>{{ BANK_NAME }}</div>
           </div>
           <div>
-            <span>Agência bancária</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{BANK_AGENCY}}</div>
+            <span>Agência do banco para depósito</span>
+            <div>{{ BANK_AGENCY }}</div>
           </div>
           <div>
-            <span>Nome do banco</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{BANK_NAME}}</div>
+            <span>Conta bancária para depósito</span>
+            <div>{{ BANK_ACCOUNT }}</div>
           </div>
           <div>
-            <span>Nome do favorecido</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{BANK_DEPOSIT_NAME}}</div>
+            <span>Nome do favorecido para depósito</span>
+            <div>{{ BANK_DEPOSIT_NAME }}</div>
           </div>
           <div>
-            <span>Documento do favorecido</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{BANK_DEPOSIT_DOCUMENT}}</div>
+            <span>Documento do favorecido para depósito</span>
+            <div>{{ BANK_DEPOSIT_DOCUMENT }}</div>
           </div>
           <div>
             <span>Dias para depósito</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{DAYS_TO_DEPOSIT}}</div>
+            <div>{{ DAYS_TO_DEPOSIT }}</div>
           </div>
           <div>
-            <span>Valor de depósito</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{VALUE_TO_DEPOSIT}}</div>
+            <span>Valor a ser depositado (valor do acordo)</span>
+            <div>{{ VALUE_TO_DEPOSIT }}</div>
           </div>
           <div>
             <span>Número do processo</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{DISPUTE_CODE}}</div>
+            <div>{{ DISPUTE_CODE }}</div>
           </div>
           <div>
-            <span>Vara</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{DISPUTE_ORG}}</div>
+            <span>Comarca</span>
+            <div>{{ DISPUTE_ORG }}</div>
           </div>
           <div>
             <span>Nome do advogado do réu</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{RESPONDENT_LAWYER_NAME}}</div>
+            <div>{{ RESPONDENT_LAWYER_NAME }}</div>
           </div>
           <div>
             <span>OAB do advogado do réu</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{RESPONDENT_LAWYER_OABS}}</div>
+            <div>{{ RESPONDENT_LAWYER_OABS }}</div>
           </div>
           <div>
             <span>Nome do advogado da parte</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{CLAIMANT_LAWYER_NAME}}</div>
+            <div>{{ CLAIMANT_LAWYER_NAME }}</div>
           </div>
           <div>
             <span>OAB do advogado da parte</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{CLAIMANT_LAWYER_OABS}}</div>
+            <div>{{ CLAIMANT_LAWYER_OABS }}</div>
           </div>
           <div>
-            <span>Assinador eletrônico do documento</span>
-            <!-- eslint-disable-next-line -->
-            <div>{{ACTIVE_SIGNER}}</div>
+            <span>Nome do assinador eletrônico do documento (ex: jurista, clicksign)</span>
+            <div>{{ ACTIVE_SIGNER }}</div>
           </div>
         </span>
       </el-card>
@@ -239,6 +220,10 @@ export default {
 @import '@/styles/colors.scss';
 
 .panel-minute-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   th.is-right .cell {
     display: flex;
   }

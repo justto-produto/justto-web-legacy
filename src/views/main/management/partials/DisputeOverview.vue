@@ -52,7 +52,7 @@
             {{ dispute.lastOfferValue | currency }}
           </span>
         </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+        <div v-if="dispute.lastCounterOfferValue > 0" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
           <span class="title">Contraproposta:</span>
           <span data-testid="overview-counterproposal">
             <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">
@@ -146,20 +146,27 @@
               </div>
             </template>
             <p v-if="showNamesake(role)" style="margin-top: 0">
-              Esta parte não foi enriquecida corretamente devido à existência de homônimos.
+              <span v-if="namesakeProcessing">
+                <i class="el-icon-warning"/>
+                Documento correto enviado para tratamento no sistema. Isso pode levar algum tempo.
+              </span>
+              <span v-else>
+                Esta parte não foi enriquecida corretamente devido à existência de homônimos.
+              </span>
             </p>
             <el-button
               v-if="showNamesake(role)"
-              :loading="namesakeButtonLoading"
-              type="warning"
+              :loading="namesakeButtonLoading || namesakeProcessing"
+              :type="namesakeProcessing ? 'success' : 'warning'"
               style="width: 100%; margin-bottom: 14px;"
               @click="namesakeDialog(role.name, role.personId)">
-              Tratar homônimos
+              <span v-if="namesakeProcessing">Enriquecendo...</span>
+              <span v-else>Tratar homônimos</span>
             </el-button>
             <div class="dispute-overview-view__info-line" style="margin: 0">
               <span class="title">Função:</span>
               <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
-                {{ buildTitle(role.party, title) }}
+                {{ buildRoleTitle(role.party, title) }}
               </span>
             </div>
             <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
@@ -171,10 +178,17 @@
               <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                 <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                   <span class="ellipsis">
-                    <span>{{ phone.number | phoneMask }}</span>
-                    <el-tooltip content="Telefone inválido">
-                      <jus-icon v-show="!phone.isValid" icon="warn-dark" />
+                    <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
+                      <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ phone.number | phoneMask }}</span>
                     </el-tooltip>
+                    <div class="">
+                      <el-tooltip content="Este número não receberá mensagens automáticas">
+                        <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
+                      </el-tooltip>
+                      <el-tooltip content="Telefone inválido">
+                        <jus-icon v-show="!phone.isValid" icon="warn-dark" />
+                      </el-tooltip>
+                    </div>
                   </span>
                 </el-radio>
               </span>
@@ -184,10 +198,17 @@
               <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
                 <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
-                  <span>{{ email.address }}</span>
-                  <el-tooltip content="E-mail inválido">
-                    <jus-icon v-show="!email.isValid" icon="warn-dark" />
+                  <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
+                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
                   </el-tooltip>
+                  <div>
+                    <el-tooltip content="Este e-mail não receberá mensagens automáticas">
+                      <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
+                    </el-tooltip>
+                    <el-tooltip content="E-mail inválido">
+                      <jus-icon v-show="!email.isValid" icon="warn-dark" />
+                    </el-tooltip>
+                  </div>
                 </span>
               </span>
             </div>
@@ -247,7 +268,7 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="namesakeDialogVisible"
-      title="Corrigir homônimo"
+      title="Tratar homônimo"
       width="70%">
       <p>Selecione um dos registros abaixo para correção de homônimo e enriquecimento da parte.</p>
       <div v-loading="namesakeDialogLoading">
@@ -257,7 +278,7 @@
           <div v-show="selectedNamesake.document">Documento: <b>{{ selectedNamesake.document | cpfCnpjMask }}</b></div>
           <div v-show="selectedNamesake.city">Cidade: <b>{{ selectedNamesake.city }}</b></div>
           <div v-show="selectedNamesake.uf">UF: <b>{{ selectedNamesake.uf }}</b></div>
-          <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth }}</b></div>
+          <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth | moment('DD/MM/YYYY') }}</b></div>
         </div>
         <div class="dispute-overview-view__namesake-filters">
           <div class="dispute-overview-view__namesake-filter">
@@ -298,7 +319,7 @@
       </div>
       <span slot="footer">
         <el-button :disabled="namesakeDialogLoading" plain @click="closeNamesakes">Cancelar</el-button>
-        <el-button :loading="namesakeDialogLoading" :disabled="!selectedNamesake" type="primary" @click="selectNamesake()">Corrigir</el-button>
+        <el-button :loading="namesakeDialogLoading" :disabled="!selectedNamesake" type="primary" @click="selectNamesake()">Tratar</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -315,7 +336,7 @@
         @submit.native.prevent="editDispute">
         <h3>Engajamento</h3>
         <el-row :gutter="20">
-          <el-col :span="19">
+          <el-col :span="24">
             <el-form-item label="Estratégia" prop="disputeStrategy">
               <el-select
                 v-model="selectedStrategyId"
@@ -329,17 +350,27 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item prop="sendMessageToParty" style="text-align: center">
-              <span slot="label">
-                Engajar autor
-                <i class="el-icon-question" @click="showHelpBox('sendMessageToParty')" />
-              </span>
-              <el-switch v-model="disputeForm.sendMessageToParty" />
-            </el-form-item>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24" class="dispute-overview-view__select-switch">
+            <div class="content">
+              <div>Engajar autor se não tiver advogado</div>
+              <p>
+                Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor quando não houver advogado constituído.
+              </p>
+            </div>
+            <el-switch v-model="disputeForm.contactPartyWhenNoLowyer" />
+          </el-col>
+          <el-col :span="24" class="dispute-overview-view__select-switch">
+            <div class="content">
+              <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
+              <p>
+                Deixando <b>selecionada</b> esta opção, iremos enviar mensagens para o autor se o <b>advogado não possuir dados válidos</b> para ser contactado.
+              </p>
+            </div>
+            <el-switch v-model="disputeForm.contactPartyWhenInvalidLowyer" />
           </el-col>
         </el-row>
-        <!-- <el-divider /> -->
         <h3>Valor proposto</h3>
         <el-row :gutter="20">
           <el-col :span="8">
@@ -468,9 +499,11 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeOab(scope.$index)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removeOab(scope.$index)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -498,12 +531,21 @@
           <el-table-column
             fixed="right"
             align="right"
-            width="48px"
-            class-name="visible">
+            width="114px"
+            class-name="visible slot-scope">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removePhone(scope.$index)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <span class="dispute-overview-view__switch-main">
+                  <jus-icon v-if="scope.row.isMain" icon="phone-active" />
+                  <jus-icon v-else icon="not-main-phone-active" />
+                  <el-switch v-model="scope.row.isMain" />
+                </span>
+              </el-tooltip>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removePhone(scope.$index)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -531,12 +573,21 @@
           <el-table-column
             fixed="right"
             align="right"
-            width="48px"
-            class-name="visible">
+            width="114px"
+            class-name="visible slot-scope">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeEmail(scope.$index)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <span class="dispute-overview-view__switch-main">
+                  <jus-icon v-if="scope.row.isMain" icon="email-active" />
+                  <jus-icon v-else icon="not-main-email-active" />
+                  <el-switch v-model="scope.row.isMain" />
+                </span>
+              </el-tooltip>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removeEmail(scope.$index)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -570,9 +621,11 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeBankData(scope.$index, scope.row.id)">
-                <jus-icon icon="trash" />
-              </a>
+              <el-tooltip :open-delay="500" content="Remover">
+                <a href="#" @click.prevent="removeBankData(scope.$index, scope.row.id)">
+                  <jus-icon icon="trash" />
+                </a>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -643,7 +696,7 @@
 </template>
 
 <script>
-import { getRoles, helpBox } from '@/utils/jusUtils'
+import { getRoles, buildRoleTitle } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 export default {
@@ -667,6 +720,7 @@ export default {
       namesakeDialogVisible: false,
       namesakeDialogLoading: false,
       namesakeButtonLoading: false,
+      namesakeProcessing: false,
       selectedNamesake: '',
       selectedNamesakePersonId: '',
       selectedClaimantId: '',
@@ -679,7 +733,8 @@ export default {
         disputeUpperRange: '',
         lastOfferValue: '',
         classification: '',
-        sendMessageToParty: ''
+        contactPartyWhenNoLowyer: '',
+        contactPartyWhenInvalidLowyer: ''
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -881,12 +936,16 @@ export default {
     }
   },
   methods: {
-    showHelpBox: (i) => helpBox(i),
+    buildRoleTitle: (...i) => buildRoleTitle(...i),
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
+    buildContactStatus (contact) {
+      return contact.source === 'ENRICHMENT' ? 'Este contato foi enriquecido pelo sistema Justto' : 'Este contato foi adicionado manualmente'
+    },
     openAddBankDialog () {
       this.addBankForm.name = this.roleForm.name
+      this.addBankForm.document = this.roleForm.documentNumber
       if (this.roleForm.emails.filter(f => f.isValid && !f.archived && f.isMain).length) {
         this.addBankForm.email = this.roleForm.emails.filter(f => !f.archived && f.isMain)[0].address
       } else if (this.roleForm.emails.filter(f => f.isValid && !f.archived).length) {
@@ -894,7 +953,6 @@ export default {
       } else {
         this.addBankForm.email = ''
       }
-      this.addBankForm.document = this.roleForm.document
       this.addBankDialogVisible = true
     },
     closeNamesakes () {
@@ -912,9 +970,10 @@ export default {
           .then(() => {
             this.namesakeDialogVisible = false
             this.namesakeDialogLoading = false
+            this.namesakeProcessing = true
             this.$jusNotification({
               title: 'Yay!',
-              message: 'Homônimo tratado com sucesso.',
+              message: 'Homônimo enviado para tratamento com sucesso.',
               type: 'success'
             })
           })
@@ -1038,7 +1097,8 @@ export default {
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
-      this.disputeForm.sendMessageToParty = dispute.sendMessageToParty
+      this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
+      this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -1070,7 +1130,8 @@ export default {
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
-            disputeToEdit.sendMessageToParty = this.disputeForm.sendMessageToParty
+            disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
+            disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
             let today = this.$moment()
@@ -1116,26 +1177,6 @@ export default {
         }
       })
     },
-    buildTitle (party, title) {
-      if (party === 'RESPONDENT') {
-        switch (title) {
-          case 'NEGOTIATOR':
-            return 'Negociador'
-          case 'PARTY':
-            return 'Réu'
-          case 'LAWYER':
-            return 'Advogado do réu'
-        }
-      } else {
-        if (title === 'PARTY') {
-          return 'Parte contrária'
-        } else if (title === 'LAWYER') {
-          return 'Advogado da parte'
-        } else {
-          return ''
-        }
-      }
-    },
     handleChange (val) {
       if (!val) {
         this.selectedPhone = 0
@@ -1153,7 +1194,7 @@ export default {
       this.editRoleDialogVisible = true
       this.roleForm = JSON.parse(JSON.stringify(role))
       this.originalRole = JSON.parse(JSON.stringify(role))
-      this.roleForm.title = this.buildTitle(role.party, role.roles[0])
+      this.roleForm.title = this.buildRoleTitle(role.party, role.roles[0])
       this.roleForm.documentNumber = this.$options.filters.cpfCnpjMask(this.roleForm.documentNumber)
       this.roleForm.emails = this.roleForm.emails.filter(f => !f.archived)
       this.roleForm.oabs = this.roleForm.oabs.filter(f => !f.archived)
@@ -1377,6 +1418,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .dispute-overview-view {
   margin-bottom: -20px;
   .jus-status-dot {
@@ -1393,6 +1436,8 @@ export default {
     .ellipsis {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      max-width: 189px;
       width: 100%;
       span {
         margin-left: 6px;
@@ -1401,6 +1446,14 @@ export default {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+      div {
+        display: flex;
+        align-items: center;
+        margin-left: 4px;
+        img {
+          margin-left: 2px;
+        }
       }
     }
     .bank-info {
@@ -1572,6 +1625,33 @@ export default {
       margin-left: 20px;
     }
   }
+  &__switch-main {
+    display: flex;
+    margin-top: 1px;
+    margin-right: 16px;
+    img {
+      width: 18px;
+      margin-top: -2px;
+      margin-right: 2px;
+    }
+  }
+  &__select-switch {
+    display: flex;
+    padding-left: 14px !important;
+    margin: 4px 0 20px;
+    .content  {
+      width: 100%;
+      div {
+        font-weight: 600;
+        padding-top: 2px;
+      }
+      p {
+        font-style: italic;
+        font-size: 12px;
+        margin: 6px 20px 0 0;
+      }
+    }
+  }
   .el-input-group__append {
     border-color: #9462f7;
     background-color: #9462f7;
@@ -1606,6 +1686,13 @@ export default {
     &:last-child {
       border-right: 1px solid #9461f7
     }
+  }
+  .slot-scope .cell {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .el-icon-warning {
+    color: $--color-warning
   }
 }
 </style>

@@ -1,3 +1,5 @@
+import axiosDispatcher from '@/store/axiosDispatcher.js'
+
 const message = {
   state: {
     recentMessages: [],
@@ -13,40 +15,18 @@ const message = {
     }
   },
   actions: {
-    sendwhatsapp ({ commit }, body) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.post('api/messages/send/whatsapp', body)
-          .then(response => {
-            resolve(response.data)
-          })
-          .catch(error => {
-            reject(error)
-          })
+    sendwhatsapp ({ commit }, data) {
+      return axiosDispatcher({
+        url: 'api/messages/send/whatsapp',
+        method: 'post',
+        data: data
       })
     },
-    sendemail ({ commit }, body) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.post('api/messages/send/email', body)
-          .then(response => {
-            resolve(response.data)
-          })
-          .catch(error => {
-            reject(error)
-          })
-      })
-    },
-    sendcna ({ commit }, body) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.post('api/messages/send/cna', body)
-          .then(response => {
-            resolve(response.data)
-          })
-          .catch(error => {
-            reject(error)
-          })
+    sendemail ({ commit }, data) {
+      return axiosDispatcher({
+        url: 'api/messages/send/email',
+        method: 'post',
+        data: data
       })
     },
     getOccurrenceMessage ({ commit }, messageId) {

@@ -22,7 +22,14 @@
               <el-input v-model="$store.state.accountModule.email" disabled />
             </el-form-item>
             <el-form-item label="Nova senha">
-              <el-input v-model="profileForm.newPassword" type="password">
+              <el-input v-model="profileForm.newPassword" :type="passwordType" auto-complete="new-password" @keyup.enter.native="passwordModal">
+                <span slot="append" class="float-button">
+                  <el-button type="text" @click="showPassword = !showPassword">
+                    <jus-icon
+                      :icon="showPassword ? 'hide' : 'eye'"
+                      class="show-password" />
+                  </el-button>
+                </span>
                 <el-button slot="append" @click="passwordModal">Alterar</el-button>
               </el-input>
             </el-form-item>
@@ -48,7 +55,7 @@
               <br>
               <el-form-item label="Nome da equipe">
                 <el-input v-model="teamName">
-                  <el-button slot="append" @click.prevent="changeTeamName">Alterar</el-button>
+                  <el-button slot="append" @click.prevent="changeTeamName">Alterar nome</el-button>
                 </el-input>
               </el-form-item>
             </el-form>
@@ -99,13 +106,7 @@
             </el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="blacklist" class="configuration-view__blacklist">
-          <span slot="label">
-            <el-tooltip content="Somentes administradores Justto">
-              <i class="el-icon-lock"/>
-            </el-tooltip>
-            Blacklist
-          </span>
+        <el-tab-pane label="Blacklist" name="blacklist" class="configuration-view__blacklist">
           <configuration-blacklist />
         </el-tab-pane>
         <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="minute" class="configuration-view__minute">
@@ -145,29 +146,48 @@
         :visible.sync="dialogPassword"
         :before-close="cancelChangePassword"
         title="Alterar senha"
-        width="30%">
-        <el-form label-position="top">
+        width="40%">
+        <el-form
+          ref="profileForm"
+          :disabled="loadingUpdatePassword"
+          :model="profileForm"
+          :rules="profileFormRules"
+          label-position="top">
           <el-form-item label="Nova senha">
-            <el-input v-model="profileForm.newPassword" type="password" disabled />
+            <el-input v-model="profileForm.newPassword" :type="passwordType" disabled>
+              <el-button slot="append" @click="showPassword = !showPassword">
+                <jus-icon :icon="showPassword ? 'hide' : 'eye'" class="show-password" />
+              </el-button>
+            </el-input>
           </el-form-item>
-          <el-form-item label="Senha atual">
-            <el-input v-model="profileForm.password" type="password" />
+          <el-form-item label="Confirme a nova senha" prop="newPasswordConfirm">
+            <el-input v-model="profileForm.newPasswordConfirm" :type="passwordType" auto-complete="new-password" @keyup.enter.native="updatePassword">
+              <el-button slot="append" @click="showPassword = !showPassword">
+                <jus-icon :icon="showPassword ? 'hide' : 'eye'" class="show-password" />
+              </el-button>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="Senha atual" prop="password">
+            <el-input v-model="profileForm.password" :type="passwordType" auto-complete="new-password" @keyup.enter.native="updatePassword">
+              <el-button slot="append" @click="showPassword = !showPassword">
+                <jus-icon :icon="showPassword ? 'hide' : 'eye'" class="show-password" />
+              </el-button>
+            </el-input>
           </el-form-item>
         </el-form>
         <span slot="footer">
           <el-button plain @click="cancelChangePassword">Cancelar</el-button>
-          <el-button :disabled="!profileForm.password.length" type="primary" @click="updatePassword">
-            Alterar
-          </el-button>
+          <el-button :loading="loadingUpdatePassword" type="primary" @click="updatePassword">Alterar senha</el-button>
         </span>
       </el-dialog>
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="dialogInvite"
         title="Convide pessoas à sua equipe"
-        width="600px">
+        width="50%">
         <el-form
           ref="inviteForm"
+          :disabled="loadingInvite"
           :model="inviteForm"
           :rules="inviteFormRules"
           label-position="top"
@@ -186,7 +206,7 @@
           </el-form-item>
         </el-form>
         <span slot="footer">
-          <el-button type="primary" @click="inviteTeammate">Convidar</el-button>
+          <el-button :loading="loadingInvite" type="primary" @click="inviteTeammate">Convidar</el-button>
         </span>
       </el-dialog>
     </template>
@@ -209,9 +229,13 @@ export default {
       dialogPassword: false,
       dialogMember: false,
       dialogInvite: false,
+      loadingInvite: false,
+      loadingUpdatePassword: false,
+      showPassword: false,
       roles: [{ key: 'NEGOTIATOR', value: 'Negociador(a)' }, { key: 'ADMINISTRATOR', value: 'Administrador(a)' }],
       profileForm: {
         newPassword: '',
+        newPasswordConfirm: '',
         password: '',
         phone: ''
       },
@@ -219,7 +243,9 @@ export default {
         phone: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
-        ]
+        ],
+        password: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        newPasswordConfirm: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       inviteForm: {
         email: '',
@@ -241,10 +267,10 @@ export default {
   },
   computed: {
     isAdminProfile () {
-      let email = (' ' + this.$store.getters.accountEmail).slice(1)
-      let domain = email.replace(/.*@/, '')
-      if (domain === 'justto.com.br') return true
       return this.$store.getters.isAdminProfile
+    },
+    passwordType () {
+      return this.showPassword ? 'text' : 'password'
     }
   },
   mounted () {
@@ -343,6 +369,7 @@ export default {
             type: 'warning'
           })
         } else {
+          this.profileForm.newPasswordConfirm = ''
           this.profileForm.password = ''
           this.dialogPassword = true
         }
@@ -355,27 +382,45 @@ export default {
       }
     },
     updatePassword () {
-      this.$store.dispatch('updatePassword', {
-        password: this.profileForm.newPassword,
-        oldPassword: this.profileForm.password
-      }).then(() => {
-        // SEGMENT TRACK
-        this.$jusSegment('Senha do usuário alterada')
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Senha alterada com sucesso.',
-          type: 'success'
-        })
-        this.dialogPassword = false
-      }).catch(error => {
-        if (error.response.status === 401) {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Senha atual incorreta',
-            type: 'warning'
+      this.$refs.profileForm.validateField(['password', 'newPasswordConfirm'], errorMessage => {
+        if (!errorMessage) {
+          if (this.profileForm.newPassword !== this.profileForm.newPasswordConfirm) {
+            this.$jusNotification({
+              title: 'Ops!',
+              message: 'Senha de confirmação não corresponde à nova senha.',
+              type: 'warning'
+            })
+            return false
+          }
+          this.loadingUpdatePassword = true
+          this.$store.dispatch('updatePassword', {
+            password: this.profileForm.newPassword,
+            oldPassword: this.profileForm.password
+          }).then(() => {
+            // SEGMENT TRACK
+            this.$jusSegment('Senha do usuário alterada')
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Senha alterada com sucesso.',
+              type: 'success'
+            })
+            this.profileForm.password = ''
+            this.profileForm.newPassword = ''
+            this.profileForm.newPasswordConfirm = ''
+            this.dialogPassword = false
+          }).catch(error => {
+            if (error.response.status === 401) {
+              this.$jusNotification({
+                title: 'Ops!',
+                message: 'Senha atual incorreta',
+                type: 'warning'
+              })
+            } else {
+              this.$jusNotification({ type: 'error' })
+            }
+          }).finally(() => {
+            this.loadingUpdatePassword = false
           })
-        } else {
-          this.$jusNotification({ type: 'error' })
         }
       })
     },
@@ -419,6 +464,7 @@ export default {
     inviteTeammate () {
       this.$refs['inviteForm'].validate((valid) => {
         if (valid) {
+          this.loadingInvite = true
           this.$store.dispatch('inviteTeammates', [{
             email: this.inviteForm.email,
             profile: this.inviteForm.profile
@@ -444,6 +490,8 @@ export default {
                 type: 'warning'
               })
             }
+          }).finally(() => {
+            this.loadingInvite = false
           })
         } else {
           return false
@@ -452,10 +500,13 @@ export default {
     },
     changeTeamName () {
       if (this.teamName) {
-        this.$store.dispatch('editWorkpace', {
+        this.$store.dispatch('changeTeamName', {
           teamName: this.teamName,
-          name: this.companyName
+          id: this.$store.getters.workspaceId
         }).then(() => {
+          const workspace = this.$store.getters.workspace
+          workspace.teamName = this.teamName
+          this.$store.commit('setWorkspace', workspace)
           // SEGMENT TRACK
           this.$jusSegment('Nome da equipe alterado')
           this.$jusNotification({
@@ -463,6 +514,9 @@ export default {
             message: 'Nome da equipe alterado com sucesso.',
             type: 'success'
           })
+        }).catch(error => {
+          console.error(error)
+          this.$jusNotification({ type: 'error' })
         })
       } else {
         this.$jusNotification({
@@ -545,6 +599,9 @@ export default {
   }
   p {
     text-align: justify;
+  }
+  .show-password {
+
   }
 }
 </style>

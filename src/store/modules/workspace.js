@@ -1,3 +1,5 @@
+import axiosDispatcher from '@/store/axiosDispatcher.js'
+
 const workspace = JSON.parse(localStorage.getItem('jusworkspace')) || {}
 const profile = localStorage.getItem('jusprofile') || ''
 
@@ -24,7 +26,7 @@ const workspaceModule = {
     setWorkspace (state, workspace) {
       if (workspace) {
         // eslint-disable-next-line
-        axios.defaults.headers.common['Workspace'] = workspace.subDomain
+        axios.defaults.headers.common['Workspace'] = workspace.subDomain || workspace.subdomain
         state.subdomain = workspace.subDomain
         state.name = workspace.name
         state.teamName = workspace.teamName
@@ -114,7 +116,14 @@ const workspaceModule = {
           })
       })
     },
-    inviteTeammates ({ commit, state }, teammates) {
+    changeTeamName ({ commit }, data) {
+      return axiosDispatcher({
+        url: '/api/workspaces/teamName',
+        method: 'patch',
+        data
+      })
+    },
+    inviteTeammates ({ state }, teammates) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('api/accounts/workspaces/invite-teammates/' + state.subdomain, teammates)
@@ -234,17 +243,6 @@ const workspaceModule = {
           })
       })
     },
-    removeInbox ({ commit }, id) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.delete('api/workspaces/inboxes/' + id)
-          .then(response => {
-            resolve(response)
-          }).catch(error => {
-            reject(error)
-          })
-      })
-    },
     getMyStrategies ({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
@@ -269,9 +267,51 @@ const workspaceModule = {
             reject(error)
           })
       })
+    },
+    adminWorkspaces ({ commit }, params) {
+      return new Promise((resolve, reject) => {
+        let headers = {}
+        if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
+        // eslint-disable-next-line
+        axios({
+          ...headers,
+          ...{
+            url: params.url || `api/workspaces/${params.workspaceId || ''}`,
+            method: params.method,
+            params: params.params,
+            data: params.data
+          }
+        }).then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    adminWorkspaceUsers ({ commit }, params) {
+      return new Promise((resolve, reject) => {
+        let headers = {}
+        if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
+        const config = {
+          ...headers,
+          ...{
+            url: params.url || `api/workspaces${params.workspaceId ? '/' + params.workspaceId : ''}/members/${params.userId || ''}`,
+            method: params.method,
+            params: params.params,
+            data: params.data
+          }
+        }
+        // eslint-disable-next-line
+        axios(config).then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
     }
   },
   getters: {
+    workspace: state => state,
     hasWorkspace: state => {
       return state.status !== '' && state.status !== 'CREATING'
     },
