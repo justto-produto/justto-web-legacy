@@ -44,12 +44,22 @@
               <jus-icon :icon="buildIcon(occurrence)" :class="buildIcon(occurrence)"/>
             </span>
           </el-tooltip>
-          <span v-html="buildLogContent(occurrence)" />
+          <span v-html="buildContent(occurrence)" />
           <span class="dispute-view-occurrences__log-info">
             <span v-html="buildHour(occurrence)" />
             <div>•</div>
             <el-tooltip :content="buildStatusTooltip(occurrence)">
               <jus-icon :icon="buildStatusIcon(occurrence)"/>
+            </el-tooltip>
+            <el-tooltip v-if="occurrence.merged">
+              <div slot="content">
+                <div v-for="merged in occurrence.merged" :key="merged.id + new Date().getTime()">
+                  Às {{ buildHour(merged) }}
+                </div>
+              </div>
+              <span>
+                (+{{ occurrence.merged.length }})
+              </span>
             </el-tooltip>
           </span>
         </el-card>
@@ -85,6 +95,27 @@
               </div>
             </el-card>
             <div :class="(occurrence.interaction ? occurrence.interaction.direction : '')" class="dispute-view-occurrences__card-info">
+              <el-tooltip v-if="occurrence.merged">
+                <div slot="content">
+                  <div v-for="merged in occurrence.merged" :key="merged.id + merged.id + new Date().getTime()">
+                    {{ buildHour(merged) + ' - ' }}
+                    <span
+                      v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && merged.interaction.direction === 'OUTBOUND'"
+                      class="dispute-view-occurrences__for-to">
+                      Para: {{ merged.interaction.message.receiver | phoneMask }}
+                    </span>
+                    <span
+                      v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && merged.interaction.direction === 'INBOUND'"
+                      class="dispute-view-occurrences__for-to">
+                      Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
+                    </span>
+                  </div>
+                </div>
+                <span>
+                  (+{{ occurrence.merged.length }} )
+                </span>
+              </el-tooltip>
+              <div v-if="occurrence.merged">•</div>
               <el-tooltip :content="buildStatusTooltip(occurrence)">
                 <jus-icon :icon="buildStatusIcon(occurrence)"/>
               </el-tooltip>
@@ -179,21 +210,32 @@ export default {
   },
   computed: {
     datedOccurrences () {
-      let datedOccurrences = {}
+      // APENAS ABA COMUNICAÇÃO
       let self = this
-      this.$store.getters.occurrences.map(o => {
-        if (o.type === 'NOTE') return 0
+      let filteredOccurrences = this.$store.getters.occurrences.filter(o => {
+        if (o.type === 'NOTE') return null
         if (self.typingTab === '1' && (
           ['NOTE', 'LOG'].includes(o.type) ||
           (o.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS', 'SCHEDULER'].includes(o.interaction.type))
-        )) {
-          return 0
-        }
-        let currentDay = this.$moment(o.createAt.dateTime).format('DD/MM/YYYY')
-        if (!datedOccurrences.hasOwnProperty(currentDay)) {
-          datedOccurrences[currentDay] = []
-        }
-        datedOccurrences[currentDay].push(o)
+        )) return null
+        return true
+      })
+      // MERGE DE DESCRIÇÃO
+      let previousOccurrenceIndex
+      filteredOccurrences.forEach((fo, index) => {
+        let previous = filteredOccurrences[previousOccurrenceIndex]
+        if (previous && this.buildContent(fo) === this.buildContent(previous)) {
+          if (!previous.merged) previous.merged = []
+          previous.merged.push(fo)
+          fo.toDelete = true
+        } else previousOccurrenceIndex = index
+      })
+      // AGRUPA POR DATA
+      let datedOccurrences = {}
+      filteredOccurrences.filter(fo => !fo.toDelete).forEach(fo => {
+        let currentDay = this.$moment(fo.createAt.dateTime).format('DD/MM/YYYY')
+        if (!datedOccurrences.hasOwnProperty(currentDay)) datedOccurrences[currentDay] = []
+        datedOccurrences[currentDay].push(fo)
       })
       return datedOccurrences
     },
@@ -330,6 +372,13 @@ export default {
       return occurrence.description
     },
     buildContent (occurrence) {
+      if (!occurrence) return ''
+      if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
+        if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
+          return 'Disputa visualizada'
+        }
+        return occurrence.description
+      }
       if (occurrence.interaction && Object.keys(occurrence.interaction.properties).length) {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT' && occurrence.interaction.properties.BANK_INFO) {
           return '<strong>Dados bancários:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')

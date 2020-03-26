@@ -45,15 +45,17 @@
             </span>
             <el-tooltip v-if="selectedContacts.length > 1">
               <div slot="content">
-                <span v-for="selected in selectedContacts" :key="selected.id">
-                  <div v-if="selected.number">
-                    <jus-icon icon="phone" is-white style="width: 14px;vertical-align: top;" />
-                    {{ selected.number | phoneMask }}
-                  </div>
-                  <div v-else-if="selected.address">
-                    <jus-icon icon="email" is-white style="width: 14px;vertical-align: top;" />
-                    {{ selected.address }}
-                  </div>
+                <span v-for="(selected, index) in selectedContacts" :key="selected.id">
+                  <span v-if="index !== 0">
+                    <div v-if="selected.number">
+                      <jus-icon icon="phone" is-white style="width: 14px;vertical-align: top;" />
+                      {{ selected.number | phoneMask }}
+                    </div>
+                    <div v-else-if="selected.address">
+                      <jus-icon icon="email" is-white style="width: 14px;vertical-align: top;" />
+                      {{ selected.address }}
+                    </div>
+                  </span>
                 </span>
               </div>
               <span>
