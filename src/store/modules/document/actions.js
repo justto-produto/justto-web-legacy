@@ -1,4 +1,5 @@
 const FileSaver = require('file-saver')
+import axiosDispatcher from '@/store/axiosDispatcher.js'
 
 const actions = {
   getDocumentModels ({ commit }) {
@@ -95,6 +96,9 @@ const actions = {
         reject(error)
       })
     })
+  },
+  getDocumentTypes () {
+    return axiosDispatcher({ url: 'api/documents/model/input/types' })
   }
 }
 

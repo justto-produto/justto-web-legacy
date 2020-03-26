@@ -21,86 +21,18 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="editDialogVisible" title="Editar minuta">
+    <el-dialog :visible.sync="editDialogVisible" title="Editar minuta" width="100%">
       <iframe :src="editDialogUrl" />
       <el-card shadow="never" class="panel-minute-view__tips">
         <h2>Variáveis disponíveis</h2>
-        <span v-pre class="list">
-          <div>
-            <span>Nome do autor</span>
-            <div>{{ CLAIMANT }}</div>
-          </div>
-          <div>
-            <span>Nome do réu</span>
-            <div>{{ RESPONDENT }}</div>
-          </div>
-          <div>
-            <span>Nome do negociador</span>
-            <div>{{ NEGOTIATOR_NAME }}</div>
-          </div>
-          <div>
-            <span>Data na assinatura do contrato</span>
-            <div>{{ SIGN_DATE }}</div>
-          </div>
-          <div>
-            <span>Cidade na assinatura do contrato</span>
-            <div>{{ SIGN_CITY }}</div>
-          </div>
-          <div>
-            <span>Nome do banco para depósito</span>
-            <div>{{ BANK_NAME }}</div>
-          </div>
-          <div>
-            <span>Agência do banco para depósito</span>
-            <div>{{ BANK_AGENCY }}</div>
-          </div>
-          <div>
-            <span>Conta bancária para depósito</span>
-            <div>{{ BANK_ACCOUNT }}</div>
-          </div>
-          <div>
-            <span>Nome do favorecido para depósito</span>
-            <div>{{ BANK_DEPOSIT_NAME }}</div>
-          </div>
-          <div>
-            <span>Documento do favorecido para depósito</span>
-            <div>{{ BANK_DEPOSIT_DOCUMENT }}</div>
-          </div>
-          <div>
-            <span>Dias para depósito</span>
-            <div>{{ DAYS_TO_DEPOSIT }}</div>
-          </div>
-          <div>
-            <span>Valor a ser depositado (valor do acordo)</span>
-            <div>{{ VALUE_TO_DEPOSIT }}</div>
-          </div>
-          <div>
-            <span>Número do processo</span>
-            <div>{{ DISPUTE_CODE }}</div>
-          </div>
-          <div>
-            <span>Comarca</span>
-            <div>{{ DISPUTE_ORG }}</div>
-          </div>
-          <div>
-            <span>Nome do advogado do réu</span>
-            <div>{{ RESPONDENT_LAWYER_NAME }}</div>
-          </div>
-          <div>
-            <span>OAB do advogado do réu</span>
-            <div>{{ RESPONDENT_LAWYER_OABS }}</div>
-          </div>
-          <div>
-            <span>Nome do advogado da parte</span>
-            <div>{{ CLAIMANT_LAWYER_NAME }}</div>
-          </div>
-          <div>
-            <span>OAB do advogado da parte</span>
-            <div>{{ CLAIMANT_LAWYER_OABS }}</div>
-          </div>
-          <div>
-            <span>Nome do assinador eletrônico do documento (ex: jurista, clicksign)</span>
-            <div>{{ ACTIVE_SIGNER }}</div>
+        <span class="list">
+          <div v-for="(key, value) in types">
+            <span>{{ key }}</span>
+            <div>
+              <span v-pre>{{ </span>
+                {{ value }}
+              <span v-pre>}}</span>
+            </div>
           </div>
         </span>
       </el-card>
@@ -117,7 +49,8 @@ export default {
       search: '',
       editDialogVisible: false,
       editDialogUrl: '',
-      minutes: []
+      minutes: [],
+      types: {}
     }
   },
   computed: {
@@ -132,6 +65,9 @@ export default {
   },
   mounted () {
     this.fetchMinutes()
+    this.$store.dispatch('getDocumentTypes').then(response =>  {
+      this.types = response.data
+    })
   },
   methods: {
     fetchMinutes () {
@@ -228,10 +164,6 @@ export default {
     display: flex;
   }
   .el-dialog {
-    width: calc(100% - 4vh);
-    margin-top: 2vh !important;
-    margin-bottom: 2vh;
-    height: calc(100% - 4vh);
     overflow: auto;
   }
   .el-table::before  {
@@ -239,8 +171,7 @@ export default {
   }
   .el-dialog__body {
     display: flex;
-    padding-bottom: 20px;
-    height: calc(100% - 64px);
+    height: calc(100% - 116px);
   }
   iframe {
     width: 100%;
@@ -249,28 +180,32 @@ export default {
     border: 0;
     background-color: $--color-secondary-light-9;
     margin-left: 10px;
-    width: 360px;
+    width: 376px;
     font-size: 13px;
     overflow-y: auto;
     * {
       border: 0;
     }
     h2 {
-      margin-top: 0;
-      margin-bottom: 10px;
+      margin-top: 10px;
+      margin-bottom: 14px;
     }
     .list {
       > div {
-        margin-top: 6px;
+        margin-top: 8px;
+        display: flex;
+        flex-direction: column;
+        > span {
+          font-weight: 600;
+        }
         div {
           padding-left: 10px;
+          font-size: 12px;
         }
       }
-      display: flex;
-      flex-direction: column;
-      span {
-        font-weight: 600;
-      }
+    }
+    .el-card__body {
+      padding: 16px;
     }
   }
 }
