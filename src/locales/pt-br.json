@@ -92,7 +92,8 @@
     "CANCEL_MESSAGES": "cancelar mensagens agendadas",
     "CHANGE_STRATEGY": "alterar estratégia",
     "CHANGE_EXPIRATION_DATE": "alterar data limite",
-    "RENEGOTIATE": "retornar para negociação"
+    "RENEGOTIATE": "retornar para negociação",
+    "EDIT-NEGOTIATORS": "editar negociadores"
   },
   "fields": {
     "claimantParty": "Parte contrária",

@@ -490,7 +490,8 @@ const disputeActions = {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
         value: params.value,
-        note: params.note
+        note: params.note,
+        updateUpperRange: params.updateUpperRange
       }).then(response => {
         resolve(response.data)
       }).catch(error => {
