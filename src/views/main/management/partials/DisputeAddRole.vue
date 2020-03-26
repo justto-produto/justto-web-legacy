@@ -1,6 +1,7 @@
 <template lang="html">
   <el-dialog
     :close-on-click-modal="false"
+    :close-on-press-escape="false"
     :visible.sync="dialogVisible"
     title="Cadastrar parte"
     width="40%">
@@ -19,30 +20,36 @@
             :value="party" />
         </el-select>
       </el-form-item>
-      <div v-if="!secondStep" class="dispute-add-role__search">
-        <el-form-item v-if="['claimantParty', 'respondentParty'].includes(newRole.party)" label="CPF/CNPJ" prop="searchDocumentNumber">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.searchDocumentNumber" />
-        </el-form-item>
-        <el-row v-else-if="newRole.party" :gutter="20">
-          <el-col :span="12">
-            <el-form-item class="oab" label="OAB" prop="searchOabNumber">
-              <el-input v-model="newRole.searchOabNumber" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item class="state" label="Estado" prop="searchOabState">
-              <el-select v-model="newRole.searchOabState" placeholder="" filterable>
-                <el-option
-                  v-for="(state, index) in $store.state.statesList"
-                  :key="`${index}-${state}`"
-                  :label="state"
-                  :value="state" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-button v-if="newRole.party" type="primary" @click="searchPerson">
-          <jus-icon icon="right" />
+      <div v-if="!secondStep">
+        <div class="dispute-add-role__search">
+          <el-form-item v-if="['claimantParty', 'respondentParty'].includes(newRole.party)" label="CPF/CNPJ" prop="searchDocumentNumber">
+            <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.searchDocumentNumber" @keyup.enter.native="searchPerson"/>
+          </el-form-item>
+          <el-row v-else-if="newRole.party" :gutter="20">
+            <el-col :span="12">
+              <el-form-item class="oab" label="OAB" prop="searchOabNumber">
+                <el-input v-model="newRole.searchOabNumber" @keyup.enter.native="searchPerson" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item class="state" label="Estado" prop="searchOabState">
+                <el-select v-model="newRole.searchOabState" placeholder="" filterable>
+                  <el-option
+                    v-for="(state, index) in $store.state.statesList"
+                    :key="`${index}-${state}`"
+                    :label="state"
+                    :value="state"
+                    @keyup.enter.native="searchPerson" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-button v-if="newRole.party" type="primary" @click="searchPerson">
+            <jus-icon icon="right" />
+          </el-button>
+        </div>
+        <el-button v-if="newRole.party" type="text" @click="secondStep = true">
+          Continuar sem documento
         </el-button>
       </div>
       <div v-else>
@@ -172,7 +179,7 @@
     </el-form>
     <span slot="footer">
       <el-button plain @click="dialogVisible = false">Cancelar</el-button>
-      <el-button :disabled="!secondStep || registerLoading" type="primary" @click="registerRole">Cadastrar</el-button>
+      <el-button :loading="registerLoading" :disabled="!secondStep" type="primary" @click="registerRole">Cadastrar</el-button>
     </span>
   </el-dialog>
 </template>
@@ -217,26 +224,12 @@ export default {
       },
       newRoleRules: {
         name: [
-          { required: false, message: 'Campo obrigatório', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'submit' }
         ],
-        phone: [
-          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' },
-          { required: false, message: 'Campo obrigatório', trigger: 'submit' }
-        ],
-        email: [
-          { type: 'email', message: 'E-mail inválido', trigger: 'submit' },
-          { required: false, message: 'Campo obrigatório', trigger: 'submit' }
-        ],
-        oab: [
-          { required: false, message: 'Campo obrigatório', trigger: 'submit' }
-        ],
-        state: [
-          { required: false, message: 'Campo obrigatório', trigger: 'submit' }
-        ],
-        documentNumber: [
-          { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' }
-        ],
+        phone: [{ validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }],
+        email: [{ type: 'email', message: 'E-mail inválido', trigger: 'submit' }],
+        documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' }],
         searchDocumentNumber: [
           { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' },
           { required: true, message: 'Campo obrigatório', trigger: 'submit' }
@@ -269,6 +262,7 @@ export default {
   watch: {
     dialogVisible () {
       this.secondStep = false
+      this.disableDocumentNumber = false
       this.newRole = {
         name: '',
         searchDocumentNumber: '',
@@ -376,6 +370,7 @@ export default {
       this.newRole.searchOabNumber = ''
       this.newRole.name = ''
       this.secondStep = false
+      this.disableDocumentNumber = false
     },
     addOab () {
       let isValid = true
@@ -499,7 +494,7 @@ export default {
       width: 100%;
     }
     .el-button {
-      margin-left: 20px;
+      margin-left: 10px;
       margin-top: 8px;
       padding: 9px 20px;
     }
