@@ -26,11 +26,11 @@
       <el-card shadow="never" class="panel-minute-view__tips">
         <h2>Variáveis disponíveis</h2>
         <span class="list">
-          <div v-for="(key, value) in types">
+          <div v-for="(key, value) in types" :key="key">
             <span>{{ key }}</span>
             <div>
               <span v-pre>{{ </span>
-                {{ value }}
+              {{ value }}
               <span v-pre>}}</span>
             </div>
           </div>
@@ -65,7 +65,7 @@ export default {
   },
   mounted () {
     this.fetchMinutes()
-    this.$store.dispatch('getDocumentTypes').then(response =>  {
+    this.$store.dispatch('getDocumentTypes').then(response => {
       this.types = response.data
     })
   },

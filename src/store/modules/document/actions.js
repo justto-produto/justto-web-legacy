@@ -1,5 +1,5 @@
-const FileSaver = require('file-saver')
 import axiosDispatcher from '@/store/axiosDispatcher.js'
+const FileSaver = require('file-saver')
 
 const actions = {
   getDocumentModels ({ commit }) {
