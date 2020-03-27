@@ -341,6 +341,7 @@
               <el-select
                 v-model="selectedStrategyId"
                 placeholder="Escolha a nova estratégia"
+                filterable
                 data-testid="strategy-input">
                 <el-option
                   v-for="(strategy, index) in strategies"
@@ -380,7 +381,7 @@
           </el-col>
           <el-col :span="16">
             <el-form-item label="Proposto por" prop="lastOfferValueName">
-              <el-select v-model="selectedNegotiatorId" placeholder="Autor da contraproposta" data-testid="proposal-negotiator-input">
+              <el-select v-model="selectedNegotiatorId" filterable placeholder="Autor da contraproposta" data-testid="proposal-negotiator-input">
                 <el-option
                   v-for="(negotiator, index) in disputeNegotiations"
                   :key="`${index}-${negotiator.id}`"
