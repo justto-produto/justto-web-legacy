@@ -48,9 +48,7 @@
           <div v-for="(key, value) in types" :key="key">
             <span>{{ key }}</span>
             <div>
-              <span v-pre>{{ </span>
-              {{ value }}
-              <span v-pre>}}</span>
+              <span v-pre>{{</span>{{ value }}<span v-pre>}}</span>
             </div>
           </div>
         </span>
