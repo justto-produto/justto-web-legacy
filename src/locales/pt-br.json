@@ -94,6 +94,8 @@
     "RESTART-ENGAGEMENT": "reengajar",
     "SETTLED": "ganhar",
     "UNSETTLED": "perder",
+    "SEND-UNSETTLED": "perder",
+    "SEND-COUNTERPROPOSAL": "perder",
     "DELETE": "excluir",
     "PAUSED": "pausar",
     "RESUME": "retomar",

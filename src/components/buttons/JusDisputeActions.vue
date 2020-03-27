@@ -442,10 +442,10 @@ export default {
           this.chooseUnsettledDialogVisible = true
           break
         case 'send-unsettled':
-          if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
+          if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && (!this.dispute.lastCounterOfferValue || this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange)) {
             this.disputeAction('counterproposal')
           } else {
-            additionParams = { body: { reason: this.unsettledTypes[this.unsrunsettledType] } }
+            additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
             this.doAction('unsettled', message, additionParams).then(() => {
               this.chooseUnsettledDialogVisible = false
             }).finally(() => {
@@ -539,8 +539,9 @@ export default {
             resolve()
             this.$jusNotification({
               title: 'Yay!',
-              message: 'Ação ' + message.titel.toUpperCase() + ' realizada com sucesso.',
-              type: 'success'
+              message: 'Ação <b>' + message.title.toUpperCase() + '</b> realizada com sucesso.',
+              type: 'success',
+              dangerouslyUseHTMLString: true
             })
           }).catch(e => {
             reject(e)
