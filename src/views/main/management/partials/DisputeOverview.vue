@@ -175,7 +175,7 @@
             </div>
             <div v-show="role.phones.length" class="dispute-overview-view__info-line">
               <span class="title">Telefone(s):</span>
-              <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
+              <span v-for="(phone, index) in role.phones.filter(p => !p.archived).sort(p => p.isMain ? -1 : 1)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                 <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                   <span class="ellipsis">
                     <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
@@ -195,7 +195,7 @@
             </div>
             <div v-show="role.emails.length" class="dispute-overview-view__info-line">
               <span class="title">E-mail(s):</span>
-              <span v-for="(email, index) in role.emails.filter(p => !p.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
+              <span v-for="(email, index) in role.emails.filter(e => !e.archived).sort(e => e.isMain ? -1 : 1)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
                 <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                 <span class="ellipsis">
                   <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
@@ -1200,6 +1200,8 @@ export default {
       this.roleForm.emails = this.roleForm.emails.filter(f => !f.archived)
       this.roleForm.oabs = this.roleForm.oabs.filter(f => !f.archived)
       this.roleForm.phones = this.roleForm.phones.filter(f => !f.archived)
+      if (this.roleForm.emails.length) this.roleForm.emails = this.roleForm.emails.sort(e => e.isMain ? -1 : 1)
+      if (this.roleForm.phones.length) this.roleForm.phones = this.roleForm.phones.sort(p => p.isMain ? -1 : 1)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },
     editRole () {
