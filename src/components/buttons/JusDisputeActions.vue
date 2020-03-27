@@ -256,11 +256,12 @@
       data-testid="choose-unsettled-dialog">
       <p>Confirmar proposta aceita no valor de
         <el-tooltip content="Clique para alterar">
-          <el-button type="text" @click="showSettledForm = true">{{ counterOfferForm.lastCounterOfferValue  | currency }}</el-button>
+          <el-button type="text" @click="showSettledForm = true">{{ counterOfferForm.lastCounterOfferValue | currency }}</el-button>
         </el-tooltip>
       </p>
-      <el-form v-if="showSettledForm"
+      <el-form
         v-loading="modalLoading"
+        v-if="showSettledForm"
         ref="counterOfferForm"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
