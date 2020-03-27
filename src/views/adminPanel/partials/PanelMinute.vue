@@ -1,7 +1,22 @@
 <template lang="html">
   <div class="panel-minute-view">
-    <el-table v-loading="loadingMinutes" :data="filteredMinutes" width="100%">
-      <el-table-column prop="name" label="Nome"/>
+    <el-table v-loading="loadingMinutes" :key="tableKey" :data="filteredMinutes" width="100%">
+      <el-table-column class-name="panel-minute-view__name" prop="name" label="Nome">
+        <template slot-scope="props">
+          <el-input
+            v-show="props.row.editing"
+            :ref="'input' + props.row.id"
+            v-model="props.row.name"
+            @keyup.enter.native="props.row.editing = false, editMinuteName(props.row)"
+            @blur="props.row.editing = false, editMinuteName(props.row)" />
+          <div
+            v-show="!props.row.editing"
+            class="label"
+            @click="props.row.editing = true ,focusInput(props.row.id, props.row.name)">
+            {{ props.row.name }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="right" width="400px">
         <template slot="header" slot-scope="scope">
           <el-input
@@ -13,10 +28,14 @@
         </template>
         <template slot-scope="props">
           <el-tooltip v-if="props.row.privateDocumentModel" content="Excluir">
-            <el-button size="mini" type="danger" plain icon="el-icon-delete" @click="deleteMinute(props.row.id)" />
+            <el-button size="mini" type="danger" plain icon="el-icon-delete" @click="deleteMinute(props.row.id)">
+              Excluir
+            </el-button>
           </el-tooltip>
           <el-tooltip content="Editar">
-            <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="editMinute(props.row.url)" />
+            <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="editMinute(props.row.url)">
+              Editar documento
+            </el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -45,6 +64,8 @@ export default {
   name: 'PanelMinute',
   data () {
     return {
+      tableKey: 0,
+      nameToEdit: '',
       loadingMinutes: true,
       search: '',
       editDialogVisible: false,
@@ -147,6 +168,15 @@ export default {
           type: 'success'
         })
       })
+    },
+    focusInput (minuteId, minuteName) {
+      this.tableKey += 1
+      this.nameToEdit = minuteName
+      this.$nextTick(() => this.$refs['input' + minuteId].$el.children[0].focus())
+    },
+    editMinuteName (minute) {
+      this.tableKey += 1
+      if (minute.name !== this.nameToEdit) this.$store.dispatch('editModel', minute)
     }
   }
 }
@@ -175,6 +205,20 @@ export default {
   }
   iframe {
     width: 100%;
+  }
+  &__name {
+    .label {
+      margin-top: 1px;
+      border: 1px solid transparent;
+    }
+    .el-input  {
+      margin-left: -5px;
+    }
+    .el-input__inner {
+      padding-left: 5px;
+      height: 28px;
+      line-height: 28px;
+    }
   }
   &__tips {
     border: 0;

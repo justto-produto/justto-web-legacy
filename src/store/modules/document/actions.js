@@ -70,6 +70,13 @@ const actions = {
       })
     })
   },
+  editModel ({ commit }, model) {
+    return axiosDispatcher({
+      url: 'api/documents/model/',
+      method: 'PUT',
+      data: model
+    })
+  },
   deleteModel ({ commit }, modelId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
