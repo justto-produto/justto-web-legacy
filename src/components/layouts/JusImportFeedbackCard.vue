@@ -28,6 +28,7 @@
         :default-first-option="false"
         value-key="name"
         clearable
+        filterable
         class="select-strategy"
         placeholder="Escolha uma estratégia"
         data-testid="feedback-strategy">
