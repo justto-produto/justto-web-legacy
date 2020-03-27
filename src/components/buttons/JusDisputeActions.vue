@@ -250,12 +250,12 @@
       :close-on-press-escape="false"
       :visible.sync="settledDialogVisible"
       append-to-body
-      title="Aceitar acordo"
+      title="Acordo Aceito"
       class="dispute-view-actions__choose-unsettled-dialog"
       width="600px"
       data-testid="choose-unsettled-dialog">
-      <p>O acordo setá fechado com os seguintes:</p>
-      <el-form
+      <p>Confirmar proposta aceita no valor de <el-button type="text" @click="disableSettledValue = false">{{ counterOfferForm.lastCounterOfferValue  | currency }}</el-button></p>
+      <el-form v-if="!disableSettledValue"
         v-loading="modalLoading"
         ref="counterOfferForm"
         :model="counterOfferForm"
@@ -265,9 +265,7 @@
           <el-col :span="12">
             <el-form-item label="Valor" prop="lastCounterOfferValue">
               <money
-                :disabled="disableSettledValue"
                 v-model="counterOfferForm.lastCounterOfferValue"
-                :class="disableSettledValue ? 'is-disabled-input' : ''"
                 class="el-input__inner"
                 data-testid="counterproposal-value-input"
                 maxlength="16" />
@@ -290,7 +288,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-button :disabled="modalLoading" type="text" @click="disableSettledValue = false">Alterar Valor</el-button>
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="settledDialogVisible = false">Cancelar</el-button>
@@ -681,10 +678,11 @@ export default {
         this.$refs.counterOfferForm.validate(valid => {
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
-              actionType = actionType === 'WIN' ? 'O valor inserido é maior que sua alçada máxima, fechar o acordo com este valor irá aumenta-la sua alçada máxima. Deseja continuar?' : 'Valor de contraproposta é maior que alçada máxima, deseja continuar?'
+              actionType = actionType === 'WIN' ? 'O valor inserido <b>irá majorar</b> a alçada máxima. Deseja continuar?' : 'Valor de contraproposta é maior que alçada máxima, deseja continuar?'
               this.$confirm(actionType, 'Atenção!', {
                 confirmButtonText: 'Continuar',
                 cancelButtonText: 'Cancelar',
+				dangerouslyUseHTMLString: true,
                 type: 'warning'
               }).then(() => {
                 resolve()
