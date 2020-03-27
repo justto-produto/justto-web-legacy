@@ -445,7 +445,7 @@ export default {
           if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && !this.dispute.lastCounterOfferValue) {
             this.disputeAction('counterproposal')
           } else {
-            additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
+            additionParams = { body: { reason: this.unsettledTypes[this.unsrunsettledType] } }
             this.doAction('unsettled', message, additionParams).then(() => {
               this.chooseUnsettledDialogVisible = false
             }).finally(() => {
@@ -532,12 +532,21 @@ export default {
           cancelButtonText: 'Cancelar',
           type: 'warning'
         }).then(() => {
+          this.modalLoading = true
           let params = { action: action, disputeId: this.dispute.id }
           if (additionParams) params = { ...params, ...additionParams }
           this.$store.dispatch('sendDisputeAction', params).then(() => {
             resolve()
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Ação ' + message.titel.toUpperCase() + ' realizada com sucesso.',
+              type: 'success'
+            })
           }).catch(e => {
             reject(e)
+            this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.modalLoading = false
           })
         })
       })
@@ -576,6 +585,7 @@ export default {
     },
 
     openSettledDialog () {
+      this.modalLoading = false
       this.disableSettledValue = true
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
       this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
@@ -585,12 +595,14 @@ export default {
       }
     },
     openEditNegotiatorsDialog () {
+      this.modalLoading = false
       this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
         return member.roles.includes('NEGOTIATOR') && !member.archived
       }).map(member => member.personId)
       this.editNegotiatorDialogVisible = true
     },
     openCounterproposalDialog () {
+      this.modalLoading = false
       this.counterOfferForm.lastCounterOfferValue = ''
       this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
       this.counterproposalDialogVisible = true
@@ -689,6 +701,7 @@ export default {
     },
     sendCounterproposal (updateUpperRange) {
       return new Promise((resolve, reject) => {
+        this.modalLoading = true
         this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
           this.$store.dispatch('sendDisputeCounterProposal', {
             disputeId: this.dispute.id,
@@ -699,6 +712,7 @@ export default {
             updateUpperRange: updateUpperRange || false
           }).then(() => {
             if (this.counterOfferForm.note) {
+              this.modalLoading = true
               let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
               let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
               this.$store.dispatch('sendDisputeNote', {
@@ -711,16 +725,26 @@ export default {
                 })
                 .catch(e => {
                   reject(e)
+                }).finally(() => {
+                  this.modalLoading = false
                 })
             } else {
               resolve()
               this.counterproposalDialogVisible = false
               this.settledDialogVisible = false
+              this.$jusNotification({
+                title: 'Yay!',
+                message: updateUpperRange ? 'Proposta aceita com sucesso.' : 'Contraproposta enviada com sucesso.',
+                type: 'success'
+              })
             }
           }).catch(e => {
             reject(e)
           }).catch(e => {
             reject(e)
+            this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.modalLoading = false
           })
         })
       })
