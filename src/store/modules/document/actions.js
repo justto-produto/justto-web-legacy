@@ -1,3 +1,4 @@
+import axiosDispatcher from '@/store/axiosDispatcher.js'
 const FileSaver = require('file-saver')
 
 const actions = {
@@ -69,6 +70,13 @@ const actions = {
       })
     })
   },
+  editModel ({ commit }, model) {
+    return axiosDispatcher({
+      url: 'api/documents/model/',
+      method: 'PUT',
+      data: model
+    })
+  },
   deleteModel ({ commit }, modelId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -95,6 +103,9 @@ const actions = {
         reject(error)
       })
     })
+  },
+  getDocumentTypes () {
+    return axiosDispatcher({ url: 'api/documents/model/input/types' })
   }
 }
 

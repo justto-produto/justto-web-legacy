@@ -1,7 +1,22 @@
 <template lang="html">
   <div class="panel-minute-view">
-    <el-table v-loading="loadingMinutes" :data="filteredMinutes" width="100%">
-      <el-table-column prop="name" label="Nome"/>
+    <el-table v-loading="loadingMinutes" :key="tableKey" :data="filteredMinutes" width="100%">
+      <el-table-column class-name="panel-minute-view__name" prop="name" label="Nome">
+        <template slot-scope="props">
+          <el-input
+            v-show="props.row.editing"
+            :ref="'input' + props.row.id"
+            v-model="props.row.name"
+            @keyup.enter.native="props.row.editing = false, editMinuteName(props.row)"
+            @blur="props.row.editing = false, editMinuteName(props.row)" />
+          <div
+            v-show="!props.row.editing"
+            class="label"
+            @click="props.row.editing = true ,focusInput(props.row.id, props.row.name)">
+            {{ props.row.name }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="right" width="400px">
         <template slot="header" slot-scope="scope">
           <el-input
@@ -13,94 +28,30 @@
         </template>
         <template slot-scope="props">
           <el-tooltip v-if="props.row.privateDocumentModel" content="Excluir">
-            <el-button size="mini" type="danger" plain icon="el-icon-delete" @click="deleteMinute(props.row.id)" />
+            <el-button size="mini" type="danger" plain icon="el-icon-delete" @click="deleteMinute(props.row.id)">
+              Excluir
+            </el-button>
           </el-tooltip>
           <el-tooltip content="Editar">
-            <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="editMinute(props.row.url)" />
+            <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="editMinute(props.row.url)">
+              Editar documento
+            </el-button>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="editDialogVisible" title="Editar minuta">
+    <el-dialog :visible.sync="editDialogVisible" title="Editar minuta" width="100%">
       <iframe :src="editDialogUrl" />
       <el-card shadow="never" class="panel-minute-view__tips">
         <h2>Variáveis disponíveis</h2>
-        <span v-pre class="list">
-          <div>
-            <span>Nome do autor</span>
-            <div>{{ CLAIMANT }}</div>
-          </div>
-          <div>
-            <span>Nome do réu</span>
-            <div>{{ RESPONDENT }}</div>
-          </div>
-          <div>
-            <span>Nome do negociador</span>
-            <div>{{ NEGOTIATOR_NAME }}</div>
-          </div>
-          <div>
-            <span>Data na assinatura do contrato</span>
-            <div>{{ SIGN_DATE }}</div>
-          </div>
-          <div>
-            <span>Cidade na assinatura do contrato</span>
-            <div>{{ SIGN_CITY }}</div>
-          </div>
-          <div>
-            <span>Nome do banco para depósito</span>
-            <div>{{ BANK_NAME }}</div>
-          </div>
-          <div>
-            <span>Agência do banco para depósito</span>
-            <div>{{ BANK_AGENCY }}</div>
-          </div>
-          <div>
-            <span>Conta bancária para depósito</span>
-            <div>{{ BANK_ACCOUNT }}</div>
-          </div>
-          <div>
-            <span>Nome do favorecido para depósito</span>
-            <div>{{ BANK_DEPOSIT_NAME }}</div>
-          </div>
-          <div>
-            <span>Documento do favorecido para depósito</span>
-            <div>{{ BANK_DEPOSIT_DOCUMENT }}</div>
-          </div>
-          <div>
-            <span>Dias para depósito</span>
-            <div>{{ DAYS_TO_DEPOSIT }}</div>
-          </div>
-          <div>
-            <span>Valor a ser depositado (valor do acordo)</span>
-            <div>{{ VALUE_TO_DEPOSIT }}</div>
-          </div>
-          <div>
-            <span>Número do processo</span>
-            <div>{{ DISPUTE_CODE }}</div>
-          </div>
-          <div>
-            <span>Comarca</span>
-            <div>{{ DISPUTE_ORG }}</div>
-          </div>
-          <div>
-            <span>Nome do advogado do réu</span>
-            <div>{{ RESPONDENT_LAWYER_NAME }}</div>
-          </div>
-          <div>
-            <span>OAB do advogado do réu</span>
-            <div>{{ RESPONDENT_LAWYER_OABS }}</div>
-          </div>
-          <div>
-            <span>Nome do advogado da parte</span>
-            <div>{{ CLAIMANT_LAWYER_NAME }}</div>
-          </div>
-          <div>
-            <span>OAB do advogado da parte</span>
-            <div>{{ CLAIMANT_LAWYER_OABS }}</div>
-          </div>
-          <div>
-            <span>Nome do assinador eletrônico do documento (ex: jurista, clicksign)</span>
-            <div>{{ ACTIVE_SIGNER }}</div>
+        <span class="list">
+          <div v-for="(key, value) in types" :key="key">
+            <span>{{ key }}</span>
+            <div>
+              <span v-pre>{{ </span>
+              {{ value }}
+              <span v-pre>}}</span>
+            </div>
           </div>
         </span>
       </el-card>
@@ -113,11 +64,14 @@ export default {
   name: 'PanelMinute',
   data () {
     return {
+      tableKey: 0,
+      nameToEdit: '',
       loadingMinutes: true,
       search: '',
       editDialogVisible: false,
       editDialogUrl: '',
-      minutes: []
+      minutes: [],
+      types: {}
     }
   },
   computed: {
@@ -132,6 +86,9 @@ export default {
   },
   mounted () {
     this.fetchMinutes()
+    this.$store.dispatch('getDocumentTypes').then(response => {
+      this.types = response.data
+    })
   },
   methods: {
     fetchMinutes () {
@@ -211,6 +168,15 @@ export default {
           type: 'success'
         })
       })
+    },
+    focusInput (minuteId, minuteName) {
+      this.tableKey += 1
+      this.nameToEdit = minuteName
+      this.$nextTick(() => this.$refs['input' + minuteId].$el.children[0].focus())
+    },
+    editMinuteName (minute) {
+      this.tableKey += 1
+      if (minute.name !== this.nameToEdit) this.$store.dispatch('editModel', minute)
     }
   }
 }
@@ -228,10 +194,6 @@ export default {
     display: flex;
   }
   .el-dialog {
-    width: calc(100% - 4vh);
-    margin-top: 2vh !important;
-    margin-bottom: 2vh;
-    height: calc(100% - 4vh);
     overflow: auto;
   }
   .el-table::before  {
@@ -239,38 +201,55 @@ export default {
   }
   .el-dialog__body {
     display: flex;
-    padding-bottom: 20px;
-    height: calc(100% - 64px);
+    height: calc(100% - 116px);
   }
   iframe {
     width: 100%;
+  }
+  &__name {
+    .label {
+      margin-top: 1px;
+      border: 1px solid transparent;
+    }
+    .el-input  {
+      margin-left: -5px;
+    }
+    .el-input__inner {
+      padding-left: 5px;
+      height: 28px;
+      line-height: 28px;
+    }
   }
   &__tips {
     border: 0;
     background-color: $--color-secondary-light-9;
     margin-left: 10px;
-    width: 360px;
+    width: 376px;
     font-size: 13px;
     overflow-y: auto;
     * {
       border: 0;
     }
     h2 {
-      margin-top: 0;
-      margin-bottom: 10px;
+      margin-top: 10px;
+      margin-bottom: 14px;
     }
     .list {
       > div {
-        margin-top: 6px;
+        margin-top: 8px;
+        display: flex;
+        flex-direction: column;
+        > span {
+          font-weight: 600;
+        }
         div {
           padding-left: 10px;
+          font-size: 12px;
         }
       }
-      display: flex;
-      flex-direction: column;
-      span {
-        font-weight: 600;
-      }
+    }
+    .el-card__body {
+      padding: 16px;
     }
   }
 }
