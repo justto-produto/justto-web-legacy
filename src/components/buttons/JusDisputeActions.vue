@@ -5,7 +5,7 @@
         <jus-icon class="back" icon="back"/>
       </router-link>
     </el-tooltip>
-    <el-tooltip v-if="canSettled" :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Acordo aceito'">
+    <el-tooltip v-if="canSettled" :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar Acordo'">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
