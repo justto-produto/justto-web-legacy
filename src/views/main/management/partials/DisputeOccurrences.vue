@@ -132,7 +132,14 @@
               <span
                 v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && occurrence.interaction.direction === 'INBOUND'"
                 class="dispute-view-occurrences__for-to">
-                Por: {{ occurrence.interaction.message.parameters.SENDER_NAME }} ({{ occurrence.interaction.message.parameters.SENDER || occurrence.interaction.message.sender | phoneMask }})
+                Por:
+                <span v-if="![occurrence.interaction.message.sender, occurrence.interaction.message.parameters.SENDER].includes(occurrence.interaction.message.parameters.SENDER_NAME)">
+                  {{ occurrence.interaction.message.parameters.SENDER_NAME }}
+                  ({{ occurrence.interaction.message.parameters.SENDER || occurrence.interaction.message.sender | phoneMask }})
+                </span>
+                <span v-else>
+                  {{ occurrence.interaction.message.parameters.SENDER || occurrence.interaction.message.sender | phoneMask }}
+                </span>
               </span>
             </div>
           </div>

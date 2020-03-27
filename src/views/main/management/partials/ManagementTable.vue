@@ -501,6 +501,7 @@ export default {
         }).then(() => {
           this.message = ''
           this.richMessage = ''
+          delete this.messageCache[dispute.id]
           this.responseDialogVisible = false
           this.$jusNotification({
             title: 'Yay!',
