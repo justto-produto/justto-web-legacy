@@ -5,7 +5,7 @@
         <jus-icon class="back" icon="back"/>
       </router-link>
     </el-tooltip>
-    <el-tooltip v-if="canSettled" content="Ganhar">
+    <el-tooltip v-if="canSettled" :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar Acordo'">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -63,7 +63,8 @@
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="editNegotiator()">
+        @click="openEditNegotiatorsDialog()">
+        <!-- @click="disputeAction('edit-negotiators')"> -->
         <jus-icon icon="delegate"/>
       </el-button>
     </el-tooltip>
@@ -79,7 +80,7 @@
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="counterproposalDialogOpen()">
+        @click="disputeAction('counterproposal')">
         <jus-icon icon="proposal2" />
       </el-button>
     </el-tooltip>
@@ -87,7 +88,7 @@
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="renegotiateDialogOpen()">
+        @click="disputeAction('renegotiate')">
         <jus-icon icon="move-to-running" />
       </el-button>
     </el-tooltip>
@@ -157,7 +158,7 @@
           :disabled="!unsettledType"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('unsettled')">
+          @click.prevent="disputeAction('send-unsettled')">
           Continuar
         </el-button>
       </span>
@@ -187,7 +188,7 @@
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="editNegotiators()">Editar dados</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('edit-negotiators', disputeNegotiators)">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -240,42 +241,61 @@
       </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="checkCounterproposal">Atualizar contraproposta</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('send-counterproposal')">Atualizar contraproposta</el-button>
       </span>
     </el-dialog>
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
       :close-on-press-escape="false"
-      :visible.sync="insertSettledValueDialogVisible"
+      :visible.sync="settledDialogVisible"
       append-to-body
-      title="Ganhar"
+      title="Acordo aceito"
       class="dispute-view-actions__choose-unsettled-dialog"
-      width="460px"
+      width="600px"
       data-testid="choose-unsettled-dialog">
-      <div class="el-message-box__content">
-        <div class="el-message-box__container">
-          <div class="el-message-box__status el-icon-warning"/>
-          <div class="el-message-box__message">
-            <p>Tem certeza que deseja realizar esta ação?</p>
-          </div>
-        </div>
-      </div>
-      <el-form>
-        <el-form-item label="Valor do acordo:" >
-          <money v-model="settledValue" class="el-input__inner" data-testid="proposal-value-input" />
-        </el-form-item>
+      <p>Confirmar proposta aceita no valor de
+        <el-tooltip content="Clique para alterar">
+          <el-button type="text" @click="showSettledForm = true">{{ counterOfferForm.lastCounterOfferValue  | currency }}</el-button>
+        </el-tooltip>
+      </p>
+      <el-form v-if="showSettledForm"
+        v-loading="modalLoading"
+        ref="counterOfferForm"
+        :model="counterOfferForm"
+        :rules="counterOfferFormRules"
+        label-position="top">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="Valor" prop="lastCounterOfferValue">
+              <money
+                v-model="counterOfferForm.lastCounterOfferValue"
+                class="el-input__inner"
+                data-testid="counterproposal-value-input"
+                maxlength="16" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Proposto por" prop="selectedRoleId">
+              <el-select
+                :disabled="disputeClaimants.length === 1"
+                v-model="counterOfferForm.selectedRoleId"
+                placeholder="Autor da contraproposta"
+                style="width: 100%;"
+                data-testid="counterproposal-claimant-input">
+                <el-option
+                  v-for="(claimant, index) in disputeClaimants"
+                  :key="`${index}-${claimant.id}`"
+                  :label="claimant.name"
+                  :value="claimant.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="modalLoading" plain @click="insertSettledValueDialogVisible = false">Cancelar</el-button>
-        <el-button
-          :loading="modalLoading"
-          :disabled="!settledValue"
-          type="primary"
-          class="confirm-action-unsettled"
-          @click.prevent="showDisputeResume('settled')">
-          Continuar
-        </el-button>
+        <el-button :disabled="modalLoading" plain @click="settledDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
       </span>
     </el-dialog>
   </div>
@@ -309,10 +329,11 @@ export default {
       negotiatorsForm: {},
       negotiatorsRules: {},
       disputeNegotiators: [],
+      showSettledForm: false,
       chooseUnsettledDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
-      insertSettledValueDialogVisible: false,
+      settledDialogVisible: false,
       modalLoading: false,
       counterOfferForm: {
         lastCounterOfferValue: '',
@@ -348,6 +369,9 @@ export default {
     },
     canSendCounterproposal () {
       return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)
+    },
+    checkUpperRangeCounterOffer () {
+      return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
     },
     workspaceNegotiators () {
       return this.$store.getters.workspaceMembers.map(member => {
@@ -399,253 +423,153 @@ export default {
     }
   },
   methods: {
-    disputeAction (action) {
-      if (action === 'unsettled') {
-        this.chooseUnsettledDialogVisible = true
-        this.unsettledType = null
-      } else if (action === 'favorite') {
-        this.doAction(action)
-      } else if (action === 'settled' && !this.dispute.disputeDealValue) {
-        this.insertSettledValueDialogVisible = true
-        this.settledValue = 0
-      } else if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
-        this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: 'OK',
-          type: 'warning'
-        })
-      } else {
-        let capAction = this.$t('action.' + action.toUpperCase())
-        this.$confirm('Tem certeza que deseja realizar ação?', capAction.charAt(0).toUpperCase() + capAction.slice(1), {
-          confirmButtonClass: 'confirm-action-btn',
-          confirmButtonText: 'Continuar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning',
-          cancelButtonClass: 'is-plain'
-        }).then(() => {
-          this.doAction(action)
-        })
+    disputeAction (action, additionParams) {
+      let message = {
+        content: 'Tem certeza que deseja realizar esta ação?',
+        title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase()))
       }
-    },
-    doAction (action) {
-      return new Promise((resolve, reject) => {
-        this.modalLoading = true
-        let translatedAction = this.$t('action.' + action.toUpperCase())
-        let params = {
-          action: action,
-          disputeId: this.dispute.id
-        }
-        if (this.unsettledType) {
-          params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
-        }
-        if (action === 'settled' && this.settledValue) {
-          params.value = this.settledValue
-        }
-        if (this.tableActions && action !== 'unsettled') {
-          this.$jusNotification({
-            title: 'Yay!',
-            dangerouslyUseHTMLString: true,
-            message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
-            type: 'success'
+      switch (action) {
+        case 'settled':
+          if (this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED') {
+            this.showDisputeResume('WIN').then(() => {
+              this.doAction(action, message)
+            })
+          } else {
+            this.openSettledDialog()
+          }
+          break
+        case 'unsettled':
+          this.unsettledType = null
+          this.chooseUnsettledDialogVisible = true
+          break
+        case 'send-unsettled':
+          if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && (!this.dispute.lastCounterOfferValue || this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange)) {
+            this.disputeAction('counterproposal')
+          } else {
+            additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
+            this.doAction('unsettled', message, additionParams).then(() => {
+              this.chooseUnsettledDialogVisible = false
+            }).finally(() => {
+              this.unsettledType = null
+            })
+          }
+          break
+        case 'resume':
+          this.doAction(action, message)
+          break
+        case 'paused':
+          this.doAction(action, message)
+          break
+        case 'restart-engagement':
+          this.restartEngagement(action).then(() => {
+            this.doAction(action, message)
           })
-        }
-        this.$store.dispatch('sendDisputeAction', params).then(() => {
-          // SEGMENT TRACK
-          resolve()
-          this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
-          if (!this.tableActions || action === 'unsettled') {
-            this.$jusNotification({
-              title: 'Yay!',
-              dangerouslyUseHTMLString: true,
-              message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
-              type: 'success'
-            })
-          }
-          if (action === 'unsettled' && !this.tableActions) {
-            setTimeout(() => {
-              this.$jusNotification({
-                title: 'Atenção!',
-                message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
-                type: 'info',
-                duration: 0
-              })
-            }, 2000)
-          }
-          if (!this.tableActions) this.$emit('fetch-data')
-        }).catch(e => {
-          reject(e)
-          console.error(e)
-          if (e.response && e.response.data.reason.length) {
-            this.$jusNotification({
-              type: 'error',
-              message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
-            })
-          } else {
-            this.$jusNotification({ type: 'error' })
-          }
-        }).finally(() => {
-          this.chooseUnsettledDialogVisible = false
-          this.insertSettledValueDialogVisible = false
-          this.modalLoading = false
-        })
-      })
-    },
-    editNegotiators () {
-      this.modalLoading = true
-      this.$store.dispatch('editNegotiators', {
-        negotiators: this.disputeNegotiators,
-        disputeId: this.dispute.id
-      }).then(() => {
-        // SEGMENT TRACK
-        this.$jusSegment('Negociadores alterados')
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Negociadores editados com sucesso.',
-          type: 'success'
-        })
-        this.editNegotiatorDialogVisible = false
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-      }).finally(() => {
-        this.modalLoading = false
-      })
-    },
-    editNegotiator () {
-      this.modalLoading = false
-      this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
-        return member.roles.includes('NEGOTIATOR') && !member.archived
-      }).map(member => member.personId)
-      this.editNegotiatorDialogVisible = true
-    },
-    counterproposalDialogOpen () {
-      if (this.dispute.paused) {
-        this.$confirm('Esta disputa está pausada, deseja remotar?', 'Ops!', {
-          confirmButtonText: 'Retomar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true
-              this.doAction('resume').then(() => {
-                this.openCounterproposalDialog()
-              }).finally(() => {
-                done()
-                instance.confirmButtonLoading = false
-              })
-            } else {
-              done()
+          break
+        case 'cancel-messages':
+          this.doAction(action, message)
+          break
+        case 'edit-negotiators':
+          additionParams = { negotiatorsId: additionParams }
+          this.doAction(action, message, additionParams).then(() => {
+            this.editNegotiatorDialogVisible = false
+          })
+          break
+        case 'enrich':
+          this.doAction(action, message)
+          break
+        case 'renegotiate':
+          this.doAction(action, message)
+          break
+        case 'counterproposal':
+          if (this.dispute.paused) {
+            message = {
+              content: 'A disputa está pausada, deseja retomar negociação para enviar uma contraproposta?',
+              title: 'Ops'
             }
-          }
-        })
-      } else {
-        this.openCounterproposalDialog()
-      }
-    },
-    renegotiateDialogOpen () {
-      this.$confirm('Esta disputa não está em negociação, deseja voltar para negociação?', 'Ops!', {
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar',
-        type: 'warning',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true
-            this.doAction('renegotiate').finally(() => {
-              done()
-              instance.confirmButtonLoading = false
+            this.doAction('resume', message).then(() => {
+              this.openCounterproposalDialog()
             })
           } else {
-            done()
+            this.openCounterproposalDialog()
           }
-        }
-      })
-    },
-    openCounterproposalDialog () {
-      this.counterOfferForm.lastCounterOfferValue = ''
-      this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
-      this.counterproposalDialogVisible = true
-      if (this.$refs.counterOfferForm) {
-        this.$refs.counterOfferForm.clearValidate()
-      }
-    },
-    checkUpperRangeCounterOffer () {
-      return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
-    },
-    checkCounterproposal () {
-      this.$refs.counterOfferForm.validate(valid => {
-        if (valid) {
-          if (this.checkUpperRangeCounterOffer()) {
-            this.$confirm('Valor de contraproposta é maior que alçada máxima, deseja continuar?', 'Atenção!', {
-              confirmButtonText: 'Continuar',
-              cancelButtonText: 'Cancelar',
-              type: 'info',
-              cancelButtonClass: 'is-plain'
-            }).then(() => {
+          break
+        case 'send-counterproposal':
+          if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE') {
+            this.sendCounterproposal().then(() => {
+              additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
+              this.doAction('unsettled', message, additionParams).finally(() => {
+                this.unsettledType = null
+              })
+            })
+          } else if (additionParams) {
+            this.checkCounterproposal('WIN').then(() => {
+              if (this.checkUpperRangeCounterOffer) {
+                this.sendCounterproposal(additionParams)
+              } else {
+                this.sendCounterproposal()
+              }
+            })
+          } else {
+            this.checkCounterproposal('COUNTERPROPOSAL').then(() => {
               this.sendCounterproposal()
             })
-          } else {
-            this.sendCounterproposal()
           }
+          break
+        case 'favorite':
+          this.doAction(action, message)
+          break
+        case 'disfavor':
+          this.doAction(action, message)
+          break
+      }
+    },
+
+    doAction (action, message, additionParams) {
+      return new Promise((resolve, reject) => {
+        this.$confirm(message.content, message.title, {
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning'
+        }).then(() => {
+          this.modalLoading = true
+          let params = { action: action, disputeId: this.dispute.id }
+          if (additionParams) params = { ...params, ...additionParams }
+          this.$store.dispatch('sendDisputeAction', params).then(() => {
+            resolve()
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Ação <b>' + message.title.toUpperCase() + '</b> realizada com sucesso.',
+              type: 'success',
+              dangerouslyUseHTMLString: true
+            })
+          }).catch(e => {
+            reject(e)
+            this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.modalLoading = false
+          })
+        })
+      })
+    },
+
+    restartEngagement (action) {
+      return new Promise((resolve, reject) => {
+        if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
+          this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
+            dangerouslyUseHTMLString: true,
+            confirmButtonText: 'OK',
+            type: 'warning'
+          })
+          reject(new Error('Ok'))
         } else {
-          return false
+          resolve()
         }
       })
-    },
-    sendCounterproposal () {
-      this.modalLoading = true
-      this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
-        this.$store.dispatch('sendDisputeCounterProposal', {
-          disputeId: this.dispute.id,
-          objectId: disputeToEdit.objects[0].id,
-          value: this.counterOfferForm.lastCounterOfferValue.toString(),
-          roleId: this.counterOfferForm.selectedRoleId,
-          note: this.counterOfferForm.note
-        }).then(() => {
-          if (this.counterOfferForm.note) {
-            let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-            let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
-            this.$store.dispatch('sendDisputeNote', {
-              note,
-              disputeId: this.dispute.id
-            })
-          }
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Contraproposta enviada com sucesso.',
-            type: 'success',
-            onClose: () => {
-              const action = this.checkUpperRangeCounterOffer() ? 'Em negociação' : 'Acordo'
-              setTimeout(() => {
-                this.$notify({
-                  title: 'Atenção!',
-                  message: 'A disputa foi movida para o status <strong>' + action + '</strong>.',
-                  type: 'info',
-                  customClass: 'info',
-                  position: 'bottom-right',
-                  offset: 84,
-                  duration: 0,
-                  dangerouslyUseHTMLString: true
-                })
-              }, 200)
-            }
-          })
-          this.counterproposalDialogVisible = false
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
-        }).finally(() => {
-          this.modalLoading = false
-        })
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
-        this.modalLoading = false
-        this.counterproposalDialogVisible = false
-      })
-    },
-    togleCollapsed () {
-      this.collapsed = !this.collapsed
     },
     setAsUnread () {
       this.$store.dispatch('disputeSetVisualized', {
-        visualized: false, disputeId: this.dispute.id
+        visualized: false,
+        disputeId: this.dispute.id
       }).then(() => {
         this.$router.push('/management')
       }).catch(() => {
@@ -656,41 +580,222 @@ export default {
       let routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
       window.open(routeData.href, '_blank')
     },
-    showDisputeResume (action) {
-      const h = this.$createElement
-      let detailsMessage = [
-        h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
-        h('p', null, [
-          h('b', null, 'Nº da disputa: '),
-          h('span', null, '#' + this.dispute.id)
-        ]),
-        h('p', null, [
-          h('b', null, 'Nº do processo: '),
-          h('span', null, this.dispute.code)
-        ]),
-        h('p', null, [
-          h('b', null, 'Réu(s): '),
-          h('span', null, this.respondentsResume.toUpperCase() || ' - ')
-        ]),
-        h('p', null, [
-          h('b', null, 'Autor(es): '),
-          h('span', null, this.authorsResume.toUpperCase() || ' - ')
-        ]),
-        h('p', null, [
-          h('b', null, 'Advogado(s) do autor(es): '),
-          h('span', null, this.lawyersResume.toUpperCase() || ' - ')
-        ]),
-        h('p', null, [
-          h('b', null, 'Valor do acordo: '),
-          h('span', null, this.$options.filters.currency(this.settledValue))
-        ])
-      ]
-      this.$confirm(h('div', null, detailsMessage), 'Ganhar', {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        type: 'warning'
-      }).then(() => {
-        this.doAction(action)
+    togleCollapsed () {
+      this.collapsed = !this.collapsed
+    },
+
+    openSettledDialog () {
+      this.modalLoading = false
+      this.showSettledForm = false
+      this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
+      if (this.disputeClaimants.length === 1) {
+        this.counterOfferForm.selectedRoleId = this.disputeClaimants[0].id
+      } else {
+        this.counterOfferForm.selectedRoleId = this.disputeClaimants.filter(c => {
+          return c.name === this.dispute.lastCounterOfferName
+        })[0].id
+      }
+      this.settledDialogVisible = true
+      if (this.$refs.counterOfferForm) {
+        this.$refs.counterOfferForm.clearValidate()
+      }
+    },
+    openEditNegotiatorsDialog () {
+      this.modalLoading = false
+      this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
+        return member.roles.includes('NEGOTIATOR') && !member.archived
+      }).map(member => member.personId)
+      this.editNegotiatorDialogVisible = true
+    },
+    openCounterproposalDialog () {
+      this.modalLoading = false
+      this.counterOfferForm.lastCounterOfferValue = ''
+      this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
+      this.counterproposalDialogVisible = true
+      if (this.$refs.counterOfferForm) {
+        this.$refs.counterOfferForm.clearValidate()
+      }
+    },
+
+    // doAction (action) {
+    //   return new Promise((resolve, reject) => {
+    //     this.modalLoading = true
+    //     let translatedAction = this.$t('action.' + action.toUpperCase())
+    //     let params = {
+    //       action: action,
+    //       disputeId: this.dispute.id
+    //     }
+    //     if (this.unsettledType) {
+    //       params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
+    //     }
+    //     if (action === 'settled' && this.settledValue) {
+    //       params.value = this.settledValue
+    //     }
+    //     if (this.tableActions && action !== 'unsettled') {
+    //       this.$jusNotification({
+    //         title: 'Yay!',
+    //         dangerouslyUseHTMLString: true,
+    //         message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
+    //         type: 'success'
+    //       })
+    //     }
+    //     this.$store.dispatch('sendDisputeAction', params).then(() => {
+    //       resolve()
+    //       // SEGMENT TRACK
+    //       this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
+    //       if (!this.tableActions || action === 'unsettled') {
+    //         this.$jusNotification({
+    //           title: 'Yay!',
+    //           dangerouslyUseHTMLString: true,
+    //           message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
+    //           type: 'success'
+    //         })
+    //       }
+    //       if (action === 'unsettled' && !this.tableActions) {
+    //         setTimeout(() => {
+    //           this.$jusNotification({
+    //             title: 'Atenção!',
+    //             message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
+    //             type: 'info',
+    //             duration: 0
+    //           })
+    //         }, 2000)
+    //       }
+    //       if (!this.tableActions) this.$emit('fetch-data')
+    //     }).catch(e => {
+    //       reject(e)
+    //       console.error(e)
+    //       if (e.response && e.response.data.reason.length) {
+    //         this.$jusNotification({
+    //           type: 'error',
+    //           message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
+    //         })
+    //       } else {
+    //         this.$jusNotification({ type: 'error' })
+    //       }
+    //     }).finally(() => {
+    //       this.chooseUnsettledDialogVisible = false
+    //       this.insertSettledValueDialogVisible = false
+    //       this.modalLoading = false
+    //     })
+    //   })
+    // },
+
+    checkCounterproposal (actionType) {
+      return new Promise((resolve, reject) => {
+        this.$refs.counterOfferForm.validate(valid => {
+          if (valid) {
+            if (this.checkUpperRangeCounterOffer) {
+              actionType = actionType === 'WIN' ? 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?' : 'Valor de contraproposta é maior que alçada máxima, deseja continuar?'
+              this.$confirm(actionType, 'Atenção!', {
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Cancelar',
+                dangerouslyUseHTMLString: true,
+                type: 'warning'
+              }).then(() => {
+                resolve()
+              }).catch(e => {
+                reject(e)
+              })
+            } else {
+              resolve()
+            }
+          } else {
+            reject(new Error('Invalid Fields'))
+          }
+        })
+      })
+    },
+    sendCounterproposal (updateUpperRange) {
+      return new Promise((resolve, reject) => {
+        this.modalLoading = true
+        this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
+          this.$store.dispatch('sendDisputeCounterProposal', {
+            disputeId: this.dispute.id,
+            objectId: disputeToEdit.objects[0].id,
+            value: this.counterOfferForm.lastCounterOfferValue.toString(),
+            roleId: this.counterOfferForm.selectedRoleId,
+            note: this.counterOfferForm.note,
+            updateUpperRange: updateUpperRange || false
+          }).then(() => {
+            if (this.counterOfferForm.note) {
+              this.modalLoading = true
+              let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
+              let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
+              this.$store.dispatch('sendDisputeNote', {
+                note,
+                disputeId: this.dispute.id
+              })
+                .then(() => {
+                  resolve()
+                  this.counterproposalDialogVisible = false
+                })
+                .catch(e => {
+                  reject(e)
+                }).finally(() => {
+                  this.modalLoading = false
+                })
+            } else {
+              resolve()
+              this.counterproposalDialogVisible = false
+              this.settledDialogVisible = false
+              this.$jusNotification({
+                title: 'Yay!',
+                message: updateUpperRange ? 'Proposta aceita com sucesso.' : 'Contraproposta enviada com sucesso.',
+                type: 'success'
+              })
+            }
+          }).catch(e => {
+            reject(e)
+          }).catch(e => {
+            reject(e)
+            this.$jusNotification({ type: 'error' })
+          }).finally(() => {
+            this.modalLoading = false
+          })
+        })
+      })
+    },
+    showDisputeResume (actionType) {
+      return new Promise((resolve, reject) => {
+        const h = this.$createElement
+        let detailsMessage = [
+          h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
+          h('p', null, [
+            h('b', null, 'Nº da disputa: '),
+            h('span', null, '#' + this.dispute.id)
+          ]),
+          h('p', null, [
+            h('b', null, 'Nº do processo: '),
+            h('span', null, this.dispute.code)
+          ]),
+          h('p', null, [
+            h('b', null, 'Réu(s): '),
+            h('span', null, this.respondentsResume.toUpperCase() || ' - ')
+          ]),
+          h('p', null, [
+            h('b', null, 'Autor(es): '),
+            h('span', null, this.authorsResume.toUpperCase() || ' - ')
+          ]),
+          h('p', null, [
+            h('b', null, 'Advogado(s) do autor(es): '),
+            h('span', null, this.lawyersResume.toUpperCase() || ' - ')
+          ]),
+          h('p', null, [
+            h('b', null, 'Valor do acordo: '),
+            h('span', null, this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue || this.dispute.disputeDealValue))
+          ])
+        ]
+        actionType = actionType === 'ACCEPT' ? 'Fechar acordo' : 'Ganhar'
+        this.$confirm(h('div', null, detailsMessage), actionType, {
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning'
+        }).then(() => {
+          resolve()
+        }).catch(e => {
+          reject(e)
+        })
       })
     }
   }
@@ -744,6 +849,13 @@ export default {
     height: 100%;
     right: 0;
     top: 0;
+  }
+}
+.is-disabled-input {
+  background-color: #f6f6f6;
+  cursor: not-allowed;
+  &:hover {
+    border-color: #dcdfe6 !important;
   }
 }
 </style>

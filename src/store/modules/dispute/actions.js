@@ -299,6 +299,9 @@ const disputeActions = {
       } else if (params.action === 'enrich') {
         // eslint-disable-next-line
         request = axios.patch('api/fusion-runner/enrich/' + params.disputeId)
+      } else if (params.action === 'edit-negotiators') {
+        // eslint-disable-next-line
+        request = axios.put('api/disputes/' + params.disputeId + '/negotiators', { negotiatorsId: params.negotiatorsId })
       } else {
         // eslint-disable-next-line
         request = axios.put('api/disputes/' + params.disputeId + '/' + params.action, params.body)
@@ -375,7 +378,7 @@ const disputeActions = {
   editNegotiators ({ commit }, negotiators) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/disputes/' + negotiators.disputeId + '/negotiators', {negotiatorsId: negotiators.negotiators})
+      axios.put('api/disputes/' + negotiators.disputeId + '/negotiators', { negotiatorsId: negotiators.negotiators })
         .then(response => {
           resolve(response.data)
         })
@@ -494,7 +497,8 @@ const disputeActions = {
         attribute: { id: params.objectId },
         role: { id: params.roleId },
         value: params.value,
-        note: params.note
+        note: params.note,
+        updateUpperRange: params.updateUpperRange
       }).then(response => {
         resolve(response.data)
       }).catch(error => {
