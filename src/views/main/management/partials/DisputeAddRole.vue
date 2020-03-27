@@ -456,6 +456,7 @@ export default {
             type: 'success'
           })
           this.$store.dispatch('getDispute', this.disputeId)
+          this.$store.dispatch('enrichPerson', response.personId)
           this.$confirm('Deseja iniciar o engajamento para esta parte?', 'Atenção!', {
             confirmButtonText: 'Engajar',
             cancelButtonText: 'Não',
