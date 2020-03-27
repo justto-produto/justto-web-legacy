@@ -5,7 +5,7 @@
         <jus-icon class="back" icon="back"/>
       </router-link>
     </el-tooltip>
-    <el-tooltip v-if="canSettled" content="Ganhar">
+    <el-tooltip v-if="canSettled" :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Acordo aceito' : 'Ganhar'">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -250,12 +250,16 @@
       :close-on-press-escape="false"
       :visible.sync="settledDialogVisible"
       append-to-body
-      title="Acordo Aceito"
+      title="Acordo aceito"
       class="dispute-view-actions__choose-unsettled-dialog"
       width="600px"
       data-testid="choose-unsettled-dialog">
-      <p>Confirmar proposta aceita no valor de <el-button type="text" @click="disableSettledValue = false">{{ counterOfferForm.lastCounterOfferValue  | currency }}</el-button></p>
-      <el-form v-if="!disableSettledValue"
+      <p>Confirmar proposta aceita no valor de
+        <el-tooltip content="Clique para alterar">
+          <el-button type="text" @click="showSettledForm = true">{{ counterOfferForm.lastCounterOfferValue  | currency }}</el-button>
+        </el-tooltip>
+      </p>
+      <el-form v-if="showSettledForm"
         v-loading="modalLoading"
         ref="counterOfferForm"
         :model="counterOfferForm"
@@ -325,7 +329,7 @@ export default {
       negotiatorsForm: {},
       negotiatorsRules: {},
       disputeNegotiators: [],
-      disableSettledValue: true,
+      showSettledForm: false,
       chooseUnsettledDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
@@ -499,13 +503,11 @@ export default {
             })
           } else if (additionParams) {
             this.checkCounterproposal('WIN').then(() => {
-              this.showDisputeResume('ACCEPT').then(() => {
-                if (this.checkUpperRangeCounterOffer) {
-                  this.sendCounterproposal(additionParams)
-                } else {
-                  this.sendCounterproposal()
-                }
-              })
+              if (this.checkUpperRangeCounterOffer) {
+                this.sendCounterproposal(additionParams)
+              } else {
+                this.sendCounterproposal()
+              }
             })
           } else {
             this.checkCounterproposal('COUNTERPROPOSAL').then(() => {
@@ -584,9 +586,15 @@ export default {
 
     openSettledDialog () {
       this.modalLoading = false
-      this.disableSettledValue = true
+      this.showSettledForm = false
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
-      this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
+      if (this.disputeClaimants.length === 1) {
+        this.counterOfferForm.selectedRoleId = this.disputeClaimants[0].id
+      } else {
+        this.counterOfferForm.selectedRoleId = this.disputeClaimants.filter(c => {
+          return c.name === this.dispute.lastCounterOfferName
+        })[0].id
+      }
       this.settledDialogVisible = true
       if (this.$refs.counterOfferForm) {
         this.$refs.counterOfferForm.clearValidate()
@@ -678,11 +686,11 @@ export default {
         this.$refs.counterOfferForm.validate(valid => {
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
-              actionType = actionType === 'WIN' ? 'O valor inserido <b>irá majorar</b> a alçada máxima. Deseja continuar?' : 'Valor de contraproposta é maior que alçada máxima, deseja continuar?'
+              actionType = actionType === 'WIN' ? 'O valor inserido <b>irá mojorar</b> alçada máxima. Deseja continuar?' : 'Valor de contraproposta é maior que alçada máxima, deseja continuar?'
               this.$confirm(actionType, 'Atenção!', {
                 confirmButtonText: 'Continuar',
                 cancelButtonText: 'Cancelar',
-				dangerouslyUseHTMLString: true,
+                dangerouslyUseHTMLString: true,
                 type: 'warning'
               }).then(() => {
                 resolve()
