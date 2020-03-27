@@ -155,7 +155,6 @@ export default {
     return {
       loadingExport: false,
       filtersVisible: false,
-      term: '',
       termDebounce: '',
       disputeDebounce: '',
       selectedIds: [],
@@ -241,6 +240,14 @@ export default {
     },
     persons () {
       return this.$store.state.disputeModule.query.persons
+    },
+    term: {
+      get () {
+        return this.$store.getters.disputeQueryTerm
+      },
+      set (term) {
+        this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
+      }
     }
   },
   watch: {
@@ -248,7 +255,6 @@ export default {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
-        this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
         this.getDisputes()
       }, 800)
     },
@@ -323,6 +329,7 @@ export default {
               main.scrollTop = 0
             }
           })
+          this.$refs.managementTable.disputeKey += 1
         })
       }, 300)
     },
@@ -353,7 +360,6 @@ export default {
           this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc', 'favorite,desc'] })
       }
-      this.$refs.managementTable.disputeKey += 1
       this.getDisputes()
     },
     showExportDisputesDialog () {
