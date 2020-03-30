@@ -591,10 +591,12 @@ export default {
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
       if (this.disputeClaimants.length === 1) {
         this.counterOfferForm.selectedRoleId = this.disputeClaimants[0].id
-      } else {
+      } else if (this.dispute.lastCounterOfferName) {
         this.counterOfferForm.selectedRoleId = this.disputeClaimants.filter(c => {
           return c.name === this.dispute.lastCounterOfferName
         })[0].id
+      } else {
+        this.counterOfferForm.selectedRoleId = ''
       }
       this.settledDialogVisible = true
       if (this.$refs.counterOfferForm) {
