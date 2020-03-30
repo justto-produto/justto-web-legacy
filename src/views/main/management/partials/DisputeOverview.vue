@@ -1628,6 +1628,9 @@ export default {
       margin-left: 20px;
     }
   }
+  &__is-enriched {
+    font-style: italic;
+  }
   &__switch-main {
     display: flex;
     margin-top: 1px;
