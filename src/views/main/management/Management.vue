@@ -120,7 +120,7 @@
           :data="columns"
           :allow-drop="allowDrop"
           :filter-node-method="filterColumns"
-          node-key="label"
+          node-key="key"
           draggable
           show-checkbox
           @check="handlerChangeTree"
@@ -165,45 +165,7 @@ export default {
       checkedNodes: 0,
       filterQuery: '',
       filteredNodes: {},
-      columns: [
-        { label: 'DISPUTE_CODE' },
-        { label: 'CAMPAIGN' },
-        { label: 'STRATEGY' },
-        { label: 'CLASSIFICATION' },
-        { label: 'CLASSIFICATION_DETAIL' },
-        { label: 'DISPUTE_ORG' },
-        { label: 'EXPIRATION_DATE' },
-        { label: 'DESCRIPTION' },
-        { label: 'PAUSED' },
-        { label: 'FAVORITE' },
-        { label: 'VISUALIZED' },
-        { label: 'STATUS' },
-        { label: 'FIRST_INTERACTION_DATE' },
-        { label: 'LAST_INTERACTION_DATE' },
-        { label: 'LAST_SENT_MESSAGE' },
-        { label: 'LAST_RECEIVED_MESSAGE' },
-        { label: 'LAST_NOTE' },
-        { label: 'UPPER_RANGE' },
-        { label: 'REQUESTED_VALUE' },
-        { label: 'PROPOSAL_VALUE' },
-        { label: 'COUNTER_PROPOSAL_VALUE' },
-        { label: 'OWNER_PROPOSAL' },
-        { label: 'OWNER_COUNTER_PROPOSAL' },
-        { label: 'HAS_DOCUMENT' },
-        { label: 'SIGNED_DOCUMENT_STATUS' },
-        { label: 'LAST_NEGOTIATOR_ACCESS_DATE' },
-        { label: 'IMPORT_DATE' },
-        { label: 'CONCLUSION_DESCRIPTION' },
-        { label: 'CONCLUSION_DATE' },
-        { label: 'CONCLUSION_REASONS' },
-        { label: 'LAST_OFFER_VALUE' },
-        { label: 'PARTY_NAMES' },
-        { label: 'PARTY_DOCUMENTS' },
-        { label: 'LAWYER_PARTY_NAMES' },
-        { label: 'LAWYER_PARTY_DOCUMENTS' },
-        { label: 'RESPONDENT_NAMES' },
-        { label: 'NEGOTIATOR_NAMES' }
-      ]
+      columns: []
     }
   },
   computed: {
@@ -277,15 +239,15 @@ export default {
   methods: {
     filterColumns (value, data) {
       this.filteredNodes = this.columns.filter(c => {
-        return this.$t(c.label).toLowerCase().includes(value.toLowerCase())
+        return this.$t(c.key).toLowerCase().includes(value.toLowerCase())
       })
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       if (!value) return true
-      return this.$t(data.label).toLowerCase().indexOf(value.toLowerCase()) !== -1
+      return this.$t(data.key).toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
     handlerChangeTree (value, obj) {
       setTimeout(function () {
-        let checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.label)).length
+        let checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.key)).length
         let nodesLength = this.filteredNodes.length
         this.isSelectedAllColumns = checkedNodes === nodesLength
         this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
@@ -294,18 +256,18 @@ export default {
     },
     invertSelectionColumns (value) {
       if (value) {
-        let allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.label)]
+        let allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.key)]
         this.$refs.tree.setCheckedKeys(allNodesSelected)
       } else {
         let filteredKeys = this.columns.filter(c => !this.filteredNodes.includes(c))
-        this.$refs.tree.setCheckedKeys(filteredKeys.map(c => c.label))
+        this.$refs.tree.setCheckedKeys(filteredKeys.map(c => c.key))
       }
       this.isIndeterminate = false
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
     },
     nodeDragEnd (draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
-        this.$refs.tree.setChecked(draggingNode.data.label, draggingNode.checked)
+        this.$refs.tree.setChecked(draggingNode.data.key, draggingNode.checked)
       }, 100)
     },
     allowDrop (draggingNode, dropNode, type) {
@@ -364,12 +326,21 @@ export default {
     },
     showExportDisputesDialog () {
       this.exportDisputesDialog = true
+      this.$store.dispatch('getExportColumns').then(response => {
+        Object.keys(response).forEach(key => {
+          this.columns.push({
+            "key": key,
+            "label": response[key]
+          })
+        })
+        // this.columns = response
+      })
       const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
       setTimeout(() => {
         if (jusexportcolumns) {
           this.$refs.tree.setCheckedKeys(jusexportcolumns)
         } else {
-          this.$refs.tree.setCheckedKeys(this.columns.map(c => c.label))
+          this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
         }
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       }, 200)
