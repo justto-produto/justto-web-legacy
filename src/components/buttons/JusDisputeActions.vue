@@ -50,13 +50,13 @@
         <jus-icon icon="refresh"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="dispute.status === 'RUNNING'" content="Reenviar mensagens automáticas">
+    <el-tooltip v-if="canResendMessage" content="Reenviar mensagens automáticas">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="resend-messages"
         @click="disputeAction('resend-messages')">
-        <jus-icon icon="refresh"/>
+        <jus-icon icon="resend-messages"/>
       </el-button>
     </el-tooltip>
     <el-tooltip v-if="!tableActions" content="Cancelar mensagens automáticas">
@@ -373,6 +373,9 @@ export default {
     },
     canUnsettled () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
+    },
+    canResendMessage () {
+      return this.dispute && this.dispute.status && ['RUNNING', 'ENGAGEMENT'].includes(this.dispute.status)
     },
     canMarkAsNotRead () {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
