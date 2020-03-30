@@ -53,8 +53,14 @@
             </el-tooltip>
             <el-tooltip v-if="occurrence.merged">
               <div slot="content">
-                <div v-for="merged in occurrence.merged" :key="merged.id + new Date().getTime()">
-                  Às {{ buildHour(merged) }}
+                <div v-for="merged in occurrence.merged" :key="merged.id + new Date().getTime()" class="dispute-view-occurrences__log-info-content">
+                  Hora: {{ buildHour(merged) }}
+                  <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && merged.interaction.direction === 'OUTBOUND'">
+                    - Para: {{ merged.interaction.message.receiver | phoneMask }}
+                  </span>
+                  <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && merged.interaction.direction === 'INBOUND'">
+                    - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
+                  </span>
                 </div>
               </div>
               <span>
@@ -97,17 +103,13 @@
             <div :class="(occurrence.interaction ? occurrence.interaction.direction : '')" class="dispute-view-occurrences__card-info">
               <el-tooltip v-if="occurrence.merged">
                 <div slot="content">
-                  <div v-for="merged in occurrence.merged" :key="merged.id + merged.id + new Date().getTime()">
-                    {{ buildHour(merged) + ' - ' }}
-                    <span
-                      v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && merged.interaction.direction === 'OUTBOUND'"
-                      class="dispute-view-occurrences__for-to">
-                      Para: {{ merged.interaction.message.receiver | phoneMask }}
+                  <div v-for="merged in occurrence.merged" :key="merged.id + new Date().getTime()" class="dispute-view-occurrences__log-info-content">
+                    Hora: {{ buildHour(merged) }}
+                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && merged.interaction.direction === 'OUTBOUND'">
+                      - Para: {{ merged.interaction.message.receiver | phoneMask }}
                     </span>
-                    <span
-                      v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && merged.interaction.direction === 'INBOUND'"
-                      class="dispute-view-occurrences__for-to">
-                      Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
+                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && merged.interaction.direction === 'INBOUND'">
+                      - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
                     </span>
                   </div>
                 </div>
@@ -124,14 +126,10 @@
               <div v-if="!!buildIcon(occurrence)">•</div>
               <jus-icon v-if="!!buildIcon(occurrence)" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
               <div v-if="(occurrence.interaction && occurrence.interaction.message) && (occurrence.interaction.message.receiver || occurrence.interaction.message.parameters)">•</div>
-              <span
-                v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.direction === 'OUTBOUND'"
-                class="dispute-view-occurrences__for-to">
+              <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.direction === 'OUTBOUND'">
                 Para: {{ occurrence.interaction.message.receiver | phoneMask }}
               </span>
-              <span
-                v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && occurrence.interaction.direction === 'INBOUND'"
-                class="dispute-view-occurrences__for-to">
+              <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && occurrence.interaction.direction === 'INBOUND'">
                 Por:
                 <span v-if="![occurrence.interaction.message.sender, occurrence.interaction.message.parameters.SENDER].includes(occurrence.interaction.message.parameters.SENDER_NAME)">
                   {{ occurrence.interaction.message.parameters.SENDER_NAME }}
@@ -190,6 +188,7 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
+import checkSimilarity from '@/utils/levenshtein'
 
 export default {
   name: 'DisputeOccurrences',
@@ -231,7 +230,7 @@ export default {
       let previousOccurrenceIndex
       filteredOccurrences.forEach((fo, index) => {
         let previous = filteredOccurrences[previousOccurrenceIndex]
-        if (previous && this.buildContent(fo) === this.buildContent(previous)) {
+        if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), 75)) {
           if (!previous.merged) previous.merged = []
           previous.merged.push(fo)
           fo.toDelete = true
@@ -656,6 +655,11 @@ export default {
     }
     span {
       font-weight: 300;
+    }
+  }
+  &__log-info-content {
+    & + .dispute-view-occurrences__log-info-content {
+      margin-top: 2px;
     }
   }
   &__note {
