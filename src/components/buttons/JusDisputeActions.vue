@@ -13,7 +13,7 @@
         @click="disputeAction('settled')">
         <jus-icon icon="win"/>
       </el-button>
-    </el-tooltip>
+    </el-tooltip
     <el-tooltip v-if="canUnsettled" content="Perder">
       <el-button
         :type="tableActions ? 'text' : ''"
@@ -41,12 +41,21 @@
         <jus-icon icon="pause"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip content="Reiniciar engajamento">
+    <el-tooltip content="Reiniciar disputa">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="restart-engagement"
         @click="disputeAction('restart-engagement')">
+        <jus-icon icon="refresh"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="dispute.status === 'RUNNING'" content="Reenviar mensagens automáticas">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        data-testid="resend-messages"
+        @click="disputeAction('resend-messages')">
         <jus-icon icon="refresh"/>
       </el-button>
     </el-tooltip>
@@ -466,6 +475,9 @@ export default {
             this.doAction(action, message)
           })
           break
+        case 'resend-messages':
+          this.doAction(action, message)
+          break
         case 'cancel-messages':
           this.doAction(action, message)
           break
@@ -556,7 +568,7 @@ export default {
     restartEngagement (action) {
       return new Promise((resolve, reject) => {
         if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
-          this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
+          this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar disputa', {
             dangerouslyUseHTMLString: true,
             confirmButtonText: 'OK',
             type: 'warning'

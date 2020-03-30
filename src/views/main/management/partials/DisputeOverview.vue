@@ -1149,8 +1149,8 @@ export default {
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
               if (this.$moment(currentDate).isBefore(today) && this.$moment(newDate).isSameOrAfter(today)) {
-                this.$confirm('A data de expiração foi alterada. Deseja reiniciar o engajamento para esta disputa?', 'Atenção!', {
-                  confirmButtonText: 'Reengajar',
+                this.$confirm('A data de expiração foi alterada. Deseja reiniciar esta disputa?', 'Atenção!', {
+                  confirmButtonText: 'Reiniciar',
                   cancelButtonText: 'Cancelar',
                   cancelButtonClass: 'is-plain',
                   type: 'warning'
