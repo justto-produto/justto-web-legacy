@@ -44,7 +44,7 @@
               </el-form-item>
             </el-form>
             <div v-for="(email, index) in role.emails" :key="index" :class="{ 'mt10': index === 0 }" class="line">
-              <el-tooltip :disabled="!!role.documentNumber" content="Cadastre o CPF da parte para selecionar um e-mail">
+              <el-tooltip :key="formKey" :disabled="!!role.documentNumber" content="Cadastre o CPF da parte para selecionar um e-mail">
                 <span><input
                   v-model="recipients[role.name]"
                   :name="role.name"
@@ -65,10 +65,10 @@
                 @click="showAddEmail(role.name)">
                 Adicionar e-mail
               </el-button>
-              <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role.name, index)">
+              <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role, index)">
                 <el-form-item v-show="role.show" :key="formKey" prop="email">
                   <el-input v-model="emailForm.email[role.name]" placeholder="Adicionar e-mail" size="small" @input="clearValidate(index)">
-                    <el-button slot="append" icon="el-icon-plus" @click="addEmail(role.name, index)" />
+                    <el-button slot="append" icon="el-icon-plus" @click="addEmail(role, index)" />
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -354,17 +354,18 @@ export default {
       this.showARoleButton = true
       this.formKey += 1
     },
-    addEmail (name, formIndex) {
+    addEmail (role, formIndex) {
       let emailForm = this.$refs['emailForm' + formIndex][0]
       emailForm.validate(valid => {
         if (valid) {
-          if (this.emailForm.email[name]) {
-            let index = this.roles.findIndex(r => r.name === name)
+          if (this.emailForm.email[role.name]) {
+            let index = this.roles.findIndex(r => r.name === role.name)
             if (index > -1) {
               this.roles[index].emails.push({
-                address: this.emailForm.email[name],
+                address: this.emailForm.email[role.name],
                 canDelete: true
               })
+              this.recipients[role.name] = { name: role.name, documentNumber: role.documentNumber, email: this.emailForm.email[role.name] }
               this.emailForm.email = {}
               this.roles[index].show = false
               this.formKey += 1
