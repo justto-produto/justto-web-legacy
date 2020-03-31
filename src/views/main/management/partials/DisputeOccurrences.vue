@@ -55,10 +55,10 @@
               <div slot="content">
                 <div v-for="merged in occurrence.merged" :key="merged.id + new Date().getTime()" class="dispute-view-occurrences__log-info-content">
                   Hora: {{ buildHour(merged) }}
-                  <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && merged.interaction.direction === 'OUTBOUND'">
+                  <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
                     - Para: {{ merged.interaction.message.receiver | phoneMask }}
                   </span>
-                  <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && merged.interaction.direction === 'INBOUND'">
+                  <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
                     - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
                   </span>
                 </div>
@@ -100,15 +100,15 @@
                 </i>
               </div>
             </el-card>
-            <div :class="(occurrence.interaction ? occurrence.interaction.direction : '')" class="dispute-view-occurrences__card-info">
+            <div :class="getDirection(occurrence.interaction)" class="dispute-view-occurrences__card-info">
               <el-tooltip v-if="occurrence.merged">
                 <div slot="content">
                   <div v-for="merged in occurrence.merged" :key="merged.id + new Date().getTime()" class="dispute-view-occurrences__log-info-content">
                     Hora: {{ buildHour(merged) }}
-                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && merged.interaction.direction === 'OUTBOUND'">
+                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
                       - Para: {{ merged.interaction.message.receiver | phoneMask }}
                     </span>
-                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && merged.interaction.direction === 'INBOUND'">
+                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
                       - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
                     </span>
                   </div>
@@ -126,10 +126,10 @@
               <div v-if="!!buildIcon(occurrence)">•</div>
               <jus-icon v-if="!!buildIcon(occurrence)" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
               <div v-if="(occurrence.interaction && occurrence.interaction.message) && (occurrence.interaction.message.receiver || occurrence.interaction.message.parameters)">•</div>
-              <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && occurrence.interaction.direction === 'OUTBOUND'">
+              <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
                 Para: {{ occurrence.interaction.message.receiver | phoneMask }}
               </span>
-              <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && occurrence.interaction.direction === 'INBOUND'">
+              <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
                 Por:
                 <span v-if="![occurrence.interaction.message.sender, occurrence.interaction.message.parameters.SENDER].includes(occurrence.interaction.message.parameters.SENDER_NAME)">
                   {{ occurrence.interaction.message.parameters.SENDER_NAME }}
