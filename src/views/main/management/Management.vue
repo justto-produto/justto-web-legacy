@@ -329,8 +329,8 @@ export default {
       this.$store.dispatch('getExportColumns').then(response => {
         Object.keys(response).forEach(key => {
           this.columns.push({
-            "key": key,
-            "label": response[key]
+            'key': key,
+            'label': response[key]
           })
         })
         // this.columns = response
