@@ -5,7 +5,7 @@
         <jus-icon class="back" icon="back"/>
       </router-link>
     </el-tooltip>
-    <el-tooltip v-if="canSettled" :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar Acordo'">
+    <el-tooltip v-if="canSettled" :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -68,7 +68,7 @@
         <jus-icon icon="cancel-messages"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="!tableActions" content="Alterar Negociador">
+    <el-tooltip v-if="!tableActions" content="Alterar negociador">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -265,12 +265,15 @@
       data-testid="choose-unsettled-dialog">
       <p>Confirmar proposta aceita no valor de
         <el-tooltip content="Clique para alterar">
-          <el-button type="text" @click="showSettledForm = true">{{ counterOfferForm.lastCounterOfferValue | currency }}</el-button>
+          <el-button type="text" @click="showSettledForm = true">
+            {{ counterOfferForm.lastCounterOfferValue | currency }}
+            <i class="el-icon-edit" />
+          </el-button>
         </el-tooltip>
       </p>
       <el-form
         v-loading="modalLoading"
-        v-if="showSettledForm"
+        v-if="showSettledForm || !counterOfferForm.selectedRoleId"
         ref="counterOfferForm"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
@@ -313,7 +316,7 @@
 
 <script>
 import { validateZero } from '@/utils/validations'
-import { getRoles, getTracktitleByAction } from '@/utils/jusUtils'
+import { getRoles } from '@/utils/jusUtils'
 
 export default {
   name: 'JusDisputeActions',
@@ -353,7 +356,7 @@ export default {
       counterOfferFormRules: {
         lastCounterOfferValue: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
+          // { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
         ],
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
@@ -539,7 +542,6 @@ export default {
           break
       }
     },
-
     doAction (action, message, additionParams) {
       return new Promise((resolve, reject) => {
         this.$confirm(message.content, message.title, {
@@ -567,7 +569,6 @@ export default {
         })
       })
     },
-
     restartEngagement (action) {
       return new Promise((resolve, reject) => {
         if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
@@ -599,7 +600,6 @@ export default {
     togleCollapsed () {
       this.collapsed = !this.collapsed
     },
-
     openSettledDialog () {
       this.modalLoading = false
       this.showSettledForm = false
@@ -634,71 +634,6 @@ export default {
         this.$refs.counterOfferForm.clearValidate()
       }
     },
-
-    // doAction (action) {
-    //   return new Promise((resolve, reject) => {
-    //     this.modalLoading = true
-    //     let translatedAction = this.$t('action.' + action.toUpperCase())
-    //     let params = {
-    //       action: action,
-    //       disputeId: this.dispute.id
-    //     }
-    //     if (this.unsettledType) {
-    //       params['body'] = { 'reason': this.unsettledTypes[this.unsettledType] }
-    //     }
-    //     if (action === 'settled' && this.settledValue) {
-    //       params.value = this.settledValue
-    //     }
-    //     if (this.tableActions && action !== 'unsettled') {
-    //       this.$jusNotification({
-    //         title: 'Yay!',
-    //         dangerouslyUseHTMLString: true,
-    //         message: `Ação <strong>${translatedAction}</strong> realizada com sucesso. Em instantes o sistema atualizará com as novas informações`,
-    //         type: 'success'
-    //       })
-    //     }
-    //     this.$store.dispatch('sendDisputeAction', params).then(() => {
-    //       resolve()
-    //       // SEGMENT TRACK
-    //       this.$jusSegment(getTracktitleByAction(action), { disputeId: params.disputeId })
-    //       if (!this.tableActions || action === 'unsettled') {
-    //         this.$jusNotification({
-    //           title: 'Yay!',
-    //           dangerouslyUseHTMLString: true,
-    //           message: `Ação <strong>${translatedAction}</strong> realizada com sucesso.`,
-    //           type: 'success'
-    //         })
-    //       }
-    //       if (action === 'unsettled' && !this.tableActions) {
-    //         setTimeout(() => {
-    //           this.$jusNotification({
-    //             title: 'Atenção!',
-    //             message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
-    //             type: 'info',
-    //             duration: 0
-    //           })
-    //         }, 2000)
-    //       }
-    //       if (!this.tableActions) this.$emit('fetch-data')
-    //     }).catch(e => {
-    //       reject(e)
-    //       console.error(e)
-    //       if (e.response && e.response.data.reason.length) {
-    //         this.$jusNotification({
-    //           type: 'error',
-    //           message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
-    //         })
-    //       } else {
-    //         this.$jusNotification({ type: 'error' })
-    //       }
-    //     }).finally(() => {
-    //       this.chooseUnsettledDialogVisible = false
-    //       this.insertSettledValueDialogVisible = false
-    //       this.modalLoading = false
-    //     })
-    //   })
-    // },
-
     checkCounterproposal (actionType) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
@@ -763,11 +698,9 @@ export default {
                 type: 'success'
               })
             }
-          }).catch(e => {
-            reject(e)
-          }).catch(e => {
-            reject(e)
-            this.$jusNotification({ type: 'error' })
+          }).catch(error => {
+            reject(error)
+            this.$jusNotification({ error })
           }).finally(() => {
             this.modalLoading = false
           })

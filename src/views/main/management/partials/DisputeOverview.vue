@@ -1086,11 +1086,10 @@ export default {
       this.disputeUpperRangeHasChanged = false
       this.lastOfferValueHasChanged = false
       this.documentNumberHasChanged = false
-      this.$store.dispatch('getMyStrategies')
+      this.$store.dispatch('getMyStrategies').finally(() => this.$nextTick(() => this.selectedStrategyId = dispute.strategyId))
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
-      this.selectedStrategyId = dispute.strategyId
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
