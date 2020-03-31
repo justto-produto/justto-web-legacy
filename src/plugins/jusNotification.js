@@ -4,8 +4,7 @@ import { Notification } from 'element-ui'
 const NotificationMessage = {
   install (Vue, options) {
     Vue.prototype.$jusNotification = (config) => {
-      debugger
-      if (config.error instanceof Error ) {
+      if (config.error instanceof Error) {
         config.type = 'warning'
         config.message = config.error.response.data.fields.Error || 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
       }
