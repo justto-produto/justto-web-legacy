@@ -375,7 +375,7 @@ export default {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
     },
     canResendMessage () {
-      return this.dispute && this.dispute.status && ['RUNNING', 'ENGAGEMENT'].includes(this.dispute.status)
+      return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING'
     },
     canMarkAsNotRead () {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
