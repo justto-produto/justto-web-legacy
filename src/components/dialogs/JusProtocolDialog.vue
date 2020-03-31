@@ -131,14 +131,15 @@
           @click="visible = false">
           Cancelar
         </el-button>
-        <el-button
-          v-if="canResendNotification && step === 3"
-          :disabled="loading"
-          icon="el-icon-refresh-right"
-          plain
-          @click="resendSignersNotification">
-          Reenviar notificação de assinatura
-        </el-button>
+        <el-tooltip v-if="canResendNotification && step === 3" content="Esta opção irá enviar novamente uma notificação para todos que ainda não assinaram a minuta.">
+          <el-button
+            :disabled="loading"
+            icon="el-icon-refresh-right"
+            plain
+            @click="resendSignersNotification">
+            Reenviar notificação de assinatura
+          </el-button>
+        </el-tooltip>
         <el-button
           v-if="[2, 4].includes(step)"
           :disabled="loading"
@@ -271,11 +272,6 @@ export default {
     }
   },
   computed: {
-    canResendNotification () {
-      return this.signers.length > this.signers.filter(s => {
-        return s.signed === true
-      }).length
-    },
     visible: {
       get () {
         return this.protocolDialogVisible
@@ -316,6 +312,13 @@ export default {
     pdfUrl () {
       if (this.disputeId) {
         return 'https://justto.app/api/documents/download-signed/' + this.disputeId
+      }
+    },
+    canResendNotification () {
+      if (this.signers) {
+        return this.signers.length > this.signers.filter(s => {
+          return s.signed === true
+        }).length
       }
     }
   },
