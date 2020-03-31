@@ -132,6 +132,14 @@
           Cancelar
         </el-button>
         <el-button
+          v-if="canResendNotification && step === 3"
+          :disabled="loading"
+          icon="el-icon-refresh-right"
+          plain
+          @click="resendSignersNotification">
+          Reenviar notificação de assinatura
+        </el-button>
+        <el-button
           v-if="[2, 4].includes(step)"
           :disabled="loading"
           plain
@@ -263,6 +271,11 @@ export default {
     }
   },
   computed: {
+    canResendNotification () {
+      return this.signers.length > this.signers.filter(s => {
+        return s.signed === true
+      }).length
+    },
     visible: {
       get () {
         return this.protocolDialogVisible
@@ -515,6 +528,26 @@ export default {
       }).finally(() => {
         this.loading = false
         this.loadingChooseRecipients = false
+      })
+    },
+    resendSignersNotification () {
+      this.loading = true
+      this.$store.dispatch('resendSignersNotification', {
+        disputeId: this.disputeId
+      }).then(() => {
+
+      }).catch(e => {
+        this.visible = false
+        if (e.response.data.reason.length) {
+          this.$jusNotification({
+            type: 'error',
+            message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
+          })
+        } else {
+          this.$jusNotification({ type: 'error' })
+        }
+      }).finally(() => {
+        this.loading = false
       })
     },
     backToDocument () {
