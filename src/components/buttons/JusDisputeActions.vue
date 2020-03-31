@@ -315,7 +315,7 @@
 </template>
 
 <script>
-import { validateZero } from '@/utils/validations'
+// import { validateZero } from '@/utils/validations'
 import { getRoles } from '@/utils/jusUtils'
 
 export default {
@@ -355,7 +355,7 @@ export default {
       },
       counterOfferFormRules: {
         lastCounterOfferValue: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
           // { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
         ],
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
