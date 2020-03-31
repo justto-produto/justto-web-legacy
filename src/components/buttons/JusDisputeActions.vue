@@ -264,7 +264,7 @@
       </p>
       <el-form
         v-loading="modalLoading"
-        v-if="showSettledForm"
+        v-if="showSettledForm || !counterOfferForm.selectedRoleId"
         ref="counterOfferForm"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
@@ -347,7 +347,7 @@ export default {
       counterOfferFormRules: {
         lastCounterOfferValue: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
+          // { validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }
         ],
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
@@ -621,7 +621,6 @@ export default {
     },
     checkCounterproposal (actionType) {
       return new Promise((resolve, reject) => {
-        if (actionType === 'WIN') resolve()
         this.$refs.counterOfferForm.validate(valid => {
           if (valid) {
             if (this.checkUpperRangeCounterOffer) {
