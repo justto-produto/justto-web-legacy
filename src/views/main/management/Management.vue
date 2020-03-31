@@ -104,6 +104,7 @@
         </div>
       </div>
       <el-dialog
+        v-loading="loadingExport"
         :close-on-click-modal="false"
         :visible.sync="exportDisputesDialog"
         append-to-body
@@ -325,7 +326,9 @@ export default {
       this.getDisputes()
     },
     showExportDisputesDialog () {
+      this.loadingExport = true
       this.exportDisputesDialog = true
+      this.columns = []
       this.$store.dispatch('getExportColumns').then(response => {
         Object.keys(response).forEach(key => {
           this.columns.push({
@@ -333,7 +336,8 @@ export default {
             'label': response[key]
           })
         })
-        // this.columns = response
+      }).finally(() => {
+        this.loadingExport = false
       })
       const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
       setTimeout(() => {
