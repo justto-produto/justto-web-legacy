@@ -33,13 +33,16 @@ const similarity = function (s1, s2) {
   return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength)
 }
 
-const checkMessage = function (newMessageTrim, recentMessages) {
-  for (let i = 0; i < recentMessages.length; i++) {
-    let actuallyMessage = recentMessages[i].messageBody
-    if ((Math.round(similarity(newMessageTrim, actuallyMessage) * 10000) / 100) >= 75) return true
+const checkSimilarity = function (compare1, compare2, percentage) {
+  if (!compare1 || !compare2) return false
+  if (Array.isArray(compare2)) {
+    for (var c2 of compare2) {
+      if ((Math.round(similarity(compare1, c2) * 10000) / 100) >= percentage) return true
+    }
+  } else if (typeof compare2 === 'string' || compare2 instanceof String) {
+    if ((Math.round(similarity(compare1, compare2) * 10000) / 100) >= percentage) return true
   }
+  return false
 }
 
-export {
-  checkMessage
-}
+export default checkSimilarity
