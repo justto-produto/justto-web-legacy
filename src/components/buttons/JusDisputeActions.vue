@@ -13,7 +13,7 @@
         @click="disputeAction('settled')">
         <jus-icon icon="win"/>
       </el-button>
-    </el-tooltip
+    </el-tooltip>
     <el-tooltip v-if="canUnsettled" content="Perder">
       <el-button
         :type="tableActions ? 'text' : ''"
