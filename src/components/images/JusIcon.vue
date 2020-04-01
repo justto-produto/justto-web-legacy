@@ -1,5 +1,5 @@
 <template>
-  <img v-if="iconPath" :src="iconPath">
+  <img draggable="false" v-if="iconPath" :src="iconPath">
 </template>
 
 <script>

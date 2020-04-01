@@ -104,9 +104,9 @@
         </div>
       </div>
       <el-dialog
-        v-loading="loadingExport"
         :close-on-click-modal="false"
         :visible.sync="exportDisputesDialog"
+        :show-close="false"
         append-to-body
         class="view-management__export-dialog"
         title="Exportar disputas"
@@ -234,8 +234,19 @@ export default {
   },
   created () {
     this.getDisputes()
-    this.filteredNodes = this.columns
-    this.checkedNodes = this.columns.length
+  },
+  mounted () {
+    this.$store.dispatch('getExportColumns').then(response => {
+      Object.keys(response).forEach(key => {
+        this.columns.push({
+          'key': key,
+          'label': response[key]
+        })
+      })
+    }).finally(() => {
+      this.filteredNodes = this.columns
+      this.checkedNodes = this.columns.length
+    })
   },
   methods: {
     filterColumns (value, data) {
@@ -326,19 +337,7 @@ export default {
       this.getDisputes()
     },
     showExportDisputesDialog () {
-      this.loadingExport = true
       this.exportDisputesDialog = true
-      this.columns = []
-      this.$store.dispatch('getExportColumns').then(response => {
-        Object.keys(response).forEach(key => {
-          this.columns.push({
-            'key': key,
-            'label': response[key]
-          })
-        })
-      }).finally(() => {
-        this.loadingExport = false
-      })
       const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
       setTimeout(() => {
         if (jusexportcolumns) {
@@ -421,6 +420,7 @@ export default {
         width: 18px;
         float: right;
         margin-right: 20px;
+        cursor: grab;
       }
     }
     &-options {
