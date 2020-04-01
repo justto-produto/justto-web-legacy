@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="jus-tags">
     <el-tag
-      v-for="tag in $store.getters.disputeTags"
+      v-for="tag in disputeTags"
       :key="tag.id"
       :color="tag.color"
       effect="dark">
@@ -13,12 +13,17 @@
       title="Adicionar etiqueta"
       trigger="click">
       <div>
-        <el-select v-model="value" filterable placeholder="">
+        <el-select
+          v-model="selectedTag"
+          filterable
+          placeholder=""
+          class="jus-tags__select"
+          @change="addTag">
           <el-option
-            v-for="tag in tags"
+            v-for="tag in workspaceTags"
             :key="tag.id"
             :label="tag.label"
-            :value="tag.name">
+            :value="tag">
             <el-tag
               :color="tag.color"
               effect="dark">
@@ -39,14 +44,13 @@ export default {
   name: 'JusTags',
   data () {
     return {
-      value: '',
-      term: ''
+      selectedTag: null
     }
   },
   computed: {
-    tags: {
+    disputeTags: {
       get () {
-        return this.$store.getters.workspaceTags
+        return this.$store.getters.disputeTags
       },
       set (tags) {
         this.$store.dispatch('editDisputeTags', {
@@ -54,11 +58,21 @@ export default {
           data: tags
         })
       }
+    },
+    workspaceTags () {
+      return this.$store.getters.workspaceTags.filter(t => {
+        return !this.disputeTags.map(t => t.id).includes(t.id)
+      })
     }
   },
   methods: {
+    addTag (tag) {
+      let disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
+      disputeTags.push(tag)
+      this.disputeTags = disputeTags
+    },
     removeTag (tagId) {
-      this.tags = this.tags.filter(t => t.id !== tagId)
+      this.disputeTags = this.disputeTags.filter(t => t.id !== tagId)
     }
   }
 }
@@ -71,8 +85,8 @@ export default {
   > * {
     margin-top: 5px;
   }
-  .el-select {
-    width: 100%
+  &__select {
+    width: 100%;
   }
 }
 </style>
