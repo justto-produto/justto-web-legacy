@@ -137,7 +137,7 @@
             icon="el-icon-refresh-right"
             plain
             @click="resendSignersNotification">
-            Reenviar notificação de assinatura
+            Reenviar assinaturas pendentes
           </el-button>
         </el-tooltip>
         <el-button
