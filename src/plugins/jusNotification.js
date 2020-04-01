@@ -1,18 +1,26 @@
 import Vue from 'vue'
 import { Notification } from 'element-ui'
 
+const errorMessage = 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
+
 const NotificationMessage = {
   install (Vue, options) {
     Vue.prototype.$jusNotification = (config) => {
       if (config.error instanceof Error) {
-        config.type = 'warning'
-        config.message = (config.error.response.data.fields.Error || config.error.response.data.reason) || 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
-      }
-      if (config.type === 'error') {
-        config.message = config.message ? config.message : 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
-      } else if (config.type === '403') {
-        config.type = 'warning'
-        config.message = config.message ? config.message : 'Você não tem permissão para acessar essa página. Entre em contato com o administrador do sistema.'
+        if (config.error.response.status === 500) {
+          config.type = 'error'
+          config.message = errorMessage
+        } else {
+          config.type = 'warning'
+          config.message = (config.error.response.data.fields.Error || config.error.response.data.reason) || errorMessage
+        }
+      } else {
+        if (config.type === 'error') {
+          config.message = config.message ? config.message : errorMessage
+        } else if (config.type === '403') {
+          config.type = 'warning'
+          config.message = config.message ? config.message : 'Você não tem permissão para acessar essa página. Entre em contato com o administrador do sistema.'
+        }
       }
       config.title = config.title ? config.title : 'Ops!'
       config.customClass = config.type
