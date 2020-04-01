@@ -1086,11 +1086,14 @@ export default {
       this.disputeUpperRangeHasChanged = false
       this.lastOfferValueHasChanged = false
       this.documentNumberHasChanged = false
-      this.$store.dispatch('getMyStrategies')
+      this.$store.dispatch('getMyStrategies').finally(() => {
+        this.$nextTick(() => {
+          this.selectedStrategyId = dispute.strategyId
+        })
+      })
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
-      this.selectedStrategyId = dispute.strategyId
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
@@ -1149,8 +1152,8 @@ export default {
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
               if (this.$moment(currentDate).isBefore(today) && this.$moment(newDate).isSameOrAfter(today)) {
-                this.$confirm('A data de expiração foi alterada. Deseja reiniciar o engajamento para esta disputa?', 'Atenção!', {
-                  confirmButtonText: 'Reengajar',
+                this.$confirm('A data de expiração foi alterada. Deseja reiniciar esta disputa?', 'Atenção!', {
+                  confirmButtonText: 'Reiniciar',
                   cancelButtonText: 'Cancelar',
                   cancelButtonClass: 'is-plain',
                   type: 'warning'
