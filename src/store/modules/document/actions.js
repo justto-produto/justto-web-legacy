@@ -50,6 +50,16 @@ const actions = {
       })
     })
   },
+  resendSignersNotification ({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.put('api/documents/resend-notification/' + params.disputeId).then(response => {
+        resolve(response.data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   deleteDocument ({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
