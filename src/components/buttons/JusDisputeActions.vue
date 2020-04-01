@@ -543,6 +543,8 @@ export default {
         this.$confirm(message.content, message.title, {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
+          cancelButtonClass: 'is-plain',
+          showClose: false,
           type: 'warning'
         }).then(() => {
           this.modalLoading = true
@@ -639,7 +641,9 @@ export default {
               this.$confirm(actionType, 'Atenção!', {
                 confirmButtonText: 'Continuar',
                 cancelButtonText: 'Cancelar',
+                cancelButtonClass: 'is-plain',
                 dangerouslyUseHTMLString: true,
+                showClose: false,
                 type: 'warning'
               }).then(() => {
                 resolve()
@@ -737,6 +741,8 @@ export default {
         this.$confirm(h('div', null, detailsMessage), actionType, {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
+          cancelButtonClass: 'is-plain',
+          showClose: false,
           type: 'warning'
         }).then(() => {
           resolve()
