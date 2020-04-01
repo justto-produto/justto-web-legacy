@@ -131,15 +131,6 @@
           @click="visible = false">
           Cancelar
         </el-button>
-        <el-tooltip v-if="canResendNotification && step === 3" content="Esta opção irá enviar novamente uma notificação para todos que ainda não assinaram a minuta.">
-          <el-button
-            :disabled="loading"
-            icon="el-icon-refresh-right"
-            plain
-            @click="resendSignersNotification">
-            Reenviar assinaturas pendentes
-          </el-button>
-        </el-tooltip>
         <el-button
           v-if="[2, 4].includes(step)"
           :disabled="loading"
@@ -169,6 +160,15 @@
           @click="downloadDocument">
           Baixar
         </el-button>
+        <el-tooltip v-if="canResendNotification && step === 3" content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta.">
+          <el-button
+            :disabled="loading"
+            icon="el-icon-refresh-right"
+            type="primary"
+            @click="resendSignersNotification">
+            Reenviar pendentes
+          </el-button>
+        </el-tooltip>
         <el-button
           v-if="false && step === 3"
           icon="el-icon-view"
@@ -538,17 +538,13 @@ export default {
       this.$store.dispatch('resendSignersNotification', {
         disputeId: this.disputeId
       }).then(() => {
-
-      }).catch(e => {
-        this.visible = false
-        if (e.response.data.reason.length) {
-          this.$jusNotification({
-            type: 'error',
-            message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
-          })
-        } else {
-          this.$jusNotification({ type: 'error' })
-        }
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Notificação reenviada com sucesso',
+          type: 'success'
+        })
+      }).catch(error => {
+        this.$jusNotification({ error })
       }).finally(() => {
         this.loading = false
       })
