@@ -119,6 +119,10 @@
             </el-collapse-item>
           </el-collapse>
         </div>
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+          <span class="title">Etiquetas</span>
+          <span><jus-tags /></span>
+        </div>
         <div class="dispute-overview-view__actions">
           <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>
         </div>
@@ -703,7 +707,8 @@ import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/
 export default {
   name: 'DisputeOverview',
   components: {
-    DisputeAddRole: () => import('./DisputeAddRole')
+    DisputeAddRole: () => import('./DisputeAddRole'),
+    JusTags: () => import('@/components/others/JusTags')
   },
   props: {
     loading: {
