@@ -4,7 +4,7 @@
       :visible.sync="visible"
       :title="title"
       :width="width"
-      :class="{ 'jus-protocol-dialog--full': fullscreen && this.step === 1, 'jus-protocol-dialog--large': [1, 4].includes(step) && !fullscreen }"
+      :class="{ 'jus-protocol-dialog--full': fullscreen && step === 1, 'jus-protocol-dialog--large': [1, 4].includes(step) && !fullscreen }"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :show-close="false"
@@ -19,8 +19,8 @@
           </el-button>
         </div>
         <!-- EDIÇÃO DE TEMPLATE -->
-        <el-tooltip :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'">
-          <i v-if="step === 1" class="jus-protocol-dialog__fullscreen-icon" :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" @click="fullscreen = !fullscreen" />
+        <el-tooltip v-if="step === 1" :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'">
+          <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="jus-protocol-dialog__fullscreen-icon" @click="fullscreen = !fullscreen" />
         </el-tooltip>
         <div v-if="step === 1">
           <iframe :src="document.url" frameborder="0" allowfullscreen />
