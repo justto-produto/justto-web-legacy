@@ -263,17 +263,8 @@
       class="dispute-view-actions__choose-unsettled-dialog"
       width="600px"
       data-testid="choose-unsettled-dialog">
-      <p>Confirmar proposta aceita no valor de
-        <el-tooltip content="Clique para alterar">
-          <el-button type="text" @click="showSettledForm = true">
-            {{ counterOfferForm.lastCounterOfferValue | currency }}
-            <i class="el-icon-edit" />
-          </el-button>
-        </el-tooltip>
-      </p>
       <el-form
         v-loading="modalLoading"
-        v-if="showSettledForm || !counterOfferForm.selectedRoleId"
         ref="counterOfferForm"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
@@ -341,7 +332,6 @@ export default {
       negotiatorsForm: {},
       negotiatorsRules: {},
       disputeNegotiators: [],
-      showSettledForm: false,
       chooseUnsettledDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
@@ -473,15 +463,19 @@ export default {
           this.doAction(action, message)
           break
         case 'restart-engagement':
-          this.restartEngagement(action).then(() => {
+          this.checkIsntManualStrategy(action).then(() => {
             this.doAction(action, message)
           })
           break
         case 'resend-messages':
-          this.doAction(action, message)
+          this.checkIsntManualStrategy(action).then(() => {
+            this.doAction(action, message)
+          })
           break
         case 'cancel-messages':
-          this.doAction(action, message)
+          this.checkIsntManualStrategy(action).then(() => {
+            this.doAction(action, message)
+          })
           break
         case 'edit-negotiators':
           additionParams = { negotiatorsId: additionParams }
@@ -558,21 +552,23 @@ export default {
               type: 'success',
               dangerouslyUseHTMLString: true
             })
-          }).catch(e => {
-            reject(e)
-            this.$jusNotification({ type: 'error' })
+          }).catch(error => {
+            reject(error)
+            this.$jusNotification({ error })
           }).finally(() => {
             this.modalLoading = false
           })
         })
       })
     },
-    restartEngagement (action) {
+    checkIsntManualStrategy (action) {
       return new Promise((resolve, reject) => {
-        if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
-          this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar disputa', {
+        if ((['restart-engagement', 'resend-messages', 'cancel-messages'].includes(action)) && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
+          this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', {
+            title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
             dangerouslyUseHTMLString: true,
             confirmButtonText: 'OK',
+            showClose: false,
             type: 'warning'
           })
           reject(new Error('Ok'))
@@ -600,7 +596,6 @@ export default {
     },
     openSettledDialog () {
       this.modalLoading = false
-      this.showSettledForm = false
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
       if (this.disputeClaimants.length === 1) {
         this.counterOfferForm.selectedRoleId = this.disputeClaimants[0].id
