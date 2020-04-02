@@ -99,9 +99,11 @@
           </el-tag>
         </div>
       </div>
-      <el-tag slot="reference" class="jus-tags__open-button" @click="visible = !visible">
-        <i class="el-icon-plus" />
-      </el-tag>
+      <el-tooltip slot="reference" content="Adicionar etiqueta">
+        <el-tag class="jus-tags__open-button" @click="visible = !visible">
+          <i class="el-icon-plus" />
+        </el-tag>
+      </el-tooltip>
     </el-popover>
   </div>
 </template>
