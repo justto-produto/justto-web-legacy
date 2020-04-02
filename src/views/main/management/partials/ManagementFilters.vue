@@ -136,9 +136,8 @@
                   :key="tag.id"
                   :label="tag.name"
                   :value="tag.id">
-                  <el-tag
-                    :color="tag.color"
-                    effect="dark">
+                  <el-tag :color="tag.color" class="el-tag--etiqueta el-tag--etiqueta-select">
+                    <i :class="`el-icon-${tag.icon}`"/>
                     {{ tag.name }}
                   </el-tag>
                 </el-option>
