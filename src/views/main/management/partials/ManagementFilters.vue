@@ -121,6 +121,30 @@
                 @change="changeimportingDate" />
             </el-form-item>
           </el-col>
+          <!-- TAGS -->
+          <el-col :span="12">
+            <el-form-item label="Etiquetas">
+              <el-select
+                v-model="filters.tags"
+                multiple
+                filterable
+                data-testid="filter-strategy"
+                placeholder="Selecione uma opção"
+                @clear="clearTags">
+                <el-option
+                  v-for="tag in workspaceTags"
+                  :key="tag.id"
+                  :label="tag.name"
+                  :value="tag.id">
+                  <el-tag
+                    :color="tag.color"
+                    effect="dark">
+                    {{ tag.name }}
+                  </el-tag>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <!-- RÉU -->
           <el-col v-if="!loading && isAll" :span="12">
             <el-form-item label="Réu">
@@ -332,6 +356,9 @@ export default {
     respondents () {
       return this.$store.getters.respondents
     },
+    workspaceTags () {
+      return this.$store.getters.workspaceTags
+    },
     interactions () {
       return [{
         key: 'WHATSAPP',
@@ -428,6 +455,7 @@ export default {
       }
       this.clearCampaign()
       this.clearStrategy()
+      this.clearTags()
       this.clearRespondent()
       this.changeDealDate()
       this.changeExpirationDate()
@@ -449,6 +477,9 @@ export default {
     },
     clearStrategy () {
       this.filters.strategy = []
+    },
+    clearTags () {
+      this.filters.tags = []
     },
     clearRespondent () {
       this.filters.respondentNames = []

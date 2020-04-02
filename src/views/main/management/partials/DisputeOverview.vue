@@ -2,6 +2,10 @@
   <div v-loading="loading || linkBankAccountLoading" class="dispute-overview-view">
     <el-collapse value="1">
       <el-collapse-item title="Informações gerais" name="1">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+          <span class="title">Etiquetas</span>
+          <jus-tags />
+        </div>
         <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline" style="margin: 0">
           <span class="title">Data de importação:</span>
           <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
@@ -118,10 +122,6 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-        </div>
-        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-          <span class="title">Etiquetas</span>
-          <span><jus-tags /></span>
         </div>
         <div class="dispute-overview-view__actions">
           <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>

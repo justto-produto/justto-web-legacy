@@ -21,6 +21,7 @@ const dispute = {
       sort: ['expirationDate,asc', 'favorite,desc'],
       campaigns: [],
       strategy: [],
+      tags: [],
       persons: [],
       expirationDate: [],
       dealDate: [],

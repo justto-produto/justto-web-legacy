@@ -10,6 +10,7 @@ const disputeGetters = {
   disputeQueryTerm: state => state.query.term,
   disputeTab: state => state.tab,
   dispute: state => state.dispute,
+  disputeId: state => state.dispute.id || 0,
   disputeHasFilters: state => state.hasFilters,
   disputeStatuses: state => state.statuses,
   disputeHasNew: state => state.hasNew,
