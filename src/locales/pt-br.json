@@ -90,8 +90,9 @@
     "ADMINISTRATOR": "administrador"
   },
   "action": {
-    "RESTART_ENGAGEMENT": "reengajar",
-    "RESTART-ENGAGEMENT": "reengajar",
+    "RESTART_ENGAGEMENT": "reiniciar disputa",
+    "RESTART-ENGAGEMENT": "reiniciar disputa",
+    "RESEND-MESSAGES": "reenviar mensagens automáticas",
     "SETTLED": "ganhar",
     "UNSETTLED": "perder",
     "SEND-UNSETTLED": "perder",

@@ -304,6 +304,9 @@ const disputeActions = {
       if (params.action === 'restart-engagement' || params.action === 'renegotiate') {
         // eslint-disable-next-line
         request = axios.patch('api/disputes/' + params.disputeId + '/' + params.action)
+      } else if (params.action === 'resend-messages') {
+        // eslint-disable-next-line
+        request = axios.put('api/messages/resend/' + params.disputeId)
       } else if (params.action === 'settled' && params.value) {
         // eslint-disable-next-line
         request = axios.put(`api/disputes/${params.disputeId}/settled?value=${params.value}`)

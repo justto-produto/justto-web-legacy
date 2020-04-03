@@ -6,7 +6,7 @@ const NotificationMessage = {
     Vue.prototype.$jusNotification = (config) => {
       if (config.error instanceof Error) {
         config.type = 'warning'
-        config.message = config.error.response.data.fields.Error || 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
+        config.message = (config.error.response.data.fields.Error || config.error.response.data.reason) || 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
       }
       if (config.type === 'error') {
         config.message = config.message ? config.message : 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
