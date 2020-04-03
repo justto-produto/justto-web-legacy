@@ -2,6 +2,10 @@
   <div v-loading="loading || linkBankAccountLoading" class="dispute-overview-view">
     <el-collapse value="1">
       <el-collapse-item title="Informações gerais" name="1">
+        <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+          <span class="title">Etiquetas</span>
+          <jus-tags />
+        </div>
         <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline" style="margin: 0">
           <span class="title">Data de importação:</span>
           <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
@@ -703,7 +707,8 @@ import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/
 export default {
   name: 'DisputeOverview',
   components: {
-    DisputeAddRole: () => import('./DisputeAddRole')
+    DisputeAddRole: () => import('./DisputeAddRole'),
+    JusTags: () => import('@/components/others/JusTags')
   },
   props: {
     loading: {

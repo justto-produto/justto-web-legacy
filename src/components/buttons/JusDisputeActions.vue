@@ -125,6 +125,15 @@
         <jus-icon :icon="dispute.favorite ? 'golden-star' : 'star'"/>
       </el-button>
     </el-tooltip>
+    <!-- TAGS -->
+    <!-- <el-tooltip v-if="tableActions" content="Gerenciar etiquetas">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="disputeAction(dispute.favorite ? 'disfavor' : 'favorite')">
+        <i class="el-icon-collection-tag" />
+      </el-button>
+    </el-tooltip> -->
     <el-tooltip v-if="!tableActions" :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'">
       <el-button
         :plain="!tableActions"

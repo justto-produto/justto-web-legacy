@@ -434,6 +434,7 @@ export default {
       this.$store.dispatch('getDispute', this.id)
         .then(dispute => {
           if (!dispute || dispute.archived) this.$router.push('/management')
+          else this.$store.dispatch('getDisputeTags', this.id)
         })
         .catch(error => {
           if (error.response.status === 403) {

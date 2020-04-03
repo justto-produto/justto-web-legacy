@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import moment from 'moment'
+// import axiosDispatcher from '@/store/axiosDispatcher.js'
+
 const FileSaver = require('file-saver')
 let removeDebounce = 0
 
-const queryBuilder = (q, command, disputesLength) => {
+const queryBuilder = (q, command, disputesLength, noSort) => {
   let query = '?'
   for (let [key, value] of Object.entries(q)) {
     if (['total'].includes(key)) continue
@@ -19,6 +21,8 @@ const queryBuilder = (q, command, disputesLength) => {
           query = query + key + '=' + v + '&'
         }
       }
+    } else if (noSort) {
+      continue
     } else if (key === 'page') {
       query = query + key + '=' + ((command === 'update' ? 1 : value) - 1) + '&'
     } else if (key === 'size') {
@@ -119,6 +123,10 @@ const disputeActions = {
           commit('setDisputes', response.data)
           commit('disputeSetHasNew', false)
         }
+        // axiosDispatcher({
+        //   url: 'api/disputes/tags' + queryBuilder(state.query, command, state.disputes.length, true),
+        //   mutation: 'setFilteredTags'
+        // })
         resolve(response.data)
       }).catch(error => {
         commit('clearDisputes')

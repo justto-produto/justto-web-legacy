@@ -303,7 +303,7 @@ export default {
               main.scrollTop = 0
             }
           })
-          this.$refs.managementTable.disputeKey += 1
+          if (this.$refs.managementTable) this.$refs.managementTable.disputeKey += 1
         })
       }, 300)
     },
@@ -320,19 +320,19 @@ export default {
       switch (tab) {
         case '0':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc', 'favorite,desc'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
           break
         case '1':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'expirationDate,asc', 'favorite,desc'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'expirationDate,asc'] })
           break
         case '2':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc', 'favorite,desc'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'conclusionDate,asc'] })
           break
         default:
           this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc', 'favorite,desc'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['id,desc'] })
       }
       this.getDisputes()
     },

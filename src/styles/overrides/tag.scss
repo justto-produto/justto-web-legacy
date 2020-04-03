@@ -12,6 +12,39 @@
   position: relative;
 }
 
+.el-tag--etiqueta {
+  margin: 3px;
+  color: rgba(247, 247, 247, 0.8);
+  font-weight: 600 !important;
+  .el-button.el-button--text {
+    color: inherit !important;
+  }
+  i {
+    font-size: 14px;
+  }
+}
+
+.el-tag--etiqueta-select {
+  display: flex;
+  align-items: center;
+  margin-left: -18px;
+  margin-right: -18px;
+  i {
+    margin-right: 4px;
+  }
+}
+
+.el-tag--etiqueta-list {
+  display: flex;
+  align-items: center;
+  .el-button {
+    margin-left: auto;
+  }
+  i {
+    margin-right: 4px;
+  }
+}
+
 .el-tag--dropzone-active {
   background-color: $--color-primary !important;
   border: solid 1px $--color-primary !important;

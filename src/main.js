@@ -98,6 +98,7 @@ if (store.getters.isLoggedIn) {
   store.dispatch('myAccount')
     .then(responses => {
       store.dispatch('getWorkspaceMembers')
+      store.dispatch('getWorkspaceTags')
     }).catch(() => {
       store.commit('logout')
     }).finally(() => {

@@ -18,9 +18,10 @@ const dispute = {
     hasNew: false,
     query: {
       status: ['ENGAGEMENT'],
-      sort: ['expirationDate,asc', 'favorite,desc'],
+      sort: ['expirationDate,asc'],
       campaigns: [],
       strategy: [],
+      tags: [],
       persons: [],
       expirationDate: [],
       dealDate: [],
@@ -33,7 +34,8 @@ const dispute = {
     },
     hasFilters: false,
     statuses: {},
-    respondents: []
+    respondents: [],
+    filteredTags: []
   },
   mutations: mutations,
   actions: actions,
