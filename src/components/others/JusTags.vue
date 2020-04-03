@@ -163,17 +163,39 @@ export default {
   methods: {
     saveTag () {
       if (this.tagForm.name) {
+        // SEGMENT TRACK
+        this.$jusSegment('Criação de TAG', {
+          tagName: this.tagForm.name,
+          tagIcon: this.tagForm.icon,
+          tagColor: this.tagForm.color,
+          page: this.$route.name
+        })
         let disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
         disputeTags.push(this.tagForm)
         this.disputeTags = disputeTags
       }
     },
     addTag (tag) {
+      // SEGMENT TRACK
+      this.$jusSegment('Vinculação de TAG', {
+        tagName: this.tagForm.name,
+        tagIcon: this.tagForm.icon,
+        tagColor: this.tagForm.color,
+        page: this.$route.name
+      })
       let disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
       disputeTags.push(tag)
       this.disputeTags = disputeTags
     },
     removeTag (tagId) {
+      // SEGMENT TRACK
+      let tagToRemove = this.disputeTags.find(t => t.id === tagId)
+      this.$jusSegment('Desvinculação de TAG', {
+        tagName: tagToRemove.name,
+        tagIcon: tagToRemove.icon,
+        tagColor: tagToRemove.color,
+        page: this.$route.name
+      })
       this.disputeTags = this.disputeTags.filter(t => t.id !== tagId)
     },
     changeIcon (icon) {
@@ -183,12 +205,14 @@ export default {
       this.tagForm.color = color
     },
     showNewTagForm () {
-      this.tagForm.name = this.$refs.selectTag.selectedLabel.slice(0,24) 
+      this.tagForm.name = this.$refs.selectTag.selectedLabel.slice(0, 24)
       this.$nextTick(() => {
         this.showForm = true
       })
     },
     getTags () {
+      // SEGMENT TRACK
+      this.$jusSegment('Visualização de TAG', { page: this.$route.name })
       this.loading = true
       this.$store.dispatch('getWorkspaceTags').finally(() => {
         this.loading = false
