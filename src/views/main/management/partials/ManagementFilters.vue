@@ -414,7 +414,8 @@ export default {
       Promise.all([
         this.$store.dispatch('getCampaigns'),
         this.$store.dispatch('getMyStrategies'),
-        this.$store.dispatch('getRespondents')
+        this.$store.dispatch('getRespondents'),
+        this.$store.dispatch('getWorkspaceTags')
       ]).finally(responses => {
         this.loading = false
       })
