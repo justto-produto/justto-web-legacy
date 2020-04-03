@@ -597,7 +597,6 @@ export default {
     },
     openSettledDialog () {
       this.modalLoading = false
-      debugger
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
       if (this.disputeClaimants.length === 1) {
         this.counterOfferForm.selectedRoleId = this.disputeClaimants[0].id
