@@ -138,6 +138,17 @@ const disputeActions = {
       })
     })
   },
+  getExportColumns ({ commit }) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.get('api/disputes/columns/to-export')
+        .then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error)
+        })
+    })
+  },
   exportDisputes ({ rootState, state }, colums) {
     return new Promise((resolve, reject) => {
       let stringColums = colums.toString()
