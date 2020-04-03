@@ -13,6 +13,7 @@
       v-model="visible"
       width="400"
       trigger="manual"
+      @show="getTags"
       @hide="resetFields">
       <div v-loading="loading">
         <button type="button" class="el-dialog__headerbtn jus-tags__close" @click="visible = false">
@@ -184,6 +185,12 @@ export default {
       this.tagForm.name = this.$refs.selectTag.selectedLabel
       this.$nextTick(() => {
         this.showForm = true
+      })
+    },
+    getTags () {
+      this.loading = true
+      this.$store.dispatch('getWorkspaceTags').finally(() => {
+        this.loading = false
       })
     },
     resetFields () {
