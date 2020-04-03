@@ -59,15 +59,18 @@
               <el-button v-if="email.canDelete" size="mini" type="text" icon="el-icon-delete" @click="removeEmail(email.address, role.name)" />
             </div>
             <div>
-              <el-button
-                v-show="!role.show"
-                :key="formKey"
-                type="text"
-                icon="el-icon-plus"
-                class="add-email"
-                @click="showAddEmail(role.name)">
-                Adicionar e-mail
-              </el-button>
+              <el-tooltip :disabled="!!role.documentNumber" content="Cadastre o CPF da parte para adicionar um e-mail">
+                <span><el-button
+                  v-show="!role.show"
+                  :key="formKey"
+                  :disabled="!role.documentNumber"
+                  type="text"
+                  icon="el-icon-plus"
+                  class="add-email"
+                  @click="showAddEmail(role.name)">
+                  Adicionar e-mail
+                </el-button></span>
+              </el-tooltip>
               <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role, index)">
                 <el-form-item v-show="role.show" :key="formKey" prop="email">
                   <el-input v-model="emailForm.email[role.name]" placeholder="Adicionar e-mail" size="small" @input="clearValidate(index)">
