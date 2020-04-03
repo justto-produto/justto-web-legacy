@@ -185,7 +185,7 @@
 </template>
 
 <script>
-import { checkMessage } from '@/utils/levenshtein'
+import checkSimilarity from '@/utils/levenshtein'
 import { quillEditor } from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -464,7 +464,7 @@ export default {
         ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
       if (this.selectedContacts.map(c => c.id).length) {
         if (this.messageType === 'whatsapp') {
-          if (checkMessage(quillMessage, this.recentMessages)) {
+          if (checkSimilarity(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
             this.$jusNotification({
               title: 'Ops!',
               message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',

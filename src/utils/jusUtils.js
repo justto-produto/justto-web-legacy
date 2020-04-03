@@ -213,7 +213,7 @@ const getTracktitleByAction = function (action, batch) {
   else if (action === 'RESUME') title = 'Ação marcar disputa como RETOMADA'
   else if (action === 'FAVORITE') title = 'Ação marcar disputa como FAVORITA'
   else if (action === 'DISFAVOR') title = 'Ação remover disputa como FAVORITA'
-  else if (action === 'RESTART_ENGAGEMENT') title = 'Ação REINICIAR ENGAJAMENTO'
+  else if (action === 'RESTART_ENGAGEMENT') title = 'Ação REINICIAR DISPUTA'
   else if (action === 'ENRICH') title = 'Ação ENRIQUECIMENTO'
   else if (action === 'CHANGE_EXPIRATION_DATE') title = 'Ação ALTERAR DATA LIMITE'
   else if (action === 'DELETE') title = 'Ação EXCLUIR'

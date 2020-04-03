@@ -41,13 +41,22 @@
         <jus-icon icon="pause"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip content="Reiniciar engajamento">
+    <el-tooltip content="Reiniciar disputa">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="restart-engagement"
         @click="disputeAction('restart-engagement')">
         <jus-icon icon="refresh"/>
+      </el-button>
+    </el-tooltip>
+    <el-tooltip v-if="canResendMessage" content="Reenviar mensagens automáticas">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        data-testid="resend-messages"
+        @click="disputeAction('resend-messages')">
+        <jus-icon icon="resend-messages"/>
       </el-button>
     </el-tooltip>
     <el-tooltip v-if="!tableActions" content="Cancelar mensagens automáticas">
@@ -254,17 +263,8 @@
       class="dispute-view-actions__choose-unsettled-dialog"
       width="600px"
       data-testid="choose-unsettled-dialog">
-      <p>Confirmar proposta aceita no valor de
-        <el-tooltip content="Clique para alterar">
-          <el-button type="text" @click="showSettledForm = true">
-            {{ counterOfferForm.lastCounterOfferValue | currency }}
-            <i class="el-icon-edit" />
-          </el-button>
-        </el-tooltip>
-      </p>
       <el-form
         v-loading="modalLoading"
-        v-if="showSettledForm || !counterOfferForm.selectedRoleId"
         ref="counterOfferForm"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
@@ -332,7 +332,6 @@ export default {
       negotiatorsForm: {},
       negotiatorsRules: {},
       disputeNegotiators: [],
-      showSettledForm: false,
       chooseUnsettledDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
@@ -363,6 +362,9 @@ export default {
     },
     canUnsettled () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
+    },
+    canResendMessage () {
+      return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING'
     },
     canMarkAsNotRead () {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
@@ -461,12 +463,19 @@ export default {
           this.doAction(action, message)
           break
         case 'restart-engagement':
-          this.restartEngagement(action).then(() => {
+          this.checkIsntManualStrategy(action).then(() => {
+            this.doAction(action, message)
+          })
+          break
+        case 'resend-messages':
+          this.checkIsntManualStrategy(action).then(() => {
             this.doAction(action, message)
           })
           break
         case 'cancel-messages':
-          this.doAction(action, message)
+          this.checkIsntManualStrategy(action).then(() => {
+            this.doAction(action, message)
+          })
           break
         case 'edit-negotiators':
           additionParams = { negotiatorsId: additionParams }
@@ -528,6 +537,8 @@ export default {
         this.$confirm(message.content, message.title, {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
+          cancelButtonClass: 'is-plain',
+          showClose: false,
           type: 'warning'
         }).then(() => {
           this.modalLoading = true
@@ -541,21 +552,23 @@ export default {
               type: 'success',
               dangerouslyUseHTMLString: true
             })
-          }).catch(e => {
-            reject(e)
-            this.$jusNotification({ type: 'error' })
+          }).catch(error => {
+            reject(error)
+            this.$jusNotification({ error })
           }).finally(() => {
             this.modalLoading = false
           })
         })
       })
     },
-    restartEngagement (action) {
+    checkIsntManualStrategy (action) {
       return new Promise((resolve, reject) => {
-        if (action === 'restart-engagement' && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
-          this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', 'Reiniciar Engajamento', {
+        if ((['restart-engagement', 'resend-messages', 'cancel-messages'].includes(action)) && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
+          this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', {
+            title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
             dangerouslyUseHTMLString: true,
             confirmButtonText: 'OK',
+            showClose: false,
             type: 'warning'
           })
           reject(new Error('Ok'))
@@ -583,7 +596,6 @@ export default {
     },
     openSettledDialog () {
       this.modalLoading = false
-      this.showSettledForm = false
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
       if (this.disputeClaimants.length === 1) {
         this.counterOfferForm.selectedRoleId = this.disputeClaimants[0].id
@@ -624,7 +636,9 @@ export default {
               this.$confirm(actionType, 'Atenção!', {
                 confirmButtonText: 'Continuar',
                 cancelButtonText: 'Cancelar',
+                cancelButtonClass: 'is-plain',
                 dangerouslyUseHTMLString: true,
+                showClose: false,
                 type: 'warning'
               }).then(() => {
                 resolve()
@@ -722,6 +736,8 @@ export default {
         this.$confirm(h('div', null, detailsMessage), actionType, {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
+          cancelButtonClass: 'is-plain',
+          showClose: false,
           type: 'warning'
         }).then(() => {
           resolve()
