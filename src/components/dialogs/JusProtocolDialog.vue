@@ -4,7 +4,7 @@
       :visible.sync="visible"
       :title="title"
       :width="width"
-      :class="{ 'jus-protocol-dialog--full': [1, 4].includes(step) }"
+      :class="{ 'jus-protocol-dialog--full': fullscreen && step === 1, 'jus-protocol-dialog--large': [1, 4].includes(step) && !fullscreen }"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :show-close="false"
@@ -19,8 +19,11 @@
           </el-button>
         </div>
         <!-- EDIÇÃO DE TEMPLATE -->
+        <el-tooltip v-if="step === 1" :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'">
+          <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="jus-protocol-dialog__fullscreen-icon" @click="fullscreen = !fullscreen" />
+        </el-tooltip>
         <div v-if="step === 1">
-          <iframe :src="document.url" />
+          <iframe :src="document.url" frameborder="0" allowfullscreen />
         </div>
         <!-- ESCOLHA DE EMAILS PARA ASSINATURA -->
         <div v-if="step === 2" class="jus-protocol-dialog__send-to">
@@ -237,6 +240,7 @@ export default {
       loadingDownload: false,
       loadingChooseRecipients: false,
       confirmChooseRecipientsVisible: false,
+      fullscreen: false,
       models: [],
       emails: {},
       recipients: {},
@@ -295,6 +299,9 @@ export default {
       }
     },
     width () {
+      if (this.step === 1 && this.fullscreen === true) {
+        return '100%'
+      }
       if ([1, 4].includes(this.step)) {
         return '85%'
       }
@@ -601,11 +608,26 @@ export default {
 <style lang="scss">
 .jus-protocol-dialog {
   &--full {
+    padding: 10px;
+    .el-dialog {
+      .el-dialog__body {
+        height: calc(100vh - 200px);
+      }
+    }
+  }
+  &--large  {
     .el-dialog {
       .el-dialog__body {
         height: calc(100vh - 284px);
       }
     }
+  }
+  &__fullscreen-icon {
+    position: absolute;
+    font-size: 22px;
+    top: 30px;
+    right: 20px;
+    cursor: pointer;
   }
   &__model-choice {
     margin: 30px;
