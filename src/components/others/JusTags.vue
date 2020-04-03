@@ -87,7 +87,7 @@
           </div> -->
         </div>
         <!-- ETIQUETAS DA DISPUTA -->
-        <div class="jus-tags__list">
+        <div v-if="disputeTags.length" class="jus-tags__list">
           <div class="jus-tags__title">Etiquetas da disputa</div>
           <el-tag
             v-for="tag in disputeTags"

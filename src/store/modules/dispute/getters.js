@@ -15,6 +15,7 @@ const disputeGetters = {
   disputeStatuses: state => state.statuses,
   disputeHasNew: state => state.hasNew,
   respondents: state => state.respondents,
+  filteredTags: state => state.filteredTags,
   filterSummary: state => (disputePhase, summarys) => {
     let filteredSummarys = summarys.filter(s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {
