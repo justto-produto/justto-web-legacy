@@ -10,10 +10,12 @@ const disputeGetters = {
   disputeQueryTerm: state => state.query.term,
   disputeTab: state => state.tab,
   dispute: state => state.dispute,
+  disputeId: state => state.dispute.id || 0,
   disputeHasFilters: state => state.hasFilters,
   disputeStatuses: state => state.statuses,
   disputeHasNew: state => state.hasNew,
   respondents: state => state.respondents,
+  filteredTags: state => state.filteredTags,
   filterSummary: state => (disputePhase, summarys) => {
     let filteredSummarys = summarys.filter(s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {

@@ -13,6 +13,9 @@ const disputeMutations = {
       state.query.total = pageable.totalElements
     }
   },
+  setFilteredTags (state, tags) {
+    state.filteredTags = tags.content
+  },
   setDispute (state, disputeVM) {
     state.dispute = disputeVM
   },
@@ -67,6 +70,7 @@ const disputeMutations = {
       sort: 'expirationDate,asc',
       campaigns: [],
       strategy: [],
+      tags: [],
       persons: [],
       expirationDate: [],
       dealDate: [],
@@ -83,6 +87,7 @@ const disputeMutations = {
       status: [],
       campaigns: [],
       strategy: [],
+      tags: [],
       persons: state.query.persons,
       dealDate: [],
       expirationDate: [],

@@ -399,7 +399,7 @@ export default {
         //   return content
         // }
       }
-      if (Object.keys(this.fullMessageBank).includes(occurrence.id.toString())) {
+      if (occurrence.id && Object.keys(this.fullMessageBank).includes(occurrence.id.toString())) {
         return this.fullMessageBank[occurrence.id]
       }
       if (this.showFullMessageList.includes(occurrence.id)) {
