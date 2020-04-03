@@ -1088,7 +1088,6 @@ export default {
       this.documentNumberHasChanged = false
       this.$store.dispatch('getMyStrategies').finally(() => {
         this.$nextTick(() => {
-          debugger
           this.selectedStrategyId = this.dispute.strategyId
           if (!this.strategies.map(s => s.id).includes(this.dispute.strategyId)) {
             this.strategies.push({ id: this.dispute.strategyId, name: 'A estratégia utilizada não está mais disponível para uso' })
