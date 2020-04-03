@@ -65,6 +65,7 @@
             </el-dropdown>
             <el-input
               v-model="tagForm.name"
+              :maxlength="24"
               size="small"
               class="jus-tags__name"
               @keyup.enter.native="saveTag"/>
@@ -182,7 +183,7 @@ export default {
       this.tagForm.color = color
     },
     showNewTagForm () {
-      this.tagForm.name = this.$refs.selectTag.selectedLabel
+      this.tagForm.name = this.$refs.selectTag.selectedLabel.slice(0,24) 
       this.$nextTick(() => {
         this.showForm = true
       })
