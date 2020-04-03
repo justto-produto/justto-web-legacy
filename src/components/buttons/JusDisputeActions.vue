@@ -263,6 +263,7 @@
       class="dispute-view-actions__choose-unsettled-dialog"
       width="600px"
       data-testid="choose-unsettled-dialog">
+      <p>Confirme o valor do acordo nos campos abaixo:</p>
       <el-form
         v-loading="modalLoading"
         ref="counterOfferForm"
@@ -493,7 +494,7 @@ export default {
           if (this.dispute.paused) {
             message = {
               content: 'A disputa está pausada, deseja retomar negociação para enviar uma contraproposta?',
-              title: 'Ops'
+              title: 'Retomar negociação'
             }
             this.doAction('resume', message).then(() => {
               this.openCounterproposalDialog()
@@ -596,10 +597,11 @@ export default {
     },
     openSettledDialog () {
       this.modalLoading = false
+      debugger
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
       if (this.disputeClaimants.length === 1) {
         this.counterOfferForm.selectedRoleId = this.disputeClaimants[0].id
-      } else if (this.dispute.lastCounterOfferName) {
+      } else if (this.dispute.lastCounterOfferName && this.disputeClaimants.map(c => c.name).includes(this.dispute.lastCounterOfferName)) {
         this.counterOfferForm.selectedRoleId = this.disputeClaimants.filter(c => {
           return c.name === this.dispute.lastCounterOfferName
         })[0].id
