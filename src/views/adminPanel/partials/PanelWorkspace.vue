@@ -254,7 +254,7 @@ export default {
             console.error(error)
             if (error.code === 'ALREADY_EXISTS') {
               this.$jusNotification({
-                message: 'E-mail já convidado para esta Equipe.',
+                message: 'Este e-mail já está cadastrado como membro de sua equipe. De qualquer forma, enviaremos um e-mail informando sua intenção de adiciona-lo na equipe.',
                 type: 'warning'
               })
             } else {
