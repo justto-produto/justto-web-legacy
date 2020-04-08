@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import moment from 'moment'
-// import axiosDispatcher from '@/store/axiosDispatcher.js'
+import axiosDispatcher from '@/store/axiosDispatcher.js'
 
 const FileSaver = require('file-saver')
 let removeDebounce = 0
@@ -61,9 +61,11 @@ const disputeActions = {
       dispatch('getDisputes', 'update')
     }, 1000)
   },
-  getDispute ({ commit }, id) {
+  getDispute ({ commit, dispatch }, id) {
     return new Promise((resolve, reject) => {
       commit('clearDispute')
+      dispatch('getDisputeProprieties', id)
+      dispatch('getDisputeAttachments', id)
       // eslint-disable-next-line
       axios.get('api/disputes/' + id + '/vm')
         .then(response => {
@@ -109,6 +111,18 @@ const disputeActions = {
         .catch(error => {
           reject(error)
         })
+    })
+  },
+  getDisputeProprieties ({ commit }, disputeId) {
+    axiosDispatcher({
+      url: `api/disputes/${disputeId}/properties`,
+      mutation: 'setDisputeProprieties'
+    })
+  },
+  getDisputeAttachments ({ commit }, disputeId) {
+    axiosDispatcher({
+      url: `api/documents/${disputeId}/attachments`,
+      mutation: 'setDisputeAttachments'
     })
   },
   getDisputes ({ commit, state }, command) {

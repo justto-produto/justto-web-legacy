@@ -786,6 +786,7 @@ export default {
         color: #424242;
         padding: 7px 10px 0;
         float: right;
+        border-color: transparent !important;
         i {
           font-size: 26px;
         }
