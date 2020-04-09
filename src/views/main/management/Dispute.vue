@@ -79,7 +79,8 @@
                   <quill-editor
                     ref="messageEditor"
                     :options="editorOptions"
-                    data-testid="email-editor"/>
+                    data-testid="email-editor"
+                    @focus="$refs.disputeOverview.overviewTab = 'roles'"/>
                 </div>
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
@@ -163,6 +164,7 @@
     <!-- DADOS DO CASO -->
     <template slot="right-card">
       <dispute-overview
+        ref="disputeOverview"
         v-if="dispute"
         :loading.sync="loadingDispute"
         :active-role-id.sync="activeRoleId"

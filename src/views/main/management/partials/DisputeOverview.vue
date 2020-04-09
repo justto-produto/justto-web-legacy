@@ -15,9 +15,9 @@
       </el-tooltip>
     </h2>
     <div v-loading="loading || linkBankAccountLoading">
-      <el-tabs class="dispute-overview-view__tabs" stretch>
+      <el-tabs v-model="overviewTab" class="dispute-overview-view__tabs" stretch>
         <!-- INFORMAÇÕES GERAIS -->
-        <el-tab-pane>
+        <el-tab-pane name="general">
           <span slot="label">
             <el-tooltip content="Informações gerais">
               <i class="el-icon-info" />
@@ -151,7 +151,7 @@
           </div>
         </el-tab-pane>
         <!-- PARTES DA DISPUTA -->
-        <el-tab-pane>
+        <el-tab-pane name="roles">
           <span slot="label">
             <el-tooltip content="Partes da disputa">
               <i class="el-icon-user-solid" />
@@ -300,7 +300,7 @@
             </el-button>
           </el-collapse>
         </el-tab-pane>
-        <el-tab-pane v-if="$store.getters.isAdminProfile">
+        <el-tab-pane v-if="$store.getters.isAdminProfile" name="proprieties">
           <span slot="label">
             <el-tooltip content="Propriedades adicionais">
               <i class="el-icon-s-tools" />
@@ -308,7 +308,7 @@
           </span>
           <dispute-proprieties />
         </el-tab-pane>
-        <el-tab-pane class="dispute-overview-view__attachment-tab">
+        <el-tab-pane name="attachments" class="dispute-overview-view__attachment-tab">
           <span slot="label">
             <el-tooltip content="Anexos">
               <i class="el-icon-paperclip" />
@@ -783,6 +783,7 @@ export default {
   },
   data () {
     return {
+      overviewTab: 'general',
       namesakeList: [],
       namesakeDialogVisible: false,
       namesakeDialogLoading: false,
