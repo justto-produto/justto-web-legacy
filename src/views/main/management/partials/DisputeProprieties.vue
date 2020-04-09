@@ -201,6 +201,8 @@ export default {
     }
     .label {
       margin: 5px 0;
+      word-break: break-all;
+      border-bottom: 2px solid #FFFFFF00
     }
     .value {
       width: 100%;
@@ -214,9 +216,11 @@ export default {
       overflow: hidden;
       line-height: initial !important;
       border: 0;
+      border-bottom: 2px solid #e4e7ed;
       padding-left: 0px;
       height: 28px;
       line-height: 28px;
+      background-color: #FFFFFF00
     }
     .el-autocomplete {
       min-width: 120px;

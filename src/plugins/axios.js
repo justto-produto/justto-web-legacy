@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
+import waitForConnection from '@/utils/loading'
 
 const AUTH_TOKEN = localStorage.justoken
 
@@ -45,6 +46,9 @@ _axios.interceptors.response.use(
     return response
   },
   function (error) {
+    if (error.response.status === 503) {
+      waitForConnection()
+    }
     if (error.response.status === 401 && !error.response.config.url.includes('update-password')) {
       store.dispatch('logout')
     }
