@@ -10,6 +10,9 @@ const NotificationMessage = {
         if (config.error.response.status === 500) {
           config.type = 'error'
           config.message = errorMessage
+        } else if (config.error.response.status === 503) {
+          config.type = 'error'
+          config.message = 'Serviço temporariamente indisponivel. por favor tente novamente em alguns instantes.'
         } else {
           config.type = 'warning'
           config.message = (config.error.response.data.fields.Error || config.error.response.data.reason) || errorMessage
