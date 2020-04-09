@@ -300,7 +300,7 @@
             </el-button>
           </el-collapse>
         </el-tab-pane>
-        <el-tab-pane v-if="$store.getters.isAdminProfile" name="proprieties">
+        <el-tab-pane name="proprieties">
           <span slot="label">
             <el-tooltip content="Propriedades adicionais">
               <i class="el-icon-s-tools" />
