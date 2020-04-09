@@ -143,6 +143,8 @@
 </template>
 
 <script>
+import waitForConnection from '@/utils/loading'
+
 export default {
   name: 'Management',
   components: {
@@ -337,6 +339,7 @@ export default {
       this.getDisputes()
     },
     showExportDisputesDialog () {
+      waitForConnection()
       this.exportDisputesDialog = true
       const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
       setTimeout(() => {

@@ -79,7 +79,8 @@
                   <quill-editor
                     ref="messageEditor"
                     :options="editorOptions"
-                    data-testid="email-editor"/>
+                    data-testid="email-editor"
+                    @focus="$refs.disputeOverview.overviewTab = 'roles'"/>
                 </div>
                 <div class="dispute-view__send-message-actions">
                   <el-tooltip
@@ -162,18 +163,8 @@
     </template>
     <!-- DADOS DO CASO -->
     <template slot="right-card">
-      <div class="dispute-view__section-title">
-        <h2 data-testid="dispute-id">Disputa #{{ dispute.id }}</h2>
-        <el-tooltip content="Excluir disputa">
-          <el-button
-            plain
-            class="right"
-            data-testid="remove"
-            icon="el-icon-delete"
-            @click="removeDispute()" />
-        </el-tooltip>
-      </div>
       <dispute-overview
+        ref="disputeOverview"
         v-if="dispute"
         :loading.sync="loadingDispute"
         :active-role-id.sync="activeRoleId"
@@ -407,22 +398,6 @@ export default {
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
-      })
-    },
-    removeDispute () {
-      this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
-        confirmButtonClass: 'confirm-remove-btn',
-        confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'warning',
-        cancelButtonClass: 'is-plain'
-      }).then(() => {
-        const loading = this.$loading({ lock: true })
-        this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
-          this.$router.push('/management')
-        }).finally(() => {
-          loading.close()
-        })
       })
     },
     fetchData () {
@@ -681,28 +656,6 @@ export default {
   }
   &__title {
     font-weight: 500;
-  }
-  &__section-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    margin: -20px -20px 0;
-    border-bottom: 1px solid #eeeeee;
-    h2 {
-      padding: 15px 0;
-      font-weight: 500;
-      display: block;
-      margin: 0;
-    }
-    .el-button {
-      border-radius: 5px;
-      padding: 10px;
-    }
-    img {
-      width: 16px;
-      height: 16px;
-    }
   }
   &__steps {
     padding: 20px 0;

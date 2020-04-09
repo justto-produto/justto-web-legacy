@@ -19,11 +19,23 @@ const disputeMutations = {
   setDispute (state, disputeVM) {
     state.dispute = disputeVM
   },
+  setDisputeProprieties (state, disputeProprieties) {
+    if (disputeProprieties.hasOwnProperty('ENRICHED')) {
+      disputeProprieties['ENRIQUECIDO'] = disputeProprieties.ENRICHED ? 'SIM' : 'NÃO'
+      delete disputeProprieties.ENRICHED
+    }
+    state.disputeProprieties = disputeProprieties
+  },
+  setDisputeAttachments (state, disputeAttachments) {
+    state.disputeAttachments = disputeAttachments
+  },
   setDisputeRoles (state, disputeRoles) {
     state.dispute.disputeRoles = disputeRoles
   },
   clearDispute (state) {
     state.dispute = { id: 0 }
+    state.disputeAttachments = []
+    state.disputeProprieties = {}
   },
   clearDisputeOccurrences (state) {
     state.occurrences.length = 0
