@@ -20,6 +20,10 @@ const disputeMutations = {
     state.dispute = disputeVM
   },
   setDisputeProprieties (state, disputeProprieties) {
+    if (disputeProprieties.hasOwnProperty('ENRICHED')) {
+      disputeProprieties['ENRIQUECIDO'] = disputeProprieties.ENRICHED ? 'SIM' : 'NÃO'
+      delete disputeProprieties.ENRICHED
+    }
     state.disputeProprieties = disputeProprieties
   },
   setDisputeAttachments (state, disputeAttachments) {

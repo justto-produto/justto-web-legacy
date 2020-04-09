@@ -3,13 +3,15 @@
     <h2 class="dispute-overview-view__title" data-testid="dispute-id">
       Disputa #{{ dispute.id }}
       <el-tooltip content="Excluir disputa">
-        <el-link
+        <el-button
           type="danger"
+          plain
           data-testid="remove"
           class="right"
+          size="mini"
           @click="removeDispute()">
           <i class="el-icon-delete"/>
-        </el-link>
+        </el-button>
       </el-tooltip>
     </h2>
     <div v-loading="loading || linkBankAccountLoading">
@@ -26,7 +28,7 @@
               <span class="title">Etiquetas</span>
               <jus-tags />
             </div>
-            <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline" style="margin: 0">
+            <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
               <span class="title">Data de importação:</span>
               <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
             </div>
@@ -171,6 +173,9 @@
               <template slot="title">
                 <i v-if="showNamesake(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
                 <div class="dispute-overview-view__name">
+                  <el-tooltip :content="buildRoleTitle(role.party, role.roles[0])">
+                    <i :class="getRoleIcon(role.party, role.roles[0])" />
+                  </el-tooltip>
                   {{ role.name }}
                 </div>
               </template>
@@ -192,7 +197,13 @@
                 <span v-if="namesakeProcessing">Enriquecendo...</span>
                 <span v-else>Tratar homônimos</span>
               </el-button>
-              <div class="dispute-overview-view__info-line" style="margin: 0">
+              <div class="dispute-overview-view__info-line">
+                <span class="title">Nome completo:</span>
+                <span>
+                  {{ role.name }}
+                </span>
+              </div>
+              <div class="dispute-overview-view__info-line">
                 <span class="title">Função:</span>
                 <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
                   {{ buildRoleTitle(role.party, title) }}
@@ -206,19 +217,17 @@
                 <span class="title">Telefone(s):</span>
                 <span v-for="(phone, index) in role.phones.filter(p => !p.archived).sort(p => p.isMain ? -1 : 1)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                   <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
-                    <span class="ellipsis">
-                      <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
-                        <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ phone.number | phoneMask }}</span>
+                    <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
+                      <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ phone.number | phoneMask }}</span>
+                    </el-tooltip>
+                    <div class="alerts">
+                      <el-tooltip content="Este número não receberá mensagens automáticas">
+                        <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
                       </el-tooltip>
-                      <div class="">
-                        <el-tooltip content="Este número não receberá mensagens automáticas">
-                          <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
-                        </el-tooltip>
-                        <el-tooltip content="Telefone inválido">
-                          <jus-icon v-show="!phone.isValid" icon="warn-dark" />
-                        </el-tooltip>
-                      </div>
-                    </span>
+                      <el-tooltip content="Telefone inválido">
+                        <jus-icon v-show="!phone.isValid" icon="warn-dark" />
+                      </el-tooltip>
+                    </div>
                   </el-radio>
                 </span>
               </div>
@@ -226,31 +235,29 @@
                 <span class="title">E-mail(s):</span>
                 <span v-for="(email, index) in role.emails.filter(e => !e.archived).sort(e => e.isMain ? -1 : 1)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
                   <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
-                  <span class="ellipsis">
-                    <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
-                      <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
+                  <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
+                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
+                  </el-tooltip>
+                  <div class="alerts">
+                    <el-tooltip content="Este e-mail não receberá mensagens automáticas">
+                      <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
                     </el-tooltip>
-                    <div>
-                      <el-tooltip content="Este e-mail não receberá mensagens automáticas">
-                        <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
-                      </el-tooltip>
-                      <el-tooltip content="E-mail inválido">
-                        <jus-icon v-show="!email.isValid" icon="warn-dark" />
-                      </el-tooltip>
-                    </div>
-                  </span>
+                    <el-tooltip content="E-mail inválido">
+                      <jus-icon v-show="!email.isValid" icon="warn-dark" />
+                    </el-tooltip>
+                  </div>
                 </span>
               </div>
               <div v-show="role.oabs.length" class="dispute-overview-view__info-line">
                 <span class="title">OAB(s):</span>
                 <span v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`" :class="{'is-main': oab.isMain}">
                   <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role, 'cna')" />
-                  <span class="ellipsis">
-                    <span>{{ oab.number + '-' + oab.state || '' }}</span>
+                  <span>{{ oab.number + '-' + oab.state || '' }}</span>
+                  <div class="alerts">
                     <el-tooltip content="OAB inválido">
                       <jus-icon v-show="!oab.isValid" icon="warn-dark" />
                     </el-tooltip>
-                  </span>
+                  </div>
                 </span>
               </div>
               <div v-if="role.bankAccounts && role.bankAccounts.length" class="dispute-overview-view__info-line">
@@ -285,7 +292,7 @@
               </div>
             </el-collapse-item>
             <el-button
-              class="dispute-overview-view__add-role"
+              class="dispute-overview-view__add-role mb20"
               plain
               icon="el-icon-plus"
               @click.prevent="newRoleDialogVisible = true">
@@ -293,19 +300,32 @@
             </el-button>
           </el-collapse>
         </el-tab-pane>
-        <el-tab-pane>
+        <el-tab-pane v-if="$store.getters.isAdminProfile">
           <span slot="label">
-            <el-tooltip content="Informações avançadas">
+            <el-tooltip content="Propriedades adicionais">
               <i class="el-icon-s-tools" />
             </el-tooltip>
           </span>
+          <dispute-proprieties />
         </el-tab-pane>
-        <el-tab-pane>
+        <el-tab-pane class="dispute-overview-view__attachment-tab">
           <span slot="label">
             <el-tooltip content="Anexos">
               <i class="el-icon-paperclip" />
             </el-tooltip>
           </span>
+          <el-link
+            v-for=" attachment in disputeAttachments"
+            :key="attachment.url"
+            :underline="false"
+            :href="attachment.url"
+            target="_blank">
+            <i class="el-icon-document"/> {{ attachment.name }}
+          </el-link>
+          <div v-if="!disputeAttachments.length" class="center">
+            <br>
+            Sem anexos
+          </div>
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -459,7 +479,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="Descrição" prop="description" style="margin: 0">
+              <el-form-item label="Descrição" prop="description">
                 <el-input v-model="disputeForm.description" type="textarea" rows="3" data-testid="description-input"/>
               </el-form-item>
             </el-col>
@@ -741,13 +761,14 @@
 </template>
 
 <script>
-import { getRoles, buildRoleTitle } from '@/utils/jusUtils'
+import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 export default {
   name: 'DisputeOverview',
   components: {
     DisputeAddRole: () => import('./DisputeAddRole'),
+    DisputeProprieties: () => import('./DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags')
   },
   props: {
@@ -888,10 +909,7 @@ export default {
     dispute () {
       return this.$store.getters.dispute
     },
-    getDisputeProprieties () {
-      return this.$store.getters.disputeProprieties
-    },
-    getDisputeAttachments () {
+    disputeAttachments () {
       return this.$store.getters.disputeAttachments
     },
     disputeBankAccounts () {
@@ -989,6 +1007,7 @@ export default {
   },
   methods: {
     buildRoleTitle: (...i) => buildRoleTitle(...i),
+    getRoleIcon: (...i) => getRoleIcon(...i),
     removeDispute () {
       this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonClass: 'confirm-remove-btn',
@@ -1500,11 +1519,13 @@ export default {
   &__title {
     font-weight: 500;
     margin: 0;
-    .el-link {
-      padding: 4px 0;
+    .el-button {
+      border-radius: 4px;
+      padding: 5px 8px;
     }
   }
   &__tabs {
+    padding-top: 15px;
     .el-tabs__item i {
       font-size: 18px;
     }
@@ -1512,34 +1533,20 @@ export default {
   &__info-line {
     line-height: 24px;
     > span:not(.title) {
-      display: flex;
       margin-left: 12px;
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      > span {
+        width: 100%;
+        margin: 0 4px;
+        word-break: break-all;
+        line-height: 1.2;
+        padding: 4px 0px;
+      }
     }
     .title {
       font-weight: 600;
-    }
-    .ellipsis {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 189px;
-      width: 100%;
-      span {
-        margin-left: 6px;
-        margin-right: 6px;
-        max-width: 164px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      div {
-        display: flex;
-        align-items: center;
-        margin-left: 4px;
-        img {
-          margin-left: 2px;
-        }
-      }
     }
     .bank-info {
       display: block !important
@@ -1553,9 +1560,8 @@ export default {
     .el-radio__label {
       padding-left: 6px;
       font-size: 13px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
       width: 100%;
     }
     .bordered {
@@ -1572,9 +1578,8 @@ export default {
       .el-checkbox__label {
         padding-left: 6px;
         font-size: 13px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
       }
     }
     .el-collapse {
@@ -1598,6 +1603,13 @@ export default {
     .el-collapse-item__content {
       font-size: 12px;
     }
+    .alerts {
+      margin-top: 5px;
+      display: inline-flex;
+      img + img {
+        margin-left: 3px;
+      }
+    }
   }
   &__info-textarea {
     text-align: justify;
@@ -1608,7 +1620,8 @@ export default {
     }
   }
   &__actions {
-    margin: 20px 0;
+    margin: 20px 0 10px;
+    display: flex;
     button {
       width: 100%;
     }
@@ -1780,6 +1793,11 @@ export default {
   }
   .el-icon-warning {
     color: $--color-warning
+  }
+  &__attachment-tab {
+    .el-link {
+      margin-top: 10px;
+    }
   }
 }
 </style>

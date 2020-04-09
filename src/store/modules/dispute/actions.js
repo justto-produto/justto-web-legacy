@@ -119,6 +119,14 @@ const disputeActions = {
       mutation: 'setDisputeProprieties'
     })
   },
+  putDisputeProprieties ({ commit }, params) {
+    return axiosDispatcher({
+      url: `api/disputes/${params.disputeId}/properties`,
+      method: 'put',
+      data: params.data,
+      mutation: 'setDisputeProprieties'
+    })
+  },
   getDisputeAttachments ({ commit }, disputeId) {
     axiosDispatcher({
       url: `api/documents/${disputeId}/attachments`,
