@@ -22,6 +22,27 @@ const buildRoleTitle = function (party, title) {
   }
 }
 
+const getRoleIcon = function (party, title) {
+  if (party === 'RESPONDENT') {
+    switch (title) {
+      case 'NEGOTIATOR':
+        return 'el-icon-service'
+      case 'PARTY':
+        return 'el-icon-office-building'
+      case 'LAWYER':
+        return 'el-icon-s-custom'
+    }
+  } else {
+    if (title === 'PARTY') {
+      return 'el-icon-user-solid'
+    } else if (title === 'LAWYER') {
+      return 'el-icon-s-custom'
+    } else {
+      return ''
+    }
+  }
+}
+
 const getRoles = function (disputeRoles, party, role) {
   let roles
   if (party) {
@@ -226,6 +247,7 @@ const getTracktitleByAction = function (action, batch) {
 
 export {
   buildRoleTitle,
+  getRoleIcon,
   getRoles,
   getFirstRole,
   fuseSearchDisputes,

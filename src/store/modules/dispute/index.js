@@ -7,6 +7,8 @@ const dispute = {
     dispute: {
       id: 0
     },
+    disputeAttachments: [],
+    disputeProprieties: {},
     loading: false,
     disputes: [],
     occurrences: [],
