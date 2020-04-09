@@ -11,7 +11,7 @@ const NotificationMessage = {
           config.type = 'error'
           config.message = errorMessage
         } else if (config.error.response.status === 503) {
-          config.type = 'error'
+          config.type = 'warning'
           config.message = 'Serviço temporariamente indisponivel. por favor tente novamente em alguns instantes.'
         } else {
           config.type = 'warning'
