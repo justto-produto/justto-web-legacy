@@ -20,7 +20,7 @@
           @blur="blurKey(propriety.key, index)" />
       </div>
       <!-- VALUE -->
-      <div class='value'>
+      <div class="value">
         <div
           v-show="!editing[propriety.value + index]"
           class="label"
@@ -50,7 +50,7 @@
             ENRIQUECIDO:
           </div>
         </div>
-        <div class='value'>
+        <div class="value">
           <div class="label">
             {{ disputeProprieties['ENRIQUECIDO'] }}
           </div>
@@ -65,7 +65,7 @@
           placeholder="Chave"
           @keyup.enter.exact.native="newPropriety"/>
       </div>
-      <div class='value'>
+      <div class="value">
         <el-input
           v-model="newValue"
           autosize
@@ -181,7 +181,7 @@ export default {
         { 'value': 'TRIBUNAL' },
         { 'value': 'ESTADO' }
       ]
-      cb(queryString ? keys.filter((key) => (key.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0) ) : keys)
+      cb(queryString ? keys.filter((key) => (key.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)) : keys)
     }
   }
 }
