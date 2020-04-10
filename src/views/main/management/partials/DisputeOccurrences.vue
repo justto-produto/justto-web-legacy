@@ -392,7 +392,8 @@ export default {
           return `
             Negociador <strong>${occurrence.interaction.properties.USER}</strong>
             informou uma proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
-            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>.`
+            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>
+            ${occurrence.interaction.properties.NOTE ? 'com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
         } else if (occurrence.interaction.type === 'NEGOTIATOR_COUNTERPROSAL') {
           return `
             Proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
