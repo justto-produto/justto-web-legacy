@@ -229,7 +229,7 @@ export default {
       // MERGE DE DESCRIÇÃO
       let previousOccurrenceIndex
       filteredOccurrences.forEach((fo, index) => {
-        let similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 90 : 75
+        let similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 99 : 75
         let previous = filteredOccurrences[previousOccurrenceIndex]
         if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), similarity)) {
           if (!previous.merged) previous.merged = []
@@ -339,7 +339,7 @@ export default {
     },
     getDirection (interaction) {
       if (!interaction) return ''
-      if (['NEGOTIATOR_PROPOSAL', 'MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL'].includes(interaction.type)) {
+      if (['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL'].includes(interaction.type)) {
         return 'OUTBOUND'
       } else return interaction.direction
     },
@@ -388,16 +388,15 @@ export default {
       if (occurrence.interaction && Object.keys(occurrence.interaction.properties).length) {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT' && occurrence.interaction.properties.BANK_INFO) {
           return '<strong>Dados bancários:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
-        } else if (['NEGOTIATOR_PROPOSAL', 'MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL'].includes(occurrence.interaction.type)) {
+        } else if (['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL'].includes(occurrence.interaction.type)) {
           return `
-            Negociador <strong>${occurrence.interaction.properties.USER}</strong>
+            Negociador <strong>${occurrence.interaction.properties.USER ? occurrence.interaction.properties.USER : ''}</strong>
             informou uma proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
-            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>
-            ${occurrence.interaction.properties.NOTE ? 'com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
-        } else if (occurrence.interaction.type === 'NEGOTIATOR_COUNTERPROSAL') {
+            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>${occurrence.interaction.properties.NOTE ? 'com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+        } else if (['NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_PROPOSAL'].includes(occurrence.interaction.type)) {
           return `
             Proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
-            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong> com a observação: "${occurrence.interaction.properties.NOTE}".`
+            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>${occurrence.interaction.properties.NOTE ? 'com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
         }
         return occurrence.description
       }
