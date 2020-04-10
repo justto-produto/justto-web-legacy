@@ -75,10 +75,14 @@
                 <el-tooltip v-if="dispute.lastOfferName" :content="'Proposto por: ' + dispute.lastOfferName">
                   <jus-avatar-user :name="dispute.lastOfferName" size="mini" />
                 </el-tooltip>
-                {{ dispute.lastOfferValue | currency }}
+                {{
+                  dispute.disputeUpperRange ? dispute.lastOfferValue :
+                  (dispute.lastCounterOfferValue ? dispute.lastCounterOfferValue : dispute.lastOfferValue)
+                  | currency
+                }}
               </span>
             </div>
-            <div v-if="dispute.lastCounterOfferValue > 0" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div v-if="dispute.lastCounterOfferValue > 0 && dispute.disputeUpperRange" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
               <span class="title">Contraproposta:</span>
               <span data-testid="overview-counterproposal">
                 <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">

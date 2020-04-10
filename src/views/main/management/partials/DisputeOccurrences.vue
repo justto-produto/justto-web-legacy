@@ -4,7 +4,7 @@
       <div slot="no-more" data-testid="occurences-start">Início das ocorrências</div>
       <div slot="no-results" data-testid="occurences-start">Início das ocorrências</div>
     </infinite-loading>
-    <div v-for="(datedOccurrence, date, index) in datedOccurrences" :key="date + index">
+    <div v-for="(datedOccurrence, date, index) in datedOccurrences" :key="date + index + new Date().getTime()">
       <el-card class="dispute-view-occurrences__date el-card--bg-info" shadow="never">
         {{ date }}
       </el-card>
@@ -229,8 +229,9 @@ export default {
       // MERGE DE DESCRIÇÃO
       let previousOccurrenceIndex
       filteredOccurrences.forEach((fo, index) => {
+        let similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 90 : 75
         let previous = filteredOccurrences[previousOccurrenceIndex]
-        if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), 75)) {
+        if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), similarity)) {
           if (!previous.merged) previous.merged = []
           previous.merged.push(fo)
           fo.toDelete = true
@@ -338,9 +339,8 @@ export default {
     },
     getDirection (interaction) {
       if (!interaction) return ''
-      if (interaction.type === 'NEGOTIATOR_PROPOSAL') {
-        if (!interaction.properties.DEVICE) return 'OUTBOUND'
-        else return interaction.direction
+      if (['NEGOTIATOR_PROPOSAL', 'MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL'].includes(interaction.type)) {
+        return 'OUTBOUND'
       } else return interaction.direction
     },
     buildName (occurrence) {
@@ -388,16 +388,17 @@ export default {
       if (occurrence.interaction && Object.keys(occurrence.interaction.properties).length) {
         if (occurrence.interaction.type === 'NEGOTIATOR_CHECKOUT' && occurrence.interaction.properties.BANK_INFO) {
           return '<strong>Dados bancários:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
+        } else if (['NEGOTIATOR_PROPOSAL', 'MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL'].includes(occurrence.interaction.type)) {
+          return `
+            Negociador <strong>${occurrence.interaction.properties.USER}</strong>
+            informou uma proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
+            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>.`
+        } else if (occurrence.interaction.type === 'NEGOTIATOR_COUNTERPROSAL') {
+          return `
+            Proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
+            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong> com a observação: "${occurrence.interaction.properties.NOTE}".`
         }
         return occurrence.description
-        // if (occurrence.interaction.properties.VALUE) {
-        //   let content = occurrence.interaction.type === 'NEGOTIATOR_PROPOSAL' ? 'Contraproposta ' : 'Proposta '
-        //   content = content + this.$t(occurrence.interaction.type) + ' R$ ' + occurrence.interaction.properties.VALUE.toUpperCase() + '.'
-        //   if (occurrence.interaction.properties.NOTE) {
-        //     content = content + '<br>Nota: ' + occurrence.interaction.properties.NOTE
-        //   }
-        //   return content
-        // }
       }
       if (occurrence.id && Object.keys(this.fullMessageBank).includes(occurrence.id.toString())) {
         return this.fullMessageBank[occurrence.id]
@@ -549,7 +550,12 @@ export default {
         background-color: #ececec;
       }
     }
-    &.NEGOTIATOR_REJECTED, &.NEGOTIATOR_PROPOSAL, &.NEGOTIATOR_ACCEPTED {
+    &.NEGOTIATOR_REJECTED,
+    &.NEGOTIATOR_PROPOSAL,
+    &.NEGOTIATOR_ACCEPTED,
+    &.MANUAL_COUNTERPROPOSAL,
+    &.NEGOTIATOR_COUNTERPROSAL,
+    &.MANUAL_PROPOSAL {
       border: 1px solid #FFC5A5;
       .el-card__header {
         background-color: #FFC5A5;

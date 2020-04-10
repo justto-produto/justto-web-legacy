@@ -7,9 +7,9 @@ const showLoading = function () {
   if (!systemShouldBeUp) {
     const loading = Loading.service({
       lock: true,
-      text: 'Ops, nosso serviço se encontra indisponivel no momento. Por favor volte entre 7:30 e 23h',
-      spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
+      text: 'Nossos serviços encontram-se em manutenção diária no momento.\nRetorne entre às 7h30 e 23h.',
+      background: 'rgba(0, 0, 0, 0.85)',
+      customClass: 'el-loading-mask--offline'
     })
     let newDate = new Date()
     let timeLeft = newDate.getTime() - new Date(newDate.getFullYear(), newDate.getMonth(), currentHour >= 23 ? newDate.getDay() + 1 : newDate.getDay(), 7, 30)
