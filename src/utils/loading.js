@@ -1,10 +1,9 @@
 import { Loading } from 'element-ui'
 
 const showLoading = function () {
-  var text
   let currentHour = new Date().getHours()
   let currentMinuts = new Date().getMinutes()
-  let systemShouldBeUp = currentHour < 23 && currentHour >= 8 && (currentHour === 7 && currentMinuts >= 30)
+  let systemShouldBeUp = currentHour < 23 && (currentHour >= 8 || (currentHour === 7 && currentMinuts >= 30))
   if (!systemShouldBeUp) {
     const loading = Loading.service({
       lock: true,
@@ -13,7 +12,7 @@ const showLoading = function () {
       background: 'rgba(0, 0, 0, 0.7)'
     })
     let newDate = new Date()
-    let timeLeft = newDate.getTime() - new Date(newDate.getFullYear(), newDate.getMonth(), currentHour >= 23 ? newDate.getDay() + 1 : newDate.getDay(), 7, 30) 
+    let timeLeft = newDate.getTime() - new Date(newDate.getFullYear(), newDate.getMonth(), currentHour >= 23 ? newDate.getDay() + 1 : newDate.getDay(), 7, 30)
     setTimeout(function () {
       loading.close()
     }, timeLeft)
