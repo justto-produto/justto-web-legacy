@@ -229,7 +229,12 @@ export default {
       // MERGE DE DESCRIÇÃO
       let previousOccurrenceIndex
       filteredOccurrences.forEach((fo, index) => {
-        let similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 99 : 75
+        let similarity
+        if (fo.interaction && fo.interaction.type) {
+          similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 99 : 75
+        } else {
+          similarity = 75
+        }
         let previous = filteredOccurrences[previousOccurrenceIndex]
         if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), similarity)) {
           if (!previous.merged) previous.merged = []
