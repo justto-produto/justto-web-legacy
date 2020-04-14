@@ -127,17 +127,6 @@ export default {
   },
   beforeCreate () {
     this.$store.commit('redirectNewWorkspaceFalse')
-    if (this.$store.state.workspaceModule.subdomain) {
-      this.$store.dispatch('whatsappStart').then(() => {
-        this.$socket.emit('subscribe', {
-          headers: {
-            Authorization: this.$store.getters.accountToken,
-            Workspace: this.$store.getters.workspaceSubdomain
-          },
-          channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
-        })
-      })
-    }
   },
   created () {
     setTimeout(function () {
@@ -171,7 +160,6 @@ export default {
         }).then(() => {
           this.$store.dispatch('refreshToken').then(() => {
             this.$refs.swiper.swiper.slideNext(800)
-            this.$store.dispatch('whatsappStart')
             this.$socket.emit('subscribe', {
               headers: {
                 Authorization: this.$store.getters.accountToken,

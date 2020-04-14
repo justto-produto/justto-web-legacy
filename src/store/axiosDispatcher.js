@@ -2,15 +2,16 @@ import store from '@/store'
 
 const axiosDispatcher = (params) => {
   return new Promise((resolve, reject) => {
+    const opt = { method: params.method || 'get' }
+    if (params.url) opt.url = params.url
+    else reject(new Error('Missing URL parameter.'))
+    if (params.headers) opt.headers = params.headers
+    if (params.data) opt.data = params.data
+    if (params.params) opt.params = params.params
     // eslint-disable-next-line
-    axios({
-      url: params.url,
-      method: params.method || 'get',
-      params: params.params,
-      data: params.data
-    }).then(response => {
+    axios(opt).then(response => {
       if (params.mutation) store.commit(params.mutation, response.data)
-      resolve(response)
+      resolve(response.data)
     }).catch(error => {
       reject(error)
     })

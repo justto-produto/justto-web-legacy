@@ -4,7 +4,7 @@
       <h1>Configurações</h1>
     </template>
     <template slot="main">
-      <el-tabs tab-position="top" value="profile">
+      <el-tabs tab-position="top" value="profile" @tab-click="handleTabClick">
         <el-tab-pane label="Perfil" name="profile">
           <el-form
             ref="profileForm"
@@ -286,6 +286,11 @@ export default {
     }
   },
   methods: {
+    handleTabClick (tab) {
+      if (tab.name === 'blacklist') {
+        this.$store.dispatch('getWorkspace')
+      }
+    },
     createWorkspace () {
       this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
         confirmButtonText: 'Criar nova Equipe',
