@@ -134,7 +134,9 @@ export default {
       localStorage.setItem('jusfeedbackpreferences', JSON.stringify({
         businessHoursEngagement: this.mappedCampaigns[range].businessHoursEngagement,
         contactPartyWhenNoLowyer: this.mappedCampaigns[range].contactPartyWhenNoLowyer,
-        contactPartyWhenInvalidLowyer: this.mappedCampaigns[range].contactPartyWhenInvalidLowyer
+        contactPartyWhenInvalidLowyer: this.mappedCampaigns[range].contactPartyWhenInvalidLowyer,
+        skipEnrichment: this.mappedCampaigns[range].skipEnrichment,
+        denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit
       }))
     },
     checkValidCampaign (campaign) {

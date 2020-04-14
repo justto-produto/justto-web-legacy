@@ -273,24 +273,20 @@
                 <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
                   <i class="el-icon-question right" style="margin-top: 5px;" />
                 </el-tooltip>
-                <el-checkbox-group v-model="disputeBankAccountsIds">
+                <el-checkbox-group v-model="disputeBankAccountsIds" class="dispute-overview-view__bank-checkbox">
                   <el-checkbox
                     v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
                     :label="bankAccount.id"
                     :key="`${index}-${bankAccount.id}`"
                     border
                     class="bordered">
-                    <span v-show="bankAccount.name">
-                      <strong>Nome:</strong> {{ bankAccount.name }} <br>
-                    </span>
-                    <span v-show="bankAccount.email">
-                      <strong>E-mail:</strong> {{ bankAccount.email }} <br>
-                    </span>
-                    <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
-                    <strong>Banco:</strong> {{ bankAccount.bank }} <br>
-                    <strong>Agência:</strong> {{ bankAccount.agency }} <br>
-                    <strong>Conta:</strong> {{ bankAccount.number }} <br>
-                    <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
+                    <div v-show="bankAccount.name"><strong>Nome:</strong> {{ bankAccount.name }}</div>
+                    <div v-show="bankAccount.email"><strong>E-mail:</strong> {{ bankAccount.email }}</div>
+                    <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }}</div>
+                    <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
+                    <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
+                    <div><strong>Conta:</strong> {{ bankAccount.number }}</div>
+                    <div><strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }}</div>
                   </el-checkbox>
                 </el-checkbox-group>
               </div>
@@ -441,6 +437,15 @@
                 </p>
               </div>
               <el-switch v-model="disputeForm.contactPartyWhenInvalidLowyer" />
+            </el-col>
+            <el-col :span="24" class="dispute-overview-view__select-switch">
+              <div class="content">
+                <div>Permitir somente depósito em conta-corrente</div>
+                <p>
+                  Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será bloqueado o depósito em conta poupança, sendo permitido somente <b>depósito em conta corrente</b>.
+                </p>
+              </div>
+              <el-switch v-model="disputeForm.denySavingDeposit" />
             </el-col>
           </el-row>
           <h3>Valor proposto</h3>
@@ -809,8 +814,9 @@ export default {
         disputeUpperRange: '',
         lastOfferValue: '',
         classification: '',
-        contactPartyWhenNoLowyer: '',
-        contactPartyWhenInvalidLowyer: ''
+        contactPartyWhenNoLowyer: false,
+        contactPartyWhenInvalidLowyer: false,
+        denySavingDeposit: false
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1138,6 +1144,18 @@ export default {
       let action, bankAccountId
       for (let roleAccount of roleBankAccountIds) {
         if (!this.disputeBankAccountsIds.includes(roleAccount)) {
+          if (this.dispute.denySavingDeposit) {
+            let ba = this.dispute.disputeRoles.find(dr => dr.id === this.activeRoleId).bankAccounts.find(ba => ba.id === roleAccount)
+            if (ba && ba.type === 'SAVING') {
+              this.$jusNotification({
+                dangerouslyUseHTMLString: true,
+                message: 'Esta disputa não permite a vinculação de contas do tipo <b>POUPANÇA</b>.',
+                type: 'warning',
+                duration: 0
+              })
+              return false
+            }
+          }
           action = 'linkDisputeBankAccounts'
           bankAccountId = roleAccount
         }
@@ -1201,6 +1219,7 @@ export default {
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
+      this.disputeForm.denySavingDeposit = dispute.denySavingDeposit
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -1234,6 +1253,7 @@ export default {
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
+            disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
             let today = this.$moment()
@@ -1577,7 +1597,7 @@ export default {
       height: auto;
       display: flex;
       align-items: center;
-      padding: 6px 11px;
+      padding: 8px;
       margin-top: 10px;
       margin-left: 0 !important;
       .el-checkbox__input {
@@ -1702,6 +1722,13 @@ export default {
     }
     .el-collapse-item__content {
       padding-bottom: 0;
+    }
+  }
+  &__bank-checkbox {
+    .el-checkbox__label {
+      flex-direction: column;
+      white-space: initial;
+      word-break: break-all;
     }
   }
   &__namesake-table {
