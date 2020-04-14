@@ -401,6 +401,14 @@
           :rules="disputeFormRules"
           label-position="top"
           @submit.native.prevent="editDispute">
+          <h3>Detalhes da Disputa</h3>
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <el-form-item label="Número do Processo" prop="disputeCode">
+                <el-input v-mask="'#######-##.####.#.##.####'" v-model="disputeForm.disputeCode" />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <h3>Engajamento</h3>
           <el-row :gutter="20">
             <el-col :span="24">
@@ -806,7 +814,8 @@ export default {
         lastOfferValue: '',
         classification: '',
         contactPartyWhenNoLowyer: '',
-        contactPartyWhenInvalidLowyer: ''
+        contactPartyWhenInvalidLowyer: '',
+        disputeCode: ''
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1158,8 +1167,8 @@ export default {
         setTimeout(function () {
           this.$emit('fetch-data')
         }.bind(this), 200)
-      }).catch(e => {
-        console.error(e)
+      }).catch(error => {
+        console.error(error)
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
         this.linkBankAccountLoading = false
@@ -1190,6 +1199,7 @@ export default {
       this.selectedClaimantId = this.disputeClaimants[0].id || ''
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.disputeForm.id = dispute.id
+      this.disputeForm.disputeCode = dispute.code
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
@@ -1225,6 +1235,7 @@ export default {
             disputeToEdit.disputeUpperRange = this.disputeForm.disputeUpperRange
             disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
             disputeToEdit.description = this.disputeForm.description
+            disputeToEdit.code = this.disputeForm.disputeCode
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
@@ -1232,7 +1243,6 @@ export default {
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
-            let today = this.$moment()
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               // SEGMENT TRACK
               this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
@@ -1245,27 +1255,34 @@ export default {
                 this.$emit('fetch-data')
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
-              if (this.$moment(currentDate).isBefore(today) && this.$moment(newDate).isSameOrAfter(today)) {
-                this.$confirm('A data de expiração foi alterada. Deseja reiniciar esta disputa?', 'Atenção!', {
-                  confirmButtonText: 'Reiniciar',
+              let isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
+              let isContactPartyChanged = this.disputeForm.contactPartyWhenNoLowyer !== this.dispute.contactPartyWhenNoLowyer || this.disputeForm.contactPartyWhenInvalidLowyer !== this.dispute.contactPartyWhenInvalidLowyer
+              let onlyResendMessaged = this.dispute.status === 'RUNNING'
+              if (isContactPartyChanged || isExpirationDateChanged) {
+                let action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'
+                let message = isContactPartyChanged ? 'As configurações de engajamento foram alteradas. Deseja ' + action + '?' : 'A data de expiração foi alterada. Deseja ' + action + '?'
+                this.$confirm(message, 'Atenção!', {
+                  confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
                   cancelButtonText: 'Cancelar',
                   cancelButtonClass: 'is-plain',
                   type: 'warning'
                 }).then(() => {
                   this.$store.dispatch('sendDisputeAction', {
-                    action: 'restart-engagement',
+                    action: onlyResendMessaged ? 'resend-messages' : 'restart-engagement',
                     disputeId: this.dispute.id
                   }).then(() => {
+                    let actionDone = onlyResendMessaged ? 'Reenvio de mensagens' : 'Reengajamento'
                     this.$jusNotification({
                       title: 'Yay!',
-                      message: 'Reengajamento realizado com sucesso.',
+                      message: actionDone + ' realizado com sucesso.',
                       type: 'success'
                     })
                   })
                 })
               }
-            }).catch(() => {
-              this.$jusNotification({ type: 'error' })
+            }).catch(error => {
+              console.error(error)
+              this.$jusNotification({ error })
             }).finally(() => {
               this.editDisputeDialogLoading = false
             })
@@ -1320,7 +1337,8 @@ export default {
           }
           Promise.all(promise).then(() => {
             this.editRoleAction()
-          }).catch(e => {
+          }).catch(error => {
+            console.error(error)
             this.$jusNotification({ type: 'error' })
           }).finally(() => {
             this.linkBankAccountLoading = false
@@ -1383,7 +1401,7 @@ export default {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
-        console.log(error)
+        console.error(error)
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
