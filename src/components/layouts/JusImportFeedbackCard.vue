@@ -148,9 +148,9 @@
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
-          <div>Não enriquecer disputas automaticmente</div>
+          <div>Não enriquecer disputas automaticamente</div>
           <p>
-            Deixando <b>selecionada</b> esta opção, as os dados das partes como e-mail, telefone e OAB, <b>não serão enriquecidos</b>.
+            Deixando <b>selecionada</b> esta opção, as os dados das partes como e-mail, telefone e OAB, <b>não serão enriquecidos automaticamente</b>.
           </p>
         </div>
         <el-switch v-model="skipEnrichment" />
