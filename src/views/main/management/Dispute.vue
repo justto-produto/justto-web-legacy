@@ -164,8 +164,8 @@
     <!-- DADOS DO CASO -->
     <template slot="right-card">
       <dispute-overview
-        ref="disputeOverview"
         v-if="dispute"
+        ref="disputeOverview"
         :loading.sync="loadingDispute"
         :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview"

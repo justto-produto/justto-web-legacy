@@ -222,17 +222,19 @@
                 <span v-for="(phone, index) in role.phones.filter(p => !p.archived).sort(p => p.isMain ? -1 : 1)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                   <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                     <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
-                      <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ phone.number | phoneMask }}</span>
+                      <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
+                        {{ phone.number | phoneMask }}<span v-if="phone.source === 'ENRICHMENT'">*</span>
+                      </span>
                     </el-tooltip>
-                    <div class="alerts">
-                      <el-tooltip content="Este número não receberá mensagens automáticas">
-                        <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
-                      </el-tooltip>
-                      <el-tooltip content="Telefone inválido">
-                        <jus-icon v-show="!phone.isValid" icon="warn-dark" />
-                      </el-tooltip>
-                    </div>
                   </el-radio>
+                  <!-- <div class="alerts"> -->
+                  <el-tooltip content="Este número não receberá mensagens automáticas">
+                    <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
+                  </el-tooltip>
+                  <el-tooltip content="Telefone inválido">
+                    <jus-icon v-show="!phone.isValid" icon="warn-dark" />
+                  </el-tooltip>
+                  <!-- </div> -->
                 </span>
               </div>
               <div v-show="role.emails.length" class="dispute-overview-view__info-line">
@@ -240,7 +242,9 @@
                 <span v-for="(email, index) in role.emails.filter(e => !e.archived).sort(e => e.isMain ? -1 : 1)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
                   <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                   <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
-                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
+                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
+                      {{ email.address }}<span v-if="email.source === 'ENRICHMENT'">*</span>
+                    </span>
                   </el-tooltip>
                   <div class="alerts">
                     <el-tooltip content="Este e-mail não receberá mensagens automáticas">
@@ -1033,7 +1037,7 @@ export default {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
     buildContactStatus (contact) {
-      return contact.source === 'ENRICHMENT' ? 'Este contato foi enriquecido pelo sistema Justto' : 'Este contato foi adicionado manualmente'
+      return contact.source === 'ENRICHMENT' ? 'Contato enriquecido pelo sistema Justto' : 'Contato adicionado manualmente'
     },
     openAddBankDialog () {
       this.addBankForm.name = this.roleForm.name
@@ -1544,10 +1548,9 @@ export default {
       align-items: flex-start;
       > span {
         width: 100%;
-        margin: 0 4px;
+        margin: 5px;
         word-break: break-all;
         line-height: 1.2;
-        padding: 4px 0px;
       }
     }
     .title {
@@ -1563,7 +1566,7 @@ export default {
       align-items: flex-start;
     }
     .el-radio__label {
-      padding-left: 6px;
+      padding-left: 5px;
       font-size: 13px;
       display: flex;
       justify-content: space-between;
@@ -1729,6 +1732,11 @@ export default {
   }
   &__is-enriched {
     font-style: italic;
+    span {
+      color: #9461f7;
+      margin-left: 2px;
+      font-weight: 500;
+    }
   }
   &__switch-main {
     display: flex;
