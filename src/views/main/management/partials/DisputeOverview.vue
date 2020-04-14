@@ -226,12 +226,12 @@
                     </el-tooltip>
                   </el-radio>
                   <!-- <div class="alerts"> -->
-                    <el-tooltip content="Este número não receberá mensagens automáticas">
-                      <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
-                    </el-tooltip>
-                    <el-tooltip content="Telefone inválido">
-                      <jus-icon v-show="!phone.isValid" icon="warn-dark" />
-                    </el-tooltip>
+                  <el-tooltip content="Este número não receberá mensagens automáticas">
+                    <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
+                  </el-tooltip>
+                  <el-tooltip content="Telefone inválido">
+                    <jus-icon v-show="!phone.isValid" icon="warn-dark" />
+                  </el-tooltip>
                   <!-- </div> -->
                 </span>
               </div>
