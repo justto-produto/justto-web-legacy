@@ -723,7 +723,6 @@ export default {
     background-color: #ffffff00;
   }
   .draggable.resizable {
-    border-bottom: 1px solid red;
     z-index: 9 !important;
     width: 100% !important;
     height: 5px !important;
