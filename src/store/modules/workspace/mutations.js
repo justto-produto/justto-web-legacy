@@ -43,7 +43,7 @@ const mutations = {
     state.members = members
   },
   setBlackList (state, blackList) {
-    state.blackList = blackList
+    if (blackList) state.blackList = blackList
   }
 }
 

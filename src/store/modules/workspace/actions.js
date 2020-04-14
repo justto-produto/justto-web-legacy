@@ -147,7 +147,6 @@ const actions = {
   patchBlackList ({ commit }, blackList) {
     return axiosDispatcher({
       url: 'api/workspaces/blacklist',
-      mutation: 'setBlackList',
       method: 'patch',
       data: blackList
     })
