@@ -16,6 +16,7 @@
     <!-- CHAT -->
     <template slot="main">
       <div ref="sectionMessages" class="dispute-view__section-messages">
+        <!-- DRAGGING -->
         <vue-draggable-resizable v-if="typingTab !== '3'" ref="resizable" :handles="['tm']" :y="y" @dragging="onDrag" />
         <!-- ACTIONS -->
         <jus-dispute-actions :dispute="dispute" :is-collapsed.sync="isCollapsed" @fetch-data="fetchData" />
@@ -203,6 +204,7 @@ export default {
   data () {
     return {
       y: 0,
+      dragDebounce: 0,
       sendMessageHeight: 208,
       id: 0,
       disputeOccurrencesKey: (new Date()).getTime(),
@@ -323,33 +325,32 @@ export default {
   mounted () {
     setTimeout(() => {
       this.disputeOccurrencesKey += 1
-      const offsetHeight = parseInt(localStorage.getItem('jusoffsetheight'))
-      if (offsetHeight) {
-        this.y = offsetHeight
-      } else {
-        this.y = this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight
-      }
+      this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
     }, 800)
+    window.addEventListener('resize', this.updateWindowHeight)
   },
   beforeDestroy () {
     this.unsubscribeOccurrences(this.id)
+    window.removeEventListener('resize', this.updateWindowHeight)
   },
   methods: {
-    onDrag: function (x, y) {
+    updateWindowHeight () {
+      this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
+    },
+    onDrag (x, y) {
       let minTop = this.$refs.sectionMessages.offsetHeight - 208
       let maxTop = 64
-      if (y > minTop) {
-        this.$refs.resizable.top = minTop
-        this.$refs.resizable.y = minTop
-        this.y = minTop
-      } else if (y < maxTop) {
-        this.$refs.resizable.top = maxTop
-        this.$refs.resizable.y = maxTop
-        this.y = maxTop
-      } else {
-        this.y = y
-      }
-      localStorage.setItem('jusoffsetheight', this.y)
+      if (y > minTop) this.y = minTop
+      else if (y < maxTop) this.y = maxTop
+      else this.y = y
+      this.updateDragHeight(this.y)
+    },
+    updateDragHeight (height) {
+      clearTimeout(this.dragDebounce)
+      this.dragDebounce = setTimeout(() => {
+        this.$refs.resizable.top = height
+        localStorage.setItem('jusoffsetheight', height)
+      }, 100)
     },
     startReply (params) {
       let messageType = params.type.toLowerCase()
@@ -722,12 +723,12 @@ export default {
     background-color: #ffffff00;
   }
   .draggable.resizable {
+    border-bottom: 1px solid red;
     z-index: 9 !important;
     width: 100% !important;
     height: 5px !important;
     left: 0 !important;
     right: 0 !important;
-    // border: 1px solid gray;
     &:hover {
       cursor: ns-resize;
     }
