@@ -1628,7 +1628,7 @@ export default {
     }
   }
   &__actions {
-    margin: 20px 0 10px;
+    margin: 20px 0;
     display: flex;
     button {
       width: 100%;
