@@ -117,7 +117,7 @@ export default {
             blackList = blackList.filter(a => a !== term)
             this.$store.dispatch('patchBlackList', blackList).then(response => {
               done()
-              this.fetchMinutes()
+              this.$store.commit('setBlackList', blackList)
             }).catch(error => {
               console.error(error)
             }).finally(() => {
