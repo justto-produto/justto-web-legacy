@@ -25,7 +25,7 @@
           </span>
           <div>
             <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-              <span class="title">Etiquetas</span>
+              <span class="title">Etiquetas:</span>
               <jus-tags />
             </div>
             <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
@@ -100,6 +100,33 @@
             <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
               <span class="title">Fim da negociação:</span>
               <span v-if="dispute.expirationDate" data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+            </div>
+            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+              <span class="title">Configurações:</span>
+              <span class="configurations">
+                Enriquecer automaticamente na importação?
+                <div><i :class="dispute.skipEnrichment ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.skipEnrichment ? 'Sim' : 'Não ' }}</div>
+                Aceitar conta poupança?
+                <div><i :class="dispute.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
+                Mensagens somente em horário comercial?
+                <div><i :class="dispute.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.businessHoursEngagement ? 'Sim' : 'Não ' }}</div>
+                Contactar autor?
+                <div>
+                  <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
+                  <span v-if="dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
+                    Quando não houver advogado ou não for possível contactar o advogado existente
+                  </span>
+                  <span v-else-if="dispute.contactPartyWhenNoLowyer && !dispute.contactPartyWhenInvalidLowyer">
+                    Somente quando não houver advogado constituído
+                  </span>
+                  <span v-else-if="!dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
+                    Somente quando não for possível contactar o advogado existente
+                  </span>
+                  <span v-else>
+                    Nunca
+                  </span>
+                </div>
+              </span>
             </div>
             <div v-if="computedDescription" class="dispute-overview-view__info-line">
               <span class="title">Descrição:</span>
@@ -273,24 +300,20 @@
                 <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
                   <i class="el-icon-question right" style="margin-top: 5px;" />
                 </el-tooltip>
-                <el-checkbox-group v-model="disputeBankAccountsIds">
+                <el-checkbox-group v-model="disputeBankAccountsIds" class="dispute-overview-view__bank-checkbox">
                   <el-checkbox
                     v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
                     :label="bankAccount.id"
                     :key="`${index}-${bankAccount.id}`"
                     border
                     class="bordered">
-                    <span v-show="bankAccount.name">
-                      <strong>Nome:</strong> {{ bankAccount.name }} <br>
-                    </span>
-                    <span v-show="bankAccount.email">
-                      <strong>E-mail:</strong> {{ bankAccount.email }} <br>
-                    </span>
-                    <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
-                    <strong>Banco:</strong> {{ bankAccount.bank }} <br>
-                    <strong>Agência:</strong> {{ bankAccount.agency }} <br>
-                    <strong>Conta:</strong> {{ bankAccount.number }} <br>
-                    <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
+                    <div v-show="bankAccount.name"><strong>Nome:</strong> {{ bankAccount.name }}</div>
+                    <div v-show="bankAccount.email"><strong>E-mail:</strong> {{ bankAccount.email }}</div>
+                    <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }}</div>
+                    <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
+                    <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
+                    <div><strong>Conta:</strong> {{ bankAccount.number }}</div>
+                    <div><strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }}</div>
                   </el-checkbox>
                 </el-checkbox-group>
               </div>
@@ -809,8 +832,9 @@ export default {
         disputeUpperRange: '',
         lastOfferValue: '',
         classification: '',
-        contactPartyWhenNoLowyer: '',
-        contactPartyWhenInvalidLowyer: ''
+        contactPartyWhenNoLowyer: false,
+        contactPartyWhenInvalidLowyer: false,
+        denySavingDeposit: false
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1138,6 +1162,18 @@ export default {
       let action, bankAccountId
       for (let roleAccount of roleBankAccountIds) {
         if (!this.disputeBankAccountsIds.includes(roleAccount)) {
+          if (this.dispute.denySavingDeposit) {
+            let ba = this.dispute.disputeRoles.find(dr => dr.id === this.activeRoleId).bankAccounts.find(ba => ba.id === roleAccount)
+            if (ba && ba.type === 'SAVING') {
+              this.$jusNotification({
+                dangerouslyUseHTMLString: true,
+                message: 'Esta disputa não permite a vinculação de contas do tipo <b>POUPANÇA</b>.',
+                type: 'warning',
+                duration: 0
+              })
+              return false
+            }
+          }
           action = 'linkDisputeBankAccounts'
           bankAccountId = roleAccount
         }
@@ -1201,6 +1237,7 @@ export default {
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
+      this.disputeForm.denySavingDeposit = dispute.denySavingDeposit
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -1234,6 +1271,7 @@ export default {
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
+            disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
             let today = this.$moment()
@@ -1553,6 +1591,16 @@ export default {
         line-height: 1.2;
       }
     }
+    .configurations {
+      margin-top: 4px;
+      line-height: 18px;
+      flex-direction: column;
+      div {
+        margin-left: 8px;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+    }
     .title {
       font-weight: 600;
     }
@@ -1577,7 +1625,7 @@ export default {
       height: auto;
       display: flex;
       align-items: center;
-      padding: 6px 11px;
+      padding: 8px;
       margin-top: 10px;
       margin-left: 0 !important;
       .el-checkbox__input {
@@ -1702,6 +1750,13 @@ export default {
     }
     .el-collapse-item__content {
       padding-bottom: 0;
+    }
+  }
+  &__bank-checkbox {
+    .el-checkbox__label {
+      flex-direction: column;
+      white-space: initial;
+      word-break: break-all;
     }
   }
   &__namesake-table {
