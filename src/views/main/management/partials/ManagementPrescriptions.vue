@@ -27,6 +27,9 @@
     <el-button v-show="tab0 || tab3" :type="NAMESAKE ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('NAMESAKE')">
       Homônimos
     </el-button>
+    <el-button v-show="tab0 || tab1" :type="NO_UPPER_RANGE ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('NO_UPPER_RANGE')">
+      Sem alçada máxima
+    </el-button>
   </div>
 </template>
 
@@ -66,6 +69,9 @@ export default {
     },
     NAMESAKE () {
       return this.$store.getters.hasPrescription('NAMESAKE')
+    },
+    NO_UPPER_RANGE () {
+      return this.$store.getters.hasPrescription('NO_UPPER_RANGE')
     },
     tab0 () {
       return this.activeTab === '0'
@@ -115,6 +121,9 @@ export default {
             break
           case 'NAMESAKE':
             this.$jusSegment('filtro botão HOMÔNIMOS')
+            break
+          case 'NO_UPPER_RANGE':
+            this.$jusSegment('filtro botão SEM ALÇADA MÁXIMA')
             break
         }
       }

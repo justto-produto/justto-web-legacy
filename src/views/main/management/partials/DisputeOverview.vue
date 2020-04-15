@@ -25,7 +25,7 @@
           </span>
           <div>
             <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-              <span class="title">Etiquetas</span>
+              <span class="title">Etiquetas:</span>
               <jus-tags />
             </div>
             <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
@@ -100,6 +100,33 @@
             <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
               <span class="title">Fim da negociação:</span>
               <span v-if="dispute.expirationDate" data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+            </div>
+            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+              <span class="title">Configurações:</span>
+              <span class="configurations">
+                Enriquecer automaticamente na importação?
+                <div><i :class="dispute.skipEnrichment ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.skipEnrichment ? 'Sim' : 'Não ' }}</div>
+                Aceitar conta poupança?
+                <div><i :class="dispute.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
+                Mensagens somente em horário comercial?
+                <div><i :class="dispute.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.businessHoursEngagement ? 'Sim' : 'Não ' }}</div>
+                Contactar autor?
+                <div>
+                  <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
+                  <span v-if="dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
+                    Quando não houver advogado ou não for possível contactar o advogado existente
+                  </span>
+                  <span v-else-if="dispute.contactPartyWhenNoLowyer && !dispute.contactPartyWhenInvalidLowyer">
+                    Somente quando não houver advogado constituído
+                  </span>
+                  <span v-else-if="!dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
+                    Somente quando não for possível contactar o advogado existente
+                  </span>
+                  <span v-else>
+                    Nunca
+                  </span>
+                </div>
+              </span>
             </div>
             <div v-if="computedDescription" class="dispute-overview-view__info-line">
               <span class="title">Descrição:</span>
@@ -222,17 +249,19 @@
                 <span v-for="(phone, index) in role.phones.filter(p => !p.archived).sort(p => p.isMain ? -1 : 1)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                   <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                     <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
-                      <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ phone.number | phoneMask }}</span>
+                      <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
+                        {{ phone.number | phoneMask }}<span v-if="phone.source === 'ENRICHMENT'">*</span>
+                      </span>
                     </el-tooltip>
-                    <div class="alerts">
-                      <el-tooltip content="Este número não receberá mensagens automáticas">
-                        <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
-                      </el-tooltip>
-                      <el-tooltip content="Telefone inválido">
-                        <jus-icon v-show="!phone.isValid" icon="warn-dark" />
-                      </el-tooltip>
-                    </div>
                   </el-radio>
+                  <!-- <div class="alerts"> -->
+                  <el-tooltip content="Este número não receberá mensagens automáticas">
+                    <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
+                  </el-tooltip>
+                  <el-tooltip content="Telefone inválido">
+                    <jus-icon v-show="!phone.isValid" icon="warn-dark" />
+                  </el-tooltip>
+                  <!-- </div> -->
                 </span>
               </div>
               <div v-show="role.emails.length" class="dispute-overview-view__info-line">
@@ -240,7 +269,9 @@
                 <span v-for="(email, index) in role.emails.filter(e => !e.archived).sort(e => e.isMain ? -1 : 1)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
                   <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                   <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
-                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">{{ email.address }}</span>
+                    <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
+                      {{ email.address }}<span v-if="email.source === 'ENRICHMENT'">*</span>
+                    </span>
                   </el-tooltip>
                   <div class="alerts">
                     <el-tooltip content="Este e-mail não receberá mensagens automáticas">
@@ -269,24 +300,20 @@
                 <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
                   <i class="el-icon-question right" style="margin-top: 5px;" />
                 </el-tooltip>
-                <el-checkbox-group v-model="disputeBankAccountsIds">
+                <el-checkbox-group v-model="disputeBankAccountsIds" class="dispute-overview-view__bank-checkbox">
                   <el-checkbox
                     v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
                     :label="bankAccount.id"
                     :key="`${index}-${bankAccount.id}`"
                     border
                     class="bordered">
-                    <span v-show="bankAccount.name">
-                      <strong>Nome:</strong> {{ bankAccount.name }} <br>
-                    </span>
-                    <span v-show="bankAccount.email">
-                      <strong>E-mail:</strong> {{ bankAccount.email }} <br>
-                    </span>
-                    <strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }} <br>
-                    <strong>Banco:</strong> {{ bankAccount.bank }} <br>
-                    <strong>Agência:</strong> {{ bankAccount.agency }} <br>
-                    <strong>Conta:</strong> {{ bankAccount.number }} <br>
-                    <strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }} <br>
+                    <div v-show="bankAccount.name"><strong>Nome:</strong> {{ bankAccount.name }}</div>
+                    <div v-show="bankAccount.email"><strong>E-mail:</strong> {{ bankAccount.email }}</div>
+                    <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }}</div>
+                    <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
+                    <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
+                    <div><strong>Conta:</strong> {{ bankAccount.number }}</div>
+                    <div><strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }}</div>
                   </el-checkbox>
                 </el-checkbox-group>
               </div>
@@ -813,8 +840,9 @@ export default {
         disputeUpperRange: '',
         lastOfferValue: '',
         classification: '',
-        contactPartyWhenNoLowyer: '',
-        contactPartyWhenInvalidLowyer: '',
+        contactPartyWhenNoLowyer: false,
+        contactPartyWhenInvalidLowyer: false,
+        denySavingDeposit: false,
         disputeCode: ''
       },
       disputeFormRules: {
@@ -1042,7 +1070,7 @@ export default {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
     buildContactStatus (contact) {
-      return contact.source === 'ENRICHMENT' ? 'Este contato foi enriquecido pelo sistema Justto' : 'Este contato foi adicionado manualmente'
+      return contact.source === 'ENRICHMENT' ? 'Contato enriquecido pelo sistema Justto' : 'Contato adicionado manualmente'
     },
     openAddBankDialog () {
       this.addBankForm.name = this.roleForm.name
@@ -1143,6 +1171,18 @@ export default {
       let action, bankAccountId
       for (let roleAccount of roleBankAccountIds) {
         if (!this.disputeBankAccountsIds.includes(roleAccount)) {
+          if (this.dispute.denySavingDeposit) {
+            let ba = this.dispute.disputeRoles.find(dr => dr.id === this.activeRoleId).bankAccounts.find(ba => ba.id === roleAccount)
+            if (ba && ba.type === 'SAVING') {
+              this.$jusNotification({
+                dangerouslyUseHTMLString: true,
+                message: 'Esta disputa não permite a vinculação de contas do tipo <b>POUPANÇA</b>.',
+                type: 'warning',
+                duration: 0
+              })
+              return false
+            }
+          }
           action = 'linkDisputeBankAccounts'
           bankAccountId = roleAccount
         }
@@ -1196,7 +1236,7 @@ export default {
       })
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
-      this.selectedClaimantId = this.disputeClaimants[0].id || ''
+      this.selectedClaimantId = this.disputeClaimants ? this.disputeClaimants[0].id : ''
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeCode = dispute.code
@@ -1207,6 +1247,7 @@ export default {
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
+      this.disputeForm.denySavingDeposit = dispute.denySavingDeposit
       this.editDisputeDialogVisible = true
     },
     editDispute () {
@@ -1241,6 +1282,7 @@ export default {
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
+            disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
             let contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
@@ -1566,10 +1608,19 @@ export default {
       align-items: flex-start;
       > span {
         width: 100%;
-        margin: 0 4px;
+        margin: 5px;
         word-break: break-all;
         line-height: 1.2;
-        padding: 4px 0px;
+      }
+    }
+    .configurations {
+      margin-top: 4px;
+      line-height: 18px;
+      flex-direction: column;
+      div {
+        margin-left: 8px;
+        margin-bottom: 8px;
+        font-weight: 500;
       }
     }
     .title {
@@ -1585,7 +1636,7 @@ export default {
       align-items: flex-start;
     }
     .el-radio__label {
-      padding-left: 6px;
+      padding-left: 5px;
       font-size: 13px;
       display: flex;
       justify-content: space-between;
@@ -1596,7 +1647,7 @@ export default {
       height: auto;
       display: flex;
       align-items: center;
-      padding: 6px 11px;
+      padding: 8px;
       margin-top: 10px;
       margin-left: 0 !important;
       .el-checkbox__input {
@@ -1647,7 +1698,7 @@ export default {
     }
   }
   &__actions {
-    margin: 20px 0 10px;
+    margin: 20px 0;
     display: flex;
     button {
       width: 100%;
@@ -1723,6 +1774,13 @@ export default {
       padding-bottom: 0;
     }
   }
+  &__bank-checkbox {
+    .el-checkbox__label {
+      flex-direction: column;
+      white-space: initial;
+      word-break: break-all;
+    }
+  }
   &__namesake-table {
     margin-bottom: 20px;
   }
@@ -1751,6 +1809,11 @@ export default {
   }
   &__is-enriched {
     font-style: italic;
+    span {
+      color: #9461f7;
+      margin-left: 2px;
+      font-weight: 500;
+    }
   }
   &__switch-main {
     display: flex;

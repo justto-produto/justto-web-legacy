@@ -162,6 +162,7 @@
       <el-select
         v-model="unsettledType"
         data-testid="select-unsettled"
+        style="margin: 10px 0px;"
         placeholder="Escolha o motivo da perda">
         <el-option
           v-for="(type, index) in unsettledTypes"
@@ -169,6 +170,40 @@
           :label="type"
           :value="index"/>
       </el-select>
+      <el-form
+        v-loading="modalLoading"
+        v-if="isInsufficientUpperRange"
+        ref="counterOfferForm"
+        :model="counterOfferForm"
+        :rules="counterOfferFormRules"
+        label-position="top">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="Valor" prop="lastCounterOfferValue">
+              <money
+                v-model="counterOfferForm.lastCounterOfferValue"
+                class="el-input__inner"
+                data-testid="counterproposal-value-input"
+                maxlength="16" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Proposto por" prop="selectedRoleId">
+              <el-select
+                :disabled="disputeClaimants.length === 1 && counterOfferForm.selectedRoleId"
+                v-model="counterOfferForm.selectedRoleId"
+                placeholder="Autor da contraproposta"
+                data-testid="counterproposal-claimant-input">
+                <el-option
+                  v-for="(claimant, index) in disputeClaimants"
+                  :key="`${index}-${claimant.id}`"
+                  :label="claimant.name"
+                  :value="claimant.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
       <span slot="footer">
         <el-button :disabled="modalLoading" plain @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
         <el-button
@@ -292,7 +327,7 @@
           <el-col :span="12">
             <el-form-item label="Proposto por" prop="selectedRoleId">
               <el-select
-                :disabled="disputeClaimants.length === 1"
+                :disabled="disputeClaimants.length === 1 && counterOfferForm.selectedRoleId"
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
                 style="width: 100%;"
@@ -366,6 +401,9 @@ export default {
       set (value) {
         this.$emit('update:isCollapsed', value)
       }
+    },
+    isInsufficientUpperRange () {
+      return this.unsettledType && this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && ((this.dispute && !this.dispute.lastCounterOfferValue) || (this.dispute && this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange))
     },
     canSettled () {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
@@ -455,8 +493,8 @@ export default {
           this.chooseUnsettledDialogVisible = true
           break
         case 'send-unsettled':
-          if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && (!this.dispute.lastCounterOfferValue || this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange)) {
-            this.disputeAction('counterproposal')
+          if (this.isInsufficientUpperRange) {
+            this.disputeAction('send-counterproposal')
           } else {
             additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
             this.doAction('unsettled', message, additionParams).then(() => {
@@ -581,7 +619,7 @@ export default {
             showClose: false,
             type: 'warning'
           })
-          reject(new Error('Ok'))
+          reject(new Error('Invalid Fields'))
         } else {
           resolve()
         }
@@ -666,49 +704,53 @@ export default {
     },
     sendCounterproposal (updateUpperRange) {
       return new Promise((resolve, reject) => {
-        this.modalLoading = true
-        this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
-          this.$store.dispatch('sendDisputeCounterProposal', {
-            disputeId: this.dispute.id,
-            objectId: disputeToEdit.objects[0].id,
-            value: this.counterOfferForm.lastCounterOfferValue.toString(),
-            roleId: this.counterOfferForm.selectedRoleId,
-            note: this.counterOfferForm.note,
-            updateUpperRange: updateUpperRange || false
-          }).then(() => {
-            if (this.counterOfferForm.note) {
-              this.modalLoading = true
-              let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-              let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
-              this.$store.dispatch('sendDisputeNote', {
-                note,
-                disputeId: this.dispute.id
-              })
-                .then(() => {
+        this.$refs.counterOfferForm.validate(valid => {
+          if (valid) {
+            this.modalLoading = true
+            this.$store.dispatch('getDisputeDTO', this.dispute.id).then(disputeToEdit => {
+              this.$store.dispatch('sendDisputeCounterProposal', {
+                disputeId: this.dispute.id,
+                objectId: disputeToEdit.objects[0].id,
+                value: this.counterOfferForm.lastCounterOfferValue.toString(),
+                roleId: this.counterOfferForm.selectedRoleId,
+                note: this.counterOfferForm.note,
+                updateUpperRange: updateUpperRange || false
+              }).then(() => {
+                if (this.counterOfferForm.note) {
+                  this.modalLoading = true
+                  let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
+                  let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
+                  this.$store.dispatch('sendDisputeNote', {
+                    note,
+                    disputeId: this.dispute.id
+                  }).then(() => {
+                    resolve()
+                    this.counterproposalDialogVisible = false
+                  }).catch(e => {
+                    reject(e)
+                  }).finally(() => {
+                    this.modalLoading = false
+                  })
+                } else {
                   resolve()
                   this.counterproposalDialogVisible = false
-                })
-                .catch(e => {
-                  reject(e)
-                }).finally(() => {
-                  this.modalLoading = false
-                })
-            } else {
-              resolve()
-              this.counterproposalDialogVisible = false
-              this.settledDialogVisible = false
-              this.$jusNotification({
-                title: 'Yay!',
-                message: updateUpperRange ? 'Proposta aceita com sucesso.' : 'Contraproposta enviada com sucesso.',
-                type: 'success'
+                  this.settledDialogVisible = false
+                  this.$jusNotification({
+                    title: 'Yay!',
+                    message: updateUpperRange ? 'Proposta aceita com sucesso.' : 'Contraproposta enviada com sucesso.',
+                    type: 'success'
+                  })
+                }
+              }).catch(error => {
+                reject(error)
+                this.$jusNotification({ error })
+              }).finally(() => {
+                this.modalLoading = false
               })
-            }
-          }).catch(error => {
-            reject(error)
-            this.$jusNotification({ error })
-          }).finally(() => {
-            this.modalLoading = false
-          })
+            })
+          } else {
+            reject(new Error('Invalid Fields'))
+          }
         })
       })
     },
@@ -767,7 +809,6 @@ export default {
       padding: 10px 0;
     }
     .el-select {
-      margin: 10px 0;
       width: 100%;
     }
   }

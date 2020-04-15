@@ -89,6 +89,7 @@ export default {
           let blackList = [...this.$store.getters.workspaceBlackList]
           blackList.push(this.blackListForm.contact)
           this.$store.dispatch('patchBlackList', blackList).then(response => {
+            this.$store.commit('setBlackList', blackList)
             this.blackListDialogVisible = false
             this.blackListForm.contact = ''
             this.$jusNotification({
@@ -116,7 +117,7 @@ export default {
             blackList = blackList.filter(a => a !== term)
             this.$store.dispatch('patchBlackList', blackList).then(response => {
               done()
-              this.fetchMinutes()
+              this.$store.commit('setBlackList', blackList)
             }).catch(error => {
               console.error(error)
             }).finally(() => {

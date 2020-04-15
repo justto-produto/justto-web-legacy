@@ -349,25 +349,30 @@ export default {
       } else return interaction.direction
     },
     buildName (occurrence) {
-      if (occurrence.interaction &&
-        occurrence.interaction.type &&
-        occurrence.interaction.message &&
-        occurrence.interaction.message.parameters &&
-        occurrence.interaction.message.parameters.RECEIVER_NAME &&
-        ['VISUALIZATION', 'CLICK'].includes(occurrence.interaction.type)) {
-        return occurrence.interaction.message.parameters.RECEIVER_NAME.toUpperCase()
+      if (occurrence.interaction) {
+        if (occurrence.interaction.type &&
+          ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
+          occurrence.interaction.properties.USER) {
+          return occurrence.interaction.properties.USER.toUpperCase()
+        }
+        if (occurrence.interaction.type &&
+          occurrence.interaction.message &&
+          occurrence.interaction.message.parameters &&
+          occurrence.interaction.message.parameters.RECEIVER_NAME &&
+          ['VISUALIZATION', 'CLICK'].includes(occurrence.interaction.type)) {
+          return occurrence.interaction.message.parameters.RECEIVER_NAME.toUpperCase()
+        }
+        if (occurrence.interaction.message &&
+          occurrence.interaction.message.parameters &&
+          occurrence.interaction.message.parameters.SENDER_NAME) {
+          return occurrence.interaction.message.parameters.SENDER_NAME.toUpperCase()
+        }
+        if (occurrence.interaction.properties &&
+          occurrence.interaction.properties.PERSON_NAME) {
+          return occurrence.interaction.properties.PERSON_NAME.toUpperCase()
+        }
       }
-      if (occurrence.interaction &&
-        occurrence.interaction.message &&
-        occurrence.interaction.message.parameters &&
-        occurrence.interaction.message.parameters.SENDER_NAME) {
-        return occurrence.interaction.message.parameters.SENDER_NAME.toUpperCase()
-      }
-      if (occurrence.interaction &&
-        occurrence.interaction.properties &&
-        occurrence.interaction.properties.PERSON_NAME) {
-        return occurrence.interaction.properties.PERSON_NAME.toUpperCase()
-      }
+      return ''
     },
     getOccurrenceMessage (messageId, occurrenceId) {
       this.$store.dispatch('getOccurrenceMessage', messageId).then(message => {
