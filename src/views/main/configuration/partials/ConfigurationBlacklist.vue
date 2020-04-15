@@ -89,6 +89,7 @@ export default {
           let blackList = [...this.$store.getters.workspaceBlackList]
           blackList.push(this.blackListForm.contact)
           this.$store.dispatch('patchBlackList', blackList).then(response => {
+            this.$store.commit('setBlackList', blackList)
             this.blackListDialogVisible = false
             this.blackListForm.contact = ''
             this.$jusNotification({
