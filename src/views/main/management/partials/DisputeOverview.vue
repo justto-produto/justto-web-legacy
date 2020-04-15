@@ -405,7 +405,7 @@
           <el-row :gutter="20">
             <el-col :span="24">
               <el-form-item label="Número do Processo" prop="disputeCode">
-                <el-input v-mask="'#######-##.####.#.##.####'" v-model="disputeForm.disputeCode" />
+                <el-input v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'" v-model="disputeForm.disputeCode" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -1243,6 +1243,8 @@ export default {
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
+            let contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
+            let contactPartyWhenInvalidLowyer = this.dispute.contactPartyWhenInvalidLowyer
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               // SEGMENT TRACK
               this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
@@ -1256,11 +1258,13 @@ export default {
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
               let isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
-              let isContactPartyChanged = this.disputeForm.contactPartyWhenNoLowyer !== this.dispute.contactPartyWhenNoLowyer || this.disputeForm.contactPartyWhenInvalidLowyer !== this.dispute.contactPartyWhenInvalidLowyer
+              let contactPartyWhenNoLowyerHasChanged = this.disputeForm.contactPartyWhenNoLowyer !== contactPartyWhenNoLowyer
+              let contactPartyWhenInvalidLowyerHasChanged = this.disputeForm.contactPartyWhenInvalidLowyer !== contactPartyWhenInvalidLowyer
+              let contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged
               let onlyResendMessaged = this.dispute.status === 'RUNNING'
-              if (isContactPartyChanged || isExpirationDateChanged) {
+              if (contactPartyHasChanged || isExpirationDateChanged) {
                 let action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'
-                let message = isContactPartyChanged ? 'As configurações de engajamento foram alteradas. Deseja ' + action + '?' : 'A data de expiração foi alterada. Deseja ' + action + '?'
+                let message = contactPartyHasChanged ? 'As configurações de engajamento foram alteradas. Deseja ' + action + '?' : 'A data de expiração foi alterada. Deseja ' + action + '?'
                 this.$confirm(message, 'Atenção!', {
                   confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
                   cancelButtonText: 'Cancelar',
