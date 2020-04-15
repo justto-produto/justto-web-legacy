@@ -145,6 +145,26 @@
         </div>
         <el-switch v-model="contactPartyWhenInvalidLowyer" />
       </div>
+      <div class="jus-import-feedback-card__switch">
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
+          <div>Não enriquecer disputas automaticamente</div>
+          <p>
+            Deixando <b>selecionada</b> esta opção, as os dados das partes como e-mail, telefone e OAB, <b>não serão enriquecidos automaticamente</b>.
+          </p>
+        </div>
+        <el-switch v-model="skipEnrichment" />
+      </div>
+      <div class="jus-import-feedback-card__switch">
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
+          <div>Permitir somente depósito em conta-corrente</div>
+          <p>
+            Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será bloqueado o depósito em conta poupança, sendo permitido somente <b>depósito em conta corrente</b>.
+          </p>
+        </div>
+        <el-switch v-model="denySavingDeposit" />
+      </div>
     </el-card>
     <jus-engagements-dialog
       :dialog-visible.sync="dialogVisible"
@@ -190,6 +210,8 @@ export default {
       businessHoursEngagement: true,
       contactPartyWhenNoLowyer: false,
       contactPartyWhenInvalidLowyer: false,
+      skipEnrichment: false,
+      denySavingDeposit: false,
       datePickerOptions: {
         disabledDate (date) {
           return date < new Date()
@@ -228,6 +250,12 @@ export default {
     },
     contactPartyWhenInvalidLowyer (value) {
       this.mappedCampaign.contactPartyWhenInvalidLowyer = value
+    },
+    skipEnrichment (value) {
+      this.mappedCampaign.skipEnrichment = value
+    },
+    denySavingDeposit (value) {
+      this.mappedCampaign.denySavingDeposit = value
     },
     respondent (value) {
       this.mappedCampaign.respondent = value
@@ -271,11 +299,15 @@ export default {
     this.businessHoursEngagement = preferences.businessHoursEngagement || true
     this.contactPartyWhenNoLowyer = preferences.contactPartyWhenNoLowyer || false
     this.contactPartyWhenInvalidLowyer = preferences.contactPartyWhenInvalidLowyer || false
+    this.skipEnrichment = preferences.skipEnrichment || false
+    this.denySavingDeposit = preferences.denySavingDeposit || false
     this.initialCampaignName = this.mappedCampaign.name
     this.mappedCampaign.campaign = {}
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
     this.mappedCampaign.contactPartyWhenNoLowyer = this.contactPartyWhenNoLowyer
     this.mappedCampaign.contactPartyWhenInvalidLowyer = this.contactPartyWhenInvalidLowyer
+    this.mappedCampaign.skipEnrichment = this.skipEnrichment
+    this.mappedCampaign.denySavingDeposit = this.denySavingDeposit
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
     if (this.mappedCampaign.respondent) {
       this.respondent = this.mappedCampaign.respondent
