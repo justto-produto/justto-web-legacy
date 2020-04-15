@@ -1191,7 +1191,7 @@ export default {
       })
       let dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
-      this.selectedClaimantId = this.disputeClaimants[0].id || ''
+      this.selectedClaimantId = this.disputeClaimants ? this.disputeClaimants[0].id : ''
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
