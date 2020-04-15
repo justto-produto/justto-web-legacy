@@ -25,7 +25,7 @@
           </span>
           <div>
             <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
-              <span class="title">Etiquetas</span>
+              <span class="title">Etiquetas:</span>
               <jus-tags />
             </div>
             <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
@@ -100,6 +100,33 @@
             <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
               <span class="title">Fim da negociação:</span>
               <span v-if="dispute.expirationDate" data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+            </div>
+            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+              <span class="title">Configurações:</span>
+              <span class="configurations">
+                Enriquecer automaticamente na importação?
+                <div><i :class="dispute.skipEnrichment ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.skipEnrichment ? 'Sim' : 'Não ' }}</div>
+                Aceitar conta poupança?
+                <div><i :class="dispute.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
+                Mensagens somente em horário comercial?
+                <div><i :class="dispute.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.businessHoursEngagement ? 'Sim' : 'Não ' }}</div>
+                Contactar autor?
+                <div>
+                  <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />
+                  <span v-if="dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
+                    Quando não houver advogado ou não for possível contactar o advogado existente
+                  </span>
+                  <span v-else-if="dispute.contactPartyWhenNoLowyer && !dispute.contactPartyWhenInvalidLowyer">
+                    Somente quando não houver advogado constituído
+                  </span>
+                  <span v-else-if="!dispute.contactPartyWhenNoLowyer && dispute.contactPartyWhenInvalidLowyer">
+                    Somente quando não for possível contactar o advogado existente
+                  </span>
+                  <span v-else>
+                    Nunca
+                  </span>
+                </div>
+              </span>
             </div>
             <div v-if="computedDescription" class="dispute-overview-view__info-line">
               <span class="title">Descrição:</span>
@@ -437,15 +464,6 @@
                 </p>
               </div>
               <el-switch v-model="disputeForm.contactPartyWhenInvalidLowyer" />
-            </el-col>
-            <el-col :span="24" class="dispute-overview-view__select-switch">
-              <div class="content">
-                <div>Permitir somente depósito em conta-corrente</div>
-                <p>
-                  Deixando <b>selecionada</b> esta opção, em caso de acordo fechado será bloqueado o depósito em conta poupança, sendo permitido somente <b>depósito em conta corrente</b>.
-                </p>
-              </div>
-              <el-switch v-model="disputeForm.denySavingDeposit" />
             </el-col>
           </el-row>
           <h3>Valor proposto</h3>
@@ -1571,6 +1589,16 @@ export default {
         margin: 5px;
         word-break: break-all;
         line-height: 1.2;
+      }
+    }
+    .configurations {
+      margin-top: 4px;
+      line-height: 18px;
+      flex-direction: column;
+      div {
+        margin-left: 8px;
+        margin-bottom: 8px;
+        font-weight: 500;
       }
     }
     .title {
