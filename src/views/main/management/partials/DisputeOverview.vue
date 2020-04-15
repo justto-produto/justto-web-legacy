@@ -1327,8 +1327,23 @@ export default {
                 })
               }
             }).catch(error => {
-              console.error(error)
-              this.$jusNotification({ error })
+              let err = { error }
+              if (err.error.response.status === 412 && err.error.response.data.code === 'DUPLICATED_VALIDATION') {
+                let message
+                if (err.error.response.data.fields.CAN_ACCESS_OTHER) {
+                  message = 'Este número de processo ja está sendo usado na dispute <a href="https://justto.app/#/management/dispute/' + err.error.response.data.fields.OTHER_DISPUTE_ID + '">#' + err.error.response.data.fields.OTHER_DISPUTE_ID + '</a>.'
+                } else {
+                  message = 'Este número de processo ja está sendo usado na dispute <b>#' + err.error.response.data.fields.OTHER_DISPUTE_ID + '</b>. Você não possui acesso a essa disputa. Verifique com um negociador responsável: ' + err.error.response.data.fields.OTHER_NEGOTIATORS
+                }
+                this.$jusNotification({
+                  title: 'Ops!',
+                  message: message,
+                  type: 'warning',
+                  dangerouslyUseHTMLString: true
+                })
+              } else {
+                this.$jusNotification({ error })
+              }
             }).finally(() => {
               this.editDisputeDialogLoading = false
             })
