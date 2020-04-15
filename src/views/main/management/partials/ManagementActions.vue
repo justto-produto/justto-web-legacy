@@ -306,15 +306,20 @@ export default {
         this.disputeNegotiators = negotiatorsPersonIdsList[0]
         this.changeNegotiatorDialogVisible = true
       } else {
-        this.$confirm('This will permanently delete the file. Continue?', 'Atenção', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Trocar',
+        this.$confirm('As disputas selecionadas possuem negociadores diferentes. Deseja trata-los individualmente ou troca-los todos?', {
+          title: 'Atenção! Múltiplos negociadores',
+          confirmButtonText: 'Trocar todos',
+          cancelButtonText: 'Escolher negociadores de cada disputa',
           cancelButtonClass: 'is-plain',
-          type: 'warning'
+          type: 'warning',
+          distinguishCancelAndClose: true,
+          customClass: 'el-message-box--lg'
         }).then(() => {
-
-        }).catch(() => {
-
+          console.log('Trocar todos')
+        }).catch(action => {
+          if (action === 'cancel') {
+            console.log('Um por um')
+          }
         })
       }
     },
