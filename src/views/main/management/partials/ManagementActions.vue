@@ -12,7 +12,7 @@
         <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">REINICIAR</el-button>
         <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">DATA LIMITE</el-button>
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">ESTRATÉGIAS</el-button>
-        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_NEGOTIATORS')">NEGOCIADORES</el-button>
+        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_NEGOTIATOR')">NEGOCIADORES</el-button>
         <el-button plain data-testid="batch-enrich" @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
       </div>
@@ -107,7 +107,22 @@
       title="Alterar negociadores"
       class="management-actions__dialog"
       width="604px">
+      <div v-if="disputeNegotiatorMap.length" class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-info"/>
+          <div class="el-message-box__message">
+            <p>
+              Alterando
+              {{ disputeNegotiatorMap[currentDisputeNegotiatorMap].disputes.length }}
+              disputas num total de
+              {{ disputeNegotiatorMapSelectedIds.length }}.
+            </p>
+          </div>
+        </div>
+      </div>
+      <br>
       <el-transfer
+        v-loading="changeNegotiatorDialogLoading"
         :titles="['Equipe', 'Disputa']"
         :button-texts="['Remover', 'Adicionar']"
         :data="workspaceNegotiators"
@@ -115,8 +130,8 @@
         filter-placeholder="Buscar"
         filterable />
       <span slot="footer">
-        <el-button plain @click="changeNegotiatorDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="editNegotiators">
+        <el-button :disabled="changeNegotiatorDialogLoading" plain @click="changeNegotiatorDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="changeNegotiatorDialogLoading" :disabled="!disputeNegotiators.length" type="primary" @click="changeNegotiator()">
           Alterar
         </el-button>
       </span>
@@ -143,9 +158,13 @@ export default {
     return {
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
-      changeExpirationDialogVisible: false,
+      changeNegotiatorByGroup: false,
       changeNegotiatorDialogVisible: false,
+      changeNegotiatorDialogLoading: false,
+      disputeNegotiatorMapSelectedIds: 0,
       disputeNegotiators: [],
+      disputeNegotiatorMap: [],
+      currentDisputeNegotiatorMap: 0,
       unsettledTypes: [],
       unsettledType: '',
       newStrategyId: '',
@@ -193,16 +212,14 @@ export default {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds
       }
-      if (action === 'CHANGE_STRATEGY') {
-        params['strategyId'] = this.newStrategyId
-      }
-      if (action === 'CHANGE_EXPIRATION_DATE') {
-        params['expirationDate'] = {
-          dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
-        }
-      }
-      if (this.unsettledType) {
-        params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+      if (this.unsettledType) params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+      switch (action) {
+        case 'CHANGE_STRATEGY':
+          params['strategyId'] = this.newStrategyId
+          break
+        case 'CHANGE_EXPIRATION_DATE':
+          params['expirationDate'] = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
+          break
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseUnsettledDialogVisible = false
@@ -248,7 +265,7 @@ export default {
       } else if (action === 'CHANGE_EXPIRATION_DATE') {
         this.changeExpirationDialogVisible = true
         this.newExpirationDate = ''
-      } else if (action === 'CHANGE_NEGOTIATORS') {
+      } else if (action === 'CHANGE_NEGOTIATOR') {
         this.checkDisputeNegotiators()
       } else {
         this.$confirm('Tem certeza que deseja realizar esta ação em lote?', this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())), {
@@ -293,17 +310,27 @@ export default {
       this.$emit('disputes:clear')
     },
     checkDisputeNegotiators () {
-      let negotiatorsPersonIdsList = []
+      let disputeNegotiatorMap = []
+      this.disputeNegotiatorMap = []
+      this.changeNegotiatorByGroup = false
+      this.disputeNegotiatorMapSelectedIds = this.selectedIds
       for (var disputeId of this.selectedIds) {
         let dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
-        let disputeNegotiatorsPersonIds = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
-        if (!negotiatorsPersonIdsList.length) negotiatorsPersonIdsList.push(disputeNegotiatorsPersonIds)
-        else if (!this.checkSameNegotiators(negotiatorsPersonIdsList, disputeNegotiatorsPersonIds)) {
-          negotiatorsPersonIdsList.push(disputeNegotiatorsPersonIds)
+        let disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
+        let mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))
+        if (mapToChangeIndex === -1) {
+          disputeNegotiatorMap.push({
+            disputes: [dispute.id],
+            negotiators: disputeNegotiators
+          })
+        } else {
+          let mapToChange = disputeNegotiatorMap[mapToChangeIndex]
+          mapToChange.disputes.push(dispute.id)
+          disputeNegotiatorMap[mapToChangeIndex] = mapToChange
         }
       }
-      if (negotiatorsPersonIdsList.length === 1) {
-        this.disputeNegotiators = negotiatorsPersonIdsList[0]
+      if (disputeNegotiatorMap.length === 1) {
+        this.disputeNegotiators = disputeNegotiatorMap[0].negotiators
         this.changeNegotiatorDialogVisible = true
       } else {
         this.$confirm('As disputas selecionadas possuem negociadores diferentes. Deseja trata-los individualmente ou troca-los todos?', {
@@ -315,19 +342,18 @@ export default {
           distinguishCancelAndClose: true,
           customClass: 'el-message-box--lg'
         }).then(() => {
-          console.log('Trocar todos')
+          this.disputeNegotiators = []
+          this.changeNegotiatorDialogVisible = true
         }).catch(action => {
           if (action === 'cancel') {
-            console.log('Um por um')
+            this.currentDisputeNegotiatorMap = 0
+            this.changeNegotiatorByGroup = true
+            this.disputeNegotiators = disputeNegotiatorMap[this.currentDisputeNegotiatorMap].negotiators
+            this.disputeNegotiatorMap = disputeNegotiatorMap
+            this.changeNegotiatorDialogVisible = true
           }
         })
       }
-    },
-    checkSameNegotiators (negotiatorsPersonIdsList, disputeNegotiatorsPersonIds) {
-      for (var negotiatorsPersonIds of negotiatorsPersonIdsList) {
-        if (this.arraysEqual(negotiatorsPersonIds, disputeNegotiatorsPersonIds)) return true
-      }
-      return false
     },
     arraysEqual (a, b) {
       if (a === b) return true
@@ -338,8 +364,42 @@ export default {
       }
       return true
     },
-    editNegotiators () {
-      console.log('grava, dá ok, parte pro abraço')
+    changeNegotiator () {
+      let isByGroup = !!this.disputeNegotiatorMap.length
+      let params = {
+        type: 'CHANGE_NEGOTIATOR',
+        negotiatorsId: this.disputeNegotiators
+      }
+      if (isByGroup) {
+        params.disputeIds = this.disputeNegotiatorMap[this.currentDisputeNegotiatorMap].disputes
+      } else {
+        params.disputeIds = this.selectedIds
+      }
+      this.changeNegotiatorDialogLoading = true
+      this.$store.dispatch('sendBatchAction', params).then(response => {
+        this.changeNegotiatorDialogVisible = false
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação <strong>' + this.$t('action.CHANGE_NEGOTIATOR') + '</strong> realizada com sucesso.',
+          type: 'success',
+          dangerouslyUseHTMLString: true
+        })
+        // SEGMENT TRACK
+        this.$jusSegment(getTracktitleByAction('CHANGE_NEGOTIATOR', true), { amount: this.selectedIds.length })
+        setTimeout(() => {
+          this.currentDisputeNegotiatorMap += 1
+          if (this.disputeNegotiatorMap.length > this.currentDisputeNegotiatorMap) {
+            this.disputeNegotiators = this.disputeNegotiators = this.disputeNegotiatorMap[this.currentDisputeNegotiatorMap].negotiators
+            this.changeNegotiatorDialogVisible = true
+          } else {
+            this.currentDisputeNegotiatorMap = 0
+          }
+        }, 200)
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.changeNegotiatorDialogLoading = false
+      })
     }
   }
 }
