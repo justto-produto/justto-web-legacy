@@ -38,6 +38,7 @@
               <el-form-item :key="formKey" prop="document" style="margin-bottom: 0px;">
                 <el-input
                   v-mask="['###.###.###-##', '##.###.###/####-##']"
+                  :ref="'documentInput' + formKey"
                   v-model="documentForm.document[index]"
                   placeholder="Informe o CPF da parte para selecionar e-mail de assinatura"
                   size="small"
@@ -67,13 +68,18 @@
                   type="text"
                   icon="el-icon-plus"
                   class="add-email"
-                  @click="showAddEmail(role.name)">
+                  @click="showAddEmail(role.name, index)">
                   Adicionar e-mail
                 </el-button></span>
               </el-tooltip>
               <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role, index)">
                 <el-form-item v-show="role.show" :key="formKey" prop="email">
-                  <el-input v-model="emailForm.email[role.name]" placeholder="Adicionar e-mail" size="small" @input="clearValidate(index)">
+                  <el-input
+                    :ref="'emailInput' + index"
+                    v-model="emailForm.email[role.name]"
+                    placeholder="Adicionar e-mail"
+                    size="small"
+                    @input="clearValidate(index)">
                     <el-button slot="append" icon="el-icon-plus" @click="addEmail(role, index)" />
                   </el-input>
                 </el-form-item>
@@ -357,6 +363,7 @@ export default {
         if (valid) {
           role.documentNumber = this.documentForm.document[formIndex]
           this.formKey += 1
+          this.showAddEmail(role.name, formIndex)
         }
       })
     },
@@ -373,6 +380,10 @@ export default {
           this.roleForm.role = ''
           this.showARoleButton = false
           this.formKey += 1
+          this.$nextTick(() => {
+            let documentInput = this.$refs['documentInput' + this.formKey][0]
+            documentInput.focus()
+          })
         }
       })
     },
@@ -400,13 +411,19 @@ export default {
         }
       })
     },
-    showAddEmail (name) {
+    showAddEmail (name, formIndex) {
       this.roles.map(r => {
         if (r.name === name) r.show = true
         else r.show = false
       })
       this.showARoleButton = false
       this.formKey += 1
+      if (formIndex) {
+        this.$nextTick(() => {
+          let emailInput = this.$refs['emailInput' + formIndex][0]
+          emailInput.focus()
+        })
+      }
     },
     removeEmail (email, name) {
       let index = this.roles.findIndex(r => r.name === name)
