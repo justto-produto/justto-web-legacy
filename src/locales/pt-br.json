@@ -6,6 +6,7 @@
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
     "materialDamage": "danos materiais",
+    "externalId": "código interno da disputa",
     "description": "descrição",
     "status": {
       "ACCEPTED": "aceita",
