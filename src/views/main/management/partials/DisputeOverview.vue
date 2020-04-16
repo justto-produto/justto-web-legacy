@@ -246,7 +246,7 @@
               </div>
               <div v-show="role.phones.length" class="dispute-overview-view__info-line">
                 <span class="title">Telefone(s):</span>
-                <span v-for="(phone, index) in role.phones.filter(p => !p.archived).sort(p => p.isMain ? -1 : 1)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
+                <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
                   <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
                     <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
                       <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
@@ -266,7 +266,7 @@
               </div>
               <div v-show="role.emails.length" class="dispute-overview-view__info-line">
                 <span class="title">E-mail(s):</span>
-                <span v-for="(email, index) in role.emails.filter(e => !e.archived).sort(e => e.isMain ? -1 : 1)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
+                <span v-for="(email, index) in role.emails.filter(e => !e.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
                   <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
                   <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
                     <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
