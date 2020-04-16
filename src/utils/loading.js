@@ -16,6 +16,12 @@ const showLoading = function () {
     setTimeout(function () {
       loading.close()
     }, timeLeft)
+  } else {
+    this.$jusNotofication({
+      title: 'Ops!',
+      type: 'warning',
+      message: 'Serviço temporariamente indisponivel. por favor tente novamente em alguns instantes.'
+    })
   }
 }
 
