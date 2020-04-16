@@ -428,6 +428,14 @@
           :rules="disputeFormRules"
           label-position="top"
           @submit.native.prevent="editDispute">
+          <h3>Detalhes da Disputa</h3>
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <el-form-item label="Número do Processo" prop="disputeCode">
+                <el-input v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'" v-model="disputeForm.disputeCode" />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <h3>Engajamento</h3>
           <el-row :gutter="20">
             <el-col :span="24">
@@ -834,7 +842,8 @@ export default {
         classification: '',
         contactPartyWhenNoLowyer: false,
         contactPartyWhenInvalidLowyer: false,
-        denySavingDeposit: false
+        denySavingDeposit: false,
+        disputeCode: ''
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1198,8 +1207,8 @@ export default {
         setTimeout(function () {
           this.$emit('fetch-data')
         }.bind(this), 200)
-      }).catch(e => {
-        console.error(e)
+      }).catch(error => {
+        console.error(error)
         this.$jusNotification({ type: 'error' })
       }).finally(() => {
         this.linkBankAccountLoading = false
@@ -1230,6 +1239,7 @@ export default {
       this.selectedClaimantId = this.disputeClaimants ? this.disputeClaimants[0].id : ''
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.disputeForm.id = dispute.id
+      this.disputeForm.disputeCode = dispute.code
       this.disputeForm.disputeUpperRange = parseFloat(dispute.disputeUpperRange)
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
@@ -1266,6 +1276,7 @@ export default {
             disputeToEdit.disputeUpperRange = this.disputeForm.disputeUpperRange
             disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
             disputeToEdit.description = this.disputeForm.description
+            disputeToEdit.code = this.disputeForm.disputeCode
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
@@ -1274,7 +1285,8 @@ export default {
             disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
-            let today = this.$moment()
+            let contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
+            let contactPartyWhenInvalidLowyer = this.dispute.contactPartyWhenInvalidLowyer
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               // SEGMENT TRACK
               this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
@@ -1287,27 +1299,51 @@ export default {
                 this.$emit('fetch-data')
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
-              if (this.$moment(currentDate).isBefore(today) && this.$moment(newDate).isSameOrAfter(today)) {
-                this.$confirm('A data de expiração foi alterada. Deseja reiniciar esta disputa?', 'Atenção!', {
-                  confirmButtonText: 'Reiniciar',
+              let isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
+              let contactPartyWhenNoLowyerHasChanged = this.disputeForm.contactPartyWhenNoLowyer !== contactPartyWhenNoLowyer
+              let contactPartyWhenInvalidLowyerHasChanged = this.disputeForm.contactPartyWhenInvalidLowyer !== contactPartyWhenInvalidLowyer
+              let contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged
+              let onlyResendMessaged = this.dispute.status === 'RUNNING'
+              if (contactPartyHasChanged || isExpirationDateChanged) {
+                let action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'
+                let message = contactPartyHasChanged ? 'As configurações de engajamento foram alteradas. Deseja ' + action + '?' : 'A data de expiração foi alterada. Deseja ' + action + '?'
+                this.$confirm(message, 'Atenção!', {
+                  confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
                   cancelButtonText: 'Cancelar',
                   cancelButtonClass: 'is-plain',
                   type: 'warning'
                 }).then(() => {
                   this.$store.dispatch('sendDisputeAction', {
-                    action: 'restart-engagement',
+                    action: onlyResendMessaged ? 'resend-messages' : 'restart-engagement',
                     disputeId: this.dispute.id
                   }).then(() => {
+                    let actionDone = onlyResendMessaged ? 'Reenvio de mensagens' : 'Reengajamento'
                     this.$jusNotification({
                       title: 'Yay!',
-                      message: 'Reengajamento realizado com sucesso.',
+                      message: actionDone + ' realizado com sucesso.',
                       type: 'success'
                     })
                   })
                 })
               }
-            }).catch(() => {
-              this.$jusNotification({ type: 'error' })
+            }).catch(error => {
+              let err = { error }
+              if (err.error.response.status === 412 && err.error.response.data.code === 'DUPLICATED_VALIDATION') {
+                let message
+                if (err.error.response.data.fields.CAN_ACCESS_OTHER) {
+                  message = 'Este número de processo ja está sendo usado na dispute <a href="https://justto.app/#/management/dispute/' + err.error.response.data.fields.OTHER_DISPUTE_ID + '">#' + err.error.response.data.fields.OTHER_DISPUTE_ID + '</a>.'
+                } else {
+                  message = 'Este número de processo ja está sendo usado na dispute <b>#' + err.error.response.data.fields.OTHER_DISPUTE_ID + '</b>. Você não possui acesso a essa disputa. Verifique com um negociador responsável: ' + err.error.response.data.fields.OTHER_NEGOTIATORS
+                }
+                this.$jusNotification({
+                  title: 'Ops!',
+                  message: message,
+                  type: 'warning',
+                  dangerouslyUseHTMLString: true
+                })
+              } else {
+                this.$jusNotification({ error })
+              }
             }).finally(() => {
               this.editDisputeDialogLoading = false
             })
@@ -1362,7 +1398,8 @@ export default {
           }
           Promise.all(promise).then(() => {
             this.editRoleAction()
-          }).catch(e => {
+          }).catch(error => {
+            console.error(error)
             this.$jusNotification({ type: 'error' })
           }).finally(() => {
             this.linkBankAccountLoading = false
@@ -1425,7 +1462,7 @@ export default {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
-        console.log(error)
+        console.error(error)
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
