@@ -190,7 +190,7 @@
           <el-col :span="12">
             <el-form-item label="Proposto por" prop="selectedRoleId">
               <el-select
-                :disabled="disputeClaimants.length === 1 && counterOfferForm.selectedRoleId"
+                :disabled="counterOfferForm.selectedRoleId && disputeClaimants.length === 1"
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
                 data-testid="counterproposal-claimant-input">
@@ -485,12 +485,12 @@ export default {
               this.doAction(action, message)
             })
           } else {
-            this.openSettledDialog()
+            this.openSettledDialog(action)
           }
           break
         case 'unsettled':
           this.unsettledType = null
-          this.chooseUnsettledDialogVisible = true
+          this.openSettledDialog(action)
           break
         case 'send-unsettled':
           if (this.isInsufficientUpperRange) {
@@ -642,7 +642,7 @@ export default {
     togleCollapsed () {
       this.collapsed = !this.collapsed
     },
-    openSettledDialog () {
+    openSettledDialog (action) {
       this.modalLoading = false
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
       if (this.disputeClaimants.length === 1) {
@@ -654,7 +654,11 @@ export default {
       } else {
         this.counterOfferForm.selectedRoleId = ''
       }
-      this.settledDialogVisible = true
+      if (action === 'settled') {
+        this.settledDialogVisible = true
+      } else {
+        this.chooseUnsettledDialogVisible = true
+      }
       if (this.$refs.counterOfferForm) {
         this.$refs.counterOfferForm.clearValidate()
       }
