@@ -9,9 +9,10 @@
         <el-button plain data-testid="batch-unsettled" @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
         <el-button plain data-testid="batch-paused" @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
         <el-button plain data-testid="batch-resume" @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
-        <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">{{ $t('action.RESTART_ENGAGEMENT') }}</el-button>
-        <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">{{ $t('action.CHANGE_EXPIRATION_DATE') }}</el-button>
-        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">{{ $t('action.CHANGE_STRATEGY') }}</el-button>
+        <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">REINICIAR</el-button>
+        <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">DATA LIMITE</el-button>
+        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">ESTRATÉGIAS</el-button>
+        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_NEGOTIATOR')">NEGOCIADORES</el-button>
         <el-button plain data-testid="batch-enrich" @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
       </div>
@@ -24,14 +25,6 @@
       class="management-actions__dialog"
       width="460px"
       data-testid="unsettled-dialog">
-      <div class="el-message-box__content">
-        <div class="el-message-box__container">
-          <div class="el-message-box__status el-icon-warning"/>
-          <div class="el-message-box__message">
-            <p>Tem certeza que deseja realizar esta ação?</p>
-          </div>
-        </div>
-      </div>
       <el-select
         v-loading="$store.state.loading"
         v-model="unsettledType"
@@ -61,18 +54,10 @@
       class="management-actions__dialog"
       width="460px"
       data-testid="strategy-dialog">
-      <div class="el-message-box__content">
-        <div class="el-message-box__container">
-          <div class="el-message-box__status el-icon-warning"/>
-          <div class="el-message-box__message">
-            <p>Tem certeza que deseja realizar esta ação?</p>
-          </div>
-        </div>
-      </div>
       <el-select
         v-model="newStrategyId"
-        data-testid="select-unsettled"
-        placeholder="Escolha a nova estratégia">
+        placeholder="Escolha a nova estratégia"
+        data-testid="select-unsettled">
         <el-option
           v-for="strategy in strategies"
           :key="strategy.id"
@@ -86,31 +71,24 @@
           type="primary"
           class="confirm-action-unsettled"
           @click.prevent="doAction('CHANGE_STRATEGY')">
-          Continuar
+          Alterar
         </el-button>
       </span>
     </el-dialog>
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="changeExpirationDialogVisible"
-      title="Alterar fim da negociação"
+      title="Alterar data limite da negociação"
       class="management-actions__dialog"
       width="460px"
       data-testid="expiration-dialog">
-      <div class="el-message-box__content">
-        <div class="el-message-box__container">
-          <div class="el-message-box__status el-icon-warning" />
-          <div class="el-message-box__message">
-            <p>Tem certeza que deseja realizar esta ação?</p>
-          </div>
-        </div>
-      </div>
       <el-date-picker
         v-model="newExpirationDate"
         :clearable="false"
         data-testid="expiration-date-input"
         format="dd/MM/yyyy"
         type="date"
+        placeholder="Escolha a data limite"
         value-format="yyyy-MM-dd" />
       <span slot="footer">
         <el-button plain @click="changeExpirationDialogVisible = false">Cancelar</el-button>
@@ -119,7 +97,42 @@
           type="primary"
           class="confirm-action-unsettled"
           @click.prevent="doAction('CHANGE_EXPIRATION_DATE')">
-          Continuar
+          Alterar
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="changeNegotiatorDialogVisible"
+      title="Alterar negociadores"
+      class="management-actions__dialog"
+      width="604px">
+      <div v-if="disputeNegotiatorMap.length" class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-info"/>
+          <div class="el-message-box__message">
+            <p>
+              Alterando
+              {{ disputeNegotiatorMap[currentDisputeNegotiatorMap].disputes.length }}
+              disputas num total de
+              {{ disputeNegotiatorMapSelectedIds.length }}.
+            </p>
+          </div>
+        </div>
+      </div>
+      <br>
+      <el-transfer
+        v-loading="changeNegotiatorDialogLoading"
+        :titles="['Equipe', 'Disputa']"
+        :button-texts="['Remover', 'Adicionar']"
+        :data="workspaceNegotiators"
+        v-model="disputeNegotiators"
+        filter-placeholder="Buscar"
+        filterable />
+      <span slot="footer">
+        <el-button :disabled="changeNegotiatorDialogLoading" plain @click="changeNegotiatorDialogVisible = false">Cancelar</el-button>
+        <el-button :loading="changeNegotiatorDialogLoading" :disabled="!disputeNegotiators.length" type="primary" @click="changeNegotiator()">
+          Alterar
         </el-button>
       </span>
     </el-dialog>
@@ -127,7 +140,7 @@
 </template>
 
 <script>
-import { getTracktitleByAction } from '@/utils/jusUtils'
+import { getTracktitleByAction, getRoles } from '@/utils/jusUtils'
 
 export default {
   name: 'ManagementActions',
@@ -145,7 +158,13 @@ export default {
     return {
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
-      changeExpirationDialogVisible: false,
+      changeNegotiatorByGroup: false,
+      changeNegotiatorDialogVisible: false,
+      changeNegotiatorDialogLoading: false,
+      disputeNegotiatorMapSelectedIds: 0,
+      disputeNegotiators: [],
+      disputeNegotiatorMap: [],
+      currentDisputeNegotiatorMap: 0,
       unsettledTypes: [],
       unsettledType: '',
       newStrategyId: '',
@@ -166,6 +185,15 @@ export default {
     },
     strategies () {
       return this.$store.getters.strategyList
+    },
+    workspaceNegotiators () {
+      return this.$store.getters.workspaceMembers.map(member => {
+        return {
+          key: member.person.id,
+          label: member.person.name,
+          value: member.person.id
+        }
+      })
     }
   },
   created () {
@@ -184,16 +212,14 @@ export default {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds
       }
-      if (action === 'CHANGE_STRATEGY') {
-        params['strategyId'] = this.newStrategyId
-      }
-      if (action === 'CHANGE_EXPIRATION_DATE') {
-        params['expirationDate'] = {
-          dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
-        }
-      }
-      if (this.unsettledType) {
-        params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+      if (this.unsettledType) params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+      switch (action) {
+        case 'CHANGE_STRATEGY':
+          params['strategyId'] = this.newStrategyId
+          break
+        case 'CHANGE_EXPIRATION_DATE':
+          params['expirationDate'] = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
+          break
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseUnsettledDialogVisible = false
@@ -239,8 +265,10 @@ export default {
       } else if (action === 'CHANGE_EXPIRATION_DATE') {
         this.changeExpirationDialogVisible = true
         this.newExpirationDate = ''
+      } else if (action === 'CHANGE_NEGOTIATOR') {
+        this.checkDisputeNegotiators()
       } else {
-        this.$confirm('Tem certeza que deseja realizar esta ação em lote?', this.$t('action.' + action.toUpperCase()), {
+        this.$confirm('Tem certeza que deseja realizar esta ação em lote?', this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())), {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
@@ -280,6 +308,98 @@ export default {
     },
     clearSelection () {
       this.$emit('disputes:clear')
+    },
+    checkDisputeNegotiators () {
+      let disputeNegotiatorMap = []
+      this.disputeNegotiatorMap = []
+      this.changeNegotiatorByGroup = false
+      this.disputeNegotiatorMapSelectedIds = this.selectedIds
+      for (var disputeId of this.selectedIds) {
+        let dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
+        let disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
+        let mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))
+        if (mapToChangeIndex === -1) {
+          disputeNegotiatorMap.push({
+            disputes: [dispute.id],
+            negotiators: disputeNegotiators
+          })
+        } else {
+          let mapToChange = disputeNegotiatorMap[mapToChangeIndex]
+          mapToChange.disputes.push(dispute.id)
+          disputeNegotiatorMap[mapToChangeIndex] = mapToChange
+        }
+      }
+      if (disputeNegotiatorMap.length === 1) {
+        this.disputeNegotiators = disputeNegotiatorMap[0].negotiators
+        this.changeNegotiatorDialogVisible = true
+      } else {
+        this.$confirm('As disputas selecionadas possuem negociadores diferentes. Deseja trata-los individualmente ou troca-los todos?', {
+          title: 'Atenção! Múltiplos negociadores',
+          confirmButtonText: 'Trocar todos',
+          cancelButtonText: 'Escolher negociadores de cada disputa',
+          cancelButtonClass: 'is-plain',
+          type: 'warning',
+          distinguishCancelAndClose: true,
+          customClass: 'el-message-box--lg'
+        }).then(() => {
+          this.disputeNegotiators = []
+          this.changeNegotiatorDialogVisible = true
+        }).catch(action => {
+          if (action === 'cancel') {
+            this.currentDisputeNegotiatorMap = 0
+            this.changeNegotiatorByGroup = true
+            this.disputeNegotiators = disputeNegotiatorMap[this.currentDisputeNegotiatorMap].negotiators
+            this.disputeNegotiatorMap = disputeNegotiatorMap
+            this.changeNegotiatorDialogVisible = true
+          }
+        })
+      }
+    },
+    arraysEqual (a, b) {
+      if (a === b) return true
+      if (a === null || b === null) return false
+      if (a.length !== b.length) return false
+      for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false
+      }
+      return true
+    },
+    changeNegotiator () {
+      let isByGroup = !!this.disputeNegotiatorMap.length
+      let params = {
+        type: 'CHANGE_NEGOTIATOR',
+        negotiatorsId: this.disputeNegotiators
+      }
+      if (isByGroup) {
+        params.disputeIds = this.disputeNegotiatorMap[this.currentDisputeNegotiatorMap].disputes
+      } else {
+        params.disputeIds = this.selectedIds
+      }
+      this.changeNegotiatorDialogLoading = true
+      this.$store.dispatch('sendBatchAction', params).then(response => {
+        this.changeNegotiatorDialogVisible = false
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Ação <strong>' + this.$t('action.CHANGE_NEGOTIATOR') + '</strong> realizada com sucesso.',
+          type: 'success',
+          dangerouslyUseHTMLString: true
+        })
+        // SEGMENT TRACK
+        this.$jusSegment(getTracktitleByAction('CHANGE_NEGOTIATOR', true), { amount: this.selectedIds.length })
+        setTimeout(() => {
+          this.currentDisputeNegotiatorMap += 1
+          if (this.disputeNegotiatorMap.length > this.currentDisputeNegotiatorMap) {
+            this.disputeNegotiators = this.disputeNegotiators = this.disputeNegotiatorMap[this.currentDisputeNegotiatorMap].negotiators
+            this.changeNegotiatorDialogVisible = true
+          } else {
+            this.currentDisputeNegotiatorMap = 0
+          }
+        }, 200)
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.changeNegotiatorDialogLoading = false
+      })
     }
   }
 }
@@ -332,23 +452,21 @@ export default {
     width: 42px;
     justify-content: center;
     align-items: center;
+    margin-right: 8px;
     i {
       margin-right: 4px;
       font-weight: 600;
     }
   }
   .el-icon-close {
+    padding: 0 20px 0px 8px;
     font-size: 16px;
   }
   &__dialog {
     .el-message-box__content {
       padding: 10px 0;
     }
-    .el-select {
-      margin: 10px 0;
-      width: 100%;
-    }
-    .el-date-editor.el-input {
+    .el-select, .el-date-editor.el-input, .el-transfer {
       width: 100%;
     }
   }

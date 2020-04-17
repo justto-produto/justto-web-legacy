@@ -232,7 +232,7 @@
         label-position="top"
         @submit.native.prevent="editNegotiator">
         <el-transfer
-          :titles="['Workspace', 'Disputa']"
+          :titles="['Equipe', 'Disputa']"
           :button-texts="['Remover', 'Adicionar']"
           :data="workspaceNegotiators"
           v-model="disputeNegotiators"
