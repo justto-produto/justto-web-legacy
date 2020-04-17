@@ -101,7 +101,7 @@
               v-show="showARoleButton"
               label="Adicionar nova parte"
               prop="role">
-              <el-input v-model="roleForm.role" placeholder="Nome" @input="clearValidate()">
+              <el-input ref="newRoleInput" v-model="roleForm.role" placeholder="Nome" @input="clearValidate()">
                 <el-button slot="append" icon="el-icon-plus" @click="addRole()" />
               </el-input>
             </el-form-item>
@@ -390,6 +390,7 @@ export default {
     showAddRole () {
       this.showARoleButton = true
       this.formKey += 1
+      this.$nextTick(() => this.$refs.newRoleInput.focus())
     },
     addEmail (role, formIndex) {
       let emailForm = this.$refs['emailForm' + formIndex][0]
