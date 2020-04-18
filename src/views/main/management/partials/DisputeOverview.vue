@@ -498,7 +498,12 @@
           <el-row :gutter="20">
             <el-col :span="8">
               <el-form-item :rules="validateDisputeUpperRange" label="Alçada máxima" prop="disputeUpperRange">
-                <money v-model="disputeForm.disputeUpperRange" class="el-input__inner" data-testid="bondary-input" @change.native="disputeUpperRangeHasChanged = true"/>
+                <money
+                  v-model="disputeForm.disputeUpperRange"
+                  class="el-input__inner"
+                  data-testid="bondary-input"
+                  @blur.native="checkZeroUpperRange"
+                  @change.native="disputeUpperRangeHasChanged = true"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -843,7 +848,8 @@ export default {
         contactPartyWhenNoLowyer: false,
         contactPartyWhenInvalidLowyer: false,
         denySavingDeposit: false,
-        disputeCode: ''
+        disputeCode: '',
+        zeroUpperRange: false
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1248,7 +1254,15 @@ export default {
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
       this.disputeForm.denySavingDeposit = dispute.denySavingDeposit
+      this.disputeForm.zeroUpperRange = !parseFloat(dispute.disputeUpperRange)
       this.editDisputeDialogVisible = true
+      this.$nextTick(() => { this.$refs.disputeForm.clearValidate() })
+    },
+    checkZeroUpperRange () {
+      if (this.disputeForm.zeroUpperRange) {
+        this.disputeForm.lastOfferValue = 0
+        this.$nextTick(() => { this.$refs.disputeForm.validate() })
+      }
     },
     editDispute () {
       this.$refs.disputeForm.validate(valid => {
