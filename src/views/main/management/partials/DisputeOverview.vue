@@ -1341,13 +1341,13 @@ export default {
                 })
               }
             }).catch(error => {
-              let err = { error }
-              if (err.error.response.status === 412 && err.error.response.data.code === 'DUPLICATED_VALIDATION') {
+              if (error.response && error.response.data && error.response.status === 412 && error.response.data.code === 'DUPLICATED_VALIDATION') {
                 let message
-                if (err.error.response.data.fields.CAN_ACCESS_OTHER) {
-                  message = 'Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://justto.app/#/management/dispute/' + err.error.response.data.fields.OTHER_DISPUTE_ID + '">#' + err.error.response.data.fields.OTHER_DISPUTE_ID + '</a>.'
+                debugger
+                if (error.response.data.fields.CAN_ACCESS_OTHER === 'true') {
+                  message = 'Este número de processo ja está sendo usado na disputa <a target="_blank" href="https://justto.app/#/management/dispute/' + error.response.data.fields.OTHER_DISPUTE_ID + '">#' + error.response.data.fields.OTHER_DISPUTE_ID + '</a>.'
                 } else {
-                  message = 'Este número de processo ja está sendo usado na disputa <b>#' + err.error.response.data.fields.OTHER_DISPUTE_ID + '</b>. Você não possui acesso a essa disputa. Verifique com um negociador responsável: ' + err.error.response.data.fields.OTHER_NEGOTIATORS
+                  message = 'Este número de processo ja está sendo usado na disputa <b>#' + error.response.data.fields.OTHER_DISPUTE_ID + '</b>. Você não possui acesso a essa disputa. Verifique com um negociador responsável: <b>' + error.response.data.fields.OTHER_NEGOTIATORS + '</b>'
                 }
                 this.$jusNotification({
                   title: 'Ops!',
