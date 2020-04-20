@@ -402,11 +402,11 @@ export default {
           return `
             Negociador <strong>${occurrence.interaction.properties.USER ? occurrence.interaction.properties.USER : ''}</strong>
             informou uma proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
-            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>${occurrence.interaction.properties.NOTE ? 'com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
         } else if (['NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_PROPOSAL'].includes(occurrence.interaction.type)) {
           return `
             Proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
-            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>${occurrence.interaction.properties.NOTE ? 'com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
         }
         return occurrence.description
       }
