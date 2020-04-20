@@ -1533,7 +1533,7 @@ export default {
       if (isValid) {
         let self = this
         let isDuplicated = this.roleForm.emails.findIndex(e => e.address === self.roleForm.email)
-        if (isDuplicated < 0) this.roleForm.emails.push({ address: this.roleForm.email })
+        if (isDuplicated < 0) this.roleForm.emails.push({ address: this.roleForm.email, isMain: true })
         this.roleForm.email = ''
       }
     },
