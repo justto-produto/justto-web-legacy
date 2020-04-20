@@ -554,7 +554,9 @@ export default {
           if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE') {
             this.sendCounterproposal().then(() => {
               additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
-              this.doAction('unsettled', message, additionParams).finally(() => {
+              this.doAction('unsettled', message, additionParams).then(() => {
+                this.chooseUnsettledDialogVisible = false
+              }).finally(() => {
                 this.unsettledType = null
               })
             })
