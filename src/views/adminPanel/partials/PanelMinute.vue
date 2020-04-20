@@ -85,7 +85,7 @@ export default {
   mounted () {
     this.fetchMinutes()
     this.$store.dispatch('getDocumentTypes').then(response => {
-      this.types = response.data
+      this.types = response
     })
   },
   methods: {
@@ -199,7 +199,7 @@ export default {
   }
   .el-dialog__body {
     display: flex;
-    height: calc(100% - 116px);
+    height: calc(100vh - 194px);
   }
   iframe {
     width: 100%;
