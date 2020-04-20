@@ -40,8 +40,17 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="editDialogVisible" title="Editar minuta" width="100%">
-      <iframe :src="editDialogUrl" />
+    <el-dialog
+      :visible.sync="editDialogVisible"
+      title="Editar minuta" :width="width"
+      class="panel-minute-view__dialog"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }">
+      <el-tooltip :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'">
+        <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="panel-minute-view__fullscreen-icon" @click="fullscreen = !fullscreen" />
+      </el-tooltip>
+      <iframe :src="editDialogUrl" frameborder="0" allowfullscreen />
       <el-card shadow="never" class="panel-minute-view__tips">
         <h2>Variáveis disponíveis</h2>
         <span class="list">
@@ -69,7 +78,8 @@ export default {
       editDialogVisible: false,
       editDialogUrl: '',
       minutes: [],
-      types: {}
+      types: {},
+      fullscreen: false
     }
   },
   computed: {
@@ -80,6 +90,12 @@ export default {
         }
         return !this.search || minute.name.toLowerCase().includes(this.search.toLowerCase())
       })
+    },
+    width () {
+      if (this.fullscreen === true) {
+        return "100%"
+      }
+      return "90%"
     }
   },
   mounted () {
@@ -188,6 +204,30 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
+  &__dialog {
+    &--full {
+      padding: 10px !important;
+      .el-dialog {
+        .el-dialog__body {
+          height: calc(100vh - 100px);
+        }
+      }
+    }
+    &--large  {
+      .el-dialog {
+        .el-dialog__body {
+          height: calc(100vh - 200px);
+        }
+      }
+    }
+  }
+  &__fullscreen-icon {
+    position: absolute;
+    font-size: 22px;
+    top: 30px;
+    right: 20px;
+    cursor: pointer;
+  }
   th.is-right .cell {
     display: flex;
   }
@@ -197,12 +237,13 @@ export default {
   .el-table::before  {
     content: none;
   }
-  .el-dialog__body {
-    display: flex;
-    height: calc(100vh - 194px);
-  }
+  // .el-dialog__body {
+  //   display: flex;
+  //   height: calc(100vh - 194px);
+  // }
   iframe {
     width: 100%;
+    height: 100%;
   }
   &__name {
     .label {
