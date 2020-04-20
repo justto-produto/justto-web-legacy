@@ -45,12 +45,11 @@
       title="Editar minuta" :width="width"
       class="panel-minute-view__dialog"
       :close-on-click-modal="false"
-      :show-close="false"
       :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }">
-      <el-tooltip :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'">
+      <!-- <el-tooltip :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'"> -->
         <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="panel-minute-view__fullscreen-icon" @click="fullscreen = !fullscreen" />
-      </el-tooltip>
-      <iframe :src="editDialogUrl" frameborder="0" allowfullscreen />
+      <!-- </el-tooltip> -->
+      <iframe :src="editDialogUrl" frameborder="0"/>
       <el-card shadow="never" class="panel-minute-view__tips">
         <h2>Variáveis disponíveis</h2>
         <span class="list">
@@ -206,10 +205,10 @@ export default {
   height: 100%;
   &__dialog {
     &--full {
-      padding: 10px !important;
+      padding: 10px;
       .el-dialog {
         .el-dialog__body {
-          height: calc(100vh - 100px);
+          height: calc(100vh - 134px);
         }
       }
     }
@@ -223,10 +222,14 @@ export default {
   }
   &__fullscreen-icon {
     position: absolute;
-    font-size: 22px;
-    top: 30px;
-    right: 20px;
+    color: $--color-text-secondary;
+    font-size: 16px;
+    top: 31px;
+    right: 48px;
     cursor: pointer;
+    &:hover {
+      color: $--color-primary
+    }
   }
   th.is-right .cell {
     display: flex;
@@ -237,13 +240,13 @@ export default {
   .el-table::before  {
     content: none;
   }
-  // .el-dialog__body {
-  //   display: flex;
-  //   height: calc(100vh - 194px);
-  // }
+  .el-dialog__body {
+    display: flex;
+    height: calc(100vh - 194px);
+  }
   iframe {
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 280px);
+    // height: 100%;
   }
   &__name {
     .label {
@@ -263,7 +266,7 @@ export default {
     border: 0;
     background-color: $--color-secondary-light-9;
     margin-left: 10px;
-    width: 376px;
+    width: 300px;
     font-size: 13px;
     overflow-y: auto;
     * {
