@@ -40,8 +40,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="editDialogVisible" title="Editar minuta" width="100%">
-      <iframe :src="editDialogUrl" />
+    <el-dialog
+      :visible.sync="editDialogVisible"
+      title="Editar minuta" :width="width"
+      class="panel-minute-view__dialog"
+      :close-on-click-modal="false"
+      :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }">
+      <!-- <el-tooltip :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'"> -->
+        <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="panel-minute-view__fullscreen-icon" @click="fullscreen = !fullscreen" />
+      <!-- </el-tooltip> -->
+      <iframe :src="editDialogUrl" frameborder="0"/>
       <el-card shadow="never" class="panel-minute-view__tips">
         <h2>Variáveis disponíveis</h2>
         <span class="list">
@@ -69,7 +77,8 @@ export default {
       editDialogVisible: false,
       editDialogUrl: '',
       minutes: [],
-      types: {}
+      types: {},
+      fullscreen: false
     }
   },
   computed: {
@@ -80,6 +89,12 @@ export default {
         }
         return !this.search || minute.name.toLowerCase().includes(this.search.toLowerCase())
       })
+    },
+    width () {
+      if (this.fullscreen === true) {
+        return "100%"
+      }
+      return "90%"
     }
   },
   mounted () {
@@ -188,6 +203,34 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
+  &__dialog {
+    &--full {
+      padding: 10px;
+      .el-dialog {
+        .el-dialog__body {
+          height: calc(100vh - 134px);
+        }
+      }
+    }
+    &--large  {
+      .el-dialog {
+        .el-dialog__body {
+          height: calc(100vh - 200px);
+        }
+      }
+    }
+  }
+  &__fullscreen-icon {
+    position: absolute;
+    color: $--color-text-secondary;
+    font-size: 16px;
+    top: 31px;
+    right: 48px;
+    cursor: pointer;
+    &:hover {
+      color: $--color-primary
+    }
+  }
   th.is-right .cell {
     display: flex;
   }
@@ -202,7 +245,8 @@ export default {
     height: calc(100vh - 194px);
   }
   iframe {
-    width: 100%;
+    width: calc(100% - 280px);
+    // height: 100%;
   }
   &__name {
     .label {
@@ -222,7 +266,7 @@ export default {
     border: 0;
     background-color: $--color-secondary-light-9;
     margin-left: 10px;
-    width: 376px;
+    width: 300px;
     font-size: 13px;
     overflow-y: auto;
     * {
