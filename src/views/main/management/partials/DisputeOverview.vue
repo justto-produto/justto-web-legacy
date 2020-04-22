@@ -204,7 +204,7 @@
               <template slot="title">
                 <i v-if="showNamesake(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
                 <div class="dispute-overview-view__name">
-                  <span v-for="r in role.roles" class="dispute-overview-view__role-icon">
+                  <span v-for="r in role.roles" :key="r.id" class="dispute-overview-view__role-icon">
                     <el-tooltip :content="buildRoleTitle(role.party, r)">
                       <i :class="getRoleIcon(role.party, r)" />
                     </el-tooltip>
