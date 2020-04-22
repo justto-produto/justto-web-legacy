@@ -11,7 +11,7 @@ if (AUTH_TOKEN) {
 
 let config = {
   baseURL: process.env.VUE_APP_BASE_URL || location.origin,
-  timeout: 60 * 1000,
+  timeout: 60 * 11000,
   headers: {}
 }
 
@@ -47,8 +47,8 @@ _axios.interceptors.response.use(
   },
   function (error) {
     if (error.response.status === 503) {
-      waitForConnection()
-      return 0
+      if (waitForConnection()) return Promise.reject(error)
+      else return 0
     }
     if (error.response.status === 401 && error.response.data.code !== 'INVALID_CREDENTIALS') {
       store.dispatch('logout')

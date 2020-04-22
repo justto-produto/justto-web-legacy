@@ -206,6 +206,20 @@
   },
   "error": {
     "ALREADY_EXISTS": "Este e-mail já está cadastrado como membro de sua equipe. De qualquer forma, enviaremos um e-mail informando sua intenção de adiciona-lo na equipe.",
-    "INVALID_CREDENTIALS": "Senha atual incorreta"
+    "INVALID_CREDENTIALS": "Senha atual incorreta",
+    "NO_REQUIRED_PARAMETERS": "Parâmetros obrigatórios não informados",
+    "EXCEEDED_ROWS_LIMIT": "Excede o limite de linhas configurado no servidor para exportar XLSX.",
+    "EMPTY_RESULT": "Nenhum resultado disponível para a consulta solicitada",
+    "FAIL_TO_PARSE_DISPUTES": "Falha ao realizar o PARSER de disputas",
+    "FAIL_TO_WRITE_FILE": "Falha ao criar arquivo",
+    "REGISTER_NOT_FOUND": "Registro não encontrado",
+    "NO_AVAILABLE_NEGOTIATOR": "Sem negociadores disponível na equipe",
+    "FAIL_TO_DELETE": "Falha ao remover registro",
+    "INVALID_VALUE": "Valor informado inválido",
+    "NOT_ALLOWED": "Operação não permitida",
+    "AUTHORIZATION": "",
+  	"GENERIC_VALIDATION": "",
+  	"DUPLICATED_VALIDATION": "",
+  	"PATTERN_VALIDATION": ""
   }
 }

@@ -2,28 +2,37 @@ import Vue from 'vue'
 import I18n from '@/plugins/vueI18n'
 import { Notification } from 'element-ui'
 
-const ERROR = ' Houve uma falha de conexão com o servidor.'
-const UNAVAILABLE = ' Serviço temporariamente indisponivel.'
-const DENY = ' Você não tem permissão para acessar essa página.'
+const ERROR = 'Houve uma falha de conexão com o servidor.'
+const UNAVAILABLE = 'Serviço temporariamente indisponivel.'
+const DENY = 'Você não tem permissão para acessar essa página.'
 const TRY = ' Tente novamente ou entre em contato com o administrador do sistema.'
+const TIMEOUT = 'Tempo limite da requisição excedido.'
 
 const NotificationMessage = {
   install (Vue, options) {
     Vue.prototype.$jusNotification = (config) => {
       if (config.error instanceof Error && config.error.response) {
         let message = I18n.te('error.' + config.error.response.data.code) ? I18n.t('error.' + config.error.response.data.code) : (config.error.response.data.message ? config.error.response.data.message + '.' : '')
-        if (config.error.response.status === 503) {
-          config.type = 'warning'
-          config.message = message || (UNAVAILABLE + TRY)
-        } else if (config.error.response.status === 403) {
-          config.type = 'warning'
-          config.message = message || (DENY + TRY)
-        } else if (config.error.response.status === 401) {
-          config.type = 'warning'
-          config.message = message + '.'
-        } else {
-          config.type = 'error'
-          config.message = message ? (message + TRY) : (ERROR + TRY)
+        switch (config.error.response.status) {
+          case 504:
+            config.type = 'error'
+            config.message = message || (TIMEOUT + TRY)
+            break
+          case 503:
+            config.type = 'warning'
+            config.message = message || (UNAVAILABLE + TRY)
+            break
+          case 403:
+            config.type = 'warning'
+            config.message = message || (DENY + TRY)
+            break
+          case 401:
+            config.type = 'warning'
+            config.message = message + '.'
+            break
+          default:
+            config.type = 'error'
+            config.message = message ? (message + TRY) : (ERROR + TRY)
         }
         console.error(config.error)
       }
