@@ -160,6 +160,7 @@ export default {
       changeStrategyDialogVisible: false,
       changeNegotiatorByGroup: false,
       changeNegotiatorDialogVisible: false,
+      changeExpirationDialogVisible: false,
       changeNegotiatorDialogLoading: false,
       disputeNegotiatorMapSelectedIds: 0,
       disputeNegotiators: [],
