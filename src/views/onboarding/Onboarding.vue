@@ -167,13 +167,13 @@ export default {
               },
               channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
             })
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
+          }).catch(error => {
+            this.$jusNotification({ error })
           }).finally(() => {
             this.$store.dispatch('hideLoading')
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         }).finally(() => {
           this.$store.dispatch('hideLoading')
         })

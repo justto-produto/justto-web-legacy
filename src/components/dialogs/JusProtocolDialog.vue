@@ -458,11 +458,10 @@ export default {
         } else {
           this.getDocumentModels()
         }
-      }).catch((e) => {
-        console.error(e)
+      }).catch(error => {
         this.visible = false
         this.loading = false
-        this.$jusNotification({ type: 'error' })
+        this.$jusNotification({ error })
       }).finally(() => {
         this.loading = false
       })
@@ -476,9 +475,9 @@ export default {
         } else {
           this.loading = false
         }
-      }).catch(() => {
+      }).catch(error => {
         this.visible = false
-        this.$jusNotification({ type: 'error' })
+        this.$jusNotification({ error })
       })
     },
     selectModel (params) {
@@ -509,9 +508,9 @@ export default {
         }
         // SEGMENT TRACK
         this.$jusSegment('Geração de minuta', { description: `Minuta gerada: ${this.document.name}` })
-      }).catch(() => {
+      }).catch(error => {
         this.visible = false
-        this.$jusNotification({ type: 'error' })
+        this.$jusNotification({ error })
       }).finally(() => {
         this.loading = false
       })
@@ -546,16 +545,9 @@ export default {
         this.signers = doc.signers
         this.step = 3
         this.loading = false
-      }).catch(e => {
+      }).catch(error => {
         this.visible = false
-        if (e.response.data.reason.length) {
-          this.$jusNotification({
-            type: 'error',
-            message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
-          })
-        } else {
-          this.$jusNotification({ type: 'error' })
-        }
+        this.$jusNotification({ error })
       }).finally(() => {
         this.loading = false
         this.loadingChooseRecipients = false
@@ -590,8 +582,8 @@ export default {
       this.$store.dispatch('downloadDocument', {
         disputeId: this.disputeId,
         name: this.document.name
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
+      }).catch(error => {
+        this.$jusNotification({ error })
       }).finally(() => {
         this.loadingDownload = false
       })
@@ -611,8 +603,8 @@ export default {
             message: 'Minuta excluída com sucesso',
             type: 'success'
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         }).finally(() => {
           this.visible = false
         })

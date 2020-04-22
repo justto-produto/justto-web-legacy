@@ -204,7 +204,7 @@
               <template slot="title">
                 <i v-if="showNamesake(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
                 <div class="dispute-overview-view__name">
-                  <span v-for="r in role.roles" class="dispute-overview-view__role-icon">
+                  <span v-for="r in role.roles" :key="r.id" class="dispute-overview-view__role-icon">
                     <el-tooltip :content="buildRoleTitle(role.party, r)">
                       <i :class="getRoleIcon(role.party, r)" />
                     </el-tooltip>
@@ -1115,8 +1115,7 @@ export default {
             })
           })
           .catch(error => {
-            console.error(error)
-            this.$jusNotification({ type: 'error' })
+            this.$jusNotification({ error })
           })
       }
     },
@@ -1135,8 +1134,7 @@ export default {
           this.namesakeList = response.data
         })
         .catch(error => {
-          console.error(error)
-          this.$jusNotification({ type: 'error' })
+          this.$jusNotification({ error })
         })
         .finally(() => {
           this.namesakeButtonLoading = false
@@ -1216,8 +1214,7 @@ export default {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
-        console.error(error)
-        this.$jusNotification({ type: 'error' })
+        this.$jusNotification({ error })
       }).finally(() => {
         this.linkBankAccountLoading = false
       })
@@ -1415,8 +1412,7 @@ export default {
           Promise.all(promise).then(() => {
             this.editRoleAction()
           }).catch(error => {
-            console.error(error)
-            this.$jusNotification({ type: 'error' })
+            this.$jusNotification({ error })
           }).finally(() => {
             this.linkBankAccountLoading = false
           })
@@ -1482,7 +1478,7 @@ export default {
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
-        } else this.$jusNotification({ type: 'error' })
+        } else this.$jusNotification({ error })
       }).finally(() => {
         this.editRoleDialogLoading = false
       })
@@ -1580,8 +1576,8 @@ export default {
             message: 'Pessoa removida com sucesso.',
             type: 'success'
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         })
       })
     },

@@ -42,12 +42,13 @@
     </el-table>
     <el-dialog
       :visible.sync="editDialogVisible"
-      title="Editar minuta" :width="width"
-      class="panel-minute-view__dialog"
+      :width="width"
       :close-on-click-modal="false"
-      :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }">
+      :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }"
+      title="Editar minuta"
+      class="panel-minute-view__dialog">
       <!-- <el-tooltip :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'"> -->
-        <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="panel-minute-view__fullscreen-icon" @click="fullscreen = !fullscreen" />
+      <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="panel-minute-view__fullscreen-icon" @click="fullscreen = !fullscreen" />
       <!-- </el-tooltip> -->
       <iframe :src="editDialogUrl" frameborder="0"/>
       <el-card shadow="never" class="panel-minute-view__tips">
@@ -92,9 +93,9 @@ export default {
     },
     width () {
       if (this.fullscreen === true) {
-        return "100%"
+        return '100%'
       }
-      return "90%"
+      return '90%'
     }
   },
   mounted () {

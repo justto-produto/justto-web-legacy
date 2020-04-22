@@ -407,23 +407,17 @@ export default {
         headers: this.socketHeaders,
         channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
-      this.$store.dispatch('getDispute', this.id)
-        .then(dispute => {
-          if (!dispute || dispute.archived) this.$router.push('/management')
-          else this.$store.dispatch('getDisputeTags', this.id)
-        })
-        .catch(error => {
-          if (error.response.status === 403) {
-            this.$jusNotification({ type: '403' })
-          } else {
-            this.$jusNotification({ type: 'error' })
-          }
-          this.$router.push('/management')
-        }).finally(() => {
-          setTimeout(() => {
-            this.loadingDispute = false
-          }, 500)
-        })
+      this.$store.dispatch('getDispute', this.id).then(dispute => {
+        if (!dispute || dispute.archived) this.$router.push('/management')
+        else this.$store.dispatch('getDisputeTags', this.id)
+      }).catch(error => {
+        this.$jusNotification({ error })
+        this.$router.push('/management')
+      }).finally(() => {
+        setTimeout(() => {
+          this.loadingDispute = false
+        }, 500)
+      })
     },
     handleTabClick (tab) {
       if (!['1', '3'].includes(tab.name)) this.activeRoleId = 0
@@ -503,9 +497,8 @@ export default {
           setTimeout(function () {
             this.$refs.messageEditor.quill.deleteText(0, 9999999999)
           }.bind(this), 200)
-        }).catch(e => {
-          console.error(e)
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         }).finally(() => {
           this.loadingTextarea = false
         })
@@ -540,8 +533,8 @@ export default {
             message: 'Nota gravada com sucesso.',
             type: 'success'
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         }).finally(() => {
           this.loadingTextarea = false
         })

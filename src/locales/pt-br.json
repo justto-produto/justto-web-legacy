@@ -203,5 +203,9 @@
     "READY": "ativo",
     "CREATING": "em criação",
     "DISABLED": "inativo"
+  },
+  "error": {
+    "ALREADY_EXISTS": "Este e-mail já está cadastrado como membro de sua equipe. De qualquer forma, enviaremos um e-mail informando sua intenção de adiciona-lo na equipe.",
+    "INVALID_CREDENTIALS": "Senha atual incorreta"
   }
 }

@@ -174,8 +174,7 @@ export default {
         this.workspaces = response.content
         this.tableKey += 1
       }).catch(error => {
-        console.error(error)
-        this.$jusNotification({ type: 'error' })
+        this.$jusNotification({ error })
       }).finally(() => {
         this.loading = false
       })
@@ -204,8 +203,7 @@ export default {
           this.users[workspace.id] = usersList
           this.usersTableKey += 1
         }).catch(error => {
-          console.error(error)
-          this.$jusNotification({ type: 'error' })
+          this.$jusNotification({ error })
         })
       }
     },
@@ -251,15 +249,7 @@ export default {
             this.usersTableKey += 1
             this.getUsersByWorkspace(this.userForm.workspaceId)
           }).catch(error => {
-            console.error(error)
-            if (error.code === 'ALREADY_EXISTS') {
-              this.$jusNotification({
-                message: 'Este e-mail já está cadastrado como membro de sua equipe. De qualquer forma, enviaremos um e-mail informando sua intenção de adiciona-lo na equipe.',
-                type: 'warning'
-              })
-            } else {
-              this.$jusNotification({ type: 'error' })
-            }
+            this.$jusNotification({ error })
           }).finally(() => {
             loading.close()
             this.addUserDialogVisible = false
@@ -286,8 +276,7 @@ export default {
               type: 'success'
             })
           }).catch(error => {
-            console.error(error)
-            this.$jusNotification({ type: 'error' })
+            this.$jusNotification({ error })
           }).finally(() => {
             loading.close()
             this.editWorkspaceDialogVisible = false
@@ -310,8 +299,7 @@ export default {
             type: 'success'
           })
         }).catch(error => {
-          console.error(error)
-          this.$jusNotification({ type: 'error' })
+          this.$jusNotification({ error })
         }).finally(() => {
           loading.close()
         })
@@ -339,8 +327,7 @@ export default {
           this.usersTableKey += 1
           this.getUsersByWorkspace(workspaceId)
         }).catch(error => {
-          console.error(error)
-          this.$jusNotification({ type: 'error' })
+          this.$jusNotification({ error })
         }).finally(() => {
           loading.close()
         })

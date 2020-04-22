@@ -98,8 +98,7 @@ export default {
               type: 'success'
             })
           }).catch(error => {
-            console.error(error)
-            this.$jusNotification({ type: 'error' })
+            this.$jusNotification({ error })
           })
         }
       })

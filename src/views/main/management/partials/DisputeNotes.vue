@@ -132,8 +132,8 @@ export default {
             message: 'Nota editada com sucesso.',
             type: 'success'
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         }).finally(() => {
           this.editDialogLoading = false
         })
@@ -156,8 +156,8 @@ export default {
             message: 'Nota removida com sucesso.',
             type: 'success'
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         }).finally(() => {
           this.noteLoading = 0
         })

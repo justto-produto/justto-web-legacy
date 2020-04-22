@@ -50,7 +50,7 @@ _axios.interceptors.response.use(
       waitForConnection()
       return 0
     }
-    if (error.response.status === 401 && !error.response.config.url.includes('update-password')) {
+    if (error.response.status === 401 && error.response.data.code !== 'INVALID_CREDENTIALS') {
       store.dispatch('logout')
     }
     return Promise.reject(error)

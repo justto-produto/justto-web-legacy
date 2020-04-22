@@ -120,8 +120,8 @@ export default {
             this.$store.commit('removeImportsFile')
           })
           this.$router.push('/import/loading')
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         })
       } else {
         this.$jusNotification({

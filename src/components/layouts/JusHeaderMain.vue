@@ -195,8 +195,7 @@ export default {
           this.$router.go('/management')
           this.changeWorkspaceDialogVisible = true
         }).catch(error => {
-          this.$jusNotification({ type: 'error' })
-          console.error(error)
+          this.$jusNotification({ error })
         }).finally(() => {
           setTimeout(() => {
             loading.close()
