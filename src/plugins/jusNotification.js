@@ -1,37 +1,48 @@
 import Vue from 'vue'
+import I18n from '@/plugins/vueI18n'
 import { Notification } from 'element-ui'
 
-const errorMessage = 'Houve uma falha de conexão com o servidor. Tente novamente ou entre em contato com o administrador do sistema.'
+const ERROR = 'Houve uma falha de conexão com o servidor.'
+const UNAVAILABLE = 'Serviço temporariamente indisponivel.'
+const DENY = 'Você não tem permissão para acessar essa página.'
+const TRY = ' Tente novamente ou entre em contato com o administrador do sistema.'
+const TIMEOUT = 'Tempo limite da requisição excedido.'
 
 const NotificationMessage = {
   install (Vue, options) {
     Vue.prototype.$jusNotification = (config) => {
-      if (config.error instanceof Error) {
-        if (config.error.response.status === 500) {
-          config.type = 'error'
-          config.message = (config.error.response.data.fields.Error || config.error.response.data.reason) || errorMessage
-        } else if (config.error.response.status === 503) {
-          config.type = 'warning'
-          config.message = 'Serviço temporariamente indisponivel. por favor tente novamente em alguns instantes.'
-        } else {
-          config.type = 'warning'
-          config.message = (config.error.response.data.fields.Error || config.error.response.data.reason) || errorMessage
+      if (config.error instanceof Error && config.error.response) {
+        let message = I18n.te('error.' + config.error.response.data.code) ? I18n.t('error.' + config.error.response.data.code) : (config.error.response.data.message ? config.error.response.data.message + '.' : '')
+        switch (config.error.response.status) {
+          case 504:
+            config.type = 'error'
+            config.message = message || (TIMEOUT + TRY)
+            break
+          case 503:
+            config.type = 'warning'
+            config.message = message || (UNAVAILABLE + TRY)
+            break
+          case 403:
+            config.type = 'warning'
+            config.message = message || (DENY + TRY)
+            break
+          case 401:
+            config.type = 'warning'
+            config.message = message + '.'
+            break
+          default:
+            config.type = 'error'
+            config.message = message ? (message + TRY) : (ERROR + TRY)
         }
-      } else {
-        if (config.type === 'error') {
-          config.message = config.message ? config.message : errorMessage
-        } else if (config.type === '403') {
-          config.type = 'warning'
-          config.message = config.message ? config.message : 'Você não tem permissão para acessar essa página. Entre em contato com o administrador do sistema.'
-        }
+        console.error(config.error)
       }
-      config.title = config.title ? config.title : 'Ops!'
+      if (!config.duration) config.duration = 5000
+      if (!config.type) config.type = 'error'
+      if (!config.message) config.message = DENY + TRY
+      if (!config.title) config.title = 'Ops!'
       config.customClass = config.type
       config.position = 'bottom-right'
       config.offset = 84
-      if (config.duration === undefined) {
-        config.duration = 5000
-      }
       Notification.closeAll()
       Notification(config)
     }

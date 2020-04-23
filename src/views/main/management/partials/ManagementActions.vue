@@ -245,15 +245,8 @@ export default {
             })
           }, 2000)
         }
-      }).catch(e => {
-        if (e.response.data.reason.length) {
-          this.$jusNotification({
-            type: 'error',
-            message: e.response.data.reason + '. Tente novamente ou entre em contato com o administrador do sistema.'
-          })
-        } else {
-          this.$jusNotification({ type: 'error' })
-        }
+      }).catch(error => {
+        this.$jusNotification({ error })
       })
     },
     sendBatchAction (action) {

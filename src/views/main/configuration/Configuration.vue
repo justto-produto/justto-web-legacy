@@ -321,9 +321,8 @@ export default {
                 message: 'Nome alterado com sucesso.',
                 type: 'success'
               })
-            }).catch(e => {
-              console.error(e)
-              this.$jusNotification({ type: 'error' })
+            }).catch(error => {
+              this.$jusNotification({ error })
             })
         } else {
           this.$jusNotification({
@@ -359,8 +358,8 @@ export default {
               message: 'Telefone de contato alterado com sucesso.',
               type: 'success'
             })
-          }).catch(() => {
-            this.$jusNotification({ type: 'error' })
+          }).catch(error => {
+            this.$jusNotification({ error })
           })
         }
       })
@@ -414,15 +413,7 @@ export default {
             this.profileForm.newPasswordConfirm = ''
             this.dialogPassword = false
           }).catch(error => {
-            if (error.response.status === 401) {
-              this.$jusNotification({
-                title: 'Ops!',
-                message: 'Senha atual incorreta',
-                type: 'warning'
-              })
-            } else {
-              this.$jusNotification({ type: 'error' })
-            }
+            this.$jusNotification({ error })
           }).finally(() => {
             this.loadingUpdatePassword = false
           })
@@ -462,8 +453,8 @@ export default {
           message: 'Usuário editado com sucesso.',
           type: 'success'
         })
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
+      }).catch(error => {
+        this.$jusNotification({ error })
       })
     },
     inviteTeammate () {
@@ -488,7 +479,7 @@ export default {
             this.getMembers()
           }).catch(error => {
             if (error.code === 'ALREADY_EXISTS') {
-              this.$jusNotification({ type: 'error' })
+              this.$jusNotification({ error })
             } else {
               this.$jusNotification({
                 message: 'Este e-mail já está cadastrado como membro de sua equipe. De qualquer forma, enviaremos um e-mail informando sua intenção de adiciona-lo na equipe.',
@@ -520,8 +511,7 @@ export default {
             type: 'success'
           })
         }).catch(error => {
-          console.error(error)
-          this.$jusNotification({ type: 'error' })
+          this.$jusNotification({ error })
         })
       } else {
         this.$jusNotification({

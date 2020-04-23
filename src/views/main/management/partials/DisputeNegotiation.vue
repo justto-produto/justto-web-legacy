@@ -107,8 +107,7 @@ export default {
           this.sliderKey += 1
         }, 200)
       }).catch(error => {
-        console.error(error)
-        this.$jusNotification({ type: 'error' })
+        this.$jusNotification({ error })
       })
     }
   }

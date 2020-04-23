@@ -473,8 +473,8 @@ export default {
               })
             })
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         }).finally(() => {
           this.registerLoading = false
         })

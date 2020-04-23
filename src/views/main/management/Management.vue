@@ -294,9 +294,8 @@ export default {
       clearTimeout(this.disputeDebounce)
       this.disputeDebounce = setTimeout(() => {
         return this.$store.dispatch('getDisputes', 'resetPages').catch(error => {
-          console.error(error)
           if (this.$store.getters.isLoggedIn) {
-            this.$jusNotification({ type: 'error' })
+            this.$jusNotification({ error })
           }
         }).finally(() => {
           this.$nextTick(() => {
@@ -361,17 +360,7 @@ export default {
           localStorage.setItem('jusexportcolumns', JSON.stringify(this.$refs.tree.getCheckedKeys()))
         })
         .catch(error => {
-          console.error(error)
-          if (error.response && error.response.status === 403) {
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Tamanho da planilha é maior do que o suportado. Para exportar planilhas com mais de 500 disputas, entre em contato com o administrador do sistema.',
-              type: 'warning',
-              duration: 0
-            })
-          } else {
-            this.$jusNotification({ type: 'error' })
-          }
+          this.$jusNotification({ error })
         })
         .finally(() => {
           this.loadingExport = false
