@@ -523,10 +523,7 @@ export default {
     },
     changeCompanyName () {
       if (this.companyName) {
-        this.$store.dispatch('editWorkpace', {
-          teamName: this.teamName,
-          name: this.companyName
-        }).then(() => {
+        this.$store.dispatch('editWorkpace', this.companyName).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nome do escritório/empresa alterado')
           this.$jusNotification({
@@ -534,6 +531,8 @@ export default {
             message: 'Nome do escritório/empresa alterado com sucesso.',
             type: 'success'
           })
+        }).catch(error => {
+          this.$jusNotification({ error })
         })
       } else {
         this.$jusNotification({

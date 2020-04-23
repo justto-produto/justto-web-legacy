@@ -101,6 +101,20 @@
               <span class="title">Fim da negociação:</span>
               <span v-if="dispute.expirationDate" data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
             </div>
+
+            <div v-if="dispute.materialDamage" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+              <span class="title">Dano material:</span>
+              <span v-if="dispute.materialDamage" data-testid="overview-materialdamage">{{ dispute.materialDamage | currency }}</span>
+            </div>
+            <div v-if="dispute.requestedValue" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+              <span class="title">Valor do processo:</span>
+              <span v-if="dispute.requestedValue" data-testid="overview-requestedvalue">{{ dispute.requestedValue | currency }}</span>
+            </div>
+            <div v-if="dispute.externalId" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+              <span class="title">Código interno:</span>
+              <span v-if="dispute.externalId" data-testid="overview-externalid">{{ dispute.externalId }}</span>
+            </div>
+
             <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
               <span class="title">Configurações:</span>
               <span class="configurations">
@@ -495,7 +509,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!-- <el-divider /> -->
           <h3>Outras configurações</h3>
           <el-row :gutter="20">
             <el-col :span="8">
@@ -522,6 +535,21 @@
             <el-col :span="8">
               <el-form-item label="Classificação" prop="classification">
                 <el-input v-model="disputeForm.classification" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="Dano material" prop="materialDamage">
+                <money v-model="disputeForm.materialDamage" class="el-input__inner"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="Valor do processo" prop="requestedValue">
+                <money v-model="disputeForm.requestedValue" class="el-input__inner"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="Código interno" prop="externalId">
+                <el-input v-model="disputeForm.externalId" />
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -851,7 +879,10 @@ export default {
         contactPartyWhenInvalidLowyer: false,
         denySavingDeposit: false,
         disputeCode: '',
-        zeroUpperRange: false
+        zeroUpperRange: false,
+        materialDamage: '',
+        requestedValue: '',
+        externalId: ''
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1069,7 +1100,7 @@ export default {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
           this.$router.push('/management')
-        }).catch(error  =>  {
+        }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
           loading.close()
@@ -1251,6 +1282,9 @@ export default {
       this.disputeForm.lastOfferValue = parseFloat(dispute.lastOfferValue)
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
+      this.disputeForm.materialDamage = dispute.materialDamage || ''
+      this.disputeForm.requestedValue = dispute.requestedValue || ''
+      this.disputeForm.externalId = dispute.externalId || ''
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
@@ -1298,6 +1332,12 @@ export default {
             disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
             disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
+            if (this.disputeForm.materialDamage) disputeToEdit.materialDamage = this.disputeForm.materialDamage
+            else disputeToEdit.materialDamage = null
+            if (this.disputeForm.requestedValue) disputeToEdit.requestedValue = this.disputeForm.requestedValue
+            else disputeToEdit.requestedValue = null
+            if (this.disputeForm.externalId) disputeToEdit.externalId = this.disputeForm.externalId
+            else disputeToEdit.externalId = null
             let currentDate = this.dispute.expirationDate.dateTime
             let newDate = disputeToEdit.expirationDate.dateTime
             let contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer

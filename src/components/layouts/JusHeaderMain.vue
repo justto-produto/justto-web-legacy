@@ -265,6 +265,7 @@ export default {
   }
   &__autocomplete li {
     cursor: default;
+    padding: 0;
   }
   &__whatsapp {
     position: relative;
