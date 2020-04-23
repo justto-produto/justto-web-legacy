@@ -633,8 +633,8 @@ export default {
         disputeId: this.dispute.id
       }).then(() => {
         this.$router.push('/management')
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
+      }).catch(error => {
+        this.$jusNotification({ error })
       })
     },
     openNewTab () {

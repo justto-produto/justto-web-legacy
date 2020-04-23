@@ -114,7 +114,7 @@ export default {
           message: 'Motivo de perda alterado com sucesso.',
           type: 'success'
         })
-      }).catch(() => this.$jusNotification({ type: 'error' }))
+      }).catch(error => this.$jusNotification({ error })
     }
   }
 }

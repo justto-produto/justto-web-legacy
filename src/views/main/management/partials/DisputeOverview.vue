@@ -1069,6 +1069,8 @@ export default {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
           this.$router.push('/management')
+        }).catch(error  =>  {
+          this.$jusNotification({ error })
         }).finally(() => {
           loading.close()
         })
@@ -1115,8 +1117,7 @@ export default {
             })
           })
           .catch(error => {
-            console.error(error)
-            this.$jusNotification({ type: 'error' })
+            this.$jusNotification({ error })
           })
       }
     },
@@ -1135,8 +1136,7 @@ export default {
           this.namesakeList = response.data
         })
         .catch(error => {
-          console.error(error)
-          this.$jusNotification({ type: 'error' })
+          this.$jusNotification({ error })
         })
         .finally(() => {
           this.namesakeButtonLoading = false
@@ -1216,8 +1216,7 @@ export default {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
-        console.error(error)
-        this.$jusNotification({ type: 'error' })
+        this.$jusNotification({ error })
       }).finally(() => {
         this.linkBankAccountLoading = false
       })
@@ -1414,8 +1413,7 @@ export default {
           Promise.all(promise).then(() => {
             this.editRoleAction()
           }).catch(error => {
-            console.error(error)
-            this.$jusNotification({ type: 'error' })
+            this.$jusNotification({ error })
           }).finally(() => {
             this.linkBankAccountLoading = false
           })
@@ -1481,7 +1479,7 @@ export default {
         if (error.status === 400) {
           this.editRoleDialogError = true
           this.editRoleDialogErrorList.push(error.data.message)
-        } else this.$jusNotification({ type: 'error' })
+        } else this.$jusNotification({ error })
       }).finally(() => {
         this.editRoleDialogLoading = false
       })
@@ -1579,8 +1577,8 @@ export default {
             message: 'Pessoa removida com sucesso.',
             type: 'success'
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         })
       })
     },

@@ -508,8 +508,8 @@ export default {
             message: 'Mensagem enviada com sucesso.',
             type: 'success'
           })
-        }).catch(() => {
-          this.$jusNotification({ type: 'error' })
+        }).catch(error => {
+          this.$jusNotification({ error })
         }).finally(() => {
           this.responseBoxLoading = false
         })

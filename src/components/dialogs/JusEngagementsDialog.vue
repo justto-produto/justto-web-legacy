@@ -141,8 +141,8 @@ export default {
           message: 'Template editado com sucesso',
           type: 'success'
         })
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
+      }).catch(error => {
+        this.$jusNotification({ error })
       }).finally(() => {
         this.editDialogLoading = false
       })
@@ -166,8 +166,8 @@ export default {
       this.$store.dispatch('getStrategyEngagement', this.strategyId).then(response => {
         this.strategyEngagements = response.communications
         this.$store.dispatch('hideLoading')
-      }).catch(() => {
-        this.$jusNotification({ type: 'error' })
+      }).catch(error => {
+        this.$jusNotification({ error })
         this.$store.dispatch('hideLoading')
       })
     }

@@ -185,8 +185,8 @@ export default {
     this.$store.dispatch('showLoading')
     if (!this.$store.state.importModule.map.length) {
       this.loading = true
-      this.$store.dispatch('getImportsColumns').catch(() => {
-        this.$jusNotification({ type: 'error' })
+      this.$store.dispatch('getImportsColumns').catch(error => {
+        this.$jusNotification({ error })
       }).finally(() => {
         this.loading = false
       })
@@ -199,8 +199,8 @@ export default {
       this.claimantParties = Array.from({ length: tags.claimantParty.rows }, (v, k) => k + 1)
       this.claimantLawyers = Array.from({ length: tags.claimantLawyer.rows }, (v, k) => k + 1)
       this.respondentParties = Array.from({ length: tags.respondentParty.rows }, (v, k) => k + 1)
-    }).catch(() => {
-      this.$jusNotification({ type: 'error' })
+    }).catch(error => {
+      this.$jusNotification({ error })
     })
   },
   mounted () {
