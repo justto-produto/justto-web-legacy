@@ -1100,7 +1100,7 @@ export default {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
           this.$router.push('/management')
-        }).catch(error  =>  {
+        }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
           loading.close()
