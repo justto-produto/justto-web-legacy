@@ -4,6 +4,9 @@
       Disputa #{{ dispute.id }} |
       Campanha: {{ dispute.campaign.name | capitalize }} |
       Processo: {{ dispute.code }}
+      <span v-if="dispute.externalId">
+        | Código interno: {{ dispute.externalId }}
+      </span>
       <div v-if="disabled">
         <span v-if="archived">
           Disputa excluída
@@ -42,6 +45,8 @@
         <div>Valor proposto: {{ dispute.lastOfferValue | currency }}</div>
         <div v-if="dispute.lastCounterOfferValue">Contraproposta: {{ dispute.lastCounterOfferValue | currency }}</div>
         <div v-if="dispute.disputeDealValue">Valor do acordo: {{ dispute.disputeDealValue | currency }}</div>
+        <div v-if="dispute.materialDamage">Dano material: {{ dispute.materialDamage | currency }}</div>
+        <div v-if="dispute.requestedValue">Valor do processo: {{ dispute.requestedValue | currency }}</div>
       </el-col>
     </el-row>
   </div>
