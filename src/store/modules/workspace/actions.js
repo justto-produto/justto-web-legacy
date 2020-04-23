@@ -36,16 +36,19 @@ const actions = {
         })
     })
   },
-  editWorkpace ({ commit }, nameOjb) {
+  editWorkpace ({ commit, state }, name) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/workspaces', nameOjb)
-        .then(response => {
-          commit('setWorkspace', response.data)
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+      axios.put('api/workspaces', {
+        teamName: state.teamName,
+        status: state.status,
+        name: name
+      }).then(response => {
+        commit('setWorkspace', response.data)
+        resolve(response.data)
+      }).catch(error => {
+        reject(error)
+      })
     })
   },
   changeTeamName ({ commit }, data) {
