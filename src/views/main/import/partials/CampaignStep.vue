@@ -8,7 +8,22 @@
       configurá-las separadamente.
       <br><br><br>
     </p>
-    <el-alert v-if="duplicatedDisputes.length" type="error">
+    <el-alert v-if="duplicatedDisputesLoading" :closable="false" type="info">
+      <div class="el-loading-parent--relative">
+        <div class="el-loading-mask">
+          <div class="el-loading-spinner">
+            <svg viewBox="25 25 50 50" class="circular">
+              <circle cx="50" cy="50" r="20" fill="none" class="path" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2>Validação de duplicidade em andamento</h2>
+        Aguarde um momento enquanto o sistema valida disputas duplicadas e expiradas.
+      </div>
+    </el-alert>
+    <el-alert v-if="!duplicatedDisputesLoading && duplicatedDisputes.length" type="error">
       <h2>Atenção!</h2>
       Foram encontradas disputa(s) duplicada(s) e/ou expirada(s):
       <ul v-for="(d, index) in duplicatedDisputes" :key="d.code + index">
@@ -33,7 +48,7 @@
       </ul>
     </el-alert>
     <div class="import-view__container">
-      <div class="import-view__content">
+      <div v-if="!duplicatedDisputesLoading" class="import-view__content">
         <jus-import-feedback-card
           v-for="(mappedCampaign, index) in mappedCampaigns"
           :mapped-campaign.sync="mappedCampaign"
@@ -59,7 +74,8 @@ export default {
   },
   data () {
     return {
-      duplicatedDisputes: []
+      duplicatedDisputes: [],
+      duplicatedDisputesLoading: true
     }
   },
   beforeMount () {
@@ -71,6 +87,8 @@ export default {
     }
     this.$store.dispatch('validateGeneseRunner').then(response => {
       this.duplicatedDisputes = response.disputes
+    }).finally(() => {
+      setTimeout(() => { this.duplicatedDisputesLoading = false }, 1000)
     })
   }
 }
@@ -112,6 +130,18 @@ export default {
     }
     ul {
       padding-left: 14px;
+    }
+    &.el-alert--info {
+      p {
+        display: flex;
+      }
+      .el-loading-parent--relative  {
+        width: 42px;
+        margin-right: 20px;
+        .el-loading-mask {
+          background-color: transparent;
+        }
+      }
     }
   }
 }
