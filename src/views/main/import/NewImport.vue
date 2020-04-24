@@ -126,7 +126,7 @@ export default {
       } else {
         this.$jusNotification({
           title: 'Ops!',
-          message: 'Para prosseguir você deve configurar todos os campos.',
+          message: 'Para prosseguir você deve configurar todos os campos de todas as campanhas.',
           type: 'warning'
         })
       }
