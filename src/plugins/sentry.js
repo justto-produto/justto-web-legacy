@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import * as Sentry from '@sentry/browser'
-import * as Integrations from '@sentry/integrations'
+import { Vue as VueIntegration } from '@sentry/integrations'
 
 Sentry.init({
-  dsn: 'https://df34dd16a4864c36a2b7557e1365a378@sentry.io/1366224',
-  integrations: [new Integrations.Vue({ Vue, attachProps: true })]
+  dsn: 'https://f6d1b05e655a4df3a33eb9f9692171cc@o382953.ingest.sentry.io/5212577',
+  integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })],
+  environment: process.env.NODE_ENV,
+  debug: process.env.NODE_ENV !== 'production'
 })

@@ -16,7 +16,7 @@ const actions = {
   editDisputeTags ({ commit }, params) {
     return axiosDispatcher({
       method: 'patch',
-      url: `/api/disputes/${params.disputeId}/tags`,
+      url: `/api/disputes/${params.disputeId}/tagss`,
       mutation: 'setDisputeTags',
       data: params.data
     })
