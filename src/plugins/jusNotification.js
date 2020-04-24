@@ -7,6 +7,7 @@ const UNAVAILABLE = 'Serviço temporariamente indisponivel.'
 const DENY = 'Você não tem permissão para acessar essa página.'
 const TRY = ' Tente novamente ou entre em contato com o administrador do sistema.'
 const TIMEOUT = 'Tempo limite da requisição excedido.'
+const NOTFOUND = 'Erro 404 (Rota não encontrada).'
 
 const NotificationMessage = {
   install (Vue, options) {
@@ -15,7 +16,6 @@ const NotificationMessage = {
         let message = I18n.te('error.' + config.error.response.data.code) ? I18n.t('error.' + config.error.response.data.code) : (config.error.response.data.message ? config.error.response.data.message + '.' : '')
         switch (config.error.response.status) {
           case 504:
-            config.type = 'error'
             config.message = message || (TIMEOUT + TRY)
             break
           case 503:
@@ -30,15 +30,18 @@ const NotificationMessage = {
             config.type = 'warning'
             config.message = message + '.'
             break
+          case 404:
+            config.message = NOTFOUND + TRY
+            break
           default:
-            config.type = 'error'
-            config.message = message ? (message + TRY) : (ERROR + TRY)
+            config.message = (message && message !== 'No message available.') ? (message + TRY) : (ERROR + TRY)
+            break
         }
         console.error(config.error)
       }
       if (!config.duration) config.duration = 5000
       if (!config.type) config.type = 'error'
-      if (!config.message) config.message = DENY + TRY
+      if (!config.message) config.message = ERROR + TRY
       if (!config.title) config.title = 'Ops!'
       config.customClass = config.type
       config.position = 'bottom-right'

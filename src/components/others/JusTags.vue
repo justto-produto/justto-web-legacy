@@ -16,12 +16,16 @@
       @show="getTags"
       @hide="resetFields">
       <div v-loading="loading">
-        <button type="button" class="el-dialog__headerbtn jus-tags__close" @click="visible = false">
+        <button v-show="!loading" type="button" class="el-dialog__headerbtn jus-tags__close" @click="visible = false">
           <i class="el-dialog__close el-icon el-icon-close" />
         </button>
+        <div class="jus-tags__title">
+          <span v-if="showForm">Nova </span>
+          <span v-else>Adicionar </span>
+          etiqueta
+        </div>
         <!-- ADICIONAR ETIQUETA -->
         <div v-if="!showForm">
-          <div class="jus-tags__title">Adicionar etiqueta</div>
           <el-select
             ref="selectTag"
             v-model="selectedTag"
@@ -50,7 +54,6 @@
         </div>
         <!-- NOVA ETIQUETA -->
         <div v-if="showForm" class="mt20">
-          <div class="jus-tags__title">Nova etiqueta</div>
           <el-tag :color="tagForm.color" class="jus-tags__new-tag">
             <el-dropdown class="jus-tags__select-icon" @command="changeIcon">
               <span><i :class="`el-icon-${tagForm.icon}`"/></span>
@@ -82,10 +85,10 @@
               </el-dropdown-menu>
             </el-dropdown>
           </el-tag>
-          <!-- <div class="jus-tags__new-tag-actions">
-            <el-button plain size="mini" @click="tagForm = false">Cancelar</el-button>
+          <div class="jus-tags__new-tag-actions">
+            <el-button plain size="mini" @click="resetFields">Cancelar</el-button>
             <el-button type="primary" size="mini" @click="saveTag">Adicionar</el-button>
-          </div> -->
+          </div>
         </div>
         <!-- ETIQUETAS DA DISPUTA -->
         <div v-if="disputeTags.length" class="jus-tags__list">
@@ -206,9 +209,7 @@ export default {
     },
     showNewTagForm () {
       this.tagForm.name = this.$refs.selectTag.selectedLabel.slice(0, 24)
-      this.$nextTick(() => {
-        this.showForm = true
-      })
+      this.$nextTick(() => { this.showForm = true })
     },
     getTags () {
       // SEGMENT TRACK
@@ -219,7 +220,7 @@ export default {
       })
     },
     resetFields () {
-      this.showForm = false
+      this.$nextTick(() => { this.showForm = false })
     }
   }
 }
