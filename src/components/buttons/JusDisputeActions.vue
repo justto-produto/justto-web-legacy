@@ -190,7 +190,6 @@
           <el-col :span="12">
             <el-form-item label="Proposto por" prop="selectedRoleId">
               <el-select
-                :disabled="counterOfferForm.selectedRoleId && disputeClaimants.length === 1"
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
                 data-testid="counterproposal-claimant-input">
@@ -327,7 +326,6 @@
           <el-col :span="12">
             <el-form-item label="Proposto por" prop="selectedRoleId">
               <el-select
-                :disabled="disputeClaimants.length === 1 && counterOfferForm.selectedRoleId"
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
                 style="width: 100%;"
