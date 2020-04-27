@@ -216,7 +216,8 @@
               class="dispute-overview-view__role-collapse"
               data-testid="expand-party">
               <template slot="title">
-                <i v-if="showNamesake(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 4px;font-size: 30px;background-color: #fff0;" />
+                <i v-if="showNamesake(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
+                <i v-if="showIsDead(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 75, 84);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
                 <div class="dispute-overview-view__name">
                   <span v-for="r in role.roles" :key="r.id" class="dispute-overview-view__role-icon">
                     <el-tooltip :content="buildRoleTitle(role.party, r)">
@@ -244,6 +245,9 @@
                 <span v-if="namesakeProcessing">Enriquecendo...</span>
                 <span v-else>Tratar homônimos</span>
               </el-button>
+              <el-alert v-if="showIsDead(role)" class="mb10" title="Possível óbito" type="error">
+                Algumas de nossas bases de informações constam que a parte possivelmente encontra-se em óbito.
+              </el-alert>
               <div class="dispute-overview-view__info-line">
                 <span class="title">Nome completo:</span>
                 <span>
@@ -1109,6 +1113,9 @@ export default {
     },
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
+    },
+    showIsDead (role) {
+      return role.dead
     },
     buildContactStatus (contact) {
       return contact.source === 'ENRICHMENT' ? 'Contato enriquecido pelo sistema Justto' : 'Contato adicionado manualmente'

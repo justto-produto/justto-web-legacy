@@ -400,13 +400,13 @@ export default {
           return '<strong>Dados bancários:</strong> <br>' + occurrence.interaction.properties.BANK_INFO.replace(/,/g, '<br>')
         } else if (['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL'].includes(occurrence.interaction.type)) {
           return `
-            Negociador <strong>${occurrence.interaction.properties.USER ? occurrence.interaction.properties.USER : ''}</strong>
-            informou uma proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
-            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+            Negociador <b>${occurrence.interaction.properties.USER ? occurrence.interaction.properties.USER : ''}</b>
+            informou uma proposta realizada por <b>${occurrence.interaction.properties.PERSON_NAME}</b>
+            no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
         } else if (['NEGOTIATOR_COUNTERPROSAL', 'NEGOTIATOR_PROPOSAL'].includes(occurrence.interaction.type)) {
           return `
-            Proposta realizada por <strong>${occurrence.interaction.properties.PERSON_NAME}</strong>
-            no valor de <strong>${occurrence.interaction.properties.VALUE}</strong>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
+            Proposta realizada por <b>${occurrence.interaction.properties.PERSON_NAME}</b>
+            no valor de <b>${occurrence.interaction.properties.VALUE}</b>${occurrence.interaction.properties.NOTE ? ' com a observação: ' + occurrence.interaction.properties.NOTE : ''}.`
         }
         return occurrence.description
       }
