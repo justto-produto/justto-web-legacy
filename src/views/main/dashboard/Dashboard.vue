@@ -2,6 +2,7 @@
   <jus-view-main class="dashboard-view">
     <template slot="main">
       <jus-chart-line ref="line" :data="chartsData[3].data" :options="opt" />
+      <jus-chart-bar ref="line" :data="chartsData[1].data" :options="opt" />
     </template>
   </jus-view-main>
 </template>
@@ -10,7 +11,8 @@
 export default {
   name: 'Dashboard',
   components: {
-    JusChartLine: () => import('@/components/charts/JusChartLine')
+    JusChartLine: () => import('@/components/charts/JusChartLine'),
+    JusChartBar: () => import('@/components/charts/JusChartBar')
   },
   data () {
     return {
