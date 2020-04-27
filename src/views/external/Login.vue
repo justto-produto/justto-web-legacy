@@ -224,7 +224,7 @@ export default {
       if (response.person) this.$store.commit('setLoggedPerson', response.person)
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
-          this.$router.push('/management')
+          this.$router.push('/')
         }).catch(error => {
           console.error(error)
           this.mountError()

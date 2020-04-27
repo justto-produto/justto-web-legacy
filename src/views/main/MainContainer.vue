@@ -13,11 +13,10 @@
         :default-active="$route.path"
         router
         class="el-menu--main-menu">
-        <!-- <el-menu-item index="/">
-          <jus-tip />
+        <el-menu-item index="/">
           <jus-icon icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
-        </el-menu-item> -->
+        </el-menu-item>
         <!-- <transition name="fade">
           <li v-if="!isCollapse" class="el-menu__title">
             <span>GERENCIAMENTO</span>

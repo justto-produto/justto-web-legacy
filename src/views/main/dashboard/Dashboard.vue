@@ -1,25 +1,58 @@
 <template>
-  <JusViewMain class="dashboard-view">
-    <template slot="title">
-      <h1>
-        Dashboard
-      </h1>
-    </template>
+  <jus-view-main class="dashboard-view">
     <template slot="main">
-      <div
-        class="typeform-widget"
-        data-url="https://justto.typeform.com/to/Jo955E"
-        data-transparency="0"
-        data-hide-headers="true"
-        data-hide-footer="true"
-        style="width: 100%; height: 100%;" />
+      <jus-chart-line ref="line" :data="chartsData[3].data" :options="opt" />
     </template>
-  </JusViewMain>
+  </jus-view-main>
 </template>
 
 <script>
 export default {
-  name: 'Dashboard'
+  name: 'Dashboard',
+  components: {
+    JusChartLine: () => import('@/components/charts/JusChartLine')
+  },
+  data () {
+    return {
+      chartsData: null,
+      chartdata: {
+        labels: ['Semana 1', 'Semana 2', 'Semana 3'],
+        datasets: [{
+          label: 'Tempo resposta médio',
+          data: [40, 20, 10]
+        }]
+      },
+      opt: {
+        onClick: this.teste
+      }
+    }
+  },
+  mounted () {
+    this.$store.dispatch('getDashboard').then(response => {
+      this.chartsData = response
+    })
+  },
+  methods: {
+    teste (event, array) {
+
+      console.log(this.$refs.line.getElement(event))
+
+      // console.log(array[0]['_model'])
+      // console.log(aray[0])
+      // console.log(aray[0]._xScale)
+      // console.log(aray[0]._yScale)
+
+      // var ctx = document.getElementById(this.$refs.line.chartId)
+
+      // console.log(ctx.getElementAtEvent(array[0]))
+      // var firstPoint = myChart.getElementAtEvent(evt)[0];
+      // if (firstPoint) {
+      //     var label = myChart.data.labels[firstPoint._index];
+      //     var value = myChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+      // }
+
+    }
+  }
 }
 </script>
 
