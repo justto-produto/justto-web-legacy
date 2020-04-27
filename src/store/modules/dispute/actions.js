@@ -561,11 +561,6 @@ const disputeActions = {
           reject(error)
         })
     })
-  },
-  getDashboard () {
-    return axiosDispatcher({
-      url: `api/disputes/dashboard?chartName=DISPUTE_AVG_RESPONSE_TIME&chartName=DISPUTE_MONETARY_SUMMARIES&chartName=DISPUTE_STATUS_SUMMARY_WITH_WARN&chartName=MONITORING_DISPUTE_BY_TIME&reload=true`,
-    })
   }
 }
 

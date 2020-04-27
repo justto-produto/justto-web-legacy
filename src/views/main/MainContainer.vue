@@ -84,6 +84,7 @@ export default {
   },
   beforeCreate () {
     this.$store.commit('clearDisputeQuery')
+    this.$store.dispatch('getDashboard')
   },
   beforeMount () {
     this.subscribe()

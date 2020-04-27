@@ -3,6 +3,7 @@
     <template slot="main">
       <jus-chart-line ref="line" :data="chartsData[3].data" :options="opt" />
       <jus-chart-bar ref="line" :data="chartsData[1].data" :options="opt" />
+      <el-button type="" @click="reload('DISPUTE_AVG_RESPONSE_TIME')">Teste</el-button>
     </template>
   </jus-view-main>
 </template>
@@ -16,25 +17,28 @@ export default {
   },
   data () {
     return {
-      chartsData: null,
-      chartdata: {
-        labels: ['Semana 1', 'Semana 2', 'Semana 3'],
-        datasets: [{
-          label: 'Tempo resposta médio',
-          data: [40, 20, 10]
-        }]
-      },
+      // chartsData: null,
+      // chartdata: {
+      //   labels: ['Semana 1', 'Semana 2', 'Semana 3'],
+      //   datasets: [{
+      //     label: 'Tempo resposta médio',
+      //     data: [40, 20, 10]
+      //   }]
+      // },
       opt: {
         onClick: this.teste
       }
     }
   },
-  mounted () {
-    this.$store.dispatch('getDashboard').then(response => {
-      this.chartsData = response
-    })
+  computed: {
+    chartsDatasets () {
+      return this.$store.getters.chartsDatasets
+    }
   },
   methods: {
+    reload (chartName) {
+      this.$store.dispatch('getDashboard', chartName)
+    },
     teste (event, array) {
 
       console.log(this.$refs.line.getElement(event))
