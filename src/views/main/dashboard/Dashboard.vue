@@ -4,12 +4,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <div class="dashboard-view__card">
-            <el-dropdown class="dashboard-view__menu" trigger="click">
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click="reload('DISPUTE_STATUS_SUMMARY_WITH_WARN')">Atualizar</el-dropdown-item>
+                <el-dropdown-item command="DISPUTE_STATUS_SUMMARY_WITH_WARN">Atualizar</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <jus-chart-bar class="dashboard-view__dataset" ref="line" :data="chartsDatasets[1].data" :options="opt" :type="'horizontalBar'"/>
@@ -17,12 +17,12 @@
         </el-col>
         <el-col :span="12">
           <div class="dashboard-view__card">
-            <el-dropdown class="dashboard-view__menu" trigger="click">
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click="reload('DISPUTE_AVG_RESPONSE_TIME')">Atualizar</el-dropdown-item>
+                <el-dropdown-item command="DISPUTE_AVG_RESPONSE_TIME">Atualizar</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[0].data" :options="opt" />
@@ -32,12 +32,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <div class="dashboard-view__card">
-            <el-dropdown class="dashboard-view__menu" trigger="click">
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click="reload('MONITORING_DISPUTE_BY_TIME')">Atualizar</el-dropdown-item>
+                <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">Atualizar</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[3].data" :options="opt" />
@@ -45,19 +45,18 @@
         </el-col>
         <el-col :span="12">
           <div class="dashboard-view__card">
-            <el-dropdown class="dashboard-view__menu" trigger="click">
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click="reload('DISPUTE_MONETARY_SUMMARIES')">Atualizar</el-dropdown-item>
+                <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">Atualizar</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <jus-chart-card class="dashboard-view__dataset" :data="chartsDatasets[2].data" />
           </div>
         </el-col>
       </el-row>
-      <el-button type="" @click="reload('DISPUTE_AVG_RESPONSE_TIME')">Teste</el-button>
     </template>
   </jus-view-main>
 </template>
@@ -67,7 +66,8 @@ export default {
   name: 'Dashboard',
   components: {
     JusChartLine: () => import('@/components/charts/JusChartLine'),
-    JusChartBar: () => import('@/components/charts/JusChartBar')
+    JusChartBar: () => import('@/components/charts/JusChartBar'),
+    JusChartCard: () => import('@/components/charts/JusChartCard')
   },
   data () {
     return {
@@ -114,6 +114,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .dashboard-view {
   .el-card__body {
     height: 100%
@@ -121,6 +123,19 @@ export default {
   &__dataset {
     width: 100%;
     height: 100%;
+  }
+  &__card {
+    position: relative;
+  }
+  &__menu {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    transform: rotate(90deg);
+    cursor: pointer;
+    &:hover {
+      color: $--color-primary;
+    }
   }
 }
 </style>
