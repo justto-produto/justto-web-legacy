@@ -1,8 +1,21 @@
 <template>
   <jus-view-main class="dashboard-view">
     <template slot="main">
-      <jus-chart-line ref="line" :data="chartsData[3].data" :options="opt" />
-      <jus-chart-bar ref="line" :data="chartsData[1].data" :options="opt" />
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <jus-chart-bar class="dashboard-view__dataset" ref="line" :data="chartsDatasets[1].data" :options="opt" />
+        </el-col>
+        <el-col :span="12">
+          <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[0].data" :options="opt" />
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[3].data" :options="opt" />
+        </el-col>
+        <el-col :span="12">
+        </el-col>
+      </el-row>
       <el-button type="" @click="reload('DISPUTE_AVG_RESPONSE_TIME')">Teste</el-button>
     </template>
   </jus-view-main>
@@ -66,6 +79,10 @@ export default {
 .dashboard-view {
   .el-card__body {
     height: 100%
+  }
+  &__dataset {
+    width: 100%;
+    height: 100%;
   }
 }
 </style>
