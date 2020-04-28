@@ -1,59 +1,67 @@
 <template>
   <jus-view-main class="dashboard-view">
     <template slot="main">
-      <el-row :gutter="20">
+      <el-row>
         <el-col :span="12">
-          <div class="dashboard-view__card">
+          <div v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" class="dashboard-view__card">
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="DISPUTE_STATUS_SUMMARY_WITH_WARN">Atualizar</el-dropdown-item>
+                <el-dropdown-item command="DISPUTE_STATUS_SUMMARY_WITH_WARN">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <jus-chart-bar class="dashboard-view__dataset" ref="line" :data="chartsDatasets[1].data" :options="opt" :type="'horizontalBar'"/>
+            <jus-chart-bar ref="line" :data="disputeStatusSummaryWithWarn" :options="opt" :type="'horizontalBar'" class="dashboard-view__dataset"/>
           </div>
         </el-col>
         <el-col :span="12">
-          <div class="dashboard-view__card">
+          <div v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" class="dashboard-view__card">
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="DISPUTE_AVG_RESPONSE_TIME">Atualizar</el-dropdown-item>
+                <el-dropdown-item command="DISPUTE_AVG_RESPONSE_TIME">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[0].data" :options="opt" />
+            <jus-chart-line ref="line" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
           </div>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row>
         <el-col :span="12">
-          <div class="dashboard-view__card">
+          <div v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" class="dashboard-view__card">
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">Atualizar</el-dropdown-item>
+                <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[3].data" :options="opt" />
+            <jus-chart-line ref="line" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
           </div>
         </el-col>
         <el-col :span="12">
-          <div class="dashboard-view__card">
+          <div v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" class="dashboard-view__card">
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">Atualizar</el-dropdown-item>
+                <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <jus-chart-card class="dashboard-view__dataset" :data="chartsDatasets[2].data" />
+            <jus-chart-card :data="disputeMonetarySummaries" class="dashboard-view__dataset" />
           </div>
         </el-col>
       </el-row>
@@ -71,19 +79,35 @@ export default {
   },
   data () {
     return {
+      loading: '',
       opt: {
         onClick: this.filter
       }
     }
   },
   computed: {
+    disputeAvgResponseTime () {
+      return this.$store.getters.getChartsDatasets('DISPUTE_AVG_RESPONSE_TIME')
+    },
+    disputeMonetarySummaries () {
+      return this.$store.getters.getChartsDatasets('DISPUTE_MONETARY_SUMMARIES')
+    },
+    disputeStatusSummaryWithWarn () {
+      return this.$store.getters.getChartsDatasets('DISPUTE_STATUS_SUMMARY_WITH_WARN')
+    },
+    monitoringDisputeByTime () {
+      return this.$store.getters.getChartsDatasets('MONITORING_DISPUTE_BY_TIME')
+    },
     chartsDatasets () {
       return this.$store.getters.chartsDatasets
     }
   },
   methods: {
     reload (chartName) {
-      this.$store.dispatch('getDashboard', chartName)
+      this.loading = chartName
+      this.$store.dispatch('getDashboard', chartName).finally(() => {
+        this.loading = ''
+      })
     },
     filter (event, array) {
       const element = this.$refs.line.getElement(event)

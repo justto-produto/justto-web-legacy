@@ -24,7 +24,7 @@ export default {
         return {
           label: this.data.labels[firstPoint._index],
           value: this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index],
-          filter: this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index],
+          filter: this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
         }
       }
     }

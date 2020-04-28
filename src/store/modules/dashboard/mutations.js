@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const mutations = {
   setDashboardDatasets (state, chartsDatasets) {
     if (state.chartsDatasets.length) {
