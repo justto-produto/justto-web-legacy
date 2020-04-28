@@ -26,6 +26,7 @@
               </el-dropdown-menu>
             </el-dropdown>
             <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[0].data" :options="opt" />
+          </div>
         </el-col>
       </el-row>
       <el-row :gutter="20">
