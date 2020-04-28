@@ -127,7 +127,7 @@
           @check="handlerChangeTree"
           @node-drag-end="nodeDragEnd">
           <span slot-scope="{ node, data }" class="custom-tree-node">
-            <span>{{ $t(node.label) | capitalize }}</span>
+            <span>{{ node.label | capitalize }}</span>
             <jus-icon class="drag-icon" icon="menu-hamburger"/>
           </span>
         </el-tree>
@@ -253,11 +253,11 @@ export default {
   methods: {
     filterColumns (value, data) {
       this.filteredNodes = this.columns.filter(c => {
-        return this.$t(c.key).toLowerCase().includes(value.toLowerCase())
+        return c.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
       })
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       if (!value) return true
-      return this.$t(data.key).toLowerCase().indexOf(value.toLowerCase()) !== -1
+      return data.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')) !== -1
     },
     handlerChangeTree (value, obj) {
       setTimeout(function () {
