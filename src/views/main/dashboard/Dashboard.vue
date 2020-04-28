@@ -70,6 +70,8 @@
 </template>
 
 <script>
+// import { draw, generate } from 'patternomaly'
+
 export default {
   name: 'Dashboard',
   components: {
@@ -87,22 +89,49 @@ export default {
   },
   computed: {
     disputeAvgResponseTime () {
-      return this.$store.getters.getChartsDatasets('DISPUTE_AVG_RESPONSE_TIME')
+      let chart = this.$store.getters.getChartsDatasets('DISPUTE_AVG_RESPONSE_TIME')
+      chart = this.generagePattern(chart)
+      return chart.data
     },
     disputeMonetarySummaries () {
-      return this.$store.getters.getChartsDatasets('DISPUTE_MONETARY_SUMMARIES')
+      let chart = this.$store.getters.getChartsDatasets('DISPUTE_MONETARY_SUMMARIES')
+      chart = this.generagePattern(chart)
+      return chart.data
     },
     disputeStatusSummaryWithWarn () {
-      return this.$store.getters.getChartsDatasets('DISPUTE_STATUS_SUMMARY_WITH_WARN')
+      let chart = this.$store.getters.getChartsDatasets('DISPUTE_STATUS_SUMMARY_WITH_WARN')
+      chart = this.generagePattern(chart)
+      return chart.data
     },
     monitoringDisputeByTime () {
-      return this.$store.getters.getChartsDatasets('MONITORING_DISPUTE_BY_TIME')
+      let chart = this.$store.getters.getChartsDatasets('MONITORING_DISPUTE_BY_TIME')
+      chart = this.generagePattern(chart)
+      return chart.data
     },
     chartsDatasets () {
       return this.$store.getters.chartsDatasets
     }
   },
   methods: {
+    generagePattern (chart) {
+      // if (chart.data && chart.data.datasets) {
+      //   for (let dataset of chart.data.datasets) {
+      //     if (chart.type !== 'bar') {
+      //       dataset.backgroundColor = [
+      //         draw('diamond', '#2ca02c'),
+      //         draw('circle', '#ff7f0e'),
+      //         draw('zigzag-horizontal', '#17becf')
+      //       ]
+      //       dataset.borderColor = [
+      //         draw('diamond', '#2ca02c'),
+      //         draw('circle', '#ff7f0e'),
+      //         draw('zigzag-horizontal', '#17becf')
+      //       ]
+      //     }
+      //   }
+      // }
+      return chart
+    },
     reload (chartName) {
       this.loading = chartName
       this.$store.dispatch('getDashboard', chartName).finally(() => {
