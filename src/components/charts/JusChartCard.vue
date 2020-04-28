@@ -1,7 +1,13 @@
 <template lang="html">
-  <div class="chart-Card-view">
-    <el-card v-for="dataset in data.datasets">
-      {{ dataset.label }}
+  <div class="chart-card-view">
+    <el-card v-for="dataset in data.datasets" :key="dataset.label" class="chart-card-view__card">
+      <div class="chart-card-view__icon">
+        <!-- <jus-icon :icon="" /> -->
+      </div>
+      <div class="chart-card-view__info">
+        <span class="chart-card-view__label">{{ dataset.label }}</span>
+        <span class="chart-card-view__value">{{ dataset.data[0] | currency }}</span>
+      </div>
     </el-card>
   </div>
 </template>
@@ -9,7 +15,7 @@
 <script>
 export default {
   name: 'JusChartCard',
-  props: {  
+  props: {
     data: {
       type: Object,
       default: () => {}
@@ -19,7 +25,26 @@ export default {
 </script>
 
 <style lang="scss">
-.chart-Card-view {
-
+.chart-card-view {
+  display: flex;
+  flex-direction: column;
+  &__card {
+    flex: 1;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+  }
+  &__info {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+  }
+  &__label {
+    font-size: 16px;
+  }
+  &__value {
+    font-size: 22px;
+    margin-top: 8px;
+  }
 }
 </style>
