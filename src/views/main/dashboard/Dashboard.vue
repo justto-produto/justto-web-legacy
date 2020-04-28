@@ -46,7 +46,6 @@
         <el-col :span="12">
         </el-col>
       </el-row>
-      <el-button type="" @click="reload('DISPUTE_AVG_RESPONSE_TIME')">Teste</el-button>
     </template>
   </jus-view-main>
 </template>
