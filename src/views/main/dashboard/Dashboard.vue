@@ -3,17 +3,57 @@
     <template slot="main">
       <el-row :gutter="20">
         <el-col :span="12">
-          <jus-chart-bar class="dashboard-view__dataset" ref="line" :data="chartsDatasets[1].data" :options="opt" />
+          <div class="dashboard-view__card">
+            <el-dropdown class="dashboard-view__menu" trigger="click">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click="reload('DISPUTE_STATUS_SUMMARY_WITH_WARN')">Atualizar</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <jus-chart-bar class="dashboard-view__dataset" ref="line" :data="chartsDatasets[1].data" :options="opt" :type="'horizontalBar'"/>
+          </div>
         </el-col>
         <el-col :span="12">
-          <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[0].data" :options="opt" />
+          <div class="dashboard-view__card">
+            <el-dropdown class="dashboard-view__menu" trigger="click">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click="reload('DISPUTE_AVG_RESPONSE_TIME')">Atualizar</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[0].data" :options="opt" />
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[3].data" :options="opt" />
+          <div class="dashboard-view__card">
+            <el-dropdown class="dashboard-view__menu" trigger="click">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click="reload('MONITORING_DISPUTE_BY_TIME')">Atualizar</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <jus-chart-line class="dashboard-view__dataset" ref="line" :data="chartsDatasets[3].data" :options="opt" />
+          </div>
         </el-col>
         <el-col :span="12">
+          <div class="dashboard-view__card">
+            <el-dropdown class="dashboard-view__menu" trigger="click">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click="reload('DISPUTE_MONETARY_SUMMARIES')">Atualizar</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <jus-chart-card class="dashboard-view__dataset" :data="chartsDatasets[2].data" />
+          </div>
         </el-col>
       </el-row>
       <el-button type="" @click="reload('DISPUTE_AVG_RESPONSE_TIME')">Teste</el-button>
