@@ -2,7 +2,7 @@
   <jus-view-main class="dashboard-view">
     <template slot="main">
       <el-row>
-        <el-col v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="12" :sm="24" class="dashboard-view__card">
+        <el-col v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" class="dashboard-view__card" :md="12" :sm="24">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -13,9 +13,9 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-bar ref="line" :data="disputeStatusSummaryWithWarn" :options="opt" :type="'horizontalBar'"/>
+          <jus-chart-bar ref="line" :data="disputeStatusSummaryWithWarn" :options="opt" :type="'horizontalBar'" class="dashboard-view__dataset"/>
         </el-col>
-        <el-col v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__card">
+        <el-col :md="12" :sm="24" v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -26,9 +26,9 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-line ref="line" :data="disputeAvgResponseTime" :options="opt" />
+          <jus-chart-line ref="line" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
         </el-col>
-        <el-col v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__card">
+        <el-col :md="12" :sm="24" v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -39,9 +39,9 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-line ref="line" :data="monitoringDisputeByTime" :options="opt" />
+          <jus-chart-line ref="line" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
         </el-col>
-        <el-col v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__card">
+        <el-col :md="12" :sm="24" v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -52,7 +52,7 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-card :data="disputeMonetarySummaries" />
+          <jus-chart-card :data="disputeMonetarySummaries" class="dashboard-view__dataset" />
         </el-col>
       </el-row>
     </template>
@@ -72,7 +72,7 @@ export default {
       loading: '',
       opt: {
         onClick: this.filter,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
         // legend: {
         //   labels: {
         //     padding: 12
@@ -182,6 +182,11 @@ export default {
   }
   .el-col {
     height: 50%;
+    // border: 1px solid black !important;
+  }
+  &__dataset {
+    width: 100%;
+    height: 100%;
   }
   &__card {
     position: relative;
