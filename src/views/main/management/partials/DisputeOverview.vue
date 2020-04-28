@@ -75,11 +75,7 @@
                 <el-tooltip v-if="dispute.lastOfferName" :content="'Proposto por: ' + dispute.lastOfferName">
                   <jus-avatar-user :name="dispute.lastOfferName" size="mini" />
                 </el-tooltip>
-                {{
-                  dispute.disputeUpperRange ? dispute.lastOfferValue :
-                  (dispute.lastCounterOfferValue ? dispute.lastCounterOfferValue : dispute.lastOfferValue)
-                  | currency
-                }}
+                {{ dispute.lastOfferValue | currency }}
               </span>
             </div>
             <div v-if="dispute.lastCounterOfferValue > 0 && dispute.disputeUpperRange" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
