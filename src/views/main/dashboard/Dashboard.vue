@@ -2,7 +2,7 @@
   <jus-view-main class="dashboard-view">
     <template slot="main">
       <el-row>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="12" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Titulo do grafico</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -23,7 +23,7 @@
             </div>
           <!-- </el-card> -->
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Titulo grafico 2</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -44,7 +44,7 @@
             </div>
           <!-- </el-card> -->
         </el-col>
-        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="16" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Titulo grafico 3</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -65,7 +65,7 @@
             </div>
           <!-- </el-card> -->
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Titulo cards</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -166,6 +166,24 @@ export default {
                 break
               case 'Perdidos':
                 dataset.borderColor = this.colors[1]
+                break
+            }
+          }
+          if (chart.type === 'bar') {
+            switch (dataset.label) {
+              case 'Sem Alerta':
+                dataset.backgroundColor = this.colors[3]
+                dataset.order = 1
+                break
+              case 'Com Alerta':
+                dataset.backgroundColor = this.colors[2]
+                dataset.order = 2
+                break
+              case 'Total':
+                dataset.backgroundColor = 'transparent'
+                dataset.borderColor = '#424242'
+                dataset.order = 0
+                dataset.type = 'line'
                 break
             }
           }
