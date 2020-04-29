@@ -23,26 +23,30 @@
         <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <!-- <span>Titulo do grafico</span> -->
-            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="command">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="DISPUTE_STATUS_SUMMARY_WITH_WARN">
+                <el-dropdown-item :command="{command: 'reload', param: 'DISPUTE_STATUS_SUMMARY_WITH_WARN'}">
                   <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
+                <el-dropdown-item :command="{command: 'switchType', param: 'disputeStatusSummaryWithWarnIsChart'}" >
+                  <i :class="disputeStatusSummaryWithWarnIsChart ? 'el-icon-notebook-2' : 'el-icon-data-analysis'"/> {{ disputeStatusSummaryWithWarnIsChart ? 'Tabela' : 'Gráfico' }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
           <!-- <el-card class="dashboard-view__dataset"> -->
           <jus-chart-bar
-            v-if="disputeStatusSummaryWithWarn"
+            v-if="disputeStatusSummaryWithWarn && disputeStatusSummaryWithWarnIsChart"
             id="disputeStatusSummaryWithWarn"
             ref="disputeStatusSummaryWithWarn"
             :data="disputeStatusSummaryWithWarn"
             :options="opt"
             stacked
             class="dashboard-view__dataset disputeStatusSummaryWithWarn"/>
+          <jus-chart-table v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart" :data="disputeStatusSummaryWithWarn" />
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
@@ -132,12 +136,14 @@ export default {
   components: {
     JusChartLine: () => import('@/components/charts/JusChartLine'),
     JusChartBar: () => import('@/components/charts/JusChartBar'),
-    JusChartCard: () => import('@/components/charts/JusChartCard')
+    JusChartCard: () => import('@/components/charts/JusChartCard'),
+    JusChartTable: () => import('@/components/charts/JusChartTable')
   },
   data () {
     return {
       loading: '',
       emptyMessage: 'Não foi possível buscar as informações para exibição do gráfico.',
+      disputeStatusSummaryWithWarnIsChart: false,
       opt: {
         onClick: this.filter,
         maintainAspectRatio: false,
@@ -253,6 +259,12 @@ export default {
           this.loading = ''
         }, 300)
       })
+    },
+    switchType (type) {
+      this[type] = !this[type]
+    },
+    command (command) {
+      this[command.command](command.param)
     },
     filter (event, array) {
       const ref = this.$refs[event.target.parentElement.id]
