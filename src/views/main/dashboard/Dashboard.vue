@@ -2,7 +2,7 @@
   <jus-view-main class="dashboard-view">
     <template slot="main">
       <el-row>
-        <el-col v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="12" :sm="24" class="dashboard-view__card">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -13,12 +13,12 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-bar ref="line" v-if="disputeStatusSummaryWithWarn" :data="disputeStatusSummaryWithWarn" :options="opt" stacked class="dashboard-view__dataset"/>
+          <jus-chart-bar ref="line" v-if="disputeStatusSummaryWithWarn|| loading" :data="disputeStatusSummaryWithWarn" :options="opt" stacked class="dashboard-view__dataset"/>
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__card">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -29,12 +29,12 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-line ref="line" v-if="disputeAvgResponseTime" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
+          <jus-chart-line ref="line" v-if="disputeAvgResponseTime|| loading" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__card">
+        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -45,12 +45,12 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-line ref="line" v-if="monitoringDisputeByTime" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
+          <jus-chart-line ref="line" v-if="monitoringDisputeByTime || loading" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__card">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -61,7 +61,7 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-card v-if="disputeMonetarySummaries" :data="disputeMonetarySummaries" class="dashboard-view__dataset" />
+          <jus-chart-card v-if="disputeMonetarySummaries|| loading" :data="disputeMonetarySummaries" class="dashboard-view__dataset" />
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
@@ -124,8 +124,11 @@ export default {
   },
   created () {
     if (!this.chartsDatasets.length) {
+      this.loading = true
       this.$store.dispatch('getDashboard').catch(error => {
         this.$jusNotification({ error })
+      }).finally(() => {
+        this.loading = false
       })
     }
   },
