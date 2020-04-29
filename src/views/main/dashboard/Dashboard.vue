@@ -103,7 +103,10 @@ export default {
       emptyMessage: 'Não foi possível buscar as informações para exibição do gráfico.',
       opt: {
         onClick: this.filter,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+        legend: {
+          reverse: true
+        }
       }
     }
   },
@@ -172,17 +175,18 @@ export default {
           if (chart.type === 'bar') {
             switch (dataset.label) {
               case 'Sem Alerta':
-                dataset.backgroundColor = this.colors[3]
+                dataset.backgroundColor = this.colors[3] + 'd9'
                 dataset.order = 1
                 break
               case 'Com Alerta':
-                dataset.backgroundColor = this.colors[2]
+                dataset.backgroundColor = this.colors[2] + 'd9'
                 dataset.order = 2
                 break
               case 'Total':
                 dataset.backgroundColor = 'transparent'
-                dataset.borderColor = '#424242'
+                dataset.borderColor = '#343c4b'
                 dataset.order = 0
+                dataset.borderDash = [3, 3.4]
                 dataset.type = 'line'
                 break
             }
