@@ -44,7 +44,7 @@
             </div>
           <!-- </el-card> -->
         </el-col>
-        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="14" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="16" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <!-- <span>Titulo grafico 3</span> -->
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -65,7 +65,7 @@
             </div>
           <!-- </el-card> -->
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="10" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <!-- <span>Titulo cards</span> -->
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">

@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="chart-card-view">
-    <el-card v-for="dataset in datasets" :key="dataset.label" class="chart-card-view__card">
-      <div :style="'color:' + getIcon(dataset.label).color" class="chart-card-view__icon">
+    <el-card v-for="dataset in datasets" :key="dataset.label" class="chart-card-view__card" shadow="never" :style="'background:' + getIcon(dataset.label).color">
+      <div class="chart-card-view__icon">
         <i :class="getIcon(dataset.label).icon" />
         <!-- <jus-icon :icon="" /> -->
       </div>
@@ -79,19 +79,23 @@ export default {
     position: absolute;
     bottom: -56px;
     left: 16px;
-    opacity: .5;
+    opacity: .2;
     font-size: 160px;
+    z-index: 1;
   }
   &__info {
     display: flex;
     flex-direction: column;
     text-align: right;
+    color: $--color-white;
+    z-index: 2;
   }
   &__label {
-    font-size: 16px;
+    font-size: 18px;
   }
   &__value {
-    font-size: 24px;
+    font-weight: 500;
+    font-size: 28px;
     margin-top: 4px;
   }
 }
