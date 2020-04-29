@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="chart-card-view">
-    <el-card v-if="data.datasets" v-for="dataset in data.datasets" :key="dataset.label" class="chart-card-view__card">
+    <el-card v-for="dataset in datasets" :key="dataset.label" class="chart-card-view__card">
       <div class="chart-card-view__icon">
         <!-- <jus-icon :icon="" /> -->
       </div>
@@ -19,6 +19,11 @@ export default {
     data: {
       type: Object,
       default: () => {}
+    }
+  },
+  computed: {
+    datasets () {
+      return this.data && this.data.datasets ? this.data.datasets : []
     }
   }
 }

@@ -1,8 +1,8 @@
 <template>
   <jus-view-main class="dashboard-view">
     <template slot="main">
-      <el-row :gutter="40">
-        <el-col v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" class="dashboard-view__card" :md="12" :sm="24">
+      <el-row>
+        <el-col v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -15,7 +15,7 @@
           </el-dropdown>
           <jus-chart-bar ref="line" :data="disputeStatusSummaryWithWarn" :options="opt" :type="'horizontalBar'" class="dashboard-view__dataset"/>
         </el-col>
-        <el-col :md="12" :sm="24" v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" class="dashboard-view__card">
+        <el-col v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -28,7 +28,7 @@
           </el-dropdown>
           <jus-chart-line ref="line" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
         </el-col>
-        <el-col :md="12" :sm="24" v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" class="dashboard-view__card">
+        <el-col v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -41,7 +41,7 @@
           </el-dropdown>
           <jus-chart-line ref="line" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
         </el-col>
-        <el-col :md="12" :sm="24" v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" class="dashboard-view__card">
+        <el-col v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
               <i class="el-icon-more" />
@@ -72,7 +72,7 @@ export default {
       loading: '',
       opt: {
         onClick: this.filter,
-        maintainAspectRatio: false,
+        maintainAspectRatio: false
         // legend: {
         //   labels: {
         //     padding: 12
@@ -182,7 +182,8 @@ export default {
   }
   .el-col {
     height: 50%;
-    border: 1px solid black !important;
+    padding: 10px 20px;
+    // border: 1px solid black !important;
   }
   &__dataset {
     width: 100%;
