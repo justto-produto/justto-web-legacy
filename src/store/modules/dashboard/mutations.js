@@ -9,6 +9,9 @@ const mutations = {
     } else {
       state.chartsDatasets = chartsDatasets
     }
+  },
+  setSelectedMemberId (state, selectedMemberId) {
+    state.selectedMemberId = selectedMemberId
   }
 }
 

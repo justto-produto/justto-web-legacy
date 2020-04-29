@@ -10,6 +10,9 @@ const actions = {
         url += `chartName=${chart}&`
       }
     }
+    if (state.selectedMemberId) {
+      url += `memberId=${state.selectedMemberId}&`
+    }
     url += 'reload=true'
     return axiosDispatcher({ mutation: 'setDashboardDatasets', url })
   }

@@ -1,6 +1,24 @@
 <template>
   <jus-view-main class="dashboard-view">
     <template slot="main">
+      <div v-if="$store.getters.isAdminProfile">
+        <el-form label-position="top">
+          <el-form-item label="Filtrar por membro da equipe">
+            <el-select
+              v-model="selectedMemberId"
+              filterable
+              clearable
+              @change="getDashboard"
+              @clear="selectedMember = ''">
+              <el-option
+                v-for="member in members"
+                :key="member.person.id"
+                :value="member.person.id"
+                :label="member.person.name"/>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
       <el-row>
         <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
@@ -17,10 +35,17 @@
             </el-dropdown>
           </div>
           <!-- <el-card class="dashboard-view__dataset"> -->
-            <jus-chart-bar id="disputeStatusSummaryWithWarn" ref="disputeStatusSummaryWithWarn" v-if="disputeStatusSummaryWithWarn" :data="disputeStatusSummaryWithWarn" :options="opt" stacked class="dashboard-view__dataset disputeStatusSummaryWithWarn"/>
-            <div v-else class="dashboard-view__empty">
-              {{ emptyMessage }}
-            </div>
+          <jus-chart-bar
+            v-if="disputeStatusSummaryWithWarn"
+            id="disputeStatusSummaryWithWarn"
+            ref="disputeStatusSummaryWithWarn"
+            :data="disputeStatusSummaryWithWarn"
+            :options="opt"
+            stacked
+            class="dashboard-view__dataset disputeStatusSummaryWithWarn"/>
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
           <!-- </el-card> -->
         </el-col>
         <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
@@ -38,10 +63,16 @@
             </el-dropdown>
           </div>
           <!-- <el-card class="dashboard-view__dataset"> -->
-            <jus-chart-line id="disputeAvgResponseTime" ref="disputeAvgResponseTime" v-if="disputeAvgResponseTime" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
-            <div v-else class="dashboard-view__empty">
-              {{ emptyMessage }}
-            </div>
+          <jus-chart-line
+            v-if="disputeAvgResponseTime"
+            id="disputeAvgResponseTime"
+            ref="disputeAvgResponseTime"
+            :data="disputeAvgResponseTime"
+            :options="opt"
+            class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
           <!-- </el-card> -->
         </el-col>
         <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="16" :sm="24" class="dashboard-view__graph">
@@ -59,10 +90,16 @@
             </el-dropdown>
           </div>
           <!-- <el-card class="dashboard-view__dataset"> -->
-            <jus-chart-line id="monitoringDisputeByTime" ref="monitoringDisputeByTime" v-if="monitoringDisputeByTime" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
-            <div v-else class="dashboard-view__empty">
-              {{ emptyMessage }}
-            </div>
+          <jus-chart-line
+            v-if="monitoringDisputeByTime"
+            id="monitoringDisputeByTime"
+            ref="monitoringDisputeByTime"
+            :data="monitoringDisputeByTime"
+            :options="opt"
+            class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
           <!-- </el-card> -->
         </el-col>
         <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
@@ -111,6 +148,14 @@ export default {
     }
   },
   computed: {
+    selectedMemberId: {
+      get () {
+        return this.$store.getters.dashboardSelectedMemberId
+      },
+      set (memberId) {
+        this.$store.commit('setSelectedMemberId', memberId)
+      }
+    },
     disputeAvgResponseTime () {
       let chart = this.$store.getters.getChartsDatasets('DISPUTE_AVG_RESPONSE_TIME')
       chart = this.format(chart)
@@ -136,19 +181,25 @@ export default {
     },
     colors () {
       return this.$store.state.tagModule.colors
+    },
+    members () {
+      return this.$store.state.workspaceModule.members
     }
   },
   created () {
     if (!this.chartsDatasets.length) {
+      this.getDashboard()
+    }
+  },
+  methods: {
+    getDashboard () {
       this.loading = true
       this.$store.dispatch('getDashboard').catch(error => {
         this.$jusNotification({ error })
       }).finally(() => {
         this.loading = false
       })
-    }
-  },
-  methods: {
+    },
     format (chart) {
       if (chart.data && chart.data.datasets) {
         if (chart.name === 'MONITORING_DISPUTE_BY_TIME') {
@@ -282,6 +333,9 @@ export default {
     width: 75%;
     margin: auto;
     text-align: center;
+  }
+  .el-select {
+    width: 100%;
   }
 }
 </style>

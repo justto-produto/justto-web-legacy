@@ -10,7 +10,8 @@ const dashboardModule = {
       'DISPUTE_MONETARY_SUMMARIES',
       'DISPUTE_STATUS_SUMMARY_WITH_WARN',
       'MONITORING_DISPUTE_BY_TIME'
-    ]
+    ],
+    selectedMemberId: ''
   },
   mutations: mutations,
   actions: actions,
