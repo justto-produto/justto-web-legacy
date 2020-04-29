@@ -1,28 +1,10 @@
 <template>
-  <jus-view-main class="dashboard-view">
+  <jus-view-main :key="key" class="dashboard-view">
     <template slot="main">
-      <div v-if="$store.getters.isAdminProfile">
-        <el-form label-position="top">
-          <el-form-item label="Filtrar por membro da equipe">
-            <el-select
-              v-model="selectedMemberId"
-              filterable
-              clearable
-              @change="getDashboard"
-              @clear="selectedMember = ''">
-              <el-option
-                v-for="member in members"
-                :key="member.person.id"
-                :value="member.person.id"
-                :label="member.person.name"/>
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-      <el-row :class="{ isAdmin: $store.getters.isAdminProfile}">
-        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
+      <el-row>
+        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="16" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <!-- <span>Titulo do grafico</span> -->
+            <span>Status de disputas com alerta</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="command">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
@@ -37,7 +19,6 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <!-- <el-card class="dashboard-view__dataset"> -->
           <jus-chart-bar
             v-if="disputeStatusSummaryWithWarn && disputeStatusSummaryWithWarnIsChart"
             id="disputeStatusSummaryWithWarn"
@@ -50,65 +31,27 @@
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
-          <!-- </el-card> -->
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph pt0">
+          <div v-if="$store.getters.isAdminProfile">
+            <el-form label-position="top">
+              <el-form-item label="Filtrar por membro da equipe">
+                <el-select
+                  v-model="selectedMemberId"
+                  filterable
+                  clearable
+                  @change="getDashboard"
+                  @clear="selectedMember = ''">
+                  <el-option
+                    v-for="member in members"
+                    :key="member.person.id"
+                    :value="member.person.id"
+                    :label="member.person.name"/>
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </div>
           <div class="dashboard-view__graph-header">
-            <!-- <span>Titulo grafico 2</span> -->
-            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
-              <span class="el-dropdown-link">
-                <i class="el-icon-more" />
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="DISPUTE_AVG_RESPONSE_TIME">
-                  <i class="el-icon-refresh"/> Atualizar
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-          <!-- <el-card class="dashboard-view__dataset"> -->
-          <jus-chart-line
-            v-if="disputeAvgResponseTime"
-            id="disputeAvgResponseTime"
-            ref="disputeAvgResponseTime"
-            :data="disputeAvgResponseTime"
-            :options="opt"
-            class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
-            {{ emptyMessage }}
-          </div>
-          <!-- </el-card> -->
-        </el-col>
-        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="16" :sm="24" class="dashboard-view__graph">
-          <div class="dashboard-view__graph-header">
-            <!-- <span>Titulo grafico 3</span> -->
-            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
-              <span class="el-dropdown-link">
-                <i class="el-icon-more" />
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">
-                  <i class="el-icon-refresh"/> Atualizar
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-          <!-- <el-card class="dashboard-view__dataset"> -->
-          <jus-chart-line
-            v-if="monitoringDisputeByTime"
-            id="monitoringDisputeByTime"
-            ref="monitoringDisputeByTime"
-            :data="monitoringDisputeByTime"
-            :options="opt"
-            class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
-            {{ emptyMessage }}
-          </div>
-          <!-- </el-card> -->
-        </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
-          <div class="dashboard-view__graph-header">
-            <!-- <span>Titulo cards</span> -->
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
@@ -121,6 +64,56 @@
             </el-dropdown>
           </div>
           <jus-chart-card v-if="disputeMonetarySummaries" :data="disputeMonetarySummaries" class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
+        </el-col>
+        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="14" :sm="24" class="dashboard-view__graph">
+          <div class="dashboard-view__graph-header">
+            <span>Monitor de disputas</span>
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <jus-chart-line
+            v-if="monitoringDisputeByTime"
+            id="monitoringDisputeByTime"
+            ref="monitoringDisputeByTime"
+            :data="monitoringDisputeByTime"
+            :options="opt"
+            class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
+        </el-col>
+        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
+          <div class="dashboard-view__graph-header">
+            <span>Tempo de resposta médio</span>
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="DISPUTE_AVG_RESPONSE_TIME">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <jus-chart-line
+            v-if="disputeAvgResponseTime"
+            id="disputeAvgResponseTime"
+            ref="disputeAvgResponseTime"
+            :data="disputeAvgResponseTime"
+            :options="opt"
+            class="dashboard-view__dataset" />
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
@@ -141,6 +134,7 @@ export default {
   },
   data () {
     return {
+      key: 0,
       loading: '',
       emptyMessage: 'Não foi possível buscar as informações para exibição do gráfico.',
       disputeStatusSummaryWithWarnIsChart: false,
@@ -203,6 +197,7 @@ export default {
       this.$store.dispatch('getDashboard').catch(error => {
         this.$jusNotification({ error })
       }).finally(() => {
+        this.key += 1
         this.loading = false
       })
     },
@@ -272,7 +267,7 @@ export default {
       const filters = (element && element.filter) || null
       if (filters) {
         this.$confirm(
-          'Deseja ver as disputas no painel de gerenciamento?',
+          'Deseja ver as disputas no painel de gerenciamento?' + JSON.stringify(filters),
           'Ir para gerenciamento', {
             confirmButtonText: 'Continuar',
             cancelButtonText: 'Cancelar',
@@ -280,10 +275,14 @@ export default {
             type: 'info'
           }).then(() => {
           this.$store.commit('clearDisputeQuery')
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
           for (let key in filters) {
             if (filters.hasOwnProperty(key)) {
               this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
             }
+          }
+          if (this.selectedMemberId) {
+            this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
           }
           this.$store.commit('setDisputeHasFilters', true)
           this.$store.commit('setDisputesTab', '3')
@@ -309,34 +308,25 @@ export default {
     display: flex;
     flex-direction: column;
     height: 50%;
-    padding: 10px 18px;
+    padding: 10px;
     // border: 1px solid black !important;
   }
   &__dataset {
     width: 100%;
     height: 100%;
   }
-  &__graph {
-    position: relative;
-  }
   &__graph-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 0 8px 8px 8px;
     > span {
       font-size: 18px;
       font-weight: bold;
-      margin-left: 8px;
     }
   }
   &__menu {
-    position: absolute;
-    top: 26px;
-    right: 26px;
+    float: right;
+    margin-top: 2px;
     transform: rotate(90deg);
     cursor: pointer;
-    z-index: 99;
     &:hover {
       color: $--color-primary;
     }
@@ -354,6 +344,12 @@ export default {
   }
   .isAdmin {
     height: calc(100% - 72px);
+  }
+  .el-col {
+    margin-top: 16px;
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }
 </style>

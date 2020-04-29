@@ -3,7 +3,6 @@
     <el-card v-for="dataset in datasets" :key="dataset.label" :style="'background:' + getIcon(dataset.label).color" class="chart-card-view__card" shadow="never">
       <div class="chart-card-view__icon">
         <i :class="getIcon(dataset.label).icon" />
-        <!-- <jus-icon :icon="" /> -->
       </div>
       <div class="chart-card-view__info">
         <span class="chart-card-view__label">{{ $t('dashboard.' + dataset.label) | capitalize }}</span>
@@ -60,27 +59,28 @@ export default {
 .chart-card-view {
   display: flex;
   flex-direction: column;
+  margin-bottom: 16px;
   &__card {
     flex: 1;
-    margin-top: 16px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     position: relative;
-    &:first-child {
-      margin-top: 0px;
+    &+ .chart-card-view__card {
+      margin-top: 10px;
     }
   }
   .el-card__body {
     display: flex;
     align-items: center;
+    padding: 12px 15px;
   }
   &__icon {
     position: absolute;
-    bottom: -56px;
-    left: 16px;
+    bottom: -50px;
+    left: 0px;
     opacity: .2;
-    font-size: 160px;
+    font-size: 130px;
     z-index: 1;
   }
   &__info {
@@ -91,7 +91,7 @@ export default {
     z-index: 2;
   }
   &__label {
-    font-size: 18px;
+    font-size: 14px;
   }
   &__value {
     font-weight: 500;
