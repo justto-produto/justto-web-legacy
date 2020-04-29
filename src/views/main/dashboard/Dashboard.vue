@@ -19,7 +19,7 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-row>
+      <el-row :class="{ isAdmin: $store.getters.isAdminProfile}">
         <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <!-- <span>Titulo do grafico</span> -->
@@ -290,6 +290,9 @@ export default {
   .el-card__body, .el-row {
     height: 100%
   }
+  .el-row {
+    padding-bottom: 20px;
+  }
   .el-col {
     display: flex;
     flex-direction: column;
@@ -336,6 +339,9 @@ export default {
   }
   .el-select {
     width: 100%;
+  }
+  .isAdmin {
+    height: calc(100% - 72px);
   }
 }
 </style>
