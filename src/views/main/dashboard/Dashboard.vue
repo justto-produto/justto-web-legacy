@@ -260,7 +260,7 @@ export default {
       const filters = (element && element.filter) || null
       if (filters) {
         this.$confirm(
-          'Deseja ver as disputas no painel de gerenciamento?',
+          'Deseja ver as disputas no painel de gerenciamento?' + JSON.stringify(filters),
           'Ir para gerenciamento', {
             confirmButtonText: 'Continuar',
             cancelButtonText: 'Cancelar',
