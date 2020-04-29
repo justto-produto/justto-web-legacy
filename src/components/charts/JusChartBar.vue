@@ -12,10 +12,28 @@ export default {
     options: {
       type: Object,
       default: () => {}
+    },
+    stacked: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
-    this.renderChart(this.data, this.options)
+    const opt = this.options
+    if (this.stacked) {
+      Object.assign(opt, {
+        scales: {
+          xAxes: [{
+            stacked: true
+          }],
+          yAxes: [{
+            stacked: true
+          }]
+        }
+      })
+    }
+    console.log(opt);
+    this.renderChart(this.data, opt)
   },
   methods: {
     // getElement (e) {
