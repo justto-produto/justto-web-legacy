@@ -13,7 +13,10 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-bar ref="line" :data="disputeStatusSummaryWithWarn" :options="opt" :type="'horizontalBar'" class="dashboard-view__dataset"/>
+          <jus-chart-bar ref="line" v-if="disputeStatusSummaryWithWarn" :data="disputeStatusSummaryWithWarn" :options="opt" stacked class="dashboard-view__dataset"/>
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
         </el-col>
         <el-col v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -26,7 +29,10 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-line ref="line" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
+          <jus-chart-line ref="line" v-if="disputeAvgResponseTime" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
         </el-col>
         <el-col v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -39,7 +45,10 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-line ref="line" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
+          <jus-chart-line ref="line" v-if="monitoringDisputeByTime" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
         </el-col>
         <el-col v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__card">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -52,7 +61,10 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <jus-chart-card :data="disputeMonetarySummaries" class="dashboard-view__dataset" />
+          <jus-chart-card v-if="disputeMonetarySummaries" :data="disputeMonetarySummaries" class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
         </el-col>
       </el-row>
     </template>
@@ -70,6 +82,7 @@ export default {
   data () {
     return {
       loading: '',
+      emptyMessage: 'Não foi possível buscar as informações para exibição do gráfico.',
       opt: {
         onClick: this.filter,
         maintainAspectRatio: false
@@ -109,6 +122,13 @@ export default {
       return this.$store.state.tagModule.colors
     }
   },
+  created () {
+    if (!this.chartsDatasets.length) {
+      this.$store.dispatch('getDashboard').catch(error => {
+        this.$jusNotification({ error })
+      })
+    }
+  },
   methods: {
     format (chart) {
       if (chart.data && chart.data.datasets) {
@@ -146,6 +166,7 @@ export default {
       })
     },
     filter (event, array) {
+      // console.log(this.$refs.line);
       const element = this.$refs.line.getElement(event)
       const filters = (element && element.filter) || null
       if (filters) {
@@ -202,6 +223,14 @@ export default {
     &:hover {
       color: $--color-primary;
     }
+  }
+  &__empty {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    width: 75%;
+    margin: auto;
+    text-align: center;
   }
 }
 </style>
