@@ -59,7 +59,7 @@ export default {
 .chart-card-view {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  // margin-bottom: 16px;
   &__card {
     flex: 1;
     display: flex;
