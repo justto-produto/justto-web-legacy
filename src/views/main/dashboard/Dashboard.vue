@@ -16,12 +16,12 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <el-card class="dashboard-view__dataset">
-            <jus-chart-bar ref="line" v-if="disputeStatusSummaryWithWarn" :data="disputeStatusSummaryWithWarn" :options="opt" stacked class="dashboard-view__dataset"/>
+          <!-- <el-card class="dashboard-view__dataset"> -->
+            <jus-chart-bar id="disputeStatusSummaryWithWarn" ref="disputeStatusSummaryWithWarn" v-if="disputeStatusSummaryWithWarn" :data="disputeStatusSummaryWithWarn" :options="opt" stacked class="dashboard-view__dataset disputeStatusSummaryWithWarn"/>
             <div v-else class="dashboard-view__empty">
               {{ emptyMessage }}
             </div>
-          </el-card>
+          <!-- </el-card> -->
         </el-col>
         <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
@@ -37,12 +37,12 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <el-card class="dashboard-view__dataset">
-            <jus-chart-line ref="line" v-if="disputeAvgResponseTime" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
+          <!-- <el-card class="dashboard-view__dataset"> -->
+            <jus-chart-line id="disputeAvgResponseTime" ref="disputeAvgResponseTime" v-if="disputeAvgResponseTime" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
             <div v-else class="dashboard-view__empty">
               {{ emptyMessage }}
             </div>
-          </el-card>
+          <!-- </el-card> -->
         </el-col>
         <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
@@ -58,12 +58,12 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <el-card class="dashboard-view__dataset">
-            <jus-chart-line ref="line" v-if="monitoringDisputeByTime" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
+          <!-- <el-card class="dashboard-view__dataset"> -->
+            <jus-chart-line id="monitoringDisputeByTime" ref="monitoringDisputeByTime" v-if="monitoringDisputeByTime" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
             <div v-else class="dashboard-view__empty">
               {{ emptyMessage }}
             </div>
-          </el-card>
+          <!-- </el-card> -->
         </el-col>
         <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
@@ -104,11 +104,6 @@ export default {
       opt: {
         onClick: this.filter,
         maintainAspectRatio: false
-        // legend: {
-        //   labels: {
-        //     padding: 12
-        //   }
-        // }
       }
     }
   },
@@ -187,8 +182,8 @@ export default {
       })
     },
     filter (event, array) {
-      // console.log(this.$refs.line);
-      const element = this.$refs.line.getElement(event)
+      const ref = this.$refs[event.target.parentElement.id]
+      const element = ref.getElement(event)
       const filters = (element && element.filter) || null
       if (filters) {
         this.$confirm(
@@ -244,7 +239,7 @@ export default {
     align-items: center;
     padding: 0 8px 8px 8px;
     > span {
-      font-size: 22px;
+      font-size: 18px;
       font-weight: bold;
       margin-left: 8px;
     }

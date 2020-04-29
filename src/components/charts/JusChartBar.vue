@@ -32,20 +32,19 @@ export default {
         }
       })
     }
-    console.log(opt);
     this.renderChart(this.data, opt)
   },
   methods: {
-    // getElement (e) {
-    //   var firstPoint = this._data._chart.getElementsAtEvent(e)[0]
-    //   if (firstPoint) {
-    //     return {
-    //       label: this.data.labels[firstPoint._index],
-    //       value: this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index],
-    //       filter: this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index],
-    //     }
-    //   }
-    // }
+    getElement (e) {
+      var firstPoint = this._data._chart.getElementsAtEvent(e)[0]
+      if (firstPoint) {
+        return {
+          label: this.data.labels[firstPoint._index],
+          value: this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index],
+          filter: this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
+        }
+      }
+    }
   }
 }
 </script>
