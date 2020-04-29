@@ -338,8 +338,5 @@ export default {
   .el-select {
     width: 100%;
   }
-  .isAdmin {
-    height: calc(100% - 72px);
-  }
 }
 </style>

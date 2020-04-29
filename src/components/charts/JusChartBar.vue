@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     getElement (e) {
-      var firstPoint = this._data._chart.getElementsAtEvent(e)[0]
+      var firstPoint = this._data._chart.getElementAtEvent(e)[0]
       if (firstPoint) {
         return {
           label: this.data.labels[firstPoint._index],
