@@ -301,15 +301,11 @@ export default {
   .el-card__body, .el-row {
     height: 100%
   }
-  .el-row {
-    padding-bottom: 20px;
-  }
   .el-col {
     display: flex;
     flex-direction: column;
     height: 50%;
     padding: 10px;
-    // border: 1px solid black !important;
   }
   &__dataset {
     width: 100%;
@@ -344,12 +340,6 @@ export default {
   }
   .isAdmin {
     height: calc(100% - 72px);
-  }
-  .el-col {
-    margin-top: 16px;
-    &:first-child {
-      margin-top: 0;
-    }
   }
 }
 </style>
