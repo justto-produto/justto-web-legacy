@@ -38,6 +38,13 @@ export default {
     margin-top: 16px;
     display: flex;
     align-items: center;
+    &:first-child {
+      margin-top: 0px;
+    }
+  }
+  .el-card__body {
+    display: flex;
+    align-items: center;
   }
   &__info {
     display: flex;

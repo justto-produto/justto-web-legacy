@@ -2,56 +2,74 @@
   <jus-view-main class="dashboard-view">
     <template slot="main">
       <el-row>
-        <el-col v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="12" :sm="24" class="dashboard-view__card">
-          <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
-            <span class="el-dropdown-link">
-              <i class="el-icon-more" />
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="DISPUTE_STATUS_SUMMARY_WITH_WARN">
-                <i class="el-icon-refresh"/> Atualizar
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <jus-chart-bar ref="line" :data="disputeStatusSummaryWithWarn" :options="opt" :type="'horizontalBar'" class="dashboard-view__dataset"/>
+        <el-col v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="12" :sm="24" class="dashboard-view__graph">
+          <div class="dashboard-view__graph-header">
+            <span>Titulo do grafico</span>
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="DISPUTE_STATUS_SUMMARY_WITH_WARN">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <el-card class="dashboard-view__dataset">
+            <jus-chart-bar ref="line" :data="disputeStatusSummaryWithWarn" :options="opt" :type="'horizontalBar'" class="dashboard-view__dataset"/>
+          </el-card>
         </el-col>
-        <el-col v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__card">
-          <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
-            <span class="el-dropdown-link">
-              <i class="el-icon-more" />
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="DISPUTE_AVG_RESPONSE_TIME">
-                <i class="el-icon-refresh"/> Atualizar
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <jus-chart-line ref="line" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
+        <el-col v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
+          <div class="dashboard-view__graph-header">
+            <span>Titulo grafico 2</span>
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="DISPUTE_AVG_RESPONSE_TIME">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <el-card class="dashboard-view__dataset">
+            <jus-chart-line ref="line" :data="disputeAvgResponseTime" :options="opt" class="dashboard-view__dataset" />
+          </el-card>
         </el-col>
-        <el-col v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__card">
-          <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
-            <span class="el-dropdown-link">
-              <i class="el-icon-more" />
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">
-                <i class="el-icon-refresh"/> Atualizar
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <jus-chart-line ref="line" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
+        <el-col v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
+          <div class="dashboard-view__graph-header">
+            <span>Titulo grafico 3</span>
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <el-card class="dashboard-view__dataset">
+            <jus-chart-line ref="line" :data="monitoringDisputeByTime" :options="opt" class="dashboard-view__dataset" />
+          </el-card>
         </el-col>
-        <el-col v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__card">
-          <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
-            <span class="el-dropdown-link">
-              <i class="el-icon-more" />
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">
-                <i class="el-icon-refresh"/> Atualizar
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+        <el-col v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__graph">
+          <div class="dashboard-view__graph-header">
+            <span>Titulo cards</span>
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
           <jus-chart-card :data="disputeMonetarySummaries" class="dashboard-view__dataset" />
         </el-col>
       </el-row>
@@ -181,22 +199,36 @@ export default {
     height: 100%
   }
   .el-col {
+    display: flex;
+    flex-direction: column;
     height: 50%;
-    padding: 10px 20px;
+    padding: 10px 18px;
     // border: 1px solid black !important;
   }
   &__dataset {
     width: 100%;
-    height: 100%;
+    // height: 100%;
+    flex: 1
   }
-  &__card {
-    position: relative;
-    max-height: 100%;
+  // &__graph {
+  //   position: relative;
+  //   max-height: 100%;
+  // }
+  &__graph-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px 8px 8px;
+    > span {
+      font-size: 22px;
+      font-weight: bold;
+      margin-left: 8px;
+    }
   }
   &__menu {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+    // position: absolute;
+    // top: 5px;
+    // right: 5px;
     transform: rotate(90deg);
     cursor: pointer;
     &:hover {
