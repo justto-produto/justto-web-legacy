@@ -4,7 +4,7 @@
       <el-row>
         <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Titulo do grafico</span>
+            <!-- <span>Titulo do grafico</span> -->
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
@@ -25,7 +25,7 @@
         </el-col>
         <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Titulo grafico 2</span>
+            <!-- <span>Titulo grafico 2</span> -->
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
@@ -44,9 +44,9 @@
             </div>
           <!-- </el-card> -->
         </el-col>
-        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="16" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Titulo grafico 3</span>
+            <!-- <span>Titulo grafico 3</span> -->
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
@@ -65,9 +65,9 @@
             </div>
           <!-- </el-card> -->
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="10" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Titulo cards</span>
+            <!-- <span>Titulo cards</span> -->
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
@@ -245,12 +245,10 @@ export default {
   &__dataset {
     width: 100%;
     height: 100%;
-    // flex: 1
   }
-  // &__graph {
-  //   position: relative;
-  //   max-height: 100%;
-  // }
+  &__graph {
+    position: relative;
+  }
   &__graph-header {
     display: flex;
     justify-content: space-between;
@@ -263,11 +261,12 @@ export default {
     }
   }
   &__menu {
-    // position: absolute;
-    // top: 5px;
-    // right: 5px;
+    position: absolute;
+    top: 26px;
+    right: 26px;
     transform: rotate(90deg);
     cursor: pointer;
+    z-index: 99;
     &:hover {
       color: $--color-primary;
     }
