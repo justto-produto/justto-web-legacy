@@ -1,7 +1,7 @@
 <template>
   <jus-view-main class="dashboard-view">
     <template slot="main">
-      <el-row>
+      <el-row :gutter="40">
         <el-col v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" class="dashboard-view__card" :md="12" :sm="24">
           <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
             <span class="el-dropdown-link">
@@ -182,7 +182,7 @@ export default {
   }
   .el-col {
     height: 50%;
-    // border: 1px solid black !important;
+    border: 1px solid black !important;
   }
   &__dataset {
     width: 100%;

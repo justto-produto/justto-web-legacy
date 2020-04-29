@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="chart-card-view">
-    <el-card v-for="dataset in data.datasets" :key="dataset.label" class="chart-card-view__card">
+    <el-card v-if="data.datasets" v-for="dataset in data.datasets" :key="dataset.label" class="chart-card-view__card">
       <div class="chart-card-view__icon">
         <!-- <jus-icon :icon="" /> -->
       </div>
