@@ -5,12 +5,12 @@ const actions = {
     let url = 'api/disputes/dashboard?'
     if (chartName) {
       url += `chartName=${chartName}&`
-      url += 'reload=true'
     } else {
       for (let chart of state.charts) {
         url += `chartName=${chart}&`
       }
     }
+    url += 'reload=true'
     return axiosDispatcher({ mutation: 'setDashboardDatasets', url })
   }
 }

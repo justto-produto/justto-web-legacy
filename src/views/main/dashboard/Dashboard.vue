@@ -2,7 +2,7 @@
   <jus-view-main class="dashboard-view">
     <template slot="main">
       <el-row>
-        <el-col v-loading="loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="12" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="12" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Titulo do grafico</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -23,7 +23,7 @@
             </div>
           </el-card>
         </el-col>
-        <el-col v-loading="loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Titulo grafico 2</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -44,7 +44,7 @@
             </div>
           </el-card>
         </el-col>
-        <el-col v-loading="loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="12" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Titulo grafico 3</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -65,7 +65,7 @@
             </div>
           </el-card>
         </el-col>
-        <el-col v-loading="loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="12" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Titulo cards</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -142,8 +142,11 @@ export default {
   },
   created () {
     if (!this.chartsDatasets.length) {
+      this.loading = true
       this.$store.dispatch('getDashboard').catch(error => {
         this.$jusNotification({ error })
+      }).finally(() => {
+        this.loading = false
       })
     }
   },
