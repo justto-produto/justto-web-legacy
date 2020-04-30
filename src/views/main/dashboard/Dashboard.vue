@@ -2,7 +2,7 @@
   <jus-view-main :key="key" class="dashboard-view">
     <template slot="main">
       <el-row>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="16" :sm="24" class="dashboard-view__graph">
+        <el-col :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Status de disputas com alerta</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="command">
@@ -20,6 +20,7 @@
             </el-dropdown>
           </div>
           <jus-chart-bar
+            v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
             v-if="disputeStatusSummaryWithWarn && disputeStatusSummaryWithWarnIsChart"
             id="disputeStatusSummaryWithWarn"
             ref="disputeStatusSummaryWithWarn"
@@ -27,73 +28,30 @@
             :options="opt"
             stacked
             class="dashboard-view__dataset disputeStatusSummaryWithWarn"/>
-          <jus-chart-table v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart" :data="disputeStatusSummaryWithWarn" />
+          <jus-chart-table
+            v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
+            v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart"
+            :data="disputeStatusSummaryWithWarn" />
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph pt0">
-          <div v-if="$store.getters.isAdminProfile">
-            <el-form label-position="top">
-              <el-form-item label="Filtrar por membro da equipe">
-                <el-select
-                  v-model="selectedMemberId"
-                  filterable
-                  clearable
-                  @change="getDashboard"
-                  @clear="selectedMember = ''">
-                  <el-option
-                    v-for="member in members"
-                    :key="member.person.id"
-                    :value="member.person.id"
-                    :label="member.person.name"/>
-                </el-select>
-              </el-form-item>
-            </el-form>
+        <el-col :md="10" :sm="24" class="dashboard-view__graph pt0">
+          <div v-if="$store.getters.isAdminProfile" class="mb20">
+            <el-select
+              v-model="selectedMemberId"
+              filterable
+              clearable
+              placeholder="Filtrar por membro da equipe"
+              @change="getDashboard"
+              @clear="selectedMember = ''">
+              <el-option
+                v-for="member in members"
+                :key="member.person.id"
+                :value="member.person.id"
+                :label="member.person.name"/>
+            </el-select>
           </div>
-          <div class="dashboard-view__graph-header">
-            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
-              <span class="el-dropdown-link">
-                <i class="el-icon-more" />
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">
-                  <i class="el-icon-refresh"/> Atualizar
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-          <jus-chart-card v-if="disputeMonetarySummaries" :data="disputeMonetarySummaries" class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
-            {{ emptyMessage }}
-          </div>
-        </el-col>
-        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="14" :sm="24" class="dashboard-view__graph">
-          <div class="dashboard-view__graph-header">
-            <span>Monitor de disputas</span>
-            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
-              <span class="el-dropdown-link">
-                <i class="el-icon-more" />
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">
-                  <i class="el-icon-refresh"/> Atualizar
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-          <jus-chart-line
-            v-if="monitoringDisputeByTime"
-            id="monitoringDisputeByTime"
-            ref="monitoringDisputeByTime"
-            :data="monitoringDisputeByTime"
-            :options="opt"
-            class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
-            {{ emptyMessage }}
-          </div>
-        </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Tempo de resposta médio</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -108,11 +66,61 @@
             </el-dropdown>
           </div>
           <jus-chart-line
+            v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'"
             v-if="disputeAvgResponseTime"
             id="disputeAvgResponseTime"
             ref="disputeAvgResponseTime"
             :data="disputeAvgResponseTime"
             :options="opt"
+            :legends="false"
+            class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
+        </el-col>
+        <el-col :md="16" :sm="24" class="dashboard-view__graph">
+          <div class="dashboard-view__graph-header">
+            <span>Monitor de disputas</span>
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <jus-chart-line
+            v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'"
+            v-if="monitoringDisputeByTime"
+            id="monitoringDisputeByTime"
+            ref="monitoringDisputeByTime"
+            :data="monitoringDisputeByTime"
+            :options="opt"
+            class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
+            {{ emptyMessage }}
+          </div>
+        </el-col>
+        <el-col :md="8" :sm="24" class="dashboard-view__graph">
+          <div class="dashboard-view__graph-header">
+            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">
+                  <i class="el-icon-refresh"/> Atualizar
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <jus-chart-card
+            v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'"
+            v-if="disputeMonetarySummaries"
+            :data="disputeMonetarySummaries"
             class="dashboard-view__dataset" />
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
@@ -264,10 +272,10 @@ export default {
     filter (event, array) {
       const ref = this.$refs[event.target.parentElement.id]
       const element = ref.getElement(event)
-      const filters = (element && element.filter) || null
+      const filters = (element && element.filters) || null
       if (filters) {
         this.$confirm(
-          'Deseja ver as disputas no painel de gerenciamento?' + JSON.stringify(filters),
+          'Deseja ver as disputas no painel de gerenciamento?',
           'Ir para gerenciamento', {
             confirmButtonText: 'Continuar',
             cancelButtonText: 'Cancelar',

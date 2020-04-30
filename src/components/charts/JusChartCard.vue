@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="chart-card-view">
-    <el-card v-for="dataset in datasets" :key="dataset.label" :style="'background:' + getIcon(dataset.label).color" class="chart-card-view__card" shadow="never">
+    <el-card v-for="dataset in datasets" :key="dataset.label" :style="'background:' + getIcon(dataset.label).color" class="chart-card-view__card">
       <div class="chart-card-view__icon">
         <i :class="getIcon(dataset.label).icon" />
       </div>
