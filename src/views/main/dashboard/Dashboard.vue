@@ -2,9 +2,9 @@
   <jus-view-main :key="key" class="dashboard-view">
     <template slot="main">
       <el-row>
-        <el-col :md="14" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Status de disputas com alerta</span>
+            <span>Disputas ativas</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="command">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
@@ -20,7 +20,6 @@
             </el-dropdown>
           </div>
           <jus-chart-bar
-            v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
             v-if="disputeStatusSummaryWithWarn && disputeStatusSummaryWithWarnIsChart"
             id="disputeStatusSummaryWithWarn"
             ref="disputeStatusSummaryWithWarn"
@@ -36,7 +35,7 @@
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col :md="10" :sm="24" class="dashboard-view__graph pt0">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph pt0">
           <div v-if="$store.getters.isAdminProfile" class="mb20">
             <el-select
               v-model="selectedMemberId"
@@ -66,7 +65,6 @@
             </el-dropdown>
           </div>
           <jus-chart-line
-            v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'"
             v-if="disputeAvgResponseTime"
             id="disputeAvgResponseTime"
             ref="disputeAvgResponseTime"
@@ -78,7 +76,7 @@
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col :md="16" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="16" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Monitor de disputas</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -93,7 +91,6 @@
             </el-dropdown>
           </div>
           <jus-chart-line
-            v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'"
             v-if="monitoringDisputeByTime"
             id="monitoringDisputeByTime"
             ref="monitoringDisputeByTime"
@@ -104,7 +101,7 @@
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col :md="8" :sm="24" class="dashboard-view__graph">
+        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
@@ -118,7 +115,6 @@
             </el-dropdown>
           </div>
           <jus-chart-card
-            v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'"
             v-if="disputeMonetarySummaries"
             :data="disputeMonetarySummaries"
             class="dashboard-view__dataset" />
@@ -143,7 +139,7 @@ export default {
   data () {
     return {
       key: 0,
-      loading: '',
+      loading: false,
       emptyMessage: 'Não foi possível buscar as informações para exibição do gráfico.',
       disputeStatusSummaryWithWarnIsChart: false,
       opt: {
@@ -259,7 +255,7 @@ export default {
       this.loading = chartName
       this.$store.dispatch('getDashboard', chartName).finally(() => {
         setTimeout(() => {
-          this.loading = ''
+          this.loading = false
         }, 300)
       })
     },
@@ -274,28 +270,19 @@ export default {
       const element = ref.getElement(event)
       const filters = (element && element.filters) || null
       if (filters) {
-        this.$confirm(
-          'Deseja ver as disputas no painel de gerenciamento?',
-          'Ir para gerenciamento', {
-            confirmButtonText: 'Continuar',
-            cancelButtonText: 'Cancelar',
-            cancelButtonClass: 'is-plain',
-            type: 'info'
-          }).then(() => {
-          this.$store.commit('clearDisputeQuery')
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-          for (let key in filters) {
-            if (filters.hasOwnProperty(key)) {
-              this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
-            }
+        this.$store.commit('clearDisputeQuery')
+        this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+        for (let key in filters) {
+          if (filters.hasOwnProperty(key)) {
+            this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }
-          if (this.selectedMemberId) {
-            this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
-          }
-          this.$store.commit('setDisputeHasFilters', true)
-          this.$store.commit('setDisputesTab', '3')
-          this.$router.push('/management')
-        })
+        }
+        if (this.selectedMemberId) {
+          this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
+        }
+        this.$store.commit('setDisputeHasFilters', true)
+        this.$store.commit('setDisputesTab', '3')
+        this.$router.push('/management')
       }
     }
   }

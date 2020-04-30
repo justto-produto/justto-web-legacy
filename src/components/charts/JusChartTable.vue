@@ -16,19 +16,37 @@
       align="center"
       class-name="withoutAlert"
       prop="withoutAlert"
-      label="Sem alerta"/>
+      label="Sem alerta">
+      <template slot-scope="scope">
+        <el-tooltip content="Clique para ver estas disputas">
+          <span>{{ scope.row.withoutAlert }}</span>
+        </el-tooltip>
+      </template>
+    </el-table-column>
     <el-table-column
       :index="1"
       align="center"
       class-name="withAlert"
       prop="withAlert"
-      label="Com alerta"/>
+      label="Com alerta">
+      <template slot-scope="scope">
+        <el-tooltip content="Clique para ver estas disputas">
+          <span>{{ scope.row.withAlert }}</span>
+        </el-tooltip>
+      </template>
+    </el-table-column>
     <el-table-column
       :index="2"
       align="center"
       prop="total"
       class-name="total"
-      label="Total"/>
+      label="Total">
+      <template slot-scope="scope">
+        <el-tooltip content="Clique para ver estas disputas">
+          <span>{{ scope.row.total }}</span>
+        </el-tooltip>
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 
@@ -70,30 +88,21 @@ export default {
       let columnIndex = column.index
       let statusFilters = this.data.filter[statusIndex]
       let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
-      if (datasetFilters) {
+      if (datasetFilters || statusFilters) {
         const filters = Object.assign(statusFilters, datasetFilters)
-        this.$confirm(
-          'Deseja ver as disputas no painel de gerenciamento?',
-          'Ir para gerenciamento', {
-            confirmButtonText: 'Continuar',
-            cancelButtonText: 'Cancelar',
-            cancelButtonClass: 'is-plain',
-            type: 'info'
-          }).then(() => {
-          this.$store.commit('clearDisputeQuery')
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-          for (let key in filters) {
-            if (filters.hasOwnProperty(key)) {
-              this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
-            }
+        this.$store.commit('clearDisputeQuery')
+        this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+        for (let key in filters) {
+          if (filters.hasOwnProperty(key)) {
+            this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }
-          if (this.selectedMemberId) {
-            this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
-          }
-          this.$store.commit('setDisputeHasFilters', true)
-          this.$store.commit('setDisputesTab', '3')
-          this.$router.push('/management')
-        })
+        }
+        if (this.selectedMemberId) {
+          this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
+        }
+        this.$store.commit('setDisputeHasFilters', true)
+        this.$store.commit('setDisputesTab', '3')
+        this.$router.push('/management')
       }
     }
   }
@@ -131,6 +140,9 @@ export default {
   }
   &::before {
     background: #fff;
+  }
+  .el-tooltip  {
+    cursor: pointer;
   }
 }
 </style>
