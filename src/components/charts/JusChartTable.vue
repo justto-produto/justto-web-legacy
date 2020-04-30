@@ -18,7 +18,7 @@
       prop="withoutAlert"
       label="Sem alerta">
       <template slot-scope="scope">
-        <el-tooltip content="Clique para ver estas disputas">
+        <el-tooltip :disabled="scope.row.withoutAlert < 1" content="Clique para ver estas disputas">
           <span>{{ scope.row.withoutAlert }}</span>
         </el-tooltip>
       </template>
@@ -30,7 +30,7 @@
       prop="withAlert"
       label="Com alerta">
       <template slot-scope="scope">
-        <el-tooltip content="Clique para ver estas disputas">
+        <el-tooltip :disabled="scope.row.withAlert < 1" content="Clique para ver estas disputas">
           <span>{{ scope.row.withAlert }}</span>
         </el-tooltip>
       </template>
@@ -42,7 +42,7 @@
       class-name="total"
       label="Total">
       <template slot-scope="scope">
-        <el-tooltip content="Clique para ver estas disputas">
+        <el-tooltip :disabled="scope.row.total < 1" content="Clique para ver estas disputas">
           <span>{{ scope.row.total }}</span>
         </el-tooltip>
       </template>
@@ -83,26 +83,28 @@ export default {
       return 'header'
     },
     cellClick (row, column, cell, event) {
-      let statusIndex = row.statusIndex
-      let cellIndex = cell.cellIndex
-      let columnIndex = column.index
-      let statusFilters = this.data.filter[statusIndex]
-      let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
-      if (datasetFilters || statusFilters) {
-        const filters = Object.assign(statusFilters, datasetFilters)
-        this.$store.commit('clearDisputeQuery')
-        this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-        for (let key in filters) {
-          if (filters.hasOwnProperty(key)) {
-            this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
+      if (cell.textContent !== '0') {
+        let statusIndex = row.statusIndex
+        let cellIndex = cell.cellIndex
+        let columnIndex = column.index
+        let statusFilters = this.data.filter[statusIndex]
+        let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
+        if (datasetFilters || statusFilters) {
+          const filters = Object.assign(statusFilters, datasetFilters)
+          this.$store.commit('clearDisputeQuery')
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+          for (let key in filters) {
+            if (filters.hasOwnProperty(key)) {
+              this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
+            }
           }
+          if (this.selectedMemberId) {
+            this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
+          }
+          this.$store.commit('setDisputeHasFilters', true)
+          this.$store.commit('setDisputesTab', '3')
+          this.$router.push('/management')
         }
-        if (this.selectedMemberId) {
-          this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
-        }
-        this.$store.commit('setDisputeHasFilters', true)
-        this.$store.commit('setDisputesTab', '3')
-        this.$router.push('/management')
       }
     }
   }
@@ -122,21 +124,20 @@ export default {
     font-weight: bold;
   }
   td.withoutAlert {
-    background: #1abc9c !important;
-    color: #fff !important;
+    background: #1abc9c80 !important;
   }
   td.withAlert {
-    background: #e74c3c !important;
-    color: #fff !important;
+    background: #e74c3c80 !important;
   }
   td.total {
-    background: #f1c40f !important;
-    color: #fff !important;
+    font-weight: bold;
+    background: #f6f6f6 !important;
+    color: #424242 !important;
   }
   .el-table__footer td {
     font-weight: bold;
-    background: #f6f6f6 !important;
-    color: #adadad !important;
+    background: #f6f6f6;
+    color: #424242;
   }
   &::before {
     background: #fff;

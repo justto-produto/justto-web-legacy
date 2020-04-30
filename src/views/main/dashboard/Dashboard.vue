@@ -269,7 +269,7 @@ export default {
       const ref = this.$refs[event.target.parentElement.id]
       const element = ref.getElement(event)
       const filters = (element && element.filters) || null
-      if (filters) {
+      if (filters && element.value > 0) {
         this.$store.commit('clearDisputeQuery')
         this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
         for (let key in filters) {
