@@ -1,10 +1,10 @@
 <template>
   <div class="management-prescriptions">
     <el-button v-show="tab0" :type="ONLY_SMS_ENGAGEMENT ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_SMS_ENGAGEMENT')">
-      Engajamento com SMS
+      Somente SMS
     </el-button>
     <el-button v-show="tab0" :type="ONLY_EMAIL_ENGAGEMENT ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_EMAIL_ENGAGEMENT')">
-      Engajamento com Email
+      Somente Email
     </el-button>
     <el-button v-show="tab1" :type="HAS_ANSWER ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('HAS_ANSWER')">
       Com resposta
