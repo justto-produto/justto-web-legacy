@@ -10,7 +10,7 @@ const actions = {
         url += `chartName=${chart}&`
       }
     }
-    if (state.selectedMemberId) {
+    if (state.selectedMemberId !== null) {
       url += `memberId=${state.selectedMemberId}&`
     }
     url += 'reload=true'

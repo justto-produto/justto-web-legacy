@@ -11,7 +11,7 @@ const dashboardModule = {
       'DISPUTE_STATUS_SUMMARY_WITH_WARN',
       'MONITORING_DISPUTE_BY_TIME'
     ],
-    selectedMemberId: ''
+    selectedMemberId: null
   },
   mutations: mutations,
   actions: actions,

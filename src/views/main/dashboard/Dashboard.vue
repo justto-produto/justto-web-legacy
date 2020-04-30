@@ -43,7 +43,7 @@
               clearable
               placeholder="Filtrar por membro da equipe"
               @change="getDashboard"
-              @clear="selectedMember = ''">
+              @clear="selectedMember = null">
               <el-option
                 v-for="member in members"
                 :key="member.person.id"
@@ -187,7 +187,10 @@ export default {
       return this.$store.state.tagModule.colors
     },
     members () {
-      return this.$store.state.workspaceModule.members
+      return [
+        { person: { id: 0, name: 'Todos os negociadores' }},
+        ...this.$store.state.workspaceModule.members
+      ]
     }
   },
   created () {
@@ -277,11 +280,12 @@ export default {
             this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }
         }
-        if (this.selectedMemberId) {
+        if (this.selectedMemberId !== null) {
           this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
         }
         this.$store.commit('setDisputeHasFilters', true)
         this.$store.commit('setDisputesTab', '3')
+        console.log(this.$store.getters.disputeQuery);
         this.$router.push('/management')
       }
     }
