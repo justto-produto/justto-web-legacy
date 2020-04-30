@@ -29,7 +29,6 @@ export default {
     getElement (e) {
       var firstPoint = this._data._chart.getElementAtEvent(e)[0]
       if (firstPoint) {
-        debugger
         let filters = this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
         if (this.data.filter) {
           Object.assign(filters, this.data.filter[firstPoint._datasetIndex])

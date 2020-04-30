@@ -2,11 +2,11 @@
   <el-table
     :data="disputeStatusSummaryWithWarn"
     :header-row-class-name="headerRowClassName"
-    @cell-click="cellClick"
     max-height="100%"
     size="medium"
     show-summary
-    class="jus-chart-table">
+    class="jus-chart-table"
+    @cell-click="cellClick">
     <el-table-column
       prop="label"
       class-name="status"
@@ -68,10 +68,10 @@ export default {
       let statusIndex = row.statusIndex
       let cellIndex = cell.cellIndex
       let columnIndex = column.index
-      let filters = this.data.filter[statusIndex]
+      let statusFilters = this.data.filter[statusIndex]
       let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
       if (datasetFilters) {
-        const filters = Object.assign(filters, datasetFilters)
+        const filters = Object.assign(statusFilters, datasetFilters)
         this.$confirm(
           'Deseja ver as disputas no painel de gerenciamento?',
           'Ir para gerenciamento', {

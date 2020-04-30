@@ -12,30 +12,32 @@ const NOTFOUND = 'Erro 404 (Rota não encontrada).'
 const NotificationMessage = {
   install (Vue, options) {
     Vue.prototype.$jusNotification = (config) => {
-      if (config.error instanceof Error && config.error.response) {
-        let message = I18n.te('error.' + config.error.response.data.code) ? I18n.t('error.' + config.error.response.data.code) : (config.error.response.data.message ? config.error.response.data.message + '.' : '')
-        switch (config.error.response.status) {
-          case 504:
-            config.message = message || (TIMEOUT + TRY)
-            break
-          case 503:
-            config.type = 'warning'
-            config.message = message || (UNAVAILABLE + TRY)
-            break
-          case 403:
-            config.type = 'warning'
-            config.message = message || (DENY + TRY)
-            break
-          case 401:
-            config.type = 'warning'
-            config.message = message + '.'
-            break
-          case 404:
-            config.message = NOTFOUND + TRY
-            break
-          default:
-            config.message = (message && message !== 'No message available.') ? (message + TRY) : (ERROR + TRY)
-            break
+      if (config.error instanceof Error) {
+        if (config.error.response) {
+          let message = I18n.te('error.' + config.error.response.data.code) ? I18n.t('error.' + config.error.response.data.code) : (config.error.response.data.message ? config.error.response.data.message + '.' : '')
+          switch (config.error.response.status) {
+            case 504:
+              config.message = message || (TIMEOUT + TRY)
+              break
+            case 503:
+              config.type = 'warning'
+              config.message = message || (UNAVAILABLE + TRY)
+              break
+            case 403:
+              config.type = 'warning'
+              config.message = message || (DENY + TRY)
+              break
+            case 401:
+              config.type = 'warning'
+              config.message = message + '.'
+              break
+            case 404:
+              config.message = NOTFOUND + TRY
+              break
+            default:
+              config.message = (message && message !== 'No message available.') ? (message + TRY) : (ERROR + TRY)
+              break
+          }
         }
         console.error(config.error)
       }

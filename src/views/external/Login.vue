@@ -197,15 +197,16 @@ export default {
                   this.getMembersAndRedirect(responses[1][0])
                 }
               }).catch(error => {
-                console.error(error)
-                this.mountError()
+                this.$jusNotification({ error })
+                this.showLoading = false
               })
             })
             .catch(error => {
               if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
                 this.mountError('E-mail não cadastrado ou senha incorreta.')
               } else {
-                this.mountError()
+                this.showLoading = false
+                this.$jusNotification({ error })
               }
             })
         } else {

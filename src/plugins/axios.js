@@ -2,7 +2,7 @@ import Vue from 'vue'
 import * as Sentry from '@sentry/browser'
 import axios from 'axios'
 import store from '@/store'
-import waitForConnection from '@/utils/loading'
+import unavailableLoading from '@/utils/loading'
 
 const AUTH_TOKEN = localStorage.justoken
 
@@ -49,8 +49,7 @@ _axios.interceptors.response.use(
   function (error) {
     Sentry.captureException(error)
     if (error.response.status === 503) {
-      if (waitForConnection()) return Promise.reject(error)
-      else return 0
+      unavailableLoading()
     }
     if (error.response.status === 401 && error.response.data.code !== 'INVALID_CREDENTIALS') {
       store.dispatch('logout')

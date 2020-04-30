@@ -143,8 +143,6 @@
 </template>
 
 <script>
-import waitForConnection from '@/utils/loading'
-
 export default {
   name: 'Management',
   components: {
@@ -338,18 +336,16 @@ export default {
       this.getDisputes()
     },
     showExportDisputesDialog () {
-      if (waitForConnection()) {
-        this.exportDisputesDialog = true
-        const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
-        setTimeout(() => {
-          if (jusexportcolumns) {
-            this.$refs.tree.setCheckedKeys(jusexportcolumns)
-          } else {
-            this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
-          }
-          this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
-        }, 200)
-      }
+      this.exportDisputesDialog = true
+      const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
+      setTimeout(() => {
+        if (jusexportcolumns) {
+          this.$refs.tree.setCheckedKeys(jusexportcolumns)
+        } else {
+          this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
+        }
+        this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
+      }, 200)
     },
     exportDisputes () {
       this.loadingExport = true
