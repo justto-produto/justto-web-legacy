@@ -52,7 +52,7 @@
             </el-select>
           </div>
           <div class="dashboard-view__graph-header">
-            <span>Tempo de resposta médio</span>
+            <span>Tempo médio de resposta</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
@@ -188,7 +188,7 @@ export default {
     },
     members () {
       return [
-        { person: { id: 0, name: 'Todos os negociadores' }},
+        { person: { id: 0, name: 'Todos os negociadores' } },
         ...this.$store.state.workspaceModule.members
       ]
     }
@@ -285,7 +285,6 @@ export default {
         }
         this.$store.commit('setDisputeHasFilters', true)
         this.$store.commit('setDisputesTab', '3')
-        console.log(this.$store.getters.disputeQuery);
         this.$router.push('/management')
       }
     }
