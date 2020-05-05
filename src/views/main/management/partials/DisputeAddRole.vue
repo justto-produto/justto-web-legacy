@@ -71,7 +71,7 @@
           </el-input>
         </el-form-item>
         <el-table
-          :data="newRole.phones"
+          :data="phonesList"
           :show-header="false"
           fit
           class="el-table--list">
@@ -104,7 +104,7 @@
           </el-input>
         </el-form-item>
         <el-table
-          :data="newRole.emails"
+          :data="emailsList"
           :show-header="false"
           fit
           class="el-table--list">
@@ -213,6 +213,8 @@ export default {
       searchLoading: false,
       registerLoading: false,
       disableDocumentNumber: false,
+      emailsList: [],
+      phonesList: [],
       newRole: {
         name: '',
         phone: '',
@@ -291,8 +293,8 @@ export default {
         this.searchLoading = true
         this.disableDocumentNumber = false
         this.newRole.oabs = []
-        this.newRole.emails = []
-        this.newRole.phones = []
+        this.emailsList = []
+        this.phonesList = []
         let params = {}
         if (this.newRole.searchDocumentNumber) {
           if (this.documentNumbers.includes(this.newRole.searchDocumentNumber.replace(/\D/g, ''))) {
@@ -341,8 +343,8 @@ export default {
                 self.newRole.name = response.name
                 if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
                 self.newRole.oabs = response.oabs
-                self.newRole.emails = response.emails
-                self.newRole.phones = response.phones
+                self.emailsList = response.emails
+                self.phonesList = response.phones
               })
               this.newRole.personId = response.id
             }
@@ -401,16 +403,16 @@ export default {
       })
       if (isValid) {
         this.newRole.phone = this.newRole.phone.replace(/ /g, '').replace(/\D/g, '')
-        let isDuplicated = this.newRole.phones.findIndex(p => {
+        let isDuplicated = this.phonesList.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
-          return number.replace(/\D/g, '')
+          return number === this.newRole.phone
         })
-        if (isDuplicated < 0) this.newRole.phones.push({ number: this.newRole.phone, isMain: true })
+        if (isDuplicated < 0) this.phonesList.push({ number: this.newRole.phone, isMain: true })
         this.newRole.phone = ''
       }
     },
     removePhone (index) {
-      this.newRole.phones.splice(index, 1)
+      this.phonesList.splice(index, 1)
     },
     addEmail () {
       let isValid = true
@@ -420,13 +422,13 @@ export default {
       })
       if (isValid) {
         let self = this
-        let isDuplicated = this.newRole.emails.findIndex(e => e.address === self.newRole.email)
-        if (isDuplicated < 0) this.newRole.emails.push({ address: this.newRole.email })
+        let isDuplicated = this.emailsList.findIndex(e => e.address === self.newRole.email)
+        if (isDuplicated < 0) this.emailsList.push({ address: this.newRole.email })
         this.newRole.email = ''
       }
     },
     removeEmail (index) {
-      this.newRole.emails.splice(index, 1)
+      this.emailsList.splice(index, 1)
     },
     registerRole () {
       let isValid = true
@@ -440,8 +442,8 @@ export default {
         role.main = true
         if (this.newRole.documentNumber) role.documentNumber = this.newRole.documentNumber.replace(/\D/g, '')
         if (this.newRole.oabs) role.oabs = this.newRole.oabs
-        if (this.newRole.emails) role.emails = this.newRole.emails
-        if (this.newRole.phones) role.phones = this.newRole.phones
+        if (this.emailsList) role.emails = this.emailsList
+        if (this.phonesList) role.phones = this.phonesList
         if (this.newRole.name) role.name = this.newRole.name
         if (this.newRole.personId) role.personId = this.newRole.personId
         role.party = this.newRole.party.startsWith('respondent') ? 'RESPONDENT' : 'CLAIMANT'
