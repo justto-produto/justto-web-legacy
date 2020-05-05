@@ -397,7 +397,6 @@ export default {
       this.newRole.oabs.splice(index, 1)
     },
     addPhone () {
-      debugger
       let isValid = true
       this.$refs.newRole.validateField('phone', errorMessage => {
         if (errorMessage || !this.newRole.phone) isValid = false
@@ -416,7 +415,6 @@ export default {
       this.phonesList.splice(index, 1)
     },
     addEmail () {
-      debugger
       let isValid = true
       this.newRole.email = this.newRole.email.trim()
       this.$refs.newRole.validateField('email', errorMessage => {
