@@ -325,7 +325,7 @@ export default {
           break
         case '1':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'sort=lastReceivedMessageDate', 'expirationDate,asc'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'lastReceivedMessage,asc', 'expirationDate,asc'] })
           break
         case '2':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
