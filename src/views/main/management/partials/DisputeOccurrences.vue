@@ -226,28 +226,35 @@ export default {
         )) return null
         return true
       })
-      // MERGE DE DESCRIÇÃO
-      let previousOccurrenceIndex
-      filteredOccurrences.forEach((fo, index) => {
-        let similarity
-        if (fo.interaction && fo.interaction.type) {
-          similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 99 : 75
-        } else {
-          similarity = 75
-        }
-        let previous = filteredOccurrences[previousOccurrenceIndex]
-        if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), similarity)) {
-          if (!previous.merged) previous.merged = []
-          previous.merged.push(fo)
-          fo.toDelete = true
-        } else previousOccurrenceIndex = index
-      })
       // AGRUPA POR DATA
       let datedOccurrences = {}
-      filteredOccurrences.filter(fo => !fo.toDelete).forEach(fo => {
+      filteredOccurrences.forEach(fo => {
         let currentDay = this.$moment(fo.createAt.dateTime).format('DD/MM/YYYY')
         if (!datedOccurrences.hasOwnProperty(currentDay)) datedOccurrences[currentDay] = []
         datedOccurrences[currentDay].push(fo)
+      })
+      // MERGE DE DESCRIÇÃO
+      let previousOccurrenceIndex
+      Object.keys(datedOccurrences).forEach((item) => {
+        let datedOccurrence = datedOccurrences[item]
+        datedOccurrence.forEach((fo, index) => {
+          let similarity
+          if (fo.interaction && fo.interaction.type) {
+            similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 99 : 75
+          } else {
+            similarity = 75
+          }
+          let previous = datedOccurrence[previousOccurrenceIndex]
+          if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), similarity)) {
+            fo.toDelete = true
+            if (!previous.merged) {
+              previous.merged = []
+              previous.toDelete = false
+            }
+            previous.merged.push(fo)
+          } else previousOccurrenceIndex = index
+        })
+        datedOccurrences[item] = datedOccurrence.filter(fo => !fo.toDelete)
       })
       return datedOccurrences
     },
