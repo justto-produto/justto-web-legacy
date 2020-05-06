@@ -2,7 +2,7 @@
   <el-table
     :data="disputeStatusSummaryWithWarn"
     :header-row-class-name="headerRowClassName"
-    max-height="100%"
+    height="100%"
     size="medium"
     class="jus-chart-table"
     @cell-click="cellClick">
@@ -160,6 +160,9 @@ export default {
     display: block;
     width: 100%;
     cursor: pointer;
+  }
+  .el-table__body {
+    height: 100%;
   }
 }
 </style>

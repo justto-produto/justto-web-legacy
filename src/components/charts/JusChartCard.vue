@@ -1,12 +1,15 @@
 <template lang="html">
   <div class="chart-card-view">
-    <el-card v-for="dataset in datasets" :key="dataset.label" :style="'background:' + getIcon(dataset.label).color" class="chart-card-view__card">
+    <el-card v-for="dataset in datasets" :key="dataset.label" :style="'background:' + dataset.color" class="chart-card-view__card">
       <div class="chart-card-view__icon">
-        <i :class="getIcon(dataset.label).icon" />
+        <i :class="dataset.icon" />
       </div>
       <div class="chart-card-view__info">
         <span class="chart-card-view__label">{{ $t('dashboard.' + dataset.label) | capitalize }}</span>
-        <span class="chart-card-view__value">{{ dataset.data[0] | currency }}</span>
+        <span class="chart-card-view__value">
+          {{ dataset.data[0] | currency }}
+          <span v-if="dataset.savingsPercentage">({{ dataset.savingsPercentage }}%)</span>
+        </span>
       </div>
     </el-card>
   </div>
@@ -23,31 +26,33 @@ export default {
   },
   computed: {
     datasets () {
-      return this.data && this.data.datasets ? this.data.datasets : []
+      return this.data && this.data.datasets
+        ? this.data.datasets.filter(ds => ds.label !== 'SAVINGS_PERCENTAGE').map(ds => {
+          switch (ds.label) {
+            case 'UPPER_RANGE_AVG':
+              ds.icon = 'el-icon-s-ticket'
+              ds.color = this.colors[0]
+              break
+            case 'SETTLED_DEALS_AVG':
+              ds.icon = 'el-icon-s-finance'
+              ds.color = this.colors[3]
+              break
+            case 'SAVINGS_TOTAL':
+              ds.icon = 'el-icon-s-marketing'
+              ds.color = this.colors[4]
+              ds.savingsPercentage = this.savingsPercentage
+              break
+          }
+          return ds
+        })
+        : []
+    },
+    savingsPercentage () {
+      return this.data && this.data.datasets
+        ? this.data.datasets.find(ds => ds.label === 'SAVINGS_PERCENTAGE').data[0] : null
     },
     colors () {
       return this.$store.state.tagModule.colors
-    }
-  },
-  methods: {
-    getIcon (label) {
-      switch (label) {
-        case 'AMOUNT_RESTRICTION_AVG':
-          return {
-            icon: 'el-icon-s-ticket',
-            color: this.colors[0]
-          }
-        case 'AMOUNT_PROPOSED_AVG':
-          return {
-            icon: 'el-icon-s-finance',
-            color: this.colors[3]
-          }
-        case 'AMOUNT_SAVED_AVG':
-          return {
-            icon: 'el-icon-s-marketing',
-            color: this.colors[4]
-          }
-      }
     }
   }
 }
@@ -72,7 +77,7 @@ export default {
   .el-card__body {
     display: flex;
     align-items: center;
-    padding: 12px 15px;
+    padding: 5px 15px;
   }
   &__icon {
     position: absolute;

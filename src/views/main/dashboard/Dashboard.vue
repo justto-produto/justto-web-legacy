@@ -1,7 +1,22 @@
 <template>
   <jus-view-main :key="key" class="dashboard-view">
     <template slot="main">
-      <el-row>
+      <div v-if="$store.getters.isAdminProfile" class="mb10">
+        <el-select
+          v-model="selectedMemberId"
+          filterable
+          clearable
+          placeholder="Filtrar por membro da equipe"
+          @change="getDashboard"
+          @clear="selectedMember = null">
+          <el-option
+            v-for="member in members"
+            :key="member.person.id"
+            :value="member.person.id"
+            :label="member.person.name"/>
+        </el-select>
+      </div>
+      <el-row :class="{ showFilter: $store.getters.isAdminProfile }">
         <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Disputas ativas</span>
@@ -35,22 +50,7 @@
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph pt0">
-          <div v-if="$store.getters.isAdminProfile" class="mb20">
-            <el-select
-              v-model="selectedMemberId"
-              filterable
-              clearable
-              placeholder="Filtrar por membro da equipe"
-              @change="getDashboard"
-              @clear="selectedMember = null">
-              <el-option
-                v-for="member in members"
-                :key="member.person.id"
-                :value="member.person.id"
-                :label="member.person.name"/>
-            </el-select>
-          </div>
+        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <span>Tempo médio de resposta</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
@@ -116,13 +116,13 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <!-- <jus-chart-card
+          <jus-chart-card
             v-if="disputeMonetarySummaries"
             :data="disputeMonetarySummaries"
-            class="dashboard-view__dataset" /> -->
-          <!-- <div v-else class="dashboard-view__empty">
+            class="dashboard-view__dataset" />
+          <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
-          </div> -->
+          </div>
         </el-col>
       </el-row>
     </template>
@@ -304,7 +304,10 @@ export default {
 
 .dashboard-view {
   .el-card__body, .el-row {
-    height: 100%
+    height: 100%;
+  }
+  .showFilter {
+    height: calc(100% - 40px);
   }
   .el-col {
     display: flex;
