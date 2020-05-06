@@ -2,6 +2,7 @@
   <el-table
     :data="disputeStatusSummaryWithWarn"
     :header-row-class-name="headerRowClassName"
+    :row-class-name="tableRowClassName"
     height="100%"
     size="medium"
     class="jus-chart-table"
@@ -17,7 +18,7 @@
       prop="withoutAlert"
       label="Sem alerta">
       <template slot-scope="scope">
-        <el-tooltip :disabled="scope.row.withoutAlert < 1" content="Clique para ver estas disputas">
+        <el-tooltip :disabled="scope.row.withoutAlert < 1" :content="buildWithoutAlertTooltip(scope.row)">
           <span>{{ scope.row.withoutAlert }}</span>
         </el-tooltip>
       </template>
@@ -29,7 +30,7 @@
       prop="withAlert"
       label="Com alerta">
       <template slot-scope="scope">
-        <el-tooltip :disabled="scope.row.withAlert < 1" content="Clique para ver estas disputas">
+        <el-tooltip :disabled="scope.row.withAlert < 1" :content="buildWithAlertTooltip(scope.row)">
           <span>{{ scope.row.withAlert }}</span>
         </el-tooltip>
       </template>
@@ -38,7 +39,7 @@
       :index="2"
       align="center"
       prop="total"
-      class-name="total"
+      class-name="column-total"
       label="Total">
       <template slot-scope="scope">
         <el-tooltip :disabled="scope.row.total < 1" content="Clique para ver estas disputas">
@@ -91,8 +92,53 @@ export default {
     }
   },
   methods: {
+    buildWithoutAlertTooltip (row) {
+      switch (row.label) {
+        case 'PENDENTE':
+          return row.withoutAlert + ' disputas estão pendentes, mas NÃO vao expirar nos proximos 3 dias'
+        case 'PROPOSTA ACEITA':
+          return row.withoutAlert + ' propostas foram aceitas'
+        case 'NEGOCIANDO':
+          return row.withoutAlert + ' disputas em negociação'
+        case 'SEM RESPOSTA':
+          return row.withoutAlert + ' disputas ainda não possuem resposta'
+        case 'TOTAL':
+          return 'teste total sem alerta'
+      }
+    },
+    buildWithAlertTooltip (row) {
+      switch (row.label) {
+        case 'PENDENTE':
+          return row.withAlert + ' disputas que expiram nos proximos 3 dias e precisam de atenção IMEDIATA'
+        case 'PROPOSTA ACEITA':
+          return row.withAlert + ' disputas precisam gerar o termo de acordo ou responder uma mensagem para a parte'
+        case 'NEGOCIANDO':
+          return row.withAlert + ' disputas em negociação que precisam de atenção porque estão próximas de expirar ou precisam responder mensagens para a parte. Cuidado para não perder estas disputas.'
+        case 'SEM RESPOSTA':
+          return row.withAlert + ' disputas que ainda não possuem resposta da parte e precisam da sua atenção imediata porque expiram nos proximos 3 dias ou ja fazem mais de 7 dias que você iniciou engajamento e precisa  reagendar mensagens'
+        case 'TOTAL':
+          return ' teste total com alerta'
+      }
+    },
+    buildTotalTooltip (row) {
+      switch (row.label) {
+        case 'PENDENTE':
+          return 'teste pendente total'
+        case 'PROPOSTA ACEITA':
+          return 'teste prop ace total'
+        case 'NEGOCIANDO':
+          return 'teste negoci com total'
+        case 'SEM RESPOSTA':
+          return ' teste sem res com total'
+        case 'TOTAL':
+          return ' teste total com total'
+      }
+    },
     headerRowClassName ({ row, rowIndex }) {
       return 'header'
+    },
+    tableRowClassName ({ row, rowIndex }) {
+      if (row.label === 'TOTAL') return 'line-total'
     },
     cellClick (row, column, cell, event) {
       if (cell.textContent !== '0') {
@@ -143,10 +189,13 @@ export default {
   td.withAlert {
     background: #f1c40f80 !important;
   }
-  td.total {
+  td.column-total {
     font-weight: bold;
     background: #f6f6f6 !important;
     color: #424242 !important;
+  }
+  tr.line-total {
+    font-weight: bold;
   }
   .el-table__footer td {
     font-weight: bold;

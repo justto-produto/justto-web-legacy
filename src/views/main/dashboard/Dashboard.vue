@@ -52,7 +52,7 @@
         </el-col>
         <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Tempo médio de resposta</span>
+            <span>Tempo médio de resposta do negociador</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
