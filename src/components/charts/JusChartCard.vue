@@ -4,7 +4,7 @@
         <div class="chart-card-view__icon">
           <i :class="dataset.icon" />
         </div>
-        <el-tooltip content="Valor referente a todo o período deste time">
+        <el-tooltip content="Valor referente a todo o período desse time">
           <div class="chart-card-view__info">
             <span class="chart-card-view__label">{{ $t('dashboard.' + dataset.label) | capitalize }}</span>
             <span class="chart-card-view__value">
