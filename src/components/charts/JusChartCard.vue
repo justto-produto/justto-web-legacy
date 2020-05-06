@@ -1,17 +1,19 @@
 <template lang="html">
   <div class="chart-card-view">
-    <el-card v-for="dataset in datasets" :key="dataset.label" :style="'background:' + dataset.color" class="chart-card-view__card">
-      <div class="chart-card-view__icon">
-        <i :class="dataset.icon" />
-      </div>
-      <div class="chart-card-view__info">
-        <span class="chart-card-view__label">{{ $t('dashboard.' + dataset.label) | capitalize }}</span>
-        <span class="chart-card-view__value">
-          {{ dataset.data[0] | currency }}
-          <span v-if="dataset.savingsPercentage">({{ dataset.savingsPercentage }}%)</span>
-        </span>
-      </div>
-    </el-card>
+      <el-card v-for="dataset in datasets" :key="dataset.label" :style="'background:' + dataset.color" class="chart-card-view__card">
+        <div class="chart-card-view__icon">
+          <i :class="dataset.icon" />
+        </div>
+        <el-tooltip content="Valor referente a todo o período deste time">
+          <div class="chart-card-view__info">
+            <span class="chart-card-view__label">{{ $t('dashboard.' + dataset.label) | capitalize }}</span>
+            <span class="chart-card-view__value">
+              {{ dataset.data[0] | currency }}
+              <span v-if="dataset.savingsPercentage">({{ dataset.savingsPercentage }}%)</span>
+            </span>
+          </div>
+      </el-tooltip>
+      </el-card>
   </div>
 </template>
 

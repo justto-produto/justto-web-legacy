@@ -45,7 +45,7 @@
           <jus-chart-table
             v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
             v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart"
-            :data="disputeStatusSummaryWithWarn" />
+            :data="disputeStatusSummaryWithWarn"/>
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
@@ -105,6 +105,7 @@
         </el-col>
         <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
+            <span>Resumo</span>
             <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
