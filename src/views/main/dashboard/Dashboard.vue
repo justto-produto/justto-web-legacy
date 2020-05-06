@@ -71,6 +71,8 @@
             :data="disputeAvgResponseTime"
             :options="opt"
             :legends="false"
+            annotation="Tempo ideal: 24 horas"
+            sufix="horas"
             class="dashboard-view__dataset" />
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
@@ -114,13 +116,13 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <jus-chart-card
+          <!-- <jus-chart-card
             v-if="disputeMonetarySummaries"
             :data="disputeMonetarySummaries"
-            class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
+            class="dashboard-view__dataset" /> -->
+          <!-- <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
-          </div>
+          </div> -->
         </el-col>
       </el-row>
     </template>
@@ -213,11 +215,16 @@ export default {
         if (chart.name === 'MONITORING_DISPUTE_BY_TIME') {
           chart.data.labels = chart.data.labels.map(l => this.$moment(l).format('DD/MM'))
         }
+        // if (chart.name === 'DISPUTE_AVG_RESPONSE_TIME') {
+        //   // debugger
+        //   chart.data.labels = chart.data.labels.map(l => l)
+        // }
         for (let dataset of chart.data.datasets) {
           if (chart.type === 'line') {
             dataset.backgroundColor = 'transparent'
             switch (dataset.label) {
               case 'Tempo de resposta médio':
+
                 dataset.borderColor = this.colors[2]
                 break
               case 'Concluídos':
@@ -310,7 +317,7 @@ export default {
     height: 100%;
   }
   &__graph-header {
-    padding: 0 8px 8px 8px;
+    padding: 0 8px 16px 0;
     > span {
       font-size: 18px;
       font-weight: bold;

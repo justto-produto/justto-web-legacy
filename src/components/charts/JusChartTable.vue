@@ -4,7 +4,6 @@
     :header-row-class-name="headerRowClassName"
     max-height="100%"
     size="medium"
-    show-summary
     class="jus-chart-table"
     @cell-click="cellClick">
     <el-table-column
@@ -63,7 +62,13 @@ export default {
     disputeStatusSummaryWithWarn () {
       let self = this
       let disputeStatusSummaryWithWarn = []
+      let sumWithoutAlert = 0
+      let sumWithAlert = 0
+      let sumTotal = 0
       this.data.labels.forEach((label, index) => {
+        sumWithoutAlert += self.data.datasets[0].data[index]
+        sumWithAlert += self.data.datasets[1].data[index]
+        sumTotal += self.data.datasets[2].data[index]
         disputeStatusSummaryWithWarn.push({
           label,
           withoutAlert: self.data.datasets[0].data[index],
@@ -71,6 +76,13 @@ export default {
           total: self.data.datasets[2].data[index],
           statusIndex: index
         })
+      })
+      disputeStatusSummaryWithWarn.push({
+        label: 'TOTAL',
+        withoutAlert: sumWithoutAlert,
+        withAlert: sumWithAlert,
+        total: sumTotal,
+        statusIndex: 4
       })
       return disputeStatusSummaryWithWarn
     },
@@ -87,10 +99,12 @@ export default {
         let statusIndex = row.statusIndex
         let cellIndex = cell.cellIndex
         let columnIndex = column.index
-        let statusFilters = this.data.filter[statusIndex]
+        let statusFilters
+        if (statusIndex === 4) statusFilters = { [Object.keys(this.data.filter[0])[1]]: Object.values(this.data.filter[0])[1] }
+        else statusFilters = this.data.filter[statusIndex]
         let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
-        if (datasetFilters || statusFilters) {
-          const filters = Object.assign(statusFilters, datasetFilters)
+        if (columnIndex !== undefined && (datasetFilters || statusFilters)) {
+          const filters = Object.assign(statusFilters || {}, datasetFilters || {})
           this.$store.commit('clearDisputeQuery')
           this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
           for (let key in filters) {
@@ -127,7 +141,7 @@ export default {
     background: #1abc9c80 !important;
   }
   td.withAlert {
-    background: #e74c3c80 !important;
+    background: #f1c40f80 !important;
   }
   td.total {
     font-weight: bold;
@@ -143,6 +157,8 @@ export default {
     background: #fff;
   }
   .el-tooltip  {
+    display: block;
+    width: 100%;
     cursor: pointer;
   }
 }
