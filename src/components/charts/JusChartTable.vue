@@ -18,8 +18,11 @@
         prop="withoutAlert"
         label="Sem alerta">
         <template slot-scope="scope">
-          <el-tooltip :content="buildWithoutAlertTooltip(scope.row)">
+          <el-tooltip v-if="scope.row.withoutAlert > 0" :content="buildWithoutAlertTooltip(scope.row)">
             <span>{{ scope.row.withoutAlert }}</span>
+          </el-tooltip>
+          <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
+            <jus-icon icon="check" class="jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -30,8 +33,11 @@
         prop="withAlert"
         label="Com alerta">
         <template slot-scope="scope">
-          <el-tooltip :content="buildWithAlertTooltip(scope.row)">
+          <el-tooltip v-if="scope.row.withAlert > 0" :content="buildWithAlertTooltip(scope.row)">
             <span>{{ scope.row.withAlert }}</span>
+          </el-tooltip>
+          <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
+            <jus-icon icon="check" class="jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -42,8 +48,11 @@
         class-name="column-total"
         label="Total">
         <template slot-scope="scope">
-          <el-tooltip :content="buildTotalTooltip(scope.row)">
+          <el-tooltip v-if="scope.row.total > 0" :content="buildTotalTooltip(scope.row)">
             <span>{{ scope.row.total }}</span>
+          </el-tooltip>
+          <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
+            <jus-icon icon="check" class="jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -105,16 +114,16 @@ export default {
       }
     },
     buildWithoutAlertTooltip (row) {
-      let name = this.tooltipName() ? ' de ' + this.tooltipName() + ' ' : ''
+      let name = this.tooltipName() ? ' de ' + this.tooltipName() : ''
       switch (row.label) {
         case 'PENDENTE':
-          return row.withoutAlert + ' disputas' + name + 'estão pendentes, mas NÃO vao expirar nos proximos 3 dias'
+          return row.withoutAlert + ' disputas' + name + ' estão pendentes, mas NÃO vao expirar nos proximos 3 dias'
         case 'PROPOSTA ACEITA':
-          return row.withoutAlert + ' disputas' + name + 'foram concluidas'
+          return row.withoutAlert + ' disputas' + name + ' foram concluidas'
         case 'NEGOCIANDO':
-          return row.withoutAlert + ' disputas' + name + 'estão em negociação'
+          return row.withoutAlert + ' disputas' + name + ' estão em negociação'
         case 'SEM RESPOSTA':
-          return row.withoutAlert + ' disputas' + name + 'ainda não possuem resposta'
+          return row.withoutAlert + ' disputas' + name + ' ainda não possuem resposta'
         case 'TOTAL':
           return 'Clique para ver estas disputas'
         default:
@@ -162,7 +171,7 @@ export default {
       if (row.label === 'TOTAL') return 'line-total'
     },
     cellClick (row, column, cell, event) {
-      if (cell.textContent !== '0') {
+      if (cell.textContent) {
         let statusIndex = row.statusIndex
         let cellIndex = cell.cellIndex
         let columnIndex = column.index
@@ -236,6 +245,9 @@ export default {
     width: 100%;
     font-style: italic;
     text-align: center;
+  }
+  &__check-icon {
+    height: 14px;
   }
 }
 </style>
