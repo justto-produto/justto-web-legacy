@@ -36,8 +36,7 @@ const dispute = {
     },
     hasFilters: false,
     statuses: {},
-    respondents: [],
-    filteredTags: []
+    respondents: []
   },
   mutations: mutations,
   actions: actions,

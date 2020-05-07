@@ -13,36 +13,75 @@
 }
 
 .el-tag--etiqueta {
+  max-width: 100%;
   margin: 3px;
-  color: rgba(247, 247, 247, 0.8);
+  height: 28px;
+  line-height: 28px;
   font-weight: 600 !important;
   .el-button.el-button--text {
     color: inherit !important;
+    padding: 6px 0;
+  }
+  div {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
   i {
     font-size: 14px;
   }
+  .el-icon-close:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  &.active {
+    border: 2px solid #9461f7;
+    padding: 0 9px;
+  }
+  .el-button.el-button--text {
+    padding: 6px 0;
+  }
+}
+
+.el-tag--new, .el-tag--etiqueta {
+  display: inline-flex;
+  color: #424242;
+  .el-button.el-button--text {
+    color: inherit !important;
+  }
+}
+
+.el-tag--new {
+  width: 100%;
+  height: 36px;
+  align-items: center;
+  margin: 0;
+  i {
+    font-size: 18px;
+  }
+  .el-input__inner {
+    padding: 0px 8px;
+    font-size: 18px;
+    background-color: transparent;
+    border: 0;
+    font-weight: 500;
+    height: 28px;
+  }
+  .el-button.el-button--text {
+    transform: rotate(90deg);
+    padding-top: 4px;
+  }
+}
+
+.el-tag--click {
+  cursor: pointer;
 }
 
 .el-tag--etiqueta-select {
   display: flex;
   align-items: center;
-  margin-left: -18px;
-  margin-right: -18px;
-  i {
-    margin-right: 4px;
-  }
-}
-
-.el-tag--etiqueta-list {
-  display: flex;
-  align-items: center;
-  .el-button {
-    margin-left: auto;
-  }
-  i {
-    margin-right: 4px;
-  }
+  height: 28px;
+  line-height: 28px;
+  margin: 0px;
 }
 
 .el-tag--dropzone-active {
