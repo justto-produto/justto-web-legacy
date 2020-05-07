@@ -1161,6 +1161,22 @@ export default {
       }
     },
     namesakeDialog (name, personId) {
+      if (['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)) {
+        this.$confirm(`Você está solicitando o tratamento de homônimo de uma disputa que já
+        foi finalizada. Este processo irá agendar novamente as mensagens
+        para a parte quando finalizado. Você deseja continuar mesmo assim?`,
+        'Atenção!', {
+          confirmButtonClass: 'confirm-action-btn',
+          confirmButtonText: 'Continuar',
+          cancelButtonText: 'Cancelar',
+          dangerouslyUseHTMLString: true,
+          cancelButtonClass: 'is-plain'
+        }).then(() => { this.opeNnamesakeDialog(name, personId) })
+      } else {
+        this.opeNnamesakeDialog(name, personId)
+      }
+    },
+    opeNnamesakeDialog (name, personId) {
       this.selectedNamesakePersonId = personId
       this.namesakeButtonLoading = true
       // eslint-disable-next-line

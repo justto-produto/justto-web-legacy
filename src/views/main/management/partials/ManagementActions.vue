@@ -262,11 +262,22 @@ export default {
       } else if (action === 'CHANGE_NEGOTIATOR') {
         this.checkDisputeNegotiators()
       } else {
-        this.$confirm('Tem certeza que deseja realizar esta ação em lote?', this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())), {
+        let message = {
+          title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
+          content: 'Tem certeza que deseja realizar esta ação em lote?'
+        }
+        if (action === 'ENRICH' &&
+            this.$store.getters.disputes.filter(d => this.selectedIds.includes(d.id) && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(d.status)).length) {
+          message.title = 'Atenção!'
+          message.content = `Você está solicitando o <b>ENRIQUECIMENTO</b> de disputas que já
+          foram finalizadas. Este processo irá agendar novamente as mensagens
+          para as partes quando finalizado. Você deseja enriquecer mesmo assim?`
+        }
+        this.$confirm(message.content, message.title, {
           confirmButtonClass: 'confirm-action-btn',
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
-          type: 'warning',
+          dangerouslyUseHTMLString: true,
           cancelButtonClass: 'is-plain'
         }).then(() => {
           if (action === 'ENRICH') this.enrichDisputes(action)
@@ -332,7 +343,6 @@ export default {
           confirmButtonText: 'Trocar todos',
           cancelButtonText: 'Escolher negociadores de cada disputa',
           cancelButtonClass: 'is-plain',
-          type: 'warning',
           distinguishCancelAndClose: true,
           customClass: 'el-message-box--lg'
         }).then(() => {
