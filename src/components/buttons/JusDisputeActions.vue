@@ -421,6 +421,9 @@ export default {
     checkUpperRangeCounterOffer () {
       return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
     },
+    isAccepted () {
+      return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : null
+    },
     workspaceNegotiators () {
       return this.$store.getters.workspaceMembers.map(member => {
         let newMember = {}
@@ -530,6 +533,12 @@ export default {
           })
           break
         case 'enrich':
+          if (this.isAccepted) {
+            message.title = 'Atenção!'
+            message.content = `Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já
+          foi finalizada. Este processo irá agendar novamente as mensagens
+          para as partes quando finalizado. Você deseja enriquecer mesmo assim?`
+          }
           this.doAction(action, message)
           break
         case 'renegotiate':
@@ -586,8 +595,8 @@ export default {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           cancelButtonClass: 'is-plain',
-          showClose: false,
-          type: 'warning'
+          dangerouslyUseHTMLString: true,
+          showClose: false
         }).then(() => {
           this.modalLoading = true
           let params = { action: action, disputeId: this.dispute.id }
@@ -616,8 +625,7 @@ export default {
             title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
             dangerouslyUseHTMLString: true,
             confirmButtonText: 'OK',
-            showClose: false,
-            type: 'warning'
+            showClose: false
           })
           reject(new Error('Invalid Fields'))
         } else {
@@ -690,8 +698,7 @@ export default {
                 cancelButtonText: 'Cancelar',
                 cancelButtonClass: 'is-plain',
                 dangerouslyUseHTMLString: true,
-                showClose: false,
-                type: 'warning'
+                showClose: false
               }).then(() => {
                 resolve()
               }).catch(e => {
@@ -793,8 +800,7 @@ export default {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           cancelButtonClass: 'is-plain',
-          showClose: false,
-          type: 'warning'
+          showClose: false
         }).then(() => {
           resolve()
         }).catch(e => {
