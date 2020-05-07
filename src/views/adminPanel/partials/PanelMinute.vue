@@ -27,16 +27,12 @@
           </el-button>
         </template>
         <template slot-scope="props">
-          <el-tooltip v-if="props.row.privateDocumentModel" content="Excluir">
-            <el-button size="mini" type="danger" plain icon="el-icon-delete" @click="deleteMinute(props.row.id)">
-              Excluir
-            </el-button>
-          </el-tooltip>
-          <el-tooltip content="Editar">
-            <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="editMinute(props.row.url)">
-              Editar documento
-            </el-button>
-          </el-tooltip>
+          <el-button v-if="props.row.privateDocumentModel" content="Excluir" size="mini" type="danger" plain icon="el-icon-delete" @click="deleteMinute(props.row.id)">
+            Excluir
+          </el-button>
+          <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="editMinute(props.row.url)">
+            Editar documento
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,9 +43,7 @@
       :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }"
       title="Editar minuta"
       class="panel-minute-view__dialog">
-      <!-- <el-tooltip :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'"> -->
       <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="panel-minute-view__fullscreen-icon" @click="fullscreen = !fullscreen" />
-      <!-- </el-tooltip> -->
       <iframe :src="editDialogUrl" frameborder="0"/>
       <el-card shadow="never" class="panel-minute-view__tips">
         <h2>Variáveis disponíveis</h2>
@@ -57,7 +51,12 @@
           <div v-for="(key, value) in types" :key="key">
             <span>{{ key }}</span>
             <div>
-              <span v-pre>{{</span>{{ value }}<span v-pre>}}</span>
+              <span>
+                <span v-pre>{{</span>{{ value }}<span v-pre>}}</span>
+              </span>
+              <el-tooltip content="Copiar para o clipboard">
+                <el-button size="mini" type="text" icon="el-icon-copy-document" @click="copy(value)"/>
+              </el-tooltip>
             </div>
           </div>
         </span>
@@ -191,6 +190,9 @@ export default {
     editMinuteName (minute) {
       this.tableKey += 1
       if (minute.name !== this.nameToEdit) this.$store.dispatch('editModel', minute)
+    },
+    copy (value) {
+      navigator.clipboard.writeText(`{{${value}}}`)
     }
   }
 }
@@ -226,7 +228,7 @@ export default {
     color: $--color-text-secondary;
     font-size: 16px;
     top: 31px;
-    right: 48px;
+    right: 53px;
     cursor: pointer;
     &:hover {
       color: $--color-primary
@@ -266,7 +268,7 @@ export default {
     border: 0;
     background-color: $--color-secondary-light-9;
     margin-left: 10px;
-    width: 300px;
+    width: 320px;
     font-size: 13px;
     overflow-y: auto;
     * {
@@ -285,8 +287,20 @@ export default {
           font-weight: 600;
         }
         div {
-          padding-left: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: 1px solid black;
           font-size: 12px;
+          margin-top: 3px;
+          padding: 3px 6px;
+          background-color: rgba(255, 255, 255, 0.75);
+          border-color: #dcdfe6;
+          border-radius: 2px;
+          button {
+            font-size: 20px;
+            padding: 0;
+          }
         }
       }
     }
