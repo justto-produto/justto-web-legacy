@@ -5,7 +5,7 @@
       :key="tag.id"
       :style="{ zIndex: workspaceTags.length - index }"
       class="jus-tags-filter__item">
-      <el-tag :color="tag.color + '33'" :class="{ 'active': tag.active }" @click="filterByTag(tag)">
+      <el-tag :color="tag.color" :class="{ 'active': tag.active }" @click="filterByTag(tag)">
         <el-tooltip :content="tag.name">
           <i :class="`el-icon-${tag.icon}`"/>
         </el-tooltip>
