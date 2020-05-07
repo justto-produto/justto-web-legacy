@@ -4,109 +4,95 @@
       v-for="tag in disputeTags"
       :key="tag.id"
       :color="tag.color"
-      class="el-tag--etiqueta">
-      <i :class="`el-icon-${tag.icon}`"/>
-      {{ tag.name }}
-      <el-button type="text" icon="el-icon-close" size="mini" @click="removeTag(tag.id)" />
+      class="el-tag--etiqueta el-tag--click">
+      <div @click="filterByTag(tag.id)">
+        <i :class="`el-icon-${tag.icon}`"/>
+        {{ tag.name }}
+      </div>
+      <el-button type="text" icon="el-icon-close" size="small" @click.prevent="removeTag(tag.id)" />
     </el-tag>
     <el-popover
       v-model="visible"
-      width="400"
+      width="310"
       trigger="manual"
+      popper-class="jus-tags__popover"
       @show="getTags"
       @hide="resetFields">
       <div v-loading="loading">
-        <button v-show="!loading" type="button" class="el-dialog__headerbtn jus-tags__close" @click="visible = false">
-          <i class="el-dialog__close el-icon el-icon-close" />
-        </button>
-        <div class="jus-tags__title">
-          <span v-if="showForm">Nova </span>
-          <span v-else>Adicionar </span>
-          etiqueta
-        </div>
         <!-- ADICIONAR ETIQUETA -->
         <div v-if="!showForm">
           <el-select
             ref="selectTag"
             v-model="selectedTag"
             filterable
-            placeholder="Buscar"
+            placeholder="Buscar ou cadastrar nova etiqueta"
             class="jus-tags__select"
+            popper-class="jus-tags__select-popper"
             @change="addTag">
             <el-option
               v-for="tag in workspaceTags"
               :key="tag.id"
-              :label="tag.label"
+              :label="tag.name"
               :value="tag">
               <el-tag
                 :color="tag.color"
                 class="el-tag--etiqueta el-tag--etiqueta-select">
-                <i :class="`el-icon-${tag.icon}`"/>
-                {{ tag.name }}
+                <div>
+                  <i :class="`el-icon-${tag.icon}`"/>
+                  {{ tag.name }}
+                </div>
               </el-tag>
             </el-option>
             <div slot="empty">
               <el-button type="text" class="jus-tags__add-button" size="small" @click="showNewTagForm">
-                <i class="el-icon-plus" /> Adicionar nova tag
+                <i class="el-icon-plus" /> Adicionar nova etiqueta
               </el-button>
             </div>
           </el-select>
         </div>
         <!-- NOVA ETIQUETA -->
-        <div v-if="showForm" class="mt20">
-          <el-tag :color="tagForm.color" class="jus-tags__new-tag">
-            <el-dropdown class="jus-tags__select-icon" @command="changeIcon">
-              <span><i :class="`el-icon-${tagForm.icon}`"/></span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  v-for="icon in icons"
-                  :key="icon"
-                  :command="icon">
-                  <i :class="`el-icon-${icon}`"/>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+        <div v-if="showForm" class="jus-tags__new-tag-form">
+          <div class="jus-tags__title">
+            Nova etiqueta
+          </div>
+          <el-tag :color="tagForm.color" class="el-tag--new">
+            <i :class="`el-icon-${tagForm.icon}`"/>
             <el-input
               v-model="tagForm.name"
               :maxlength="24"
               size="small"
-              class="jus-tags__name"
               @keyup.enter.native="saveTag"/>
-            <el-dropdown class="jus-tags__select-color" @command="changeColor">
-              <span><i class="el-icon-brush"/></span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
+            <el-popover trigger="hover" width="200" popper-class="jus-tags__edit-tag">
+              <div class="title">
+                Personalizar etiqueta
+              </div>
+              <div class="icon">
+                <i
+                  v-for="icon in icons"
+                  :key="icon"
+                  :class="`el-icon-${icon}`"
+                  @click="tagForm.icon = icon" />
+              </div>
+              <div class="color">
+                <el-tag
                   v-for="color in colors"
                   :key="color"
-                  :command="color"
-                  :style="{ backgroundColor: color, color: 'transparent' }">
-                  {{ color }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+                  :color="color"
+                  class="el-tag--click"
+                  @click="tagForm.color = color" />
+              </div>
+              <el-button slot="reference" type="text" icon="el-icon-more" />
+            </el-popover>
           </el-tag>
           <div class="jus-tags__new-tag-actions">
             <el-button plain size="mini" @click="resetFields">Cancelar</el-button>
             <el-button type="primary" size="mini" @click="saveTag">Adicionar</el-button>
           </div>
         </div>
-        <!-- ETIQUETAS DA DISPUTA -->
-        <div v-if="disputeTags.length" class="jus-tags__list">
-          <div class="jus-tags__title">Etiquetas da disputa</div>
-          <el-tag
-            v-for="tag in disputeTags"
-            :key="tag.id"
-            :color="tag.color"
-            class="el-tag--etiqueta el-tag--etiqueta-list">
-            <i :class="`el-icon-${tag.icon}`"/>
-            {{ tag.name }}
-            <el-button type="text" icon="el-icon-close" size="mini" @click="removeTag(tag.id)" />
-          </el-tag>
-        </div>
       </div>
-      <el-tooltip slot="reference" content="Adicionar etiqueta">
-        <el-tag class="jus-tags__open-button" @click="visible = !visible">
-          <i class="el-icon-plus" />
+      <el-tooltip id="idTagTooltip" slot="reference" content="Adicionar etiqueta">
+        <el-tag id="idTag" class="jus-tags__open-button" @click="visible = !visible">
+          <i id="idTagIcon" class="el-icon-plus" />
         </el-tag>
       </el-tooltip>
     </el-popover>
@@ -144,6 +130,7 @@ export default {
           this.$jusNotification({ error })
         }).finally(() => {
           this.loading = false
+          this.visible = false
         })
       }
     },
@@ -162,8 +149,17 @@ export default {
   mounted () {
     this.tagForm.color = this.colors[0]
     this.tagForm.icon = this.icons[0]
+    window.addEventListener('click', this.closeOnCLick)
+  },
+  destroyed () {
+    window.removeEventListener('click', this.closeOnCLick)
   },
   methods: {
+    closeOnCLick (e) {
+      if (!e.target.id.startsWith('idTag') && !e.target.textContent.includes('Adicionar nova etiqueta')) {
+        this.visible = false
+      }
+    },
     saveTag () {
       if (this.tagForm.name) {
         // SEGMENT TRACK
@@ -217,10 +213,18 @@ export default {
       this.loading = true
       this.$store.dispatch('getWorkspaceTags').finally(() => {
         this.loading = false
+        this.$refs.selectTag.focus()
       })
     },
     resetFields () {
       this.$nextTick(() => { this.showForm = false })
+    },
+    filterByTag (tagId) {
+      this.$store.commit('clearDisputeQuery')
+      this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+      this.$store.commit('updateDisputeQuery', { key: 'tags', value: [tagId] })
+      this.$store.commit('setDisputesTab', '3')
+      this.$router.push('/management')
     }
   }
 }
@@ -229,75 +233,81 @@ export default {
 <style lang="scss">
 .jus-tags {
   width: 100%;
-  margin: 2px 0 5px;
+  padding: 2px 3px 5px 10px;
+  &__popover {
+    padding: 10px;
+  }
   &__select {
     width: 100%;
   }
+  &__select-popper {
+    width: 310px;
+    margin-left: -10px;
+    .el-select-dropdown__list {
+      padding-top: 10px;
+      padding-right: 10px;
+    }
+    .el-select-dropdown__item {
+      padding: 0 10px;
+      height: 32px;
+      line-height: 32px;
+    }
+    .el-scrollbar__bar.is-vertical {
+      opacity: 1;
+      width: 8px;
+      .el-scrollbar__thumb {
+        background-color: #c8c8c8;
+      }
+    }
+  }
   &__add-button {
     padding: 10px;
+    font-size: 13px;
+    .el-icon-plus {
+      margin-right: 2px;
+    }
   }
   &__open-button {
     cursor: pointer;
     margin: 3px;
-    margin-left: 3px;
-  }
-  &__list {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    .el-tag--etiqueta {
-      margin: 3px 0;
-    }
+    height: 28px;
+    line-height: 28px;
   }
   &__title {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 10px;
   }
-  &__new-tag {
-    width: 100%;
-    padding: 4px 10px;
-    height: auto;
-    display: flex;
+  &__new-tag-form {
+    padding: 10px 5px;
   }
+
   &__new-tag-actions {
     text-align: right;
-    margin-top: 10px;
+    margin-top: 16px;
   }
-  &__select-icon, &__select-color {
-    color: rgba(247, 247, 247, 0.6);
-    cursor: pointer;
-    font-size: 20px;
-  }
-  &__select-color {
-    border: 1px solid rgba(247, 247, 247, 0.6);
-    border-radius: 4px;
-    padding: 0px 6px;
-  }
-  &__name .el-input__inner {
-    font-size: 18px;
-    color: rgba(247, 247, 247, 0.8);
-    background-color: transparent;
-    border: 0;
-    font-weight: 600;
-  }
-  &__pick-color {
-    flex-direction: column;
-    align-items: center;
-    width: auto;
-    padding: 10px;
-    .el-color-predefine {
-      width: auto;
+  &__edit-tag {
+    padding: 10px 12px;
+    text-align: center;
+    .title {
+      font-size: 15px;
+      font-weight: 600;
     }
-    .el-color-dropdown__main-wrapper,
-    .el-color-dropdown__value,
-    .el-color-dropdown__link-btn {
-      display: none;
+    .icon, .color {
+      padding-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      margin: -2px;
     }
-  }
-  &__close {
-    top: 12px;
-    right: 22px;
+    .icon i {
+      cursor: pointer;
+      flex: 1 0 17%;
+      padding: 5px;
+    }
+    .color .el-tag {
+      flex: 1 0 31%;
+      margin: 2px;
+    }
   }
 }
 </style>

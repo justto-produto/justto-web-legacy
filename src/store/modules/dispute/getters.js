@@ -1,7 +1,3 @@
-// import moment from 'moment'
-// import i18n from '@/plugins/vueI18n.js'
-// import { fuseSearchDisputes } from '@/utils/jusUtils'
-
 const disputeGetters = {
   loadingDisputes: state => state.loading,
   disputes: state => state.disputes,
@@ -17,7 +13,6 @@ const disputeGetters = {
   disputeStatuses: state => state.statuses,
   disputeHasNew: state => state.hasNew,
   respondents: state => state.respondents,
-  filteredTags: state => state.filteredTags,
   filterSummary: state => (disputePhase, summarys) => {
     let filteredSummarys = summarys.filter(s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {
