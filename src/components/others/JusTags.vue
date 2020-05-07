@@ -126,6 +126,7 @@ export default {
         }).then(() => {
           this.tagForm.name = ''
           this.showForm = false
+          this.$store.dispatch('getWorkspaceTags')
         }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
