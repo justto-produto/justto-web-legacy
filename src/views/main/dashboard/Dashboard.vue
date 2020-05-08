@@ -222,27 +222,35 @@ export default {
             switch (dataset.label) {
               case 'Geral':
                 dataset.borderColor = this.colors[2]
+                dataset.pointBackgroundColor = this.colors[2]
                 break
               case 'E-mail':
                 dataset.borderColor = this.colors[1]
+                dataset.pointBackgroundColor = this.colors[1]
                 break
               case 'WhatsApp':
                 dataset.borderColor = this.colors[4]
+                dataset.pointBackgroundColor = this.colors[4]
                 break
               case 'Plataforma':
                 dataset.borderColor = this.colors[5]
+                dataset.pointBackgroundColor = this.colors[5]
                 break
               case 'SMS':
                 dataset.borderColor = this.colors[3]
+                dataset.pointBackgroundColor = this.colors[3]
                 break
               case 'Concluídos':
                 dataset.borderColor = this.colors[4]
+                dataset.pointBackgroundColor = this.colors[4]
                 break
               case 'Acordos':
                 dataset.borderColor = this.colors[5]
+                dataset.pointBackgroundColor = this.colors[5]
                 break
               case 'Perdidos':
                 dataset.borderColor = this.colors[1]
+                dataset.pointBackgroundColor = this.colors[1]
                 break
               case 'Total':
                 dataset.borderColor = '#343c4b'
