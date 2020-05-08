@@ -13,9 +13,6 @@ const disputeMutations = {
       state.query.total = pageable.totalElements
     }
   },
-  setFilteredTags (state, tags) {
-    state.filteredTags = tags.content
-  },
   setDispute (state, disputeVM) {
     state.dispute = disputeVM
   },
@@ -78,8 +75,8 @@ const disputeMutations = {
   },
   clearDisputeQuery (state) {
     state.query = {
-      status: ['ENGAGEMENT'],
-      sort: 'expirationDate,asc',
+      status: ['RUNNING'],
+      sort: ['visualized,asc', 'conclusionDate,asc'],
       campaigns: [],
       strategy: [],
       tags: [],
@@ -118,7 +115,7 @@ const disputeMutations = {
     state.tab = tab
   },
   clearDisputeTab (state, tab) {
-    state.tab = '0'
+    state.tab = '1'
   },
   setDisputeOccurrences (state, occurrences) {
     if (occurrences && occurrences.length) state.occurrences = occurrences.reverse()

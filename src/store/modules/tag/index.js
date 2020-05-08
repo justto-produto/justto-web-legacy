@@ -6,6 +6,7 @@ const tagModule = {
   state: {
     workspaceTags: [],
     disputeTags: [],
+    filteredTags: [],
     colors: [
       '#f1c40f', // 0 amarelo
       '#e74c3c', // 1 vermelho

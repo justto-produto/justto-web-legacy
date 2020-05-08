@@ -16,7 +16,7 @@ const dispute = {
     occurrencesSize: 20,
     summaryNearExpirations: [],
     summaryNotVisualizeds: [],
-    tab: '0',
+    tab: '1',
     hasNew: false,
     query: {
       status: ['ENGAGEMENT'],
@@ -36,8 +36,7 @@ const dispute = {
     },
     hasFilters: false,
     statuses: {},
-    respondents: [],
-    filteredTags: []
+    respondents: []
   },
   mutations: mutations,
   actions: actions,

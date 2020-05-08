@@ -47,7 +47,7 @@ _axios.interceptors.response.use(
     return response
   },
   function (error) {
-    Sentry.captureException(error)
+    if (process.env.NODE_ENV === 'production') Sentry.captureException(error)
     if (error.response.status === 503) {
       unavailableLoading()
     }

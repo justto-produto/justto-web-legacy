@@ -1,10 +1,10 @@
 <template>
   <div class="management-prescriptions">
     <el-button v-show="tab0" :type="ONLY_SMS_ENGAGEMENT ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_SMS_ENGAGEMENT')">
-      Engajamento com SMS
+      Somente SMS
     </el-button>
     <el-button v-show="tab0" :type="ONLY_EMAIL_ENGAGEMENT ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_EMAIL_ENGAGEMENT')">
-      Engajamento com Email
+      Somente Email
     </el-button>
     <el-button v-show="tab1" :type="HAS_ANSWER ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('HAS_ANSWER')">
       Com resposta
@@ -30,12 +30,16 @@
     <el-button v-show="tab0 || tab1" :type="NO_UPPER_RANGE ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('NO_UPPER_RANGE')">
       Sem alçada máxima
     </el-button>
+    <jus-tags-filter @prescriptions:getDisputes="getDisputes" />
   </div>
 </template>
 
 <script>
 export default {
   name: 'ManagementPrescriptions',
+  components: {
+    JusTagsFilter: () => import('@/components/others/JusTagsFilter')
+  },
   props: {
     activeTab: {
       default: '1',
@@ -127,6 +131,9 @@ export default {
             break
         }
       }
+      this.getDisputes()
+    },
+    getDisputes () {
       this.$emit('management:getDisputes')
     }
   }
@@ -135,7 +142,8 @@ export default {
 
 <style lang="scss">
 .management-prescriptions {
-  margin: 6px 0;
+  margin: 6px 192px 6px 0px;
+  display: flex;
   .el-button--primary.is-plain:focus {
     color: #9461f7;
     background: #f4effe;

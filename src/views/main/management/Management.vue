@@ -82,7 +82,7 @@
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
       <div style="min-height: 44px;position: relative;">
-        <management-prescriptions v-show="activeTab !== '2'" :active-tab="activeTab" @management:getDisputes="getDisputes" />
+        <management-prescriptions :active-tab="activeTab" @management:getDisputes="getDisputes" />
         <div v-show="disputesTotalLength" style="right: 0px;position: absolute;top: 13px;">
           Exibindo {{ disputes.length }} de {{ disputesTotalLength }} disputa<span v-show="disputesTotalLength > 1">s</span>
         </div>
@@ -291,6 +291,7 @@ export default {
     getDisputes () {
       clearTimeout(this.disputeDebounce)
       this.disputeDebounce = setTimeout(() => {
+        this.$store.dispatch('getFilteredTags')
         return this.$store.dispatch('getDisputes', 'resetPages').catch(error => {
           if (this.$store.getters.isLoggedIn) {
             this.$jusNotification({ error })
@@ -323,7 +324,7 @@ export default {
           break
         case '1':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
-          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'expirationDate,asc'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'lastReceivedMessage,asc', 'expirationDate,asc'] })
           break
         case '2':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ACCEPTED', 'CHECKOUT'] })
