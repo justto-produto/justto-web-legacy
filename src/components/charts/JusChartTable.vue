@@ -120,13 +120,13 @@ export default {
       let name = this.tooltipName() ? ' de ' + this.tooltipName() : ''
       switch (row.label) {
         case 'PENDENTE':
-          return row.withoutAlert + ' disputas' + name + ' estão pendentes, mas NÃO vão expirar nos proximos 3 dias.'
+          return row.withoutAlert + ' disputas' + name + ' estão pendentes, mas NÃO vão expirar nos proximos 3 dias. Pode tratar dos outros casos, só não esqueça de tratar estas pendências'
         case 'PROPOSTA ACEITA':
-          return row.withoutAlert + ' disputas' + name + ' foram concluidas.'
+          return row.withoutAlert + ' disputas' + name + ' foram concluidas. Aguardando providências para sua formalização'
         case 'NEGOCIANDO':
-          return row.withoutAlert + ' disputas' + name + ' estão em negociação.'
+          return row.withoutAlert + ' disputas' + name + ' estão em negociação, mas NÃO vão expirar nos próximos 3 dias'
         case 'SEM RESPOSTA':
-          return row.withoutAlert + ' disputas' + name + ' ainda não possuem resposta.'
+          return row.withoutAlert + ' disputas' + name + ' ainda não possuem resposta, mas NÃO vão expirar nos próximos 3 dias'
         case 'TOTAL':
           return 'Clique para ver estas disputas.'
         default:
@@ -139,11 +139,11 @@ export default {
         case 'PENDENTE':
           return name + row.withAlert + ' disputas que expiram nos proximos 3 dias e precisam de atenção IMEDIATA'
         case 'PROPOSTA ACEITA':
-          return name + row.withAlert + ' disputas precisam gerar o termo de acordo ou responder uma mensagem para a parte.'
+          return name + row.withAlert + ' disputas precisam gerar o termo de acordo, providenciar sua assinatura, responder uma mensagem da parte ou dar ganho na disputa'
         case 'NEGOCIANDO':
           return name + row.withAlert + ' disputas em negociação próximas de expirar ou precisam responder mensagens para a parte.'
         case 'SEM RESPOSTA':
-          return name + row.withAlert + ' disputas que ainda não possuem resposta da parte e expiram nos proximos 3 dias, ou que já fazem mais de 7 dias que você iniciou engajamento e precisa reagendar mensagens.'
+          return name + row.withAlert + ' disputas que ainda não possuem resposta da parte e expiram nos proximos 3 dias, ou que já fazem mais de 7 dias que você iniciou engajamento e precisa reagendar mensagens. Entre em contato manualmente ou reagende as mensagens'
         case 'TOTAL':
           return 'Clique para ver estas disputas'
         default:
