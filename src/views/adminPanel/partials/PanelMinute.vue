@@ -247,7 +247,6 @@ export default {
   }
   iframe {
     width: calc(100% - 280px);
-    // height: 100%;
   }
   &__name {
     .label {

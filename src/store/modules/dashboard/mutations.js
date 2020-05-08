@@ -12,6 +12,10 @@ const mutations = {
   },
   setSelectedMemberId (state, selectedMemberId) {
     state.selectedMemberId = selectedMemberId
+  },
+  clearDashboard (state) {
+    state.chartsDatasets = []
+    state.selectedMemberId = null
   }
 }
 

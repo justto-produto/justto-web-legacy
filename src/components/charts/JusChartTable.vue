@@ -18,7 +18,8 @@
         prop="withoutAlert"
         label="Sem alerta">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.withoutAlert > 0" :content="buildWithoutAlertTooltip(scope.row)">
+          <el-tooltip v-if="scope.row.withoutAlert > 0" popper-class="jus-chart-table__tooltip">
+            <div slot="content" v-html="buildWithoutAlertTooltip(scope.row)" />
             <span>{{ scope.row.withoutAlert }}</span>
           </el-tooltip>
           <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
@@ -33,7 +34,8 @@
         prop="withAlert"
         label="Com alerta">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.withAlert > 0" :content="buildWithAlertTooltip(scope.row)">
+          <el-tooltip v-if="scope.row.withAlert > 0" popper-class="jus-chart-table__tooltip">
+            <div slot="content" v-html="buildWithAlertTooltip(scope.row)" />
             <span>{{ scope.row.withAlert }}</span>
           </el-tooltip>
           <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
@@ -48,7 +50,8 @@
         class-name="column-total"
         label="Total">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.total > 0" :content="buildTotalTooltip(scope.row)">
+          <el-tooltip v-if="scope.row.total > 0" popper-class="jus-chart-table__tooltip">
+            <div slot="content" v-html="buildTotalTooltip(scope.row)" />
             <span>{{ scope.row.total }}</span>
           </el-tooltip>
           <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
@@ -57,7 +60,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <span class="jus-chart-table__subtitle">*Clique nos números para poder visualizar as disputas</span>
+    <span class="jus-chart-table__subtitle">* Clique nos números para poder visualizar as disputas</span>
   </div>
 </template>
 
@@ -117,17 +120,17 @@ export default {
       let name = this.tooltipName() ? ' de ' + this.tooltipName() : ''
       switch (row.label) {
         case 'PENDENTE':
-          return row.withoutAlert + ' disputas' + name + ' estão pendentes, mas NÃO vao expirar nos proximos 3 dias'
+          return row.withoutAlert + ' disputas' + name + ' estão pendentes, mas NÃO vão expirar nos proximos 3 dias.'
         case 'PROPOSTA ACEITA':
-          return row.withoutAlert + ' disputas' + name + ' foram concluidas'
+          return row.withoutAlert + ' disputas' + name + ' foram concluidas.'
         case 'NEGOCIANDO':
-          return row.withoutAlert + ' disputas' + name + ' estão em negociação'
+          return row.withoutAlert + ' disputas' + name + ' estão em negociação.'
         case 'SEM RESPOSTA':
-          return row.withoutAlert + ' disputas' + name + ' ainda não possuem resposta'
+          return row.withoutAlert + ' disputas' + name + ' ainda não possuem resposta.'
         case 'TOTAL':
-          return 'Clique para ver estas disputas'
+          return 'Clique para ver estas disputas.'
         default:
-          return 'Clique para ver estas disputas'
+          return 'Clique para ver estas disputas.'
       }
     },
     buildWithAlertTooltip (row) {
@@ -136,11 +139,11 @@ export default {
         case 'PENDENTE':
           return name + row.withAlert + ' disputas que expiram nos proximos 3 dias e precisam de atenção IMEDIATA'
         case 'PROPOSTA ACEITA':
-          return name + row.withAlert + ' disputas precisam gerar o termo de acordo ou responder uma mensagem para a parte'
+          return name + row.withAlert + ' disputas precisam gerar o termo de acordo ou responder uma mensagem para a parte.'
         case 'NEGOCIANDO':
           return name + row.withAlert + ' disputas em negociação próximas de expirar ou precisam responder mensagens para a parte.'
         case 'SEM RESPOSTA':
-          return name + row.withAlert + ' disputas que ainda não possuem resposta da parte e expiram nos proximos 3 dias, ou que ja fazem mais de 7 dias que você iniciou engajamento e precisa reagendar mensagens'
+          return name + row.withAlert + ' disputas que ainda não possuem resposta da parte e expiram nos proximos 3 dias, ou que já fazem mais de 7 dias que você iniciou engajamento e precisa reagendar mensagens.'
         case 'TOTAL':
           return 'Clique para ver estas disputas'
         default:
@@ -153,15 +156,15 @@ export default {
         case 'PENDENTE':
           return name + row.total + ' disputas pendentes. Cuidado para não perde o prazo!'
         case 'PROPOSTA ACEITA':
-          return name + row.total + ' disputas aceitas. Não se esqueça de gerar os termos e enviar para o autor'
+          return name + row.total + ' disputas aceitas. Não se esqueça de gerar os termos e enviar para o autor.'
         case 'NEGOCIANDO':
-          return name + row.total + ' disputas em negociação'
+          return name + row.total + ' disputas em negociação.'
         case 'SEM RESPOSTA':
-          return name + row.total + ' disputas que ainda não possuem respostas. Se já se passaram 1 semana, reinicie o engajamento para aumentar as chances de sucesso'
+          return name + row.total + ' disputas que ainda não possuem respostas. Se já se passaram 1 semana, reinicie o engajamento para aumentar as chances de sucesso.'
         case 'TOTAL':
-          return 'Clique para ver estas disputas'
+          return 'Clique para ver estas disputas.'
         default:
-          return 'Clique para ver estas disputas'
+          return 'Clique para ver estas disputas.'
       }
     },
     headerRowClassName ({ row, rowIndex }) {
@@ -243,11 +246,18 @@ export default {
   &__subtitle {
     display: block;
     width: 100%;
+    padding-top: 4px;
     font-style: italic;
     text-align: center;
   }
   &__check-icon {
     height: 14px;
+  }
+  &__tooltip {
+    div {
+      text-align: justify;
+      max-width: 360px;
+    }
   }
 }
 </style>
