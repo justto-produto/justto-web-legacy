@@ -291,6 +291,7 @@ export default {
     getDisputes () {
       clearTimeout(this.disputeDebounce)
       this.disputeDebounce = setTimeout(() => {
+        this.$store.dispatch('getFilteredTags')
         return this.$store.dispatch('getDisputes', 'resetPages').catch(error => {
           if (this.$store.getters.isLoggedIn) {
             this.$jusNotification({ error })

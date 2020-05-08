@@ -4,6 +4,9 @@ const mutations = {
   },
   setDisputeTags (state, tags) {
     state.disputeTags = tags
+  },
+  setFilteredTags (state, tags) {
+    state.filteredTags = tags.content
   }
 }
 
