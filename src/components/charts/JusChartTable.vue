@@ -172,6 +172,7 @@ export default {
     },
     tableRowClassName ({ row, rowIndex }) {
       if (row.label === 'TOTAL') return 'line-total'
+      if (row.withAlert === 0) return 'withoutAlertDispute'
     },
     cellClick (row, column, cell, event) {
       if (cell.textContent) {
@@ -228,6 +229,9 @@ export default {
       background: #f6f6f6 !important;
       color: #424242 !important;
     }
+    .withoutAlertDispute td:nth-child(3) {
+      background: #1abc9c80 !important;
+    }
     tr.line-total {
       font-weight: bold;
     }
@@ -239,7 +243,7 @@ export default {
       width: 100%;
       cursor: pointer;
     }
-    .el-table__body {
+    &__body {
       height: 100%;
     }
   }
