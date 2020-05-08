@@ -70,7 +70,7 @@
             ref="disputeAvgResponseTime"
             :data="disputeAvgResponseTime"
             :options="opt"
-            annotation="Tempo ideal: 24 horas"
+            annotation="Tempo ideal"
             sufix="horas"
             class="dashboard-view__dataset" />
           <div v-else class="dashboard-view__empty">
