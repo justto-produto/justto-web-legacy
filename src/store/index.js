@@ -10,6 +10,7 @@ import disputeModule from './modules/dispute/index'
 import messageModule from './modules/message'
 import socketModule from './modules/socket/index'
 import documentModule from './modules/document'
+import dashboardModule from './modules/dashboard'
 import tagModule from './modules/tag'
 import banksList from '@/utils/banksList'
 
@@ -62,6 +63,7 @@ export default new Vuex.Store({
     messageModule,
     socketModule,
     documentModule,
-    tagModule
+    tagModule,
+    dashboardModule
   }
 })

@@ -12,10 +12,105 @@ export default {
     options: {
       type: Object,
       default: () => {}
+    },
+    legends: {
+      type: Boolean,
+      default: true
+    },
+    annotation: {
+      type: String,
+      default: ''
+    },
+    sufix: {
+      type: String,
+      default: ''
+    },
+    filterable: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
-    this.renderChart(this.data, this.options)
+    let options = Object.assign({}, this.options)
+    let self = this
+    if (!this.filterable) delete options.onClick
+    let annotation = this.annotation ? [{
+      type: 'line',
+      drawTime: 'afterDatasetsDraw',
+      value: 24,
+      endValue: 24,
+      borderColor: '#adadad',
+      borderWidth: 3,
+      borderDash: [3, 3.4],
+      borderDashOffset: 5,
+      mode: 'horizontal',
+      scaleID: 'y-axis-0',
+      label: {
+        backgroundColor: 'rgba(173, 173, 173, 0.8)',
+        fontFamily: 'inherit',
+        fontSize: 12,
+        fontStyle: 'bold',
+        fontColor: '#fff',
+        xPadding: 3,
+        yPadding: 4,
+        cornerRadius: 3,
+        position: 'center',
+        enabled: true,
+        content: this.annotation
+      }
+    }] : []
+    let sufix = this.sufix ? [{
+      ticks: {
+        callback: (value, index, values) => {
+          return value ? `${value} ${self.sufix}` : value
+        }
+      }
+    }] : []
+    this.renderChart(this.data, Object.assign(options, {
+      legend: {
+        display: this.legends,
+        labels: {
+          boxWidth: 6,
+          usePointStyle: true,
+          generateLabels: this.generateLabels
+        }
+      },
+      annotation: { annotations: annotation },
+      scales: { yAxes: sufix }
+    }))
+  },
+  methods: {
+    getElement (e) {
+      let firstPoint = this._data._chart.getElementAtEvent(e)[0]
+      if (firstPoint) {
+        let filters = this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
+        if (this.data.filter) {
+          Object.assign(filters, this.data.filter[firstPoint._datasetIndex])
+        }
+        return {
+          label: this.data.labels[firstPoint._index],
+          value: this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index],
+          filters
+        }
+      }
+    },
+    generateLabels (chart) {
+      let data = chart.data
+      if (data.datasets.length && data.datasets.length) {
+        return data.datasets.map(function (dataset, i) {
+          // eslint-disable-next-line
+          let fill = Chart.helpers.getValueAtIndexOrDefault(data.datasets[i].borderColor, i, chart.options.elements.arc.borderColor)
+          return {
+            text: dataset.label,
+            fillStyle: fill,
+            index: i,
+            hidden: false
+          }
+        })
+      } else {
+        return []
+      }
+    }
   }
 }
 </script>

@@ -199,10 +199,16 @@
   "LAST_RECEIVED_MESSAGE": "Última mensagem recebida",
   "LAST_NOTE": "Última nota",
   "CONCLUSION_DATE": "Data de conclusão",
-  "workspace":{
+  "workspace": {
     "READY": "ativo",
     "CREATING": "em criação",
     "DISABLED": "inativo"
+  },
+  "dashboard": {
+    "UPPER_RANGE_AVG": "alçada média",
+    "SETTLED_DEALS_AVG": "média dos acordos",
+    "SAVINGS_TOTAL": "economia",
+    "SAVINGS_PERCENTAGE": "%"
   },
   "error": {
     "ALREADY_EXISTS": "Este e-mail já está cadastrado como membro de sua equipe. De qualquer forma, enviaremos um e-mail informando sua intenção de adiciona-lo na equipe.",

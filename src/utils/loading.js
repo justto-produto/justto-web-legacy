@@ -17,7 +17,6 @@ const showLoading = function () {
       loading.close()
     }, timeLeft)
   }
-  return systemShouldBeUp
 }
 
 export default showLoading

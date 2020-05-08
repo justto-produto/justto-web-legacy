@@ -14,10 +14,9 @@ const router = new Router({
       },
       children: [
         {
+          redirect: Store.getters.isJusttoAdmin ? 'management' : '',
           name: 'dashboard',
           path: '/',
-          // TODO: RETIRAR APÓS IMPLEMENTAR DASHBOARD
-          redirect: 'management',
           component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard'),
           meta: {
             trackPage: true,
