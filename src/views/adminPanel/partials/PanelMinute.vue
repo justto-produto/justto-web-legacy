@@ -27,7 +27,14 @@
           </el-button>
         </template>
         <template slot-scope="props">
-          <el-button v-if="props.row.privateDocumentModel" content="Excluir" size="mini" type="danger" plain icon="el-icon-delete" @click="deleteMinute(props.row.id)">
+          <el-button
+            v-if="props.row.privateDocumentModel"
+            content="Excluir"
+            size="mini"
+            type="danger"
+            plain
+            icon="el-icon-delete"
+            @click="deleteMinute(props.row.id)">
             Excluir
           </el-button>
           <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="editMinute(props.row.url)">

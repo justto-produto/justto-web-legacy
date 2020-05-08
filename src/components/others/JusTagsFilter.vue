@@ -40,7 +40,7 @@ export default {
   name: 'JusTagsFilter',
   computed: {
     workspaceTags () {
-      return this.$store.getters.workspaceTags.map(t => {
+      return this.$store.getters.filteredTags.map(t => {
         if (this.$store.getters.disputeQuery.tags.includes(t.id)) {
           t.active = true
         } else {
