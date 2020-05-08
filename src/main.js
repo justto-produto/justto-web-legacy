@@ -14,12 +14,8 @@ import '@/plugins/chatScroll'
 import '@/plugins/jusNotification'
 import '@/plugins/jusSegment'
 import '@/plugins/socket'
-<<<<<<< HEAD
 import '@/plugins/sentry'
 import '@/plugins/chart'
-=======
-// import '@/plugins/sentry'
->>>>>>> SAAS-2144 Reformula tags
 
 // filters
 import '@/filters/capitalize'
