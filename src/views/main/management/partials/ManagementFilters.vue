@@ -122,11 +122,10 @@
             </el-form-item>
           </el-col>
           <!-- TAGS -->
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="Etiquetas">
               <el-select
                 v-model="filters.tags"
-                multiple
                 filterable
                 data-testid="filter-strategy"
                 placeholder="Selecione uma opção"
@@ -143,7 +142,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <!-- RÉU -->
           <el-col v-if="!loading && isAll" :span="12">
             <el-form-item label="Réu">
