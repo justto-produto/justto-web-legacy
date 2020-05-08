@@ -46,14 +46,14 @@ export default {
       mode: 'horizontal',
       scaleID: 'y-axis-0',
       label: {
-        backgroundColor: '#adadad',
+        backgroundColor: 'rgba(173, 173, 173, 0.8)',
         fontFamily: 'inherit',
         fontSize: 12,
         fontStyle: 'bold',
         fontColor: '#fff',
-        xPadding: 12,
-        yPadding: 6,
-        cornerRadius: 4,
+        xPadding: 3,
+        yPadding: 4,
+        cornerRadius: 3,
         position: 'center',
         enabled: true,
         content: this.annotation
@@ -75,13 +75,8 @@ export default {
           generateLabels: this.generateLabels
         }
       },
-      annotation: {
-        drawTime: 'afterDatasetsDraw',
-        annotations: annotation
-      },
-      scales: {
-        yAxes: sufix
-      }
+      annotation: { annotations: annotation },
+      scales: { yAxes: sufix }
     }))
   },
   methods: {
