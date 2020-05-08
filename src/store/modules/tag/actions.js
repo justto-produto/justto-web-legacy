@@ -4,13 +4,15 @@ const actions = {
   getWorkspaceTags () {
     return axiosDispatcher({
       url: 'api/workspaces/tags',
-      mutation: 'setWorkspaceTags'
+      mutation: 'setWorkspaceTags',
+      params: { size: 99999, sort: 'id,asc' }
     })
   },
   getDisputeTags ({ commit }, disputeId) {
     return axiosDispatcher({
       url: `/api/disputes/${disputeId}/tags`,
-      mutation: 'setDisputeTags'
+      mutation: 'setDisputeTags',
+      params: { size: 99999, sort: 'id,desc' }
     })
   },
   editDisputeTags ({ commit }, params) {

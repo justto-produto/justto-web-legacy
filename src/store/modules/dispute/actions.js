@@ -145,10 +145,7 @@ const disputeActions = {
           commit('setDisputes', response.data)
           commit('disputeSetHasNew', false)
         }
-        // axiosDispatcher({
-        //   url: 'api/disputes/tags' + queryBuilder(state.query, command, state.disputes.length, true),
-        //   mutation: 'setFilteredTags'
-        // })
+
         resolve(response.data)
       }).catch(error => {
         commit('clearDisputes')

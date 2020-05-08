@@ -7,12 +7,12 @@ const tagModule = {
     workspaceTags: [],
     disputeTags: [],
     colors: [
-      '#f1c40f', // amarelo
-      '#e74c3c', // vermelho
-      '#f39c12', // laranja
-      '#3498db', // azul
-      '#1abc9c', // verde
-      '#9b59b6' // roxo
+      '#FFEEAA', // amarelo
+      '#FDC3BC', // vermelho
+      '#FFDFAD', // laranja
+      '#CFECFE', // azul
+      '#B3F0E4', // verde
+      '#EAEAEA' // roxo
     ],
     icons: [
       'user',
