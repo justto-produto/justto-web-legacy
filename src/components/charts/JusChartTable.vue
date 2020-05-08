@@ -4,7 +4,7 @@
       :data="disputeStatusSummaryWithWarn"
       :header-row-class-name="headerRowClassName"
       :row-class-name="tableRowClassName"
-      height="calc(100% - 22px)"
+      height="calc(100% - 32px)"
       size="medium"
       @cell-click="cellClick">
       <el-table-column

@@ -104,8 +104,6 @@ export default {
       if (data.datasets.length && data.datasets.length) {
         return data.datasets.map(function (dataset, i) {
           // eslint-disable-next-line
-          var ds = data.datasets[i]
-          var meta = chart.getDatasetMeta(i)
           let fill = Chart.helpers.getValueAtIndexOrDefault(data.datasets[i].borderColor, i, chart.options.elements.arc.borderColor)
           return {
             text: dataset.label,

@@ -9,7 +9,7 @@ const queryBuilder = (q, command, disputesLength, noSort) => {
   let query = '?'
   for (let [key, value] of Object.entries(q)) {
     if (['total'].includes(key)) continue
-    if (!value) continue
+    if (!value && key !== 'onlyNotVisualized') continue
     if (Array.isArray(value)) {
       if (!value.length) continue
       if (['expirationDate', 'dealDate', 'importingDate'].includes(key)) {
