@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="chart-card-view">
     <el-card v-for="dataset in datasets" :key="dataset.label" :style="'background:' + dataset.color" class="chart-card-view__card">
-      <div class="chart-card-view__icon">
+      <div :class="'chart-card-view__icon ' + dataset.label">
         <i :class="dataset.icon" />
       </div>
       <el-tooltip content="Valor referente a todo o período desse time">
@@ -88,6 +88,14 @@ export default {
     opacity: .2;
     font-size: 130px;
     z-index: 1;
+    text-align: center;
+    width: 130px;
+    &.UPPER_RANGE_AVG {
+      bottom: -40px;
+    }
+    .el-icon-s-ticket {
+      font-size: 112px;
+    }
   }
   &__info {
     display: flex;
