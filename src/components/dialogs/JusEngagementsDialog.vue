@@ -24,7 +24,7 @@
                 <h3>{{ step.template.title }}</h3>
                 <span v-html="step.template.body" />
                 <el-button
-                  v-if="isJusttoAdmin"
+                  v-if="$store.getters.isJusttoAdmin"
                   plain
                   style="margin: 12px auto; display: block"
                   @click="openEditDialog(step)">Editar template
@@ -92,20 +92,6 @@ export default {
       editDialogLoading: false,
       editorKey: 0,
       preview: false
-    }
-  },
-  computed: {
-    isJusttoAdmin () {
-      // 185 Gabi
-      // 338 Lilian
-      // 484 Henrique
-      // 293 Kelvin
-      // 200 Argel
-      // 198 Jesus
-      // 294 Lucas
-      // 234 Mateus
-      // 181 Michelle
-      return [185, 338, 484, 293, 200, 234, 198, 294, 181].includes(this.$store.getters.accountId)
     }
   },
   watch: {

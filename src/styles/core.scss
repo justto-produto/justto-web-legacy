@@ -40,6 +40,9 @@ hr {
 a {
   cursor: pointer;
 }
+.pt0 {
+  padding-top: 0 !important;
+}
 .my20 {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -107,6 +110,9 @@ a {
 }
 .center {
   text-align: center;
+}
+.justify {
+  text-align: justify;
 }
 .right {
   float: right;

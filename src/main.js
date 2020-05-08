@@ -14,7 +14,8 @@ import '@/plugins/chatScroll'
 import '@/plugins/jusNotification'
 import '@/plugins/jusSegment'
 import '@/plugins/socket'
-// import '@/plugins/sentry'
+import '@/plugins/sentry'
+import '@/plugins/chart'
 
 // filters
 import '@/filters/capitalize'

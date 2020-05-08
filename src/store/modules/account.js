@@ -101,6 +101,7 @@ const account = {
       commit('clearWorkspace')
       commit('clearDisputes')
       commit('clearDisputeTab')
+      commit('clearDashboard')
       localStorage.removeItem('justoken')
       // eslint-disable-next-line
       delete axios.defaults.headers.common['Authorization']
@@ -150,9 +151,7 @@ const account = {
     accountId: state => state.id,
     accountEmail: state => state.email,
     isJusttoAdmin: state => {
-      if (state.email.endsWith('@justto.com.br')) {
-        return true
-      }
+      if (state.email.endsWith('@justto.com.br')) return true
       return false
     }
   }
