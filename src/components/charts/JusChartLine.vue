@@ -24,10 +24,16 @@ export default {
     sufix: {
       type: String,
       default: ''
+    },
+    filterable: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
+    let options = Object.assign({}, this.options)
     let self = this
+    if (!this.filterable) delete options.onClick
     let annotation = this.annotation ? [{
       type: 'line',
       drawTime: 'afterDatasetsDraw',
@@ -60,9 +66,14 @@ export default {
         }
       }
     }] : []
-    this.renderChart(this.data, Object.assign(this.options, {
+    this.renderChart(this.data, Object.assign(options, {
       legend: {
-        display: this.legends
+        display: this.legends,
+        labels: {
+          boxWidth: 6,
+          usePointStyle: true,
+          generateLabels: this.generateLabels
+        }
       },
       annotation: {
         drawTime: 'afterDatasetsDraw',
@@ -75,7 +86,7 @@ export default {
   },
   methods: {
     getElement (e) {
-      var firstPoint = this._data._chart.getElementAtEvent(e)[0]
+      let firstPoint = this._data._chart.getElementAtEvent(e)[0]
       if (firstPoint) {
         let filters = this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
         if (this.data.filter) {
@@ -86,6 +97,25 @@ export default {
           value: this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index],
           filters
         }
+      }
+    },
+    generateLabels (chart) {
+      let data = chart.data
+      if (data.datasets.length && data.datasets.length) {
+        return data.datasets.map(function (dataset, i) {
+          // eslint-disable-next-line
+          var ds = data.datasets[i]
+          var meta = chart.getDatasetMeta(i)
+          let fill = Chart.helpers.getValueAtIndexOrDefault(data.datasets[i].borderColor, i, chart.options.elements.arc.borderColor)
+          return {
+            text: dataset.label,
+            fillStyle: fill,
+            index: i,
+            hidden: false
+          }
+        })
+      } else {
+        return []
       }
     }
   }

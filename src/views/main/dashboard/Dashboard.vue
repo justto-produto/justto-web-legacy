@@ -70,7 +70,6 @@
             ref="disputeAvgResponseTime"
             :data="disputeAvgResponseTime"
             :options="opt"
-            :legends="false"
             annotation="Tempo ideal: 24 horas"
             sufix="horas"
             class="dashboard-view__dataset" />
@@ -98,6 +97,7 @@
             ref="monitoringDisputeByTime"
             :data="monitoringDisputeByTime"
             :options="opt"
+            filterable
             class="dashboard-view__dataset" />
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
@@ -216,17 +216,24 @@ export default {
         if (chart.name === 'MONITORING_DISPUTE_BY_TIME') {
           chart.data.labels = chart.data.labels.map(l => this.$moment(l).format('DD/MM'))
         }
-        // if (chart.name === 'DISPUTE_AVG_RESPONSE_TIME') {
-        //   // debugger
-        //   chart.data.labels = chart.data.labels.map(l => l)
-        // }
         for (let dataset of chart.data.datasets) {
           if (chart.type === 'line') {
             dataset.backgroundColor = 'transparent'
             switch (dataset.label) {
-              case 'Tempo de resposta médio':
-
+              case 'Geral':
                 dataset.borderColor = this.colors[2]
+                break
+              case 'E-mail':
+                dataset.borderColor = this.colors[1]
+                break
+              case 'WhatsApp':
+                dataset.borderColor = this.colors[4]
+                break
+              case 'Plataforma':
+                dataset.borderColor = this.colors[5]
+                break
+              case 'SMS':
+                dataset.borderColor = this.colors[3]
                 break
               case 'Concluídos':
                 dataset.borderColor = this.colors[4]
@@ -236,6 +243,11 @@ export default {
                 break
               case 'Perdidos':
                 dataset.borderColor = this.colors[1]
+                break
+              case 'Total':
+                dataset.borderColor = '#343c4b'
+                dataset.order = 1
+                dataset.borderDash = [3, 3.4]
                 break
             }
           }
