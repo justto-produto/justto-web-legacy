@@ -11,29 +11,12 @@
           placeholder="Busque aqui as suas disputas">
           <template slot-scope="{ item }">
             <jus-dispute-resume v-if="item.id" :dispute="item" />
-            <span v-else style="background-color: white;display: block;margin-left: -20px;margin-right: -20px;padding: 0 20px;">
+            <span v-else style="background-color: white;display: block;padding: 0 20px;">
               Não foram encontradas disputas para esta busca. Tente buscar pelo número do processo.
             </span>
           </template>
         </el-autocomplete>
       </div>
-      <!-- <div class="jus-header-main__whatsapp">
-        <el-tooltip>
-          <div slot="content">
-            <span v-if="whatsappStatus === undefined">
-              Conectando ao WhatsApp...
-            </span>
-            <span v-else-if="!whatsappStatus">
-              WhatsApp fora do ar, já estamos trabalhando na estabilização do serviço.
-            </span>
-            <span v-else>
-              WhatsApp conectado.
-            </span>
-          </div>
-          <jus-icon :icon="'whatsapp-' + (whatsappStatus === undefined ? 'inactive' : !whatsappStatus ? 'disconnected' : 'connected')" />
-        </el-tooltip>
-        <i v-if="!iswhatsappStatus" class="el-icon-warning el-icon-pulse el-icon-danger" />
-      </div> -->
       <div class="jus-header-main__info">
         <el-tooltip v-if="$store.getters.isJusttoAdmin" content="Modo anônimo">
           <el-switch v-model="ghostMode" />
@@ -63,11 +46,6 @@
                 Alterar equipe
               </el-dropdown-item>
             </a>
-            <!-- <a href="http://ajuda.justto.com.br/" target="_blank">
-              <el-dropdown-item>
-                Central de ajuda
-              </el-dropdown-item>
-            </a> -->
             <a href="#" @click="logout()">
               <el-dropdown-item divided>
                 Sair

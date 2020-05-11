@@ -17,7 +17,7 @@
       </div>
     </h4>
     <el-row :gutter="20" data-testid="dipute-info">
-      <el-col :span="8">
+      <el-col :span="10">
         <div>Estratégia: {{ dispute.campaign.strategy }}</div>
         <div>Status: <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span></div>
         <div v-for="(claiment, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'PARTY')" :key="dispute.id + claiment.name + index + 'claimant'">
@@ -27,7 +27,7 @@
           Advogado: {{ lawyer.name }}
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="7">
         <div>Campanha: {{ dispute.campaign.name }}</div>
         <div v-if="dispute.expirationDate">Fim da negociação:
           <span>{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
@@ -40,7 +40,7 @@
           <span>{{ getLastInteraction(dispute.lastInteraction.createAt.dateTime) }}</span>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="7">
         <div>Alçada máxima: {{ dispute.disputeUpperRange | currency }}</div>
         <div>Valor proposto: {{ dispute.lastOfferValue | currency }}</div>
         <div v-if="dispute.lastCounterOfferValue">Contraproposta: {{ dispute.lastCounterOfferValue | currency }}</div>

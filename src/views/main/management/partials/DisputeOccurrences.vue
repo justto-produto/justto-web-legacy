@@ -234,9 +234,9 @@ export default {
         datedOccurrences[currentDay].push(fo)
       })
       // MERGE DE DESCRIÇÃO
-      let previousOccurrenceIndex
       Object.keys(datedOccurrences).forEach((item) => {
         let datedOccurrence = datedOccurrences[item]
+        let previousOccurrenceIndex
         datedOccurrence.forEach((fo, index) => {
           let similarity
           if (fo.interaction && fo.interaction.type) {
