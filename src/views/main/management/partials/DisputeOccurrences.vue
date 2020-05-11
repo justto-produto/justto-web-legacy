@@ -577,8 +577,6 @@ export default {
       .el-card__header {
         background-color: #FFC5A5;
       }
-      .el-card__body {
-      }
       .note {
         font-weight: lighter;
         font-style: italic;
@@ -613,6 +611,12 @@ export default {
       strong {
         margin-bottom: 8px;
         display: inline-block;
+      }
+      table:not([style]) {
+        width: 100%;
+      }
+      img {
+        max-width: 100%;
       }
     }
   }
