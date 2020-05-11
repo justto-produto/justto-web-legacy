@@ -14,13 +14,16 @@ const router = new Router({
       },
       children: [
         {
-          redirect: Store.getters.isJusttoAdmin ? 'management' : '',
           name: 'dashboard',
           path: '/',
           component: () => import(/* webpackChunkName: "dashboardIndex" */ '@/views/main/dashboard/Dashboard'),
           meta: {
             trackPage: true,
             title: 'Justto - Dashboard'
+          },
+          beforeEnter: (to, from, next) => {
+            if (Store.getters.isJusttoAdmin) next()
+            else next('management')
           }
         },
         {
