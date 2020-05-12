@@ -102,6 +102,7 @@
         label="Parte(s) contrária(s)">
         <template slot-scope="scope">
           {{ scope.row.firstClaimant }}
+          <jus-vexatious-alert />
         </template>
       </el-table-column>
       <el-table-column
@@ -371,6 +372,7 @@ export default {
     JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
     InfiniteLoading: () => import('vue-infinite-loading'),
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
     quillEditor
   },
   props: {
