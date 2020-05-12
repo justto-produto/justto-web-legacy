@@ -15,6 +15,7 @@
         <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_NEGOTIATOR')">NEGOCIADORES</el-button>
         <el-button plain data-testid="batch-enrich" @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
         <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
+        <el-button plain data-testid="batch-resendmessage" @click="sendBatchAction('RESEND_MESSAGE')">{{ $t('action.RESEND_MESSAGE') }}</el-button>
       </div>
       <i class="el-icon-close" @click="clearSelection()"/>
     </div>
