@@ -19,8 +19,11 @@
       <el-row :class="{ showFilter: $store.getters.isAdminProfile }">
         <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Disputas ativas</span>
-            <el-dropdown class="dashboard-view__menu" trigger="click" @command="command">
+            <div>
+              <b>Disputas ativas</b>
+              <p>Clique nos números para poder visualizar as disputas.</p>
+            </div>
+            <el-dropdown trigger="click" @command="command">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -52,8 +55,11 @@
         </el-col>
         <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Tempo médio de resposta do negociador</span>
-            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+            <div>
+              <b>Tempo médio de resposta do negociador</b>
+              <p>Referente as últimas 4 semanas.</p>
+            </div>
+            <el-dropdown trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -79,8 +85,11 @@
         </el-col>
         <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="16" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Monitor de disputas</span>
-            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+            <div>
+              <b>Monitor de disputas</b>
+              <p>Referente aos últimos 7 dias. Clique nos números para visualizar as disputas.</p>
+            </div>
+            <el-dropdown trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -105,8 +114,11 @@
         </el-col>
         <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
-            <span>Resumo</span>
-            <el-dropdown class="dashboard-view__menu" trigger="click" @command="reload">
+            <div>
+              <b>Resumo</b>
+              <p>Referente a todo o tempo de vida da Equipe.</p>
+            </div>
+            <el-dropdown trigger="click" @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -147,10 +159,7 @@ export default {
       disputeStatusSummaryWithWarnIsChart: false,
       opt: {
         onClick: this.filter,
-        maintainAspectRatio: false,
-        legend: {
-          reverse: true
-        }
+        maintainAspectRatio: false
       }
     }
   },
@@ -221,20 +230,22 @@ export default {
             dataset.backgroundColor = 'transparent'
             switch (dataset.label) {
               case 'Geral':
-                dataset.borderColor = this.colors[2]
-                dataset.pointBackgroundColor = this.colors[2]
+                dataset.borderColor = '#343c4b'
+                dataset.pointBackgroundColor = '#343c4b'
+                dataset.order = 1
+                dataset.borderDash = [3, 3.4]
                 break
               case 'E-mail':
-                dataset.borderColor = this.colors[1]
-                dataset.pointBackgroundColor = this.colors[1]
+                dataset.borderColor = '#d1dbe2'
+                dataset.pointBackgroundColor = '#d1dbe2'
                 break
               case 'WhatsApp':
                 dataset.borderColor = this.colors[4]
                 dataset.pointBackgroundColor = this.colors[4]
                 break
               case 'Plataforma':
-                dataset.borderColor = this.colors[5]
-                dataset.pointBackgroundColor = this.colors[5]
+                dataset.borderColor = this.colors[2]
+                dataset.pointBackgroundColor = this.colors[2]
                 break
               case 'SMS':
                 dataset.borderColor = this.colors[3]
@@ -324,6 +335,9 @@ export default {
 @import '@/styles/colors.scss';
 
 .dashboard-view {
+  .el-card__body {
+    padding-bottom: 10px;
+  }
   .el-card__body, .el-row {
     height: 100%;
   }
@@ -341,19 +355,24 @@ export default {
     height: 100%;
   }
   &__graph-header {
-    padding: 0 8px 16px 0;
-    > span {
-      font-size: 18px;
-      font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    .el-dropdown  {
+      margin-top: 2px;
+      cursor: pointer;
+      transform: rotate(90deg);
+      height: fit-content;
+      &:hover {
+        color: $--color-primary;
+      }
     }
-  }
-  &__menu {
-    float: right;
-    margin-top: 2px;
-    transform: rotate(90deg);
-    cursor: pointer;
-    &:hover {
-      color: $--color-primary;
+    b {
+      font-size: 18px;
+    }
+    p {
+      margin-top: 5px;
+      margin-bottom: 0;
     }
   }
   &__empty {
