@@ -266,6 +266,7 @@ export default {
                 break
               case 'Total':
                 dataset.borderColor = '#343c4b'
+                dataset.pointBackgroundColor = '#343c4b'
                 dataset.order = 1
                 dataset.borderDash = [3, 3.4]
                 break
