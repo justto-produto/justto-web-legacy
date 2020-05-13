@@ -44,11 +44,12 @@
             :data="disputeStatusSummaryWithWarn"
             :options="opt"
             stacked
-            class="dashboard-view__dataset disputeStatusSummaryWithWarn"/>
+            class="dashboard-view__dataset"/>
           <jus-chart-table
             v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
             v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart"
-            :data="disputeStatusSummaryWithWarn"/>
+            :data="disputeStatusSummaryWithWarn"
+            class="dashboard-view__dataset"/>
           <div v-else class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
@@ -236,8 +237,8 @@ export default {
                 dataset.borderDash = [3, 3.4]
                 break
               case 'E-mail':
-                dataset.borderColor = '#d1dbe2'
-                dataset.pointBackgroundColor = '#d1dbe2'
+                dataset.borderColor = this.colors[3]
+                dataset.pointBackgroundColor = this.colors[3]
                 break
               case 'WhatsApp':
                 dataset.borderColor = this.colors[4]
@@ -352,12 +353,12 @@ export default {
   }
   &__dataset {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 48px);
   }
   &__graph-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
     .el-dropdown  {
       margin-top: 2px;
       cursor: pointer;
@@ -371,7 +372,8 @@ export default {
       font-size: 18px;
     }
     p {
-      margin-top: 5px;
+      font-size: 14px;
+      margin-top: 2px;
       margin-bottom: 0;
     }
   }

@@ -4,7 +4,7 @@
       :data="disputeStatusSummaryWithWarn"
       :header-row-class-name="headerRowClassName"
       :cell-class-name="cellClassName"
-      height="calc(100% - 32px)"
+      height="100%"
       size="medium"
       @cell-click="cellClick">
       <el-table-column
@@ -210,9 +210,8 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 .jus-chart-table {
-  height: 100%;
   .el-table {
-    .header th{
+    .header th {
       background: #f6f6f6;
     }
     td.status {
