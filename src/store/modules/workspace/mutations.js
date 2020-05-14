@@ -16,6 +16,7 @@ const mutations = {
       state.status = workspace.status
       state.id = workspace.id
       state.blackList = workspace.blackList
+      state.properties = workspace.properties
       localStorage.setItem('jusworkspace', JSON.stringify(workspace))
     }
   },
@@ -35,6 +36,7 @@ const mutations = {
     state.profile = ''
     state.blackList = []
     state.members = []
+    state.properties = {}
     localStorage.removeItem('jusworkspace')
     localStorage.removeItem('jusprofile')
     localStorage.removeItem('jusperson')

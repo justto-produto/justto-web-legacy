@@ -1,7 +1,7 @@
 <template lang="html">
   <el-popover
     width="314"
-    trigger="hover"
+    trigger="click"
     class="jus-vexatious-alert"
     popper-class="jus-vexatious-alert el-popover--dark"
     @show="fetchAlerts">
