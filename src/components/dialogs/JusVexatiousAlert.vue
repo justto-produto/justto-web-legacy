@@ -1,21 +1,27 @@
 <template lang="html">
   <el-popover
-    width="300"
-    trigger="click"
+    width="314"
+    trigger="hover"
     class="jus-vexatious-alert"
     popper-class="jus-vexatious-alert el-popover--dark"
     @show="fetchAlerts">
     <div class="title">
-      Provável litigante
+      Muitas disputas envolvendo esta pessoa
     </div>
     <div
-      v-loading="true"
+      v-loading="loading"
       element-loading-spinner="el-icon-loading"
       element-loading-text="Buscando detalhes..."
       class="body">
-      Disputas acima da média na plataforma: <b>14</b>
-      <br>
-      Disputas acima da média nesta equipe: <b>6</b>
+      <div v-if="alerts">
+        {{ name | firstName }} possui <b>{{ alerts.globalTotalValue }}</b> disputas em nossa plataforma.
+        <span v-if="alerts.globalTotalValue !== alerts.workspaceTotalValue">
+          Todas elas em sua equipe.
+        </span>
+        <span v-else>
+          <b>{{ alerts.workspaceTotalValue }}</b> delas somente em sua equipe.
+        </span>
+      </div>
     </div>
     <jus-icon slot="reference" icon="alert-active" />
   </el-popover>
@@ -28,19 +34,29 @@ export default {
     documentNumber: {
       type: String,
       default: ''
+    },
+    name: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
-      loading: false
+      loading: false,
+      alerts: {}
     }
   },
   methods: {
     fetchAlerts () {
-      this.loading = true
-      this.$store.dispatch('getDisputePartyAnalysis', this.documentNumber).finally(() => {
-        this.loading = false
-      })
+      this.alerts = this.$store.getters.partyAnalysisByDocument(this.documentNumber)
+      if (!this.alerts) {
+        this.loading = true
+        this.$store.dispatch('getDisputePartyAnalysis', this.documentNumber).then(() => {
+          this.alerts = this.$store.getters.partyAnalysisByDocument(this.documentNumber)
+        }).finally(() => {
+          this.loading = false
+        })
+      }
     }
   }
 }
@@ -54,7 +70,8 @@ export default {
     font-size: 14px;
   }
   .body {
-    margin-top: 10px;
+    word-break: break-word;
+    margin-top: 6px;
     min-height: 32px;
   }
   .el-loading-mask {

@@ -37,7 +37,7 @@ const dispute = {
     hasFilters: false,
     statuses: {},
     respondents: [],
-    partyAnalysis: []
+    partyAnalysis: {}
   },
   mutations: mutations,
   actions: actions,

@@ -532,8 +532,9 @@ const disputeActions = {
   },
   getDisputePartyAnalysis ({ commit }, documentNumber) {
     return axiosDispatcher({
-      url: `api/dispute/party/analisis/${documentNumber}`,
-      mutation: 'setDisputeProprieties'
+      url: `api/disputes/party/analisis/${documentNumber}`,
+      mutation: 'addPartyAnalysis',
+      payload: documentNumber
     })
   }
 }

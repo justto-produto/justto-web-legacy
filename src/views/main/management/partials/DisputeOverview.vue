@@ -255,7 +255,8 @@
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
                     v-if="verifyRoleVexatious(role.personProperties, title)"
-                    :document-number="role.documentNumber" />
+                    :document-number="role.documentNumber"
+                    :name="role.name" />
                 </span>
               </div>
               <div v-show="role.documentNumber" class="dispute-overview-view__info-line">

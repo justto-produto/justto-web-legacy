@@ -104,7 +104,8 @@
           {{ scope.row.firstClaimant }}
           <jus-vexatious-alert
             v-if="scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length"
-            :document-number="scope.row.firstClaimantDocumentNumber" />
+            :document-number="scope.row.firstClaimantDocumentNumber"
+            :name="scope.row.firstClaimant" />
         </template>
       </el-table-column>
       <el-table-column
