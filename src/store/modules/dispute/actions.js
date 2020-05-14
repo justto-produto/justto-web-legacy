@@ -101,7 +101,7 @@ const disputeActions = {
   },
   getDisputeAttachments ({ commit }, disputeId) {
     axiosDispatcher({
-      url: `api/documents/${disputeId}/attachments`,
+      url: `api/office/documents/${disputeId}/attachments`,
       mutation: 'setDisputeAttachments'
     })
   },

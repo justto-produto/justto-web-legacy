@@ -327,7 +327,7 @@ export default {
     },
     pdfUrl () {
       if (this.disputeId) {
-        return 'https://justto.app/api/documents/download-signed/' + this.disputeId
+        return 'https://justto.app/api/office/documents/download-signed/' + this.disputeId
       }
     },
     canResendNotification () {
