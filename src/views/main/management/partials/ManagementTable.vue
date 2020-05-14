@@ -102,7 +102,9 @@
         label="Parte(s) contrária(s)">
         <template slot-scope="scope">
           {{ scope.row.firstClaimant }}
-          <jus-vexatious-alert />
+          <jus-vexatious-alert
+            v-if="scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length"
+            :document-number="scope.row.firstClaimantDocumentNumber" />
         </template>
       </el-table-column>
       <el-table-column
@@ -113,6 +115,10 @@
         min-width="154px">
         <template slot-scope="scope">
           {{ scope.row.firstClaimantLawyer }}
+          <jus-vexatious-alert
+            v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
+            :document-number="scope.row.firstClaimantLawyerDocumentNumber"
+            :alerts="scope.row.firstClaimantLawyerAlerts" />
         </template>
       </el-table-column>
       <el-table-column

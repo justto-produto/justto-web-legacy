@@ -253,7 +253,9 @@
                 <span class="title">Função:</span>
                 <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
                   {{ buildRoleTitle(role.party, title) }}
-                  <jus-vexatious-alert />
+                  <jus-vexatious-alert
+                    v-if="verifyRoleVexatious(role.personProperties, title)"
+                    :document-number="role.documentNumber" />
                 </span>
               </div>
               <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
@@ -1032,6 +1034,11 @@ export default {
           if (dr.archived) return false
           return true
         })
+        // sortedArray = sortedArray.map(dr => {
+        //   if (dr.roleNameParty)
+        //   debugger
+        //   return dr
+        // })
         return sortedArray.sort((a, b) => {
           if (a.party === b.party) {
             return (a.roles[0] > b.roles[0]) ? -1 : (a.roles[0] < b.roles[0]) ? 1 : 0
@@ -1112,7 +1119,16 @@ export default {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
     showVexatious (role) {
-      return true
+      const alerts = ['IS_VEXATIOUS_PARTY', 'IS_VEXATIOUS_AUTHOR', 'IS_VEXATIOUS_LAWYER']
+      for (var alert of alerts) {
+        if (role.personProperties && role.personProperties instanceof Object && role.personProperties.hasOwnProperty(alert)) return true
+      }
+      return false
+    },
+    verifyRoleVexatious (personProperties, title) {
+      if (title === 'PARTY') return personProperties['IS_VEXATIOUS_PARTY']
+      else if (title === 'LAWYER') return personProperties['IS_VEXATIOUS_LAWYER']
+      return false
     },
     showIsDead (role) {
       return role.dead

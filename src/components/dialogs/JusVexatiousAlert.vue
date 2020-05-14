@@ -1,22 +1,23 @@
 <template lang="html">
   <el-popover
-    width="422"
+    width="300"
     trigger="click"
     class="jus-vexatious-alert"
-    popper-class="jus-vexatious-alert el-popover--dark">
+    popper-class="jus-vexatious-alert el-popover--dark"
+    @show="fetchAlerts">
     <div class="title">
-      Advogado com disputas acima da média na plataforma
+      Provável litigante
     </div>
     <div
       v-loading="true"
-      v-if="true"
       element-loading-spinner="el-icon-loading"
       element-loading-text="Buscando detalhes..."
-      element-loading-background="rgba(255, 255, 255, 0)"
       class="body">
-      teste
+      Disputas acima da média na plataforma: <b>14</b>
+      <br>
+      Disputas acima da média nesta equipe: <b>6</b>
     </div>
-    <jus-icon v-if="visible" slot="reference" icon="alert-active" />
+    <jus-icon slot="reference" icon="alert-active" />
   </el-popover>
 </template>
 
@@ -24,9 +25,22 @@
 export default {
   name: 'JusVexatiousAlert',
   props: {
-    visible: {
-      default: true,
-      type: Boolean
+    documentNumber: {
+      type: String,
+      default: ''
+    }
+  },
+  data () {
+    return {
+      loading: false
+    }
+  },
+  methods: {
+    fetchAlerts () {
+      this.loading = true
+      this.$store.dispatch('getDisputePartyAnalysis', this.documentNumber).finally(() => {
+        this.loading = false
+      })
     }
   }
 }
@@ -40,13 +54,17 @@ export default {
     font-size: 14px;
   }
   .body {
-    margin-top: 20px;
-    min-height: 60px;
+    margin-top: 10px;
+    min-height: 32px;
+  }
+  .el-loading-mask {
+    background-color: rgb(52, 60, 75);
   }
   .el-loading-spinner {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: -15px;
     i  {
       font-size: 15px;
       margin-right: 8px;

@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import moment from 'moment'
 import axiosDispatcher from '@/store/axiosDispatcher.js'
 import { queryBuilder } from '@/utils/jusUtils'
 
@@ -86,7 +85,7 @@ const disputeActions = {
     })
   },
   getDisputeProprieties ({ commit }, disputeId) {
-    axiosDispatcher({
+    return axiosDispatcher({
       url: `api/disputes/${disputeId}/properties`,
       mutation: 'setDisputeProprieties'
     })
@@ -529,6 +528,12 @@ const disputeActions = {
         }).catch(error => {
           reject(error)
         })
+    })
+  },
+  getDisputePartyAnalysis ({ commit }, documentNumber) {
+    return axiosDispatcher({
+      url: `api/dispute/party/analisis/${documentNumber}`,
+      mutation: 'setDisputeProprieties'
     })
   }
 }
