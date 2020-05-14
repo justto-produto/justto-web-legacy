@@ -3,8 +3,8 @@
     <el-table
       :data="disputeStatusSummaryWithWarn"
       :header-row-class-name="headerRowClassName"
-      :row-class-name="tableRowClassName"
-      height="calc(100% - 32px)"
+      :cell-class-name="cellClassName"
+      height="100%"
       size="medium"
       @cell-click="cellClick">
       <el-table-column
@@ -14,8 +14,6 @@
       <el-table-column
         :index="0"
         align="center"
-        class-name="withoutAlert"
-        prop="withoutAlert"
         label="Sem alerta">
         <template slot-scope="scope">
           <el-tooltip v-if="scope.row.withoutAlert > 0" popper-class="jus-chart-table__tooltip">
@@ -30,7 +28,6 @@
       <el-table-column
         :index="1"
         align="center"
-        class-name="withAlert"
         prop="withAlert"
         label="Com alerta">
         <template slot-scope="scope">
@@ -60,7 +57,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <span class="jus-chart-table__subtitle">* Clique nos números para poder visualizar as disputas</span>
   </div>
 </template>
 
@@ -170,9 +166,15 @@ export default {
     headerRowClassName ({ row, rowIndex }) {
       return 'header'
     },
-    tableRowClassName ({ row, rowIndex }) {
-      if (row.label === 'TOTAL') return 'line-total'
-      if (row.withAlert === 0) return 'withoutAlertDispute'
+    cellClassName ({ row, column, rowIndex, columnIndex }) {
+      let cls = ''
+      if (row.label === 'TOTAL') cls += 'line-total '
+      if (columnIndex === 1) cls += 'without-alert'
+      if (columnIndex === 2) {
+        if (row.withAlert) cls += 'with-alert'
+        else cls += 'without-alert'
+      }
+      return cls
     },
     cellClick (row, column, cell, event) {
       if (cell.textContent) {
@@ -208,20 +210,18 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 .jus-chart-table {
-  height: 100%;
   .el-table {
-    padding-right: 10px;
-    .header th{
+    .header th {
       background: #f6f6f6;
     }
     td.status {
       background: #f6f6f6;
       font-weight: bold;
     }
-    td.withoutAlert {
+    td.without-alert {
       background: #1abc9c80 !important;
     }
-    td.withAlert {
+    td.with-alert {
       background: #f1c40f80 !important;
     }
     td.column-total {
@@ -229,10 +229,7 @@ export default {
       background: #f6f6f6 !important;
       color: #424242 !important;
     }
-    .withoutAlertDispute td:nth-child(3) {
-      background: #1abc9c80 !important;
-    }
-    tr.line-total {
+    tr.line-total, td.line-total {
       font-weight: bold;
     }
     &::before {
@@ -246,13 +243,6 @@ export default {
     &__body {
       height: 100%;
     }
-  }
-  &__subtitle {
-    display: block;
-    width: 100%;
-    padding-top: 4px;
-    font-style: italic;
-    text-align: center;
   }
   &__check-icon {
     height: 14px;

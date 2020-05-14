@@ -40,7 +40,7 @@ export default {
       value: 24,
       endValue: 24,
       borderColor: '#adadad',
-      borderWidth: 3,
+      borderWidth: 1,
       borderDash: [3, 3.4],
       borderDashOffset: 5,
       mode: 'horizontal',
@@ -56,7 +56,8 @@ export default {
         cornerRadius: 3,
         position: 'center',
         enabled: true,
-        content: this.annotation
+        content: this.annotation,
+        yAdjust: this.getMax() < 24 ? 11 : 0
       }
     }] : []
     let sufix = this.sufix ? [{
@@ -69,6 +70,7 @@ export default {
     this.renderChart(this.data, Object.assign(options, {
       legend: {
         display: this.legends,
+        position: 'bottom',
         labels: {
           boxWidth: 6,
           usePointStyle: true,
@@ -110,6 +112,15 @@ export default {
       } else {
         return []
       }
+    },
+    getMax () {
+      let max = 0
+      for (let dataset of this.data.datasets) {
+        for (let data of dataset.data) {
+          if (data >= max) max = data
+        }
+      }
+      return max
     }
   }
 }
