@@ -14,12 +14,12 @@
       element-loading-text="Buscando detalhes..."
       class="body">
       <div v-if="alerts">
-        {{ name | firstName }} possui <b>{{ alerts.globalTotalValue }}</b> disputas em nossa plataforma.
+        {{ name | firstName }} possui <b>{{ Math.round(alerts.globalTotalValue) }}</b> disputas em nossa plataforma.
         <span v-if="alerts.globalTotalValue !== alerts.workspaceTotalValue">
           Todas elas em sua equipe.
         </span>
         <span v-else>
-          <b>{{ alerts.workspaceTotalValue }}</b> delas somente em sua equipe.
+          <b>{{ Math.round(alerts.workspaceTotalValue) }}</b> delas somente em sua equipe.
         </span>
       </div>
     </div>
