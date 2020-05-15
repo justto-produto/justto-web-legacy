@@ -14,6 +14,7 @@
       <el-table-column
         :index="0"
         align="center"
+        prop="withoutAlert"
         label="Sem alerta">
         <template slot-scope="scope">
           <el-tooltip v-if="scope.row.withoutAlert > 0" popper-class="jus-chart-table__tooltip">
@@ -73,28 +74,34 @@ export default {
     disputeStatusSummaryWithWarn () {
       let self = this
       let disputeStatusSummaryWithWarn = []
-      let sumWithoutAlert = 0
-      let sumWithAlert = 0
-      let sumTotal = 0
+      // let sumWithoutAlert = 0
+      // let sumWithAlert = 0
+      // let sumTotal = 0
       this.data.labels.forEach((label, index) => {
-        sumWithoutAlert += self.data.datasets[0].data[index]
-        sumWithAlert += self.data.datasets[1].data[index]
-        sumTotal += self.data.datasets[2].data[index]
+        // sumWithoutAlert += self.data.datasets[0].data[index]
+        // sumWithAlert += self.data.datasets[1].data[index]
+        // sumTotal += self.data.datasets[2].data[index]
         disputeStatusSummaryWithWarn.push({
           label,
           withoutAlert: self.data.datasets[0].data[index],
+          withoutAlertFilter: self.data.datasets[0].filter[index],
           withAlert: self.data.datasets[1].data[index],
+          withAlertFilter: self.data.datasets[1].filter[index],
           total: self.data.datasets[2].data[index],
+          totalFilter: self.data.datasets[2].filter[index],
           statusIndex: index
         })
       })
-      disputeStatusSummaryWithWarn.push({
-        label: 'TOTAL',
-        withoutAlert: sumWithoutAlert,
-        withAlert: sumWithAlert,
-        total: sumTotal,
-        statusIndex: 4
-      })
+      // disputeStatusSummaryWithWarn.push({
+      //   label: 'TOTAL',
+      //   withoutAlert: sumWithoutAlert,
+      //   // withoutAlertFilter: {}
+      //   withAlert: sumWithAlert,
+      //   // withAlertFilter: {}
+      //   total: sumTotal,
+      //   // totalFilter: {}
+      //   statusIndex: 4
+      // })
       return disputeStatusSummaryWithWarn
     },
     selectedMemberId () {
@@ -179,28 +186,36 @@ export default {
     cellClick (row, column, cell, event) {
       if (cell.textContent) {
         let statusIndex = row.statusIndex
-        let cellIndex = cell.cellIndex
-        let columnIndex = column.index
-        let statusFilters
-        if (statusIndex === 4) statusFilters = { [Object.keys(this.data.filter[0])[1]]: Object.values(this.data.filter[0])[1] }
-        else statusFilters = this.data.filter[statusIndex]
-        let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
-        if (columnIndex !== undefined && (datasetFilters || statusFilters)) {
-          const filters = Object.assign(statusFilters || {}, datasetFilters || {})
-          this.$store.commit('clearDisputeQuery')
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-          for (let key in filters) {
-            if (filters.hasOwnProperty(key)) {
-              this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
-            }
+        let columnProperty = column.property
+        // let columnLabel = column.label
+        // let cellIndex = cell.cellIndex
+        // let columnIndex = column.index
+        // if (statusIndex === 4) {
+        //   let status = []
+        //   let datasetFilter = this.data.datasets.filter(d => d.label.toUpperCase() === columnLabel.toUpperCase())[0]
+        //   statusFilters = { status: status.concat(this.data.filter[0].status, this.data.filter[1].status, this.data.filter[2].status, this.data.filter[3].status) }
+        //   datasetFilters = { ...datasetFilter.filter[0], ...datasetFilter.filter[1], ...datasetFilter.filter[2], ...datasetFilter.filter[3] }
+        // } else {
+        let statusFilters = this.data.filter[statusIndex]
+        let datasetFilters = row[columnProperty + 'Filter']
+        // }
+        // let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
+        // if (columnIndex !== undefined && (datasetFilters || statusFilters)) {
+        const filters = Object.assign(statusFilters || {}, datasetFilters || {})
+        this.$store.commit('clearDisputeQuery')
+        this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+        for (let key in filters) {
+          if (filters.hasOwnProperty(key)) {
+            this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }
-          if (this.selectedMemberId) {
-            this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
-          }
-          this.$store.commit('setDisputeHasFilters', true)
-          this.$store.commit('setDisputesTab', '3')
-          this.$router.push('/management')
         }
+        if (this.selectedMemberId) {
+          this.$store.commit('updateDisputeQuery', { key: 'persons', value: [this.selectedMemberId] })
+        }
+        this.$store.commit('setDisputeHasFilters', true)
+        this.$store.commit('setDisputesTab', '3')
+        this.$router.push('/management')
+        // }
       }
     }
   }
