@@ -10,7 +10,10 @@ const axiosDispatcher = (params) => {
     if (params.params) opt.params = params.params
     // eslint-disable-next-line
     axios(opt).then(response => {
-      if (params.mutation) store.commit(params.mutation, response.data)
+      if (params.mutation) {
+        if (params.payload) store.commit(params.mutation, { data: response.data, payload: params.payload })
+        else store.commit(params.mutation, response.data)
+      }
       resolve(response.data)
     }).catch(error => {
       reject(error)
