@@ -75,33 +75,18 @@ const getRoleIcon = function (party, title) {
 const getRoles = function (disputeRoles, party, role) {
   let roles
   if (party) {
-    if (Array.isArray(party)) {
-      roles = disputeRoles.filter(disputeRole => {
-        return party.includes(disputeRole.party)
-      })
-    } else {
-      roles = disputeRoles.filter(disputeRole => {
-        return disputeRole.party === party
-      })
-    }
+    if (Array.isArray(party)) roles = disputeRoles.filter(disputeRole => party.includes(disputeRole.party))
+    else roles = disputeRoles.filter(disputeRole => disputeRole.party === party)
   }
-  if (role) {
-    roles = roles.filter(disputeRole => {
-      return disputeRole.roles.includes(role)
-    })
-  }
+  if (role) roles = roles.filter(disputeRole => disputeRole.roles.includes(role))
   return roles
 }
 
 const getFirstRole = function (disputeRoles, party, role) {
   const roles = getRoles(disputeRoles, party, role)
-  if (roles.length === 0) {
-    return ''
-  } else if (roles.length === 1) {
-    return roles[0].name
-  } else {
-    return roles[0].name + ' (+ ' + (roles.length - 1) + ')'
-  }
+  if (roles.length === 0) return ''
+  else if (roles.length === 1) return roles[0].name
+  else return roles[0].name + ' (+ ' + (roles.length - 1) + ')'
 }
 
 const fuseSearchDisputes = function (disputes, term) {

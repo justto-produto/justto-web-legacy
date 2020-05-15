@@ -289,13 +289,13 @@
 </template>
 
 <script>
-import { Money } from 'v-money'
+// import { Money } from 'v-money'
 
 export default {
   name: 'ManagementFilters',
-  components: {
-    Money
-  },
+  // components: {
+  //   Money
+  // },
   props: {
     visible: {
       type: Boolean,
@@ -309,13 +309,13 @@ export default {
   data () {
     return {
       loading: false,
-      filters: {},
-      money: {
-        decimal: ',',
-        thousands: '.',
-        prefix: 'R$ ',
-        precision: 0
-      }
+      filters: {}
+      // money: {
+      //   decimal: ',',
+      //   thousands: '.',
+      //   prefix: 'R$ ',
+      //   precision: 0
+      // }
     }
   },
   computed: {

@@ -36,13 +36,14 @@ const actions = {
         })
     })
   },
-  editWorkpace ({ commit, state }, name) {
+  editWorkpace ({ commit, state }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/workspaces', {
         teamName: state.teamName,
         status: state.status,
-        name: name
+        name: params.name || state.name,
+        properties: params.properties || state.properties
       }).then(response => {
         commit('setWorkspace', response.data)
         resolve(response.data)

@@ -171,6 +171,9 @@ const disputeMutations = {
   removePrescription (state, prescription) {
     state.query.prescriptions.splice(state.query.prescriptions.indexOf(prescription), 1)
     state.query.page = 1
+  },
+  addPartyAnalysis (state, analysis) {
+    state.partyAnalysis[analysis.payload] = analysis.data
   }
 }
 
