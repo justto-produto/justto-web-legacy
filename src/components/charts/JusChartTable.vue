@@ -257,6 +257,9 @@ export default {
     }
     &__body {
       height: 100%;
+      td {
+        padding: 0;
+      }
     }
   }
   &__check-icon {
