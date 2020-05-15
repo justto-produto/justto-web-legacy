@@ -80,12 +80,12 @@
               <div>
                 <span :ref="getMessageRef(occurrence)">
                   <span v-html="buildContent(occurrence)" />
-                  <span v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message)" class="dispute-view-occurrences__whats-status">
+                  <span v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)" class="dispute-view-occurrences__whats-status">
                     <el-tooltip popper-class="mw400">
                       <div slot="content" style="max-width: 400px;text-align: justify;">
-                        <span v-html="buildWhatsappStatus(occurrence.interaction.message).message" />
+                        <span v-html="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).message" />
                       </div>
-                      <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message).icon" />
+                      <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).icon" />
                     </el-tooltip>
                   </span>
                   <span v-if="showResume(occurrence)">
@@ -496,6 +496,7 @@ export default {
     },
     /** @method buildWhatsappStatus
       * @param {Message} message
+      * @param {DateTime} executionDateTime
       * @returns {Object} {icon, message}
       * @description Return icon and message according to status
       // WAITING
@@ -504,10 +505,10 @@ export default {
       // FAILED
       // CANCELED
     */
-    buildWhatsappStatus (message) {
+    buildWhatsappStatus (message, executionDateTime) {
       if (!message) return null
       if (message.status.startsWith('PROCESSED')) {
-        let sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(message.scheduledTime.dateTime).format('DD/MM/YYYY HH:mm')
+        let sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
         let receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
         let readDate = message.parameters ? message.parameters.READ_DATE : ''
         let icon = 'status-0'
