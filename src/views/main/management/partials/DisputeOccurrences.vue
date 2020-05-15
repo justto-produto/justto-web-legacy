@@ -80,6 +80,14 @@
               <div>
                 <span :ref="getMessageRef(occurrence)">
                   <span v-html="buildContent(occurrence)" />
+                  <span v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message)" class="dispute-view-occurrences__whats-status">
+                    <el-tooltip popper-class="mw400">
+                      <div slot="content" style="max-width: 400px;text-align: justify;">
+                        <span v-html="buildWhatsappStatus(occurrence.interaction.message).message" />
+                      </div>
+                      <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message).icon" />
+                    </el-tooltip>
+                  </span>
                   <span v-if="showResume(occurrence)">
                     <a href="#" data-testid="show-email" @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
                   </span>
@@ -485,6 +493,42 @@ export default {
       let resume = occurrence.interaction.message.resume
       let type = occurrence.interaction.message.communicationType
       this.$emit('dispute:reply', { sender, resume, type })
+    },
+    /** @method buildWhatsappStatus
+      * @param {Message} message
+      * @returns {Object} {icon, message}
+      * @description Return icon and message according to status
+      // WAITING
+      // PROCESSED
+      // PROCESSED_BY_USER
+      // FAILED
+      // CANCELED
+    */
+    buildWhatsappStatus (message) {
+      if (!message) return null
+      if (message.status.startsWith('PROCESSED')) {
+        let sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(message.scheduledTime.dateTime).format('DD/MM/YYYY HH:mm')
+        let receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
+        let readDate = message.parameters ? message.parameters.READ_DATE : ''
+        let icon = 'status-0'
+        let msg = `Enviado em ${sendDate}.`
+        if (receiverDate) {
+          msg += `<br>Recebido em ${receiverDate}.`
+          icon = 'status-1'
+        }
+        if (readDate) {
+          msg += `<br>Lido em ${readDate}.`
+          icon = 'status-2'
+        }
+        return { icon, message: msg }
+      } else if (message.status === 'CANCELED') {
+        return { icon: 'error', message: 'Envio da mensagem cancelado.' }
+      } else if (message.status === 'RETRYING') {
+        return { icon: 'refresh', message: 'Falha na entrega desta mensagem. Tentando reenviar.' }
+      } else if (message.status === 'FAILED') {
+        return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND}.</i>` }
+      }
+      return null
     }
   }
 }
@@ -792,6 +836,15 @@ export default {
     margin-bottom: 22px;
     img {
       width: 20px;
+    }
+  }
+  &__whats-status {
+    float: right;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-right: -10px;
+    img {
+      width: 18px;
     }
   }
 }
