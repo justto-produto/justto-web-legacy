@@ -110,7 +110,6 @@
               <span class="title">Código interno:</span>
               <span v-if="dispute.externalId" data-testid="overview-externalid">{{ dispute.externalId }}</span>
             </div>
-
             <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
               <span class="title">Configurações:</span>
               <span class="configurations">
@@ -212,7 +211,7 @@
               class="dispute-overview-view__role-collapse"
               data-testid="expand-party">
               <template slot="title">
-                <i v-if="showNamesake(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
+                <i v-if="showNamesake(role) || showVexatious(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
                 <i v-if="showIsDead(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 75, 84);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
                 <div class="dispute-overview-view__name">
                   <span v-for="r in role.roles" :key="r.id" class="dispute-overview-view__role-icon">
@@ -254,6 +253,10 @@
                 <span class="title">Função:</span>
                 <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
                   {{ buildRoleTitle(role.party, title) }}
+                  <jus-vexatious-alert
+                    v-if="verifyRoleVexatious(role.personProperties, title)"
+                    :document-number="role.documentNumber"
+                    :name="role.name" />
                 </span>
               </div>
               <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
@@ -843,7 +846,8 @@ export default {
   components: {
     DisputeAddRole: () => import('./DisputeAddRole'),
     DisputeProprieties: () => import('./DisputeProprieties'),
-    JusTags: () => import('@/components/others/JusTags')
+    JusTags: () => import('@/components/others/JusTags'),
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert')
   },
   props: {
     loading: {
@@ -1031,6 +1035,11 @@ export default {
           if (dr.archived) return false
           return true
         })
+        // sortedArray = sortedArray.map(dr => {
+        //   if (dr.roleNameParty)
+        //   debugger
+        //   return dr
+        // })
         return sortedArray.sort((a, b) => {
           if (a.party === b.party) {
             return (a.roles[0] > b.roles[0]) ? -1 : (a.roles[0] < b.roles[0]) ? 1 : 0
@@ -1109,6 +1118,18 @@ export default {
     },
     showNamesake (role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
+    },
+    showVexatious (role) {
+      const alerts = ['IS_VEXATIOUS_PARTY', 'IS_VEXATIOUS_AUTHOR', 'IS_VEXATIOUS_LAWYER']
+      for (var alert of alerts) {
+        if (role.personProperties && role.personProperties instanceof Object && role.personProperties.hasOwnProperty(alert)) return true
+      }
+      return false
+    },
+    verifyRoleVexatious (personProperties, title) {
+      if (title === 'PARTY') return personProperties['IS_VEXATIOUS_PARTY']
+      else if (title === 'LAWYER') return personProperties['IS_VEXATIOUS_LAWYER']
+      return false
     },
     showIsDead (role) {
       return role.dead
@@ -1693,7 +1714,7 @@ export default {
       width: 100%;
       display: flex;
       align-items: flex-start;
-      > span {
+      > span:not(.jus-vexatious-alert) {
         width: 100%;
         margin: 5px;
         word-break: break-all;

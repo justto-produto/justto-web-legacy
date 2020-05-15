@@ -228,5 +228,9 @@
   	"GENERIC_VALIDATION": "",
   	"DUPLICATED_VALIDATION": "",
   	"PATTERN_VALIDATION": ""
+  },
+  "threshold": {
+    "QUANTITY": "Por contagem de disputas",
+    "AVERAGE": "Por percentual acima da média"
   }
 }

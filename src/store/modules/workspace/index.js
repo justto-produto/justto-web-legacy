@@ -16,7 +16,8 @@ const workspaceModule = {
     profile: profile,
     members: [],
     redirectNewWorkspace: false,
-    blackList: workspace.blackList
+    blackList: workspace.blackList,
+    properties: workspace.properties || {}
   },
   mutations: mutations,
   actions: actions,

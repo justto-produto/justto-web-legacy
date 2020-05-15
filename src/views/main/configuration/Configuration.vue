@@ -5,106 +5,140 @@
     </template>
     <template slot="main">
       <el-tabs tab-position="top" value="profile" @tab-click="handleTabClick">
-        <el-tab-pane label="Perfil" name="profile">
-          <el-form
-            ref="profileForm"
-            :model="profileForm"
-            :rules="profileFormRules"
-            label-position="top">
-            <el-form-item label="Nome">
-              <el-input v-model="person.name">
-                <el-button slot="append" @click="changeName">
-                  Alterar
-                </el-button>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="Email">
-              <el-input v-model="$store.state.accountModule.email" disabled />
-            </el-form-item>
-            <el-form-item label="Nova senha">
-              <el-input v-model="profileForm.newPassword" :type="passwordType" auto-complete="new-password" @keyup.enter.native="passwordModal">
-                <span slot="append" class="float-button">
-                  <el-button type="text" @click="showPassword = !showPassword">
-                    <jus-icon
-                      :icon="showPassword ? 'hide' : 'eye'"
-                      class="show-password" />
-                  </el-button>
-                </span>
-                <el-button slot="append" @click="passwordModal">Alterar</el-button>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="Contato" prop="phone">
-              <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="profileForm.phone">
-                <el-button slot="append" @click="updatePhone">Alterar</el-button>
-              </el-input>
-            </el-form-item>
-          </el-form>
+        <el-tab-pane label="Perfil" name="profile" class="configuration-view__profile">
+          <el-row :gutter="20">
+            <el-col :span="12" :offset="6">
+              <el-form
+                ref="profileForm"
+                :model="profileForm"
+                :rules="profileFormRules"
+                label-position="top">
+                <el-form-item label="Nome">
+                  <el-input v-model="person.name">
+                    <el-button slot="append" @click="changeName">
+                      Alterar
+                    </el-button>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="Email">
+                  <el-input v-model="$store.state.accountModule.email" disabled />
+                </el-form-item>
+                <el-form-item label="Nova senha">
+                  <el-input v-model="profileForm.newPassword" :type="passwordType" auto-complete="new-password" @keyup.enter.native="passwordModal">
+                    <span slot="append" class="float-button">
+                      <el-button type="text" @click="showPassword = !showPassword">
+                        <jus-icon
+                          :icon="showPassword ? 'hide' : 'eye'"
+                          class="show-password" />
+                      </el-button>
+                    </span>
+                    <el-button slot="append" @click="passwordModal">Alterar</el-button>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="Contato" prop="phone">
+                  <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="profileForm.phone">
+                    <el-button slot="append" @click="updatePhone">Alterar</el-button>
+                  </el-input>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
         </el-tab-pane>
-        <el-tab-pane label="Equipe" name="team">
-          <div class="configuration-view__team">
-            <el-form label-position="top">
-              <h3>Alterar nome da Equipe</h3>
+        <el-tab-pane label="Equipe" name="team" class="configuration-view__team">
+          <el-row :gutter="20">
+            <el-col :span="9" :offset="2">
+              <el-form label-position="top">
+                <h3>Alterar nome da Equipe</h3>
+                <el-alert
+                  :closable="false"
+                  type="info"
+                  show-icon>
+                  <span slot="title">
+                    Este nome <strong>NÃO</strong> irá aparecer nas mensagens automáticas. Utilize-o para organização interna.
+                  </span>
+                </el-alert>
+                <br>
+                <el-form-item label="Nome da equipe">
+                  <el-input v-model="teamName">
+                    <el-button slot="append" @click.prevent="changeTeamName">Alterar nome</el-button>
+                  </el-input>
+                </el-form-item>
+              </el-form>
+              <br>
+              <el-form label-position="top">
+                <h3>Configurações gerais da Equipe</h3>
+                <el-form-item label="Como identificar possível ofensores na sua equipe?">
+                  <el-select v-model="vexatiousType">
+                    <el-option
+                      v-for="type in ['QUANTITY', 'AVERAGE']"
+                      :key="type"
+                      :label="$t(`threshold.${type}`)"
+                      :value="type" />
+                  </el-select>
+                </el-form-item>
+                <el-form-item v-if="vexatiousType">
+                  <span slot="label">
+                    <span v-if="vexatiousType === 'QUANTITY'">Quantas disputas uma mesma pessoa precisa ter para ser qualificado como possível ofensor?</span>
+                    <span v-else>Qual percentual acima da média de disputas uma pessoa precisa ter para ser qualificado como possível ofensor?</span>
+                  </span>
+                  <money
+                    v-model="vexatiousThreshold"
+                    v-bind="vexatiousTypeMask"
+                    class="el-input__inner" />
+                </el-form-item>
+                <el-button type="primary" @click.prevent="saveProperties">Salvar</el-button>
+              </el-form>
+            </el-col>
+            <el-col :span="9" :offset="2">
+              <h3 class="mt40 mb30">Membros da equipe</h3>
+              <div v-for="member in teamMembers" :key="member.id">
+                <div class="configuration-view__members-list">
+                  <div class="member">
+                    <strong>{{ member.person.name }}: </strong>
+                    <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
+                  </div>
+                  <div class="actions">
+                    <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
+                    <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
+                  </div>
+                </div>
+              </div>
+              <el-button type="primary" class="mt40" @click="dialogInvite = true">
+                Convidar novo membro
+              </el-button>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="Empresa" name="company" class="configuration-view__company">
+          <el-row :gutter="20">
+            <el-col :span="12" :offset="6">
+              <h3>Alterar nome da empresa/escritório</h3>
               <el-alert
                 :closable="false"
                 type="info"
                 show-icon>
                 <span slot="title">
-                  Este nome <strong>NÃO</strong> irá aparecer nas mensagens automáticas. Utilize-o para organização interna.
+                  Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
                 </span>
               </el-alert>
               <br>
-              <el-form-item label="Nome da equipe">
-                <el-input v-model="teamName">
-                  <el-button slot="append" @click.prevent="changeTeamName">Alterar nome</el-button>
-                </el-input>
-              </el-form-item>
-            </el-form>
-            <h3 class="mt40 mb30">Membros da equipe</h3>
-            <div v-for="member in teamMembers" :key="member.id">
-              <div class="configuration-view__members-list">
-                <div class="member">
-                  <strong>{{ member.person.name }}: </strong>
-                  <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
-                </div>
-                <div class="actions">
-                  <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
-                  <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
-                </div>
-              </div>
-            </div>
-            <el-button type="primary" @click="dialogInvite = true">
-              Convidar novo membro
-            </el-button>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="Empresa" name="company">
-          <div class="configuration-view__company">
-            <h3>Alterar nome da empresa/escritório</h3>
-            <el-alert
-              :closable="false"
-              type="info"
-              show-icon>
-              <span slot="title">
-                Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
-              </span>
-            </el-alert>
-            <br>
-            <el-form label-position="top">
-              <el-form-item label="Nome da empresa/escritório">
-                <el-input v-model="companyName">
-                  <el-button slot="append" @click.prevent="changeCompanyName">Alterar</el-button>
-                </el-input>
-              </el-form-item>
-            </el-form>
-            <h3 class="mt40">Criação de novas equipes</h3>
-            <p>
-              Se o seu escritório possui mais de uma célula de negociação, você
-              pode criar uma nova equipe e se organizar melhor.
-            </p>
-            <el-button type="secondary" @click="createWorkspace">
-              Criar nova Equipe
-            </el-button>
-          </div>
+              <el-form label-position="top">
+                <el-form-item label="Nome da empresa/escritório">
+                  <el-input v-model="companyName">
+                    <el-button slot="append" @click.prevent="changeCompanyName">Alterar</el-button>
+                  </el-input>
+                </el-form-item>
+              </el-form>
+              <h3 class="mt40">Criação de novas equipes</h3>
+              <p>
+                Se o seu escritório possui mais de uma célula de negociação, você
+                pode criar uma nova equipe e se organizar melhor.
+              </p>
+              <el-button type="secondary" @click="createWorkspace">
+                Criar nova Equipe
+              </el-button>
+            </el-col>
+          </el-row>
         </el-tab-pane>
         <el-tab-pane label="Blacklist" name="blacklist" class="configuration-view__blacklist">
           <configuration-blacklist />
@@ -262,7 +296,9 @@ export default {
       teamName: '',
       companyName: '',
       teamMembers: [],
-      currentEditMember: {}
+      currentEditMember: {},
+      vexatiousThreshold: '',
+      vexatiousType: ''
     }
   },
   computed: {
@@ -271,6 +307,16 @@ export default {
     },
     passwordType () {
       return this.showPassword ? 'text' : 'password'
+    },
+    vexatiousTypeMask () {
+      return {
+        decimal: '',
+        thousands: '',
+        prefix: '',
+        suffix: this.vexatiousType === 'AVERAGE' ? ' %' : '',
+        precision: 0,
+        masked: false
+      }
     }
   },
   mounted () {
@@ -278,6 +324,8 @@ export default {
     this.person = JSON.parse(JSON.stringify(this.$store.getters.loggedPerson))
     this.teamName = this.$store.state.workspaceModule.teamName + ''
     this.companyName = this.$store.state.workspaceModule.name + ''
+    this.vexatiousType = this.$store.getters.workspaceProperties.VEXATIOUS_TYPE
+    this.vexatiousThreshold = this.$store.getters.workspaceProperties.VEXATIOUS_THRESHOLD
     this.profileForm.phone = this.$store.getters.loggedPersonPhone ? this.$store.getters.loggedPersonPhone.number : ''
     if (this.profileForm.phone && this.profileForm.phone.length === 13) {
       this.profileForm.phone = this.profileForm.phone.substr(2)
@@ -494,6 +542,26 @@ export default {
         }
       })
     },
+    saveProperties () {
+      if (this.vexatiousThreshold && this.vexatiousType) {
+        this.$store.dispatch('editWorkpace', {
+          properties: {
+            VEXATIOUS_THRESHOLD: this.vexatiousThreshold.toString(),
+            VEXATIOUS_TYPE: this.vexatiousType.toString()
+          }
+        }).then(() => {
+          // SEGMENT TRACK
+          this.$jusSegment('Configurações da equipe alterada')
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Configurações da equipe alteradas com sucesso.',
+            type: 'success'
+          })
+        }).catch(error => {
+          this.$jusNotification({ error })
+        })
+      }
+    },
     changeTeamName () {
       if (this.teamName) {
         this.$store.dispatch('changeTeamName', {
@@ -523,7 +591,7 @@ export default {
     },
     changeCompanyName () {
       if (this.companyName) {
-        this.$store.dispatch('editWorkpace', this.companyName).then(() => {
+        this.$store.dispatch('editWorkpace', { name: this.companyName }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nome do escritório/empresa alterado')
           this.$jusNotification({
@@ -551,20 +619,19 @@ export default {
   .el-tab-pane {
     margin: auto;
     margin-top: 20px;
-    &:not(.configuration-view__minute):not(.configuration-view__blacklist) {
-      max-width: 500px;
-    }
   }
   &--user {
     .el-tabs__header {
       display: none;
     }
   }
-
   &__team {
-    button {
+    button, .el-select {
       width: 100%;
-      margin-top: 40px;
+    }
+    .el-form--label-top .el-form-item__label {
+      line-height: normal !important;
+      margin-bottom: 8px;
     }
   }
   &__company {
@@ -593,9 +660,6 @@ export default {
   }
   p {
     text-align: justify;
-  }
-  .show-password {
-
   }
 }
 </style>
