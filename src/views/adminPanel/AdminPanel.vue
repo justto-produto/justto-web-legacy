@@ -7,9 +7,9 @@
           class="el-menu-vertical-demo"
           background-color="#f7f7f7"
           @select="changeMenuIndex">
-          <el-menu-item index="0">
+          <!-- <el-menu-item index="0">
             <i class="el-icon-s-data" /> Dashboard
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="1">
             <i class="el-icon-s-cooperation" /> Equipes
           </el-menu-item>
