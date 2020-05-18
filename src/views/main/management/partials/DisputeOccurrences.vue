@@ -80,6 +80,14 @@
               <div>
                 <span :ref="getMessageRef(occurrence)">
                   <span v-html="buildContent(occurrence)" />
+                  <span v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)" class="dispute-view-occurrences__whats-status">
+                    <el-tooltip popper-class="mw400">
+                      <div slot="content" style="max-width: 400px;text-align: justify;">
+                        <span v-html="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).message" />
+                      </div>
+                      <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).icon" />
+                    </el-tooltip>
+                  </span>
                   <span v-if="showResume(occurrence)">
                     <a href="#" data-testid="show-email" @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
                   </span>
@@ -486,6 +494,43 @@ export default {
       let resume = occurrence.interaction.message.resume
       let type = occurrence.interaction.message.communicationType
       this.$emit('dispute:reply', { sender, resume, type })
+    },
+    /** @method buildWhatsappStatus
+      * @param {Message} message
+      * @param {DateTime} executionDateTime
+      * @returns {Object} {icon, message}
+      * @description Return icon and message according to status
+      // WAITING
+      // PROCESSED
+      // PROCESSED_BY_USER
+      // FAILED
+      // CANCELED
+    */
+    buildWhatsappStatus (message, executionDateTime) {
+      if (!message) return null
+      if (message.status.startsWith('PROCESSED')) {
+        let sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
+        let receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
+        let readDate = message.parameters ? message.parameters.READ_DATE : ''
+        let icon = 'status-0'
+        let msg = `Enviado em ${sendDate}.`
+        if (receiverDate) {
+          msg += `<br>Recebido em ${receiverDate}.`
+          icon = 'status-1'
+        }
+        if (readDate) {
+          msg += `<br>Lido em ${readDate}.`
+          icon = 'status-2'
+        }
+        return { icon, message: msg }
+      } else if (message.status === 'CANCELED') {
+        return { icon: 'error', message: 'Envio da mensagem cancelado.' }
+      } else if (message.status === 'RETRYING') {
+        return { icon: 'refresh', message: 'Falha na entrega desta mensagem. Tentando reenviar.' }
+      } else if (message.status === 'FAILED') {
+        return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND}.</i>` }
+      }
+      return null
     }
   }
 }
@@ -558,7 +603,10 @@ export default {
       &.WHATSAPP {
         background-color: $--color-success-light-5;
       }
-      &.EMAIL, &.UNKNOWN {
+      &.EMAIL {
+        background-color: $--color-info-light;
+      }
+      &.UNKNOWN {
         background-color: $--color-cloudy-blue;
       }
       &.EMAIL_CNA {
@@ -734,16 +782,19 @@ export default {
   }
   &__date {
     + .dispute-view-occurrences__occurrence {
-      margin-top: -16px;
+      margin-top: -12px;
     }
+    padding: 4px;
     position: sticky;
     top: 12px;
     margin: auto;
     margin-top: 20px;
     margin-bottom: 24px;
     width: fit-content;
-    border: 1px solid $--color-info-light;
+    background-color: transparent;
+    border: none;
     .el-card__body {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
       padding: 10px;
     }
   }
@@ -793,6 +844,15 @@ export default {
     margin-bottom: 22px;
     img {
       width: 20px;
+    }
+  }
+  &__whats-status {
+    float: right;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-right: -10px;
+    img {
+      width: 18px;
     }
   }
 }
