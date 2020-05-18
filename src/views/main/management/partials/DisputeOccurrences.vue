@@ -238,6 +238,7 @@ export default {
         let datedOccurrence = datedOccurrences[item]
         let previousOccurrenceIndex
         datedOccurrence.forEach((fo, index) => {
+          if (fo.interaction && fo.interaction.message && fo.interaction.message.communicationType === 'WHATSAPP') return
           let similarity
           if (fo.interaction && fo.interaction.type) {
             similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 99 : 75
