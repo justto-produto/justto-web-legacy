@@ -67,7 +67,7 @@
               <br>
               <el-form label-position="top">
                 <h3>Configurações gerais da Equipe</h3>
-                <el-form-item label="Como identificar possível ofensores na sua equipe?">
+                <el-form-item label="Como detectar possíveis ofensores em sua carteira?">
                   <el-select v-model="vexatiousType">
                     <el-option
                       v-for="type in ['QUANTITY', 'AVERAGE']"
