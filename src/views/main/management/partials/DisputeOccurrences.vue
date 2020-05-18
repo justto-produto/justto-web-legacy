@@ -602,7 +602,10 @@ export default {
       &.WHATSAPP {
         background-color: $--color-success-light-5;
       }
-      &.EMAIL, &.UNKNOWN {
+      &.EMAIL {
+        background-color: $--color-info-light;
+      }
+      &.UNKNOWN {
         background-color: $--color-cloudy-blue;
       }
       &.EMAIL_CNA {
@@ -778,16 +781,19 @@ export default {
   }
   &__date {
     + .dispute-view-occurrences__occurrence {
-      margin-top: -16px;
+      margin-top: -12px;
     }
+    padding: 4px;
     position: sticky;
     top: 12px;
     margin: auto;
     margin-top: 20px;
     margin-bottom: 24px;
     width: fit-content;
-    border: 1px solid $--color-info-light;
+    background-color: transparent;
+    border: none;
     .el-card__body {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
       padding: 10px;
     }
   }
