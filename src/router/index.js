@@ -20,10 +20,6 @@ const router = new Router({
           meta: {
             trackPage: true,
             title: 'Justto - Dashboard'
-          },
-          beforeEnter: (to, from, next) => {
-            if (Store.getters.isJusttoAdmin) next()
-            else next('management')
           }
         },
         {

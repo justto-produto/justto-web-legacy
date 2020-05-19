@@ -13,7 +13,7 @@
         :default-active="$route.path"
         router
         class="el-menu--main-menu">
-        <el-menu-item v-if="$store.getters.isJusttoAdmin" index="/">
+        <el-menu-item index="/">
           <jus-icon icon="dashboard" class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
