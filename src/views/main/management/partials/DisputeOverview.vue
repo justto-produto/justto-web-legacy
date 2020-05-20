@@ -364,15 +364,20 @@
               <i class="el-icon-paperclip" />
             </el-tooltip>
           </span>
+          <el-input
+            placeholder="Busque anexos pelo nome"
+            prefix-icon="el-icon-search"
+            v-model="attachmentFilterTerm">
+          </el-input>
           <el-link
-            v-for=" attachment in disputeAttachments"
+            v-for="attachment in filteredDisputeAttachments"
             :key="attachment.url"
             :underline="false"
             :href="attachment.url"
             target="_blank">
             <i class="el-icon-document"/> {{ attachment.name }}
           </el-link>
-          <div v-if="!disputeAttachments.length" class="center">
+          <div v-if="!filteredDisputeAttachments.length" class="center">
             <br>
             Sem anexos
           </div>
@@ -873,6 +878,7 @@ export default {
       selectedNegotiatorId: '',
       selectedStrategyId: '',
       selectedPhone: 0,
+      attachmentFilterTerm: '',
       disputeForm: {
         description: '',
         expirationDate: '',
@@ -996,6 +1002,11 @@ export default {
     },
     disputeAttachments () {
       return this.$store.getters.disputeAttachments
+    },
+    filteredDisputeAttachments() {
+      if (this.disputeAttachments) {
+        return this.disputeAttachments.filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')))
+      } return []
     },
     disputeBankAccounts () {
       return this.$store.getters.disputeBankAccounts
