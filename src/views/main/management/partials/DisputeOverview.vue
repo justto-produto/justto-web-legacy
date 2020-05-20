@@ -365,10 +365,9 @@
             </el-tooltip>
           </span>
           <el-input
+            v-model="attachmentFilterTerm"
             placeholder="Busque anexos pelo nome"
-            prefix-icon="el-icon-search"
-            v-model="attachmentFilterTerm">
-          </el-input>
+            prefix-icon="el-icon-search" />
           <el-link
             v-for="attachment in filteredDisputeAttachments"
             :key="attachment.url"
@@ -1003,7 +1002,7 @@ export default {
     disputeAttachments () {
       return this.$store.getters.disputeAttachments
     },
-    filteredDisputeAttachments() {
+    filteredDisputeAttachments () {
       if (this.disputeAttachments) {
         return this.disputeAttachments.filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')))
       } return []
