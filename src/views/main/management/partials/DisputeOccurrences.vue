@@ -246,6 +246,7 @@ export default {
         let datedOccurrence = datedOccurrences[item]
         let previousOccurrenceIndex
         datedOccurrence.forEach((fo, index) => {
+          if (fo.interaction && fo.interaction.message && fo.interaction.message.communicationType === 'WHATSAPP') return
           let similarity
           if (fo.interaction && fo.interaction.type) {
             similarity = ['MANUAL_COUNTERPROPOSAL', 'NEGOTIATOR_PROPOSAL', 'NEGOTIATOR_COUNTERPROSAL', 'MANUAL_PROPOSAL'].includes(fo.interaction.type) ? 99 : 75
@@ -527,7 +528,7 @@ export default {
       } else if (message.status === 'RETRYING') {
         return { icon: 'refresh', message: 'Falha na entrega desta mensagem. Tentando reenviar.' }
       } else if (message.status === 'FAILED') {
-        return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND}.</i>` }
+        return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND || 'Desconhecido'}.</i>` }
       }
       return null
     }
