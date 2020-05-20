@@ -1,15 +1,15 @@
 <template lang="html">
   <div class="jus-tags-filter">
     <div
-      v-for="(tag, index) in workspaceTags.slice(workspaceTags.length - 3, workspaceTags.length).reverse()"
+      v-for="(tag, index) in workspaceTags.slice(-3).reverse()"
       :key="tag.id"
       :style="{ zIndex: workspaceTags.length - index }"
       class="jus-tags-filter__item">
-      <el-tag :color="tag.color" :class="{ 'active': tag.active }" @click="filterByTag(tag)">
-        <el-tooltip :content="tag.name">
+      <el-tooltip :content="tag.name">
+        <el-tag :color="tag.color" :class="{ 'active': tag.active }" @click="filterByTag(tag)">
           <i :class="`el-icon-${tag.icon}`"/>
-        </el-tooltip>
-      </el-tag>
+        </el-tag>
+      </el-tooltip>
     </div>
     <el-popover
       v-if="workspaceTags.length > 3"
