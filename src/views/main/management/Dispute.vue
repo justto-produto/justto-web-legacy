@@ -107,10 +107,7 @@
                   <div>
                     <el-tooltip :key="buttonKey" :disabled="!validName || invalidReceiver === false">
                       <div slot="content">
-                        <span v-if="messageType === 'whatsapp'">
-                          Desculpe o transtorno, o envio de mensagens WhatsApp está em manutenção neste momento
-                        </span>
-                        <span v-if="!activeRole.personId && messageType !== 'whatsapp'">
+                        <span v-if="!activeRole.personId">
                           Escolha um destinatário ao lado para receber sua mensagem
                         </span>
                         <span v-else-if="invalidReceiver">
@@ -123,7 +120,6 @@
                           type="primary"
                           size="medium"
                           data-testid="submit-message"
-                          :disabled="messageType === 'whatsapp'"
                           @click="sendMessage()">
                           Enviar mensagem
                         </el-button>
