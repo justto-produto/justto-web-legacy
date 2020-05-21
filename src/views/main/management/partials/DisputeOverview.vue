@@ -266,7 +266,12 @@
               <div v-show="role.phones.length" class="dispute-overview-view__info-line">
                 <span class="title">Telefone(s):</span>
                 <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
-                  <el-radio v-model="selectedPhone" :label="phone.id" data-testid="radio-whatsapp" @change="updateDisputeRole(role, 'whatsapp')">
+                  <el-radio
+                    v-model="selectedPhone"
+                    :label="phone.id"
+                    :disabled="!phone.isMobile"
+                    data-testid="radio-whatsapp"
+                    @change="updateDisputeRole(role, 'whatsapp')">
                     <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
                       <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
                         {{ phone.number | phoneMask }}<span v-if="phone.source === 'ENRICHMENT'">*</span>
@@ -1145,7 +1150,13 @@ export default {
       return role.dead
     },
     buildContactStatus (contact) {
-      return contact.source === 'ENRICHMENT' ? 'Contato enriquecido pelo sistema Justto' : 'Contato adicionado manualmente'
+      if (!contact.isMobile && !contact.address) {
+        return 'Não é possível enviar WhatsApp para números de telefones fixo'
+      } else if (contact.source === 'ENRICHMENT') {
+        return 'Contato enriquecido pelo sistema Justto'
+      } else {
+        return 'Contato adicionado manualmente'
+      }
     },
     openAddBankDialog () {
       this.addBankForm.name = this.roleForm.name
