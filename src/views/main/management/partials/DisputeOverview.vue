@@ -1150,7 +1150,7 @@ export default {
       return role.dead
     },
     buildContactStatus (contact) {
-      if (!contact.isMobile && !contact.address) {
+      if (!contact.address && !contact.isMobile) {
         return 'Não é possível enviar WhatsApp para números de telefones fixo'
       } else if (contact.source === 'ENRICHMENT') {
         return 'Contato enriquecido pelo sistema Justto'
