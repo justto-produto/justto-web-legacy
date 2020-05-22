@@ -27,11 +27,11 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   computed: {
-    datasets () {
+    datasets() {
       return this.data && this.data.datasets
         ? this.data.datasets.filter(ds => ds.label !== 'SAVINGS_PERCENTAGE').map(ds => {
           switch (ds.label) {
@@ -53,14 +53,14 @@ export default {
         })
         : []
     },
-    savingsPercentage () {
+    savingsPercentage() {
       return this.data && this.data.datasets
         ? this.data.datasets.find(ds => ds.label === 'SAVINGS_PERCENTAGE').data[0] : null
     },
-    colors () {
+    colors() {
       return this.$store.state.tagModule.colors
-    }
-  }
+    },
+  },
 }
 </script>
 

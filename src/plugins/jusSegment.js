@@ -2,8 +2,8 @@ import Vue from 'vue'
 import store from '@/store'
 
 const JusSegment = {
-  install (Vue, options) {
-    function SegmentLog (event, proprieties) {
+  install(Vue, options) {
+    function SegmentLog(event, proprieties) {
       this.event = event
       this.proprieties = proprieties
     }
@@ -12,7 +12,7 @@ const JusSegment = {
         userId: store.getters.accountEmail,
         workspace: store.getters.workspaceName,
         team: store.getters.workspaceTeamName,
-        source: 'front'
+        source: 'front',
       }
       Object.assign(proprieties, prop)
       window.analytics.track(event, proprieties, () => {
@@ -26,7 +26,7 @@ const JusSegment = {
         userId: store.getters.accountEmail,
         workspace: store.getters.workspaceName,
         team: store.getters.workspaceTeamName,
-        source: 'front'
+        source: 'front',
       }
       window.analytics.page(page, () => {
         if (process.env.NODE_ENV === 'development') {
@@ -34,7 +34,7 @@ const JusSegment = {
         }
       })
     }
-  }
+  },
 }
 
 Vue.use(JusSegment)

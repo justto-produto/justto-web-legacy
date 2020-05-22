@@ -25,15 +25,15 @@
 export default {
   name: 'DisputeNegotiation',
   components: {
-    JusElementSlider: () => import('@/components/others/JusElementSlider')
+    JusElementSlider: () => import('@/components/others/JusElementSlider'),
   },
   props: {
     dispute: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
-  data () {
+  data() {
     return {
       loading: false,
       value: [0, 0],
@@ -41,26 +41,26 @@ export default {
       subtitles: [],
       sliderKey: 0,
       max: 0,
-      min: 100000000
+      min: 100000000,
     }
   },
   watch: {
     dispute: {
-      handler (value) {
+      handler(value) {
         this.fetch()
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
-  mounted () {
+  mounted() {
     this.fetch()
   },
   methods: {
-    fetch () {
+    fetch() {
       this.loading = true
       this.subtitles = []
       this.marks[this.dispute.disputeUpperRange] = {
-        label: this.$createElement('div', [this.$createElement('span', 'AM'), this.$createElement('span', `R$ ${parseInt(this.dispute.disputeUpperRange)}`)])
+        label: this.$createElement('div', [this.$createElement('span', 'AM'), this.$createElement('span', `R$ ${parseInt(this.dispute.disputeUpperRange)}`)]),
       }
       this.$store.dispatch('getDisputeDTO', this.dispute.id).then(response => {
         this.max = 0
@@ -79,7 +79,7 @@ export default {
               this.marks[parseFloat(offer.value)] = {
                 label: this.$createElement('div', [this.$createElement('span', `P${countP} ${this.$options.filters.moment(offer.createAt.dateTime, 'DD/MM')}`), this.$createElement('span', `R$ ${parseInt(offer.value)}`)]),
                 details: offer,
-                zIndex
+                zIndex,
               }
               this.subtitles.push({ label: `P${countP}`, value: `Proposta ${countP}` })
             } else {
@@ -90,7 +90,7 @@ export default {
               this.marks[parseFloat(offer.value)] = {
                 label: this.$createElement('div', [this.$createElement('span', `CP${countCP} ${this.$options.filters.moment(offer.createAt.dateTime, 'DD/MM')}`), this.$createElement('span', `R$ ${parseInt(offer.value)}`)]),
                 details: offer,
-                zIndex
+                zIndex,
               }
               this.subtitles.push({ label: `CP${countCP}`, value: `Contraproposta ${countCP}` })
             }
@@ -113,8 +113,8 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

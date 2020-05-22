@@ -365,9 +365,9 @@ export default {
   directives: { mask },
   components: {
     ConfigurationBlacklist: () => import('./partials/ConfigurationBlacklist'),
-    PanelMinute: () => import('@/views/adminPanel/partials/PanelMinute')
+    PanelMinute: () => import('@/views/adminPanel/partials/PanelMinute'),
   },
-  data () {
+  data() {
     return {
       dialogPassword: false,
       dialogMember: false,
@@ -380,25 +380,25 @@ export default {
         newPassword: '',
         newPasswordConfirm: '',
         password: '',
-        phone: ''
+        phone: '',
       },
       profileFormRules: {
         phone: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
+          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' },
         ],
         password: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        newPasswordConfirm: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        newPasswordConfirm: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       inviteForm: {
         email: '',
-        profile: 'NEGOTIATOR'
+        profile: 'NEGOTIATOR',
       },
       inviteFormRules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
-        ]
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
+        ],
       },
       syncedEmails: [],
       person: {},
@@ -407,28 +407,28 @@ export default {
       teamMembers: [],
       currentEditMember: {},
       vexatiousThreshold: '',
-      vexatiousType: ''
+      vexatiousType: '',
     }
   },
   computed: {
-    isAdminProfile () {
+    isAdminProfile() {
       return this.$store.getters.isAdminProfile
     },
-    passwordType () {
+    passwordType() {
       return this.showPassword ? 'text' : 'password'
     },
-    vexatiousTypeMask () {
+    vexatiousTypeMask() {
       return {
         decimal: '',
         thousands: '',
         prefix: '',
         suffix: this.vexatiousType === 'AVERAGE' ? ' %' : '',
         precision: 0,
-        masked: false
+        masked: false,
       }
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.getMembers()
     this.person = JSON.parse(JSON.stringify(this.$store.getters.loggedPerson))
     this.teamName = this.$store.state.workspaceModule.teamName + ''
@@ -443,30 +443,30 @@ export default {
     }
   },
   methods: {
-    handleTabClick (tab) {
+    handleTabClick(tab) {
       if (tab.name === 'blacklist') {
         this.$store.dispatch('getWorkspace')
       }
     },
-    createWorkspace () {
+    createWorkspace() {
       this.$confirm('Você será redirecionado para a criação de nova Equipe, deseja continuar?', 'Redirecionamento', {
         confirmButtonText: 'Criar nova Equipe',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$store.commit('redirectNewWorkspaceTrue')
         this.$router.push('onboarding')
       })
     },
-    getMembers () {
+    getMembers() {
       this.$store.dispatch('getWorkspaceMembers').then(response => {
         this.teamMembers = response
           .sort((a, b) => a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0)
           .filter(r => !r.archived)
       })
     },
-    changeName () {
+    changeName() {
       if (this.person.name) {
         if (this.person.name.length > 2) {
           this.$store.dispatch('changePersonName', this.person)
@@ -476,7 +476,7 @@ export default {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Nome alterado com sucesso.',
-                type: 'success'
+                type: 'success',
               })
             }).catch(error => {
               this.$jusNotification({ error })
@@ -485,26 +485,26 @@ export default {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Nome precisa conter mais de 3 caracteres.',
-            type: 'warning'
+            type: 'warning',
           })
         }
       } else {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Nome não pode ficar em branco.',
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
-    cancelChangePassword () {
+    cancelChangePassword() {
       this.dialogPassword = false
     },
-    updatePhone () {
+    updatePhone() {
       this.$refs.profileForm.validateField('phone', errorMessage => {
         if (!errorMessage) {
           this.$store.dispatch('setMainPhone', {
             phoneDTO: { number: this.profileForm.phone },
-            personId: this.person.id
+            personId: this.person.id,
           }).then(phoneDTO => {
             let person = JSON.parse(localStorage.getItem('jusperson'))
             person.phones = [phoneDTO]
@@ -513,7 +513,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Telefone de contato alterado com sucesso.',
-              type: 'success'
+              type: 'success',
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -521,13 +521,13 @@ export default {
         }
       })
     },
-    passwordModal () {
+    passwordModal() {
       if (this.profileForm.newPassword) {
         if (this.profileForm.newPassword.length < 6) {
           this.$jusNotification({
             title: 'Ops!',
             message: 'Senha precisa conter no mínimo 6 caracteres.',
-            type: 'warning'
+            type: 'warning',
           })
         } else {
           this.profileForm.newPasswordConfirm = ''
@@ -538,32 +538,32 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Senha não pode ficar em branco.',
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
-    updatePassword () {
+    updatePassword() {
       this.$refs.profileForm.validateField(['password', 'newPasswordConfirm'], errorMessage => {
         if (!errorMessage) {
           if (this.profileForm.newPassword !== this.profileForm.newPasswordConfirm) {
             this.$jusNotification({
               title: 'Ops!',
               message: 'Senha de confirmação não corresponde à nova senha.',
-              type: 'warning'
+              type: 'warning',
             })
             return false
           }
           this.loadingUpdatePassword = true
           this.$store.dispatch('updatePassword', {
             password: this.profileForm.newPassword,
-            oldPassword: this.profileForm.password
+            oldPassword: this.profileForm.password,
           }).then(() => {
             // SEGMENT TRACK
             this.$jusSegment('Senha do usuário alterada')
             this.$jusNotification({
               title: 'Yay!',
               message: 'Senha alterada com sucesso.',
-              type: 'success'
+              type: 'success',
             })
             this.profileForm.password = ''
             this.profileForm.newPassword = ''
@@ -577,12 +577,12 @@ export default {
         }
       })
     },
-    removeMember (id, name) {
+    removeMember(id, name) {
       this.$confirm('Tem certeza que deseja excluir ' + name + ' da equipe?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$store.dispatch('removeWorkspaceMember', id).then(() => {
           // SEGMENT TRACK
@@ -591,16 +591,16 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Usuário removido com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         })
       })
     },
-    showEditMember (member) {
+    showEditMember(member) {
       this.currentEditMember = JSON.parse(JSON.stringify(member))
       this.dialogMember = true
     },
-    editMember () {
+    editMember() {
       delete this.currentEditMember.person
       this.$store.dispatch('editWorkspaceMember', this.currentEditMember).then(() => {
         this.getMembers()
@@ -608,27 +608,27 @@ export default {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Usuário editado com sucesso.',
-          type: 'success'
+          type: 'success',
         })
       }).catch(error => {
         this.$jusNotification({ error })
       })
     },
-    inviteTeammate () {
+    inviteTeammate() {
       this.$refs['inviteForm'].validate((valid) => {
         if (valid) {
           this.loadingInvite = true
           this.$store.dispatch('inviteTeammates', [{
             email: this.inviteForm.email,
-            profile: this.inviteForm.profile
+            profile: this.inviteForm.profile,
           }]).then(response => {
             this.$jusSegment('Convite de novo membro', {
-              description: `Usuário convidado: ${this.inviteForm.email} como ${this.inviteForm.profile}`
+              description: `Usuário convidado: ${this.inviteForm.email} como ${this.inviteForm.profile}`,
             })
             this.$jusNotification({
               title: 'Yay!',
               message: 'Convite enviado com sucesso.',
-              type: 'success'
+              type: 'success',
             })
             this.dialogInvite = false
             this.inviteForm.email = ''
@@ -640,7 +640,7 @@ export default {
             } else {
               this.$jusNotification({
                 message: 'Este e-mail já está cadastrado como membro de sua equipe. De qualquer forma, enviaremos um e-mail informando sua intenção de adiciona-lo na equipe.',
-                type: 'warning'
+                type: 'warning',
               })
             }
           }).finally(() => {
@@ -651,31 +651,31 @@ export default {
         }
       })
     },
-    saveProperties () {
+    saveProperties() {
       if (this.vexatiousThreshold && this.vexatiousType) {
         this.$store.dispatch('editWorkpace', {
           properties: {
             VEXATIOUS_THRESHOLD: this.vexatiousThreshold.toString(),
-            VEXATIOUS_TYPE: this.vexatiousType.toString()
-          }
+            VEXATIOUS_TYPE: this.vexatiousType.toString(),
+          },
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Configurações da equipe alterada')
           this.$jusNotification({
             title: 'Yay!',
             message: 'Configurações da equipe alteradas com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
         })
       }
     },
-    changeTeamName () {
+    changeTeamName() {
       if (this.teamName) {
         this.$store.dispatch('changeTeamName', {
           teamName: this.teamName,
-          id: this.$store.getters.workspaceId
+          id: this.$store.getters.workspaceId,
         }).then(() => {
           const workspace = this.$store.getters.workspace
           workspace.teamName = this.teamName
@@ -685,7 +685,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nome da equipe alterado com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -694,11 +694,11 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Nome não pode ficar em branco.',
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
-    changeCompanyName () {
+    changeCompanyName() {
       if (this.companyName) {
         this.$store.dispatch('editWorkpace', { name: this.companyName }).then(() => {
           // SEGMENT TRACK
@@ -706,7 +706,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nome do escritório/empresa alterado com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -715,11 +715,11 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Nome não pode ficar em branco.',
-          type: 'warning'
+          type: 'warning',
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

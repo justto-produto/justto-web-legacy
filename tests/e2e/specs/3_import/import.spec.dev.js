@@ -3,8 +3,8 @@ const password = Cypress.env('default-password')
 const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 const fileInput = 'input[type=file]'
 
-describe('Justto.App - Planilha Modelo', function () {
-  beforeEach(function () {
+describe('Justto.App - Planilha Modelo', function() {
+  beforeEach(function() {
     // Acessa a página inicial do Justto.App
     cy.visit('/')
 
@@ -33,7 +33,7 @@ describe('Justto.App - Planilha Modelo', function () {
   })
 
   // IMPORTA PLANILHA
-  it('Importa planilha modelo: Falha', function () {
+  it('Importa planilha modelo: Falha', function() {
     // Acessa a tela de gerenciamento
     cy.get('[data-testid=menu-import]')
       .click()
@@ -135,7 +135,7 @@ describe('Justto.App - Planilha Modelo', function () {
   })
 
   // IMPORTA PLANILHA
-  it('Importa planilha modelo: Sucesso', function () {
+  it('Importa planilha modelo: Sucesso', function() {
     // Acessa a tela de gerenciamento
     cy.get('[data-testid=menu-import]')
       .click()

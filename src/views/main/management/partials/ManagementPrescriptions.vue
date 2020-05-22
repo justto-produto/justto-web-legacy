@@ -88,60 +88,60 @@
 export default {
   name: 'ManagementPrescriptions',
   components: {
-    JusTagsFilter: () => import('@/components/others/JusTagsFilter')
+    JusTagsFilter: () => import('@/components/others/JusTagsFilter'),
   },
   props: {
     activeTab: {
       default: '1',
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
-    ONLY_SMS_ENGAGEMENT () {
+    ONLY_SMS_ENGAGEMENT() {
       return this.$store.getters.hasPrescription('ONLY_SMS_ENGAGEMENT')
     },
-    ONLY_EMAIL_ENGAGEMENT () {
+    ONLY_EMAIL_ENGAGEMENT() {
       return this.$store.getters.hasPrescription('ONLY_EMAIL_ENGAGEMENT')
     },
-    HAS_ANSWER () {
+    HAS_ANSWER() {
       return this.$store.getters.hasPrescription('HAS_ANSWER')
     },
-    COUNTERPROPOSAL_UP_TO_20 () {
+    COUNTERPROPOSAL_UP_TO_20() {
       return this.$store.getters.hasPrescription('COUNTERPROPOSAL_UP_TO_20')
     },
-    COUNTERPROPOSAL_OVER_20 () {
+    COUNTERPROPOSAL_OVER_20() {
       return this.$store.getters.hasPrescription('COUNTERPROPOSAL_OVER_20')
     },
-    ONLY_VISUALIZED () {
+    ONLY_VISUALIZED() {
       return this.$store.getters.hasPrescription('ONLY_VISUALIZED')
     },
-    PENDING () {
+    PENDING() {
       return this.$store.getters.hasPrescription('PENDING')
     },
-    UNSETTLED_WITH_MESSAGES () {
+    UNSETTLED_WITH_MESSAGES() {
       return this.$store.getters.hasPrescription('UNSETTLED_WITH_MESSAGES')
     },
-    NAMESAKE () {
+    NAMESAKE() {
       return this.$store.getters.hasPrescription('NAMESAKE')
     },
-    NO_UPPER_RANGE () {
+    NO_UPPER_RANGE() {
       return this.$store.getters.hasPrescription('NO_UPPER_RANGE')
     },
-    tab0 () {
+    tab0() {
       return this.activeTab === '0'
     },
-    tab1 () {
+    tab1() {
       return this.activeTab === '1'
     },
-    tab2 () {
+    tab2() {
       return this.activeTab === '2'
     },
-    tab3 () {
+    tab3() {
       return this.activeTab === '3'
-    }
+    },
   },
   methods: {
-    handlePrescriptionClick (prescription) {
+    handlePrescriptionClick(prescription) {
       this.$store.commit('resetDisputeQueryPage')
       if (this[prescription]) {
         this.$store.commit('removePrescription', prescription)
@@ -183,10 +183,10 @@ export default {
       }
       this.getDisputes()
     },
-    getDisputes () {
+    getDisputes() {
       this.$emit('management:getDisputes')
-    }
-  }
+    },
+  },
 }
 </script>
 

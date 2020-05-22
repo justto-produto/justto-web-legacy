@@ -2,8 +2,8 @@ const login = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 
-describe('Justto.App - Gerenciamento: Ação em Lote', function () {
-  beforeEach(function () {
+describe('Justto.App - Gerenciamento: Ação em Lote', function() {
+  beforeEach(function() {
     // Acessa a página inicial do Justto.App
     cy.access('/')
 
@@ -25,7 +25,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .should('be.visible')
   })
 
-  afterEach(function () {
+  afterEach(function() {
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success', { timeout: 60000 })
       .should('be.visible')
@@ -49,11 +49,11 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
     'Sem interesse no acordo',
     'Encaminhado para arbitragem',
     'Não foi possível realizar contato',
-    'Acordo fechado por terceiros'
+    'Acordo fechado por terceiros',
   ]
 
   motives.forEach((motive) => {
-    it('Ação em Lote: Perder - ' + motive, function () {
+    it('Ação em Lote: Perder - ' + motive, function() {
       // Clica na ação
       cy.get('[data-testid=batch-unsettled]')
         .click()

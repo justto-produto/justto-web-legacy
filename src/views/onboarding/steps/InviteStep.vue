@@ -81,44 +81,44 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       showError: false,
       profiles: [
         { label: 'Administrador', value: 'ADMINISTRATOR' },
-        { label: 'Negociador', value: 'NEGOTIATOR' }
+        { label: 'Negociador', value: 'NEGOTIATOR' },
       ],
       teamMembersForm: {
         teamMember: '',
         teamMemberType: '',
         teamMembers: [
-        ]
+        ],
       },
       teamMembersFormRules: {
         teamMember: [
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
-        ]
-      }
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
+        ],
+      },
     }
   },
   methods: {
-    addTeamMember (form) {
+    addTeamMember(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
           if (this.teamMembersForm.teamMember === this.$store.state.accountModule.email) {
             this.$jusNotification({
               title: 'Ops!',
               message: 'Não é possível enviar convites a si mesmo',
-              type: 'warning'
+              type: 'warning',
             })
           } else if (!this.teamMembersForm.teamMembers.includes(this.teamMembersForm.teamMember)) {
             this.teamMembersForm.teamMembers.push(
               {
                 email: this.teamMembersForm.teamMember,
-                profile: 'NEGOTIATOR'
+                profile: 'NEGOTIATOR',
               }
             )
           }
@@ -128,12 +128,12 @@ export default {
         }
       })
     },
-    removeTeamMember (member) {
+    removeTeamMember(member) {
       this.teamMembersForm.teamMembers.splice(
         this.teamMembersForm.teamMembers.indexOf(member), 1
       )
     },
-    submitForm () {
+    submitForm() {
       this.showError = false
       this.$store.dispatch('showLoading')
       this.$store.dispatch('inviteTeammates', this.teamMembersForm.teamMembers)
@@ -145,8 +145,8 @@ export default {
         }).finally(() => {
           this.$store.dispatch('hideLoading')
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

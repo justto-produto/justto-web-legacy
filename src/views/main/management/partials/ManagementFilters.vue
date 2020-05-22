@@ -337,17 +337,17 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     tabIndex: {
       type: String,
-      default: '0'
-    }
+      default: '0',
+    },
   },
-  data () {
+  data() {
     return {
       loading: false,
-      filters: {}
+      filters: {},
       // money: {
       //   decimal: ',',
       //   thousands: '.',
@@ -358,21 +358,21 @@ export default {
   },
   computed: {
     visibleFilters: {
-      get () { return this.visible },
-      set (value) {
+      get() { return this.visible },
+      set(value) {
         this.$emit('update:visible', value)
-      }
+      },
     },
-    isEngagement () {
+    isEngagement() {
       return this.tabIndex === '0'
     },
-    isInteration () {
+    isInteration() {
       return this.tabIndex === '1'
     },
-    isNewAgreements () {
+    isNewAgreements() {
       return this.tabIndex === '2' || this.tabIndex === '3'
     },
-    isNewAgreementsLabel () {
+    isNewAgreementsLabel() {
       switch (this.tabIndex) {
         case '2':
           return 'Data do acordo'
@@ -380,37 +380,37 @@ export default {
           return 'Data de Finalização (ganho/perdido)'
       }
     },
-    isAll () {
+    isAll() {
       return this.tabIndex === '3'
     },
-    strategies () {
+    strategies() {
       return this.$store.getters.strategyList
     },
-    campaigns () {
+    campaigns() {
       return this.$store.getters.campaignList
     },
-    respondents () {
+    respondents() {
       return this.$store.getters.respondents
     },
-    workspaceTags () {
+    workspaceTags() {
       return this.$store.getters.workspaceTags
     },
-    interactions () {
+    interactions() {
       return [{
         key: 'WHATSAPP',
-        value: 'Whatsapp'
+        value: 'Whatsapp',
       }, {
         key: 'EMAIL',
-        value: 'Email'
+        value: 'Email',
       }, {
         key: 'NEGOTIATOR_ACCESS',
-        value: 'Sistema Justto'
+        value: 'Sistema Justto',
       }]
     },
-    negotiatorsList () {
+    negotiatorsList() {
       return this.$store.state.workspaceModule.members
     },
-    activeTabLabel () {
+    activeTabLabel() {
       switch (this.tabIndex) {
         case '0':
           return 'Sem resposta'
@@ -422,7 +422,7 @@ export default {
           return 'Todos'
       }
     },
-    statuses () {
+    statuses() {
       return [
         'IMPORTED',
         'ENRICHED',
@@ -434,30 +434,30 @@ export default {
         'EXPIRED',
         'SETTLED',
         'UNSETTLED',
-        'REFUSED'
+        'REFUSED',
       ]
-    }
+    },
   },
   watch: {
-    visibleFilters (value) {
+    visibleFilters(value) {
       if (value) {
         this.fetchData()
       }
-    }
+    },
   },
   methods: {
-    fetchData () {
+    fetchData() {
       this.loading = true
       Promise.all([
         this.$store.dispatch('getCampaigns'),
         this.$store.dispatch('getMyStrategies'),
         this.$store.dispatch('getRespondents'),
-        this.$store.dispatch('getWorkspaceTags')
+        this.$store.dispatch('getWorkspaceTags'),
       ]).finally(responses => {
         this.loading = false
       })
     },
-    applyFilters () {
+    applyFilters() {
       this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
@@ -486,7 +486,7 @@ export default {
         this.$jusSegment('Filtro por data fim negociação')
       }
     },
-    clearFilters () {
+    clearFilters() {
       if (this.tabIndex === '3') {
         this.filters.status = []
       }
@@ -506,28 +506,28 @@ export default {
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
     },
-    restoreFilters () {
+    restoreFilters() {
       this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
     },
-    clearInteraction (value) {
+    clearInteraction(value) {
       delete this.filters.lastInteractionType
     },
-    clearStrategy () {
+    clearStrategy() {
       this.filters.strategy = []
     },
-    clearTags () {
+    clearTags() {
       this.filters.tags = []
     },
-    clearRespondent () {
+    clearRespondent() {
       this.filters.respondentNames = []
     },
-    clearCampaign () {
+    clearCampaign() {
       this.filters.campaigns = []
     },
     // clearDisputestate () {
     //   delete this.filters.disputestate
     // },
-    changeDealDate (value) {
+    changeDealDate(value) {
       if (value) {
         this.filters.dealDate = value
       } else {
@@ -541,21 +541,21 @@ export default {
     //     delete this.filters.lastInteractionDate
     //   }
     // },
-    changeExpirationDate (value) {
+    changeExpirationDate(value) {
       if (value) {
         this.filters.expirationDate = value
       } else {
         this.filters.expirationDate = []
       }
     },
-    changeimportingDate (value) {
+    changeimportingDate(value) {
       if (value) {
         this.filters.importingDate = value
       } else {
         this.filters.importingDate = []
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

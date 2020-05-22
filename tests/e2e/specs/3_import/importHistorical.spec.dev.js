@@ -3,9 +3,9 @@ const loginHasHistorical = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
 var loop = 0
 
-describe('Justto.App - Planilha Modelo', function () {
+describe('Justto.App - Planilha Modelo', function() {
   // Verifica em Qual repetição está
-  beforeEach(function () {
+  beforeEach(function() {
     loop++
     switch (loop) {
       case 1:
@@ -42,7 +42,7 @@ describe('Justto.App - Planilha Modelo', function () {
     cy.wait(1000)
   })
 
-  it('Historico de Importações: Vazio', function () {
+  it('Historico de Importações: Vazio', function() {
     // Acessa a tela de gerenciamento
     cy.get('[data-testid=menu-import]')
       .click()
@@ -56,7 +56,7 @@ describe('Justto.App - Planilha Modelo', function () {
       .should('be.visible')
   })
 
-  it('Histórico de Importações: Com casos', function () {
+  it('Histórico de Importações: Com casos', function() {
     // Acessa a tela de importação
     cy.get('[data-testid=menu-import]')
       .click()

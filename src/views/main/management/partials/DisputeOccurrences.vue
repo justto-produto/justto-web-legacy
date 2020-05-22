@@ -281,14 +281,14 @@ export default {
   props: {
     disputeId: {
       type: String,
-      default: ''
+      default: '',
     },
     typingTab: {
       type: String,
-      default: '1'
-    }
+      default: '1',
+    },
   },
-  data () {
+  data() {
     return {
       loadingMessage: 'false',
       message: '',
@@ -296,11 +296,11 @@ export default {
       messageDialogVisible: false,
       showFullMessageList: [],
       fullMessageBank: {},
-      infiniteId: +new Date()
+      infiniteId: +new Date(),
     }
   },
   computed: {
-    datedOccurrences () {
+    datedOccurrences() {
       // APENAS ABA COMUNICAÇÃO
       let self = this
       let filteredOccurrences = this.$store.getters.occurrences.filter(o => {
@@ -344,29 +344,29 @@ export default {
       })
       return datedOccurrences
     },
-    fetchAction () {
+    fetchAction() {
       if (this.typingTab === '1') {
         return 'getDisputeCommunications'
       } else {
         return 'getDisputeOccurrences'
       }
-    }
+    },
   },
   watch: {
-    typingTab () {
+    typingTab() {
       this.clearOccurrences()
       this.infiniteId += 1
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.clearOccurrences()
   },
   methods: {
-    clearOccurrences () {
+    clearOccurrences() {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
     },
-    loadOccurrences ($state) {
+    loadOccurrences($state) {
       this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
         if (response.last) {
           $state.complete()
@@ -376,10 +376,10 @@ export default {
         }
       })
     },
-    showFullMessage (occurrenceId) {
+    showFullMessage(occurrenceId) {
       this.showFullMessageList.push(occurrenceId)
     },
-    showMessageDialog (messageId) {
+    showMessageDialog(messageId) {
       this.messageDialogVisible = true
       this.message = ''
       this.loadingMessage = true
@@ -394,21 +394,21 @@ export default {
           this.loadingMessage = false
         })
     },
-    getMessageRef (occurrence) {
+    getMessageRef(occurrence) {
       if (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.messageId) {
         return occurrence.id
       }
     },
-    buildTooltip (occurrence) {
+    buildTooltip(occurrence) {
       let text = ''
       if (occurrence.interaction && occurrence.interaction.parameters && occurrence.interaction.parameters.DEVICE) {
         text = text + 'Dispositivo: ' + occurrence.interaction.properties.DEVICE
       }
       return text
     },
-    buildIcon (occurrence) {
+    buildIcon(occurrence) {
       if (occurrence.interaction && occurrence.interaction.type === 'CLICK') {
         return 'click'
       }
@@ -435,13 +435,13 @@ export default {
       }
       return ''
     },
-    getDirection (interaction) {
+    getDirection(interaction) {
       if (!interaction) return ''
       if (['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL'].includes(interaction.type)) {
         return 'OUTBOUND'
       } else return interaction.direction
     },
-    buildName (occurrence) {
+    buildName(occurrence) {
       if (occurrence.interaction) {
         if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
@@ -467,20 +467,20 @@ export default {
       }
       return ''
     },
-    getOccurrenceMessage (messageId, occurrenceId) {
+    getOccurrenceMessage(messageId, occurrenceId) {
       this.$store.dispatch('getOccurrenceMessage', messageId).then(message => {
         let ref = this.$refs[occurrenceId]
         ref[0].innerHTML = message.content
         this.fullMessageBank[occurrenceId] = message.content
       })
     },
-    buildLogContent (occurrence) {
+    buildLogContent(occurrence) {
       if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
         return 'Disputa visualizada'
       }
       return occurrence.description
     },
-    buildContent (occurrence) {
+    buildContent(occurrence) {
       if (!occurrence) return ''
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
         if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
@@ -520,7 +520,7 @@ export default {
       }
       return occurrence.description
     },
-    showResume (occurrence) {
+    showResume(occurrence) {
       if (!this.showFullMessageList.includes(occurrence.id) &&
         occurrence.interaction &&
         occurrence.interaction.message &&
@@ -530,21 +530,21 @@ export default {
       }
       return false
     },
-    buildStatusIcon (occurrence) {
+    buildStatusIcon(occurrence) {
       if (occurrence.status) {
         return occurrence.status.toLowerCase()
       }
     },
-    buildStatusTooltip (occurrence) {
+    buildStatusTooltip(occurrence) {
       return 'No momento desta ocorrência, esta disputa estava ' + this.$t('dispute.status.' + occurrence.status)
     },
-    buildHour (occurrence) {
+    buildHour(occurrence) {
       if (occurrence.executionDateTime) {
         return this.$moment(occurrence.executionDateTime.dateTime).format('HH:mm')
       }
       return this.$moment(occurrence.createAt.dateTime).format('HH:mm')
     },
-    buildCommunicationType (occurrence) {
+    buildCommunicationType(occurrence) {
       let typeClass = ''
       if (occurrence.interaction && occurrence.interaction.message) {
         if (occurrence.interaction.message.communicationType) {
@@ -556,7 +556,7 @@ export default {
       }
       return typeClass
     },
-    showReply (occurrence) {
+    showReply(occurrence) {
       if (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
@@ -566,7 +566,7 @@ export default {
       }
       return false
     },
-    startReply (occurrence) {
+    startReply(occurrence) {
       let sender = occurrence.interaction.message.sender
       let resume = occurrence.interaction.message.resume
       let type = occurrence.interaction.message.communicationType
@@ -583,7 +583,7 @@ export default {
       // FAILED
       // CANCELED
     */
-    buildWhatsappStatus (message, executionDateTime) {
+    buildWhatsappStatus(message, executionDateTime) {
       if (!message) return null
       if (message.status.startsWith('PROCESSED')) {
         let sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
@@ -608,8 +608,8 @@ export default {
         return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND || 'Desconhecido'}.</i>` }
       }
       return null
-    }
-  }
+    },
+  },
 }
 </script>
 

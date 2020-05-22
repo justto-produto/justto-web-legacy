@@ -35,21 +35,21 @@ export default {
   props: {
     documentNumber: {
       type: String,
-      default: ''
+      default: '',
     },
     name: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
-  data () {
+  data() {
     return {
       loading: false,
-      alerts: {}
+      alerts: {},
     }
   },
   methods: {
-    fetchAlerts () {
+    fetchAlerts() {
       this.alerts = this.$store.getters.partyAnalysisByDocument(this.documentNumber)
       if (!this.alerts) {
         this.loading = true
@@ -59,8 +59,8 @@ export default {
           this.loading = false
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

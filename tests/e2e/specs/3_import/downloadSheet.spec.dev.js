@@ -1,8 +1,8 @@
 const login = Cypress.env('empty-account-email')
 const password = Cypress.env('default-password')
 
-describe('Justto.App - Planilha Modelo', function () {
-  it('Planilha modelo Disponível: Sucesso', function () {
+describe('Justto.App - Planilha Modelo', function() {
+  it('Planilha modelo Disponível: Sucesso', function() {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('/')

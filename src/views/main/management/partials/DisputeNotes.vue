@@ -81,24 +81,24 @@ export default {
   props: {
     disputeId: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
-  data () {
+  data() {
     return {
       loading: true,
       noteLoading: 0,
       editDialog: false,
       editDialogLoading: false,
-      newNoteContent: ''
+      newNoteContent: '',
     }
   },
   computed: {
-    occurrences () {
+    occurrences() {
       return this.$store.getters.occurrences
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.$store.commit('clearDisputeOccurrences')
     setTimeout(() => {
       this.$store.dispatch('getDisputeNotes', this.disputeId).then(() => {
@@ -107,25 +107,25 @@ export default {
     }, 200)
   },
   methods: {
-    splitModified (description) {
+    splitModified(description) {
       return description.split(' modificou uma nota. ')
     },
-    splitNew (description) {
+    splitNew(description) {
       return description.split(' adicionou uma nota. ')
     },
-    buildContent (occurrence) {
+    buildContent(occurrence) {
       if (occurrence.updateAt) {
         return this.splitModified(occurrence.description)[1]
       }
       return this.splitNew(occurrence.description)[1]
     },
-    buildSender (occurrence) {
+    buildSender(occurrence) {
       if (occurrence.updateAt) {
         return 'Modificado por ' + this.splitModified(occurrence.description)[0]
       }
       return 'Adicionado por ' + this.splitNew(occurrence.description)[0]
     },
-    buildHour (occurrence) {
+    buildHour(occurrence) {
       if (occurrence.updateAt) {
         return this.$moment(occurrence.updateAt.dateTime).format('DD/MM/YY [às] HH:mm')
       } else if (occurrence.executionDateTime) {
@@ -133,23 +133,23 @@ export default {
       }
       return this.$moment(occurrence.createAt.dateTime).format('DD/MM/YY [às] HH:mm')
     },
-    openEditDialog (occurrence) {
+    openEditDialog(occurrence) {
       this.activeOccurrence = occurrence
       this.newNoteContent = this.buildContent(occurrence)
       this.editDialog = true
     },
-    editNote (newNoteContent) {
+    editNote(newNoteContent) {
       this.editDialogLoading = true
       this.$store.dispatch('editDisputeNote', {
         newNoteContent: newNoteContent,
-        activeOccurrence: this.activeOccurrence
+        activeOccurrence: this.activeOccurrence,
       })
         .then(() => {
           this.editDialog = false
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota editada com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -157,12 +157,12 @@ export default {
           this.editDialogLoading = false
         })
     },
-    removeNote (occurrence, index) {
+    removeNote(occurrence, index) {
       this.$confirm('Esta nota será deletada permanentemente. Deseja continuar?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancelar',
         type: 'warning',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
       }).then(() => {
         let noteId = occurrence.id
         this.noteLoading = occurrence.id
@@ -173,7 +173,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota removida com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -181,7 +181,7 @@ export default {
           this.noteLoading = 0
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>

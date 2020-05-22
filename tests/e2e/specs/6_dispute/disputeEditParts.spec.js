@@ -4,16 +4,16 @@ const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
 const user = Cypress.env('main-user')
 
-describe('Justto.App - Disputa: Edição do Caso', function () {
-  before(function () {
+describe('Justto.App - Disputa: Edição do Caso', function() {
+  before(function() {
     cy.prepair_testes('PUT', 'prepare-dispute-update-test-e2e')
   })
-  beforeEach(function () {
+  beforeEach(function() {
     cy.access('/')
     cy.login(login, password, workspace)
   })
 
-  it('Edição de Partes', function () {
+  it('Edição de Partes', function() {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')

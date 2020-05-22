@@ -73,25 +73,25 @@ export default {
   props: {
     showPlans: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showExit: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       modal: false,
-      modalType: 1
+      modalType: 1,
     }
   },
   methods: {
-    showModal (type) {
+    showModal(type) {
       this.modalType = type
       this.modal = true
-    }
-  }
+    },
+  },
 }
 </script>
 

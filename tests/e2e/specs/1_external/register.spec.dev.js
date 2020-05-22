@@ -1,8 +1,8 @@
 const email = Cypress.env('main-email')
-const email_register = 'register@justto.com.br'
+const emailRegister = 'register@justto.com.br'
 
-describe('Nova Conta', function () {
-  beforeEach(function () {
+describe('Nova Conta', function() {
+  beforeEach(function() {
     cy.access('/')
 
     // Acessa a página de registro
@@ -13,7 +13,7 @@ describe('Nova Conta', function () {
     cy.url().should('include', '/#/register')
   })
 
-  it('Sucesso', function () {
+  it('Sucesso', function() {
     // Preenche o campo 'Nome'
     cy.get('[data-testid=register-name]')
       .type('Conta Teste')
@@ -21,8 +21,8 @@ describe('Nova Conta', function () {
 
     // Preenche o campo 'Email'
     cy.get('[data-testid=register-email]')
-      .type(email_register)
-      .should('have.value', email_register)
+      .type(emailRegister)
+      .should('have.value', emailRegister)
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=register-password]')
@@ -38,7 +38,7 @@ describe('Nova Conta', function () {
       .should('be.visible')
   })
 
-  it('Sucesso', function () {
+  it('Sucesso', function() {
     // Preenche o campo 'Nome'
     cy.get('[data-testid=register-name]')
       .type('Conta Teste')
@@ -63,7 +63,7 @@ describe('Nova Conta', function () {
       .should('be.visible')
   })
 
-  it('Email Inválido', function () {
+  it('Email Inválido', function() {
     // Preenche o campo 'Nome'
     cy.get('[data-testid=register-name]')
       .type('Conta Teste')

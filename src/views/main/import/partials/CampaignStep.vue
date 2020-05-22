@@ -82,21 +82,21 @@
 export default {
   name: 'CampaignStep',
   components: {
-    JusImportFeedbackCard: () => import('@/components/layouts/JusImportFeedbackCard')
+    JusImportFeedbackCard: () => import('@/components/layouts/JusImportFeedbackCard'),
   },
   props: {
     mappedCampaigns: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  data () {
+  data() {
     return {
       duplicatedDisputes: [],
-      duplicatedDisputesLoading: true
+      duplicatedDisputesLoading: true,
     }
   },
-  beforeMount () {
+  beforeMount() {
     if (!this.$store.getters.strategyList.length) {
       this.$store.dispatch('showLoading')
       this.$store.dispatch('getMyStrategies').finally(() => {
@@ -108,7 +108,7 @@ export default {
     }).finally(() => {
       setTimeout(() => { this.duplicatedDisputesLoading = false }, 1000)
     })
-  }
+  },
 }
 </script>
 

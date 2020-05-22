@@ -4,17 +4,17 @@ const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
 const user = Cypress.env('main-user')
 
-describe('Disputa', function () {
-  before(function () {
+describe('Disputa', function() {
+  before(function() {
     cy.prepair_testes('DELETE', 'delete-occorrences-dispute-update-test-e2e')
   })
 
-  beforeEach(function () {
+  beforeEach(function() {
     cy.access('/')
     cy.login(login, password, workspace)
   })
 
-  it('Salvar Nota', function () {
+  it('Salvar Nota', function() {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
@@ -44,7 +44,7 @@ describe('Disputa', function () {
     cy.get('[data-testid=note-empty]')
       .contains('Não foram encontradas notas.')
 
-    function randomText (size) {
+    function randomText(size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
       var result = ''
       for (var i = 0; i < size; i++) {

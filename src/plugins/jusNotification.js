@@ -10,7 +10,7 @@ const TIMEOUT = 'Tempo limite da requisição excedido.'
 const NOTFOUND = 'Erro 404 (Rota não encontrada).'
 
 const NotificationMessage = {
-  install (Vue, options) {
+  install(Vue, options) {
     Vue.prototype.$jusNotification = (config) => {
       if (config.error instanceof Error) {
         if (config.error.response) {
@@ -51,7 +51,7 @@ const NotificationMessage = {
       Notification.closeAll()
       Notification(config)
     }
-  }
+  },
 }
 
 Vue.use(NotificationMessage)

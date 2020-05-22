@@ -16,26 +16,26 @@ export default {
   props: {
     to: {
       default: '',
-      type: String
+      type: String,
     },
     src: {
       default: '',
-      type: String
+      type: String,
     },
     back: {
       default: false,
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   methods: {
-    goTo () {
+    goTo() {
       if (this.src) {
         window.location = this.src
       } else if (this.back) {
         this.$router.go(-1)
       } else this.$router.push(this.to)
-    }
-  }
+    },
+  },
 }
 </script>
 

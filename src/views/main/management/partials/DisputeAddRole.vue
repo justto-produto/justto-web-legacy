@@ -257,22 +257,22 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disputeId: {
       type: Number,
-      default: 0
+      default: 0,
     },
     documentNumbers: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     oabs: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  data () {
+  data() {
     return {
       secondStep: false,
       searchLoading: false,
@@ -287,36 +287,36 @@ export default {
         documentNumber: '',
         searchDocumentNumber: '',
         searchOabNumber: '',
-        searchOabState: ''
+        searchOabState: '',
       },
       newRoleRules: {
         name: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'submit' }
+          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'submit' },
         ],
         phone: [{ validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }],
         email: [{ type: 'email', message: 'E-mail inválido', trigger: 'submit' }],
         documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' }],
         searchDocumentNumber: [
           { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' },
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         ],
         searchOabNumber: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        searchOabState: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-      }
+        searchOabState: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      },
     }
   },
   computed: {
     dialogVisible: {
-      get () {
+      get() {
         return this.visible
       },
-      set (value) {
+      set(value) {
         this.$emit('update:visible', value)
-      }
+      },
     },
     roleParty: () => ['claimantParty', 'claimantLawyer', 'respondentParty', 'respondentLawyer'],
-    partySelected () {
+    partySelected() {
       if (this.newRole.party) {
         if (['claimantParty', 'respondentParty'].includes(this.newRole.party)) {
           return true
@@ -324,10 +324,10 @@ export default {
         return false
       }
       return undefined
-    }
+    },
   },
   watch: {
-    dialogVisible () {
+    dialogVisible() {
       this.secondStep = false
       this.disableDocumentNumber = false
       this.newRole = {
@@ -335,12 +335,12 @@ export default {
         searchDocumentNumber: '',
         documentNumber: '',
         searchOabState: '',
-        searchOabNumber: ''
+        searchOabNumber: '',
       }
-    }
+    },
   },
   methods: {
-    searchPerson () {
+    searchPerson() {
       let isValid = true
       let fields
       let searchAction
@@ -363,11 +363,11 @@ export default {
         let params = {}
         if (this.newRole.searchDocumentNumber) {
           if (this.documentNumbers.includes(this.newRole.searchDocumentNumber.replace(/\D/g, ''))) {
-            setTimeout(function () {
+            setTimeout(function() {
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Parte já cadastrada nesta disputa.',
-                type: 'warning'
+                type: 'warning',
               })
               this.searchLoading = false
             }.bind(this), 300)
@@ -380,11 +380,11 @@ export default {
           this.disableDocumentNumber = true
         } else if (this.newRole.searchOabNumber && this.newRole.searchOabState) {
           if (this.oabs.includes(this.newRole.searchOabNumber.replace(/\D/g, '') + this.newRole.searchOabState)) {
-            setTimeout(function () {
+            setTimeout(function() {
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Parte já cadastrada nesta disputa.',
-                type: 'warning'
+                type: 'warning',
               })
               this.searchLoading = false
             }.bind(this), 300)
@@ -403,7 +403,7 @@ export default {
                 confirmButtonText: 'Sim, utilizar',
                 cancelButtonText: 'Não',
                 type: 'info',
-                cancelButtonClass: 'is-plain'
+                cancelButtonClass: 'is-plain',
               }).then(() => {
                 self.newRole.name = response.name
                 if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
@@ -421,16 +421,16 @@ export default {
             if (this.newRole.searchOabNumber && this.newRole.searchOabState) {
               this.newRole.oabs.push({
                 number: this.newRole.searchOabNumber,
-                state: this.newRole.searchOabState
+                state: this.newRole.searchOabState,
               })
             }
-            setTimeout(function () {
+            setTimeout(function() {
               this.searchLoading = false
             }.bind(this), 500)
           })
       }
     },
-    clearDocuments () {
+    clearDocuments() {
       this.newRole.searchDocumentNumber = ''
       this.newRole.documentNumber = ''
       this.newRole.searchOabState = ''
@@ -439,7 +439,7 @@ export default {
       this.secondStep = false
       this.disableDocumentNumber = false
     },
-    addOab () {
+    addOab() {
       let isValid = true
       this.$refs.newRole.validateField(['oab', 'state'], errorMessage => {
         if (errorMessage || !this.newRole.oab || !this.newRole.state) isValid = false
@@ -451,17 +451,17 @@ export default {
         if (isDuplicated < 0) {
           this.newRole.oabs.push({
             number: this.newRole.oab,
-            state: this.newRole.state
+            state: this.newRole.state,
           })
         }
         this.newRole.oab = ''
         this.newRole.state = ''
       }
     },
-    removeOab (index) {
+    removeOab(index) {
       this.newRole.oabs.splice(index, 1)
     },
-    addPhone () {
+    addPhone() {
       let isValid = true
       this.$refs.newRole.validateField('phone', errorMessage => {
         if (errorMessage || !this.newRole.phone) isValid = false
@@ -476,10 +476,10 @@ export default {
         this.newRole.phone = ''
       }
     },
-    removePhone (index) {
+    removePhone(index) {
       this.phonesList.splice(index, 1)
     },
-    addEmail () {
+    addEmail() {
       let isValid = true
       this.newRole.email = this.newRole.email.trim()
       this.$refs.newRole.validateField('email', errorMessage => {
@@ -492,10 +492,10 @@ export default {
         this.newRole.email = ''
       }
     },
-    removeEmail (index) {
+    removeEmail(index) {
       this.emailsList.splice(index, 1)
     },
-    registerRole () {
+    registerRole() {
       let isValid = true
       this.$refs.newRole.validateField(['documentNumber', 'name'], errorMessage => {
         if (errorMessage) isValid = false
@@ -520,23 +520,23 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nova parte cadastrada com sucesso.',
-            type: 'success'
+            type: 'success',
           })
           this.$store.dispatch('getDispute', this.disputeId)
           this.$confirm('Deseja iniciar o engajamento para esta parte?', 'Atenção!', {
             confirmButtonText: 'Engajar',
             cancelButtonText: 'Não',
             type: 'info',
-            cancelButtonClass: 'is-plain'
+            cancelButtonClass: 'is-plain',
           }).then(() => {
             this.$store.dispatch('restartDisputeRoleEngagement', {
               disputeId: this.disputeId,
-              disputeRoleId: response.id
+              disputeRoleId: response.id,
             }).then(() => {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Engajamento realizado com sucesso.',
-                type: 'success'
+                type: 'success',
               })
             })
           })
@@ -546,8 +546,8 @@ export default {
           this.registerLoading = false
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

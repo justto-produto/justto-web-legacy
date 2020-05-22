@@ -91,11 +91,11 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   computed: {
-    disputeStatusSummaryWithWarn () {
+    disputeStatusSummaryWithWarn() {
       let self = this
       let disputeStatusSummaryWithWarn = []
       // let sumWithoutAlert = 0
@@ -113,7 +113,7 @@ export default {
           withAlertFilter: self.data.datasets[1].filter[index],
           total: self.data.datasets[2].data[index],
           totalFilter: self.data.datasets[2].filter[index],
-          statusIndex: index
+          statusIndex: index,
         })
       })
       // disputeStatusSummaryWithWarn.push({
@@ -128,22 +128,22 @@ export default {
       // })
       return disputeStatusSummaryWithWarn
     },
-    selectedMemberId () {
+    selectedMemberId() {
       return this.$store.getters.dashboardSelectedMemberId
     },
-    members () {
+    members() {
       return this.$store.state.workspaceModule.members
-    }
+    },
   },
   methods: {
-    tooltipName () {
+    tooltipName() {
       if (this.selectedMemberId) {
         return this.members.filter(member => member.personId === this.selectedMemberId)[0].person.name
       } else {
         return ''
       }
     },
-    buildWithoutAlertTooltip (row) {
+    buildWithoutAlertTooltip(row) {
       let name = this.tooltipName() ? ' de ' + this.tooltipName() : ''
       switch (row.label) {
         case 'PENDENTE':
@@ -160,7 +160,7 @@ export default {
           return 'Clique para ver estas disputas.'
       }
     },
-    buildWithAlertTooltip (row) {
+    buildWithAlertTooltip(row) {
       let name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
       switch (row.label) {
         case 'PENDENTE':
@@ -177,7 +177,7 @@ export default {
           return 'Clique para ver estas disputas'
       }
     },
-    buildTotalTooltip (row) {
+    buildTotalTooltip(row) {
       let name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
       switch (row.label) {
         case 'PENDENTE':
@@ -194,10 +194,10 @@ export default {
           return 'Clique para ver estas disputas.'
       }
     },
-    headerRowClassName ({ row, rowIndex }) {
+    headerRowClassName({ row, rowIndex }) {
       return 'header'
     },
-    cellClassName ({ row, column, rowIndex, columnIndex }) {
+    cellClassName({ row, column, rowIndex, columnIndex }) {
       let cls = ''
       if (row.label === 'TOTAL') cls += 'line-total '
       if (columnIndex === 1) cls += 'without-alert'
@@ -207,7 +207,7 @@ export default {
       }
       return cls
     },
-    cellClick (row, column, cell, event) {
+    cellClick(row, column, cell, event) {
       if (cell.textContent) {
         let statusIndex = row.statusIndex
         let columnProperty = column.property
@@ -241,8 +241,8 @@ export default {
         this.$router.push('/management')
         // }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

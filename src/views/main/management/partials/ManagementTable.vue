@@ -414,7 +414,7 @@ import {
   getLastInteraction,
   getInteractionIcon,
   getLastInteractionTooltip,
-  getDocumentStep
+  getDocumentStep,
 } from '@/utils/jusUtils'
 import { quillEditor } from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
@@ -435,23 +435,23 @@ export default {
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
     InfiniteLoading: () => import('vue-infinite-loading'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
-    quillEditor
+    quillEditor,
   },
   props: {
     activeTab: {
       type: String,
-      default: '0'
+      default: '0',
     },
     selectedIds: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     loadingDisputes: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       showEmpty: false,
       showEmptyDebounce: '',
@@ -476,71 +476,71 @@ export default {
             [{ 'header': 1 }, { 'header': 2 }],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             ['blockquote'],
-            ['clean']
-          ]
-        }
-      }
+            ['clean'],
+          ],
+        },
+      },
     }
   },
   computed: {
     selectedIdsComp: {
-      get () {
+      get() {
         return this.selectedIds
       },
-      set (ids) {
+      set(ids) {
         this.$emit('update:selectedIds', ids)
-      }
+      },
     },
-    disputes () {
+    disputes() {
       return this.$store.getters.disputes
     },
-    tab0 () {
+    tab0() {
       return this.activeTab === '0'
     },
-    tab1 () {
+    tab1() {
       return this.activeTab === '1'
     },
-    tab2 () {
+    tab2() {
       return this.activeTab === '2'
     },
-    tab3 () {
+    tab3() {
       return this.activeTab === '3'
-    }
+    },
   },
   watch: {
     disputes: {
-      handler () {
+      handler() {
         this.$refs.disputeTable.doLayout()
       },
-      deep: true
+      deep: true,
     },
-    loadingDisputes (value) {
+    loadingDisputes(value) {
       if (!value) {
         clearTimeout(this.showEmptyDebounce)
         this.showEmptyDebounce = setTimeout(() => {
           this.showEmpty = true
         }, 2000)
       }
-    }
+    },
   },
-  beforeCreate () {
+  beforeCreate() {
     this.$store.commit('resetDisputeQueryPage')
   },
   methods: {
-    cellMouseEnter (row, column, cell, event) {
+    cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
     },
-    startResponseBox (id) {
+    startResponseBox(id) {
       this.message = ''
       if (this.messageCache[id]) {
         this.message = this.messageCache[id]
         this.responseBoxVisible = true
       }
     },
-    showResponseBox (id) {
+    showResponseBox(id) {
       this.responseBoxVisible = true
     },
-    hideResponseBox (id, cancel) {
+    hideResponseBox(id, cancel) {
       if (cancel) {
         delete this.messageCache[id]
       } else if (this.message) {
@@ -549,19 +549,19 @@ export default {
       this.message = ''
       this.responseBoxVisible = false
     },
-    openResponseDialog (row) {
+    openResponseDialog(row) {
       this.responseRow = row
       this.responseDialogVisible = true
       this.richMessage = this.message + ''
     },
-    sendMessage (dispute) {
+    sendMessage(dispute) {
       if (this.message.trim().replace('\n', '') || this.richMessage.trim().replace('\n', '')) {
         let message = this.richMessage ? this.richMessage : this.message
         this.responseBoxLoading = true
         this.$store.dispatch('send' + dispute.lastReceivedMessage.message.communicationType.toLowerCase(), {
           to: [{ address: dispute.lastReceivedMessage.message.sender }],
           message,
-          disputeId: dispute.id
+          disputeId: dispute.id,
         }).then(() => {
           this.message = ''
           this.richMessage = ''
@@ -570,7 +570,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Mensagem enviada com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -583,20 +583,20 @@ export default {
     getInteractionIcon: (i) => getInteractionIcon(i),
     getLastInteractionTooltip: (i) => getLastInteractionTooltip(i),
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
-    tableRowClassName ({ row, rowIndex }) {
+    tableRowClassName({ row, rowIndex }) {
       if (!row.visualized && !this.tab0) {
         return 'el-table__row--visualized-row'
       }
     },
-    handleRowClick (row, column, event) {
+    handleRowClick(row, column, event) {
       if (row.id && !['IMG', 'SPAN', 'BUTTON'].includes(event.target.tagName)) {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
-    clearSelection () {
+    clearSelection() {
       this.$refs.disputeTable.clearSelection()
     },
-    handleSelectionChange (selected) {
+    handleSelectionChange(selected) {
       let ids = []
       for (let dispute of selected) {
         if (dispute && dispute.id) {
@@ -605,15 +605,15 @@ export default {
       }
       this.selectedIdsComp = ids
     },
-    disputeNextToExpire (date) {
+    disputeNextToExpire(date) {
       return this.$moment(date).isBetween(this.$moment(), this.$moment().add(4, 'day'))
     },
-    showProtocolModal (dispute) {
+    showProtocolModal(dispute) {
       this.selectedDisputeId = dispute.id
       this.selectedDisputeRoles = dispute.disputeRoles
       this.protocolDialogVisible = true
     },
-    getMessageSummary (lastOutboundInteraction, disputeId) {
+    getMessageSummary(lastOutboundInteraction, disputeId) {
       if (lastOutboundInteraction.message && lastOutboundInteraction.message.parameters.READ_DATE) {
         const messageResume = this.$store.getters.getMessageResumeByDisputeId(disputeId)
         if (messageResume) {
@@ -626,7 +626,7 @@ export default {
         }
       }
     },
-    infiniteHandler ($state) {
+    infiniteHandler($state) {
       this.$store.commit('addDisputeQueryPage')
       this.$store.dispatch('getDisputes', 'nextPage').then(response => {
         if (response.last) {
@@ -635,8 +635,8 @@ export default {
           $state.loaded()
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

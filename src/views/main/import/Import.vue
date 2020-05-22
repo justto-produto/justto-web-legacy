@@ -84,24 +84,24 @@ export default {
   name: 'Import',
   components: {
     InfiniteLoading,
-    JusImportDialog: () => import('@/components/dialogs/JusImportDialog')
+    JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
   },
-  data () {
+  data() {
     return {
       importsHistory: [],
       page: 1,
-      importDialogVisible: false
+      importDialogVisible: false,
     }
   },
   computed: {
-    importsHistoryPaged () {
+    importsHistoryPaged() {
       return this.importsHistory.slice(0, this.page * 20)
-    }
+    },
   },
-  beforeMount () {
+  beforeMount() {
     this.$store.dispatch('getImportsHistory').then(response => {
       if (response && response.length) {
-        this.importsHistory = response.sort(function (a, b) {
+        this.importsHistory = response.sort(function(a, b) {
           if (a.id < b.id) return 1
           if (a.id > b.id) return -1
           return 0
@@ -110,7 +110,7 @@ export default {
     })
   },
   methods: {
-    setStatusIcon (status) {
+    setStatusIcon(status) {
       switch (status) {
         case 'FINISHED':
           return 'el-icon-folder-checked'
@@ -122,7 +122,7 @@ export default {
           return 'el-icon-folder-delete'
       }
     },
-    infiniteHandler ($state) {
+    infiniteHandler($state) {
       setTimeout(() => {
         this.page = this.page + 1
         if (this.importsHistory.length === this.importsHistoryPaged.length) {
@@ -132,12 +132,12 @@ export default {
         }
       }, 600)
     },
-    downloadModel () {
+    downloadModel() {
       // SEGMENT TRACK
       this.$jusSegment('Baixar planilha modelo')
       window.open('Planilha-Modelo-Justto.xlsx', '_blank')
-    }
-  }
+    },
+  },
 }
 </script>
 

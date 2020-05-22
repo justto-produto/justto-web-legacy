@@ -11,16 +11,16 @@ const documents = 'api/office/documents/'
  */
 
 const actions = {
-  getDocumentModels ({ commit }) {
+  getDocumentModels({ commit }) {
     return axiosDispatcher({ url: documents + 'model' })
   },
-  createDocumentByModel ({ commit }, params) {
+  createDocumentByModel({ commit }, params) {
     return axiosDispatcher({
       url: documents + params.modelId + '/' + params.disputeId,
-      method: 'POST'
+      method: 'POST',
     })
   },
-  getDocumentByDisputeId ({ commit }, disputeId) {
+  getDocumentByDisputeId({ commit }, disputeId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get(documents + disputeId)
@@ -34,53 +34,53 @@ const actions = {
         })
     })
   },
-  setDocumentSigners ({ commit }, params) {
+  setDocumentSigners({ commit }, params) {
     return axiosDispatcher({
       url: documents + 'signer/' + params.disputeId,
       method: 'POST',
-      data: params.recipients
+      data: params.recipients,
     })
   },
-  resendSignersNotification ({ commit }, params) {
+  resendSignersNotification({ commit }, params) {
     return axiosDispatcher({
       url: documents + 'resend-notification/' + params.disputeId,
-      method: 'PUT'
+      method: 'PUT',
     })
   },
-  deleteDocument ({ commit }, disputeId) {
+  deleteDocument({ commit }, disputeId) {
     return axiosDispatcher({
       url: documents + disputeId,
-      method: 'DELETE'
+      method: 'DELETE',
     })
   },
-  addModel ({ commit }, url) {
+  addModel({ commit }, url) {
     return axiosDispatcher({
       url: documents + `model?url=${url}`,
       method: 'POST',
-      data: {}
+      data: {},
     })
   },
-  editModel ({ commit }, model) {
+  editModel({ commit }, model) {
     return axiosDispatcher({
       url: documents + 'model/',
       method: 'PUT',
-      data: model
+      data: model,
     })
   },
-  deleteModel ({ commit }, modelId) {
+  deleteModel({ commit }, modelId) {
     return axiosDispatcher({
       url: documents + 'model/' + modelId,
-      method: 'DELETE'
+      method: 'DELETE',
     })
   },
-  downloadDocument ({ commit }, params) {
+  downloadDocument({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get(documents + 'download-signed/' + params.disputeId, {
-        responseType: 'arraybuffer'
+        responseType: 'arraybuffer',
       }).then(response => {
         const blob = new Blob([response.data], {
-          type: 'application/octet-stream'
+          type: 'application/octet-stream',
         })
         let fileName = params.name + '.pdf'
         FileSaver.saveAs(blob, fileName)
@@ -90,9 +90,9 @@ const actions = {
       })
     })
   },
-  getDocumentTypes () {
+  getDocumentTypes() {
     return axiosDispatcher({ url: documents + 'model/input/types' })
-  }
+  },
 }
 
 export default actions

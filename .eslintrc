@@ -5,6 +5,8 @@
   },
   "extends": ["plugin:vue/recommended", "@vue/standard"],
   "rules": {
+    "space-before-function-paren": ["error", "never"],
+    "comma-dangle": ["error", "always-multiline"],
     "standard/no-callback-literal": 0,
     "vue/max-attributes-per-line": [
       "error",
@@ -23,18 +25,24 @@
         "allowCoexistStyle": true
       }
     ],
-    "vue/no-textarea-mustache": ["error"],
+    "vue/no-textarea-mustache": "error",
     "vue/no-unused-vars": [
       "error",
       {
         "ignorePattern": "^_"
       }
     ],
-    "vue/require-valid-default-prop": ["error"],
+    "vue/require-valid-default-prop": "error",
     "vue/return-in-computed-property": [
       "error",
       {
         "treatUndefinedAsUnspecified": true
+      }
+    ],
+    "vue/no-multi-spaces": [
+      "error",
+      {
+        "ignoreProperties": false
       }
     ]
   },

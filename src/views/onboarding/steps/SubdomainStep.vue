@@ -45,59 +45,59 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       isAvailable: false,
       isValid: false,
       subdomainForm: {
-        subdomain: this.$store.state.workspaceModule.subdomain
+        subdomain: this.$store.state.workspaceModule.subdomain,
       },
       subdomainFormRules: {
         subdomain: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validateSubdomainName, trigger: 'change' },
-          { validator: validateSubdomainAvailability, trigger: 'change' }
-        ]
-      }
+          { validator: validateSubdomainAvailability, trigger: 'change' },
+        ],
+      },
     }
   },
   computed: {
-    availabilityAlert () {
+    availabilityAlert() {
       if (this.isAvailable) {
         return {
           title: 'Subdomínio disponível.',
-          type: 'success'
+          type: 'success',
         }
       }
       return {
         title: 'Este subdomínio já está em uso.',
-        type: 'error'
+        type: 'error',
       }
     },
-    creatingWorkspace () {
+    creatingWorkspace() {
       return this.$store.getters.creatingWorkspace
     },
-    showAlert () {
+    showAlert() {
       if (!this.creatingWorkspace) {
         if (this.isValid) {
           return true
         } return false
       } return false
-    }
+    },
   },
   watch: {
     subdomainForm: {
-      handler (value) {
+      handler(value) {
         this.subdomainForm.subdomain = value.subdomain.toLowerCase()
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
-    submitForm () {
+    submitForm() {
       if (!this.creatingWorkspace) {
         this.$refs['subdomainForm'].validate(valid => {
           if (valid) {
@@ -107,8 +107,8 @@ export default {
           }
         })
       } else this.$emit('onboarding:step:next')
-    }
-  }
+    },
+  },
 }
 </script>
 

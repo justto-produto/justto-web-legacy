@@ -194,9 +194,9 @@ export default {
     ManagementTable: () => import('./partials/ManagementTable'),
     ManagementActions: () => import('./partials/ManagementActions'),
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
-    JusImportDialog: () => import('@/components/dialogs/JusImportDialog')
+    JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
   },
-  data () {
+  data() {
     return {
       loadingExport: false,
       filtersVisible: false,
@@ -210,81 +210,81 @@ export default {
       checkedNodes: 0,
       filterQuery: '',
       filteredNodes: {},
-      columns: []
+      columns: [],
     }
   },
   computed: {
-    loadingDisputes () {
+    loadingDisputes() {
       return this.$store.getters.loadingDisputes
     },
-    hasFilters () {
+    hasFilters() {
       return this.$store.getters.disputeHasFilters
     },
-    engagementLength () {
+    engagementLength() {
       return this.$store.getters.disputeNearExpirationsEngajement
     },
-    interactionLength () {
+    interactionLength() {
       return this.$store.getters.disputeNotVisualizedInteration
     },
-    newDealsLength () {
+    newDealsLength() {
       return this.$store.getters.disputeNotVisualizedNewDeal
     },
-    disputes () {
+    disputes() {
       return this.$store.getters.disputes
     },
-    hasNew () {
+    hasNew() {
       return this.$store.getters.disputeHasNew
     },
     activeTab: {
-      get () { return this.$store.getters.disputeTab },
-      set (tab) { this.$store.commit('setDisputesTab', tab) }
+      get() { return this.$store.getters.disputeTab },
+      set(tab) { this.$store.commit('setDisputesTab', tab) },
     },
-    multiActive () {
+    multiActive() {
       return this.selectedIds.length >= 1
     },
-    disputesTotalLength () {
+    disputesTotalLength() {
       return this.$store.getters.disputeQuery.total
     },
-    persons () {
+    persons() {
       return this.$store.state.disputeModule.query.persons
     },
     term: {
-      get () {
+      get() {
         return this.$store.getters.disputeQueryTerm
       },
-      set (term) {
+      set(term) {
         this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
-      }
-    }
+      },
+    },
   },
   watch: {
-    term (term) {
+    term(term) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
         this.getDisputes()
       }, 800)
     },
-    persons () {
+    persons() {
       this.getDisputes()
     },
-    filterQuery (val) {
+    filterQuery(val) {
       this.$refs.tree.filter(val)
-    }
+    },
   },
-  beforeCreate () {
+  beforeCreate() {
     this.$store.dispatch('getNotVisualizeds')
     this.$store.dispatch('getNearExpirations')
   },
-  created () {
+  created() {
     this.getDisputes()
   },
-  mounted () {
+  mounted() {
     this.$store.dispatch('getExportColumns').then(response => {
       Object.keys(response).forEach(key => {
         this.columns.push({
           'key': key,
-          'label': response[key]
+          'label': response[key],
         })
       })
     }).finally(() => {
@@ -293,7 +293,7 @@ export default {
     })
   },
   methods: {
-    filterColumns (value, data) {
+    filterColumns(value, data) {
       this.filteredNodes = this.columns.filter(c => {
         return c.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
       })
@@ -301,8 +301,8 @@ export default {
       if (!value) return true
       return data.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')) !== -1
     },
-    handlerChangeTree (value, obj) {
-      setTimeout(function () {
+    handlerChangeTree(value, obj) {
+      setTimeout(function() {
         let checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.key)).length
         let nodesLength = this.filteredNodes.length
         this.isSelectedAllColumns = checkedNodes === nodesLength
@@ -310,7 +310,7 @@ export default {
         this.checkedNodes = obj.checkedKeys.length
       }.bind(this), 200)
     },
-    invertSelectionColumns (value) {
+    invertSelectionColumns(value) {
       if (value) {
         let allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.key)]
         this.$refs.tree.setCheckedKeys(allNodesSelected)
@@ -321,18 +321,18 @@ export default {
       this.isIndeterminate = false
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
     },
-    nodeDragEnd (draggingNode, dropNode, dropType, ev) {
+    nodeDragEnd(draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
         this.$refs.tree.setChecked(draggingNode.data.key, draggingNode.checked)
       }, 100)
     },
-    allowDrop (draggingNode, dropNode, type) {
+    allowDrop(draggingNode, dropNode, type) {
       if (type === 'prev') {
         return true
       }
       return false
     },
-    getDisputes () {
+    getDisputes() {
       clearTimeout(this.disputeDebounce)
       this.disputeDebounce = setTimeout(() => {
         this.$store.dispatch('getFilteredTags')
@@ -351,10 +351,10 @@ export default {
         })
       }, 300)
     },
-    clearSelection () {
+    clearSelection() {
       this.$refs.managementTable.clearSelection()
     },
-    handleChangeTab (tab) {
+    handleChangeTab(tab) {
       this.$refs.managementTable.showEmpty = false
       this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
@@ -380,7 +380,7 @@ export default {
       }
       this.getDisputes()
     },
-    showExportDisputesDialog () {
+    showExportDisputesDialog() {
       this.exportDisputesDialog = true
       const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
       setTimeout(() => {
@@ -392,7 +392,7 @@ export default {
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       }, 200)
     },
-    exportDisputes () {
+    exportDisputes() {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.$refs.tree.getCheckedKeys())
         .then(() => {
@@ -408,12 +408,12 @@ export default {
           this.exportDisputesDialog = false
         })
     },
-    showImportDialog () {
+    showImportDialog() {
       // SEGMENT TRACK
       this.$jusSegment('Botão importação rápida')
       this.importDialogVisible = true
-    }
-  }
+    },
+  },
 }
 </script>
 

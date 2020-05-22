@@ -30,12 +30,12 @@
 export default {
   name: 'CheckLinesStep',
   computed: {
-    lines () {
+    lines() {
       if (this.$store.state.importModule.file) {
         return this.$store.state.importModule.file.rows
       } else return 0
-    }
-  }
+    },
+  },
 }
 </script>
 

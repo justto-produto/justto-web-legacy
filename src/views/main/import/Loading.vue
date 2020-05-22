@@ -57,35 +57,35 @@
 <script>
 export default {
   name: 'ImportLoading',
-  data () {
+  data() {
     return {
-      showGif: 0
+      showGif: 0,
     }
   },
-  mounted () {
+  mounted() {
     this.increaseShow()
   },
   methods: {
-    increaseShow () {
+    increaseShow() {
       let self = this
       if (self.showGif === 0) {
-        setTimeout(function () {
+        setTimeout(function() {
           self.showGif++
           self.increaseShow()
         }, 1000)
       } else if (self.showGif < 5) {
-        setTimeout(function () {
+        setTimeout(function() {
           self.showGif++
           self.increaseShow()
         }, 2000)
       } else if (self.showGif === 5) {
-        setTimeout(function () {
+        setTimeout(function() {
           self.showGif++
           self.increaseShow()
         }, Math.floor(Math.random() * 2000))
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

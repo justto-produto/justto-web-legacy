@@ -4,8 +4,8 @@ const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
 const name = Cypress.env('main-name')
 
-describe('Justto.App - Disputa: Ação Perder', function () {
-  beforeEach(function () {
+describe('Justto.App - Disputa: Ação Perder', function() {
+  beforeEach(function() {
     cy.prepair_testes('PUT', '/prepare-dispute-update-test-e2e')
     cy.access('/')
     cy.login(login, password, workspace)
@@ -23,7 +23,7 @@ describe('Justto.App - Disputa: Ação Perder', function () {
     cy.url().should('include', '/#/management/dispute/')
   })
 
-  afterEach('Remove a Conta', function () {
+  afterEach('Remove a Conta', function() {
     // Clica em Remover
     cy.get('[data-testid=remove]')
       .click()
@@ -47,11 +47,11 @@ describe('Justto.App - Disputa: Ação Perder', function () {
     'Sem interesse no acordo',
     'Encaminhado para arbitragem',
     'Não foi possível realizar contato',
-    'Acordo fechado por terceiros'
+    'Acordo fechado por terceiros',
   ]
 
   motives.forEach((motive) => {
-    it('Ação: Perder - ' + motive, function () {
+    it('Ação: Perder - ' + motive, function() {
       // Clica em Perder
       cy.get('[data-testid=unsettled]')
         .click()

@@ -13,7 +13,7 @@ if (AUTH_TOKEN) {
 let config = {
   baseURL: process.env.VUE_APP_BASE_URL || location.origin,
   timeout: 60 * 11000,
-  headers: {}
+  headers: {},
 }
 
 const _axios = axios.create(config)
@@ -22,7 +22,7 @@ _axios.CancelToken = axios.CancelToken
 _axios.isCancel = axios.isCancel
 
 _axios.interceptors.request.use(
-  function (config) {
+  function(config) {
     let storageWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
     if (store.getters.isLoggedIn && store.getters.hasWorkspace && storageWorkspace && storageWorkspace.subDomain) {
       if (config.headers.common.Workspace !== storageWorkspace.subDomain) {
@@ -31,22 +31,22 @@ _axios.interceptors.request.use(
     }
     return config
   },
-  function (error) {
+  function(error) {
     return Promise.reject(error)
   }
 )
 
 _axios.interceptors.response.use(
-  function (response) {
+  function(response) {
     if (response.status === 204 && response.config && !response.config.__isRetryRequest) {
       response.config.__isRetryRequest = true
-      setTimeout(function () {
+      setTimeout(function() {
         return axios(response.config)
       }, 2000)
     }
     return response
   },
-  function (error) {
+  function(error) {
     if (process.env.NODE_ENV === 'production') Sentry.captureException(error)
     if (error.response.status === 503) {
       unavailableLoading()
@@ -58,20 +58,20 @@ _axios.interceptors.response.use(
   }
 )
 
-Plugin.install = function (Vue, options) {
+Plugin.install = function(Vue, options) {
   Vue.axios = _axios
   window.axios = _axios
   Object.defineProperties(Vue.prototype, {
     axios: {
-      get () {
+      get() {
         return _axios
-      }
+      },
     },
     $axios: {
-      get () {
+      get() {
         return _axios
-      }
-    }
+      },
+    },
   })
 }
 

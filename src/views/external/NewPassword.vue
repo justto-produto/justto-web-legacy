@@ -82,9 +82,9 @@
 export default {
   name: 'NewPassword',
   components: {
-    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
   },
-  data () {
+  data() {
     const validatePassword = (rule, value, callback) => {
       if (value !== this.newPasswordForm.password) {
         callback(new Error('Campos não correspondem'))
@@ -99,29 +99,29 @@ export default {
       token: '',
       newPasswordForm: {
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
       },
       rules: {
         password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         ],
         confirmPassword: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validatePassword, trigger: 'submit' }
-        ]
-      }
+          { validator: validatePassword, trigger: 'submit' },
+        ],
+      },
     }
   },
-  beforeCreate () {
+  beforeCreate() {
     // if (!this.$route.query.token) {
     //   this.$router.push('/')
     // }
   },
-  created () {
+  created() {
     this.token = this.$route.params.token
   },
   methods: {
-    submitForm () {
+    submitForm() {
       this.$refs.newPasswordForm.validate(valid => {
         if (valid) {
           this.showLoading = true
@@ -143,10 +143,10 @@ export default {
         }
       })
     },
-    switchShowPassword () {
+    switchShowPassword() {
       this.showPassword = !this.showPassword
-    }
-  }
+    },
+  },
 }
 </script>
 

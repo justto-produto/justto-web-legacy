@@ -79,31 +79,31 @@ export default {
     PanelUser: () => import('./partials/PanelUser'),
     PanelStrategy: () => import('./partials/PanelStrategy'),
     PanelMinute: () => import('./partials/PanelMinute'),
-    PanelBilling: () => import('./partials/PanelBilling')
+    PanelBilling: () => import('./partials/PanelBilling'),
   },
-  data () {
+  data() {
     return {
       menuIndex: '0',
       left: 12,
-      right: 0
+      right: 0,
     }
   },
-  created () {
-    setTimeout(function () {
+  created() {
+    setTimeout(function() {
       this.left = 5
     }.bind(this), 400)
-    setTimeout(function () {
+    setTimeout(function() {
       this.right = 19
     }.bind(this), 1200)
   },
   methods: {
-    changeMenuIndex (index) {
+    changeMenuIndex(index) {
       this.menuIndex = index
     },
-    add () {
+    add() {
       this.$refs[`panel${this.menuIndex}`].add()
-    }
-  }
+    },
+  },
 }
 </script>
 

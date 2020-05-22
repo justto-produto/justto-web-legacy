@@ -1173,19 +1173,19 @@ export default {
     DisputeAddRole: () => import('./DisputeAddRole'),
     DisputeProprieties: () => import('./DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
-    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert')
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
   },
   props: {
     loading: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     activeRoleId: {
       default: 0,
-      type: Number
-    }
+      type: Number,
+    },
   },
-  data () {
+  data() {
     return {
       overviewTab: 'general',
       namesakeList: [],
@@ -1213,29 +1213,29 @@ export default {
         zeroUpperRange: false,
         materialDamage: '',
         requestedValue: '',
-        externalId: ''
+        externalId: '',
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       roleForm: {},
       originalRole: {},
       roleRules: {
         name: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' }
+          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' },
         ],
         phone: [
           { required: false, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
+          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' },
         ],
         email: [
           { required: false, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
+          { type: 'email', message: 'E-mail inválido', trigger: 'submit' },
         ],
         oab: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
-        state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
+        state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       newRoleDialogVisible: false,
       linkBankAccountLoading: false,
@@ -1254,42 +1254,42 @@ export default {
         bank: '',
         agency: '',
         number: '',
-        type: ''
+        type: '',
       },
       addBankRules: {
         name: [
-          { required: false, message: 'Campo obrigatório', trigger: 'submit' }
+          { required: false, message: 'Campo obrigatório', trigger: 'submit' },
         ],
         email: [
-          { type: 'email', required: false, message: 'Insira um e-mail válido', trigger: 'submit' }
+          { type: 'email', required: false, message: 'Insira um e-mail válido', trigger: 'submit' },
         ],
         document: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
         ],
         bank: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         number: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       bankAccountIdstoUnlink: [],
       documentNumberHasChanged: false,
       disputeUpperRangeHasChanged: false,
       lastOfferValueHasChanged: false,
       cityFilter: null,
-      ufFilter: null
+      ufFilter: null,
     }
   },
   computed: {
-    ufList () {
+    ufList() {
       let ufList = this.namesakeList.map(namesake => namesake.uf)
       return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
     },
-    cityList () {
+    cityList() {
       let cityList = this.namesakeList.map(namesake => namesake.city)
       return cityList.filter((city, i) => city !== null && cityList.indexOf(city) === i)
     },
-    filteredNamesakeList () {
+    filteredNamesakeList() {
       if (this.ufFilter && this.cityFilter) {
         return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter && namesake.city === this.cityFilter)
       } else if (this.ufFilter) {
@@ -1300,57 +1300,57 @@ export default {
         return this.namesakeList
       }
     },
-    validateDocumentNumber () {
+    validateDocumentNumber() {
       if (this.documentNumberHasChanged) {
         return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
       }
       return []
     },
-    validateDisputeUpperRange () {
+    validateDisputeUpperRange() {
       if (this.disputeUpperRangeHasChanged) {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
     },
-    validateLastOfferValue () {
+    validateLastOfferValue() {
       if (this.lastOfferValueHasChanged) {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
     },
-    dispute () {
+    dispute() {
       return this.$store.getters.dispute
     },
-    disputeAttachments () {
+    disputeAttachments() {
       return this.$store.getters.disputeAttachments
     },
-    filteredDisputeAttachments () {
+    filteredDisputeAttachments() {
       if (this.disputeAttachments) {
         return this.disputeAttachments.filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')))
       } return []
     },
-    disputeBankAccounts () {
+    disputeBankAccounts() {
       return this.$store.getters.disputeBankAccounts
     },
     disputeBankAccountsIds: {
-      get () {
+      get() {
         if (this.dispute.bankAccounts || Array.isArray(this.dispute.bankAccounts)) {
           return this.dispute.bankAccounts.map(dba => dba.id)
         }
         return []
       },
-      set (bankAccountId) {
+      set(bankAccountId) {
         this.updateDisputeBankAccounts(bankAccountId)
-      }
+      },
     },
     selectedRole: {
-      get () { return this.activeRoleId },
-      set (newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) }
+      get() { return this.activeRoleId },
+      set(newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) },
     },
-    strategies () {
+    strategies() {
       return this.$store.getters.strategyList
     },
-    computedDescription () {
+    computedDescription() {
       if (this.dispute.description && this.dispute.description.length > 140) {
         if (this.descriptionCollapse) {
           return this.dispute.description.substring(0, 140) + '...'
@@ -1358,7 +1358,7 @@ export default {
       }
       return this.dispute.description
     },
-    disputeRolesSort () {
+    disputeRolesSort() {
       if (this.dispute.disputeRoles) {
         let sortedArray = this.dispute.disputeRoles.slice(0) || []
         sortedArray = sortedArray.filter(a => a.party !== 'IMPARTIAL')
@@ -1381,7 +1381,7 @@ export default {
         })
       } return []
     },
-    documentNumbers () {
+    documentNumbers() {
       if (this.disputeRolesSort && this.disputeRolesSort.length) {
         return this.disputeRolesSort.map(role => {
           if (role.documentNumber) return role.documentNumber
@@ -1389,7 +1389,7 @@ export default {
       }
       return []
     },
-    oabs () {
+    oabs() {
       if (this.disputeRolesSort && this.disputeRolesSort.length) {
         let oabs = []
         this.disputeRolesSort.map(role => {
@@ -1401,42 +1401,42 @@ export default {
       }
       return []
     },
-    disputeClaimants () {
+    disputeClaimants() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
     },
-    disputeNegotiations () {
+    disputeNegotiations() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR')
       }
       return []
     },
-    banks () {
+    banks() {
       return this.$store.getters.banksList
-    }
+    },
   },
   watch: {
-    activeRoleId: function (newActiveRole) {
+    activeRoleId: function(newActiveRole) {
       if (newActiveRole === 0) this.handleChange('')
     },
-    filteredNamesakeList: function (newFilteredNamesakes) {
+    filteredNamesakeList: function(newFilteredNamesakes) {
       if (!newFilteredNamesakes.includes(this.selectedNamesake)) {
         this.selectedNamesake = ''
       }
-    }
+    },
   },
   methods: {
     buildRoleTitle: (...i) => buildRoleTitle(...i),
     getRoleIcon: (...i) => getRoleIcon(...i),
-    removeDispute () {
+    removeDispute() {
       this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonClass: 'confirm-remove-btn',
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
@@ -1448,25 +1448,25 @@ export default {
         })
       })
     },
-    showNamesake (role) {
+    showNamesake(role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
-    showVexatious (role) {
+    showVexatious(role) {
       const alerts = ['IS_VEXATIOUS_PARTY', 'IS_VEXATIOUS_AUTHOR', 'IS_VEXATIOUS_LAWYER']
       for (var alert of alerts) {
         if (role.personProperties && role.personProperties instanceof Object && role.personProperties.hasOwnProperty(alert)) return true
       }
       return false
     },
-    verifyRoleVexatious (personProperties, title) {
+    verifyRoleVexatious(personProperties, title) {
       if (title === 'PARTY') return personProperties['IS_VEXATIOUS_PARTY']
       else if (title === 'LAWYER') return personProperties['IS_VEXATIOUS_LAWYER']
       return false
     },
-    showIsDead (role) {
+    showIsDead(role) {
       return role.dead
     },
-    buildContactStatus (contact) {
+    buildContactStatus(contact) {
       if (!contact.address && !contact.isMobile) {
         return 'Não é possível enviar WhatsApp para números de telefones fixo'
       } else if (contact.source === 'ENRICHMENT') {
@@ -1475,7 +1475,7 @@ export default {
         return 'Contato adicionado manualmente'
       }
     },
-    openAddBankDialog () {
+    openAddBankDialog() {
       this.addBankForm.name = this.roleForm.name
       this.addBankForm.document = this.roleForm.documentNumber
       if (this.roleForm.emails.filter(f => f.isValid && !f.archived && f.isMain).length) {
@@ -1487,14 +1487,14 @@ export default {
       }
       this.addBankDialogVisible = true
     },
-    closeNamesakes () {
+    closeNamesakes() {
       this.namesakeDialogVisible = false
       this.selectedNamesake = ''
       this.selectedNamesakePersonId = ''
       this.cityFilter = null
       this.ufFilter = null
     },
-    selectNamesake () {
+    selectNamesake() {
       if (this.selectedNamesake) {
         this.namesakeDialogLoading = true
         // eslint-disable-next-line
@@ -1506,7 +1506,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Homônimo enviado para tratamento com sucesso.',
-              type: 'success'
+              type: 'success',
             })
           })
           .catch(error => {
@@ -1514,12 +1514,12 @@ export default {
           })
       }
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       if (val) {
         this.selectedNamesake = val
       }
     },
-    namesakeDialog (name, personId) {
+    namesakeDialog(name, personId) {
       if (['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)) {
         this.$confirm(`Você está solicitando o tratamento de homônimo de uma disputa que já
         foi finalizada. Este processo irá agendar novamente as mensagens
@@ -1529,13 +1529,13 @@ export default {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
+          cancelButtonClass: 'is-plain',
         }).then(() => { this.opeNnamesakeDialog(name, personId) })
       } else {
         this.opeNnamesakeDialog(name, personId)
       }
     },
-    opeNnamesakeDialog (name, personId) {
+    opeNnamesakeDialog(name, personId) {
       this.selectedNamesakePersonId = personId
       this.namesakeButtonLoading = true
       // eslint-disable-next-line
@@ -1551,7 +1551,7 @@ export default {
           this.namesakeButtonLoading = false
         })
     },
-    updateDisputeRole (activeRole, messageType) {
+    updateDisputeRole(activeRole, messageType) {
       let disputeRoles = this.dispute.disputeRoles.map(dr => {
         if (dr.id === activeRole.id) {
           dr = activeRole
@@ -1584,7 +1584,7 @@ export default {
       this.$store.commit('setDisputeRoles', disputeRoles)
       this.$emit('updateActiveRole', { activeRole, messageType })
     },
-    updateDisputeBankAccounts (roleBankAccountIds) {
+    updateDisputeBankAccounts(roleBankAccountIds) {
       let action, bankAccountId
       for (let roleAccount of roleBankAccountIds) {
         if (!this.disputeBankAccountsIds.includes(roleAccount)) {
@@ -1595,7 +1595,7 @@ export default {
                 dangerouslyUseHTMLString: true,
                 message: 'Esta disputa não permite a vinculação de contas do tipo <b>POUPANÇA</b>.',
                 type: 'warning',
-                duration: 0
+                duration: 0,
               })
               return false
             }
@@ -1613,15 +1613,15 @@ export default {
       this.linkBankAccountLoading = true
       this.$store.dispatch(action, {
         disputeId: this.dispute.id,
-        bankAccountId
+        bankAccountId,
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
           message: 'Conta bancária <strong>' + this.$t('bankAccount.' + action).toUpperCase() + '</strong> à disputa com sucesso.',
-          type: 'success'
+          type: 'success',
         })
-        setTimeout(function () {
+        setTimeout(function() {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
@@ -1630,7 +1630,7 @@ export default {
         this.linkBankAccountLoading = false
       })
     },
-    roleTitleSort (title) {
+    roleTitleSort(title) {
       if (title) {
         let sortedArray = title.slice(0) || []
         return sortedArray.sort((a, b) => {
@@ -1638,7 +1638,7 @@ export default {
         })
       } return []
     },
-    openDisputeDialog () {
+    openDisputeDialog() {
       this.disputeUpperRangeHasChanged = false
       this.lastOfferValueHasChanged = false
       this.documentNumberHasChanged = false
@@ -1671,13 +1671,13 @@ export default {
       this.editDisputeDialogVisible = true
       this.$nextTick(() => { this.$refs.disputeForm.clearValidate() })
     },
-    checkZeroUpperRange () {
+    checkZeroUpperRange() {
       if (this.disputeForm.zeroUpperRange) {
         this.disputeForm.lastOfferValue = 0
         this.$nextTick(() => { this.$refs.disputeForm.validate() })
       }
     },
-    editDispute () {
+    editDispute() {
       this.$refs.disputeForm.validate(valid => {
         if (valid) {
           this.editDisputeDialogLoading = true
@@ -1689,14 +1689,14 @@ export default {
               this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
                 ? h('div', null, '- Alçada máxima está abaixo do valor proposto.') : null,
               h('br', null, null),
-              h('div', null, 'Deseja continuar?')
+              h('div', null, 'Deseja continuar?'),
             ]),
             type: 'warning',
             confirmButtonText: 'Continuar',
             confirmButtonClass: 'edit-case-confirm-button',
             cancelButtonClass: 'is-plain',
             showCancelButton: true,
-            customClass: 'edit-case-confitm-dialog'
+            customClass: 'edit-case-confitm-dialog',
           }).then(() => {
             let disputeToEdit = JSON.parse(JSON.stringify(this.dispute))
             disputeToEdit.strategyId = this.selectedStrategyId
@@ -1726,9 +1726,9 @@ export default {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Os dados foram alterados com sucesso.',
-                type: 'success'
+                type: 'success',
               })
-              setTimeout(function () {
+              setTimeout(function() {
                 this.$emit('fetch-data')
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
@@ -1744,17 +1744,17 @@ export default {
                   confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
                   cancelButtonText: 'Cancelar',
                   cancelButtonClass: 'is-plain',
-                  type: 'warning'
+                  type: 'warning',
                 }).then(() => {
                   this.$store.dispatch('sendDisputeAction', {
                     action: onlyResendMessaged ? 'resend-messages' : 'restart-engagement',
-                    disputeId: this.dispute.id
+                    disputeId: this.dispute.id,
                   }).then(() => {
                     let actionDone = onlyResendMessaged ? 'Reenvio de mensagens' : 'Reengajamento'
                     this.$jusNotification({
                       title: 'Yay!',
                       message: actionDone + ' realizado com sucesso.',
-                      type: 'success'
+                      type: 'success',
                     })
                   })
                 })
@@ -1771,7 +1771,7 @@ export default {
                   title: 'Ops!',
                   message: message,
                   type: 'warning',
-                  dangerouslyUseHTMLString: true
+                  dangerouslyUseHTMLString: true,
                 })
               } else {
                 this.$jusNotification({ error })
@@ -1785,7 +1785,7 @@ export default {
         }
       })
     },
-    handleChange (val) {
+    handleChange(val) {
       if (!val) {
         this.selectedPhone = 0
         this.dispute.disputeRoles.forEach(dr => {
@@ -1796,7 +1796,7 @@ export default {
         })
       }
     },
-    openRoleDialog (role) {
+    openRoleDialog(role) {
       this.bankAccountIdstoUnlink = []
       this.editRoleDialogError = false
       this.editRoleDialogVisible = true
@@ -1811,7 +1811,7 @@ export default {
       if (this.roleForm.phones.length) this.roleForm.phones = this.roleForm.phones.sort(p => p.isMain ? -1 : 1)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },
-    editRole () {
+    editRole() {
       let isValid = true
       this.$refs.roleForm.validateField(['name', 'documentNumber'], errorMessage => {
         if (errorMessage) isValid = false
@@ -1824,7 +1824,7 @@ export default {
             promise.push(
               this.$store.dispatch('unlinkDisputeBankAccounts', {
                 disputeId: this.dispute.id,
-                bankAccountId: id
+                bankAccountId: id,
               })
             )
           }
@@ -1840,20 +1840,20 @@ export default {
         }
       }
     },
-    editRoleAction () {
+    editRoleAction() {
       let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
       delete roleToEdit.title
       this.editRoleDialogLoading = true
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
-        disputeRole: roleToEdit
+        disputeRole: roleToEdit,
       }).then(() => {
         // SEGMENT TRACK
         this.$jusSegment('Editar partes da disputa', { description: `Usuário ${roleToEdit.name} alterado` })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Os dados foram alterados com sucesso.',
-          type: 'success'
+          type: 'success',
         })
         let roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
         if (roleDataDifference.length) {
@@ -1861,14 +1861,14 @@ export default {
             confirmButtonText: 'Reengajar',
             cancelButtonText: 'Cancelar',
             type: 'warning',
-            cancelButtonClass: 'is-plain'
+            cancelButtonClass: 'is-plain',
           }).then(() => {
             let contacts = []
             for (let contact of roleDataDifference) {
               contacts.push(
                 this.$store.dispatch('restartEngagementByContact', {
                   disputeId: this.dispute.id,
-                  contact: contact.address || contact.number
+                  contact: contact.address || contact.number,
                 })
               )
             }
@@ -1876,20 +1876,20 @@ export default {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Reengajamento realizado com sucesso.',
-                type: 'success'
+                type: 'success',
               })
             }).catch(() => {
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Parece que nem todos os contatos foram reengajados corretamente.',
                 type: 'warning',
-                dangerouslyUseHTMLString: true
+                dangerouslyUseHTMLString: true,
               })
             })
           })
         }
         this.editRoleDialogVisible = false
-        setTimeout(function () {
+        setTimeout(function() {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
@@ -1902,10 +1902,10 @@ export default {
         this.editRoleDialogLoading = false
       })
     },
-    verifyChangedRoleData (editedRole, originalRole) {
+    verifyChangedRoleData(editedRole, originalRole) {
       let changed = {
         newPhones: [],
-        newEmails: []
+        newEmails: [],
       }
       if (editedRole.phones.length) {
         let mappedPhones = originalRole.phones.map(phone => phone.number)
@@ -1921,7 +1921,7 @@ export default {
       }
       return [ ...changed.newPhones, ...changed.newEmails ]
     },
-    addPhone () {
+    addPhone() {
       let isValid = true
       this.roleForm.phone = this.roleForm.phone.trim()
       this.$refs.roleForm.validateField('phone', errorMessage => {
@@ -1938,10 +1938,10 @@ export default {
         this.roleForm.phone = ''
       }
     },
-    removePhone (index) {
+    removePhone(index) {
       this.roleForm.phones.splice(index, 1)
     },
-    addEmail () {
+    addEmail() {
       let isValid = true
       this.roleForm.email = this.roleForm.email.trim()
       this.$refs.roleForm.validateField('email', errorMessage => {
@@ -1954,10 +1954,10 @@ export default {
         this.roleForm.email = ''
       }
     },
-    removeEmail (index) {
+    removeEmail(index) {
       this.roleForm.emails.splice(index, 1)
     },
-    addOab () {
+    addOab() {
       let isValid = true
       this.$refs.roleForm.validateField(['oab', 'state'], errorMessage => {
         if (errorMessage || !this.roleForm.oab || !this.roleForm.state) isValid = false
@@ -1969,38 +1969,38 @@ export default {
         if (isDuplicated < 0) {
           this.roleForm.oabs.push({
             number: this.roleForm.oab,
-            state: this.roleForm.state
+            state: this.roleForm.state,
           })
         }
         this.roleForm.oab = ''
         this.roleForm.state = ''
       }
     },
-    removeOab (index) {
+    removeOab(index) {
       this.roleForm.oabs.splice(index, 1)
     },
-    removeRole (role) {
+    removeRole(role) {
       this.$confirm('Tem certeza que deseja excluir esta parte?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'warning',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
       }).then(() => {
         this.$store.dispatch('removeRole', {
           disputeId: this.dispute.id,
-          roleId: role.id
+          roleId: role.id,
         }).then(response => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Pessoa removida com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
         })
       })
     },
-    addBankData () {
+    addBankData() {
       this.$refs.addBankForm.validate(valid => {
         if (valid) {
           if (!this.roleForm.bankAccounts) {
@@ -2019,11 +2019,11 @@ export default {
         }
       })
     },
-    removeBankData (index, id) {
+    removeBankData(index, id) {
       this.bankAccountIdstoUnlink.push(id)
       this.roleForm.bankAccounts.splice(index, 1)
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -84,26 +84,26 @@
 <script>
 export default {
   name: 'ConfigurationBlackList',
-  data () {
+  data() {
     return {
       blackListDialogVisible: false,
       search: '',
       blackListForm: { contact: '' },
-      blackListRules: { contact: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }] }
+      blackListRules: { contact: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }] },
     }
   },
   computed: {
-    filteredBlackList () {
+    filteredBlackList() {
       return this.$store.getters.workspaceBlackList.filter(minute => {
         if (!minute) {
           return false
         }
         return !this.search || minute.toLowerCase().includes(this.search.toLowerCase())
       })
-    }
+    },
   },
   methods: {
-    addBlackList () {
+    addBlackList() {
       this.$refs.blackListForm.validate(valid => {
         if (valid) {
           let blackList = [...this.$store.getters.workspaceBlackList]
@@ -115,7 +115,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Termo adicionado na blackList com sucesso',
-              type: 'success'
+              type: 'success',
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -123,7 +123,7 @@ export default {
         }
       })
     },
-    deleteBlackList (term) {
+    deleteBlackList(term) {
       this.$confirm('Tem certeza que deseja excluir?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
@@ -145,16 +145,16 @@ export default {
           } else {
             done()
           }
-        }
+        },
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Minuta excluída com sucesso',
-          type: 'success'
+          type: 'success',
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

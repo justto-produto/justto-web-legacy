@@ -73,50 +73,50 @@ export default {
   components: {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
-    VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
+    VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
-  data () {
+  data() {
     return {
       subscriptions: [],
-      isCollapse: true
+      isCollapse: true,
     }
   },
   computed: {
-    workspace () {
+    workspace() {
       return this.$store.getters.workspaceSubdomain
     },
-    personId () {
+    personId() {
       return this.$store.getters.loggedPersonId
     },
-    headers () {
+    headers() {
       return {
         Authorization: this.$store.getters.accountToken,
-        Workspace: this.workspace
+        Workspace: this.workspace,
       }
-    }
+    },
   },
   watch: {
-    workspace (workspace) {
+    workspace(workspace) {
       this.subscribe()
-    }
+    },
   },
-  beforeCreate () {
+  beforeCreate() {
     this.$store.commit('clearDisputeQuery')
   },
-  beforeMount () {
+  beforeMount() {
     this.subscribe()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
     this.subscriptions.length = 0
   },
   sockets: {
-    reconnect () {
+    reconnect() {
       this.subscribe()
-    }
+    },
   },
   methods: {
-    subscribe () {
+    subscribe() {
       if (this.workspace) {
         this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
         this.subscriptions.length = 0
@@ -126,8 +126,8 @@ export default {
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute/summary' })
         this.subscriptions.forEach(s => this.$socket.emit('subscribe', s))
       }
-    }
-  }
+    },
+  },
 }
 
 </script>

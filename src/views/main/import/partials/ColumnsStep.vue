@@ -196,7 +196,7 @@
 <script>
 export default {
   name: 'ColumnsStep',
-  data () {
+  data() {
     return {
       tags: {},
       disputeTags: [],
@@ -206,28 +206,28 @@ export default {
       loadingTags: false,
       errorColumns: false,
       errorTags: false,
-      loading: false
+      loading: false,
     }
   },
   computed: {
     columns: {
-      get () {
+      get() {
         return this.$store.state.importModule.map
       },
-      set (value) {
+      set(value) {
         this.$store.commit('setImportsMap', value)
-      }
-    }
+      },
+    },
   },
   watch: {
-    loading (loading) {
+    loading(loading) {
       if (!loading && !this.loadingTags) this.$store.dispatch('hideLoading')
     },
-    loadingTags (loadingTags) {
+    loadingTags(loadingTags) {
       if (!loadingTags && !this.loading) this.$store.dispatch('hideLoading')
-    }
+    },
   },
-  beforeMount () {
+  beforeMount() {
     this.$store.dispatch('showLoading')
     if (!this.$store.state.importModule.map.length) {
       this.loading = true
@@ -249,17 +249,17 @@ export default {
       this.$jusNotification({ error })
     })
   },
-  mounted () {
+  mounted() {
     document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container jus-main-view--full-height')
   },
-  destroyed () {
+  destroyed() {
     document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container')
   },
   methods: {
-    dragTag (event, data) {
+    dragTag(event, data) {
       event.dataTransfer.setData('data', data)
     },
-    dropTag (event, column, index) {
+    dropTag(event, column, index) {
       var data = JSON.parse(event.dataTransfer.getData('data'))
       this.columns.find(element => {
         if (column.id === element.id) {
@@ -269,7 +269,7 @@ export default {
       })
       this.columns = this.columns
     },
-    removeTag (column) {
+    removeTag(column) {
       this.columns.find(element => {
         if (element === column) {
           element.tag = null
@@ -277,7 +277,7 @@ export default {
         }
       })
     },
-    isAvailable (tag) {
+    isAvailable(tag) {
       var isAvailable = true
       this.columns.find(element => {
         if (element.tag) {
@@ -290,7 +290,7 @@ export default {
       })
       return isAvailable
     },
-    isMultipleAvailable (tag, index) {
+    isMultipleAvailable(tag, index) {
       var isAvailable = true
       this.columns.find(column => {
         if (column.tag) {
@@ -304,15 +304,15 @@ export default {
       })
       return isAvailable
     },
-    addTagList (list) {
+    addTagList(list) {
       let lastIndex = list.slice(-1)[0]
       list.push(lastIndex + 1)
     },
-    removeTagList (list, tags) {
+    removeTagList(list, tags) {
       this.removeLink(list, tags)
       list.splice(-1, 1)
     },
-    removeLink (array, tags) {
+    removeLink(array, tags) {
       let indexToRemove = array.length - 1
       this.columns.find(column => {
         if (column.index && column.index === indexToRemove) {
@@ -323,7 +323,7 @@ export default {
       })
       this.columns = this.columns
     },
-    matchTagId (id, tags) {
+    matchTagId(id, tags) {
       var match = false
       tags.find(tag => {
         if (id === tag.id) {
@@ -332,7 +332,7 @@ export default {
       })
       return match
     },
-    getColumnTitle (id) {
+    getColumnTitle(id) {
       let title = ''
       for (let tagList in this.tags) {
         if (this.tags.hasOwnProperty(tagList)) {
@@ -346,8 +346,8 @@ export default {
         }
       }
       return title
-    }
-  }
+    },
+  },
 }
 </script>
 

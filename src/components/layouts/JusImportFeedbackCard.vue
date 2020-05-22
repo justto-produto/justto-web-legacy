@@ -190,19 +190,19 @@
 export default {
   name: 'JusImportFeedbackCard',
   components: {
-    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog')
+    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog'),
   },
   props: {
     mappedCampaign: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     index: {
       type: Number,
-      default: 1
-    }
+      default: 1,
+    },
   },
-  data () {
+  data() {
     return {
       color: '#ff9300',
       initialCampaignName: '',
@@ -224,23 +224,23 @@ export default {
       skipEnrichment: false,
       denySavingDeposit: false,
       datePickerOptions: {
-        disabledDate (date) {
+        disabledDate(date) {
           return date < new Date()
-        }
-      }
+        },
+      },
     }
   },
   computed: {
-    strategies () {
+    strategies() {
       return this.$store.getters.strategyList.filter(s => !s.archived)
     },
-    negotiatorsList () {
+    negotiatorsList() {
       return this.$store.state.workspaceModule.members
     },
-    campaignTitle () {
+    campaignTitle() {
       return this.campaignName ? this.campaignName : this.initialCampaignName ? this.initialCampaignName : 'Campanha ' + this.index
     },
-    isPaymentStrategy () {
+    isPaymentStrategy() {
       let isStrategy = false
       if (this.strategy && this.strategy.types) {
         this.strategy.types.map(type => {
@@ -250,28 +250,28 @@ export default {
       } else {
         return false
       }
-    }
+    },
   },
   watch: {
-    businessHoursEngagement (value) {
+    businessHoursEngagement(value) {
       this.mappedCampaign.businessHoursEngagement = value
     },
-    contactPartyWhenNoLowyer (value) {
+    contactPartyWhenNoLowyer(value) {
       this.mappedCampaign.contactPartyWhenNoLowyer = value
     },
-    contactPartyWhenInvalidLowyer (value) {
+    contactPartyWhenInvalidLowyer(value) {
       this.mappedCampaign.contactPartyWhenInvalidLowyer = value
     },
-    skipEnrichment (value) {
+    skipEnrichment(value) {
       this.mappedCampaign.skipEnrichment = value
     },
-    denySavingDeposit (value) {
+    denySavingDeposit(value) {
       this.mappedCampaign.denySavingDeposit = value
     },
-    respondent (value) {
+    respondent(value) {
       this.mappedCampaign.respondent = value
     },
-    campaignName (value) {
+    campaignName(value) {
       this.mappedCampaign.name = value
       if (value) {
         clearTimeout(this.campaignNameDebounce)
@@ -289,23 +289,23 @@ export default {
         this.campaignNameDuplicated = false
       }
     },
-    strategy (value) {
+    strategy(value) {
       this.mappedCampaign.strategy = value.name
       this.mappedCampaign.strategyId = value.id
     },
-    deadline (value) {
+    deadline(value) {
       this.mappedCampaign.deadline = {
-        dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
       }
     },
-    negotiatorIds (value) {
+    negotiatorIds(value) {
       this.mappedCampaign.negotiatorIds = value
     },
-    paymentDeadLine (value) {
+    paymentDeadLine(value) {
       this.mappedCampaign.paymentDeadLine = value
-    }
+    },
   },
-  beforeMount () {
+  beforeMount() {
     const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
     this.businessHoursEngagement = preferences.businessHoursEngagement || true
     this.contactPartyWhenNoLowyer = preferences.contactPartyWhenNoLowyer || false
@@ -330,17 +330,17 @@ export default {
     }
   },
   methods: {
-    showDuplicatedAlert (campaignName) {
+    showDuplicatedAlert(campaignName) {
       this.$alert('', {
         title: 'Campanhas associadas',
         message: `Já existe uma campanha com o nome <strong>${campaignName}</strong>.<br>
         Ao importar novos casos para essa campanha as estratégias de comunicação definidas anteriormente não serão alteradas`,
         confirmButtonText: 'OK',
-        dangerouslyUseHTMLString: true
+        dangerouslyUseHTMLString: true,
       })
-    }
+    },
     // showHelpBox: (i) => helpBox(i)
-  }
+  },
 }
 </script>
 

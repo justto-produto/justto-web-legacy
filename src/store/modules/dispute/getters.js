@@ -31,7 +31,7 @@ const disputeGetters = {
     return getters.filterSummary('NEW_DEAL', state.summaryNotVisualizeds)
   },
   hasPrescription: state => (prescription) => state.query.prescriptions.includes(prescription),
-  partyAnalysisByDocument: state => (documentNumber) => state.partyAnalysis[documentNumber]
+  partyAnalysisByDocument: state => (documentNumber) => state.partyAnalysis[documentNumber],
 }
 
 export default disputeGetters

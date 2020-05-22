@@ -1,12 +1,13 @@
 // erro de getters, de resto ok
 
-import { shallowMount, createLocalVue } from '@vue/test-utils'
-import JusImportFeedbackCard from '@/components/layouts/JusImportFeedbackCard.vue'
-import Vuex from 'vuex'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import Element from 'element-ui'
-import JusIcon from '@/components/images/JusIcon.vue'
 import JusAvatarUser from '@/components/images/JusAvatarUser.vue'
 import JusEngagementsDialog from '@/components/dialogs/JusEngagementsDialog.vue'
+import JusIcon from '@/components/images/JusIcon.vue'
+import JusImportFeedbackCard from '@/components/layouts/JusImportFeedbackCard.vue'
+import Vuex from 'vuex'
 
 const localVue = createLocalVue()
 localVue.component('JusIcon', JusIcon)
@@ -16,21 +17,22 @@ localVue.use(Vuex)
 localVue.use(Element)
 
 describe('JusImportFeedbackCard.vue', () => {
-  let actions
   let store
   let state
   let getters
   beforeEach(() => {
     getters = {
       strategyList: jest.fn(),
-      campaignList: jest.fn()
-    },
+      campaignList: jest.fn(),
+    }
+
     state = {
-      workspaceModule: jest.fn()
-    },
+      workspaceModule: jest.fn(),
+    }
+
     store = new Vuex.Store({
       getters,
-      state
+      state,
     })
   })
   it('É um objeto Vue.', () => {

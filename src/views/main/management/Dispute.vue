@@ -258,9 +258,9 @@ export default {
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     VueDraggableResizable: () => import('vue-draggable-resizable'),
-    quillEditor
+    quillEditor,
   },
-  data () {
+  data() {
     return {
       y: 0,
       dragDebounce: 0,
@@ -286,14 +286,14 @@ export default {
             [{ 'header': 1 }, { 'header': 2 }],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             ['blockquote'],
-            ['clean']
-          ]
-        }
-      }
+            ['clean'],
+          ],
+        },
+      },
     }
   },
   computed: {
-    sendMessageHeightComputed () {
+    sendMessageHeightComputed() {
       switch (this.typingTab) {
         case '1':
           return this.validName ? (this.sendMessageHeight + 'px') : '115px'
@@ -303,7 +303,7 @@ export default {
           return '50px'
       }
     },
-    validName () {
+    validName() {
       if (this.$store.getters.loggedPersonName && this.$store.getters.loggedPersonName !== this.$store.state.accountModule.email) {
         return true
       } else {
@@ -312,25 +312,25 @@ export default {
         }
       }
     },
-    dispute () {
+    dispute() {
       return this.$store.getters.dispute
     },
-    isPaused () {
+    isPaused() {
       return this.dispute ? this.dispute.paused : false
     },
-    isFavorite () {
+    isFavorite() {
       return this.dispute ? this.dispute.favorite : false
     },
-    socketHeaders () {
+    socketHeaders() {
       return {
         Authorization: this.$store.getters.accountToken,
-        Workspace: this.$store.getters.workspaceSubdomain
+        Workspace: this.$store.getters.workspaceSubdomain,
       }
     },
-    recentMessages () {
+    recentMessages() {
       return this.$store.getters.messageRecentMessages
     },
-    selectedContacts () {
+    selectedContacts() {
       if (this.directContactAddress) {
         return [{ id: 0, address: this.directContactAddress }]
       }
@@ -343,31 +343,31 @@ export default {
           return []
       }
     },
-    invalidReceiver () {
+    invalidReceiver() {
       switch (this.messageType) {
         case 'email':
           return this.activeRole.invalidEmail
         case 'whatsapp':
           return this.activeRole.invalidPhone
       }
-    }
+    },
   },
   watch: {
-    '$route.params.id': function (id, oldId) {
+    '$route.params.id': function(id, oldId) {
       this.id = id.toString()
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence',
       })
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
       this.disputeOccurrencesKey += 1
     },
-    y (y) {
+    y(y) {
       this.sendMessageHeight = this.$refs.sectionMessages.offsetHeight - this.y
-    }
+    },
   },
-  created () {
+  created() {
     this.id = this.$route.params.id.toString()
     this.fetchData()
     if (this.$store.getters.disputeStatuses.unsettled) {
@@ -381,22 +381,22 @@ export default {
       this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
     }
   },
-  mounted () {
+  mounted() {
     setTimeout(() => {
       this.disputeOccurrencesKey += 1
       this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
     }, 800)
     window.addEventListener('resize', this.updateWindowHeight)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.unsubscribeOccurrences(this.id)
     window.removeEventListener('resize', this.updateWindowHeight)
   },
   methods: {
-    updateWindowHeight () {
+    updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
-    onDrag (x, y) {
+    onDrag(x, y) {
       let minTop = this.$refs.sectionMessages.offsetHeight - 208
       let maxTop = 64
       if (y > minTop) this.y = minTop
@@ -404,14 +404,14 @@ export default {
       else this.y = y
       this.updateDragHeight(this.y)
     },
-    updateDragHeight (height) {
+    updateDragHeight(height) {
       clearTimeout(this.dragDebounce)
       this.dragDebounce = setTimeout(() => {
         this.$refs.resizable.top = height
         localStorage.setItem('jusoffsetheight', height)
       }, 100)
     },
-    startReply (params) {
+    startReply(params) {
       let messageType = params.type.toLowerCase()
       this.setMessageType(messageType)
       if (messageType === 'email') {
@@ -420,13 +420,13 @@ export default {
       this.activeRoleId = 0
       this.directContactAddress = params.sender
     },
-    setMessageType (type) {
+    setMessageType(type) {
       this.removeReply()
       this.messageType = ''
       this.messageType = type
       this.$nextTick(() => this.$refs.messageEditor.quill.focus())
     },
-    updateActiveRole (params) {
+    updateActiveRole(params) {
       if (typeof params === 'number') {
         let disputeId = params
         params = {}
@@ -445,7 +445,7 @@ export default {
       if (this.typingTab !== '1' && params.activeRole) this.typingTab = '1'
       if (params.messageType) this.setMessageType(params.messageType)
     },
-    removeReply () {
+    removeReply() {
       this.directContactAddress = ''
       let message = this.$refs.messageEditor.quill.getText()
       let messageIndex = message.indexOf('\n\n___________________')
@@ -453,18 +453,18 @@ export default {
         this.$refs.messageEditor.quill.setText(message.substring(messageIndex, 0))
       }
     },
-    unsubscribeOccurrences (id) {
+    unsubscribeOccurrences(id) {
       this.$store.commit('clearDisputeOccurrences')
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence',
       })
     },
-    fetchData () {
+    fetchData() {
       this.loadingDispute = true
       this.$socket.emit('subscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence',
       })
       this.$store.dispatch('getDispute', this.id).then(dispute => {
         if (!dispute || dispute.archived) this.$router.push('/management')
@@ -478,14 +478,14 @@ export default {
         }, 500)
       })
     },
-    handleTabClick (tab) {
+    handleTabClick(tab) {
       if (!['1', '3'].includes(tab.name)) this.activeRoleId = 0
       this.typingTab = tab.name
     },
-    handleBeforeLeaveTabs () {
+    handleBeforeLeaveTabs() {
       this.$store.commit('clearOccurrencesSize')
     },
-    sendMessage () {
+    sendMessage() {
       if (!this.$refs.messageEditor.quill.getText().trim()) {
         return false
       }
@@ -497,7 +497,7 @@ export default {
             this.$jusNotification({
               title: 'Ops!',
               message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
-              type: 'warning'
+              type: 'warning',
             })
             return false
           } else {
@@ -509,7 +509,7 @@ export default {
                     this.recentMessages.splice(i, 1)
                   }
                 }
-              }, 30000))
+              }, 30000)),
             })
             let lastMessage = this.recentMessages.length - 1
             this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
@@ -519,12 +519,12 @@ export default {
         let to = []
         if (this.directContactAddress) {
           to.push({
-            address: this.directContactAddress
+            address: this.directContactAddress,
           })
         } else {
           to.push({
             roleId: this.activeRole.id,
-            contactsId: this.selectedContacts.map(c => c.id)
+            contactsId: this.selectedContacts.map(c => c.id),
           })
         }
         let externalIdentification = +new Date()
@@ -533,14 +533,14 @@ export default {
             message: this.$refs.messageEditor.quill.getText(),
             type: this.messageType,
             receiver: this.messageType === 'email' ? contact.address : contact.phone,
-            externalIdentification
+            externalIdentification,
           })
         }
         this.$store.dispatch('send' + this.messageType, {
           to,
           message: quillMessage,
           disputeId: this.dispute.id,
-          externalIdentification
+          externalIdentification,
         }).then(() => {
           // SEGMENT TRACK
           if (this.directContactAddress) {
@@ -551,9 +551,9 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: this.messageType + ' enviado com sucesso.',
-            type: 'success'
+            type: 'success',
           })
-          setTimeout(function () {
+          setTimeout(function() {
             this.$refs.messageEditor.quill.deleteText(0, 9999999999)
           }.bind(this), 200)
         }).catch(error => {
@@ -566,23 +566,23 @@ export default {
           title: 'Ops!',
           dangerouslyUseHTMLString: true,
           message: `Selecione ao menos um contato do tipo <b>${this.messageType.toUpperCase()}</b> para envio.`,
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
-    addLoadingOccurrence (params) {
+    addLoadingOccurrence(params) {
       this.$store.commit('addLoadingOccurrence', Object.assign({
         sender: this.$store.getters.loggedPersonName,
-        createAt: { dateTime: this.$moment() }
+        createAt: { dateTime: this.$moment() },
       }, params))
     },
-    sendNote () {
+    sendNote() {
       let note = this.$refs.noteEditor.quill.getText()
       if (note.trim()) {
         this.loadingTextarea = true
         this.$store.dispatch('sendDisputeNote', {
           note,
-          disputeId: this.dispute.id
+          disputeId: this.dispute.id,
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nova nota salva')
@@ -590,7 +590,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota gravada com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -598,8 +598,8 @@ export default {
           this.loadingTextarea = false
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

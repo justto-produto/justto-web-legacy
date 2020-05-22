@@ -7,30 +7,30 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     options: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     legends: {
       type: Boolean,
-      default: true
+      default: true,
     },
     annotation: {
       type: String,
-      default: ''
+      default: '',
     },
     sufix: {
       type: String,
-      default: ''
+      default: '',
     },
     filterable: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  mounted () {
+  mounted() {
     let options = Object.assign({}, this.options)
     let self = this
     if (!this.filterable) delete options.onClick
@@ -57,15 +57,15 @@ export default {
         position: 'center',
         enabled: true,
         content: this.annotation,
-        yAdjust: this.getMax() < 24 ? 11 : 0
-      }
+        yAdjust: this.getMax() < 24 ? 11 : 0,
+      },
     }] : []
     let sufix = this.sufix ? [{
       ticks: {
         callback: (value, index, values) => {
           return value ? `${value} ${self.sufix}` : value
-        }
-      }
+        },
+      },
     }] : []
     this.renderChart(this.data, Object.assign(options, {
       legend: {
@@ -74,15 +74,15 @@ export default {
         labels: {
           boxWidth: 6,
           usePointStyle: true,
-          generateLabels: this.generateLabels
-        }
+          generateLabels: this.generateLabels,
+        },
       },
       annotation: { annotations: annotation },
-      scales: { yAxes: sufix }
+      scales: { yAxes: sufix },
     }))
   },
   methods: {
-    getElement (e) {
+    getElement(e) {
       let firstPoint = this._data._chart.getElementAtEvent(e)[0]
       if (firstPoint) {
         let filters = this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
@@ -92,28 +92,28 @@ export default {
         return {
           label: this.data.labels[firstPoint._index],
           value: this.data.datasets[firstPoint._datasetIndex].data[firstPoint._index],
-          filters
+          filters,
         }
       }
     },
-    generateLabels (chart) {
+    generateLabels(chart) {
       let data = chart.data
       if (data.datasets.length && data.datasets.length) {
-        return data.datasets.map(function (dataset, i) {
+        return data.datasets.map(function(dataset, i) {
           // eslint-disable-next-line
           let fill = Chart.helpers.getValueAtIndexOrDefault(data.datasets[i].borderColor, i, chart.options.elements.arc.borderColor)
           return {
             text: dataset.label,
             fillStyle: fill,
             index: i,
-            hidden: false
+            hidden: false,
           }
         })
       } else {
         return []
       }
     },
-    getMax () {
+    getMax() {
       let max = 0
       for (let dataset of this.data.datasets) {
         for (let data of dataset.data) {
@@ -121,7 +121,7 @@ export default {
         }
       }
       return max
-    }
-  }
+    },
+  },
 }
 </script>

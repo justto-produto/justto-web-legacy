@@ -98,7 +98,7 @@
 <script>
 export default {
   name: 'DisputeProprieties',
-  data () {
+  data() {
     return {
       loading: false,
       lineKey: 0,
@@ -107,17 +107,17 @@ export default {
       editing: {},
       editable: '',
       newKey: '',
-      newValue: ''
+      newValue: '',
     }
   },
   computed: {
-    disputeProprietiesList () {
+    disputeProprietiesList() {
       let list = []
       for (let proprieties of Object.entries(this.disputeProprieties)) {
         if (!['ERROR_COUT', 'ENRIQUECIDO'].includes(proprieties[0])) {
           list.push({
             key: proprieties[0],
-            value: proprieties[1]
+            value: proprieties[1],
           })
         }
       }
@@ -127,29 +127,29 @@ export default {
       })
     },
     disputeProprieties: {
-      get () {
+      get() {
         return this.$store.getters.disputeProprieties
       },
-      set (proprieties) {
+      set(proprieties) {
         this.$store.dispatch('putDisputeProprieties', {
           disputeId: this.$store.getters.disputeId,
-          data: proprieties
+          data: proprieties,
         }).finally(() => {
           this.newKey = ''
           this.newValue = ''
           this.loading = false
         })
-      }
-    }
+      },
+    },
   },
   methods: {
-    focus (key, index) {
+    focus(key, index) {
       this.editing[key + index] = true
       this.lineKey += 1
       this.editable = key
       this.$nextTick(() => this.$refs['input' + key + index][0].$el.children[0].focus())
     },
-    blurKey (key, index) {
+    blurKey(key, index) {
       this.editing[key + index] = false
       this.lineKey += 1
       if (key !== this.editable) {
@@ -160,7 +160,7 @@ export default {
         this.disputeProprieties = newDisputeProprieties
       }
     },
-    blurValue (key, value, index) {
+    blurValue(key, value, index) {
       this.editing[value + index] = false
       this.lineKey += 1
       if (value !== this.editable) {
@@ -170,13 +170,13 @@ export default {
         this.disputeProprieties = newDisputeProprieties
       }
     },
-    removePropriety (key) {
+    removePropriety(key) {
       this.loading = true
       let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
       delete newDisputeProprieties[key]
       this.disputeProprieties = newDisputeProprieties
     },
-    newPropriety () {
+    newPropriety() {
       if (this.newKey && this.newValue) {
         this.loading = true
         let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
@@ -184,7 +184,7 @@ export default {
         this.disputeProprieties = newDisputeProprieties
       }
     },
-    getSuggestionsKeys (queryString, cb) {
+    getSuggestionsKeys(queryString, cb) {
       let keys = [
         { 'value': 'COMARCA' },
         { 'value': 'AREA' },
@@ -192,11 +192,11 @@ export default {
         { 'value': 'VARA' },
         { 'value': 'SITUACAO' },
         { 'value': 'TRIBUNAL' },
-        { 'value': 'ESTADO' }
+        { 'value': 'ESTADO' },
       ]
       cb(queryString ? keys.filter((key) => (key.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)) : keys)
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,25 +1,25 @@
 const imports = {
   state: {
     file: undefined,
-    map: []
+    map: [],
   },
   mutations: {
-    setImportsFile (state, file) {
+    setImportsFile(state, file) {
       state.file = file
     },
-    removeImportsFile (state) {
+    removeImportsFile(state) {
       state.file = undefined
       state.map = []
     },
-    setImportsMap (state, map) {
+    setImportsMap(state, map) {
       state.map = map
     },
-    removeImportsMap (state, map) {
+    removeImportsMap(state, map) {
       state.map = []
-    }
+    },
   },
   actions: {
-    getImportsHistory () {
+    getImportsHistory() {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/imports/history')
@@ -31,13 +31,13 @@ const imports = {
           })
       })
     },
-    getImportsColumns ({ commit, state, dispatch }) {
+    getImportsColumns({ commit, state, dispatch }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/imports/' + state.file.id + '/columns')
           .then(response => {
             if (response.status === 204) {
-              setTimeout(function () {
+              setTimeout(function() {
                 resolve(dispatch('getImportsColumns'))
               }, 3000)
             } else {
@@ -50,7 +50,7 @@ const imports = {
           })
       })
     },
-    getImportsTags ({ state }) {
+    getImportsTags({ state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/imports/' + state.file.id + '/tags')
@@ -62,7 +62,7 @@ const imports = {
           })
       })
     },
-    mapImportColumns ({ state }, map) {
+    mapImportColumns({ state }, map) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.put('api/imports/'+ state.file.id + '/map', map)
@@ -74,7 +74,7 @@ const imports = {
           })
       })
     },
-    uploadImportFile ({ commit }, file) {
+    uploadImportFile({ commit }, file) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('api/imports/upload', file)
@@ -86,7 +86,7 @@ const imports = {
           })
       })
     },
-    startGeneseRunner ({ state }) {
+    startGeneseRunner({ state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('api/geneserunner/' + state.file.id + '/start')
@@ -98,7 +98,7 @@ const imports = {
           })
       })
     },
-    validateGeneseRunner ({ state }) {
+    validateGeneseRunner({ state }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/geneserunner/' + state.file.id + '/validate')
@@ -109,14 +109,14 @@ const imports = {
             reject(error)
           })
       })
-    }
+    },
   },
   getters: {
     importedFileName: state => state.file ? state.file.file_name : null,
     hasImportsFile: state => {
       return state.file !== undefined
-    }
-  }
+    },
+  },
 }
 
 export default imports

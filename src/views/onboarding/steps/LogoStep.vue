@@ -46,27 +46,27 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       imageUrl: '',
-      loading: false
+      loading: false,
     }
   },
   methods: {
-    remove () {
+    remove() {
       this.imageUrl = ''
     },
-    loadingProgress (event, file, fileList) {
+    loadingProgress(event, file, fileList) {
       this.loading = true
     },
-    handleAvatarSuccess (res, file) {
+    handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw)
       this.loading = false
     },
-    beforeAvatarUpload (file) {
+    beforeAvatarUpload(file) {
       const isValid = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/svg+xml'
       // const isLt2M = file.size / 1024 / 1024 < 2
       if (!isValid) {
@@ -76,8 +76,8 @@ export default {
       //   this.$message.error('Avatar picture size can not exceed 2MB!')
       // }
       return isValid // && isLt2M
-    }
-  }
+    },
+  },
 }
 </script>
 

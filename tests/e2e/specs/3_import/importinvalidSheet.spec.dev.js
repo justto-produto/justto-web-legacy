@@ -3,8 +3,8 @@ const password = Cypress.env('default-password')
 const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 const fileInput = 'input[type=file]'
 
-describe('Justto.App - Importação de planilha: Erros', function () {
-  beforeEach(function () {
+describe('Justto.App - Importação de planilha: Erros', function() {
+  beforeEach(function() {
     // Acessa a página inicial do Justto.App
     cy.visit('/')
 
@@ -39,7 +39,7 @@ describe('Justto.App - Importação de planilha: Erros', function () {
     cy.url().should('include', '/#/import')
   })
 
-  it('Importa planilha modelo: Planilha inválida', function () {
+  it('Importa planilha modelo: Planilha inválida', function() {
     // Importa planilha
     cy.upload_file('PLANINHA_EMPTY_FILE_TEST.xlsx', fileType, fileInput)
 
@@ -47,7 +47,7 @@ describe('Justto.App - Importação de planilha: Erros', function () {
     cy.contains('Arquivo vazio ou fora do formato padrão. Verifique o seu conteúdo e tente novamente.')
   })
 
-  it('Importa planilha modelo: Arquivo pesado', function () {
+  it('Importa planilha modelo: Arquivo pesado', function() {
     // Importa planilha
     cy.upload_file('ss20mb.xlsx', fileType, fileInput)
 
@@ -55,7 +55,7 @@ describe('Justto.App - Importação de planilha: Erros', function () {
     cy.contains('Arquivo não pode ultrapassar 20MB.')
   })
 
-  it('Importa planilha modelo: Formato inválido', function () {
+  it('Importa planilha modelo: Formato inválido', function() {
     // Importa planilha
     cy.upload_file('CERTAMENTE_NAO_E_UMA_PLANILHA.jpeg', fileType, fileInput)
 

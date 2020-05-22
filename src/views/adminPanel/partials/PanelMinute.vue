@@ -107,7 +107,7 @@
 <script>
 export default {
   name: 'PanelMinute',
-  data () {
+  data() {
     return {
       tableKey: 0,
       nameToEdit: '',
@@ -117,11 +117,11 @@ export default {
       editDialogUrl: '',
       minutes: [],
       types: {},
-      fullscreen: false
+      fullscreen: false,
     }
   },
   computed: {
-    filteredMinutes () {
+    filteredMinutes() {
       return this.minutes.filter(minute => {
         if (minute.archived || !minute.name) {
           return false
@@ -129,21 +129,21 @@ export default {
         return !this.search || minute.name.toLowerCase().includes(this.search.toLowerCase())
       })
     },
-    width () {
+    width() {
       if (this.fullscreen === true) {
         return '100%'
       }
       return '90%'
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.fetchMinutes()
     this.$store.dispatch('getDocumentTypes').then(response => {
       this.types = response
     })
   },
   methods: {
-    fetchMinutes () {
+    fetchMinutes() {
       this.loadingMinutes = true
       this.$store.dispatch('getDocumentModels').then(response => {
         this.minutes = response
@@ -153,7 +153,7 @@ export default {
         this.loadingMinutes = false
       })
     },
-    addMinute () {
+    addMinute() {
       this.$prompt('Insira a URL (Google Docs) do documento:', 'Adicionar minuta', {
         confirmButtonText: 'Adicionar',
         cancelButtonText: 'Cancelar',
@@ -170,7 +170,7 @@ export default {
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Houve uma falha ao adicionar minuta. Certifique-se de que o documento adicionado é público.',
-                type: 'warning'
+                type: 'warning',
               })
             }).finally(() => {
               done()
@@ -179,20 +179,20 @@ export default {
           } else {
             done()
           }
-        }
+        },
       }).then(({ value }) => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Minuta adicionada com sucesso',
-          type: 'success'
+          type: 'success',
         })
       })
     },
-    editMinute (url) {
+    editMinute(url) {
       this.editDialogUrl = url
       this.editDialogVisible = true
     },
-    deleteMinute (modelId) {
+    deleteMinute(modelId) {
       this.$confirm('Tem certeza que deseja excluir?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
@@ -212,28 +212,28 @@ export default {
           } else {
             done()
           }
-        }
+        },
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Minuta excluída com sucesso',
-          type: 'success'
+          type: 'success',
         })
       })
     },
-    focusInput (minuteId, minuteName) {
+    focusInput(minuteId, minuteName) {
       this.tableKey += 1
       this.nameToEdit = minuteName
       this.$nextTick(() => this.$refs['input' + minuteId].$el.children[0].focus())
     },
-    editMinuteName (minute) {
+    editMinuteName(minute) {
       this.tableKey += 1
       if (minute.name !== this.nameToEdit) this.$store.dispatch('editModel', minute)
     },
-    copy (value) {
+    copy(value) {
       navigator.clipboard.writeText(`{{${value}}}`)
-    }
-  }
+    },
+  },
 }
 </script>
 

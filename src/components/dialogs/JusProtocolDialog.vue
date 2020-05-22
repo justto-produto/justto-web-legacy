@@ -12,30 +12,63 @@
       class="jus-protocol-dialog">
       <div v-loading="loading">
         <!-- ESCOLHA DE TEMPLATE -->
-        <div v-if="step === 0" class="jus-protocol-dialog__model-choice">
-          <el-button v-for="model in models" :key="model.id" plain @click="selectModel({ modelId: model.id })">
+        <div
+          v-if="step === 0"
+          class="jus-protocol-dialog__model-choice">
+          <el-button
+            v-for="model in models"
+            :key="model.id"
+            plain
+            @click="selectModel({ modelId: model.id })">
             <h4>{{ model.name }}</h4>
-            <jus-icon icon="doc" is-active />
+            <jus-icon
+              icon="doc"
+              is-active />
           </el-button>
         </div>
         <!-- EDIÇÃO DE TEMPLATE -->
-        <el-tooltip v-if="step === 1" :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'">
-          <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="jus-protocol-dialog__fullscreen-icon" @click="fullscreen = !fullscreen" />
+        <el-tooltip
+          v-if="step === 1"
+          :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'">
+          <i
+            :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'"
+            class="jus-protocol-dialog__fullscreen-icon"
+            @click="fullscreen = !fullscreen" />
         </el-tooltip>
         <div v-if="step === 1">
-          <iframe :src="document.url" frameborder="0" allowfullscreen />
+          <iframe
+            :src="document.url"
+            frameborder="0"
+            allowfullscreen />
         </div>
         <!-- ESCOLHA DE EMAILS PARA ASSINATURA -->
-        <div v-if="step === 2" class="jus-protocol-dialog__send-to">
+        <div
+          v-if="step === 2"
+          class="jus-protocol-dialog__send-to">
           <p>Escolha um endereço de email para cada parte.</p>
-          <div v-for="(role, index) in roles" :key="index">
+          <div
+            v-for="(role, index) in roles"
+            :key="index">
             <span class="title">{{ role.name.toUpperCase() }}</span>
-            <div v-if="role.party" class="subtitle">
+            <div
+              v-if="role.party"
+              class="subtitle">
               {{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}
             </div>
-            <div v-if="role.documentNumber" :key="formKey" class="subtitle">{{ role.documentNumber | cpfCnpjMask }}</div>
-            <el-form v-else :ref="'documentForm' + index" :model="documentForm" :rules="documentFormRules" @submit.native.prevent="addDocument(role, index)">
-              <el-form-item :key="formKey" prop="document" style="margin-bottom: 0px;">
+            <div
+              v-if="role.documentNumber"
+              :key="formKey"
+              class="subtitle">{{ role.documentNumber | cpfCnpjMask }}</div>
+            <el-form
+              v-else
+              :ref="'documentForm' + index"
+              :model="documentForm"
+              :rules="documentFormRules"
+              @submit.native.prevent="addDocument(role, index)">
+              <el-form-item
+                :key="formKey"
+                prop="document"
+                style="margin-bottom: 0px;">
                 <el-input
                   v-mask="['###.###.###-##', '##.###.###/####-##']"
                   :ref="'documentInput' + formKey"
@@ -43,12 +76,22 @@
                   placeholder="Informe o CPF da parte para selecionar e-mail de assinatura"
                   size="small"
                   @input="clearValidate(index)">
-                  <el-button slot="append" icon="el-icon-plus" @click="addDocument(role, index)" />
+                  <el-button
+                    slot="append"
+                    icon="el-icon-plus"
+                    @click="addDocument(role, index)" />
                 </el-input>
               </el-form-item>
             </el-form>
-            <div v-for="(email, index) in role.emails" :key="index" :class="{ 'mt10': index === 0 }" class="line">
-              <el-tooltip :key="formKey" :disabled="!!role.documentNumber" content="Cadastre o CPF da parte para selecionar um e-mail">
+            <div
+              v-for="(email, index) in role.emails"
+              :key="index"
+              :class="{ 'mt10': index === 0 }"
+              class="line">
+              <el-tooltip
+                :key="formKey"
+                :disabled="!!role.documentNumber"
+                content="Cadastre o CPF da parte para selecionar um e-mail">
                 <span><input
                   v-model="recipients[role.name]"
                   :name="role.name"
@@ -57,10 +100,17 @@
                   type="radio"></span>
               </el-tooltip>
               {{ email.address }}
-              <el-button v-if="email.canDelete" size="mini" type="text" icon="el-icon-delete" @click="removeEmail(email.address, role.name)" />
+              <el-button
+                v-if="email.canDelete"
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="removeEmail(email.address, role.name)" />
             </div>
             <div>
-              <el-tooltip :disabled="!!role.documentNumber" content="Cadastre o CPF da parte para adicionar um e-mail">
+              <el-tooltip
+                :disabled="!!role.documentNumber"
+                content="Cadastre o CPF da parte para adicionar um e-mail">
                 <span><el-button
                   v-show="!role.show"
                   :key="formKey"
@@ -72,15 +122,25 @@
                   Adicionar e-mail
                 </el-button></span>
               </el-tooltip>
-              <el-form :ref="'emailForm' + index" :model="emailForm" :rules="emailFormRules" @submit.native.prevent="addEmail(role, index)">
-                <el-form-item v-show="role.show" :key="formKey" prop="email">
+              <el-form
+                :ref="'emailForm' + index"
+                :model="emailForm"
+                :rules="emailFormRules"
+                @submit.native.prevent="addEmail(role, index)">
+                <el-form-item
+                  v-show="role.show"
+                  :key="formKey"
+                  prop="email">
                   <el-input
                     :ref="'emailInput' + index"
                     v-model="emailForm.email[role.name]"
                     placeholder="Adicionar e-mail"
                     size="small"
                     @input="clearValidate(index)">
-                    <el-button slot="append" icon="el-icon-plus" @click="addEmail(role, index)" />
+                    <el-button
+                      slot="append"
+                      icon="el-icon-plus"
+                      @click="addEmail(role, index)" />
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -94,23 +154,40 @@
             hide-required-asterisk
             class="new-role"
             @submit.native.prevent="addRole()">
-            <el-button v-show="!showARoleButton" type="text" icon="el-icon-plus" @click="showAddRole()">
+            <el-button
+              v-show="!showARoleButton"
+              type="text"
+              icon="el-icon-plus"
+              @click="showAddRole()">
               Adicionar nova parte
             </el-button>
             <el-form-item
               v-show="showARoleButton"
               label="Adicionar nova parte"
               prop="role">
-              <el-input ref="newRoleInput" v-model="roleForm.role" placeholder="Nome" @input="clearValidate()">
-                <el-button slot="append" icon="el-icon-plus" @click="addRole()" />
+              <el-input
+                ref="newRoleInput"
+                v-model="roleForm.role"
+                placeholder="Nome"
+                @input="clearValidate()">
+                <el-button
+                  slot="append"
+                  icon="el-icon-plus"
+                  @click="addRole()" />
               </el-input>
             </el-form-item>
           </el-form>
         </div>
         <!-- FEEDBACK DE ASSINATURAS -->
         <div v-if="step === 3">
-          <div v-for="(signer, index) in signers" :key="index" class="jus-protocol-dialog__status">
-            <jus-avatar-user :name="signer.name" size="sm" shape="circle" />
+          <div
+            v-for="(signer, index) in signers"
+            :key="index"
+            class="jus-protocol-dialog__status">
+            <jus-avatar-user
+              :name="signer.name"
+              size="sm"
+              shape="circle" />
             <div class="jus-protocol-dialog__status-role">
               {{ signer.name }}<br>
               {{ signer.email }}
@@ -122,11 +199,19 @@
           </div>
         </div>
         <!-- VISUALIZAÇÃO DA MINUTA -->
-        <div v-loading="loadingPdf" v-if="step === 4">
-          <object ref="pdfView" :data="pdfUrl" type="application/pdf" @load="loadingPdf = false" />
+        <div
+          v-loading="loadingPdf"
+          v-if="step === 4">
+          <object
+            ref="pdfView"
+            :data="pdfUrl"
+            type="application/pdf"
+            @load="loadingPdf = false" />
         </div>
       </div>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer">
         <el-button
           v-if="![0, 4].includes(step)"
           :disabled="loading"
@@ -172,7 +257,9 @@
           @click="downloadDocument">
           Baixar
         </el-button>
-        <el-tooltip v-if="canResendNotification && step === 3" content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta.">
+        <el-tooltip
+          v-if="canResendNotification && step === 3"
+          content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta.">
           <el-button
             :disabled="loading"
             icon="el-icon-refresh-right"
@@ -198,23 +285,38 @@
       title="Confirmar partes para assinatura"
       width="50%"
       append-to-body>
-      <el-alert type="info" title="Faltando algum assinante?" class="mb40">
+      <el-alert
+        type="info"
+        title="Faltando algum assinante?"
+        class="mb40">
         Cada parte assinante precisa ter o CPF cadastrado e um E-MAIL selecionado. Certifique-se na
         tela anterior se todas as partes para assinatura estão corretamente preenchidas.
       </el-alert>
-      <div v-for="recipient of recipients" :key="recipient.name" class="jus-protocol-dialog__confirm-recipients">
-        <jus-avatar-user :name="recipient.name" size="sm" shape="circle" />
+      <div
+        v-for="recipient of recipients"
+        :key="recipient.name"
+        class="jus-protocol-dialog__confirm-recipients">
+        <jus-avatar-user
+          :name="recipient.name"
+          size="sm"
+          shape="circle" />
         <div>
           <b>{{ recipient.name }}</b><br>
           <b>{{ recipient.documentNumber | cpfCnpjMask }}</b><br>
           {{ recipient.email }}
         </div>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button plain @click="confirmChooseRecipientsVisible = false">
+      <span
+        slot="footer"
+        class="dialog-footer">
+        <el-button
+          plain
+          @click="confirmChooseRecipientsVisible = false">
           Voltar
         </el-button>
-        <el-button type="primary" @click="chooseRecipients">
+        <el-button
+          type="primary"
+          @click="chooseRecipients">
           Confirmar e enviar
         </el-button>
       </span>
@@ -230,18 +332,18 @@ export default {
   props: {
     protocolDialogVisible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disputeId: {
       type: Number,
-      default: 0
+      default: 0,
     },
     disputeRoles: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  data () {
+  data() {
     return {
       step: 0,
       loading: false,
@@ -259,41 +361,41 @@ export default {
       roles: [],
       showARoleButton: false,
       roleForm: {
-        role: ''
+        role: '',
       },
       roleFormRules: {
-        role: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        role: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       emailForm: {
-        email: {}
+        email: {},
       },
       emailFormRules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateObjectEmail, trigger: 'submit' }
-        ]
+          { validator: validateObjectEmail, trigger: 'submit' },
+        ],
       },
       documentForm: {
-        document: {}
+        document: {},
       },
       documentFormRules: {
         document: [
           { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-        ]
-      }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+        ],
+      },
     }
   },
   computed: {
     visible: {
-      get () {
+      get() {
         return this.protocolDialogVisible
       },
-      set (value) {
+      set(value) {
         if (!value) this.$emit('update:protocolDialogVisible', value)
-      }
+      },
     },
-    title () {
+    title() {
       switch (this.step) {
         case 0:
           if (this.models.length > 1) {
@@ -307,7 +409,7 @@ export default {
         default: return 'Minuta'
       }
     },
-    width () {
+    width() {
       if (this.step === 1 && this.fullscreen === true) {
         return '100%'
       }
@@ -316,7 +418,7 @@ export default {
       }
       return '70%'
     },
-    hasEmails () {
+    hasEmails() {
       let hasEmails = false
       if (this.roles) {
         this.roles.map(e => {
@@ -325,21 +427,21 @@ export default {
       }
       return hasEmails
     },
-    pdfUrl () {
+    pdfUrl() {
       if (this.disputeId) {
         return 'https://justto.app/api/office/documents/download-signed/' + this.disputeId
       }
     },
-    canResendNotification () {
+    canResendNotification() {
       if (this.signers) {
         return this.signers.length > this.signers.filter(s => {
           return s.signed === true
         }).length
       }
-    }
+    },
   },
   watch: {
-    visible (value) {
+    visible(value) {
       if (value) {
         this.loading = true
         this.loadingChooseRecipients = false
@@ -354,10 +456,10 @@ export default {
         this.showARoleButton = false
         this.documentForm.document = {}
       }
-    }
+    },
   },
   methods: {
-    addDocument (role, formIndex) {
+    addDocument(role, formIndex) {
       let documentForm = this.$refs['documentForm' + formIndex][0]
       documentForm.validate(valid => {
         if (valid) {
@@ -367,12 +469,12 @@ export default {
         }
       })
     },
-    hideForms () {
+    hideForms() {
       this.roles.map(r => { r.show = false })
       this.showARoleButton = false
       this.formKey += 1
     },
-    addRole () {
+    addRole() {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
           let name = this.roleForm.role.toUpperCase()
@@ -387,12 +489,12 @@ export default {
         }
       })
     },
-    showAddRole () {
+    showAddRole() {
       this.showARoleButton = true
       this.formKey += 1
       this.$nextTick(() => this.$refs.newRoleInput.focus())
     },
-    addEmail (role, formIndex) {
+    addEmail(role, formIndex) {
       let emailForm = this.$refs['emailForm' + formIndex][0]
       emailForm.validate(valid => {
         if (valid) {
@@ -401,7 +503,7 @@ export default {
             if (index > -1) {
               this.roles[index].emails.push({
                 address: this.emailForm.email[role.name],
-                canDelete: true
+                canDelete: true,
               })
               this.recipients[role.name] = { name: role.name, documentNumber: role.documentNumber, email: this.emailForm.email[role.name] }
               this.emailForm.email = {}
@@ -412,7 +514,7 @@ export default {
         }
       })
     },
-    showAddEmail (name, formIndex) {
+    showAddEmail(name, formIndex) {
       this.roles.map(r => {
         if (r.name === name) r.show = true
         else r.show = false
@@ -426,14 +528,14 @@ export default {
         })
       }
     },
-    removeEmail (email, name) {
+    removeEmail(email, name) {
       let index = this.roles.findIndex(r => r.name === name)
       if (index > -1) {
         let emailIndex = this.roles[index].emails.findIndex(e => e.address === email)
         this.roles[index].emails.splice(emailIndex, 1)
       }
     },
-    clearValidate (formIndex) {
+    clearValidate(formIndex) {
       let roleform = this.$refs.roleForm
       let documentForm
       let emailForm
@@ -445,7 +547,7 @@ export default {
       if (documentForm) documentForm[0].clearValidate()
       if (emailForm) emailForm[0].clearValidate()
     },
-    getDocument () {
+    getDocument() {
       this.$store.dispatch('getDocumentByDisputeId', this.disputeId).then(document => {
         if (document) {
           this.document = document
@@ -466,7 +568,7 @@ export default {
         this.loading = false
       })
     },
-    getDocumentModels () {
+    getDocumentModels() {
       this.loading = true
       this.$store.dispatch('getDocumentModels').then(models => {
         this.models = models
@@ -480,11 +582,11 @@ export default {
         this.$jusNotification({ error })
       })
     },
-    selectModel (params) {
+    selectModel(params) {
       this.loading = true
       this.$store.dispatch('createDocumentByModel', {
         disputeId: this.disputeId,
-        modelId: params.modelId
+        modelId: params.modelId,
       }).then(doc => {
         this.document = doc
         this.step = 1
@@ -499,7 +601,7 @@ export default {
                 cancelButtonText: 'Não exibir mais esta mensagem',
                 cancelButtonClass: 'is-plain',
                 dangerouslyUseHTMLString: true,
-                type: 'info'
+                type: 'info',
               }
             ).catch(() => {
               localStorage.setItem('jushidemodelalert', true)
@@ -515,19 +617,19 @@ export default {
         this.loading = false
       })
     },
-    confirmChooseRecipients () {
+    confirmChooseRecipients() {
       if (!Object.keys(this.recipients).length) {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Selecione ao menos um email.',
-          type: 'warning'
+          type: 'warning',
         })
         return false
       } else {
         this.confirmChooseRecipientsVisible = true
       }
     },
-    chooseRecipients () {
+    chooseRecipients() {
       this.loading = true
       this.loadingChooseRecipients = true
       this.confirmChooseRecipientsVisible = false
@@ -536,11 +638,11 @@ export default {
         recipients.push({
           name: recipient.name,
           email: recipient.email,
-          documentNumber: recipient.documentNumber
+          documentNumber: recipient.documentNumber,
         })
       }
       this.$store.dispatch('setDocumentSigners', {
-        disputeId: this.disputeId, recipients
+        disputeId: this.disputeId, recipients,
       }).then(doc => {
         this.signers = doc.signers
         this.step = 3
@@ -553,15 +655,15 @@ export default {
         this.loadingChooseRecipients = false
       })
     },
-    resendSignersNotification () {
+    resendSignersNotification() {
       this.loading = true
       this.$store.dispatch('resendSignersNotification', {
-        disputeId: this.disputeId
+        disputeId: this.disputeId,
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Notificação reenviada com sucesso',
-          type: 'success'
+          type: 'success',
         })
       }).catch(error => {
         this.$jusNotification({ error })
@@ -569,7 +671,7 @@ export default {
         this.loading = false
       })
     },
-    backToDocument () {
+    backToDocument() {
       if (this.step === 4) {
         this.step = 3
       } else {
@@ -577,31 +679,31 @@ export default {
         this.recipients = {}
       }
     },
-    downloadDocument () {
+    downloadDocument() {
       this.loadingDownload = true
       this.$store.dispatch('downloadDocument', {
         disputeId: this.disputeId,
-        name: this.document.name
+        name: this.document.name,
       }).catch(error => {
         this.$jusNotification({ error })
       }).finally(() => {
         this.loadingDownload = false
       })
     },
-    deleteDocument () {
+    deleteDocument() {
       this.$confirm('Tem certeza que deseja excluir?', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
         type: 'warning',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
       }).then(() => {
         this.loading = true
         this.$store.dispatch('deleteDocument', this.disputeId).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Minuta excluída com sucesso',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -610,11 +712,11 @@ export default {
         })
       })
     },
-    visualizePdf () {
+    visualizePdf() {
       this.loadingPdf = true
       this.step = 4
-    }
-  }
+    },
+  },
 }
 </script>
 

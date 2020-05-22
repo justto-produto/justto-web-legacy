@@ -48,32 +48,32 @@ import { getDocumentStep } from '@/utils/jusUtils'
 export default {
   name: 'DisputeTips',
   components: {
-    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
+    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
   },
-  data () {
+  data() {
     return {
       showTips: true,
-      protocolDialogVisible: false
+      protocolDialogVisible: false,
     }
   },
   computed: {
-    dispute () {
+    dispute() {
       return this.$store.getters.dispute
     },
-    documentStep () {
+    documentStep() {
       return getDocumentStep(this.dispute.hasDocument, this.dispute.signStatus)
     },
-    showProtocol () {
+    showProtocol() {
       return ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status)
-    }
+    },
   },
   methods: {
-    showProtocolDialog () {
+    showProtocolDialog() {
       // SEGMENT TRACK
       this.$jusSegment('Gerenciar minuta dentro do ticket view', { disputeId: this.dispute.id })
       this.protocolDialogVisible = true
-    }
-  }
+    },
+  },
 }
 </script>
 

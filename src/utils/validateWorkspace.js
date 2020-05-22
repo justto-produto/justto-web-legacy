@@ -1,7 +1,7 @@
 import store from '@/store'
 
-const validateWorkspace = function () {
-  setInterval(function () {
+const validateWorkspace = function() {
+  setInterval(function() {
     let storageWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
     if (store.getters.isLoggedIn && store.getters.hasWorkspace && storageWorkspace && storageWorkspace.subDomain) {
       if (store.getters.workspaceSubdomain !== storageWorkspace.subDomain) {

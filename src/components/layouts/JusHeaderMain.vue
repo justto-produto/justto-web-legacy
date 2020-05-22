@@ -106,56 +106,56 @@
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
   },
-  data () {
+  data() {
     return {
       dispute: '',
       workspaces: [],
       selectedWorkspace: '',
-      changeWorkspaceDialogVisible: false
+      changeWorkspaceDialogVisible: false,
     }
   },
   computed: {
-    name () {
+    name() {
       return this.$store.getters.loggedPersonName
     },
-    teamName () {
+    teamName() {
       return this.$store.getters.workspaceTeamName
     },
-    appVersion () {
+    appVersion() {
       return process.env.VUE_APP_VERSION
     },
-    whatsappStatus () {
+    whatsappStatus() {
       return this.$store.getters.whatsappStatus
     },
     ghostMode: {
-      get () {
+      get() {
         return this.$store.getters.ghostMode
       },
-      set (value) {
+      set(value) {
         this.$store.commit('setGhostMode', value)
-      }
-    }
+      },
+    },
   },
-  beforeMount () {
+  beforeMount() {
     this.$store.dispatch('myWorkspace').then(response => {
       this.workspaces = response.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
     })
   },
   methods: {
-    logout () {
+    logout() {
       setTimeout(() => {
         this.$store.dispatch('logout')
       }, 500)
       const loading = this.$loading({
-        lock: true
+        lock: true,
       })
       setTimeout(() => {
         loading.close()
       }, 1000)
     },
-    search (term, cb) {
+    search(term, cb) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
@@ -169,17 +169,17 @@ export default {
         })
       }, 800)
     },
-    changeWorkspace () {
+    changeWorkspace() {
       this.$store.dispatch('myWorkspace').then(response => {
         this.workspaces = response.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
       })
       this.selectedWorkspace = ''
       this.changeWorkspaceDialogVisible = true
     },
-    goToWorkspace () {
+    goToWorkspace() {
       const loading = this.$loading({
         lock: true,
-        text: 'Alterando Equipe...'
+        text: 'Alterando Equipe...',
       })
       let workspace = this.workspaces[this.selectedWorkspace]
       let oldWorkspace = this.$store.getters.workspaceTeamName
@@ -190,7 +190,7 @@ export default {
         .then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Troca de time/workspace', {
-            description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}`
+            description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}`,
           })
           this.$router.go('/management')
           this.changeWorkspaceDialogVisible = true
@@ -201,8 +201,8 @@ export default {
             loading.close()
           }, 1000)
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

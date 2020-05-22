@@ -200,14 +200,14 @@ export default {
   props: {
     active: {
       type: Boolean,
-      default: false
+      default: false,
     },
     selectedIds: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  data () {
+  data() {
     return {
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
@@ -222,35 +222,35 @@ export default {
       unsettledTypes: [],
       unsettledType: '',
       newStrategyId: '',
-      newExpirationDate: ''
+      newExpirationDate: '',
     }
   },
   computed: {
     selectedIdsComp: {
-      get () {
+      get() {
         return this.selectedIds
       },
-      set (ids) {
+      set(ids) {
         this.$emit('update:selectedIds', ids)
-      }
+      },
     },
-    selectedIdsLength () {
+    selectedIdsLength() {
       return this.selectedIdsComp.length
     },
-    strategies () {
+    strategies() {
       return this.$store.getters.strategyList
     },
-    workspaceNegotiators () {
+    workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
         return {
           key: member.person.id,
           label: member.person.name,
-          value: member.person.id
+          value: member.person.id,
         }
       })
-    }
+    },
   },
-  created () {
+  created() {
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
     } else {
@@ -261,10 +261,10 @@ export default {
     this.$store.dispatch('getMyStrategies')
   },
   methods: {
-    doAction (action) {
+    doAction(action) {
       let params = {
         type: action.toUpperCase(),
-        disputeIds: this.selectedIds
+        disputeIds: this.selectedIds,
       }
       if (this.unsettledType) params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       switch (action) {
@@ -284,7 +284,7 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         })
         // SEGMENT TRACK
         this.$jusSegment(getTracktitleByAction(action, true), { amount: this.selectedIds.length })
@@ -294,7 +294,7 @@ export default {
               title: 'Atenção!',
               message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
               type: 'info',
-              duration: 0
+              duration: 0,
             })
           }, 2000)
         }
@@ -302,7 +302,7 @@ export default {
         this.$jusNotification({ error })
       })
     },
-    sendBatchAction (action) {
+    sendBatchAction(action) {
       if (action === 'UNSETTLED') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = ''
@@ -317,7 +317,7 @@ export default {
       } else {
         let message = {
           title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
-          content: 'Tem certeza que deseja realizar esta ação em lote?'
+          content: 'Tem certeza que deseja realizar esta ação em lote?',
         }
         if (action === 'ENRICH' &&
             this.$store.getters.disputes.filter(d => this.selectedIds.includes(d.id) && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(d.status)).length) {
@@ -331,14 +331,14 @@ export default {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
+          cancelButtonClass: 'is-plain',
         }).then(() => {
           if (action === 'ENRICH') this.enrichDisputes(action)
           else this.doAction(action)
         })
       }
     },
-    enrichDisputes (action) {
+    enrichDisputes(action) {
       let selecteds = this.selectedIds
       let reengagement = []
       for (let selected of selecteds) {
@@ -352,22 +352,22 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         })
       }).catch(e => {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. Parece que algumas das disputas selecionadas não foram enriquecidas.',
           type: 'warning',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         })
       })
       this.selectedIdsComp = []
     },
-    clearSelection () {
+    clearSelection() {
       this.$emit('disputes:clear')
     },
-    checkDisputeNegotiators () {
+    checkDisputeNegotiators() {
       let disputeNegotiatorMap = []
       this.disputeNegotiatorMap = []
       this.changeNegotiatorByGroup = false
@@ -379,7 +379,7 @@ export default {
         if (mapToChangeIndex === -1) {
           disputeNegotiatorMap.push({
             disputes: [dispute.id],
-            negotiators: disputeNegotiators
+            negotiators: disputeNegotiators,
           })
         } else {
           let mapToChange = disputeNegotiatorMap[mapToChangeIndex]
@@ -397,7 +397,7 @@ export default {
           cancelButtonText: 'Escolher negociadores de cada disputa',
           cancelButtonClass: 'is-plain',
           distinguishCancelAndClose: true,
-          customClass: 'el-message-box--lg'
+          customClass: 'el-message-box--lg',
         }).then(() => {
           this.disputeNegotiators = []
           this.changeNegotiatorDialogVisible = true
@@ -412,7 +412,7 @@ export default {
         })
       }
     },
-    arraysEqual (a, b) {
+    arraysEqual(a, b) {
       if (a === b) return true
       if (a === null || b === null) return false
       if (a.length !== b.length) return false
@@ -421,11 +421,11 @@ export default {
       }
       return true
     },
-    changeNegotiator () {
+    changeNegotiator() {
       let isByGroup = !!this.disputeNegotiatorMap.length
       let params = {
         type: 'CHANGE_NEGOTIATOR',
-        negotiatorsId: this.disputeNegotiators
+        negotiatorsId: this.disputeNegotiators,
       }
       if (isByGroup) {
         params.disputeIds = this.disputeNegotiatorMap[this.currentDisputeNegotiatorMap].disputes
@@ -439,7 +439,7 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.CHANGE_NEGOTIATOR') + '</strong> realizada com sucesso.',
           type: 'success',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         })
         // SEGMENT TRACK
         this.$jusSegment(getTracktitleByAction('CHANGE_NEGOTIATOR', true), { amount: this.selectedIds.length })
@@ -457,8 +457,8 @@ export default {
       }).finally(() => {
         this.changeNegotiatorDialogLoading = false
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

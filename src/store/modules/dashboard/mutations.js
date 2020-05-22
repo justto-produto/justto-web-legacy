@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 const mutations = {
-  setDashboardDatasets (state, chartsDatasets) {
+  setDashboardDatasets(state, chartsDatasets) {
     if (chartsDatasets.length === 1) {
       let chartIndex = state.chartsDatasets.findIndex(c => c.name === chartsDatasets[0].name)
       if (chartIndex === -1) state.chartsDatasets.push(chartsDatasets[0])
@@ -10,13 +10,13 @@ const mutations = {
       state.chartsDatasets = chartsDatasets
     }
   },
-  setSelectedMemberId (state, selectedMemberId) {
+  setSelectedMemberId(state, selectedMemberId) {
     state.selectedMemberId = selectedMemberId
   },
-  clearDashboard (state) {
+  clearDashboard(state) {
     state.chartsDatasets = []
     state.selectedMemberId = null
-  }
+  },
 }
 
 export default mutations

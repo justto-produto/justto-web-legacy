@@ -1,4 +1,4 @@
-const editDistance = function (s1, s2) {
+const editDistance = function(s1, s2) {
   var costs = []
   for (var i = 0; i <= s1.length; i++) {
     var lastValue = i
@@ -21,7 +21,7 @@ const editDistance = function (s1, s2) {
   return costs[s2.length]
 }
 
-const similarity = function (s1, s2) {
+const similarity = function(s1, s2) {
   let longer = s1
   let shorter = s2
   if (s1.length < s2.length) {
@@ -33,7 +33,7 @@ const similarity = function (s1, s2) {
   return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength)
 }
 
-const checkSimilarity = function (compare1, compare2, percentage) {
+const checkSimilarity = function(compare1, compare2, percentage) {
   if (!compare1 || !compare2) return false
   if (Array.isArray(compare2)) {
     for (var c2 of compare2) {

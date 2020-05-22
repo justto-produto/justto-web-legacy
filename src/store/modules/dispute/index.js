@@ -5,7 +5,7 @@ import getters from './getters'
 const dispute = {
   state: {
     dispute: {
-      id: 0
+      id: 0,
     },
     disputeAttachments: [],
     disputeProprieties: {},
@@ -32,16 +32,16 @@ const dispute = {
       page: 1,
       size: 20,
       term: '',
-      total: 0
+      total: 0,
     },
     hasFilters: false,
     statuses: {},
     respondents: [],
-    partyAnalysis: {}
+    partyAnalysis: {},
   },
   mutations: mutations,
   actions: actions,
-  getters: getters
+  getters: getters,
 }
 
 export default dispute

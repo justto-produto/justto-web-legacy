@@ -69,26 +69,26 @@ export default {
   props: {
     dispute: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   computed: {
-    disabled () {
+    disabled() {
       return this.dispute.isMy === false || this.dispute.archived === true
     },
-    archived () {
+    archived() {
       return this.dispute.archived
-    }
+    },
   },
   methods: {
     getLastInteraction: (i) => getLastInteraction(i),
-    getClaimants (disputeRoles, party, role) {
+    getClaimants(disputeRoles, party, role) {
       return getRoles(disputeRoles, party, role)
     },
-    click () {
+    click() {
       if (!this.disabled) this.$router.push('/management/dispute/' + this.dispute.id)
-    }
-  }
+    },
+  },
 }
 </script>
 

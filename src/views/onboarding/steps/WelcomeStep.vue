@@ -27,28 +27,28 @@
 <script>
 export default {
   components: {
-    JusLogoCompany: () => import('@/components/images/JusLogoCompany')
+    JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
   },
   props: {
     isGuest: {
       type: Boolean,
-      default: false
+      default: false,
     },
     companyName: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   computed: {
-    name () {
+    name() {
       return this.$store.getters.loggedPersonName
-    }
+    },
   },
   methods: {
-    nextStep () {
+    nextStep() {
       this.$emit('onboarding:step:next')
-    }
-  }
+    },
+  },
 }
 </script>
 

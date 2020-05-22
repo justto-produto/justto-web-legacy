@@ -186,9 +186,9 @@ export default {
     JusChartLine: () => import('@/components/charts/JusChartLine'),
     JusChartBar: () => import('@/components/charts/JusChartBar'),
     JusChartCard: () => import('@/components/charts/JusChartCard'),
-    JusChartTable: () => import('@/components/charts/JusChartTable')
+    JusChartTable: () => import('@/components/charts/JusChartTable'),
   },
-  data () {
+  data() {
     return {
       key: 0,
       loading: false,
@@ -196,59 +196,59 @@ export default {
       disputeStatusSummaryWithWarnIsChart: false,
       opt: {
         onClick: this.filter,
-        maintainAspectRatio: false
-      }
+        maintainAspectRatio: false,
+      },
     }
   },
   computed: {
     selectedMemberId: {
-      get () {
+      get() {
         return this.$store.getters.dashboardSelectedMemberId
       },
-      set (memberId) {
+      set(memberId) {
         this.$store.commit('setSelectedMemberId', memberId)
-      }
+      },
     },
-    disputeAvgResponseTime () {
+    disputeAvgResponseTime() {
       let chart = this.$store.getters.getChartsDatasets('DISPUTE_AVG_RESPONSE_TIME')
       chart = this.format(chart)
       return chart.data
     },
-    disputeMonetarySummaries () {
+    disputeMonetarySummaries() {
       let chart = this.$store.getters.getChartsDatasets('DISPUTE_MONETARY_SUMMARIES')
       chart = this.format(chart)
       return chart.data
     },
-    disputeStatusSummaryWithWarn () {
+    disputeStatusSummaryWithWarn() {
       let chart = this.$store.getters.getChartsDatasets('DISPUTE_STATUS_SUMMARY_WITH_WARN')
       chart = this.format(chart)
       return chart.data
     },
-    monitoringDisputeByTime () {
+    monitoringDisputeByTime() {
       let chart = this.$store.getters.getChartsDatasets('MONITORING_DISPUTE_BY_TIME')
       chart = this.format(chart)
       return chart.data
     },
-    chartsDatasets () {
+    chartsDatasets() {
       return this.$store.getters.chartsDatasets
     },
-    colors () {
+    colors() {
       return this.$store.state.tagModule.colors
     },
-    members () {
+    members() {
       return [
         { person: { id: 0, name: 'Todos os negociadores' } },
-        ...this.$store.state.workspaceModule.members
+        ...this.$store.state.workspaceModule.members,
       ]
-    }
+    },
   },
-  created () {
+  created() {
     if (!this.chartsDatasets.length) {
       this.getDashboard()
     }
   },
   methods: {
-    getDashboard () {
+    getDashboard() {
       this.loading = true
       this.$store.dispatch('getDashboard').catch(error => {
         this.$jusNotification({ error })
@@ -257,7 +257,7 @@ export default {
         this.loading = false
       })
     },
-    format (chart) {
+    format(chart) {
       if (chart.data && chart.data.datasets) {
         if (chart.name === 'MONITORING_DISPUTE_BY_TIME') {
           chart.data.labels = chart.data.labels.map(l => this.$moment(l).format('DD/MM'))
@@ -331,7 +331,7 @@ export default {
       }
       return chart
     },
-    reload (chartName) {
+    reload(chartName) {
       this.loading = chartName
       this.$store.dispatch('getDashboard', chartName).finally(() => {
         setTimeout(() => {
@@ -339,13 +339,13 @@ export default {
         }, 300)
       })
     },
-    switchType (type) {
+    switchType(type) {
       this[type] = !this[type]
     },
-    command (command) {
+    command(command) {
       this[command.command](command.param)
     },
-    filter (event, array) {
+    filter(event, array) {
       const ref = this.$refs[event.target.parentElement.id]
       const element = ref.getElement(event)
       const filters = (element && element.filters) || null
@@ -364,8 +364,8 @@ export default {
         this.$store.commit('setDisputesTab', '3')
         this.$router.push('/management')
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

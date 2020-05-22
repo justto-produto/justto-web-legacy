@@ -1,11 +1,11 @@
 const mutations = {
-  setLoggedPerson (state, loggedPerson) {
+  setLoggedPerson(state, loggedPerson) {
     state.loggedPerson = loggedPerson
     localStorage.setItem('jusperson', JSON.stringify(loggedPerson))
   },
-  clearLoggedPerson (state) {
+  clearLoggedPerson(state) {
     state.loggedPerson = {}
-  }
+  },
 }
 
 export default mutations

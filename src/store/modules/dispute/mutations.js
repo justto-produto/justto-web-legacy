@@ -1,65 +1,65 @@
 import Vue from 'vue'
 
 const disputeMutations = {
-  setDisputes (state, pageable) {
+  setDisputes(state, pageable) {
     state.disputes = pageable.content
     state.query.size = pageable.size
     state.query.total = pageable.totalElements
   },
-  addDisputes (state, pageable) {
+  addDisputes(state, pageable) {
     if (pageable.content && pageable.content.length) {
       state.disputes.push(...pageable.content)
       state.query.size = pageable.size
       state.query.total = pageable.totalElements
     }
   },
-  setDispute (state, disputeVM) {
+  setDispute(state, disputeVM) {
     state.dispute = disputeVM
   },
-  setDisputeProprieties (state, disputeProprieties) {
+  setDisputeProprieties(state, disputeProprieties) {
     if (disputeProprieties.hasOwnProperty('ENRICHED')) {
       disputeProprieties['ENRIQUECIDO'] = disputeProprieties.ENRICHED ? 'SIM' : 'NÃO'
       delete disputeProprieties.ENRICHED
     }
     state.disputeProprieties = disputeProprieties
   },
-  setDisputeAttachments (state, disputeAttachments) {
+  setDisputeAttachments(state, disputeAttachments) {
     state.disputeAttachments = disputeAttachments
   },
-  setDisputeRoles (state, disputeRoles) {
+  setDisputeRoles(state, disputeRoles) {
     state.dispute.disputeRoles = disputeRoles
   },
-  clearDispute (state) {
+  clearDispute(state) {
     state.dispute = { id: 0 }
     state.disputeAttachments = []
     state.disputeProprieties = {}
   },
-  clearDisputeOccurrences (state) {
+  clearDisputeOccurrences(state) {
     state.occurrences.length = 0
   },
-  clearDisputes (state) {
+  clearDisputes(state) {
     state.disputes = []
     state.hasNew = false
   },
-  incrementOccurrencesSize (state) {
+  incrementOccurrencesSize(state) {
     state.occurrencesSize = state.occurrencesSize + 10
   },
-  clearOccurrencesSize (state) {
+  clearOccurrencesSize(state) {
     state.occurrencesSize = state.occurrencesInitialSize
   },
-  setDisputeQuery (state, query) {
+  setDisputeQuery(state, query) {
     state.query = query
     state.query.page = 1
   },
-  updateDisputeQuery (state, params) {
+  updateDisputeQuery(state, params) {
     state.query[params.key] = params.value
     state.query.page = 1
   },
-  resetDisputeQueryPage (state) {
+  resetDisputeQueryPage(state) {
     state.query.page = 1
     state.query.size = 20
   },
-  addDisputeQueryPage (state) {
+  addDisputeQueryPage(state) {
     if (state.query.page === 1) {
       state.query.size = 5
       state.query.page = 5
@@ -67,13 +67,13 @@ const disputeMutations = {
       state.query.page += 1
     }
   },
-  setSummaryNearExpirations (state, summarys) {
+  setSummaryNearExpirations(state, summarys) {
     state.summaryNearExpirations = summarys
   },
-  setSummaryNotVisualizeds (state, summarys) {
+  setSummaryNotVisualizeds(state, summarys) {
     state.summaryNotVisualizeds = summarys
   },
-  clearDisputeQuery (state) {
+  clearDisputeQuery(state) {
     state.query = {
       status: ['RUNNING'],
       sort: ['visualized,asc', 'conclusionDate,asc'],
@@ -88,10 +88,10 @@ const disputeMutations = {
       page: 1,
       size: 20,
       term: '',
-      total: 0
+      total: 0,
     }
   },
-  clearDisputeQueryByTab (state) {
+  clearDisputeQueryByTab(state) {
     state.query = {
       status: [],
       campaigns: [],
@@ -105,25 +105,25 @@ const disputeMutations = {
       page: 1,
       size: 20,
       term: state.query.term,
-      total: 0
+      total: 0,
     }
   },
-  setDisputeHasFilters (state, bol) {
+  setDisputeHasFilters(state, bol) {
     state.hasFilters = bol
   },
-  setDisputesTab (state, tab) {
+  setDisputesTab(state, tab) {
     state.tab = tab
   },
-  clearDisputeTab (state, tab) {
+  clearDisputeTab(state, tab) {
     state.tab = '1'
   },
-  setDisputeOccurrences (state, occurrences) {
+  setDisputeOccurrences(state, occurrences) {
     if (occurrences && occurrences.length) state.occurrences = occurrences.reverse()
   },
-  addLoadingOccurrence (state, occurrence) {
+  addLoadingOccurrence(state, occurrence) {
     state.occurrences.push(occurrence)
   },
-  SOCKET_ADD_OCCURRENCE (state, newOccurrence) {
+  SOCKET_ADD_OCCURRENCE(state, newOccurrence) {
     Vue.nextTick(() => {
       if (!newOccurrence.id) {
         state.occurrences.push(newOccurrence)
@@ -143,7 +143,7 @@ const disputeMutations = {
       }
     })
   },
-  SOCKET_ADD_DISPUTE_SUMARY (state, disputeWebsocketSummaryDto) {
+  SOCKET_ADD_DISPUTE_SUMARY(state, disputeWebsocketSummaryDto) {
     Vue.nextTick(() => {
       if (disputeWebsocketSummaryDto.type) {
         switch (disputeWebsocketSummaryDto.type) {
@@ -155,26 +155,26 @@ const disputeMutations = {
       }
     })
   },
-  setDisputeStatuses (state, status) {
+  setDisputeStatuses(state, status) {
     state.statuses[status.label] = status.value
   },
-  disputeSetHasNew (state, bol) {
+  disputeSetHasNew(state, bol) {
     state.hasNew = bol
   },
-  setRespondents (state, respondents) {
+  setRespondents(state, respondents) {
     state.respondents = respondents
   },
-  addPrescription (state, prescription) {
+  addPrescription(state, prescription) {
     state.query.prescriptions.push(prescription)
     state.query.page = 1
   },
-  removePrescription (state, prescription) {
+  removePrescription(state, prescription) {
     state.query.prescriptions.splice(state.query.prescriptions.indexOf(prescription), 1)
     state.query.page = 1
   },
-  addPartyAnalysis (state, analysis) {
+  addPartyAnalysis(state, analysis) {
     state.partyAnalysis[analysis.payload] = analysis.data
-  }
+  },
 }
 
 export default disputeMutations

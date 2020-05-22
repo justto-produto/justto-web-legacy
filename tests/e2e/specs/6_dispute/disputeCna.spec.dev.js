@@ -4,13 +4,13 @@ const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
 const user = Cypress.env('main-user')
 
-describe('Disputa', function () {
-  before(function () {
+describe('Disputa', function() {
+  before(function() {
     // Requisição para Preparar ambiente
     cy.prepair_testes('DELETE', 'delete-occorrences-dispute-update-test-e2e')
   })
 
-  beforeEach(function () {
+  beforeEach(function() {
     // Acessa a página inicial do Justto.App
     cy.access('/')
 
@@ -18,7 +18,7 @@ describe('Disputa', function () {
     cy.login(login, password, workspace)
   })
 
-  it('Envio de CNA', function () {
+  it('Envio de CNA', function() {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
@@ -58,7 +58,7 @@ describe('Disputa', function () {
     cy.get('[data-testid=submit-message]')
       .should('not.be.disabled')
 
-    function randomText (size) {
+    function randomText(size) {
       var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
       var result = ''
       for (var i = 0; i < size; i++) {

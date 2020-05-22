@@ -24,15 +24,15 @@
 <script>
 export default {
   name: 'JusFilterButton',
-  data () {
+  data() {
     return {
       term: '',
       isCollapsed: true,
-      debounce: ''
+      debounce: '',
     }
   },
   watch: {
-    isCollapsed (isCollapsed) {
+    isCollapsed(isCollapsed) {
       if (isCollapsed) {
         this.term = ''
         this.$refs.filterInput.blur()
@@ -40,32 +40,32 @@ export default {
         this.focus()
       }
     },
-    term (term) {
+    term(term) {
       clearTimeout(this.debounce)
       this.debounce = setTimeout(() => {
         this.$store.commit('setDisputeFilterTerm', term)
       }, 800)
-    }
+    },
   },
-  beforeMount () {
+  beforeMount() {
     this.term = this.$store.getters.disputeFiltersTerm
     if (this.term) this.isCollapsed = false
   },
   methods: {
-    toggle () {
+    toggle() {
       this.isCollapsed = !this.isCollapsed
     },
-    blur () {
+    blur() {
       setTimeout(() => {
         if (!this.term) {
           this.isCollapsed = true
         }
       }, 250)
     },
-    focus () {
+    focus() {
       this.$refs.filterInput.focus()
-    }
-  }
+    },
+  },
 }
 </script>
 

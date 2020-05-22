@@ -4,17 +4,17 @@ const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
 const user = Cypress.env('main-user')
 
-describe('Disputa', function () {
-  before(function () {
+describe('Disputa', function() {
+  before(function() {
     cy.prepair_testes('PUT', 'prepare-dispute-update-test-e2e')
   })
 
-  beforeEach(function () {
+  beforeEach(function() {
     cy.access('/')
     cy.login(login, password, workspace)
   })
 
-  it('Edição de Disputa', function () {
+  it('Edição de Disputa', function() {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')

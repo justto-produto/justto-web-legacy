@@ -2,16 +2,16 @@ const email = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 
-describe('Login', function () {
-  beforeEach(function () {
+describe('Login', function() {
+  beforeEach(function() {
     cy.access('/')
   })
 
-  it('Multiplos Workspaces', function () {
+  it('Multiplos Workspaces', function() {
     cy.login(email, password, workspace)
   })
 
-  it('Single Workspace', function () {
+  it('Single Workspace', function() {
     // Preenche o campo 'Email'
     cy.get('[data-testid=login-email]')
       .type('guilherme@justto.com.br')
@@ -30,7 +30,7 @@ describe('Login', function () {
     cy.url().should('include', '/#/management')
   })
 
-  it('Email Inválido', function () {
+  it('Email Inválido', function() {
     // Preenche campo 'Email' com email não existente
     cy.get('[data-testid=login-email]')
       .type('email@invalido')
@@ -50,7 +50,7 @@ describe('Login', function () {
       .should('be.visible')
   })
 
-  it('Email ou senha incorretos', function () {
+  it('Email ou senha incorretos', function() {
     // Preenche campo 'Email' com email não existente
     cy.get('[data-testid=login-email]')
       .type(email)

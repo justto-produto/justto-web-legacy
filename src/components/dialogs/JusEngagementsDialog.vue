@@ -105,18 +105,18 @@ export default {
   props: {
     dialogVisible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     strategyId: {
       type: Number,
-      default: 0
+      default: 0,
     },
     isManual: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       dialog: false,
       strategyEngagements: [],
@@ -124,41 +124,41 @@ export default {
       editDialog: false,
       editDialogLoading: false,
       editorKey: 0,
-      preview: false
+      preview: false,
     }
   },
   watch: {
-    dialogVisible (value) {
+    dialogVisible(value) {
       if (value) {
         this.dialog = value
         if (!this.isManual) this.getEngagements()
       }
     },
-    dialog (value) {
+    dialog(value) {
       if (!value) this.$emit('update:dialogVisible', value)
-    }
+    },
   },
   methods: {
-    openEditDialog (step) {
+    openEditDialog(step) {
       this.preview = false
       this.editDialog = true
       this.communication = step
     },
-    editTemplate () {
+    editTemplate() {
       this.editDialogLoading = true
       this.$store.dispatch('editStrategyTemplate', {
         id: this.communication.template.id,
         contentType: 'TEXT',
         title: this.communication.template.title,
         body: this.communication.template.body,
-        protocolId: this.communication.template.protocolId
+        protocolId: this.communication.template.protocolId,
       }).then(() => {
         this.editDialog = false
         this.getEngagements()
         this.$jusNotification({
           title: 'Yay!',
           message: 'Template editado com sucesso',
-          type: 'success'
+          type: 'success',
         })
       }).catch(error => {
         this.$jusNotification({ error })
@@ -166,7 +166,7 @@ export default {
         this.editDialogLoading = false
       })
     },
-    getIcon (communicationType) {
+    getIcon(communicationType) {
       switch (communicationType) {
         case 'WHATSAPP':
           return 'whatsapp'
@@ -180,7 +180,7 @@ export default {
           return 'sms'
       }
     },
-    getEngagements () {
+    getEngagements() {
       this.$store.dispatch('showLoading')
       this.$store.dispatch('getStrategyEngagement', this.strategyId).then(response => {
         this.strategyEngagements = response.communications
@@ -189,8 +189,8 @@ export default {
         this.$jusNotification({ error })
         this.$store.dispatch('hideLoading')
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

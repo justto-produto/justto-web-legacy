@@ -93,9 +93,9 @@ export default {
     TeamNameStep: () => import('./steps/TeamNameStep'),
     LogoStep: () => import('./steps/LogoStep'),
     InviteStep: () => import('./steps/InviteStep'),
-    FinalStep: () => import('./steps/FinalStep')
+    FinalStep: () => import('./steps/FinalStep'),
   },
-  data () {
+  data() {
     return {
       responses: {},
       left: 12,
@@ -107,15 +107,15 @@ export default {
         direction: 'vertical',
         slidesPerView: 1,
         allowTouchMove: false,
-        initialSlide: 0
-      }
+        initialSlide: 0,
+      },
     }
   },
   computed: {
-    isGuest () {
+    isGuest() {
       return !!this.$route.query.invitedBy
     },
-    currentVisible () {
+    currentVisible() {
       if (this.isGuest) {
         switch (this.currentStep) {
           case 0:
@@ -139,49 +139,49 @@ export default {
             return 'final'
         }
       }
-    }
+    },
   },
-  beforeCreate () {
+  beforeCreate() {
     this.$store.commit('redirectNewWorkspaceFalse')
   },
-  created () {
-    setTimeout(function () {
+  created() {
+    setTimeout(function() {
       this.left = 6
     }.bind(this), 400)
-    setTimeout(function () {
+    setTimeout(function() {
       this.right = 18
     }.bind(this), 1200)
   },
   methods: {
-    updateProgress (progress) {
+    updateProgress(progress) {
       this.progressPercentage = Math.round((progress * 100) * 0.2) / 0.2
     },
-    slideChange () {
+    slideChange() {
       this.currentStep = this.$refs.swiper.swiper.activeIndex
     },
-    nextStep (responseObj) {
+    nextStep(responseObj) {
       Object.assign(this.responses, responseObj)
       this.$refs.swiper.swiper.slideNext(800)
     },
-    previousStep () {
+    previousStep() {
       this.$refs.swiper.swiper.slidePrev(800)
     },
-    createSubdomain (responseObj) {
+    createSubdomain(responseObj) {
       if (!this.$store.getters.creatingWorkspace) {
         this.$store.dispatch('showLoading')
         Object.assign(this.responses, responseObj)
         this.$store.dispatch('createWorkpace', {
           name: this.responses.team,
-          subDomain: uuidv4()
+          subDomain: uuidv4(),
         }).then(() => {
           this.$store.dispatch('refreshToken').then(() => {
             this.$refs.swiper.swiper.slideNext(800)
             this.$socket.emit('subscribe', {
               headers: {
                 Authorization: this.$store.getters.accountToken,
-                Workspace: this.$store.getters.workspaceSubdomain
+                Workspace: this.$store.getters.workspaceSubdomain,
               },
-              channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp'
+              channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/whatsapp',
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -196,8 +196,8 @@ export default {
       } else {
         this.$refs.swiper.swiper.slideNext(800)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -53,20 +53,20 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       showError: false,
       oabForm: {
         oab: this.$store.state.workspaceModule.oabNumber ? this.$store.state.workspaceModule.oabNumber : '',
-        state: this.$store.state.workspaceModule.oabState ? this.$store.state.workspaceModule.oabState : ''
-      }
+        state: this.$store.state.workspaceModule.oabState ? this.$store.state.workspaceModule.oabState : '',
+      },
     }
   },
   methods: {
-    submitForm () {
+    submitForm() {
       this.showError = false
       this.$refs['oabForm'].validate((valid) => {
         if (valid) {
@@ -86,18 +86,18 @@ export default {
         } else return false
       })
     },
-    skip () {
+    skip() {
       this.$emit('onboarding:step:next')
       this.$refs['oabForm'].resetFields()
     },
-    hasChanges () {
+    hasChanges() {
       if (this.$store.state.accountModule.oabNumber !== this.oabForm.oab ||
       this.$store.state.accountModule.oabState !== this.oabForm.state) {
         return true
       }
       return false
-    }
-  }
+    },
+  },
 }
 </script>
 

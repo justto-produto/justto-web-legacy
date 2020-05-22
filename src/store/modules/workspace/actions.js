@@ -1,19 +1,19 @@
 import axiosDispatcher from '@/store/axiosDispatcher.js'
 
 const actions = {
-  myWorkspace () {
+  myWorkspace() {
     return axiosDispatcher({
       url: 'api/workspaces/my',
-      headers: { Workspace: '' }
+      headers: { Workspace: '' },
     })
   },
-  getWorkspace ({ getters }) {
+  getWorkspace({ getters }) {
     return axiosDispatcher({
       url: `api/workspaces/${getters.workspaceId}`,
-      mutation: 'setWorkspace'
+      mutation: 'setWorkspace',
     })
   },
-  verifyAvailability ({ commit }, subdomain) {
+  verifyAvailability({ commit }, subdomain) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/workspaces/sub-domain-availability', {subDomain: subdomain})
@@ -24,7 +24,7 @@ const actions = {
         })
     })
   },
-  createWorkpace ({ commit }, object) {
+  createWorkpace({ commit }, object) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.post('api/accounts/workspaces', object)
@@ -36,14 +36,14 @@ const actions = {
         })
     })
   },
-  editWorkpace ({ commit, state }, params) {
+  editWorkpace({ commit, state }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/workspaces', {
         teamName: state.teamName,
         status: state.status,
         name: params.name || state.name,
-        properties: params.properties || state.properties
+        properties: params.properties || state.properties,
       }).then(response => {
         commit('setWorkspace', response.data)
         resolve(response.data)
@@ -52,14 +52,14 @@ const actions = {
       })
     })
   },
-  changeTeamName ({ commit }, data) {
+  changeTeamName({ commit }, data) {
     return axiosDispatcher({
       url: '/api/workspaces/teamName',
       method: 'patch',
-      data
+      data,
     })
   },
-  inviteTeammates ({ state }, teammates) {
+  inviteTeammates({ state }, teammates) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.post('api/accounts/workspaces/invite-teammates/' + state.subdomain, teammates)
@@ -70,7 +70,7 @@ const actions = {
         })
     })
   },
-  readyWorkspace ({ commit }, workspace) {
+  readyWorkspace({ commit }, workspace) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/workspaces/ready/' + workspace)
@@ -81,7 +81,7 @@ const actions = {
         })
     })
   },
-  getWorkspaceMembers ({ commit, dispatch }) {
+  getWorkspaceMembers({ commit, dispatch }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/workspaces/members?size=999&')
@@ -102,7 +102,7 @@ const actions = {
         })
     })
   },
-  removeWorkspaceMember ({ commit }, id) {
+  removeWorkspaceMember({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.delete('api/workspaces/members/' + id)
@@ -113,7 +113,7 @@ const actions = {
         })
     })
   },
-  editWorkspaceMember ({ commit }, member) {
+  editWorkspaceMember({ commit }, member) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/workspaces/members/', member)
@@ -124,7 +124,7 @@ const actions = {
         })
     })
   },
-  syncInbox ({ commit }, object) {
+  syncInbox({ commit }, object) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.post('api/workspaces/inboxes', object)
@@ -135,7 +135,7 @@ const actions = {
         })
     })
   },
-  getMyStrategies ({ commit }) {
+  getMyStrategies({ commit }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/workspaces/strategies')
@@ -148,14 +148,14 @@ const actions = {
         })
     })
   },
-  patchBlackList ({ commit }, blackList) {
+  patchBlackList({ commit }, blackList) {
     return axiosDispatcher({
       url: 'api/workspaces/blacklist',
       method: 'patch',
-      data: blackList
+      data: blackList,
     })
   },
-  adminWorkspaces ({ commit }, params) {
+  adminWorkspaces({ commit }, params) {
     return new Promise((resolve, reject) => {
       let headers = {}
       if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
@@ -166,8 +166,8 @@ const actions = {
           url: params.url || `api/workspaces/${params.workspaceId || ''}`,
           method: params.method,
           params: params.params,
-          data: params.data
-        }
+          data: params.data,
+        },
       }).then(response => {
         resolve(response.data)
       }).catch(error => {
@@ -175,7 +175,7 @@ const actions = {
       })
     })
   },
-  adminWorkspaceUsers ({ commit }, params) {
+  adminWorkspaceUsers({ commit }, params) {
     return new Promise((resolve, reject) => {
       let headers = {}
       if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
@@ -185,8 +185,8 @@ const actions = {
           url: params.url || `api/workspaces${params.workspaceId ? '/' + params.workspaceId : ''}/members/${params.userId || ''}`,
           method: params.method,
           params: params.params,
-          data: params.data
-        }
+          data: params.data,
+        },
       }
       // eslint-disable-next-line
       axios(config).then(response => {
@@ -195,7 +195,7 @@ const actions = {
         reject(error)
       })
     })
-  }
+  },
 }
 
 export default actions

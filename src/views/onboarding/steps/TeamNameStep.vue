@@ -39,29 +39,29 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       nameForm: {
-        name: ''
+        name: '',
       },
       nameFormRules: {
-        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-      }
+        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      },
     }
   },
   computed: {
-    creatingWorkspace () {
+    creatingWorkspace() {
       return this.$store.getters.creatingWorkspace
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.nameForm.name = this.creatingWorkspace ? this.$store.state.workspaceModule.name : ''
   },
   methods: {
-    submitForm () {
+    submitForm() {
       this.$refs['nameForm'].validate(valid => {
         if (valid) {
           this.$emit('onboarding:createSubdomain', { team: this.nameForm.name })
@@ -69,7 +69,7 @@ export default {
           return false
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>

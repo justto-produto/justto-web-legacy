@@ -17,11 +17,11 @@ const workspaceModule = {
     members: [],
     redirectNewWorkspace: false,
     blackList: workspace.blackList,
-    properties: workspace.properties || {}
+    properties: workspace.properties || {},
   },
   mutations: mutations,
   actions: actions,
-  getters: getters
+  getters: getters,
 }
 
 export default workspaceModule

@@ -11,19 +11,19 @@ export default {
   props: {
     isActive: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isWhite: {
       type: Boolean,
-      default: false
+      default: false,
     },
     icon: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   computed: {
-    iconPath: function () {
+    iconPath: function() {
       if (this.icon) {
         return require(
           '@/assets/icons/ic-' +
@@ -34,7 +34,7 @@ export default {
         )
       }
       return false
-    }
-  }
+    },
+  },
 }
 </script>

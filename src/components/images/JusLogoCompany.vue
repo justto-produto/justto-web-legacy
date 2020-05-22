@@ -11,35 +11,35 @@ export default {
   props: {
     src: {
       type: String,
-      default: ''
+      default: '',
     },
     shape: {
       type: String,
-      default: 'square'
+      default: 'square',
     },
     size: {
       type: String,
-      default: 'md'
+      default: 'md',
     },
     shadow: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
-    shapeClass () {
+    shapeClass() {
       return 'jus-logo-company--' + this.shape
     },
-    sizeClass () {
+    sizeClass() {
       return 'jus-logo-company--' + this.size
     },
-    shadowClass () {
+    shadowClass() {
       if (this.shadow) {
         return 'jus-logo-company--shadow'
       }
       return ''
-    }
-  }
+    },
+  },
 }
 </script>
 
