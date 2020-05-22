@@ -3,7 +3,7 @@ import Vue from 'vue'
 const mutations = {
   setDashboardDatasets(state, chartsDatasets) {
     if (chartsDatasets.length === 1) {
-      let chartIndex = state.chartsDatasets.findIndex(c => c.name === chartsDatasets[0].name)
+      const chartIndex = state.chartsDatasets.findIndex(c => c.name === chartsDatasets[0].name)
       if (chartIndex === -1) state.chartsDatasets.push(chartsDatasets[0])
       else Vue.set(state.chartsDatasets, chartIndex, chartsDatasets[0])
     } else {

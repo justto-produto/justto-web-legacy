@@ -3,8 +3,8 @@ import Vue from 'vue'
 Vue.filter('phoneMask', function(value) {
   if (!value) return ''
   if (!/^\d+$/.test(value)) return value
-  let template1 = '(B) C-D'
-  let template2 = '+A (B) C-D'
+  const template1 = '(B) C-D'
+  const template2 = '+A (B) C-D'
   if (value.length === 10) {
     return template1
       .replace('B', value.substr(0, 2))

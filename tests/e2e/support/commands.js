@@ -83,7 +83,7 @@ Cypress.Commands.add('login', (email, password, workspace) => {
 })
 
 Cypress.Commands.add('access', (link) => {
-  let url = link === '/' ? '/#/login' : link
+  const url = link === '/' ? '/#/login' : link
 
   // Acessa a página inicial do Justto.App
   cy.visit(link)

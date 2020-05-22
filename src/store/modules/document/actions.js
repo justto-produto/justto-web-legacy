@@ -82,7 +82,7 @@ const actions = {
         const blob = new Blob([response.data], {
           type: 'application/octet-stream',
         })
-        let fileName = params.name + '.pdf'
+        const fileName = params.name + '.pdf'
         FileSaver.saveAs(blob, fileName)
         resolve(response)
       }).catch(error => {

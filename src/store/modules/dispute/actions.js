@@ -10,9 +10,9 @@ const disputeActions = {
     if (state.dispute.id === disputeChanged.id) {
       state.dispute = disputeChanged
     } else {
-      let disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
+      const disputeIndex = state.disputes.findIndex(d => disputeChanged.id === d.id)
       if (disputeIndex !== -1) {
-        let dispute = state.disputes.find(d => disputeChanged.id === d.id)
+        const dispute = state.disputes.find(d => disputeChanged.id === d.id)
         if (dispute.status !== disputeChanged.status && state.tab !== '3') {
           commit('disputeSetHasNew', true)
         } else {
@@ -149,7 +149,7 @@ const disputeActions = {
   },
   exportDisputes({ state }, colums) {
     return new Promise((resolve, reject) => {
-      let stringColums = colums.toString()
+      const stringColums = colums.toString()
       // eslint-disable-next-line
       axios.get('api/disputes/export'+ queryBuilder(state.query) + 'fileFormat=CSV&columnToExport=' + stringColums, {
         responseType: 'arraybuffer',
@@ -161,7 +161,7 @@ const disputeActions = {
         ], {
           type: 'text/plain;charset=utf-8',
         })
-        let fileName = new Date().getTime() + '.csv'
+        const fileName = new Date().getTime() + '.csv'
         FileSaver.saveAs(blob, fileName)
         resolve(response)
       }).catch(error => {

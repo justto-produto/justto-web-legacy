@@ -153,7 +153,7 @@ export default {
       })
     },
     handleError(error) {
-      let errorMessage = {}
+      const errorMessage = {}
       if (error.status === 406) {
         errorMessage.message = error.data.error
         errorMessage.type = 'warning'

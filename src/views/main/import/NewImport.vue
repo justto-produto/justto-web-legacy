@@ -95,20 +95,20 @@ export default {
       }
     },
     finalStep() {
-      let campaignsTrack = []
+      const campaignsTrack = []
       let allValid = true
       let checked = false
-      let promises = []
-      for (let mappedCampaign of this.mappedCampaigns) {
-        let campaign = JSON.parse(JSON.stringify(mappedCampaign))
+      const promises = []
+      for (const mappedCampaign of this.mappedCampaigns) {
+        const campaign = JSON.parse(JSON.stringify(mappedCampaign))
         if (!this.checkValidCampaign(campaign)) {
           allValid = false
         }
         checked = true
       }
       if (checked && allValid) {
-        for (let mappedCampaign of this.mappedCampaigns) {
-          let campaign = JSON.parse(JSON.stringify(mappedCampaign))
+        for (const mappedCampaign of this.mappedCampaigns) {
+          const campaign = JSON.parse(JSON.stringify(mappedCampaign))
           campaignsTrack.push({
             name: campaign.name,
             strategy: campaign.strategy,
@@ -142,7 +142,7 @@ export default {
           type: 'warning',
         })
       }
-      let range = this.mappedCampaigns.length - 1
+      const range = this.mappedCampaigns.length - 1
       localStorage.setItem('jusfeedbackpreferences', JSON.stringify({
         businessHoursEngagement: this.mappedCampaigns[range].businessHoursEngagement,
         contactPartyWhenNoLowyer: this.mappedCampaigns[range].contactPartyWhenNoLowyer,

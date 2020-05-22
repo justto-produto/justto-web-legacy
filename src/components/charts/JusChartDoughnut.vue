@@ -15,7 +15,7 @@ export default {
     },
   },
   mounted() {
-    let labels = this.data.slice()
+    const labels = this.data.slice()
     this.renderChart(
       {
         datasets: [{
@@ -52,19 +52,19 @@ export default {
         },
       }
     )
-    let title = this.title
+    const title = this.title
     // eslint-disable-next-line
     Chart.pluginService.register({
       beforeDraw: function(chart) {
         if (chart.config.type === 'doughnut') {
-          var width = chart.chart.width
-          var height = chart.chart.height
-          var ctx = chart.chart.ctx
+          const width = chart.chart.width
+          const height = chart.chart.height
+          const ctx = chart.chart.ctx
           ctx.restore()
           ctx.textBaseline = 'top'
-          var text = title
-          var textX = Math.round((width - ctx.measureText(text).width) / 2)
-          var textY = height / 2
+          const text = title
+          const textX = Math.round((width - ctx.measureText(text).width) / 2)
+          const textY = height / 2
           ctx.fillText(text, textX, textY)
           ctx.save()
         }

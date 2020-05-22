@@ -9,7 +9,7 @@ const alertMutations = {
   },
   removeAlert(state, alertChanged) {
     Vue.nextTick(() => {
-      let alertIndex = state.alerts.findIndex(a => alertChanged.id === a.id)
+      const alertIndex = state.alerts.findIndex(a => alertChanged.id === a.id)
       Vue.delete(state.alerts, alertIndex)
     })
   },

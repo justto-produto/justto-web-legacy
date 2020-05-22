@@ -130,7 +130,7 @@ export default {
   },
   methods: {
     submitForm() {
-      let self = this
+      const self = this
       this.$refs['registerForm'].validate(valid => {
         self.showError = false
         self.showSuccess = false

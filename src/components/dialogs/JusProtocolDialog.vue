@@ -460,7 +460,7 @@ export default {
   },
   methods: {
     addDocument(role, formIndex) {
-      let documentForm = this.$refs['documentForm' + formIndex][0]
+      const documentForm = this.$refs['documentForm' + formIndex][0]
       documentForm.validate(valid => {
         if (valid) {
           role.documentNumber = this.documentForm.document[formIndex]
@@ -477,13 +477,13 @@ export default {
     addRole() {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
-          let name = this.roleForm.role.toUpperCase()
+          const name = this.roleForm.role.toUpperCase()
           this.roles.push({ name, emails: [] })
           this.roleForm.role = ''
           this.showARoleButton = false
           this.formKey += 1
           this.$nextTick(() => {
-            let documentInput = this.$refs['documentInput' + this.formKey][0]
+            const documentInput = this.$refs['documentInput' + this.formKey][0]
             documentInput.focus()
           })
         }
@@ -495,11 +495,11 @@ export default {
       this.$nextTick(() => this.$refs.newRoleInput.focus())
     },
     addEmail(role, formIndex) {
-      let emailForm = this.$refs['emailForm' + formIndex][0]
+      const emailForm = this.$refs['emailForm' + formIndex][0]
       emailForm.validate(valid => {
         if (valid) {
           if (this.emailForm.email[role.name]) {
-            let index = this.roles.findIndex(r => r.name === role.name)
+            const index = this.roles.findIndex(r => r.name === role.name)
             if (index > -1) {
               this.roles[index].emails.push({
                 address: this.emailForm.email[role.name],
@@ -523,20 +523,20 @@ export default {
       this.formKey += 1
       if (formIndex) {
         this.$nextTick(() => {
-          let emailInput = this.$refs['emailInput' + formIndex][0]
+          const emailInput = this.$refs['emailInput' + formIndex][0]
           emailInput.focus()
         })
       }
     },
     removeEmail(email, name) {
-      let index = this.roles.findIndex(r => r.name === name)
+      const index = this.roles.findIndex(r => r.name === name)
       if (index > -1) {
-        let emailIndex = this.roles[index].emails.findIndex(e => e.address === email)
+        const emailIndex = this.roles[index].emails.findIndex(e => e.address === email)
         this.roles[index].emails.splice(emailIndex, 1)
       }
     },
     clearValidate(formIndex) {
-      let roleform = this.$refs.roleForm
+      const roleform = this.$refs.roleForm
       let documentForm
       let emailForm
       if (formIndex) {
@@ -633,8 +633,8 @@ export default {
       this.loading = true
       this.loadingChooseRecipients = true
       this.confirmChooseRecipientsVisible = false
-      let recipients = []
-      for (let recipient of Object.values(this.recipients)) {
+      const recipients = []
+      for (const recipient of Object.values(this.recipients)) {
         recipients.push({
           name: recipient.name,
           email: recipient.email,

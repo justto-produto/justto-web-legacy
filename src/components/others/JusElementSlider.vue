@@ -263,8 +263,8 @@ export default {
     //   return `${100 * (this.minValue - this.min) / (this.max - this.min)}%`
     // },
     precision() {
-      let precisions = [this.min, this.max, this.step].map(item => {
-        let decimal = ('' + item).split('.')[1]
+      const precisions = [this.min, this.max, this.step].map(item => {
+        const decimal = ('' + item).split('.')[1]
         return decimal ? decimal.length : 0
       })
       return Math.max.apply(null, precisions)

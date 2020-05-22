@@ -14,7 +14,7 @@ const disputeGetters = {
   disputeHasNew: state => state.hasNew,
   respondents: state => state.respondents,
   filterSummary: state => (disputePhase, summarys) => {
-    let filteredSummarys = summarys.filter(s => s.disputePhase === disputePhase)
+    const filteredSummarys = summarys.filter(s => s.disputePhase === disputePhase)
     if (filteredSummarys && filteredSummarys.length > 0) {
       let counter = 0
       filteredSummarys.forEach(s => (counter += s.quantity))

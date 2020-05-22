@@ -506,7 +506,7 @@ export default {
             phoneDTO: { number: this.profileForm.phone },
             personId: this.person.id,
           }).then(phoneDTO => {
-            let person = JSON.parse(localStorage.getItem('jusperson'))
+            const person = JSON.parse(localStorage.getItem('jusperson'))
             person.phones = [phoneDTO]
             this.$store.commit('setLoggedPerson', person)
             this.profileForm.phone = phoneDTO.number

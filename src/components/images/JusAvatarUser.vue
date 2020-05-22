@@ -61,7 +61,7 @@ export default {
     },
     nameInitials() {
       if (this.name && this.name.trim()) {
-        let split = this.name.split(' ').filter(Boolean)
+        const split = this.name.split(' ').filter(Boolean)
         if (split.length > 1) {
           return split[0].substring(0, 1) + split[split.length - 1].substring(0, 1)
         } else if (split.length === 1) {

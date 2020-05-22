@@ -200,7 +200,7 @@ describe('Justto.App - Planilha Modelo', function() {
         .clear().type(campaing)
         .should('have.value', campaing)
 
-      var strategy
+      let strategy
       switch (index) {
         case 0: strategy = 'INDENIZATÓRIO - COM ADVOGADO (JEC, CíVEL)'
           break

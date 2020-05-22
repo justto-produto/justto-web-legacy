@@ -6,7 +6,7 @@ const actions = {
     if (chartName) {
       url += `chartName=${chartName}&`
     } else {
-      for (let chart of state.charts) {
+      for (const chart of state.charts) {
         url += `chartName=${chart}&`
       }
     }

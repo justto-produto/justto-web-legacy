@@ -22,7 +22,7 @@ describe('Import.vue', () => {
   let state
   let mutations
   let getters
-  let router = new VueRouter()
+  const router = new VueRouter()
   beforeEach(() => {
     state = {
       accountModule: {},

@@ -262,7 +262,7 @@ export default {
         if (chart.name === 'MONITORING_DISPUTE_BY_TIME') {
           chart.data.labels = chart.data.labels.map(l => this.$moment(l).format('DD/MM'))
         }
-        for (let dataset of chart.data.datasets) {
+        for (const dataset of chart.data.datasets) {
           if (chart.type === 'line') {
             dataset.backgroundColor = 'transparent'
             switch (dataset.label) {
@@ -352,7 +352,7 @@ export default {
       if (filters && element.value > 0) {
         this.$store.commit('clearDisputeQuery')
         this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-        for (let key in filters) {
+        for (const key in filters) {
           if (filters.hasOwnProperty(key)) {
             this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }

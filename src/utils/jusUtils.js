@@ -3,17 +3,17 @@ import moment from 'moment'
 
 const queryBuilder = (q, command, disputesLength, noSort) => {
   let query = '?'
-  for (let [key, value] of Object.entries(q)) {
+  for (const [key, value] of Object.entries(q)) {
     if (['total'].includes(key)) continue
     if (!value && key !== 'onlyNotVisualized') continue
     if (Array.isArray(value)) {
       if (!value.length) continue
       if (['expirationDate', 'dealDate', 'importingDate'].includes(key)) {
-        let startDate = moment(value[0]).startOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
-        let endDate = moment(value[1]).endOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        const startDate = moment(value[0]).startOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        const endDate = moment(value[1]).endOf('day').utc().format('YYYY-MM-DD[T]HH:mm:ss[Z]')
         query = `${query}${key}Start=${startDate}&${key}End=${endDate}&`
       } else {
-        for (let v of value) {
+        for (const v of value) {
           query = query + key + '=' + v + '&'
         }
       }

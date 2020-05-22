@@ -202,7 +202,7 @@ export default {
           tagColor: this.tagForm.color,
           page: this.$route.name,
         })
-        let disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
+        const disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
         disputeTags.push(this.tagForm)
         this.disputeTags = disputeTags
       }
@@ -215,13 +215,13 @@ export default {
         tagColor: this.tagForm.color,
         page: this.$route.name,
       })
-      let disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
+      const disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
       disputeTags.push(tag)
       this.disputeTags = disputeTags
     },
     removeTag(tagId) {
       // SEGMENT TRACK
-      let tagToRemove = this.disputeTags.find(t => t.id === tagId)
+      const tagToRemove = this.disputeTags.find(t => t.id === tagId)
       this.$jusSegment('Desvinculação de TAG', {
         tagName: tagToRemove.name,
         tagIcon: tagToRemove.icon,

@@ -360,7 +360,7 @@ export default {
         this.newRole.oabs = []
         this.emailsList = []
         this.phonesList = []
-        let params = {}
+        const params = {}
         if (this.newRole.searchDocumentNumber) {
           if (this.documentNumbers.includes(this.newRole.searchDocumentNumber.replace(/\D/g, ''))) {
             setTimeout(function() {
@@ -398,7 +398,7 @@ export default {
         this.$store.dispatch(searchAction, params)
           .then(response => {
             if (response) {
-              let self = this
+              const self = this
               this.$confirm('Já existem informações no sistema da parte a ser cadastrada. Deseja utilizar os dados existentes?', 'Parte encontrada no sistema', {
                 confirmButtonText: 'Sim, utilizar',
                 cancelButtonText: 'Não',
@@ -445,9 +445,9 @@ export default {
         if (errorMessage || !this.newRole.oab || !this.newRole.state) isValid = false
       })
       if (isValid) {
-        let self = this
+        const self = this
         this.newRole.oab = this.newRole.oab.replace(/ /g, '')
-        let isDuplicated = this.newRole.oabs.findIndex(o => o.number === self.newRole.oab && o.state === self.newRole.state)
+        const isDuplicated = this.newRole.oabs.findIndex(o => o.number === self.newRole.oab && o.state === self.newRole.state)
         if (isDuplicated < 0) {
           this.newRole.oabs.push({
             number: this.newRole.oab,
@@ -468,7 +468,7 @@ export default {
       })
       if (isValid) {
         this.newRole.phone = this.newRole.phone.replace(/ /g, '').replace(/\D/g, '')
-        let isDuplicated = this.phonesList.findIndex(p => {
+        const isDuplicated = this.phonesList.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === this.newRole.phone
         })
@@ -486,8 +486,8 @@ export default {
         if (errorMessage || !this.newRole.email) isValid = false
       })
       if (isValid) {
-        let self = this
-        let isDuplicated = this.emailsList.findIndex(e => e.address === self.newRole.email)
+        const self = this
+        const isDuplicated = this.emailsList.findIndex(e => e.address === self.newRole.email)
         if (isDuplicated < 0) this.emailsList.push({ address: this.newRole.email })
         this.newRole.email = ''
       }
@@ -502,8 +502,8 @@ export default {
       })
       if (isValid) {
         this.registerLoading = true
-        let role = {}
-        let disputeId = this.disputeId
+        const role = {}
+        const disputeId = this.disputeId
         role.main = true
         if (this.newRole.documentNumber) role.documentNumber = this.newRole.documentNumber.replace(/\D/g, '')
         if (this.newRole.oabs) role.oabs = this.newRole.oabs

@@ -25,7 +25,7 @@ const actions = {
     })
   },
   getFilteredTags({ rootState }) {
-    let query = JSON.parse(JSON.stringify(rootState.disputeModule.query))
+    const query = JSON.parse(JSON.stringify(rootState.disputeModule.query))
     delete query.sort
     delete query.page
     delete query.size

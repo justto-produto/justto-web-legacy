@@ -397,8 +397,8 @@ export default {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
     onDrag(x, y) {
-      let minTop = this.$refs.sectionMessages.offsetHeight - 208
-      let maxTop = 64
+      const minTop = this.$refs.sectionMessages.offsetHeight - 208
+      const maxTop = 64
       if (y > minTop) this.y = minTop
       else if (y < maxTop) this.y = maxTop
       else this.y = y
@@ -412,7 +412,7 @@ export default {
       }, 100)
     },
     startReply(params) {
-      let messageType = params.type.toLowerCase()
+      const messageType = params.type.toLowerCase()
       this.setMessageType(messageType)
       if (messageType === 'email') {
         this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + params.resume)
@@ -428,7 +428,7 @@ export default {
     },
     updateActiveRole(params) {
       if (typeof params === 'number') {
-        let disputeId = params
+        const disputeId = params
         params = {}
         params.activeRole = this.dispute.disputeRoles.find(role => {
           return role.id === disputeId
@@ -447,8 +447,8 @@ export default {
     },
     removeReply() {
       this.directContactAddress = ''
-      let message = this.$refs.messageEditor.quill.getText()
-      let messageIndex = message.indexOf('\n\n___________________')
+      const message = this.$refs.messageEditor.quill.getText()
+      const messageIndex = message.indexOf('\n\n___________________')
       if (messageIndex !== -1) {
         this.$refs.messageEditor.quill.setText(message.substring(messageIndex, 0))
       }
@@ -489,7 +489,7 @@ export default {
       if (!this.$refs.messageEditor.quill.getText().trim()) {
         return false
       }
-      let quillMessage = this.messageType === 'email'
+      const quillMessage = this.messageType === 'email'
         ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
       if (this.selectedContacts.map(c => c.id).length) {
         if (this.messageType === 'whatsapp') {
@@ -504,19 +504,19 @@ export default {
             this.$store.state.messageModule.recentMessages.push({
               messageBody: quillMessage,
               selfDestroy: () => (setTimeout(() => {
-                for (var i = 0; i < this.recentMessages.length; i++) {
+                for (let i = 0; i < this.recentMessages.length; i++) {
                   if (quillMessage === this.recentMessages[i].messageBody) {
                     this.recentMessages.splice(i, 1)
                   }
                 }
               }, 30000)),
             })
-            let lastMessage = this.recentMessages.length - 1
+            const lastMessage = this.recentMessages.length - 1
             this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
           }
         }
         this.loadingTextarea = true
-        let to = []
+        const to = []
         if (this.directContactAddress) {
           to.push({
             address: this.directContactAddress,
@@ -527,8 +527,8 @@ export default {
             contactsId: this.selectedContacts.map(c => c.id),
           })
         }
-        let externalIdentification = +new Date()
-        for (var contact of this.selectedContacts) {
+        const externalIdentification = +new Date()
+        for (const contact of this.selectedContacts) {
           this.addLoadingOccurrence({
             message: this.$refs.messageEditor.quill.getText(),
             type: this.messageType,
@@ -577,7 +577,7 @@ export default {
       }, params))
     },
     sendNote() {
-      let note = this.$refs.noteEditor.quill.getText()
+      const note = this.$refs.noteEditor.quill.getText()
       if (note.trim()) {
         this.loadingTextarea = true
         this.$store.dispatch('sendDisputeNote', {

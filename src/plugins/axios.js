@@ -10,7 +10,7 @@ if (AUTH_TOKEN) {
   axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
 }
 
-let config = {
+const config = {
   baseURL: process.env.VUE_APP_BASE_URL || location.origin,
   timeout: 60 * 11000,
   headers: {},
@@ -23,7 +23,7 @@ _axios.isCancel = axios.isCancel
 
 _axios.interceptors.request.use(
   function(config) {
-    let storageWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
+    const storageWorkspace = JSON.parse(localStorage.getItem('jusworkspace'))
     if (store.getters.isLoggedIn && store.getters.hasWorkspace && storageWorkspace && storageWorkspace.subDomain) {
       if (config.headers.common.Workspace !== storageWorkspace.subDomain) {
         window.location.reload()

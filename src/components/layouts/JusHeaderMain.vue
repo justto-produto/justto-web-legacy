@@ -181,8 +181,8 @@ export default {
         lock: true,
         text: 'Alterando Equipe...',
       })
-      let workspace = this.workspaces[this.selectedWorkspace]
-      let oldWorkspace = this.$store.getters.workspaceTeamName
+      const workspace = this.workspaces[this.selectedWorkspace]
+      const oldWorkspace = this.$store.getters.workspaceTeamName
       if (workspace.workspace) this.$store.commit('setWorkspace', workspace.workspace)
       if (workspace.profile) this.$store.commit('setProfile', workspace.profile)
       if (workspace.person) this.$store.commit('setLoggedPerson', workspace.person)

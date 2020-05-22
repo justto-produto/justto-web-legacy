@@ -46,10 +46,10 @@ describe('Disputa', function() {
       .should('be.disabled')
 
     function randomText(size) {
-      var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
-      var result = ''
-      for (var i = 0; i < size; i++) {
-        var n = Math.floor(Math.random() * caracters.length)
+      const caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
+      let result = ''
+      for (let i = 0; i < size; i++) {
+        const n = Math.floor(Math.random() * caracters.length)
         result += caracters.substring(n, n + 1)
       }
       return 'TST' + result

@@ -262,7 +262,7 @@ export default {
   },
   methods: {
     doAction(action) {
-      let params = {
+      const params = {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds,
       }
@@ -315,7 +315,7 @@ export default {
       } else if (action === 'CHANGE_NEGOTIATOR') {
         this.checkDisputeNegotiators()
       } else {
-        let message = {
+        const message = {
           title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
           content: 'Tem certeza que deseja realizar esta ação em lote?',
         }
@@ -339,9 +339,9 @@ export default {
       }
     },
     enrichDisputes(action) {
-      let selecteds = this.selectedIds
-      let reengagement = []
-      for (let selected of selecteds) {
+      const selecteds = this.selectedIds
+      const reengagement = []
+      for (const selected of selecteds) {
         reengagement.push(
           this.$store.dispatch('enrichDispute', selected)
         )
@@ -368,21 +368,21 @@ export default {
       this.$emit('disputes:clear')
     },
     checkDisputeNegotiators() {
-      let disputeNegotiatorMap = []
+      const disputeNegotiatorMap = []
       this.disputeNegotiatorMap = []
       this.changeNegotiatorByGroup = false
       this.disputeNegotiatorMapSelectedIds = this.selectedIds
       for (var disputeId of this.selectedIds) {
-        let dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
-        let disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
-        let mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))
+        const dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
+        const disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
+        const mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))
         if (mapToChangeIndex === -1) {
           disputeNegotiatorMap.push({
             disputes: [dispute.id],
             negotiators: disputeNegotiators,
           })
         } else {
-          let mapToChange = disputeNegotiatorMap[mapToChangeIndex]
+          const mapToChange = disputeNegotiatorMap[mapToChangeIndex]
           mapToChange.disputes.push(dispute.id)
           disputeNegotiatorMap[mapToChangeIndex] = mapToChange
         }
@@ -416,14 +416,14 @@ export default {
       if (a === b) return true
       if (a === null || b === null) return false
       if (a.length !== b.length) return false
-      for (var i = 0; i < a.length; ++i) {
+      for (let i = 0; i < a.length; ++i) {
         if (a[i] !== b[i]) return false
       }
       return true
     },
     changeNegotiator() {
-      let isByGroup = !!this.disputeNegotiatorMap.length
-      let params = {
+      const isByGroup = !!this.disputeNegotiatorMap.length
+      const params = {
         type: 'CHANGE_NEGOTIATOR',
         negotiatorsId: this.disputeNegotiators,
       }

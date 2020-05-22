@@ -302,8 +302,8 @@ export default {
   computed: {
     datedOccurrences() {
       // APENAS ABA COMUNICAÇÃO
-      let self = this
-      let filteredOccurrences = this.$store.getters.occurrences.filter(o => {
+      const self = this
+      const filteredOccurrences = this.$store.getters.occurrences.filter(o => {
         if (o.type === 'NOTE') return null
         if (self.typingTab === '1' && (
           ['NOTE', 'LOG'].includes(o.type) ||
@@ -312,15 +312,15 @@ export default {
         return true
       })
       // AGRUPA POR DATA
-      let datedOccurrences = {}
+      const datedOccurrences = {}
       filteredOccurrences.forEach(fo => {
-        let currentDay = this.$moment(fo.createAt.dateTime).format('DD/MM/YYYY')
+        const currentDay = this.$moment(fo.createAt.dateTime).format('DD/MM/YYYY')
         if (!datedOccurrences.hasOwnProperty(currentDay)) datedOccurrences[currentDay] = []
         datedOccurrences[currentDay].push(fo)
       })
       // MERGE DE DESCRIÇÃO
       Object.keys(datedOccurrences).forEach((item) => {
-        let datedOccurrence = datedOccurrences[item]
+        const datedOccurrence = datedOccurrences[item]
         let previousOccurrenceIndex
         datedOccurrence.forEach((fo, index) => {
           if (fo.interaction && fo.interaction.message && fo.interaction.message.communicationType === 'WHATSAPP') return
@@ -330,7 +330,7 @@ export default {
           } else {
             similarity = 75
           }
-          let previous = datedOccurrence[previousOccurrenceIndex]
+          const previous = datedOccurrence[previousOccurrenceIndex]
           if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), similarity)) {
             fo.toDelete = true
             if (!previous.merged) {
@@ -469,7 +469,7 @@ export default {
     },
     getOccurrenceMessage(messageId, occurrenceId) {
       this.$store.dispatch('getOccurrenceMessage', messageId).then(message => {
-        let ref = this.$refs[occurrenceId]
+        const ref = this.$refs[occurrenceId]
         ref[0].innerHTML = message.content
         this.fullMessageBank[occurrenceId] = message.content
       })
@@ -567,9 +567,9 @@ export default {
       return false
     },
     startReply(occurrence) {
-      let sender = occurrence.interaction.message.sender
-      let resume = occurrence.interaction.message.resume
-      let type = occurrence.interaction.message.communicationType
+      const sender = occurrence.interaction.message.sender
+      const resume = occurrence.interaction.message.resume
+      const type = occurrence.interaction.message.communicationType
       this.$emit('dispute:reply', { sender, resume, type })
     },
     /** @method buildWhatsappStatus
@@ -586,9 +586,9 @@ export default {
     buildWhatsappStatus(message, executionDateTime) {
       if (!message) return null
       if (message.status.startsWith('PROCESSED')) {
-        let sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
-        let receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
-        let readDate = message.parameters ? message.parameters.READ_DATE : ''
+        const sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
+        const receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
+        const readDate = message.parameters ? message.parameters.READ_DATE : ''
         let icon = 'status-0'
         let msg = `Enviado em ${sendDate}.`
         if (receiverDate) {

@@ -10,7 +10,7 @@ const message = {
       state.messageResumes.push(messageResume)
     },
     deleteMessageResumeByDisputeId(state, disputeId) {
-      let index = state.messageResumes.findIndex(mr => mr.disputeId === disputeId)
+      const index = state.messageResumes.findIndex(mr => mr.disputeId === disputeId)
       if (index !== -1) state.messageResumes.splice(index, 1)
     },
   },

@@ -267,8 +267,8 @@ export default {
           method: 'get',
           workspaceId: workspaceId,
         }).then(response => {
-          let usersList = []
-          for (let user of response) {
+          const usersList = []
+          for (const user of response) {
             usersList.push({
               name: user.person.name,
               documentNumber: user.person.documentNumber,

@@ -14,7 +14,7 @@ localVue.use(Element)
 describe('Login.vue', () => {
   let actions
   let store
-  let router = new VueRouter()
+  const router = new VueRouter()
   beforeEach(() => {
     actions = {
       logout: jest.fn(),

@@ -68,7 +68,7 @@ export default {
         let countP = 0
         let countCP = 0
         let zIndex = 1
-        for (let offer of response.objects[0].offers.sort((a, b) => {
+        for (const offer of response.objects[0].offers.sort((a, b) => {
           a = this.$moment(a.createAt.dateTime).unix()
           b = this.$moment(b.createAt.dateTime).unix()
           return (a > b ? 1 : -1)
@@ -97,7 +97,7 @@ export default {
           }
           zIndex += 1
         }
-        for (let mark of Object.keys(this.marks)) {
+        for (const mark of Object.keys(this.marks)) {
           if (mark > this.max) this.max = parseInt(mark)
           if (mark < this.min) this.min = parseInt(mark)
         }

@@ -112,8 +112,8 @@ export default {
   },
   computed: {
     disputeProprietiesList() {
-      let list = []
-      for (let proprieties of Object.entries(this.disputeProprieties)) {
+      const list = []
+      for (const proprieties of Object.entries(this.disputeProprieties)) {
         if (!['ERROR_COUT', 'ENRIQUECIDO'].includes(proprieties[0])) {
           list.push({
             key: proprieties[0],
@@ -154,7 +154,7 @@ export default {
       this.lineKey += 1
       if (key !== this.editable) {
         this.loading = true
-        let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
+        const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
         newDisputeProprieties[this.editable] = newDisputeProprieties[key]
         delete newDisputeProprieties[key]
         this.disputeProprieties = newDisputeProprieties
@@ -165,27 +165,27 @@ export default {
       this.lineKey += 1
       if (value !== this.editable) {
         this.loading = true
-        let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
+        const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
         newDisputeProprieties[key] = this.editable
         this.disputeProprieties = newDisputeProprieties
       }
     },
     removePropriety(key) {
       this.loading = true
-      let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
+      const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
       delete newDisputeProprieties[key]
       this.disputeProprieties = newDisputeProprieties
     },
     newPropriety() {
       if (this.newKey && this.newValue) {
         this.loading = true
-        let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
+        const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
         newDisputeProprieties[this.newKey] = this.newValue
         this.disputeProprieties = newDisputeProprieties
       }
     },
     getSuggestionsKeys(queryString, cb) {
-      let keys = [
+      const keys = [
         { 'value': 'COMARCA' },
         { 'value': 'AREA' },
         { 'value': 'FORO' },

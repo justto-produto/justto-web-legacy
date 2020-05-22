@@ -496,7 +496,7 @@ export default {
     },
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
-        let newMember = {}
+        const newMember = {}
         newMember.key = member.person.id
         newMember.label = member.person.name
         newMember.value = member.person.id
@@ -714,7 +714,7 @@ export default {
       })
     },
     openNewTab() {
-      let routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
+      const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
       window.open(routeData.href, '_blank')
     },
     togleCollapsed() {
@@ -799,8 +799,8 @@ export default {
               }).then(() => {
                 if (this.counterOfferForm.note) {
                   this.modalLoading = true
-                  let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-                  let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
+                  const people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
+                  const note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
                   this.$store.dispatch('sendDisputeNote', {
                     note,
                     disputeId: this.dispute.id,
@@ -838,7 +838,7 @@ export default {
     showDisputeResume(actionType) {
       return new Promise((resolve, reject) => {
         const h = this.$createElement
-        let detailsMessage = [
+        const detailsMessage = [
           h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
           h('p', null, [
             h('b', null, 'Nº da disputa: '),

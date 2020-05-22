@@ -260,7 +260,7 @@ export default {
       event.dataTransfer.setData('data', data)
     },
     dropTag(event, column, index) {
-      var data = JSON.parse(event.dataTransfer.getData('data'))
+      const data = JSON.parse(event.dataTransfer.getData('data'))
       this.columns.find(element => {
         if (column.id === element.id) {
           element.tag = data.tag
@@ -278,11 +278,11 @@ export default {
       })
     },
     isAvailable(tag) {
-      var isAvailable = true
+      let isAvailable = true
       this.columns.find(element => {
         if (element.tag) {
-          let elKey = element.tag.id
-          let tagKey = tag.id
+          const elKey = element.tag.id
+          const tagKey = tag.id
           if (elKey === tagKey) {
             isAvailable = false
           }
@@ -291,12 +291,12 @@ export default {
       return isAvailable
     },
     isMultipleAvailable(tag, index) {
-      var isAvailable = true
+      let isAvailable = true
       this.columns.find(column => {
         if (column.tag) {
-          let elIndex = column.index ? column.index : 0
-          let elKey = column.tag.id
-          let tagKey = tag.id
+          const elIndex = column.index ? column.index : 0
+          const elKey = column.tag.id
+          const tagKey = tag.id
           if (elKey === tagKey && elIndex === index) {
             isAvailable = false
           }
@@ -305,7 +305,7 @@ export default {
       return isAvailable
     },
     addTagList(list) {
-      let lastIndex = list.slice(-1)[0]
+      const lastIndex = list.slice(-1)[0]
       list.push(lastIndex + 1)
     },
     removeTagList(list, tags) {
@@ -313,7 +313,7 @@ export default {
       list.splice(-1, 1)
     },
     removeLink(array, tags) {
-      let indexToRemove = array.length - 1
+      const indexToRemove = array.length - 1
       this.columns.find(column => {
         if (column.index && column.index === indexToRemove) {
           if (this.matchTagId(column.tag.id, tags)) {
@@ -324,7 +324,7 @@ export default {
       this.columns = this.columns
     },
     matchTagId(id, tags) {
-      var match = false
+      let match = false
       tags.find(tag => {
         if (id === tag.id) {
           match = true
@@ -334,7 +334,7 @@ export default {
     },
     getColumnTitle(id) {
       let title = ''
-      for (let tagList in this.tags) {
+      for (const tagList in this.tags) {
         if (this.tags.hasOwnProperty(tagList)) {
           if (this.tags[tagList] && this.tags[tagList].tags) {
             this.tags[tagList].tags.map(tag => {

@@ -106,7 +106,7 @@ export default {
     addBlackList() {
       this.$refs.blackListForm.validate(valid => {
         if (valid) {
-          let blackList = [...this.$store.getters.workspaceBlackList]
+          const blackList = [...this.$store.getters.workspaceBlackList]
           blackList.push(this.blackListForm.contact)
           this.$store.dispatch('patchBlackList', blackList).then(response => {
             this.$store.commit('setBlackList', blackList)

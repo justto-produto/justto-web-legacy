@@ -31,10 +31,10 @@ export default {
     },
   },
   mounted() {
-    let options = Object.assign({}, this.options)
-    let self = this
+    const options = Object.assign({}, this.options)
+    const self = this
     if (!this.filterable) delete options.onClick
-    let annotation = this.annotation ? [{
+    const annotation = this.annotation ? [{
       type: 'line',
       drawTime: 'afterDatasetsDraw',
       value: 24,
@@ -60,7 +60,7 @@ export default {
         yAdjust: this.getMax() < 24 ? 11 : 0,
       },
     }] : []
-    let sufix = this.sufix ? [{
+    const sufix = this.sufix ? [{
       ticks: {
         callback: (value, index, values) => {
           return value ? `${value} ${self.sufix}` : value
@@ -83,9 +83,9 @@ export default {
   },
   methods: {
     getElement(e) {
-      let firstPoint = this._data._chart.getElementAtEvent(e)[0]
+      const firstPoint = this._data._chart.getElementAtEvent(e)[0]
       if (firstPoint) {
-        let filters = this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
+        const filters = this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
         if (this.data.filter) {
           Object.assign(filters, this.data.filter[firstPoint._datasetIndex])
         }
@@ -97,7 +97,7 @@ export default {
       }
     },
     generateLabels(chart) {
-      let data = chart.data
+      const data = chart.data
       if (data.datasets.length && data.datasets.length) {
         return data.datasets.map(function(dataset, i) {
           // eslint-disable-next-line
@@ -115,8 +115,8 @@ export default {
     },
     getMax() {
       let max = 0
-      for (let dataset of this.data.datasets) {
-        for (let data of dataset.data) {
+      for (const dataset of this.data.datasets) {
+        for (const data of dataset.data) {
           if (data >= max) max = data
         }
       }

@@ -8,7 +8,7 @@ const JusSegment = {
       this.proprieties = proprieties
     }
     Vue.prototype.$jusSegment = (event, prop) => {
-      let proprieties = {
+      const proprieties = {
         userId: store.getters.accountEmail,
         workspace: store.getters.workspaceName,
         team: store.getters.workspaceTeamName,
@@ -22,7 +22,7 @@ const JusSegment = {
       })
     }
     Vue.prototype.$jusSegmentPage = (page) => {
-      let proprieties = {
+      const proprieties = {
         userId: store.getters.accountEmail,
         workspace: store.getters.workspaceName,
         team: store.getters.workspaceTeamName,

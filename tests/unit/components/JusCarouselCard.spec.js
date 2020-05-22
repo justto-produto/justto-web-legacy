@@ -8,7 +8,7 @@ const localVue = createLocalVue()
 localVue.use(VueRouter)
 localVue.use(Element)
 
-let router = new VueRouter()
+const router = new VueRouter()
 const wrapper = shallowMount(JusCarouselCard, { localVue, router })
 wrapper.setProps({ slide: {} })
 

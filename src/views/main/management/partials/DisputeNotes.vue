@@ -164,7 +164,7 @@ export default {
         type: 'warning',
         cancelButtonClass: 'is-plain',
       }).then(() => {
-        let noteId = occurrence.id
+        const noteId = occurrence.id
         this.noteLoading = occurrence.id
         this.$store.dispatch('deleteDisputeNote', noteId).then(() => {
           // SEGMENT TRACK

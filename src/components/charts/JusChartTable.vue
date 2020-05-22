@@ -96,8 +96,8 @@ export default {
   },
   computed: {
     disputeStatusSummaryWithWarn() {
-      let self = this
-      let disputeStatusSummaryWithWarn = []
+      const self = this
+      const disputeStatusSummaryWithWarn = []
       // let sumWithoutAlert = 0
       // let sumWithAlert = 0
       // let sumTotal = 0
@@ -144,7 +144,7 @@ export default {
       }
     },
     buildWithoutAlertTooltip(row) {
-      let name = this.tooltipName() ? ' de ' + this.tooltipName() : ''
+      const name = this.tooltipName() ? ' de ' + this.tooltipName() : ''
       switch (row.label) {
         case 'PENDENTE':
           return row.withoutAlert + ' disputas' + name + ' estão pendentes, mas NÃO vão expirar nos proximos 3 dias. Pode tratar dos outros casos, só não esqueça de tratar estas pendências'
@@ -161,7 +161,7 @@ export default {
       }
     },
     buildWithAlertTooltip(row) {
-      let name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
+      const name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
       switch (row.label) {
         case 'PENDENTE':
           return name + row.withAlert + ' disputas que expiram nos proximos 3 dias e precisam de atenção IMEDIATA'
@@ -178,7 +178,7 @@ export default {
       }
     },
     buildTotalTooltip(row) {
-      let name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
+      const name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
       switch (row.label) {
         case 'PENDENTE':
           return name + row.total + ' disputas pendentes. Cuidado para não perde o prazo!'
@@ -209,8 +209,8 @@ export default {
     },
     cellClick(row, column, cell, event) {
       if (cell.textContent) {
-        let statusIndex = row.statusIndex
-        let columnProperty = column.property
+        const statusIndex = row.statusIndex
+        const columnProperty = column.property
         // let columnLabel = column.label
         // let cellIndex = cell.cellIndex
         // let columnIndex = column.index
@@ -220,15 +220,15 @@ export default {
         //   statusFilters = { status: status.concat(this.data.filter[0].status, this.data.filter[1].status, this.data.filter[2].status, this.data.filter[3].status) }
         //   datasetFilters = { ...datasetFilter.filter[0], ...datasetFilter.filter[1], ...datasetFilter.filter[2], ...datasetFilter.filter[3] }
         // } else {
-        let statusFilters = this.data.filter[statusIndex]
-        let datasetFilters = row[columnProperty + 'Filter']
+        const statusFilters = this.data.filter[statusIndex]
+        const datasetFilters = row[columnProperty + 'Filter']
         // }
         // let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
         // if (columnIndex !== undefined && (datasetFilters || statusFilters)) {
         const filters = Object.assign(statusFilters || {}, datasetFilters || {})
         this.$store.commit('clearDisputeQuery')
         this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-        for (let key in filters) {
+        for (const key in filters) {
           if (filters.hasOwnProperty(key)) {
             this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }

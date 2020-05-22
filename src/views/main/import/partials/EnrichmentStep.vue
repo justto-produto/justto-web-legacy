@@ -83,7 +83,7 @@ export default {
       this.checked2 = false
       this.checked3 = false
       this.loading = true
-      let self = this
+      const self = this
       setTimeout(function() {
         self.checked1 = true
       }, 2000)

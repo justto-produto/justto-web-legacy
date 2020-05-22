@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     increaseShow() {
-      let self = this
+      const self = this
       if (self.showGif === 0) {
         setTimeout(function() {
           self.showGif++

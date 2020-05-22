@@ -303,8 +303,8 @@ export default {
     },
     handlerChangeTree(value, obj) {
       setTimeout(function() {
-        let checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.key)).length
-        let nodesLength = this.filteredNodes.length
+        const checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.key)).length
+        const nodesLength = this.filteredNodes.length
         this.isSelectedAllColumns = checkedNodes === nodesLength
         this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
         this.checkedNodes = obj.checkedKeys.length
@@ -312,10 +312,10 @@ export default {
     },
     invertSelectionColumns(value) {
       if (value) {
-        let allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.key)]
+        const allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.key)]
         this.$refs.tree.setCheckedKeys(allNodesSelected)
       } else {
-        let filteredKeys = this.columns.filter(c => !this.filteredNodes.includes(c))
+        const filteredKeys = this.columns.filter(c => !this.filteredNodes.includes(c))
         this.$refs.tree.setCheckedKeys(filteredKeys.map(c => c.key))
       }
       this.isIndeterminate = false
@@ -342,7 +342,7 @@ export default {
           }
         }).finally(() => {
           this.$nextTick(() => {
-            let main = this.$el.querySelector('.el-table__body-wrapper')
+            const main = this.$el.querySelector('.el-table__body-wrapper')
             if (main) {
               main.scrollTop = 0
             }

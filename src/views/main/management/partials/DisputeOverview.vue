@@ -1282,11 +1282,11 @@ export default {
   },
   computed: {
     ufList() {
-      let ufList = this.namesakeList.map(namesake => namesake.uf)
+      const ufList = this.namesakeList.map(namesake => namesake.uf)
       return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
     },
     cityList() {
-      let cityList = this.namesakeList.map(namesake => namesake.city)
+      const cityList = this.namesakeList.map(namesake => namesake.city)
       return cityList.filter((city, i) => city !== null && cityList.indexOf(city) === i)
     },
     filteredNamesakeList() {
@@ -1391,7 +1391,7 @@ export default {
     },
     oabs() {
       if (this.disputeRolesSort && this.disputeRolesSort.length) {
-        let oabs = []
+        const oabs = []
         this.disputeRolesSort.map(role => {
           if (role.oabs && role.oabs.length) {
             role.oabs.map(oab => oabs.push(oab.number + oab.state))
@@ -1453,7 +1453,7 @@ export default {
     },
     showVexatious(role) {
       const alerts = ['IS_VEXATIOUS_PARTY', 'IS_VEXATIOUS_AUTHOR', 'IS_VEXATIOUS_LAWYER']
-      for (var alert of alerts) {
+      for (const alert of alerts) {
         if (role.personProperties && role.personProperties instanceof Object && role.personProperties.hasOwnProperty(alert)) return true
       }
       return false
@@ -1552,7 +1552,7 @@ export default {
         })
     },
     updateDisputeRole(activeRole, messageType) {
-      let disputeRoles = this.dispute.disputeRoles.map(dr => {
+      const disputeRoles = this.dispute.disputeRoles.map(dr => {
         if (dr.id === activeRole.id) {
           dr = activeRole
         }
@@ -1586,10 +1586,10 @@ export default {
     },
     updateDisputeBankAccounts(roleBankAccountIds) {
       let action, bankAccountId
-      for (let roleAccount of roleBankAccountIds) {
+      for (const roleAccount of roleBankAccountIds) {
         if (!this.disputeBankAccountsIds.includes(roleAccount)) {
           if (this.dispute.denySavingDeposit) {
-            let ba = this.dispute.disputeRoles.find(dr => dr.id === this.activeRoleId).bankAccounts.find(ba => ba.id === roleAccount)
+            const ba = this.dispute.disputeRoles.find(dr => dr.id === this.activeRoleId).bankAccounts.find(ba => ba.id === roleAccount)
             if (ba && ba.type === 'SAVING') {
               this.$jusNotification({
                 dangerouslyUseHTMLString: true,
@@ -1604,7 +1604,7 @@ export default {
           bankAccountId = roleAccount
         }
       }
-      for (let disputeAccount of this.disputeBankAccountsIds) {
+      for (const disputeAccount of this.disputeBankAccountsIds) {
         if (!roleBankAccountIds.includes(disputeAccount)) {
           action = 'unlinkDisputeBankAccounts'
           bankAccountId = disputeAccount
@@ -1632,7 +1632,7 @@ export default {
     },
     roleTitleSort(title) {
       if (title) {
-        let sortedArray = title.slice(0) || []
+        const sortedArray = title.slice(0) || []
         return sortedArray.sort((a, b) => {
           return (a[0] > b[0]) ? -1 : (a[0] < b[0]) ? 1 : 0
         })
@@ -1650,7 +1650,7 @@ export default {
           }
         })
       })
-      let dispute = JSON.parse(JSON.stringify(this.dispute))
+      const dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants ? this.disputeClaimants[0].id : ''
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
@@ -1698,7 +1698,7 @@ export default {
             showCancelButton: true,
             customClass: 'edit-case-confitm-dialog',
           }).then(() => {
-            let disputeToEdit = JSON.parse(JSON.stringify(this.dispute))
+            const disputeToEdit = JSON.parse(JSON.stringify(this.dispute))
             disputeToEdit.strategyId = this.selectedStrategyId
             disputeToEdit.disputeUpperRange = this.disputeForm.disputeUpperRange
             disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
@@ -1716,10 +1716,10 @@ export default {
             else disputeToEdit.requestedValue = null
             if (this.disputeForm.externalId) disputeToEdit.externalId = this.disputeForm.externalId
             else disputeToEdit.externalId = null
-            let currentDate = this.dispute.expirationDate.dateTime
-            let newDate = disputeToEdit.expirationDate.dateTime
-            let contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
-            let contactPartyWhenInvalidLowyer = this.dispute.contactPartyWhenInvalidLowyer
+            const currentDate = this.dispute.expirationDate.dateTime
+            const newDate = disputeToEdit.expirationDate.dateTime
+            const contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
+            const contactPartyWhenInvalidLowyer = this.dispute.contactPartyWhenInvalidLowyer
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               // SEGMENT TRACK
               this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
@@ -1732,14 +1732,14 @@ export default {
                 this.$emit('fetch-data')
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
-              let isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
-              let contactPartyWhenNoLowyerHasChanged = this.disputeForm.contactPartyWhenNoLowyer !== contactPartyWhenNoLowyer
-              let contactPartyWhenInvalidLowyerHasChanged = this.disputeForm.contactPartyWhenInvalidLowyer !== contactPartyWhenInvalidLowyer
-              let contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged
-              let onlyResendMessaged = this.dispute.status === 'RUNNING'
+              const isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
+              const contactPartyWhenNoLowyerHasChanged = this.disputeForm.contactPartyWhenNoLowyer !== contactPartyWhenNoLowyer
+              const contactPartyWhenInvalidLowyerHasChanged = this.disputeForm.contactPartyWhenInvalidLowyer !== contactPartyWhenInvalidLowyer
+              const contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged
+              const onlyResendMessaged = this.dispute.status === 'RUNNING'
               if (contactPartyHasChanged || isExpirationDateChanged) {
-                let action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'
-                let message = contactPartyHasChanged ? 'As configurações de engajamento foram alteradas. Deseja ' + action + '?' : 'A data de expiração foi alterada. Deseja ' + action + '?'
+                const action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'
+                const message = contactPartyHasChanged ? 'As configurações de engajamento foram alteradas. Deseja ' + action + '?' : 'A data de expiração foi alterada. Deseja ' + action + '?'
                 this.$confirm(message, 'Atenção!', {
                   confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
                   cancelButtonText: 'Cancelar',
@@ -1750,7 +1750,7 @@ export default {
                     action: onlyResendMessaged ? 'resend-messages' : 'restart-engagement',
                     disputeId: this.dispute.id,
                   }).then(() => {
-                    let actionDone = onlyResendMessaged ? 'Reenvio de mensagens' : 'Reengajamento'
+                    const actionDone = onlyResendMessaged ? 'Reenvio de mensagens' : 'Reengajamento'
                     this.$jusNotification({
                       title: 'Yay!',
                       message: actionDone + ' realizado com sucesso.',
@@ -1819,8 +1819,8 @@ export default {
       if (isValid) {
         if (this.bankAccountIdstoUnlink.length) {
           this.linkBankAccountLoading = true
-          let promise = []
-          for (let id of this.bankAccountIdstoUnlink) {
+          const promise = []
+          for (const id of this.bankAccountIdstoUnlink) {
             promise.push(
               this.$store.dispatch('unlinkDisputeBankAccounts', {
                 disputeId: this.dispute.id,
@@ -1841,7 +1841,7 @@ export default {
       }
     },
     editRoleAction() {
-      let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
+      const roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
       delete roleToEdit.title
       this.editRoleDialogLoading = true
       this.$store.dispatch('editRole', {
@@ -1855,7 +1855,7 @@ export default {
           message: 'Os dados foram alterados com sucesso.',
           type: 'success',
         })
-        let roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
+        const roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
         if (roleDataDifference.length) {
           this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
             confirmButtonText: 'Reengajar',
@@ -1863,8 +1863,8 @@ export default {
             type: 'warning',
             cancelButtonClass: 'is-plain',
           }).then(() => {
-            let contacts = []
-            for (let contact of roleDataDifference) {
+            const contacts = []
+            for (const contact of roleDataDifference) {
               contacts.push(
                 this.$store.dispatch('restartEngagementByContact', {
                   disputeId: this.dispute.id,
@@ -1903,18 +1903,18 @@ export default {
       })
     },
     verifyChangedRoleData(editedRole, originalRole) {
-      let changed = {
+      const changed = {
         newPhones: [],
         newEmails: [],
       }
       if (editedRole.phones.length) {
-        let mappedPhones = originalRole.phones.map(phone => phone.number)
+        const mappedPhones = originalRole.phones.map(phone => phone.number)
         changed.newPhones = editedRole.phones.filter(phone => {
           if (!mappedPhones.includes(phone.number)) return phone.number
         })
       }
       if (editedRole.emails.length) {
-        let mappedEmails = originalRole.emails.map(email => email.address)
+        const mappedEmails = originalRole.emails.map(email => email.address)
         changed.newEmails = editedRole.emails.filter(email => {
           if (!mappedEmails.includes(email.address)) return email.address
         })
@@ -1928,9 +1928,9 @@ export default {
         if (errorMessage || !this.roleForm.phone) isValid = false
       })
       if (isValid) {
-        let self = this
+        const self = this
         this.roleForm.phone = this.roleForm.phone.replace(/ /g, '').replace(/\D/g, '')
-        let isDuplicated = this.roleForm.phones.findIndex(p => {
+        const isDuplicated = this.roleForm.phones.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === self.roleForm.phone
         })
@@ -1948,8 +1948,8 @@ export default {
         if (errorMessage || !this.roleForm.email) isValid = false
       })
       if (isValid) {
-        let self = this
-        let isDuplicated = this.roleForm.emails.findIndex(e => e.address === self.roleForm.email)
+        const self = this
+        const isDuplicated = this.roleForm.emails.findIndex(e => e.address === self.roleForm.email)
         if (isDuplicated < 0) this.roleForm.emails.push({ address: this.roleForm.email, isMain: true })
         this.roleForm.email = ''
       }
@@ -1963,9 +1963,9 @@ export default {
         if (errorMessage || !this.roleForm.oab || !this.roleForm.state) isValid = false
       })
       if (isValid) {
-        let self = this
+        const self = this
         this.roleForm.oab = this.roleForm.oab.replace(/ /g, '')
-        let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
+        const isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
         if (isDuplicated < 0) {
           this.roleForm.oabs.push({
             number: this.roleForm.oab,
@@ -2006,7 +2006,7 @@ export default {
           if (!this.roleForm.bankAccounts) {
             this.roleForm.bankAccounts = []
           }
-          let bankForm = JSON.parse(JSON.stringify(this.addBankForm))
+          const bankForm = JSON.parse(JSON.stringify(this.addBankForm))
           this.roleForm.bankAccounts.push(bankForm)
           this.addBankForm.name = ''
           this.addBankForm.email = ''

@@ -556,7 +556,7 @@ export default {
     },
     sendMessage(dispute) {
       if (this.message.trim().replace('\n', '') || this.richMessage.trim().replace('\n', '')) {
-        let message = this.richMessage ? this.richMessage : this.message
+        const message = this.richMessage ? this.richMessage : this.message
         this.responseBoxLoading = true
         this.$store.dispatch('send' + dispute.lastReceivedMessage.message.communicationType.toLowerCase(), {
           to: [{ address: dispute.lastReceivedMessage.message.sender }],
@@ -597,8 +597,8 @@ export default {
       this.$refs.disputeTable.clearSelection()
     },
     handleSelectionChange(selected) {
-      let ids = []
-      for (let dispute of selected) {
+      const ids = []
+      for (const dispute of selected) {
         if (dispute && dispute.id) {
           ids.push(dispute.id)
         }

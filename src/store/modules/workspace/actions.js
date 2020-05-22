@@ -86,12 +86,12 @@ const actions = {
       // eslint-disable-next-line
       axios.get('api/workspaces/members?size=999&')
         .then(response => {
-          var promises = []
-          for (let member of response.data.content) {
+          const promises = []
+          for (const member of response.data.content) {
             promises.push(dispatch('getPerson', member.personId))
           }
           Promise.all(promises).then(responses => {
-            for (var i = 0; i < response.data.content.length; i++) {
+            for (let i = 0; i < response.data.content.length; i++) {
               response.data.content[i].person = responses[i]
             }
             resolve(response.data.content)
@@ -157,7 +157,7 @@ const actions = {
   },
   adminWorkspaces({ commit }, params) {
     return new Promise((resolve, reject) => {
-      let headers = {}
+      const headers = {}
       if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
       // eslint-disable-next-line
       axios({
@@ -177,7 +177,7 @@ const actions = {
   },
   adminWorkspaceUsers({ commit }, params) {
     return new Promise((resolve, reject) => {
-      let headers = {}
+      const headers = {}
       if (params.headers && Object.keys(params.headers).length) headers.headers = params.headers
       const config = {
         ...headers,
