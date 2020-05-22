@@ -9,7 +9,11 @@
         <i :class="`el-icon-${tag.icon}`"/>
         {{ tag.name }}
       </div>
-      <el-button type="text" icon="el-icon-close" size="small" @click.prevent="removeTag(tag.id)" />
+      <el-button
+        type="text"
+        icon="el-icon-close"
+        size="small"
+        @click.prevent="removeTag(tag.id)" />
     </el-tag>
     <el-popover
       v-model="visible"
@@ -44,25 +48,36 @@
               </el-tag>
             </el-option>
             <div slot="empty">
-              <el-button type="text" class="jus-tags__add-button" size="small" @click="showNewTagForm">
+              <el-button
+                type="text"
+                class="jus-tags__add-button"
+                size="small"
+                @click="showNewTagForm">
                 <i class="el-icon-plus" /> Adicionar nova etiqueta
               </el-button>
             </div>
           </el-select>
         </div>
         <!-- NOVA ETIQUETA -->
-        <div v-if="showForm" class="jus-tags__new-tag-form">
+        <div
+          v-if="showForm"
+          class="jus-tags__new-tag-form">
           <div class="jus-tags__title">
             Nova etiqueta
           </div>
-          <el-tag :color="tagForm.color" class="el-tag--new">
+          <el-tag
+            :color="tagForm.color"
+            class="el-tag--new">
             <i :class="`el-icon-${tagForm.icon}`"/>
             <el-input
               v-model="tagForm.name"
               :maxlength="24"
               size="small"
               @keyup.enter.native="saveTag"/>
-            <el-popover trigger="hover" width="200" popper-class="jus-tags__edit-tag">
+            <el-popover
+              trigger="hover"
+              width="200"
+              popper-class="jus-tags__edit-tag">
               <div class="title">
                 Personalizar etiqueta
               </div>
@@ -81,18 +96,35 @@
                   class="el-tag--click"
                   @click="tagForm.color = color" />
               </div>
-              <el-button slot="reference" type="text" icon="el-icon-more" />
+              <el-button
+                slot="reference"
+                type="text"
+                icon="el-icon-more" />
             </el-popover>
           </el-tag>
           <div class="jus-tags__new-tag-actions">
-            <el-button plain size="mini" @click="resetFields">Cancelar</el-button>
-            <el-button type="primary" size="mini" @click="saveTag">Adicionar</el-button>
+            <el-button
+              plain
+              size="mini"
+              @click="resetFields">Cancelar</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="saveTag">Adicionar</el-button>
           </div>
         </div>
       </div>
-      <el-tooltip id="idTagTooltip" slot="reference" content="Adicionar etiqueta">
-        <el-tag id="idTag" class="jus-tags__open-button" @click="visible = !visible">
-          <i id="idTagIcon" class="el-icon-plus" />
+      <el-tooltip
+        id="idTagTooltip"
+        slot="reference"
+        content="Adicionar etiqueta">
+        <el-tag
+          id="idTag"
+          class="jus-tags__open-button"
+          @click="visible = !visible">
+          <i
+            id="idTagIcon"
+            class="el-icon-plus" />
         </el-tag>
       </el-tooltip>
     </el-popover>

@@ -2,7 +2,9 @@
   <div class="columns-step">
     <h2 class="new-import-view__title">Mapeamento de colunas</h2>
     <el-row :gutter="60">
-      <el-col :span="12" data-testid="import-columns">
+      <el-col
+        :span="12"
+        data-testid="import-columns">
         <h3>Colunas do arquivo</h3>
         <p>
           Estas são as colunas do seu arquivo. Os dados em roxo, acima do campo, são os dados da primeira linha de cada
@@ -33,9 +35,16 @@
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
         </div>
-        <div v-loading="true" v-show="loading">
-          <div v-for="item in [1,2,3,4,5]" :key="item" class="file-column">
-            <div :item="item" class="file-column__name">
+        <div
+          v-loading="true"
+          v-show="loading">
+          <div
+            v-for="item in [1,2,3,4,5]"
+            :key="item"
+            class="file-column">
+            <div
+              :item="item"
+              class="file-column__name">
               <span class="file-column__title">coluna</span>
               <span class="file-column__example">exemplo</span>
             </div>
@@ -45,15 +54,22 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="12" data-testid="import-tags">
+      <el-col
+        :span="12"
+        data-testid="import-tags">
         <h3>Campos do Sistema</h3>
         <p>
           Estes são os campos do sistema. Para mapeá-los, você deve arrastar os campos abaixo para a coluna
           correspondente.
         </p>
         <h3>Dados do conflito</h3>
-        <el-collapse v-loading="loadingTags" value="1" class="el-collapse--drag">
-          <el-collapse-item title="Dados do conflito" name="1">
+        <el-collapse
+          v-loading="loadingTags"
+          value="1"
+          class="el-collapse--drag">
+          <el-collapse-item
+            title="Dados do conflito"
+            name="1">
             <span
               v-for="(tag, index) in disputeTags"
               :key="`${tag.id}-${tag.name}`"
@@ -69,9 +85,14 @@
         </el-collapse>
         <h3 v-show="!loadingTags">
           Partes contrárias
-          <a href="#" @click="addTagList(claimantParties)"><i class="el-icon-plus right"/></a>
+          <a
+            href="#"
+            @click="addTagList(claimantParties)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(claimantPartyIndex, index) in claimantParties" :key="'claimantParty' + claimantPartyIndex" class="drag-group">
+        <div
+          v-for="(claimantPartyIndex, index) in claimantParties"
+          :key="'claimantParty' + claimantPartyIndex"
+          class="drag-group">
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Parte Contrária ' + claimantPartyIndex">
               <span
@@ -87,16 +108,26 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex" href="#" @click="removeTagList(claimantParties, tags.claimantParty.tags)">
+          <a
+            v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex"
+            href="#"
+            @click="removeTagList(claimantParties, tags.claimantParty.tags)">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="margin-left: 24px;"/>
+          <span
+            v-else
+            style="margin-left: 24px;"/>
         </div>
         <h3 v-show="!loadingTags">
           Advogados
-          <a href="#" @click="addTagList(claimantLawyers)"><i class="el-icon-plus right"/></a>
+          <a
+            href="#"
+            @click="addTagList(claimantLawyers)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(claimantLawyerIndex, index) in claimantLawyers" :key="'claimantLawyer' + claimantLawyerIndex" class="drag-group">
+        <div
+          v-for="(claimantLawyerIndex, index) in claimantLawyers"
+          :key="'claimantLawyer' + claimantLawyerIndex"
+          class="drag-group">
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Advogado ' + claimantLawyerIndex">
               <span
@@ -112,16 +143,26 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="claimantLawyerIndex !== 1 && claimantLawyers.length === claimantLawyerIndex" href="#" @click="removeTagList(claimantLawyers)">
+          <a
+            v-if="claimantLawyerIndex !== 1 && claimantLawyers.length === claimantLawyerIndex"
+            href="#"
+            @click="removeTagList(claimantLawyers)">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="margin-left: 24px;"/>
+          <span
+            v-else
+            style="margin-left: 24px;"/>
         </div>
         <h3 v-show="!loadingTags">
           Réus
-          <a href="#" @click="addTagList(respondentParties)"><i class="el-icon-plus right"/></a>
+          <a
+            href="#"
+            @click="addTagList(respondentParties)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(respondentPartyIndex, index) in respondentParties" :key="respondentPartyIndex" class="drag-group">
+        <div
+          v-for="(respondentPartyIndex, index) in respondentParties"
+          :key="respondentPartyIndex"
+          class="drag-group">
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Réu ' + respondentPartyIndex">
               <span
@@ -137,10 +178,15 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="respondentPartyIndex !== 1 && respondentParties.length === respondentPartyIndex" href="#" @click="removeTagList(respondentParties)">
+          <a
+            v-if="respondentPartyIndex !== 1 && respondentParties.length === respondentPartyIndex"
+            href="#"
+            @click="removeTagList(respondentParties)">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="margin-left: 24px;"/>
+          <span
+            v-else
+            style="margin-left: 24px;"/>
         </div>
       </el-col>
     </el-row>

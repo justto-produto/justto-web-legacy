@@ -17,15 +17,27 @@
         action="http://localhost:3000/images"
         drag
         class="el-upload--logo">
-        <img v-if="imageUrl" :src="imageUrl" class="uploaded-logo">
-        <jus-icon v-else icon="upload-file" is-active class="el-icon-upload"/>
+        <img
+          v-if="imageUrl"
+          :src="imageUrl"
+          class="uploaded-logo">
+        <jus-icon
+          v-else
+          icon="upload-file"
+          is-active
+          class="el-icon-upload"/>
         <div>
           <div class="el-upload__text">Arraste aqui ou <em>escolha um arquivo do seu computador</em></div>
         </div>
       </el-upload>
     </div>
-    <el-button :disabled="imageUrl === ''" type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
-    <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
+    <el-button
+      :disabled="imageUrl === ''"
+      type="primary"
+      @click="$emit('onboarding:step:next')">Próximo</el-button>
+    <el-button
+      type="text"
+      @click="$emit('onboarding:step:next')">Pular</el-button>
   </div>
 </template>
 

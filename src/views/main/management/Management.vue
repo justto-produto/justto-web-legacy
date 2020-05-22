@@ -1,5 +1,7 @@
 <template>
-  <jus-view-main :loading-main="loadingDisputes" class="view-management">
+  <jus-view-main
+    :loading-main="loadingDisputes"
+    class="view-management">
     <template slot="main">
       <management-actions
         :active="multiActive"
@@ -35,7 +37,10 @@
                 class="el-badge--absolute" />
             </span>
           </el-tab-pane>
-          <el-tab-pane name="2" label="Com Interação" data-testid="tab-pproposal-accepted">
+          <el-tab-pane
+            name="2"
+            label="Com Interação"
+            data-testid="tab-pproposal-accepted">
             <span slot="label">
               Proposta aceita
               <el-badge
@@ -47,24 +52,34 @@
                 class="el-badge--absolute" />
             </span>
           </el-tab-pane>
-          <el-tab-pane name="3" label="Com Interação">
+          <el-tab-pane
+            name="3"
+            label="Com Interação">
             <span slot="label">Todos</span>
           </el-tab-pane>
         </el-tabs>
         <div class="view-management__buttons">
-          <el-input v-model="term" clearable prefix-icon="el-icon-search" />
+          <el-input
+            v-model="term"
+            clearable
+            prefix-icon="el-icon-search" />
           <el-button
             :plain="!hasFilters"
             :type="hasFilters ? 'primary' : ''"
             @click="filtersVisible = true">
-            <jus-icon :is-white="hasFilters" icon="filter" data-testid="management-filterbtn" />
+            <jus-icon
+              :is-white="hasFilters"
+              icon="filter"
+              data-testid="management-filterbtn" />
             Filtrar
           </el-button>
           <el-tooltip content="Importar disputas">
             <el-button
               plain
               @click="showImportDialog">
-              <jus-icon icon="upload-file" style="width: 20px;" />
+              <jus-icon
+                icon="upload-file"
+                style="width: 20px;" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Exportar disputas">
@@ -82,8 +97,12 @@
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
       <div style="min-height: 44px;position: relative;">
-        <management-prescriptions :active-tab="activeTab" @management:getDisputes="getDisputes" />
-        <div v-show="disputesTotalLength" style="right: 0px;position: absolute;top: 13px;">
+        <management-prescriptions
+          :active-tab="activeTab"
+          @management:getDisputes="getDisputes" />
+        <div
+          v-show="disputesTotalLength"
+          style="right: 0px;position: absolute;top: 13px;">
           Exibindo {{ disputes.length }} de {{ disputesTotalLength }} disputa<span v-show="disputesTotalLength > 1">s</span>
         </div>
       </div>
@@ -93,14 +112,21 @@
         :selected-ids.sync="selectedIds"
         :loading-disputes.sync="loadingDisputes"
         @getDisputes="getDisputes" />
-      <div v-show="hasNew" class="el-notification info right" style="bottom: 100px;z-index: 1980;">
+      <div
+        v-show="hasNew"
+        class="el-notification info right"
+        style="bottom: 100px;z-index: 1980;">
         <i class="el-notification__icon el-icon-info" />
         <div class="el-notification__group is-with-icon">
           <h2 class="el-notification__title">Há atualizações nas<br>disputas</h2>
           <div class="el-notification__content">
-            <a href="#" @click.prevent="getDisputes">Clique aqui para recarregar</a>
+            <a
+              href="#"
+              @click.prevent="getDisputes">Clique aqui para recarregar</a>
           </div>
-          <div class="el-notification__closeBtn el-icon-close" @click="$store.commit('disputeSetHasNew', false)" />
+          <div
+            class="el-notification__closeBtn el-icon-close"
+            @click="$store.commit('disputeSetHasNew', false)" />
         </div>
       </div>
       <el-dialog
@@ -113,8 +139,16 @@
         width="50%">
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="isSelectedAllColumns" @change="invertSelectionColumns">Nome do campo ({{ checkedNodes }} de {{ columns.length }})</el-checkbox>
-          <el-input v-model="filterQuery" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
+          <el-checkbox
+            :indeterminate="isIndeterminate"
+            v-model="isSelectedAllColumns"
+            @change="invertSelectionColumns">Nome do campo ({{ checkedNodes }} de {{ columns.length }})</el-checkbox>
+          <el-input
+            v-model="filterQuery"
+            size="small"
+            placeholder="Buscar"
+            prefix-icon="el-icon-search"
+            clearable />
         </div>
         <el-tree
           ref="tree"
@@ -126,14 +160,24 @@
           show-checkbox
           @check="handlerChangeTree"
           @node-drag-end="nodeDragEnd">
-          <span slot-scope="{ node, data }" class="custom-tree-node">
+          <span
+            slot-scope="{ node, data }"
+            class="custom-tree-node">
             <span>{{ node.label | capitalize }}</span>
-            <jus-icon class="drag-icon" icon="menu-hamburger"/>
+            <jus-icon
+              class="drag-icon"
+              icon="menu-hamburger"/>
           </span>
         </el-tree>
         <span slot="footer">
-          <el-button :disabled="loadingExport" plain @click="exportDisputesDialog = false">Cancelar</el-button>
-          <el-button :loading="loadingExport" type="primary" @click.prevent="exportDisputes">
+          <el-button
+            :disabled="loadingExport"
+            plain
+            @click="exportDisputesDialog = false">Cancelar</el-button>
+          <el-button
+            :loading="loadingExport"
+            type="primary"
+            @click.prevent="exportDisputes">
             Exportar
           </el-button>
         </span>

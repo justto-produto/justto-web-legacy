@@ -10,11 +10,20 @@
         :model="oabForm"
         label-position="top"
         @submit.native.prevent="submitForm">
-        <el-form-item label="OAB" prop="oab">
-          <el-input v-model="oabForm.oab" name="oab"/>
+        <el-form-item
+          label="OAB"
+          prop="oab">
+          <el-input
+            v-model="oabForm.oab"
+            name="oab"/>
         </el-form-item>
-        <el-form-item label="UF" prop="state">
-          <el-select v-model="oabForm.state" filterable placeholder="">
+        <el-form-item
+          label="UF"
+          prop="state">
+          <el-select
+            v-model="oabForm.state"
+            filterable
+            placeholder="">
             <el-option
               v-for="state in $store.state.statesList"
               :key="state"
@@ -29,8 +38,13 @@
       title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
       type="error"/>
-    <el-button :disabled="!oabForm.oab || !oabForm.state" type="primary" @click="submitForm">Próximo</el-button>
-    <el-button type="text" @click="skip">Pular</el-button>
+    <el-button
+      :disabled="!oabForm.oab || !oabForm.state"
+      type="primary"
+      @click="submitForm">Próximo</el-button>
+    <el-button
+      type="text"
+      @click="skip">Pular</el-button>
   </div>
 </template>
 

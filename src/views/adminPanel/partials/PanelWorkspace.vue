@@ -1,18 +1,38 @@
 <template lang="html">
   <div class="panel-workspace-view">
-    <el-table v-loading="loading" :key="tableKey" :data="filteredWorkspaces" width="100%" @expand-change="getUsersByWorkspace">
-      <el-table-column type="expand" fixed="left" width="50px">
+    <el-table
+      v-loading="loading"
+      :key="tableKey"
+      :data="filteredWorkspaces"
+      width="100%"
+      @expand-change="getUsersByWorkspace">
+      <el-table-column
+        type="expand"
+        fixed="left"
+        width="50px">
         <template slot-scope="props">
-          <el-table :key="usersTableKey" :data="users[props.row.id]" size="small" width="100%">
-            <el-table-column prop="name" label="Nome"/>
-            <el-table-column prop="profile" label="Perfil">
+          <el-table
+            :key="usersTableKey"
+            :data="users[props.row.id]"
+            size="small"
+            width="100%">
+            <el-table-column
+              prop="name"
+              label="Nome"/>
+            <el-table-column
+              prop="profile"
+              label="Perfil">
               <template slot-scope="props2">
                 {{ $t('profile.' + props2.row.profile) | capitalize }}
               </template>
             </el-table-column>
-            <el-table-column align="right" fixed="right">
+            <el-table-column
+              align="right"
+              fixed="right">
               <template slot-scope="props2">
-                <el-tooltip :open-delay="800" content="Remover usuário">
+                <el-tooltip
+                  :open-delay="800"
+                  content="Remover usuário">
                   <el-button
                     type="text"
                     icon="el-icon-delete"
@@ -24,15 +44,26 @@
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="Nome"/>
-      <el-table-column prop="teamName" label="Nome de exibição"/>
-      <el-table-column prop="status" label="Status" width="80px">
+      <el-table-column
+        prop="name"
+        label="Nome"/>
+      <el-table-column
+        prop="teamName"
+        label="Nome de exibição"/>
+      <el-table-column
+        prop="status"
+        label="Status"
+        width="80px">
         <template slot-scope="props">
           {{ $t('workspace.' + props.row.status) | capitalize }}
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="right">
-        <template slot="header" slot-scope="scope">
+      <el-table-column
+        fixed="right"
+        align="right">
+        <template
+          slot="header"
+          slot-scope="scope">
           <el-input
             v-model="search"
             size="mini"
@@ -40,18 +71,33 @@
             @input="resetPage"/>
         </template>
         <template slot-scope="props">
-          <el-tooltip :open-delay="800" :content="props.row.status === 'DISABLED' ? 'Equipe desabilitada' : 'Convidar usuário'">
+          <el-tooltip
+            :open-delay="800"
+            :content="props.row.status === 'DISABLED' ? 'Equipe desabilitada' : 'Convidar usuário'">
             <span style="margin-right:10px;">
-              <el-button :disabled="props.row.status === 'DISABLED'" size="mini" type="" icon="el-icon-plus" @click="addUserDialog(props.row)"/>
+              <el-button
+                :disabled="props.row.status === 'DISABLED'"
+                size="mini"
+                type=""
+                icon="el-icon-plus"
+                @click="addUserDialog(props.row)"/>
             </span>
           </el-tooltip>
-          <el-tooltip :open-delay="800" content="Editar equipe">
-            <el-button size="mini" type="" icon="el-icon-edit" @click="editWorkspaceDialog(props.row)"/>
+          <el-tooltip
+            :open-delay="800"
+            content="Editar equipe">
+            <el-button
+              size="mini"
+              type=""
+              icon="el-icon-edit"
+              @click="editWorkspaceDialog(props.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
-    <el-backtop ref="backTop" target=".panel-workspace-view" />
+    <el-backtop
+      ref="backTop"
+      target=".panel-workspace-view" />
     <el-pagination
       v-show="!search"
       :page-size="pageSize"
@@ -64,11 +110,19 @@
       title="Convidar usuário"
       width="50%"
       @submit.native.prevent="addUser">
-      <el-form ref="userForm" :model="userForm" :rules="userRules" label-position="top">
-        <el-form-item label="E-mail" prop="email">
+      <el-form
+        ref="userForm"
+        :model="userForm"
+        :rules="userRules"
+        label-position="top">
+        <el-form-item
+          label="E-mail"
+          prop="email">
           <el-input v-model="userForm.email" />
         </el-form-item>
-        <el-form-item label="Perfil" prop="profile">
+        <el-form-item
+          label="Perfil"
+          prop="profile">
           <el-select v-model="userForm.profile">
             <el-option
               v-for="item in ['NEGOTIATOR', 'ADMINISTRATOR']"
@@ -78,9 +132,15 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button plain @click="addUserDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="addUser">Convidar</el-button>
+      <span
+        slot="footer"
+        class="dialog-footer">
+        <el-button
+          plain
+          @click="addUserDialogVisible = false">Cancelar</el-button>
+        <el-button
+          type="primary"
+          @click="addUser">Convidar</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -88,14 +148,24 @@
       title="Editar equipe"
       width="50%"
       @submit.native.prevent="editWorkspace">
-      <el-form ref="workspaceForm" :model="workspaceForm" :rules="workspaceRules" label-position="top">
-        <el-form-item label="Nome" prop="name">
+      <el-form
+        ref="workspaceForm"
+        :model="workspaceForm"
+        :rules="workspaceRules"
+        label-position="top">
+        <el-form-item
+          label="Nome"
+          prop="name">
           <el-input v-model="workspaceForm.name" />
         </el-form-item>
-        <el-form-item label="Nome de exibição" prop="teamName">
+        <el-form-item
+          label="Nome de exibição"
+          prop="teamName">
           <el-input v-model="workspaceForm.teamName" />
         </el-form-item>
-        <el-form-item label="Status" prop="status">
+        <el-form-item
+          label="Status"
+          prop="status">
           <el-select v-model="workspaceForm.status">
             <el-option
               v-for="item in ['READY', 'DISABLED']"
@@ -105,9 +175,15 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button plain @click="editWorkspaceDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="editWorkspace">Editar</el-button>
+      <span
+        slot="footer"
+        class="dialog-footer">
+        <el-button
+          plain
+          @click="editWorkspaceDialogVisible = false">Cancelar</el-button>
+        <el-button
+          type="primary"
+          @click="editWorkspace">Editar</el-button>
       </span>
     </el-dialog>
   </div>

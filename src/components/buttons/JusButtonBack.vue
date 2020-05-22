@@ -1,5 +1,7 @@
 <template>
-  <div class="jus-button-back" @click="goTo">
+  <div
+    class="jus-button-back"
+    @click="goTo">
     <jus-icon icon="back"/> Voltar
   </div>
 </template>

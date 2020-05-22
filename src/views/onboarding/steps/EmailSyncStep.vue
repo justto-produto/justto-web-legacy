@@ -14,11 +14,23 @@
       :rules="syncFormRules"
       label-position="top"
       @submit.native.prevent="submitForm">
-      <el-form-item label="E-mail de trabalho" prop="email" type="text">
-        <el-input v-model="syncForm.email" :readonly="synced" name="email"/>
+      <el-form-item
+        label="E-mail de trabalho"
+        prop="email"
+        type="text">
+        <el-input
+          v-model="syncForm.email"
+          :readonly="synced"
+          name="email"/>
       </el-form-item>
-      <el-form-item v-if="!synced" label="Senha do e-mail" prop="password">
-        <el-input v-model="syncForm.password" type="password" name="password"/>
+      <el-form-item
+        v-if="!synced"
+        label="Senha do e-mail"
+        prop="password">
+        <el-input
+          v-model="syncForm.password"
+          type="password"
+          name="password"/>
       </el-form-item>
     </el-form>
     <el-alert
@@ -34,13 +46,22 @@
       <strong>{{ message }}</strong>
       <JusStatusDot :type="type"/>
     </div>
-    <el-button v-if="!synced" type="primary" @click="syncEmail">
+    <el-button
+      v-if="!synced"
+      type="primary"
+      @click="syncEmail">
       Sincronizar
     </el-button>
-    <el-button v-if="synced" type="primary" @click="$emit('onboarding:step:next')">
+    <el-button
+      v-if="synced"
+      type="primary"
+      @click="$emit('onboarding:step:next')">
       Próximo
     </el-button>
-    <el-button v-if="!synced" type="text" @click="nextStep()">Pular</el-button>
+    <el-button
+      v-if="!synced"
+      type="text"
+      @click="nextStep()">Pular</el-button>
   </div>
 </template>
 

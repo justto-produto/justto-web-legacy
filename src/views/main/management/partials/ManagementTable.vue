@@ -19,7 +19,9 @@
       @cell-mouse-enter="cellMouseEnter"
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="44px" />
+      <el-table-column
+        type="selection"
+        width="44px" />
       <el-table-column
         v-if="tab1"
         :sortable="false"
@@ -34,7 +36,9 @@
             @show="getMessageSummary(scope.row.lastOutboundInteraction, scope.row.id)"
             @hide="messageSummary = {}">
             <strong>
-              <jus-icon :icon="getInteractionIcon(scope.row.lastOutboundInteraction)" is-white />
+              <jus-icon
+                :icon="getInteractionIcon(scope.row.lastOutboundInteraction)"
+                is-white />
               Último {{ getLastInteractionTooltip(scope.row.lastOutboundInteraction) }}
               em {{ scope.row.lastOutboundInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
             </strong><br>
@@ -64,9 +68,13 @@
                 Último click: {{ messageSummary.lastClickDate.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
               </div>
             </span>
-            <jus-icon slot="reference" :icon="'status-' + (scope.row.lastOutboundInteraction.message.parameters.READ_DATE ? 2 : 0)" />
+            <jus-icon
+              slot="reference"
+              :icon="'status-' + (scope.row.lastOutboundInteraction.message.parameters.READ_DATE ? 2 : 0)" />
           </el-popover>
-          <span v-else style="color: #adadad;margin-right: 8px;font-size: 22px;vertical-align: sub;">-</span>
+          <span
+            v-else
+            style="color: #adadad;margin-right: 8px;font-size: 22px;vertical-align: sub;">-</span>
           <el-tooltip>
             <div slot="content">
               <span v-if="!!scope.row.lastNegotiatorAccess">
@@ -76,7 +84,9 @@
                 Ainda não houve acesso ao sistema Justto de Negociação
               </span>
             </div>
-            <jus-icon :is-active="!!scope.row.lastNegotiatorAccess" icon="justto-access" />
+            <jus-icon
+              :is-active="!!scope.row.lastNegotiatorAccess"
+              icon="justto-access" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -92,7 +102,9 @@
         prop="campaignName"
         label="Campanha"
         min-width="94px">
-        <template v-if="scope.row.campaign" slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
+        <template
+          v-if="scope.row.campaign"
+          slot-scope="scope">{{ scope.row.campaign.name | capitalize }}</template>
       </el-table-column>
       <el-table-column
         :sortable="false"
@@ -158,7 +170,9 @@
             @hide="hideResponseBox(scope.row.id)">
             <div>
               <strong>
-                <jus-icon :icon="getInteractionIcon(scope.row.lastReceivedMessage)" is-white />
+                <jus-icon
+                  :icon="getInteractionIcon(scope.row.lastReceivedMessage)"
+                  is-white />
                 {{ getLastInteractionTooltip(scope.row.lastReceivedMessage) }}
                 recebido em
                 {{ scope.row.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
@@ -173,22 +187,50 @@
                   class="management-table__last-interaction-tooltip"
                   v-html="'Resumo: ' + scope.row.lastReceivedMessage.message.resume + (scope.row.lastReceivedMessage.message.resume.length > 139 ? '...' : '')" />
               </div>
-              <div class="" style="width: 100%;text-align: right;min-width:300px">
-                <el-button v-if="!responseBoxVisible" size="mini" icon="el-icon-s-promotion" style="margin-top: 10px;" @click="showResponseBox(scope.row.id)">Responder</el-button>
+              <div
+                class=""
+                style="width: 100%;text-align: right;min-width:300px">
+                <el-button
+                  v-if="!responseBoxVisible"
+                  size="mini"
+                  icon="el-icon-s-promotion"
+                  style="margin-top: 10px;"
+                  @click="showResponseBox(scope.row.id)">Responder</el-button>
                 <div v-else>
-                  <el-button type="text" size="mini" icon="el-icon-top-right" @click="openResponseDialog(scope.row)">
+                  <el-button
+                    type="text"
+                    size="mini"
+                    icon="el-icon-top-right"
+                    @click="openResponseDialog(scope.row)">
                     Expandir
                   </el-button>
-                  <el-input v-model="message" type="textarea" rows="4" placeholder="Escreva alguma coisa" style="padding-bottom: 10px" />
-                  <el-button size="mini" @click="hideResponseBox(scope.row.id, true)">Cancelar</el-button>
-                  <el-button size="mini" icon="el-icon-s-promotion" @click="sendMessage(scope.row)">Enviar</el-button>
+                  <el-input
+                    v-model="message"
+                    type="textarea"
+                    rows="4"
+                    placeholder="Escreva alguma coisa"
+                    style="padding-bottom: 10px" />
+                  <el-button
+                    size="mini"
+                    @click="hideResponseBox(scope.row.id, true)">Cancelar</el-button>
+                  <el-button
+                    size="mini"
+                    icon="el-icon-s-promotion"
+                    @click="sendMessage(scope.row)">Enviar</el-button>
                 </div>
               </div>
             </div>
             <div slot="reference">
-              <span class="position-relative" style="vertical-align: middle;">
-                <jus-icon v-if="scope.row.lastReceivedMessage" :icon="getInteractionIcon(scope.row.lastReceivedMessage)" class="management-table__interaction-icon" />
-                <i v-if="!scope.row.visualized" class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
+              <span
+                class="position-relative"
+                style="vertical-align: middle;">
+                <jus-icon
+                  v-if="scope.row.lastReceivedMessage"
+                  :icon="getInteractionIcon(scope.row.lastReceivedMessage)"
+                  class="management-table__interaction-icon" />
+                <i
+                  v-if="!scope.row.visualized"
+                  class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
               </span>
               <span style="margin-left: 4px;">
                 {{ getLastInteraction(scope.row.lastReceivedMessage.createAt.dateTime) }}
@@ -236,7 +278,10 @@
         min-width="140px">
         <template slot-scope="scope">
           <el-tooltip content="Negociação encerra nos próximos 3 dias">
-            <span v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'" data-testid="expiration-notify" class="management-table__expiration-icon position-relative">
+            <span
+              v-if="(disputeNextToExpire(scope.row.expirationDate.dateTime) || scope.row.disputeNextToExpire) && scope.row.status !== 'EXPIRED'"
+              data-testid="expiration-notify"
+              class="management-table__expiration-icon position-relative">
               <jus-icon icon="clock" />
               <i class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary" />
             </span>
@@ -276,7 +321,9 @@
           <span v-if="scope.row.paused">(pausada)</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="hidden-actions" width="1px">
+      <el-table-column
+        class-name="hidden-actions"
+        width="1px">
         <template slot-scope="scope">
           <jus-dispute-actions
             v-if="disputeActionsRow === scope.row.id"
@@ -287,7 +334,10 @@
       <template slot="empty">
         <transition name="el-fade-in-linear">
           <span v-show="showEmpty">
-            <jus-icon icon="empty-screen-filter" class="management-table__empty-table" data-testid="cases-empty-icon"/>
+            <jus-icon
+              icon="empty-screen-filter"
+              class="management-table__empty-table"
+              data-testid="cases-empty-icon"/>
             <h4 data-testid="cases-empty-text">
               Não foram encontradas disputas para<br>os filtros selecionados.
             </h4>
@@ -340,8 +390,13 @@
           :class="{ 'show-toolbar': responseRow.lastReceivedMessage.message.communicationType === 'EMAIL' }"
           :options="editorOptions" />
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button :disabled="responseBoxLoading" plain @click="responseDialogVisible = false">Cancelar</el-button>
+      <span
+        slot="footer"
+        class="dialog-footer">
+        <el-button
+          :disabled="responseBoxLoading"
+          plain
+          @click="responseDialogVisible = false">Cancelar</el-button>
         <el-button
           :loading="responseBoxLoading"
           type="primary"

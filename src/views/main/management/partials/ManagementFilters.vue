@@ -1,13 +1,22 @@
 <template>
-  <el-dialog :close-on-click-modal="false" :visible.sync="visibleFilters" @open="restoreFilters()">
+  <el-dialog
+    :close-on-click-modal="false"
+    :visible.sync="visibleFilters"
+    @open="restoreFilters()">
     <template slot="title">
       <h2>Filtrar {{ activeTabLabel }}</h2>
     </template>
     <div class="management-filters">
-      <el-form v-loading="loading" :model="filters" label-position="top" style="margin-bottom: -22px;">
+      <el-form
+        v-loading="loading"
+        :model="filters"
+        label-position="top"
+        style="margin-bottom: -22px;">
         <el-row :gutter="20">
           <!--  CAMPANHA -->
-          <el-col v-if="!loading" :span="12">
+          <el-col
+            v-if="!loading"
+            :span="12">
             <el-form-item label="Campanha">
               <el-select
                 v-model="filters.campaigns"
@@ -25,7 +34,9 @@
             </el-form-item>
           </el-col>
           <!-- ESTRATÉGIA -->
-          <el-col v-if="!loading" :span="12">
+          <el-col
+            v-if="!loading"
+            :span="12">
             <el-form-item label="Estratégia">
               <el-select
                 v-model="filters.strategy"
@@ -43,7 +54,9 @@
             </el-form-item>
           </el-col>
           <!-- DATA DO ACORDO -->
-          <el-col v-if="isNewAgreements" :span="12">
+          <el-col
+            v-if="isNewAgreements"
+            :span="12">
             <el-form-item :label="isNewAgreementsLabel">
               <el-date-picker
                 v-model="filters.dealDate"
@@ -144,7 +157,9 @@
             </el-form-item>
           </el-col> -->
           <!-- RÉU -->
-          <el-col v-if="!loading && isAll" :span="12">
+          <el-col
+            v-if="!loading && isAll"
+            :span="12">
             <el-form-item label="Réu">
               <el-select
                 v-model="filters.respondentNames"
@@ -164,40 +179,56 @@
           </el-col>
           <!-- FAVORITOS -->
           <el-col :span="12">
-            <el-form-item label="Exibir ocorrências:" class="management-filters__switch">
+            <el-form-item
+              label="Exibir ocorrências:"
+              class="management-filters__switch">
               <div>
                 <div>
                   <jus-icon icon="star" /> Somente favoritas
                 </div>
-                <el-switch v-model="filters.onlyFavorite" data-testid="filters-favorite" />
+                <el-switch
+                  v-model="filters.onlyFavorite"
+                  data-testid="filters-favorite" />
               </div>
               <div>
                 <div>
                   <jus-icon icon="pause" /> Somente pausadas
                 </div>
-                <el-switch v-model="filters.onlyPaused" data-testid="filters-only-paused" />
+                <el-switch
+                  v-model="filters.onlyPaused"
+                  data-testid="filters-only-paused" />
               </div>
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
-          <el-col v-if="isInteration" :span="12">
-            <el-form-item label="Exibir ocorrências:" class="management-filters__switch management-filters__switch--invisible">
+          <el-col
+            v-if="isInteration"
+            :span="12">
+            <el-form-item
+              label="Exibir ocorrências:"
+              class="management-filters__switch management-filters__switch--invisible">
               <div >
                 <div>
                   <jus-icon icon="eye" /> Somente não visualizadas
                 </div>
-                <el-switch v-model="filters.onlyNotVisualized" data-testid="filters-only-not-visualized" />
+                <el-switch
+                  v-model="filters.onlyNotVisualized"
+                  data-testid="filters-only-not-visualized" />
               </div>
               <div>
                 <div>
                   <jus-icon icon="proposal" /> Tem contraproposta
                 </div>
-                <el-switch v-model="filters.hasCounterproposal" data-testid="filters-has-counterproposal" />
+                <el-switch
+                  v-model="filters.hasCounterproposal"
+                  data-testid="filters-has-counterproposal" />
               </div>
             </el-form-item>
           </el-col>
           <!-- MEIO DE INTERAÇÃO -->
-          <el-col v-if="isInteration" :span="12">
+          <el-col
+            v-if="isInteration"
+            :span="12">
             <el-form-item label="Meio de interação">
               <el-select
                 v-model="filters.lastInteractionType"
@@ -243,10 +274,15 @@
             </el-form-item>
           </el-col> -->
           <!-- STATUS -->
-          <el-col v-if="isAll" :span="24">
+          <el-col
+            v-if="isAll"
+            :span="24">
             <el-form-item label="Status">
               <el-checkbox-group v-model="filters.status">
-                <el-checkbox v-for="status in statuses" :label="status" :key="status">
+                <el-checkbox
+                  v-for="status in statuses"
+                  :label="status"
+                  :key="status">
                   {{ $t('occurrence.type.' + status) | capitalize }}
                 </el-checkbox>
               </el-checkbox-group>
@@ -277,7 +313,9 @@
       </el-form>
     </div>
     <span slot="footer">
-      <el-button plain @click="clearFilters()">Limpar filtros</el-button>
+      <el-button
+        plain
+        @click="clearFilters()">Limpar filtros</el-button>
       <el-button
         data-testid="filter-applyfilter"
         type="primary"

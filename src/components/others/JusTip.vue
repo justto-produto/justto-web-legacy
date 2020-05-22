@@ -1,6 +1,8 @@
 <template>
   <div class="jus-tip">
-    <span class="jus-tip__throbber" @click="open"/>
+    <span
+      class="jus-tip__throbber"
+      @click="open"/>
   </div>
 </template>
 

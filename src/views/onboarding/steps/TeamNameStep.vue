@@ -1,6 +1,8 @@
 <template>
   <div class="onboarding-step-content">
-    <div data-testid="teamname-step" class="onboarding-step-content__title">
+    <div
+      data-testid="teamname-step"
+      class="onboarding-step-content__title">
       <h2>Qual o nome da sua equipe?</h2>
       <p>
         Você pode colocar o nome do seu escritório ou empresa.
@@ -15,11 +17,20 @@
       :rules="nameFormRules"
       label-position="top"
       @submit.native.prevent="submitForm">
-      <el-form-item label="Equipe" prop="name">
-        <el-input v-model="nameForm.name" :disabled="creatingWorkspace" name="name" data-testid="teamname-form"/>
+      <el-form-item
+        label="Equipe"
+        prop="name">
+        <el-input
+          v-model="nameForm.name"
+          :disabled="creatingWorkspace"
+          name="name"
+          data-testid="teamname-form"/>
       </el-form-item>
     </el-form>
-    <el-button type="primary" data-testid="teamname-next" @click="submitForm">Próximo</el-button>
+    <el-button
+      type="primary"
+      data-testid="teamname-next"
+      @click="submitForm">Próximo</el-button>
   </div>
 </template>
 

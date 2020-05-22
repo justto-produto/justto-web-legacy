@@ -3,7 +3,10 @@
     v-loading="loading"
     element-loading-background="rgba(247, 247, 247, 0.7)"
     class="dispute-proprieties-view">
-    <div v-for="(propriety, index) in disputeProprietiesList" :key="lineKey + index" class="dispute-proprieties-view__line">
+    <div
+      v-for="(propriety, index) in disputeProprietiesList"
+      :key="lineKey + index"
+      class="dispute-proprieties-view__line">
       <!-- KEY -->
       <div class="key">
         <div
@@ -40,11 +43,17 @@
       </div>
       <!-- ACTION -->
       <el-tooltip content="Remover propriedade">
-        <el-link :underline="false" type="danger" icon="el-icon-delete" @click="removePropriety(propriety.key)" />
+        <el-link
+          :underline="false"
+          type="danger"
+          icon="el-icon-delete"
+          @click="removePropriety(propriety.key)" />
       </el-tooltip>
     </div>
     <el-tooltip content="Propriedade não editável">
-      <div v-if="disputeProprieties['ENRIQUECIDO']" class="dispute-proprieties-view__line">
+      <div
+        v-if="disputeProprieties['ENRIQUECIDO']"
+        class="dispute-proprieties-view__line">
         <div class="key">
           <div class="label">
             ENRIQUECIDO:
@@ -76,7 +85,11 @@
           @keyup.enter.exact.native="newPropriety"/>
       </div>
       <el-tooltip content="Adicionar propriedade">
-        <el-link :underline="false" type="primary" icon="el-icon-plus" @click="newPropriety" />
+        <el-link
+          :underline="false"
+          type="primary"
+          icon="el-icon-plus"
+          @click="newPropriety" />
       </el-tooltip>
     </div>
   </div>

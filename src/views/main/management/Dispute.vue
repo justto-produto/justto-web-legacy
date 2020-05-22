@@ -5,8 +5,12 @@
     full-screen
     right-card-width="320"
     class="dispute-view">
-    <template v-if="false" slot="title">
-      <h1 v-if="dispute" class="dispute-view__title">
+    <template
+      v-if="false"
+      slot="title">
+      <h1
+        v-if="dispute"
+        class="dispute-view__title">
         <router-link to="/management">
           <jus-icon icon="back"/>
         </router-link>
@@ -15,11 +19,21 @@
     </template>
     <!-- CHAT -->
     <template slot="main">
-      <div ref="sectionMessages" class="dispute-view__section-messages">
+      <div
+        ref="sectionMessages"
+        class="dispute-view__section-messages">
         <!-- DRAGGING -->
-        <vue-draggable-resizable v-if="typingTab !== '3'" ref="resizable" :handles="['tm']" :y="y" @dragging="onDrag" />
+        <vue-draggable-resizable
+          v-if="typingTab !== '3'"
+          ref="resizable"
+          :handles="['tm']"
+          :y="y"
+          @dragging="onDrag" />
         <!-- ACTIONS -->
-        <jus-dispute-actions :dispute="dispute" :is-collapsed.sync="isCollapsed" @fetch-data="fetchData" />
+        <jus-dispute-actions
+          :dispute="dispute"
+          :is-collapsed.sync="isCollapsed"
+          @fetch-data="fetchData" />
         <!-- MESSAGES -->
         <dispute-occurrences
           v-if="['1', '3'].includes(typingTab)"
@@ -31,14 +45,22 @@
           @dispute:reply="startReply">
           <dispute-tips v-if="typingTab === '1'" />
         </dispute-occurrences>
-        <dispute-notes v-else-if="typingTab === '2'" :dispute-id="id" />
+        <dispute-notes
+          v-else-if="typingTab === '2'"
+          :dispute-id="id" />
         <dispute-negotiation
           v-else-if="typingTab === '4'"
           :dispute="dispute"/>
-        <div :style="{ height: sendMessageHeightComputed }" class="dispute-view__send-message">
-          <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
+        <div
+          :style="{ height: sendMessageHeightComputed }"
+          class="dispute-view__send-message">
+          <div
+            v-show="selectedContacts && selectedContacts.length && typingTab === '1'"
+            class="dispute-view__send-to">
             Destinatário(s):
-            <span v-for="(selected, index) in selectedContacts" :key="selected.id">
+            <span
+              v-for="(selected, index) in selectedContacts"
+              :key="selected.id">
               <span v-if="index === 0">
                 <span v-if="selected.number">{{ selected.number | phoneMask }}</span>
                 <span v-else-if="selected.address">{{ selected.address | phoneMask }}</span>
@@ -46,14 +68,22 @@
             </span>
             <el-tooltip v-if="selectedContacts.length > 1">
               <div slot="content">
-                <span v-for="(selected, index) in selectedContacts" :key="selected.id">
+                <span
+                  v-for="(selected, index) in selectedContacts"
+                  :key="selected.id">
                   <span v-if="index !== 0">
                     <div v-if="selected.number">
-                      <jus-icon icon="phone" is-white style="width: 14px;vertical-align: top;" />
+                      <jus-icon
+                        icon="phone"
+                        is-white
+                        style="width: 14px;vertical-align: top;" />
                       {{ selected.number | phoneMask }}
                     </div>
                     <div v-else-if="selected.address">
-                      <jus-icon icon="email" is-white style="width: 14px;vertical-align: top;" />
+                      <jus-icon
+                        icon="email"
+                        is-white
+                        style="width: 14px;vertical-align: top;" />
                       {{ selected.address }}
                     </div>
                   </span>
@@ -64,8 +94,15 @@
               </span>
             </el-tooltip>
           </div>
-          <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
-            <el-tab-pane v-loading="loadingTextarea" label="Comunicação" name="1">
+          <el-tabs
+            ref="messageTab"
+            v-model="typingTab"
+            :before-leave="handleBeforeLeaveTabs"
+            @tab-click="handleTabClick">
+            <el-tab-pane
+              v-loading="loadingTextarea"
+              label="Comunicação"
+              name="1">
               <el-card
                 v-loading="isPaused"
                 element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
@@ -88,24 +125,38 @@
                     v-if="!validName"
                     content="Atualize sue nome em suas configurações de perfil para enviar mensagens">
                     <div class="dispute-view__disabled-text">
-                      <jus-icon icon="warn-dark" style="vertical-align: bottom;" />
+                      <jus-icon
+                        icon="warn-dark"
+                        style="vertical-align: bottom;" />
                       Configure um nome em seu perfil
                     </div>
                   </el-tooltip>
                   <div v-else>
                     <el-tooltip content="Enviar E-mail">
-                      <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
-                        <jus-icon :is-active="messageType === 'email'" icon="email"/>
+                      <a
+                        href="#"
+                        data-testid="select-email"
+                        @click.prevent="setMessageType('email')">
+                        <jus-icon
+                          :is-active="messageType === 'email'"
+                          icon="email"/>
                       </a>
                     </el-tooltip>
                     <el-tooltip content="Enviar Whatsapp">
-                      <a href="#" data-testid="select-whatsapp" @click.prevent="setMessageType('whatsapp')">
-                        <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
+                      <a
+                        href="#"
+                        data-testid="select-whatsapp"
+                        @click.prevent="setMessageType('whatsapp')">
+                        <jus-icon
+                          :is-active="messageType === 'whatsapp'"
+                          icon="whatsapp"/>
                       </a>
                     </el-tooltip>
                   </div>
                   <div>
-                    <el-tooltip :key="buttonKey" :disabled="!validName || invalidReceiver === false">
+                    <el-tooltip
+                      :key="buttonKey"
+                      :disabled="!validName || invalidReceiver === false">
                       <div slot="content">
                         <span v-if="!activeRole.personId">
                           Escolha um destinatário ao lado para receber sua mensagem
@@ -136,8 +187,13 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <el-tab-pane v-loading="loadingTextarea" label="Notas" name="2">
-              <el-card shadow="always" class="dispute-view__send-message-box">
+            <el-tab-pane
+              v-loading="loadingTextarea"
+              label="Notas"
+              name="2">
+              <el-card
+                shadow="always"
+                class="dispute-view__send-message-box">
                 <div class="dispute-view__quill">
                   <quill-editor
                     ref="noteEditor"
@@ -156,8 +212,11 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <el-tab-pane label="Ocorrências" name="3" style="padding: 10px;" />
-            <!-- <el-tab-pane v-if="this.$store.getters.isJusttoAdmin" label="Negociação" name="4" style="padding: 10px;" /> -->
+            <el-tab-pane
+              label="Ocorrências"
+              name="3"
+              style="padding: 10px;" />
+              <!-- <el-tab-pane v-if="this.$store.getters.isJusttoAdmin" label="Negociação" name="4" style="padding: 10px;" /> -->
           </el-tabs>
         </div>
       </div>

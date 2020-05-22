@@ -15,7 +15,9 @@
       title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
       type="error"/>
-    <el-button type="primary" @click="readyWorkspace">Inserir primeiras disputas</el-button>
+    <el-button
+      type="primary"
+      @click="readyWorkspace">Inserir primeiras disputas</el-button>
   </div>
 </template>
 

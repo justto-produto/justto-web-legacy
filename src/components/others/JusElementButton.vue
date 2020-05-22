@@ -15,14 +15,18 @@
     @keydown.right="onRightKeyDown"
     @keydown.down.prevent="onLeftKeyDown"
     @keydown.up.prevent="onRightKeyDown">
-    <div v-if="object" class="teste">
+    <div
+      v-if="object"
+      class="teste">
       <span class="teste2">{{ object.label }}</span>
       <span>
         R$ {{ formatValue }}<br>
         {{ object.date || '' }}
       </span>
     </div>
-    <div :class="{ 'hover': hovering, 'dragging': dragging }" class="el-slider__button"/>
+    <div
+      :class="{ 'hover': hovering, 'dragging': dragging }"
+      class="el-slider__button"/>
   </div>
 </template>
 

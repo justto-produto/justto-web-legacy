@@ -6,7 +6,10 @@
       :style="{ zIndex: workspaceTags.length - index }"
       class="jus-tags-filter__item">
       <el-tooltip :content="tag.name">
-        <el-tag :color="tag.color" :class="{ 'active': tag.active }" @click="filterByTag(tag)">
+        <el-tag
+          :color="tag.color"
+          :class="{ 'active': tag.active }"
+          @click="filterByTag(tag)">
           <i :class="`el-icon-${tag.icon}`"/>
         </el-tag>
       </el-tooltip>
@@ -30,7 +33,9 @@
           </div>
         </el-tag>
       </div>
-      <el-button slot="reference" type="text">+ {{ workspaceTags.length - 3 }}</el-button>
+      <el-button
+        slot="reference"
+        type="text">+ {{ workspaceTags.length - 3 }}</el-button>
     </el-popover>
   </div>
 </template>

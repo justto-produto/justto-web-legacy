@@ -4,9 +4,16 @@
       <h2 class="import-view__action">
         Histórico de importações
         <div>
-          <el-button plain @click="downloadModel()">Baixar planilha modelo</el-button>
-          <el-button type="primary" @click="importDialogVisible = true">
-            <jus-icon icon="upload-file" is-white style="width: 17px;vertical-align: top;margin-right: 4px;" />
+          <el-button
+            plain
+            @click="downloadModel()">Baixar planilha modelo</el-button>
+          <el-button
+            type="primary"
+            @click="importDialogVisible = true">
+            <jus-icon
+              icon="upload-file"
+              is-white
+              style="width: 17px;vertical-align: top;margin-right: 4px;" />
             Nova importação de disputas
           </el-button>
         </div>
@@ -19,7 +26,9 @@
           <template slot-scope="scope">{{ scope.row.file_name }}</template>
         </el-table-column>
         <el-table-column label="Importado por">
-          <template v-if="scope.row.created_name" slot-scope="scope">
+          <template
+            v-if="scope.row.created_name"
+            slot-scope="scope">
             {{ scope.row.created_name }}
             <span v-if="scope.row.created_by">({{ scope.row.created_by }})</span>
           </template>
@@ -35,12 +44,20 @@
             {{ $t('import.status.' + scope.row.status ) | capitalize }}
           </template>
         </el-table-column>
-        <el-table-column width="90" label="Linhas" align="center">
+        <el-table-column
+          width="90"
+          label="Linhas"
+          align="center">
           <template slot-scope="scope">{{ scope.row.rows }}</template>
         </el-table-column>
-        <el-table-column width="90" align="center" label="Baixar">
+        <el-table-column
+          width="90"
+          align="center"
+          label="Baixar">
           <template slot-scope="scope">
-            <a :href="scope.row.file_url" target="_blank">
+            <a
+              :href="scope.row.file_url"
+              target="_blank">
               <jus-icon icon="download-sheet" />
             </a>
           </template>

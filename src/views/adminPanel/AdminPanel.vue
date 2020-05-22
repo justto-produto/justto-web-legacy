@@ -1,6 +1,8 @@
 <template lang="html">
   <el-row class="admin-panel-view">
-    <el-col :span="left" style="transition: width ease 1s;">
+    <el-col
+      :span="left"
+      style="transition: width ease 1s;">
       <jus-sidenav-external show-exit>
         <el-menu
           default-active="0"
@@ -29,7 +31,10 @@
       </jus-sidenav-external>
     </el-col>
     <transition name="swiper-fade">
-      <el-col v-if="right > 0" :span="right" class="content">
+      <el-col
+        v-if="right > 0"
+        :span="right"
+        class="content">
         <h1>
           {{ $t('panel.' + menuIndex) }}
           <!-- <el-button
@@ -41,12 +46,24 @@
             Adicionar
           </el-button> -->
         </h1>
-        <panel-dashboard v-if="menuIndex === '0'" ref="panel0"/>
-        <panel-workspace v-if="menuIndex === '1'" ref="panel1"/>
-        <panel-user v-if="menuIndex === '2'" ref="panel2"/>
-        <panel-strategy v-if="menuIndex === '3'" ref="panel3"/>
-        <panel-minute v-if="menuIndex === '4'" ref="panel4"/>
-        <panel-billing v-if="menuIndex === '5'" ref="panel5"/>
+        <panel-dashboard
+          v-if="menuIndex === '0'"
+          ref="panel0"/>
+        <panel-workspace
+          v-if="menuIndex === '1'"
+          ref="panel1"/>
+        <panel-user
+          v-if="menuIndex === '2'"
+          ref="panel2"/>
+        <panel-strategy
+          v-if="menuIndex === '3'"
+          ref="panel3"/>
+        <panel-minute
+          v-if="menuIndex === '4'"
+          ref="panel4"/>
+        <panel-billing
+          v-if="menuIndex === '5'"
+          ref="panel5"/>
       </el-col>
     </transition>
   </el-row>

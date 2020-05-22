@@ -17,12 +17,20 @@
         prop="withoutAlert"
         label="Sem alerta">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.withoutAlert > 0" popper-class="jus-chart-table__tooltip">
-            <div slot="content" v-html="buildWithoutAlertTooltip(scope.row)" />
+          <el-tooltip
+            v-if="scope.row.withoutAlert > 0"
+            popper-class="jus-chart-table__tooltip">
+            <div
+              slot="content"
+              v-html="buildWithoutAlertTooltip(scope.row)" />
             <span>{{ scope.row.withoutAlert }}</span>
           </el-tooltip>
-          <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
-            <jus-icon icon="check" class="jus-chart-table__check-icon" />
+          <el-tooltip
+            v-else
+            content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
+            <jus-icon
+              icon="check"
+              class="jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -32,12 +40,20 @@
         prop="withAlert"
         label="Com alerta">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.withAlert > 0" popper-class="jus-chart-table__tooltip">
-            <div slot="content" v-html="buildWithAlertTooltip(scope.row)" />
+          <el-tooltip
+            v-if="scope.row.withAlert > 0"
+            popper-class="jus-chart-table__tooltip">
+            <div
+              slot="content"
+              v-html="buildWithAlertTooltip(scope.row)" />
             <span>{{ scope.row.withAlert }}</span>
           </el-tooltip>
-          <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
-            <jus-icon icon="check" class="jus-chart-table__check-icon" />
+          <el-tooltip
+            v-else
+            content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
+            <jus-icon
+              icon="check"
+              class="jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -48,12 +64,20 @@
         class-name="column-total"
         label="Total">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.total > 0" popper-class="jus-chart-table__tooltip">
-            <div slot="content" v-html="buildTotalTooltip(scope.row)" />
+          <el-tooltip
+            v-if="scope.row.total > 0"
+            popper-class="jus-chart-table__tooltip">
+            <div
+              slot="content"
+              v-html="buildTotalTooltip(scope.row)" />
             <span>{{ scope.row.total }}</span>
           </el-tooltip>
-          <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
-            <jus-icon icon="check" class="jus-chart-table__check-icon" />
+          <el-tooltip
+            v-else
+            content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
+            <jus-icon
+              icon="check"
+              class="jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>

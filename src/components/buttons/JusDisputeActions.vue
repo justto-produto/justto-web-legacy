@@ -1,11 +1,19 @@
 <template lang="html">
-  <div :class="tableActions ? 'jus-dispute-actions--table' : 'jus-dispute-actions--dispute'" class="jus-dispute-actions">
-    <el-tooltip v-if="!tableActions" content="Voltar">
+  <div
+    :class="tableActions ? 'jus-dispute-actions--table' : 'jus-dispute-actions--dispute'"
+    class="jus-dispute-actions">
+    <el-tooltip
+      v-if="!tableActions"
+      content="Voltar">
       <router-link to="/management">
-        <jus-icon class="back" icon="back"/>
+        <jus-icon
+          class="back"
+          icon="back"/>
       </router-link>
     </el-tooltip>
-    <el-tooltip v-if="canSettled" :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'">
+    <el-tooltip
+      v-if="canSettled"
+      :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -14,7 +22,9 @@
         <jus-icon icon="win"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="canUnsettled" content="Perder">
+    <el-tooltip
+      v-if="canUnsettled"
+      content="Perder">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -23,7 +33,9 @@
         <jus-icon icon="lose"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="dispute.paused" content="Retomar">
+    <el-tooltip
+      v-if="dispute.paused"
+      content="Retomar">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -32,7 +44,9 @@
         <jus-icon icon="start-again"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-else content="Pausar">
+    <el-tooltip
+      v-else
+      content="Pausar">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -50,7 +64,9 @@
         <jus-icon icon="refresh"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="canResendMessage" content="Reenviar mensagens automáticas">
+    <el-tooltip
+      v-if="canResendMessage"
+      content="Reenviar mensagens automáticas">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -59,7 +75,9 @@
         <jus-icon icon="resend-messages"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="!tableActions" content="Cancelar mensagens automáticas">
+    <el-tooltip
+      v-if="!tableActions"
+      content="Cancelar mensagens automáticas">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -68,7 +86,9 @@
         <jus-icon icon="cancel-messages"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="!tableActions" content="Alterar negociador">
+    <el-tooltip
+      v-if="!tableActions"
+      content="Alterar negociador">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -77,7 +97,9 @@
         <jus-icon icon="delegate"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="!tableActions" content="Enriquecer disputa">
+    <el-tooltip
+      v-if="!tableActions"
+      content="Enriquecer disputa">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -85,7 +107,9 @@
         <jus-icon icon="enrich"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="canSendCounterproposal" content="Contraproposta manual">
+    <el-tooltip
+      v-if="canSendCounterproposal"
+      content="Contraproposta manual">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -93,7 +117,9 @@
         <jus-icon icon="proposal2" />
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="!canSendCounterproposal" content="Retornar para negociação">
+    <el-tooltip
+      v-if="!canSendCounterproposal"
+      content="Retornar para negociação">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -101,7 +127,9 @@
         <jus-icon icon="move-to-running" />
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="canMarkAsNotRead" content="Marcar como não lida">
+    <el-tooltip
+      v-if="canMarkAsNotRead"
+      content="Marcar como não lida">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -109,7 +137,9 @@
         <jus-icon icon="unread"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="tableActions" content="Abrir disputa em nova aba">
+    <el-tooltip
+      v-if="tableActions"
+      content="Abrir disputa em nova aba">
       <el-button
         type="text"
         @click="openNewTab()">
@@ -134,7 +164,9 @@
         <i class="el-icon-collection-tag" />
       </el-button>
     </el-tooltip> -->
-    <el-tooltip v-if="!tableActions" :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'">
+    <el-tooltip
+      v-if="!tableActions"
+      :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'">
       <el-button
         :plain="!tableActions"
         :icon="collapsed ? 'el-icon-arrow-left' : 'el-icon-arrow-right'"
@@ -179,7 +211,9 @@
         label-position="top">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="Valor" prop="lastCounterOfferValue">
+            <el-form-item
+              label="Valor"
+              prop="lastCounterOfferValue">
               <money
                 v-model="counterOfferForm.lastCounterOfferValue"
                 class="el-input__inner"
@@ -188,7 +222,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Proposto por" prop="selectedRoleId">
+            <el-form-item
+              label="Proposto por"
+              prop="selectedRoleId">
               <el-select
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
@@ -204,7 +240,10 @@
         </el-row>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="modalLoading" plain @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
         <el-button
           :loading="modalLoading"
           :disabled="!unsettledType"
@@ -239,8 +278,14 @@
           filterable/>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="modalLoading" plain @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('edit-negotiators', disputeNegotiators)">Editar dados</el-button>
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="modalLoading"
+          type="primary"
+          @click.prevent="disputeAction('edit-negotiators', disputeNegotiators)">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -259,7 +304,9 @@
         :rules="counterOfferFormRules">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="Valor" prop="lastCounterOfferValue">
+            <el-form-item
+              label="Valor"
+              prop="lastCounterOfferValue">
               <money
                 v-model="counterOfferForm.lastCounterOfferValue"
                 class="el-input__inner"
@@ -268,7 +315,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Proposto por" prop="selectedRoleId">
+            <el-form-item
+              label="Proposto por"
+              prop="selectedRoleId">
               <el-select
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
@@ -285,15 +334,26 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="Nota" prop="note">
-              <el-input v-model="counterOfferForm.note" type="textarea" rows="4" />
+            <el-form-item
+              label="Nota"
+              prop="note">
+              <el-input
+                v-model="counterOfferForm.note"
+                type="textarea"
+                rows="4" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('send-counterproposal')">Atualizar contraproposta</el-button>
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="counterproposalDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="modalLoading"
+          type="primary"
+          @click.prevent="disputeAction('send-counterproposal')">Atualizar contraproposta</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -315,7 +375,9 @@
         label-position="top">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="Valor" prop="lastCounterOfferValue">
+            <el-form-item
+              label="Valor"
+              prop="lastCounterOfferValue">
               <money
                 v-model="counterOfferForm.lastCounterOfferValue"
                 class="el-input__inner"
@@ -324,7 +386,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Proposto por" prop="selectedRoleId">
+            <el-form-item
+              label="Proposto por"
+              prop="selectedRoleId">
               <el-select
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
@@ -341,8 +405,14 @@
         </el-row>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="modalLoading" plain @click="settledDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="settledDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="modalLoading"
+          type="primary"
+          @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
       </span>
     </el-dialog>
   </div>

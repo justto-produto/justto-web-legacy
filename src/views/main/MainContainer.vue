@@ -1,9 +1,15 @@
 <template>
   <el-container>
-    <el-aside class="container-aside" width="auto">
-      <div :class="{'aside-logo--colapsed': isCollapse}" class="aside-logo">
+    <el-aside
+      class="container-aside"
+      width="auto">
+      <div
+        :class="{'aside-logo--colapsed': isCollapse}"
+        class="aside-logo">
         <router-link to="/">
-          <img class="aside-logo__logo" src="@/assets/logo-small.svg">
+          <img
+            class="aside-logo__logo"
+            src="@/assets/logo-small.svg">
         </router-link>
       </div>
       <el-menu
@@ -14,7 +20,9 @@
         router
         class="el-menu--main-menu">
         <el-menu-item index="/">
-          <jus-icon icon="dashboard" class="el-menu__icon"/>
+          <jus-icon
+            icon="dashboard"
+            class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
         <!-- <transition name="fade">
@@ -22,16 +30,26 @@
             <span>GERENCIAMENTO</span>
           </li>
         </transition> -->
-        <el-menu-item index="/management" data-testid="menu-management">
-          <jus-icon icon="management" class="el-menu__icon"/>
+        <el-menu-item
+          index="/management"
+          data-testid="menu-management">
+          <jus-icon
+            icon="management"
+            class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
-        <el-menu-item index="/import" data-testid="menu-import">
-          <jus-icon icon="import" class="el-menu__icon"/>
+        <el-menu-item
+          index="/import"
+          data-testid="menu-import">
+          <jus-icon
+            icon="import"
+            class="el-menu__icon"/>
           <span slot="title">Importação</span>
         </el-menu-item>
       </el-menu>
-      <div v-show="$store.getters.workspaceMembers.length" class="jus-team-menu__title">
+      <div
+        v-show="$store.getters.workspaceMembers.length"
+        class="jus-team-menu__title">
         TIME
       </div>
       <vue-perfect-scrollbar>

@@ -1,14 +1,23 @@
 <template>
   <div class="jus-import-feedback-card">
-    <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ campaignTitle }}</el-tag>
+    <el-tag
+      :color="color"
+      class="el-tag--mapped-campaign-tag">{{ campaignTitle }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-input v-model="respondent" data-testid="feedback-respondent" placeholder="Dê um nome para o seu Réu">
+      <el-input
+        v-model="respondent"
+        data-testid="feedback-respondent"
+        placeholder="Dê um nome para o seu Réu">
         <i
           slot="prefix"
           :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
       </el-input>
-      <el-input v-model="campaignName" class="select-strategy" data-testid="feedback-campaignName" placeholder="Dê um nome para a sua Campanha">
+      <el-input
+        v-model="campaignName"
+        class="select-strategy"
+        data-testid="feedback-campaignName"
+        placeholder="Dê um nome para a sua Campanha">
         <i
           slot="prefix"
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -65,7 +74,9 @@
           </span>
         </div>
       </div> -->
-      <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
+      <div
+        v-if="isPaymentStrategy"
+        class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
         </div>

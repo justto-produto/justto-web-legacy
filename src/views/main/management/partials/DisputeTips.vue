@@ -1,19 +1,38 @@
 <template>
-  <el-card v-if="showTips && showProtocol" class="dispute-tips el-card--bordered el-card--info">
+  <el-card
+    v-if="showTips && showProtocol"
+    class="dispute-tips el-card--bordered el-card--info">
     <div slot="header">
       <i class="el-icon-info" />
       Próximo passo: Geração e envio de minuta
-      <el-button type="text" icon="el-icon-close" @click="showTips = false" />
+      <el-button
+        type="text"
+        icon="el-icon-close"
+        @click="showTips = false" />
     </div>
     <div class="content">
-      <el-steps :active="documentStep" align-center process-status="wait">
-        <el-step title="Criação" description="Criação e edição da minuta" icon="el-icon-document" />
-        <el-step title="Envio" description="Envio para assinatura das partes" icon="el-icon-s-promotion" />
-        <el-step title="Assinaturas" description="Todas as assinaturas coletadas" icon="el-icon-edit" />
+      <el-steps
+        :active="documentStep"
+        align-center
+        process-status="wait">
+        <el-step
+          title="Criação"
+          description="Criação e edição da minuta"
+          icon="el-icon-document" />
+        <el-step
+          title="Envio"
+          description="Envio para assinatura das partes"
+          icon="el-icon-s-promotion" />
+        <el-step
+          title="Assinaturas"
+          description="Todas as assinaturas coletadas"
+          icon="el-icon-edit" />
       </el-steps>
     </div>
     <div class="action">
-      <el-button type="primary" @click="showProtocolDialog()">
+      <el-button
+        type="primary"
+        @click="showProtocolDialog()">
         Gerenciar minuta
       </el-button>
     </div>

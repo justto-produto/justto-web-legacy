@@ -23,7 +23,9 @@
         </span>
       </div>
     </div>
-    <jus-icon slot="reference" icon="alert-active" />
+    <jus-icon
+      slot="reference"
+      icon="alert-active" />
   </el-popover>
 </template>
 

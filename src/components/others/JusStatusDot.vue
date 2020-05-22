@@ -1,5 +1,7 @@
 <template>
-  <span :class="typeClass" class="jus-status-dot"/>
+  <span
+    :class="typeClass"
+    class="jus-status-dot"/>
 </template>
 
 <script>

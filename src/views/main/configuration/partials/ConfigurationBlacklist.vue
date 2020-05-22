@@ -1,23 +1,37 @@
 <template lang="html">
   <div class="configuration-blackList-view">
-    <el-table :data="filteredBlackList" width="100%">
+    <el-table
+      :data="filteredBlackList"
+      width="100%">
       <el-table-column label="Termo bloqueado">
         <template slot-scope="props">
           {{ props.row }}
         </template>
       </el-table-column>
-      <el-table-column align="right" width="400px">
-        <template slot="header" slot-scope="scope">
+      <el-table-column
+        align="right"
+        width="400px">
+        <template
+          slot="header"
+          slot-scope="scope">
           <el-input
             v-model="search"
             placeholder="Buscar"/>
-          <el-button type="primary" icon="el-icon-plus" @click="blackListDialogVisible = true">
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            @click="blackListDialogVisible = true">
             Adicionar
           </el-button>
         </template>
         <template slot-scope="props">
           <el-tooltip content="Excluir">
-            <el-button size="mini" type="danger" plain icon="el-icon-delete" @click="deleteBlackList(props.row)" />
+            <el-button
+              size="mini"
+              type="danger"
+              plain
+              icon="el-icon-delete"
+              @click="deleteBlackList(props.row)" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -49,13 +63,19 @@
         :rules="blackListRules"
         label-position="top"
         @submit.native.prevent="addBlackList">
-        <el-form-item label="Termo a ser bloqueado" prop="contact">
+        <el-form-item
+          label="Termo a ser bloqueado"
+          prop="contact">
           <el-input v-model="blackListForm.contact" />
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button plain @click="blackListDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="addBlackList">Adicionar</el-button>
+        <el-button
+          plain
+          @click="blackListDialogVisible = false">Cancelar</el-button>
+        <el-button
+          type="primary"
+          @click="addBlackList">Adicionar</el-button>
       </span>
     </el-dialog>
   </div>

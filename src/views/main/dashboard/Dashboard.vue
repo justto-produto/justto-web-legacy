@@ -1,7 +1,11 @@
 <template>
-  <jus-view-main :key="key" class="dashboard-view">
+  <jus-view-main
+    :key="key"
+    class="dashboard-view">
     <template slot="main">
-      <div v-if="$store.getters.isAdminProfile" class="mb10">
+      <div
+        v-if="$store.getters.isAdminProfile"
+        class="mb10">
         <el-select
           v-model="selectedMemberId"
           filterable
@@ -17,13 +21,19 @@
         </el-select>
       </div>
       <el-row :class="{ showFilter: $store.getters.isAdminProfile }">
-        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
+        <el-col
+          v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
+          :md="14"
+          :sm="24"
+          class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <div>
               <b>Disputas ativas</b>
               <p>Clique nos números para poder visualizar as disputas.</p>
             </div>
-            <el-dropdown trigger="click" @command="command">
+            <el-dropdown
+              trigger="click"
+              @command="command">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -50,17 +60,25 @@
             v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart"
             :data="disputeStatusSummaryWithWarn"
             class="dashboard-view__dataset"/>
-          <div v-else class="dashboard-view__empty">
+          <div
+            v-else
+            class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
+        <el-col
+          v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'"
+          :md="10"
+          :sm="24"
+          class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <div>
               <b>Tempo médio de resposta do negociador</b>
               <p>Referente as últimas 4 semanas.</p>
             </div>
-            <el-dropdown trigger="click" @command="reload">
+            <el-dropdown
+              trigger="click"
+              @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -80,17 +98,25 @@
             annotation="Tempo ideal"
             sufix="horas"
             class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
+          <div
+            v-else
+            class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="16" :sm="24" class="dashboard-view__graph">
+        <el-col
+          v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'"
+          :md="16"
+          :sm="24"
+          class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <div>
               <b>Monitor de disputas</b>
               <p>Referente aos últimos 7 dias. Clique nos números para visualizar as disputas.</p>
             </div>
-            <el-dropdown trigger="click" @command="reload">
+            <el-dropdown
+              trigger="click"
+              @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -109,17 +135,25 @@
             :options="opt"
             filterable
             class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
+          <div
+            v-else
+            class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
+        <el-col
+          v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'"
+          :md="8"
+          :sm="24"
+          class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <div>
               <b>Resumo</b>
               <p>Referente a todo o tempo de vida da Equipe.</p>
             </div>
-            <el-dropdown trigger="click" @command="reload">
+            <el-dropdown
+              trigger="click"
+              @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -134,7 +168,9 @@
             v-if="disputeMonetarySummaries"
             :data="disputeMonetarySummaries"
             class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
+          <div
+            v-else
+            class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>

@@ -1,7 +1,14 @@
 <template lang="html">
   <div class="panel-minute-view">
-    <el-table v-loading="loadingMinutes" :key="tableKey" :data="filteredMinutes" width="100%">
-      <el-table-column class-name="panel-minute-view__name" prop="name" label="Nome">
+    <el-table
+      v-loading="loadingMinutes"
+      :key="tableKey"
+      :data="filteredMinutes"
+      width="100%">
+      <el-table-column
+        class-name="panel-minute-view__name"
+        prop="name"
+        label="Nome">
         <template slot-scope="props">
           <el-input
             v-show="props.row.editing"
@@ -17,12 +24,19 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="right" width="400px">
-        <template slot="header" slot-scope="scope">
+      <el-table-column
+        align="right"
+        width="400px">
+        <template
+          slot="header"
+          slot-scope="scope">
           <el-input
             v-model="search"
             placeholder="Buscar"/>
-          <el-button type="primary" icon="el-icon-plus" @click="addMinute">
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            @click="addMinute">
             Adicionar
           </el-button>
         </template>
@@ -37,7 +51,12 @@
             @click="deleteMinute(props.row.id)">
             Excluir
           </el-button>
-          <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="editMinute(props.row.url)">
+          <el-button
+            size="mini"
+            type="primary"
+            plain
+            icon="el-icon-edit"
+            @click="editMinute(props.row.url)">
             Editar documento
           </el-button>
         </template>
@@ -50,19 +69,32 @@
       :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }"
       title="Editar minuta"
       class="panel-minute-view__dialog">
-      <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="panel-minute-view__fullscreen-icon" @click="fullscreen = !fullscreen" />
-      <iframe :src="editDialogUrl" frameborder="0"/>
-      <el-card shadow="never" class="panel-minute-view__tips">
+      <i
+        :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'"
+        class="panel-minute-view__fullscreen-icon"
+        @click="fullscreen = !fullscreen" />
+      <iframe
+        :src="editDialogUrl"
+        frameborder="0"/>
+      <el-card
+        shadow="never"
+        class="panel-minute-view__tips">
         <h2>Variáveis disponíveis</h2>
         <span class="list">
-          <div v-for="(key, value) in types" :key="key">
+          <div
+            v-for="(key, value) in types"
+            :key="key">
             <span>{{ key }}</span>
             <div>
               <span>
                 <span v-pre>{{</span>{{ value }}<span v-pre>}}</span>
               </span>
               <el-tooltip content="Copiar para o clipboard">
-                <el-button size="mini" type="text" icon="el-icon-copy-document" @click="copy(value)"/>
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-copy-document"
+                  @click="copy(value)"/>
               </el-tooltip>
             </div>
           </div>

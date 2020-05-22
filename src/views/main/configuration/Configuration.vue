@@ -1,13 +1,24 @@
 <template lang="html">
-  <jus-view-main :class="{'configuration-view--user': !isAdminProfile}" class="configuration-view" right-card-width="550">
+  <jus-view-main
+    :class="{'configuration-view--user': !isAdminProfile}"
+    class="configuration-view"
+    right-card-width="550">
     <template slot="title">
       <h1>Configurações</h1>
     </template>
     <template slot="main">
-      <el-tabs tab-position="top" value="profile" @tab-click="handleTabClick">
-        <el-tab-pane label="Perfil" name="profile" class="configuration-view__profile">
+      <el-tabs
+        tab-position="top"
+        value="profile"
+        @tab-click="handleTabClick">
+        <el-tab-pane
+          label="Perfil"
+          name="profile"
+          class="configuration-view__profile">
           <el-row :gutter="20">
-            <el-col :span="12" :offset="6">
+            <el-col
+              :span="12"
+              :offset="6">
               <el-form
                 ref="profileForm"
                 :model="profileForm"
@@ -15,38 +26,63 @@
                 label-position="top">
                 <el-form-item label="Nome">
                   <el-input v-model="person.name">
-                    <el-button slot="append" @click="changeName">
+                    <el-button
+                      slot="append"
+                      @click="changeName">
                       Alterar
                     </el-button>
                   </el-input>
                 </el-form-item>
                 <el-form-item label="Email">
-                  <el-input v-model="$store.state.accountModule.email" disabled />
+                  <el-input
+                    v-model="$store.state.accountModule.email"
+                    disabled />
                 </el-form-item>
                 <el-form-item label="Nova senha">
-                  <el-input v-model="profileForm.newPassword" :type="passwordType" auto-complete="new-password" @keyup.enter.native="passwordModal">
-                    <span slot="append" class="float-button">
-                      <el-button type="text" @click="showPassword = !showPassword">
+                  <el-input
+                    v-model="profileForm.newPassword"
+                    :type="passwordType"
+                    auto-complete="new-password"
+                    @keyup.enter.native="passwordModal">
+                    <span
+                      slot="append"
+                      class="float-button">
+                      <el-button
+                        type="text"
+                        @click="showPassword = !showPassword">
                         <jus-icon
                           :icon="showPassword ? 'hide' : 'eye'"
                           class="show-password" />
                       </el-button>
                     </span>
-                    <el-button slot="append" @click="passwordModal">Alterar</el-button>
+                    <el-button
+                      slot="append"
+                      @click="passwordModal">Alterar</el-button>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="Contato" prop="phone">
-                  <el-input v-mask="['(##) ####-####', '(##) #####-####']" v-model="profileForm.phone">
-                    <el-button slot="append" @click="updatePhone">Alterar</el-button>
+                <el-form-item
+                  label="Contato"
+                  prop="phone">
+                  <el-input
+                    v-mask="['(##) ####-####', '(##) #####-####']"
+                    v-model="profileForm.phone">
+                    <el-button
+                      slot="append"
+                      @click="updatePhone">Alterar</el-button>
                   </el-input>
                 </el-form-item>
               </el-form>
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="Equipe" name="team" class="configuration-view__team">
+        <el-tab-pane
+          label="Equipe"
+          name="team"
+          class="configuration-view__team">
           <el-row :gutter="20">
-            <el-col :span="9" :offset="2">
+            <el-col
+              :span="9"
+              :offset="2">
               <el-form label-position="top">
                 <h3>Alterar nome da Equipe</h3>
                 <el-alert
@@ -60,7 +96,9 @@
                 <br>
                 <el-form-item label="Nome da equipe">
                   <el-input v-model="teamName">
-                    <el-button slot="append" @click.prevent="changeTeamName">Alterar nome</el-button>
+                    <el-button
+                      slot="append"
+                      @click.prevent="changeTeamName">Alterar nome</el-button>
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -86,32 +124,50 @@
                     v-bind="vexatiousTypeMask"
                     class="el-input__inner" />
                 </el-form-item>
-                <el-button type="primary" @click.prevent="saveProperties">Salvar</el-button>
+                <el-button
+                  type="primary"
+                  @click.prevent="saveProperties">Salvar</el-button>
               </el-form>
             </el-col>
-            <el-col :span="9" :offset="2">
+            <el-col
+              :span="9"
+              :offset="2">
               <h3 class="mt40 mb30">Membros da equipe</h3>
-              <div v-for="member in teamMembers" :key="member.id">
+              <div
+                v-for="member in teamMembers"
+                :key="member.id">
                 <div class="configuration-view__members-list">
                   <div class="member">
                     <strong>{{ member.person.name }}: </strong>
                     <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                   </div>
                   <div class="actions">
-                    <a href="#" @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
-                    <a href="#" @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
+                    <a
+                      href="#"
+                      @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
+                    <a
+                      href="#"
+                      @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
                   </div>
                 </div>
               </div>
-              <el-button type="primary" class="mt40" @click="dialogInvite = true">
+              <el-button
+                type="primary"
+                class="mt40"
+                @click="dialogInvite = true">
                 Convidar novo membro
               </el-button>
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="Empresa" name="company" class="configuration-view__company">
+        <el-tab-pane
+          label="Empresa"
+          name="company"
+          class="configuration-view__company">
           <el-row :gutter="20">
-            <el-col :span="12" :offset="6">
+            <el-col
+              :span="12"
+              :offset="6">
               <h3>Alterar nome da empresa/escritório</h3>
               <el-alert
                 :closable="false"
@@ -125,7 +181,9 @@
               <el-form label-position="top">
                 <el-form-item label="Nome da empresa/escritório">
                   <el-input v-model="companyName">
-                    <el-button slot="append" @click.prevent="changeCompanyName">Alterar</el-button>
+                    <el-button
+                      slot="append"
+                      @click.prevent="changeCompanyName">Alterar</el-button>
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -134,16 +192,24 @@
                 Se o seu escritório possui mais de uma célula de negociação, você
                 pode criar uma nova equipe e se organizar melhor.
               </p>
-              <el-button type="secondary" @click="createWorkspace">
+              <el-button
+                type="secondary"
+                @click="createWorkspace">
                 Criar nova Equipe
               </el-button>
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="Blacklist" name="blacklist" class="configuration-view__blacklist">
+        <el-tab-pane
+          label="Blacklist"
+          name="blacklist"
+          class="configuration-view__blacklist">
           <configuration-blacklist />
         </el-tab-pane>
-        <el-tab-pane v-if="$store.getters.isJusttoAdmin" name="minute" class="configuration-view__minute">
+        <el-tab-pane
+          v-if="$store.getters.isJusttoAdmin"
+          name="minute"
+          class="configuration-view__minute">
           <span slot="label">
             <el-tooltip content="Somentes administradores Justto">
               <i class="el-icon-lock"/>
@@ -171,8 +237,12 @@
           </el-form-item>
         </el-form>
         <span slot="footer">
-          <el-button plain @click="dialogMember = false">Cancelar</el-button>
-          <el-button type="primary" @click="editMember">Salvar alterações</el-button>
+          <el-button
+            plain
+            @click="dialogMember = false">Cancelar</el-button>
+          <el-button
+            type="primary"
+            @click="editMember">Salvar alterações</el-button>
         </span>
       </el-dialog>
       <el-dialog
@@ -188,30 +258,62 @@
           :rules="profileFormRules"
           label-position="top">
           <el-form-item label="Nova senha">
-            <el-input v-model="profileForm.newPassword" :type="passwordType" disabled>
-              <el-button slot="append" @click="showPassword = !showPassword">
-                <jus-icon :icon="showPassword ? 'hide' : 'eye'" class="show-password" />
+            <el-input
+              v-model="profileForm.newPassword"
+              :type="passwordType"
+              disabled>
+              <el-button
+                slot="append"
+                @click="showPassword = !showPassword">
+                <jus-icon
+                  :icon="showPassword ? 'hide' : 'eye'"
+                  class="show-password" />
               </el-button>
             </el-input>
           </el-form-item>
-          <el-form-item label="Confirme a nova senha" prop="newPasswordConfirm">
-            <el-input v-model="profileForm.newPasswordConfirm" :type="passwordType" auto-complete="new-password" @keyup.enter.native="updatePassword">
-              <el-button slot="append" @click="showPassword = !showPassword">
-                <jus-icon :icon="showPassword ? 'hide' : 'eye'" class="show-password" />
+          <el-form-item
+            label="Confirme a nova senha"
+            prop="newPasswordConfirm">
+            <el-input
+              v-model="profileForm.newPasswordConfirm"
+              :type="passwordType"
+              auto-complete="new-password"
+              @keyup.enter.native="updatePassword">
+              <el-button
+                slot="append"
+                @click="showPassword = !showPassword">
+                <jus-icon
+                  :icon="showPassword ? 'hide' : 'eye'"
+                  class="show-password" />
               </el-button>
             </el-input>
           </el-form-item>
-          <el-form-item label="Senha atual" prop="password">
-            <el-input v-model="profileForm.password" :type="passwordType" auto-complete="new-password" @keyup.enter.native="updatePassword">
-              <el-button slot="append" @click="showPassword = !showPassword">
-                <jus-icon :icon="showPassword ? 'hide' : 'eye'" class="show-password" />
+          <el-form-item
+            label="Senha atual"
+            prop="password">
+            <el-input
+              v-model="profileForm.password"
+              :type="passwordType"
+              auto-complete="new-password"
+              @keyup.enter.native="updatePassword">
+              <el-button
+                slot="append"
+                @click="showPassword = !showPassword">
+                <jus-icon
+                  :icon="showPassword ? 'hide' : 'eye'"
+                  class="show-password" />
               </el-button>
             </el-input>
           </el-form-item>
         </el-form>
         <span slot="footer">
-          <el-button plain @click="cancelChangePassword">Cancelar</el-button>
-          <el-button :loading="loadingUpdatePassword" type="primary" @click="updatePassword">Alterar senha</el-button>
+          <el-button
+            plain
+            @click="cancelChangePassword">Cancelar</el-button>
+          <el-button
+            :loading="loadingUpdatePassword"
+            type="primary"
+            @click="updatePassword">Alterar senha</el-button>
         </span>
       </el-dialog>
       <el-dialog
@@ -226,10 +328,14 @@
           :rules="inviteFormRules"
           label-position="top"
           @submit.native.prevent="inviteTeammate">
-          <el-form-item label="Email" prop="email">
+          <el-form-item
+            label="Email"
+            prop="email">
             <el-input v-model="inviteForm.email" />
           </el-form-item>
-          <el-form-item label="Perfil" prop="profile">
+          <el-form-item
+            label="Perfil"
+            prop="profile">
             <el-select v-model="inviteForm.profile">
               <el-option
                 v-for="role in roles"
@@ -240,7 +346,10 @@
           </el-form-item>
         </el-form>
         <span slot="footer">
-          <el-button :loading="loadingInvite" type="primary" @click="inviteTeammate">Convidar</el-button>
+          <el-button
+            :loading="loadingInvite"
+            type="primary"
+            @click="inviteTeammate">Convidar</el-button>
         </span>
       </el-dialog>
     </template>

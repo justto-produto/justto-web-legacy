@@ -1,7 +1,9 @@
 <template>
   <div class="external-view">
     <el-container>
-      <el-aside width="50%" class="hidden-sm-and-down">
+      <el-aside
+        width="50%"
+        class="hidden-sm-and-down">
         <jus-sidenav-external />
       </el-aside>
       <el-main class="display-flex position-relative">
@@ -21,8 +23,12 @@
             type="success"
             data-testid="forgot-password-success"
             @close="showSuccess = false"/>
-          <el-form-item label="Email" prop="email">
-            <el-input v-model="forgotForm.email" data-testid="forgot-password-email"/>
+          <el-form-item
+            label="Email"
+            prop="email">
+            <el-input
+              v-model="forgotForm.email"
+              data-testid="forgot-password-email"/>
           </el-form-item>
           <el-button
             native-type="submit"
@@ -33,8 +39,12 @@
           </el-button>
           <el-row class="external-view__info">
             Ao clicar no botão, eu concordo com os
-            <a href="https://justto.com.br/termos-de-uso/" target="_blank">Termos de Uso</a> e
-            <a href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação.</a>
+            <a
+              href="https://justto.com.br/termos-de-uso/"
+              target="_blank">Termos de Uso</a> e
+            <a
+              href="https://justto.com.br/termos-de-contratacao/"
+              target="_blank">Termos Gerais de Contratação.</a>
           </el-row>
         </el-form>
       </el-main>

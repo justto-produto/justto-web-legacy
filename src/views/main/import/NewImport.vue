@@ -6,20 +6,32 @@
       </h1>
     </template>
     <template slot="main">
-      <el-steps :active="activeStep" class="new-import-view__steps el-steps--circle" finish-status="success">
+      <el-steps
+        :active="activeStep"
+        class="new-import-view__steps el-steps--circle"
+        finish-status="success">
         <el-step/>
         <el-step/>
         <el-step/>
       </el-steps>
       <div class="new-import-view__content">
         <transition name="fade">
-          <check-lines-step v-if="activeStep === 0" key="0"/>
-          <columns-step v-if="activeStep === 1" key="1"/>
-          <campaign-step v-if="activeStep === 2" key="2" :mapped-campaigns="mappedCampaigns"/>
+          <check-lines-step
+            v-if="activeStep === 0"
+            key="0"/>
+          <columns-step
+            v-if="activeStep === 1"
+            key="1"/>
+          <campaign-step
+            v-if="activeStep === 2"
+            key="2"
+            :mapped-campaigns="mappedCampaigns"/>
         </transition>
       </div>
       <div class="new-import-view__actions">
-        <el-button plain @click="previousStep">Voltar</el-button>
+        <el-button
+          plain
+          @click="previousStep">Voltar</el-button>
         <el-button
           v-if="activeStep === 2"
           type="primary"

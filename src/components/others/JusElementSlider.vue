@@ -38,11 +38,17 @@
             class="el-slider__stop el-slider__marks-stop"/>
         </div>
         <div class="el-slider__marks">
-          <div v-for="(item, key) in markList" :key="key" class="hover">
+          <div
+            v-for="(item, key) in markList"
+            :key="key"
+            class="hover">
             <JusElementMarker
               :mark="item.mark"
               :style="getStopStyle(item.position, item.mark.zIndex)"/>
-            <div v-if="item.mark.details" :style="getStopStyle(item.position)" class="details">
+            <div
+              v-if="item.mark.details"
+              :style="getStopStyle(item.position)"
+              class="details">
               <b>Data</b>
               <div>{{ item.mark.details.createAt.dateTime | moment('DD/MM/YY') }}</div>
               <b>Nome</b>
@@ -56,9 +62,15 @@
               v-if="item.mark.details"
               :style="diffToAmBarStyle(item)"
               class="el-slider__diff-bar el-slider__bar bar">
-              <div :class="{ 'reverse': (amMark.point >= item.point) }" class="collapse">
-                <i v-if="item.point >= amMark.point" class="el-icon-top" />
-                <i v-else class="el-icon-bottom" />
+              <div
+                :class="{ 'reverse': (amMark.point >= item.point) }"
+                class="collapse">
+                <i
+                  v-if="item.point >= amMark.point"
+                  class="el-icon-top" />
+                <i
+                  v-else
+                  class="el-icon-bottom" />
                 {{ Math.round(((diffToAmBar(item)) * 100) / amMark.point) }}%
                 <br>
                 R$ {{ diffToAmBar(item) }}

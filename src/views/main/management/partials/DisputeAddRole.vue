@@ -12,7 +12,10 @@
       :rules="newRoleRules"
       label-position="top">
       <el-form-item label="Parte">
-        <el-select v-model="newRole.party" clearable @change="clearDocuments">
+        <el-select
+          v-model="newRole.party"
+          clearable
+          @change="clearDocuments">
           <el-option
             v-for="(party, index) in roleParty"
             :key="`${index}-${party}`"
@@ -22,18 +25,37 @@
       </el-form-item>
       <div v-if="!secondStep">
         <div class="dispute-add-role__search">
-          <el-form-item v-if="['claimantParty', 'respondentParty'].includes(newRole.party)" label="CPF/CNPJ" prop="searchDocumentNumber">
-            <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.searchDocumentNumber" @keyup.enter.native="searchPerson"/>
+          <el-form-item
+            v-if="['claimantParty', 'respondentParty'].includes(newRole.party)"
+            label="CPF/CNPJ"
+            prop="searchDocumentNumber">
+            <el-input
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
+              v-model="newRole.searchDocumentNumber"
+              @keyup.enter.native="searchPerson"/>
           </el-form-item>
-          <el-row v-else-if="newRole.party" :gutter="20">
+          <el-row
+            v-else-if="newRole.party"
+            :gutter="20">
             <el-col :span="12">
-              <el-form-item class="oab" label="OAB" prop="searchOabNumber">
-                <el-input v-model="newRole.searchOabNumber" @keyup.enter.native="searchPerson" />
+              <el-form-item
+                class="oab"
+                label="OAB"
+                prop="searchOabNumber">
+                <el-input
+                  v-model="newRole.searchOabNumber"
+                  @keyup.enter.native="searchPerson" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item class="state" label="Estado" prop="searchOabState">
-                <el-select v-model="newRole.searchOabState" placeholder="" filterable>
+              <el-form-item
+                class="state"
+                label="Estado"
+                prop="searchOabState">
+                <el-select
+                  v-model="newRole.searchOabState"
+                  placeholder=""
+                  filterable>
                   <el-option
                     v-for="(state, index) in $store.state.statesList"
                     :key="`${index}-${state}`"
@@ -44,28 +66,45 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-button v-if="newRole.party" type="primary" @click="searchPerson">
+          <el-button
+            v-if="newRole.party"
+            type="primary"
+            @click="searchPerson">
             <jus-icon icon="right" />
           </el-button>
         </div>
-        <el-button v-if="newRole.party" type="text" @click="secondStep = true">
+        <el-button
+          v-if="newRole.party"
+          type="text"
+          @click="secondStep = true">
           Continuar sem documento
         </el-button>
       </div>
       <div v-else>
-        <el-form-item label="CPF/CNPJ" prop="documentNumber">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" :disabled="disableDocumentNumber"/>
+        <el-form-item
+          label="CPF/CNPJ"
+          prop="documentNumber">
+          <el-input
+            v-mask="['###.###.###-##', '##.###.###/####-##']"
+            v-model="newRole.documentNumber"
+            :disabled="disableDocumentNumber"/>
         </el-form-item>
-        <el-form-item label="Nome" prop="name">
+        <el-form-item
+          label="Nome"
+          prop="name">
           <el-input v-model="newRole.name" />
         </el-form-item>
-        <el-form-item label="Telefone" prop="phone">
+        <el-form-item
+          label="Telefone"
+          prop="phone">
           <el-input
             v-mask="['(##) ####-####', '(##) #####-####']"
             v-model="newRole.phone"
             @keydown.enter.native="addPhone()"
             @blur="addPhone()">
-            <el-button slot="append" @click="addPhone()">
+            <el-button
+              slot="append"
+              @click="addPhone()">
               <jus-icon icon="add-white" />
             </el-button>
           </el-input>
@@ -86,19 +125,26 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removePhone(scope.$index)">
+              <a
+                href="#"
+                @click.prevent="removePhone(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </template>
           </el-table-column>
         </el-table>
-        <el-form-item label="E-mail" prop="email">
+        <el-form-item
+          label="E-mail"
+          prop="email">
           <el-input
             v-model="newRole.email"
             data-testid="input-email"
             @keydown.enter.native="addEmail()"
             @blur="addEmail()">
-            <el-button slot="append" data-testid="add-email" @click="addEmail()">
+            <el-button
+              slot="append"
+              data-testid="add-email"
+              @click="addEmail()">
               <jus-icon icon="add-white" />
             </el-button>
           </el-input>
@@ -119,20 +165,28 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeEmail(scope.$index)">
+              <a
+                href="#"
+                @click.prevent="removeEmail(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </template>
           </el-table-column>
         </el-table>
         <div class="dispute-overview-view__oab-form">
-          <el-form-item class="oab" label="OAB" prop="oab">
+          <el-form-item
+            class="oab"
+            label="OAB"
+            prop="oab">
             <el-input
               v-model="newRole.oab"
               @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
               @blur="addOab(newRole.personId, newRole.oabs)"/>
           </el-form-item>
-          <el-form-item class="state" label="Estado" prop="state">
+          <el-form-item
+            class="state"
+            label="Estado"
+            prop="state">
             <el-select
               v-model="newRole.state"
               :default-first-option="true"
@@ -149,7 +203,10 @@
                 :value="state" />
             </el-select>
           </el-form-item>
-          <el-button class="button" type="primary" @click="addOab(newRole.personId, newRole.oabs)">
+          <el-button
+            class="button"
+            type="primary"
+            @click="addOab(newRole.personId, newRole.oabs)">
             <jus-icon icon="add-white" />
           </el-button>
         </div>
@@ -169,7 +226,9 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeOab(scope.$index)">
+              <a
+                href="#"
+                @click.prevent="removeOab(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </template>
@@ -178,8 +237,14 @@
       </div>
     </el-form>
     <span slot="footer">
-      <el-button plain @click="dialogVisible = false">Cancelar</el-button>
-      <el-button :loading="registerLoading" :disabled="!secondStep" type="primary" @click="registerRole">Cadastrar</el-button>
+      <el-button
+        plain
+        @click="dialogVisible = false">Cancelar</el-button>
+      <el-button
+        :loading="registerLoading"
+        :disabled="!secondStep"
+        type="primary"
+        @click="registerRole">Cadastrar</el-button>
     </span>
   </el-dialog>
 </template>

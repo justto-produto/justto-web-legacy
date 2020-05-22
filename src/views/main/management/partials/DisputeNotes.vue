@@ -17,9 +17,15 @@
             v-loading="noteLoading === occurrence.id"
             class="dispute-view-occurrences__card dispute-view-occurrences__card--note"
             shadow="never">
-            <div slot="header" class="dispute-view-occurrences__card--note-header">
-              <i class="el-icon-edit" @click="openEditDialog(occurrence)" />
-              <i class="el-icon-delete" @click="removeNote(occurrence, index)" />
+            <div
+              slot="header"
+              class="dispute-view-occurrences__card--note-header">
+              <i
+                class="el-icon-edit"
+                @click="openEditDialog(occurrence)" />
+              <i
+                class="el-icon-delete"
+                @click="removeNote(occurrence, index)" />
             </div>
             <span v-html="buildContent(occurrence)" />
           </el-card>
@@ -31,9 +37,19 @@
         </div>
       </div>
     </li>
-    <el-dialog :visible.sync="editDialog" width="60%" title="Editar Nota" append-to-body>
-      <el-input v-model="newNoteContent" :disabled="editDialogLoading" class="dispute-view-occurrences__textarea" type="textarea" />
-      <span slot="footer" class="dialog-footer">
+    <el-dialog
+      :visible.sync="editDialog"
+      width="60%"
+      title="Editar Nota"
+      append-to-body>
+      <el-input
+        v-model="newNoteContent"
+        :disabled="editDialogLoading"
+        class="dispute-view-occurrences__textarea"
+        type="textarea" />
+      <span
+        slot="footer"
+        class="dialog-footer">
         <el-button
           :disabled="editDialogLoading"
           plain
@@ -49,7 +65,10 @@
         </el-button>
       </span>
     </el-dialog>
-    <li v-if="!loading && !occurrences.length" class="dispute-view-occurrences__empty" data-testid="note-empty">
+    <li
+      v-if="!loading && !occurrences.length"
+      class="dispute-view-occurrences__empty"
+      data-testid="note-empty">
       <jus-icon icon="empty-screen-filter" />
       Não foram encontradas notas.
     </li>

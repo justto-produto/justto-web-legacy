@@ -1,23 +1,60 @@
 <template lang="html">
   <div>
-    <div :class="{'active': active}" class="management-actions">
+    <div
+      :class="{'active': active}"
+      class="management-actions">
       <div class="management-actions__length">
         <i class="el-icon-check" /> {{ selectedIdsLength }}
       </div>
       <div>
-        <el-button plain data-testid="batch-settled" @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
-        <el-button plain data-testid="batch-unsettled" @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
-        <el-button plain data-testid="batch-paused" @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
-        <el-button plain data-testid="batch-resume" @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
-        <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">REINICIAR</el-button>
-        <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">DATA LIMITE</el-button>
-        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">ESTRATÉGIAS</el-button>
-        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_NEGOTIATOR')">NEGOCIADORES</el-button>
-        <el-button plain data-testid="batch-enrich" @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
-        <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
-        <el-button plain data-testid="batch-resendmessage" @click="sendBatchAction('RESEND_MESSAGE')">{{ $t('action.RESEND_MESSAGE') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-settled"
+          @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-unsettled"
+          @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-paused"
+          @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-resume"
+          @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-restartengagement"
+          @click="sendBatchAction('RESTART_ENGAGEMENT')">REINICIAR</el-button>
+        <el-button
+          plain
+          data-testid="batch-chageexpirationdate"
+          @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">DATA LIMITE</el-button>
+        <el-button
+          plain
+          data-testid="batch-changestrategy"
+          @click="sendBatchAction('CHANGE_STRATEGY')">ESTRATÉGIAS</el-button>
+        <el-button
+          plain
+          data-testid="batch-changestrategy"
+          @click="sendBatchAction('CHANGE_NEGOTIATOR')">NEGOCIADORES</el-button>
+        <el-button
+          plain
+          data-testid="batch-enrich"
+          @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-delete"
+          @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-resendmessage"
+          @click="sendBatchAction('RESEND_MESSAGE')">{{ $t('action.RESEND_MESSAGE') }}</el-button>
       </div>
-      <i class="el-icon-close" @click="clearSelection()"/>
+      <i
+        class="el-icon-close"
+        @click="clearSelection()"/>
     </div>
     <el-dialog
       :close-on-click-modal="false"
@@ -38,7 +75,9 @@
           :value="index" />
       </el-select>
       <span slot="footer">
-        <el-button plain @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+        <el-button
+          plain
+          @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!unsettledType"
           type="primary"
@@ -66,7 +105,9 @@
           :label="strategy.name"/>
       </el-select>
       <span slot="footer">
-        <el-button plain @click="changeStrategyDialogVisible = false">Cancelar</el-button>
+        <el-button
+          plain
+          @click="changeStrategyDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!newStrategyId"
           type="primary"
@@ -92,7 +133,9 @@
         placeholder="Escolha a data limite"
         value-format="yyyy-MM-dd" />
       <span slot="footer">
-        <el-button plain @click="changeExpirationDialogVisible = false">Cancelar</el-button>
+        <el-button
+          plain
+          @click="changeExpirationDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!newExpirationDate"
           type="primary"
@@ -108,7 +151,9 @@
       title="Alterar negociadores"
       class="management-actions__dialog"
       width="604px">
-      <div v-if="disputeNegotiatorMap.length" class="el-message-box__content">
+      <div
+        v-if="disputeNegotiatorMap.length"
+        class="el-message-box__content">
         <div class="el-message-box__container">
           <div class="el-message-box__status el-icon-info"/>
           <div class="el-message-box__message">
@@ -131,8 +176,15 @@
         filter-placeholder="Buscar"
         filterable />
       <span slot="footer">
-        <el-button :disabled="changeNegotiatorDialogLoading" plain @click="changeNegotiatorDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="changeNegotiatorDialogLoading" :disabled="!disputeNegotiators.length" type="primary" @click="changeNegotiator()">
+        <el-button
+          :disabled="changeNegotiatorDialogLoading"
+          plain
+          @click="changeNegotiatorDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="changeNegotiatorDialogLoading"
+          :disabled="!disputeNegotiators.length"
+          type="primary"
+          @click="changeNegotiator()">
           Alterar
         </el-button>
       </span>
