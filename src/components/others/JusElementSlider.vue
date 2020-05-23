@@ -370,9 +370,8 @@ export default {
       return Math.abs(this.amMark.point - item.point)
     },
     diffToAmBarStyle(item) {
-      let barSize
+      const barSize = `${Math.abs(100 * (this.amMark.point - item.point) / (this.max - this.min))}%`
       let barStart
-      barSize = `${Math.abs(100 * (this.amMark.point - item.point) / (this.max - this.min))}%`
       if (item.point < this.amMark.point) {
         barStart = `${item.position}%`
       } else {

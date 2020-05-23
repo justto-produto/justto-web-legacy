@@ -372,7 +372,7 @@ export default {
       this.disputeNegotiatorMap = []
       this.changeNegotiatorByGroup = false
       this.disputeNegotiatorMapSelectedIds = this.selectedIds
-      for (var disputeId of this.selectedIds) {
+      for (const disputeId of this.selectedIds) {
         const dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
         const disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
         const mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))

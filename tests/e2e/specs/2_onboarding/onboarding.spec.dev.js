@@ -1,5 +1,5 @@
 const email = Cypress.env('onboarding-email')
-const subDomain = Cypress.env('default-onboarding-sub-domain')
+// const subDomain = Cypress.env('default-onboarding-sub-domain')
 const password = Cypress.env('default-password')
 describe('Justto.App - Onboarding', function() {
   // beforeEach(function () {
@@ -39,7 +39,7 @@ describe('Justto.App - Onboarding', function() {
     //   .should('be.visible')
   })
 
-  const randomSubdomain = new Date().getTime().toString()
+  // const randomSubdomain = new Date().getTime().toString()
 
   it('OnBoarding: Whatsapp Step', function() {
     // Verifica se o step é do WhatsApp

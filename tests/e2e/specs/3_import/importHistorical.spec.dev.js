@@ -1,7 +1,7 @@
 const loginEmptyHistorical = Cypress.env('empty-account-email')
 const loginHasHistorical = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
-var loop = 0
+let loop = 0
 
 describe('Justto.App - Planilha Modelo', function() {
   // Verifica em Qual repetição está
@@ -9,9 +9,11 @@ describe('Justto.App - Planilha Modelo', function() {
     loop++
     switch (loop) {
       case 1:
+        // eslint-disable-next-line
         var login = loginEmptyHistorical
         break
       case 2:
+        // eslint-disable-next-line
         var login = loginHasHistorical
         break
       default:
