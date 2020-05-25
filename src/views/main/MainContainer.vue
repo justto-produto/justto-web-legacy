@@ -31,12 +31,13 @@
           <span slot="title">Importação</span>
         </el-menu-item>
       </el-menu>
-      <div v-show="$store.getters.workspaceMembers.length" class="jus-team-menu__title">
-        TIME
+        <div v-show="$store.getters.workspaceMembers.length && $store.getters.isAdminProfile" class="jus-team-menu__title">
+          TIME
+        </div>
+        <vue-perfect-scrollbar v-if="$store.getters.isAdminProfile">
+          <jus-team-menu />
+        </vue-perfect-scrollbar>
       </div>
-      <vue-perfect-scrollbar>
-        <jus-team-menu />
-      </vue-perfect-scrollbar>
     </el-aside>
     <el-container direction="vertical">
       <jus-header-main />
