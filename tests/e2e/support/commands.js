@@ -77,9 +77,6 @@ Cypress.Commands.add('login', (email, password, workspace) => {
   // Clica no botão "Selecionar e Entrar"
   cy.get('[data-testid=submit-workspace]')
     .click()
-
-  // Valida se acesso foi feito
-  cy.url().should('include', '/#/management')
 })
 
 Cypress.Commands.add('access', (link) => {

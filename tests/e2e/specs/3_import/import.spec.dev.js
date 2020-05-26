@@ -25,9 +25,6 @@ describe('Justto.App - Planilha Modelo', function() {
     cy.get('[data-testid="submit"]')
       .click()
 
-    // Valida se acesso foi feito
-    cy.url().should('include', '/#/management')
-
     // Espera carregamento
     cy.wait(1000)
   })

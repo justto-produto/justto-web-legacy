@@ -19,15 +19,12 @@ describe('Login', function() {
 
     // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
-      .type('123456')
-      .should('have.value', '123456')
+      .type('12345687')
+      .should('have.value', '12345687')
 
     // Clica no botão "Entrar"
     cy.get('[data-testid=submit-login]')
       .click()
-
-    // Valida se acesso foi feito
-    cy.url().should('include', '/#/management')
   })
 
   it('Email Inválido', function() {

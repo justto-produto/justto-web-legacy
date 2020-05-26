@@ -6,9 +6,13 @@
         <div>
           <el-button
             plain
-            @click="downloadModel()">Baixar planilha modelo</el-button>
+            data-testid="download-model"
+            @click="downloadModel()">
+            Baixar planilha modelo
+          </el-button>
           <el-button
             type="primary"
+            data-testid="upload-button"
             @click="importDialogVisible = true">
             <jus-icon
               icon="upload-file"
