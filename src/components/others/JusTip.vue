@@ -1,6 +1,8 @@
 <template>
   <div class="jus-tip">
-    <span class="jus-tip__throbber" @click="open"/>
+    <span
+      class="jus-tip__throbber"
+      @click="open"/>
   </div>
 </template>
 
@@ -8,19 +10,19 @@
 export default {
   name: 'JusTip',
   methods: {
-    open () {
+    open() {
       this.$confirm('Essa é uma dica pra você ficar esperto ;)', 'Dica!', {
         distinguishCancelAndClose: true,
         confirmButtonText: 'Beleza',
         cancelButtonText: 'Não exibir mais dicas',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
       }).catch(() => {
         this.$message({
-          message: 'Ok'
+          message: 'Ok',
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

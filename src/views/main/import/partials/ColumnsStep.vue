@@ -2,7 +2,9 @@
   <div class="columns-step">
     <h2 class="new-import-view__title">Mapeamento de colunas</h2>
     <el-row :gutter="60">
-      <el-col :span="12" data-testid="import-columns">
+      <el-col
+        :span="12"
+        data-testid="import-columns">
         <h3>Colunas do arquivo</h3>
         <p>
           Estas são as colunas do seu arquivo. Os dados em roxo, acima do campo, são os dados da primeira linha de cada
@@ -33,9 +35,16 @@
             <span v-else>Arraste a coluna aqui</span>
           </el-tag>
         </div>
-        <div v-loading="true" v-show="loading">
-          <div v-for="item in [1,2,3,4,5]" :key="item" class="file-column">
-            <div :item="item" class="file-column__name">
+        <div
+          v-loading="true"
+          v-show="loading">
+          <div
+            v-for="item in [1,2,3,4,5]"
+            :key="item"
+            class="file-column">
+            <div
+              :item="item"
+              class="file-column__name">
               <span class="file-column__title">coluna</span>
               <span class="file-column__example">exemplo</span>
             </div>
@@ -45,15 +54,22 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="12" data-testid="import-tags">
+      <el-col
+        :span="12"
+        data-testid="import-tags">
         <h3>Campos do Sistema</h3>
         <p>
           Estes são os campos do sistema. Para mapeá-los, você deve arrastar os campos abaixo para a coluna
           correspondente.
         </p>
         <h3>Dados do conflito</h3>
-        <el-collapse v-loading="loadingTags" value="1" class="el-collapse--drag">
-          <el-collapse-item title="Dados do conflito" name="1">
+        <el-collapse
+          v-loading="loadingTags"
+          value="1"
+          class="el-collapse--drag">
+          <el-collapse-item
+            title="Dados do conflito"
+            name="1">
             <span
               v-for="(tag, index) in disputeTags"
               :key="`${tag.id}-${tag.name}`"
@@ -69,9 +85,14 @@
         </el-collapse>
         <h3 v-show="!loadingTags">
           Partes contrárias
-          <a href="#" @click="addTagList(claimantParties)"><i class="el-icon-plus right"/></a>
+          <a
+            href="#"
+            @click="addTagList(claimantParties)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(claimantPartyIndex, index) in claimantParties" :key="'claimantParty' + claimantPartyIndex" class="drag-group">
+        <div
+          v-for="(claimantPartyIndex, index) in claimantParties"
+          :key="'claimantParty' + claimantPartyIndex"
+          class="drag-group">
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Parte Contrária ' + claimantPartyIndex">
               <span
@@ -87,16 +108,26 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex" href="#" @click="removeTagList(claimantParties, tags.claimantParty.tags)">
+          <a
+            v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex"
+            href="#"
+            @click="removeTagList(claimantParties, tags.claimantParty.tags)">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="margin-left: 24px;"/>
+          <span
+            v-else
+            style="margin-left: 24px;"/>
         </div>
         <h3 v-show="!loadingTags">
           Advogados
-          <a href="#" @click="addTagList(claimantLawyers)"><i class="el-icon-plus right"/></a>
+          <a
+            href="#"
+            @click="addTagList(claimantLawyers)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(claimantLawyerIndex, index) in claimantLawyers" :key="'claimantLawyer' + claimantLawyerIndex" class="drag-group">
+        <div
+          v-for="(claimantLawyerIndex, index) in claimantLawyers"
+          :key="'claimantLawyer' + claimantLawyerIndex"
+          class="drag-group">
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Advogado ' + claimantLawyerIndex">
               <span
@@ -112,16 +143,26 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="claimantLawyerIndex !== 1 && claimantLawyers.length === claimantLawyerIndex" href="#" @click="removeTagList(claimantLawyers)">
+          <a
+            v-if="claimantLawyerIndex !== 1 && claimantLawyers.length === claimantLawyerIndex"
+            href="#"
+            @click="removeTagList(claimantLawyers)">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="margin-left: 24px;"/>
+          <span
+            v-else
+            style="margin-left: 24px;"/>
         </div>
         <h3 v-show="!loadingTags">
           Réus
-          <a href="#" @click="addTagList(respondentParties)"><i class="el-icon-plus right"/></a>
+          <a
+            href="#"
+            @click="addTagList(respondentParties)"><i class="el-icon-plus right"/></a>
         </h3>
-        <div v-for="(respondentPartyIndex, index) in respondentParties" :key="respondentPartyIndex" class="drag-group">
+        <div
+          v-for="(respondentPartyIndex, index) in respondentParties"
+          :key="respondentPartyIndex"
+          class="drag-group">
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Réu ' + respondentPartyIndex">
               <span
@@ -137,10 +178,15 @@
               </span>
             </el-collapse-item>
           </el-collapse>
-          <a v-if="respondentPartyIndex !== 1 && respondentParties.length === respondentPartyIndex" href="#" @click="removeTagList(respondentParties)">
+          <a
+            v-if="respondentPartyIndex !== 1 && respondentParties.length === respondentPartyIndex"
+            href="#"
+            @click="removeTagList(respondentParties)">
             <i class="el-icon-delete"/>
           </a>
-          <span v-else style="margin-left: 24px;"/>
+          <span
+            v-else
+            style="margin-left: 24px;"/>
         </div>
       </el-col>
     </el-row>
@@ -150,7 +196,7 @@
 <script>
 export default {
   name: 'ColumnsStep',
-  data () {
+  data() {
     return {
       tags: {},
       disputeTags: [],
@@ -160,28 +206,28 @@ export default {
       loadingTags: false,
       errorColumns: false,
       errorTags: false,
-      loading: false
+      loading: false,
     }
   },
   computed: {
     columns: {
-      get () {
+      get() {
         return this.$store.state.importModule.map
       },
-      set (value) {
+      set(value) {
         this.$store.commit('setImportsMap', value)
-      }
-    }
+      },
+    },
   },
   watch: {
-    loading (loading) {
+    loading(loading) {
       if (!loading && !this.loadingTags) this.$store.dispatch('hideLoading')
     },
-    loadingTags (loadingTags) {
+    loadingTags(loadingTags) {
       if (!loadingTags && !this.loading) this.$store.dispatch('hideLoading')
-    }
+    },
   },
-  beforeMount () {
+  beforeMount() {
     this.$store.dispatch('showLoading')
     if (!this.$store.state.importModule.map.length) {
       this.loading = true
@@ -203,18 +249,18 @@ export default {
       this.$jusNotification({ error })
     })
   },
-  mounted () {
+  mounted() {
     document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container jus-main-view--full-height')
   },
-  destroyed () {
+  destroyed() {
     document.querySelector('.jus-main-view__container').setAttribute('class', 'jus-main-view__container')
   },
   methods: {
-    dragTag (event, data) {
+    dragTag(event, data) {
       event.dataTransfer.setData('data', data)
     },
-    dropTag (event, column, index) {
-      var data = JSON.parse(event.dataTransfer.getData('data'))
+    dropTag(event, column, index) {
+      const data = JSON.parse(event.dataTransfer.getData('data'))
       this.columns.find(element => {
         if (column.id === element.id) {
           element.tag = data.tag
@@ -223,7 +269,7 @@ export default {
       })
       this.columns = this.columns
     },
-    removeTag (column) {
+    removeTag(column) {
       this.columns.find(element => {
         if (element === column) {
           element.tag = null
@@ -231,12 +277,12 @@ export default {
         }
       })
     },
-    isAvailable (tag) {
-      var isAvailable = true
+    isAvailable(tag) {
+      let isAvailable = true
       this.columns.find(element => {
         if (element.tag) {
-          let elKey = element.tag.id
-          let tagKey = tag.id
+          const elKey = element.tag.id
+          const tagKey = tag.id
           if (elKey === tagKey) {
             isAvailable = false
           }
@@ -244,13 +290,13 @@ export default {
       })
       return isAvailable
     },
-    isMultipleAvailable (tag, index) {
-      var isAvailable = true
+    isMultipleAvailable(tag, index) {
+      let isAvailable = true
       this.columns.find(column => {
         if (column.tag) {
-          let elIndex = column.index ? column.index : 0
-          let elKey = column.tag.id
-          let tagKey = tag.id
+          const elIndex = column.index ? column.index : 0
+          const elKey = column.tag.id
+          const tagKey = tag.id
           if (elKey === tagKey && elIndex === index) {
             isAvailable = false
           }
@@ -258,16 +304,16 @@ export default {
       })
       return isAvailable
     },
-    addTagList (list) {
-      let lastIndex = list.slice(-1)[0]
+    addTagList(list) {
+      const lastIndex = list.slice(-1)[0]
       list.push(lastIndex + 1)
     },
-    removeTagList (list, tags) {
+    removeTagList(list, tags) {
       this.removeLink(list, tags)
       list.splice(-1, 1)
     },
-    removeLink (array, tags) {
-      let indexToRemove = array.length - 1
+    removeLink(array, tags) {
+      const indexToRemove = array.length - 1
       this.columns.find(column => {
         if (column.index && column.index === indexToRemove) {
           if (this.matchTagId(column.tag.id, tags)) {
@@ -277,8 +323,8 @@ export default {
       })
       this.columns = this.columns
     },
-    matchTagId (id, tags) {
-      var match = false
+    matchTagId(id, tags) {
+      let match = false
       tags.find(tag => {
         if (id === tag.id) {
           match = true
@@ -286,9 +332,9 @@ export default {
       })
       return match
     },
-    getColumnTitle (id) {
+    getColumnTitle(id) {
       let title = ''
-      for (let tagList in this.tags) {
+      for (const tagList in this.tags) {
         if (this.tags.hasOwnProperty(tagList)) {
           if (this.tags[tagList] && this.tags[tagList].tags) {
             this.tags[tagList].tags.map(tag => {
@@ -300,8 +346,8 @@ export default {
         }
       }
       return title
-    }
-  }
+    },
+  },
 }
 </script>
 

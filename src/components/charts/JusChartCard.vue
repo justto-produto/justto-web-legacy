@@ -1,6 +1,10 @@
 <template lang="html">
   <div class="chart-card-view">
-    <el-card v-for="dataset in datasets" :key="dataset.label" :style="'background:' + dataset.color" class="chart-card-view__card">
+    <el-card
+      v-for="dataset in datasets"
+      :key="dataset.label"
+      :style="'background:' + dataset.color"
+      class="chart-card-view__card">
       <div :class="'chart-card-view__icon ' + dataset.label">
         <i :class="dataset.icon" />
       </div>
@@ -23,11 +27,11 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   computed: {
-    datasets () {
+    datasets() {
       return this.data && this.data.datasets
         ? this.data.datasets.filter(ds => ds.label !== 'SAVINGS_PERCENTAGE').map(ds => {
           switch (ds.label) {
@@ -49,14 +53,14 @@ export default {
         })
         : []
     },
-    savingsPercentage () {
+    savingsPercentage() {
       return this.data && this.data.datasets
         ? this.data.datasets.find(ds => ds.label === 'SAVINGS_PERCENTAGE').data[0] : null
     },
-    colors () {
+    colors() {
       return this.$store.state.tagModule.colors
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,5 +1,7 @@
 <template>
-  <jus-view-main :loading-main="loadingDisputes" class="view-management">
+  <jus-view-main
+    :loading-main="loadingDisputes"
+    class="view-management">
     <template slot="main">
       <management-actions
         :active="multiActive"
@@ -35,7 +37,10 @@
                 class="el-badge--absolute" />
             </span>
           </el-tab-pane>
-          <el-tab-pane name="2" label="Com Interação" data-testid="tab-pproposal-accepted">
+          <el-tab-pane
+            name="2"
+            label="Com Interação"
+            data-testid="tab-pproposal-accepted">
             <span slot="label">
               Proposta aceita
               <el-badge
@@ -47,24 +52,34 @@
                 class="el-badge--absolute" />
             </span>
           </el-tab-pane>
-          <el-tab-pane name="3" label="Com Interação">
+          <el-tab-pane
+            name="3"
+            label="Com Interação">
             <span slot="label">Todos</span>
           </el-tab-pane>
         </el-tabs>
         <div class="view-management__buttons">
-          <el-input v-model="term" clearable prefix-icon="el-icon-search" />
+          <el-input
+            v-model="term"
+            clearable
+            prefix-icon="el-icon-search" />
           <el-button
             :plain="!hasFilters"
             :type="hasFilters ? 'primary' : ''"
             @click="filtersVisible = true">
-            <jus-icon :is-white="hasFilters" icon="filter" data-testid="management-filterbtn" />
+            <jus-icon
+              :is-white="hasFilters"
+              icon="filter"
+              data-testid="management-filterbtn" />
             Filtrar
           </el-button>
           <el-tooltip content="Importar disputas">
             <el-button
               plain
               @click="showImportDialog">
-              <jus-icon icon="upload-file" style="width: 20px;" />
+              <jus-icon
+                icon="upload-file"
+                style="width: 20px;" />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Exportar disputas">
@@ -82,8 +97,12 @@
         :visible.sync="filtersVisible"
         :tab-index="activeTab" />
       <div style="min-height: 44px;position: relative;">
-        <management-prescriptions :active-tab="activeTab" @management:getDisputes="getDisputes" />
-        <div v-show="disputesTotalLength" style="right: 0px;position: absolute;top: 13px;">
+        <management-prescriptions
+          :active-tab="activeTab"
+          @management:getDisputes="getDisputes" />
+        <div
+          v-show="disputesTotalLength"
+          style="right: 0px;position: absolute;top: 13px;">
           Exibindo {{ disputes.length }} de {{ disputesTotalLength }} disputa<span v-show="disputesTotalLength > 1">s</span>
         </div>
       </div>
@@ -93,14 +112,21 @@
         :selected-ids.sync="selectedIds"
         :loading-disputes.sync="loadingDisputes"
         @getDisputes="getDisputes" />
-      <div v-show="hasNew" class="el-notification info right" style="bottom: 100px;z-index: 1980;">
+      <div
+        v-show="hasNew"
+        class="el-notification info right"
+        style="bottom: 100px;z-index: 1980;">
         <i class="el-notification__icon el-icon-info" />
         <div class="el-notification__group is-with-icon">
           <h2 class="el-notification__title">Há atualizações nas<br>disputas</h2>
           <div class="el-notification__content">
-            <a href="#" @click.prevent="getDisputes">Clique aqui para recarregar</a>
+            <a
+              href="#"
+              @click.prevent="getDisputes">Clique aqui para recarregar</a>
           </div>
-          <div class="el-notification__closeBtn el-icon-close" @click="$store.commit('disputeSetHasNew', false)" />
+          <div
+            class="el-notification__closeBtn el-icon-close"
+            @click="$store.commit('disputeSetHasNew', false)" />
         </div>
       </div>
       <el-dialog
@@ -113,8 +139,16 @@
         width="50%">
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="isSelectedAllColumns" @change="invertSelectionColumns">Nome do campo ({{ checkedNodes }} de {{ columns.length }})</el-checkbox>
-          <el-input v-model="filterQuery" size="small" placeholder="Buscar" prefix-icon="el-icon-search" clearable />
+          <el-checkbox
+            :indeterminate="isIndeterminate"
+            v-model="isSelectedAllColumns"
+            @change="invertSelectionColumns">Nome do campo ({{ checkedNodes }} de {{ columns.length }})</el-checkbox>
+          <el-input
+            v-model="filterQuery"
+            size="small"
+            placeholder="Buscar"
+            prefix-icon="el-icon-search"
+            clearable />
         </div>
         <el-tree
           ref="tree"
@@ -126,14 +160,24 @@
           show-checkbox
           @check="handlerChangeTree"
           @node-drag-end="nodeDragEnd">
-          <span slot-scope="{ node, data }" class="custom-tree-node">
+          <span
+            slot-scope="{ node, data }"
+            class="custom-tree-node">
             <span>{{ node.label | capitalize }}</span>
-            <jus-icon class="drag-icon" icon="menu-hamburger"/>
+            <jus-icon
+              class="drag-icon"
+              icon="menu-hamburger"/>
           </span>
         </el-tree>
         <span slot="footer">
-          <el-button :disabled="loadingExport" plain @click="exportDisputesDialog = false">Cancelar</el-button>
-          <el-button :loading="loadingExport" type="primary" @click.prevent="exportDisputes">
+          <el-button
+            :disabled="loadingExport"
+            plain
+            @click="exportDisputesDialog = false">Cancelar</el-button>
+          <el-button
+            :loading="loadingExport"
+            type="primary"
+            @click.prevent="exportDisputes">
             Exportar
           </el-button>
         </span>
@@ -150,9 +194,9 @@ export default {
     ManagementTable: () => import('./partials/ManagementTable'),
     ManagementActions: () => import('./partials/ManagementActions'),
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
-    JusImportDialog: () => import('@/components/dialogs/JusImportDialog')
+    JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
   },
-  data () {
+  data() {
     return {
       loadingExport: false,
       filtersVisible: false,
@@ -166,81 +210,81 @@ export default {
       checkedNodes: 0,
       filterQuery: '',
       filteredNodes: {},
-      columns: []
+      columns: [],
     }
   },
   computed: {
-    loadingDisputes () {
+    loadingDisputes() {
       return this.$store.getters.loadingDisputes
     },
-    hasFilters () {
+    hasFilters() {
       return this.$store.getters.disputeHasFilters
     },
-    engagementLength () {
+    engagementLength() {
       return this.$store.getters.disputeNearExpirationsEngajement
     },
-    interactionLength () {
+    interactionLength() {
       return this.$store.getters.disputeNotVisualizedInteration
     },
-    newDealsLength () {
+    newDealsLength() {
       return this.$store.getters.disputeNotVisualizedNewDeal
     },
-    disputes () {
+    disputes() {
       return this.$store.getters.disputes
     },
-    hasNew () {
+    hasNew() {
       return this.$store.getters.disputeHasNew
     },
     activeTab: {
-      get () { return this.$store.getters.disputeTab },
-      set (tab) { this.$store.commit('setDisputesTab', tab) }
+      get() { return this.$store.getters.disputeTab },
+      set(tab) { this.$store.commit('setDisputesTab', tab) },
     },
-    multiActive () {
+    multiActive() {
       return this.selectedIds.length >= 1
     },
-    disputesTotalLength () {
+    disputesTotalLength() {
       return this.$store.getters.disputeQuery.total
     },
-    persons () {
+    persons() {
       return this.$store.state.disputeModule.query.persons
     },
     term: {
-      get () {
+      get() {
         return this.$store.getters.disputeQueryTerm
       },
-      set (term) {
+      set(term) {
         this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
-      }
-    }
+      },
+    },
   },
   watch: {
-    term (term) {
+    term(term) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
         this.getDisputes()
       }, 800)
     },
-    persons () {
+    persons() {
       this.getDisputes()
     },
-    filterQuery (val) {
+    filterQuery(val) {
       this.$refs.tree.filter(val)
-    }
+    },
   },
-  beforeCreate () {
+  beforeCreate() {
     this.$store.dispatch('getNotVisualizeds')
     this.$store.dispatch('getNearExpirations')
   },
-  created () {
+  created() {
     this.getDisputes()
   },
-  mounted () {
+  mounted() {
     this.$store.dispatch('getExportColumns').then(response => {
       Object.keys(response).forEach(key => {
         this.columns.push({
           'key': key,
-          'label': response[key]
+          'label': response[key],
         })
       })
     }).finally(() => {
@@ -249,7 +293,7 @@ export default {
     })
   },
   methods: {
-    filterColumns (value, data) {
+    filterColumns(value, data) {
       this.filteredNodes = this.columns.filter(c => {
         return c.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
       })
@@ -257,38 +301,38 @@ export default {
       if (!value) return true
       return data.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')) !== -1
     },
-    handlerChangeTree (value, obj) {
-      setTimeout(function () {
-        let checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.key)).length
-        let nodesLength = this.filteredNodes.length
+    handlerChangeTree(value, obj) {
+      setTimeout(function() {
+        const checkedNodes = this.filteredNodes.filter(n => obj.checkedKeys.includes(n.key)).length
+        const nodesLength = this.filteredNodes.length
         this.isSelectedAllColumns = checkedNodes === nodesLength
         this.isIndeterminate = checkedNodes > 0 && checkedNodes < nodesLength
         this.checkedNodes = obj.checkedKeys.length
       }.bind(this), 200)
     },
-    invertSelectionColumns (value) {
+    invertSelectionColumns(value) {
       if (value) {
-        let allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.key)]
+        const allNodesSelected = [...this.$refs.tree.getCheckedKeys(), ...this.filteredNodes.map(c => c.key)]
         this.$refs.tree.setCheckedKeys(allNodesSelected)
       } else {
-        let filteredKeys = this.columns.filter(c => !this.filteredNodes.includes(c))
+        const filteredKeys = this.columns.filter(c => !this.filteredNodes.includes(c))
         this.$refs.tree.setCheckedKeys(filteredKeys.map(c => c.key))
       }
       this.isIndeterminate = false
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
     },
-    nodeDragEnd (draggingNode, dropNode, dropType, ev) {
+    nodeDragEnd(draggingNode, dropNode, dropType, ev) {
       setTimeout(() => {
         this.$refs.tree.setChecked(draggingNode.data.key, draggingNode.checked)
       }, 100)
     },
-    allowDrop (draggingNode, dropNode, type) {
+    allowDrop(draggingNode, dropNode, type) {
       if (type === 'prev') {
         return true
       }
       return false
     },
-    getDisputes () {
+    getDisputes() {
       clearTimeout(this.disputeDebounce)
       this.disputeDebounce = setTimeout(() => {
         this.$store.dispatch('getFilteredTags')
@@ -298,7 +342,7 @@ export default {
           }
         }).finally(() => {
           this.$nextTick(() => {
-            let main = this.$el.querySelector('.el-table__body-wrapper')
+            const main = this.$el.querySelector('.el-table__body-wrapper')
             if (main) {
               main.scrollTop = 0
             }
@@ -307,10 +351,10 @@ export default {
         })
       }, 300)
     },
-    clearSelection () {
+    clearSelection() {
       this.$refs.managementTable.clearSelection()
     },
-    handleChangeTab (tab) {
+    handleChangeTab(tab) {
       this.$refs.managementTable.showEmpty = false
       this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
@@ -336,7 +380,7 @@ export default {
       }
       this.getDisputes()
     },
-    showExportDisputesDialog () {
+    showExportDisputesDialog() {
       this.exportDisputesDialog = true
       const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
       setTimeout(() => {
@@ -348,7 +392,7 @@ export default {
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       }, 200)
     },
-    exportDisputes () {
+    exportDisputes() {
       this.loadingExport = true
       this.$store.dispatch('exportDisputes', this.$refs.tree.getCheckedKeys())
         .then(() => {
@@ -364,12 +408,12 @@ export default {
           this.exportDisputesDialog = false
         })
     },
-    showImportDialog () {
+    showImportDialog() {
       // SEGMENT TRACK
       this.$jusSegment('Botão importação rápida')
       this.importDialogVisible = true
-    }
-  }
+    },
+  },
 }
 </script>
 

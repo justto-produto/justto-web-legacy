@@ -6,7 +6,10 @@
       :style="{ zIndex: workspaceTags.length - index }"
       class="jus-tags-filter__item">
       <el-tooltip :content="tag.name">
-        <el-tag :color="tag.color" :class="{ 'active': tag.active }" @click="filterByTag(tag)">
+        <el-tag
+          :color="tag.color"
+          :class="{ 'active': tag.active }"
+          @click="filterByTag(tag)">
           <i :class="`el-icon-${tag.icon}`"/>
         </el-tag>
       </el-tooltip>
@@ -30,7 +33,9 @@
           </div>
         </el-tag>
       </div>
-      <el-button slot="reference" type="text">+ {{ workspaceTags.length - 3 }}</el-button>
+      <el-button
+        slot="reference"
+        type="text">+ {{ workspaceTags.length - 3 }}</el-button>
     </el-popover>
   </div>
 </template>
@@ -39,7 +44,7 @@
 export default {
   name: 'JusTagsFilter',
   computed: {
-    workspaceTags () {
+    workspaceTags() {
       return this.$store.getters.filteredTags.map(t => {
         if (this.$store.getters.disputeQuery.tags.includes(t.id)) {
           t.active = true
@@ -48,17 +53,17 @@ export default {
         }
         return t
       }).sort((a, b) => a.active === b.active ? 0 : a.active > b.active ? 1 : -1)
-    }
+    },
   },
   methods: {
-    filterByTag (tag) {
+    filterByTag(tag) {
       let currentTags = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery.tags))
       if (tag.active) currentTags = currentTags.filter(t => t !== tag.id)
       else currentTags.push(tag.id)
       this.$store.commit('updateDisputeQuery', { key: 'tags', value: currentTags })
       this.$emit('prescriptions:getDisputes')
-    }
-  }
+    },
+  },
 }
 </script>
 

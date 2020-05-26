@@ -2,20 +2,20 @@ const login = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 const dispute = Cypress.env('main-dispute')
-const name = Cypress.env('main-name')
+// const name = Cypress.env('main-name')
 
-describe('Envio de WhatsApp', function () {
-  before(function () {
+describe('Envio de WhatsApp', function() {
+  before(function() {
     // Requisição para Preparar ambiente
     cy.prepair_testes('DELETE', 'delete-occorrences-dispute-update-test-e2e')
   })
 
-  beforeEach(function () {
+  beforeEach(function() {
     cy.access('/')
     cy.login(login, password, workspace)
   })
 
-  it('Envia de Email: Sucesso', function () {
+  it('Envia de Email: Sucesso', function() {
     // Entra na aba 'Todos'
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
@@ -46,11 +46,11 @@ describe('Envio de WhatsApp', function () {
     cy.get('[data-testid=expand-party]').first()
       .click()
 
-    function randomText (size) {
-      var caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
-      var result = ''
-      for (var i = 0; i < size; i++) {
-        var n = Math.floor(Math.random() * caracters.length)
+    function randomText(size) {
+      const caracters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
+      let result = ''
+      for (let i = 0; i < size; i++) {
+        const n = Math.floor(Math.random() * caracters.length)
         result += caracters.substring(n, n + 1)
       }
       return 'TST' + result

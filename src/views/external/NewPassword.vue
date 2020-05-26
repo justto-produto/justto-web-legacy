@@ -1,7 +1,9 @@
 <template>
   <div class="external-view">
     <el-container>
-      <el-aside width="50%" class="hidden-sm-and-down">
+      <el-aside
+        width="50%"
+        class="hidden-sm-and-down">
         <jus-sidenav-external />
       </el-aside>
       <el-main class="display-flex position-relative">
@@ -25,7 +27,9 @@
             <template slot="title"/>
             Senha alterada com sucesso!
             <br>
-            <router-link to="/login" data-testid="go-login">
+            <router-link
+              to="/login"
+              data-testid="go-login">
               Clique aqui para acessar.
             </router-link>
           </el-alert>
@@ -39,15 +43,27 @@
             <template slot="title"/>
             Não foi possível identificar sua requisição de alteração de senha.
             <br>
-            <router-link to="/forgot-password" data-testid="try-again">
+            <router-link
+              to="/forgot-password"
+              data-testid="try-again">
               Clique aqui para tentar novamente.
             </router-link>
           </el-alert>
-          <el-form-item label="Senha" prop="password">
-            <el-input v-model="newPasswordForm.password" type="password" data-testid="new-password"/>
+          <el-form-item
+            label="Senha"
+            prop="password">
+            <el-input
+              v-model="newPasswordForm.password"
+              type="password"
+              data-testid="new-password"/>
           </el-form-item>
-          <el-form-item label="Confirmar senha" prop="confirmPassword">
-            <el-input v-model="newPasswordForm.confirmPassword" type="password" data-testid="confirm-password"/>
+          <el-form-item
+            label="Confirmar senha"
+            prop="confirmPassword">
+            <el-input
+              v-model="newPasswordForm.confirmPassword"
+              type="password"
+              data-testid="confirm-password"/>
           </el-form-item>
           <el-button
             native-type="submit"
@@ -66,9 +82,9 @@
 export default {
   name: 'NewPassword',
   components: {
-    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
   },
-  data () {
+  data() {
     const validatePassword = (rule, value, callback) => {
       if (value !== this.newPasswordForm.password) {
         callback(new Error('Campos não correspondem'))
@@ -83,29 +99,29 @@ export default {
       token: '',
       newPasswordForm: {
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
       },
       rules: {
         password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         ],
         confirmPassword: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validatePassword, trigger: 'submit' }
-        ]
-      }
+          { validator: validatePassword, trigger: 'submit' },
+        ],
+      },
     }
   },
-  beforeCreate () {
+  beforeCreate() {
     // if (!this.$route.query.token) {
     //   this.$router.push('/')
     // }
   },
-  created () {
+  created() {
     this.token = this.$route.params.token
   },
   methods: {
-    submitForm () {
+    submitForm() {
       this.$refs.newPasswordForm.validate(valid => {
         if (valid) {
           this.showLoading = true
@@ -127,10 +143,10 @@ export default {
         }
       })
     },
-    switchShowPassword () {
+    switchShowPassword() {
       this.showPassword = !this.showPassword
-    }
-  }
+    },
+  },
 }
 </script>
 

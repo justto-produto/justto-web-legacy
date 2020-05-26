@@ -1,6 +1,6 @@
 const actions = {
   // CHAT
-  sendMessageEvent ({ commit }, params) {
+  sendMessageEvent({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/disputes/' + params.id + '/chat/message', params.data)
@@ -11,7 +11,7 @@ const actions = {
           reject(error)
         })
     })
-  }
+  },
   // SOCKET_ADD_ALERT ({ commit }, alert) {
   //   commit('addAlert', alert)
   // },

@@ -6,20 +6,32 @@
       </h1>
     </template>
     <template slot="main">
-      <el-steps :active="activeStep" class="new-import-view__steps el-steps--circle" finish-status="success">
+      <el-steps
+        :active="activeStep"
+        class="new-import-view__steps el-steps--circle"
+        finish-status="success">
         <el-step/>
         <el-step/>
         <el-step/>
       </el-steps>
       <div class="new-import-view__content">
         <transition name="fade">
-          <check-lines-step v-if="activeStep === 0" key="0"/>
-          <columns-step v-if="activeStep === 1" key="1"/>
-          <campaign-step v-if="activeStep === 2" key="2" :mapped-campaigns="mappedCampaigns"/>
+          <check-lines-step
+            v-if="activeStep === 0"
+            key="0"/>
+          <columns-step
+            v-if="activeStep === 1"
+            key="1"/>
+          <campaign-step
+            v-if="activeStep === 2"
+            key="2"
+            :mapped-campaigns="mappedCampaigns"/>
         </transition>
       </div>
       <div class="new-import-view__actions">
-        <el-button plain @click="previousStep">Voltar</el-button>
+        <el-button
+          plain
+          @click="previousStep">Voltar</el-button>
         <el-button
           v-if="activeStep === 2"
           type="primary"
@@ -46,35 +58,35 @@ export default {
   components: {
     CheckLinesStep: () => import('./partials/CheckLinesStep'),
     ColumnsStep: () => import('./partials/ColumnsStep'),
-    CampaignStep: () => import('./partials/CampaignStep')
+    CampaignStep: () => import('./partials/CampaignStep'),
   },
-  data () {
+  data() {
     return {
       uploadId: undefined,
       activeStep: 0,
-      mappedCampaigns: []
+      mappedCampaigns: [],
     }
   },
-  beforeCreate () {
+  beforeCreate() {
     this.$store.commit('removeImportsMap')
     if (!this.$store.getters.hasImportsFile) {
       this.$router.push('/import')
     }
   },
   methods: {
-    nextStep () {
+    nextStep() {
       if (this.activeStep === 1) {
         this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
           // SEGMENT TRACK
           this.$jusSegment('Importação 3/4 Mapeamento concluido', {
-            fileName: this.$store.getters.importedFileName
+            fileName: this.$store.getters.importedFileName,
           })
           this.mappedCampaigns = response
         })
       }
       this.activeStep += 1
     },
-    previousStep () {
+    previousStep() {
       this.$store.dispatch('hideLoading')
       if (this.activeStep) {
         this.activeStep -= 1
@@ -82,24 +94,24 @@ export default {
         this.$router.push('/import')
       }
     },
-    finalStep () {
-      let campaignsTrack = []
+    finalStep() {
+      const campaignsTrack = []
       let allValid = true
       let checked = false
-      let promises = []
-      for (let mappedCampaign of this.mappedCampaigns) {
-        let campaign = JSON.parse(JSON.stringify(mappedCampaign))
+      const promises = []
+      for (const mappedCampaign of this.mappedCampaigns) {
+        const campaign = JSON.parse(JSON.stringify(mappedCampaign))
         if (!this.checkValidCampaign(campaign)) {
           allValid = false
         }
         checked = true
       }
       if (checked && allValid) {
-        for (let mappedCampaign of this.mappedCampaigns) {
-          let campaign = JSON.parse(JSON.stringify(mappedCampaign))
+        for (const mappedCampaign of this.mappedCampaigns) {
+          const campaign = JSON.parse(JSON.stringify(mappedCampaign))
           campaignsTrack.push({
             name: campaign.name,
-            strategy: campaign.strategy
+            strategy: campaign.strategy,
           })
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           delete campaign.campaign
@@ -114,7 +126,7 @@ export default {
         Promise.all(promises).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Importação 4/4 Importação Concluída', {
-            fileName: this.$store.getters.importedFileName
+            fileName: this.$store.getters.importedFileName,
           })
           this.$store.dispatch('startGeneseRunner').finally(() => {
             this.$store.commit('removeImportsFile')
@@ -127,19 +139,19 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Para prosseguir você deve configurar todos os campos de todas as campanhas.',
-          type: 'warning'
+          type: 'warning',
         })
       }
-      let range = this.mappedCampaigns.length - 1
+      const range = this.mappedCampaigns.length - 1
       localStorage.setItem('jusfeedbackpreferences', JSON.stringify({
         businessHoursEngagement: this.mappedCampaigns[range].businessHoursEngagement,
         contactPartyWhenNoLowyer: this.mappedCampaigns[range].contactPartyWhenNoLowyer,
         contactPartyWhenInvalidLowyer: this.mappedCampaigns[range].contactPartyWhenInvalidLowyer,
         skipEnrichment: this.mappedCampaigns[range].skipEnrichment,
-        denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit
+        denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit,
       }))
     },
-    checkValidCampaign (campaign) {
+    checkValidCampaign(campaign) {
       if (
         campaign.hasOwnProperty('respondent') &&
         !!campaign.respondent &&
@@ -161,9 +173,9 @@ export default {
       ) {
         return true
       } else return false
-    }
+    },
   },
-  beforeRouteLeave (to, from, next) {
+  beforeRouteLeave(to, from, next) {
     if (to.path === '/import/loading') {
       next()
     } else if (this.$store.getters.hasImportsFile && to.path !== '/login') {
@@ -172,14 +184,14 @@ export default {
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
         type: 'warning',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
       }).then(() => {
         next()
       })
     } else {
       next()
     }
-  }
+  },
 }
 </script>
 

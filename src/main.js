@@ -86,7 +86,7 @@ Vue.use(money, {
   decimal: ',',
   thousands: '.',
   prefix: 'R$ ',
-  precision: 2
+  precision: 2,
 })
 
 Vue.config.productionTip = false
@@ -110,12 +110,12 @@ if (store.getters.isLoggedIn) {
   initVue()
 }
 
-function initVue () {
+function initVue() {
   new Vue({
     router,
     store,
     i18n,
-    render: h => h(App)
+    render: h => h(App),
   }).$mount('#app')
   validateWorkspace()
 }

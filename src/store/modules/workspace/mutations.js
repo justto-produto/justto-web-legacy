@@ -1,11 +1,11 @@
 const mutations = {
-  redirectNewWorkspaceTrue (state) {
+  redirectNewWorkspaceTrue(state) {
     state.redirectNewWorkspace = true
   },
-  redirectNewWorkspaceFalse (state) {
+  redirectNewWorkspaceFalse(state) {
     state.redirectNewWorkspace = false
   },
-  setWorkspace (state, workspace) {
+  setWorkspace(state, workspace) {
     if (workspace) {
       // eslint-disable-next-line
       axios.defaults.headers.common['Workspace'] = workspace.subDomain || workspace.subdomain
@@ -20,13 +20,13 @@ const mutations = {
       localStorage.setItem('jusworkspace', JSON.stringify(workspace))
     }
   },
-  setProfile (state, profile) {
+  setProfile(state, profile) {
     if (profile) {
       state.profile = profile
       localStorage.setItem('jusprofile', profile)
     }
   },
-  clearWorkspace (state) {
+  clearWorkspace(state) {
     state.id = ''
     state.name = ''
     state.teamName = ''
@@ -41,12 +41,12 @@ const mutations = {
     localStorage.removeItem('jusprofile')
     localStorage.removeItem('jusperson')
   },
-  setWorkspaceMembers (state, members) {
+  setWorkspaceMembers(state, members) {
     state.members = members
   },
-  setBlackList (state, blackList) {
+  setBlackList(state, blackList) {
     if (blackList) state.blackList = blackList
-  }
+  },
 }
 
 export default mutations

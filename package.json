@@ -77,32 +77,6 @@
     "vue-cli-plugin-styleguidist": "^0.1.10",
     "vue-template-compiler": "^2.6.10"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/recommended",
-      "@vue/standard"
-    ],
-    "rules": {
-      "standard/no-callback-literal": 0,
-      "vue/max-attributes-per-line": [
-        "error",
-        {
-          "singleline": 5,
-          "multiline": {
-            "max": 1,
-            "allowFirstLine": false
-          }
-        }
-      ]
-    },
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}

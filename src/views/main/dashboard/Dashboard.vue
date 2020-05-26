@@ -1,7 +1,11 @@
 <template>
-  <jus-view-main :key="key" class="dashboard-view">
+  <jus-view-main
+    :key="key"
+    class="dashboard-view">
     <template slot="main">
-      <div v-if="$store.getters.isAdminProfile" class="mb10">
+      <div
+        v-if="$store.getters.isAdminProfile"
+        class="mb10">
         <el-select
           v-model="selectedMemberId"
           filterable
@@ -17,13 +21,19 @@
         </el-select>
       </div>
       <el-row :class="{ showFilter: $store.getters.isAdminProfile }">
-        <el-col v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'" :md="14" :sm="24" class="dashboard-view__graph">
+        <el-col
+          v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
+          :md="14"
+          :sm="24"
+          class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <div>
               <b>Disputas ativas</b>
               <p>Clique nos números para poder visualizar as disputas.</p>
             </div>
-            <el-dropdown trigger="click" @command="command">
+            <el-dropdown
+              trigger="click"
+              @command="command">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -50,17 +60,25 @@
             v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart"
             :data="disputeStatusSummaryWithWarn"
             class="dashboard-view__dataset"/>
-          <div v-else class="dashboard-view__empty">
+          <div
+            v-else
+            class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'" :md="10" :sm="24" class="dashboard-view__graph">
+        <el-col
+          v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'"
+          :md="10"
+          :sm="24"
+          class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <div>
               <b>Tempo médio de resposta do negociador</b>
               <p>Referente as últimas 4 semanas.</p>
             </div>
-            <el-dropdown trigger="click" @command="reload">
+            <el-dropdown
+              trigger="click"
+              @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -80,17 +98,25 @@
             annotation="Tempo ideal"
             sufix="horas"
             class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
+          <div
+            v-else
+            class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'" :md="16" :sm="24" class="dashboard-view__graph">
+        <el-col
+          v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'"
+          :md="16"
+          :sm="24"
+          class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <div>
               <b>Monitor de disputas</b>
               <p>Referente aos últimos 7 dias. Clique nos números para visualizar as disputas.</p>
             </div>
-            <el-dropdown trigger="click" @command="reload">
+            <el-dropdown
+              trigger="click"
+              @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -109,17 +135,25 @@
             :options="opt"
             filterable
             class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
+          <div
+            v-else
+            class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
-        <el-col v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'" :md="8" :sm="24" class="dashboard-view__graph">
+        <el-col
+          v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'"
+          :md="8"
+          :sm="24"
+          class="dashboard-view__graph">
           <div class="dashboard-view__graph-header">
             <div>
               <b>Resumo</b>
               <p>Referente a todo o tempo de vida da Equipe.</p>
             </div>
-            <el-dropdown trigger="click" @command="reload">
+            <el-dropdown
+              trigger="click"
+              @command="reload">
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
@@ -134,7 +168,9 @@
             v-if="disputeMonetarySummaries"
             :data="disputeMonetarySummaries"
             class="dashboard-view__dataset" />
-          <div v-else class="dashboard-view__empty">
+          <div
+            v-else
+            class="dashboard-view__empty">
             {{ emptyMessage }}
           </div>
         </el-col>
@@ -150,9 +186,9 @@ export default {
     JusChartLine: () => import('@/components/charts/JusChartLine'),
     JusChartBar: () => import('@/components/charts/JusChartBar'),
     JusChartCard: () => import('@/components/charts/JusChartCard'),
-    JusChartTable: () => import('@/components/charts/JusChartTable')
+    JusChartTable: () => import('@/components/charts/JusChartTable'),
   },
-  data () {
+  data() {
     return {
       key: 0,
       loading: false,
@@ -160,59 +196,59 @@ export default {
       disputeStatusSummaryWithWarnIsChart: false,
       opt: {
         onClick: this.filter,
-        maintainAspectRatio: false
-      }
+        maintainAspectRatio: false,
+      },
     }
   },
   computed: {
     selectedMemberId: {
-      get () {
+      get() {
         return this.$store.getters.dashboardSelectedMemberId
       },
-      set (memberId) {
+      set(memberId) {
         this.$store.commit('setSelectedMemberId', memberId)
-      }
+      },
     },
-    disputeAvgResponseTime () {
+    disputeAvgResponseTime() {
       let chart = this.$store.getters.getChartsDatasets('DISPUTE_AVG_RESPONSE_TIME')
       chart = this.format(chart)
       return chart.data
     },
-    disputeMonetarySummaries () {
+    disputeMonetarySummaries() {
       let chart = this.$store.getters.getChartsDatasets('DISPUTE_MONETARY_SUMMARIES')
       chart = this.format(chart)
       return chart.data
     },
-    disputeStatusSummaryWithWarn () {
+    disputeStatusSummaryWithWarn() {
       let chart = this.$store.getters.getChartsDatasets('DISPUTE_STATUS_SUMMARY_WITH_WARN')
       chart = this.format(chart)
       return chart.data
     },
-    monitoringDisputeByTime () {
+    monitoringDisputeByTime() {
       let chart = this.$store.getters.getChartsDatasets('MONITORING_DISPUTE_BY_TIME')
       chart = this.format(chart)
       return chart.data
     },
-    chartsDatasets () {
+    chartsDatasets() {
       return this.$store.getters.chartsDatasets
     },
-    colors () {
+    colors() {
       return this.$store.state.tagModule.colors
     },
-    members () {
+    members() {
       return [
         { person: { id: 0, name: 'Todos os negociadores' } },
-        ...this.$store.state.workspaceModule.members
+        ...this.$store.state.workspaceModule.members,
       ]
-    }
+    },
   },
-  created () {
+  created() {
     if (!this.chartsDatasets.length) {
       this.getDashboard()
     }
   },
   methods: {
-    getDashboard () {
+    getDashboard() {
       this.loading = true
       this.$store.dispatch('getDashboard').catch(error => {
         this.$jusNotification({ error })
@@ -221,12 +257,12 @@ export default {
         this.loading = false
       })
     },
-    format (chart) {
+    format(chart) {
       if (chart.data && chart.data.datasets) {
         if (chart.name === 'MONITORING_DISPUTE_BY_TIME') {
           chart.data.labels = chart.data.labels.map(l => this.$moment(l).format('DD/MM'))
         }
-        for (let dataset of chart.data.datasets) {
+        for (const dataset of chart.data.datasets) {
           if (chart.type === 'line') {
             dataset.backgroundColor = 'transparent'
             switch (dataset.label) {
@@ -295,7 +331,7 @@ export default {
       }
       return chart
     },
-    reload (chartName) {
+    reload(chartName) {
       this.loading = chartName
       this.$store.dispatch('getDashboard', chartName).finally(() => {
         setTimeout(() => {
@@ -303,20 +339,20 @@ export default {
         }, 300)
       })
     },
-    switchType (type) {
+    switchType(type) {
       this[type] = !this[type]
     },
-    command (command) {
+    command(command) {
       this[command.command](command.param)
     },
-    filter (event, array) {
+    filter(event, array) {
       const ref = this.$refs[event.target.parentElement.id]
       const element = ref.getElement(event)
       const filters = (element && element.filters) || null
       if (filters && element.value > 0) {
         this.$store.commit('clearDisputeQuery')
         this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-        for (let key in filters) {
+        for (const key in filters) {
           if (filters.hasOwnProperty(key)) {
             this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }
@@ -328,8 +364,8 @@ export default {
         this.$store.commit('setDisputesTab', '3')
         this.$router.push('/management')
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

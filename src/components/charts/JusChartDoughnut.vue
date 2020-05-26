@@ -7,15 +7,15 @@ export default {
   props: {
     title: {
       type: String,
-      default: ''
+      default: '',
     },
     data: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  mounted () {
-    let labels = this.data.slice()
+  mounted() {
+    const labels = this.data.slice()
     this.renderChart(
       {
         datasets: [{
@@ -23,10 +23,10 @@ export default {
           backgroundColor: [
             '#9461f7',
             '#ff9300',
-            '#f4f4f4'
-          ]
+            '#f4f4f4',
+          ],
         }],
-        labels: labels.slice(0, -1)
+        labels: labels.slice(0, -1),
       },
       {
         responsive: false,
@@ -36,8 +36,8 @@ export default {
             usePointStyle: true,
             fontSize: 9,
             fontColor: '#424242',
-            fontFamily: "'Montserrat', sans-serif"
-          }
+            fontFamily: "'Montserrat', sans-serif",
+          },
         },
         title: {
           display: true,
@@ -45,32 +45,32 @@ export default {
           fontFamily: "'Montserrat', sans-serif",
           fontStyle: 'normal',
           padding: 0,
-          fontSize: 12
+          fontSize: 12,
         },
         tooltips: {
-          enabled: false
-        }
+          enabled: false,
+        },
       }
     )
-    let title = this.title
+    const title = this.title
     // eslint-disable-next-line
     Chart.pluginService.register({
-      beforeDraw: function (chart) {
+      beforeDraw: function(chart) {
         if (chart.config.type === 'doughnut') {
-          var width = chart.chart.width
-          var height = chart.chart.height
-          var ctx = chart.chart.ctx
+          const width = chart.chart.width
+          const height = chart.chart.height
+          const ctx = chart.chart.ctx
           ctx.restore()
           ctx.textBaseline = 'top'
-          var text = title
-          var textX = Math.round((width - ctx.measureText(text).width) / 2)
-          var textY = height / 2
+          const text = title
+          const textX = Math.round((width - ctx.measureText(text).width) / 2)
+          const textY = height / 2
           ctx.fillText(text, textX, textY)
           ctx.save()
         }
-      }
+      },
     })
-  }
+  },
 }
 </script>
 

@@ -30,25 +30,25 @@
 <script>
 export default {
   name: 'PanelUser',
-  data () {
+  data() {
     return {
       search: '',
       users: [{
         name: 'Usuario 1',
-        status: 'Ativo'
+        status: 'Ativo',
       }, {
         name: 'Usiiario 2',
-        status: 'Inativo'
-      }]
+        status: 'Inativo',
+      }],
     }
   },
   computed: {
-    filteredUsers () {
+    filteredUsers() {
       return this.users.filter(data => {
         return !this.search || data.name.toLowerCase().includes(this.search.toLowerCase())
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

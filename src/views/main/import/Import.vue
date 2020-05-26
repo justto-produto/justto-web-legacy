@@ -4,9 +4,20 @@
       <h2 class="import-view__action">
         Histórico de importações
         <div>
-          <el-button plain @click="downloadModel()">Baixar planilha modelo</el-button>
-          <el-button type="primary" @click="importDialogVisible = true">
-            <jus-icon icon="upload-file" is-white style="width: 17px;vertical-align: top;margin-right: 4px;" />
+          <el-button
+            plain
+            data-testid="download-model"
+            @click="downloadModel()">
+            Baixar planilha modelo
+          </el-button>
+          <el-button
+            type="primary"
+            data-testid="upload-button"
+            @click="importDialogVisible = true">
+            <jus-icon
+              icon="upload-file"
+              is-white
+              style="width: 17px;vertical-align: top;margin-right: 4px;" />
             Nova importação de disputas
           </el-button>
         </div>
@@ -19,7 +30,9 @@
           <template slot-scope="scope">{{ scope.row.file_name }}</template>
         </el-table-column>
         <el-table-column label="Importado por">
-          <template v-if="scope.row.created_name" slot-scope="scope">
+          <template
+            v-if="scope.row.created_name"
+            slot-scope="scope">
             {{ scope.row.created_name }}
             <span v-if="scope.row.created_by">({{ scope.row.created_by }})</span>
           </template>
@@ -35,12 +48,20 @@
             {{ $t('import.status.' + scope.row.status ) | capitalize }}
           </template>
         </el-table-column>
-        <el-table-column width="90" label="Linhas" align="center">
+        <el-table-column
+          width="90"
+          label="Linhas"
+          align="center">
           <template slot-scope="scope">{{ scope.row.rows }}</template>
         </el-table-column>
-        <el-table-column width="90" align="center" label="Baixar">
+        <el-table-column
+          width="90"
+          align="center"
+          label="Baixar">
           <template slot-scope="scope">
-            <a :href="scope.row.file_url" target="_blank">
+            <a
+              :href="scope.row.file_url"
+              target="_blank">
               <jus-icon icon="download-sheet" />
             </a>
           </template>
@@ -67,24 +88,24 @@ export default {
   name: 'Import',
   components: {
     InfiniteLoading,
-    JusImportDialog: () => import('@/components/dialogs/JusImportDialog')
+    JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
   },
-  data () {
+  data() {
     return {
       importsHistory: [],
       page: 1,
-      importDialogVisible: false
+      importDialogVisible: false,
     }
   },
   computed: {
-    importsHistoryPaged () {
+    importsHistoryPaged() {
       return this.importsHistory.slice(0, this.page * 20)
-    }
+    },
   },
-  beforeMount () {
+  beforeMount() {
     this.$store.dispatch('getImportsHistory').then(response => {
       if (response && response.length) {
-        this.importsHistory = response.sort(function (a, b) {
+        this.importsHistory = response.sort(function(a, b) {
           if (a.id < b.id) return 1
           if (a.id > b.id) return -1
           return 0
@@ -93,7 +114,7 @@ export default {
     })
   },
   methods: {
-    setStatusIcon (status) {
+    setStatusIcon(status) {
       switch (status) {
         case 'FINISHED':
           return 'el-icon-folder-checked'
@@ -105,7 +126,7 @@ export default {
           return 'el-icon-folder-delete'
       }
     },
-    infiniteHandler ($state) {
+    infiniteHandler($state) {
       setTimeout(() => {
         this.page = this.page + 1
         if (this.importsHistory.length === this.importsHistoryPaged.length) {
@@ -115,12 +136,12 @@ export default {
         }
       }, 600)
     },
-    downloadModel () {
+    downloadModel() {
       // SEGMENT TRACK
       this.$jusSegment('Baixar planilha modelo')
       window.open('Planilha-Modelo-Justto.xlsx', '_blank')
-    }
-  }
+    },
+  },
 }
 </script>
 

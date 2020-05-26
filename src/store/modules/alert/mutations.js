@@ -1,18 +1,18 @@
 import Vue from 'vue'
 
 const alertMutations = {
-  clearAlerts (state) {
+  clearAlerts(state) {
     state.alerts = []
   },
-  addAlert (state, alert) {
+  addAlert(state, alert) {
     if (!state.alerts.find(a => a.id === alert.id)) { state.alerts.push(alert) }
   },
-  removeAlert (state, alertChanged) {
+  removeAlert(state, alertChanged) {
     Vue.nextTick(() => {
-      let alertIndex = state.alerts.findIndex(a => alertChanged.id === a.id)
+      const alertIndex = state.alerts.findIndex(a => alertChanged.id === a.id)
       Vue.delete(state.alerts, alertIndex)
     })
-  }
+  },
 }
 
 export default alertMutations

@@ -1,7 +1,7 @@
 const email = Cypress.env('main-email')
 
-describe('Esqueci a Senha', function () {
-  beforeEach(function () {
+describe('Esqueci a Senha', function() {
+  beforeEach(function() {
     cy.access('/')
 
     // Acessa a página de Equeci minha Senha
@@ -12,7 +12,7 @@ describe('Esqueci a Senha', function () {
     cy.url().should('include', '/#/forgot-password')
   })
 
-  it('Email Enviado', function () {
+  it('Email Enviado', function() {
     // Digita um email válido existente
     cy.get('[data-testid=forgot-password-email]')
       .type(email)
@@ -27,7 +27,7 @@ describe('Esqueci a Senha', function () {
       .should('be.visible')
   })
 
-  it('Email Inválido', function () {
+  it('Email Inválido', function() {
     // Digita um email inválido
     cy.get('[data-testid=forgot-password-email]')
       .type('email inválido')

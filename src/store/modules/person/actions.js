@@ -1,5 +1,5 @@
 const actions = {
-  getPerson ({ commit }, id) {
+  getPerson({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/persons/' + id)
@@ -11,7 +11,7 @@ const actions = {
         })
     })
   },
-  refreshPerson ({ commit }, id) {
+  refreshPerson({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/persons/' + id)
@@ -24,7 +24,7 @@ const actions = {
         })
     })
   },
-  setMainPhone ({ commit }, params) {
+  setMainPhone({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.post('api/persons/' + params.personId + '/phones/main', params.phoneDTO)
@@ -35,11 +35,11 @@ const actions = {
         })
     })
   },
-  changePersonName ({ commit }, person) {
+  changePersonName({ commit }, person) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/persons/' + person.id + '/name', {
-        name: person.name
+        name: person.name,
       }).then(response => {
         commit('setLoggedPerson', response.data)
         resolve(response.data)
@@ -48,7 +48,7 @@ const actions = {
       })
     })
   },
-  searchPersonByDocument ({ commit }, params) {
+  searchPersonByDocument({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/spider/person/' + params.document)
@@ -59,7 +59,7 @@ const actions = {
         })
     })
   },
-  searchPersonByOab ({ commit }, params) {
+  searchPersonByOab({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get('api/spider/lawyer/' + params.oabNumber + '/' + params.oabState)
@@ -70,7 +70,7 @@ const actions = {
         })
     })
   },
-  enrichPerson ({ commit }, personId) {
+  enrichPerson({ commit }, personId) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.patch('api/fusion-runner/enrich/person/' + personId)
@@ -80,7 +80,7 @@ const actions = {
           reject(error)
         })
     })
-  }
+  },
 }
 
 export default actions

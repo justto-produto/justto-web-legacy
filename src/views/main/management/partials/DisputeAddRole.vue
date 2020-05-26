@@ -12,7 +12,10 @@
       :rules="newRoleRules"
       label-position="top">
       <el-form-item label="Parte">
-        <el-select v-model="newRole.party" clearable @change="clearDocuments">
+        <el-select
+          v-model="newRole.party"
+          clearable
+          @change="clearDocuments">
           <el-option
             v-for="(party, index) in roleParty"
             :key="`${index}-${party}`"
@@ -22,18 +25,37 @@
       </el-form-item>
       <div v-if="!secondStep">
         <div class="dispute-add-role__search">
-          <el-form-item v-if="['claimantParty', 'respondentParty'].includes(newRole.party)" label="CPF/CNPJ" prop="searchDocumentNumber">
-            <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.searchDocumentNumber" @keyup.enter.native="searchPerson"/>
+          <el-form-item
+            v-if="['claimantParty', 'respondentParty'].includes(newRole.party)"
+            label="CPF/CNPJ"
+            prop="searchDocumentNumber">
+            <el-input
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
+              v-model="newRole.searchDocumentNumber"
+              @keyup.enter.native="searchPerson"/>
           </el-form-item>
-          <el-row v-else-if="newRole.party" :gutter="20">
+          <el-row
+            v-else-if="newRole.party"
+            :gutter="20">
             <el-col :span="12">
-              <el-form-item class="oab" label="OAB" prop="searchOabNumber">
-                <el-input v-model="newRole.searchOabNumber" @keyup.enter.native="searchPerson" />
+              <el-form-item
+                class="oab"
+                label="OAB"
+                prop="searchOabNumber">
+                <el-input
+                  v-model="newRole.searchOabNumber"
+                  @keyup.enter.native="searchPerson" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item class="state" label="Estado" prop="searchOabState">
-                <el-select v-model="newRole.searchOabState" placeholder="" filterable>
+              <el-form-item
+                class="state"
+                label="Estado"
+                prop="searchOabState">
+                <el-select
+                  v-model="newRole.searchOabState"
+                  placeholder=""
+                  filterable>
                   <el-option
                     v-for="(state, index) in $store.state.statesList"
                     :key="`${index}-${state}`"
@@ -44,28 +66,45 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-button v-if="newRole.party" type="primary" @click="searchPerson">
+          <el-button
+            v-if="newRole.party"
+            type="primary"
+            @click="searchPerson">
             <jus-icon icon="right" />
           </el-button>
         </div>
-        <el-button v-if="newRole.party" type="text" @click="secondStep = true">
+        <el-button
+          v-if="newRole.party"
+          type="text"
+          @click="secondStep = true">
           Continuar sem documento
         </el-button>
       </div>
       <div v-else>
-        <el-form-item label="CPF/CNPJ" prop="documentNumber">
-          <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="newRole.documentNumber" :disabled="disableDocumentNumber"/>
+        <el-form-item
+          label="CPF/CNPJ"
+          prop="documentNumber">
+          <el-input
+            v-mask="['###.###.###-##', '##.###.###/####-##']"
+            v-model="newRole.documentNumber"
+            :disabled="disableDocumentNumber"/>
         </el-form-item>
-        <el-form-item label="Nome" prop="name">
+        <el-form-item
+          label="Nome"
+          prop="name">
           <el-input v-model="newRole.name" />
         </el-form-item>
-        <el-form-item label="Telefone" prop="phone">
+        <el-form-item
+          label="Telefone"
+          prop="phone">
           <el-input
             v-mask="['(##) ####-####', '(##) #####-####']"
             v-model="newRole.phone"
             @keydown.enter.native="addPhone()"
             @blur="addPhone()">
-            <el-button slot="append" @click="addPhone()">
+            <el-button
+              slot="append"
+              @click="addPhone()">
               <jus-icon icon="add-white" />
             </el-button>
           </el-input>
@@ -86,19 +125,26 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removePhone(scope.$index)">
+              <a
+                href="#"
+                @click.prevent="removePhone(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </template>
           </el-table-column>
         </el-table>
-        <el-form-item label="E-mail" prop="email">
+        <el-form-item
+          label="E-mail"
+          prop="email">
           <el-input
             v-model="newRole.email"
             data-testid="input-email"
             @keydown.enter.native="addEmail()"
             @blur="addEmail()">
-            <el-button slot="append" data-testid="add-email" @click="addEmail()">
+            <el-button
+              slot="append"
+              data-testid="add-email"
+              @click="addEmail()">
               <jus-icon icon="add-white" />
             </el-button>
           </el-input>
@@ -119,20 +165,28 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeEmail(scope.$index)">
+              <a
+                href="#"
+                @click.prevent="removeEmail(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </template>
           </el-table-column>
         </el-table>
         <div class="dispute-overview-view__oab-form">
-          <el-form-item class="oab" label="OAB" prop="oab">
+          <el-form-item
+            class="oab"
+            label="OAB"
+            prop="oab">
             <el-input
               v-model="newRole.oab"
               @keydown.enter.native="addOab(newRole.personId, newRole.oabs)"
               @blur="addOab(newRole.personId, newRole.oabs)"/>
           </el-form-item>
-          <el-form-item class="state" label="Estado" prop="state">
+          <el-form-item
+            class="state"
+            label="Estado"
+            prop="state">
             <el-select
               v-model="newRole.state"
               :default-first-option="true"
@@ -149,7 +203,10 @@
                 :value="state" />
             </el-select>
           </el-form-item>
-          <el-button class="button" type="primary" @click="addOab(newRole.personId, newRole.oabs)">
+          <el-button
+            class="button"
+            type="primary"
+            @click="addOab(newRole.personId, newRole.oabs)">
             <jus-icon icon="add-white" />
           </el-button>
         </div>
@@ -169,7 +226,9 @@
             width="48px"
             class-name="visible">
             <template slot-scope="scope">
-              <a href="#" @click.prevent="removeOab(scope.$index)">
+              <a
+                href="#"
+                @click.prevent="removeOab(scope.$index)">
                 <jus-icon icon="trash" />
               </a>
             </template>
@@ -178,8 +237,14 @@
       </div>
     </el-form>
     <span slot="footer">
-      <el-button plain @click="dialogVisible = false">Cancelar</el-button>
-      <el-button :loading="registerLoading" :disabled="!secondStep" type="primary" @click="registerRole">Cadastrar</el-button>
+      <el-button
+        plain
+        @click="dialogVisible = false">Cancelar</el-button>
+      <el-button
+        :loading="registerLoading"
+        :disabled="!secondStep"
+        type="primary"
+        @click="registerRole">Cadastrar</el-button>
     </span>
   </el-dialog>
 </template>
@@ -192,22 +257,22 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disputeId: {
       type: Number,
-      default: 0
+      default: 0,
     },
     documentNumbers: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     oabs: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  data () {
+  data() {
     return {
       secondStep: false,
       searchLoading: false,
@@ -222,36 +287,36 @@ export default {
         documentNumber: '',
         searchDocumentNumber: '',
         searchOabNumber: '',
-        searchOabState: ''
+        searchOabState: '',
       },
       newRoleRules: {
         name: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'submit' }
+          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'submit' },
         ],
         phone: [{ validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }],
         email: [{ type: 'email', message: 'E-mail inválido', trigger: 'submit' }],
         documentNumber: [{ validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' }],
         searchDocumentNumber: [
           { validator: validateCpf, message: 'CPF/CNPJ inválido', trigger: 'submit' },
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         ],
         searchOabNumber: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        searchOabState: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-      }
+        searchOabState: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      },
     }
   },
   computed: {
     dialogVisible: {
-      get () {
+      get() {
         return this.visible
       },
-      set (value) {
+      set(value) {
         this.$emit('update:visible', value)
-      }
+      },
     },
     roleParty: () => ['claimantParty', 'claimantLawyer', 'respondentParty', 'respondentLawyer'],
-    partySelected () {
+    partySelected() {
       if (this.newRole.party) {
         if (['claimantParty', 'respondentParty'].includes(this.newRole.party)) {
           return true
@@ -259,10 +324,10 @@ export default {
         return false
       }
       return undefined
-    }
+    },
   },
   watch: {
-    dialogVisible () {
+    dialogVisible() {
       this.secondStep = false
       this.disableDocumentNumber = false
       this.newRole = {
@@ -270,12 +335,12 @@ export default {
         searchDocumentNumber: '',
         documentNumber: '',
         searchOabState: '',
-        searchOabNumber: ''
+        searchOabNumber: '',
       }
-    }
+    },
   },
   methods: {
-    searchPerson () {
+    searchPerson() {
       let isValid = true
       let fields
       let searchAction
@@ -295,14 +360,14 @@ export default {
         this.newRole.oabs = []
         this.emailsList = []
         this.phonesList = []
-        let params = {}
+        const params = {}
         if (this.newRole.searchDocumentNumber) {
           if (this.documentNumbers.includes(this.newRole.searchDocumentNumber.replace(/\D/g, ''))) {
-            setTimeout(function () {
+            setTimeout(function() {
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Parte já cadastrada nesta disputa.',
-                type: 'warning'
+                type: 'warning',
               })
               this.searchLoading = false
             }.bind(this), 300)
@@ -315,11 +380,11 @@ export default {
           this.disableDocumentNumber = true
         } else if (this.newRole.searchOabNumber && this.newRole.searchOabState) {
           if (this.oabs.includes(this.newRole.searchOabNumber.replace(/\D/g, '') + this.newRole.searchOabState)) {
-            setTimeout(function () {
+            setTimeout(function() {
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Parte já cadastrada nesta disputa.',
-                type: 'warning'
+                type: 'warning',
               })
               this.searchLoading = false
             }.bind(this), 300)
@@ -333,12 +398,12 @@ export default {
         this.$store.dispatch(searchAction, params)
           .then(response => {
             if (response) {
-              let self = this
+              const self = this
               this.$confirm('Já existem informações no sistema da parte a ser cadastrada. Deseja utilizar os dados existentes?', 'Parte encontrada no sistema', {
                 confirmButtonText: 'Sim, utilizar',
                 cancelButtonText: 'Não',
                 type: 'info',
-                cancelButtonClass: 'is-plain'
+                cancelButtonClass: 'is-plain',
               }).then(() => {
                 self.newRole.name = response.name
                 if (response.documentNumber) self.newRole.documentNumber = this.$options.filters.cpfCnpjMask(response.documentNumber)
@@ -356,16 +421,16 @@ export default {
             if (this.newRole.searchOabNumber && this.newRole.searchOabState) {
               this.newRole.oabs.push({
                 number: this.newRole.searchOabNumber,
-                state: this.newRole.searchOabState
+                state: this.newRole.searchOabState,
               })
             }
-            setTimeout(function () {
+            setTimeout(function() {
               this.searchLoading = false
             }.bind(this), 500)
           })
       }
     },
-    clearDocuments () {
+    clearDocuments() {
       this.newRole.searchDocumentNumber = ''
       this.newRole.documentNumber = ''
       this.newRole.searchOabState = ''
@@ -374,36 +439,36 @@ export default {
       this.secondStep = false
       this.disableDocumentNumber = false
     },
-    addOab () {
+    addOab() {
       let isValid = true
       this.$refs.newRole.validateField(['oab', 'state'], errorMessage => {
         if (errorMessage || !this.newRole.oab || !this.newRole.state) isValid = false
       })
       if (isValid) {
-        let self = this
+        const self = this
         this.newRole.oab = this.newRole.oab.replace(/ /g, '')
-        let isDuplicated = this.newRole.oabs.findIndex(o => o.number === self.newRole.oab && o.state === self.newRole.state)
+        const isDuplicated = this.newRole.oabs.findIndex(o => o.number === self.newRole.oab && o.state === self.newRole.state)
         if (isDuplicated < 0) {
           this.newRole.oabs.push({
             number: this.newRole.oab,
-            state: this.newRole.state
+            state: this.newRole.state,
           })
         }
         this.newRole.oab = ''
         this.newRole.state = ''
       }
     },
-    removeOab (index) {
+    removeOab(index) {
       this.newRole.oabs.splice(index, 1)
     },
-    addPhone () {
+    addPhone() {
       let isValid = true
       this.$refs.newRole.validateField('phone', errorMessage => {
         if (errorMessage || !this.newRole.phone) isValid = false
       })
       if (isValid) {
         this.newRole.phone = this.newRole.phone.replace(/ /g, '').replace(/\D/g, '')
-        let isDuplicated = this.phonesList.findIndex(p => {
+        const isDuplicated = this.phonesList.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === this.newRole.phone
         })
@@ -411,34 +476,34 @@ export default {
         this.newRole.phone = ''
       }
     },
-    removePhone (index) {
+    removePhone(index) {
       this.phonesList.splice(index, 1)
     },
-    addEmail () {
+    addEmail() {
       let isValid = true
       this.newRole.email = this.newRole.email.trim()
       this.$refs.newRole.validateField('email', errorMessage => {
         if (errorMessage || !this.newRole.email) isValid = false
       })
       if (isValid) {
-        let self = this
-        let isDuplicated = this.emailsList.findIndex(e => e.address === self.newRole.email)
+        const self = this
+        const isDuplicated = this.emailsList.findIndex(e => e.address === self.newRole.email)
         if (isDuplicated < 0) this.emailsList.push({ address: this.newRole.email })
         this.newRole.email = ''
       }
     },
-    removeEmail (index) {
+    removeEmail(index) {
       this.emailsList.splice(index, 1)
     },
-    registerRole () {
+    registerRole() {
       let isValid = true
       this.$refs.newRole.validateField(['documentNumber', 'name'], errorMessage => {
         if (errorMessage) isValid = false
       })
       if (isValid) {
         this.registerLoading = true
-        let role = {}
-        let disputeId = this.disputeId
+        const role = {}
+        const disputeId = this.disputeId
         role.main = true
         if (this.newRole.documentNumber) role.documentNumber = this.newRole.documentNumber.replace(/\D/g, '')
         if (this.newRole.oabs) role.oabs = this.newRole.oabs
@@ -455,23 +520,23 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nova parte cadastrada com sucesso.',
-            type: 'success'
+            type: 'success',
           })
           this.$store.dispatch('getDispute', this.disputeId)
           this.$confirm('Deseja iniciar o engajamento para esta parte?', 'Atenção!', {
             confirmButtonText: 'Engajar',
             cancelButtonText: 'Não',
             type: 'info',
-            cancelButtonClass: 'is-plain'
+            cancelButtonClass: 'is-plain',
           }).then(() => {
             this.$store.dispatch('restartDisputeRoleEngagement', {
               disputeId: this.disputeId,
-              disputeRoleId: response.id
+              disputeRoleId: response.id,
             }).then(() => {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Engajamento realizado com sucesso.',
-                type: 'success'
+                type: 'success',
               })
             })
           })
@@ -481,8 +546,8 @@ export default {
           this.registerLoading = false
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,9 +1,15 @@
 <template>
   <div class="jus-sidenav-external">
-    <a href="#" @click.prevent="$router.push('/login')">
-      <img class="jus-sidenav-external__logo" src="@/assets/logo.svg">
+    <a
+      href="#"
+      @click.prevent="$router.push('/login')">
+      <img
+        class="jus-sidenav-external__logo"
+        src="@/assets/logo.svg">
     </a>
-    <div v-if="showPlans" class="jus-sidenav-external__title">
+    <div
+      v-if="showPlans"
+      class="jus-sidenav-external__title">
       <div>
         <span>15</span>
         <span>dias de teste<br>gratuito</span>
@@ -15,8 +21,12 @@
     <div class="jus-sidenav-external__content">
       <slot />
     </div>
-    <div v-if="showExit" class="jus-sidenav-external__exit">
-      <a href="#" @click="$router.push('login')">Sair</a>
+    <div
+      v-if="showExit"
+      class="jus-sidenav-external__exit">
+      <a
+        href="#"
+        @click="$router.push('login')">Sair</a>
     </div>
     <!-- <el-dialog
       v-if="showPlans"
@@ -63,25 +73,25 @@ export default {
   props: {
     showPlans: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showExit: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       modal: false,
-      modalType: 1
+      modalType: 1,
     }
   },
   methods: {
-    showModal (type) {
+    showModal(type) {
       this.modalType = type
       this.modal = true
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -7,7 +7,7 @@ const document = {
   },
   mutations: mutations,
   actions: actions,
-  getters: getters
+  getters: getters,
 }
 
 export default document

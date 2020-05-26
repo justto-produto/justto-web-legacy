@@ -5,8 +5,12 @@
     full-screen
     right-card-width="320"
     class="dispute-view">
-    <template v-if="false" slot="title">
-      <h1 v-if="dispute" class="dispute-view__title">
+    <template
+      v-if="false"
+      slot="title">
+      <h1
+        v-if="dispute"
+        class="dispute-view__title">
         <router-link to="/management">
           <jus-icon icon="back"/>
         </router-link>
@@ -15,11 +19,21 @@
     </template>
     <!-- CHAT -->
     <template slot="main">
-      <div ref="sectionMessages" class="dispute-view__section-messages">
+      <div
+        ref="sectionMessages"
+        class="dispute-view__section-messages">
         <!-- DRAGGING -->
-        <vue-draggable-resizable v-if="typingTab !== '3'" ref="resizable" :handles="['tm']" :y="y" @dragging="onDrag" />
+        <vue-draggable-resizable
+          v-if="typingTab !== '3'"
+          ref="resizable"
+          :handles="['tm']"
+          :y="y"
+          @dragging="onDrag" />
         <!-- ACTIONS -->
-        <jus-dispute-actions :dispute="dispute" :is-collapsed.sync="isCollapsed" @fetch-data="fetchData" />
+        <jus-dispute-actions
+          :dispute="dispute"
+          :is-collapsed.sync="isCollapsed"
+          @fetch-data="fetchData" />
         <!-- MESSAGES -->
         <dispute-occurrences
           v-if="['1', '3'].includes(typingTab)"
@@ -31,14 +45,22 @@
           @dispute:reply="startReply">
           <dispute-tips v-if="typingTab === '1'" />
         </dispute-occurrences>
-        <dispute-notes v-else-if="typingTab === '2'" :dispute-id="id" />
+        <dispute-notes
+          v-else-if="typingTab === '2'"
+          :dispute-id="id" />
         <dispute-negotiation
           v-else-if="typingTab === '4'"
           :dispute="dispute"/>
-        <div :style="{ height: sendMessageHeightComputed }" class="dispute-view__send-message">
-          <div v-show="selectedContacts && selectedContacts.length && typingTab === '1'" class="dispute-view__send-to">
+        <div
+          :style="{ height: sendMessageHeightComputed }"
+          class="dispute-view__send-message">
+          <div
+            v-show="selectedContacts && selectedContacts.length && typingTab === '1'"
+            class="dispute-view__send-to">
             Destinatário(s):
-            <span v-for="(selected, index) in selectedContacts" :key="selected.id">
+            <span
+              v-for="(selected, index) in selectedContacts"
+              :key="selected.id">
               <span v-if="index === 0">
                 <span v-if="selected.number">{{ selected.number | phoneMask }}</span>
                 <span v-else-if="selected.address">{{ selected.address | phoneMask }}</span>
@@ -46,14 +68,22 @@
             </span>
             <el-tooltip v-if="selectedContacts.length > 1">
               <div slot="content">
-                <span v-for="(selected, index) in selectedContacts" :key="selected.id">
+                <span
+                  v-for="(selected, index) in selectedContacts"
+                  :key="selected.id">
                   <span v-if="index !== 0">
                     <div v-if="selected.number">
-                      <jus-icon icon="phone" is-white style="width: 14px;vertical-align: top;" />
+                      <jus-icon
+                        icon="phone"
+                        is-white
+                        style="width: 14px;vertical-align: top;" />
                       {{ selected.number | phoneMask }}
                     </div>
                     <div v-else-if="selected.address">
-                      <jus-icon icon="email" is-white style="width: 14px;vertical-align: top;" />
+                      <jus-icon
+                        icon="email"
+                        is-white
+                        style="width: 14px;vertical-align: top;" />
                       {{ selected.address }}
                     </div>
                   </span>
@@ -64,8 +94,15 @@
               </span>
             </el-tooltip>
           </div>
-          <el-tabs ref="messageTab" v-model="typingTab" :before-leave="handleBeforeLeaveTabs" @tab-click="handleTabClick">
-            <el-tab-pane v-loading="loadingTextarea" label="Comunicação" name="1">
+          <el-tabs
+            ref="messageTab"
+            v-model="typingTab"
+            :before-leave="handleBeforeLeaveTabs"
+            @tab-click="handleTabClick">
+            <el-tab-pane
+              v-loading="loadingTextarea"
+              label="Comunicação"
+              name="1">
               <el-card
                 v-loading="isPaused"
                 element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
@@ -88,24 +125,38 @@
                     v-if="!validName"
                     content="Atualize sue nome em suas configurações de perfil para enviar mensagens">
                     <div class="dispute-view__disabled-text">
-                      <jus-icon icon="warn-dark" style="vertical-align: bottom;" />
+                      <jus-icon
+                        icon="warn-dark"
+                        style="vertical-align: bottom;" />
                       Configure um nome em seu perfil
                     </div>
                   </el-tooltip>
                   <div v-else>
                     <el-tooltip content="Enviar E-mail">
-                      <a href="#" data-testid="select-email" @click.prevent="setMessageType('email')">
-                        <jus-icon :is-active="messageType === 'email'" icon="email"/>
+                      <a
+                        href="#"
+                        data-testid="select-email"
+                        @click.prevent="setMessageType('email')">
+                        <jus-icon
+                          :is-active="messageType === 'email'"
+                          icon="email"/>
                       </a>
                     </el-tooltip>
                     <el-tooltip content="Enviar Whatsapp">
-                      <a href="#" data-testid="select-whatsapp" @click.prevent="setMessageType('whatsapp')">
-                        <jus-icon :is-active="messageType === 'whatsapp'" icon="whatsapp"/>
+                      <a
+                        href="#"
+                        data-testid="select-whatsapp"
+                        @click.prevent="setMessageType('whatsapp')">
+                        <jus-icon
+                          :is-active="messageType === 'whatsapp'"
+                          icon="whatsapp"/>
                       </a>
                     </el-tooltip>
                   </div>
                   <div>
-                    <el-tooltip :key="buttonKey" :disabled="!validName || invalidReceiver === false">
+                    <el-tooltip
+                      :key="buttonKey"
+                      :disabled="!validName || invalidReceiver === false">
                       <div slot="content">
                         <span v-if="!activeRole.personId">
                           Escolha um destinatário ao lado para receber sua mensagem
@@ -136,8 +187,13 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <el-tab-pane v-loading="loadingTextarea" label="Notas" name="2">
-              <el-card shadow="always" class="dispute-view__send-message-box">
+            <el-tab-pane
+              v-loading="loadingTextarea"
+              label="Notas"
+              name="2">
+              <el-card
+                shadow="always"
+                class="dispute-view__send-message-box">
                 <div class="dispute-view__quill">
                   <quill-editor
                     ref="noteEditor"
@@ -156,8 +212,11 @@
                 </div>
               </el-card>
             </el-tab-pane>
-            <el-tab-pane label="Ocorrências" name="3" style="padding: 10px;" />
-            <!-- <el-tab-pane v-if="this.$store.getters.isJusttoAdmin" label="Negociação" name="4" style="padding: 10px;" /> -->
+            <el-tab-pane
+              label="Ocorrências"
+              name="3"
+              style="padding: 10px;" />
+              <!-- <el-tab-pane v-if="this.$store.getters.isJusttoAdmin" label="Negociação" name="4" style="padding: 10px;" /> -->
           </el-tabs>
         </div>
       </div>
@@ -199,9 +258,9 @@ export default {
     DisputeTips: () => import('./partials/DisputeTips'),
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     VueDraggableResizable: () => import('vue-draggable-resizable'),
-    quillEditor
+    quillEditor,
   },
-  data () {
+  data() {
     return {
       y: 0,
       dragDebounce: 0,
@@ -227,14 +286,14 @@ export default {
             [{ 'header': 1 }, { 'header': 2 }],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             ['blockquote'],
-            ['clean']
-          ]
-        }
-      }
+            ['clean'],
+          ],
+        },
+      },
     }
   },
   computed: {
-    sendMessageHeightComputed () {
+    sendMessageHeightComputed() {
       switch (this.typingTab) {
         case '1':
           return this.validName ? (this.sendMessageHeight + 'px') : '115px'
@@ -244,7 +303,7 @@ export default {
           return '50px'
       }
     },
-    validName () {
+    validName() {
       if (this.$store.getters.loggedPersonName && this.$store.getters.loggedPersonName !== this.$store.state.accountModule.email) {
         return true
       } else {
@@ -253,25 +312,25 @@ export default {
         }
       }
     },
-    dispute () {
+    dispute() {
       return this.$store.getters.dispute
     },
-    isPaused () {
+    isPaused() {
       return this.dispute ? this.dispute.paused : false
     },
-    isFavorite () {
+    isFavorite() {
       return this.dispute ? this.dispute.favorite : false
     },
-    socketHeaders () {
+    socketHeaders() {
       return {
         Authorization: this.$store.getters.accountToken,
-        Workspace: this.$store.getters.workspaceSubdomain
+        Workspace: this.$store.getters.workspaceSubdomain,
       }
     },
-    recentMessages () {
+    recentMessages() {
       return this.$store.getters.messageRecentMessages
     },
-    selectedContacts () {
+    selectedContacts() {
       if (this.directContactAddress) {
         return [{ id: 0, address: this.directContactAddress }]
       }
@@ -284,31 +343,31 @@ export default {
           return []
       }
     },
-    invalidReceiver () {
+    invalidReceiver() {
       switch (this.messageType) {
         case 'email':
           return this.activeRole.invalidEmail
         case 'whatsapp':
           return this.activeRole.invalidPhone
       }
-    }
+    },
   },
   watch: {
-    '$route.params.id': function (id, oldId) {
+    '$route.params.id': function(id, oldId) {
       this.id = id.toString()
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence',
       })
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
       this.disputeOccurrencesKey += 1
     },
-    y (y) {
+    y(y) {
       this.sendMessageHeight = this.$refs.sectionMessages.offsetHeight - this.y
-    }
+    },
   },
-  created () {
+  created() {
     this.id = this.$route.params.id.toString()
     this.fetchData()
     if (this.$store.getters.disputeStatuses.unsettled) {
@@ -322,38 +381,38 @@ export default {
       this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
     }
   },
-  mounted () {
+  mounted() {
     setTimeout(() => {
       this.disputeOccurrencesKey += 1
       this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
     }, 800)
     window.addEventListener('resize', this.updateWindowHeight)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.unsubscribeOccurrences(this.id)
     window.removeEventListener('resize', this.updateWindowHeight)
   },
   methods: {
-    updateWindowHeight () {
+    updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
-    onDrag (x, y) {
-      let minTop = this.$refs.sectionMessages.offsetHeight - 208
-      let maxTop = 64
+    onDrag(x, y) {
+      const minTop = this.$refs.sectionMessages.offsetHeight - 208
+      const maxTop = 64
       if (y > minTop) this.y = minTop
       else if (y < maxTop) this.y = maxTop
       else this.y = y
       this.updateDragHeight(this.y)
     },
-    updateDragHeight (height) {
+    updateDragHeight(height) {
       clearTimeout(this.dragDebounce)
       this.dragDebounce = setTimeout(() => {
         this.$refs.resizable.top = height
         localStorage.setItem('jusoffsetheight', height)
       }, 100)
     },
-    startReply (params) {
-      let messageType = params.type.toLowerCase()
+    startReply(params) {
+      const messageType = params.type.toLowerCase()
       this.setMessageType(messageType)
       if (messageType === 'email') {
         this.$refs.messageEditor.quill.insertText(9999999999, '\n\n___________________\n' + params.resume)
@@ -361,15 +420,15 @@ export default {
       this.activeRoleId = 0
       this.directContactAddress = params.sender
     },
-    setMessageType (type) {
+    setMessageType(type) {
       this.removeReply()
       this.messageType = ''
       this.messageType = type
       this.$nextTick(() => this.$refs.messageEditor.quill.focus())
     },
-    updateActiveRole (params) {
+    updateActiveRole(params) {
       if (typeof params === 'number') {
-        let disputeId = params
+        const disputeId = params
         params = {}
         params.activeRole = this.dispute.disputeRoles.find(role => {
           return role.id === disputeId
@@ -386,26 +445,26 @@ export default {
       if (this.typingTab !== '1' && params.activeRole) this.typingTab = '1'
       if (params.messageType) this.setMessageType(params.messageType)
     },
-    removeReply () {
+    removeReply() {
       this.directContactAddress = ''
-      let message = this.$refs.messageEditor.quill.getText()
-      let messageIndex = message.indexOf('\n\n___________________')
+      const message = this.$refs.messageEditor.quill.getText()
+      const messageIndex = message.indexOf('\n\n___________________')
       if (messageIndex !== -1) {
         this.$refs.messageEditor.quill.setText(message.substring(messageIndex, 0))
       }
     },
-    unsubscribeOccurrences (id) {
+    unsubscribeOccurrences(id) {
       this.$store.commit('clearDisputeOccurrences')
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence',
       })
     },
-    fetchData () {
+    fetchData() {
       this.loadingDispute = true
       this.$socket.emit('subscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence',
       })
       this.$store.dispatch('getDispute', this.id).then(dispute => {
         if (!dispute || dispute.archived) this.$router.push('/management')
@@ -419,18 +478,18 @@ export default {
         }, 500)
       })
     },
-    handleTabClick (tab) {
+    handleTabClick(tab) {
       if (!['1', '3'].includes(tab.name)) this.activeRoleId = 0
       this.typingTab = tab.name
     },
-    handleBeforeLeaveTabs () {
+    handleBeforeLeaveTabs() {
       this.$store.commit('clearOccurrencesSize')
     },
-    sendMessage () {
+    sendMessage() {
       if (!this.$refs.messageEditor.quill.getText().trim()) {
         return false
       }
-      let quillMessage = this.messageType === 'email'
+      const quillMessage = this.messageType === 'email'
         ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
       if (this.selectedContacts.map(c => c.id).length) {
         if (this.messageType === 'whatsapp') {
@@ -438,50 +497,50 @@ export default {
             this.$jusNotification({
               title: 'Ops!',
               message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
-              type: 'warning'
+              type: 'warning',
             })
             return false
           } else {
             this.$store.state.messageModule.recentMessages.push({
               messageBody: quillMessage,
               selfDestroy: () => (setTimeout(() => {
-                for (var i = 0; i < this.recentMessages.length; i++) {
+                for (let i = 0; i < this.recentMessages.length; i++) {
                   if (quillMessage === this.recentMessages[i].messageBody) {
                     this.recentMessages.splice(i, 1)
                   }
                 }
-              }, 30000))
+              }, 30000)),
             })
-            let lastMessage = this.recentMessages.length - 1
+            const lastMessage = this.recentMessages.length - 1
             this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
           }
         }
         this.loadingTextarea = true
-        let to = []
+        const to = []
         if (this.directContactAddress) {
           to.push({
-            address: this.directContactAddress
+            address: this.directContactAddress,
           })
         } else {
           to.push({
             roleId: this.activeRole.id,
-            contactsId: this.selectedContacts.map(c => c.id)
+            contactsId: this.selectedContacts.map(c => c.id),
           })
         }
-        let externalIdentification = +new Date()
-        for (var contact of this.selectedContacts) {
+        const externalIdentification = +new Date()
+        for (const contact of this.selectedContacts) {
           this.addLoadingOccurrence({
             message: this.$refs.messageEditor.quill.getText(),
             type: this.messageType,
             receiver: this.messageType === 'email' ? contact.address : contact.phone,
-            externalIdentification
+            externalIdentification,
           })
         }
         this.$store.dispatch('send' + this.messageType, {
           to,
           message: quillMessage,
           disputeId: this.dispute.id,
-          externalIdentification
+          externalIdentification,
         }).then(() => {
           // SEGMENT TRACK
           if (this.directContactAddress) {
@@ -492,9 +551,9 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: this.messageType + ' enviado com sucesso.',
-            type: 'success'
+            type: 'success',
           })
-          setTimeout(function () {
+          setTimeout(function() {
             this.$refs.messageEditor.quill.deleteText(0, 9999999999)
           }.bind(this), 200)
         }).catch(error => {
@@ -507,23 +566,23 @@ export default {
           title: 'Ops!',
           dangerouslyUseHTMLString: true,
           message: `Selecione ao menos um contato do tipo <b>${this.messageType.toUpperCase()}</b> para envio.`,
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
-    addLoadingOccurrence (params) {
+    addLoadingOccurrence(params) {
       this.$store.commit('addLoadingOccurrence', Object.assign({
         sender: this.$store.getters.loggedPersonName,
-        createAt: { dateTime: this.$moment() }
+        createAt: { dateTime: this.$moment() },
       }, params))
     },
-    sendNote () {
-      let note = this.$refs.noteEditor.quill.getText()
+    sendNote() {
+      const note = this.$refs.noteEditor.quill.getText()
       if (note.trim()) {
         this.loadingTextarea = true
         this.$store.dispatch('sendDisputeNote', {
           note,
-          disputeId: this.dispute.id
+          disputeId: this.dispute.id,
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nova nota salva')
@@ -531,7 +590,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota gravada com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -539,8 +598,8 @@ export default {
           this.loadingTextarea = false
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

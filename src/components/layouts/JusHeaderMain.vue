@@ -10,20 +10,30 @@
           popper-class="jus-header-main__autocomplete"
           placeholder="Busque aqui as suas disputas">
           <template slot-scope="{ item }">
-            <jus-dispute-resume v-if="item.id" :dispute="item" />
-            <span v-else style="background-color: white;display: block;padding: 0 20px;">
+            <jus-dispute-resume
+              v-if="item.id"
+              :dispute="item" />
+            <span
+              v-else
+              style="background-color: white;display: block;padding: 0 20px;">
               Não foram encontradas disputas para esta busca. Tente buscar pelo número do processo.
             </span>
           </template>
         </el-autocomplete>
       </div>
       <div class="jus-header-main__info">
-        <el-tooltip v-if="$store.getters.isJusttoAdmin" content="Modo anônimo">
+        <el-tooltip
+          v-if="$store.getters.isJusttoAdmin"
+          content="Modo anônimo">
           <el-switch v-model="ghostMode" />
         </el-tooltip>
-        <el-dropdown trigger="click" placement="bottom-start">
+        <el-dropdown
+          trigger="click"
+          placement="bottom-start">
           <span class="el-dropdown-link">
-            <jus-avatar-user :name="name" size="sm" />
+            <jus-avatar-user
+              :name="name"
+              size="sm" />
             <div class="jus-header-main__name">
               <div style="text-transform: capitalize;">
                 {{ name }}
@@ -41,12 +51,17 @@
                 Configurações
               </el-dropdown-item>
             </router-link>
-            <a v-if="workspaces.length" href="#" @click.prevent="changeWorkspace">
+            <a
+              v-if="workspaces.length"
+              href="#"
+              @click.prevent="changeWorkspace">
               <el-dropdown-item>
                 Alterar equipe
               </el-dropdown-item>
             </a>
-            <a href="#" @click="logout()">
+            <a
+              href="#"
+              @click="logout()">
               <el-dropdown-item divided>
                 Sair
               </el-dropdown-item>
@@ -70,9 +85,16 @@
               :label="workspace.workspace.teamName"
               data-testid="select-workspace"/>
           </el-select>
-          <span slot="footer" class="dialog-footer">
-            <el-button plain @click="changeWorkspaceDialogVisible = false">Cancelar</el-button>
-            <el-button :disabled="selectedWorkspace === ''" type="primary" @click="goToWorkspace">Alterar</el-button>
+          <span
+            slot="footer"
+            class="dialog-footer">
+            <el-button
+              plain
+              @click="changeWorkspaceDialogVisible = false">Cancelar</el-button>
+            <el-button
+              :disabled="selectedWorkspace === ''"
+              type="primary"
+              @click="goToWorkspace">Alterar</el-button>
           </span>
         </el-dialog>
       </div>
@@ -84,56 +106,56 @@
 export default {
   name: 'JusHeaderMain',
   components: {
-    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume')
+    JusDisputeResume: () => import('@/components/layouts/JusDisputeResume'),
   },
-  data () {
+  data() {
     return {
       dispute: '',
       workspaces: [],
       selectedWorkspace: '',
-      changeWorkspaceDialogVisible: false
+      changeWorkspaceDialogVisible: false,
     }
   },
   computed: {
-    name () {
+    name() {
       return this.$store.getters.loggedPersonName
     },
-    teamName () {
+    teamName() {
       return this.$store.getters.workspaceTeamName
     },
-    appVersion () {
+    appVersion() {
       return process.env.VUE_APP_VERSION
     },
-    whatsappStatus () {
+    whatsappStatus() {
       return this.$store.getters.whatsappStatus
     },
     ghostMode: {
-      get () {
+      get() {
         return this.$store.getters.ghostMode
       },
-      set (value) {
+      set(value) {
         this.$store.commit('setGhostMode', value)
-      }
-    }
+      },
+    },
   },
-  beforeMount () {
+  beforeMount() {
     this.$store.dispatch('myWorkspace').then(response => {
       this.workspaces = response.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
     })
   },
   methods: {
-    logout () {
+    logout() {
       setTimeout(() => {
         this.$store.dispatch('logout')
       }, 500)
       const loading = this.$loading({
-        lock: true
+        lock: true,
       })
       setTimeout(() => {
         loading.close()
       }, 1000)
     },
-    search (term, cb) {
+    search(term, cb) {
       clearTimeout(this.termDebounce)
       this.termDebounce = setTimeout(() => {
         this.$store.dispatch('searchDisputes', { key: 'term', value: term }).then(response => {
@@ -147,20 +169,20 @@ export default {
         })
       }, 800)
     },
-    changeWorkspace () {
+    changeWorkspace() {
       this.$store.dispatch('myWorkspace').then(response => {
         this.workspaces = response.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
       })
       this.selectedWorkspace = ''
       this.changeWorkspaceDialogVisible = true
     },
-    goToWorkspace () {
+    goToWorkspace() {
       const loading = this.$loading({
         lock: true,
-        text: 'Alterando Equipe...'
+        text: 'Alterando Equipe...',
       })
-      let workspace = this.workspaces[this.selectedWorkspace]
-      let oldWorkspace = this.$store.getters.workspaceTeamName
+      const workspace = this.workspaces[this.selectedWorkspace]
+      const oldWorkspace = this.$store.getters.workspaceTeamName
       if (workspace.workspace) this.$store.commit('setWorkspace', workspace.workspace)
       if (workspace.profile) this.$store.commit('setProfile', workspace.profile)
       if (workspace.person) this.$store.commit('setLoggedPerson', workspace.person)
@@ -168,7 +190,7 @@ export default {
         .then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Troca de time/workspace', {
-            description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}`
+            description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}`,
           })
           this.$router.go('/management')
           this.changeWorkspaceDialogVisible = true
@@ -179,8 +201,8 @@ export default {
             loading.close()
           }, 1000)
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

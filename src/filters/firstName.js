@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-Vue.filter('firstName', function (value) {
+Vue.filter('firstName', function(value) {
   if (!value) return ''
   value = value.toString().toLowerCase()
   if (value.includes('@')) value = value.split('@')[0]

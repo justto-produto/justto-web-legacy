@@ -2,13 +2,13 @@ const login = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 
-describe('Justto.App - Visualização de Gerenciamento', function () {
-  before('Cena', function () {
+describe('Justto.App - Visualização de Gerenciamento', function() {
+  before('Cena', function() {
     // Requisição para Preparar ambiente
     cy.prepair_testes('PUT', 'prepare-management-test-e2e')
   })
 
-  beforeEach(function () {
+  beforeEach(function() {
     // Acessa a página inicial do Justto.App
     cy.access('/')
 
@@ -16,7 +16,7 @@ describe('Justto.App - Visualização de Gerenciamento', function () {
     cy.login(login, password, workspace)
   })
 
-  it('Exibição de Casos - Com casos', function () {
+  it('Exibição de Casos - Com casos', function() {
     // Verifica numero dos badges
     cy.get('[data-testid=badge-tab0]')
       .contains('5')

@@ -1,6 +1,8 @@
 <template lang="html">
   <el-row class="admin-panel-view">
-    <el-col :span="left" style="transition: width ease 1s;">
+    <el-col
+      :span="left"
+      style="transition: width ease 1s;">
       <jus-sidenav-external show-exit>
         <el-menu
           default-active="0"
@@ -29,7 +31,10 @@
       </jus-sidenav-external>
     </el-col>
     <transition name="swiper-fade">
-      <el-col v-if="right > 0" :span="right" class="content">
+      <el-col
+        v-if="right > 0"
+        :span="right"
+        class="content">
         <h1>
           {{ $t('panel.' + menuIndex) }}
           <!-- <el-button
@@ -41,12 +46,24 @@
             Adicionar
           </el-button> -->
         </h1>
-        <panel-dashboard v-if="menuIndex === '0'" ref="panel0"/>
-        <panel-workspace v-if="menuIndex === '1'" ref="panel1"/>
-        <panel-user v-if="menuIndex === '2'" ref="panel2"/>
-        <panel-strategy v-if="menuIndex === '3'" ref="panel3"/>
-        <panel-minute v-if="menuIndex === '4'" ref="panel4"/>
-        <panel-billing v-if="menuIndex === '5'" ref="panel5"/>
+        <panel-dashboard
+          v-if="menuIndex === '0'"
+          ref="panel0"/>
+        <panel-workspace
+          v-if="menuIndex === '1'"
+          ref="panel1"/>
+        <panel-user
+          v-if="menuIndex === '2'"
+          ref="panel2"/>
+        <panel-strategy
+          v-if="menuIndex === '3'"
+          ref="panel3"/>
+        <panel-minute
+          v-if="menuIndex === '4'"
+          ref="panel4"/>
+        <panel-billing
+          v-if="menuIndex === '5'"
+          ref="panel5"/>
       </el-col>
     </transition>
   </el-row>
@@ -62,31 +79,31 @@ export default {
     PanelUser: () => import('./partials/PanelUser'),
     PanelStrategy: () => import('./partials/PanelStrategy'),
     PanelMinute: () => import('./partials/PanelMinute'),
-    PanelBilling: () => import('./partials/PanelBilling')
+    PanelBilling: () => import('./partials/PanelBilling'),
   },
-  data () {
+  data() {
     return {
       menuIndex: '0',
       left: 12,
-      right: 0
+      right: 0,
     }
   },
-  created () {
-    setTimeout(function () {
+  created() {
+    setTimeout(function() {
       this.left = 5
     }.bind(this), 400)
-    setTimeout(function () {
+    setTimeout(function() {
       this.right = 19
     }.bind(this), 1200)
   },
   methods: {
-    changeMenuIndex (index) {
+    changeMenuIndex(index) {
       this.menuIndex = index
     },
-    add () {
+    add() {
       this.$refs[`panel${this.menuIndex}`].add()
-    }
-  }
+    },
+  },
 }
 </script>
 

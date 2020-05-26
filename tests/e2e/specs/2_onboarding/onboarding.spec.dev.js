@@ -1,12 +1,12 @@
 const email = Cypress.env('onboarding-email')
-const subDomain = Cypress.env('default-onboarding-sub-domain')
+// const subDomain = Cypress.env('default-onboarding-sub-domain')
 const password = Cypress.env('default-password')
-describe('Justto.App - Onboarding', function () {
+describe('Justto.App - Onboarding', function() {
   // beforeEach(function () {
   // cy.deleteWorkspace('admin')
   // })
 
-  it('Onboarding: Login', function () {
+  it('Onboarding: Login', function() {
     // cy.deleteWorkspace(email, password, subDomain)
     cy.wait(1000)
     cy.visit('/#/login')
@@ -22,12 +22,12 @@ describe('Justto.App - Onboarding', function () {
     cy.url().should('include', '/#/onboarding')
   })
 
-  it('Onboarding: Vamos começar', function () {
+  it('Onboarding: Vamos começar', function() {
     cy.get('[data-testid=lets-start]')
       .click()
   })
 
-  it('Onboarding: Nome da Equipe', function () {
+  it('Onboarding: Nome da Equipe', function() {
     cy.contains('Qual o nome da sua equipe?')
       .should('be.visible')
     cy.get('[data-testid=teamname-form]')
@@ -39,9 +39,9 @@ describe('Justto.App - Onboarding', function () {
     //   .should('be.visible')
   })
 
-  const randomSubdomain = new Date().getTime().toString()
+  // const randomSubdomain = new Date().getTime().toString()
 
-  it('OnBoarding: Whatsapp Step', function () {
+  it('OnBoarding: Whatsapp Step', function() {
     // Verifica se o step é do WhatsApp
     cy.contains('WhatsApp')
       .should('be.visible')

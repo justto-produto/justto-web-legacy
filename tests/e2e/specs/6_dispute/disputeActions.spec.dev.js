@@ -1,15 +1,15 @@
 const login = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
-const dispute = Cypress.env('main-dispute')
-const name = Cypress.env('main-name')
+// const dispute = Cypress.env('main-dispute')
+// const name = Cypress.env('main-name')
 
-describe('Ações da Disputa', function () {
-  before(function () {
+describe('Ações da Disputa', function() {
+  before(function() {
     cy.prepair_testes('PUT', 'prepare-dispute-update-test-e2e')
   })
 
-  beforeEach(function () {
+  beforeEach(function() {
     cy.access('/')
     cy.login(login, password, workspace)
 
@@ -28,7 +28,7 @@ describe('Ações da Disputa', function () {
     cy.url().should('include', '/#/management/dispute/')
   })
 
-  it('Ação: Pausar', function () {
+  it('Ação: Pausar', function() {
     // Clica em Pausar
     cy.get('[data-testid=paused]')
       .click()
@@ -55,7 +55,7 @@ describe('Ações da Disputa', function () {
       .contains('Ganho (pausada)')
   })
 
-  it('Ação: Retomar', function () {
+  it('Ação: Retomar', function() {
     // Clica em Retomar
     cy.get('[data-testid=resume')
       .click()
@@ -82,7 +82,7 @@ describe('Ações da Disputa', function () {
       .contains('Ganho')
   })
 
-  it('Ação: Reiniciar Engajamento', function () {
+  it('Ação: Reiniciar Engajamento', function() {
     // VClica em Reiniciar Engajamento
     cy.get('[data-testid=restart-engagement]')
       .click()
@@ -109,7 +109,7 @@ describe('Ações da Disputa', function () {
       .contains('Engajamento')
   })
 
-  it('Ação: Ganhar', function () {
+  it('Ação: Ganhar', function() {
     // Clica em Ganhar
     cy.get('[data-testid=settled]')
       .click()
@@ -140,7 +140,7 @@ describe('Ações da Disputa', function () {
       .contains('Ganho')
   })
 
-  it('Ação: Favoritar', function () {
+  it('Ação: Favoritar', function() {
     // Favorita/disfavorita caso
     cy.get('[data-testid=favorite]')
       .click()

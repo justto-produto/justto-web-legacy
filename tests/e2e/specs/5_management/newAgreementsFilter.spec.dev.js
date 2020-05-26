@@ -1,8 +1,8 @@
 const login = Cypress.env('import-actions-email')
 const password = Cypress.env('default-password')
 
-describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
-  beforeEach(function () {
+describe('Justto.App - Com Interação: Filtro Novos Acordos', function() {
+  beforeEach(function() {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
@@ -28,7 +28,7 @@ describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
     cy.url().should('include', '/#/management')
   })
 
-  it('Gerenciamento: Novos Acordos - Exibição dos Casos', function () {
+  it('Gerenciamento: Novos Acordos - Exibição dos Casos', function() {
     // Seleciona a aba "Proposta aceita"
     cy.get('.el-tabs__nav > #tab-2')
       .click({ force: true })
@@ -36,7 +36,7 @@ describe('Justto.App - Com Interação: Filtro Novos Acordos', function () {
     cy.get('[class=el-table__body]').should('be.visible')
   })
 
-  it('Gerenciamento: Novos Acordos - Exibição dos Casos - Vazio', function () {
+  it('Gerenciamento: Novos Acordos - Exibição dos Casos - Vazio', function() {
     // Seleciona a aba "Proposta aceita"
     cy.get('.el-tabs__nav > #tab-2')
       .click({ force: true })

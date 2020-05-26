@@ -38,11 +38,17 @@
             class="el-slider__stop el-slider__marks-stop"/>
         </div>
         <div class="el-slider__marks">
-          <div v-for="(item, key) in markList" :key="key" class="hover">
+          <div
+            v-for="(item, key) in markList"
+            :key="key"
+            class="hover">
             <JusElementMarker
               :mark="item.mark"
               :style="getStopStyle(item.position, item.mark.zIndex)"/>
-            <div v-if="item.mark.details" :style="getStopStyle(item.position)" class="details">
+            <div
+              v-if="item.mark.details"
+              :style="getStopStyle(item.position)"
+              class="details">
               <b>Data</b>
               <div>{{ item.mark.details.createAt.dateTime | moment('DD/MM/YY') }}</div>
               <b>Nome</b>
@@ -56,9 +62,15 @@
               v-if="item.mark.details"
               :style="diffToAmBarStyle(item)"
               class="el-slider__diff-bar el-slider__bar bar">
-              <div :class="{ 'reverse': (amMark.point >= item.point) }" class="collapse">
-                <i v-if="item.point >= amMark.point" class="el-icon-top" />
-                <i v-else class="el-icon-bottom" />
+              <div
+                :class="{ 'reverse': (amMark.point >= item.point) }"
+                class="collapse">
+                <i
+                  v-if="item.point >= amMark.point"
+                  class="el-icon-top" />
+                <i
+                  v-else
+                  class="el-icon-bottom" />
                 {{ Math.round(((diffToAmBar(item)) * 100) / amMark.point) }}%
                 <br>
                 R$ {{ diffToAmBar(item) }}
@@ -83,89 +95,89 @@ export default {
   components: {
     ElInputNumber,
     JusElementButton,
-    JusElementMarker
+    JusElementMarker,
   },
   mixins: [Emitter],
   inject: {
     elForm: {
-      default: ''
-    }
+      default: '',
+    },
   },
   props: {
     min: {
       type: Number,
-      default: 0
+      default: 0,
     },
     max: {
       type: Number,
-      default: 100
+      default: 100,
     },
     step: {
       type: Number,
-      default: 1
+      default: 1,
     },
     value: {
       type: [Number, Array],
-      default: 0
+      default: 0,
     },
     showInput: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showInputControls: {
       type: Boolean,
-      default: true
+      default: true,
     },
     inputSize: {
       type: String,
-      default: 'small'
+      default: 'small',
     },
     showStops: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showTooltip: {
       type: Boolean,
-      default: true
+      default: true,
     },
     formatTooltip: {
       type: Function,
-      default: undefined
+      default: undefined,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     range: {
       type: Boolean,
-      default: false
+      default: false,
     },
     vertical: {
       type: Boolean,
-      default: false
+      default: false,
     },
     height: {
       type: String,
-      default: ''
+      default: '',
     },
     debounce: {
       type: Number,
-      default: 300
+      default: 300,
     },
     label: {
       type: String,
-      default: ''
+      default: '',
     },
     tooltipClass: {
       type: String,
-      default: ''
+      default: '',
     },
     marks: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
-  data () {
+  data() {
     return {
       firstValue: null,
       firstObj: null,
@@ -173,7 +185,7 @@ export default {
       secondObj: null,
       oldValue: null,
       dragging: false,
-      sliderSize: 1
+      sliderSize: 1,
     }
   },
   computed: {
@@ -186,7 +198,7 @@ export default {
     // diffValue () {
     //   return Math.abs(this.firstValue - this.secondValue)
     // },
-    stops () {
+    stops() {
       if (!this.showStops || this.min > this.max) return []
       if (this.step === 0) {
         process.env.NODE_ENV !== 'production' &&
@@ -208,7 +220,7 @@ export default {
         return result.filter(step => step > 100 * (this.firstValue - this.min) / (this.max - this.min))
       }
     },
-    markList () {
+    markList() {
       if (!this.marks) {
         return []
       }
@@ -219,13 +231,13 @@ export default {
         .map(point => ({
           point,
           position: (point - this.min) * 100 / (this.max - this.min),
-          mark: this.marks[point]
+          mark: this.marks[point],
         }))
     },
-    minValue () {
+    minValue() {
       return Math.min(this.firstValue, this.secondValue)
     },
-    maxValue () {
+    maxValue() {
       return Math.max(this.firstValue, this.secondValue)
     },
     // barSize () {
@@ -250,14 +262,14 @@ export default {
     // am2BarStart () {
     //   return `${100 * (this.minValue - this.min) / (this.max - this.min)}%`
     // },
-    precision () {
-      let precisions = [this.min, this.max, this.step].map(item => {
-        let decimal = ('' + item).split('.')[1]
+    precision() {
+      const precisions = [this.min, this.max, this.step].map(item => {
+        const decimal = ('' + item).split('.')[1]
         return decimal ? decimal.length : 0
       })
       return Math.max.apply(null, precisions)
     },
-    runwayStyle () {
+    runwayStyle() {
       return this.vertical ? { height: this.height } : {}
     },
     // barStyle () {
@@ -282,18 +294,18 @@ export default {
     //     left: this.am2BarStart
     //   }
     // },
-    sliderDisabled () {
+    sliderDisabled() {
       return this.disabled || (this.elForm || {}).disabled
     },
-    amMark () {
+    amMark() {
       for (const value of Object.values(this.markList)) {
         if (value.mark && !value.mark.details) return value
       }
       return 0
-    }
+    },
   },
   watch: {
-    value (val, oldVal) {
+    value(val, oldVal) {
       if (this.dragging ||
           (Array.isArray(val) &&
           Array.isArray(oldVal) &&
@@ -302,31 +314,31 @@ export default {
       }
       this.setValues()
     },
-    dragging (val) {
+    dragging(val) {
       if (!val) {
         this.setValues()
       }
     },
-    firstValue (val) {
+    firstValue(val) {
       if (this.range) {
         this.$emit('input', [this.firstValue, this.secondValue])
       } else {
         this.$emit('input', val)
       }
     },
-    secondValue () {
+    secondValue() {
       if (this.range) {
         this.$emit('input', [this.firstValue, this.secondValue])
       }
     },
-    min () {
+    min() {
       this.setValues()
     },
-    max () {
+    max() {
       this.setValues()
-    }
+    },
   },
-  mounted () {
+  mounted() {
     if (this.range) {
       if (Array.isArray(this.value) && this.value.length) {
         this.firstValue = Math.max(this.min, this.value[0].value)
@@ -349,18 +361,17 @@ export default {
     this.resetSize()
     window.addEventListener('resize', this.resetSize)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     window.removeEventListener('resize', this.resetSize)
   },
   methods: {
     buildRoleTitle: (...i) => buildRoleTitle(...i),
-    diffToAmBar (item) {
+    diffToAmBar(item) {
       return Math.abs(this.amMark.point - item.point)
     },
-    diffToAmBarStyle (item) {
-      let barSize
+    diffToAmBarStyle(item) {
+      const barSize = `${Math.abs(100 * (this.amMark.point - item.point) / (this.max - this.min))}%`
       let barStart
-      barSize = `${Math.abs(100 * (this.amMark.point - item.point) / (this.max - this.min))}%`
       if (item.point < this.amMark.point) {
         barStart = `${item.position}%`
       } else {
@@ -368,10 +379,10 @@ export default {
       }
       return {
         width: barSize,
-        left: barStart
+        left: barStart,
       }
     },
-    valueChanged () {
+    valueChanged() {
       if (this.range) {
         return ![this.minValue, this.maxValue]
           .every((item, index) => item === this.oldValue[index])
@@ -379,7 +390,7 @@ export default {
         return this.value !== this.oldValue
       }
     },
-    setValues () {
+    setValues() {
       if (this.min > this.max) {
         console.error('[Element Error][Slider]min should not be greater than max.')
         return
@@ -416,7 +427,7 @@ export default {
         }
       }
     },
-    setPosition (percent) {
+    setPosition(percent) {
       const targetValue = this.min + percent * (this.max - this.min) / 100
       if (!this.range) {
         this.$refs.button1.setPosition(percent)
@@ -430,7 +441,7 @@ export default {
       }
       this.$refs[button].setPosition(percent)
     },
-    onSliderClick (event) {
+    onSliderClick(event) {
       // if (this.sliderDisabled || this.dragging) return
       // this.resetSize()
       // if (this.vertical) {
@@ -442,17 +453,17 @@ export default {
       // }
       // this.emitChange()
     },
-    resetSize () {
+    resetSize() {
       if (this.$refs.slider) {
         this.sliderSize = this.$refs.slider[`client${this.vertical ? 'Height' : 'Width'}`]
       }
     },
-    getStopStyle (position, zIndex) {
+    getStopStyle(position, zIndex) {
       return {
         'left': position + '%',
-        'z-index': zIndex
+        'z-index': zIndex,
       }
-    }
-  }
+    },
+  },
 }
 </script>

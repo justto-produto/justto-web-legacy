@@ -3,8 +3,8 @@ const password = Cypress.env('default-password')
 const defaultStrategy = Cypress.env('default-strategy')
 const defaultCampaign = Cypress.env('default-campaign')
 
-describe('Justto.App - Com Interação: Filtro Todos', function () {
-  beforeEach(function () {
+describe('Justto.App - Com Interação: Filtro Todos', function() {
+  beforeEach(function() {
     // Acessa a página inicial do Justto.App
     // cy.visit('http://homol.justto.com.br')
     cy.visit('localhost:8080')
@@ -30,7 +30,7 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
     cy.url().should('include', '/#/management')
   })
 
-  it('Gerenciamento: Todos - Exibição dos Casos', function () {
+  it('Gerenciamento: Todos - Exibição dos Casos', function() {
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')
@@ -61,7 +61,7 @@ describe('Justto.App - Com Interação: Filtro Todos', function () {
       .should('be.visible')
   })
 
-  it('Gerenciamento: Todos - Exibição dos Casos - Vazio', function () {
+  it('Gerenciamento: Todos - Exibição dos Casos - Vazio', function() {
     // Seleciona a aba "Todos"
     cy.get('.el-tabs__nav > #tab-3')
       .contains('Todos')

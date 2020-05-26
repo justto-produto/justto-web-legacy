@@ -1,5 +1,7 @@
 <template>
-  <span :class="typeClass" class="jus-status-dot"/>
+  <span
+    :class="typeClass"
+    class="jus-status-dot"/>
 </template>
 
 <script>
@@ -7,16 +9,16 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'info'
-    }
+      default: 'info',
+    },
   },
   computed: {
-    typeClass () {
+    typeClass() {
       if (this.type) {
         return 'jus-status-dot--' + this.type
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,10 +1,14 @@
 <template>
-  <div :class="{'fullScreen': fullScreen}" class="jus-main-view">
+  <div
+    :class="{'fullScreen': fullScreen}"
+    class="jus-main-view">
     <!-- TITLE SLOT -->
     <!-- <div v-if="this.$slots['title']" class="jus-main-view__title">
       <slot name="title"/>
     </div> -->
-    <div v-loading="loadingContainer" class="jus-main-view__container">
+    <div
+      v-loading="loadingContainer"
+      class="jus-main-view__container">
       <!-- LEFT CARD SLOT -->
       <div v-if="this.$slots['left-card']">
         <el-card
@@ -39,29 +43,29 @@ export default {
   props: {
     rightCardWidth: {
       default: '300',
-      type: String
+      type: String,
     },
     rightCardCollapsed: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     leftCardWidth: {
       default: '300',
-      type: String
+      type: String,
     },
     loadingMain: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     loadingContainer: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     fullScreen: {
       default: false,
-      type: Boolean
-    }
-  }
+      type: Boolean,
+    },
+  },
 }
 </script>
 

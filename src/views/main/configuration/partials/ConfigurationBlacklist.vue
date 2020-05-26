@@ -1,23 +1,37 @@
 <template lang="html">
   <div class="configuration-blackList-view">
-    <el-table :data="filteredBlackList" width="100%">
+    <el-table
+      :data="filteredBlackList"
+      width="100%">
       <el-table-column label="Termo bloqueado">
         <template slot-scope="props">
           {{ props.row }}
         </template>
       </el-table-column>
-      <el-table-column align="right" width="400px">
-        <template slot="header" slot-scope="scope">
+      <el-table-column
+        align="right"
+        width="400px">
+        <template
+          slot="header"
+          slot-scope="scope">
           <el-input
             v-model="search"
             placeholder="Buscar"/>
-          <el-button type="primary" icon="el-icon-plus" @click="blackListDialogVisible = true">
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            @click="blackListDialogVisible = true">
             Adicionar
           </el-button>
         </template>
         <template slot-scope="props">
           <el-tooltip content="Excluir">
-            <el-button size="mini" type="danger" plain icon="el-icon-delete" @click="deleteBlackList(props.row)" />
+            <el-button
+              size="mini"
+              type="danger"
+              plain
+              icon="el-icon-delete"
+              @click="deleteBlackList(props.row)" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -49,13 +63,19 @@
         :rules="blackListRules"
         label-position="top"
         @submit.native.prevent="addBlackList">
-        <el-form-item label="Termo a ser bloqueado" prop="contact">
+        <el-form-item
+          label="Termo a ser bloqueado"
+          prop="contact">
           <el-input v-model="blackListForm.contact" />
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button plain @click="blackListDialogVisible = false">Cancelar</el-button>
-        <el-button type="primary" @click="addBlackList">Adicionar</el-button>
+        <el-button
+          plain
+          @click="blackListDialogVisible = false">Cancelar</el-button>
+        <el-button
+          type="primary"
+          @click="addBlackList">Adicionar</el-button>
       </span>
     </el-dialog>
   </div>
@@ -64,29 +84,29 @@
 <script>
 export default {
   name: 'ConfigurationBlackList',
-  data () {
+  data() {
     return {
       blackListDialogVisible: false,
       search: '',
       blackListForm: { contact: '' },
-      blackListRules: { contact: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }] }
+      blackListRules: { contact: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }] },
     }
   },
   computed: {
-    filteredBlackList () {
+    filteredBlackList() {
       return this.$store.getters.workspaceBlackList.filter(minute => {
         if (!minute) {
           return false
         }
         return !this.search || minute.toLowerCase().includes(this.search.toLowerCase())
       })
-    }
+    },
   },
   methods: {
-    addBlackList () {
+    addBlackList() {
       this.$refs.blackListForm.validate(valid => {
         if (valid) {
-          let blackList = [...this.$store.getters.workspaceBlackList]
+          const blackList = [...this.$store.getters.workspaceBlackList]
           blackList.push(this.blackListForm.contact)
           this.$store.dispatch('patchBlackList', blackList).then(response => {
             this.$store.commit('setBlackList', blackList)
@@ -95,7 +115,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Termo adicionado na blackList com sucesso',
-              type: 'success'
+              type: 'success',
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -103,7 +123,7 @@ export default {
         }
       })
     },
-    deleteBlackList (term) {
+    deleteBlackList(term) {
       this.$confirm('Tem certeza que deseja excluir?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
@@ -125,16 +145,16 @@ export default {
           } else {
             done()
           }
-        }
+        },
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Minuta excluída com sucesso',
-          type: 'success'
+          type: 'success',
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

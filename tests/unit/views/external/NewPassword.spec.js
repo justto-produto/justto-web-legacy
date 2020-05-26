@@ -14,14 +14,14 @@ localVue.use(Element)
 describe('NewPassword.vue', () => {
   let actions
   let store
-  let router = new VueRouter()
+  const router = new VueRouter()
   beforeEach(() => {
     actions = {
-      logout: jest.fn()
+      logout: jest.fn(),
     }
     store = new Vuex.Store({
       actions,
-      namespaced: true
+      namespaced: true,
     })
   })
   it('É um objeto Vue.', () => {

@@ -1,10 +1,14 @@
 <template lang="html">
-  <div v-loading="!dispute" class="dispute-view__side-content">
+  <div
+    v-loading="!dispute"
+    class="dispute-view__side-content"
+  >
     <el-steps
       :active="0"
       direction="vertical"
       process-status="wait"
-      class="dispute-view__steps el-steps--dots">
+      class="dispute-view__steps el-steps--dots"
+    >
       <el-step>
         <template slot="title">Enriquecimento</template>
         <template slot="description">
@@ -17,7 +21,10 @@
       <el-step>
         <template slot="title">Engajamento</template>
         <template slot="description">
-          <el-checkbox v-model="scheduled" class="dispute-view__show-scheduled">
+          <el-checkbox
+            v-model="scheduled"
+            class="dispute-view__show-scheduled"
+          >
             Exibir mensagens agendadas
           </el-checkbox>
         </template>
@@ -54,12 +61,14 @@
             v-if="dispute.status === 'UNSETTLED'"
             v-model="unsettledReason"
             class="case-view__unsettled-types"
-            @change="changeReasonStatus">
+            @change="changeReasonStatus"
+          >
             <el-option
               v-for="(type, index) in unsettledTypes"
               :key="index"
               :label="type"
-              :value="index" />
+              :value="index"
+            />
           </el-select>
         </template>
       </el-step>
@@ -68,55 +77,59 @@
 </template>
 
 <script>
-
 export default {
   name: 'DisputeSummary',
   props: {
     dispute: {
       default: () => {},
-      type: Object
+      type: Object,
     },
     showScheduled: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     unsettledTypes: {
       default: () => {},
-      type: Object
-    }
+      type: Object,
+    },
   },
-  data () {
+  data() {
     return {
-      scheduled: false
+      scheduled: false,
     }
   },
   computed: {
-    unsettledReason () {
-      return this.dispute.conclusionReasons.length ? this.dispute.conclusionReasons[0] : ''
-    }
+    unsettledReason() {
+      return this.dispute.conclusionReasons.length
+        ? this.dispute.conclusionReasons[0]
+        : ''
+    },
   },
   watch: {
-    showScheduled (value) {
+    showScheduled(value) {
       this.scheduled = value
     },
-    scheduled (value) {
+    scheduled(value) {
       this.$emit('update:showScheduled', value)
-    }
+    },
   },
   methods: {
-    changeReasonStatus () {
-      this.$store.dispatch('editCaseReason', {
-        disputeId: this.dispute.id,
-        reasonValue: this.unsettledTypes[this.unsettledReason]
-      }).then(() => {
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Motivo de perda alterado com sucesso.',
-          type: 'success'
+    changeReasonStatus() {
+      this.$store
+        .dispatch('editCaseReason', {
+          disputeId: this.dispute.id,
+          reasonValue: this.unsettledTypes[this.unsettledReason],
         })
-      }).catch(error => this.$jusNotification({ error })
-    }
-  }
+        .then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Motivo de perda alterado com sucesso.',
+            type: 'success',
+          })
+        })
+        .catch((error) => this.$jusNotification({ error }))
+    },
+  },
 }
 </script>
 

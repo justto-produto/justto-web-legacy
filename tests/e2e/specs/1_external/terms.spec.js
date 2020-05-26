@@ -1,9 +1,9 @@
-describe('Termos', function () {
-  beforeEach(function () {
+describe('Termos', function() {
+  beforeEach(function() {
     cy.access('/')
   })
 
-  it('Termos Gerais de contratação', function () {
+  it('Termos Gerais de contratação', function() {
     // Verifica se link para Termos aparece
     cy.get('[data-testid=contract-terms]')
       .contains('Termos Gerais de Contratação')
@@ -13,7 +13,7 @@ describe('Termos', function () {
     cy.request('https://justto.com.br/termos-de-contratacao/')
   })
 
-  it('Termos de Uso', function () {
+  it('Termos de Uso', function() {
     // Verifica se link para Termos aparece
     cy.get('[data-testid=use-terms]')
       .contains('Termos de Uso')

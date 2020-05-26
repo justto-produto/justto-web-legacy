@@ -1,14 +1,14 @@
 const strategy = {
   state: {
-    list: []
+    list: [],
   },
   mutations: {
-    setStrategies (state, response) {
+    setStrategies(state, response) {
       state.list = response
-    }
+    },
   },
   actions: {
-    getStrategies ({ commit }) {
+    getStrategies({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/strategies/list')
@@ -21,7 +21,7 @@ const strategy = {
           })
       })
     },
-    getStrategyEngagement ({ commit }, id) {
+    getStrategyEngagement({ commit }, id) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/strategies/' + id + '/engagement')
@@ -33,7 +33,7 @@ const strategy = {
           })
       })
     },
-    editStrategyTemplate ({ commit }, params) {
+    editStrategyTemplate({ commit }, params) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.put('api/templates/', params)
@@ -43,15 +43,15 @@ const strategy = {
             reject(error)
           })
       })
-    }
+    },
   },
   getters: {
     strategyList: state => state.list.sort((a, b) => {
       if (a.name < b.name) { return -1 }
       if (a.name > b.name) { return 1 }
       return 0
-    })
-  }
+    }),
+  },
 }
 
 export default strategy

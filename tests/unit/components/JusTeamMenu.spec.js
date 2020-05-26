@@ -1,9 +1,11 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils'
-import JusTeamMenu from '@/components/layouts/JusTeamMenu.vue'
-import Element from 'element-ui'
 import '@/filters/capitalize'
-import Vuex from 'vuex'
+
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+
+import Element from 'element-ui'
 import JusAvatarUser from '@/components/images/JusAvatarUser.vue'
+import JusTeamMenu from '@/components/layouts/JusTeamMenu.vue'
+import Vuex from 'vuex'
 
 const localVue = createLocalVue()
 localVue.use(Element)
@@ -15,10 +17,11 @@ describe('JusTeamMenu.vue', () => {
   let state
   beforeEach(() => {
     state = {
-      workspaceModule: {}
-    },
+      workspaceModule: {},
+    }
+
     store = new Vuex.Store({
-      state
+      state,
     })
   })
   it('É um objeto Vue.', () => {

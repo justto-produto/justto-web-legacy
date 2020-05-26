@@ -17,12 +17,20 @@
         prop="withoutAlert"
         label="Sem alerta">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.withoutAlert > 0" popper-class="jus-chart-table__tooltip">
-            <div slot="content" v-html="buildWithoutAlertTooltip(scope.row)" />
+          <el-tooltip
+            v-if="scope.row.withoutAlert > 0"
+            popper-class="jus-chart-table__tooltip">
+            <div
+              slot="content"
+              v-html="buildWithoutAlertTooltip(scope.row)" />
             <span>{{ scope.row.withoutAlert }}</span>
           </el-tooltip>
-          <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
-            <jus-icon icon="check" class="jus-chart-table__check-icon" />
+          <el-tooltip
+            v-else
+            content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
+            <jus-icon
+              icon="check"
+              class="jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -32,12 +40,20 @@
         prop="withAlert"
         label="Com alerta">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.withAlert > 0" popper-class="jus-chart-table__tooltip">
-            <div slot="content" v-html="buildWithAlertTooltip(scope.row)" />
+          <el-tooltip
+            v-if="scope.row.withAlert > 0"
+            popper-class="jus-chart-table__tooltip">
+            <div
+              slot="content"
+              v-html="buildWithAlertTooltip(scope.row)" />
             <span>{{ scope.row.withAlert }}</span>
           </el-tooltip>
-          <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
-            <jus-icon icon="check" class="jus-chart-table__check-icon" />
+          <el-tooltip
+            v-else
+            content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
+            <jus-icon
+              icon="check"
+              class="jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -48,12 +64,20 @@
         class-name="column-total"
         label="Total">
         <template slot-scope="scope">
-          <el-tooltip v-if="scope.row.total > 0" popper-class="jus-chart-table__tooltip">
-            <div slot="content" v-html="buildTotalTooltip(scope.row)" />
+          <el-tooltip
+            v-if="scope.row.total > 0"
+            popper-class="jus-chart-table__tooltip">
+            <div
+              slot="content"
+              v-html="buildTotalTooltip(scope.row)" />
             <span>{{ scope.row.total }}</span>
           </el-tooltip>
-          <el-tooltip v-else content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
-            <jus-icon icon="check" class="jus-chart-table__check-icon" />
+          <el-tooltip
+            v-else
+            content="Tudo certo aqui, nenhuma disputa precisa de sua atenção">
+            <jus-icon
+              icon="check"
+              class="jus-chart-table__check-icon" />
           </el-tooltip>
         </template>
       </el-table-column>
@@ -67,13 +91,13 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   computed: {
-    disputeStatusSummaryWithWarn () {
-      let self = this
-      let disputeStatusSummaryWithWarn = []
+    disputeStatusSummaryWithWarn() {
+      const self = this
+      const disputeStatusSummaryWithWarn = []
       // let sumWithoutAlert = 0
       // let sumWithAlert = 0
       // let sumTotal = 0
@@ -89,7 +113,7 @@ export default {
           withAlertFilter: self.data.datasets[1].filter[index],
           total: self.data.datasets[2].data[index],
           totalFilter: self.data.datasets[2].filter[index],
-          statusIndex: index
+          statusIndex: index,
         })
       })
       // disputeStatusSummaryWithWarn.push({
@@ -104,23 +128,23 @@ export default {
       // })
       return disputeStatusSummaryWithWarn
     },
-    selectedMemberId () {
+    selectedMemberId() {
       return this.$store.getters.dashboardSelectedMemberId
     },
-    members () {
+    members() {
       return this.$store.state.workspaceModule.members
-    }
+    },
   },
   methods: {
-    tooltipName () {
+    tooltipName() {
       if (this.selectedMemberId) {
         return this.members.filter(member => member.personId === this.selectedMemberId)[0].person.name
       } else {
         return ''
       }
     },
-    buildWithoutAlertTooltip (row) {
-      let name = this.tooltipName() ? ' de ' + this.tooltipName() : ''
+    buildWithoutAlertTooltip(row) {
+      const name = this.tooltipName() ? ' de ' + this.tooltipName() : ''
       switch (row.label) {
         case 'PENDENTE':
           return row.withoutAlert + ' disputas' + name + ' estão pendentes, mas NÃO vão expirar nos proximos 3 dias. Pode tratar dos outros casos, só não esqueça de tratar estas pendências'
@@ -136,8 +160,8 @@ export default {
           return 'Clique para ver estas disputas.'
       }
     },
-    buildWithAlertTooltip (row) {
-      let name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
+    buildWithAlertTooltip(row) {
+      const name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
       switch (row.label) {
         case 'PENDENTE':
           return name + row.withAlert + ' disputas que expiram nos proximos 3 dias e precisam de atenção IMEDIATA'
@@ -153,8 +177,8 @@ export default {
           return 'Clique para ver estas disputas'
       }
     },
-    buildTotalTooltip (row) {
-      let name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
+    buildTotalTooltip(row) {
+      const name = this.tooltipName() ? this.tooltipName() + ' tem ' : ''
       switch (row.label) {
         case 'PENDENTE':
           return name + row.total + ' disputas pendentes. Cuidado para não perde o prazo!'
@@ -170,10 +194,10 @@ export default {
           return 'Clique para ver estas disputas.'
       }
     },
-    headerRowClassName ({ row, rowIndex }) {
+    headerRowClassName({ row, rowIndex }) {
       return 'header'
     },
-    cellClassName ({ row, column, rowIndex, columnIndex }) {
+    cellClassName({ row, column, rowIndex, columnIndex }) {
       let cls = ''
       if (row.label === 'TOTAL') cls += 'line-total '
       if (columnIndex === 1) cls += 'without-alert'
@@ -183,10 +207,10 @@ export default {
       }
       return cls
     },
-    cellClick (row, column, cell, event) {
+    cellClick(row, column, cell, event) {
       if (cell.textContent) {
-        let statusIndex = row.statusIndex
-        let columnProperty = column.property
+        const statusIndex = row.statusIndex
+        const columnProperty = column.property
         // let columnLabel = column.label
         // let cellIndex = cell.cellIndex
         // let columnIndex = column.index
@@ -196,15 +220,15 @@ export default {
         //   statusFilters = { status: status.concat(this.data.filter[0].status, this.data.filter[1].status, this.data.filter[2].status, this.data.filter[3].status) }
         //   datasetFilters = { ...datasetFilter.filter[0], ...datasetFilter.filter[1], ...datasetFilter.filter[2], ...datasetFilter.filter[3] }
         // } else {
-        let statusFilters = this.data.filter[statusIndex]
-        let datasetFilters = row[columnProperty + 'Filter']
+        const statusFilters = this.data.filter[statusIndex]
+        const datasetFilters = row[columnProperty + 'Filter']
         // }
         // let datasetFilters = this.data.datasets[columnIndex] ? this.data.datasets[columnIndex].filter[cellIndex] : null
         // if (columnIndex !== undefined && (datasetFilters || statusFilters)) {
         const filters = Object.assign(statusFilters || {}, datasetFilters || {})
         this.$store.commit('clearDisputeQuery')
         this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-        for (let key in filters) {
+        for (const key in filters) {
           if (filters.hasOwnProperty(key)) {
             this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }
@@ -217,8 +241,8 @@ export default {
         this.$router.push('/management')
         // }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

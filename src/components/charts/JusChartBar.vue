@@ -7,35 +7,35 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     options: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     stacked: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  mounted () {
+  mounted() {
     const opt = this.options
     if (this.stacked) {
       Object.assign(opt, {
         scales: {
           xAxes: [{
-            stacked: true
+            stacked: true,
           }],
           yAxes: [{
-            stacked: true
-          }]
-        }
+            stacked: true,
+          }],
+        },
       })
     }
     this.renderChart(this.data, opt)
   },
   methods: {
-    getElement (e) {
+    getElement(e) {
       return null
       // var firstPoint = this._data._chart.getElementAtEvent(e)[0]
       // if (firstPoint) {
@@ -45,7 +45,7 @@ export default {
       //     filter: this.data.datasets[firstPoint._datasetIndex].filter[firstPoint._index]
       //   }
       // }
-    }
-  }
+    },
+  },
 }
 </script>

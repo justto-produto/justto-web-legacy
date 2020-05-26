@@ -1,23 +1,60 @@
 <template lang="html">
   <div>
-    <div :class="{'active': active}" class="management-actions">
+    <div
+      :class="{'active': active}"
+      class="management-actions">
       <div class="management-actions__length">
         <i class="el-icon-check" /> {{ selectedIdsLength }}
       </div>
       <div>
-        <el-button plain data-testid="batch-settled" @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
-        <el-button plain data-testid="batch-unsettled" @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
-        <el-button plain data-testid="batch-paused" @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
-        <el-button plain data-testid="batch-resume" @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
-        <el-button plain data-testid="batch-restartengagement" @click="sendBatchAction('RESTART_ENGAGEMENT')">REINICIAR</el-button>
-        <el-button plain data-testid="batch-chageexpirationdate" @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">DATA LIMITE</el-button>
-        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_STRATEGY')">ESTRATÉGIAS</el-button>
-        <el-button plain data-testid="batch-changestrategy" @click="sendBatchAction('CHANGE_NEGOTIATOR')">NEGOCIADORES</el-button>
-        <el-button plain data-testid="batch-enrich" @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
-        <el-button plain data-testid="batch-delete" @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
-        <el-button plain data-testid="batch-resendmessage" @click="sendBatchAction('RESEND_MESSAGE')">{{ $t('action.RESEND_MESSAGE') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-settled"
+          @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-unsettled"
+          @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-paused"
+          @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-resume"
+          @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-restartengagement"
+          @click="sendBatchAction('RESTART_ENGAGEMENT')">REINICIAR</el-button>
+        <el-button
+          plain
+          data-testid="batch-chageexpirationdate"
+          @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">DATA LIMITE</el-button>
+        <el-button
+          plain
+          data-testid="batch-changestrategy"
+          @click="sendBatchAction('CHANGE_STRATEGY')">ESTRATÉGIAS</el-button>
+        <el-button
+          plain
+          data-testid="batch-changestrategy"
+          @click="sendBatchAction('CHANGE_NEGOTIATOR')">NEGOCIADORES</el-button>
+        <el-button
+          plain
+          data-testid="batch-enrich"
+          @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-delete"
+          @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
+        <el-button
+          plain
+          data-testid="batch-resendmessage"
+          @click="sendBatchAction('RESEND_MESSAGE')">{{ $t('action.RESEND_MESSAGE') }}</el-button>
       </div>
-      <i class="el-icon-close" @click="clearSelection()"/>
+      <i
+        class="el-icon-close"
+        @click="clearSelection()"/>
     </div>
     <el-dialog
       :close-on-click-modal="false"
@@ -38,7 +75,9 @@
           :value="index" />
       </el-select>
       <span slot="footer">
-        <el-button plain @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+        <el-button
+          plain
+          @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!unsettledType"
           type="primary"
@@ -66,7 +105,9 @@
           :label="strategy.name"/>
       </el-select>
       <span slot="footer">
-        <el-button plain @click="changeStrategyDialogVisible = false">Cancelar</el-button>
+        <el-button
+          plain
+          @click="changeStrategyDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!newStrategyId"
           type="primary"
@@ -92,7 +133,9 @@
         placeholder="Escolha a data limite"
         value-format="yyyy-MM-dd" />
       <span slot="footer">
-        <el-button plain @click="changeExpirationDialogVisible = false">Cancelar</el-button>
+        <el-button
+          plain
+          @click="changeExpirationDialogVisible = false">Cancelar</el-button>
         <el-button
           :disabled="!newExpirationDate"
           type="primary"
@@ -108,7 +151,9 @@
       title="Alterar negociadores"
       class="management-actions__dialog"
       width="604px">
-      <div v-if="disputeNegotiatorMap.length" class="el-message-box__content">
+      <div
+        v-if="disputeNegotiatorMap.length"
+        class="el-message-box__content">
         <div class="el-message-box__container">
           <div class="el-message-box__status el-icon-info"/>
           <div class="el-message-box__message">
@@ -131,8 +176,15 @@
         filter-placeholder="Buscar"
         filterable />
       <span slot="footer">
-        <el-button :disabled="changeNegotiatorDialogLoading" plain @click="changeNegotiatorDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="changeNegotiatorDialogLoading" :disabled="!disputeNegotiators.length" type="primary" @click="changeNegotiator()">
+        <el-button
+          :disabled="changeNegotiatorDialogLoading"
+          plain
+          @click="changeNegotiatorDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="changeNegotiatorDialogLoading"
+          :disabled="!disputeNegotiators.length"
+          type="primary"
+          @click="changeNegotiator()">
           Alterar
         </el-button>
       </span>
@@ -148,14 +200,14 @@ export default {
   props: {
     active: {
       type: Boolean,
-      default: false
+      default: false,
     },
     selectedIds: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  data () {
+  data() {
     return {
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
@@ -170,35 +222,35 @@ export default {
       unsettledTypes: [],
       unsettledType: '',
       newStrategyId: '',
-      newExpirationDate: ''
+      newExpirationDate: '',
     }
   },
   computed: {
     selectedIdsComp: {
-      get () {
+      get() {
         return this.selectedIds
       },
-      set (ids) {
+      set(ids) {
         this.$emit('update:selectedIds', ids)
-      }
+      },
     },
-    selectedIdsLength () {
+    selectedIdsLength() {
       return this.selectedIdsComp.length
     },
-    strategies () {
+    strategies() {
       return this.$store.getters.strategyList
     },
-    workspaceNegotiators () {
+    workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
         return {
           key: member.person.id,
           label: member.person.name,
-          value: member.person.id
+          value: member.person.id,
         }
       })
-    }
+    },
   },
-  created () {
+  created() {
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
     } else {
@@ -209,10 +261,10 @@ export default {
     this.$store.dispatch('getMyStrategies')
   },
   methods: {
-    doAction (action) {
-      let params = {
+    doAction(action) {
+      const params = {
         type: action.toUpperCase(),
-        disputeIds: this.selectedIds
+        disputeIds: this.selectedIds,
       }
       if (this.unsettledType) params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       switch (action) {
@@ -232,7 +284,7 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         })
         // SEGMENT TRACK
         this.$jusSegment(getTracktitleByAction(action, true), { amount: this.selectedIds.length })
@@ -242,7 +294,7 @@ export default {
               title: 'Atenção!',
               message: 'Enviaremos para às contrapartes uma mensagem de encerramento de negociação.',
               type: 'info',
-              duration: 0
+              duration: 0,
             })
           }, 2000)
         }
@@ -250,7 +302,7 @@ export default {
         this.$jusNotification({ error })
       })
     },
-    sendBatchAction (action) {
+    sendBatchAction(action) {
       if (action === 'UNSETTLED') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = ''
@@ -263,9 +315,9 @@ export default {
       } else if (action === 'CHANGE_NEGOTIATOR') {
         this.checkDisputeNegotiators()
       } else {
-        let message = {
+        const message = {
           title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
-          content: 'Tem certeza que deseja realizar esta ação em lote?'
+          content: 'Tem certeza que deseja realizar esta ação em lote?',
         }
         if (action === 'ENRICH' &&
             this.$store.getters.disputes.filter(d => this.selectedIds.includes(d.id) && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(d.status)).length) {
@@ -279,17 +331,17 @@ export default {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
+          cancelButtonClass: 'is-plain',
         }).then(() => {
           if (action === 'ENRICH') this.enrichDisputes(action)
           else this.doAction(action)
         })
       }
     },
-    enrichDisputes (action) {
-      let selecteds = this.selectedIds
-      let reengagement = []
-      for (let selected of selecteds) {
+    enrichDisputes(action) {
+      const selecteds = this.selectedIds
+      const reengagement = []
+      for (const selected of selecteds) {
         reengagement.push(
           this.$store.dispatch('enrichDispute', selected)
         )
@@ -300,37 +352,37 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
           type: 'success',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         })
       }).catch(e => {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. Parece que algumas das disputas selecionadas não foram enriquecidas.',
           type: 'warning',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         })
       })
       this.selectedIdsComp = []
     },
-    clearSelection () {
+    clearSelection() {
       this.$emit('disputes:clear')
     },
-    checkDisputeNegotiators () {
-      let disputeNegotiatorMap = []
+    checkDisputeNegotiators() {
+      const disputeNegotiatorMap = []
       this.disputeNegotiatorMap = []
       this.changeNegotiatorByGroup = false
       this.disputeNegotiatorMapSelectedIds = this.selectedIds
-      for (var disputeId of this.selectedIds) {
-        let dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
-        let disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
-        let mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))
+      for (const disputeId of this.selectedIds) {
+        const dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
+        const disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
+        const mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))
         if (mapToChangeIndex === -1) {
           disputeNegotiatorMap.push({
             disputes: [dispute.id],
-            negotiators: disputeNegotiators
+            negotiators: disputeNegotiators,
           })
         } else {
-          let mapToChange = disputeNegotiatorMap[mapToChangeIndex]
+          const mapToChange = disputeNegotiatorMap[mapToChangeIndex]
           mapToChange.disputes.push(dispute.id)
           disputeNegotiatorMap[mapToChangeIndex] = mapToChange
         }
@@ -345,7 +397,7 @@ export default {
           cancelButtonText: 'Escolher negociadores de cada disputa',
           cancelButtonClass: 'is-plain',
           distinguishCancelAndClose: true,
-          customClass: 'el-message-box--lg'
+          customClass: 'el-message-box--lg',
         }).then(() => {
           this.disputeNegotiators = []
           this.changeNegotiatorDialogVisible = true
@@ -360,20 +412,20 @@ export default {
         })
       }
     },
-    arraysEqual (a, b) {
+    arraysEqual(a, b) {
       if (a === b) return true
       if (a === null || b === null) return false
       if (a.length !== b.length) return false
-      for (var i = 0; i < a.length; ++i) {
+      for (let i = 0; i < a.length; ++i) {
         if (a[i] !== b[i]) return false
       }
       return true
     },
-    changeNegotiator () {
-      let isByGroup = !!this.disputeNegotiatorMap.length
-      let params = {
+    changeNegotiator() {
+      const isByGroup = !!this.disputeNegotiatorMap.length
+      const params = {
         type: 'CHANGE_NEGOTIATOR',
-        negotiatorsId: this.disputeNegotiators
+        negotiatorsId: this.disputeNegotiators,
       }
       if (isByGroup) {
         params.disputeIds = this.disputeNegotiatorMap[this.currentDisputeNegotiatorMap].disputes
@@ -387,7 +439,7 @@ export default {
           title: 'Yay!',
           message: 'Ação <strong>' + this.$t('action.CHANGE_NEGOTIATOR') + '</strong> realizada com sucesso.',
           type: 'success',
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         })
         // SEGMENT TRACK
         this.$jusSegment(getTracktitleByAction('CHANGE_NEGOTIATOR', true), { amount: this.selectedIds.length })
@@ -405,8 +457,8 @@ export default {
       }).finally(() => {
         this.changeNegotiatorDialogLoading = false
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

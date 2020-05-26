@@ -14,11 +14,23 @@
       :rules="syncFormRules"
       label-position="top"
       @submit.native.prevent="submitForm">
-      <el-form-item label="E-mail de trabalho" prop="email" type="text">
-        <el-input v-model="syncForm.email" :readonly="synced" name="email"/>
+      <el-form-item
+        label="E-mail de trabalho"
+        prop="email"
+        type="text">
+        <el-input
+          v-model="syncForm.email"
+          :readonly="synced"
+          name="email"/>
       </el-form-item>
-      <el-form-item v-if="!synced" label="Senha do e-mail" prop="password">
-        <el-input v-model="syncForm.password" type="password" name="password"/>
+      <el-form-item
+        v-if="!synced"
+        label="Senha do e-mail"
+        prop="password">
+        <el-input
+          v-model="syncForm.password"
+          type="password"
+          name="password"/>
       </el-form-item>
     </el-form>
     <el-alert
@@ -34,13 +46,22 @@
       <strong>{{ message }}</strong>
       <JusStatusDot :type="type"/>
     </div>
-    <el-button v-if="!synced" type="primary" @click="syncEmail">
+    <el-button
+      v-if="!synced"
+      type="primary"
+      @click="syncEmail">
       Sincronizar
     </el-button>
-    <el-button v-if="synced" type="primary" @click="$emit('onboarding:step:next')">
+    <el-button
+      v-if="synced"
+      type="primary"
+      @click="$emit('onboarding:step:next')">
       Próximo
     </el-button>
-    <el-button v-if="!synced" type="text" @click="nextStep()">Pular</el-button>
+    <el-button
+      v-if="!synced"
+      type="text"
+      @click="nextStep()">Pular</el-button>
   </div>
 </template>
 
@@ -48,43 +69,43 @@
 
 export default {
   components: {
-    JusLogoCompany: () => import('@/components/images/JusLogoCompany')
+    JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
   },
-  data () {
+  data() {
     return {
       showSuccess: false,
       showError: false,
       synced: false,
       syncForm: {
         email: '',
-        password: ''
+        password: '',
       },
       syncFormRules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
         ],
         password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-        ]
-      }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+        ],
+      },
     }
   },
-  onCreate () {
+  onCreate() {
     if (this.$store.state.workspaceModule.emailAccount) {
       this.syncForm.email = this.$store.state.workspaceModule.emailAccount
     }
   },
   computed: {
-    message () {
+    message() {
       return this.synced ? 'SINCRONIZADO' : 'AGUARDANDO SINCRONIZAÇÃO'
     },
-    type () {
+    type() {
       return this.synced ? 'success' : 'warning'
-    }
+    },
   },
   methods: {
-    syncEmail () {
+    syncEmail() {
       this.showSuccess = false
       this.showError = false
       this.$refs['syncForm'].validate((valid) => {
@@ -105,10 +126,10 @@ export default {
         }
       })
     },
-    nextStep () {
+    nextStep() {
       this.$emit('onboarding:step:next')
-    }
-  }
+    },
+  },
 }
 </script>
 

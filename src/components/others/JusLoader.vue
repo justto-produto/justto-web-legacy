@@ -14,9 +14,9 @@ export default {
   props: {
     content: {
       default: '',
-      type: String
-    }
-  }
+      type: String,
+    },
+  },
 }
 </script>
 

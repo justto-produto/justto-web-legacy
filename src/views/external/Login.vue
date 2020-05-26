@@ -1,7 +1,9 @@
 <template>
   <div class="external-view">
     <el-container>
-      <el-aside width="50%" class="hidden-sm-and-down">
+      <el-aside
+        width="50%"
+        class="hidden-sm-and-down">
         <jus-sidenav-external />
       </el-aside>
       <el-main class="display-flex">
@@ -27,14 +29,18 @@
             type="success"
             data-testid="register-success"
             @close="showSuccess = false"/>
-          <el-form-item label="Email" prop="email">
+          <el-form-item
+            label="Email"
+            prop="email">
             <el-input
               v-model="loginForm.email"
               type="email"
               name="login-email"
               data-testid="login-email"/>
           </el-form-item>
-          <el-form-item label="Senha" prop="password">
+          <el-form-item
+            label="Senha"
+            prop="password">
             <el-input
               v-model="loginForm.password"
               :type="passwordType"
@@ -63,11 +69,20 @@
           </el-button>
           <el-row class="external-view__info">
             Ao clicar em Entrar, eu concordo com os
-            <a data-testid="use-terms" href="https://justto.com.br/termos-de-uso/" target="_blank"> Termos de Uso</a> e com os
-            <a data-testid="contract-terms" href="https://justto.com.br/termos-de-contratacao/" target="_blank">Termos Gerais de Contratação.</a>
+            <a
+              data-testid="use-terms"
+              href="https://justto.com.br/termos-de-uso/"
+              target="_blank"> Termos de Uso</a> e com os
+            <a
+              data-testid="contract-terms"
+              href="https://justto.com.br/termos-de-contratacao/"
+              target="_blank">Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
-            <a href="register" data-testid="register" @click.prevent="$router.push('register')">Cadastre-se agora mesmo.</a>
+            <a
+              href="register"
+              data-testid="register"
+              @click.prevent="$router.push('register')">Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
         <el-form
@@ -81,7 +96,9 @@
           @submit.native.prevent="selectWorkspace">
           <h1 class="external-view__title">Equipe</h1>
           <p>Selecione uma de suas equipes de trabalho para entrar.</p>
-          <el-form-item label="Equipe" prop="selectedWorkspaceIndex">
+          <el-form-item
+            label="Equipe"
+            prop="selectedWorkspaceIndex">
             <el-select
               v-model="workspaceForm.selectedWorkspaceIndex"
               placeholder="Selecione"
@@ -121,9 +138,9 @@
 export default {
   name: 'Login',
   components: {
-    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal')
+    JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
   },
-  data () {
+  data() {
     return {
       workspaces: [],
       showPassword: false,
@@ -133,37 +150,37 @@ export default {
       errorMessage: '',
       loginForm: {
         email: '',
-        password: ''
+        password: '',
       },
       rules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
         ],
         password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
-        ]
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+        ],
       },
       workspaceForm: {
-        selectedWorkspaceIndex: ''
+        selectedWorkspaceIndex: '',
       },
       workspaceRules: {
         selectedWorkspaceIndex:
-        [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-      }
+        [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      },
     }
   },
   computed: {
-    passwordType () {
+    passwordType() {
       return this.showPassword ? 'text' : 'password'
-    }
+    },
   },
-  beforeMount () {
+  beforeMount() {
     if (this.$store.getters.isLoggedIn) {
       this.$store.dispatch('logout')
     }
   },
-  created () {
+  created() {
     if (this.$route.query.token) {
       this.$store.dispatch('activate', this.$route.query.token)
         .then(() => {
@@ -175,7 +192,7 @@ export default {
     }
   },
   methods: {
-    doLogin () {
+    doLogin() {
       this.$refs['loginForm'].validate(valid => {
         if (valid) {
           this.showError = false
@@ -184,7 +201,7 @@ export default {
             .then(() => {
               Promise.all([
                 this.$store.dispatch('myAccount'),
-                this.$store.dispatch('myWorkspace')
+                this.$store.dispatch('myWorkspace'),
               ]).then(responses => {
                 // SEGMENT TRACK
                 this.$jusSegment('Usuário logado')
@@ -214,11 +231,11 @@ export default {
         }
       })
     },
-    getMembersAndRedirect (response) {
+    getMembersAndRedirect(response) {
       // SEGMENT TRACK
       this.$jusSegment('Seleção de Workspace', {
         workspace: response.workspace.name,
-        team: response.workspace.teamName
+        team: response.workspace.teamName,
       })
       if (response.workspace) this.$store.commit('setWorkspace', response.workspace)
       if (response.profile) this.$store.commit('setProfile', response.profile)
@@ -231,23 +248,23 @@ export default {
           this.mountError()
         })
     },
-    selectWorkspace () {
+    selectWorkspace() {
       this.$refs.workspaceForm.validate(valid => {
         if (valid) {
           this.getMembersAndRedirect(this.workspaces[this.workspaceForm.selectedWorkspaceIndex])
         }
       })
     },
-    switchShowPassword () {
+    switchShowPassword() {
       this.showPassword = !this.showPassword
     },
-    mountError (message) {
+    mountError(message) {
       this.errorMessage = message || `Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema.`
       this.showError = true
       this.showLoading = false
-    }
-  }
+    },
+  },
 }
 </script>
 
