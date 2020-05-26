@@ -11,9 +11,10 @@
             @blur="props.row.editing = false, editMinuteName(props.row)" />
           <div
             v-show="!props.row.editing"
-            class="label"
+            class="label panel-minute-view__editable-label"
             @click="props.row.editing = true ,focusInput(props.row.id, props.row.name)">
             {{ props.row.name }}
+            <jus-icon icon="edit" />
           </div>
         </template>
       </el-table-column>
@@ -314,6 +315,14 @@ export default {
     .el-card__body {
       padding: 16px;
     }
+  }
+  &__editable-label img {
+    display: none;
+    cursor: pointer;
+    width: 16px;
+  }
+  &__editable-label:hover img {
+    display: inline;
   }
 }
 </style>

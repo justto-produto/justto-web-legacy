@@ -24,7 +24,23 @@
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="Nome"/>
+      <el-table-column prop="name" label="Nome">
+        <template slot-scope="props">
+          <el-input
+            v-show="props.row.editing"
+            :ref="'input' + props.row.id"
+            v-model="props.row.name"
+            @keyup.enter.native="props.row.editing = false, editWorkspaceName(props.row)"
+            @blur="props.row.editing = false, editWorkspaceName(props.row)" />
+          <div
+            v-show="!props.row.editing"
+            class="label panel-workspace-view__editable-label"
+            @click="props.row.editing = true ,focusInput(props.row.id, props.row.name)">
+            {{ props.row.name }}
+            <jus-icon icon="edit" />
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="teamName" label="Nome de exibição"/>
       <el-table-column prop="status" label="Status" width="80px">
         <template slot-scope="props">
@@ -121,6 +137,7 @@ export default {
       loading: false,
       addUserDialogVisible: false,
       editWorkspaceDialogVisible: false,
+      workspaceNameToEdit: '',
       search: '',
       page: 1,
       pageSize: 20,
@@ -332,6 +349,20 @@ export default {
           loading.close()
         })
       })
+    },
+    editWorkspaceName (workspace) {
+      this.tableKey += 1
+      if (workspace.name !== this.workspaceNameToEdit) {
+        this.$store.dispatch('adminWorkspaces', {
+          method: 'put',
+          data: workspace
+        })
+      }
+    },
+    focusInput (workspaceId, workspaceName) {
+      this.tableKey += 1
+      this.workspaceNameToEdit = workspaceName
+      this.$nextTick(() => this.$refs['input' + workspaceId].$el.children[0].focus())
     }
   }
 }
@@ -349,6 +380,14 @@ export default {
     th {
       background-color: #f7f7f7;
     }
+  }
+  &__editable-label img {
+    display: none;
+    cursor: pointer;
+    width: 16px;
+  }
+  &__editable-label:hover img {
+    display: inline;
   }
 }
 </style>
