@@ -510,10 +510,21 @@
               <i class="el-icon-paperclip" />
             </el-tooltip>
           </span>
-          <el-input
-            v-model="attachmentFilterTerm"
-            placeholder="Busque anexos pelo nome"
-            prefix-icon="el-icon-search" />
+          <div class="dispute-overview-view__attachment-buttons">
+            <el-input
+              v-model="attachmentFilterTerm"
+              clearable
+              placeholder="Busque por anexos"
+              prefix-icon="el-icon-search" />
+              <el-tooltip content="Enriquecer disputa">
+                <el-button
+                type=""
+                plain
+                @click="enrichDispute">
+                <jus-icon icon="enrich"/>
+              </el-button>
+            </el-tooltip>
+          </div>
           <el-link
             v-for="attachment in filteredDisputeAttachments"
             :key="attachment.url"
@@ -1416,6 +1427,9 @@ export default {
     banks() {
       return this.$store.getters.banksList
     },
+    isAccepted () {
+      return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : false
+    }
   },
   watch: {
     activeRoleId: function(newActiveRole) {
@@ -2023,7 +2037,31 @@ export default {
       this.bankAccountIdstoUnlink.push(id)
       this.roleForm.bankAccounts.splice(index, 1)
     },
-  },
+    enrichDispute () {
+      const message = {
+        content: this.isAccepted ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?',
+        title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER'
+      }
+      this.$confirm(message.content, message.title, {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        dangerouslyUseHTMLString: true,
+        showClose: false
+      }).then(() => {
+        this.$store.dispatch('sendDisputeAction', {
+          disputeId: this.dispute.id,
+          action: 'enrich'
+        }).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Ação <b>ENRIQUECER</b> realizada com sucesso.',
+            type: 'success',
+            dangerouslyUseHTMLString: true
+          })
+        })
+      })
+    }
+  }
 }
 </script>
 
@@ -2291,6 +2329,19 @@ export default {
       }
     }
   }
+  &__attachment-buttons {
+    .el-input {
+      width: calc(100% - 50px);
+    }
+    .el-button {
+      padding: 12px;
+      margin-left: 8px;
+      img {
+        margin: -3px 0px;
+        width: 14px;
+      }
+    }
+  }
   .el-input-group__append {
     border-color: #9462f7;
     background-color: #9462f7;
@@ -2336,6 +2387,7 @@ export default {
   &__attachment-tab {
     .el-link {
       margin-top: 10px;
+      display: block;
     }
   }
 }
