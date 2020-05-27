@@ -4,7 +4,7 @@
       :class="{'active': active}"
       class="management-actions">
       <div class="management-actions__length">
-        <i class="el-icon-check" /> {{ isSelectedAll ? disputesTotalLength : selectedIdsLength }}
+        <i class="el-icon-check" /> {{ selectedLenghtToShow }}
       </div>
       <div>
         <el-button
@@ -268,11 +268,14 @@ export default {
     selectedIdsLength() {
       return this.selectedIdsComp.length
     },
-    isSelectedAll() {
-      return this.$store.getters.disputes.length === this.selectedIdsLength
-    },
     disputesTotalLength() {
       return this.$store.getters.disputeQuery.total
+    },
+    selectedLenghtToShow() {
+      return this.isSelectedAll ? this.disputesTotalLength : this.selectedIdsLength
+    },
+    isSelectedAll() {
+      return this.$store.getters.disputes.length === this.selectedIdsLength
     },
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
@@ -406,12 +409,6 @@ export default {
       this.$emit('disputes:clear')
     },
     checkDisputeNegotiators() {
-      // const params = { disputeIds: this.selectedIds }
-      // if (this.isSelectedAll) {
-      //   params['disputeIds'] = []
-      //   params['allSelected'] = true
-      // }
-      // this.$store.dispatch('getNegotiators', params).then(response => { const negotiatoresList = response })
       const disputeNegotiatorMap = []
       this.disputeNegotiatorMap = []
       this.changeNegotiatorByGroup = false
