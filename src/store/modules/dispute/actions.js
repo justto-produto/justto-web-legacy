@@ -93,7 +93,7 @@ const disputeActions = {
   putDisputeProprieties({ commit }, params) {
     return axiosDispatcher({
       url: `api/disputes/${params.disputeId}/properties`,
-      method: 'put',
+      method: 'PUT',
       data: params.data,
       mutation: 'setDisputeProprieties',
     })
@@ -245,16 +245,11 @@ const disputeActions = {
         })
     })
   },
-  sendBatchAction({ commit }, body) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/disputes/actions/batch', body)
-        .then(response => {
-          resolve(response.data)
-        })
-        .catch(error => {
-          reject(error)
-        })
+  sendBatchAction({ commit, state }, params) {
+    return axiosDispatcher({
+      url: `api/disputes/actions/batch${queryBuilder(state.query)}`,
+      method: 'PUT',
+      data: params,
     })
   },
   sendDisputeNote({ commit }, body) {
@@ -535,6 +530,11 @@ const disputeActions = {
       url: `api/disputes/party/analisis/${documentNumber}`,
       mutation: 'addPartyAnalysis',
       payload: documentNumber,
+    })
+  },
+  getNegotiators({ state, commit, dispatch }) {
+    return axiosDispatcher({
+      url: `/api/disputes/negotiators/filter${queryBuilder(state.query)}`,
     })
   },
 }

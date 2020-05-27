@@ -281,6 +281,10 @@ export default {
           params['expirationDate'] = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
           break
       }
+      if (this.isSelectedAll) {
+        params['allSelected'] = true
+        params['disputeIds'] = []
+      }
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
@@ -374,6 +378,10 @@ export default {
       this.$emit('disputes:clear')
     },
     checkDisputeNegotiators() {
+      if (this.isSelectedAll) {
+        this.$store.disputeModule.dispatch('axiosDispatcher')
+      }
+
       const disputeNegotiatorMap = []
       this.disputeNegotiatorMap = []
       this.changeNegotiatorByGroup = false
