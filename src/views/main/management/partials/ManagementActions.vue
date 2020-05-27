@@ -4,7 +4,7 @@
       :class="{'active': active}"
       class="management-actions">
       <div class="management-actions__length">
-        <i class="el-icon-check" /> {{ selectedIdsLength }}
+        <i class="el-icon-check" /> {{ isSelectedAll ? disputesTotalLength : selectedIdsLength }}
       </div>
       <div>
         <el-button
@@ -234,11 +234,17 @@ export default {
         this.$emit('update:selectedIds', ids)
       },
     },
+    strategies() {
+      return this.$store.getters.strategyList
+    },
     selectedIdsLength() {
       return this.selectedIdsComp.length
     },
-    strategies() {
-      return this.$store.getters.strategyList
+    isSelectedAll() {
+      return this.$store.getters.disputes.length === this.selectedIdsLength
+    },
+    disputesTotalLength() {
+      return this.$store.getters.disputeQuery.total
     },
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
