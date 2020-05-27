@@ -525,20 +525,22 @@
               </el-button>
             </el-tooltip>
           </div>
-          <el-link
-            v-for="attachment in filteredDisputeAttachments"
-            :key="attachment.url"
-            :underline="false"
-            :href="attachment.url"
-            target="_blank">
-            <i class="el-icon-document"/> {{ attachment.name }}
-          </el-link>
-          <div
-            v-if="!filteredDisputeAttachments.length"
-            class="center">
-            <br>
-            Sem anexos
-          </div>
+          <JusDragArea>
+            <el-link
+              v-for="attachment in filteredDisputeAttachments"
+              :key="attachment.url"
+              :underline="false"
+              :href="attachment.url"
+              target="_blank">
+              <i class="el-icon-document"/> {{ attachment.name }}
+            </el-link>
+            <div
+              v-if="!filteredDisputeAttachments.length"
+              class="center">
+              <br>
+              Sem anexos
+            </div>
+          </JusDragArea>
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -1178,9 +1180,13 @@
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
+import { JusDragArea } from '@/components/JusDragArea'
+
 export default {
   name: 'DisputeOverview',
   components: {
+    JusDragArea,
+
     DisputeAddRole: () => import('./DisputeAddRole'),
     DisputeProprieties: () => import('./DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
