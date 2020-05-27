@@ -532,9 +532,9 @@ const disputeActions = {
       payload: documentNumber,
     })
   },
-  getNegotiators({ state, commit, dispatch }) {
+  getNegotiators({ state, commit, dispatch }, params) {
     return axiosDispatcher({
-      url: `/api/disputes/negotiators/filter${queryBuilder(state.query)}`,
+      url: `/api/disputes/negotiators/filter${queryBuilder({ ...state.query, ...params })}`,
     })
   },
 }

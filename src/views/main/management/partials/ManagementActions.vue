@@ -378,9 +378,14 @@ export default {
       this.$emit('disputes:clear')
     },
     checkDisputeNegotiators() {
+      const params = { disputeIds: this.selectedIds }
       if (this.isSelectedAll) {
-        this.$store.disputeModule.dispatch('axiosDispatcher')
+        params['disputeIds'] = []
+        params['allSelected'] = true
       }
+      this.$store.dispatch('getNegotiators', params).then(response => { const negotiatoresList = response })
+
+
 
       const disputeNegotiatorMap = []
       this.disputeNegotiatorMap = []
