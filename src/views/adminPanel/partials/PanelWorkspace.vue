@@ -105,12 +105,33 @@
       width="50%"
       @submit.native.prevent="editWorkspace">
       <el-form ref="workspaceForm" :model="workspaceForm" :rules="workspaceRules" label-position="top">
-        <el-form-item label="Nome" prop="name">
+        <h3>Alterar nome da equipe</h3>
+        <el-alert
+          :closable="false"
+          type="info"
+          show-icon>
+          <span slot="title">
+            Este nome <strong>NÃO</strong> irá aparecer nas mensagens automáticas. Utilize-o para organização interna.
+          </span>
+        </el-alert>
+        <br>
+        <el-form-item label="Nome da equipe" prop="name">
           <el-input v-model="workspaceForm.name" />
         </el-form-item>
+        <h3>Alterar nome da empresa/escritório</h3>
+        <el-alert
+          :closable="false"
+          type="info"
+          show-icon>
+          <span slot="title">
+            Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
+          </span>
+        </el-alert>
+        <br>
         <el-form-item label="Nome de exibição" prop="teamName">
           <el-input v-model="workspaceForm.teamName" />
         </el-form-item>
+        <h3>Configurações gerais da equipe</h3>
         <el-form-item label="Status" prop="status">
           <el-select v-model="workspaceForm.status">
             <el-option
@@ -119,6 +140,25 @@
               :label="$t('workspace.' + item).toUpperCase()"
               :value="item" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="Como detectar possíveis ofensores em sua carteira?">
+          <el-select v-model="workspaceForm.vexatiousType">
+            <el-option
+              v-for="type in ['QUANTITY', 'AVERAGE']"
+              :key="type"
+              :label="$t(`threshold.${type}`)"
+              :value="type" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="workspaceForm.vexatiousType">
+          <span slot="label">
+            <span v-if="workspaceForm.vexatiousType === 'QUANTITY'">Quantas disputas uma mesma pessoa precisa ter para ser qualificado como possível ofensor?</span>
+            <span v-else>Qual percentual acima da média de disputas uma pessoa precisa ter para ser qualificado como possível ofensor?</span>
+          </span>
+          <money
+            v-model="workspaceForm.vexatiousThreshold"
+            v-bind="vexatiousTypeMask"
+            class="el-input__inner" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -159,7 +199,9 @@ export default {
       workspaceForm: {
         name: '',
         teamName: '',
-        status: ''
+        status: '',
+        vexatiousType: '',
+        vexatiousThreshold: ''
       },
       workspaceRules: {
         name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
@@ -178,6 +220,16 @@ export default {
         const start = this.page === 1 ? 0 : ((this.page - 1) * this.pageSize)
         const end = (this.page * this.pageSize)
         return this.workspaces.slice(start, end)
+      }
+    },
+    vexatiousTypeMask () {
+      return {
+        decimal: '',
+        thousands: '',
+        prefix: '',
+        suffix: this.workspaceForm.vexatiousType === 'AVERAGE' ? ' %' : '',
+        precision: 0,
+        masked: false
       }
     }
   },
@@ -380,6 +432,10 @@ export default {
     th {
       background-color: #f7f7f7;
     }
+  }
+  .el-form--label-top .el-form-item__label {
+    line-height: normal !important;
+    margin-bottom: 8px;
   }
   &__editable-label img {
     display: none;
