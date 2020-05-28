@@ -42,8 +42,8 @@ const actions = {
       axios.put('api/workspaces', {
         teamName: state.teamName,
         status: state.status,
-        name: params.name || state.name,
-        properties: params.properties || state.properties
+        name: params.name,
+        properties: params.properties
       }).then(response => {
         commit('setWorkspace', response.data)
         resolve(response.data)

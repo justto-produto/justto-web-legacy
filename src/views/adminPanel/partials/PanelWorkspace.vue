@@ -141,8 +141,8 @@
               :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Como detectar possíveis ofensores em sua carteira?">
-          <el-select v-model="workspaceForm.vexatiousType">
+        <el-form-item label="Como detectar possíveis ofensores em sua carteira?" prop="vexatiousType">
+          <el-select v-model="workspaceForm.properties.VEXATIOUS_TYPE">
             <el-option
               v-for="type in ['QUANTITY', 'AVERAGE']"
               :key="type"
@@ -150,13 +150,13 @@
               :value="type" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="workspaceForm.vexatiousType">
+        <el-form-item v-if="workspaceForm.properties.VEXATIOUS_TYPE" prop="vexatiousThreshold">
           <span slot="label">
-            <span v-if="workspaceForm.vexatiousType === 'QUANTITY'">Quantas disputas uma mesma pessoa precisa ter para ser qualificado como possível ofensor?</span>
+            <span v-if="workspaceForm.properties.VEXATIOUS_TYPE === 'QUANTITY'">Quantas disputas uma mesma pessoa precisa ter para ser qualificado como possível ofensor?</span>
             <span v-else>Qual percentual acima da média de disputas uma pessoa precisa ter para ser qualificado como possível ofensor?</span>
           </span>
           <money
-            v-model="workspaceForm.vexatiousThreshold"
+            v-model="workspaceForm.properties.VEXATIOUS_THRESHOLD"
             v-bind="vexatiousTypeMask"
             class="el-input__inner" />
         </el-form-item>
@@ -201,10 +201,15 @@ export default {
         teamName: '',
         status: '',
         vexatiousType: '',
-        vexatiousThreshold: ''
+        vexatiousThreshold: '',
+        properties: {
+          VEXATIOUS_THRESHOLD: '',
+          VEXATIOUS_TYPE: ''
+        }
       },
       workspaceRules: {
-        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+
       }
     }
   },
@@ -227,7 +232,7 @@ export default {
         decimal: '',
         thousands: '',
         prefix: '',
-        suffix: this.workspaceForm.vexatiousType === 'AVERAGE' ? ' %' : '',
+        suffix: this.workspaceForm.properties.VEXATIOUS_TYPE === 'AVERAGE' ? ' %' : '',
         precision: 0,
         masked: false
       }

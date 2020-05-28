@@ -548,7 +548,8 @@ export default {
           properties: {
             VEXATIOUS_THRESHOLD: this.vexatiousThreshold.toString(),
             VEXATIOUS_TYPE: this.vexatiousType.toString()
-          }
+          },
+          name: this.companyName
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Configurações da equipe alterada')
@@ -591,7 +592,13 @@ export default {
     },
     changeCompanyName () {
       if (this.companyName) {
-        this.$store.dispatch('editWorkpace', { name: this.companyName }).then(() => {
+        this.$store.dispatch('editWorkpace', {
+          properties: {
+            VEXATIOUS_THRESHOLD: this.vexatiousThreshold.toString(),
+            VEXATIOUS_TYPE: this.vexatiousType.toString()
+          },
+          name: this.companyName
+        }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nome do escritório/empresa alterado')
           this.$jusNotification({
