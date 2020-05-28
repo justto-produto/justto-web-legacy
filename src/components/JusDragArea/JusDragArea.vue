@@ -1,32 +1,44 @@
 <template>
-  <article
+  <form
     ref="dragAreaElm"
     :class="{
       'jus-drag-area--dragging': isDragging
     }"
+    enctype="multipart/form-data"
     class="jus-drag-area"
+    @dragenter="handleDragenter"
   >
     <slot />
-    <el-card
-      :body-style="{ 'text-align': 'center'}"
-      class="el-card--dashed-hover jus-drag-area__mask"
-      shadow="never"
+    <label
+      for="input-file"
+      @dragover.prevent
+      @drop.prevent="handleDrop"
     >
-      <jus-icon
-        icon="upload-file"
-        is-active />
-      <div>
-        <br>
-        Clique aqui e importe sua planilha nos<br> formatos XLSX, CSV ou XLS.
-      </div>
-    </el-card>
-  </article>
+      <el-card
+        :body-style="{ 'text-align': 'center'}"
+        class="el-card--dashed-hover jus-drag-area__mask"
+        shadow="never"
+      >
+        <jus-icon
+          icon="upload-file"
+          is-active />
+        <div>
+          <br>
+          Arraste aqui os anexos que deseja importar!
+        </div>
+      </el-card>
+    </label>
+    <input
+      id="input-file"
+      type="file"
+      class="jus-drag-area__input-file"
+      @change="handleDrop"
+    >
+  </form>
 </template>
 
 <script>
-import Dropzone from "dropzone"; //eslint-disable-line
-
-Dropzone.autoDiscover = false
+import { mapActions } from 'vuex'
 
 export default {
   name: 'JusDragArea',
@@ -35,17 +47,33 @@ export default {
     isDragging: false,
   }),
   mounted() {
-    this.dropzone = new Dropzone(this.$refs.dragAreaElm, {
-      url: 'https',
-      uploadMultiple: true,
-      clickable: false,
-    })
+  },
+  methods: {
+    ...mapActions(['uploadAttachment']),
+    handleDragenter(evt) {
+      console.log('start', evt)
+      this.isDragging = true
+    },
+    handleDragleave(evt) {
+      console.log('end', evt)
+      this.isDragging = false
+    },
+    handleDrop(evt) {
+      const { files } = evt.dataTransfer
 
-    this.dropzone.on('dragover', () => (this.isDragging = true))
-    this.dropzone.on('dragend', () => (this.isDragging = false))
-    this.dropzone.on('drop', () => (this.isDragging = false))
-    this.dropzone.on('success', file => (file.previewElement.innerHTML = ''))
-    this.dropzone.on('error', file => (file.previewElement.innerHTML = ''))
+      console.log(files)
+
+      Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex]))
+
+      this.isDragging = false
+    },
+    saveFile(file) {
+      const { params } = this.$route
+      const formData = new FormData()
+      formData.append('file', file)
+
+      return this.uploadAttachment(params.id, formData)
+    },
   },
 }
 </script>
@@ -58,6 +86,10 @@ export default {
   min-height: 300px;
 
   .jus-drag-area__mask {
+    display: none;
+  }
+
+  .jus-drag-area__input-file {
     display: none;
   }
 

@@ -104,6 +104,14 @@ const disputeActions = {
       mutation: 'setDisputeAttachments',
     })
   },
+  uploadAttachment({ commit }, disputeId, file) {
+    axiosDispatcher({
+      url: `api/office/disputes/${disputeId}/attachment`,
+      method: 'post',
+      data: file,
+      mutation: 'appendFile',
+    })
+  },
   getDisputes({ commit, state }, command) {
     return new Promise((resolve, reject) => {
       if (command !== 'nextPage') state.loading = true
