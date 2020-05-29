@@ -109,7 +109,12 @@ const disputeActions = {
       url: `api/office/disputes/${disputeId}/attachment`,
       method: 'post',
       data: formData,
-      mutation: 'appendFile',
+    })
+  },
+  deleteAttachment({ commit }, { disputeId, documentId }) {
+    axiosDispatcher({
+      url: `api/dispute/${disputeId}/attachment/${documentId}`,
+      method: 'delete',
     })
   },
   getDisputes({ commit, state }, command) {

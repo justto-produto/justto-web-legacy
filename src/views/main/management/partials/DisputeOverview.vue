@@ -525,22 +525,29 @@
               </el-button>
             </el-tooltip>
           </div>
-          <JusDragArea>
-            <el-link
+          <jus-drag-area>
+            <span
               v-for="attachment in filteredDisputeAttachments"
-              :key="attachment.url"
-              :underline="false"
-              :href="attachment.url"
-              target="_blank">
-              <i class="el-icon-document"/> {{ attachment.name }}
-            </el-link>
+              :key="attachment.url">
+              <el-link
+                :underline="false"
+                :href="attachment.url"
+                target="_blank">
+                <i class="el-icon-document"/>
+                {{ attachment.name }}
+                <i
+                  class="el-icon-delete"
+                  @click="deleteAttachment(attachment)"
+                />
+              </el-link>
+            </span>
             <div
               v-if="!filteredDisputeAttachments.length"
               class="center">
               <br>
               Sem anexos
             </div>
-          </JusDragArea>
+          </jus-drag-area>
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -1343,7 +1350,10 @@ export default {
     },
     filteredDisputeAttachments() {
       if (this.disputeAttachments) {
-        return this.disputeAttachments.filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')))
+        return this.disputeAttachments
+          .filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+          )
       } return []
     },
     disputeBankAccounts() {
@@ -2065,6 +2075,12 @@ export default {
             dangerouslyUseHTMLString: true,
           })
         })
+      })
+    },
+    deleteAttachment(attachment) {
+      this.$store.dispatch('deleteAttachment', {
+        disputeId: this.dispute.id,
+        documentId: attachment.id,
       })
     },
   },

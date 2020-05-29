@@ -146,6 +146,15 @@
         <jus-icon icon="external-link" />
       </el-button>
     </el-tooltip>
+    <el-tooltip
+      v-if="tableActions"
+      content="Abrir disputa em nova aba">
+      <el-button
+        type="text"
+        @click="uploadAttacment()">
+        <jus-icon icon="upload-file" />
+      </el-button>
+    </el-tooltip>
     <el-tooltip :content="dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
       <el-button
         :type="tableActions ? 'text' : ''"
@@ -719,6 +728,9 @@ export default {
     },
     togleCollapsed() {
       this.collapsed = !this.collapsed
+    },
+    uploadAttacment() {
+
     },
     openSettledDialog(action) {
       this.modalLoading = false
