@@ -535,11 +535,11 @@
                 target="_blank">
                 <i class="el-icon-document"/>
                 {{ attachment.name }}
-                <i
-                  class="el-icon-delete"
-                  @click="deleteAttachment(attachment)"
-                />
               </el-link>
+              <!-- <i
+              class="el-icon-delete"
+              @click="deleteAttachment(attachment)"
+              /> -->
             </span>
             <div
               v-if="!filteredDisputeAttachments.length"

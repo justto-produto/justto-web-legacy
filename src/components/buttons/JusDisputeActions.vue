@@ -147,10 +147,10 @@
       </el-button>
     </el-tooltip>
     <el-tooltip
-      v-if="tableActions"
       content="Abrir disputa em nova aba">
       <el-button
-        type="text"
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
         @click="uploadAttacment()">
         <jus-icon icon="upload-file" />
       </el-button>
