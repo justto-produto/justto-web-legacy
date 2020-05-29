@@ -526,21 +526,25 @@
             </el-tooltip>
           </div>
           <jus-drag-area>
-            <span
-              v-for="attachment in filteredDisputeAttachments"
-              :key="attachment.url">
-              <el-link
-                :underline="false"
-                :href="attachment.url"
-                target="_blank">
-                <i class="el-icon-document"/>
-                {{ attachment.name }}
-              </el-link>
-              <!-- <i
-              class="el-icon-delete"
-              @click="deleteAttachment(attachment)"
-              /> -->
-            </span>
+            <ul class="link-list">
+              <li
+                v-for="attachment in filteredDisputeAttachments"
+                :key="attachment.url"
+                class="link-item">
+                <el-link
+                  :underline="false"
+                  :href="attachment.url"
+                  target="_blank"
+                  class="dispute-overview-view__attachment-link">
+                  <i class="el-icon-document"/>
+                  {{ attachment.name }}
+                </el-link>
+                <i
+                  class="el-icon-delete"
+                  @click="deleteAttachment(attachment)"
+                />
+              </li>
+            </ul>
             <div
               v-if="!filteredDisputeAttachments.length"
               class="center">
@@ -2407,9 +2411,24 @@ export default {
     color: $--color-warning
   }
   &__attachment-tab {
-    .el-link {
-      margin-top: 10px;
-      display: block;
+    .el-icon-delete {
+      display: none;
+      color: $--color-danger;
+      cursor: pointer;
+    }
+    .link-list {
+      list-style: none;
+      padding: 0;
+      .link-item {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &:hover .el-icon-delete {
+          display: block;
+
+        }
+      }
     }
   }
 }
