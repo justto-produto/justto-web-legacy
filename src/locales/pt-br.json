@@ -8,6 +8,7 @@
     "materialDamage": "danos materiais",
     "externalId": "código interno da disputa",
     "description": "descrição",
+    "provisionedValue": "Valor Provisionado",
     "status": {
       "ACCEPTED": "aceita",
       "CHECKOUT": "sem dados bancarios",
@@ -232,8 +233,5 @@
   "threshold": {
     "QUANTITY": "Por contagem de disputas",
     "AVERAGE": "Por percentual acima da média"
-  },
-  "provisioned": {
-    "value": "Valor Provisionado"
   }
 }
