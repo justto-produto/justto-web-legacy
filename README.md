@@ -1,6 +1,6 @@
 # Justto Web 2.0 [![wercker status](https://app.wercker.com/status/a35117f11c094f18132e51e83cc975d0/s/ "wercker status")](https://app.wercker.com/project/byKey/a35117f11c094f18132e51e83cc975d0)
 
-Novo sistema web da Justto. :heart:
+Novo sistema web da Justto que agora funciona. :heart:
 
 [:point_right: Leia a documentação antes de programar!! :point_left:](https://gitlab.com/Justto/justto-web/wikis/)
 
