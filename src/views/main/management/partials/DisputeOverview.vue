@@ -516,12 +516,12 @@
               clearable
               placeholder="Busque por anexos"
               prefix-icon="el-icon-search" />
-            <el-tooltip content="Enriquecer disputa">
+            <el-tooltip content="Atualizar anexos">
               <el-button
                 type=""
                 plain
                 @click="enrichDispute">
-                <jus-icon icon="enrich"/>
+                <jus-icon icon="refresh"/>
               </el-button>
             </el-tooltip>
           </div>
