@@ -68,11 +68,12 @@ export default {
       this.isDragging = false
     },
     saveFile(file) {
-      const { params } = this.$route
+      console.log('SUCK MY DICK', file)
+      const disputeId = this.$route.params.id
       const formData = new FormData()
       formData.append('file', file)
 
-      return this.uploadAttachment(params.id, formData)
+      return this.uploadAttachment({ disputeId, formData })
     },
   },
 }
