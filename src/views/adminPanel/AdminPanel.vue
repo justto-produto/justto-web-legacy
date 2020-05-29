@@ -9,12 +9,12 @@
           class="el-menu-vertical-demo"
           background-color="#f7f7f7"
           @select="changeMenuIndex">
-          <!-- <el-menu-item index="0">
-            <i class="el-icon-s-data" /> Dashboard
-          </el-menu-item> -->
-          <el-menu-item index="1">
+          <el-menu-item index="0">
             <i class="el-icon-s-cooperation" /> Equipes
           </el-menu-item>
+          <!-- <el-menu-item index="1">
+            <i class="el-icon-s-data" /> Dashboard
+          </el-menu-item> -->
           <!-- <el-menu-item index="2">
             <i class="el-icon-user-solid" /> Usuários
           </el-menu-item>
@@ -46,12 +46,12 @@
             Adicionar
           </el-button> -->
         </h1>
-        <panel-dashboard
-          v-if="menuIndex === '0'"
-          ref="panel0"/>
         <panel-workspace
-          v-if="menuIndex === '1'"
+          v-if="menuIndex === '0'"
           ref="panel1"/>
+        <panel-dashboard
+          v-if="menuIndex === '1'"
+          ref="panel0"/>
         <panel-user
           v-if="menuIndex === '2'"
           ref="panel2"/>
