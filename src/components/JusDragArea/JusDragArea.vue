@@ -62,13 +62,26 @@ export default {
       const { files } = evt.dataTransfer
 
       console.log(files)
+      let message
+      const attatchmentsLenght = Object.keys(files).length
+      if (attatchmentsLenght === 1) {
+        message = `Tem certeza que deseja enviar o arquivo "${files[0].name}"?`
+      } else {
+        message = `Tem certeza que deseja fazer o upload de ${attatchmentsLenght} arquivos?`
+      }
 
-      Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex]))
+      this.$confirm(message, 'Enviando anexos', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        showClose: false,
+      }).then(() => {
+        Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex]))
+      })
 
       this.isDragging = false
     },
     saveFile(file) {
-      console.log('SUCK MY DICK', file)
       const disputeId = this.$route.params.id
       const formData = new FormData()
       formData.append('file', file)

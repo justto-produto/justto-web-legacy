@@ -147,11 +147,11 @@
       </el-button>
     </el-tooltip>
     <el-tooltip
-      content="Abrir disputa em nova aba">
+      content="Enviar anexo">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="uploadAttacment()">
+        @click="uploadAttacmentDialogVisable = true">
         <jus-icon icon="upload-file" />
       </el-button>
     </el-tooltip>
@@ -424,14 +424,28 @@
           @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="uploadAttacmentDialogVisable"
+      append-to-body
+      title="Envie anexos"
+      width="600px"
+      class="dispute-view-actions__upload-attatchment-dialog"
+      data-testid="upload-file-dialog">
+      <jus-drag-area/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getRoles } from '@/utils/jusUtils'
+import { JusDragArea } from '@/components/JusDragArea'
 
 export default {
   name: 'JusDisputeActions',
+  components: {
+    JusDragArea,
+  },
   props: {
     dispute: {
       type: Object,
@@ -457,6 +471,7 @@ export default {
       chooseUnsettledDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
+      uploadAttacmentDialogVisable: false,
       settledDialogVisible: false,
       modalLoading: false,
       counterOfferForm: {
@@ -729,9 +744,6 @@ export default {
     togleCollapsed() {
       this.collapsed = !this.collapsed
     },
-    uploadAttacment() {
-
-    },
     openSettledDialog(action) {
       this.modalLoading = false
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
@@ -941,6 +953,9 @@ export default {
     height: 100%;
     right: 0;
     top: 0;
+  }
+  &__upload-attatchment-dialog {
+    height: 400px;
   }
 }
 .is-disabled-input {
