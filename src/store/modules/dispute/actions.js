@@ -114,7 +114,7 @@ const disputeActions = {
   },
   deleteAttachment({ commit }, { disputeId, documentId }) {
     axiosDispatcher({
-      url: `api/dispute/${disputeId}/attachment/${documentId}`,
+      url: `api/office/disputes/${disputeId}/attachment/${documentId}`,
       method: 'delete',
     })
   },
