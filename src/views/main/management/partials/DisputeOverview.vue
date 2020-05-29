@@ -516,12 +516,12 @@
               clearable
               placeholder="Busque por anexos"
               prefix-icon="el-icon-search" />
-            <el-tooltip content="Enriquecer disputa">
+            <el-tooltip content="Atualizar anexos">
               <el-button
                 type=""
                 plain
                 @click="enrichDispute">
-                <jus-icon icon="enrich"/>
+                <jus-icon icon="refresh"/>
               </el-button>
             </el-tooltip>
           </div>
@@ -2038,11 +2038,8 @@ export default {
       this.roleForm.bankAccounts.splice(index, 1)
     },
     enrichDispute() {
-      const message = {
-        content: this.isAccepted ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?',
-        title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER',
-      }
-      this.$confirm(message.content, message.title, {
+      const content = this.isAccepted ? 'Isso irá <b>ENRIQUECER</b> uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?'
+      this.$confirm(content, 'ATUALIZAR ANEXOS', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         dangerouslyUseHTMLString: true,
