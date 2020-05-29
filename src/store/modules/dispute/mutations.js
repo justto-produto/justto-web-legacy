@@ -29,9 +29,6 @@ const disputeMutations = {
   setDisputeRoles(state, disputeRoles) {
     state.dispute.disputeRoles = disputeRoles
   },
-  appendFile(state, file) {
-    state.disputeAttachments.push(file.payload)
-  },
   clearDispute(state) {
     state.dispute = { id: 0 }
     state.disputeAttachments = []

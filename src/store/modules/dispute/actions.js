@@ -110,7 +110,6 @@ const disputeActions = {
       method: 'post',
       data: formData,
       payload: file,
-      mutation: 'appendFile',
     })
   },
   deleteAttachment({ commit }, { disputeId, documentId }) {
