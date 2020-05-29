@@ -41,7 +41,7 @@ const actions = {
       // eslint-disable-next-line
       axios.put('api/workspaces', {
         id: state.id,
-      	teamName: state.teamName,
+        teamName: state.teamName,
         status: state.status,
         name: params.name,
         properties: params.properties,

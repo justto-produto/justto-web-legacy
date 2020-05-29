@@ -47,8 +47,8 @@
           </el-button> -->
         </h1>
         <panel-workspace
-        v-if="menuIndex === '0'"
-        ref="panel1"/>
+          v-if="menuIndex === '0'"
+          ref="panel1"/>
         <panel-dashboard
           v-if="menuIndex === '1'"
           ref="panel0"/>
