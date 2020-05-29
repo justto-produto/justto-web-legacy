@@ -4,53 +4,81 @@
       :class="{'active': active}"
       class="management-actions">
       <div class="management-actions__length">
-        <i class="el-icon-check" /> {{ selectedIdsLength }}
+        <i class="el-icon-check" /> {{ selectedLenghtToShow }}
       </div>
       <div>
         <el-button
           plain
           data-testid="batch-settled"
-          @click="sendBatchAction('SETTLED')">{{ $t('action.SETTLED') }}</el-button>
+          @click="sendBatchAction('SETTLED')">
+          {{ $t('action.SETTLED') }}
+        </el-button>
         <el-button
           plain
           data-testid="batch-unsettled"
-          @click="sendBatchAction('UNSETTLED')">{{ $t('action.UNSETTLED') }}</el-button>
+          @click="sendBatchAction('UNSETTLED')">
+          {{ $t('action.UNSETTLED') }}
+        </el-button>
         <el-button
           plain
           data-testid="batch-paused"
-          @click="sendBatchAction('PAUSED')">{{ $t('action.PAUSED') }}</el-button>
+          @click="sendBatchAction('PAUSED')">
+          {{ $t('action.PAUSED') }}
+        </el-button>
         <el-button
           plain
           data-testid="batch-resume"
-          @click="sendBatchAction('RESUME')">{{ $t('action.RESUME') }}</el-button>
+          @click="sendBatchAction('RESUME')">
+          {{ $t('action.RESUME') }}
+        </el-button>
         <el-button
           plain
           data-testid="batch-restartengagement"
-          @click="sendBatchAction('RESTART_ENGAGEMENT')">REINICIAR</el-button>
+          @click="sendBatchAction('RESTART_ENGAGEMENT')">
+          REINICIAR
+        </el-button>
         <el-button
           plain
           data-testid="batch-chageexpirationdate"
-          @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">DATA LIMITE</el-button>
+          @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">
+          DATA LIMITE
+        </el-button>
         <el-button
           plain
           data-testid="batch-changestrategy"
-          @click="sendBatchAction('CHANGE_STRATEGY')">ESTRATÉGIAS</el-button>
-        <el-button
-          plain
-          data-testid="batch-changestrategy"
-          @click="sendBatchAction('CHANGE_NEGOTIATOR')">NEGOCIADORES</el-button>
+          @click="sendBatchAction('CHANGE_STRATEGY')">
+          ESTRATÉGIAS
+        </el-button>
+        <el-tooltip content="Funcionalidade indisponível no momento. Por favor, contacte seu key account">
+          <span style="display: inline-block; padding: 0; margin: 0; border: none;">
+            <el-button
+              :disabled="true"
+              style="color: #adadad"
+              plain
+              data-testid="batch-changestrategy"
+              @click="sendBatchAction('CHANGE_NEGOTIATOR')">
+              NEGOCIADORES
+            </el-button>
+          </span>
+        </el-tooltip>
         <el-button
           plain
           data-testid="batch-enrich"
-          @click="sendBatchAction('ENRICH')">{{ $t('action.ENRICH') }}</el-button>
+          @click="sendBatchAction('ENRICH')">
+          {{ $t('action.ENRICH') }}
+        </el-button>
         <el-button
           plain
           data-testid="batch-delete"
-          @click="sendBatchAction('DELETE')">{{ $t('action.DELETE') }}</el-button>
+          @click="sendBatchAction('DELETE')">
+          {{ $t('action.DELETE') }}
+        </el-button>
         <el-button
           plain
           data-testid="batch-resendmessage"
-          @click="sendBatchAction('RESEND_MESSAGE')">{{ $t('action.RESEND_MESSAGE') }}</el-button>
+          @click="sendBatchAction('RESEND_MESSAGE')">
+          {{ $t('action.RESEND_MESSAGE') }}
+        </el-button>
       </div>
       <i
         class="el-icon-close"
@@ -234,11 +262,20 @@ export default {
         this.$emit('update:selectedIds', ids)
       },
     },
+    strategies() {
+      return this.$store.getters.strategyList
+    },
     selectedIdsLength() {
       return this.selectedIdsComp.length
     },
-    strategies() {
-      return this.$store.getters.strategyList
+    disputesTotalLength() {
+      return this.$store.getters.disputeQuery.total
+    },
+    selectedLenghtToShow() {
+      return this.isSelectedAll ? this.disputesTotalLength : this.selectedIdsLength
+    },
+    isSelectedAll() {
+      return this.$store.getters.disputes.length === this.selectedIdsLength
     },
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
@@ -274,6 +311,10 @@ export default {
         case 'CHANGE_EXPIRATION_DATE':
           params['expirationDate'] = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
           break
+      }
+      if (this.isSelectedAll) {
+        params['allSelected'] = true
+        params['disputeIds'] = []
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseUnsettledDialogVisible = false
