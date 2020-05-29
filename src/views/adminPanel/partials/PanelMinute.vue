@@ -21,7 +21,9 @@
             class="label panel-minute-view__editable-label"
             @click="props.row.editing = true ,focusInput(props.row.id, props.row.name)">
             {{ props.row.name }}
-            <jus-icon icon="edit" />
+            <jus-icon
+              class="edit-icon"
+              icon="edit"/>
           </div>
         </template>
       </el-table-column>
@@ -348,13 +350,18 @@ export default {
       padding: 16px;
     }
   }
-  &__editable-label img {
-    display: none;
-    cursor: pointer;
-    width: 16px;
-  }
-  &__editable-label:hover img {
-    display: inline;
+  &__editable-label {
+    .edit-icon {
+      display: none;
+      cursor: pointer;
+      width: 16px;
+    }
+    &:hover {
+      .edit-icon {
+        display: inline;
+      }
+    }
   }
 }
+
 </style>

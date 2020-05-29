@@ -144,7 +144,9 @@
                   <div class="actions">
                     <a
                       href="#"
-                      @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
+                      @click.prevent="showEditMember(member)">
+                      <jus-icon icon="edit" />
+                    </a>
                     <a
                       href="#"
                       @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
