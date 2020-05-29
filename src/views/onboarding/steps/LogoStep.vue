@@ -17,15 +17,27 @@
         action="http://localhost:3000/images"
         drag
         class="el-upload--logo">
-        <img v-if="imageUrl" :src="imageUrl" class="uploaded-logo">
-        <jus-icon v-else icon="upload-file" is-active class="el-icon-upload"/>
+        <img
+          v-if="imageUrl"
+          :src="imageUrl"
+          class="uploaded-logo">
+        <jus-icon
+          v-else
+          icon="upload-file"
+          is-active
+          class="el-icon-upload"/>
         <div>
           <div class="el-upload__text">Arraste aqui ou <em>escolha um arquivo do seu computador</em></div>
         </div>
       </el-upload>
     </div>
-    <el-button :disabled="imageUrl === ''" type="primary" @click="$emit('onboarding:step:next')">Próximo</el-button>
-    <el-button type="text" @click="$emit('onboarding:step:next')">Pular</el-button>
+    <el-button
+      :disabled="imageUrl === ''"
+      type="primary"
+      @click="$emit('onboarding:step:next')">Próximo</el-button>
+    <el-button
+      type="text"
+      @click="$emit('onboarding:step:next')">Pular</el-button>
   </div>
 </template>
 
@@ -34,27 +46,27 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       imageUrl: '',
-      loading: false
+      loading: false,
     }
   },
   methods: {
-    remove () {
+    remove() {
       this.imageUrl = ''
     },
-    loadingProgress (event, file, fileList) {
+    loadingProgress(event, file, fileList) {
       this.loading = true
     },
-    handleAvatarSuccess (res, file) {
+    handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw)
       this.loading = false
     },
-    beforeAvatarUpload (file) {
+    beforeAvatarUpload(file) {
       const isValid = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/svg+xml'
       // const isLt2M = file.size / 1024 / 1024 < 2
       if (!isValid) {
@@ -64,8 +76,8 @@ export default {
       //   this.$message.error('Avatar picture size can not exceed 2MB!')
       // }
       return isValid // && isLt2M
-    }
-  }
+    },
+  },
 }
 </script>
 

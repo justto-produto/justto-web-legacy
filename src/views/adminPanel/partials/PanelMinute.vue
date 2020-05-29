@@ -1,7 +1,14 @@
 <template lang="html">
   <div class="panel-minute-view">
-    <el-table v-loading="loadingMinutes" :key="tableKey" :data="filteredMinutes" width="100%">
-      <el-table-column class-name="panel-minute-view__name" prop="name" label="Nome">
+    <el-table
+      v-loading="loadingMinutes"
+      :key="tableKey"
+      :data="filteredMinutes"
+      width="100%">
+      <el-table-column
+        class-name="panel-minute-view__name"
+        prop="name"
+        label="Nome">
         <template slot-scope="props">
           <el-input
             v-show="props.row.editing"
@@ -18,12 +25,19 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="right" width="400px">
-        <template slot="header" slot-scope="scope">
+      <el-table-column
+        align="right"
+        width="400px">
+        <template
+          slot="header"
+          slot-scope="scope">
           <el-input
             v-model="search"
             placeholder="Buscar"/>
-          <el-button type="primary" icon="el-icon-plus" @click="addMinute">
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            @click="addMinute">
             Adicionar
           </el-button>
         </template>
@@ -38,7 +52,12 @@
             @click="deleteMinute(props.row.id)">
             Excluir
           </el-button>
-          <el-button size="mini" type="primary" plain icon="el-icon-edit" @click="editMinute(props.row.url)">
+          <el-button
+            size="mini"
+            type="primary"
+            plain
+            icon="el-icon-edit"
+            @click="editMinute(props.row.url)">
             Editar documento
           </el-button>
         </template>
@@ -51,19 +70,32 @@
       :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }"
       title="Editar minuta"
       class="panel-minute-view__dialog">
-      <i :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'" class="panel-minute-view__fullscreen-icon" @click="fullscreen = !fullscreen" />
-      <iframe :src="editDialogUrl" frameborder="0"/>
-      <el-card shadow="never" class="panel-minute-view__tips">
+      <i
+        :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'"
+        class="panel-minute-view__fullscreen-icon"
+        @click="fullscreen = !fullscreen" />
+      <iframe
+        :src="editDialogUrl"
+        frameborder="0"/>
+      <el-card
+        shadow="never"
+        class="panel-minute-view__tips">
         <h2>Variáveis disponíveis</h2>
         <span class="list">
-          <div v-for="(key, value) in types" :key="key">
+          <div
+            v-for="(key, value) in types"
+            :key="key">
             <span>{{ key }}</span>
             <div>
               <span>
                 <span v-pre>{{</span>{{ value }}<span v-pre>}}</span>
               </span>
               <el-tooltip content="Copiar para o clipboard">
-                <el-button size="mini" type="text" icon="el-icon-copy-document" @click="copy(value)"/>
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-copy-document"
+                  @click="copy(value)"/>
               </el-tooltip>
             </div>
           </div>
@@ -76,7 +108,7 @@
 <script>
 export default {
   name: 'PanelMinute',
-  data () {
+  data() {
     return {
       tableKey: 0,
       nameToEdit: '',
@@ -86,11 +118,11 @@ export default {
       editDialogUrl: '',
       minutes: [],
       types: {},
-      fullscreen: false
+      fullscreen: false,
     }
   },
   computed: {
-    filteredMinutes () {
+    filteredMinutes() {
       return this.minutes.filter(minute => {
         if (minute.archived || !minute.name) {
           return false
@@ -98,21 +130,21 @@ export default {
         return !this.search || minute.name.toLowerCase().includes(this.search.toLowerCase())
       })
     },
-    width () {
+    width() {
       if (this.fullscreen === true) {
         return '100%'
       }
       return '90%'
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.fetchMinutes()
     this.$store.dispatch('getDocumentTypes').then(response => {
       this.types = response
     })
   },
   methods: {
-    fetchMinutes () {
+    fetchMinutes() {
       this.loadingMinutes = true
       this.$store.dispatch('getDocumentModels').then(response => {
         this.minutes = response
@@ -122,7 +154,7 @@ export default {
         this.loadingMinutes = false
       })
     },
-    addMinute () {
+    addMinute() {
       this.$prompt('Insira a URL (Google Docs) do documento:', 'Adicionar minuta', {
         confirmButtonText: 'Adicionar',
         cancelButtonText: 'Cancelar',
@@ -139,7 +171,7 @@ export default {
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Houve uma falha ao adicionar minuta. Certifique-se de que o documento adicionado é público.',
-                type: 'warning'
+                type: 'warning',
               })
             }).finally(() => {
               done()
@@ -148,20 +180,20 @@ export default {
           } else {
             done()
           }
-        }
+        },
       }).then(({ value }) => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Minuta adicionada com sucesso',
-          type: 'success'
+          type: 'success',
         })
       })
     },
-    editMinute (url) {
+    editMinute(url) {
       this.editDialogUrl = url
       this.editDialogVisible = true
     },
-    deleteMinute (modelId) {
+    deleteMinute(modelId) {
       this.$confirm('Tem certeza que deseja excluir?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
@@ -181,28 +213,28 @@ export default {
           } else {
             done()
           }
-        }
+        },
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Minuta excluída com sucesso',
-          type: 'success'
+          type: 'success',
         })
       })
     },
-    focusInput (minuteId, minuteName) {
+    focusInput(minuteId, minuteName) {
       this.tableKey += 1
       this.nameToEdit = minuteName
       this.$nextTick(() => this.$refs['input' + minuteId].$el.children[0].focus())
     },
-    editMinuteName (minute) {
+    editMinuteName(minute) {
       this.tableKey += 1
       if (minute.name !== this.nameToEdit) this.$store.dispatch('editModel', minute)
     },
-    copy (value) {
+    copy(value) {
       navigator.clipboard.writeText(`{{${value}}}`)
-    }
-  }
+    },
+  },
 }
 </script>
 

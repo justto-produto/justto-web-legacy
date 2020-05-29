@@ -75,9 +75,9 @@ const validateSubdomainAvailability = (rule, value, callback) => {
 }
 
 const validateObjectEmail = (rule, value, callback) => {
-  let email = value[Object.keys(value)[0]]
+  const email = value[Object.keys(value)[0]]
   if (email) {
-    let re = /\S+@\S+\.\S+/
+    const re = /\S+@\S+\.\S+/
     if (re.test(email)) {
       callback()
     } else {
@@ -95,5 +95,5 @@ export {
   validatePhone,
   validateSubdomainName,
   validateSubdomainAvailability,
-  validateObjectEmail
+  validateObjectEmail,
 }

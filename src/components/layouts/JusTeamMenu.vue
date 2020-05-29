@@ -23,15 +23,15 @@
 export default {
   name: 'JusTeamMenu',
   computed: {
-    members () {
+    members() {
       return this.$store.state.workspaceModule.members
     },
-    activePersonsIds () {
+    activePersonsIds() {
       return this.$store.getters.disputeQuery.persons || []
-    }
+    },
   },
   methods: {
-    setFilterPersonId (id, name) {
+    setFilterPersonId(id, name) {
       if (this.activePersonsIds.includes(id)) {
         this.$store.commit('updateDisputeQuery', { key: 'persons', value: [] })
       } else {
@@ -39,8 +39,8 @@ export default {
         this.$jusSegment('Filtro por negociador', { description: `Alterado filtro de negociador para ${name}` })
         this.$store.commit('updateDisputeQuery', { key: 'persons', value: [id] })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

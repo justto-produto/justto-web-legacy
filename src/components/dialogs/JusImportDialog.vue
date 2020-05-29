@@ -4,10 +4,17 @@
     :visible.sync="visible"
     class="jus-import-dialog"
     title="Nova importação de disputas">
-    <label for="fileupload" @dragover.prevent @drop.prevent="handleFile($event)">
-      <el-card class="el-card--dashed-hover" shadow="never">
+    <label
+      for="fileupload"
+      @dragover.prevent
+      @drop.prevent="handleFile($event)">
+      <el-card
+        class="el-card--dashed-hover"
+        shadow="never">
         <div v-if="isInitial">
-          <jus-icon icon="upload-file" is-active />
+          <jus-icon
+            icon="upload-file"
+            is-active />
           <div>
             <br>
             Clique aqui e importe sua planilha nos<br> formatos XLSX, CSV ou XLS.
@@ -15,7 +22,9 @@
         </div>
         <div v-if="isSaving">
           <br><br>
-          <div v-loading="true" class="import-view__loading" />
+          <div
+            v-loading="true"
+            class="import-view__loading" />
           <div>
             <br><br><br>
             Carregando...
@@ -36,9 +45,16 @@
         class="jus-import-dialog__upload"
         @change="handleFile($event)">
     </label>
-    <span slot="footer" class="dialog-footer">
-      <el-button plain @click="closeDialog">Cancelar</el-button>
-      <el-button :disabled="!isSuccess" type="primary" @click="startImport">Importar</el-button>
+    <span
+      slot="footer"
+      class="dialog-footer">
+      <el-button
+        plain
+        @click="closeDialog">Cancelar</el-button>
+      <el-button
+        :disabled="!isSuccess"
+        type="primary"
+        @click="startImport">Importar</el-button>
     </span>
   </el-dialog>
 </template>
@@ -53,43 +69,43 @@ export default {
   props: {
     dialogVisible: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       currentStatus: 0,
       uploadedFile: null,
-      uploadError: null
+      uploadError: null,
     }
   },
   computed: {
     visible: {
-      get () {
+      get() {
         return this.dialogVisible
       },
-      set (visible) {
+      set(visible) {
         this.$emit('update:dialogVisible', visible)
-      }
+      },
     },
-    isInitial () {
+    isInitial() {
       return this.currentStatus === STATUS_INITIAL
     },
-    isSaving () {
+    isSaving() {
       return this.currentStatus === STATUS_SAVING
     },
-    isSuccess () {
+    isSuccess() {
       return this.currentStatus === STATUS_SUCCESS
-    }
+    },
   },
   methods: {
-    startImport () {
+    startImport() {
       // SEGMENT TRACK
       this.$jusSegment('Importação 2/4 Importação iniciada', { fileName: this.uploadedFile.file_name })
       this.$router.push('/import/new')
       this.$store.dispatch('hideLoading')
     },
-    handleFile (e) {
+    handleFile(e) {
       this.$notify.closeAll()
       const file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0]
       const isLt20M = file.size / 1024 / 1024 < 20
@@ -101,14 +117,14 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Arquivo em formato inválido.',
-          type: 'warning'
+          type: 'warning',
         })
       }
       if (!isLt20M) {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Arquivo não pode ultrapassar 20MB.',
-          type: 'warning'
+          type: 'warning',
         })
       }
       if (isLt20M && isValid) {
@@ -124,7 +140,7 @@ export default {
         this.removeFile()
       }
     },
-    saveFile (formData) {
+    saveFile(formData) {
       this.currentStatus = STATUS_SAVING
       this.$store.dispatch('uploadImportFile', formData).then(response => {
         this.currentStatus = STATUS_SUCCESS
@@ -136,8 +152,8 @@ export default {
         this.currentStatus = STATUS_INITIAL
       })
     },
-    handleError (error) {
-      let errorMessage = {}
+    handleError(error) {
+      const errorMessage = {}
       if (error.status === 406) {
         errorMessage.message = error.data.error
         errorMessage.type = 'warning'
@@ -152,14 +168,14 @@ export default {
       this.$jusNotification({
         title: 'Ops!',
         message: errorMessage.message,
-        type: errorMessage.type
+        type: errorMessage.type,
       })
     },
-    closeDialog () {
+    closeDialog() {
       this.visible = false
       this.removeFile()
     },
-    removeFile () {
+    removeFile() {
       const input = this.$refs.fileupload
       input.type = 'text'
       input.type = 'file'
@@ -167,8 +183,8 @@ export default {
       this.currentStatus = STATUS_INITIAL
       this.uploadedFile = null
       this.uploadError = null
-    }
-  }
+    },
+  },
 }
 </script>
 

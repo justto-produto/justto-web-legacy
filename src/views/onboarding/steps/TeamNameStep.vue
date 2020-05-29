@@ -1,6 +1,8 @@
 <template>
   <div class="onboarding-step-content">
-    <div data-testid="teamname-step" class="onboarding-step-content__title">
+    <div
+      data-testid="teamname-step"
+      class="onboarding-step-content__title">
       <h2>Qual o nome da sua equipe?</h2>
       <p>
         Você pode colocar o nome do seu escritório ou empresa.
@@ -15,11 +17,20 @@
       :rules="nameFormRules"
       label-position="top"
       @submit.native.prevent="submitForm">
-      <el-form-item label="Equipe" prop="name">
-        <el-input v-model="nameForm.name" :disabled="creatingWorkspace" name="name" data-testid="teamname-form"/>
+      <el-form-item
+        label="Equipe"
+        prop="name">
+        <el-input
+          v-model="nameForm.name"
+          :disabled="creatingWorkspace"
+          name="name"
+          data-testid="teamname-form"/>
       </el-form-item>
     </el-form>
-    <el-button type="primary" data-testid="teamname-next" @click="submitForm">Próximo</el-button>
+    <el-button
+      type="primary"
+      data-testid="teamname-next"
+      @click="submitForm">Próximo</el-button>
   </div>
 </template>
 
@@ -28,29 +39,29 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       nameForm: {
-        name: ''
+        name: '',
       },
       nameFormRules: {
-        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-      }
+        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      },
     }
   },
   computed: {
-    creatingWorkspace () {
+    creatingWorkspace() {
       return this.$store.getters.creatingWorkspace
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.nameForm.name = this.creatingWorkspace ? this.$store.state.workspaceModule.name : ''
   },
   methods: {
-    submitForm () {
+    submitForm() {
       this.$refs['nameForm'].validate(valid => {
         if (valid) {
           this.$emit('onboarding:createSubdomain', { team: this.nameForm.name })
@@ -58,7 +69,7 @@ export default {
           return false
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>

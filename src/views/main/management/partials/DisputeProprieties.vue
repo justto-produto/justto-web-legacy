@@ -3,7 +3,10 @@
     v-loading="loading"
     element-loading-background="rgba(247, 247, 247, 0.7)"
     class="dispute-proprieties-view">
-    <div v-for="(propriety, index) in disputeProprietiesList" :key="lineKey + index" class="dispute-proprieties-view__line">
+    <div
+      v-for="(propriety, index) in disputeProprietiesList"
+      :key="lineKey + index"
+      class="dispute-proprieties-view__line">
       <!-- KEY -->
       <div class="key">
         <div
@@ -40,11 +43,17 @@
       </div>
       <!-- ACTION -->
       <el-tooltip content="Remover propriedade">
-        <el-link :underline="false" type="danger" icon="el-icon-delete" @click="removePropriety(propriety.key)" />
+        <el-link
+          :underline="false"
+          type="danger"
+          icon="el-icon-delete"
+          @click="removePropriety(propriety.key)" />
       </el-tooltip>
     </div>
     <el-tooltip content="Propriedade não editável">
-      <div v-if="disputeProprieties['ENRIQUECIDO']" class="dispute-proprieties-view__line">
+      <div
+        v-if="disputeProprieties['ENRIQUECIDO']"
+        class="dispute-proprieties-view__line">
         <div class="key">
           <div class="label">
             ENRIQUECIDO:
@@ -76,7 +85,11 @@
           @keyup.enter.exact.native="newPropriety"/>
       </div>
       <el-tooltip content="Adicionar propriedade">
-        <el-link :underline="false" type="primary" icon="el-icon-plus" @click="newPropriety" />
+        <el-link
+          :underline="false"
+          type="primary"
+          icon="el-icon-plus"
+          @click="newPropriety" />
       </el-tooltip>
     </div>
   </div>
@@ -85,7 +98,7 @@
 <script>
 export default {
   name: 'DisputeProprieties',
-  data () {
+  data() {
     return {
       loading: false,
       lineKey: 0,
@@ -94,17 +107,17 @@ export default {
       editing: {},
       editable: '',
       newKey: '',
-      newValue: ''
+      newValue: '',
     }
   },
   computed: {
-    disputeProprietiesList () {
-      let list = []
-      for (let proprieties of Object.entries(this.disputeProprieties)) {
+    disputeProprietiesList() {
+      const list = []
+      for (const proprieties of Object.entries(this.disputeProprieties)) {
         if (!['ERROR_COUT', 'ENRIQUECIDO'].includes(proprieties[0])) {
           list.push({
             key: proprieties[0],
-            value: proprieties[1]
+            value: proprieties[1],
           })
         }
       }
@@ -114,76 +127,76 @@ export default {
       })
     },
     disputeProprieties: {
-      get () {
+      get() {
         return this.$store.getters.disputeProprieties
       },
-      set (proprieties) {
+      set(proprieties) {
         this.$store.dispatch('putDisputeProprieties', {
           disputeId: this.$store.getters.disputeId,
-          data: proprieties
+          data: proprieties,
         }).finally(() => {
           this.newKey = ''
           this.newValue = ''
           this.loading = false
         })
-      }
-    }
+      },
+    },
   },
   methods: {
-    focus (key, index) {
+    focus(key, index) {
       this.editing[key + index] = true
       this.lineKey += 1
       this.editable = key
       this.$nextTick(() => this.$refs['input' + key + index][0].$el.children[0].focus())
     },
-    blurKey (key, index) {
+    blurKey(key, index) {
       this.editing[key + index] = false
       this.lineKey += 1
       if (key !== this.editable) {
         this.loading = true
-        let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
+        const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
         newDisputeProprieties[this.editable] = newDisputeProprieties[key]
         delete newDisputeProprieties[key]
         this.disputeProprieties = newDisputeProprieties
       }
     },
-    blurValue (key, value, index) {
+    blurValue(key, value, index) {
       this.editing[value + index] = false
       this.lineKey += 1
       if (value !== this.editable) {
         this.loading = true
-        let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
+        const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
         newDisputeProprieties[key] = this.editable
         this.disputeProprieties = newDisputeProprieties
       }
     },
-    removePropriety (key) {
+    removePropriety(key) {
       this.loading = true
-      let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
+      const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
       delete newDisputeProprieties[key]
       this.disputeProprieties = newDisputeProprieties
     },
-    newPropriety () {
+    newPropriety() {
       if (this.newKey && this.newValue) {
         this.loading = true
-        let newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
+        const newDisputeProprieties = JSON.parse(JSON.stringify(this.disputeProprieties))
         newDisputeProprieties[this.newKey] = this.newValue
         this.disputeProprieties = newDisputeProprieties
       }
     },
-    getSuggestionsKeys (queryString, cb) {
-      let keys = [
+    getSuggestionsKeys(queryString, cb) {
+      const keys = [
         { 'value': 'COMARCA' },
         { 'value': 'AREA' },
         { 'value': 'FORO' },
         { 'value': 'VARA' },
         { 'value': 'SITUACAO' },
         { 'value': 'TRIBUNAL' },
-        { 'value': 'ESTADO' }
+        { 'value': 'ESTADO' },
       ]
       cb(queryString ? keys.filter((key) => (key.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)) : keys)
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -42,9 +42,9 @@ Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
   })
 })
 
-Cypress.Commands.add('prepair_testes', (method, end_point) => {
+Cypress.Commands.add('prepair_testes', (method, endPoint) => {
   // Faz requisição para preparar ambiente especifico de teste
-  cy.request(method, 'https://justto.app/api/disputes/' + end_point)
+  cy.request(method, 'https://justto.app/api/disputes/' + endPoint)
 })
 
 Cypress.Commands.add('login', (email, password, workspace) => {
@@ -77,13 +77,10 @@ Cypress.Commands.add('login', (email, password, workspace) => {
   // Clica no botão "Selecionar e Entrar"
   cy.get('[data-testid=submit-workspace]')
     .click()
-
-  // Valida se acesso foi feito
-  cy.url().should('include', '/#/management')
 })
 
 Cypress.Commands.add('access', (link) => {
-  let url = link === '/' ? '/#/login' : link
+  const url = link === '/' ? '/#/login' : link
 
   // Acessa a página inicial do Justto.App
   cy.visit(link)

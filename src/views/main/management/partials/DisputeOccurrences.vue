@@ -1,25 +1,49 @@
 <template lang="html">
-  <ul v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }" class="dispute-view-occurrences">
-    <infinite-loading :identifier="infiniteId" :distance="10" spinner="spiral" direction="top" @infinite="loadOccurrences">
-      <div slot="no-more" data-testid="occurences-start">Início das ocorrências</div>
-      <div slot="no-results" data-testid="occurences-start">Início das ocorrências</div>
+  <ul
+    v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }"
+    class="dispute-view-occurrences">
+    <infinite-loading
+      :identifier="infiniteId"
+      :distance="10"
+      spinner="spiral"
+      direction="top"
+      @infinite="loadOccurrences">
+      <div
+        slot="no-more"
+        data-testid="occurences-start">Início das ocorrências</div>
+      <div
+        slot="no-results"
+        data-testid="occurences-start">Início das ocorrências</div>
     </infinite-loading>
-    <div v-for="(datedOccurrence, date, index) in datedOccurrences" :key="date + index + new Date().getTime()">
-      <el-card class="dispute-view-occurrences__date el-card--bg-info" shadow="never">
+    <div
+      v-for="(datedOccurrence, date, index) in datedOccurrences"
+      :key="date + index + new Date().getTime()">
+      <el-card
+        class="dispute-view-occurrences__date el-card--bg-info"
+        shadow="never">
         {{ date }}
       </el-card>
       <li
         v-for="(occurrence, index) in datedOccurrence"
         :key="index + new Date().getTime()"
         class="dispute-view-occurrences__occurrence">
-        <div v-if="!occurrence.id" class="dispute-view-occurrences__interaction OUTBOUND LOADING">
+        <div
+          v-if="!occurrence.id"
+          class="dispute-view-occurrences__interaction OUTBOUND LOADING">
           <div class="dispute-view-occurrences__avatar">
             <el-tooltip :content="occurrence.sender">
-              <jus-avatar-user :name="occurrence.sender" shape="circle" size="sm" />
+              <jus-avatar-user
+                :name="occurrence.sender"
+                shape="circle"
+                size="sm" />
             </el-tooltip>
           </div>
           <div class="dispute-view-occurrences__card-box">
-            <el-card :class="occurrence.type.toUpperCase()" shadow="never" class="dispute-view-occurrences__card COMMUNICATION" data-testid="message-box">
+            <el-card
+              :class="occurrence.type.toUpperCase()"
+              shadow="never"
+              class="dispute-view-occurrences__card COMMUNICATION"
+              data-testid="message-box">
               <span v-html="occurrence.message" />
             </el-card>
             <div class="dispute-view-occurrences__card-info">
@@ -39,9 +63,15 @@
           (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
           shadow="never"
           class="dispute-view-occurrences__log el-card--bg-warning">
-          <el-tooltip :disabled="!buildTooltip(occurrence)" :content="buildTooltip(occurrence)">
-            <span :class="{ 'dispute-view-occurrences__log-canceled': occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'}" class="dispute-view-occurrences__log-icon">
-              <jus-icon :icon="buildIcon(occurrence)" :class="buildIcon(occurrence)"/>
+          <el-tooltip
+            :disabled="!buildTooltip(occurrence)"
+            :content="buildTooltip(occurrence)">
+            <span
+              :class="{ 'dispute-view-occurrences__log-canceled': occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'}"
+              class="dispute-view-occurrences__log-icon">
+              <jus-icon
+                :icon="buildIcon(occurrence)"
+                :class="buildIcon(occurrence)"/>
             </span>
           </el-tooltip>
           <span v-html="buildContent(occurrence)" />
@@ -53,7 +83,10 @@
             </el-tooltip>
             <el-tooltip v-if="occurrence.merged">
               <div slot="content">
-                <div v-for="merged in occurrence.merged" :key="merged.id + new Date().getTime()" class="dispute-view-occurrences__log-info-content">
+                <div
+                  v-for="merged in occurrence.merged"
+                  :key="merged.id + new Date().getTime()"
+                  class="dispute-view-occurrences__log-info-content">
                   Hora: {{ buildHour(merged) }}
                   <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
                     - Para: {{ merged.interaction.message.receiver | phoneMask }}
@@ -69,49 +102,77 @@
             </el-tooltip>
           </span>
         </el-card>
-        <div v-else-if="occurrence.type !== 'NOTE'" :class="getDirection(occurrence.interaction)" class="dispute-view-occurrences__interaction">
+        <div
+          v-else-if="occurrence.type !== 'NOTE'"
+          :class="getDirection(occurrence.interaction)"
+          class="dispute-view-occurrences__interaction">
           <div class="dispute-view-occurrences__avatar">
-            <el-tooltip :disabled="!buildName(occurrence)" :content="buildName(occurrence)">
-              <jus-avatar-user :name="buildName(occurrence)" shape="circle" size="sm" />
+            <el-tooltip
+              :disabled="!buildName(occurrence)"
+              :content="buildName(occurrence)">
+              <jus-avatar-user
+                :name="buildName(occurrence)"
+                shape="circle"
+                size="sm" />
             </el-tooltip>
           </div>
           <div class="dispute-view-occurrences__card-box">
-            <el-card :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')" shadow="never" class="dispute-view-occurrences__card" data-testid="message-box">
+            <el-card
+              :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
+              shadow="never"
+              class="dispute-view-occurrences__card"
+              data-testid="message-box">
               <div>
                 <span :ref="getMessageRef(occurrence)">
                   <span v-html="buildContent(occurrence)" />
-                  <span v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)" class="dispute-view-occurrences__whats-status">
+                  <span
+                    v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)"
+                    class="dispute-view-occurrences__whats-status">
                     <el-tooltip popper-class="mw400">
-                      <div slot="content" style="max-width: 400px;text-align: justify;">
+                      <div
+                        slot="content"
+                        style="max-width: 400px;text-align: justify;">
                         <span v-html="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).message" />
                       </div>
                       <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).icon" />
                     </el-tooltip>
                   </span>
                   <span v-if="showResume(occurrence)">
-                    <a href="#" data-testid="show-email" @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
+                    <a
+                      href="#"
+                      data-testid="show-email"
+                      @click.prevent="showFullMessage(occurrence.id)"> ver mais</a>
                   </span>
                 </span>
                 <br>
                 <i v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'">
                   <br>
-                  <i class="el-icon-close" style="width: 14px;margin-bottom: -1.2px;" />
+                  <i
+                    class="el-icon-close"
+                    style="width: 14px;margin-bottom: -1.2px;" />
                   Mensagem agendada para {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
                   <strong>CANCELADA</strong>.
                 </i>
                 <i v-else-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.type === 'SCHEDULER' && occurrence.interaction.message.status === 'WAITING'">
                   <br>
-                  <jus-icon icon="clock" style="width: 14px;margin-bottom: -1.2px;"/>
+                  <jus-icon
+                    icon="clock"
+                    style="width: 14px;margin-bottom: -1.2px;"/>
                   Mensagem agendada para
                   {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
                   que ainda não foi entregue.
                 </i>
               </div>
             </el-card>
-            <div :class="getDirection(occurrence.interaction)" class="dispute-view-occurrences__card-info">
+            <div
+              :class="getDirection(occurrence.interaction)"
+              class="dispute-view-occurrences__card-info">
               <el-tooltip v-if="occurrence.merged">
                 <div slot="content">
-                  <div v-for="merged in occurrence.merged" :key="merged.id + new Date().getTime()" class="dispute-view-occurrences__log-info-content">
+                  <div
+                    v-for="merged in occurrence.merged"
+                    :key="merged.id + new Date().getTime()"
+                    class="dispute-view-occurrences__log-info-content">
                     Hora: {{ buildHour(merged) }}
                     <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
                       - Para: {{ merged.interaction.message.receiver | phoneMask }}
@@ -132,7 +193,10 @@
               <div>•</div>
               <span v-html="buildHour(occurrence)" />
               <div v-if="!!buildIcon(occurrence)">•</div>
-              <jus-icon v-if="!!buildIcon(occurrence)" :icon="buildIcon(occurrence)" :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
+              <jus-icon
+                v-if="!!buildIcon(occurrence)"
+                :icon="buildIcon(occurrence)"
+                :class="{'NEGOTIATOR': occurrence.interaction && occurrence.interaction.type.startsWith('NEGOTIATOR')}"/>
               <div v-if="(occurrence.interaction && occurrence.interaction.message) && (occurrence.interaction.message.receiver || occurrence.interaction.message.parameters)">•</div>
               <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
                 Para: {{ occurrence.interaction.message.receiver | phoneMask }}
@@ -149,9 +213,13 @@
               </span>
             </div>
           </div>
-          <div v-if="showReply(occurrence)" class="dispute-view-occurrences__side-icon">
+          <div
+            v-if="showReply(occurrence)"
+            class="dispute-view-occurrences__side-icon">
             <el-tooltip content="Responder">
-              <a href="#" @click.prevent="startReply(occurrence)">
+              <a
+                href="#"
+                @click.prevent="startReply(occurrence)">
                 <jus-icon icon="reply" />
               </a>
             </el-tooltip>
@@ -169,23 +237,32 @@
       </span>
       <div v-loading="loadingMessage">
         <span v-if="messageError && !loadingMessage">
-          <el-alert :closable="false" type="error">
+          <el-alert
+            :closable="false"
+            type="error">
             <strong>Não foi possível buscar o conteúdo da mensagem neste momento.</strong>
             <br><br>
             Tente novamente ou entre em contato com o administrador do sistema.
           </el-alert>
         </span>
         <span v-else-if="!message && !loadingMessage">
-          <el-alert :closable="false" type="warning">
+          <el-alert
+            :closable="false"
+            type="warning">
             <strong>Não foi possível exibir o conteúdo da mensagem.</strong>
             <br><br>
             Mídias de áudio ou vídeo ainda não estão disponíveis para visualização na plataforma Justto.
           </el-alert>
         </span>
-        <span v-else v-html="message"/>
+        <span
+          v-else
+          v-html="message"/>
       </div>
       <span slot="footer">
-        <el-button plain data-testid="close-button" @click="messageDialogVisible = false">Fechar</el-button>
+        <el-button
+          plain
+          data-testid="close-button"
+          @click="messageDialogVisible = false">Fechar</el-button>
       </span>
     </el-dialog>
     <div style="margin-top: 20px">
@@ -204,14 +281,14 @@ export default {
   props: {
     disputeId: {
       type: String,
-      default: ''
+      default: '',
     },
     typingTab: {
       type: String,
-      default: '1'
-    }
+      default: '1',
+    },
   },
-  data () {
+  data() {
     return {
       loadingMessage: 'false',
       message: '',
@@ -219,14 +296,14 @@ export default {
       messageDialogVisible: false,
       showFullMessageList: [],
       fullMessageBank: {},
-      infiniteId: +new Date()
+      infiniteId: +new Date(),
     }
   },
   computed: {
-    datedOccurrences () {
+    datedOccurrences() {
       // APENAS ABA COMUNICAÇÃO
-      let self = this
-      let filteredOccurrences = this.$store.getters.occurrences.filter(o => {
+      const self = this
+      const filteredOccurrences = this.$store.getters.occurrences.filter(o => {
         if (o.type === 'NOTE') return null
         if (self.typingTab === '1' && (
           ['NOTE', 'LOG'].includes(o.type) ||
@@ -235,15 +312,15 @@ export default {
         return true
       })
       // AGRUPA POR DATA
-      let datedOccurrences = {}
+      const datedOccurrences = {}
       filteredOccurrences.forEach(fo => {
-        let currentDay = this.$moment(fo.createAt.dateTime).format('DD/MM/YYYY')
+        const currentDay = this.$moment(fo.createAt.dateTime).format('DD/MM/YYYY')
         if (!datedOccurrences.hasOwnProperty(currentDay)) datedOccurrences[currentDay] = []
         datedOccurrences[currentDay].push(fo)
       })
       // MERGE DE DESCRIÇÃO
       Object.keys(datedOccurrences).forEach((item) => {
-        let datedOccurrence = datedOccurrences[item]
+        const datedOccurrence = datedOccurrences[item]
         let previousOccurrenceIndex
         datedOccurrence.forEach((fo, index) => {
           if (fo.interaction && fo.interaction.message && fo.interaction.message.communicationType === 'WHATSAPP') return
@@ -253,7 +330,7 @@ export default {
           } else {
             similarity = 75
           }
-          let previous = datedOccurrence[previousOccurrenceIndex]
+          const previous = datedOccurrence[previousOccurrenceIndex]
           if (previous && checkSimilarity(this.buildContent(fo), this.buildContent(previous), similarity)) {
             fo.toDelete = true
             if (!previous.merged) {
@@ -267,29 +344,29 @@ export default {
       })
       return datedOccurrences
     },
-    fetchAction () {
+    fetchAction() {
       if (this.typingTab === '1') {
         return 'getDisputeCommunications'
       } else {
         return 'getDisputeOccurrences'
       }
-    }
+    },
   },
   watch: {
-    typingTab () {
+    typingTab() {
       this.clearOccurrences()
       this.infiniteId += 1
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.clearOccurrences()
   },
   methods: {
-    clearOccurrences () {
+    clearOccurrences() {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
     },
-    loadOccurrences ($state) {
+    loadOccurrences($state) {
       this.$store.dispatch(this.fetchAction, this.disputeId).then(response => {
         if (response.last) {
           $state.complete()
@@ -299,10 +376,10 @@ export default {
         }
       })
     },
-    showFullMessage (occurrenceId) {
+    showFullMessage(occurrenceId) {
       this.showFullMessageList.push(occurrenceId)
     },
-    showMessageDialog (messageId) {
+    showMessageDialog(messageId) {
       this.messageDialogVisible = true
       this.message = ''
       this.loadingMessage = true
@@ -317,21 +394,21 @@ export default {
           this.loadingMessage = false
         })
     },
-    getMessageRef (occurrence) {
+    getMessageRef(occurrence) {
       if (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.messageId) {
         return occurrence.id
       }
     },
-    buildTooltip (occurrence) {
+    buildTooltip(occurrence) {
       let text = ''
       if (occurrence.interaction && occurrence.interaction.parameters && occurrence.interaction.parameters.DEVICE) {
         text = text + 'Dispositivo: ' + occurrence.interaction.properties.DEVICE
       }
       return text
     },
-    buildIcon (occurrence) {
+    buildIcon(occurrence) {
       if (occurrence.interaction && occurrence.interaction.type === 'CLICK') {
         return 'click'
       }
@@ -358,13 +435,13 @@ export default {
       }
       return ''
     },
-    getDirection (interaction) {
+    getDirection(interaction) {
       if (!interaction) return ''
       if (['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL'].includes(interaction.type)) {
         return 'OUTBOUND'
       } else return interaction.direction
     },
-    buildName (occurrence) {
+    buildName(occurrence) {
       if (occurrence.interaction) {
         if (occurrence.interaction.type &&
           ['MANUAL_COUNTERPROPOSAL', 'MANUAL_PROPOSAL', 'CLICK'].includes(occurrence.interaction.type) &&
@@ -390,20 +467,20 @@ export default {
       }
       return ''
     },
-    getOccurrenceMessage (messageId, occurrenceId) {
+    getOccurrenceMessage(messageId, occurrenceId) {
       this.$store.dispatch('getOccurrenceMessage', messageId).then(message => {
-        let ref = this.$refs[occurrenceId]
+        const ref = this.$refs[occurrenceId]
         ref[0].innerHTML = message.content
         this.fullMessageBank[occurrenceId] = message.content
       })
     },
-    buildLogContent (occurrence) {
+    buildLogContent(occurrence) {
       if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
         return 'Disputa visualizada'
       }
       return occurrence.description
     },
-    buildContent (occurrence) {
+    buildContent(occurrence) {
       if (!occurrence) return ''
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
         if (occurrence.interaction && occurrence.interaction.type === 'NEGOTIATOR_ACCESS') {
@@ -443,7 +520,7 @@ export default {
       }
       return occurrence.description
     },
-    showResume (occurrence) {
+    showResume(occurrence) {
       if (!this.showFullMessageList.includes(occurrence.id) &&
         occurrence.interaction &&
         occurrence.interaction.message &&
@@ -453,21 +530,21 @@ export default {
       }
       return false
     },
-    buildStatusIcon (occurrence) {
+    buildStatusIcon(occurrence) {
       if (occurrence.status) {
         return occurrence.status.toLowerCase()
       }
     },
-    buildStatusTooltip (occurrence) {
+    buildStatusTooltip(occurrence) {
       return 'No momento desta ocorrência, esta disputa estava ' + this.$t('dispute.status.' + occurrence.status)
     },
-    buildHour (occurrence) {
+    buildHour(occurrence) {
       if (occurrence.executionDateTime) {
         return this.$moment(occurrence.executionDateTime.dateTime).format('HH:mm')
       }
       return this.$moment(occurrence.createAt.dateTime).format('HH:mm')
     },
-    buildCommunicationType (occurrence) {
+    buildCommunicationType(occurrence) {
       let typeClass = ''
       if (occurrence.interaction && occurrence.interaction.message) {
         if (occurrence.interaction.message.communicationType) {
@@ -479,7 +556,7 @@ export default {
       }
       return typeClass
     },
-    showReply (occurrence) {
+    showReply(occurrence) {
       if (occurrence.interaction &&
         occurrence.interaction.message &&
         occurrence.interaction.message.communicationType &&
@@ -489,10 +566,10 @@ export default {
       }
       return false
     },
-    startReply (occurrence) {
-      let sender = occurrence.interaction.message.sender
-      let resume = occurrence.interaction.message.resume
-      let type = occurrence.interaction.message.communicationType
+    startReply(occurrence) {
+      const sender = occurrence.interaction.message.sender
+      const resume = occurrence.interaction.message.resume
+      const type = occurrence.interaction.message.communicationType
       this.$emit('dispute:reply', { sender, resume, type })
     },
     /** @method buildWhatsappStatus
@@ -506,12 +583,12 @@ export default {
       // FAILED
       // CANCELED
     */
-    buildWhatsappStatus (message, executionDateTime) {
+    buildWhatsappStatus(message, executionDateTime) {
       if (!message) return null
       if (message.status.startsWith('PROCESSED')) {
-        let sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
-        let receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
-        let readDate = message.parameters ? message.parameters.READ_DATE : ''
+        const sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
+        const receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
+        const readDate = message.parameters ? message.parameters.READ_DATE : ''
         let icon = 'status-0'
         let msg = `Enviado em ${sendDate}.`
         if (receiverDate) {
@@ -531,8 +608,8 @@ export default {
         return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND || 'Desconhecido'}.</i>` }
       }
       return null
-    }
-  }
+    },
+  },
 }
 </script>
 

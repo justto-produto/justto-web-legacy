@@ -15,28 +15,30 @@
       title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
       type="error"/>
-    <el-button type="primary" @click="readyWorkspace">Inserir primeiras disputas</el-button>
+    <el-button
+      type="primary"
+      @click="readyWorkspace">Inserir primeiras disputas</el-button>
   </div>
 </template>
 
 <script>
 export default {
   components: {
-    JusLogoCompany: () => import('@/components/images/JusLogoCompany')
+    JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
   },
   props: {
     isGuest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
-      showError: false
+      showError: false,
     }
   },
   methods: {
-    readyWorkspace: function () {
+    readyWorkspace: function() {
       this.showError = false
       this.$store.dispatch('readyWorkspace', this.$store.state.workspaceModule.subdomain)
         .then(() => {
@@ -63,7 +65,7 @@ export default {
         .catch(() => {
           this.showError = true
         })
-    }
-  }
+    },
+  },
 }
 </script>

@@ -15,14 +15,18 @@
     @keydown.right="onRightKeyDown"
     @keydown.down.prevent="onLeftKeyDown"
     @keydown.up.prevent="onRightKeyDown">
-    <div v-if="object" class="teste">
+    <div
+      v-if="object"
+      class="teste">
       <span class="teste2">{{ object.label }}</span>
       <span>
         R$ {{ formatValue }}<br>
         {{ object.date || '' }}
       </span>
     </div>
-    <div :class="{ 'hover': hovering, 'dragging': dragging }" class="el-slider__button"/>
+    <div
+      :class="{ 'hover': hovering, 'dragging': dragging }"
+      class="el-slider__button"/>
   </div>
 </template>
 
@@ -32,18 +36,18 @@ export default {
   props: {
     value: {
       type: Number,
-      default: 0
+      default: 0,
     },
     vertical: {
       type: Boolean,
-      default: false
+      default: false,
     },
     object: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
-  data () {
+  data() {
     return {
       hovering: false,
       dragging: false,
@@ -54,54 +58,54 @@ export default {
       currentY: 0,
       startPosition: 0,
       newPosition: null,
-      oldValue: this.value
+      oldValue: this.value,
     }
   },
   computed: {
-    disabled () {
+    disabled() {
       return this.$parent.sliderDisabled
     },
-    max () {
+    max() {
       return this.$parent.max
     },
-    min () {
+    min() {
       return this.$parent.min
     },
-    step () {
+    step() {
       return this.$parent.step
     },
-    showTooltip () {
+    showTooltip() {
       return this.$parent.showTooltip
     },
-    precision () {
+    precision() {
       return this.$parent.precision
     },
-    currentPosition () {
+    currentPosition() {
       return `${(this.value - this.min) / (this.max - this.min) * 100}%`
     },
-    enableFormat () {
+    enableFormat() {
       return this.$parent.formatTooltip instanceof Function
     },
-    formatValue () {
+    formatValue() {
       return (this.enableFormat && this.$parent.formatTooltip(this.value)) || this.value
     },
-    wrapperStyle () {
+    wrapperStyle() {
       return this.vertical ? { bottom: this.currentPosition } : { left: this.currentPosition }
-    }
+    },
   },
   watch: {
-    dragging (val) {
+    dragging(val) {
       this.$parent.dragging = val
-    }
+    },
   },
   methods: {
-    handleMouseEnter () {
+    handleMouseEnter() {
       this.hovering = true
     },
-    handleMouseLeave () {
+    handleMouseLeave() {
       this.hovering = false
     },
-    onButtonDown (event) {
+    onButtonDown(event) {
       if (this.disabled) return
       event.preventDefault()
       this.onDragStart(event)
@@ -111,19 +115,19 @@ export default {
       window.addEventListener('touchend', this.onDragEnd)
       window.addEventListener('contextmenu', this.onDragEnd)
     },
-    onLeftKeyDown () {
+    onLeftKeyDown() {
       if (this.disabled) return
       this.newPosition = parseFloat(this.currentPosition) - this.step / (this.max - this.min) * 100
       this.setPosition(this.newPosition)
       this.$parent.emitChange()
     },
-    onRightKeyDown () {
+    onRightKeyDown() {
       if (this.disabled) return
       this.newPosition = parseFloat(this.currentPosition) + this.step / (this.max - this.min) * 100
       this.setPosition(this.newPosition)
       this.$parent.emitChange()
     },
-    onDragStart (event) {
+    onDragStart(event) {
       this.dragging = true
       this.isClick = true
       if (event.type === 'touchstart') {
@@ -138,7 +142,7 @@ export default {
       this.startPosition = parseFloat(this.currentPosition)
       this.newPosition = this.startPosition
     },
-    onDragging (event) {
+    onDragging(event) {
       if (this.dragging) {
         this.isClick = false
         this.$parent.resetSize()
@@ -158,7 +162,7 @@ export default {
         this.setPosition(this.newPosition)
       }
     },
-    onDragEnd () {
+    onDragEnd() {
       if (this.dragging) {
         setTimeout(() => {
           this.dragging = false
@@ -174,7 +178,7 @@ export default {
         window.removeEventListener('contextmenu', this.onDragEnd)
       }
     },
-    setPosition (newPosition) {
+    setPosition(newPosition) {
       if (newPosition === null || isNaN(newPosition)) return
       if (newPosition < 0) {
         newPosition = 0
@@ -189,8 +193,8 @@ export default {
       if (!this.dragging && this.value !== this.oldValue) {
         this.oldValue = this.value
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

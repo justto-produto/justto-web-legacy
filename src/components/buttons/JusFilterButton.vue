@@ -1,10 +1,22 @@
 <template lang="html">
-  <div :class="{'jus-filter-button--collapse': isCollapsed}" class="jus-filter-button" @keyup.esc="toggle()">
-    <el-input ref="filterInput" v-model="term" @blur="blur()">
-      <el-button slot="prepend" @click="toggle()">
+  <div
+    :class="{'jus-filter-button--collapse': isCollapsed}"
+    class="jus-filter-button"
+    @keyup.esc="toggle()">
+    <el-input
+      ref="filterInput"
+      v-model="term"
+      @blur="blur()">
+      <el-button
+        slot="prepend"
+        @click="toggle()">
         <jus-icon icon="search" />
       </el-button>
-      <i v-if="!isCollapsed" slot="suffix" class="el-input__icon el-icon-close" @click="toggle()" />
+      <i
+        v-if="!isCollapsed"
+        slot="suffix"
+        class="el-input__icon el-icon-close"
+        @click="toggle()" />
     </el-input>
   </div>
 </template>
@@ -12,15 +24,15 @@
 <script>
 export default {
   name: 'JusFilterButton',
-  data () {
+  data() {
     return {
       term: '',
       isCollapsed: true,
-      debounce: ''
+      debounce: '',
     }
   },
   watch: {
-    isCollapsed (isCollapsed) {
+    isCollapsed(isCollapsed) {
       if (isCollapsed) {
         this.term = ''
         this.$refs.filterInput.blur()
@@ -28,32 +40,32 @@ export default {
         this.focus()
       }
     },
-    term (term) {
+    term(term) {
       clearTimeout(this.debounce)
       this.debounce = setTimeout(() => {
         this.$store.commit('setDisputeFilterTerm', term)
       }, 800)
-    }
+    },
   },
-  beforeMount () {
+  beforeMount() {
     this.term = this.$store.getters.disputeFiltersTerm
     if (this.term) this.isCollapsed = false
   },
   methods: {
-    toggle () {
+    toggle() {
       this.isCollapsed = !this.isCollapsed
     },
-    blur () {
+    blur() {
       setTimeout(() => {
         if (!this.term) {
           this.isCollapsed = true
         }
       }, 250)
     },
-    focus () {
+    focus() {
       this.$refs.filterInput.focus()
-    }
-  }
+    },
+  },
 }
 </script>
 

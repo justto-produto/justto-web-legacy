@@ -10,11 +10,20 @@
         :model="oabForm"
         label-position="top"
         @submit.native.prevent="submitForm">
-        <el-form-item label="OAB" prop="oab">
-          <el-input v-model="oabForm.oab" name="oab"/>
+        <el-form-item
+          label="OAB"
+          prop="oab">
+          <el-input
+            v-model="oabForm.oab"
+            name="oab"/>
         </el-form-item>
-        <el-form-item label="UF" prop="state">
-          <el-select v-model="oabForm.state" filterable placeholder="">
+        <el-form-item
+          label="UF"
+          prop="state">
+          <el-select
+            v-model="oabForm.state"
+            filterable
+            placeholder="">
             <el-option
               v-for="state in $store.state.statesList"
               :key="state"
@@ -29,8 +38,13 @@
       title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
       type="error"/>
-    <el-button :disabled="!oabForm.oab || !oabForm.state" type="primary" @click="submitForm">Próximo</el-button>
-    <el-button type="text" @click="skip">Pular</el-button>
+    <el-button
+      :disabled="!oabForm.oab || !oabForm.state"
+      type="primary"
+      @click="submitForm">Próximo</el-button>
+    <el-button
+      type="text"
+      @click="skip">Pular</el-button>
   </div>
 </template>
 
@@ -39,20 +53,20 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       showError: false,
       oabForm: {
         oab: this.$store.state.workspaceModule.oabNumber ? this.$store.state.workspaceModule.oabNumber : '',
-        state: this.$store.state.workspaceModule.oabState ? this.$store.state.workspaceModule.oabState : ''
-      }
+        state: this.$store.state.workspaceModule.oabState ? this.$store.state.workspaceModule.oabState : '',
+      },
     }
   },
   methods: {
-    submitForm () {
+    submitForm() {
       this.showError = false
       this.$refs['oabForm'].validate((valid) => {
         if (valid) {
@@ -72,18 +86,18 @@ export default {
         } else return false
       })
     },
-    skip () {
+    skip() {
       this.$emit('onboarding:step:next')
       this.$refs['oabForm'].resetFields()
     },
-    hasChanges () {
+    hasChanges() {
       if (this.$store.state.accountModule.oabNumber !== this.oabForm.oab ||
       this.$store.state.accountModule.oabState !== this.oabForm.state) {
         return true
       }
       return false
-    }
-  }
+    },
+  },
 }
 </script>
 

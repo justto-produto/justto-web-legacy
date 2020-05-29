@@ -1,5 +1,7 @@
 <template>
-  <div v-loading="$store.state.loading" class="campaign-step">
+  <div
+    v-loading="$store.state.loading"
+    class="campaign-step">
     <h2 class="new-import-view__title">Configuração de campanhas</h2>
     <p>
       O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de
@@ -8,12 +10,22 @@
       configurá-las separadamente.
       <br><br><br>
     </p>
-    <el-alert v-if="duplicatedDisputesLoading" :closable="false" type="info">
+    <el-alert
+      v-if="duplicatedDisputesLoading"
+      :closable="false"
+      type="info">
       <div class="el-loading-parent--relative">
         <div class="el-loading-mask">
           <div class="el-loading-spinner">
-            <svg viewBox="25 25 50 50" class="circular">
-              <circle cx="50" cy="50" r="20" fill="none" class="path" />
+            <svg
+              viewBox="25 25 50 50"
+              class="circular">
+              <circle
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                class="path" />
             </svg>
           </div>
         </div>
@@ -23,10 +35,14 @@
         Aguarde um momento enquanto o sistema valida disputas duplicadas e expiradas.
       </div>
     </el-alert>
-    <el-alert v-if="!duplicatedDisputesLoading && duplicatedDisputes.length" type="error">
+    <el-alert
+      v-if="!duplicatedDisputesLoading && duplicatedDisputes.length"
+      type="error">
       <h2>Atenção!</h2>
       Foram encontradas disputa(s) duplicada(s) e/ou expirada(s):
-      <ul v-for="(d, index) in duplicatedDisputes" :key="d.code + index">
+      <ul
+        v-for="(d, index) in duplicatedDisputes"
+        :key="d.code + index">
         <li>
           {{ d.code }} - Disputa
           <span v-if="d.status === 'DUPLICATE'">
@@ -48,7 +64,9 @@
       </ul>
     </el-alert>
     <div class="import-view__container">
-      <div v-if="!duplicatedDisputesLoading" class="import-view__content">
+      <div
+        v-if="!duplicatedDisputesLoading"
+        class="import-view__content">
         <jus-import-feedback-card
           v-for="(mappedCampaign, index) in mappedCampaigns"
           :mapped-campaign.sync="mappedCampaign"
@@ -64,21 +82,21 @@
 export default {
   name: 'CampaignStep',
   components: {
-    JusImportFeedbackCard: () => import('@/components/layouts/JusImportFeedbackCard')
+    JusImportFeedbackCard: () => import('@/components/layouts/JusImportFeedbackCard'),
   },
   props: {
     mappedCampaigns: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  data () {
+  data() {
     return {
       duplicatedDisputes: [],
-      duplicatedDisputesLoading: true
+      duplicatedDisputesLoading: true,
     }
   },
-  beforeMount () {
+  beforeMount() {
     if (!this.$store.getters.strategyList.length) {
       this.$store.dispatch('showLoading')
       this.$store.dispatch('getMyStrategies').finally(() => {
@@ -90,7 +108,7 @@ export default {
     }).finally(() => {
       setTimeout(() => { this.duplicatedDisputesLoading = false }, 1000)
     })
-  }
+  },
 }
 </script>
 

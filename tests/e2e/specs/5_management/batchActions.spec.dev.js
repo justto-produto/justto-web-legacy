@@ -2,8 +2,8 @@ const login = Cypress.env('main-email')
 const password = Cypress.env('main-password')
 const workspace = Cypress.env('main-workspace')
 
-describe('Justto.App - Gerenciamento: Ação em Lote', function () {
-  beforeEach(function () {
+describe('Justto.App - Gerenciamento: Ação em Lote', function() {
+  beforeEach(function() {
     // Acessa a página inicial do Justto.App
     cy.access('/')
 
@@ -25,7 +25,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .should('be.visible')
   })
 
-  afterEach('Notificação de Sucesso', function () {
+  afterEach('Notificação de Sucesso', function() {
     // Notificação de sucesso deve aparecer
     cy.get('.el-notification.success', { timeout: 60000 })
       .should('be.visible')
@@ -36,7 +36,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .should('not.be.visible')
   })
 
-  it('Ação em Lote: Pausar', function () {
+  it('Ação em Lote: Pausar', function() {
     // Clica na ação
     cy.get('[data-testid=batch-paused]')
       .click()
@@ -50,7 +50,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .click()
   })
 
-  it('Ação em Lote: Retomar', function () {
+  it('Ação em Lote: Retomar', function() {
     // Clica na ação
     cy.get('[data-testid=batch-resume]')
       .click()
@@ -64,7 +64,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .click()
   })
 
-  it('Ação em Lote: Ganha', function () {
+  it('Ação em Lote: Ganha', function() {
     // Clica na ação
     cy.get('[data-testid=batch-settled]')
       .click()
@@ -78,7 +78,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .click()
   })
 
-  it('Ação em Lote: Reiniciar Engajamento', function () {
+  it('Ação em Lote: Reiniciar Engajamento', function() {
     // VClica em Reiniciar Engajamento
     cy.get('[data-testid=batch-restartengagement]')
       .click()
@@ -92,7 +92,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function () {
       .click()
   })
 
-  it('Ação em Lote: Excluir', function () {
+  it('Ação em Lote: Excluir', function() {
     // Clica em Remover
     cy.get('[data-testid=batch-delete]')
       .click()

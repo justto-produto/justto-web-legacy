@@ -2,39 +2,39 @@ import axiosDispatcher from '@/store/axiosDispatcher.js'
 import { queryBuilder } from '@/utils/jusUtils'
 
 const actions = {
-  getWorkspaceTags () {
+  getWorkspaceTags() {
     return axiosDispatcher({
       url: 'api/workspaces/tags',
       mutation: 'setWorkspaceTags',
-      params: { size: 99999, sort: 'id,asc' }
+      params: { size: 99999, sort: 'id,asc' },
     })
   },
-  getDisputeTags ({ commit }, disputeId) {
+  getDisputeTags({ commit }, disputeId) {
     return axiosDispatcher({
       url: `/api/disputes/${disputeId}/tags`,
       mutation: 'setDisputeTags',
-      params: { size: 99999, sort: 'id,desc' }
+      params: { size: 99999, sort: 'id,desc' },
     })
   },
-  editDisputeTags ({ commit }, params) {
+  editDisputeTags({ commit }, params) {
     return axiosDispatcher({
       method: 'patch',
       url: `/api/disputes/${params.disputeId}/tags`,
       mutation: 'setDisputeTags',
-      data: params.data
+      data: params.data,
     })
   },
-  getFilteredTags ({ rootState }) {
-    let query = JSON.parse(JSON.stringify(rootState.disputeModule.query))
+  getFilteredTags({ rootState }) {
+    const query = JSON.parse(JSON.stringify(rootState.disputeModule.query))
     delete query.sort
     delete query.page
     delete query.size
     return axiosDispatcher({
       method: 'get',
       url: `/api/disputes/tags${queryBuilder(query)}`,
-      mutation: 'setFilteredTags'
+      mutation: 'setFilteredTags',
     })
-  }
+  },
 }
 
 export default actions

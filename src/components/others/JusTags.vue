@@ -9,7 +9,11 @@
         <i :class="`el-icon-${tag.icon}`"/>
         {{ tag.name }}
       </div>
-      <el-button type="text" icon="el-icon-close" size="small" @click.prevent="removeTag(tag.id)" />
+      <el-button
+        type="text"
+        icon="el-icon-close"
+        size="small"
+        @click.prevent="removeTag(tag.id)" />
     </el-tag>
     <el-popover
       v-model="visible"
@@ -44,25 +48,36 @@
               </el-tag>
             </el-option>
             <div slot="empty">
-              <el-button type="text" class="jus-tags__add-button" size="small" @click="showNewTagForm">
+              <el-button
+                type="text"
+                class="jus-tags__add-button"
+                size="small"
+                @click="showNewTagForm">
                 <i class="el-icon-plus" /> Adicionar nova etiqueta
               </el-button>
             </div>
           </el-select>
         </div>
         <!-- NOVA ETIQUETA -->
-        <div v-if="showForm" class="jus-tags__new-tag-form">
+        <div
+          v-if="showForm"
+          class="jus-tags__new-tag-form">
           <div class="jus-tags__title">
             Nova etiqueta
           </div>
-          <el-tag :color="tagForm.color" class="el-tag--new">
+          <el-tag
+            :color="tagForm.color"
+            class="el-tag--new">
             <i :class="`el-icon-${tagForm.icon}`"/>
             <el-input
               v-model="tagForm.name"
               :maxlength="24"
               size="small"
               @keyup.enter.native="saveTag"/>
-            <el-popover trigger="hover" width="200" popper-class="jus-tags__edit-tag">
+            <el-popover
+              trigger="hover"
+              width="200"
+              popper-class="jus-tags__edit-tag">
               <div class="title">
                 Personalizar etiqueta
               </div>
@@ -81,18 +96,35 @@
                   class="el-tag--click"
                   @click="tagForm.color = color" />
               </div>
-              <el-button slot="reference" type="text" icon="el-icon-more" />
+              <el-button
+                slot="reference"
+                type="text"
+                icon="el-icon-more" />
             </el-popover>
           </el-tag>
           <div class="jus-tags__new-tag-actions">
-            <el-button plain size="mini" @click="resetFields">Cancelar</el-button>
-            <el-button type="primary" size="mini" @click="saveTag">Adicionar</el-button>
+            <el-button
+              plain
+              size="mini"
+              @click="resetFields">Cancelar</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="saveTag">Adicionar</el-button>
           </div>
         </div>
       </div>
-      <el-tooltip id="idTagTooltip" slot="reference" content="Adicionar etiqueta">
-        <el-tag id="idTag" class="jus-tags__open-button" @click="visible = !visible">
-          <i id="idTagIcon" class="el-icon-plus" />
+      <el-tooltip
+        id="idTagTooltip"
+        slot="reference"
+        content="Adicionar etiqueta">
+        <el-tag
+          id="idTag"
+          class="jus-tags__open-button"
+          @click="visible = !visible">
+          <i
+            id="idTagIcon"
+            class="el-icon-plus" />
         </el-tag>
       </el-tooltip>
     </el-popover>
@@ -102,27 +134,27 @@
 <script>
 export default {
   name: 'JusTags',
-  data () {
+  data() {
     return {
       loading: false,
       visible: false,
       selectedTag: null,
       showForm: false,
       tagForm: {
-        name: '', color: '', icon: ''
-      }
+        name: '', color: '', icon: '',
+      },
     }
   },
   computed: {
     disputeTags: {
-      get () {
+      get() {
         return this.$store.getters.disputeTags
       },
-      set (tags) {
+      set(tags) {
         this.loading = true
         this.$store.dispatch('editDisputeTags', {
           disputeId: this.$store.getters.disputeId,
-          data: tags
+          data: tags,
         }).then(() => {
           this.tagForm.name = ''
           this.showForm = false
@@ -133,82 +165,82 @@ export default {
           this.loading = false
           this.visible = false
         })
-      }
+      },
     },
-    workspaceTags () {
+    workspaceTags() {
       return this.$store.getters.workspaceTags.filter(t => {
         return !this.disputeTags.map(t => t.id).includes(t.id)
       })
     },
-    colors () {
+    colors() {
       return this.$store.state.tagModule.colors
     },
-    icons () {
+    icons() {
       return this.$store.state.tagModule.icons
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.tagForm.color = this.colors[0]
     this.tagForm.icon = this.icons[0]
     window.addEventListener('click', this.closeOnCLick)
   },
-  destroyed () {
+  destroyed() {
     window.removeEventListener('click', this.closeOnCLick)
   },
   methods: {
-    closeOnCLick (e) {
+    closeOnCLick(e) {
       if (!e.target.id.startsWith('idTag') && !e.target.textContent.includes('Adicionar nova etiqueta')) {
         this.visible = false
       }
     },
-    saveTag () {
+    saveTag() {
       if (this.tagForm.name) {
         // SEGMENT TRACK
         this.$jusSegment('Criação de TAG', {
           tagName: this.tagForm.name,
           tagIcon: this.tagForm.icon,
           tagColor: this.tagForm.color,
-          page: this.$route.name
+          page: this.$route.name,
         })
-        let disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
+        const disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
         disputeTags.push(this.tagForm)
         this.disputeTags = disputeTags
       }
     },
-    addTag (tag) {
+    addTag(tag) {
       // SEGMENT TRACK
       this.$jusSegment('Vinculação de TAG', {
         tagName: this.tagForm.name,
         tagIcon: this.tagForm.icon,
         tagColor: this.tagForm.color,
-        page: this.$route.name
+        page: this.$route.name,
       })
-      let disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
+      const disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
       disputeTags.push(tag)
       this.disputeTags = disputeTags
     },
-    removeTag (tagId) {
+    removeTag(tagId) {
       // SEGMENT TRACK
-      let tagToRemove = this.disputeTags.find(t => t.id === tagId)
+      const tagToRemove = this.disputeTags.find(t => t.id === tagId)
       this.$jusSegment('Desvinculação de TAG', {
         tagName: tagToRemove.name,
         tagIcon: tagToRemove.icon,
         tagColor: tagToRemove.color,
-        page: this.$route.name
+        page: this.$route.name,
       })
       this.disputeTags = this.disputeTags.filter(t => t.id !== tagId)
     },
-    changeIcon (icon) {
+    changeIcon(icon) {
       this.tagForm.icon = icon
     },
-    changeColor (color) {
+    changeColor(color) {
       this.tagForm.color = color
     },
-    showNewTagForm () {
+    showNewTagForm() {
       this.tagForm.name = this.$refs.selectTag.selectedLabel.slice(0, 24)
       this.$nextTick(() => { this.showForm = true })
     },
-    getTags () {
+    getTags() {
       // SEGMENT TRACK
       this.$jusSegment('Visualização de TAG', { page: this.$route.name })
       this.loading = true
@@ -217,17 +249,17 @@ export default {
         this.$refs.selectTag.focus()
       })
     },
-    resetFields () {
+    resetFields() {
       this.$nextTick(() => { this.showForm = false })
     },
-    filterByTag (tagId) {
+    filterByTag(tagId) {
       this.$store.commit('clearDisputeQuery')
       this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
       this.$store.commit('updateDisputeQuery', { key: 'tags', value: [tagId] })
       this.$store.commit('setDisputesTab', '3')
       this.$router.push('/management')
-    }
-  }
+    },
+  },
 }
 </script>
 

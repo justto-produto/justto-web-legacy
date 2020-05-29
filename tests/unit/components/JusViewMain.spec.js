@@ -1,12 +1,12 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils'
-import JusViewMain from '@/components/layouts/JusViewMain.vue'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import Element from 'element-ui'
+import JusViewMain from '@/components/layouts/JusViewMain.vue'
 
 const localVue = createLocalVue()
 localVue.use(Element)
 
 describe('JusViewMain.vue', () => {
-  let actions
   it('É um objeto Vue.', () => {
     const wrapper = shallowMount(JusViewMain, { localVue })
     expect(wrapper.isVueInstance()).toBe(true)

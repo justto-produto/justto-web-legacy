@@ -1,33 +1,83 @@
 <template>
   <div class="management-prescriptions">
-    <el-button v-show="tab0" :type="ONLY_SMS_ENGAGEMENT ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_SMS_ENGAGEMENT')">
+    <el-button
+      v-show="tab0"
+      :type="ONLY_SMS_ENGAGEMENT ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('ONLY_SMS_ENGAGEMENT')">
       Somente SMS
     </el-button>
-    <el-button v-show="tab0" :type="ONLY_EMAIL_ENGAGEMENT ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_EMAIL_ENGAGEMENT')">
+    <el-button
+      v-show="tab0"
+      :type="ONLY_EMAIL_ENGAGEMENT ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('ONLY_EMAIL_ENGAGEMENT')">
       Somente Email
     </el-button>
-    <el-button v-show="tab1" :type="HAS_ANSWER ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('HAS_ANSWER')">
+    <el-button
+      v-show="tab1"
+      :type="HAS_ANSWER ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('HAS_ANSWER')">
       Com resposta
     </el-button>
-    <el-button v-show="tab1" :type="COUNTERPROPOSAL_UP_TO_20 ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('COUNTERPROPOSAL_UP_TO_20')">
+    <el-button
+      v-show="tab1"
+      :type="COUNTERPROPOSAL_UP_TO_20 ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('COUNTERPROPOSAL_UP_TO_20')">
       Contraproposta (até 20%)
     </el-button>
-    <el-button v-show="tab1" :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
+    <el-button
+      v-show="tab1"
+      :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
       Contraproposta (+20%)
     </el-button>
-    <el-button v-show="tab1" :type="ONLY_VISUALIZED ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('ONLY_VISUALIZED')">
+    <el-button
+      v-show="tab1"
+      :type="ONLY_VISUALIZED ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('ONLY_VISUALIZED')">
       Somente visualizados
     </el-button>
-    <el-button v-show="tab3" :type="PENDING ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('PENDING')">
+    <el-button
+      v-show="tab3"
+      :type="PENDING ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('PENDING')">
       Pendentes
     </el-button>
-    <el-button v-show="tab3" :type="UNSETTLED_WITH_MESSAGES ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
+    <el-button
+      v-show="tab3"
+      :type="UNSETTLED_WITH_MESSAGES ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
       Perdidos com Mensagem
     </el-button>
-    <el-button v-show="tab0 || tab3" :type="NAMESAKE ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('NAMESAKE')">
+    <el-button
+      v-show="tab0 || tab3"
+      :type="NAMESAKE ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('NAMESAKE')">
       Homônimos
     </el-button>
-    <el-button v-show="tab0 || tab1" :type="NO_UPPER_RANGE ? 'primary' : ''" plain size="small" @click="handlePrescriptionClick('NO_UPPER_RANGE')">
+    <el-button
+      v-show="tab0 || tab1"
+      :type="NO_UPPER_RANGE ? 'primary' : ''"
+      plain
+      size="small"
+      @click="handlePrescriptionClick('NO_UPPER_RANGE')">
       Sem alçada máxima
     </el-button>
     <jus-tags-filter @prescriptions:getDisputes="getDisputes" />
@@ -38,60 +88,60 @@
 export default {
   name: 'ManagementPrescriptions',
   components: {
-    JusTagsFilter: () => import('@/components/others/JusTagsFilter')
+    JusTagsFilter: () => import('@/components/others/JusTagsFilter'),
   },
   props: {
     activeTab: {
       default: '1',
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
-    ONLY_SMS_ENGAGEMENT () {
+    ONLY_SMS_ENGAGEMENT() {
       return this.$store.getters.hasPrescription('ONLY_SMS_ENGAGEMENT')
     },
-    ONLY_EMAIL_ENGAGEMENT () {
+    ONLY_EMAIL_ENGAGEMENT() {
       return this.$store.getters.hasPrescription('ONLY_EMAIL_ENGAGEMENT')
     },
-    HAS_ANSWER () {
+    HAS_ANSWER() {
       return this.$store.getters.hasPrescription('HAS_ANSWER')
     },
-    COUNTERPROPOSAL_UP_TO_20 () {
+    COUNTERPROPOSAL_UP_TO_20() {
       return this.$store.getters.hasPrescription('COUNTERPROPOSAL_UP_TO_20')
     },
-    COUNTERPROPOSAL_OVER_20 () {
+    COUNTERPROPOSAL_OVER_20() {
       return this.$store.getters.hasPrescription('COUNTERPROPOSAL_OVER_20')
     },
-    ONLY_VISUALIZED () {
+    ONLY_VISUALIZED() {
       return this.$store.getters.hasPrescription('ONLY_VISUALIZED')
     },
-    PENDING () {
+    PENDING() {
       return this.$store.getters.hasPrescription('PENDING')
     },
-    UNSETTLED_WITH_MESSAGES () {
+    UNSETTLED_WITH_MESSAGES() {
       return this.$store.getters.hasPrescription('UNSETTLED_WITH_MESSAGES')
     },
-    NAMESAKE () {
+    NAMESAKE() {
       return this.$store.getters.hasPrescription('NAMESAKE')
     },
-    NO_UPPER_RANGE () {
+    NO_UPPER_RANGE() {
       return this.$store.getters.hasPrescription('NO_UPPER_RANGE')
     },
-    tab0 () {
+    tab0() {
       return this.activeTab === '0'
     },
-    tab1 () {
+    tab1() {
       return this.activeTab === '1'
     },
-    tab2 () {
+    tab2() {
       return this.activeTab === '2'
     },
-    tab3 () {
+    tab3() {
       return this.activeTab === '3'
-    }
+    },
   },
   methods: {
-    handlePrescriptionClick (prescription) {
+    handlePrescriptionClick(prescription) {
       this.$store.commit('resetDisputeQueryPage')
       if (this[prescription]) {
         this.$store.commit('removePrescription', prescription)
@@ -133,10 +183,10 @@ export default {
       }
       this.getDisputes()
     },
-    getDisputes () {
+    getDisputes() {
       this.$emit('management:getDisputes')
-    }
-  }
+    },
+  },
 }
 </script>
 

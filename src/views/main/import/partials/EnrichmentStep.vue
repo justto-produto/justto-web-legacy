@@ -6,9 +6,15 @@
       cada vez mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada
       para encontrar as pessoas e chegar uma solução adequada.
     </p>
-    <el-card shadow="never" class="el-card--dashed">
-      <div v-if="loading && !enriched" class="el-loading-spinner">
-        <svg viewBox="25 25 50 50" class="circular">
+    <el-card
+      shadow="never"
+      class="el-card--dashed">
+      <div
+        v-if="loading && !enriched"
+        class="el-loading-spinner">
+        <svg
+          viewBox="25 25 50 50"
+          class="circular">
           <circle
             cx="50"
             cy="50"
@@ -32,13 +38,19 @@
       </p>
       <ul>
         <li>
-          <el-checkbox v-model="checked1" class="el-checkbox--status">Dados de Contato das Partes</el-checkbox>
+          <el-checkbox
+            v-model="checked1"
+            class="el-checkbox--status">Dados de Contato das Partes</el-checkbox>
         </li>
         <li>
-          <el-checkbox v-model="checked2" class="el-checkbox--status">Dados de Contato dos Advogados</el-checkbox>
+          <el-checkbox
+            v-model="checked2"
+            class="el-checkbox--status">Dados de Contato dos Advogados</el-checkbox>
         </li>
         <li>
-          <el-checkbox v-model="checked3" class="el-checkbox--status">Dados dos Processos Judiciais</el-checkbox>
+          <el-checkbox
+            v-model="checked3"
+            class="el-checkbox--status">Dados dos Processos Judiciais</el-checkbox>
         </li>
       </ul>
     </el-card>
@@ -48,44 +60,44 @@
 <script>
 export default {
   name: 'EnrichmentStep',
-  data () {
+  data() {
     return {
       loading: false,
       checked1: false,
       checked2: false,
       checked3: false,
-      revision: false
+      revision: false,
     }
   },
   computed: {
-    enriched () {
+    enriched() {
       return this.checked1 && this.checked2 && this.checked3
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.startEnrichment()
   },
   methods: {
-    startEnrichment () {
+    startEnrichment() {
       this.checked1 = false
       this.checked2 = false
       this.checked3 = false
       this.loading = true
-      let self = this
-      setTimeout(function () {
+      const self = this
+      setTimeout(function() {
         self.checked1 = true
       }, 2000)
-      setTimeout(function () {
+      setTimeout(function() {
         self.checked2 = true
       }, 2800)
-      setTimeout(function () {
+      setTimeout(function() {
         self.checked3 = true
       }, 4000)
-      setTimeout(function () {
+      setTimeout(function() {
         self.$emit('import:step:next')
       }, 5500)
-    }
-  }
+    },
+  },
 }
 </script>
 

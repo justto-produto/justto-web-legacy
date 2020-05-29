@@ -6,32 +6,32 @@ const account = {
     id: '',
     name: '',
     email: '',
-    token: localStorage.getItem('justoken') || ''
+    token: localStorage.getItem('justoken') || '',
   },
   mutations: {
-    setToken (state, token) {
+    setToken(state, token) {
       if (token) state.token = token
     },
-    logout (state) {
+    logout(state) {
       state.id = ''
       state.name = ''
       state.email = ''
       state.token = ''
     },
-    setUser (state, response) {
+    setUser(state, response) {
       if (response.id) state.id = response.id
       if (response.name) state.name = response.name
       if (response.email) state.email = response.email
-    }
+    },
   },
   actions: {
-    myAccount () {
+    myAccount() {
       return axiosDispatcher({
         url: 'api/accounts/my',
-        mutation: 'setUser'
+        mutation: 'setUser',
       })
     },
-    register ({ commit }, loginForm) {
+    register({ commit }, loginForm) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('api/accounts/register', loginForm)
@@ -42,7 +42,7 @@ const account = {
           })
       })
     },
-    activate ({ commit }, token) {
+    activate({ commit }, token) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.put('api/accounts/activate/' + token)
@@ -54,7 +54,7 @@ const account = {
           })
       })
     },
-    login ({ commit }, credentials) {
+    login({ commit }, credentials) {
       // eslint-disable-next-line
       delete axios.defaults.headers.common['Authorization']
       // eslint-disable-next-line
@@ -76,7 +76,7 @@ const account = {
           })
       })
     },
-    refreshToken ({ commit }) {
+    refreshToken({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/accounts/refresh-token')
@@ -96,7 +96,7 @@ const account = {
           })
       })
     },
-    logout ({ commit }, options) {
+    logout({ commit }, options) {
       commit('logout')
       commit('clearWorkspace')
       commit('clearDisputes')
@@ -108,7 +108,7 @@ const account = {
       if (options && options.redirect === false) {
       } else router.push('/login')
     },
-    forgotPassword ({ commit }, email) {
+    forgotPassword({ commit }, email) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.put('api/accounts/reset-password?email=' + email)
@@ -120,7 +120,7 @@ const account = {
           })
       })
     },
-    resetPassword ({ commit }, data) {
+    resetPassword({ commit }, data) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.put('api/accounts/new-password/' + data.token, { password: data.password })
@@ -132,7 +132,7 @@ const account = {
           })
       })
     },
-    updatePassword ({ commit }, form) {
+    updatePassword({ commit }, form) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.post('api/accounts/my/update-password', form)
@@ -143,7 +143,7 @@ const account = {
             reject(error)
           })
       })
-    }
+    },
   },
   getters: {
     accountToken: state => state.token,
@@ -153,8 +153,8 @@ const account = {
     isJusttoAdmin: state => {
       if (state.email.endsWith('@justto.com.br')) return true
       return false
-    }
-  }
+    },
+  },
 }
 
 export default account

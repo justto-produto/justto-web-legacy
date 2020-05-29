@@ -1,5 +1,5 @@
-describe('Confirmação de Registro', function () {
-  it('Cadastro Ativado', function () {
+describe('Confirmação de Registro', function() {
+  it('Cadastro Ativado', function() {
     // Acessa link de validação (Link do email)
     cy.visit('/#/login?token=TSTAUTO')
 

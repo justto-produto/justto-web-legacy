@@ -10,9 +10,9 @@
 export default {
   name: 'App',
   watch: {
-    '$route' (to, from) {
+    '$route'(to, from) {
       document.title = to.meta.title || 'Justto'
-    }
-  }
+    },
+  },
 }
 </script>

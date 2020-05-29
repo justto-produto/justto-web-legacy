@@ -1,10 +1,16 @@
 <template>
-  <div :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass + ' ' + activeClass" class="jus-avatar-user">
-    <img v-if="showAvatar" :src="avatarSrc">
+  <div
+    :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass + ' ' + activeClass"
+    class="jus-avatar-user">
+    <img
+      v-if="showAvatar"
+      :src="avatarSrc">
     <span v-else>
       {{ nameInitials.toUpperCase() }}
     </span>
-    <span v-if="notifications > 0 && size === 'sm'" class="jus-avatar-user__notifications">
+    <span
+      v-if="notifications > 0 && size === 'sm'"
+      class="jus-avatar-user__notifications">
       {{ notifications }}
     </span>
   </div>
@@ -16,46 +22,46 @@ export default {
   props: {
     src: {
       type: String,
-      default: ''
+      default: '',
     },
     notifications: {
       type: Number,
-      default: undefined
+      default: undefined,
     },
     size: {
       type: String,
-      default: 'md'
+      default: 'md',
     },
     shape: {
       type: String,
-      default: 'square'
+      default: 'square',
     },
     name: {
       type: String,
-      default: ''
+      default: '',
     },
     purple: {
       type: Boolean,
-      default: false
+      default: false,
     },
     active: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
-    showAvatar () {
+    showAvatar() {
       if (this.src) return true
       if (this.name && this.name.trim()) return false
       return true
     },
-    avatarSrc () {
+    avatarSrc() {
       if (this.src) return this.src
       return require('@/assets/icons/ic-user.svg')
     },
-    nameInitials () {
+    nameInitials() {
       if (this.name && this.name.trim()) {
-        let split = this.name.split(' ').filter(Boolean)
+        const split = this.name.split(' ').filter(Boolean)
         if (split.length > 1) {
           return split[0].substring(0, 1) + split[split.length - 1].substring(0, 1)
         } else if (split.length === 1) {
@@ -64,19 +70,19 @@ export default {
       }
       return ''
     },
-    shapeClass () {
+    shapeClass() {
       return 'jus-avatar-user--' + this.shape
     },
-    sizeClass () {
+    sizeClass() {
       return 'jus-avatar-user--' + this.size
     },
-    purpleClass () {
+    purpleClass() {
       return this.purple ? 'jus-avatar-user--purple' : ''
     },
-    activeClass () {
+    activeClass() {
       return this.active ? 'jus-avatar-user--active' : ''
-    }
-  }
+    },
+  },
 }
 </script>
 

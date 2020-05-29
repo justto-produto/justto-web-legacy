@@ -1,19 +1,38 @@
 <template>
-  <el-card v-if="showTips && showProtocol" class="dispute-tips el-card--bordered el-card--info">
+  <el-card
+    v-if="showTips && showProtocol"
+    class="dispute-tips el-card--bordered el-card--info">
     <div slot="header">
       <i class="el-icon-info" />
       Próximo passo: Geração e envio de minuta
-      <el-button type="text" icon="el-icon-close" @click="showTips = false" />
+      <el-button
+        type="text"
+        icon="el-icon-close"
+        @click="showTips = false" />
     </div>
     <div class="content">
-      <el-steps :active="documentStep" align-center process-status="wait">
-        <el-step title="Criação" description="Criação e edição da minuta" icon="el-icon-document" />
-        <el-step title="Envio" description="Envio para assinatura das partes" icon="el-icon-s-promotion" />
-        <el-step title="Assinaturas" description="Todas as assinaturas coletadas" icon="el-icon-edit" />
+      <el-steps
+        :active="documentStep"
+        align-center
+        process-status="wait">
+        <el-step
+          title="Criação"
+          description="Criação e edição da minuta"
+          icon="el-icon-document" />
+        <el-step
+          title="Envio"
+          description="Envio para assinatura das partes"
+          icon="el-icon-s-promotion" />
+        <el-step
+          title="Assinaturas"
+          description="Todas as assinaturas coletadas"
+          icon="el-icon-edit" />
       </el-steps>
     </div>
     <div class="action">
-      <el-button type="primary" @click="showProtocolDialog()">
+      <el-button
+        type="primary"
+        @click="showProtocolDialog()">
         Gerenciar minuta
       </el-button>
     </div>
@@ -29,32 +48,32 @@ import { getDocumentStep } from '@/utils/jusUtils'
 export default {
   name: 'DisputeTips',
   components: {
-    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog')
+    JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
   },
-  data () {
+  data() {
     return {
       showTips: true,
-      protocolDialogVisible: false
+      protocolDialogVisible: false,
     }
   },
   computed: {
-    dispute () {
+    dispute() {
       return this.$store.getters.dispute
     },
-    documentStep () {
+    documentStep() {
       return getDocumentStep(this.dispute.hasDocument, this.dispute.signStatus)
     },
-    showProtocol () {
+    showProtocol() {
       return ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status)
-    }
+    },
   },
   methods: {
-    showProtocolDialog () {
+    showProtocolDialog() {
       // SEGMENT TRACK
       this.$jusSegment('Gerenciar minuta dentro do ticket view', { disputeId: this.dispute.id })
       this.protocolDialogVisible = true
-    }
-  }
+    },
+  },
 }
 </script>
 

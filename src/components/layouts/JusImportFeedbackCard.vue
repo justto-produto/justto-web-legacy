@@ -1,14 +1,23 @@
 <template>
   <div class="jus-import-feedback-card">
-    <el-tag :color="color" class="el-tag--mapped-campaign-tag">{{ campaignTitle }}</el-tag>
+    <el-tag
+      :color="color"
+      class="el-tag--mapped-campaign-tag">{{ campaignTitle }}</el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
-      <el-input v-model="respondent" data-testid="feedback-respondent" placeholder="Dê um nome para o seu Réu">
+      <el-input
+        v-model="respondent"
+        data-testid="feedback-respondent"
+        placeholder="Dê um nome para o seu Réu">
         <i
           slot="prefix"
           :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
           class="el-input__icon" />
       </el-input>
-      <el-input v-model="campaignName" class="select-strategy" data-testid="feedback-campaignName" placeholder="Dê um nome para a sua Campanha">
+      <el-input
+        v-model="campaignName"
+        class="select-strategy"
+        data-testid="feedback-campaignName"
+        placeholder="Dê um nome para a sua Campanha">
         <i
           slot="prefix"
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
@@ -65,7 +74,9 @@
           </span>
         </div>
       </div> -->
-      <div v-if="isPaymentStrategy" class="jus-import-feedback-card__number">
+      <div
+        v-if="isPaymentStrategy"
+        class="jus-import-feedback-card__number">
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
         </div>
@@ -179,19 +190,19 @@
 export default {
   name: 'JusImportFeedbackCard',
   components: {
-    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog')
+    JusEngagementsDialog: () => import('@/components/dialogs/JusEngagementsDialog'),
   },
   props: {
     mappedCampaign: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     index: {
       type: Number,
-      default: 1
-    }
+      default: 1,
+    },
   },
-  data () {
+  data() {
     return {
       color: '#ff9300',
       initialCampaignName: '',
@@ -213,23 +224,23 @@ export default {
       skipEnrichment: false,
       denySavingDeposit: false,
       datePickerOptions: {
-        disabledDate (date) {
+        disabledDate(date) {
           return date < new Date()
-        }
-      }
+        },
+      },
     }
   },
   computed: {
-    strategies () {
+    strategies() {
       return this.$store.getters.strategyList.filter(s => !s.archived)
     },
-    negotiatorsList () {
+    negotiatorsList() {
       return this.$store.state.workspaceModule.members
     },
-    campaignTitle () {
+    campaignTitle() {
       return this.campaignName ? this.campaignName : this.initialCampaignName ? this.initialCampaignName : 'Campanha ' + this.index
     },
-    isPaymentStrategy () {
+    isPaymentStrategy() {
       let isStrategy = false
       if (this.strategy && this.strategy.types) {
         this.strategy.types.map(type => {
@@ -239,28 +250,28 @@ export default {
       } else {
         return false
       }
-    }
+    },
   },
   watch: {
-    businessHoursEngagement (value) {
+    businessHoursEngagement(value) {
       this.mappedCampaign.businessHoursEngagement = value
     },
-    contactPartyWhenNoLowyer (value) {
+    contactPartyWhenNoLowyer(value) {
       this.mappedCampaign.contactPartyWhenNoLowyer = value
     },
-    contactPartyWhenInvalidLowyer (value) {
+    contactPartyWhenInvalidLowyer(value) {
       this.mappedCampaign.contactPartyWhenInvalidLowyer = value
     },
-    skipEnrichment (value) {
+    skipEnrichment(value) {
       this.mappedCampaign.skipEnrichment = value
     },
-    denySavingDeposit (value) {
+    denySavingDeposit(value) {
       this.mappedCampaign.denySavingDeposit = value
     },
-    respondent (value) {
+    respondent(value) {
       this.mappedCampaign.respondent = value
     },
-    campaignName (value) {
+    campaignName(value) {
       this.mappedCampaign.name = value
       if (value) {
         clearTimeout(this.campaignNameDebounce)
@@ -278,23 +289,23 @@ export default {
         this.campaignNameDuplicated = false
       }
     },
-    strategy (value) {
+    strategy(value) {
       this.mappedCampaign.strategy = value.name
       this.mappedCampaign.strategyId = value.id
     },
-    deadline (value) {
+    deadline(value) {
       this.mappedCampaign.deadline = {
-        dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
+        dateTime: this.$moment(value).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
       }
     },
-    negotiatorIds (value) {
+    negotiatorIds(value) {
       this.mappedCampaign.negotiatorIds = value
     },
-    paymentDeadLine (value) {
+    paymentDeadLine(value) {
       this.mappedCampaign.paymentDeadLine = value
-    }
+    },
   },
-  beforeMount () {
+  beforeMount() {
     const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
     this.businessHoursEngagement = preferences.businessHoursEngagement || true
     this.contactPartyWhenNoLowyer = preferences.contactPartyWhenNoLowyer || false
@@ -319,17 +330,17 @@ export default {
     }
   },
   methods: {
-    showDuplicatedAlert (campaignName) {
+    showDuplicatedAlert(campaignName) {
       this.$alert('', {
         title: 'Campanhas associadas',
         message: `Já existe uma campanha com o nome <strong>${campaignName}</strong>.<br>
         Ao importar novos casos para essa campanha as estratégias de comunicação definidas anteriormente não serão alteradas`,
         confirmButtonText: 'OK',
-        dangerouslyUseHTMLString: true
+        dangerouslyUseHTMLString: true,
       })
-    }
+    },
     // showHelpBox: (i) => helpBox(i)
-  }
+  },
 }
 </script>
 

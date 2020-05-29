@@ -16,7 +16,11 @@
     "default-onboarding-sub-domain":"testeonboarding",
 
     "token-email": "teste.token@justto.com.br",
-    "token-description": ""
+    "token-description": "",
+
+    "default-email": "testesjustto@justto.com.br",
+    "default-password": "TestesAutom@ticos",
+    "default-workspace": "TesteJesus"
   },
   "ignoreTestFiles": "/**/*.dev.js"
 }

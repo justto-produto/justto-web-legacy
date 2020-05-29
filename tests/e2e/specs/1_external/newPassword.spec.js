@@ -1,9 +1,9 @@
-describe('Nova Senha', function () {
-  beforeEach(function () {
+describe('Nova Senha', function() {
+  beforeEach(function() {
     cy.access('/#/new-password/TSTAUTO')
   })
 
-  it('Senha Alterada', function () {
+  it('Senha Alterada', function() {
     // Preenche o campo 'Senha'
     cy.get('[data-testid=new-password]')
       .type('password')
@@ -31,7 +31,7 @@ describe('Nova Senha', function () {
     cy.url().should('include', '/#/login')
   })
 
-  it('Senhas não Correspondem', function () {
+  it('Senhas não Correspondem', function() {
     // Preenche o campo 'Senha'
     cy.get('[data-testid=new-password]')
       .type('password')

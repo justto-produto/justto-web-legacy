@@ -1,11 +1,19 @@
 <template lang="html">
-  <div :class="tableActions ? 'jus-dispute-actions--table' : 'jus-dispute-actions--dispute'" class="jus-dispute-actions">
-    <el-tooltip v-if="!tableActions" content="Voltar">
+  <div
+    :class="tableActions ? 'jus-dispute-actions--table' : 'jus-dispute-actions--dispute'"
+    class="jus-dispute-actions">
+    <el-tooltip
+      v-if="!tableActions"
+      content="Voltar">
       <router-link to="/management">
-        <jus-icon class="back" icon="back"/>
+        <jus-icon
+          class="back"
+          icon="back"/>
       </router-link>
     </el-tooltip>
-    <el-tooltip v-if="canSettled" :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'">
+    <el-tooltip
+      v-if="canSettled"
+      :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -14,7 +22,9 @@
         <jus-icon icon="win"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="canUnsettled" content="Perder">
+    <el-tooltip
+      v-if="canUnsettled"
+      content="Perder">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -23,7 +33,9 @@
         <jus-icon icon="lose"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="dispute.paused" content="Retomar">
+    <el-tooltip
+      v-if="dispute.paused"
+      content="Retomar">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -32,7 +44,9 @@
         <jus-icon icon="start-again"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-else content="Pausar">
+    <el-tooltip
+      v-else
+      content="Pausar">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -50,7 +64,9 @@
         <jus-icon icon="refresh"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="canResendMessage" content="Reenviar mensagens automáticas">
+    <el-tooltip
+      v-if="canResendMessage"
+      content="Reenviar mensagens automáticas">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -59,7 +75,9 @@
         <jus-icon icon="resend-messages"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="!tableActions" content="Cancelar mensagens automáticas">
+    <el-tooltip
+      v-if="!tableActions"
+      content="Cancelar mensagens automáticas">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -68,7 +86,9 @@
         <jus-icon icon="cancel-messages"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="!tableActions" content="Alterar negociador">
+    <el-tooltip
+      v-if="!tableActions"
+      content="Alterar negociador">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -77,7 +97,9 @@
         <jus-icon icon="delegate"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="!tableActions" content="Enriquecer disputa">
+    <el-tooltip
+      v-if="!tableActions"
+      content="Enriquecer disputa">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -85,7 +107,9 @@
         <jus-icon icon="enrich"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="canSendCounterproposal" content="Contraproposta manual">
+    <el-tooltip
+      v-if="canSendCounterproposal"
+      content="Contraproposta manual">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -93,7 +117,9 @@
         <jus-icon icon="proposal2" />
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="!canSendCounterproposal" content="Retornar para negociação">
+    <el-tooltip
+      v-if="!canSendCounterproposal"
+      content="Retornar para negociação">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -101,7 +127,9 @@
         <jus-icon icon="move-to-running" />
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="canMarkAsNotRead" content="Marcar como não lida">
+    <el-tooltip
+      v-if="canMarkAsNotRead"
+      content="Marcar como não lida">
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
@@ -109,7 +137,9 @@
         <jus-icon icon="unread"/>
       </el-button>
     </el-tooltip>
-    <el-tooltip v-if="tableActions" content="Abrir disputa em nova aba">
+    <el-tooltip
+      v-if="tableActions"
+      content="Abrir disputa em nova aba">
       <el-button
         type="text"
         @click="openNewTab()">
@@ -134,7 +164,9 @@
         <i class="el-icon-collection-tag" />
       </el-button>
     </el-tooltip> -->
-    <el-tooltip v-if="!tableActions" :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'">
+    <el-tooltip
+      v-if="!tableActions"
+      :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'">
       <el-button
         :plain="!tableActions"
         :icon="collapsed ? 'el-icon-arrow-left' : 'el-icon-arrow-right'"
@@ -179,7 +211,9 @@
         label-position="top">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="Valor" prop="lastCounterOfferValue">
+            <el-form-item
+              label="Valor"
+              prop="lastCounterOfferValue">
               <money
                 v-model="counterOfferForm.lastCounterOfferValue"
                 class="el-input__inner"
@@ -188,7 +222,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Proposto por" prop="selectedRoleId">
+            <el-form-item
+              label="Proposto por"
+              prop="selectedRoleId">
               <el-select
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
@@ -204,7 +240,10 @@
         </el-row>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="modalLoading" plain @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
         <el-button
           :loading="modalLoading"
           :disabled="!unsettledType"
@@ -239,8 +278,14 @@
           filterable/>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="modalLoading" plain @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('edit-negotiators', disputeNegotiators)">Editar dados</el-button>
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="modalLoading"
+          type="primary"
+          @click.prevent="disputeAction('edit-negotiators', disputeNegotiators)">Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -259,7 +304,9 @@
         :rules="counterOfferFormRules">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="Valor" prop="lastCounterOfferValue">
+            <el-form-item
+              label="Valor"
+              prop="lastCounterOfferValue">
               <money
                 v-model="counterOfferForm.lastCounterOfferValue"
                 class="el-input__inner"
@@ -268,7 +315,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Proposto por" prop="selectedRoleId">
+            <el-form-item
+              label="Proposto por"
+              prop="selectedRoleId">
               <el-select
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
@@ -285,15 +334,26 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="Nota" prop="note">
-              <el-input v-model="counterOfferForm.note" type="textarea" rows="4" />
+            <el-form-item
+              label="Nota"
+              prop="note">
+              <el-input
+                v-model="counterOfferForm.note"
+                type="textarea"
+                rows="4" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="modalLoading" plain @click="counterproposalDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('send-counterproposal')">Atualizar contraproposta</el-button>
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="counterproposalDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="modalLoading"
+          type="primary"
+          @click.prevent="disputeAction('send-counterproposal')">Atualizar contraproposta</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -315,7 +375,9 @@
         label-position="top">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="Valor" prop="lastCounterOfferValue">
+            <el-form-item
+              label="Valor"
+              prop="lastCounterOfferValue">
               <money
                 v-model="counterOfferForm.lastCounterOfferValue"
                 class="el-input__inner"
@@ -324,7 +386,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Proposto por" prop="selectedRoleId">
+            <el-form-item
+              label="Proposto por"
+              prop="selectedRoleId">
               <el-select
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
@@ -341,8 +405,14 @@
         </el-row>
       </el-form>
       <span slot="footer">
-        <el-button :disabled="modalLoading" plain @click="settledDialogVisible = false">Cancelar</el-button>
-        <el-button :loading="modalLoading" type="primary" @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="settledDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="modalLoading"
+          type="primary"
+          @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
       </span>
     </el-dialog>
   </div>
@@ -356,18 +426,18 @@ export default {
   props: {
     dispute: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     tableActions: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isCollapsed: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       settledValue: 0,
       unsettledType: null,
@@ -383,63 +453,63 @@ export default {
       counterOfferForm: {
         lastCounterOfferValue: '',
         selectedRoleId: '',
-        note: ''
+        note: '',
       },
       counterOfferFormRules: {
         lastCounterOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
-      }
+        selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+      },
     }
   },
   computed: {
     collapsed: {
-      get () {
+      get() {
         return this.isCollapsed
       },
-      set (value) {
+      set(value) {
         this.$emit('update:isCollapsed', value)
-      }
+      },
     },
-    isInsufficientUpperRange () {
+    isInsufficientUpperRange() {
       return this.unsettledType && this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && ((this.dispute && !this.dispute.lastCounterOfferValue) || (this.dispute && this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange))
     },
-    canSettled () {
+    canSettled() {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
     },
-    canUnsettled () {
+    canUnsettled() {
       return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
     },
-    canResendMessage () {
+    canResendMessage() {
       return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING'
     },
-    canMarkAsNotRead () {
+    canMarkAsNotRead() {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
     },
-    canSendCounterproposal () {
+    canSendCounterproposal() {
       return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)
     },
-    checkUpperRangeCounterOffer () {
+    checkUpperRangeCounterOffer() {
       return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
     },
-    isAccepted () {
+    isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : null
     },
-    workspaceNegotiators () {
+    workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
-        let newMember = {}
+        const newMember = {}
         newMember.key = member.person.id
         newMember.label = member.person.name
         newMember.value = member.person.id
         return newMember
       })
     },
-    disputeClaimants () {
+    disputeClaimants() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
     },
-    authorsResume () {
+    authorsResume() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'PARTY').map(role => {
           return role.name
@@ -447,7 +517,7 @@ export default {
       }
       return []
     },
-    lawyersResume () {
+    lawyersResume() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT', 'LAWYER').map(role => {
           return role.name
@@ -455,16 +525,16 @@ export default {
       }
       return []
     },
-    respondentsResume () {
+    respondentsResume() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'RESPONDENT').map(role => {
           return role.name
         }).join(', ')
       }
       return []
-    }
+    },
   },
-  created () {
+  created() {
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
     } else {
@@ -474,10 +544,10 @@ export default {
     }
   },
   methods: {
-    disputeAction (action, additionParams) {
+    disputeAction(action, additionParams) {
       let message = {
         content: 'Tem certeza que deseja realizar esta ação?',
-        title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase()))
+        title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
       }
       switch (action) {
         case 'settled':
@@ -548,7 +618,7 @@ export default {
           if (this.dispute.paused) {
             message = {
               content: 'A disputa está pausada, deseja retomar negociação para enviar uma contraproposta?',
-              title: 'Retomar negociação'
+              title: 'Retomar negociação',
             }
             this.doAction('resume', message).then(() => {
               this.openCounterproposalDialog()
@@ -589,14 +659,14 @@ export default {
           break
       }
     },
-    doAction (action, message, additionParams) {
+    doAction(action, message, additionParams) {
       return new Promise((resolve, reject) => {
         this.$confirm(message.content, message.title, {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           cancelButtonClass: 'is-plain',
           dangerouslyUseHTMLString: true,
-          showClose: false
+          showClose: false,
         }).then(() => {
           this.modalLoading = true
           let params = { action: action, disputeId: this.dispute.id }
@@ -607,7 +677,7 @@ export default {
               title: 'Yay!',
               message: 'Ação <b>' + message.title.toUpperCase() + '</b> realizada com sucesso.',
               type: 'success',
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             })
           }).catch(error => {
             reject(error)
@@ -618,14 +688,14 @@ export default {
         })
       })
     },
-    checkIsntManualStrategy (action) {
+    checkIsntManualStrategy(action) {
       return new Promise((resolve, reject) => {
         if ((['restart-engagement', 'resend-messages', 'cancel-messages'].includes(action)) && (this.dispute.strategyId === 25 || this.dispute.strategyId === 26)) {
           this.$alert('Esta disputa está com uma estratégia de <b>engajamento manual</b>. Se deseja realizar engajamento automático, edite a disputa e escolha uma estratégia de engajamento adequada', {
             title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
             dangerouslyUseHTMLString: true,
             confirmButtonText: 'OK',
-            showClose: false
+            showClose: false,
           })
           reject(new Error('Invalid Fields'))
         } else {
@@ -633,24 +703,24 @@ export default {
         }
       })
     },
-    setAsUnread () {
+    setAsUnread() {
       this.$store.dispatch('disputeSetVisualized', {
         visualized: false,
-        disputeId: this.dispute.id
+        disputeId: this.dispute.id,
       }).then(() => {
         this.$router.push('/management')
       }).catch(error => {
         this.$jusNotification({ error })
       })
     },
-    openNewTab () {
-      let routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
+    openNewTab() {
+      const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
       window.open(routeData.href, '_blank')
     },
-    togleCollapsed () {
+    togleCollapsed() {
       this.collapsed = !this.collapsed
     },
-    openSettledDialog (action) {
+    openSettledDialog(action) {
       this.modalLoading = false
       this.counterOfferForm.lastCounterOfferValue = this.dispute.lastCounterOfferValue || this.dispute.lastOfferValue
       if (this.disputeClaimants.length === 1) {
@@ -671,14 +741,14 @@ export default {
         this.$refs.counterOfferForm.clearValidate()
       }
     },
-    openEditNegotiatorsDialog () {
+    openEditNegotiatorsDialog() {
       this.modalLoading = false
       this.disputeNegotiators = this.dispute.disputeRoles.filter(member => {
         return member.roles.includes('NEGOTIATOR') && !member.archived
       }).map(member => member.personId)
       this.editNegotiatorDialogVisible = true
     },
-    openCounterproposalDialog () {
+    openCounterproposalDialog() {
       this.modalLoading = false
       this.counterOfferForm.lastCounterOfferValue = ''
       this.counterOfferForm.selectedRoleId = this.disputeClaimants.length === 1 ? this.disputeClaimants[0].id : ''
@@ -687,7 +757,7 @@ export default {
         this.$refs.counterOfferForm.clearValidate()
       }
     },
-    checkCounterproposal (actionType) {
+    checkCounterproposal(actionType) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
           if (valid) {
@@ -698,7 +768,7 @@ export default {
                 cancelButtonText: 'Cancelar',
                 cancelButtonClass: 'is-plain',
                 dangerouslyUseHTMLString: true,
-                showClose: false
+                showClose: false,
               }).then(() => {
                 resolve()
               }).catch(e => {
@@ -713,7 +783,7 @@ export default {
         })
       })
     },
-    sendCounterproposal (updateUpperRange) {
+    sendCounterproposal(updateUpperRange) {
       return new Promise((resolve, reject) => {
         this.$refs.counterOfferForm.validate(valid => {
           if (valid) {
@@ -725,15 +795,15 @@ export default {
                 value: this.counterOfferForm.lastCounterOfferValue.toString(),
                 roleId: this.counterOfferForm.selectedRoleId,
                 note: this.counterOfferForm.note,
-                updateUpperRange: updateUpperRange || false
+                updateUpperRange: updateUpperRange || false,
               }).then(() => {
                 if (this.counterOfferForm.note) {
                   this.modalLoading = true
-                  let people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
-                  let note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
+                  const people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
+                  const note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
                   this.$store.dispatch('sendDisputeNote', {
                     note,
-                    disputeId: this.dispute.id
+                    disputeId: this.dispute.id,
                   }).then(() => {
                     resolve()
                     this.counterproposalDialogVisible = false
@@ -749,7 +819,7 @@ export default {
                   this.$jusNotification({
                     title: 'Yay!',
                     message: updateUpperRange ? 'Proposta aceita com sucesso.' : 'Contraproposta enviada com sucesso.',
-                    type: 'success'
+                    type: 'success',
                   })
                 }
               }).catch(error => {
@@ -765,50 +835,50 @@ export default {
         })
       })
     },
-    showDisputeResume (actionType) {
+    showDisputeResume(actionType) {
       return new Promise((resolve, reject) => {
         const h = this.$createElement
-        let detailsMessage = [
+        const detailsMessage = [
           h('strong', { style: 'margin-bottom: 6px; display: flex' }, 'Confira os dados da disputa:'),
           h('p', null, [
             h('b', null, 'Nº da disputa: '),
-            h('span', null, '#' + this.dispute.id)
+            h('span', null, '#' + this.dispute.id),
           ]),
           h('p', null, [
             h('b', null, 'Nº do processo: '),
-            h('span', null, this.dispute.code)
+            h('span', null, this.dispute.code),
           ]),
           h('p', null, [
             h('b', null, 'Réu(s): '),
-            h('span', null, this.respondentsResume.toUpperCase() || ' - ')
+            h('span', null, this.respondentsResume.toUpperCase() || ' - '),
           ]),
           h('p', null, [
             h('b', null, 'Autor(es): '),
-            h('span', null, this.authorsResume.toUpperCase() || ' - ')
+            h('span', null, this.authorsResume.toUpperCase() || ' - '),
           ]),
           h('p', null, [
             h('b', null, 'Advogado(s) do autor(es): '),
-            h('span', null, this.lawyersResume.toUpperCase() || ' - ')
+            h('span', null, this.lawyersResume.toUpperCase() || ' - '),
           ]),
           h('p', null, [
             h('b', null, 'Valor do acordo: '),
-            h('span', null, this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue || this.dispute.disputeDealValue))
-          ])
+            h('span', null, this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue || this.dispute.disputeDealValue)),
+          ]),
         ]
         actionType = actionType === 'ACCEPT' ? 'Fechar acordo' : 'Ganhar'
         this.$confirm(h('div', null, detailsMessage), actionType, {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           cancelButtonClass: 'is-plain',
-          showClose: false
+          showClose: false,
         }).then(() => {
           resolve()
         }).catch(e => {
           reject(e)
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

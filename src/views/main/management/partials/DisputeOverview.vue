@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="dispute-overview-view">
-    <h2 class="dispute-overview-view__title" data-testid="dispute-id">
+    <h2
+      class="dispute-overview-view__title"
+      data-testid="dispute-id">
       Disputa #{{ dispute.id }}
       <el-tooltip content="Excluir disputa">
         <el-button
@@ -15,7 +17,10 @@
       </el-tooltip>
     </h2>
     <div v-loading="loading || linkBankAccountLoading">
-      <el-tabs v-model="overviewTab" class="dispute-overview-view__tabs" stretch>
+      <el-tabs
+        v-model="overviewTab"
+        class="dispute-overview-view__tabs"
+        stretch>
         <!-- INFORMAÇÕES GERAIS -->
         <el-tab-pane name="general">
           <span slot="label">
@@ -24,29 +29,46 @@
             </el-tooltip>
           </span>
           <div>
-            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Etiquetas:</span>
               <jus-tags />
             </div>
-            <div v-if="dispute.createAt" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              v-if="dispute.createAt"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Data de importação:</span>
               <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
             </div>
-            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Processo:</span>
               <span>{{ dispute.code }}</span>
             </div>
-            <div v-if="dispute.campaign" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              v-if="dispute.campaign"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Campanha:</span>
               <span>{{ dispute.campaign.name }}</span>
             </div>
-            <div v-if="dispute.strategyName" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              v-if="dispute.strategyName"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Estratégia:</span>
               <span data-testid="overview-strategy">{{ dispute.strategyName }}</span>
             </div>
-            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Status:</span>
-              <el-tooltip v-if="dispute.status === 'PENDING'" content="Faltam dados de contato da parte ou do advogado da parte">
+              <el-tooltip
+                v-if="dispute.status === 'PENDING'"
+                content="Faltam dados de contato da parte ou do advogado da parte">
                 <span data-testid="overview-status">
                   {{ $t('occurrence.type.' + dispute.status) | capitalize }}
                   <el-tooltip content="Selecione">
@@ -61,28 +83,46 @@
                 </span>
               </span>
             </div>
-            <div v-if="dispute.classification" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              v-if="dispute.classification"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Classificação:</span>
               <span>{{ dispute.classification.name | capitalize }}</span>
             </div>
-            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Alçada máxima:</span>
               <span data-testid="overview-upperrange">{{ dispute.disputeUpperRange | currency }}</span>
             </div>
-            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Valor proposto<span v-if="dispute.lastOfferName"> por {{ dispute.lastOfferName | firstName }}</span>:</span>
               <span data-testid="overview-proposal">
-                <el-tooltip v-if="dispute.lastOfferName" :content="'Proposto por: ' + dispute.lastOfferName">
-                  <jus-avatar-user :name="dispute.lastOfferName" size="mini" />
+                <el-tooltip
+                  v-if="dispute.lastOfferName"
+                  :content="'Proposto por: ' + dispute.lastOfferName">
+                  <jus-avatar-user
+                    :name="dispute.lastOfferName"
+                    size="mini" />
                 </el-tooltip>
                 {{ dispute.lastOfferValue | currency }}
               </span>
             </div>
-            <div v-if="dispute.lastCounterOfferValue > 0 && dispute.disputeUpperRange" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              v-if="dispute.lastCounterOfferValue > 0 && dispute.disputeUpperRange"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Contraproposta<span v-if="dispute.lastCounterOfferName"> por {{ dispute.lastCounterOfferName | firstName }}</span>:</span>
               <span data-testid="overview-counterproposal">
-                <el-tooltip v-if="dispute.lastCounterOfferName" :content="'Proposto por: ' + dispute.lastCounterOfferName">
-                  <jus-avatar-user :name="dispute.lastCounterOfferName" size="mini" />
+                <el-tooltip
+                  v-if="dispute.lastCounterOfferName"
+                  :content="'Proposto por: ' + dispute.lastCounterOfferName">
+                  <jus-avatar-user
+                    :name="dispute.lastCounterOfferName"
+                    size="mini" />
                 </el-tooltip>
                 {{ dispute.lastCounterOfferValue | currency }}
               </span>
@@ -93,24 +133,45 @@
               <span class="title">Valor do acordo:</span>
               <span>{{ dispute.disputeDealValue | currency }}</span>
             </div>
-            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Fim da negociação:</span>
-              <span v-if="dispute.expirationDate" data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+              <span
+                v-if="dispute.expirationDate"
+                data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
             </div>
 
-            <div v-if="dispute.materialDamage" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              v-if="dispute.materialDamage"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Dano material:</span>
-              <span v-if="dispute.materialDamage" data-testid="overview-materialdamage">{{ dispute.materialDamage | currency }}</span>
+              <span
+                v-if="dispute.materialDamage"
+                data-testid="overview-materialdamage">{{ dispute.materialDamage | currency }}</span>
             </div>
-            <div v-if="dispute.requestedValue" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              v-if="dispute.requestedValue"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Valor do processo:</span>
-              <span v-if="dispute.requestedValue" data-testid="overview-requestedvalue">{{ dispute.requestedValue | currency }}</span>
+              <span
+                v-if="dispute.requestedValue"
+                data-testid="overview-requestedvalue">{{ dispute.requestedValue | currency }}</span>
             </div>
-            <div v-if="dispute.externalId" class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              v-if="dispute.externalId"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Código interno:</span>
-              <span v-if="dispute.externalId" data-testid="overview-externalid">{{ dispute.externalId }}</span>
+              <span
+                v-if="dispute.externalId"
+                data-testid="overview-externalid">{{ dispute.externalId }}</span>
             </div>
-            <div class="dispute-overview-view__info-line" data-testid="dispute-infoline">
+            <div
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
               <span class="title">Configurações:</span>
               <span class="configurations">
                 Enriquecer automaticamente na importação?
@@ -137,13 +198,20 @@
                 </div>
               </span>
             </div>
-            <div v-if="computedDescription" class="dispute-overview-view__info-line">
+            <div
+              v-if="computedDescription"
+              class="dispute-overview-view__info-line">
               <span class="title">Descrição:</span>
               <span>
-                <span :class="{ 'right': computedDescription.length < 25 }" data-testid="overview-description">
+                <span
+                  :class="{ 'right': computedDescription.length < 25 }"
+                  data-testid="overview-description">
                   {{ computedDescription }}
                   <span v-if="dispute.description.length > 140">
-                    <a href="#" class="dispute-overview-view__see-more" @click.prevent="descriptionCollapse = !descriptionCollapse">
+                    <a
+                      href="#"
+                      class="dispute-overview-view__see-more"
+                      @click.prevent="descriptionCollapse = !descriptionCollapse">
                       {{ descriptionCollapse ? 'ver mais': 'ver menos' }}
                       <i :class="descriptionCollapse ? 'el-icon-arrow-down': 'el-icon-arrow-up'" />
                     </a>
@@ -151,7 +219,9 @@
                 </span>
               </span>
             </div>
-            <div v-if="dispute.bankAccounts && dispute.bankAccounts.length" class="dispute-overview-view__info-line">
+            <div
+              v-if="dispute.bankAccounts && dispute.bankAccounts.length"
+              class="dispute-overview-view__info-line">
               <span class="title">Conta(s) bancária(s):</span>
               <el-collapse value="0">
                 <el-collapse-item
@@ -187,7 +257,10 @@
             </div>
           </div>
           <div class="dispute-overview-view__actions">
-            <el-button type="primary" data-testid="edit-dispute" @click="openDisputeDialog()">Editar</el-button>
+            <el-button
+              type="primary"
+              data-testid="edit-dispute"
+              @click="openDisputeDialog()">Editar</el-button>
           </div>
         </el-tab-pane>
         <!-- PARTES DA DISPUTA -->
@@ -211,10 +284,19 @@
               class="dispute-overview-view__role-collapse"
               data-testid="expand-party">
               <template slot="title">
-                <i v-if="showNamesake(role) || showVexatious(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
-                <i v-if="showIsDead(role)" class="el-icon-warning-outline el-icon-pulse" style="color: rgb(255, 75, 84);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
+                <i
+                  v-if="showNamesake(role) || showVexatious(role)"
+                  class="el-icon-warning-outline el-icon-pulse"
+                  style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
+                <i
+                  v-if="showIsDead(role)"
+                  class="el-icon-warning-outline el-icon-pulse"
+                  style="color: rgb(255, 75, 84);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
                 <div class="dispute-overview-view__name">
-                  <span v-for="r in role.roles" :key="r.id" class="dispute-overview-view__role-icon">
+                  <span
+                    v-for="r in role.roles"
+                    :key="r.id"
+                    class="dispute-overview-view__role-icon">
                     <el-tooltip :content="buildRoleTitle(role.party, r)">
                       <i :class="getRoleIcon(role.party, r)" />
                     </el-tooltip>
@@ -222,7 +304,9 @@
                   {{ role.name }}
                 </div>
               </template>
-              <p v-if="showNamesake(role)" style="margin-top: 0">
+              <p
+                v-if="showNamesake(role)"
+                style="margin-top: 0">
                 <span v-if="namesakeProcessing">
                   <i class="el-icon-warning"/>
                   Documento correto enviado para tratamento no sistema. Isso pode levar algum tempo.
@@ -240,7 +324,11 @@
                 <span v-if="namesakeProcessing">Enriquecendo...</span>
                 <span v-else>Tratar homônimos</span>
               </el-button>
-              <el-alert v-if="showIsDead(role)" class="mb10" title="Possível óbito" type="error">
+              <el-alert
+                v-if="showIsDead(role)"
+                class="mb10"
+                title="Possível óbito"
+                type="error">
                 Algumas de nossas bases de informações constam que a parte possivelmente encontra-se em óbito.
               </el-alert>
               <div class="dispute-overview-view__info-line">
@@ -251,7 +339,9 @@
               </div>
               <div class="dispute-overview-view__info-line">
                 <span class="title">Função:</span>
-                <span v-for="(title, index) in roleTitleSort(role.roles)" :key="`${index}-${title.index}`">
+                <span
+                  v-for="(title, index) in roleTitleSort(role.roles)"
+                  :key="`${index}-${title.index}`">
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
                     v-if="verifyRoleVexatious(role.personProperties, title)"
@@ -259,20 +349,29 @@
                     :name="role.name" />
                 </span>
               </div>
-              <div v-show="role.documentNumber" class="dispute-overview-view__info-line">
+              <div
+                v-show="role.documentNumber"
+                class="dispute-overview-view__info-line">
                 <span class="title">CPF/CNPJ:</span>
                 <span>{{ role.documentNumber | cpfCnpjMask }}</span>
               </div>
-              <div v-show="role.phones.length" class="dispute-overview-view__info-line">
+              <div
+                v-show="role.phones.length"
+                class="dispute-overview-view__info-line">
                 <span class="title">Telefone(s):</span>
-                <span v-for="(phone, index) in role.phones.filter(p => !p.archived)" :key="`${index}-${phone.id}`" :class="{'is-main': phone.isMain}">
+                <span
+                  v-for="(phone, index) in role.phones.filter(p => !p.archived)"
+                  :key="`${index}-${phone.id}`"
+                  :class="{'is-main': phone.isMain}">
                   <el-radio
                     v-model="selectedPhone"
                     :label="phone.id"
                     :disabled="!phone.isMobile"
                     data-testid="radio-whatsapp"
                     @change="updateDisputeRole(role, 'whatsapp')">
-                    <el-tooltip :content="buildContactStatus(phone)" :open-delay="500">
+                    <el-tooltip
+                      :content="buildContactStatus(phone)"
+                      :open-delay="500">
                       <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
                         {{ phone.number | phoneMask }}<span v-if="phone.source === 'ENRICHMENT'">*</span>
                       </span>
@@ -280,51 +379,84 @@
                   </el-radio>
                   <!-- <div class="alerts"> -->
                   <el-tooltip content="Este número não receberá mensagens automáticas">
-                    <jus-icon v-show="!phone.isMain" icon="not-main-phone-active" />
+                    <jus-icon
+                      v-show="!phone.isMain"
+                      icon="not-main-phone-active" />
                   </el-tooltip>
                   <el-tooltip content="Telefone inválido">
-                    <jus-icon v-show="!phone.isValid" icon="warn-dark" />
+                    <jus-icon
+                      v-show="!phone.isValid"
+                      icon="warn-dark" />
                   </el-tooltip>
                   <!-- </div> -->
                 </span>
               </div>
-              <div v-show="role.emails.length" class="dispute-overview-view__info-line">
+              <div
+                v-show="role.emails.length"
+                class="dispute-overview-view__info-line">
                 <span class="title">E-mail(s):</span>
-                <span v-for="(email, index) in role.emails.filter(e => !e.archived)" :key="`${index}-${email.id}`" :class="{'is-main': email.isMain}">
-                  <el-checkbox v-model="email.selected" data-testid="checkbox-email" @change="updateDisputeRole(role, 'email')" />
-                  <el-tooltip :content="buildContactStatus(email)" :open-delay="500">
+                <span
+                  v-for="(email, index) in role.emails.filter(e => !e.archived)"
+                  :key="`${index}-${email.id}`"
+                  :class="{'is-main': email.isMain}">
+                  <el-checkbox
+                    v-model="email.selected"
+                    data-testid="checkbox-email"
+                    @change="updateDisputeRole(role, 'email')" />
+                  <el-tooltip
+                    :content="buildContactStatus(email)"
+                    :open-delay="500">
                     <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
                       {{ email.address }}<span v-if="email.source === 'ENRICHMENT'">*</span>
                     </span>
                   </el-tooltip>
                   <div class="alerts">
                     <el-tooltip content="Este e-mail não receberá mensagens automáticas">
-                      <jus-icon v-show="!email.isMain" icon="not-main-email-active" />
+                      <jus-icon
+                        v-show="!email.isMain"
+                        icon="not-main-email-active" />
                     </el-tooltip>
                     <el-tooltip content="E-mail inválido">
-                      <jus-icon v-show="!email.isValid" icon="warn-dark" />
+                      <jus-icon
+                        v-show="!email.isValid"
+                        icon="warn-dark" />
                     </el-tooltip>
                   </div>
                 </span>
               </div>
-              <div v-show="role.oabs.length" class="dispute-overview-view__info-line">
+              <div
+                v-show="role.oabs.length"
+                class="dispute-overview-view__info-line">
                 <span class="title">OAB(s):</span>
-                <span v-for="(oab, index) in role.oabs.filter(o => !o.archived)" :key="`${index}-${oab.id}`" :class="{'is-main': oab.isMain}">
-                  <el-checkbox v-model="oab.selected" @change="updateDisputeRole(role, 'cna')" />
+                <span
+                  v-for="(oab, index) in role.oabs.filter(o => !o.archived)"
+                  :key="`${index}-${oab.id}`"
+                  :class="{'is-main': oab.isMain}">
+                  <el-checkbox
+                    v-model="oab.selected"
+                    @change="updateDisputeRole(role, 'cna')" />
                   <span>{{ oab.number + '-' + oab.state || '' }}</span>
                   <div class="alerts">
                     <el-tooltip content="OAB inválido">
-                      <jus-icon v-show="!oab.isValid" icon="warn-dark" />
+                      <jus-icon
+                        v-show="!oab.isValid"
+                        icon="warn-dark" />
                     </el-tooltip>
                   </div>
                 </span>
               </div>
-              <div v-if="role.bankAccounts && role.bankAccounts.length" class="dispute-overview-view__info-line">
+              <div
+                v-if="role.bankAccounts && role.bankAccounts.length"
+                class="dispute-overview-view__info-line">
                 <span class="title">Conta(s) bancária(s):</span>
                 <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
-                  <i class="el-icon-question right" style="margin-top: 5px;" />
+                  <i
+                    class="el-icon-question right"
+                    style="margin-top: 5px;" />
                 </el-tooltip>
-                <el-checkbox-group v-model="disputeBankAccountsIds" class="dispute-overview-view__bank-checkbox">
+                <el-checkbox-group
+                  v-model="disputeBankAccountsIds"
+                  class="dispute-overview-view__bank-checkbox">
                   <el-checkbox
                     v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
                     :label="bankAccount.id"
@@ -341,9 +473,16 @@
                   </el-checkbox>
                 </el-checkbox-group>
               </div>
-              <div v-if="!role.roles.includes('NEGOTIATOR')" class="dispute-overview-view__actions">
-                <el-button plain @click="removeRole(role)">Excluir</el-button>
-                <el-button type="primary" data-testid="edit-part" @click="openRoleDialog(role)">Editar</el-button>
+              <div
+                v-if="!role.roles.includes('NEGOTIATOR')"
+                class="dispute-overview-view__actions">
+                <el-button
+                  plain
+                  @click="removeRole(role)">Excluir</el-button>
+                <el-button
+                  type="primary"
+                  data-testid="edit-part"
+                  @click="openRoleDialog(role)">Editar</el-button>
               </div>
             </el-collapse-item>
             <el-button
@@ -363,16 +502,29 @@
           </span>
           <dispute-proprieties />
         </el-tab-pane>
-        <el-tab-pane name="attachments" class="dispute-overview-view__attachment-tab">
+        <el-tab-pane
+          name="attachments"
+          class="dispute-overview-view__attachment-tab">
           <span slot="label">
             <el-tooltip content="Anexos">
               <i class="el-icon-paperclip" />
             </el-tooltip>
           </span>
-          <el-input
-            v-model="attachmentFilterTerm"
-            placeholder="Busque anexos pelo nome"
-            prefix-icon="el-icon-search" />
+          <div class="dispute-overview-view__attachment-buttons">
+            <el-input
+              v-model="attachmentFilterTerm"
+              clearable
+              placeholder="Busque por anexos"
+              prefix-icon="el-icon-search" />
+            <el-tooltip content="Enriquecer disputa">
+              <el-button
+                type=""
+                plain
+                @click="enrichDispute">
+                <jus-icon icon="enrich"/>
+              </el-button>
+            </el-tooltip>
+          </div>
           <el-link
             v-for="attachment in filteredDisputeAttachments"
             :key="attachment.url"
@@ -381,7 +533,9 @@
             target="_blank">
             <i class="el-icon-document"/> {{ attachment.name }}
           </el-link>
-          <div v-if="!filteredDisputeAttachments.length" class="center">
+          <div
+            v-if="!filteredDisputeAttachments.length"
+            class="center">
             <br>
             Sem anexos
           </div>
@@ -405,7 +559,11 @@
           <div class="dispute-overview-view__namesake-filters">
             <div class="dispute-overview-view__namesake-filter">
               <span>Cidade: </span>
-              <el-select v-model="cityFilter" clearable filterable default-first-option>
+              <el-select
+                v-model="cityFilter"
+                clearable
+                filterable
+                default-first-option>
                 <el-option
                   v-for="city in cityList"
                   :key="city"
@@ -415,7 +573,11 @@
             </div>
             <div class="dispute-overview-view__namesake-filter">
               <span>UF: </span>
-              <el-select v-model="ufFilter" clearable filterable default-first-option>
+              <el-select
+                v-model="ufFilter"
+                clearable
+                filterable
+                default-first-option>
                 <el-option
                   v-for="uf in ufList"
                   :key="uf"
@@ -430,18 +592,38 @@
             highlight-current-row
             style="width: 100%"
             @current-change="handleCurrentChange">
-            <el-table-column label="Nome" prop="name" />
-            <el-table-column label="Documento" prop="document" width="160px">
+            <el-table-column
+              label="Nome"
+              prop="name" />
+            <el-table-column
+              label="Documento"
+              prop="document"
+              width="160px">
               <template slot-scope="scope">{{ scope.row.document | cpfCnpjMask }}</template>
             </el-table-column>
-            <el-table-column label="Cidade" prop="city" />
-            <el-table-column label="UF" prop="uf" width="70px" />
-            <el-table-column label="Nascimento" prop="dateOfBirth" width="140px" />
+            <el-table-column
+              label="Cidade"
+              prop="city" />
+            <el-table-column
+              label="UF"
+              prop="uf"
+              width="70px" />
+            <el-table-column
+              label="Nascimento"
+              prop="dateOfBirth"
+              width="140px" />
           </el-table>
         </div>
         <span slot="footer">
-          <el-button :disabled="namesakeDialogLoading" plain @click="closeNamesakes">Cancelar</el-button>
-          <el-button :loading="namesakeDialogLoading" :disabled="!selectedNamesake" type="primary" @click="selectNamesake()">Tratar</el-button>
+          <el-button
+            :disabled="namesakeDialogLoading"
+            plain
+            @click="closeNamesakes">Cancelar</el-button>
+          <el-button
+            :loading="namesakeDialogLoading"
+            :disabled="!selectedNamesake"
+            type="primary"
+            @click="selectNamesake()">Tratar</el-button>
         </span>
       </el-dialog>
       <el-dialog
@@ -459,15 +641,21 @@
           <h3>Detalhes da Disputa</h3>
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item label="Número do Processo" prop="disputeCode">
-                <el-input v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'" v-model="disputeForm.disputeCode" />
+              <el-form-item
+                label="Número do Processo"
+                prop="disputeCode">
+                <el-input
+                  v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
+                  v-model="disputeForm.disputeCode" />
               </el-form-item>
             </el-col>
           </el-row>
           <h3>Engajamento</h3>
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item label="Estratégia" prop="disputeStrategy">
+              <el-form-item
+                label="Estratégia"
+                prop="disputeStrategy">
                 <el-select
                   v-model="selectedStrategyId"
                   placeholder="Escolha a nova estratégia"
@@ -483,7 +671,9 @@
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="24" class="dispute-overview-view__select-switch">
+            <el-col
+              :span="24"
+              class="dispute-overview-view__select-switch">
               <div class="content">
                 <div>Engajar autor se não tiver advogado</div>
                 <p>
@@ -492,7 +682,9 @@
               </div>
               <el-switch v-model="disputeForm.contactPartyWhenNoLowyer" />
             </el-col>
-            <el-col :span="24" class="dispute-overview-view__select-switch">
+            <el-col
+              :span="24"
+              class="dispute-overview-view__select-switch">
               <div class="content">
                 <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
                 <p>
@@ -505,13 +697,26 @@
           <h3>Valor proposto</h3>
           <el-row :gutter="20">
             <el-col :span="8">
-              <el-form-item :rules="validateLastOfferValue" label="Valor" prop="lastOfferValue">
-                <money v-model="disputeForm.lastOfferValue" class="el-input__inner" data-testid="proposal-value-input" @change.native="lastOfferValueHasChanged = true"/>
+              <el-form-item
+                :rules="validateLastOfferValue"
+                label="Valor"
+                prop="lastOfferValue">
+                <money
+                  v-model="disputeForm.lastOfferValue"
+                  class="el-input__inner"
+                  data-testid="proposal-value-input"
+                  @change.native="lastOfferValueHasChanged = true"/>
               </el-form-item>
             </el-col>
             <el-col :span="16">
-              <el-form-item label="Proposto por" prop="lastOfferValueName">
-                <el-select v-model="selectedNegotiatorId" filterable placeholder="Autor da contraproposta" data-testid="proposal-negotiator-input">
+              <el-form-item
+                label="Proposto por"
+                prop="lastOfferValueName">
+                <el-select
+                  v-model="selectedNegotiatorId"
+                  filterable
+                  placeholder="Autor da contraproposta"
+                  data-testid="proposal-negotiator-input">
                   <el-option
                     v-for="(negotiator, index) in disputeNegotiations"
                     :key="`${index}-${negotiator.id}`"
@@ -524,7 +729,10 @@
           <h3>Outras configurações</h3>
           <el-row :gutter="20">
             <el-col :span="8">
-              <el-form-item :rules="validateDisputeUpperRange" label="Alçada máxima" prop="disputeUpperRange">
+              <el-form-item
+                :rules="validateDisputeUpperRange"
+                label="Alçada máxima"
+                prop="disputeUpperRange">
                 <money
                   v-model="disputeForm.disputeUpperRange"
                   class="el-input__inner"
@@ -534,7 +742,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="Fim da negociação" prop="expirationDate">
+              <el-form-item
+                label="Fim da negociação"
+                prop="expirationDate">
                 <el-date-picker
                   v-model="disputeForm.expirationDate"
                   :clearable="false"
@@ -545,49 +755,77 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="Classificação" prop="classification">
+              <el-form-item
+                label="Classificação"
+                prop="classification">
                 <el-input v-model="disputeForm.classification" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="Dano material" prop="materialDamage">
-                <money v-model="disputeForm.materialDamage" class="el-input__inner"/>
+              <el-form-item
+                label="Dano material"
+                prop="materialDamage">
+                <money
+                  v-model="disputeForm.materialDamage"
+                  class="el-input__inner"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="Valor do processo" prop="requestedValue">
-                <money v-model="disputeForm.requestedValue" class="el-input__inner"/>
+              <el-form-item
+                label="Valor do processo"
+                prop="requestedValue">
+                <money
+                  v-model="disputeForm.requestedValue"
+                  class="el-input__inner"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="Código interno" prop="externalId">
+              <el-form-item
+                label="Código interno"
+                prop="externalId">
                 <el-input v-model="disputeForm.externalId" />
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="Descrição" prop="description">
-                <el-input v-model="disputeForm.description" type="textarea" rows="3" data-testid="description-input"/>
+              <el-form-item
+                label="Descrição"
+                prop="description">
+                <el-input
+                  v-model="disputeForm.description"
+                  type="textarea"
+                  rows="3"
+                  data-testid="description-input"/>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <span slot="footer">
-          <el-button plain @click="editDisputeDialogVisible = false">Cancelar</el-button>
-          <el-button :loading="editDisputeDialogLoading" type="primary" data-testid="confirm-edit-data" @click="editDispute()">Editar dados</el-button>
+          <el-button
+            plain
+            @click="editDisputeDialogVisible = false">Cancelar</el-button>
+          <el-button
+            :loading="editDisputeDialogLoading"
+            type="primary"
+            data-testid="confirm-edit-data"
+            @click="editDispute()">Editar dados</el-button>
         </span>
       </el-dialog>
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="editRoleDialogVisible"
         width="40%">
-        <span slot="title" class="el-dialog__title">
+        <span
+          slot="title"
+          class="el-dialog__title">
           Alterar dados de {{ roleForm.title }}
         </span>
         <el-alert
           v-show="editRoleDialogError"
           type="error"
           @close="editRoleDialogError = false">
-          <ul><li v-for="(error, index) in editRoleDialogErrorList" :key="`${index}-${error}`">
+          <ul><li
+            v-for="(error, index) in editRoleDialogErrorList"
+            :key="`${index}-${error}`">
             {{ error }}
           </li></ul>
         </el-alert>
@@ -598,20 +836,38 @@
           :rules="roleRules"
           label-position="top"
           @submit.native.prevent>
-          <el-form-item label="Nome" prop="name">
-            <el-input v-model="roleForm.name" autofocus="" />
+          <el-form-item
+            label="Nome"
+            prop="name">
+            <el-input
+              v-model="roleForm.name"
+              autofocus="" />
           </el-form-item>
-          <el-form-item :rules="validateDocumentNumber" label="CPF/CNPJ" prop="documentNumber">
-            <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="roleForm.documentNumber" @change="documentNumberHasChanged = true" />
+          <el-form-item
+            :rules="validateDocumentNumber"
+            label="CPF/CNPJ"
+            prop="documentNumber">
+            <el-input
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
+              v-model="roleForm.documentNumber"
+              @change="documentNumberHasChanged = true" />
           </el-form-item>
-          <div v-if="roleForm.roles && roleForm.roles.includes('LAWYER')" class="dispute-overview-view__oab-form">
-            <el-form-item class="oab" label="OAB" prop="oab">
+          <div
+            v-if="roleForm.roles && roleForm.roles.includes('LAWYER')"
+            class="dispute-overview-view__oab-form">
+            <el-form-item
+              class="oab"
+              label="OAB"
+              prop="oab">
               <el-input
                 v-model="roleForm.oab"
                 @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
                 @blur="addOab(roleForm.personId, roleForm.oabs)"/>
             </el-form-item>
-            <el-form-item class="state" label="Estado" prop="state">
+            <el-form-item
+              class="state"
+              label="Estado"
+              prop="state">
               <el-select
                 v-model="roleForm.state"
                 :default-first-option="true"
@@ -628,7 +884,10 @@
                   :value="state"/>
               </el-select>
             </el-form-item>
-            <el-button class="button" type="primary" @click="addOab(roleForm.personId, roleForm.oabs)">
+            <el-button
+              class="button"
+              type="primary"
+              @click="addOab(roleForm.personId, roleForm.oabs)">
               <jus-icon icon="add-white" />
             </el-button>
           </div>
@@ -649,21 +908,29 @@
               width="48px"
               class-name="visible">
               <template slot-scope="scope">
-                <el-tooltip :open-delay="500" content="Remover">
-                  <a href="#" @click.prevent="removeOab(scope.$index)">
+                <el-tooltip
+                  :open-delay="500"
+                  content="Remover">
+                  <a
+                    href="#"
+                    @click.prevent="removeOab(scope.$index)">
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
-          <el-form-item label="Telefone" prop="phone">
+          <el-form-item
+            label="Telefone"
+            prop="phone">
             <el-input
               v-mask="['(##) ####-####', '(##) #####-####']"
               v-model="roleForm.phone"
               @keydown.enter.native="addPhone()"
               @blur="addPhone()">
-              <el-button slot="append" @click="addPhone()">
+              <el-button
+                slot="append"
+                @click="addPhone()">
                 <jus-icon icon="add-white" />
               </el-button>
             </el-input>
@@ -684,28 +951,43 @@
               width="114px"
               class-name="visible slot-scope">
               <template slot-scope="scope">
-                <el-tooltip :open-delay="500" :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <el-tooltip
+                  :open-delay="500"
+                  :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
                   <span class="dispute-overview-view__switch-main">
-                    <jus-icon v-if="scope.row.isMain" icon="phone-active" />
-                    <jus-icon v-else icon="not-main-phone-active" />
+                    <jus-icon
+                      v-if="scope.row.isMain"
+                      icon="phone-active" />
+                    <jus-icon
+                      v-else
+                      icon="not-main-phone-active" />
                     <el-switch v-model="scope.row.isMain" />
                   </span>
                 </el-tooltip>
-                <el-tooltip :open-delay="500" content="Remover">
-                  <a href="#" @click.prevent="removePhone(scope.$index)">
+                <el-tooltip
+                  :open-delay="500"
+                  content="Remover">
+                  <a
+                    href="#"
+                    @click.prevent="removePhone(scope.$index)">
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
-          <el-form-item label="E-mail" prop="email">
+          <el-form-item
+            label="E-mail"
+            prop="email">
             <el-input
               v-model="roleForm.email"
               data-testid="input-email"
               @keydown.enter.native="addEmail()"
               @blur="addEmail()">
-              <el-button slot="append" data-testid="add-email" @click="addEmail()">
+              <el-button
+                slot="append"
+                data-testid="add-email"
+                @click="addEmail()">
                 <jus-icon icon="add-white" />
               </el-button>
             </el-input>
@@ -726,15 +1008,25 @@
               width="114px"
               class-name="visible slot-scope">
               <template slot-scope="scope">
-                <el-tooltip :open-delay="500" :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                <el-tooltip
+                  :open-delay="500"
+                  :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
                   <span class="dispute-overview-view__switch-main">
-                    <jus-icon v-if="scope.row.isMain" icon="email-active" />
-                    <jus-icon v-else icon="not-main-email-active" />
+                    <jus-icon
+                      v-if="scope.row.isMain"
+                      icon="email-active" />
+                    <jus-icon
+                      v-else
+                      icon="not-main-email-active" />
                     <el-switch v-model="scope.row.isMain" />
                   </span>
                 </el-tooltip>
-                <el-tooltip :open-delay="500" content="Remover">
-                  <a href="#" @click.prevent="removeEmail(scope.$index)">
+                <el-tooltip
+                  :open-delay="500"
+                  content="Remover">
+                  <a
+                    href="#"
+                    @click.prevent="removeEmail(scope.$index)">
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
@@ -771,8 +1063,12 @@
               width="48px"
               class-name="visible">
               <template slot-scope="scope">
-                <el-tooltip :open-delay="500" content="Remover">
-                  <a href="#" @click.prevent="removeBankData(scope.$index, scope.row.id)">
+                <el-tooltip
+                  :open-delay="500"
+                  content="Remover">
+                  <a
+                    href="#"
+                    @click.prevent="removeBankData(scope.$index, scope.row.id)">
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
@@ -781,8 +1077,14 @@
           </el-table>
         </el-form>
         <span slot="footer">
-          <el-button plain @click="editRoleDialogVisible = false">Cancelar</el-button>
-          <el-button :loading="editRoleDialogLoading" type="primary" data-testid="edit-data-part" @click="editRole">
+          <el-button
+            plain
+            @click="editRoleDialogVisible = false">Cancelar</el-button>
+          <el-button
+            :loading="editRoleDialogLoading"
+            type="primary"
+            data-testid="edit-data-part"
+            @click="editRole">
             Editar dados
           </el-button>
         </span>
@@ -798,17 +1100,30 @@
           :rules="addBankRules"
           label-position="top"
           @submit.native.prevent>
-          <el-form-item label="Nome" prop="name">
+          <el-form-item
+            label="Nome"
+            prop="name">
             <el-input v-model="addBankForm.name" />
           </el-form-item>
-          <el-form-item label="Email" prop="email">
+          <el-form-item
+            label="Email"
+            prop="email">
             <el-input v-model="addBankForm.email" />
           </el-form-item>
-          <el-form-item label="CPF ou CNPJ" prop="document">
-            <el-input v-mask="['###.###.###-##', '##.###.###/####-##']" v-model="addBankForm.document" />
+          <el-form-item
+            label="CPF ou CNPJ"
+            prop="document">
+            <el-input
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
+              v-model="addBankForm.document" />
           </el-form-item>
-          <el-form-item label="Banco" prop="bank">
-            <el-select v-model="addBankForm.bank" filterable placeholder="">
+          <el-form-item
+            label="Banco"
+            prop="bank">
+            <el-select
+              v-model="addBankForm.bank"
+              filterable
+              placeholder="">
               <el-option
                 v-for="bank in banks"
                 :key="bank.code"
@@ -816,14 +1131,23 @@
                 :value="bank.code + ' - ' + bank.name" />
             </el-select>
           </el-form-item>
-          <el-form-item label="Agência" prop="agency">
+          <el-form-item
+            label="Agência"
+            prop="agency">
             <el-input v-model="addBankForm.agency" />
           </el-form-item>
-          <el-form-item label="Número do Conta" prop="number">
+          <el-form-item
+            label="Número do Conta"
+            prop="number">
             <el-input v-model="addBankForm.number" />
           </el-form-item>
-          <el-form-item label="Tipo de Conta" prop="type">
-            <el-select v-model="addBankForm.type" placeholder="" class="select">
+          <el-form-item
+            label="Tipo de Conta"
+            prop="type">
+            <el-select
+              v-model="addBankForm.type"
+              placeholder=""
+              class="select">
               <el-option
                 v-for="type in [{ label: 'Poupança', type: 'SAVING' },{ label: 'Corrente', type: 'CHECKING' }]"
                 :key="type.type"
@@ -833,8 +1157,12 @@
           </el-form-item>
         </el-form>
         <span slot="footer">
-          <el-button plain @click="addBankDialogVisible = false">Cancelar</el-button>
-          <el-button type="primary" @click="addBankData()">Adicionar</el-button>
+          <el-button
+            plain
+            @click="addBankDialogVisible = false">Cancelar</el-button>
+          <el-button
+            type="primary"
+            @click="addBankData()">Adicionar</el-button>
         </span>
       </el-dialog>
       <dispute-add-role
@@ -856,19 +1184,19 @@ export default {
     DisputeAddRole: () => import('./DisputeAddRole'),
     DisputeProprieties: () => import('./DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
-    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert')
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
   },
   props: {
     loading: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     activeRoleId: {
       default: 0,
-      type: Number
-    }
+      type: Number,
+    },
   },
-  data () {
+  data() {
     return {
       overviewTab: 'general',
       namesakeList: [],
@@ -896,29 +1224,29 @@ export default {
         zeroUpperRange: false,
         materialDamage: '',
         requestedValue: '',
-        externalId: ''
+        externalId: '',
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       roleForm: {},
       originalRole: {},
       roleRules: {
         name: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' }
+          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' },
         ],
         phone: [
           { required: false, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
+          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' },
         ],
         email: [
           { required: false, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
+          { type: 'email', message: 'E-mail inválido', trigger: 'submit' },
         ],
         oab: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
-        state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
+        state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       newRoleDialogVisible: false,
       linkBankAccountLoading: false,
@@ -937,42 +1265,42 @@ export default {
         bank: '',
         agency: '',
         number: '',
-        type: ''
+        type: '',
       },
       addBankRules: {
         name: [
-          { required: false, message: 'Campo obrigatório', trigger: 'submit' }
+          { required: false, message: 'Campo obrigatório', trigger: 'submit' },
         ],
         email: [
-          { type: 'email', required: false, message: 'Insira um e-mail válido', trigger: 'submit' }
+          { type: 'email', required: false, message: 'Insira um e-mail válido', trigger: 'submit' },
         ],
         document: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
+          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
         ],
         bank: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         number: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+        type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       bankAccountIdstoUnlink: [],
       documentNumberHasChanged: false,
       disputeUpperRangeHasChanged: false,
       lastOfferValueHasChanged: false,
       cityFilter: null,
-      ufFilter: null
+      ufFilter: null,
     }
   },
   computed: {
-    ufList () {
-      let ufList = this.namesakeList.map(namesake => namesake.uf)
+    ufList() {
+      const ufList = this.namesakeList.map(namesake => namesake.uf)
       return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
     },
-    cityList () {
-      let cityList = this.namesakeList.map(namesake => namesake.city)
+    cityList() {
+      const cityList = this.namesakeList.map(namesake => namesake.city)
       return cityList.filter((city, i) => city !== null && cityList.indexOf(city) === i)
     },
-    filteredNamesakeList () {
+    filteredNamesakeList() {
       if (this.ufFilter && this.cityFilter) {
         return this.namesakeList.filter(namesake => namesake.uf === this.ufFilter && namesake.city === this.cityFilter)
       } else if (this.ufFilter) {
@@ -983,57 +1311,57 @@ export default {
         return this.namesakeList
       }
     },
-    validateDocumentNumber () {
+    validateDocumentNumber() {
       if (this.documentNumberHasChanged) {
         return [{ validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }]
       }
       return []
     },
-    validateDisputeUpperRange () {
+    validateDisputeUpperRange() {
       if (this.disputeUpperRangeHasChanged) {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
     },
-    validateLastOfferValue () {
+    validateLastOfferValue() {
       if (this.lastOfferValueHasChanged) {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
     },
-    dispute () {
+    dispute() {
       return this.$store.getters.dispute
     },
-    disputeAttachments () {
+    disputeAttachments() {
       return this.$store.getters.disputeAttachments
     },
-    filteredDisputeAttachments () {
+    filteredDisputeAttachments() {
       if (this.disputeAttachments) {
         return this.disputeAttachments.filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')))
       } return []
     },
-    disputeBankAccounts () {
+    disputeBankAccounts() {
       return this.$store.getters.disputeBankAccounts
     },
     disputeBankAccountsIds: {
-      get () {
+      get() {
         if (this.dispute.bankAccounts || Array.isArray(this.dispute.bankAccounts)) {
           return this.dispute.bankAccounts.map(dba => dba.id)
         }
         return []
       },
-      set (bankAccountId) {
+      set(bankAccountId) {
         this.updateDisputeBankAccounts(bankAccountId)
-      }
+      },
     },
     selectedRole: {
-      get () { return this.activeRoleId },
-      set (newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) }
+      get() { return this.activeRoleId },
+      set(newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) },
     },
-    strategies () {
+    strategies() {
       return this.$store.getters.strategyList
     },
-    computedDescription () {
+    computedDescription() {
       if (this.dispute.description && this.dispute.description.length > 140) {
         if (this.descriptionCollapse) {
           return this.dispute.description.substring(0, 140) + '...'
@@ -1041,7 +1369,7 @@ export default {
       }
       return this.dispute.description
     },
-    disputeRolesSort () {
+    disputeRolesSort() {
       if (this.dispute.disputeRoles) {
         let sortedArray = this.dispute.disputeRoles.slice(0) || []
         sortedArray = sortedArray.filter(a => a.party !== 'IMPARTIAL')
@@ -1064,7 +1392,7 @@ export default {
         })
       } return []
     },
-    documentNumbers () {
+    documentNumbers() {
       if (this.disputeRolesSort && this.disputeRolesSort.length) {
         return this.disputeRolesSort.map(role => {
           if (role.documentNumber) return role.documentNumber
@@ -1072,9 +1400,9 @@ export default {
       }
       return []
     },
-    oabs () {
+    oabs() {
       if (this.disputeRolesSort && this.disputeRolesSort.length) {
-        let oabs = []
+        const oabs = []
         this.disputeRolesSort.map(role => {
           if (role.oabs && role.oabs.length) {
             role.oabs.map(oab => oabs.push(oab.number + oab.state))
@@ -1084,42 +1412,45 @@ export default {
       }
       return []
     },
-    disputeClaimants () {
+    disputeClaimants() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'CLAIMANT')
       }
       return []
     },
-    disputeNegotiations () {
+    disputeNegotiations() {
       if (this.dispute && this.dispute.disputeRoles) {
         return getRoles(this.dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR')
       }
       return []
     },
-    banks () {
+    banks() {
       return this.$store.getters.banksList
-    }
+    },
+    isAccepted() {
+      return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : false
+    },
   },
   watch: {
-    activeRoleId: function (newActiveRole) {
+    activeRoleId: function(newActiveRole) {
       if (newActiveRole === 0) this.handleChange('')
     },
-    filteredNamesakeList: function (newFilteredNamesakes) {
+    filteredNamesakeList: function(newFilteredNamesakes) {
       if (!newFilteredNamesakes.includes(this.selectedNamesake)) {
         this.selectedNamesake = ''
       }
-    }
+    },
   },
   methods: {
     buildRoleTitle: (...i) => buildRoleTitle(...i),
     getRoleIcon: (...i) => getRoleIcon(...i),
-    removeDispute () {
+    removeDispute() {
       this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
         confirmButtonClass: 'confirm-remove-btn',
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
       }).then(() => {
         const loading = this.$loading({ lock: true })
         this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
@@ -1131,25 +1462,25 @@ export default {
         })
       })
     },
-    showNamesake (role) {
+    showNamesake(role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
-    showVexatious (role) {
+    showVexatious(role) {
       const alerts = ['IS_VEXATIOUS_PARTY', 'IS_VEXATIOUS_AUTHOR', 'IS_VEXATIOUS_LAWYER']
-      for (var alert of alerts) {
+      for (const alert of alerts) {
         if (role.personProperties && role.personProperties instanceof Object && role.personProperties.hasOwnProperty(alert)) return true
       }
       return false
     },
-    verifyRoleVexatious (personProperties, title) {
+    verifyRoleVexatious(personProperties, title) {
       if (title === 'PARTY') return personProperties['IS_VEXATIOUS_PARTY']
       else if (title === 'LAWYER') return personProperties['IS_VEXATIOUS_LAWYER']
       return false
     },
-    showIsDead (role) {
+    showIsDead(role) {
       return role.dead
     },
-    buildContactStatus (contact) {
+    buildContactStatus(contact) {
       if (!contact.address && !contact.isMobile) {
         return 'Não é possível enviar WhatsApp para números de telefones fixo'
       } else if (contact.source === 'ENRICHMENT') {
@@ -1158,7 +1489,7 @@ export default {
         return 'Contato adicionado manualmente'
       }
     },
-    openAddBankDialog () {
+    openAddBankDialog() {
       this.addBankForm.name = this.roleForm.name
       this.addBankForm.document = this.roleForm.documentNumber
       if (this.roleForm.emails.filter(f => f.isValid && !f.archived && f.isMain).length) {
@@ -1170,14 +1501,14 @@ export default {
       }
       this.addBankDialogVisible = true
     },
-    closeNamesakes () {
+    closeNamesakes() {
       this.namesakeDialogVisible = false
       this.selectedNamesake = ''
       this.selectedNamesakePersonId = ''
       this.cityFilter = null
       this.ufFilter = null
     },
-    selectNamesake () {
+    selectNamesake() {
       if (this.selectedNamesake) {
         this.namesakeDialogLoading = true
         // eslint-disable-next-line
@@ -1189,7 +1520,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Homônimo enviado para tratamento com sucesso.',
-              type: 'success'
+              type: 'success',
             })
           })
           .catch(error => {
@@ -1197,12 +1528,12 @@ export default {
           })
       }
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       if (val) {
         this.selectedNamesake = val
       }
     },
-    namesakeDialog (name, personId) {
+    namesakeDialog(name, personId) {
       if (['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)) {
         this.$confirm(`Você está solicitando o tratamento de homônimo de uma disputa que já
         foi finalizada. Este processo irá agendar novamente as mensagens
@@ -1212,13 +1543,13 @@ export default {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain'
+          cancelButtonClass: 'is-plain',
         }).then(() => { this.opeNnamesakeDialog(name, personId) })
       } else {
         this.opeNnamesakeDialog(name, personId)
       }
     },
-    opeNnamesakeDialog (name, personId) {
+    opeNnamesakeDialog(name, personId) {
       this.selectedNamesakePersonId = personId
       this.namesakeButtonLoading = true
       // eslint-disable-next-line
@@ -1234,8 +1565,8 @@ export default {
           this.namesakeButtonLoading = false
         })
     },
-    updateDisputeRole (activeRole, messageType) {
-      let disputeRoles = this.dispute.disputeRoles.map(dr => {
+    updateDisputeRole(activeRole, messageType) {
+      const disputeRoles = this.dispute.disputeRoles.map(dr => {
         if (dr.id === activeRole.id) {
           dr = activeRole
         }
@@ -1267,18 +1598,18 @@ export default {
       this.$store.commit('setDisputeRoles', disputeRoles)
       this.$emit('updateActiveRole', { activeRole, messageType })
     },
-    updateDisputeBankAccounts (roleBankAccountIds) {
+    updateDisputeBankAccounts(roleBankAccountIds) {
       let action, bankAccountId
-      for (let roleAccount of roleBankAccountIds) {
+      for (const roleAccount of roleBankAccountIds) {
         if (!this.disputeBankAccountsIds.includes(roleAccount)) {
           if (this.dispute.denySavingDeposit) {
-            let ba = this.dispute.disputeRoles.find(dr => dr.id === this.activeRoleId).bankAccounts.find(ba => ba.id === roleAccount)
+            const ba = this.dispute.disputeRoles.find(dr => dr.id === this.activeRoleId).bankAccounts.find(ba => ba.id === roleAccount)
             if (ba && ba.type === 'SAVING') {
               this.$jusNotification({
                 dangerouslyUseHTMLString: true,
                 message: 'Esta disputa não permite a vinculação de contas do tipo <b>POUPANÇA</b>.',
                 type: 'warning',
-                duration: 0
+                duration: 0,
               })
               return false
             }
@@ -1287,7 +1618,7 @@ export default {
           bankAccountId = roleAccount
         }
       }
-      for (let disputeAccount of this.disputeBankAccountsIds) {
+      for (const disputeAccount of this.disputeBankAccountsIds) {
         if (!roleBankAccountIds.includes(disputeAccount)) {
           action = 'unlinkDisputeBankAccounts'
           bankAccountId = disputeAccount
@@ -1296,15 +1627,15 @@ export default {
       this.linkBankAccountLoading = true
       this.$store.dispatch(action, {
         disputeId: this.dispute.id,
-        bankAccountId
+        bankAccountId,
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
           message: 'Conta bancária <strong>' + this.$t('bankAccount.' + action).toUpperCase() + '</strong> à disputa com sucesso.',
-          type: 'success'
+          type: 'success',
         })
-        setTimeout(function () {
+        setTimeout(function() {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
@@ -1313,15 +1644,15 @@ export default {
         this.linkBankAccountLoading = false
       })
     },
-    roleTitleSort (title) {
+    roleTitleSort(title) {
       if (title) {
-        let sortedArray = title.slice(0) || []
+        const sortedArray = title.slice(0) || []
         return sortedArray.sort((a, b) => {
           return (a[0] > b[0]) ? -1 : (a[0] < b[0]) ? 1 : 0
         })
       } return []
     },
-    openDisputeDialog () {
+    openDisputeDialog() {
       this.disputeUpperRangeHasChanged = false
       this.lastOfferValueHasChanged = false
       this.documentNumberHasChanged = false
@@ -1333,7 +1664,7 @@ export default {
           }
         })
       })
-      let dispute = JSON.parse(JSON.stringify(this.dispute))
+      const dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
       this.selectedClaimantId = this.disputeClaimants ? this.disputeClaimants[0].id : ''
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
@@ -1354,13 +1685,13 @@ export default {
       this.editDisputeDialogVisible = true
       this.$nextTick(() => { this.$refs.disputeForm.clearValidate() })
     },
-    checkZeroUpperRange () {
+    checkZeroUpperRange() {
       if (this.disputeForm.zeroUpperRange) {
         this.disputeForm.lastOfferValue = 0
         this.$nextTick(() => { this.$refs.disputeForm.validate() })
       }
     },
-    editDispute () {
+    editDispute() {
       this.$refs.disputeForm.validate(valid => {
         if (valid) {
           this.editDisputeDialogLoading = true
@@ -1372,16 +1703,16 @@ export default {
               this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
                 ? h('div', null, '- Alçada máxima está abaixo do valor proposto.') : null,
               h('br', null, null),
-              h('div', null, 'Deseja continuar?')
+              h('div', null, 'Deseja continuar?'),
             ]),
             type: 'warning',
             confirmButtonText: 'Continuar',
             confirmButtonClass: 'edit-case-confirm-button',
             cancelButtonClass: 'is-plain',
             showCancelButton: true,
-            customClass: 'edit-case-confitm-dialog'
+            customClass: 'edit-case-confitm-dialog',
           }).then(() => {
-            let disputeToEdit = JSON.parse(JSON.stringify(this.dispute))
+            const disputeToEdit = JSON.parse(JSON.stringify(this.dispute))
             disputeToEdit.strategyId = this.selectedStrategyId
             disputeToEdit.disputeUpperRange = this.disputeForm.disputeUpperRange
             disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
@@ -1399,45 +1730,45 @@ export default {
             else disputeToEdit.requestedValue = null
             if (this.disputeForm.externalId) disputeToEdit.externalId = this.disputeForm.externalId
             else disputeToEdit.externalId = null
-            let currentDate = this.dispute.expirationDate.dateTime
-            let newDate = disputeToEdit.expirationDate.dateTime
-            let contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
-            let contactPartyWhenInvalidLowyer = this.dispute.contactPartyWhenInvalidLowyer
+            const currentDate = this.dispute.expirationDate.dateTime
+            const newDate = disputeToEdit.expirationDate.dateTime
+            const contactPartyWhenNoLowyer = this.dispute.contactPartyWhenNoLowyer
+            const contactPartyWhenInvalidLowyer = this.dispute.contactPartyWhenInvalidLowyer
             this.$store.dispatch('editDispute', disputeToEdit).then(() => {
               // SEGMENT TRACK
               this.$jusSegment('Editar disputa', { disputeId: disputeToEdit.id })
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Os dados foram alterados com sucesso.',
-                type: 'success'
+                type: 'success',
               })
-              setTimeout(function () {
+              setTimeout(function() {
                 this.$emit('fetch-data')
               }.bind(this), 200)
               this.editDisputeDialogVisible = false
-              let isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
-              let contactPartyWhenNoLowyerHasChanged = this.disputeForm.contactPartyWhenNoLowyer !== contactPartyWhenNoLowyer
-              let contactPartyWhenInvalidLowyerHasChanged = this.disputeForm.contactPartyWhenInvalidLowyer !== contactPartyWhenInvalidLowyer
-              let contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged
-              let onlyResendMessaged = this.dispute.status === 'RUNNING'
+              const isExpirationDateChanged = this.$moment(currentDate).isBefore(this.$moment()) && this.$moment(newDate).isSameOrAfter(this.$moment())
+              const contactPartyWhenNoLowyerHasChanged = this.disputeForm.contactPartyWhenNoLowyer !== contactPartyWhenNoLowyer
+              const contactPartyWhenInvalidLowyerHasChanged = this.disputeForm.contactPartyWhenInvalidLowyer !== contactPartyWhenInvalidLowyer
+              const contactPartyHasChanged = contactPartyWhenInvalidLowyerHasChanged || contactPartyWhenNoLowyerHasChanged
+              const onlyResendMessaged = this.dispute.status === 'RUNNING'
               if (contactPartyHasChanged || isExpirationDateChanged) {
-                let action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'
-                let message = contactPartyHasChanged ? 'As configurações de engajamento foram alteradas. Deseja ' + action + '?' : 'A data de expiração foi alterada. Deseja ' + action + '?'
+                const action = onlyResendMessaged ? 'reenviar mensagens automáticas' : 'reiniciar esta disputa'
+                const message = contactPartyHasChanged ? 'As configurações de engajamento foram alteradas. Deseja ' + action + '?' : 'A data de expiração foi alterada. Deseja ' + action + '?'
                 this.$confirm(message, 'Atenção!', {
                   confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
                   cancelButtonText: 'Cancelar',
                   cancelButtonClass: 'is-plain',
-                  type: 'warning'
+                  type: 'warning',
                 }).then(() => {
                   this.$store.dispatch('sendDisputeAction', {
                     action: onlyResendMessaged ? 'resend-messages' : 'restart-engagement',
-                    disputeId: this.dispute.id
+                    disputeId: this.dispute.id,
                   }).then(() => {
-                    let actionDone = onlyResendMessaged ? 'Reenvio de mensagens' : 'Reengajamento'
+                    const actionDone = onlyResendMessaged ? 'Reenvio de mensagens' : 'Reengajamento'
                     this.$jusNotification({
                       title: 'Yay!',
                       message: actionDone + ' realizado com sucesso.',
-                      type: 'success'
+                      type: 'success',
                     })
                   })
                 })
@@ -1454,7 +1785,7 @@ export default {
                   title: 'Ops!',
                   message: message,
                   type: 'warning',
-                  dangerouslyUseHTMLString: true
+                  dangerouslyUseHTMLString: true,
                 })
               } else {
                 this.$jusNotification({ error })
@@ -1468,7 +1799,7 @@ export default {
         }
       })
     },
-    handleChange (val) {
+    handleChange(val) {
       if (!val) {
         this.selectedPhone = 0
         this.dispute.disputeRoles.forEach(dr => {
@@ -1479,7 +1810,7 @@ export default {
         })
       }
     },
-    openRoleDialog (role) {
+    openRoleDialog(role) {
       this.bankAccountIdstoUnlink = []
       this.editRoleDialogError = false
       this.editRoleDialogVisible = true
@@ -1494,7 +1825,7 @@ export default {
       if (this.roleForm.phones.length) this.roleForm.phones = this.roleForm.phones.sort(p => p.isMain ? -1 : 1)
       if (this.$refs.roleForm) this.$refs.roleForm.clearValidate()
     },
-    editRole () {
+    editRole() {
       let isValid = true
       this.$refs.roleForm.validateField(['name', 'documentNumber'], errorMessage => {
         if (errorMessage) isValid = false
@@ -1502,12 +1833,12 @@ export default {
       if (isValid) {
         if (this.bankAccountIdstoUnlink.length) {
           this.linkBankAccountLoading = true
-          let promise = []
-          for (let id of this.bankAccountIdstoUnlink) {
+          const promise = []
+          for (const id of this.bankAccountIdstoUnlink) {
             promise.push(
               this.$store.dispatch('unlinkDisputeBankAccounts', {
                 disputeId: this.dispute.id,
-                bankAccountId: id
+                bankAccountId: id,
               })
             )
           }
@@ -1523,35 +1854,35 @@ export default {
         }
       }
     },
-    editRoleAction () {
-      let roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
+    editRoleAction() {
+      const roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
       delete roleToEdit.title
       this.editRoleDialogLoading = true
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
-        disputeRole: roleToEdit
+        disputeRole: roleToEdit,
       }).then(() => {
         // SEGMENT TRACK
         this.$jusSegment('Editar partes da disputa', { description: `Usuário ${roleToEdit.name} alterado` })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Os dados foram alterados com sucesso.',
-          type: 'success'
+          type: 'success',
         })
-        let roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
+        const roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
         if (roleDataDifference.length) {
           this.$confirm('Novos dados de contato foram adicionados. Deseja reiniciar o engajamento para esta parte?', 'Atenção!', {
             confirmButtonText: 'Reengajar',
             cancelButtonText: 'Cancelar',
             type: 'warning',
-            cancelButtonClass: 'is-plain'
+            cancelButtonClass: 'is-plain',
           }).then(() => {
-            let contacts = []
-            for (let contact of roleDataDifference) {
+            const contacts = []
+            for (const contact of roleDataDifference) {
               contacts.push(
                 this.$store.dispatch('restartEngagementByContact', {
                   disputeId: this.dispute.id,
-                  contact: contact.address || contact.number
+                  contact: contact.address || contact.number,
                 })
               )
             }
@@ -1559,20 +1890,20 @@ export default {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Reengajamento realizado com sucesso.',
-                type: 'success'
+                type: 'success',
               })
             }).catch(() => {
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Parece que nem todos os contatos foram reengajados corretamente.',
                 type: 'warning',
-                dangerouslyUseHTMLString: true
+                dangerouslyUseHTMLString: true,
               })
             })
           })
         }
         this.editRoleDialogVisible = false
-        setTimeout(function () {
+        setTimeout(function() {
           this.$emit('fetch-data')
         }.bind(this), 200)
       }).catch(error => {
@@ -1585,35 +1916,35 @@ export default {
         this.editRoleDialogLoading = false
       })
     },
-    verifyChangedRoleData (editedRole, originalRole) {
-      let changed = {
+    verifyChangedRoleData(editedRole, originalRole) {
+      const changed = {
         newPhones: [],
-        newEmails: []
+        newEmails: [],
       }
       if (editedRole.phones.length) {
-        let mappedPhones = originalRole.phones.map(phone => phone.number)
+        const mappedPhones = originalRole.phones.map(phone => phone.number)
         changed.newPhones = editedRole.phones.filter(phone => {
           if (!mappedPhones.includes(phone.number)) return phone.number
         })
       }
       if (editedRole.emails.length) {
-        let mappedEmails = originalRole.emails.map(email => email.address)
+        const mappedEmails = originalRole.emails.map(email => email.address)
         changed.newEmails = editedRole.emails.filter(email => {
           if (!mappedEmails.includes(email.address)) return email.address
         })
       }
       return [ ...changed.newPhones, ...changed.newEmails ]
     },
-    addPhone () {
+    addPhone() {
       let isValid = true
       this.roleForm.phone = this.roleForm.phone.trim()
       this.$refs.roleForm.validateField('phone', errorMessage => {
         if (errorMessage || !this.roleForm.phone) isValid = false
       })
       if (isValid) {
-        let self = this
+        const self = this
         this.roleForm.phone = this.roleForm.phone.replace(/ /g, '').replace(/\D/g, '')
-        let isDuplicated = this.roleForm.phones.findIndex(p => {
+        const isDuplicated = this.roleForm.phones.findIndex(p => {
           const number = p.number.startsWith('55') ? p.number.replace('55', '') : p.number
           return number === self.roleForm.phone
         })
@@ -1621,75 +1952,75 @@ export default {
         this.roleForm.phone = ''
       }
     },
-    removePhone (index) {
+    removePhone(index) {
       this.roleForm.phones.splice(index, 1)
     },
-    addEmail () {
+    addEmail() {
       let isValid = true
       this.roleForm.email = this.roleForm.email.trim()
       this.$refs.roleForm.validateField('email', errorMessage => {
         if (errorMessage || !this.roleForm.email) isValid = false
       })
       if (isValid) {
-        let self = this
-        let isDuplicated = this.roleForm.emails.findIndex(e => e.address === self.roleForm.email)
+        const self = this
+        const isDuplicated = this.roleForm.emails.findIndex(e => e.address === self.roleForm.email)
         if (isDuplicated < 0) this.roleForm.emails.push({ address: this.roleForm.email, isMain: true })
         this.roleForm.email = ''
       }
     },
-    removeEmail (index) {
+    removeEmail(index) {
       this.roleForm.emails.splice(index, 1)
     },
-    addOab () {
+    addOab() {
       let isValid = true
       this.$refs.roleForm.validateField(['oab', 'state'], errorMessage => {
         if (errorMessage || !this.roleForm.oab || !this.roleForm.state) isValid = false
       })
       if (isValid) {
-        let self = this
+        const self = this
         this.roleForm.oab = this.roleForm.oab.replace(/ /g, '')
-        let isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
+        const isDuplicated = this.roleForm.oabs.findIndex(o => o.number === self.roleForm.oab && o.state === self.roleForm.state)
         if (isDuplicated < 0) {
           this.roleForm.oabs.push({
             number: this.roleForm.oab,
-            state: this.roleForm.state
+            state: this.roleForm.state,
           })
         }
         this.roleForm.oab = ''
         this.roleForm.state = ''
       }
     },
-    removeOab (index) {
+    removeOab(index) {
       this.roleForm.oabs.splice(index, 1)
     },
-    removeRole (role) {
+    removeRole(role) {
       this.$confirm('Tem certeza que deseja excluir esta parte?', 'Atenção!', {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'warning',
-        cancelButtonClass: 'is-plain'
+        cancelButtonClass: 'is-plain',
       }).then(() => {
         this.$store.dispatch('removeRole', {
           disputeId: this.dispute.id,
-          roleId: role.id
+          roleId: role.id,
         }).then(response => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Pessoa removida com sucesso.',
-            type: 'success'
+            type: 'success',
           })
         }).catch(error => {
           this.$jusNotification({ error })
         })
       })
     },
-    addBankData () {
+    addBankData() {
       this.$refs.addBankForm.validate(valid => {
         if (valid) {
           if (!this.roleForm.bankAccounts) {
             this.roleForm.bankAccounts = []
           }
-          let bankForm = JSON.parse(JSON.stringify(this.addBankForm))
+          const bankForm = JSON.parse(JSON.stringify(this.addBankForm))
           this.roleForm.bankAccounts.push(bankForm)
           this.addBankForm.name = ''
           this.addBankForm.email = ''
@@ -1702,11 +2033,35 @@ export default {
         }
       })
     },
-    removeBankData (index, id) {
+    removeBankData(index, id) {
       this.bankAccountIdstoUnlink.push(id)
       this.roleForm.bankAccounts.splice(index, 1)
-    }
-  }
+    },
+    enrichDispute() {
+      const message = {
+        content: this.isAccepted ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?',
+        title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER',
+      }
+      this.$confirm(message.content, message.title, {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        dangerouslyUseHTMLString: true,
+        showClose: false,
+      }).then(() => {
+        this.$store.dispatch('sendDisputeAction', {
+          disputeId: this.dispute.id,
+          action: 'enrich',
+        }).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Ação <b>ENRIQUECER</b> realizada com sucesso.',
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          })
+        })
+      })
+    },
+  },
 }
 </script>
 
@@ -1974,6 +2329,19 @@ export default {
       }
     }
   }
+  &__attachment-buttons {
+    .el-input {
+      width: calc(100% - 50px);
+    }
+    .el-button {
+      padding: 12px;
+      margin-left: 8px;
+      img {
+        margin: -3px 0px;
+        width: 14px;
+      }
+    }
+  }
   .el-input-group__append {
     border-color: #9462f7;
     background-color: #9462f7;
@@ -2019,6 +2387,7 @@ export default {
   &__attachment-tab {
     .el-link {
       margin-top: 10px;
+      display: block;
     }
   }
 }

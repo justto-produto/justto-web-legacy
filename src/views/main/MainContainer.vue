@@ -1,9 +1,15 @@
 <template>
   <el-container>
-    <el-aside class="container-aside" width="auto">
-      <div :class="{'aside-logo--colapsed': isCollapse}" class="aside-logo">
+    <el-aside
+      class="container-aside"
+      width="auto">
+      <div
+        :class="{'aside-logo--colapsed': isCollapse}"
+        class="aside-logo">
         <router-link to="/">
-          <img class="aside-logo__logo" src="@/assets/logo-small.svg">
+          <img
+            class="aside-logo__logo"
+            src="@/assets/logo-small.svg">
         </router-link>
       </div>
       <el-menu
@@ -14,7 +20,9 @@
         router
         class="el-menu--main-menu">
         <el-menu-item index="/">
-          <jus-icon icon="dashboard" class="el-menu__icon"/>
+          <jus-icon
+            icon="dashboard"
+            class="el-menu__icon"/>
           <span slot="title">Dashboard</span>
         </el-menu-item>
         <!-- <transition name="fade">
@@ -22,19 +30,29 @@
             <span>GERENCIAMENTO</span>
           </li>
         </transition> -->
-        <el-menu-item index="/management" data-testid="menu-management">
-          <jus-icon icon="management" class="el-menu__icon"/>
+        <el-menu-item
+          index="/management"
+          data-testid="menu-management">
+          <jus-icon
+            icon="management"
+            class="el-menu__icon"/>
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
-        <el-menu-item index="/import" data-testid="menu-import">
-          <jus-icon icon="import" class="el-menu__icon"/>
+        <el-menu-item
+          index="/import"
+          data-testid="menu-import">
+          <jus-icon
+            icon="import"
+            class="el-menu__icon"/>
           <span slot="title">Importação</span>
         </el-menu-item>
       </el-menu>
-      <div v-show="$store.getters.workspaceMembers.length" class="jus-team-menu__title">
+      <div
+        v-show="$store.getters.workspaceMembers.length && $store.getters.isAdminProfile"
+        class="jus-team-menu__title">
         TIME
       </div>
-      <vue-perfect-scrollbar>
+      <vue-perfect-scrollbar v-if="$store.getters.isAdminProfile">
         <jus-team-menu />
       </vue-perfect-scrollbar>
     </el-aside>
@@ -55,50 +73,50 @@ export default {
   components: {
     JusHeaderMain: () => import('@/components/layouts/JusHeaderMain'),
     JusTeamMenu: () => import('@/components/layouts/JusTeamMenu'),
-    VuePerfectScrollbar: () => import('vue-perfect-scrollbar')
+    VuePerfectScrollbar: () => import('vue-perfect-scrollbar'),
   },
-  data () {
+  data() {
     return {
       subscriptions: [],
-      isCollapse: true
+      isCollapse: true,
     }
   },
   computed: {
-    workspace () {
+    workspace() {
       return this.$store.getters.workspaceSubdomain
     },
-    personId () {
+    personId() {
       return this.$store.getters.loggedPersonId
     },
-    headers () {
+    headers() {
       return {
         Authorization: this.$store.getters.accountToken,
-        Workspace: this.workspace
+        Workspace: this.workspace,
       }
-    }
+    },
   },
   watch: {
-    workspace (workspace) {
+    workspace(workspace) {
       this.subscribe()
-    }
+    },
   },
-  beforeCreate () {
+  beforeCreate() {
     this.$store.commit('clearDisputeQuery')
   },
-  beforeMount () {
+  beforeMount() {
     this.subscribe()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
     this.subscriptions.length = 0
   },
   sockets: {
-    reconnect () {
+    reconnect() {
       this.subscribe()
-    }
+    },
   },
   methods: {
-    subscribe () {
+    subscribe() {
       if (this.workspace) {
         this.subscriptions.forEach(s => this.$socket.emit('unsubscribe', s))
         this.subscriptions.length = 0
@@ -108,8 +126,8 @@ export default {
         this.subscriptions.push({ headers: this.headers, channel: '/topic/' + this.workspace + '/' + this.personId + '/dispute/summary' })
         this.subscriptions.forEach(s => this.$socket.emit('subscribe', s))
       }
-    }
-  }
+    },
+  },
 }
 
 </script>

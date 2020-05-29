@@ -17,35 +17,38 @@
       quem irá operar o sistema (você e sua equipe). Se você não tiver todas as informações agora, você poderá pular
       e adicionar depois.
     </p>
-    <el-button type="primary" data-testid="lets-start" @click="nextStep">Vamos começar</el-button>
+    <el-button
+      type="primary"
+      data-testid="lets-start"
+      @click="nextStep">Vamos começar</el-button>
   </div>
 </template>
 
 <script>
 export default {
   components: {
-    JusLogoCompany: () => import('@/components/images/JusLogoCompany')
+    JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
   },
   props: {
     isGuest: {
       type: Boolean,
-      default: false
+      default: false,
     },
     companyName: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   computed: {
-    name () {
+    name() {
       return this.$store.getters.loggedPersonName
-    }
+    },
   },
   methods: {
-    nextStep () {
+    nextStep() {
       this.$emit('onboarding:step:next')
-    }
-  }
+    },
+  },
 }
 </script>
 
