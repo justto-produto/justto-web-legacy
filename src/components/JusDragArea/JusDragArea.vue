@@ -97,11 +97,14 @@ export default {
   &.jus-drag-area--dragging {
 
     .jus-drag-area__mask {
-      display: block;
+      align-items: center;
+      display: flex;
       height: 100%;
+      justify-content: center;
       left: 0;
       position: absolute;
       top: 0;
+      z-index: 2;
       width: 100%;
     }
   }
