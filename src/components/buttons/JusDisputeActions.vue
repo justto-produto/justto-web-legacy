@@ -431,8 +431,9 @@
       title="Envie anexos"
       width="600px"
       class="dispute-view-actions__upload-attatchment-dialog"
-      data-testid="upload-file-dialog">
-      <jus-drag-area/>
+      data-testid="upload-file-dialog"
+    >
+      <jus-drag-area :visible="true" />
     </el-dialog>
   </div>
 </template>

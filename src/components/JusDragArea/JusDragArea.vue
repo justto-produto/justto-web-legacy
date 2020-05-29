@@ -1,16 +1,15 @@
 <template>
-  <form
+  <article
     ref="dragAreaElm"
     :class="{
-      'jus-drag-area--dragging': isDragging
+      'jus-drag-area--dragging': maskIsVisible
     }"
-    enctype="multipart/form-data"
     class="jus-drag-area"
     @dragenter="handleDragenter"
   >
     <slot />
     <label
-      for="input-file"
+      :for="`input-file-drag-area-${_uid}`"
       @dragover.prevent
       @drop.prevent="handleDrop"
     >
@@ -29,12 +28,12 @@
       </el-card>
     </label>
     <input
-      id="input-file"
+      :id="`input-file-drag-area-${_uid}`"
       type="file"
       class="jus-drag-area__input-file"
       @change="handleDrop"
     >
-  </form>
+  </article>
 </template>
 
 <script>
@@ -42,44 +41,52 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'JusDragArea',
+  props: {
+    visible: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data: () => ({
     dropzone: null,
     isDragging: false,
   }),
-  mounted() {
+  computed: {
+    maskIsVisible: self => self.visible || self.isDragging,
   },
   methods: {
     ...mapActions(['uploadAttachment']),
     handleDragenter(evt) {
-      console.log('start', evt)
       this.isDragging = true
     },
     handleDragleave(evt) {
-      console.log('end', evt)
       this.isDragging = false
     },
     handleDrop(evt) {
-      const { files } = evt.dataTransfer
+      const { files } = evt.dataTransfer || evt.target
 
-      console.log(files)
+      this.uploadVerification(files)
+
+      this.isDragging = false
+    },
+    uploadVerification(files) {
       let message
-      const attatchmentsLenght = Object.keys(files).length
-      if (attatchmentsLenght === 1) {
-        message = `Tem certeza que deseja enviar o arquivo "${files[0].name}"?`
+      const attatchmentIndexes = Object.keys(files)
+
+      if (attatchmentIndexes.length === 1) {
+        message = `Tem certeza que deseja fazer o upload do arquivo "${files[0].name}"?`
       } else {
-        message = `Tem certeza que deseja fazer o upload de ${attatchmentsLenght} arquivos?`
+        message = `Tem certeza que deseja fazer o upload de ${attatchmentIndexes.length} arquivos?`
       }
 
-      this.$confirm(message, 'Enviando anexos', {
+      return this.$confirm(message, 'Enviando anexos', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
         showClose: false,
       }).then(() => {
         Object.keys(files).map(fileIndex => this.saveFile(files[fileIndex]))
-      })
-
-      this.isDragging = false
+      }).catch(() => false)
     },
     saveFile(file) {
       const disputeId = this.$route.params.id
