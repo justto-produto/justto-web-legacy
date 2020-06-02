@@ -493,27 +493,37 @@ export default {
         ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
       if (this.selectedContacts.map(c => c.id).length) {
         if (this.messageType === 'whatsapp') {
-          if (checkSimilarity(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
-            this.$jusNotification({
-              title: 'Ops!',
-              message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
-              type: 'warning',
-            })
-            return false
-          } else {
-            this.$store.state.messageModule.recentMessages.push({
-              messageBody: quillMessage,
-              selfDestroy: () => (setTimeout(() => {
-                for (let i = 0; i < this.recentMessages.length; i++) {
-                  if (quillMessage === this.recentMessages[i].messageBody) {
-                    this.recentMessages.splice(i, 1)
-                  }
-                }
-              }, 30000)),
-            })
-            const lastMessage = this.recentMessages.length - 1
-            this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
-          }
+          this.$store.dispatch('canSendWhatsapp', this.selectedContacts[0].number).then(response => {
+            if (response.canSend) {
+              if (checkSimilarity(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
+                this.$jusNotification({
+                  title: 'Ops!',
+                  message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
+                  type: 'warning',
+                })
+                return false
+              } else {
+                this.$store.state.messageModule.recentMessages.push({
+                  messageBody: quillMessage,
+                  selfDestroy: () => (setTimeout(() => {
+                    for (let i = 0; i < this.recentMessages.length; i++) {
+                      if (quillMessage === this.recentMessages[i].messageBody) {
+                        this.recentMessages.splice(i, 1)
+                      }
+                    }
+                  }, 30000)),
+                })
+                const lastMessage = this.recentMessages.length - 1
+                this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
+              }
+            } else {
+              const message = 'O envio de mensagem para este número WhatsApp não é permitido neste momento. O prazo para responder mensagens no WhatsApp é de 24 horas<br/>Não encontramos uma mensagem deste número nas últimas 24 horas para que você possa responder.'
+              this.$alert(message, 'Ops!', {
+                dangerouslyUseHTMLString: true,
+                type: 'warning',
+              })
+            }
+          })
         }
         this.loadingTextarea = true
         const to = []
