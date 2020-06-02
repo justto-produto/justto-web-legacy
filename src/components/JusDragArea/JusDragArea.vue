@@ -10,7 +10,8 @@
     <slot />
     <label
       :for="`input-file-drag-area-${_uid}`"
-      @dragover.prevent
+      @dragover.prevent="handleDragenter"
+      @dragleave="handleDragleave"
       @drop.prevent="handleDrop"
     >
       <el-card
@@ -18,10 +19,15 @@
         class="el-card--dashed-hover jus-drag-area__mask"
         shadow="never"
       >
-        <jus-icon
-          icon="upload-file"
-          is-active />
+        <div
+          class="jus-drag-area__mask-action"
+        />
+
         <div>
+          <jus-icon
+            icon="upload-file"
+            is-active
+          />
           <br>
           Arraste aqui os anexos que deseja importar!
         </div>
@@ -48,7 +54,6 @@ export default {
     },
   },
   data: () => ({
-    dropzone: null,
     isDragging: false,
   }),
   computed: {
@@ -126,6 +131,14 @@ export default {
       top: 0;
       z-index: 2;
       width: 100%;
+
+      .jus-drag-area__mask-action {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
     }
   }
 }
