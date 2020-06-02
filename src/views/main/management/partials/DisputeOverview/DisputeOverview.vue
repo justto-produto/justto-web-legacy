@@ -526,31 +526,10 @@
             </el-tooltip>
           </div>
           <jus-drag-area>
-            <ul class="link-list">
-              <li
-                v-for="attachment in filteredDisputeAttachments"
-                :key="attachment.url"
-                class="link-item">
-                <el-link
-                  :underline="false"
-                  :href="attachment.url"
-                  target="_blank"
-                  class="dispute-overview-view__attachment-link">
-                  <i class="el-icon-document"/>
-                  {{ attachment.name }}
-                </el-link>
-                <i
-                  class="el-icon-delete"
-                  @click="deleteAttachment(attachment)"
-                />
-              </li>
-            </ul>
-            <div
-              v-if="!filteredDisputeAttachments.length"
-              class="center">
-              <br>
-              Sem anexos
-            </div>
+            <DisputeAttachments
+              :attachments="filteredDisputeAttachments"
+              @delete-attachment="deleteAttachment"
+            />
           </jus-drag-area>
         </el-tab-pane>
       </el-tabs>
@@ -612,7 +591,11 @@
               label="Documento"
               prop="document"
               width="160px">
-              <template slot-scope="scope">{{ scope.row.document | cpfCnpjMask }}</template>
+              <template slot-scope="scope">
+                <span>
+                  {{ scope.row.document | cpfCnpjMask }}
+                </span>
+              </template>
             </el-table-column>
             <el-table-column
               label="Cidade"
@@ -912,7 +895,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.number + '-' + scope.row.state || '' }}
+                <span>
+                  {{ scope.row.number + '-' + scope.row.state || '' }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -955,7 +940,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.number | phoneMask }}
+                <span>
+                  {{ scope.row.number | phoneMask }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -1012,7 +999,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.address }}
+                <span>
+                  {{ scope.row.address }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -1064,7 +1053,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.name }}
+                <span>
+                  {{ scope.row.name }}
+                </span>
                 <div style="font-size: 12px;">
                   {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
                 </div>
@@ -1081,7 +1072,8 @@
                   content="Remover">
                   <a
                     href="#"
-                    @click.prevent="removeBankData(scope.$index, scope.row.id)">
+                    @click.prevent="removeBankData(scope.$index, scope.row.id)"
+                  >
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
@@ -1192,14 +1184,16 @@ import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 import { JusDragArea } from '@/components/JusDragArea'
+import DisputeAttachments from './sections/DisputeAttachments'
 
 export default {
   name: 'DisputeOverview',
   components: {
     JusDragArea,
+    DisputeAttachments,
 
-    DisputeAddRole: () => import('./DisputeAddRole'),
-    DisputeProprieties: () => import('./DisputeProprieties'),
+    DisputeAddRole: () => import('../DisputeAddRole'),
+    DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
   },
