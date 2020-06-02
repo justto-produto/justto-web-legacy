@@ -94,7 +94,7 @@
               v-if="dispute.provisionedValue > 0"
               class="dispute-overview-view__info-line"
               data-testid="dispute-infoline">
-              <span class="title">Valor Provisionado::</span>
+              <span class="title">Valor Provisionado:</span>
               <span data-testid="overview-provisioned-value">{{ dispute.provisionedValue | currency }}</span>
             </div>
             <div
