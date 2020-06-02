@@ -500,11 +500,11 @@ export default {
       this.clearInteraction()
       this.filters.onlyFavorite = false
       this.filters.onlyPaused = false
-      this.filters.onlyNotVisualized = false
       this.filters.hasCounterproposal = false
       this.$store.commit('setDisputeHasFilters', false)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
+      delete this.filters.onlyNotVisualized
     },
     restoreFilters() {
       this.filters = JSON.parse(JSON.stringify(this.$store.getters.disputeQuery))
