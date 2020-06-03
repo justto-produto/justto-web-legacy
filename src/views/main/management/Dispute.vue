@@ -485,10 +485,10 @@ export default {
     handleBeforeLeaveTabs() {
       this.$store.commit('clearOccurrencesSize')
     },
-    verifyWhatsappMessage() {
+    verifyWhatsappMessage(quillMessage) {
       return new Promise((resolve, reject) => {
         if (this.messageType === 'whatsapp') {
-          this.$store.dispatch('canSendWhatsapp', this.directContactAddress || this.selectedContacts[0].number).then(response => {                      
+          this.$store.dispatch('canSendWhatsapp', this.directContactAddress || this.selectedContacts[0].number).then(response => {
             if (response.canSend) {
               if (checkSimilarity(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
                 this.$jusNotification({
@@ -496,8 +496,7 @@ export default {
                   message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
                   type: 'warning',
                 })
-                // return false
-                reject()
+                reject(new Error('Mensagem similar enviada recentemente'))
               } else {
                 this.$store.state.messageModule.recentMessages.push({
                   messageBody: quillMessage,
@@ -516,11 +515,10 @@ export default {
             } else {
               const message = 'O envio de mensagem para este número WhatsApp não é permitido neste momento. O prazo para responder mensagens no WhatsApp é de 24 horas.<br><br>Não encontramos uma mensagem deste número nas últimas 24 horas para que você possa responder.'
               this.$alert(message, 'Ops!', {
-              dangerouslyUseHTMLString: true,
-              confirmButtonText: 'OK',
-            })
-            // return false
-            reject()
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: 'OK',
+              })
+              reject(new Error('Ultima mensagem recebida a mais de 24h'))
             }
           })
         } else {
@@ -536,7 +534,7 @@ export default {
         ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
       if (this.selectedContacts.map(c => c.id).length) {
         this.loadingTextarea = true
-        this.verifyWhatsappMessage().then(() => {
+        this.verifyWhatsappMessage(quillMessage).then(() => {
           const to = []
           if (this.directContactAddress) {
             to.push({
