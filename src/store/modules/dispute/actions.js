@@ -104,16 +104,15 @@ const disputeActions = {
       mutation: 'setDisputeAttachments',
     })
   },
-  uploadAttachment({ commit }, { disputeId, formData, file }) {
-    axiosDispatcher({
+  uploadAttachment({ commit }, { disputeId, formData }) {
+    return axiosDispatcher({
       url: `api/office/disputes/${disputeId}/attachment`,
       method: 'post',
       data: formData,
-      payload: file,
     })
   },
   deleteAttachment({ commit }, { disputeId, documentId }) {
-    axiosDispatcher({
+    return axiosDispatcher({
       url: `api/office/disputes/${disputeId}/attachment/${documentId}`,
       method: 'delete',
     })

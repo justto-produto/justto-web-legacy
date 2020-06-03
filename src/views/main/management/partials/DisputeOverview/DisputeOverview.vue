@@ -513,7 +513,9 @@
               <i class="el-icon-paperclip" />
             </el-tooltip>
           </span>
-          <DisputeAttachments :isAccepted="isAccepted" />
+          <DisputeAttachments
+            :is-accepted="isAccepted"
+            :dispute-id="dispute.id" />
         </el-tab-pane>
       </el-tabs>
       <el-dialog

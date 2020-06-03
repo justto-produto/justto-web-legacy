@@ -36,7 +36,7 @@
           </el-link>
           <i
             class="el-icon-delete"
-            @click="deleteAttachment(attachment)"
+            @click="removeAttachment(attachment)"
           />
         </li>
       </ul>
@@ -75,7 +75,7 @@
 
 <script>
 import { JusDragArea } from '@/components/JusDragArea'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'DisputeAttachments',
@@ -87,6 +87,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    disputeId: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -95,7 +99,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters['disputeAttachments'],
+    ...mapGetters(['disputeAttachments']),
     filteredDisputeAttachments() {
       if (this.disputeAttachments) {
         return this.disputeAttachments
@@ -106,10 +110,13 @@ export default {
     },
   },
   methods: {
-    deleteAttachment(attachment) {
-      this.$store.dispatch('deleteAttachment', {
+    ...mapActions(['deleteAttachment', 'getDisputeAttachments']),
+    removeAttachment(attachment) {
+      this.deleteAttachment({
         disputeId: attachment.disputeId,
         documentId: attachment.id,
+      }).then(() => {
+        this.getDisputeAttachments(attachment.disputeId)
       })
     },
     enrichDispute() {
@@ -124,7 +131,7 @@ export default {
         showClose: false,
       }).then(() => {
         this.$store.dispatch('sendDisputeAction', {
-          disputeId: this.dispute.id,
+          disputeId: this.disputeId,
           action: 'enrich',
         }).then(() => {
           this.$jusNotification({

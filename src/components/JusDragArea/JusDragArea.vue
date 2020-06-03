@@ -60,7 +60,7 @@ export default {
     maskIsVisible: self => self.visible || self.isDragging,
   },
   methods: {
-    ...mapActions(['uploadAttachment']),
+    ...mapActions(['uploadAttachment', 'getDisputeAttachments']),
     handleDragenter(evt) {
       this.isDragging = true
     },
@@ -98,7 +98,13 @@ export default {
       const formData = new FormData()
       formData.append('file', file)
 
-      return this.uploadAttachment({ disputeId, formData, file })
+      return this.uploadAttachment({
+        disputeId,
+        formData,
+        file,
+      }).then(() => {
+        this.getDisputeAttachments(disputeId)
+      })
     },
   },
 }
