@@ -513,22 +513,7 @@
               <i class="el-icon-paperclip" />
             </el-tooltip>
           </span>
-          <div class="dispute-overview-view__attachment-buttons">
-            <el-input
-              v-model="attachmentFilterTerm"
-              clearable
-              placeholder="Busque por anexos"
-              prefix-icon="el-icon-search" />
-            <el-tooltip content="Atualizar anexos">
-              <el-button
-                type=""
-                plain
-                @click="enrichDispute">
-                <jus-icon icon="refresh"/>
-              </el-button>
-            </el-tooltip>
-          </div>
-          <DisputeAttachments :attachments="filteredDisputeAttachments" />
+          <DisputeAttachments :isAccepted="isAccepted" />
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -2046,30 +2031,6 @@ export default {
     removeBankData(index, id) {
       this.bankAccountIdstoUnlink.push(id)
       this.roleForm.bankAccounts.splice(index, 1)
-    },
-    enrichDispute() {
-      const message = {
-        content: this.isAccepted ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?',
-        title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER',
-      }
-      this.$confirm(message.content, message.title, {
-        confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
-        dangerouslyUseHTMLString: true,
-        showClose: false,
-      }).then(() => {
-        this.$store.dispatch('sendDisputeAction', {
-          disputeId: this.dispute.id,
-          action: 'enrich',
-        }).then(() => {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Ação <b>ENRIQUECER</b> realizada com sucesso.',
-            type: 'success',
-            dangerouslyUseHTMLString: true,
-          })
-        })
-      })
     },
   },
 }

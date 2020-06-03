@@ -1,12 +1,29 @@
 <template>
   <section class="dispute-attachments">
+    <div class="dispute-overview-view__attachment-buttons">
+      <el-input
+        v-model="attachmentFilterTerm"
+        clearable
+        placeholder="Busque por anexos"
+        prefix-icon="el-icon-search"
+      />
+      <el-tooltip content="Atualizar anexos">
+        <el-button
+          type=""
+          plain
+          @click="enrichDispute">
+          <jus-icon icon="refresh"/>
+        </el-button>
+      </el-tooltip>
+    </div>
+
     <jus-drag-area class="dispute-attachments__drag-area">
       <ul
-        v-if="attachments.length"
+        v-if="filteredDisputeAttachments.length"
         class="dispute-attachments__attachment-list"
       >
         <li
-          v-for="attachment in attachments"
+          v-for="attachment in filteredDisputeAttachments"
           :key="attachment.url"
           class="dispute-attachments__attachment">
           <el-link
@@ -58,6 +75,7 @@
 
 <script>
 import { JusDragArea } from '@/components/JusDragArea'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DisputeAttachments',
@@ -65,21 +83,57 @@ export default {
     JusDragArea,
   },
   props: {
-    attachments: {
-      type: Array,
+    isAccepted: {
+      type: Boolean,
       required: true,
     },
   },
   data() {
     return {
       uploadAttacmentDialogVisable: false,
+      attachmentFilterTerm: '',
     }
+  },
+  computed: {
+    ...mapGetters['disputeAttachments'],
+    filteredDisputeAttachments() {
+      if (this.disputeAttachments) {
+        return this.disputeAttachments
+          .filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+          )
+      } return []
+    },
   },
   methods: {
     deleteAttachment(attachment) {
       this.$store.dispatch('deleteAttachment', {
         disputeId: attachment.disputeId,
         documentId: attachment.id,
+      })
+    },
+    enrichDispute() {
+      const message = {
+        content: this.isAccepted ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?',
+        title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER',
+      }
+      this.$confirm(message.content, message.title, {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        dangerouslyUseHTMLString: true,
+        showClose: false,
+      }).then(() => {
+        this.$store.dispatch('sendDisputeAction', {
+          disputeId: this.dispute.id,
+          action: 'enrich',
+        }).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Ação <b>ENRIQUECER</b> realizada com sucesso.',
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          })
+        })
       })
     },
   },

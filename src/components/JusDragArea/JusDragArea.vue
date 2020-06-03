@@ -113,6 +113,7 @@ export default {
 
   .jus-drag-area__mask {
     display: none;
+    cursor: pointer;
   }
 
   .jus-drag-area__input-file {
