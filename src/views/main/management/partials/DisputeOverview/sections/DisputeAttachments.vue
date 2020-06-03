@@ -77,7 +77,10 @@ export default {
   },
   methods: {
     deleteAttachment(attachment) {
-      this.$emit('deleteAttachment', attachment)
+      this.$store.dispatch('deleteAttachment', {
+        disputeId: attachment.disputeId,
+        documentId: attachment.id,
+      })
     },
   },
 }

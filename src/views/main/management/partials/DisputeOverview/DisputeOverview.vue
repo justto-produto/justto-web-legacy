@@ -528,10 +528,7 @@
               </el-button>
             </el-tooltip>
           </div>
-          <DisputeAttachments
-            :attachments="filteredDisputeAttachments"
-            @delete-attachment="deleteAttachment"
-          />
+          <DisputeAttachments :attachments="filteredDisputeAttachments" />
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -2072,12 +2069,6 @@ export default {
             dangerouslyUseHTMLString: true,
           })
         })
-      })
-    },
-    deleteAttachment(attachment) {
-      this.$store.dispatch('deleteAttachment', {
-        disputeId: this.dispute.id,
-        documentId: attachment.id,
       })
     },
   },
