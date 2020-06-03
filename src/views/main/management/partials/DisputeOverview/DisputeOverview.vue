@@ -16,7 +16,10 @@
         </el-button>
       </el-tooltip>
     </h2>
-    <div v-loading="loading || linkBankAccountLoading">
+    <div
+      v-loading="loading || linkBankAccountLoading"
+      class="dispute-overview-view__loading"
+    >
       <el-tabs
         v-model="overviewTab"
         class="dispute-overview-view__tabs"
@@ -525,12 +528,10 @@
               </el-button>
             </el-tooltip>
           </div>
-          <jus-drag-area>
-            <DisputeAttachments
-              :attachments="filteredDisputeAttachments"
-              @delete-attachment="deleteAttachment"
-            />
-          </jus-drag-area>
+          <DisputeAttachments
+            :attachments="filteredDisputeAttachments"
+            @delete-attachment="deleteAttachment"
+          />
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -1183,13 +1184,11 @@
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
-import { JusDragArea } from '@/components/JusDragArea'
 import DisputeAttachments from './sections/DisputeAttachments'
 
 export default {
   name: 'DisputeOverview',
   components: {
-    JusDragArea,
     DisputeAttachments,
 
     DisputeAddRole: () => import('../DisputeAddRole'),
@@ -2089,6 +2088,14 @@ export default {
 @import '@/styles/colors.scss';
 
 .dispute-overview-view {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+
+  .dispute-overview-view__loading {
+    height: 100%;
+  }
+
   &__title {
     font-weight: 500;
     margin: 0;
@@ -2098,9 +2105,17 @@ export default {
     }
   }
   &__tabs {
+    height: 100%;
     padding-top: 15px;
+
     .el-tabs__item i {
       font-size: 18px;
+    }
+
+    .el-tabs__content {
+      height: calc(100% - 58px);
+      overflow-y: auto;
+      position: initial;
     }
   }
   &__info-line {
@@ -2405,24 +2420,12 @@ export default {
     color: $--color-warning
   }
   &__attachment-tab {
+    height: 100%;
+
     .el-icon-delete {
       display: none;
       color: $--color-danger;
       cursor: pointer;
-    }
-    .link-list {
-      list-style: none;
-      padding: 0;
-      .link-item {
-        padding: 8px 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        &:hover .el-icon-delete {
-          display: block;
-
-        }
-      }
     }
   }
 }
