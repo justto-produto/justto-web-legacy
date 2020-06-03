@@ -430,7 +430,6 @@
       append-to-body
       title="Envie anexos"
       width="600px"
-      class="dispute-view-actions__upload-attatchment-dialog"
       data-testid="upload-file-dialog"
     >
       <jus-drag-area :visible="true" />
@@ -954,9 +953,6 @@ export default {
     height: 100%;
     right: 0;
     top: 0;
-  }
-  &__upload-attatchment-dialog {
-    height: 400px;
   }
 }
 .is-disabled-input {

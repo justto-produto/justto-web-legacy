@@ -35,10 +35,23 @@
         <el-button
           type="primary"
           size="medium"
+          icon="el-icon-upload"
+          @click="uploadAttacmentDialogVisable = true"
         >
           Adicionar anexos
         </el-button>
       </div>
+
+      <el-dialog
+        :close-on-click-modal="false"
+        :visible.sync="uploadAttacmentDialogVisable"
+        append-to-body
+        title="Envie anexos"
+        width="600px"
+        data-testid="upload-file-dialog"
+      >
+        <jus-drag-area :visible="true" />
+      </el-dialog>
     </jus-drag-area>
   </section>
 </template>
@@ -56,6 +69,11 @@ export default {
       type: Array,
       required: true,
     },
+  },
+  data() {
+    return {
+      uploadAttacmentDialogVisable: false,
+    }
   },
   methods: {
     deleteAttachment(attachment) {
