@@ -91,6 +91,13 @@
               <span>{{ dispute.classification.name | capitalize }}</span>
             </div>
             <div
+              v-if="dispute.provisionedValue > 0"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
+              <span class="title">Valor Provisionado:</span>
+              <span data-testid="overview-provisioned-value">{{ dispute.provisionedValue | currency }}</span>
+            </div>
+            <div
               class="dispute-overview-view__info-line"
               data-testid="dispute-infoline">
               <span class="title">Alçada máxima:</span>
@@ -640,13 +647,20 @@
           @submit.native.prevent="editDispute">
           <h3>Detalhes da Disputa</h3>
           <el-row :gutter="20">
-            <el-col :span="24">
+            <el-col :span="12">
               <el-form-item
                 label="Número do Processo"
                 prop="disputeCode">
                 <el-input
                   v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
                   v-model="disputeForm.disputeCode" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                label="Código interno"
+                prop="externalId">
+                <el-input v-model="disputeForm.externalId" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -781,9 +795,11 @@
             </el-col>
             <el-col :span="8">
               <el-form-item
-                label="Código interno"
-                prop="externalId">
-                <el-input v-model="disputeForm.externalId" />
+                label="Valor Provisionado"
+                prop="provisionedValue">
+                <money
+                  v-model="disputeForm.provisionedValue"
+                  class="el-input__inner"/>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -1225,6 +1241,7 @@ export default {
         materialDamage: '',
         requestedValue: '',
         externalId: '',
+        provisionedValue: '',
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1677,6 +1694,7 @@ export default {
       this.disputeForm.materialDamage = dispute.materialDamage || ''
       this.disputeForm.requestedValue = dispute.requestedValue || ''
       this.disputeForm.externalId = dispute.externalId || ''
+      this.disputeForm.provisionedValue = dispute.provisionedValue || ''
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
@@ -1718,6 +1736,7 @@ export default {
             disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
             disputeToEdit.description = this.disputeForm.description
             disputeToEdit.code = this.disputeForm.disputeCode
+            disputeToEdit.provisionedValue = this.disputeForm.provisionedValue
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
