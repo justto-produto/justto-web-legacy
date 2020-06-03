@@ -485,15 +485,10 @@ export default {
     handleBeforeLeaveTabs() {
       this.$store.commit('clearOccurrencesSize')
     },
-    sendMessage() {
-      if (!this.$refs.messageEditor.quill.getText().trim()) {
-        return false
-      }
-      const quillMessage = this.messageType === 'email'
-        ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
-      if (this.selectedContacts.map(c => c.id).length) {
+    verifyWhatsappMessage() {
+      return new Promise((resolve, reject) => {
         if (this.messageType === 'whatsapp') {
-          this.$store.dispatch('canSendWhatsapp', this.directContactAddress || this.selectedContacts[0].number).then(response => {
+          this.$store.dispatch('canSendWhatsapp', this.directContactAddress || this.selectedContacts[0].number).then(response => {                      
             if (response.canSend) {
               if (checkSimilarity(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
                 this.$jusNotification({
@@ -501,7 +496,8 @@ export default {
                   message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
                   type: 'warning',
                 })
-                return false
+                // return false
+                reject()
               } else {
                 this.$store.state.messageModule.recentMessages.push({
                   messageBody: quillMessage,
@@ -515,59 +511,77 @@ export default {
                 })
                 const lastMessage = this.recentMessages.length - 1
                 this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
+                resolve()
               }
             } else {
-              const message = 'O envio de mensagem para este número WhatsApp não é permitido neste momento. O prazo para responder mensagens no WhatsApp é de 24 horas<br/>Não encontramos uma mensagem deste número nas últimas 24 horas para que você possa responder.'
+              const message = 'O envio de mensagem para este número WhatsApp não é permitido neste momento. O prazo para responder mensagens no WhatsApp é de 24 horas.<br><br>Não encontramos uma mensagem deste número nas últimas 24 horas para que você possa responder.'
               this.$alert(message, 'Ops!', {
-                dangerouslyUseHTMLString: true,
-                type: 'warning',
-              })
+              dangerouslyUseHTMLString: true,
+              confirmButtonText: 'OK',
+            })
+            // return false
+            reject()
             }
           })
-        }
-        this.loadingTextarea = true
-        const to = []
-        if (this.directContactAddress) {
-          to.push({
-            address: this.directContactAddress,
-          })
         } else {
-          to.push({
-            roleId: this.activeRole.id,
-            contactsId: this.selectedContacts.map(c => c.id),
-          })
+          resolve()
         }
-        const externalIdentification = +new Date()
-        for (const contact of this.selectedContacts) {
-          this.addLoadingOccurrence({
-            message: this.$refs.messageEditor.quill.getText(),
-            type: this.messageType,
-            receiver: this.messageType === 'email' ? contact.address : contact.phone,
-            externalIdentification,
-          })
-        }
-        this.$store.dispatch('send' + this.messageType, {
-          to,
-          message: quillMessage,
-          disputeId: this.dispute.id,
-          externalIdentification,
-        }).then(() => {
-          // SEGMENT TRACK
+      })
+    },
+    sendMessage() {
+      if (!this.$refs.messageEditor.quill.getText().trim()) {
+        return false
+      }
+      const quillMessage = this.messageType === 'email'
+        ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
+      if (this.selectedContacts.map(c => c.id).length) {
+        this.loadingTextarea = true
+        this.verifyWhatsappMessage().then(() => {
+          const to = []
           if (this.directContactAddress) {
-            this.$jusSegment(`Envio de ${this.messageType} via resposta rápida`)
+            to.push({
+              address: this.directContactAddress,
+            })
           } else {
-            this.$jusSegment(`Envio de ${this.messageType} manual`)
+            to.push({
+              roleId: this.activeRole.id,
+              contactsId: this.selectedContacts.map(c => c.id),
+            })
           }
-          this.$jusNotification({
-            title: 'Yay!',
-            message: this.messageType + ' enviado com sucesso.',
-            type: 'success',
+          const externalIdentification = +new Date()
+          for (const contact of this.selectedContacts) {
+            this.addLoadingOccurrence({
+              message: this.$refs.messageEditor.quill.getText(),
+              type: this.messageType,
+              receiver: this.messageType === 'email' ? contact.address : contact.phone,
+              externalIdentification,
+            })
+          }
+          this.$store.dispatch('send' + this.messageType, {
+            to,
+            message: quillMessage,
+            disputeId: this.dispute.id,
+            externalIdentification,
+          }).then(() => {
+            // SEGMENT TRACK
+            if (this.directContactAddress) {
+              this.$jusSegment(`Envio de ${this.messageType} via resposta rápida`)
+            } else {
+              this.$jusSegment(`Envio de ${this.messageType} manual`)
+            }
+            this.$jusNotification({
+              title: 'Yay!',
+              message: this.messageType + ' enviado com sucesso.',
+              type: 'success',
+            })
+            setTimeout(function() {
+              this.$refs.messageEditor.quill.deleteText(0, 9999999999)
+            }.bind(this), 200)
+          }).catch(error => {
+            this.$jusNotification({ error })
+          }).finally(() => {
+            this.loadingTextarea = false
           })
-          setTimeout(function() {
-            this.$refs.messageEditor.quill.deleteText(0, 9999999999)
-          }.bind(this), 200)
-        }).catch(error => {
-          this.$jusNotification({ error })
         }).finally(() => {
           this.loadingTextarea = false
         })
