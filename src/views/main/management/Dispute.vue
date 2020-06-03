@@ -493,7 +493,7 @@ export default {
         ? this.$refs.messageEditor.quill.container.firstChild.innerHTML : this.$refs.messageEditor.quill.getText()
       if (this.selectedContacts.map(c => c.id).length) {
         if (this.messageType === 'whatsapp') {
-          this.$store.dispatch('canSendWhatsapp', this.selectedContacts[0].number).then(response => {
+          this.$store.dispatch('canSendWhatsapp', this.directContactAddress || this.selectedContacts[0].number).then(response => {
             if (response.canSend) {
               if (checkSimilarity(quillMessage, this.recentMessages.map(rm => rm.messageBody), 75)) {
                 this.$jusNotification({
