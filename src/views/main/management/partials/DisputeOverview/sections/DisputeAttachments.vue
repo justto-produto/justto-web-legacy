@@ -9,10 +9,9 @@
       />
       <el-tooltip content="Atualizar anexos">
         <el-button
-          type=""
           plain
           @click="enrichDispute">
-          <jus-icon icon="refresh"/>
+          <jus-icon icon="refresh" />
         </el-button>
       </el-tooltip>
     </div>
@@ -64,6 +63,7 @@
         :visible.sync="uploadAttacmentDialogVisable"
         append-to-body
         title="Envie anexos"
+        class="dispute-attachments__upload-dialog"
         width="600px"
         data-testid="upload-file-dialog"
       >
@@ -100,17 +100,20 @@ export default {
   },
   computed: {
     ...mapGetters(['disputeAttachments']),
+
     filteredDisputeAttachments() {
       if (this.disputeAttachments) {
-        return this.disputeAttachments
-          .filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+        return this.disputeAttachments.filter(a =>
+          a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(
+            this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
           )
+        )
       } return []
     },
   },
   methods: {
     ...mapActions(['deleteAttachment', 'getDisputeAttachments']),
+
     removeAttachment(attachment) {
       this.deleteAttachment({
         disputeId: attachment.disputeId,
@@ -119,9 +122,12 @@ export default {
         this.getDisputeAttachments(attachment.disputeId)
       })
     },
+
     enrichDispute() {
       const message = {
-        content: this.isAccepted ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?',
+        content: this.isAccepted
+          ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?'
+          : 'Tem certeza que deseja realizar esta ação?',
         title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER',
       }
       this.$confirm(message.content, message.title, {
@@ -157,21 +163,21 @@ export default {
   }
 
   .dispute-attachments__attachment-list {
-      list-style: none;
-      max-height: calc(100% - 70px);
-      overflow-y: auto;
-      padding: 0;
+    list-style: none;
+    max-height: calc(100% - 70px);
+    overflow-y: auto;
+    padding: 0;
 
-      .dispute-attachments__attachment {
-        padding: 8px 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        &:hover .el-icon-delete {
-          display: block;
-        }
+    .dispute-attachments__attachment {
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &:hover .el-icon-delete {
+        display: block;
       }
     }
+  }
 
   .dispute-attachments__action-container {
     align-items: center;
@@ -181,6 +187,14 @@ export default {
     justify-content: center;
     position: absolute;
     width: 100%;
+  }
+}
+</style>
+
+<style lang="scss">
+.dispute-attachments__upload-dialog {
+  .el-dialog__body {
+    height: 300px;
   }
 }
 </style>
