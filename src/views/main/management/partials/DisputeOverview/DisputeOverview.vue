@@ -16,7 +16,10 @@
         </el-button>
       </el-tooltip>
     </h2>
-    <div v-loading="loading || linkBankAccountLoading">
+    <div
+      v-loading="loading || linkBankAccountLoading"
+      class="dispute-overview-view__loading"
+    >
       <el-tabs
         v-model="overviewTab"
         class="dispute-overview-view__tabs"
@@ -517,35 +520,10 @@
               <i class="el-icon-paperclip" />
             </el-tooltip>
           </span>
-          <div class="dispute-overview-view__attachment-buttons">
-            <el-input
-              v-model="attachmentFilterTerm"
-              clearable
-              placeholder="Busque por anexos"
-              prefix-icon="el-icon-search" />
-            <el-tooltip content="Atualizar anexos">
-              <el-button
-                type=""
-                plain
-                @click="enrichDispute">
-                <jus-icon icon="refresh"/>
-              </el-button>
-            </el-tooltip>
-          </div>
-          <el-link
-            v-for="attachment in filteredDisputeAttachments"
-            :key="attachment.url"
-            :underline="false"
-            :href="attachment.url"
-            target="_blank">
-            <i class="el-icon-document"/> {{ attachment.name }}
-          </el-link>
-          <div
-            v-if="!filteredDisputeAttachments.length"
-            class="center">
-            <br>
-            Sem anexos
-          </div>
+          <DisputeAttachments
+            :is-accepted="isAccepted"
+            :dispute-id="dispute.id"
+          />
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -606,7 +584,11 @@
               label="Documento"
               prop="document"
               width="160px">
-              <template slot-scope="scope">{{ scope.row.document | cpfCnpjMask }}</template>
+              <template slot-scope="scope">
+                <span>
+                  {{ scope.row.document | cpfCnpjMask }}
+                </span>
+              </template>
             </el-table-column>
             <el-table-column
               label="Cidade"
@@ -915,7 +897,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.number + '-' + scope.row.state || '' }}
+                <span>
+                  {{ scope.row.number + '-' + scope.row.state || '' }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -958,7 +942,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.number | phoneMask }}
+                <span>
+                  {{ scope.row.number | phoneMask }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -1015,7 +1001,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.address }}
+                <span>
+                  {{ scope.row.address }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -1067,7 +1055,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.name }}
+                <span>
+                  {{ scope.row.name }}
+                </span>
                 <div style="font-size: 12px;">
                   {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
                 </div>
@@ -1084,7 +1074,8 @@
                   content="Remover">
                   <a
                     href="#"
-                    @click.prevent="removeBankData(scope.$index, scope.row.id)">
+                    @click.prevent="removeBankData(scope.$index, scope.row.id)"
+                  >
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
@@ -1194,11 +1185,15 @@
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
+import DisputeAttachments from './sections/DisputeAttachments'
+
 export default {
   name: 'DisputeOverview',
   components: {
-    DisputeAddRole: () => import('./DisputeAddRole'),
-    DisputeProprieties: () => import('./DisputeProprieties'),
+    DisputeAttachments,
+
+    DisputeAddRole: () => import('../DisputeAddRole'),
+    DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
   },
@@ -1354,7 +1349,10 @@ export default {
     },
     filteredDisputeAttachments() {
       if (this.disputeAttachments) {
-        return this.disputeAttachments.filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')))
+        return this.disputeAttachments
+          .filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+          )
       } return []
     },
     disputeBankAccounts() {
@@ -2085,6 +2083,14 @@ export default {
 @import '@/styles/colors.scss';
 
 .dispute-overview-view {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+
+  .dispute-overview-view__loading {
+    height: 100%;
+  }
+
   &__title {
     font-weight: 500;
     margin: 0;
@@ -2094,9 +2100,17 @@ export default {
     }
   }
   &__tabs {
+    height: 100%;
     padding-top: 15px;
+
     .el-tabs__item i {
       font-size: 18px;
+    }
+
+    .el-tabs__content {
+      height: calc(100% - 58px);
+      overflow-y: auto;
+      position: initial;
     }
   }
   &__info-line {
@@ -2401,9 +2415,12 @@ export default {
     color: $--color-warning
   }
   &__attachment-tab {
-    .el-link {
-      margin-top: 10px;
-      display: block;
+    height: 100%;
+
+    .el-icon-delete {
+      display: none;
+      color: $--color-danger;
+      cursor: pointer;
     }
   }
 }

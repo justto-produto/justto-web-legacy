@@ -104,6 +104,19 @@ const disputeActions = {
       mutation: 'setDisputeAttachments',
     })
   },
+  uploadAttachment({ commit }, { disputeId, formData }) {
+    return axiosDispatcher({
+      url: `api/office/disputes/${disputeId}/attachment`,
+      method: 'post',
+      data: formData,
+    })
+  },
+  deleteAttachment({ commit }, { disputeId, documentId }) {
+    return axiosDispatcher({
+      url: `api/office/disputes/${disputeId}/attachment/${documentId}`,
+      method: 'delete',
+    })
+  },
   getDisputes({ commit, state }, command) {
     return new Promise((resolve, reject) => {
       if (command !== 'nextPage') state.loading = true
