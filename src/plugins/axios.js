@@ -1,5 +1,6 @@
-import Vue from 'vue'
 import * as Sentry from '@sentry/browser'
+
+import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
 import unavailableLoading from '@/utils/loading'
@@ -41,7 +42,6 @@ _axios.interceptors.response.use(
     if (response.status === 204 && response.config && response.config.__isRetryRequest) {
       response.config.__isRetryRequest = false
       setTimeout(function() {
-        debugger
         return axios(response.config)
       }, 2000)
     }
