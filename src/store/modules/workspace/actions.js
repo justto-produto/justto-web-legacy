@@ -40,10 +40,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.put('api/workspaces', {
+        id: state.id,
         teamName: state.teamName,
         status: state.status,
-        name: params.name || state.name,
-        properties: params.properties || state.properties,
+        name: params.name,
+        properties: params.properties,
       }).then(response => {
         commit('setWorkspace', response.data)
         resolve(response.data)

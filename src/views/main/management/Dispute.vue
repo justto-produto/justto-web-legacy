@@ -781,7 +781,7 @@ export default {
   .draggable.resizable {
     z-index: 9 !important;
     width: 100% !important;
-    height: 5px !important;
+    height: 10px !important;
     left: 0 !important;
     right: 0 !important;
     &:hover {
