@@ -146,6 +146,15 @@
         <jus-icon icon="external-link" />
       </el-button>
     </el-tooltip>
+    <el-tooltip
+      content="Enviar anexo">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="uploadAttacmentDialogVisable = true">
+        <jus-icon icon="upload-file" />
+      </el-button>
+    </el-tooltip>
     <el-tooltip :content="dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
       <el-button
         :type="tableActions ? 'text' : ''"
@@ -415,14 +424,28 @@
           @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
+      :visible.sync="uploadAttacmentDialogVisable"
+      append-to-body
+      title="Envie anexos"
+      width="600px"
+      data-testid="upload-file-dialog"
+    >
+      <jus-drag-area :visible="true" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getRoles } from '@/utils/jusUtils'
+import { JusDragArea } from '@/components/JusDragArea'
 
 export default {
   name: 'JusDisputeActions',
+  components: {
+    JusDragArea,
+  },
   props: {
     dispute: {
       type: Object,
@@ -448,6 +471,7 @@ export default {
       chooseUnsettledDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
+      uploadAttacmentDialogVisable: false,
       settledDialogVisible: false,
       modalLoading: false,
       counterOfferForm: {
