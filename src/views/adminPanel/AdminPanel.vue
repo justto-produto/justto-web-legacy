@@ -17,11 +17,11 @@
           </el-menu-item> -->
           <!-- <el-menu-item index="2">
             <i class="el-icon-user-solid" /> Usuários
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="3">
             <i class="el-icon-s-operation" /> Estratégias
           </el-menu-item>
-          <el-menu-item index="4">
+          <!-- <el-menu-item index="4">
             <i class="el-icon-document" /> Minutas
           </el-menu-item>
           <el-menu-item index="5">
