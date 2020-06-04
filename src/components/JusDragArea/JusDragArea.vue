@@ -115,7 +115,7 @@ export default {
 
 .jus-drag-area {
   position: relative;
-  min-height: 300px;
+  height: 100%;
 
   .jus-drag-area__mask {
     display: none;
