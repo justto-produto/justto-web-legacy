@@ -38,7 +38,7 @@ export default {
         .filter(s => s.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
           .includes(this.filterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
         )
-    }
+    },
   },
   methods: {
     ...mapActions(['updateStrategy']),
