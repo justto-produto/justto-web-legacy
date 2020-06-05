@@ -57,12 +57,17 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/nestable.scss';
+@import '@/styles/colors.scss';
 
 .panel-strategy {
   padding: 40px;
 
   .strategy-card {
+    &:hover {
+      border: 1px solid $--color-primary;
+      color: $--color-primary;
+    }
+
     & > .el-card__body {
       display: grid;
       grid-template-areas:

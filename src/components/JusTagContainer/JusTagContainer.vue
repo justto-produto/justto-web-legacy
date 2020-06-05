@@ -115,6 +115,7 @@ export default {
       cursor: pointer;
       color: $--color-primary;
       position: relative;
+      font-size: 18px;
       top: -4px;
     }
   }
