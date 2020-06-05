@@ -11,13 +11,14 @@
       <jus-text-editable
         :value="strategyData.name"
         type="title"
-        @hasEdition="changeEstrategyData"
+        @hasEdition="changeEstrategyData($event, 'name')"
       />
     </div>
     <div class="strategy-card__workspaces-area">
       <jus-tag-container
         :tag-list="strategyData.workspaces"
         title="Times"
+        @change="changeEstrategyData($event, 'workspaces')"
       />
     </div>
     <div class="strategy-card__messages-area"/>
@@ -47,8 +48,8 @@ export default {
     }
   },
   methods: {
-    changeEstrategyData(val) {
-      this.strategyData.name = val
+    changeEstrategyData(val, key) {
+      this.strategyData[key] = val
       this.$emit('changeEstrategyData', this.strategyData)
     },
   },

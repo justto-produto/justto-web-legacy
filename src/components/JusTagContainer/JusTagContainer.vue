@@ -55,7 +55,8 @@ export default {
   },
   methods: {
     handleClose(index) {
-      return this.tags.splice(index, 1)
+      this.tags.splice(index, 1)
+      this.changeTags()
     },
     showInput() {
       this.inputVisible = true
@@ -68,8 +69,12 @@ export default {
 
       if (this.inputValue) {
         this.tags.push({ name: this.inputValue })
+        this.changeTags()
         this.inputValue = ''
       }
+    },
+    changeTags() {
+      this.$emit('change', this.tags)
     },
   },
 }
