@@ -4,26 +4,28 @@
       v-show="isEditing"
       ref="textInput"
       v-model="inputValue"
-      placeholder="Please input"
-      @keydown.native.enter="editionHandler"
-      @change.native="onChangeHandler"
+      @keyup.enter.native="saveChanges"
+      @blur="saveChanges"
     >
       <el-button
         slot="append"
         icon="el-icon-check"
         type="primary"
-        @click="editionHandler"
+        @click="saveChanges"
       />
     </el-input>
     <span
-      v-if="!isEditing"
+      v-show="!isEditing"
       :class="{
         [`jus-text-editable__mask--${type}`]: type
       }"
       class="jus-text-editable__mask"
       @click="editionHandler"
     >
-      {{ inputValue }}
+      {{ value }}
+      <jus-icon
+        class="edit-icon"
+        icon="edit"/>
     </span>
   </div>
 </template>
@@ -48,10 +50,12 @@ export default {
   }),
   methods: {
     editionHandler(evt) {
-      this.isEditing = !this.isEditing
+      this.isEditing = true
+      this.$nextTick(() => this.$refs.textInput.$el.children[0].focus())
     },
-    onChangeHandler() {
+    saveChanges() {
       this.$emit('hasEdition', this.inputValue)
+      this.isEditing = false
     },
   },
 }
@@ -63,10 +67,19 @@ $text-types:
   'title' 24px 700 uppercase;
 
 .jus-text-editable__mask {
-  cursor: pointer;
   display: block;
   min-height: 16px;
   width: 100%;
+  .edit-icon {
+    display: none;
+    cursor: pointer;
+    width: 16px;
+  }
+  &:hover {
+    .edit-icon {
+      display: inline;
+    }
+  }
 
   @each $name, $size, $weight, $style in $text-types {
     &.jus-text-editable__mask--#{$name} {
