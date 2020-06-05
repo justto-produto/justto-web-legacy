@@ -13,6 +13,22 @@
       >
         {{ tag.name }}
       </el-tag>
+
+      <el-input
+        v-if="inputVisible"
+        ref="saveTagInput"
+        v-model="inputValue"
+        class="jus-tag-container__input"
+        size="mini"
+        @keyup.enter.native="handleInputConfirm"
+        @blur="handleInputConfirm"
+      />
+
+      <i
+        v-else
+        class="el-icon-plus jus-tag-container__button"
+        @click="showInput"
+      />
     </div>
   </article>
 </template>
@@ -33,11 +49,27 @@ export default {
   data() {
     return {
       tags: this.tagList,
+      inputVisible: false,
+      inputValue: '',
     }
   },
   methods: {
     handleClose(index) {
       return this.tags.splice(index, 1)
+    },
+    showInput() {
+      this.inputVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    handleInputConfirm() {
+      this.inputVisible = false
+
+      if (this.inputValue) {
+        this.tags.push({ name: this.inputValue })
+        this.inputValue = ''
+      }
     },
   },
 }
@@ -60,17 +92,32 @@ export default {
     display: flex;
     flex-wrap: wrap;
     border-radius: 4px;
+    align-items: center;
 
     .jus-tag-container__tag {
       display: block;
       margin-bottom: 8px;
       margin-right: 8px;
     }
+
+    .jus-tag-container__input {
+      width: 80px;
+      position: relative;
+      top: -4px;
+    }
+
+    .jus-tag-container__button {
+      cursor: pointer;
+      color: $--color-primary;
+      position: relative;
+      top: -4px;
+    }
   }
 
   .jus-tag-container__title {
     font-size: 12px;
-    line-height: 1.5;
+    display: block;
+    margin-bottom: 16px;
     color: $--color-text-regular;
   }
 }
