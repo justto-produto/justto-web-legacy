@@ -14,6 +14,7 @@
         @hasEdition="changeEstrategyData($event, 'name')"
       />
     </div>
+
     <div class="strategy-card__workspaces-area">
       <jus-tag-container
         :tag-list="strategyData.workspaces"
@@ -21,7 +22,11 @@
         @change="changeEstrategyData($event, 'workspaces')"
       />
     </div>
-    <div class="strategy-card__messages-area"/>
+
+    <div class="strategy-card__messages-area">
+      <strategy-communication />
+    </div>
+
     <div class="strategy-card__strategies-area"/>
   </el-card>
 </template>
@@ -29,12 +34,14 @@
 <script>
 import { JusTagContainer } from '@/components/JusTagContainer'
 import { JusTextEditable } from '@/components/JusTextEditable'
+import StrategyCommunication from './StrategyCommunication'
 
 export default {
   name: 'PanelStrategy',
   components: {
     JusTagContainer,
     JusTextEditable,
+    StrategyCommunication,
   },
   props: {
     strategy: {
@@ -95,7 +102,6 @@ export default {
 
       .strategy-card__messages-area {
         grid-area: messages-area;
-        background: gold;
       }
 
       .strategy-card__strategies-area {
