@@ -458,6 +458,7 @@ export default {
       })
     },
     applyFilters() {
+      if (!this.filters.onlyNotVisualized) delete this.filters.onlyNotVisualized
       this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputeQuery', this.filters)
       this.visibleFilters = false
