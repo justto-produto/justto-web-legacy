@@ -1,7 +1,7 @@
 <template>
   <section class="panel-strategy">
     <strategy-card
-      v-for="(strategy, index) in strategies"
+      v-for="(strategy, index) in filteredStrategie"
       :key="`${index}-${_uid}`"
       :strategy="strategy"
       class="panel-strategy__card"
@@ -22,10 +22,23 @@ export default {
     VueNestable,
     VueNestableHandle,
   },
+  props: {
+    filterTerm: {
+      type: String,
+      default: '',
+    },
+  },
   computed: {
     ...mapGetters({
       strategies: 'getStrategies',
     }),
+
+    filteredStrategie() {
+      return this.strategies
+        .filter(s => s.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .includes(this.filterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+        )
+    }
   },
   methods: {
     ...mapActions(['updateStrategy']),
