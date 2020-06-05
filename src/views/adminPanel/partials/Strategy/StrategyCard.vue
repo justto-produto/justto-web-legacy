@@ -14,18 +14,25 @@
         @hasEdition="changeEstrategyData"
       />
     </div>
-    <div class="strategy-card__workspaces-area"/>
+    <div class="strategy-card__workspaces-area">
+      <jus-tag-container
+        :tag-list="strategyData.workspaces"
+        title="Times"
+      />
+    </div>
     <div class="strategy-card__messages-area"/>
     <div class="strategy-card__strategies-area"/>
   </el-card>
 </template>
 
 <script>
+import { JusTagContainer } from '@/components/JusTagContainer'
 import { JusTextEditable } from '@/components/JusTextEditable'
 
 export default {
   name: 'PanelStrategy',
   components: {
+    JusTagContainer,
     JusTextEditable,
   },
   props: {
@@ -78,7 +85,6 @@ export default {
 
       .strategy-card__workspaces-area {
         grid-area: workspaces-area;
-        background: slateblue;
       }
 
       .strategy-card__messages-area {

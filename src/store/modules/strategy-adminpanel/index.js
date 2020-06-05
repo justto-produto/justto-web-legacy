@@ -10,9 +10,7 @@ const StrategyModule = {
         name: 'Mock Strategy',
         isActive: true,
         isPrivate: false,
-        workspaces: [
-          { id: 1, name: 'teste' },
-        ],
+        workspaces: [],
         communications: [
           // Message mock
           {
@@ -67,7 +65,9 @@ const StrategyModule = {
         isActive: true,
         isPrivate: true,
         workspaces: [
-          { id: 1, name: 'teste' },
+          { id: 1, name: 'Mock Workspace' },
+          { id: 2, name: 'Test 1' },
+          { id: 2, name: 'Test 2' },
         ],
         communications: [
           // Message mock
