@@ -104,6 +104,11 @@ export default {
         file,
       }).then(() => {
         this.getDisputeAttachments(disputeId)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Anexo(s) adicionado(s) com sucesso',
+          type: 'success',
+        })
       })
     },
   },
