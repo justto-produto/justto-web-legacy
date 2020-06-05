@@ -27,7 +27,12 @@
       <strategy-communication />
     </div>
 
-    <div class="strategy-card__strategies-area"/>
+    <div class="strategy-card__strategies-area">
+      <jus-tag-container
+        :tag-list="[{name: 'Pagamento'}]"
+        @change="changeEstrategyData($event, 'workspaces')"
+      />
+    </div>
   </el-card>
 </template>
 
@@ -106,7 +111,6 @@ export default {
 
       .strategy-card__strategies-area {
         grid-area: strategies-area;
-        background: aquamarine;
       }
     }
   }

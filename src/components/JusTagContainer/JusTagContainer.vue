@@ -1,6 +1,9 @@
 <template>
   <article class="jus-tag-container">
-    <span class="jus-tag-container__title">
+    <span
+      v-if="title"
+      class="jus-tag-container__title"
+    >
       {{ title }}
     </span>
     <div class="jus-tag-container__wrapper">
