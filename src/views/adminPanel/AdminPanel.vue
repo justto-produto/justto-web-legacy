@@ -70,6 +70,8 @@
 </template>
 
 <script>
+import PanelStrategy from './partials/Strategy/PanelStrategy'
+
 export default {
   name: 'AdminPanel',
   components: {
@@ -77,7 +79,7 @@ export default {
     PanelDashboard: () => import('./partials/PanelDashboard'),
     PanelWorkspace: () => import('./partials/PanelWorkspace'),
     PanelUser: () => import('./partials/PanelUser'),
-    PanelStrategy: () => import('./partials/PanelStrategy'),
+    PanelStrategy,
     PanelMinute: () => import('./partials/PanelMinute'),
     PanelBilling: () => import('./partials/PanelBilling'),
   },
