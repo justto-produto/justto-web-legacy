@@ -88,7 +88,7 @@ export default {
       required: true,
     },
     disputeId: {
-      type: String,
+      type: Number,
       required: true,
     },
   },
