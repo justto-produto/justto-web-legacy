@@ -1,18 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import workspaceModule from './modules/workspace'
 import accountModule from './modules/account'
-import importModule from './modules/import'
-import campaignModule from './modules/campaign'
-import strategyModule from './modules/strategy'
-import personModule from './modules/person/index'
-import disputeModule from './modules/dispute/index'
-import messageModule from './modules/message'
-import socketModule from './modules/socket/index'
-import documentModule from './modules/document'
-import dashboardModule from './modules/dashboard'
-import tagModule from './modules/tag'
 import banksList from '@/utils/banksList'
+import campaignModule from './modules/campaign'
+import dashboardModule from './modules/dashboard'
+import disputeModule from './modules/dispute/index'
+import documentModule from './modules/document'
+import importModule from './modules/import'
+import messageModule from './modules/message'
+import personModule from './modules/person/index'
+import socketModule from './modules/socket/index'
+import strategyAdminPanelModule from './modules/strategy-adminpanel'
+import strategyModule from './modules/strategy'
+import tagModule from './modules/tag'
+import workspaceModule from './modules/workspace'
 
 Vue.use(Vuex)
 
@@ -54,16 +55,17 @@ export default new Vuex.Store({
   },
   modules: {
     accountModule,
-    workspaceModule,
-    importModule,
     campaignModule,
-    strategyModule,
-    personModule,
-    disputeModule,
-    messageModule,
-    socketModule,
-    documentModule,
-    tagModule,
     dashboardModule,
+    disputeModule,
+    documentModule,
+    importModule,
+    messageModule,
+    personModule,
+    socketModule,
+    strategyAdminPanelModule,
+    strategyModule,
+    tagModule,
+    workspaceModule,
   },
 })
