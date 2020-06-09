@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import { filterByTerm } from '@/utils/jusUtils'
 import { JusDragArea } from '@/components/JusDragArea'
 import { mapGetters, mapActions } from 'vuex'
 
@@ -102,13 +103,7 @@ export default {
     ...mapGetters(['disputeAttachments']),
 
     filteredDisputeAttachments() {
-      if (this.disputeAttachments) {
-        return this.disputeAttachments.filter(a =>
-          a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(
-            this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-          )
-        )
-      } return []
+      return filterByTerm(this.attachmentFilterTerm, this.disputeAttachments, 'name')
     },
   },
   methods: {

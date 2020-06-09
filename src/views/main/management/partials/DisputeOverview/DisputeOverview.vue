@@ -1344,17 +1344,6 @@ export default {
     dispute() {
       return this.$store.getters.dispute
     },
-    disputeAttachments() {
-      return this.$store.getters.disputeAttachments
-    },
-    filteredDisputeAttachments() {
-      if (this.disputeAttachments) {
-        return this.disputeAttachments
-          .filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
-          )
-      } return []
-    },
     disputeBankAccounts() {
       return this.$store.getters.disputeBankAccounts
     },
