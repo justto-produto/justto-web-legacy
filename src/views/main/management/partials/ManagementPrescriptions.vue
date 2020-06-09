@@ -4,7 +4,7 @@
       v-for="prescription in prescriptions"
       v-show="prescription.tabs.includes(activeTab)"
       :key="prescription.name"
-      :type="hasPrescription(prescription.name) ? 'primary' : ''"
+      :type="buttonType(prescription.name)"
       plain
       size="small"
       @click="handlePrescriptionClick(prescription.name)"
@@ -64,6 +64,11 @@ export default {
       }
       this.getDisputes()
     },
+
+    buttonType(name) {
+      return this.hasPrescription(name) ? 'primary' : ''
+    },
+
     getDisputes() {
       this.$emit('management:getDisputes')
     },
