@@ -66,7 +66,7 @@ export default {
       return convertedVariables
     },
     filteredVariables() {
-      return filterByTerm(this.variableFilterTerm, this.convertedVariables, 'value')
+      return filterByTerm(this.variableFilterTerm, this.convertedVariables, 'key', 'value')
     },
   },
   methods: {
