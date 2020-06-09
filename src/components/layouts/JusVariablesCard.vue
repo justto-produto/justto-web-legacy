@@ -27,8 +27,10 @@
         v-for="variable in filteredVariables"
         :key="variable.value"
         class="jus-variables-card__variable">
-        <span>{{ variable.value }}</span>
-        <div>
+        <span class="jus-variables-card__variable-description">
+          {{ variable.value }}
+        </span>
+        <div class="jus-variables-card__variable-name">
           <span>
             <span v-html="`{{${variable.key}}}`" />
           </span>
@@ -37,6 +39,7 @@
               size="mini"
               type="text"
               icon="el-icon-copy-document"
+              class="jus-variables-card__copy-button"
               @click="copyVariable(variable.key)"
             />
           </el-tooltip>
@@ -100,31 +103,40 @@ export default {
   margin-left: 10px;
   width: 320px;
   font-size: 12px;
+
   .jus-variables-card__header {
     margin-bottom: 16px;
+
     .jus-variables-card__title {
       margin: 8px 0;
     }
+
     .jus-variables-card__filter-input {
       width: 230px;
     }
+
     .jus-variables-card__filter-length {
       font-size: 14px;
       margin-left: 2px;
+
       &--active {
         font-weight: bold;
       }
     }
   }
+
   .jus-variables-card__body {
     overflow-y: auto;
     height: calc(100% - 92px);
+
     .jus-variables-card__variable {
       margin: 8px 8px 4px 0;
-      > span {
+
+      .jus-variables-card__variable-description {
         font-weight: 600;
       }
-      > div {
+
+      .jus-variables-card__variable-name {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -133,13 +145,15 @@ export default {
         padding: 3px 6px;
         background-color: $--color-white;
         border-radius: 2px;
-        .el-button {
+
+        .jus-variables-card__copy-button {
           font-size: 20px;
           padding: 0;
         }
       }
     }
   }
+
   .el-card__body {
     height: 100%;
     padding: 14px;

@@ -259,8 +259,11 @@ const getTracktitleByAction = function(action, batch) {
   return title
 }
 
+const normalizeString = function(str) {
+  return str ? str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : ''
+}
+
 const filterByTerm = function(term, array, key1, key2) {
-  const normalizeString = (str) => str ? str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : ''
   return array.filter(i => normalizeString(i[key1]).includes(normalizeString(term)) || normalizeString(i[key2]).includes(normalizeString(term)))
 }
 
@@ -280,4 +283,5 @@ export {
   getTracktitleByAction,
   queryBuilder,
   filterByTerm,
+  normalizeString,
 }
