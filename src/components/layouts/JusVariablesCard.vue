@@ -2,18 +2,26 @@
   <el-card
     shadow="never"
     class="jus-variables-card">
+
     <div class="jus-variables-card__header">
-      <h2 class="jus-variables-card__title">Variáveis disponíveis</h2>
+      <h2 class="jus-variables-card__title">
+        Variáveis disponíveis
+      </h2>
       <el-input
         v-model="variableFilterTerm"
         placeholder="Buscar variável"
-        size="small">
-        <i
-          slot="prefix"
-          class="el-input__icon el-icon-search"
-        />
-      </el-input>
+        size="small"
+        prefix-icon="el-icon-search"
+        clearable
+        class="jus-variables-card__filter-input"
+      />
+      <span
+        :class="{ 'jus-variables-card__filter-length--active': variableFilterTerm.length }"
+        class="jus-variables-card__filter-length">
+        {{ filteredVariables.length }}/{{ Object.keys(variables).length }}
+      </span>
     </div>
+
     <div class="jus-variables-card__body">
       <div
         v-for="variable in filteredVariables"
@@ -22,19 +30,20 @@
         <span>{{ variable.value }}</span>
         <div>
           <span>
-            <span v-pre>{{</span>{{ variable.key }}<span v-pre>}}</span>
+            <span v-html="`{{${variable.key}}}`" />
           </span>
           <el-tooltip content="Copiar para o clipboard">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-copy-document"
-              @click="copy(variable.key)"
+              @click="copyVariable(variable.key)"
             />
           </el-tooltip>
         </div>
       </div>
     </div>
+
   </el-card>
 </template>
 
@@ -70,8 +79,13 @@ export default {
     },
   },
   methods: {
-    copy(value) {
+    copyVariable(value) {
       navigator.clipboard.writeText(`{{${value}}}`)
+      this.$jusNotification({
+        title: 'Yay',
+        message: 'Variável copiada para o clipboard',
+        type: 'success',
+      })
     },
   },
 }
@@ -91,12 +105,22 @@ export default {
     .jus-variables-card__title {
       margin: 8px 0;
     }
+    .jus-variables-card__filter-input {
+      width: 230px;
+    }
+    .jus-variables-card__filter-length {
+      font-size: 14px;
+      margin-left: 2px;
+      &--active {
+        font-weight: bold;
+      }
+    }
   }
   .jus-variables-card__body {
     overflow-y: auto;
     height: calc(100% - 92px);
     .jus-variables-card__variable {
-      margin: 4px 8px 4px 0;
+      margin: 8px 8px 4px 0;
       > span {
         font-weight: 600;
       }
