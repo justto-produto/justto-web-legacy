@@ -146,6 +146,15 @@ export default {
       })
     },
 
+    copyUrl(value) {
+      navigator.clipboard.writeText(value)
+      this.$jusNotification({
+        title: 'Yay',
+        message: 'URL copiada para o clipboard',
+        type: 'success',
+      })
+    },
+
     removeAttachment(attachment) {
       this.deleteAttachment({
         disputeId: attachment.disputeId,
@@ -158,15 +167,6 @@ export default {
             type: 'success',
           })
         })
-      })
-    },
-
-    copyUrl(value) {
-      navigator.clipboard.writeText(value)
-      this.$jusNotification({
-        title: 'Yay',
-        message: 'URL copiada para o clipboard',
-        type: 'success',
       })
     },
 
@@ -188,28 +188,39 @@ export default {
   .dispute-attachments__attachment-list {
     overflow-y: auto;
     height: calc(100% - 116px);
+
     .dispute-attachments__attachment {
       margin-top: 10px;
       margin-right: 10px;
       &:first-child { margin-top: 0px; }
+
       .dispute-overview-view__attachment-main {
         display: flex;
         justify-content: space-between;
+
         .dispute-overview-view__attachment-link {
           display: block;
           word-break: break-all;
           width: 176px;
         }
+
         .dispute-overview-view__attachment-actions {
           .el-icon {
             cursor: pointer;
             margin-left: 4px;
             font-size: 16px;
           }
-          .el-icon-delete { color: $--color-danger; }
-          .el-icon-copy-document { color: $--color-primary; }
+
+          .el-icon-delete {
+            color: $--color-danger;
+          }
+
+          .el-icon-copy-document {
+            color: $--color-primary;
+          }
         }
       }
+
       .dispute-overview-view__attachment-details {
         color: $--color-text-secondary;
         font-weight: bold;
@@ -233,6 +244,7 @@ export default {
     height: 300px;
   }
 }
+
 .dispute-attachments__attachment {
   .el-card__body {
     padding: 14px;
