@@ -23,9 +23,11 @@
             v-if="activeStep === 1"
             key="1"/>
           <campaign-step
-            v-if="activeStep === 2"
+            v-if="activeStep === 2 && isMapped"
             key="2"
-            :mapped-campaigns="mappedCampaigns"/>
+            :mapped-campaigns="mappedCampaigns"
+            :campaign-is-mapped="isMapped"
+          />
         </transition>
       </div>
       <div class="new-import-view__actions">
@@ -65,7 +67,13 @@ export default {
       uploadId: undefined,
       activeStep: 0,
       mappedCampaigns: [],
+      campaignIsMapped: false,
     }
+  },
+  computed: {
+    isMapped() {
+      return this.campaignIsMapped
+    },
   },
   beforeCreate() {
     this.$store.commit('removeImportsMap')
@@ -82,6 +90,8 @@ export default {
             fileName: this.$store.getters.importedFileName,
           })
           this.mappedCampaigns = response
+
+          this.campaignIsMapped = true
         })
       }
       this.activeStep += 1
