@@ -23,6 +23,22 @@
       "UNSETTLED": "perdida"
     }
   },
+  "prescription": {
+    "ONLY_SMS_ENGAGEMENT": "somente SMS",
+    "ONLY_EMAIL_ENGAGEMENT": "somente email",
+    "HAS_ANSWER": "com resposta",
+    "COUNTERPROPOSAL_UP_TO_20": "contraproposta (até 20%)",
+    "COUNTERPROPOSAL_OVER_20": "contraproposta (+20%)",
+    "ONLY_VISUALIZED": "somente visualizados",
+    "PENDING": "pendentes",
+    "UNSETTLED_WITH_MESSAGES": "perdidos com mensagem",
+    "NO_DOCUMENT_TERM": "sem termo",
+    "PENDING_TO_SEND_SIGNING": "pendente de envio",
+    "DOCUMENT_WAITING_SIGNATURES": "aguardando assinatura",
+    "DOCUMENT_SIGNED": "termo assinado",
+    "NAMESAKE": "homônimos",
+    "NO_UPPER_RANGE": "sem alçada máxima"
+  },
   "expirationDate": {
     "dateTime": "fim da negociação"
   },
