@@ -16,66 +16,65 @@
       </el-tooltip>
     </div>
 
-    <!-- <jus-drag-area class="dispute-attachments__drag-area"> -->
-    <div class="dispute-attachments__attachment-list">
-      <el-card
-        v-for="attachment in filteredDisputeAttachments"
-        :key="attachment.url"
-        class="dispute-attachments__attachment"
-        shadow="never">
-        <div class="dispute-overview-view__attachment-main">
-          <el-link
-            :underline="false"
-            :href="attachment.url"
-            target="_blank"
-            class="dispute-overview-view__attachment-link">
-            <i class="el-icon-document"/>
-            {{ attachment.name }}
-          </el-link>
-          <div class="dispute-overview-view__attachment-actions">
-            <el-tooltip content="Copiar URL">
-              <i
-                class="el-icon el-icon-copy-document"
-                @click="copyUrl(attachment.url)"
-              />
-            </el-tooltip>
-            <el-tooltip content="Remover anexo">
-              <i
-                class="el-icon el-icon-delete"
-                @click="removeAttachment(attachment)"
-              />
-            </el-tooltip>
+    <jus-drag-area class="dispute-attachments__drag-area">
+      <div class="dispute-attachments__attachment-list">
+        <el-card
+          v-for="attachment in filteredDisputeAttachments"
+          :key="attachment.url"
+          class="dispute-attachments__attachment"
+          shadow="never">
+          <div class="dispute-overview-view__attachment-main">
+            <el-link
+              :underline="false"
+              :href="attachment.url"
+              target="_blank"
+              class="dispute-overview-view__attachment-link">
+              <i class="el-icon-document"/>
+              {{ attachment.name }}
+            </el-link>
+            <div class="dispute-overview-view__attachment-actions">
+              <el-tooltip content="Copiar URL">
+                <i
+                  class="el-icon el-icon-copy-document"
+                  @click="copyUrl(attachment.url)"
+                />
+              </el-tooltip>
+              <el-tooltip content="Remover anexo">
+                <i
+                  class="el-icon el-icon-delete"
+                  @click="removeAttachment(attachment)"
+                />
+              </el-tooltip>
+            </div>
           </div>
-        </div>
-        <span class="dispute-overview-view__attachment-details">
-          <!-- {{ attachment.enriched }} - {{ attachment.createAt }} -->
-          Enriquecido - 22/05/2020
-        </span>
-      </el-card>
-    </div>
+          <span class="dispute-overview-view__attachment-details">
+            {{ attachmentFont(attachment) }} - {{ attachment.createAt.dateTime | moment('DD/MM/YY') }}
+          </span>
+        </el-card>
+      </div>
 
-    <div class="dispute-attachments__upload-button">
-      <el-button
-        type="primary"
-        size="medium"
-        icon="el-icon-upload"
-        @click="uploadAttacmentDialogVisable = true">
-        Adicionar anexos
-      </el-button>
-    </div>
+      <div class="dispute-attachments__upload-button">
+        <el-button
+          type="primary"
+          size="medium"
+          icon="el-icon-upload"
+          @click="uploadAttacmentDialogVisable = true">
+          Adicionar anexos
+        </el-button>
+      </div>
 
-    <el-dialog
-      :close-on-click-modal="false"
-      :visible.sync="uploadAttacmentDialogVisable"
-      append-to-body
-      title="Envie anexos"
-      class="dispute-attachments__upload-dialog"
-      width="600px"
-      data-testid="upload-file-dialog"
-    >
-      <jus-drag-area :visible="true" />
-    </el-dialog>
-    <!-- </jus-drag-area> -->
+      <el-dialog
+        :close-on-click-modal="false"
+        :visible.sync="uploadAttacmentDialogVisable"
+        append-to-body
+        title="Envie anexos"
+        class="dispute-attachments__upload-dialog"
+        width="600px"
+        data-testid="upload-file-dialog"
+      >
+        <jus-drag-area :visible="true" />
+      </el-dialog>
+    </jus-drag-area>
   </section>
 </template>
 
@@ -169,6 +168,10 @@ export default {
         message: 'URL copiada para o clipboard',
         type: 'success',
       })
+    },
+
+    attachmentFont(attachment) {
+      return attachment.enriched ? 'Enriquecido' : 'Adicionado'
     },
   },
 }
