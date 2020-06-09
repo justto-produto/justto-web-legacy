@@ -79,30 +79,7 @@
       <iframe
         :src="editDialogUrl"
         frameborder="0"/>
-      <el-card
-        shadow="never"
-        class="panel-minute-view__tips">
-        <h2>Variáveis disponíveis</h2>
-        <span class="list">
-          <div
-            v-for="(key, value) in types"
-            :key="key">
-            <span>{{ key }}</span>
-            <div>
-              <span>
-                <span v-pre>{{</span>{{ value }}<span v-pre>}}</span>
-              </span>
-              <el-tooltip content="Copiar para o clipboard">
-                <el-button
-                  size="mini"
-                  type="text"
-                  icon="el-icon-copy-document"
-                  @click="copy(value)"/>
-              </el-tooltip>
-            </div>
-          </div>
-        </span>
-      </el-card>
+      <JusVariablesCard :variables="types"/>
     </el-dialog>
   </div>
 </template>
@@ -110,6 +87,9 @@
 <script>
 export default {
   name: 'PanelMinute',
+  components: {
+    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
+  },
   data() {
     return {
       tableKey: 0,
@@ -121,6 +101,7 @@ export default {
       minutes: [],
       types: {},
       fullscreen: false,
+      variableFilterTerm: '',
     }
   },
   computed: {
@@ -304,50 +285,6 @@ export default {
       padding-left: 5px;
       height: 28px;
       line-height: 28px;
-    }
-  }
-  &__tips {
-    border: 0;
-    background-color: $--color-secondary-light-9;
-    margin-left: 10px;
-    width: 320px;
-    font-size: 13px;
-    overflow-y: auto;
-    * {
-      border: 0;
-    }
-    h2 {
-      margin-top: 10px;
-      margin-bottom: 14px;
-    }
-    .list {
-      > div {
-        margin-top: 8px;
-        display: flex;
-        flex-direction: column;
-        > span {
-          font-weight: 600;
-        }
-        div {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          border: 1px solid black;
-          font-size: 12px;
-          margin-top: 3px;
-          padding: 3px 6px;
-          background-color: rgba(255, 255, 255, 0.75);
-          border-color: #dcdfe6;
-          border-radius: 2px;
-          button {
-            font-size: 20px;
-            padding: 0;
-          }
-        }
-      }
-    }
-    .el-card__body {
-      padding: 16px;
     }
   }
   &__editable-label {
