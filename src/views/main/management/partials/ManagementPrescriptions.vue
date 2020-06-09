@@ -7,7 +7,8 @@
       :type="hasPrescription(prescription.name) ? 'primary' : ''"
       plain
       size="small"
-      @click="handlePrescriptionClick(prescription.name)">
+      @click="handlePrescriptionClick(prescription.name)"
+    >
       {{ $t(`prescription.${prescription.name}`) | capitalize }}
     </el-button>
     <jus-tags-filter @prescriptions:getDisputes="getDisputes" />
