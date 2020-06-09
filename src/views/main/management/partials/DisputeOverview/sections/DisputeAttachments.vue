@@ -164,6 +164,11 @@ export default {
 
     copyUrl(value) {
       navigator.clipboard.writeText(value)
+      this.$jusNotification({
+        title: 'Yay',
+        message: 'URL copiada para o clipboard',
+        type: 'success',
+      })
     },
   },
 }
