@@ -35,7 +35,9 @@
       </div>
       <el-button
         slot="reference"
-        type="text">+ {{ workspaceTags.length - 3 }}</el-button>
+        type="text">
+        + {{ workspaceTags.length - 3 }}
+      </el-button>
     </el-popover>
   </div>
 </template>
@@ -91,6 +93,7 @@ export default {
     }
   }
   .el-button--text {
+    padding: 8px 0;
     margin-left: 4px;
     color: #adadad;
   }

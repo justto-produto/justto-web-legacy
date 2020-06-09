@@ -1,90 +1,22 @@
 <template>
   <div class="management-prescriptions">
     <el-button
-      v-show="tab0"
-      :type="ONLY_SMS_ENGAGEMENT ? 'primary' : ''"
+      v-for="prescription in prescriptions"
+      v-show="prescription.tabs.includes(activeTab)"
+      :key="prescription.name"
+      :type="buttonType(prescription.name)"
       plain
       size="small"
-      @click="handlePrescriptionClick('ONLY_SMS_ENGAGEMENT')">
-      Somente SMS
-    </el-button>
-    <el-button
-      v-show="tab0"
-      :type="ONLY_EMAIL_ENGAGEMENT ? 'primary' : ''"
-      plain
-      size="small"
-      @click="handlePrescriptionClick('ONLY_EMAIL_ENGAGEMENT')">
-      Somente Email
-    </el-button>
-    <el-button
-      v-show="tab1"
-      :type="HAS_ANSWER ? 'primary' : ''"
-      plain
-      size="small"
-      @click="handlePrescriptionClick('HAS_ANSWER')">
-      Com resposta
-    </el-button>
-    <el-button
-      v-show="tab1"
-      :type="COUNTERPROPOSAL_UP_TO_20 ? 'primary' : ''"
-      plain
-      size="small"
-      @click="handlePrescriptionClick('COUNTERPROPOSAL_UP_TO_20')">
-      Contraproposta (até 20%)
-    </el-button>
-    <el-button
-      v-show="tab1"
-      :type="COUNTERPROPOSAL_OVER_20 ? 'primary' : ''"
-      plain
-      size="small"
-      @click="handlePrescriptionClick('COUNTERPROPOSAL_OVER_20')">
-      Contraproposta (+20%)
-    </el-button>
-    <el-button
-      v-show="tab1"
-      :type="ONLY_VISUALIZED ? 'primary' : ''"
-      plain
-      size="small"
-      @click="handlePrescriptionClick('ONLY_VISUALIZED')">
-      Somente visualizados
-    </el-button>
-    <el-button
-      v-show="tab3"
-      :type="PENDING ? 'primary' : ''"
-      plain
-      size="small"
-      @click="handlePrescriptionClick('PENDING')">
-      Pendentes
-    </el-button>
-    <el-button
-      v-show="tab3"
-      :type="UNSETTLED_WITH_MESSAGES ? 'primary' : ''"
-      plain
-      size="small"
-      @click="handlePrescriptionClick('UNSETTLED_WITH_MESSAGES')">
-      Perdidos com Mensagem
-    </el-button>
-    <el-button
-      v-show="tab0 || tab3"
-      :type="NAMESAKE ? 'primary' : ''"
-      plain
-      size="small"
-      @click="handlePrescriptionClick('NAMESAKE')">
-      Homônimos
-    </el-button>
-    <el-button
-      v-show="tab0 || tab1"
-      :type="NO_UPPER_RANGE ? 'primary' : ''"
-      plain
-      size="small"
-      @click="handlePrescriptionClick('NO_UPPER_RANGE')">
-      Sem alçada máxima
+      @click="handlePrescriptionClick(prescription.name)"
+    >
+      {{ $t(`prescription.${prescription.name}`) | capitalize }}
     </el-button>
     <jus-tags-filter @prescriptions:getDisputes="getDisputes" />
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'ManagementPrescriptions',
   components: {
@@ -96,93 +28,47 @@ export default {
       type: String,
     },
   },
+  data() {
+    return {
+      prescriptions: [
+        { name: 'ONLY_SMS_ENGAGEMENT', tabs: ['0'] },
+        { name: 'ONLY_EMAIL_ENGAGEMENT', tabs: ['0'] },
+        { name: 'HAS_ANSWER', tabs: ['1'] },
+        { name: 'COUNTERPROPOSAL_UP_TO_20', tabs: ['1'] },
+        { name: 'COUNTERPROPOSAL_OVER_20', tabs: ['1'] },
+        { name: 'ONLY_VISUALIZED', tabs: ['1'] },
+        { name: 'NO_DOCUMENT_TERM', tabs: ['2'] },
+        { name: 'PENDING_TO_SEND_SIGNING', tabs: ['2'] },
+        { name: 'DOCUMENT_WAITING_SIGNATURES', tabs: ['2'] },
+        { name: 'DOCUMENT_SIGNED', tabs: ['2'] },
+        { name: 'PENDING', tabs: ['3'] },
+        { name: 'UNSETTLED_WITH_MESSAGES', tabs: ['3'] },
+        { name: 'NAMESAKE', tabs: ['0', '3'] },
+        { name: 'NO_UPPER_RANGE', tabs: ['0', '1'] },
+      ],
+    }
+  },
   computed: {
-    ONLY_SMS_ENGAGEMENT() {
-      return this.$store.getters.hasPrescription('ONLY_SMS_ENGAGEMENT')
-    },
-    ONLY_EMAIL_ENGAGEMENT() {
-      return this.$store.getters.hasPrescription('ONLY_EMAIL_ENGAGEMENT')
-    },
-    HAS_ANSWER() {
-      return this.$store.getters.hasPrescription('HAS_ANSWER')
-    },
-    COUNTERPROPOSAL_UP_TO_20() {
-      return this.$store.getters.hasPrescription('COUNTERPROPOSAL_UP_TO_20')
-    },
-    COUNTERPROPOSAL_OVER_20() {
-      return this.$store.getters.hasPrescription('COUNTERPROPOSAL_OVER_20')
-    },
-    ONLY_VISUALIZED() {
-      return this.$store.getters.hasPrescription('ONLY_VISUALIZED')
-    },
-    PENDING() {
-      return this.$store.getters.hasPrescription('PENDING')
-    },
-    UNSETTLED_WITH_MESSAGES() {
-      return this.$store.getters.hasPrescription('UNSETTLED_WITH_MESSAGES')
-    },
-    NAMESAKE() {
-      return this.$store.getters.hasPrescription('NAMESAKE')
-    },
-    NO_UPPER_RANGE() {
-      return this.$store.getters.hasPrescription('NO_UPPER_RANGE')
-    },
-    tab0() {
-      return this.activeTab === '0'
-    },
-    tab1() {
-      return this.activeTab === '1'
-    },
-    tab2() {
-      return this.activeTab === '2'
-    },
-    tab3() {
-      return this.activeTab === '3'
-    },
+    ...mapGetters(['hasPrescription']),
   },
   methods: {
     handlePrescriptionClick(prescription) {
       this.$store.commit('resetDisputeQueryPage')
-      if (this[prescription]) {
+      if (this.hasPrescription(prescription)) {
         this.$store.commit('removePrescription', prescription)
       } else {
         this.$store.commit('addPrescription', prescription)
         // SEGMENT TRACK
-        switch (prescription) {
-          case 'ONLY_SMS_ENGAGEMENT':
-            this.$jusSegment('Filtro botão ENGAJAMENTO COM SMS')
-            break
-          case 'ONLY_EMAIL_ENGAGEMENT':
-            this.$jusSegment('Filtro botão ENGAJAMENTO COM EMAIL')
-            break
-          case 'HAS_ANSWER':
-            this.$jusSegment('Filtro botão COM RESPOSTA')
-            break
-          case 'COUNTERPROPOSAL_UP_TO_20':
-            this.$jusSegment('filtro botão CONTRAPROPOSTA ATÉ 20%')
-            break
-          case 'COUNTERPROPOSAL_OVER_20':
-            this.$jusSegment('filtro botão CONTRAPROPOSTA ACIMA 20%')
-            break
-          case 'ONLY_VISUALIZED':
-            this.$jusSegment('filtro botão APENAS VISIALIZADOS')
-            break
-          case 'PENDING':
-            this.$jusSegment('filtro botão PENDENTES')
-            break
-          case 'UNSETTLED_WITH_MESSAGES':
-            this.$jusSegment('filtro botão PERDIDOS COM MENSAGEM')
-            break
-          case 'NAMESAKE':
-            this.$jusSegment('filtro botão HOMÔNIMOS')
-            break
-          case 'NO_UPPER_RANGE':
-            this.$jusSegment('filtro botão SEM ALÇADA MÁXIMA')
-            break
-        }
+        const translatedPrescription = this.$t(`prescription.${prescription}`).toUpperCase()
+        this.$jusSegment(`Filtro botão ${translatedPrescription}`)
       }
       this.getDisputes()
     },
+
+    buttonType(name) {
+      return this.hasPrescription(name) ? 'primary' : ''
+    },
+
     getDisputes() {
       this.$emit('management:getDisputes')
     },
@@ -190,7 +76,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .management-prescriptions {
   margin: 6px 192px 6px 0px;
   display: flex;
