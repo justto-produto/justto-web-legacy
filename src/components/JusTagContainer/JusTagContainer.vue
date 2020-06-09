@@ -6,7 +6,20 @@
     >
       {{ title }}
     </span>
-    <div class="jus-tag-container__wrapper">
+    <p
+      v-if="placeholderIsVisible"
+      class="jus-tag-container__placeholder"
+    >
+      <i
+        class="el-icon-plus jus-tag-container__button"
+        @click="showInput"
+      />
+      {{ placeholder }}
+    </p>
+    <div
+      v-else
+      class="jus-tag-container__wrapper"
+    >
       <el-tag
         v-for="(tag, index) in tags"
         :key="`${index}-${_uid}`"
@@ -40,13 +53,17 @@
 export default {
   name: 'JusTagContainer',
   props: {
-    title: {
+    placeholder: {
       type: String,
-      default: null,
+      default: '',
     },
     tagList: {
       type: Array,
       default: () => [],
+    },
+    title: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -55,6 +72,11 @@ export default {
       inputVisible: false,
       inputValue: '',
     }
+  },
+  computed: {
+    placeholderIsVisible() {
+      return !this.tags.length && this.placeholder && !this.inputVisible
+    },
   },
   methods: {
     handleClose(index) {
@@ -96,11 +118,29 @@ export default {
     border-color: $--color-primary-light-8;
   }
 
+  .jus-tag-container__placeholder {
+    color: $--color-text-secondary;
+    margin: 0;
+    padding: 0 16px 16px 0;
+    user-select: none;
+  }
+
+  .jus-tag-container__button {
+    cursor: pointer;
+    color: $--color-primary;
+    position: relative;
+    font-size: 18px;
+  }
+
   .jus-tag-container__wrapper {
     display: flex;
     flex-wrap: wrap;
     border-radius: 4px;
     align-items: center;
+
+    .jus-tag-container__button {
+      top: -4px;
+    }
 
     .jus-tag-container__tag {
       display: block;
@@ -111,14 +151,6 @@ export default {
     .jus-tag-container__input {
       width: 80px;
       position: relative;
-      top: -4px;
-    }
-
-    .jus-tag-container__button {
-      cursor: pointer;
-      color: $--color-primary;
-      position: relative;
-      font-size: 18px;
       top: -4px;
     }
   }

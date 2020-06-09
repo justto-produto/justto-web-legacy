@@ -18,6 +18,7 @@
     <div class="strategy-card__workspaces-area">
       <jus-tag-container
         :tag-list="strategyData.workspaces"
+        placeholder="Todos os times possuem acesso a esta estratégia."
         title="Times"
         @change="changeEstrategyData($event, 'workspaces')"
       />
@@ -103,6 +104,10 @@ export default {
 
       .strategy-card__workspaces-area {
         grid-area: workspaces-area;
+
+        & > .jus-tag-container {
+          height: 100%;
+        }
       }
 
       .strategy-card__messages-area {
@@ -111,6 +116,10 @@ export default {
 
       .strategy-card__strategies-area {
         grid-area: strategies-area;
+
+        & > .jus-tag-container {
+          height: 100%;
+        }
       }
     }
   }
