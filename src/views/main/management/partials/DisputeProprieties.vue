@@ -203,6 +203,8 @@ export default {
 <style lang="scss">
 .dispute-proprieties-view {
   padding-top: 10px;
+  overflow-y: auto;
+  height: calc(100% - 24px);
   &__line {
     display: flex;
     align-items: flex-start;

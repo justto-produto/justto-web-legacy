@@ -25,7 +25,9 @@
         class="dispute-overview-view__tabs"
         stretch>
         <!-- INFORMAÇÕES GERAIS -->
-        <el-tab-pane name="general">
+        <el-tab-pane
+          name="general"
+          class="dispute-overview-view__tabs-content">
           <span slot="label">
             <el-tooltip content="Informações gerais">
               <i class="el-icon-info" />
@@ -274,7 +276,9 @@
           </div>
         </el-tab-pane>
         <!-- PARTES DA DISPUTA -->
-        <el-tab-pane name="roles">
+        <el-tab-pane
+          name="roles"
+          class="dispute-overview-view__tabs-content">
           <span slot="label">
             <el-tooltip content="Partes da disputa">
               <i class="el-icon-user-solid" />
@@ -504,13 +508,15 @@
             </el-button>
           </el-collapse>
         </el-tab-pane>
-        <el-tab-pane name="proprieties">
+        <el-tab-pane
+          name="proprieties"
+          class="dispute-overview-view__tabs-content">
           <span slot="label">
             <el-tooltip content="Propriedades adicionais">
               <i class="el-icon-s-tools" />
             </el-tooltip>
           </span>
-          <dispute-proprieties />
+          <DisputeProprieties />
         </el-tab-pane>
         <el-tab-pane
           name="attachments"
@@ -2091,16 +2097,17 @@ export default {
   &__tabs {
     height: 100%;
     padding-top: 15px;
-
     .el-tabs__item i {
       font-size: 18px;
     }
-
     .el-tabs__content {
       height: calc(100% - 58px);
-      overflow-y: auto;
       position: initial;
     }
+  }
+  &__tabs-content {
+    overflow-y: auto;
+    height: 100%;
   }
   &__info-line {
     line-height: 24px;
@@ -2405,12 +2412,6 @@ export default {
   }
   &__attachment-tab {
     height: 100%;
-
-    .el-icon-delete {
-      display: none;
-      color: $--color-danger;
-      cursor: pointer;
-    }
   }
 }
 </style>
