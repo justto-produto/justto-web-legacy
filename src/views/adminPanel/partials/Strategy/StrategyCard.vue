@@ -17,6 +17,11 @@
 
     <div class="strategy-card__workspaces-area">
       <jus-tag-container
+        :options="[
+          { id: 1, name: 'Mock Workspace' },
+          { id: 2, name: 'Test 1' },
+          { id: 3, name: 'Test 2' },
+        ]"
         :tag-list="strategyData.workspaces"
         placeholder="Todos os times possuem acesso a esta estratégia."
         title="Times"

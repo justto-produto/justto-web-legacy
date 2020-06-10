@@ -30,15 +30,28 @@
         {{ tag.name }}
       </el-tag>
 
-      <el-input
-        v-if="inputVisible"
-        ref="saveTagInput"
-        v-model="inputValue"
-        class="jus-tag-container__input"
-        size="mini"
-        @keyup.enter.native="handleInputConfirm"
-        @blur="handleInputConfirm"
-      />
+      <div v-if="inputVisible">
+        <el-input
+          v-if="!searchItems"
+          ref="saveTagInput"
+          v-model="inputValue"
+          class="jus-tag-container__input"
+          size="mini"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        />
+
+        <el-autocomplete
+          v-else
+          ref="saveTagInput"
+          :fetch-suggestions="suggestions"
+          v-model="inputValue"
+          class="jus-tag-container__input"
+          size="mini"
+          value-key="name"
+          @select="handleSelect"
+        />
+      </div>
 
       <i
         v-else
@@ -50,16 +63,23 @@
 </template>
 
 <script>
+import { querySearch } from '@/utils/AutoComplete.util'
+import _ from 'lodash'
+
 export default {
   name: 'JusTagContainer',
   props: {
+    options: {
+      type: Array,
+      default: null,
+    },
     placeholder: {
       type: String,
       default: '',
     },
     tagList: {
       type: Array,
-      default: () => [],
+      default: null,
     },
     title: {
       type: String,
@@ -71,6 +91,7 @@ export default {
       tags: this.tagList,
       inputVisible: false,
       inputValue: '',
+      searchItems: [],
     }
   },
   computed: {
@@ -78,9 +99,41 @@ export default {
       return !this.tags.length && this.placeholder && !this.inputVisible
     },
   },
+  mounted() {
+    this.searchItems = this.options
+  },
   methods: {
+    resetTags() {
+      const diff = []
+
+      for (let i = 0; i < this.tags.length; i++) {
+        for (let j = 0; j < this.options.length; j++) {
+          if (_.isEqual(this.tags[i], this.options[j])) {
+            diff.push(this.options[j])
+          }
+        }
+      }
+
+      this.searchItems = _.pullAll(this.options, diff)
+    },
+    suggestions(queryString, callback) {
+      querySearch(
+        this.searchItems,
+        queryString,
+        this.filter(queryString),
+        callback
+      )
+    },
+
+    filter: (queryString) =>
+      searchItem =>
+        searchItem.name
+          .toLowerCase()
+          .indexOf(queryString.toLowerCase()) === 0,
+
     handleClose(index) {
       this.tags.splice(index, 1)
+      this.resetTags()
       this.changeTags()
     },
     showInput() {
@@ -95,8 +148,20 @@ export default {
       if (this.inputValue) {
         this.tags.push({ name: this.inputValue })
         this.changeTags()
-        this.inputValue = ''
       }
+
+      this.clearInput()
+    },
+    handleSelect(item) {
+      this.tags.push(item)
+      this.resetTags()
+
+      this.inputVisible = false
+      this.clearInput()
+      this.changeTags()
+    },
+    clearInput() {
+      this.inputValue = ''
     },
     changeTags() {
       this.$emit('change', this.tags)
@@ -149,7 +214,7 @@ export default {
     }
 
     .jus-tag-container__input {
-      width: 80px;
+      width: 140px;
       position: relative;
       top: -4px;
     }

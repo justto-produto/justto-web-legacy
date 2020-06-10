@@ -67,7 +67,7 @@ const StrategyModule = {
         workspaces: [
           { id: 1, name: 'Mock Workspace' },
           { id: 2, name: 'Test 1' },
-          { id: 2, name: 'Test 2' },
+          { id: 3, name: 'Test 2' },
         ],
         communications: [
           // Message mock
