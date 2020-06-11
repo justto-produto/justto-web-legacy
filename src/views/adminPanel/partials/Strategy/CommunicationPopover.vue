@@ -155,6 +155,14 @@ export default {
     &:nth-child(odd) {
       background-color: $--color-primary-light-9;
 
+      &:hover {
+        background-color: $--color-primary-light-8;
+
+        .el-tree-node__content {
+          background-color: $--color-primary-light-8;
+        }
+      }
+
       .el-tree-node__content {
         background-color: $--color-primary-light-9;
       }
