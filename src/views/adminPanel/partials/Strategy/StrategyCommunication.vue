@@ -1,29 +1,39 @@
 <template>
   <article class="strategy-communication">
     <ul class="strategy-communication__list">
-      <li
+      <el-popover
         v-for="(recipient, index) in recipients"
         :key="index"
-        class="strategy-communication__list-item"
+        :title="recipient.name"
+        :open-delay="200"
+        placement="bottom-start"
+        trigger="hover"
       >
-        <span class="strategy-communication__name">
-          {{ recipient.name }}
-        </span>
-        <div class="strategy-communication__email">
-          <jus-icon
-            icon="email"
-            class="strategy-communication__icon"
-          />
-          {{ recipient.emails }}
-        </div>
-        <span class="strategy-communication__sms">
-          <jus-icon
-            icon="sms"
-            class="strategy-communication__icon"
-          />
-          {{ recipient.sms }}
-        </span>
-      </li>
+        <CommunicationPopover />
+
+        <li
+          slot="reference"
+          class="strategy-communication__list-item"
+        >
+          <span class="strategy-communication__name">
+            {{ recipient.name }}
+          </span>
+          <div class="strategy-communication__email">
+            <jus-icon
+              icon="email"
+              class="strategy-communication__icon"
+            />
+            {{ recipient.emails }}
+          </div>
+          <span class="strategy-communication__sms">
+            <jus-icon
+              icon="sms"
+              class="strategy-communication__icon"
+            />
+            {{ recipient.sms }}
+          </span>
+        </li>
+      </el-popover>
     </ul>
   </article>
 </template>
@@ -31,6 +41,9 @@
 <script>
 export default {
   name: 'StrategyCommunication',
+  components: {
+    CommunicationPopover: () => import('./CommunicationPopover'),
+  },
   props: {
     communications: {
       type: Array,
@@ -68,8 +81,9 @@ export default {
 
     li.strategy-communication__list-item {
       align-items: center;
-      border-radius: 4px;
       background-color: $--color-primary-light-9;
+      border-radius: 4px;
+      cursor: pointer;
       display: grid;
       font-weight: 700;
       gap: 16px;
@@ -78,10 +92,6 @@ export default {
       margin-bottom: 8px;
       padding: 8px 16px;
       width: 100%;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
 
       .strategy-communication__name {
         font-weight: 400;
