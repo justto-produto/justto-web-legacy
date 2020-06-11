@@ -49,18 +49,12 @@
           @click="sendBatchAction('CHANGE_STRATEGY')">
           ESTRATÉGIAS
         </el-button>
-        <el-tooltip content="Funcionalidade indisponível no momento. Por favor, contacte seu key account">
-          <span style="display: inline-block; padding: 0; margin: 0; border: none;">
-            <el-button
-              :disabled="true"
-              style="color: #adadad"
-              plain
-              data-testid="batch-changestrategy"
-              @click="sendBatchAction('CHANGE_NEGOTIATOR')">
-              NEGOCIADORES
-            </el-button>
-          </span>
-        </el-tooltip>
+        <el-button
+          plain
+          data-testid="batch-changestrategy"
+          @click="sendBatchAction('CHANGE_NEGOTIATOR')">
+          NEGOCIADORES
+        </el-button>
         <el-button
           plain
           data-testid="batch-enrich"
@@ -187,9 +181,9 @@
           <div class="el-message-box__message">
             <p>
               Alterando
-              {{ disputeNegotiatorMap[currentDisputeNegotiatorMap].disputes.length }}
+              {{ disputeNegotiatorMap[currentDisputeNegotiator].disputes.length }}
               disputas num total de
-              {{ disputeNegotiatorMapSelectedIds.length }}.
+              {{ selectedLenghtToShow }}.
             </p>
           </div>
         </div>
@@ -239,14 +233,12 @@ export default {
     return {
       chooseUnsettledDialogVisible: false,
       changeStrategyDialogVisible: false,
-      changeNegotiatorByGroup: false,
       changeNegotiatorDialogVisible: false,
       changeExpirationDialogVisible: false,
       changeNegotiatorDialogLoading: false,
-      disputeNegotiatorMapSelectedIds: 0,
       disputeNegotiators: [],
       disputeNegotiatorMap: [],
-      currentDisputeNegotiatorMap: 0,
+      currentDisputeNegotiator: 0,
       unsettledTypes: [],
       unsettledType: '',
       newStrategyId: '',
@@ -409,49 +401,107 @@ export default {
       this.$emit('disputes:clear')
     },
     checkDisputeNegotiators() {
-      const disputeNegotiatorMap = []
+      const _ = require('lodash')
+      let disputeNegotiatorMap = []
       this.disputeNegotiatorMap = []
-      this.changeNegotiatorByGroup = false
-      this.disputeNegotiatorMapSelectedIds = this.selectedIds
-      for (const disputeId of this.selectedIds) {
-        const dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
-        const disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
-        const mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))
-        if (mapToChangeIndex === -1) {
-          disputeNegotiatorMap.push({
-            disputes: [dispute.id],
-            negotiators: disputeNegotiators,
-          })
-        } else {
-          const mapToChange = disputeNegotiatorMap[mapToChangeIndex]
-          mapToChange.disputes.push(dispute.id)
-          disputeNegotiatorMap[mapToChangeIndex] = mapToChange
+
+      if (!this.isSelectedAll) this.$store.commit('updateDisputeQuery', { key: 'id', value: this.selectedIds })
+      this.$store.dispatch('getNegotiators').then(response => {
+        disputeNegotiatorMap = response
+
+        let concatedDisputeIds = []
+        for (const negotiator of disputeNegotiatorMap) {
+          concatedDisputeIds = concatedDisputeIds.concat(negotiator.disputes)
         }
-      }
-      if (disputeNegotiatorMap.length === 1) {
-        this.disputeNegotiators = disputeNegotiatorMap[0].negotiators
-        this.changeNegotiatorDialogVisible = true
-      } else {
-        this.$confirm('As disputas selecionadas possuem negociadores diferentes. Deseja trata-los individualmente ou troca-los todos?', {
-          title: 'Atenção! Múltiplos negociadores',
-          confirmButtonText: 'Trocar todos',
-          cancelButtonText: 'Escolher negociadores de cada disputa',
-          cancelButtonClass: 'is-plain',
-          distinguishCancelAndClose: true,
-          customClass: 'el-message-box--lg',
-        }).then(() => {
-          this.disputeNegotiators = []
-          this.changeNegotiatorDialogVisible = true
-        }).catch(action => {
-          if (action === 'cancel') {
-            this.currentDisputeNegotiatorMap = 0
-            this.changeNegotiatorByGroup = true
-            this.disputeNegotiators = disputeNegotiatorMap[this.currentDisputeNegotiatorMap].negotiators
-            this.disputeNegotiatorMap = disputeNegotiatorMap
-            this.changeNegotiatorDialogVisible = true
+
+        const duplicatedDisputeIds = []
+        concatedDisputeIds.map((dispute, i) => {
+          if (concatedDisputeIds.indexOf(dispute) !== i) {
+            duplicatedDisputeIds.push(dispute)
           }
         })
-      }
+
+        const multiNegotiatorsList = []
+
+        disputeNegotiatorMap.map(negotiator => {
+          const intersection = _.intersection(negotiator.disputes, duplicatedDisputeIds)
+          if (intersection.length) {
+            const { id, name } = negotiator
+            const currentNegotiatorIndex = multiNegotiatorsList.findIndex(n => {
+              return !!_.intersection(negotiator.disputes, duplicatedDisputeIds).length
+            })
+            if (currentNegotiatorIndex === -1) {
+              multiNegotiatorsList.push({
+                disputes: intersection,
+                negotiators: [{ id, name }],
+              })
+            } else {
+              multiNegotiatorsList[currentNegotiatorIndex].negotiators.push({ id, name })
+            }
+            negotiator.disputes = _.difference(negotiator.disputes, intersection)
+          }
+        })
+
+        disputeNegotiatorMap.map((negotiator, index) => {
+          if (!negotiator.disputes.length) disputeNegotiatorMap.splice(index, 1)
+        })
+
+        const disputeNegotiatorList = disputeNegotiatorMap.map((negotiator, index) => {
+          const { disputes, id, name } = negotiator
+          return {
+            disputes,
+            negotiators: { id, name },
+          }
+        })
+
+        const fullNegotiatorsList = multiNegotiatorsList.concat(disputeNegotiatorList)
+
+        console.log(multiNegotiatorsList)
+        console.log(disputeNegotiatorList)
+        console.log(fullNegotiatorsList)
+
+        if (fullNegotiatorsList.length === 1) {
+          this.disputeNegotiators = fullNegotiatorsList[0].negotiators
+          this.changeNegotiatorDialogVisible = true
+        } else {
+          this.$confirm('As disputas selecionadas possuem negociadores diferentes. Deseja trata-los individualmente ou troca-los todos?', {
+            title: 'Atenção! Múltiplos negociadores',
+            confirmButtonText: 'Trocar todos',
+            cancelButtonText: 'Escolher negociadores de cada disputa',
+            cancelButtonClass: 'is-plain',
+            distinguishCancelAndClose: true,
+            customClass: 'el-message-box--lg',
+          }).then(() => {
+            this.disputeNegotiators = []
+            this.changeNegotiatorDialogVisible = true
+          }).catch(action => {
+            if (action === 'cancel') {
+              this.currentDisputeNegotiator = 0
+              this.changeNegotiatorByGroup = true
+              this.disputeNegotiators = fullNegotiatorsList[this.currentDisputeNegotiator].negotiators
+              this.disputeNegotiatorMap = fullNegotiatorsList
+              this.changeNegotiatorDialogVisible = true
+            }
+          })
+        }
+      })
+      this.$store.commit('updateDisputeQuery', { key: 'id', value: [] })
+
+      // for (const disputeId of this.selectedIds) {
+      //   const dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
+      //   const disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
+      //   const mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))
+      //   if (mapToChangeIndex === -1) {
+      //     disputeNegotiatorMap.push({
+      //       disputes: [dispute.id],
+      //       negotiators: disputeNegotiators,
+      //     })
+      //   } else {
+      //     const mapToChange = disputeNegotiatorMap[mapToChangeIndex]
+      //     mapToChange.disputes.push(dispute.id)
+      //     disputeNegotiatorMap[mapToChangeIndex] = mapToChange
+      //   }
+      // }
     },
     arraysEqual(a, b) {
       if (a === b) return true
@@ -469,7 +519,7 @@ export default {
         negotiatorsId: this.disputeNegotiators,
       }
       if (isByGroup) {
-        params.disputeIds = this.disputeNegotiatorMap[this.currentDisputeNegotiatorMap].disputes
+        params.disputeIds = this.disputeNegotiatorMap[this.currentDisputeNegotiator].disputes
       } else {
         params.disputeIds = this.selectedIds
       }
@@ -485,12 +535,12 @@ export default {
         // SEGMENT TRACK
         this.$jusSegment(getTracktitleByAction('CHANGE_NEGOTIATOR', true), { amount: this.selectedIds.length })
         setTimeout(() => {
-          this.currentDisputeNegotiatorMap += 1
-          if (this.disputeNegotiatorMap.length > this.currentDisputeNegotiatorMap) {
-            this.disputeNegotiators = this.disputeNegotiators = this.disputeNegotiatorMap[this.currentDisputeNegotiatorMap].negotiators
+          this.currentDisputeNegotiator += 1
+          if (this.disputeNegotiatorMap.length > this.currentDisputeNegotiator) {
+            this.disputeNegotiators = this.disputeNegotiators = this.disputeNegotiatorMap[this.currentDisputeNegotiator].negotiators
             this.changeNegotiatorDialogVisible = true
           } else {
-            this.currentDisputeNegotiatorMap = 0
+            this.currentDisputeNegotiator = 0
           }
         }, 200)
       }).catch(error => {
