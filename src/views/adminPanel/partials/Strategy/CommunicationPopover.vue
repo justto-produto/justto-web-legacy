@@ -37,6 +37,12 @@
               class="communication-popover__item-action-icon"
               @click.native="editCommunicationName(data.id)"
             />
+
+            <jus-icon
+              icon="doc"
+              class="communication-popover__item-action-icon"
+              @click.native="editCommunication(data.id)"
+            />
           </div>
         </div>
       </el-tree>
@@ -46,6 +52,22 @@
       <span class="communication-popover__title">
         Novo
       </span>
+
+      <ul class="communication-popover__message-types-list">
+        <li
+          v-for="(item, index) in communicationTypes"
+          :key="index"
+          class="communication-popover__message-types-item"
+          @click="addMessage(item.key)"
+        >
+          <jus-icon
+            :icon="item.icon"
+            class="communication-popover__message-types-icon"
+          />
+
+          <span>{{ item.label }}</span>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -77,9 +99,11 @@ export default {
       editInput: null,
     }
   },
+  computed: {
+    communicationTypes: () => Object.values(STRATEGY_COMMUNICATION_TYPES),
+  },
   methods: {
     allowDrop: (_draggingNode, _dropNode, type) => type !== 'inner',
-    translateTypeToIcon: communicationType => STRATEGY_COMMUNICATION_TYPES[communicationType],
     translateTypeToIcon: communicationType =>
       STRATEGY_COMMUNICATION_TYPES[communicationType].icon,
 
@@ -91,14 +115,34 @@ export default {
         this.$refs[`edit-input-${communicationId}`].$refs.input.focus()
       }, 200)
     },
+    editCommunication(communicationId) {
+      console.log('SUCK MY DICK', communicationId)
+    },
     handleCloseInput() {
       this.editInput = null
+    },
+    addMessage(communicationType) {
+      // TODO: Remove id generation, when unmock API
+      let id = 0
+      this.data.map(message => {
+        if (message.id >= id) id = message.id + 1
+      })
+
+      this.data.push({
+        id,
+        name: '',
+        communicationType,
+      })
+
+      return this.editCommunicationName(id)
     },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .communication-popover {
   display: grid;
   gap: 24px;
@@ -115,9 +159,18 @@ export default {
       padding-right: 24px;
       width: 100%;
 
+      &:hover
+      > .communication-popover__item-actions
+      > .communication-popover__item-action-icon {
+        display: block;
+      }
+
       .communication-popover__item-text-container {
         align-items: center;
         display: flex;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
 
         .communication-popover__message-icon {
           width: 18px;
@@ -125,8 +178,16 @@ export default {
         }
       }
 
-      .communication-popover__item-action-icon {
-        cursor: pointer;
+      .communication-popover__item-actions {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: auto 1fr;
+
+        .communication-popover__item-action-icon {
+          cursor: pointer;
+          display: none;
+          width: 20px;
+        }
       }
     }
   }
@@ -136,6 +197,30 @@ export default {
       font-size: 18px;
       font-weight: 700;
       display: block;
+      margin-bottom: 8px;
+    }
+
+    .communication-popover__message-types-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      .communication-popover__message-types-item {
+        align-items: center;
+        cursor: pointer;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: auto 1fr;
+        padding: 8px;
+
+        &:hover {
+          background-color: $--color-primary-light-9;
+        }
+
+        .communication-popover__message-types-icon {
+          width: 18px;
+        }
+      }
     }
   }
 }
