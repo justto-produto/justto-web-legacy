@@ -3,6 +3,9 @@
     v-if="visible"
     :visible.sync="visible"
     :title="communicationData.name"
+    :class="{
+      'communication-editor__dialog--full': inFullScreen,
+    }"
     width="750px"
   >
     <div class="communication-editor">
@@ -14,7 +17,18 @@
       />
     </div>
 
-    <JusVariablesCard :variables="variables" />
+    <div>
+      <JusVariablesCard
+        v-if="variables"
+        :variables="variables"
+      />
+
+      <i
+        :class="inFullScreen ? 'el-icon-bottom-left' : 'el-icon-top-right'"
+        class="communication-editor__resize-icon"
+        @click="resize()"
+      />
+    </div>
   </el-dialog>
 </template>
 
@@ -29,6 +43,10 @@ export default {
   },
   props: {
     communicationData: {
+      type: Object,
+      default: null,
+    },
+    variables: {
       type: Object,
       default: null,
     },
@@ -51,15 +69,17 @@ export default {
           ],
         },
       },
-      variables: {
-        teste1: 'teste 1',
-        teste2: 'teste 2',
-      },
+      inFullScreen: false,
     }
   },
   computed: {
     modalIsVisible() {
       return this.visible
+    },
+  },
+  methods: {
+    resize() {
+      this.inFullScreen = !this.inFullScreen
     },
   },
 }
@@ -74,6 +94,14 @@ export default {
     padding: 16px;
   }
 }
+
+.communication-editor__resize-icon {
+  color: #adadad;
+  cursor: pointer;
+  position: absolute;
+  right: 56px;
+  top: 32px;
+}
 </style>
 
 <style lang="scss">
@@ -81,5 +109,16 @@ export default {
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr auto;
+  // super gamb for calc total height of dialog ¯\_(ツ)_/¯
+  height: calc(100% - (60px + 57px));
+}
+
+.el-dialog {
+  transition-duration: .2s;
+}
+
+.communication-editor__dialog--full > .el-dialog {
+  width: 100% !important;
+  height: 100%;
 }
 </style>

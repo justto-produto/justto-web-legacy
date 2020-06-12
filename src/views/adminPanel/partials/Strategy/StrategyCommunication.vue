@@ -37,8 +37,9 @@
     </ul>
 
     <communication-editor
-      :visible="editorIsVisible"
       :communication-data="communication"
+      :visible="editorIsVisible"
+      :variables="variables"
     />
   </article>
 </template>
@@ -64,6 +65,10 @@ export default {
       ],
       communicationData: null,
       isVisible: false,
+      variables: {
+        teste1: 'teste 1',
+        teste2: 'teste 2',
+      },
     }
   },
   computed: {
