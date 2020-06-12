@@ -426,17 +426,16 @@ export default {
         disputeNegotiatorMap.map(negotiator => {
           const intersection = _.intersection(negotiator.disputes, duplicatedDisputeIds)
           if (intersection.length) {
-            const { id, name } = negotiator
             const currentNegotiatorIndex = multiNegotiatorsList.findIndex(n => {
               return !!_.intersection(negotiator.disputes, duplicatedDisputeIds).length
             })
             if (currentNegotiatorIndex === -1) {
               multiNegotiatorsList.push({
                 disputes: intersection,
-                negotiators: [{ id, name }],
+                negotiators: [negotiator.id],
               })
             } else {
-              multiNegotiatorsList[currentNegotiatorIndex].negotiators.push({ id, name })
+              multiNegotiatorsList[currentNegotiatorIndex].negotiators.push(negotiator.id)
             }
             negotiator.disputes = _.difference(negotiator.disputes, intersection)
           }
@@ -450,7 +449,7 @@ export default {
           const { disputes, id, name } = negotiator
           return {
             disputes,
-            negotiators: { id, name },
+            negotiators: [id],
           }
         })
 
@@ -477,7 +476,6 @@ export default {
           }).catch(action => {
             if (action === 'cancel') {
               this.currentDisputeNegotiator = 0
-              this.changeNegotiatorByGroup = true
               this.disputeNegotiators = fullNegotiatorsList[this.currentDisputeNegotiator].negotiators
               this.disputeNegotiatorMap = fullNegotiatorsList
               this.changeNegotiatorDialogVisible = true
@@ -503,15 +501,15 @@ export default {
       //   }
       // }
     },
-    arraysEqual(a, b) {
-      if (a === b) return true
-      if (a === null || b === null) return false
-      if (a.length !== b.length) return false
-      for (let i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false
-      }
-      return true
-    },
+    // arraysEqual(a, b) {
+    //   if (a === b) return true
+    //   if (a === null || b === null) return false
+    //   if (a.length !== b.length) return false
+    //   for (let i = 0; i < a.length; ++i) {
+    //     if (a[i] !== b[i]) return false
+    //   }
+    //   return true
+    // },
     changeNegotiator() {
       const isByGroup = !!this.disputeNegotiatorMap.length
       const params = {
