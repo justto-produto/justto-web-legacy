@@ -43,6 +43,12 @@
               class="communication-popover__item-action-icon"
               @click.native="editCommunication(data)"
             />
+
+            <jus-icon
+              icon="trash"
+              class="communication-popover__item-action-icon"
+              @click.native="deleteCommunication(data.id)"
+            />
           </div>
         </div>
       </el-tree>
@@ -58,7 +64,7 @@
           v-for="(item, index) in communicationTypes"
           :key="index"
           class="communication-popover__message-types-item"
-          @click="addMessage(item.key)"
+          @click="addCommunication(item.key)"
         >
           <jus-icon
             :icon="item.icon"
@@ -123,7 +129,7 @@ export default {
     handleCloseInput() {
       this.editInput = null
     },
-    addMessage(communicationType) {
+    addCommunication(communicationType) {
       // TODO: Remove id generation, when unmock API
       let id = 0
       this.data.map(message => {
@@ -137,6 +143,13 @@ export default {
       })
 
       return this.editCommunicationName(id)
+    },
+    deleteCommunication(communicationId) {
+      this.data.map((communication, index) => {
+        if (communication.id === communicationId) {
+          return this.data.splice(index, 1)
+        }
+      })
     },
   },
 }
@@ -155,7 +168,7 @@ export default {
     .communication-popover__item {
       align-items: center;
       display: grid;
-      grid-template-columns: 32px 1fr 72px;
+      grid-template-columns: 32px 1fr auto;
       gap: 24px;
       padding: 16px 0;
       padding-right: 24px;
@@ -183,12 +196,12 @@ export default {
       .communication-popover__item-actions {
         display: grid;
         gap: 8px;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: repeat(2, auto) 1fr;
 
         .communication-popover__item-action-icon {
           cursor: pointer;
           display: none;
-          width: 20px;
+          height: 18px;
         }
       }
     }
