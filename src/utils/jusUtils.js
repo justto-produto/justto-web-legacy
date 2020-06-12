@@ -264,7 +264,7 @@ const normalizeString = function(str) {
 }
 
 const filterByTerm = function(term, array, key1, key2) {
-  return array.filter(i => normalizeString(i[key1]).includes(normalizeString(term)) || normalizeString(i[key2]).includes(normalizeString(term)))
+  return array ? array.filter(i => normalizeString(i[key1]).includes(normalizeString(term)) || normalizeString(i[key2]).includes(normalizeString(term))) : []
 }
 
 export {

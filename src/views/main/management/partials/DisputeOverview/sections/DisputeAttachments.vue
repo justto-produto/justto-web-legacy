@@ -17,7 +17,9 @@
     </div>
 
     <jus-drag-area class="dispute-attachments__drag-area">
-      <div class="dispute-attachments__attachment-list">
+      <div
+        v-if="filteredDisputeAttachments.length"
+        class="dispute-attachments__attachment-list">
         <el-card
           v-for="attachment in filteredDisputeAttachments"
           :key="attachment.url"
@@ -51,6 +53,11 @@
             {{ attachmentFont(attachment) }} - {{ attachment.createAt.dateTime | moment('DD/MM/YY') }}
           </span>
         </el-card>
+      </div>
+      <div
+        v-else
+        class="dispute-attachments__without-attachment">
+        Sem Anexos
       </div>
 
       <div class="dispute-attachments__upload-button">
@@ -223,6 +230,11 @@ export default {
         margin-top: 2px;
       }
     }
+  }
+
+  .dispute-attachments__without-attachment {
+    text-align: center;
+    height: calc(100% - 116px);
   }
 
   .dispute-attachments__upload-button {
