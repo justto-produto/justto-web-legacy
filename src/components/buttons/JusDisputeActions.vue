@@ -722,7 +722,7 @@ export default {
             confirmButtonText: 'OK',
             showClose: false,
           })
-          reject(new Error('Invalid Fields'))
+          reject(new Error('A estratégia dessa disputa é manual. Mude a estratégial para poder Reiniciar Dispute, Reiniciar Engajamento ou Cancelar Mensagens'))
         } else {
           resolve()
         }
