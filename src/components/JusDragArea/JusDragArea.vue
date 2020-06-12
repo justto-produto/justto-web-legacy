@@ -104,6 +104,11 @@ export default {
         file,
       }).then(() => {
         this.getDisputeAttachments(disputeId)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Anexo(s) adicionado(s) com sucesso',
+          type: 'success',
+        })
       })
     },
   },
@@ -115,7 +120,7 @@ export default {
 
 .jus-drag-area {
   position: relative;
-  min-height: 300px;
+  height: 100%;
 
   .jus-drag-area__mask {
     display: none;

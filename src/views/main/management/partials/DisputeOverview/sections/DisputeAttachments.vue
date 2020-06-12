@@ -9,52 +9,56 @@
       />
       <el-tooltip content="Atualizar anexos">
         <el-button
-          type=""
           plain
           @click="enrichDispute">
-          <jus-icon icon="refresh"/>
+          <jus-icon icon="refresh" />
         </el-button>
       </el-tooltip>
     </div>
 
     <jus-drag-area class="dispute-attachments__drag-area">
-      <ul
-        v-if="filteredDisputeAttachments.length"
-        class="dispute-attachments__attachment-list"
-      >
-        <li
+      <div class="dispute-attachments__attachment-list">
+        <el-card
           v-for="attachment in filteredDisputeAttachments"
           :key="attachment.url"
-          class="dispute-attachments__attachment">
-          <el-link
-            :underline="false"
-            :href="attachment.url"
-            target="_blank"
-            class="dispute-overview-view__attachment-link">
-            <i class="el-icon-document"/>
-            {{ attachment.name }}
-          </el-link>
-          <i
-            class="el-icon-delete"
-            @click="removeAttachment(attachment)"
-          />
-        </li>
-      </ul>
-
-      <div
-        v-else
-        class="center">
-        <br>
-        Sem anexos
+          class="dispute-attachments__attachment"
+          shadow="never">
+          <div class="dispute-overview-view__attachment-main">
+            <el-link
+              :underline="false"
+              :href="attachment.url"
+              target="_blank"
+              class="dispute-overview-view__attachment-link">
+              <i class="el-icon-document"/>
+              {{ attachment.name }}
+            </el-link>
+            <div class="dispute-overview-view__attachment-actions">
+              <el-tooltip content="Copiar URL">
+                <i
+                  class="el-icon el-icon-copy-document"
+                  @click="copyUrl(attachment.url)"
+                />
+              </el-tooltip>
+              <el-tooltip content="Remover anexo">
+                <i
+                  class="el-icon el-icon-delete"
+                  @click="removeAttachment(attachment)"
+                />
+              </el-tooltip>
+            </div>
+          </div>
+          <span class="dispute-overview-view__attachment-details">
+            {{ attachmentFont(attachment) }} - {{ attachment.createAt.dateTime | moment('DD/MM/YY') }}
+          </span>
+        </el-card>
       </div>
 
-      <div class="dispute-attachments__action-container">
+      <div class="dispute-attachments__upload-button">
         <el-button
           type="primary"
           size="medium"
           icon="el-icon-upload"
-          @click="uploadAttacmentDialogVisable = true"
-        >
+          @click="uploadAttacmentDialogVisable = true">
           Adicionar anexos
         </el-button>
       </div>
@@ -64,6 +68,7 @@
         :visible.sync="uploadAttacmentDialogVisable"
         append-to-body
         title="Envie anexos"
+        class="dispute-attachments__upload-dialog"
         width="600px"
         data-testid="upload-file-dialog"
       >
@@ -74,6 +79,7 @@
 </template>
 
 <script>
+import { filterByTerm } from '@/utils/jusUtils'
 import { JusDragArea } from '@/components/JusDragArea'
 import { mapGetters, mapActions } from 'vuex'
 
@@ -88,7 +94,7 @@ export default {
       required: true,
     },
     disputeId: {
-      type: String,
+      type: Number,
       required: true,
     },
   },
@@ -100,28 +106,19 @@ export default {
   },
   computed: {
     ...mapGetters(['disputeAttachments']),
+
     filteredDisputeAttachments() {
-      if (this.disputeAttachments) {
-        return this.disputeAttachments
-          .filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
-          )
-      } return []
+      return filterByTerm(this.attachmentFilterTerm, this.disputeAttachments, 'name')
     },
   },
   methods: {
     ...mapActions(['deleteAttachment', 'getDisputeAttachments']),
-    removeAttachment(attachment) {
-      this.deleteAttachment({
-        disputeId: attachment.disputeId,
-        documentId: attachment.id,
-      }).then(() => {
-        this.getDisputeAttachments(attachment.disputeId)
-      })
-    },
+
     enrichDispute() {
       const message = {
-        content: this.isAccepted ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?',
+        content: this.isAccepted
+          ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?'
+          : 'Tem certeza que deseja realizar esta ação?',
         title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER',
       }
       this.$confirm(message.content, message.title, {
@@ -143,44 +140,109 @@ export default {
         })
       })
     },
+
+    copyUrl(value) {
+      navigator.clipboard.writeText(value)
+      this.$jusNotification({
+        title: 'Yay',
+        message: 'URL copiada para o clipboard',
+        type: 'success',
+      })
+    },
+
+    removeAttachment(attachment) {
+      this.deleteAttachment({
+        disputeId: attachment.disputeId,
+        documentId: attachment.id,
+      }).then(() => {
+        this.getDisputeAttachments(attachment.disputeId).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Anexo removido com sucesso',
+            type: 'success',
+          })
+        })
+      })
+    },
+
+    attachmentFont(attachment) {
+      return attachment.enriched ? 'Enriquecido' : 'Adicionado'
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.dispute-attachments {
-  height: calc(100% - 54px);
-  position: relative;
+@import '@/styles/colors.scss';
 
-  .dispute-attachments__drag-area {
-    height: 100%;
+.dispute-attachments {
+  .dispute-overview-view__attachment-buttons {
+    margin-bottom: 10px;
   }
 
   .dispute-attachments__attachment-list {
-      list-style: none;
-      max-height: calc(100% - 70px);
-      overflow-y: auto;
-      padding: 0;
+    overflow-y: auto;
+    height: calc(100% - 116px);
 
-      .dispute-attachments__attachment {
-        padding: 8px 0;
+    .dispute-attachments__attachment {
+      margin-top: 10px;
+      margin-right: 10px;
+      &:first-child { margin-top: 0px; }
+
+      .dispute-overview-view__attachment-main {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        &:hover .el-icon-delete {
+
+        .dispute-overview-view__attachment-link {
           display: block;
+          word-break: break-all;
+          width: 176px;
+        }
+
+        .dispute-overview-view__attachment-actions {
+          .el-icon {
+            cursor: pointer;
+            margin-left: 4px;
+            font-size: 16px;
+          }
+
+          .el-icon-delete {
+            color: $--color-danger;
+          }
+
+          .el-icon-copy-document {
+            color: $--color-primary;
+          }
         }
       }
-    }
 
-  .dispute-attachments__action-container {
-    align-items: center;
-    bottom: 20px;
-    left: 0;
+      .dispute-overview-view__attachment-details {
+        color: $--color-text-secondary;
+        font-weight: bold;
+        display: block;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .dispute-attachments__upload-button {
+    margin-top: 10px;
     display: flex;
     justify-content: center;
-    position: absolute;
-    width: 100%;
+  }
+}
+</style>
+
+<style lang="scss">
+.dispute-attachments__upload-dialog {
+  .el-dialog__body {
+    height: 300px;
+  }
+}
+
+.dispute-attachments__attachment {
+  .el-card__body {
+    padding: 14px;
   }
 }
 </style>

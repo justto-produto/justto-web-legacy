@@ -402,7 +402,7 @@ export default {
     },
     onDrag(x, y) {
       const minTop = this.$refs.sectionMessages.offsetHeight - 208
-      const maxTop = 64
+      const maxTop = 65 + 120
       if (y > minTop) this.y = minTop
       else if (y < maxTop) this.y = maxTop
       else this.y = y
@@ -803,7 +803,7 @@ export default {
   .draggable.resizable {
     z-index: 9 !important;
     width: 100% !important;
-    height: 10px !important;
+    height: 16px !important;
     left: 0 !important;
     right: 0 !important;
     &:hover {
