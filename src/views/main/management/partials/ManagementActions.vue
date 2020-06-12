@@ -183,7 +183,7 @@
               Alterando
               {{ disputeNegotiatorMap[currentDisputeNegotiator].disputes.length }}
               disputas num total de
-              {{ selectedLenghtToShow }}.
+              {{ allSelectedDisputes }}.
             </p>
           </div>
         </div>
@@ -215,7 +215,7 @@
 </template>
 
 <script>
-import { getTracktitleByAction, getRoles } from '@/utils/jusUtils'
+import { getTracktitleByAction } from '@/utils/jusUtils'
 
 export default {
   name: 'ManagementActions',
@@ -239,6 +239,7 @@ export default {
       disputeNegotiators: [],
       disputeNegotiatorMap: [],
       currentDisputeNegotiator: 0,
+      allSelectedDisputes: 0,
       unsettledTypes: [],
       unsettledType: '',
       newStrategyId: '',
@@ -421,6 +422,8 @@ export default {
           }
         })
 
+        this.allSelectedDisputes = concatedDisputeIds.length - duplicatedDisputeIds.length
+
         const multiNegotiatorsList = []
 
         disputeNegotiatorMap.map(negotiator => {
@@ -446,7 +449,7 @@ export default {
         })
 
         const disputeNegotiatorList = disputeNegotiatorMap.map((negotiator, index) => {
-          const { disputes, id, name } = negotiator
+          const { disputes, id } = negotiator
           return {
             disputes,
             negotiators: [id],
@@ -484,32 +487,7 @@ export default {
         }
       })
       this.$store.commit('updateDisputeQuery', { key: 'id', value: [] })
-
-      // for (const disputeId of this.selectedIds) {
-      //   const dispute = this.$store.getters.disputes.find(d => d.id === disputeId)
-      //   const disputeNegotiators = getRoles(dispute.disputeRoles, 'RESPONDENT', 'NEGOTIATOR').map(dn => dn.personId)
-      //   const mapToChangeIndex = disputeNegotiatorMap.findIndex(dnm => this.arraysEqual(dnm.negotiators, disputeNegotiators))
-      //   if (mapToChangeIndex === -1) {
-      //     disputeNegotiatorMap.push({
-      //       disputes: [dispute.id],
-      //       negotiators: disputeNegotiators,
-      //     })
-      //   } else {
-      //     const mapToChange = disputeNegotiatorMap[mapToChangeIndex]
-      //     mapToChange.disputes.push(dispute.id)
-      //     disputeNegotiatorMap[mapToChangeIndex] = mapToChange
-      //   }
-      // }
     },
-    // arraysEqual(a, b) {
-    //   if (a === b) return true
-    //   if (a === null || b === null) return false
-    //   if (a.length !== b.length) return false
-    //   for (let i = 0; i < a.length; ++i) {
-    //     if (a[i] !== b[i]) return false
-    //   }
-    //   return true
-    // },
     changeNegotiator() {
       const isByGroup = !!this.disputeNegotiatorMap.length
       const params = {
