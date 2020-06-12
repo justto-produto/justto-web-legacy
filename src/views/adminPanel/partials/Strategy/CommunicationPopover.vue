@@ -41,7 +41,7 @@
             <jus-icon
               icon="doc"
               class="communication-popover__item-action-icon"
-              @click.native="editCommunication(data.id)"
+              @click.native="editCommunication(data)"
             />
           </div>
         </div>
@@ -84,6 +84,7 @@ export default {
           id: 1,
           name: '1º E-mail Advogado',
           communicationType: 'EMAIL',
+          message: 'lorem ipsum dolor sit amet',
         },
         {
           id: 2,
@@ -94,6 +95,7 @@ export default {
           id: 3,
           name: 'Envia SMS para Advogado',
           communicationType: 'SMS',
+          message: 'lorem ipsum dolor sit amet',
         },
       ],
       editInput: null,
@@ -115,8 +117,8 @@ export default {
         this.$refs[`edit-input-${communicationId}`].$refs.input.focus()
       }, 200)
     },
-    editCommunication(communicationId) {
-      console.log('SUCK MY DICK', communicationId)
+    editCommunication(communication) {
+      this.$emit('edit-communication', communication)
     },
     handleCloseInput() {
       this.editInput = null

@@ -9,7 +9,7 @@
         placement="bottom-start"
         trigger="hover"
       >
-        <CommunicationPopover />
+        <CommunicationPopover @edit-communication="handleEditCommunication" />
 
         <li
           slot="reference"
@@ -35,6 +35,11 @@
         </li>
       </el-popover>
     </ul>
+
+    <communication-editor
+      :visible="editorIsVisible"
+      :communication-data="communication"
+    />
   </article>
 </template>
 
@@ -42,6 +47,7 @@
 export default {
   name: 'StrategyCommunication',
   components: {
+    CommunicationEditor: () => import('./CommunicationEditor'),
     CommunicationPopover: () => import('./CommunicationPopover'),
   },
   props: {
@@ -56,7 +62,23 @@ export default {
         { name: 'Parte', emails: 3, sms: 3 },
         { name: 'Advogados', emails: 5, sms: 2 },
       ],
+      communicationData: null,
+      isVisible: false,
     }
+  },
+  computed: {
+    editorIsVisible() {
+      return this.isVisible
+    },
+    communication() {
+      return this.communicationData
+    },
+  },
+  methods: {
+    handleEditCommunication(communication) {
+      this.isVisible = true
+      this.communicationData = communication
+    },
   },
 }
 </script>
