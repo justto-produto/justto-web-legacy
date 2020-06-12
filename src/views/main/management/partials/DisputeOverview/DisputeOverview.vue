@@ -299,7 +299,7 @@
               data-testid="expand-party">
               <template slot="title">
                 <i
-                  v-if="showNamesake(role) || showVexatious(role)"
+                  v-if="showNamesake(role) || showVexatious(role.personProperties)"
                   class="el-icon-warning-outline el-icon-pulse"
                   style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
                 <i
@@ -358,7 +358,7 @@
                   :key="`${index}-${title.index}`">
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
-                    v-if="verifyRoleVexatious(role.personProperties, title)"
+                    v-if="showVexatious(role.personProperties)"
                     :document-number="role.documentNumber"
                     :name="role.name" />
                 </span>
@@ -1475,16 +1475,8 @@ export default {
     showNamesake(role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
-    showVexatious(role) {
-      const alerts = ['IS_VEXATIOUS_PARTY', 'IS_VEXATIOUS_AUTHOR', 'IS_VEXATIOUS_LAWYER']
-      for (const alert of alerts) {
-        if (role.personProperties && role.personProperties instanceof Object && role.personProperties.hasOwnProperty(alert)) return true
-      }
-      return false
-    },
-    verifyRoleVexatious(personProperties, title) {
-      if (title === 'PARTY') return personProperties['IS_VEXATIOUS_PARTY']
-      else if (title === 'LAWYER') return personProperties['IS_VEXATIOUS_LAWYER']
+    showVexatious(personProperties) {
+      if (personProperties['IS_VEXATIOUS_AUTHOR'] === 'true' || personProperties['IS_VEXATIOUS_LAWYER'] === 'true' || personProperties['IS_VEXATIOUS_PARTY'] === 'true') return true
       return false
     },
     showIsDead(role) {
