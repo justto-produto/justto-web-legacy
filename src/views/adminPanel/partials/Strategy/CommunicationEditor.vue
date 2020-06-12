@@ -8,7 +8,7 @@
     }"
     width="750px"
   >
-    <div class="communication-editor">
+    <div class="communication-editor show-toolbar">
       <quill-editor
         ref="textEditor"
         v-model="communicationData.message"
@@ -34,6 +34,9 @@
 
 <script>
 import { quillEditor } from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 export default {
   name: 'CommunicationEditor',
@@ -58,14 +61,13 @@ export default {
   data() {
     return {
       editorOptions: {
-        placeholder: 'Escreva alguma coisa',
+        placeholder: 'Digite a mensagem aqui!',
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
             [{ 'header': 1 }, { 'header': 2 }],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             ['blockquote'],
-            ['clean'],
           ],
         },
       },
@@ -120,5 +122,11 @@ export default {
 .communication-editor__dialog--full > .el-dialog {
   width: 100% !important;
   height: 100%;
+}
+
+.show-toolbar {
+  .ql-toolbar {
+    display: inherit;
+  }
 }
 </style>
