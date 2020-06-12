@@ -5,7 +5,6 @@
         :data="data"
         :allow-drop="allowDrop"
         node-key="id"
-        default-expand-all
         draggable
       >
         <div
@@ -13,11 +12,13 @@
           class="communication-popover__item"
         >
           <jus-icon icon="menu-hamburger" />
+
           <div class="communication-popover__item-text-container">
             <jus-icon
               :icon="translateTypeToIcon(data.communicationType)"
               class="communication-popover__message-icon"
             />
+
             <el-input
               v-if="editInput === data.id"
               :ref="`edit-input-${data.id}`"
@@ -25,6 +26,7 @@
               @keyup.native.enter="handleCloseInput"
               @blur="handleCloseInput"
             />
+
             <span v-else>
               {{ data.name }}
             </span>
