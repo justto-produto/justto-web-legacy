@@ -23,7 +23,7 @@
             v-if="activeStep === 1"
             key="1"/>
           <campaign-step
-            v-if="activeStep === 2 && isMapped"
+            v-if="activeStep === 2"
             key="2"
             :mapped-campaigns="mappedCampaigns"
             :campaign-is-mapped="isMapped"
