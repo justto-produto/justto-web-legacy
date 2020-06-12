@@ -80,6 +80,8 @@ export default {
   methods: {
     allowDrop: (_draggingNode, _dropNode, type) => type !== 'inner',
     translateTypeToIcon: communicationType => STRATEGY_COMMUNICATION_TYPES[communicationType],
+    translateTypeToIcon: communicationType =>
+      STRATEGY_COMMUNICATION_TYPES[communicationType].icon,
 
     editCommunicationName(communicationId) {
       this.editInput = communicationId
