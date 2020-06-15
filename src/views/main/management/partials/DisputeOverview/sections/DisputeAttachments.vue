@@ -43,6 +43,7 @@
               </el-tooltip>
               <el-tooltip content="Remover anexo">
                 <i
+                  v-if="!attachment.enriched"
                   class="el-icon el-icon-delete"
                   @click="removeAttachment(attachment)"
                 />
