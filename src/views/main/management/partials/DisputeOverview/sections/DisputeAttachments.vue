@@ -83,7 +83,7 @@
         data-testid="upload-file-dialog"
       >
         <jus-drag-area
-          :visible="true"
+          visible
           @closeDialog="handleAttachmentDialogVisable()"
         />
       </el-dialog>
