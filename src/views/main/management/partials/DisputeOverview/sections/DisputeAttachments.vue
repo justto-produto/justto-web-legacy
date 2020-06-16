@@ -68,14 +68,14 @@
           type="primary"
           size="medium"
           icon="el-icon-upload"
-          @click="attacmentDialogVisable = true">
+          @click="uploadAttacmentDialogVisable = true">
           Adicionar anexos
         </el-button>
       </div>
 
       <el-dialog
         :close-on-click-modal="false"
-        :visible.sync="attacmentDialogVisable"
+        :visible.sync="uploadAttacmentDialogVisable"
         append-to-body
         title="Envie anexos"
         class="dispute-attachments__upload-dialog"
@@ -84,7 +84,7 @@
       >
         <jus-drag-area
           :visible="true"
-          @closeDialog="attacmentDialogVisable = false"
+          @closeDialog="uploadAttacmentDialogVisable = false"
         />
       </el-dialog>
     </jus-drag-area>
@@ -113,7 +113,7 @@ export default {
   },
   data() {
     return {
-      attacmentDialogVisable: false,
+      uploadAttacmentDialogVisable: false,
       deleteAttachmentLoading: false,
       attachmentFilterTerm: '',
     }

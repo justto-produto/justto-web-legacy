@@ -109,7 +109,6 @@ export default {
         this.getDisputeAttachments(disputeId).then(() => {
           this.$emit('closeDialog')
           this.uploadAttachmentLoading = false
-
           this.$jusNotification({
             title: 'Yay!',
             message: 'Anexo(s) adicionado(s) com sucesso',
