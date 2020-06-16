@@ -18,6 +18,7 @@
 
     <jus-drag-area class="dispute-attachments__drag-area">
       <div
+        v-loading="deleteAttachmentLoading"
         v-if="filteredDisputeAttachments.length"
         class="dispute-attachments__attachment-list">
         <el-card
@@ -43,6 +44,7 @@
               </el-tooltip>
               <el-tooltip content="Remover anexo">
                 <i
+                  v-if="!attachment.enriched"
                   class="el-icon el-icon-delete"
                   @click="removeAttachment(attachment)"
                 />
@@ -50,7 +52,7 @@
             </div>
           </div>
           <span class="dispute-overview-view__attachment-details">
-            {{ attachmentFont(attachment) }} - {{ attachment.createAt.dateTime | moment('DD/MM/YY') }}
+            {{ attachmentOrigin(attachment) }} - {{ attachment.createAt.dateTime | moment('DD/MM/YY') }}
           </span>
         </el-card>
       </div>
@@ -62,10 +64,11 @@
 
       <div class="dispute-attachments__upload-button">
         <el-button
+          :disabled="deleteAttachmentLoading"
           type="primary"
           size="medium"
           icon="el-icon-upload"
-          @click="uploadAttacmentDialogVisable = true">
+          @click="handleAttachmentDialogVisable()">
           Adicionar anexos
         </el-button>
       </div>
@@ -79,7 +82,10 @@
         width="600px"
         data-testid="upload-file-dialog"
       >
-        <jus-drag-area :visible="true" />
+        <jus-drag-area
+          visible
+          @closeDialog="handleAttachmentDialogVisable()"
+        />
       </el-dialog>
     </jus-drag-area>
   </section>
@@ -108,6 +114,7 @@ export default {
   data() {
     return {
       uploadAttacmentDialogVisable: false,
+      deleteAttachmentLoading: false,
       attachmentFilterTerm: '',
     }
   },
@@ -158,11 +165,13 @@ export default {
     },
 
     removeAttachment(attachment) {
+      this.deleteAttachmentLoading = true
       this.deleteAttachment({
         disputeId: attachment.disputeId,
         documentId: attachment.id,
       }).then(() => {
         this.getDisputeAttachments(attachment.disputeId).then(() => {
+          this.deleteAttachmentLoading = false
           this.$jusNotification({
             title: 'Yay!',
             message: 'Anexo removido com sucesso',
@@ -172,8 +181,12 @@ export default {
       })
     },
 
-    attachmentFont(attachment) {
+    attachmentOrigin(attachment) {
       return attachment.enriched ? 'Enriquecido' : 'Adicionado'
+    },
+
+    handleAttachmentDialogVisable() {
+      this.uploadAttacmentDialogVisable = !this.uploadAttacmentDialogVisable
     },
   },
 }
