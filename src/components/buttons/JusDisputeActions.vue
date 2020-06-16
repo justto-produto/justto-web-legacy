@@ -433,7 +433,10 @@
       width="600px"
       data-testid="upload-file-dialog"
     >
-      <jus-drag-area :visible="true" />
+      <jus-drag-area
+        :visible="true"
+        @closeDialog="uploadAttacmentDialogVisable = false"
+      />
     </el-dialog>
   </div>
 </template>
