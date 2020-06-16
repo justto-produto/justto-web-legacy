@@ -1,6 +1,6 @@
 <template>
   <article
-    v-loading="uploadAttachmentLoading"
+    v-loading="isAttachmentLoading"
     ref="dragAreaElm"
     :class="{
       'jus-drag-area--dragging': maskIsVisible
@@ -56,7 +56,7 @@ export default {
   },
   data: () => ({
     isDragging: false,
-    uploadAttachmentLoading: false,
+    isAttachmentLoading: false,
   }),
   computed: {
     maskIsVisible: self => self.visible || self.isDragging,
@@ -96,7 +96,7 @@ export default {
       }).catch(() => false)
     },
     saveFile(file) {
-      this.uploadAttachmentLoading = true
+      this.isAttachmentLoading = true
       const disputeId = this.$route.params.id
       const formData = new FormData()
       formData.append('file', file)
@@ -108,7 +108,7 @@ export default {
       }).then(() => {
         this.getDisputeAttachments(disputeId).then(() => {
           this.$emit('closeDialog')
-          this.uploadAttachmentLoading = false
+          this.isAttachmentLoading = false
           this.$jusNotification({
             title: 'Yay!',
             message: 'Anexo(s) adicionado(s) com sucesso',

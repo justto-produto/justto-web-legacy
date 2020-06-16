@@ -68,7 +68,7 @@
           type="primary"
           size="medium"
           icon="el-icon-upload"
-          @click="uploadAttacmentDialogVisable = true">
+          @click="handleAttachmentDialogVisable()">
           Adicionar anexos
         </el-button>
       </div>
@@ -84,7 +84,7 @@
       >
         <jus-drag-area
           :visible="true"
-          @closeDialog="uploadAttacmentDialogVisable = false"
+          @closeDialog="handleAttachmentDialogVisable()"
         />
       </el-dialog>
     </jus-drag-area>
@@ -183,6 +183,10 @@ export default {
 
     attachmentOrigin(attachment) {
       return attachment.enriched ? 'Enriquecido' : 'Adicionado'
+    },
+
+    handleAttachmentDialogVisable() {
+      this.uploadAttacmentDialogVisable = !this.uploadAttacmentDialogVisable
     },
   },
 }

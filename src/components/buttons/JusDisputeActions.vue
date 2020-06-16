@@ -151,7 +151,7 @@
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="uploadAttacmentDialogVisable = true">
+        @click="handleAttachmentDialogVisable()">
         <jus-icon icon="upload-file" />
       </el-button>
     </el-tooltip>
@@ -435,7 +435,7 @@
     >
       <jus-drag-area
         :visible="true"
-        @closeDialog="uploadAttacmentDialogVisable = false"
+        @closeDialog="handleAttachmentDialogVisable()"
       />
     </el-dialog>
   </div>
@@ -784,6 +784,9 @@ export default {
       if (this.$refs.counterOfferForm) {
         this.$refs.counterOfferForm.clearValidate()
       }
+    },
+    handleAttachmentDialogVisable() {
+      this.uploadAttacmentDialogVisable = !this.uploadAttacmentDialogVisable
     },
     checkCounterproposal(actionType) {
       return new Promise((resolve, reject) => {
