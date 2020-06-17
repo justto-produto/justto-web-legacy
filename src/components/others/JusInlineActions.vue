@@ -1,15 +1,16 @@
 <template>
-  <div class="inline-actions">>
+  <div class="inline-actions">
     <div
       v-for="action in actions"
-      :key="action.name">
+      :key="action.name"
+      class="inline-actions__action-containet">
       <el-tooltip
         v-if="true"
         :content="action.label">
         <el-button
           type="text"
-          @click="emmitAction(name)">
-          <jus-icon :icon="action.icon"/>
+          @click="emitAction(action)">
+          <jus-icon :icon="action.icon" class="inline-actions__action-icon"/>
         </el-button>
       </el-tooltip>
     </div>
@@ -35,8 +36,11 @@ export default {
   methods: {
     emitAction(action) {
       this.$emit('eventHandler', {
-        action,
-        scope: this.scope,
+        eventName: 'JusInlineAction',
+        eventProps: {
+          trigger: action.name,
+          scope: this.scope,
+        },
       })
     },
   },
@@ -47,28 +51,20 @@ export default {
 @import '@/styles/colors.scss';
 
 .inline-actions {
-  padding: 11px 0px 11px 20px;
-  box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
-  z-index: 1;
-  .el-button {
-    border-radius: 5px;
-    padding: 11px;
-    &.el-button--text {
-      color: #424242;
-      padding: 7px 10px 0;
-      float: right;
-      border-color: transparent !important;
-      i {
-        font-size: 26px;
-      }
-    }
+  background: linear-gradient(to right, rgba(246,246,246,0) 0%, rgba(246,246,246,1) 10%);
+  padding: 0 20px 0 28px;
+  position: absolute;
+  display: flex;
+  height: 100%;
+  right: 0;
+  top: 0;
+  .inline-actions__action-containet {
+    display: flex;
+    align-items: center;
   }
-  .back {
-    margin-right: 20px;
-    vertical-align: text-top;
-  }
-  .el-button + span, span + .el-button {
-    margin-left: 10px;
+  .inline-actions__action-icon {
+    width: 16px;
+    height: 16px;  
   }
 }
 </style>

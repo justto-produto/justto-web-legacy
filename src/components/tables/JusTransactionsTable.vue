@@ -2,12 +2,12 @@
   <article class="transactions-table">
     <div class="transactions-table__header">
       <el-input
-        v-model="filterTerm"
+        v-model="searchTerm"
         class="transactions-table__filter-input"
-        clearable
-        size="small"
         prefix-icon="el-icon-search"
         placeholder="Buscar"
+        size="small"
+        clearable
       />
       <span class="transactions-table__filter-counter">
         Exibindo {{ filteredTransactions.length }} de {{ transactions.length }} resultados
@@ -86,8 +86,9 @@
           width="1px">
           <template slot-scope="scope">
             <JusInlineActions
-              :actions="actionsList"
+              :actions="availableActions"
               :scope="scope.row"
+              @eventHandler="eventHandler"
             />
           </template>
         </el-table-column>
@@ -125,31 +126,40 @@ export default {
   },
   data() {
     return {
-      filterTerm: '',
-      actionsList: [
+      searchTerm: '',
+      availableActions: [
         {
           name: 'deleteTransaction',
           label: 'Apagar lançamento',
-          icon: 'trash'
+          icon: 'trash',
         },
       ],
     }
   },
   computed: {
-    filteredTransactions() {
-      const normalizedFilterTerm = normalizeString(this.filterTerm)
 
-      return this.transactions.filter(t => {
-        return normalizeString(t.respondent).includes(normalizedFilterTerm) ||
-          normalizeString(t.code).includes(normalizedFilterTerm) ||
-          normalizeString(t.referenceId).includes(normalizedFilterTerm) ||
-          normalizeString(t.externalId).includes(normalizedFilterTerm) ||
-          normalizeString(this.$t(`transactions.${t.type}`)).includes(normalizedFilterTerm) ||
-          normalizeString(this.$options.filters.currency(t.value)).includes(normalizedFilterTerm)
-      })
+  },
+  watch: {
+    searchTerm(term) {
+      clearTimeout(this.termDebounce)
+      this.termDebounce = setTimeout(() => {
+        this.getTransactions()
+      }, 800)
     },
   },
   methods: {
+    // ...mapActions(['deleteTransaction']),
+
+    eventHandler(evt) {
+      debugger
+      const action = evt.eventProps.trigger + 'Action'
+      this[action](evt.eventProps.scope)
+    },
+
+    deleteTransactionAction(scope) {
+      console.log(scope)
+    },
+
     transactionResume(transaction) {
       return this.$options.filters.capitalize(this.$t(`transactions.${transaction.type}`)) + ' na disputa #' + transaction.referenceId + '<br>' + transaction.code
     },
@@ -205,24 +215,22 @@ export default {
 
     .el-table--disputes {
       .el-table__row {
-        cursor: default;
+        cursor: initial;
       }
     }
 
     th.transactions-table__hidden-actions {
       position: relative;
     }
+
     td.transactions-table__hidden-actions .cell {
       display: none;
     }
-    tr:hover {
-      td.transactions-table__hidden-actions .cell{
-        display: contents;
-      }
+
+    tr:hover td.transactions-table__hidden-actions .cell {
+      display: contents;
     }
-    th.gutter { 
-      display: table-cell !important;
-    }
+
     td {
       height: 46px;
     }
