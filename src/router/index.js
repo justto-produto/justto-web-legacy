@@ -23,18 +23,18 @@ const router = new Router({
           },
         },
         {
-          name: 'financialClientList',
-          path: '/financeiro',
-          component: () => import(/* webpackChunkName: "financialClientList" */ '@/views/main/financial/FinancialClientList'),
+          name: 'billingClientList',
+          path: '/billing',
+          component: () => import(/* webpackChunkName: "billingClientList" */ '@/views/main/billing/BillingClientList'),
           meta: {
             trackPage: true,
             title: 'Justto - Financeiro',
           },
         },
         {
-          name: 'financialDashboard',
-          path: '/financeiro/:clientId',
-          component: () => import(/* webpackChunkName: "financialDashboard" */ '@/views/main/financial/FinancialClientDashboard'),
+          name: 'billingDashboard',
+          path: '/billing/:clientId',
+          component: () => import(/* webpackChunkName: "billingDashboard" */ '@/views/main/billing/BillingDashboard'),
           meta: {
             trackPage: true,
             title: 'Justto - Financeiro',

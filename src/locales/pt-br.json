@@ -23,6 +23,14 @@
       "UNSETTLED": "perdida"
     }
   },
+  "transactions": {
+    "DISPUTE_ACCEPTED": "disputa aceita",
+    "IMPORTED_DISPUTE": "disputa importada",
+    "INTERACTION": "interação na disputa",
+    "MANUAL": "valor manual",
+    "SETTLED_DISPUTE": "acordo fechado",
+    "SUBSCRIPTION": "assinatura"
+  },
   "prescription": {
     "ONLY_SMS_ENGAGEMENT": "somente SMS",
     "ONLY_EMAIL_ENGAGEMENT": "somente email",
