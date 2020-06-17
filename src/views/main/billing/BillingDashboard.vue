@@ -31,6 +31,7 @@ export default {
           referenceId: 15955,
           externalId: null,
           value: 9999999.00,
+          id: 123
         },
         {
           occurredDate: [
@@ -45,6 +46,7 @@ export default {
           referenceId: 24532,
           externalId: null,
           value: 12.00,
+          id: 456,
         },
         {
           occurredDate: [
@@ -59,6 +61,7 @@ export default {
           referenceId: 29185,
           externalId: null,
           value: 12.00,
+          id: 789,
         },
       ],
     }
