@@ -94,9 +94,11 @@ export default {
 <style lang="scss">
 .jus-financial-card {
   & > .el-card__body {
+    align-content: center;
     display: grid;
     gap: 8px;
     grid-template-rows: repeat(2, auto);
+    height: 100%;
     padding: 24px;
     position: relative;
   }

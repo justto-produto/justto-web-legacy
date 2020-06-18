@@ -38,5 +38,6 @@ export default {
 .jus-grid {
   display: grid;
   width: 100%;
+  grid-auto-flow: column;
 }
 </style>
