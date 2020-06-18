@@ -2,7 +2,7 @@
   <div
     :style="{
       gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      gridTemplateRows: `repeat(${rows}, 1fr)`,
+      gridTemplateRows: `repeat(${rows}, auto)`,
       gap: toPixel(spacing),
     }"
     class="jus-grid"
