@@ -12,7 +12,12 @@ import socketModule from './modules/socket/index'
 import documentModule from './modules/document'
 import dashboardModule from './modules/dashboard'
 import tagModule from './modules/tag'
+<<<<<<< Updated upstream
 import banksList from '@/utils/banksList'
+=======
+import workspaceModule from './modules/workspace'
+import UserModule from "./modules/user";
+>>>>>>> Stashed changes
 
 Vue.use(Vuex)
 
@@ -65,5 +70,6 @@ export default new Vuex.Store({
     documentModule,
     tagModule,
     dashboardModule,
+	UserModule
   },
 })

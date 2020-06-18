@@ -30,6 +30,18 @@ _axios.interceptors.request.use(
         window.location.reload()
       }
     }
+	if(!axios.defaults.headers.common.UserLanguage) {
+		axios.defaults.headers.common['UserLanguage'] = store.getters.getUserLanguage
+	}
+	if(!axios.defaults.headers.common.UserTimeZone) {
+		axios.defaults.headers.common['UserTimeZone'] = store.getters.getUserTimeZone
+	}
+	if(!axios.defaults.headers.common.UserBrowserName) {
+		axios.defaults.headers.common['UserBrowserName'] = store.getters.getUserBrowserName
+	}
+	if(!axios.defaults.headers.common.UserOS) {
+		axios.defaults.headers.common['UserOS'] = store.getters.getUserOS
+	}
     return config
   },
   function(error) {
