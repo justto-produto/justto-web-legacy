@@ -132,7 +132,7 @@
             id="monitoringDisputeByTime"
             ref="monitoringDisputeByTime"
             :data="monitoringDisputeByTime"
-            :options="opt"
+            :options="monitoringDisputeByTimeOptions"
             filterable
             class="dashboard-view__dataset" />
           <div
@@ -229,6 +229,10 @@ export default {
       chart = this.format(chart)
       return chart.data
     },
+	monitoringDisputeByTimeOptions() {
+		let chart = this.$store.getters.getChartsDatasets('MONITORING_DISPUTE_BY_TIME')
+		return Object.assign(this.opt, chart.options)
+	},
     chartsDatasets() {
       return this.$store.getters.chartsDatasets
     },
