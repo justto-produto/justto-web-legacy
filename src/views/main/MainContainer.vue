@@ -46,6 +46,14 @@
             class="el-menu__icon"/>
           <span slot="title">Importação</span>
         </el-menu-item>
+        <el-menu-item
+          index="/financeiro"
+          data-testid="menu-financial">
+          <jus-icon
+            icon="dollar"
+            class="el-menu__icon"/>
+          <span slot="title">Financeiro</span>
+        </el-menu-item>
       </el-menu>
       <div
         v-show="$store.getters.workspaceMembers.length && $store.getters.isAdminProfile"
