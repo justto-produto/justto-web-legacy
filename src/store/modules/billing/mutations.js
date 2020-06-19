@@ -1,6 +1,11 @@
 const mutations = {
-  setCustomers: (state, customers) => (state.customers = customers),
-  setCustomer: (state, customerId) => (state.currentCustomer.customerId = customerId),
+  setAllCustomers: (state, customers) => (state.allCustomers = customers.content),
+  setMyCustomers: (state, customers) => (state.myCustomers = customers),
+  setCustomer: (state, customerData) => {
+    state.currentCustomer.customerId = customerData.id
+    state.currentCustomer.customerName = customerData.name
+    state.currentCustomer.contracts = customerData.contracts
+  },
   setContracts: (state, contracts) => (state.currentCustomer.contracts = contracts),
   setBillingDashboard: (state, billingDashboard) => (state.billingDashboard = billingDashboard),
   setTransactions: (state, transactions) => (state.currentCustomer.transactions = transactions),
