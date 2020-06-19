@@ -230,7 +230,7 @@ export default {
       return chart.data
     },
 	monitoringDisputeByTimeOptions() {
-		let chart = this.$store.getters.getChartsDatasets('MONITORING_DISPUTE_BY_TIME')
+		const chart = this.$store.getters.getChartsDatasets('MONITORING_DISPUTE_BY_TIME')
 		return Object.assign(this.opt, chart.options)
 	},
     chartsDatasets() {
