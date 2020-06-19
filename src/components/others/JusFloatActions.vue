@@ -1,16 +1,19 @@
 <template>
-  <div class="inline-actions">
+  <div class="float-actions">
     <div
       v-for="action in actions"
       :key="action.name"
-      class="inline-actions__action-containet">
+      class="float-actions__action-containet">
       <el-tooltip
         v-if="true"
         :content="action.label">
         <el-button
           type="text"
           @click="emitAction(action)">
-          <jus-icon :icon="action.icon" class="inline-actions__action-icon"/>
+          <jus-icon
+            :icon="action.icon"
+            class="float-actions__action-icon"
+          />
         </el-button>
       </el-tooltip>
     </div>
@@ -19,7 +22,7 @@
 
 <script>
 export default {
-  name: 'JusInlineActions',
+  name: 'JusFloatActions',
   props: {
     actions: {
       type: Array,
@@ -28,15 +31,15 @@ export default {
     scope: {
       type: Object,
       required: true,
-    }
+    },
   },
   computed: {
 
   },
   methods: {
     emitAction(action) {
-      this.$emit('eventHandler', {
-        eventName: 'JusInlineAction',
+      this.$emit('floatAction', {
+        eventName: 'JusFloatAction',
         eventProps: {
           trigger: action.name,
           scope: this.scope,
@@ -50,7 +53,7 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.inline-actions {
+.float-actions {
   background: linear-gradient(to right, rgba(246,246,246,0) 0%, rgba(246,246,246,1) 10%);
   padding: 0 20px 0 28px;
   position: absolute;
@@ -58,13 +61,13 @@ export default {
   height: 100%;
   right: 0;
   top: 0;
-  .inline-actions__action-containet {
+  .float-actions__action-containet {
     display: flex;
     align-items: center;
   }
-  .inline-actions__action-icon {
+  .float-actions__action-icon {
     width: 16px;
-    height: 16px;  
+    height: 16px;
   }
 }
 </style>
