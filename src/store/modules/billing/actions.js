@@ -2,12 +2,35 @@ import axiosDispatcher from '@/store/axiosDispatcher.js'
 import { queryBuilder } from '@/utils/jusUtils'
 
 const actions = {
-  getCusomers: () => {
+  getMyCusomers: () => {
     axiosDispatcher({
       url: 'api/billing/customer/my',
-      mutation: 'setCustomers',
+      mutation: 'setMyCustomers',
     })
   },
+
+  getAllCustomers: () =>
+    axiosDispatcher({
+      url: 'api/billing/customer',
+      mutation: 'setAllCustomers',
+    }),
+
+  addCustomer: ({ dispatch, state }, customerData) =>
+    axiosDispatcher({
+      url: 'api/billing/customer',
+      method: 'post',
+      data: customerData,
+    }).then(res => axiosDispatcher({
+      url: `api/billing/customer/${res.id}/${state.query.workspaceId}`,
+      method: 'patch',
+    }).then(() => dispatch('getMyCusomers'))),
+
+  unlinkCustomer: ({ dispatch, state }, customerId) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerId}/${state.query.workspaceId}`,
+      method: 'delete',
+    }).then(() => dispatch('getMyCusomers')),
+
   getContracts: ({ state }) => {
     axiosDispatcher({
       url: `api/billing/customer/${state.currentCustomer.customerId}/contract`,
@@ -38,8 +61,9 @@ const actions = {
     })
   },
 
-  setCustomer: ({ commit, dispatch }) => {
-    commit('setCustomer')
+  setCustomer: ({ commit, dispatch }, customerData) => {
+    if (!customerData.contracts.length) customerData.contracts.push({})
+    commit('setCustomer', customerData)
     dispatch('getTransactions')
   },
   setRangeDate: ({ commit, dispatch }, rangeDate) => {

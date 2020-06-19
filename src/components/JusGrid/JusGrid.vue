@@ -1,8 +1,9 @@
 <template>
   <div
     :style="{
+      gridAutoFlow: flow,
       gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      gridTemplateRows: `repeat(${rows}, auto)`,
+      gridTemplateRows: `repeat(${rowsCount}, auto)`,
       gap: toPixel(spacing),
     }"
     class="jus-grid"
@@ -15,9 +16,14 @@
 export default {
   name: 'JusGrid',
   props: {
+    flow: {
+      type: String,
+      default: null,
+      validator: val => ['column', 'row'].includes(val),
+    },
     rows: {
       type: Number,
-      default: 1,
+      default: null,
     },
     columns: {
       type: Number,
@@ -26,6 +32,11 @@ export default {
     spacing: {
       type: Number,
       default: 24,
+    },
+  },
+  computed: {
+    rowsCount() {
+      return this.rows || 'auto-fit'
     },
   },
   methods: {
@@ -38,6 +49,5 @@ export default {
 .jus-grid {
   display: grid;
   width: 100%;
-  grid-auto-flow: column;
 }
 </style>
