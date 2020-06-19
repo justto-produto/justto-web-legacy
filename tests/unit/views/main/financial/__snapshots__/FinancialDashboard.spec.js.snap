@@ -1,3 +1,294 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Views > FinancialDashboard renders correctly 1`] = `<jus-view-main />`;
+exports[`Views > FinancialDashboard renders correctly 1`] = `
+<jus-view-main>
+  <div
+    class="financial-client-list"
+    slot="main"
+  >
+    <div
+      class="jus-grid"
+      style="grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, auto); gap: 24px;"
+    >
+      <el-card
+        class="jus-financial-card"
+        shadow="hover"
+        style="grid-column: span 1; grid-row: span 2:v;"
+      >
+        <div
+          class="jus-financial-card__actions"
+        >
+          <el-tooltip
+            content="Ver lançamentos"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="eye"
+            />
+          </el-tooltip>
+          <el-tooltip
+            content="Filtrar gerenciamento"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="management"
+            />
+          </el-tooltip>
+        </div>
+         
+        <span
+          class="jus-financial-card__title"
+        >
+          
+    Importações
+  
+        </span>
+         
+        <span
+          class="jus-financial-card__cash"
+        >
+          
+    R$ 4000,00
+  
+        </span>
+      </el-card>
+      <el-card
+        class="jus-financial-card"
+        shadow="hover"
+        style="grid-column: span 1; grid-row: span 2:v;"
+      >
+        <div
+          class="jus-financial-card__actions"
+        >
+          <el-tooltip
+            content="Ver lançamentos"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="eye"
+            />
+          </el-tooltip>
+          <el-tooltip
+            content="Filtrar gerenciamento"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="management"
+            />
+          </el-tooltip>
+        </div>
+         
+        <span
+          class="jus-financial-card__title"
+        >
+          
+    Propostas Aceitas
+  
+        </span>
+         
+        <span
+          class="jus-financial-card__cash"
+        >
+          
+    R$ 4000,00
+  
+        </span>
+      </el-card>
+      <el-card
+        class="jus-financial-card"
+        shadow="hover"
+        style="grid-column: span 1; grid-row: span 2:v;"
+      >
+        <div
+          class="jus-financial-card__actions"
+        >
+          <el-tooltip
+            content="Ver lançamentos"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="eye"
+            />
+          </el-tooltip>
+          <el-tooltip
+            content="Filtrar gerenciamento"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="management"
+            />
+          </el-tooltip>
+        </div>
+         
+        <span
+          class="jus-financial-card__title"
+        >
+          
+    Mensalidade
+  
+        </span>
+         
+        <span
+          class="jus-financial-card__cash"
+        >
+          
+    R$ 4000,00
+  
+        </span>
+      </el-card>
+      <el-card
+        class="jus-financial-card"
+        shadow="hover"
+        style="grid-column: span 1; grid-row: span 2:v;"
+      >
+        <div
+          class="jus-financial-card__actions"
+        >
+          <el-tooltip
+            content="Ver lançamentos"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="eye"
+            />
+          </el-tooltip>
+          <el-tooltip
+            content="Filtrar gerenciamento"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="management"
+            />
+          </el-tooltip>
+        </div>
+         
+        <span
+          class="jus-financial-card__title"
+        >
+          
+    Interações
+  
+        </span>
+         
+        <span
+          class="jus-financial-card__cash"
+        >
+          
+    R$ 4000,00
+  
+        </span>
+      </el-card>
+      <el-card
+        class="jus-financial-card"
+        shadow="hover"
+        style="grid-column: span 1; grid-row: span 2:v;"
+      >
+        <div
+          class="jus-financial-card__actions"
+        >
+          <el-tooltip
+            content="Ver lançamentos"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="eye"
+            />
+          </el-tooltip>
+          <el-tooltip
+            content="Filtrar gerenciamento"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="management"
+            />
+          </el-tooltip>
+        </div>
+         
+        <span
+          class="jus-financial-card__title"
+        >
+          
+    Ganho
+  
+        </span>
+         
+        <span
+          class="jus-financial-card__cash"
+        >
+          
+    R$ 4000,00
+  
+        </span>
+      </el-card>
+      <el-card
+        class="jus-financial-card"
+        shadow="hover"
+        style="grid-column: span 1; grid-row: span 2:v;"
+      >
+        <div
+          class="jus-financial-card__actions"
+        >
+          <el-tooltip
+            content="Ver lançamentos"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="eye"
+            />
+          </el-tooltip>
+          <el-tooltip
+            content="Filtrar gerenciamento"
+          >
+            <jus-icon
+              class="jus-financial-card__icon"
+              icon="management"
+            />
+          </el-tooltip>
+        </div>
+         
+        <span
+          class="jus-financial-card__title"
+        >
+          
+    Outros Serviços
+  
+        </span>
+         
+        <span
+          class="jus-financial-card__cash"
+        >
+          
+    R$ 4000,00
+  
+        </span>
+      </el-card>
+       
+      <el-card
+        class="jus-financial-card jus-financial-card--highlighted"
+        shadow="hover"
+        style="grid-column: span 1; grid-row: span 2;"
+      >
+        <div
+          class="jus-financial-card__actions"
+        />
+         
+        <span
+          class="jus-financial-card__title"
+        >
+          
+    Total
+  
+        </span>
+         
+        <span
+          class="jus-financial-card__cash"
+        >
+          
+    R$ 4000,00
+  
+        </span>
+      </el-card>
+    </div>
+  </div>
+</jus-view-main>
+`;
