@@ -145,6 +145,7 @@ export default {
       }
     },
     handleSeeMore(userData) {
+      this.setCustomer(userData)
       this.$router.push(`/billing/${userData.id}`)
     },
     handleEdit(userData) {
