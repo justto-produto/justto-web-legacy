@@ -1,5 +1,8 @@
 <template>
   <el-card
+    :class="{
+      'jus-financial-card--highlighted': highlighted,
+    }"
     shadow="hover"
     class="jus-financial-card"
   >
@@ -34,6 +37,10 @@ export default {
     actions: {
       type: Array,
       default: null,
+    },
+    highlighted: {
+      type: Boolean,
+      default: false,
     },
     title: {
       type: String,
@@ -72,6 +79,10 @@ export default {
         width: 100%;
       }
     }
+  }
+
+  &.jus-financial-card--highlighted {
+    background-color: $--color-primary-light-9
   }
 
   .jus-financial-card__actions {

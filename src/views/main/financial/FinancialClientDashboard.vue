@@ -19,6 +19,7 @@
         />
         <jus-financial-card
           v-grid-item.col-1.row-2
+          highlighted
           title="Total"
           value="4000,00"
         />
