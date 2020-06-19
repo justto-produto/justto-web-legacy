@@ -147,10 +147,9 @@ export default {
       ]
     },
   },
-  beforeCreate() {
-    if (!this.isJusttoAdmin) this.$router.go(-1)
-  },
   beforeMount() {
+    if (!this.isJusttoAdmin) this.$router.go(-1)
+
     this.dateRange[0] = this.initialDateRange[0]
     this.dateRange[1] = this.initialDateRange[1]
     this.clearTransactionsQuery(this.initialDateRange)
