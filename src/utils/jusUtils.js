@@ -260,11 +260,12 @@ const getTracktitleByAction = function(action, batch) {
 }
 
 const normalizeString = function(str) {
-  return str ? str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : ''
+  return str ? str.toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : ''
 }
 
 const filterByTerm = function(term, array, key1, key2) {
-  return array ? array.filter(i => normalizeString(i[key1]).includes(normalizeString(term)) || normalizeString(i[key2]).includes(normalizeString(term))) : []
+  term = normalizeString(term)
+  return array ? array.filter(i => normalizeString(i[key1]).includes(term) || normalizeString(i[key2]).includes(term)) : []
 }
 
 export {

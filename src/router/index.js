@@ -1,6 +1,6 @@
-import Vue from 'vue'
 import Router from 'vue-router'
 import Store from '@/store'
+import Vue from 'vue'
 Vue.use(Router)
 
 const router = new Router({
@@ -20,6 +20,24 @@ const router = new Router({
           meta: {
             trackPage: true,
             title: 'Justto - Dashboard',
+          },
+        },
+        {
+          name: 'billingClientList',
+          path: '/billing',
+          component: () => import(/* webpackChunkName: "billingClientList" */ '@/views/main/billing/BillingClientList'),
+          meta: {
+            trackPage: true,
+            title: 'Justto - Financeiro',
+          },
+        },
+        {
+          name: 'billingDashboard',
+          path: '/billing/:clientId',
+          component: () => import(/* webpackChunkName: "billingDashboard" */ '@/views/main/billing/BillingDashboard'),
+          meta: {
+            trackPage: true,
+            title: 'Justto - Financeiro',
           },
         },
         {
