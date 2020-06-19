@@ -66,6 +66,6 @@ export default new Vuex.Store({
     documentModule,
     tagModule,
     dashboardModule,
-	UserModule
+    UserModule,
   },
 })
