@@ -238,7 +238,7 @@ export default {
 .billing-view {
   .billing-view__slot-main {
     height: 100%;
-    display: grid;    
+    display: grid;
     grid-template-rows: repeat(2, auto) 1fr;
     gap: 20px;
 
