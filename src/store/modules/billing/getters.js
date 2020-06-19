@@ -1,11 +1,7 @@
-const billingGetters = {
+const getters = {
   getCusomers: state => state.customers,
   getCurrentCustomer: state => state.currentCustomer,
-  getDateRange: state => ({
-    startDate: state.startDate,
-    finishDate: state.finishDate,
-  }),
-  getWorkspace: state => state.workspaceId,
+  transactions: state => state.currentCustomer.transactions,
 }
 
-export default billingGetters
+export default getters

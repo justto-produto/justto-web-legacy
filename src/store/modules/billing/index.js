@@ -1,15 +1,26 @@
-const billingModule = {
+import mutations from './mutations'
+import actions from './actions'
+import getters from './getters'
+
+const billing = {
   state: {
     customers: [],
     currentCustomer: {
       contracts: [],
-      customerId: null,
-      dashboardData: null,
+      customerId: 67,
+      transactions: null,
     },
-    startDate: '',
-    finishDate: '',
-    workspaceId: null,
+    query: {
+      startDate: '',
+      finishDate: '',
+      workspaceId: null,
+      type: '',
+      term: '',
+    },
   },
+  mutations: mutations,
+  actions: actions,
+  getters: getters,
 }
 
-export default billingModule
+export default billing

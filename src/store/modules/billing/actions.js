@@ -2,37 +2,54 @@ import axiosDispatcher from '@/store/axiosDispatcher.js'
 import { queryBuilder } from '@/utils/jusUtils'
 
 const actions = {
-  getCusomers: () =>
+  getCusomers: () => {
     axiosDispatcher({
       url: 'api/billing/customer/my',
       mutation: 'setCustomers',
-    }),
-  getContracts: ({ state }) =>
+    })
+  },
+  getContracts: ({ state }) => {
     axiosDispatcher({
       url: `api/billing/customer/${state.currentCustomer.customerId}/contract`,
       mutation: 'setContracts',
-    }),
-  getDashboardData: ({ state }) => {
+    })
+  },
+  getTransactions: ({ state }) => {
     const query = {
-      startDate: state.startDate,
-      finishDate: state.finishDate,
+      ...state.query,
       customerId: state.currentCustomer.customerId,
-      workspaceId: state.workspaceId,
     }
 
     return axiosDispatcher({
-      url: `api/billing/dashboard${queryBuilder(query)}`,
-      mutation: 'setDashboardData',
+      url: `api/billing/transaction${queryBuilder(query)}`,
+      mutation: 'setTransactions',
     })
   },
-  setCustomer: ({ commit, dispatch }) => commit('setCustomer')
-    .then(_res => dispatch('getDashboardData')),
-  setStartDate: ({ commit, dispatch }, newDate) => commit('setStartDate', newDate)
-    .then(_res => dispatch('getDashboardData')),
-  setFinishDate: ({ commit, dispatch }, newDate) => commit('setFinishDate', newDate)
-    .then(_res => dispatch('getDashboardData')),
-  setWorkspace: ({ commit, dispatch }, workspaceId) => commit('setWorkspace', workspaceId)
-    .then(_res => dispatch('getCusomers')),
+
+  setCustomer: ({ commit, dispatch }) => {
+    commit('setCustomer')
+    dispatch('getTransactions')
+  },
+  setRangeDate: ({ commit, dispatch }, rangeDate) => {
+    commit('setStartDate', rangeDate[0])
+    commit('setFinishDate', rangeDate[1])
+    dispatch('getTransactions')
+  },
+  setTerm: ({ commit, dispatch }, term) => {
+    commit('setTerm', term)
+    dispatch('getTransactions')
+  },
+  setWorkspaceId: ({ commit }, workspaceId) => {
+    commit('setWorkspaceId', workspaceId)
+  },
+
+  cancelTransaction: ({ commit }, params) => {
+    axiosDispatcher({
+      url: `api/billing/transaction/${params.id}/cancel`,
+      method: 'POST',
+      data: params.data,
+    })
+  },
 }
 
 export default actions
