@@ -185,7 +185,7 @@ export default {
       }
     }
   }
-  
+
   .billing-view__table {
     .billing-view__table-body {
       .el-card__body {
