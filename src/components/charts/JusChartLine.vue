@@ -77,8 +77,7 @@ export default {
           generateLabels: this.generateLabels,
         },
       },
-      annotation: { annotations: annotation },
-      scales: { yAxes: sufix },
+      annotation: { annotations: annotation }
     }))
   },
   methods: {
