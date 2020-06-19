@@ -58,6 +58,13 @@ const actions = {
   setWorkspaceId: ({ commit }, workspaceId) => {
     commit('setWorkspaceId', workspaceId)
   },
+  clearTransactionsQuery: ({ commit, dispatch }, rangeDate) => {
+    commit('setTerm', '')
+    commit('setType', '')
+    commit('setStartDate', rangeDate[0])
+    commit('setFinishDate', rangeDate[1])
+    dispatch('getTransactions')
+  },
 
   cancelTransaction: ({ dispatch }, params) => {
     axiosDispatcher({

@@ -16,6 +16,7 @@ const billing = {
       workspaceId: null,
       type: '',
       term: '',
+      size: 9999,
     },
     billingDashboard: {},
   },

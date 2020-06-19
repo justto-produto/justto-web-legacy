@@ -49,7 +49,7 @@ export default {
     cardTitle() {
       const total = this.data.total
       const computedTotal = total >= 0 ? `: ${+total}` : ''
-      const title = this.$t(`billing.${this.data.title}`)
+      const title = this.data.title
 
       return title + computedTotal
     },

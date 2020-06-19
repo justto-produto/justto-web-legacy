@@ -31,25 +31,6 @@
     "SETTLED_DISPUTE": "acordo fechado",
     "SUBSCRIPTION": "assinatura"
   },
-  "billing": {
-    "imports": "importações",
-    "dealsSettled": "propostas aceitas",
-    "monthlyFees": "mensalidades",
-    "interactions": "interações",
-    "dealsAccepted": "ganho",
-    "others": "outros servições",
-    "overall": "total"
-  },
-  "billingFilters": {
-    "imports": "IMPORTED_DISPUTE",
-    "dealsSettled": "SETTLED_DISPUTE",
-    "monthlyFees": "",
-    "interactions": "INTERACTION",
-    "dealsAccepted": "DISPUTE_ACCEPTED",
-    "others": "MANUAL",
-    "overall": "",
-    "": "SUBSCRIPTION" 
-  },
   "prescription": {
     "ONLY_SMS_ENGAGEMENT": "somente SMS",
     "ONLY_EMAIL_ENGAGEMENT": "somente email",

@@ -8,7 +8,9 @@
       class="billing-view__slot-main">
 
       <article class="billing-view__range">
-        <h2>Cobrança do período</h2>
+        <h2 class="billing-view__range-title">
+          Cobrança do período
+        </h2>
         <el-date-picker
           v-model="dateRange"
           :clearable="false"
@@ -27,7 +29,8 @@
 
       <jus-grid
         :rows="2"
-        :columns="4">
+        :columns="4"
+        class="billing-view__cards">
         <jus-financial-card
           v-grid-item.col-1.row-1
           v-grid-item.col-1.row-2:v-if="index === 6"
@@ -90,63 +93,76 @@ export default {
     return {
       dateRange: [],
       searchTerm: '',
-      mainActions: [
-        {
-          icon: 'eye',
-          label: 'Ver lançamentos',
-          trigger: 'showTransactions',
-        },
-        {
-          icon: 'management',
-          label: 'Filtrar gerenciamento',
-          trigger: 'showDisputes',
-        },
-      ],
-      secondaryActions: [
-        {
-          icon: 'add',
-          label: 'Novo lançamento',
-          trigger: 'addTransaction',
-        },
-      ],
+      filterTransactions: {
+        icon: 'eye',
+        label: 'Ver lançamentos',
+        trigger: 'showTransactions',
+      },
+      filterDisputes: {
+        icon: 'management',
+        label: 'Filtrar gerenciamento',
+        trigger: 'showDisputes',
+      },
+      addTransaction: {
+        icon: 'add',
+        label: 'Novo lançamento',
+        trigger: 'addTransaction',
+      },
     }
   },
   computed: {
     ...mapGetters([
       'billingDashboard',
+      'isJusttoAdmin',
       'transactions',
       'workspaceId',
     ]),
 
     dataCards() {
-      return this.billingDashboard.map(data => {
-        const showable = ['imports', 'dealsSettled', 'monthlyFees', 'interactions', 'dealsAccepted']
-        if (showable.includes(data.title)) {
-          return { data, actions: this.mainActions }
-        } return { data, actions: this.secondaryActions }
-      }).filter(card => card.data.title !== 'overall')
+      if (this.billingDashboard.length) {
+        return this.billingDashboard.map(data => {
+          if (data.type === 'OTHERS') {
+            return { data, actions: [this.addTransaction] }
+          } else if (data.type === 'SUBSCRIPTION') {
+            return { data }
+          } else {
+            return { data, actions: [this.filterTransactions, this.filterDisputes] }
+          }
+        })
+      }
     },
 
     totalCard() {
-      return this.billingDashboard.filter(data => {
-        return data.title === 'overall'
-      })[0]
+      let revenue = 0
+      for (const d of this.billingDashboard) revenue += d.revenue
+      return { title: 'total', revenue }
+    },
+
+    initialDateRange() {
+      return [
+        this.$moment(new Date()).startOf('month').format('YYYY-MM-DD'),
+        this.$moment(new Date()).endOf('month').format('YYYY-MM-DD'),
+      ]
     },
   },
+  beforeCreate() {
+    if (!this.isJusttoAdmin) this.$router.go(-1)
+  },
   beforeMount() {
-    this.dateRange[0] = this.$moment(new Date()).startOf('month').format('YYYY-MM-DD')
-    this.dateRange[1] = this.$moment(new Date()).endOf('month').format('YYYY-MM-DD')
-    this.setRangeDate(this.dateRange)
+    this.dateRange[0] = this.initialDateRange[0]
+    this.dateRange[1] = this.initialDateRange[1]
+    this.clearTransactionsQuery(this.initialDateRange)
     this.setWorkspaceId(this.workspaceId)
     this.getBillingDashboard()
   },
   methods: {
     ...mapActions([
-      'getBillingDashboard',
       'cancelTransaction',
+      'clearTransactionsQuery',
+      'getBillingDashboard',
+      'setRangeDate',
       'setTerm',
       'setType',
-      'setRangeDate',
       'setWorkspaceId',
     ]),
 
@@ -170,20 +186,36 @@ export default {
     },
 
     showTransactionsAction(evt) {
-      const type = this.$t(`billingFilters.${evt.eventProps.customProps.title}`)
-      this.setType(type)
+      this.setType(evt.eventProps.customProps.type)
     },
 
     showDisputesAction(evt) {
-      const type = this.$t(`billingFilters.${evt.eventProps.customProps.title}`)
+      let type = ''
+      switch (evt.eventProps.customProps.type) {
+        case 'IMPORTED_DISPUTE':
+          type = 'IMPORTED'
+          break
+        case 'SETTLED_DISPUTE':
+          type = 'SETTLED'
+          break
+        case 'INTERACTION':
+          type = 'RUNNING'
+          break
+        case 'DISPUTE_ACCEPTED':
+          type = 'ACCEPTED'
+          break
+        default:
+          type = ''
+      }
       this.$store.commit('clearDisputeQuery')
       this.$store.commit('updateDisputeQuery', { key: 'status', value: type })
+      // this.$store.commit('updateDisputeQuery', { key: 'transactionType', value: evt.eventProps.customProps.type })
       this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputesTab', '3')
       this.$router.push('/management')
     },
 
-    addTransaction(evt) {
+    addTransactionAction(evt) {
 
     },
 
@@ -206,6 +238,9 @@ export default {
 .billing-view {
   .billing-view__slot-main {
     height: 100%;
+    display: grid;    
+    grid-template-rows: repeat(2, auto) 1fr;
+    gap: 20px;
 
     .billing-view__range {
       display: flex;
@@ -220,20 +255,24 @@ export default {
           font-weight: bold !important;
         }
       }
+
+      .billing-view__range-title {
+        margin: 0px;
+        font-size: 24px;
+      }
     }
 
     .billing-view__table {
-      height: 50% !important;
-
-      .billing-view__table-body {
-        height: 100% !important;
-      }
+      padding-top: 12px;
+      display: grid;
+      gap: 8px;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
 
       .billing-view__table-header {
         display: flex;
         align-items: center;
-        justify-content: center;
-        margin-bottom: 8px;
+        justify-content: flex-start;
 
         .billing-view__table-filter-input  {
           width: 300px;
@@ -254,21 +293,21 @@ export default {
       .billing-view__range-input {
         padding: 4px 0;
         margin-left: 8px !important;
-        width: 278px;
+        width: 298px;
 
         .el-icon-date, .el-range__close-icon {
           display: none;
         }
 
         .el-range-input, .el-range-separator {
-          font-size: 22px;
+          font-size: 24px;
           font-weight: bold;
           color: $--color-primary;
           cursor: pointer;
         }
 
         .el-range-input {
-          width: 130px
+          width: 140px
         }
 
         .el-range-separator {

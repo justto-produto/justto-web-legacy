@@ -47,10 +47,11 @@
           <span slot="title">Importação</span>
         </el-menu-item>
         <el-menu-item
-          index="/financeiro"
+          v-if="$store.getters.isJusttoAdmin"
+          index="/billing"
           data-testid="menu-financial">
           <jus-icon
-            icon="dollar"
+            icon="coins"
             class="el-menu__icon"/>
           <span slot="title">Financeiro</span>
         </el-menu-item>
