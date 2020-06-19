@@ -131,12 +131,6 @@ export default {
 
 <style lang="scss" scoped>
 .data-table {
-
-  .data-table__empty-table {
-    margin-top: 40px;
-    width: 60px;
-  }
-
   .data-table__dispute-link {
     .data-table__dispute-link-icon {
       display: none;
@@ -149,30 +143,34 @@ export default {
       display: inline;
     }
   }
+
+  .data-table__empty-table {
+    margin-top: 40px;
+    width: 60px;
+  }
 }
 </style>
 
 <style lang="scss">
 .data-table {
+  .el-table__row {
+    height: 46px;
 
-  &.el-table--disputes .el-table__row {
-    cursor: initial !important;
+    &:hover .data-table__hidden-actions .cell {
+      display: contents;
+    }
   }
 
-  th.data-table__hidden-actions {
+  .data-table__hidden-actions {
     position: relative;
   }
 
-  td.data-table__hidden-actions .cell {
+  .data-table__hidden-actions .cell {
     display: none;
   }
 
-  tr:hover td.data-table__hidden-actions .cell {
-    display: contents;
-  }
-
-  td {
-    height: 46px;
+  &.el-table--disputes .el-table__row {
+    cursor: initial !important;
   }
 }
 </style>

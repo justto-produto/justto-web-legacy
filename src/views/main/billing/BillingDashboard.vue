@@ -156,19 +156,9 @@ export default {
 </style>
 
 <style lang="scss">
-
 @import '@/styles/colors.scss';
 
 .billing-view {
-  .billing-view__table {
-    .billing-view__table-body {
-      .el-card__body {
-        padding: 16px;
-        height: 600px;
-      }
-    }
-  }
-
   .billing-view__range {
     .billing-view__range-input {
       padding: 4px 0;
@@ -192,6 +182,15 @@ export default {
 
       .el-range-separator {
         width: 18px;
+      }
+    }
+  }
+  
+  .billing-view__table {
+    .billing-view__table-body {
+      .el-card__body {
+        padding: 16px;
+        height: 600px;
       }
     }
   }

@@ -54,17 +54,19 @@ export default {
 @import '@/styles/colors.scss';
 
 .float-actions {
-  background: linear-gradient(to right, rgba(246,246,246,0) 0%, rgba(246,246,246,1) 10%);
+  background: linear-gradient(to right, transparent 0%, rgba(246,246,246,1) 24px);
   padding: 0 20px 0 28px;
   position: absolute;
   display: flex;
   height: 100%;
   right: 0;
   top: 0;
+
   .float-actions__action-containet {
     display: flex;
     align-items: center;
   }
+
   .float-actions__action-icon {
     width: 16px;
     height: 16px;
