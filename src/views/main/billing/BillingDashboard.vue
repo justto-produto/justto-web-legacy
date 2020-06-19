@@ -30,7 +30,9 @@
       <jus-grid
         :rows="2"
         :columns="4"
-        class="billing-view__cards">
+        class="billing-view__cards"
+        flow="column"
+      >
         <jus-financial-card
           v-grid-item.col-1.row-1
           v-grid-item.col-1.row-2:v-if="index === 6"
@@ -238,7 +240,7 @@ export default {
 .billing-view {
   .billing-view__slot-main {
     height: 100%;
-    display: grid;    
+    display: grid;
     grid-template-rows: repeat(2, auto) 1fr;
     gap: 20px;
 

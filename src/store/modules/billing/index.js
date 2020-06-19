@@ -1,13 +1,15 @@
-import mutations from './mutations'
 import actions from './actions'
 import getters from './getters'
+import mutations from './mutations'
 
 const billing = {
   state: {
-    customers: [],
+    allCustomers: [],
+    myCustomers: [],
     currentCustomer: {
       contracts: [],
       customerId: 67,
+      customerName: '',
       transactions: null,
     },
     query: {
