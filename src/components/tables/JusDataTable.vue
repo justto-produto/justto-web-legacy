@@ -107,9 +107,9 @@ export default {
     return {
       availableActions: [
         {
-          name: 'cancelTransaction',
-          label: 'Cancelar lançamento',
           icon: 'trash',
+          label: 'Cancelar lançamento',
+          trigger: 'cancelTransaction',
         },
       ],
     }

@@ -17,6 +17,7 @@ const billing = {
       type: '',
       term: '',
     },
+    billingDashboard: {},
   },
   mutations: mutations,
   actions: actions,

@@ -9,7 +9,7 @@
         :content="action.label">
         <el-button
           type="text"
-          @click="emitAction(action)">
+          @click="emitAction(action.trigger)">
           <jus-icon
             :icon="action.icon"
             class="float-actions__action-icon"
@@ -37,12 +37,12 @@ export default {
 
   },
   methods: {
-    emitAction(action) {
+    emitAction(trigger) {
       this.$emit('floatAction', {
         eventName: 'JusFloatAction',
         eventProps: {
-          trigger: action.name,
-          scope: this.scope,
+          trigger,
+          customProps: this.scope,
         },
       })
     },

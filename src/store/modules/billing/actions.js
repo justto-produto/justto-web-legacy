@@ -26,6 +26,18 @@ const actions = {
     })
   },
 
+  getBillingDashboard: ({ state }) => {
+    const query = {
+      ...state.query,
+      customerId: state.currentCustomer.customerId,
+    }
+
+    return axiosDispatcher({
+      url: `api/billing/dashboard${queryBuilder(query)}`,
+      mutation: 'setBillingDashboard',
+    })
+  },
+
   setCustomer: ({ commit, dispatch }) => {
     commit('setCustomer')
     dispatch('getTransactions')
@@ -39,15 +51,21 @@ const actions = {
     commit('setTerm', term)
     dispatch('getTransactions')
   },
+  setType: ({ commit, dispatch }, type) => {
+    commit('setType', type)
+    dispatch('getTransactions')
+  },
   setWorkspaceId: ({ commit }, workspaceId) => {
     commit('setWorkspaceId', workspaceId)
   },
 
-  cancelTransaction: ({ commit }, params) => {
+  cancelTransaction: ({ dispatch }, params) => {
     axiosDispatcher({
       url: `api/billing/transaction/${params.id}/cancel`,
       method: 'POST',
       data: params.data,
+    }).then(() => {
+      dispatch('getTransactions')
     })
   },
 }

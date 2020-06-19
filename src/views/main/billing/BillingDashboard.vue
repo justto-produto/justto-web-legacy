@@ -3,7 +3,9 @@
     :loading-container="false"
     full-screen
     class="billing-view">
-    <div slot="main">
+    <div
+      slot="main"
+      class="billing-view__slot-main">
 
       <article class="billing-view__range">
         <h2>Cobrança do período</h2>
@@ -29,17 +31,16 @@
         <jus-financial-card
           v-grid-item.col-1.row-1
           v-grid-item.col-1.row-2:v-if="index === 6"
-          v-for="(card, index) in cards"
+          v-for="(card, index) in dataCards"
           :key="index"
+          :data="card.data"
           :actions="card.actions"
-          :title="card.title"
-          :value="card.value"
+          @cardAction="handlerAction"
         />
         <jus-financial-card
           v-grid-item.col-1.row-2
+          :data="totalCard"
           highlighted
-          title="Total"
-          value="4000,00"
         />
       </jus-grid>
 
@@ -64,7 +65,7 @@
           <JusDataTable
             :data="transactions.content"
             class="billing-view__data-table"
-            @floatAction="floatAction"
+            @floatAction="handlerAction"
           />
         </el-card>
       </article>
@@ -89,129 +90,65 @@ export default {
     return {
       dateRange: [],
       searchTerm: '',
-      cards: [
+      mainActions: [
         {
-          title: 'Importações',
-          value: '4000,00',
-          actions: [
-            {
-              icon: 'eye',
-              label: 'Ver lançamentos',
-              handler: () => false,
-            },
-            {
-              icon: 'management',
-              label: 'Filtrar gerenciamento',
-              handler: () => false,
-            },
-          ],
+          icon: 'eye',
+          label: 'Ver lançamentos',
+          trigger: 'showTransactions',
         },
         {
-          title: 'Propostas Aceitas',
-          value: '4000,00',
-          actions: [
-            {
-              icon: 'eye',
-              label: 'Ver lançamentos',
-              handler: () => false,
-            },
-            {
-              icon: 'management',
-              label: 'Filtrar gerenciamento',
-              handler: () => false,
-            },
-          ],
+          icon: 'management',
+          label: 'Filtrar gerenciamento',
+          trigger: 'showDisputes',
         },
+      ],
+      secondaryActions: [
         {
-          title: 'Mensalidade',
-          value: '4000,00',
-          actions: [
-            {
-              icon: 'eye',
-              label: 'Ver lançamentos',
-              handler: () => false,
-            },
-            {
-              icon: 'management',
-              label: 'Filtrar gerenciamento',
-              handler: () => false,
-            },
-          ],
-        },
-        {
-          title: 'Interações',
-          value: '4000,00',
-          actions: [
-            {
-              icon: 'eye',
-              label: 'Ver lançamentos',
-              handler: () => false,
-            },
-            {
-              icon: 'management',
-              label: 'Filtrar gerenciamento',
-              handler: () => false,
-            },
-          ],
-        },
-        {
-          title: 'Ganho',
-          value: '4000,00',
-          actions: [
-            {
-              icon: 'eye',
-              label: 'Ver lançamentos',
-              handler: () => false,
-            },
-            {
-              icon: 'management',
-              label: 'Filtrar gerenciamento',
-              handler: () => false,
-            },
-          ],
-        },
-        {
-          title: 'Outros Serviços',
-          value: '4000,00',
-          actions: [
-            {
-              icon: 'eye',
-              label: 'Ver lançamentos',
-              handler: () => false,
-            },
-            {
-              icon: 'management',
-              label: 'Filtrar gerenciamento',
-              handler: () => false,
-            },
-          ],
+          icon: 'add',
+          label: 'Novo lançamento',
+          trigger: 'addTransaction',
         },
       ],
     }
   },
   computed: {
-    ...mapGetters(['transactions', 'workspaceId']),
+    ...mapGetters([
+      'billingDashboard',
+      'transactions',
+      'workspaceId',
+    ]),
+
+    dataCards() {
+      return this.billingDashboard.map(data => {
+        const showable = ['imports', 'dealsSettled', 'monthlyFees', 'interactions', 'dealsAccepted']
+        if (showable.includes(data.title)) {
+          return { data, actions: this.mainActions }
+        } return { data, actions: this.secondaryActions }
+      }).filter(card => card.data.title !== 'overall')
+    },
+
+    totalCard() {
+      return this.billingDashboard.filter(data => {
+        return data.title === 'overall'
+      })[0]
+    },
   },
   beforeMount() {
     this.dateRange[0] = this.$moment(new Date()).startOf('month').format('YYYY-MM-DD')
     this.dateRange[1] = this.$moment(new Date()).endOf('month').format('YYYY-MM-DD')
     this.setRangeDate(this.dateRange)
     this.setWorkspaceId(this.workspaceId)
-    this.getTransactions()
+    this.getBillingDashboard()
   },
   methods: {
     ...mapActions([
-      'getTransactions',
+      'getBillingDashboard',
       'cancelTransaction',
       'setTerm',
+      'setType',
       'setRangeDate',
       'setWorkspaceId',
     ]),
-
-    floatAction(evt) {
-      const action = evt.eventProps.trigger + 'Action'
-      this[action](evt)
-    },
 
     filterByTerm() {
       clearTimeout(this.termDebounce)
@@ -227,13 +164,36 @@ export default {
       }, 800)
     },
 
+    handlerAction(evt) {
+      const action = evt.eventProps.trigger + 'Action'
+      this[action](evt)
+    },
+
+    showTransactionsAction(evt) {
+      const type = this.$t(`billingFilters.${evt.eventProps.customProps.title}`)
+      this.setType(type)
+    },
+
+    showDisputesAction(evt) {
+      const type = this.$t(`billingFilters.${evt.eventProps.customProps.title}`)
+      this.$store.commit('clearDisputeQuery')
+      this.$store.commit('updateDisputeQuery', { key: 'status', value: type })
+      this.$store.commit('setDisputeHasFilters', true)
+      this.$store.commit('setDisputesTab', '3')
+      this.$router.push('/management')
+    },
+
+    addTransaction(evt) {
+
+    },
+
     cancelTransactionAction(evt) {
       this.$prompt('Insira o motivo do cancelamento', 'Cancelar lançamento', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
       }).then(({ value }) => {
         this[evt.eventProps.trigger]({
-          id: evt.eventProps.scope.id,
+          id: evt.eventProps.customProps.id,
           data: { reason: value },
         })
       })
@@ -244,33 +204,41 @@ export default {
 
 <style lang="scss" scoped>
 .billing-view {
-  .billing-view__range {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .billing-view__slot-main {
+    height: 100%;
 
-    .billing-view__range-input {
-      border: none !important;
-
-      .el-range-input {
-        font-size: 30px;
-        font-weight: bold !important;
-      }
-    }
-  }
-
-  .billing-view__table {
-    height: 50%;
-
-    .billing-view__table-header {
+    .billing-view__range {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 8px;
 
-      .billing-view__table-filter-input  {
-        width: 300px;
-        margin-right: 8px;
+      .billing-view__range-input {
+        border: none !important;
+
+        .el-range-input {
+          font-size: 30px;
+          font-weight: bold !important;
+        }
+      }
+    }
+
+    .billing-view__table {
+      height: 50% !important;
+
+      .billing-view__table-body {
+        height: 100% !important;
+      }
+
+      .billing-view__table-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+
+        .billing-view__table-filter-input  {
+          width: 300px;
+          margin-right: 8px;
+        }
       }
     }
   }
@@ -281,40 +249,46 @@ export default {
 @import '@/styles/colors.scss';
 
 .billing-view {
-  .billing-view__range {
-    .billing-view__range-input {
-      padding: 4px 0;
-      margin-left: 8px !important;
-      width: 278px;
+  .billing-view__slot-main {
+    .billing-view__range {
+      .billing-view__range-input {
+        padding: 4px 0;
+        margin-left: 8px !important;
+        width: 278px;
 
-      .el-icon-date, .el-range__close-icon {
-        display: none;
+        .el-icon-date, .el-range__close-icon {
+          display: none;
+        }
+
+        .el-range-input, .el-range-separator {
+          font-size: 22px;
+          font-weight: bold;
+          color: $--color-primary;
+          cursor: pointer;
+        }
+
+        .el-range-input {
+          width: 130px
+        }
+
+        .el-range-separator {
+          width: 18px;
+        }
       }
+    }
 
-      .el-range-input, .el-range-separator {
-        font-size: 22px;
-        font-weight: bold;
-        color: $--color-primary;
-        cursor: pointer;
-      }
-
-      .el-range-input {
-        width: 130px
-      }
-
-      .el-range-separator {
-        width: 18px;
+    .billing-view__table {
+      .billing-view__table-body {
+        .el-card__body {
+          padding: 16px;
+          height: 100%;
+        }
       }
     }
   }
 
-  .billing-view__table {
-    .billing-view__table-body {
-      .el-card__body {
-        padding: 16px;
-        height: 600px;
-      }
-    }
+  .el-card__body {
+    height: 100%;
   }
 }
 </style>
