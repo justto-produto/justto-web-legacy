@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import workspaceModule from './modules/workspace'
 import accountModule from './modules/account'
 import importModule from './modules/import'
 import campaignModule from './modules/campaign'
@@ -13,6 +12,8 @@ import documentModule from './modules/document'
 import dashboardModule from './modules/dashboard'
 import tagModule from './modules/tag'
 import banksList from '@/utils/banksList'
+import workspaceModule from './modules/workspace'
+import UserModule from "./modules/user";
 
 Vue.use(Vuex)
 
@@ -65,5 +66,6 @@ export default new Vuex.Store({
     documentModule,
     tagModule,
     dashboardModule,
+    UserModule,
   },
 })
