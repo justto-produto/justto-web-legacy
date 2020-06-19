@@ -13,7 +13,7 @@ import personModule from './modules/person/index'
 import socketModule from './modules/socket/index'
 import strategyModule from './modules/strategy'
 import tagModule from './modules/tag'
-import UserModule from "./modules/user";
+import userModule from './modules/user'
 import workspaceModule from './modules/workspace'
 
 Vue.use(Vuex)
@@ -67,8 +67,7 @@ export default new Vuex.Store({
     socketModule,
     strategyModule,
     tagModule,
-    dashboardModule,
-    UserModule,
+    userModule,
     workspaceModule,
   },
 })
