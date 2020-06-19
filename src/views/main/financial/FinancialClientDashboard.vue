@@ -29,16 +29,14 @@
 </template>
 
 <script>
-import { JusGrid } from '@/components/JusGrid'
-import { JusFinancialCard } from '@/components/JusFinancialCard'
 import { GridItem } from '@/utils/directives/JusGridItem'
 
 export default {
   name: 'FinancialCLientDashboard',
   directives: { GridItem },
   components: {
-    JusGrid,
-    JusFinancialCard,
+    JusGrid: () => import('@/components/JusGrid/JusGrid'),
+    JusFinancialCard: () => import('@/components/JusFinancialCard/JusFinancialCard'),
   },
   data() {
     return {
