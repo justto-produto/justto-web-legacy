@@ -60,6 +60,7 @@ export default {
         yAdjust: this.getMax() < 24 ? 11 : 0,
       },
     }] : []
+    // eslint-disable-next-line
     const sufix = this.sufix ? [{
       ticks: {
         callback: (value, index, values) => {
@@ -77,7 +78,7 @@ export default {
           generateLabels: this.generateLabels,
         },
       },
-      annotation: { annotations: annotation }
+      annotation: { annotations: annotation },
     }))
   },
   methods: {
