@@ -10,7 +10,8 @@
       <el-tooltip content="Atualizar anexos">
         <el-button
           plain
-          @click="enrichDispute">
+          @click="enrichDispute"
+        >
           <jus-icon icon="refresh" />
         </el-button>
       </el-tooltip>
@@ -18,21 +19,24 @@
 
     <jus-drag-area class="dispute-attachments__drag-area">
       <div
-        v-loading="deleteAttachmentLoading"
         v-if="filteredDisputeAttachments.length"
-        class="dispute-attachments__attachment-list">
+        v-loading="deleteAttachmentLoading"
+        class="dispute-attachments__attachment-list"
+      >
         <el-card
           v-for="attachment in filteredDisputeAttachments"
           :key="attachment.url"
           class="dispute-attachments__attachment"
-          shadow="never">
+          shadow="never"
+        >
           <div class="dispute-overview-view__attachment-main">
             <el-link
               :underline="false"
               :href="attachment.url"
               target="_blank"
-              class="dispute-overview-view__attachment-link">
-              <i class="el-icon-document"/>
+              class="dispute-overview-view__attachment-link"
+            >
+              <i class="el-icon-document" />
               {{ attachment.name }}
             </el-link>
             <div class="dispute-overview-view__attachment-actions">
@@ -58,7 +62,8 @@
       </div>
       <div
         v-else
-        class="dispute-attachments__without-attachment">
+        class="dispute-attachments__without-attachment"
+      >
         Sem Anexos
       </div>
 
@@ -68,7 +73,8 @@
           type="primary"
           size="medium"
           icon="el-icon-upload"
-          @click="handleAttachmentDialogVisable()">
+          @click="handleAttachmentDialogVisable()"
+        >
           Adicionar anexos
         </el-button>
       </div>

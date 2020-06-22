@@ -4,13 +4,15 @@
       v-for="(tag, index) in workspaceTags.slice(-3).reverse()"
       :key="tag.id"
       :style="{ zIndex: workspaceTags.length - index }"
-      class="jus-tags-filter__item">
+      class="jus-tags-filter__item"
+    >
       <el-tooltip :content="tag.name">
         <el-tag
           :color="tag.color"
           :class="{ 'active': tag.active }"
-          @click="filterByTag(tag)">
-          <i :class="`el-icon-${tag.icon}`"/>
+          @click="filterByTag(tag)"
+        >
+          <i :class="`el-icon-${tag.icon}`" />
         </el-tag>
       </el-tooltip>
     </div>
@@ -19,23 +21,26 @@
       placement="bottom"
       width="400"
       popper-class="jus-tags-filter__popover"
-      trigger="click">
+      trigger="click"
+    >
       <div class="jus-tags-filter__others">
         <el-tag
           v-for="tag in workspaceTags.slice(0, workspaceTags.length - 3).reverse()"
           :key="tag.id"
           :color="tag.color"
           :class="{ 'active': tag.active }"
-          class="el-tag--etiqueta el-tag--click">
+          class="el-tag--etiqueta el-tag--click"
+        >
           <div @click="filterByTag(tag)">
-            <i :class="`el-icon-${tag.icon}`"/>
+            <i :class="`el-icon-${tag.icon}`" />
             {{ tag.name }}
           </div>
         </el-tag>
       </div>
       <el-button
         slot="reference"
-        type="text">
+        type="text"
+      >
         + {{ workspaceTags.length - 3 }}
       </el-button>
     </el-popover>

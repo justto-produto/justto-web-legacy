@@ -2,13 +2,15 @@
   <el-row class="admin-panel-view">
     <el-col
       :span="left"
-      style="transition: width ease 1s;">
+      style="transition: width ease 1s;"
+    >
       <jus-sidenav-external show-exit>
         <el-menu
           default-active="0"
           class="el-menu-vertical-demo"
           background-color="#f7f7f7"
-          @select="changeMenuIndex">
+          @select="changeMenuIndex"
+        >
           <el-menu-item index="0">
             <i class="el-icon-s-cooperation" /> Equipes
           </el-menu-item>
@@ -34,7 +36,8 @@
       <el-col
         v-if="right > 0"
         :span="right"
-        class="content">
+        class="content"
+      >
         <h1>
           {{ $t('panel.' + menuIndex) }}
           <!-- <el-button
@@ -48,22 +51,28 @@
         </h1>
         <panel-workspace
           v-if="menuIndex === '0'"
-          ref="panel1"/>
+          ref="panel1"
+        />
         <panel-dashboard
           v-if="menuIndex === '1'"
-          ref="panel0"/>
+          ref="panel0"
+        />
         <panel-user
           v-if="menuIndex === '2'"
-          ref="panel2"/>
+          ref="panel2"
+        />
         <panel-strategy
           v-if="menuIndex === '3'"
-          ref="panel3"/>
+          ref="panel3"
+        />
         <panel-minute
           v-if="menuIndex === '4'"
-          ref="panel4"/>
+          ref="panel4"
+        />
         <panel-billing
           v-if="menuIndex === '5'"
-          ref="panel5"/>
+          ref="panel5"
+        />
       </el-col>
     </transition>
   </el-row>

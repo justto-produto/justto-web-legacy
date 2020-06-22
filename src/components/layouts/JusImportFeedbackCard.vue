@@ -2,26 +2,33 @@
   <div class="jus-import-feedback-card">
     <el-tag
       :color="color"
-      class="el-tag--mapped-campaign-tag">{{ campaignTitle }}</el-tag>
+      class="el-tag--mapped-campaign-tag"
+    >
+      {{ campaignTitle }}
+    </el-tag>
     <el-card :style="'border-left: solid 4px ' + color">
       <el-input
         v-model="respondent"
         data-testid="feedback-respondent"
-        placeholder="Dê um nome para o seu Réu">
+        placeholder="Dê um nome para o seu Réu"
+      >
         <i
           slot="prefix"
           :class="respondent === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon" />
+          class="el-input__icon"
+        />
       </el-input>
       <el-input
         v-model="campaignName"
         class="select-strategy"
         data-testid="feedback-campaignName"
-        placeholder="Dê um nome para a sua Campanha">
+        placeholder="Dê um nome para a sua Campanha"
+      >
         <i
           slot="prefix"
           :class="campaignName === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon" />
+          class="el-input__icon"
+        />
       </el-input>
       <div class="select-strategy__messages">
         <div v-show="campaignNameDuplicated && campaignName !== ''">
@@ -40,16 +47,19 @@
         filterable
         class="select-strategy"
         placeholder="Escolha uma estratégia"
-        data-testid="feedback-strategy">
+        data-testid="feedback-strategy"
+      >
         <i
           slot="prefix"
           :class="strategy === '' ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon" />
+          class="el-input__icon"
+        />
         <el-option
           v-for="strategy in strategies"
           :key="strategy.id"
           :label="strategy.name"
-          :value="strategy" />
+          :value="strategy"
+        />
       </el-select>
       <div class="select-strategy__messages">
         <div v-show="strategy !== ''">
@@ -76,7 +86,8 @@
       </div> -->
       <div
         v-if="isPaymentStrategy"
-        class="jus-import-feedback-card__number">
+        class="jus-import-feedback-card__number"
+      >
         <div>
           <i class="el-icon-circle-check el-input__icon--success" />Data do pagamento
         </div>
@@ -86,7 +97,8 @@
             :min="1"
             :max="9999"
             name="payment-deadline"
-            controls-position="right" />
+            controls-position="right"
+          />
           <span class="jus-import-feedback-card__sufix">
             dia(s) corridos após o protocolo
           </span>
@@ -100,7 +112,8 @@
         format="dd-MM-yyyy"
         placeholder="Defina a data limite para a negociação"
         data-testid="feedback-datapicker"
-        value-format="yyyy-MM-dd" />
+        value-format="yyyy-MM-dd"
+      />
       <el-select
         v-model="negotiatorIds"
         value-key="name"
@@ -108,21 +121,25 @@
         multiple
         placeholder="Escolha os negociadores"
         class="select-negotiator"
-        data-testid="feedback-negotiators">
+        data-testid="feedback-negotiators"
+      >
         <i
           slot="prefix"
           :class="negotiatorIds.length === 0 ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
-          class="el-input__icon" />
+          class="el-input__icon"
+        />
         <el-option
           v-for="item in negotiatorsList"
           :key="item.person.id"
           :label="item.person.name"
-          :value="item.person.id">
+          :value="item.person.id"
+        >
           <jus-avatar-user
             :name="item.person.name"
             shape="circle"
             size="xs"
-            style="vertical-align: middle" />
+            style="vertical-align: middle"
+          />
           <span style="vertical-align: middle;margin-left: 10px;">{{ item.person.name }}</span>
         </el-option>
       </el-select>

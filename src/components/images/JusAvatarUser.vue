@@ -1,16 +1,19 @@
 <template>
   <div
     :class="purpleClass + ' ' + sizeClass + ' ' + shapeClass + ' ' + activeClass"
-    class="jus-avatar-user">
+    class="jus-avatar-user"
+  >
     <img
       v-if="showAvatar"
-      :src="avatarSrc">
+      :src="avatarSrc"
+    >
     <span v-else>
       {{ nameInitials.toUpperCase() }}
     </span>
     <span
       v-if="notifications > 0 && size === 'sm'"
-      class="jus-avatar-user__notifications">
+      class="jus-avatar-user__notifications"
+    >
       {{ notifications }}
     </span>
   </div>

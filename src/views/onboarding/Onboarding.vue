@@ -3,34 +3,39 @@
     <el-col
       :md="left"
       class="hidden-sm-and-down"
-      style="transition: width ease 1s;">
-      <jus-sidenav-external/>
+      style="transition: width ease 1s;"
+    >
+      <jus-sidenav-external />
     </el-col>
     <transition name="swiper-fade">
       <el-col
         v-if="right > 0"
-        :md="right">
+        :md="right"
+      >
         <swiper
-          v-loading="$store.state.loading"
           ref="swiper"
+          v-loading="$store.state.loading"
           :options="swiperOption"
           class="swiper-box"
           @slideChange="slideChange"
-          @progress="updateProgress">
+          @progress="updateProgress"
+        >
           <swiper-slide>
             <transition name="el-fade-in-linear">
               <welcome-step
                 v-if="currentVisible === 'welcome'"
                 :is-guest="isGuest"
                 :company-name="$route.query.invitedBy"
-                @onboarding:step:next="nextStep"/>
+                @onboarding:step:next="nextStep"
+              />
             </transition>
           </swiper-slide>
           <swiper-slide v-if="!isGuest">
             <transition name="el-fade-in-linear">
               <team-name-step
                 v-if="currentVisible === 'teamname'"
-                @onboarding:createSubdomain="createSubdomain"/>
+                @onboarding:createSubdomain="createSubdomain"
+              />
             </transition>
           </swiper-slide>
           <!-- <swiper-slide v-if="!isGuest">
@@ -48,14 +53,16 @@
             <transition name="el-fade-in-linear">
               <invite-step
                 v-if="currentVisible === 'invite'"
-                @onboarding:step:next="nextStep"/>
+                @onboarding:step:next="nextStep"
+              />
             </transition>
           </swiper-slide>
           <swiper-slide>
             <transition name="el-fade-in-linear">
               <final-step
                 v-if="currentVisible === 'final'"
-                :is-guest="isGuest"/>
+                :is-guest="isGuest"
+              />
             </transition>
           </swiper-slide>
         </swiper>
@@ -64,19 +71,22 @@
           <el-progress
             :width="400"
             :percentage="progressPercentage"
-            text-inside/>
+            text-inside
+          />
         </div>
       </el-col>
     </transition>
     <el-tooltip
       :open-delay="800"
-      content="Voltar">
+      content="Voltar"
+    >
       <el-button
         :disabled="currentStep === 0"
         class="el-button--previous-step"
         type="primary"
         icon="el-icon-arrow-up"
-        @click="previousStep"/>
+        @click="previousStep"
+      />
     </el-tooltip>
   </el-row>
 </template>
@@ -89,9 +99,7 @@ export default {
   components: {
     JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
     WelcomeStep: () => import('./steps/WelcomeStep'),
-    OabStep: () => import('./steps/OabStep'),
     TeamNameStep: () => import('./steps/TeamNameStep'),
-    LogoStep: () => import('./steps/LogoStep'),
     InviteStep: () => import('./steps/InviteStep'),
     FinalStep: () => import('./steps/FinalStep'),
   },
@@ -139,6 +147,8 @@ export default {
             return 'final'
         }
       }
+
+      return ''
     },
   },
   beforeCreate() {

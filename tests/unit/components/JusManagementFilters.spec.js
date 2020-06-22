@@ -29,7 +29,8 @@ describe('JusManagementFilters.vue', () => {
       propsData: {
         tabIndex: '0',
         filters: {},
-      } })
+      },
+    })
     expect(wrapper.isVueInstance()).toBe(true)
   })
 })

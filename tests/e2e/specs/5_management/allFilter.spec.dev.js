@@ -17,16 +17,16 @@ describe('Justto.App - Com Interação: Filtro Todos', function() {
       .type(login)
       .should('have.value', login)
 
-      // Preenche o campo 'Senha'
+    // Preenche o campo 'Senha'
     cy.get('[data-testid=login-password]')
       .type(password)
       .should('have.value', password)
 
-      // Clica no botão "Entrar"
+    // Clica no botão "Entrar"
     cy.get('[data-testid=submit]')
       .click()
 
-      // Verifica se tela acessada é a de "Gerenciamento"
+    // Verifica se tela acessada é a de "Gerenciamento"
     cy.url().should('include', '/#/management')
   })
 

@@ -2,33 +2,39 @@
   <jus-view-main
     :class="{'configuration-view--user': !isAdminProfile}"
     class="configuration-view"
-    right-card-width="550">
+    right-card-width="550"
+  >
     <template slot="title">
       <h1>Configurações</h1>
     </template>
-    <template slot="main">
+    <div slot="main">
       <el-tabs
         tab-position="top"
         value="profile"
-        @tab-click="handleTabClick">
+        @tab-click="handleTabClick"
+      >
         <el-tab-pane
           label="Perfil"
           name="profile"
-          class="configuration-view__profile">
+          class="configuration-view__profile"
+        >
           <el-row :gutter="20">
             <el-col
               :span="12"
-              :offset="6">
+              :offset="6"
+            >
               <el-form
                 ref="profileForm"
                 :model="profileForm"
                 :rules="profileFormRules"
-                label-position="top">
+                label-position="top"
+              >
                 <el-form-item label="Nome">
                   <el-input v-model="person.name">
                     <el-button
                       slot="append"
-                      @click="changeName">
+                      @click="changeName"
+                    >
                       Alterar
                     </el-button>
                   </el-input>
@@ -36,39 +42,52 @@
                 <el-form-item label="Email">
                   <el-input
                     v-model="$store.state.accountModule.email"
-                    disabled />
+                    disabled
+                  />
                 </el-form-item>
                 <el-form-item label="Nova senha">
                   <el-input
                     v-model="profileForm.newPassword"
                     :type="passwordType"
                     auto-complete="new-password"
-                    @keyup.enter.native="passwordModal">
+                    @keyup.enter.native="passwordModal"
+                  >
                     <span
                       slot="append"
-                      class="float-button">
+                      class="float-button"
+                    >
                       <el-button
                         type="text"
-                        @click="showPassword = !showPassword">
+                        @click="showPassword = !showPassword"
+                      >
                         <jus-icon
                           :icon="showPassword ? 'hide' : 'eye'"
-                          class="show-password" />
+                          class="show-password"
+                        />
                       </el-button>
                     </span>
                     <el-button
                       slot="append"
-                      @click="passwordModal">Alterar</el-button>
+                      @click="passwordModal"
+                    >
+                      Alterar
+                    </el-button>
                   </el-input>
                 </el-form-item>
                 <el-form-item
                   label="Contato"
-                  prop="phone">
+                  prop="phone"
+                >
                   <el-input
+                    v-model="profileForm.phone"
                     v-mask="['(##) ####-####', '(##) #####-####']"
-                    v-model="profileForm.phone">
+                  >
                     <el-button
                       slot="append"
-                      @click="updatePhone">Alterar</el-button>
+                      @click="updatePhone"
+                    >
+                      Alterar
+                    </el-button>
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -78,17 +97,20 @@
         <el-tab-pane
           label="Equipe"
           name="team"
-          class="configuration-view__team">
+          class="configuration-view__team"
+        >
           <el-row :gutter="20">
             <el-col
               :span="9"
-              :offset="2">
+              :offset="2"
+            >
               <el-form label-position="top">
                 <h3>Alterar nome da Equipe</h3>
                 <el-alert
                   :closable="false"
                   type="info"
-                  show-icon>
+                  show-icon
+                >
                   <span slot="title">
                     Este nome <strong>NÃO</strong> irá aparecer nas mensagens automáticas. Utilize-o para organização interna.
                   </span>
@@ -98,7 +120,10 @@
                   <el-input v-model="teamName">
                     <el-button
                       slot="append"
-                      @click.prevent="changeTeamName">Alterar nome</el-button>
+                      @click.prevent="changeTeamName"
+                    >
+                      Alterar nome
+                    </el-button>
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -111,7 +136,8 @@
                       v-for="type in ['QUANTITY', 'AVERAGE']"
                       :key="type"
                       :label="$t(`threshold.${type}`)"
-                      :value="type" />
+                      :value="type"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item v-if="vexatiousType">
@@ -122,20 +148,28 @@
                   <money
                     v-model="vexatiousThreshold"
                     v-bind="vexatiousTypeMask"
-                    class="el-input__inner" />
+                    class="el-input__inner"
+                  />
                 </el-form-item>
                 <el-button
                   type="primary"
-                  @click.prevent="saveProperties">Salvar</el-button>
+                  @click.prevent="saveProperties"
+                >
+                  Salvar
+                </el-button>
               </el-form>
             </el-col>
             <el-col
               :span="9"
-              :offset="2">
-              <h3 class="mt40 mb30">Membros da equipe</h3>
+              :offset="2"
+            >
+              <h3 class="mt40 mb30">
+                Membros da equipe
+              </h3>
               <div
                 v-for="member in teamMembers"
-                :key="member.id">
+                :key="member.id"
+              >
                 <div class="configuration-view__members-list">
                   <div class="member">
                     <strong>{{ member.person.name }}: </strong>
@@ -144,19 +178,22 @@
                   <div class="actions">
                     <a
                       href="#"
-                      @click.prevent="showEditMember(member)">
+                      @click.prevent="showEditMember(member)"
+                    >
                       <jus-icon icon="edit" />
                     </a>
                     <a
                       href="#"
-                      @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
+                      @click.prevent="removeMember(member.id, member.person.name)"
+                    ><jus-icon icon="trash" /></a>
                   </div>
                 </div>
               </div>
               <el-button
                 type="primary"
                 class="mt40"
-                @click="dialogInvite = true">
+                @click="dialogInvite = true"
+              >
                 Convidar novo membro
               </el-button>
             </el-col>
@@ -165,16 +202,19 @@
         <el-tab-pane
           label="Empresa"
           name="company"
-          class="configuration-view__company">
+          class="configuration-view__company"
+        >
           <el-row :gutter="20">
             <el-col
               :span="12"
-              :offset="6">
+              :offset="6"
+            >
               <h3>Alterar nome da empresa/escritório</h3>
               <el-alert
                 :closable="false"
                 type="info"
-                show-icon>
+                show-icon
+              >
                 <span slot="title">
                   Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
                 </span>
@@ -185,18 +225,24 @@
                   <el-input v-model="companyName">
                     <el-button
                       slot="append"
-                      @click.prevent="changeCompanyName">Alterar</el-button>
+                      @click.prevent="changeCompanyName"
+                    >
+                      Alterar
+                    </el-button>
                   </el-input>
                 </el-form-item>
               </el-form>
-              <h3 class="mt40">Criação de novas equipes</h3>
+              <h3 class="mt40">
+                Criação de novas equipes
+              </h3>
               <p>
                 Se o seu escritório possui mais de uma célula de negociação, você
                 pode criar uma nova equipe e se organizar melhor.
               </p>
               <el-button
                 type="secondary"
-                @click="createWorkspace">
+                @click="createWorkspace"
+              >
                 Criar nova Equipe
               </el-button>
             </el-col>
@@ -205,16 +251,18 @@
         <el-tab-pane
           label="Blacklist"
           name="blacklist"
-          class="configuration-view__blacklist">
+          class="configuration-view__blacklist"
+        >
           <configuration-blacklist />
         </el-tab-pane>
         <el-tab-pane
           v-if="$store.getters.isJusttoAdmin"
           name="minute"
-          class="configuration-view__minute">
+          class="configuration-view__minute"
+        >
           <span slot="label">
             <el-tooltip content="Somentes administradores Justto">
-              <i class="el-icon-lock"/>
+              <i class="el-icon-lock" />
             </el-tooltip>
             Minuta
           </span>
@@ -226,7 +274,8 @@
         :close-on-click-modal="false"
         :title="currentEditMember.person.name"
         :visible.sync="dialogMember"
-        width="400px">
+        width="400px"
+      >
         <el-form label-position="top">
           <el-form-item label="Perfil">
             <el-select v-model="currentEditMember.profile">
@@ -234,17 +283,20 @@
                 v-for="role in roles"
                 :key="role.key"
                 :label="role.value"
-                :value="role.key" />
+                :value="role.key"
+              />
             </el-select>
           </el-form-item>
         </el-form>
         <span slot="footer">
           <el-button
             plain
-            @click="dialogMember = false">Cancelar</el-button>
+            @click="dialogMember = false"
+          >Cancelar</el-button>
           <el-button
             type="primary"
-            @click="editMember">Salvar alterações</el-button>
+            @click="editMember"
+          >Salvar alterações</el-button>
         </span>
       </el-dialog>
       <el-dialog
@@ -252,58 +304,71 @@
         :visible.sync="dialogPassword"
         :before-close="cancelChangePassword"
         title="Alterar senha"
-        width="40%">
+        width="40%"
+      >
         <el-form
           ref="profileForm"
           :disabled="loadingUpdatePassword"
           :model="profileForm"
           :rules="profileFormRules"
-          label-position="top">
+          label-position="top"
+        >
           <el-form-item label="Nova senha">
             <el-input
               v-model="profileForm.newPassword"
               :type="passwordType"
-              disabled>
+              disabled
+            >
               <el-button
                 slot="append"
-                @click="showPassword = !showPassword">
+                @click="showPassword = !showPassword"
+              >
                 <jus-icon
                   :icon="showPassword ? 'hide' : 'eye'"
-                  class="show-password" />
+                  class="show-password"
+                />
               </el-button>
             </el-input>
           </el-form-item>
           <el-form-item
             label="Confirme a nova senha"
-            prop="newPasswordConfirm">
+            prop="newPasswordConfirm"
+          >
             <el-input
               v-model="profileForm.newPasswordConfirm"
               :type="passwordType"
               auto-complete="new-password"
-              @keyup.enter.native="updatePassword">
+              @keyup.enter.native="updatePassword"
+            >
               <el-button
                 slot="append"
-                @click="showPassword = !showPassword">
+                @click="showPassword = !showPassword"
+              >
                 <jus-icon
                   :icon="showPassword ? 'hide' : 'eye'"
-                  class="show-password" />
+                  class="show-password"
+                />
               </el-button>
             </el-input>
           </el-form-item>
           <el-form-item
             label="Senha atual"
-            prop="password">
+            prop="password"
+          >
             <el-input
               v-model="profileForm.password"
               :type="passwordType"
               auto-complete="new-password"
-              @keyup.enter.native="updatePassword">
+              @keyup.enter.native="updatePassword"
+            >
               <el-button
                 slot="append"
-                @click="showPassword = !showPassword">
+                @click="showPassword = !showPassword"
+              >
                 <jus-icon
                   :icon="showPassword ? 'hide' : 'eye'"
-                  class="show-password" />
+                  class="show-password"
+                />
               </el-button>
             </el-input>
           </el-form-item>
@@ -311,39 +376,46 @@
         <span slot="footer">
           <el-button
             plain
-            @click="cancelChangePassword">Cancelar</el-button>
+            @click="cancelChangePassword"
+          >Cancelar</el-button>
           <el-button
             :loading="loadingUpdatePassword"
             type="primary"
-            @click="updatePassword">Alterar senha</el-button>
+            @click="updatePassword"
+          >Alterar senha</el-button>
         </span>
       </el-dialog>
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="dialogInvite"
         title="Convide pessoas à sua equipe"
-        width="50%">
+        width="50%"
+      >
         <el-form
           ref="inviteForm"
           :disabled="loadingInvite"
           :model="inviteForm"
           :rules="inviteFormRules"
           label-position="top"
-          @submit.native.prevent="inviteTeammate">
+          @submit.native.prevent="inviteTeammate"
+        >
           <el-form-item
             label="Email"
-            prop="email">
+            prop="email"
+          >
             <el-input v-model="inviteForm.email" />
           </el-form-item>
           <el-form-item
             label="Perfil"
-            prop="profile">
+            prop="profile"
+          >
             <el-select v-model="inviteForm.profile">
               <el-option
                 v-for="role in roles"
                 :key="role.key"
                 :label="role.value"
-                :value="role.key" />
+                :value="role.key"
+              />
             </el-select>
           </el-form-item>
         </el-form>
@@ -351,10 +423,11 @@
           <el-button
             :loading="loadingInvite"
             type="primary"
-            @click="inviteTeammate">Convidar</el-button>
+            @click="inviteTeammate"
+          >Convidar</el-button>
         </span>
       </el-dialog>
-    </template>
+    </div>
   </jus-view-main>
 </template>
 
@@ -441,6 +514,7 @@ export default {
     if (this.profileForm.phone && this.profileForm.phone.length === 13) {
       this.profileForm.phone = this.profileForm.phone.substr(2)
     } else {
+      // eslint-disable-next-line no-self-assign
       this.profileForm.phone = this.profileForm.phone
     }
   },
@@ -617,7 +691,7 @@ export default {
       })
     },
     inviteTeammate() {
-      this.$refs['inviteForm'].validate((valid) => {
+      this.$refs.inviteForm.validate((valid) => {
         if (valid) {
           this.loadingInvite = true
           this.$store.dispatch('inviteTeammates', [{

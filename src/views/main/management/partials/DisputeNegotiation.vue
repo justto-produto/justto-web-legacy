@@ -1,7 +1,8 @@
 <template lang="html">
   <div
     v-loading="loading"
-    class="dispute-view-negotiation">
+    class="dispute-view-negotiation"
+  >
     <JusElementSlider
       v-if="!loading"
       :key="sliderKey"
@@ -9,12 +10,14 @@
       :min="min"
       :max="max"
       :marks="marks"
-      range />
+      range
+    />
     <div class="subtitle">
       <span>AM:</span> <b>Alçada máxima</b>
       <div
         v-for="(sub, index) in subtitles"
-        :key="index + sub.label">
+        :key="index + sub.label"
+      >
         <span>{{ sub.label }}:</span> <b>{{ sub.value }}</b>
       </div>
     </div>

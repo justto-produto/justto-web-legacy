@@ -20,14 +20,17 @@
     <el-button
       type="primary"
       data-testid="lets-start"
-      @click="nextStep">Vamos começar</el-button>
+      @click="nextStep"
+    >
+      Vamos começar
+    </el-button>
   </div>
 </template>
 
 <script>
 export default {
   components: {
-    JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
+    // JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
   },
   props: {
     isGuest: {

@@ -7,11 +7,13 @@
     <el-card
       data-testid="import-checklines"
       class="el-card--dashed"
-      shadow="never">
+      shadow="never"
+    >
       <h4>Disputas prontas para importação: {{ lines }}</h4>
       <el-collapse
         accordion
-        class="el-collapse--bordered el-collapse--active">
+        class="el-collapse--bordered el-collapse--active"
+      >
         <el-collapse-item name="1">
           <template slot="title">
             <strong>Sua planilha tinha mais linhas do que o número acima?</strong>

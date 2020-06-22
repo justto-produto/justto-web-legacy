@@ -2,11 +2,12 @@
   <jus-view-main
     :loading-container="false"
     full-screen
-    class="billing-view">
+    class="billing-view"
+  >
     <div
       slot="main"
-      class="billing-view__slot-main">
-
+      class="billing-view__slot-main"
+    >
       <article class="billing-view__range">
         <h2 class="billing-view__range-title">
           Cobrança do período
@@ -34,10 +35,10 @@
         flow="column"
       >
         <jus-financial-card
-          v-grid-item.col-1.row-1
-          v-grid-item.col-1.row-2:v-if="index === 6"
           v-for="(card, index) in dataCards"
           :key="index"
+          v-grid-item.col-1.row-1
+          v-grid-item.col-1.row-2:v-if="index === 6"
           :data="card.data"
           :actions="card.actions"
           @cardAction="handlerAction"
@@ -66,7 +67,8 @@
         </div>
         <el-card
           class="billing-view__table-body"
-          shadow="never">
+          shadow="never"
+        >
           <JusDataTable
             :data="transactions.content"
             class="billing-view__data-table"
@@ -74,7 +76,6 @@
           />
         </el-card>
       </article>
-
     </div>
   </jus-view-main>
 </template>
@@ -132,6 +133,8 @@ export default {
           }
         })
       }
+
+      return null
     },
 
     totalCard() {

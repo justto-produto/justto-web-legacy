@@ -3,59 +3,71 @@
     <el-container>
       <el-aside
         width="50%"
-        class="hidden-sm-and-down">
+        class="hidden-sm-and-down"
+      >
         <jus-sidenav-external />
       </el-aside>
       <el-main class="display-flex">
         <el-form
-          v-loading="showLoading"
           v-if="!workspaces.length"
           ref="loginForm"
+          v-loading="showLoading"
           :model="loginForm"
           :rules="rules"
           label-position="top"
           class="external-view__form"
-          @submit.native.prevent="doLogin">
-          <h1 class="external-view__title">Login</h1>
+          @submit.native.prevent="doLogin"
+        >
+          <h1 class="external-view__title">
+            Login
+          </h1>
           <el-alert
             v-show="showError"
             :title="errorMessage"
             type="error"
             data-testid="login-failure"
-            @close="showError = false"/>
+            @close="showError = false"
+          />
           <el-alert
             v-show="showSuccess"
             title="Cadastro ativado com sucesso!"
             type="success"
             data-testid="register-success"
-            @close="showSuccess = false"/>
+            @close="showSuccess = false"
+          />
           <el-form-item
             label="Email"
-            prop="email">
+            prop="email"
+          >
             <el-input
               v-model="loginForm.email"
               type="email"
               name="login-email"
-              data-testid="login-email"/>
+              data-testid="login-email"
+            />
           </el-form-item>
           <el-form-item
             label="Senha"
-            prop="password">
+            prop="password"
+          >
             <el-input
               v-model="loginForm.password"
               :type="passwordType"
               name="login-password"
-              data-testid="login-password"/>
+              data-testid="login-password"
+            />
             <div class="el-button--input-float">
               <jus-icon
                 :icon="showPassword ? 'hide' : 'eye'"
                 class="external-view__show-password"
-                @click.native="switchShowPassword"/>
+                @click.native="switchShowPassword"
+              />
               <el-button
                 type="text"
                 tabindex="-1"
                 data-testid="forgot-password"
-                @click="$router.push('forgot-password')">
+                @click="$router.push('forgot-password')"
+              >
                 Esqueceu sua senha?
               </el-button>
             </div>
@@ -64,7 +76,8 @@
             native-type="submit"
             class="external-view__submit"
             type="primary"
-            data-testid="submit-login">
+            data-testid="submit-login"
+          >
             Entrar
           </el-button>
           <el-row class="external-view__info">
@@ -72,51 +85,61 @@
             <a
               data-testid="use-terms"
               href="https://justto.com.br/termos-de-uso/"
-              target="_blank"> Termos de Uso</a> e com os
+              target="_blank"
+            > Termos de Uso</a> e com os
             <a
               data-testid="contract-terms"
               href="https://justto.com.br/termos-de-contratacao/"
-              target="_blank">Termos Gerais de Contratação.</a>
+              target="_blank"
+            >Termos Gerais de Contratação.</a>
             <br><br>
             Não possui conta?
             <a
               href="register"
               data-testid="register"
-              @click.prevent="$router.push('register')">Cadastre-se agora mesmo.</a>
+              @click.prevent="$router.push('register')"
+            >Cadastre-se agora mesmo.</a>
           </el-row>
         </el-form>
         <el-form
-          v-loading="showLoading"
           v-else
           ref="workspaceForm"
+          v-loading="showLoading"
           :model="workspaceForm"
           :rules="workspaceRules"
           label-position="top"
           class="external-view__form"
-          @submit.native.prevent="selectWorkspace">
-          <h1 class="external-view__title">Equipe</h1>
+          @submit.native.prevent="selectWorkspace"
+        >
+          <h1 class="external-view__title">
+            Equipe
+          </h1>
           <p>Selecione uma de suas equipes de trabalho para entrar.</p>
           <el-form-item
             label="Equipe"
-            prop="selectedWorkspaceIndex">
+            prop="selectedWorkspaceIndex"
+          >
             <el-select
               v-model="workspaceForm.selectedWorkspaceIndex"
               placeholder="Selecione"
               filterable
-              data-testid="select-workspace">
+              data-testid="select-workspace"
+            >
               <el-option
                 v-for="(w, index) in workspaces"
                 :key="index"
                 :value="index"
                 :label="w.workspace.teamName"
-                data-testid="select-workspace-item"/>
+                data-testid="select-workspace-item"
+              />
             </el-select>
           </el-form-item>
           <el-button
             native-type="submit"
             class="external-view__submit"
             type="primary"
-            data-testid="submit-workspace">
+            data-testid="submit-workspace"
+          >
             Selecionar e entrar
           </el-button>
           <br><br>
@@ -125,7 +148,8 @@
             class="external-view__submit"
             type="secondary"
             icon="el-icon-s-operation"
-            @click="$router.push('admin-panel')">
+            @click="$router.push('admin-panel')"
+          >
             Painel administrativo
           </el-button>
         </el-form>
@@ -193,7 +217,7 @@ export default {
   },
   methods: {
     doLogin() {
-      this.$refs['loginForm'].validate(valid => {
+      this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.showError = false
           this.showLoading = true

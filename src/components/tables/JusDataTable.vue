@@ -3,23 +3,27 @@
     :data="data"
     size="mini"
     height="100%"
-    class="data-table el-table--disputes">
+    class="data-table el-table--disputes"
+  >
     <el-table-column
       label="Data"
-      width="80">
+      width="80"
+    >
       <template slot-scope="scope">
         <span>{{ scope.row.occurredDate | moment('DD/MM/YY') }}</span>
       </template>
     </el-table-column>
     <el-table-column
-      label="Lançamento">
+      label="Lançamento"
+    >
       <template slot-scope="scope">
         <span v-html="transactionResume(scope.row)" />
       </template>
     </el-table-column>
     <el-table-column
       label="Tipo"
-      width="150">
+      width="150"
+    >
       <template slot-scope="scope">
         <span>{{ $t(`transactions.${scope.row.type}`) | capitalize }}</span>
       </template>
@@ -35,38 +39,44 @@
     />
     <el-table-column
       label="#ID"
-      width="90">
+      width="90"
+    >
       <template slot-scope="scope">
         <span class="data-table__dispute-link">
           <el-link
             :underline="false"
             :href="`https://justto.app/#/management/dispute/${scope.row.referenceId}`"
-            target="_blank">
+            target="_blank"
+          >
             {{ scope.row.referenceId }}
             <jus-icon
               icon="external-link"
-              class="data-table__dispute-link-icon"/>
+              class="data-table__dispute-link-icon"
+            />
           </el-link>
         </span>
       </template>
     </el-table-column>
     <el-table-column
       label="ID Interno"
-      width="140">
+      width="140"
+    >
       <template slot-scope="scope">
         <span>{{ scope.row.externalId || '-' }}</span>
       </template>
     </el-table-column>
     <el-table-column
       label="Valor"
-      width="120">
+      width="120"
+    >
       <template slot-scope="scope">
         <span>{{ scope.row.value | currency }}</span>
       </template>
     </el-table-column>
     <el-table-column
       class-name="data-table__hidden-actions"
-      width="1px">
+      width="1px"
+    >
       <template slot-scope="scope">
         <JusFloatActions
           :actions="availableActions"
@@ -80,14 +90,14 @@
         <span v-show="!data.lenght">
           <jus-icon
             icon="empty-screen-filter"
-            class="data-table__empty-table"/>
+            class="data-table__empty-table"
+          />
           <h4 data-testid="cases-empty-text">
             Nenhum lançamento para exibir.
           </h4>
         </span>
       </transition>
     </template>
-
   </el-table>
 </template>
 

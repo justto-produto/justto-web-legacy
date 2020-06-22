@@ -3,48 +3,58 @@
     <el-container>
       <el-aside
         width="50%"
-        class="hidden-sm-and-down">
+        class="hidden-sm-and-down"
+      >
         <jus-sidenav-external />
       </el-aside>
       <el-main class="display-flex position-relative">
-        <jus-button-back to="login"/>
+        <jus-button-back to="login" />
         <el-form
-          v-loading="showLoading"
           ref="forgotForm"
+          v-loading="showLoading"
           :model="forgotForm"
           :rules="rules"
           class="external-view__form"
           label-position="top"
-          @submit.native.prevent="submitForm">
-          <h1 class="external-view__title">Recuperar senha</h1>
+          @submit.native.prevent="submitForm"
+        >
+          <h1 class="external-view__title">
+            Recuperar senha
+          </h1>
           <el-alert
             v-show="showSuccess"
             title="Requisição de recuperação enviada com sucesso! Acesse seu email para prosseguir."
             type="success"
             data-testid="forgot-password-success"
-            @close="showSuccess = false"/>
+            @close="showSuccess = false"
+          />
           <el-form-item
             label="Email"
-            prop="email">
+            prop="email"
+          >
             <el-input
               v-model="forgotForm.email"
-              data-testid="forgot-password-email"/>
+              data-testid="forgot-password-email"
+            />
           </el-form-item>
           <el-button
             native-type="submit"
             class="external-view__submit"
             type="primary"
-            data-testid="submit">
+            data-testid="submit"
+          >
             Recuperar
           </el-button>
           <el-row class="external-view__info">
             Ao clicar no botão, eu concordo com os
             <a
               href="https://justto.com.br/termos-de-uso/"
-              target="_blank">Termos de Uso</a> e
+              target="_blank"
+            >Termos de Uso</a> e
             <a
               href="https://justto.com.br/termos-de-contratacao/"
-              target="_blank">Termos Gerais de Contratação.</a>
+              target="_blank"
+            >Termos Gerais de Contratação.</a>
           </el-row>
         </el-form>
       </el-main>
@@ -75,7 +85,7 @@ export default {
   },
   methods: {
     submitForm() {
-      this.$refs['forgotForm'].validate(valid => {
+      this.$refs.forgotForm.validate(valid => {
         if (valid) {
           this.showSuccess = false
           this.showLoading = true

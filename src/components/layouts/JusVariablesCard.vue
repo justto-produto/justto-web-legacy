@@ -1,8 +1,8 @@
 <template lang="html">
   <el-card
     shadow="never"
-    class="jus-variables-card">
-
+    class="jus-variables-card"
+  >
     <div class="jus-variables-card__header">
       <h2 class="jus-variables-card__title">
         Variáveis disponíveis
@@ -17,7 +17,8 @@
       />
       <span
         :class="{ 'jus-variables-card__filter-length--active': variableFilterTerm.length }"
-        class="jus-variables-card__filter-length">
+        class="jus-variables-card__filter-length"
+      >
         {{ filteredVariables.length }}/{{ Object.keys(variables).length }}
       </span>
     </div>
@@ -26,7 +27,8 @@
       <div
         v-for="variable in filteredVariables"
         :key="variable.value"
-        class="jus-variables-card__variable">
+        class="jus-variables-card__variable"
+      >
         <span class="jus-variables-card__variable-description">
           {{ variable.value }}
         </span>
@@ -46,7 +48,6 @@
         </div>
       </div>
     </div>
-
   </el-card>
 </template>
 

@@ -50,7 +50,7 @@ export default {
         tooltips: {
           enabled: false,
         },
-      }
+      },
     )
     const title = this.title
     // eslint-disable-next-line

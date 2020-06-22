@@ -19,7 +19,7 @@
         @click.native="showFormCard"
       >
         <span>Adicionar um usuário</span>
-        <i class="el-icon-plus client-grid__icon"/>
+        <i class="el-icon-plus client-grid__icon" />
       </el-card>
 
       <el-card
@@ -70,23 +70,26 @@
           >
             <el-option
               label="ATIVO"
-              value="ACTIVE"/>
+              value="ACTIVE"
+            />
             <el-option
               label="TRIAL"
-              value="TRIAL"/>
+              value="TRIAL"
+            />
           </el-select>
         </el-form-item>
       </el-form>
       <span
         slot="footer"
-        class="dialog-footer">
+        class="dialog-footer"
+      >
         <el-button @click="dialogFormVisible = false">Cancelar</el-button>
         <el-button
           type="primary"
-          @click="dialogFormVisible = false">Salvar</el-button>
+          @click="dialogFormVisible = false"
+        >Salvar</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
