@@ -161,7 +161,7 @@
           @check="handlerChangeTree"
           @node-drag-end="nodeDragEnd">
           <span
-            slot-scope="{ node, data }"
+            slot-scope="{ node }"
             class="custom-tree-node">
             <span>{{ node.label | capitalize }}</span>
             <jus-icon
