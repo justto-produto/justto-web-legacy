@@ -129,6 +129,7 @@ export default {
   methods: {
     ...mapActions([
       'addCustomer',
+      'associateCustomer',
       'getAllCustomers',
       'getMyCusomers',
       'setCustomer',
@@ -137,7 +138,6 @@ export default {
       'updateCustomer',
     ]),
     handleEditTitle(userData) {
-      console.log('SUCK MY DICK', userData)
       this.updateCustomer(userData)
     },
     querySearch(queryString, cb) {
@@ -164,7 +164,14 @@ export default {
     },
     addClient() {
       const name = this.inputValue
-      this.addCustomer({ name })
+      const similarClient = this.custumerSuggestions.filter(val => val.name === name)
+
+      if (similarClient.length) {
+        this.associateCustomer(similarClient[0].id)
+      } else {
+        this.addCustomer({ name })
+      }
+
       this.hideFormCard()
     },
     showFormCard() {
@@ -172,6 +179,7 @@ export default {
     },
     hideFormCard() {
       this.formCardIsVisible = false
+      this.inputValue = ''
     },
   },
 }
