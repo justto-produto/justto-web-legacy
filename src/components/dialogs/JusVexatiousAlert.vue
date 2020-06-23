@@ -66,29 +66,35 @@ export default {
 
 <style lang="scss">
 .jus-vexatious-alert {
-  margin: auto 0 auto auto;
+  margin-right: 8px;
+
   .title {
     font-weight: 600;
     font-size: 14px;
   }
+
   .body {
     word-break: break-word;
     margin-top: 6px;
     min-height: 32px;
   }
+
   .el-loading-mask {
     background-color: rgb(52, 60, 75);
   }
+
   .el-loading-spinner {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: -15px;
+
     i  {
       font-size: 15px;
       margin-right: 8px;
     }
   }
+
   .el-popover__reference {
     cursor: pointer;
   }

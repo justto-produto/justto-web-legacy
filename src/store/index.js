@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import accountModule from './modules/account'
 import banksList from '@/utils/banksList'
+import billingModule from './modules/billing'
 import campaignModule from './modules/campaign'
 import dashboardModule from './modules/dashboard'
 import disputeModule from './modules/dispute/index'
@@ -13,6 +14,7 @@ import socketModule from './modules/socket/index'
 import strategyAdminPanelModule from './modules/strategy-adminpanel'
 import strategyModule from './modules/strategy'
 import tagModule from './modules/tag'
+import userModule from './modules/user'
 import workspaceModule from './modules/workspace'
 
 Vue.use(Vuex)
@@ -55,6 +57,7 @@ export default new Vuex.Store({
   },
   modules: {
     accountModule,
+    billingModule,
     campaignModule,
     dashboardModule,
     disputeModule,
@@ -66,6 +69,7 @@ export default new Vuex.Store({
     strategyAdminPanelModule,
     strategyModule,
     tagModule,
+    userModule,
     workspaceModule,
   },
 })

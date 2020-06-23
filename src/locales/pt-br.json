@@ -3,6 +3,10 @@
   "test": "teste",
   "isTyping": "está digitando",
   "dispute": {
+    "moralDamage": "valor dano moral",
+    "negotiatorEmail": "email do negociador",
+    "strategy": "nome da estratégia",
+    "campaign": "nome da campanha",
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
     "materialDamage": "danos materiais",
@@ -22,6 +26,14 @@
       "SETTLED": "ganha",
       "UNSETTLED": "perdida"
     }
+  },
+  "transactions": {
+    "DISPUTE_ACCEPTED": "disputa aceita",
+    "IMPORTED_DISPUTE": "disputa importada",
+    "INTERACTION": "interação na disputa",
+    "MANUAL": "valor manual",
+    "SETTLED_DISPUTE": "acordo fechado",
+    "SUBSCRIPTION": "assinatura"
   },
   "prescription": {
     "ONLY_SMS_ENGAGEMENT": "somente SMS",

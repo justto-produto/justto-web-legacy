@@ -46,6 +46,15 @@
             class="el-menu__icon"/>
           <span slot="title">Importação</span>
         </el-menu-item>
+        <el-menu-item
+          v-if="$store.getters.isJusttoAdmin"
+          index="/billing"
+          data-testid="menu-financial">
+          <jus-icon
+            icon="coins"
+            class="el-menu__icon"/>
+          <span slot="title">Financeiro</span>
+        </el-menu-item>
       </el-menu>
       <div
         v-show="$store.getters.workspaceMembers.length && $store.getters.isAdminProfile"

@@ -113,11 +113,12 @@
         class-name="text-ellipsis"
         label="Parte(s) contrária(s)">
         <template slot-scope="scope">
-          {{ scope.row.firstClaimant }}
           <jus-vexatious-alert
             v-if="scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length"
             :document-number="scope.row.firstClaimantDocumentNumber"
-            :name="scope.row.firstClaimant" />
+            :name="scope.row.firstClaimant"
+          />
+          {{ scope.row.firstClaimant }}
         </template>
       </el-table-column>
       <el-table-column
@@ -127,11 +128,12 @@
         label="Advogado(s) da parte"
         min-width="154px">
         <template slot-scope="scope">
-          {{ scope.row.firstClaimantLawyer }}
           <jus-vexatious-alert
             v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
             :document-number="scope.row.firstClaimantLawyerDocumentNumber"
-            :alerts="scope.row.firstClaimantLawyerAlerts" />
+            :alerts="scope.row.firstClaimantLawyerAlerts"
+          />
+          {{ scope.row.firstClaimantLawyer }}
         </template>
       </el-table-column>
       <el-table-column
