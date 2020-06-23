@@ -67,13 +67,13 @@
 </template>
 
 <script>
-import { VueNestable, VueNestableHandle } from 'vue-nestable'
+// import { VueNestable, VueNestableHandle } from 'vue-nestable'
 
 export default {
   name: 'PanelStrategy',
   components: {
-    VueNestable,
-    VueNestableHandle,
+    // VueNestable,
+    // VueNestableHandle,
   },
   data() {
     return {
