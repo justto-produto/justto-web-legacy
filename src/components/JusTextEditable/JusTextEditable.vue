@@ -44,16 +44,19 @@ export default {
       validator: (val) => ['default', 'title'].includes(val),
     },
   },
-  data: (self) => ({
-    inputValue: self.value,
-    isEditing: false,
-  }),
+  data() {
+    return {
+      inputValue: this.value,
+      isEditing: false,
+    }
+  },
   methods: {
     editionHandler(evt) {
       this.isEditing = true
       this.$nextTick(() => this.$refs.textInput.$el.children[0].focus())
     },
     saveChanges() {
+      console.log('asdjhas', this.inputValue)
       this.$emit('hasEdition', this.inputValue)
       this.isEditing = false
     },

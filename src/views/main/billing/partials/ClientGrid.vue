@@ -7,6 +7,7 @@
         v-for="(user, index) in custumerList"
         :key="index"
         :user-data="user"
+        @edit-title="handleEditTitle"
         @see-more="handleSeeMore"
         @edit="handleEdit"
         @close="handleClose"
@@ -18,7 +19,7 @@
         class="client-grid__action-card"
         @click.native="showFormCard"
       >
-        <span>Adicionar um usuário</span>
+        <span>Adicionar um cliente</span>
         <i class="el-icon-plus client-grid__icon"/>
       </el-card>
 
@@ -133,7 +134,12 @@ export default {
       'setCustomer',
       'setWorkspaceId',
       'unlinkCustomer',
+      'updateCustomer',
     ]),
+    handleEditTitle(userData) {
+      console.log('SUCK MY DICK', userData)
+      this.updateCustomer(userData)
+    },
     querySearch(queryString, cb) {
       const options = this.custumerSuggestions
       const results = queryString ? options.filter(this.createFilter(queryString)) : options

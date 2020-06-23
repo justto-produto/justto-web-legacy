@@ -31,6 +31,13 @@ const actions = {
       method: 'delete',
     }).then(() => dispatch('getMyCusomers')),
 
+  updateCustomer: ({ dispatch }, customerData) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerData.id}`,
+      method: 'patch',
+      data: customerData,
+    }).then(() => dispatch('getMyCusomers')),
+
   getContracts: ({ state }) => {
     axiosDispatcher({
       url: `api/billing/customer/${state.currentCustomer.customerId}/contract`,
