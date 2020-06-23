@@ -34,15 +34,17 @@
 
     <div class="jus-user-card__wrapper">
       <jus-avatar-user
-        :name="userData.name"
+        :name="userDataBind.name"
         size="lg"
         shape="circle"
         class="jus-user-card__avatar"
       />
 
-      <span class="jus-user-card__title">
-        {{ userData.name }}
-      </span>
+      <JusTextEditable
+        :value="userDataBind.name"
+        class="jus-user-card__title"
+        @hasEdition="emitEditTitle"
+      />
 
       <div class="jus-user-card__actions">
         <el-button
@@ -59,6 +61,9 @@
 <script>
 export default {
   name: 'JusUserCard',
+  components: {
+    JusTextEditable: () => import('@/components/JusTextEditable/JusTextEditable'),
+  },
   props: {
     userData: {
       type: Object,
@@ -67,9 +72,14 @@ export default {
         .map(key => ['name', 'id', 'contractStatus'].includes(key)),
     },
   },
+  data() {
+    return {
+      userDataBind: this.userData,
+    }
+  },
   computed: {
     contractStatus() {
-      const contracts = this.userData.contracts
+      const contracts = this.userDataBind.contracts
 
       if (!contracts.length) return { label: 'VAZIO', type: 'info' }
 
@@ -86,14 +96,18 @@ export default {
     },
   },
   methods: {
+    emitEditTitle(inputValue) {
+      this.userDataBind.name = inputValue
+      this.$emit('edit-title', this.userDataBind)
+    },
     emitEditEvent() {
-      this.$emit('edit', this.userData)
+      this.$emit('edit', this.userDataBind)
     },
     emitCloseEvent() {
-      this.$emit('close', this.userData)
+      this.$emit('close', this.userDataBind)
     },
     emitSeeMore() {
-      this.$emit('see-more', this.userData)
+      this.$emit('see-more', this.userDataBind)
     },
   },
 }
@@ -129,14 +143,11 @@ export default {
     }
   }
 
-  .jus-user-card__avatar {
-    margin-bottom: 16px;
-  }
-
   .jus-user-card__title {
     display: block;
     font-weight: 700;
     text-align: center;
+    margin: 16px 0;
   }
 
   .jus-user-card__actions {
@@ -157,13 +168,24 @@ export default {
 
 <style lang="scss">
 .jus-user-card {
+  height: fit-content;
+
   .el-card__body {
     .jus-user-card__wrapper {
       align-items: center;
-      display: grid;
-      gap: 24px;
-      grid-template-rows: repeat(3, auto);
-      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+      min-height: 250px;
+      width: 100%;
+
+      .jus-user-card__avatar {
+        & > span {
+          font-size: 32px;
+          font-weight: 500;
+        }
+      }
     }
   }
 }
