@@ -5,7 +5,7 @@
       :key="action.name"
       class="float-actions__action-containet">
       <el-tooltip
-        v-if="true"
+        v-if="action.condition(scope.value)"
         :content="action.label">
         <el-button
           type="text"

@@ -2,15 +2,12 @@
   <div
     class="jus-button-back"
     @click="goTo">
-    <jus-icon icon="back"/> Voltar
+    <jus-icon icon="back"/>
+    <span v-if="text">{{ text }}</span>
   </div>
 </template>
 
 <script>
-
-/**
- * Botão flutuante com ícone de voltar.
- */
 export default {
   name: 'JusButtonBack',
   props: {
@@ -25,6 +22,10 @@ export default {
     back: {
       default: false,
       type: Boolean,
+    },
+    text: {
+      default: '',
+      type: String,
     },
   },
   methods: {

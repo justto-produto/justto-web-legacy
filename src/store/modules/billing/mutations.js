@@ -6,6 +6,7 @@ const mutations = {
     state.currentCustomer.customerName = customerData.name
     state.currentCustomer.contracts = customerData.contracts
   },
+  setCustomerId: (state, customerId) => (state.currentCustomer.customerId = customerId),
   setContracts: (state, contracts) => (state.currentCustomer.contracts = contracts),
   setBillingDashboard: (state, billingDashboard) => (state.billingDashboard = billingDashboard),
   setTransactions: (state, transactions) => (state.currentCustomer.transactions = transactions),
