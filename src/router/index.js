@@ -33,7 +33,7 @@ const router = new Router({
         },
         {
           name: 'billingDashboard',
-          path: '/billing/:clientId',
+          path: '/billing/:customerId',
           component: () => import(/* webpackChunkName: "billingDashboard" */ '@/views/main/billing/BillingDashboard'),
           meta: {
             trackPage: true,

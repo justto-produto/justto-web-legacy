@@ -7,6 +7,11 @@
       slot="main"
       class="billing-view__slot-main">
 
+      <JusButtonBack
+        to="/billing"
+        class="billing-view__back-button"
+      />
+
       <article class="billing-view__range">
         <h2 class="billing-view__range-title">
           Cobrança do período
@@ -31,8 +36,7 @@
         :rows="2"
         :columns="4"
         class="billing-view__cards"
-        flow="column"
-      >
+        flow="column">
         <jus-financial-card
           v-grid-item.col-1.row-1
           v-grid-item.col-1.row-2:v-if="index === 6"
@@ -61,19 +65,79 @@
             @input="filterByTerm"
           />
           <span class="billing-view__table-filter-counter">
-            Exibindo {{ transactions.content.length }} de {{ transactions.totalElements }} resultados
+            Exibindo {{ transactionsList.length }} de {{ transactions.totalElements || 0 }} resultados
           </span>
         </div>
         <el-card
           class="billing-view__table-body"
           shadow="never">
           <JusDataTable
-            :data="transactions.content"
+            :data="transactionsList"
             class="billing-view__data-table"
             @floatAction="handlerAction"
           />
         </el-card>
       </article>
+
+      <el-dialog
+        :close-on-click-modal="false"
+        :show-close="false"
+        :visible.sync="addTransactionDialogVisable"
+        title="Novo Lançamento"
+        width="50%">
+        <el-form
+          v-loading="modalLoading"
+          ref="addTransactionForm"
+          :model="addTransactionForm">
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item
+                label="Valor"
+                prop="value">
+                <money
+                  v-model="addTransactionForm.value"
+                  class="el-input__inner"
+                  maxlength="16"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                label="Data"
+                prop="occurredDate">
+                <el-date-picker
+                  v-model="addTransactionForm.occurredDate"
+                  format="dd/MM/yyyy"
+                  value-format="yyyy-MM-dd"
+                  type="date"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col>
+              <el-form-item
+                label="Nota"
+                prop="note">
+                <el-input
+                  v-model="addTransactionForm.note"
+                  type="textarea"
+                  rows="4"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer">
+          <el-button
+            :disabled="modalLoading"
+            @click="addTransactionDialogVisable = false">Cancelar</el-button>
+          <el-button
+            :loading="modalLoading"
+            type="primary"
+            @click.prevent="addTransaction()">Continuar</el-button>
+        </div>
+      </el-dialog>
 
     </div>
   </jus-view-main>
@@ -90,25 +154,33 @@ export default {
     JusDataTable: () => import('@/components/tables/JusDataTable'),
     JusFinancialCard: () => import('@/components/JusFinancialCard/JusFinancialCard'),
     JusGrid: () => import('@/components/JusGrid/JusGrid'),
+    JusButtonBack: () => import('@/components/buttons/JusButtonBack'),
   },
   data() {
     return {
       dateRange: [],
       searchTerm: '',
-      filterTransactions: {
+      filterTransactionsActionParams: {
         icon: 'eye',
         label: 'Ver lançamentos',
         trigger: 'showTransactions',
       },
-      filterDisputes: {
+      filterDisputesActionParams: {
         icon: 'management',
         label: 'Filtrar gerenciamento',
         trigger: 'showDisputes',
       },
-      addTransaction: {
+      addTransactionActionParams: {
         icon: 'add',
         label: 'Novo lançamento',
         trigger: 'addTransaction',
+      },
+      addTransactionDialogVisable: false,
+      modalLoading: false,
+      addTransactionForm: {
+        value: '',
+        note: '',
+        occurredDate: '',
       },
     }
   },
@@ -120,15 +192,19 @@ export default {
       'workspaceId',
     ]),
 
+    transactionsList() {
+      return this.transactions.content ? this.transactions.content : []
+    },
+
     dataCards() {
       if (this.billingDashboard.length) {
         return this.billingDashboard.map(data => {
           if (data.type === 'OTHERS') {
-            return { data, actions: [this.addTransaction] }
+            return { data, actions: [this.filterTransactionsActionParams, this.addTransactionActionParams] }
           } else if (data.type === 'SUBSCRIPTION') {
-            return { data }
+            return { data, actions: [this.filterTransactionsActionParams] }
           } else {
-            return { data, actions: [this.filterTransactions, this.filterDisputes] }
+            return { data, actions: [this.filterTransactionsActionParams, this.filterDisputesActionParams] }
           }
         })
       }
@@ -136,7 +212,9 @@ export default {
 
     totalCard() {
       let revenue = 0
-      for (const d of this.billingDashboard) revenue += d.revenue
+      if (this.billingDashboard) {
+        for (const d of Array.from(this.billingDashboard)) revenue += d.revenue
+      }
       return { title: 'total', revenue }
     },
 
@@ -153,6 +231,7 @@ export default {
     this.dateRange[0] = this.initialDateRange[0]
     this.dateRange[1] = this.initialDateRange[1]
     this.clearTransactionsQuery(this.initialDateRange)
+    this.setCustomerId(this.$route.params.customerId)
     this.setWorkspaceId(this.workspaceId)
     this.getBillingDashboard()
   },
@@ -161,6 +240,9 @@ export default {
       'cancelTransaction',
       'clearTransactionsQuery',
       'getBillingDashboard',
+      'postTransaction',
+      'setCustomerId',
+      'setManagementFilters',
       'setRangeDate',
       'setTerm',
       'setType',
@@ -187,37 +269,42 @@ export default {
     },
 
     showTransactionsAction(evt) {
-      this.setType(evt.eventProps.customProps.type)
+      const type = evt.eventProps.customProps.type !== 'OTHERS' ? evt.eventProps.customProps.type : 'MANUAL'
+      this.setType(type)
     },
 
     showDisputesAction(evt) {
-      let type = ''
-      switch (evt.eventProps.customProps.type) {
-        case 'IMPORTED_DISPUTE':
-          type = 'IMPORTED'
-          break
-        case 'SETTLED_DISPUTE':
-          type = 'SETTLED'
-          break
-        case 'INTERACTION':
-          type = 'RUNNING'
-          break
-        case 'DISPUTE_ACCEPTED':
-          type = 'ACCEPTED'
-          break
-        default:
-          type = ''
-      }
+      const type = evt.eventProps.customProps.type
       this.$store.commit('clearDisputeQuery')
-      this.$store.commit('updateDisputeQuery', { key: 'status', value: type })
-      // this.$store.commit('updateDisputeQuery', { key: 'transactionType', value: evt.eventProps.customProps.type })
+      this.$store.commit('addPrescription', 'BILLING_TRANSACTION')
+      this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
+      this.$store.commit('updateDisputeQuery', { key: 'startDate', value: this.dateRange[0] })
+      this.$store.commit('updateDisputeQuery', { key: 'finishDate', value: this.dateRange[1] })
+      this.$store.commit('updateDisputeQuery', { key: 'transactionType', value: type })
       this.$store.commit('setDisputeHasFilters', true)
       this.$store.commit('setDisputesTab', '3')
       this.$router.push('/management')
     },
 
     addTransactionAction(evt) {
+      this.addTransactionForm.value = ''
+      this.addTransactionForm.note = ''
+      this.addTransactionForm.occurredDate = this.$moment(new Date()).format('YYYY-MM-DD')
+      this.addTransactionDialogVisable = true
+    },
 
+    addTransaction() {
+      this.modalLoading = true
+      this.postTransaction(this.addTransactionForm).then(() => {
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: 'Lançamento realizado com sucesso',
+        })
+      }).finally(() => {
+        this.modalLoading = false
+        this.addTransactionDialogVisable = false
+      })
     },
 
     cancelTransactionAction(evt) {
@@ -242,6 +329,13 @@ export default {
     display: grid;
     grid-template-rows: repeat(2, auto) 1fr;
     gap: 20px;
+    position: relative;
+
+    .billing-view__back-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
 
     .billing-view__range {
       display: flex;
@@ -325,6 +419,10 @@ export default {
         }
       }
     }
+  }
+
+  .el-date-editor.el-input {
+    width: 100%;
   }
 
   .el-card__body {

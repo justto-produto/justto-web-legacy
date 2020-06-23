@@ -26,13 +26,19 @@
     </el-table-column>
     <el-table-column
       prop="respondent"
-      label="Réu"
-    />
+      label="Réu">
+      <template slot-scope="scope">
+        <span>{{ scope.row.respondent || '-' }}</span>
+      </template>
+    </el-table-column>
     <el-table-column
       prop="code"
       label="Processo"
-      width="130"
-    />
+      width="130">
+      <template slot-scope="scope">
+        <span>{{ scope.row.code || '-' }}</span>
+      </template>
+    </el-table-column>
     <el-table-column
       label="#ID"
       width="90">
@@ -42,7 +48,7 @@
             :underline="false"
             :href="`https://justto.app/#/management/dispute/${scope.row.referenceId}`"
             target="_blank">
-            {{ scope.row.referenceId }}
+            {{ scope.row.referenceId || '-' }}
             <jus-icon
               icon="external-link"
               class="data-table__dispute-link-icon"/>
@@ -110,6 +116,7 @@ export default {
           icon: 'trash',
           label: 'Cancelar lançamento',
           trigger: 'cancelTransaction',
+          condition: (value) => !value,
         },
       ],
     }
@@ -123,7 +130,7 @@ export default {
     },
 
     transactionResume(transaction) {
-      return this.$options.filters.capitalize(this.$t(`transactions.${transaction.type}`)) + ' na disputa #' + transaction.referenceId + '<br>' + transaction.code
+      return this.$options.filters.capitalize(this.$t(`transactions.${transaction.type}`)) + (transaction.type !== 'MANUAL' ? ' na disputa #' + transaction.referenceId + '<br>' + transaction.code : '')
     },
   },
 }
