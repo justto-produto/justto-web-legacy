@@ -15,15 +15,18 @@ const actions = {
       mutation: 'setAllCustomers',
     }),
 
-  addCustomer: ({ dispatch, state }, customerData) =>
+  associateCustomer: ({ dispatch, state }, customerId) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerId}/${state.query.workspaceId}`,
+      method: 'patch',
+    }).then(() => dispatch('getMyCusomers')),
+
+  addCustomer: ({ dispatch }, customerData) =>
     axiosDispatcher({
       url: 'api/billing/customer',
       method: 'post',
       data: customerData,
-    }).then(res => axiosDispatcher({
-      url: `api/billing/customer/${res.id}/${state.query.workspaceId}`,
-      method: 'patch',
-    }).then(() => dispatch('getMyCusomers'))),
+    }).then(res => dispatch('associateCustomer', res.id)),
 
   unlinkCustomer: ({ dispatch, state }, customerId) =>
     axiosDispatcher({
