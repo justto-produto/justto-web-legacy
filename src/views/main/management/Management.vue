@@ -161,7 +161,7 @@
           @check="handlerChangeTree"
           @node-drag-end="nodeDragEnd">
           <span
-            slot-scope="{ node, data }"
+            slot-scope="{ node }"
             class="custom-tree-node">
             <span>{{ node.label | capitalize }}</span>
             <jus-icon
@@ -187,6 +187,8 @@
 </template>
 
 <script>
+import { filterByTerm } from '@/utils/jusUtils'
+
 export default {
   name: 'Management',
   components: {
@@ -294,9 +296,7 @@ export default {
   },
   methods: {
     filterColumns(value, data) {
-      this.filteredNodes = this.columns.filter(c => {
-        return c.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
-      })
+      this.filteredNodes = filterByTerm(value, this.columns, 'label')
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       if (!value) return true
       return data.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')) !== -1

@@ -16,13 +16,18 @@
         </el-button>
       </el-tooltip>
     </h2>
-    <div v-loading="loading || linkBankAccountLoading">
+    <div
+      v-loading="loading || linkBankAccountLoading"
+      class="dispute-overview-view__loading"
+    >
       <el-tabs
         v-model="overviewTab"
         class="dispute-overview-view__tabs"
         stretch>
         <!-- INFORMAÇÕES GERAIS -->
-        <el-tab-pane name="general">
+        <el-tab-pane
+          name="general"
+          class="dispute-overview-view__tabs-content">
           <span slot="label">
             <el-tooltip content="Informações gerais">
               <i class="el-icon-info" />
@@ -89,6 +94,13 @@
               data-testid="dispute-infoline">
               <span class="title">Classificação:</span>
               <span>{{ dispute.classification.name | capitalize }}</span>
+            </div>
+            <div
+              v-if="dispute.provisionedValue > 0"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline">
+              <span class="title">Valor Provisionado:</span>
+              <span data-testid="overview-provisioned-value">{{ dispute.provisionedValue | currency }}</span>
             </div>
             <div
               class="dispute-overview-view__info-line"
@@ -264,7 +276,9 @@
           </div>
         </el-tab-pane>
         <!-- PARTES DA DISPUTA -->
-        <el-tab-pane name="roles">
+        <el-tab-pane
+          name="roles"
+          class="dispute-overview-view__tabs-content">
           <span slot="label">
             <el-tooltip content="Partes da disputa">
               <i class="el-icon-user-solid" />
@@ -285,7 +299,7 @@
               data-testid="expand-party">
               <template slot="title">
                 <i
-                  v-if="showNamesake(role) || showVexatious(role)"
+                  v-if="showNamesake(role) || showVexatious(role.personProperties)"
                   class="el-icon-warning-outline el-icon-pulse"
                   style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
                 <i
@@ -344,7 +358,7 @@
                   :key="`${index}-${title.index}`">
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
-                    v-if="verifyRoleVexatious(role.personProperties, title)"
+                    v-if="showVexatious(role.personProperties)"
                     :document-number="role.documentNumber"
                     :name="role.name" />
                 </span>
@@ -494,13 +508,15 @@
             </el-button>
           </el-collapse>
         </el-tab-pane>
-        <el-tab-pane name="proprieties">
+        <el-tab-pane
+          name="proprieties"
+          class="dispute-overview-view__tabs-content">
           <span slot="label">
             <el-tooltip content="Propriedades adicionais">
               <i class="el-icon-s-tools" />
             </el-tooltip>
           </span>
-          <dispute-proprieties />
+          <DisputeProprieties />
         </el-tab-pane>
         <el-tab-pane
           name="attachments"
@@ -510,35 +526,10 @@
               <i class="el-icon-paperclip" />
             </el-tooltip>
           </span>
-          <div class="dispute-overview-view__attachment-buttons">
-            <el-input
-              v-model="attachmentFilterTerm"
-              clearable
-              placeholder="Busque por anexos"
-              prefix-icon="el-icon-search" />
-            <el-tooltip content="Enriquecer disputa">
-              <el-button
-                type=""
-                plain
-                @click="enrichDispute">
-                <jus-icon icon="enrich"/>
-              </el-button>
-            </el-tooltip>
-          </div>
-          <el-link
-            v-for="attachment in filteredDisputeAttachments"
-            :key="attachment.url"
-            :underline="false"
-            :href="attachment.url"
-            target="_blank">
-            <i class="el-icon-document"/> {{ attachment.name }}
-          </el-link>
-          <div
-            v-if="!filteredDisputeAttachments.length"
-            class="center">
-            <br>
-            Sem anexos
-          </div>
+          <DisputeAttachments
+            :is-accepted="isAccepted"
+            :dispute-id="dispute.id"
+          />
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -599,7 +590,11 @@
               label="Documento"
               prop="document"
               width="160px">
-              <template slot-scope="scope">{{ scope.row.document | cpfCnpjMask }}</template>
+              <template slot-scope="scope">
+                <span>
+                  {{ scope.row.document | cpfCnpjMask }}
+                </span>
+              </template>
             </el-table-column>
             <el-table-column
               label="Cidade"
@@ -640,13 +635,20 @@
           @submit.native.prevent="editDispute">
           <h3>Detalhes da Disputa</h3>
           <el-row :gutter="20">
-            <el-col :span="24">
+            <el-col :span="12">
               <el-form-item
                 label="Número do Processo"
                 prop="disputeCode">
                 <el-input
                   v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
                   v-model="disputeForm.disputeCode" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                label="Código interno"
+                prop="externalId">
+                <el-input v-model="disputeForm.externalId" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -781,9 +783,11 @@
             </el-col>
             <el-col :span="8">
               <el-form-item
-                label="Código interno"
-                prop="externalId">
-                <el-input v-model="disputeForm.externalId" />
+                label="Valor Provisionado"
+                prop="provisionedValue">
+                <money
+                  v-model="disputeForm.provisionedValue"
+                  class="el-input__inner"/>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -899,7 +903,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.number + '-' + scope.row.state || '' }}
+                <span>
+                  {{ scope.row.number + '-' + scope.row.state || '' }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -942,7 +948,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.number | phoneMask }}
+                <span>
+                  {{ scope.row.number | phoneMask }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -999,7 +1007,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.address }}
+                <span>
+                  {{ scope.row.address }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -1051,7 +1061,9 @@
             class="el-table--list">
             <el-table-column>
               <template slot-scope="scope">
-                {{ scope.row.name }}
+                <span>
+                  {{ scope.row.name }}
+                </span>
                 <div style="font-size: 12px;">
                   {{ scope.row.bank }} | {{ scope.row.agency }} | {{ scope.row.number }}
                 </div>
@@ -1068,7 +1080,8 @@
                   content="Remover">
                   <a
                     href="#"
-                    @click.prevent="removeBankData(scope.$index, scope.row.id)">
+                    @click.prevent="removeBankData(scope.$index, scope.row.id)"
+                  >
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
@@ -1178,11 +1191,15 @@
 import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
+import DisputeAttachments from './sections/DisputeAttachments'
+
 export default {
   name: 'DisputeOverview',
   components: {
-    DisputeAddRole: () => import('./DisputeAddRole'),
-    DisputeProprieties: () => import('./DisputeProprieties'),
+    DisputeAttachments,
+
+    DisputeAddRole: () => import('../DisputeAddRole'),
+    DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
   },
@@ -1225,6 +1242,7 @@ export default {
         materialDamage: '',
         requestedValue: '',
         externalId: '',
+        provisionedValue: '',
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -1331,14 +1349,6 @@ export default {
     },
     dispute() {
       return this.$store.getters.dispute
-    },
-    disputeAttachments() {
-      return this.$store.getters.disputeAttachments
-    },
-    filteredDisputeAttachments() {
-      if (this.disputeAttachments) {
-        return this.disputeAttachments.filter(a => a.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(this.attachmentFilterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')))
-      } return []
     },
     disputeBankAccounts() {
       return this.$store.getters.disputeBankAccounts
@@ -1465,16 +1475,8 @@ export default {
     showNamesake(role) {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
-    showVexatious(role) {
-      const alerts = ['IS_VEXATIOUS_PARTY', 'IS_VEXATIOUS_AUTHOR', 'IS_VEXATIOUS_LAWYER']
-      for (const alert of alerts) {
-        if (role.personProperties && role.personProperties instanceof Object && role.personProperties.hasOwnProperty(alert)) return true
-      }
-      return false
-    },
-    verifyRoleVexatious(personProperties, title) {
-      if (title === 'PARTY') return personProperties['IS_VEXATIOUS_PARTY']
-      else if (title === 'LAWYER') return personProperties['IS_VEXATIOUS_LAWYER']
+    showVexatious(personProperties) {
+      if (personProperties['IS_VEXATIOUS_AUTHOR'] === 'true' || personProperties['IS_VEXATIOUS_LAWYER'] === 'true' || personProperties['IS_VEXATIOUS_PARTY'] === 'true') return true
       return false
     },
     showIsDead(role) {
@@ -1677,6 +1679,7 @@ export default {
       this.disputeForm.materialDamage = dispute.materialDamage || ''
       this.disputeForm.requestedValue = dispute.requestedValue || ''
       this.disputeForm.externalId = dispute.externalId || ''
+      this.disputeForm.provisionedValue = dispute.provisionedValue || ''
       this.disputeForm.classification = dispute.classification && dispute.classification.name ? dispute.classification.name : ''
       this.disputeForm.contactPartyWhenNoLowyer = dispute.contactPartyWhenNoLowyer
       this.disputeForm.contactPartyWhenInvalidLowyer = dispute.contactPartyWhenInvalidLowyer
@@ -1718,6 +1721,7 @@ export default {
             disputeToEdit.expirationDate.dateTime = this.$moment(this.disputeForm.expirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]')
             disputeToEdit.description = this.disputeForm.description
             disputeToEdit.code = this.disputeForm.disputeCode
+            disputeToEdit.provisionedValue = this.disputeForm.provisionedValue
             disputeToEdit.classification = { name: this.disputeForm.classification }
             disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
@@ -2038,11 +2042,8 @@ export default {
       this.roleForm.bankAccounts.splice(index, 1)
     },
     enrichDispute() {
-      const message = {
-        content: this.isAccepted ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?',
-        title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER',
-      }
-      this.$confirm(message.content, message.title, {
+      const content = this.isAccepted ? 'Isso irá <b>ENRIQUECER</b> uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?' : 'Tem certeza que deseja realizar esta ação?'
+      this.$confirm(content, 'ATUALIZAR ANEXOS', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         dangerouslyUseHTMLString: true,
@@ -2069,6 +2070,14 @@ export default {
 @import '@/styles/colors.scss';
 
 .dispute-overview-view {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+
+  .dispute-overview-view__loading {
+    height: 100%;
+  }
+
   &__title {
     font-weight: 500;
     margin: 0;
@@ -2078,10 +2087,19 @@ export default {
     }
   }
   &__tabs {
+    height: 100%;
     padding-top: 15px;
     .el-tabs__item i {
       font-size: 18px;
     }
+    .el-tabs__content {
+      height: calc(100% - 58px);
+      position: initial;
+    }
+  }
+  &__tabs-content {
+    overflow-y: auto;
+    height: 100%;
   }
   &__info-line {
     line-height: 24px;
@@ -2385,10 +2403,7 @@ export default {
     color: $--color-warning
   }
   &__attachment-tab {
-    .el-link {
-      margin-top: 10px;
-      display: block;
-    }
+    height: 100%;
   }
 }
 </style>

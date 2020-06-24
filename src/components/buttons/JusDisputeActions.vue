@@ -146,6 +146,15 @@
         <jus-icon icon="external-link" />
       </el-button>
     </el-tooltip>
+    <el-tooltip
+      content="Enviar anexo">
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="handleAttachmentDialogVisable()">
+        <jus-icon icon="upload-file" />
+      </el-button>
+    </el-tooltip>
     <el-tooltip :content="dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
       <el-button
         :type="tableActions ? 'text' : ''"
@@ -173,6 +182,65 @@
         type="text"
         @click="togleCollapsed" />
     </el-tooltip>
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="settledDialogVisible"
+      append-to-body
+      title="Acordo aceito"
+      class="dispute-view-actions__choose-unsettled-dialog"
+      width="600px"
+      data-testid="choose-unsettled-dialog">
+      <p>Confirme o valor do acordo nos campos abaixo:</p>
+      <el-form
+        v-loading="modalLoading"
+        ref="counterOfferForm"
+        :model="counterOfferForm"
+        :rules="counterOfferFormRules"
+        label-position="top">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item
+              label="Valor"
+              prop="lastCounterOfferValue">
+              <money
+                v-model="counterOfferForm.lastCounterOfferValue"
+                class="el-input__inner"
+                data-testid="counterproposal-value-input"
+                maxlength="16" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="Proposto por"
+              prop="selectedRoleId">
+              <el-select
+                v-model="counterOfferForm.selectedRoleId"
+                placeholder="Autor da contraproposta"
+                style="width: 100%;"
+                data-testid="counterproposal-claimant-input">
+                <el-option
+                  v-for="(claimant, index) in disputeClaimants"
+                  :key="`${index}-${claimant.id}`"
+                  :label="claimant.name"
+                  :value="claimant.id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <span slot="footer">
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="settledDialogVisible = false">Cancelar</el-button>
+        <el-button
+          :loading="modalLoading"
+          type="primary"
+          @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
+      </span>
+    </el-dialog>
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -358,71 +426,30 @@
     </el-dialog>
     <el-dialog
       :close-on-click-modal="false"
-      :show-close="false"
-      :close-on-press-escape="false"
-      :visible.sync="settledDialogVisible"
+      :visible.sync="uploadAttacmentDialogVisable"
       append-to-body
-      title="Acordo aceito"
-      class="dispute-view-actions__choose-unsettled-dialog"
+      title="Envie anexos"
+      class="jus-dispute-actions__upload-dialog"
       width="600px"
-      data-testid="choose-unsettled-dialog">
-      <p>Confirme o valor do acordo nos campos abaixo:</p>
-      <el-form
-        v-loading="modalLoading"
-        ref="counterOfferForm"
-        :model="counterOfferForm"
-        :rules="counterOfferFormRules"
-        label-position="top">
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item
-              label="Valor"
-              prop="lastCounterOfferValue">
-              <money
-                v-model="counterOfferForm.lastCounterOfferValue"
-                class="el-input__inner"
-                data-testid="counterproposal-value-input"
-                maxlength="16" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item
-              label="Proposto por"
-              prop="selectedRoleId">
-              <el-select
-                v-model="counterOfferForm.selectedRoleId"
-                placeholder="Autor da contraproposta"
-                style="width: 100%;"
-                data-testid="counterproposal-claimant-input">
-                <el-option
-                  v-for="(claimant, index) in disputeClaimants"
-                  :key="`${index}-${claimant.id}`"
-                  :label="claimant.name"
-                  :value="claimant.id" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <span slot="footer">
-        <el-button
-          :disabled="modalLoading"
-          plain
-          @click="settledDialogVisible = false">Cancelar</el-button>
-        <el-button
-          :loading="modalLoading"
-          type="primary"
-          @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
-      </span>
+      data-testid="upload-file-dialog"
+    >
+      <jus-drag-area
+        :visible="true"
+        @closeDialog="handleAttachmentDialogVisable()"
+      />
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { getRoles } from '@/utils/jusUtils'
+import { JusDragArea } from '@/components/JusDragArea'
 
 export default {
   name: 'JusDisputeActions',
+  components: {
+    JusDragArea,
+  },
   props: {
     dispute: {
       type: Object,
@@ -448,6 +475,7 @@ export default {
       chooseUnsettledDialogVisible: false,
       editNegotiatorDialogVisible: false,
       counterproposalDialogVisible: false,
+      uploadAttacmentDialogVisable: false,
       settledDialogVisible: false,
       modalLoading: false,
       counterOfferForm: {
@@ -697,7 +725,7 @@ export default {
             confirmButtonText: 'OK',
             showClose: false,
           })
-          reject(new Error('Invalid Fields'))
+          reject(new Error('A estratégia dessa disputa é manual. Mude a estratégial para poder Reiniciar Dispute, Reiniciar Engajamento ou Cancelar Mensagens'))
         } else {
           resolve()
         }
@@ -756,6 +784,9 @@ export default {
       if (this.$refs.counterOfferForm) {
         this.$refs.counterOfferForm.clearValidate()
       }
+    },
+    handleAttachmentDialogVisable() {
+      this.uploadAttacmentDialogVisable = !this.uploadAttacmentDialogVisable
     },
     checkCounterproposal(actionType) {
       return new Promise((resolve, reject) => {
@@ -890,6 +921,11 @@ export default {
     }
     .el-select {
       width: 100%;
+    }
+  }
+  &__upload-dialog {
+    .el-dialog__body {
+      height: 300px;
     }
   }
   img {

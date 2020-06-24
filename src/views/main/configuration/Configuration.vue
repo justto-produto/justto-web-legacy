@@ -144,7 +144,9 @@
                   <div class="actions">
                     <a
                       href="#"
-                      @click.prevent="showEditMember(member)"><jus-icon icon="edit" /></a>
+                      @click.prevent="showEditMember(member)">
+                      <jus-icon icon="edit" />
+                    </a>
                     <a
                       href="#"
                       @click.prevent="removeMember(member.id, member.person.name)"><jus-icon icon="trash" /></a>
@@ -658,6 +660,7 @@ export default {
             VEXATIOUS_THRESHOLD: this.vexatiousThreshold.toString(),
             VEXATIOUS_TYPE: this.vexatiousType.toString(),
           },
+          name: this.companyName,
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Configurações da equipe alterada')
@@ -700,7 +703,13 @@ export default {
     },
     changeCompanyName() {
       if (this.companyName) {
-        this.$store.dispatch('editWorkpace', { name: this.companyName }).then(() => {
+        this.$store.dispatch('editWorkpace', {
+          properties: {
+            VEXATIOUS_THRESHOLD: this.vexatiousThreshold.toString(),
+            VEXATIOUS_TYPE: this.vexatiousType.toString(),
+          },
+          name: this.companyName,
+        }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nome do escritório/empresa alterado')
           this.$jusNotification({

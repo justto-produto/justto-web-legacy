@@ -7,7 +7,10 @@
         <jus-sidenav-external show-plans/>
       </el-aside>
       <el-main class="display-flex position-relative">
-        <jus-button-back src="http://justto.com.br" />
+        <jus-button-back
+          src="http://justto.com.br"
+          text="Voltar"
+        />
         <el-form
           v-loading="showLoading"
           ref="registerForm"

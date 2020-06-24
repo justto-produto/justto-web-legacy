@@ -9,19 +9,19 @@
           class="el-menu-vertical-demo"
           background-color="#f7f7f7"
           @select="changeMenuIndex">
-          <!-- <el-menu-item index="0">
-            <i class="el-icon-s-data" /> Dashboard
-          </el-menu-item> -->
-          <el-menu-item index="1">
+          <el-menu-item index="0">
             <i class="el-icon-s-cooperation" /> Equipes
           </el-menu-item>
+          <!-- <el-menu-item index="1">
+            <i class="el-icon-s-data" /> Dashboard
+          </el-menu-item> -->
           <!-- <el-menu-item index="2">
             <i class="el-icon-user-solid" /> Usuários
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="3">
             <i class="el-icon-s-operation" /> Estratégias
           </el-menu-item>
-          <el-menu-item index="4">
+          <!-- <el-menu-item index="4">
             <i class="el-icon-document" /> Minutas
           </el-menu-item>
           <el-menu-item index="5">
@@ -35,35 +35,53 @@
         v-if="right > 0"
         :span="right"
         class="content">
-        <h1>
-          {{ $t('panel.' + menuIndex) }}
-          <!-- <el-button
-            v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
-            type="primary"
-            icon="el-icon-plus"
-            style="float: right;"
-            @click="add">
-            Adicionar
-          </el-button> -->
-        </h1>
-        <panel-dashboard
-          v-if="menuIndex === '0'"
-          ref="panel0"/>
+        <div class="admin-panel-view__panel-header">
+          <h1>{{ $t('panel.' + menuIndex) }}</h1>
+          <div class="admin-panel-view__header-options">
+            <!-- <el-button
+              v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
+              type="primary"
+              icon="el-icon-plus"
+              @click="add">
+              Adicionar
+            </el-button> -->
+            <el-input
+              v-model="filterTerm"
+              prefix-icon="el-icon-search"
+              placeholder="Buscar"
+            />
+          </div>
+        </div>
         <panel-workspace
+          v-if="menuIndex === '0'"
+          ref="panel1"
+          :filter-term="filterTerm"
+        />
+        <panel-dashboard
           v-if="menuIndex === '1'"
-          ref="panel1"/>
+          ref="panel0"
+          :filter-term="filterTerm"
+        />
         <panel-user
           v-if="menuIndex === '2'"
-          ref="panel2"/>
+          ref="panel2"
+          :filter-term="filterTerm"
+        />
         <panel-strategy
           v-if="menuIndex === '3'"
-          ref="panel3"/>
+          ref="panel3"
+          :filter-term="filterTerm"
+        />
         <panel-minute
           v-if="menuIndex === '4'"
-          ref="panel4"/>
+          ref="panel4"
+          :filter-term="filterTerm"
+        />
         <panel-billing
           v-if="menuIndex === '5'"
-          ref="panel5"/>
+          ref="panel5"
+          :filter-term="filterTerm"
+        />
       </el-col>
     </transition>
   </el-row>
@@ -77,15 +95,16 @@ export default {
     PanelDashboard: () => import('./partials/PanelDashboard'),
     PanelWorkspace: () => import('./partials/PanelWorkspace'),
     PanelUser: () => import('./partials/PanelUser'),
-    PanelStrategy: () => import('./partials/PanelStrategy'),
     PanelMinute: () => import('./partials/PanelMinute'),
     PanelBilling: () => import('./partials/PanelBilling'),
+    PanelStrategy: () => import('./partials/Strategy/PanelStrategy'),
   },
   data() {
     return {
       menuIndex: '0',
       left: 12,
       right: 0,
+      filterTerm: '',
     }
   },
   created() {
@@ -113,6 +132,13 @@ export default {
   background-color: #fff;
   >.el-col {
     height: 100%
+  }
+  &__panel-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__header-options {
+    margin: 20px 48px 0px;
   }
   .el-col.content {
     h1 {

@@ -15,6 +15,9 @@ const message = {
     },
   },
   actions: {
+    canSendWhatsapp({ commit }, phone) {
+      return axiosDispatcher({ url: `api/messages/can-send/${phone}` })
+    },
     sendwhatsapp({ commit }, data) {
       return axiosDispatcher({
         url: 'api/messages/send/whatsapp',

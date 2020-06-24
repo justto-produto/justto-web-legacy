@@ -1,5 +1,6 @@
-import Vue from 'vue'
 import * as Sentry from '@sentry/browser'
+
+import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
 import unavailableLoading from '@/utils/loading'
@@ -29,6 +30,18 @@ _axios.interceptors.request.use(
         window.location.reload()
       }
     }
+    if (!axios.defaults.headers.common.UserLanguage) {
+      axios.defaults.headers.common['UserLanguage'] = store.getters.getUserLanguage
+    }
+    if (!axios.defaults.headers.common.UserTimeZone) {
+      axios.defaults.headers.common['UserTimeZone'] = store.getters.getUserTimeZone
+    }
+    if (!axios.defaults.headers.common.UserBrowserName) {
+      axios.defaults.headers.common['UserBrowserName'] = store.getters.getUserBrowserName
+    }
+    if (!axios.defaults.headers.common.UserOS) {
+      axios.defaults.headers.common['UserOS'] = store.getters.getUserOS
+    }
     return config
   },
   function(error) {
@@ -38,8 +51,8 @@ _axios.interceptors.request.use(
 
 _axios.interceptors.response.use(
   function(response) {
-    if (response.status === 204 && response.config && !response.config.__isRetryRequest) {
-      response.config.__isRetryRequest = true
+    if (response.status === 204 && response.config && response.config.__isRetryRequest) {
+      response.config.__isRetryRequest = false
       setTimeout(function() {
         return axios(response.config)
       }, 2000)

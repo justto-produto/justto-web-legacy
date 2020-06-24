@@ -85,6 +85,10 @@ export default {
     JusImportFeedbackCard: () => import('@/components/layouts/JusImportFeedbackCard'),
   },
   props: {
+    campaignIsMapped: {
+      type: Boolean,
+      default: false,
+    },
     mappedCampaigns: {
       type: Array,
       default: () => [],
@@ -96,6 +100,17 @@ export default {
       duplicatedDisputesLoading: true,
     }
   },
+  watch: {
+    campaignIsMapped(current) {
+      if (current) {
+        this.$store.dispatch('validateGeneseRunner').then(response => {
+          this.duplicatedDisputes = response.disputes
+        }).finally(() => {
+          setTimeout(() => { this.duplicatedDisputesLoading = false }, 1000)
+        })
+      }
+    },
+  },
   beforeMount() {
     if (!this.$store.getters.strategyList.length) {
       this.$store.dispatch('showLoading')
@@ -103,11 +118,6 @@ export default {
         this.$store.dispatch('hideLoading')
       })
     }
-    this.$store.dispatch('validateGeneseRunner').then(response => {
-      this.duplicatedDisputes = response.disputes
-    }).finally(() => {
-      setTimeout(() => { this.duplicatedDisputesLoading = false }, 1000)
-    })
   },
 }
 </script>

@@ -1,6 +1,6 @@
 {
   "name": "justto-web",
-  "version": "1.10.279",
+  "version": "1.10.313",
   "homepage": "https://app.justto.com",
   "author": "Henrique Liberato",
   "engines": {
@@ -33,6 +33,7 @@
     "file-loader": "^4.2.0",
     "file-saver": "^2.0.2",
     "fuse.js": "^3.4.5",
+    "lodash": "^4.17.15",
     "moment-timezone": "^0.5.26",
     "register-service-worker": "^1.6.2",
     "v-money": "^0.8.1",

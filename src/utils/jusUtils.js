@@ -259,6 +259,15 @@ const getTracktitleByAction = function(action, batch) {
   return title
 }
 
+const normalizeString = function(str) {
+  return str ? str.toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : ''
+}
+
+const filterByTerm = function(term, array, key1, key2) {
+  term = normalizeString(term)
+  return array ? array.filter(i => normalizeString(i[key1]).includes(term) || normalizeString(i[key2]).includes(term)) : []
+}
+
 export {
   buildRoleTitle,
   getRoleIcon,
@@ -274,4 +283,6 @@ export {
   getDocumentStep,
   getTracktitleByAction,
   queryBuilder,
+  filterByTerm,
+  normalizeString,
 }

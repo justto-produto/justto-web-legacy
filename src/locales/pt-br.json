@@ -3,11 +3,16 @@
   "test": "teste",
   "isTyping": "está digitando",
   "dispute": {
+    "moralDamage": "valor dano moral",
+    "negotiatorEmail": "email do negociador",
+    "strategy": "nome da estratégia",
+    "campaign": "nome da campanha",
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
     "materialDamage": "danos materiais",
     "externalId": "código interno da disputa",
     "description": "descrição",
+    "provisionedValue": "Valor Provisionado",
     "status": {
       "ACCEPTED": "aceita",
       "CHECKOUT": "sem dados bancarios",
@@ -21,6 +26,30 @@
       "SETTLED": "ganha",
       "UNSETTLED": "perdida"
     }
+  },
+  "transactions": {
+    "DISPUTE_ACCEPTED": "disputa aceita",
+    "IMPORTED_DISPUTE": "disputa importada",
+    "INTERACTION": "interação na disputa",
+    "MANUAL": "valor manual",
+    "SETTLED_DISPUTE": "acordo fechado",
+    "SUBSCRIPTION": "assinatura"
+  },
+  "prescription": {
+    "ONLY_SMS_ENGAGEMENT": "somente SMS",
+    "ONLY_EMAIL_ENGAGEMENT": "somente email",
+    "HAS_ANSWER": "com resposta",
+    "COUNTERPROPOSAL_UP_TO_20": "contraproposta (até 20%)",
+    "COUNTERPROPOSAL_OVER_20": "contraproposta (+20%)",
+    "ONLY_VISUALIZED": "somente visualizados",
+    "PENDING": "pendentes",
+    "UNSETTLED_WITH_MESSAGES": "perdidos com mensagem",
+    "NO_DOCUMENT_TERM": "sem termo",
+    "PENDING_TO_SEND_SIGNING": "pendente de envio",
+    "DOCUMENT_WAITING_SIGNATURES": "aguardando assinatura",
+    "DOCUMENT_SIGNED": "termo assinado",
+    "NAMESAKE": "homônimos",
+    "NO_UPPER_RANGE": "sem alçada máxima"
   },
   "expirationDate": {
     "dateTime": "fim da negociação"
@@ -232,8 +261,5 @@
   "threshold": {
     "QUANTITY": "Por contagem de disputas",
     "AVERAGE": "Por percentual acima da média"
-  },
-  "provisioned": {
-    "value": "Valor Provisionado"
   }
 }
