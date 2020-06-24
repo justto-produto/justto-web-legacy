@@ -72,7 +72,6 @@ const actions = {
   },
 
   setCustomer: ({ commit, dispatch }, customerData) => {
-    if (!customerData.contracts.length) customerData.contracts.push({})
     commit('setCustomer', customerData)
     dispatch('getTransactions')
   },
