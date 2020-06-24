@@ -152,7 +152,7 @@ const account = {
     accountEmail: state => state.email,
     isJusttoAdmin: state => {
       if (state.email.endsWith('@justto.com.br')) return true
-      return false
+      else return false
     },
   },
 }

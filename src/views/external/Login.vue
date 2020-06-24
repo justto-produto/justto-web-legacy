@@ -199,24 +199,31 @@ export default {
           this.showLoading = true
           this.$store.dispatch('login', this.loginForm)
             .then(() => {
-              Promise.all([
-                this.$store.dispatch('myAccount'),
-                this.$store.dispatch('myWorkspace'),
-              ]).then(responses => {
-                // SEGMENT TRACK
-                this.$jusSegment('Usuário logado')
-                if (responses[1].length > 1) {
-                  this.showLoading = false
-                  this.workspaces = responses[1]
-                } else if (responses[1].length === 0) {
-                  this.$router.push('/onboarding')
-                } else {
-                  this.getMembersAndRedirect(responses[1][0])
-                }
+              this.$store.dispatch('myAccount').then(() => {
+                this.getMyWorkspaces()
               }).catch(error => {
                 this.$jusNotification({ error })
                 this.showLoading = false
               })
+
+              // Promise.all([
+              //   this.$store.dispatch('myAccount'),
+              //   getUserWorkspaces
+              // ]).then(responses => {
+              //   // SEGMENT TRACK
+              //   this.$jusSegment('Usuário logado')
+              //   if (responses[1].length > 1) {
+              //     this.showLoading = false
+              //     this.workspaces = responses[1]
+              //   } else if (responses[1].length === 0) {
+              //     this.$router.push('/onboarding')
+              //   } else {
+              //     this.getMembersAndRedirect(responses[1][0])
+              //   }
+              // }).catch(error => {
+              //   this.$jusNotification({ error })
+              //   this.showLoading = false
+              // })
             })
             .catch(error => {
               if (error.response && (error.response.status === 401 || error.response.data.code === 'INVALID_CREDENTIALS')) {
@@ -229,6 +236,26 @@ export default {
         } else {
           return false
         }
+      })
+    },
+    getMyWorkspaces() {
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch('myWorkspace').then(response => {
+          this.$jusSegment('Usuário logado')
+          if (response.length > 1) {
+            this.showLoading = false
+            this.workspaces = response
+          } else if (response.length === 0) {
+            this.$router.push('/onboarding')
+          } else {
+            this.getMembersAndRedirect(response[0])
+          }
+          resolve(response)
+        }).catch(error => {
+          this.$jusNotification({ error })
+          this.showLoading = false
+          reject(error)
+        })
       })
     },
     getMembersAndRedirect(response) {
@@ -251,7 +278,24 @@ export default {
     selectWorkspace() {
       this.$refs.workspaceForm.validate(valid => {
         if (valid) {
-          this.getMembersAndRedirect(this.workspaces[this.workspaceForm.selectedWorkspaceIndex])
+          const selectedWorkspace = this.workspaces[this.workspaceForm.selectedWorkspaceIndex]
+          if (selectedWorkspace.person) {
+            this.getMembersAndRedirect(selectedWorkspace)
+          } else {
+            this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then(() => {
+              this.getMyWorkspaces().then((response) => {
+                console.log(response)
+                const ind = this.workspaceForm.selectedWorkspaceIndex
+                console.log(ind)
+
+                // const workspaceFiltered =  this.workspaces.filter(w => {
+                //   return w.workspace.id === selectedWorkspace.workspace.id
+                // })[0]
+
+                this.getMembersAndRedirect(this.workspaces[this.workspaceForm.selectedWorkspaceIndex])
+              })
+            })
+          }
         }
       })
     },

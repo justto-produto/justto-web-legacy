@@ -103,6 +103,11 @@ const actions = {
         })
     })
   },
+  getWorkspaces({ commit }) {
+    return axiosDispatcher({
+      url: 'api/workspaces',
+    })
+  },
   removeWorkspaceMember({ commit }, id) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
@@ -195,6 +200,12 @@ const actions = {
       }).catch(error => {
         reject(error)
       })
+    })
+  },
+  ensureWorkspaceAccesss({ commit }, workspaceId) {
+    return axiosDispatcher({
+      url: `api/accounts/workspaces/ensure-workspace-accesss/${workspaceId}`,
+      method: 'PATCH',
     })
   },
 }
