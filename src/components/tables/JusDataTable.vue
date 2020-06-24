@@ -30,7 +30,8 @@
     </el-table-column>
     <el-table-column
       prop="respondent"
-      label="Réu">
+      label="Réu"
+    >
       <template slot-scope="scope">
         <span>{{ scope.row.respondent || '-' }}</span>
       </template>
@@ -38,7 +39,8 @@
     <el-table-column
       prop="code"
       label="Processo"
-      width="130">
+      width="130"
+    >
       <template slot-scope="scope">
         <span>{{ scope.row.code || '-' }}</span>
       </template>

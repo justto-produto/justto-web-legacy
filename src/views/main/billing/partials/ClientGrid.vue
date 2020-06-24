@@ -19,7 +19,7 @@
         class="client-grid__action-card"
         @click.native="showFormCard"
       >
-        <span>Adicionar um usuário</span>
+        <span>Adicionar um cliente</span>
         <i class="el-icon-plus client-grid__icon" />
       </el-card>
 

@@ -3,7 +3,7 @@
     class="jus-button-back"
     @click="goTo"
   >
-    <jus-icon icon="back"/>
+    <jus-icon icon="back" />
     <span v-if="text">{{ text }}</span>
   </div>
 </template>

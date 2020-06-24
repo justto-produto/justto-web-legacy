@@ -14,6 +14,11 @@
         class="billing-view__back-button"
       />
 
+      <JusButtonBack
+        to="/billing"
+        class="billing-view__back-button"
+      />
+
       <article class="billing-view__range">
         <h2 class="billing-view__range-title">
           Cobrança do período
