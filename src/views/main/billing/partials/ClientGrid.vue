@@ -49,48 +49,10 @@
       </el-card>
     </jus-grid>
 
-    <el-dialog
-      :visible.sync="dialogFormVisible"
-      title="Editar dados do cliente"
-    >
-      <el-form
-        v-if="form"
-        :model="form"
-      >
-        <el-form-item label="Nome">
-          <el-input
-            v-model="form.customerName"
-            autocomplete="off"
-          />
-        </el-form-item>
-        <el-form-item label="Contrato">
-          <el-select
-            v-if="!!form.contracts.length"
-            v-model="form.contracts[form.contracts.length - 1].status"
-            placeholder="Selecione o estado do contrato"
-          >
-            <el-option
-              label="ATIVO"
-              value="ACTIVE"
-            />
-            <el-option
-              label="TRIAL"
-              value="TRIAL"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="dialogFormVisible = false">Cancelar</el-button>
-        <el-button
-          type="primary"
-          @click="dialogFormVisible = false"
-        >Salvar</el-button>
-      </span>
-    </el-dialog>
+    <ContractsModal
+      v-if="dialogFormVisible"
+      :client-data="form"
+    />
   </div>
 </template>
 
@@ -102,6 +64,7 @@ export default {
   components: {
     JusGrid: () => import('@/components/JusGrid/JusGrid'),
     JusUserCard: () => import('@/components/JusUserCard/JusUserCard'),
+    ContractsModal: () => import('./ContractsModal'),
   },
   data() {
     return {
@@ -163,7 +126,19 @@ export default {
       this.dialogFormVisible = true
     },
     handleClose(userData) {
-      this.unlinkCustomer(userData.id)
+      this.$confirm('Tem certeza que deseja desvincular este cliente dassa workspace?', 'Atenção', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning',
+      }).then(() => {
+        this.unlinkCustomer(userData.id).then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Cliente desvinculado com sucesso.',
+          })
+        })
+      })
     },
     addClient() {
       const name = this.inputValue
