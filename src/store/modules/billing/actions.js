@@ -47,6 +47,21 @@ const actions = {
       mutation: 'setContracts',
     })
   },
+
+  addContract: ({ dispatch }, { customerId, contract }) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerId}/contract`,
+      method: 'post',
+      data: contract,
+    }).then(() => dispatch('getMyCusomers')),
+
+  updateContract: ({ dispatch }, { customerId, contract }) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerId}/contract/${contract.id}`,
+      method: 'patch',
+      data: contract,
+    }).then(() => dispatch('getMyCusomers')),
+
   getTransactions: ({ state }) => {
     const query = {
       ...state.query,
@@ -72,7 +87,6 @@ const actions = {
   },
 
   setCustomer: ({ commit, dispatch }, customerData) => {
-    if (!customerData.contracts.length) customerData.contracts.push({})
     commit('setCustomer', customerData)
     dispatch('getTransactions')
   },
@@ -83,6 +97,7 @@ const actions = {
   setRangeDate: ({ commit, dispatch }, rangeDate) => {
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
+    dispatch('getBillingDashboard')
     dispatch('getTransactions')
   },
   setTerm: ({ commit, dispatch }, term) => {
@@ -101,6 +116,8 @@ const actions = {
     commit('setType', '')
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
+    commit('setTransactions', [])
+    dispatch('getBillingDashboard')
   },
 
   postTransaction: ({ state, dispatch }, params) => {

@@ -102,6 +102,8 @@
           />
           <h4 data-testid="cases-empty-text">
             Nenhum lançamento para exibir.
+            <br>
+            Selecione um tipo de lançamento nos cards acima para visualizar.
           </h4>
         </span>
       </transition>

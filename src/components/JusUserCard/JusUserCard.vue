@@ -95,6 +95,11 @@ export default {
       }
     },
   },
+  watch: {
+    userData(current) {
+      this.userDataBind = current
+    },
+  },
   methods: {
     emitEditTitle(inputValue) {
       this.userDataBind.name = inputValue

@@ -44,8 +44,8 @@
         <el-autocomplete
           v-else
           ref="saveTagInput"
-          :fetch-suggestions="suggestions"
           v-model="inputValue"
+          :fetch-suggestions="suggestions"
           class="jus-tag-container__input"
           size="mini"
           value-key="name"
@@ -121,7 +121,7 @@ export default {
         this.searchItems,
         queryString,
         this.filter(queryString),
-        callback
+        callback,
       )
     },
 
