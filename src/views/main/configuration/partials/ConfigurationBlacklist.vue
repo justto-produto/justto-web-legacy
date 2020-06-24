@@ -2,7 +2,8 @@
   <div class="configuration-blackList-view">
     <el-table
       :data="filteredBlackList"
-      width="100%">
+      width="100%"
+    >
       <el-table-column label="Termo bloqueado">
         <template slot-scope="props">
           {{ props.row }}
@@ -10,30 +11,32 @@
       </el-table-column>
       <el-table-column
         align="right"
-        width="400px">
-        <template
-          slot="header"
-          slot-scope="scope">
+        width="400px"
+      >
+        <div slot="header">
           <el-input
             v-model="search"
-            placeholder="Buscar"/>
+            placeholder="Buscar"
+          />
           <el-button
             type="primary"
             icon="el-icon-plus"
-            @click="blackListDialogVisible = true">
+            @click="blackListDialogVisible = true"
+          >
             Adicionar
           </el-button>
-        </template>
-        <template slot-scope="props">
+        </div>
+        <div slot-scope="props">
           <el-tooltip content="Excluir">
             <el-button
               size="mini"
               type="danger"
               plain
               icon="el-icon-delete"
-              @click="deleteBlackList(props.row)" />
+              @click="deleteBlackList(props.row)"
+            />
           </el-tooltip>
-        </template>
+        </div>
       </el-table-column>
     </el-table>
     <el-dialog
@@ -43,7 +46,8 @@
       :visible.sync="blackListDialogVisible"
       title="Adicionar à blackList"
       label-position="top"
-      width="40%">
+      width="40%"
+    >
       <el-alert type="info">
         Exemplos: <br><br>
         <b>contato@empresa.com.br</b> bloqueará o envio automático de e-mails somente para o endereço específico.
@@ -62,20 +66,24 @@
         :model="blackListForm"
         :rules="blackListRules"
         label-position="top"
-        @submit.native.prevent="addBlackList">
+        @submit.native.prevent="addBlackList"
+      >
         <el-form-item
           label="Termo a ser bloqueado"
-          prop="contact">
+          prop="contact"
+        >
           <el-input v-model="blackListForm.contact" />
         </el-form-item>
       </el-form>
       <span slot="footer">
         <el-button
           plain
-          @click="blackListDialogVisible = false">Cancelar</el-button>
+          @click="blackListDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           type="primary"
-          @click="addBlackList">Adicionar</el-button>
+          @click="addBlackList"
+        >Adicionar</el-button>
       </span>
     </el-dialog>
   </div>

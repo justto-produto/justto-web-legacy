@@ -8,7 +8,7 @@
     }"
     class="jus-grid"
   >
-    <slot/>
+    <slot />
   </div>
 </template>
 

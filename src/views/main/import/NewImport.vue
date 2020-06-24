@@ -9,19 +9,22 @@
       <el-steps
         :active="activeStep"
         class="new-import-view__steps el-steps--circle"
-        finish-status="success">
-        <el-step/>
-        <el-step/>
-        <el-step/>
+        finish-status="success"
+      >
+        <el-step />
+        <el-step />
+        <el-step />
       </el-steps>
       <div class="new-import-view__content">
         <transition name="fade">
           <check-lines-step
             v-if="activeStep === 0"
-            key="0"/>
+            key="0"
+          />
           <columns-step
             v-if="activeStep === 1"
-            key="1"/>
+            key="1"
+          />
           <campaign-step
             v-if="activeStep === 2"
             key="2"
@@ -33,12 +36,16 @@
       <div class="new-import-view__actions">
         <el-button
           plain
-          @click="previousStep">Voltar</el-button>
+          @click="previousStep"
+        >
+          Voltar
+        </el-button>
         <el-button
           v-if="activeStep === 2"
           type="primary"
           data-testid="start-negotiation"
-          @click="finalStep">
+          @click="finalStep"
+        >
           Iniciar negociação
         </el-button>
         <el-button
@@ -46,7 +53,8 @@
           :disabled="$store.state.loading"
           type="primary"
           data-testid="submit"
-          @click="nextStep">
+          @click="nextStep"
+        >
           Próximo
         </el-button>
       </div>
@@ -55,6 +63,7 @@
 </template>
 
 <script>
+/* eslint-disable no-prototype-builtins */
 export default {
   name: 'NewImport',
   components: {

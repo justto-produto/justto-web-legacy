@@ -4,12 +4,14 @@
       'jus-financial-card--highlighted': highlighted,
     }"
     shadow="hover"
-    class="jus-financial-card">
+    class="jus-financial-card"
+  >
     <div class="jus-financial-card__actions">
       <el-tooltip
         v-for="(action, index) in actions"
+        :key="index"
         :content="action.label"
-        :key="index">
+      >
         <jus-icon
           :icon="action.icon"
           class="jus-financial-card__icon"

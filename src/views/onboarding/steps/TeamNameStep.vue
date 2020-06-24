@@ -2,7 +2,8 @@
   <div class="onboarding-step-content">
     <div
       data-testid="teamname-step"
-      class="onboarding-step-content__title">
+      class="onboarding-step-content__title"
+    >
       <h2>Qual o nome da sua equipe?</h2>
       <p>
         Você pode colocar o nome do seu escritório ou empresa.
@@ -16,21 +17,27 @@
       :model="nameForm"
       :rules="nameFormRules"
       label-position="top"
-      @submit.native.prevent="submitForm">
+      @submit.native.prevent="submitForm"
+    >
       <el-form-item
         label="Equipe"
-        prop="name">
+        prop="name"
+      >
         <el-input
           v-model="nameForm.name"
           :disabled="creatingWorkspace"
           name="name"
-          data-testid="teamname-form"/>
+          data-testid="teamname-form"
+        />
       </el-form-item>
     </el-form>
     <el-button
       type="primary"
       data-testid="teamname-next"
-      @click="submitForm">Próximo</el-button>
+      @click="submitForm"
+    >
+      Próximo
+    </el-button>
   </div>
 </template>
 
@@ -62,7 +69,7 @@ export default {
   },
   methods: {
     submitForm() {
-      this.$refs['nameForm'].validate(valid => {
+      this.$refs.nameForm.validate(valid => {
         if (valid) {
           this.$emit('onboarding:createSubdomain', { team: this.nameForm.name })
         } else {

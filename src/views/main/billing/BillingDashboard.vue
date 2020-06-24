@@ -2,10 +2,17 @@
   <jus-view-main
     :loading-container="false"
     full-screen
-    class="billing-view">
+    class="billing-view"
+  >
     <div
       slot="main"
-      class="billing-view__slot-main">
+      class="billing-view__slot-main"
+    >
+
+      <JusButtonBack
+        to="/billing"
+        class="billing-view__back-button"
+      />
 
       <JusButtonBack
         to="/billing"
@@ -70,7 +77,8 @@
         </div>
         <el-card
           class="billing-view__table-body"
-          shadow="never">
+          shadow="never"
+        >
           <JusDataTable
             :data="transactionsList"
             class="billing-view__data-table"
@@ -208,6 +216,8 @@ export default {
           }
         })
       }
+
+      return null
     },
 
     totalCard() {

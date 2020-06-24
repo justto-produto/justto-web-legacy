@@ -15,7 +15,7 @@ describe('Justto.App - Gerenciamento: Ação em Lote', function() {
       .contains('Todos')
       .click({ force: true })
 
-      // Seleciona primeira disputa
+    // Seleciona primeira disputa
     cy.get('tbody label', { timeout: 60000 }).first()
       .click()
 

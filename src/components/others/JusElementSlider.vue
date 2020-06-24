@@ -2,53 +2,62 @@
   <div
     :class="{ 'is-vertical': vertical, 'el-slider--with-input': showInput }"
     class="el-slider el-slider--negotiation"
-    role="slider">
+    role="slider"
+  >
     <div
       ref="slider"
       :class="{ 'show-input': showInput, 'disabled': sliderDisabled }"
       :style="runwayStyle"
       class="el-slider__runway"
-      @click="onSliderClick">
+      @click="onSliderClick"
+    >
       <JusElementButton
         v-if="firstValue"
         ref="button1"
-        :vertical="vertical"
         v-model="firstValue"
+        :vertical="vertical"
         :object="firstObj"
-        :tooltip-class="tooltipClass"/>
+        :tooltip-class="tooltipClass"
+      />
       <JusElementButton
         v-if="range && secondValue"
         ref="button2"
         v-model="secondValue"
         :vertical="vertical"
         :object="secondObj"
-        :tooltip-class="tooltipClass"/>
+        :tooltip-class="tooltipClass"
+      />
       <div
         v-for="(item, key) in stops"
         v-show="showStops"
         :key="key"
         :style="getStopStyle(item)"
-        class="el-slider__stop"/>
+        class="el-slider__stop"
+      />
       <template v-if="markList.length > 0">
         <div>
           <div
             v-for="(item, key) in markList"
             :key="key"
             :style="getStopStyle(item.position)"
-            class="el-slider__stop el-slider__marks-stop"/>
+            class="el-slider__stop el-slider__marks-stop"
+          />
         </div>
         <div class="el-slider__marks">
           <div
             v-for="(item, key) in markList"
             :key="key"
-            class="hover">
+            class="hover"
+          >
             <JusElementMarker
               :mark="item.mark"
-              :style="getStopStyle(item.position, item.mark.zIndex)"/>
+              :style="getStopStyle(item.position, item.mark.zIndex)"
+            />
             <div
               v-if="item.mark.details"
               :style="getStopStyle(item.position)"
-              class="details">
+              class="details"
+            >
               <b>Data</b>
               <div>{{ item.mark.details.createAt.dateTime | moment('DD/MM/YY') }}</div>
               <b>Nome</b>
@@ -61,16 +70,20 @@
             <div
               v-if="item.mark.details"
               :style="diffToAmBarStyle(item)"
-              class="el-slider__diff-bar el-slider__bar bar">
+              class="el-slider__diff-bar el-slider__bar bar"
+            >
               <div
                 :class="{ 'reverse': (amMark.point >= item.point) }"
-                class="collapse">
+                class="collapse"
+              >
                 <i
                   v-if="item.point >= amMark.point"
-                  class="el-icon-top" />
+                  class="el-icon-top"
+                />
                 <i
                   v-else
-                  class="el-icon-bottom" />
+                  class="el-icon-bottom"
+                />
                 {{ Math.round(((diffToAmBar(item)) * 100) / amMark.point) }}%
                 <br>
                 R$ {{ diffToAmBar(item) }}
@@ -86,14 +99,12 @@
 <script>
 import JusElementButton from './JusElementButton.vue'
 import JusElementMarker from './JusElementMarker'
-import ElInputNumber from 'element-ui/packages/input-number'
 import Emitter from 'element-ui/src/mixins/emitter'
 import { buildRoleTitle } from '@/utils/jusUtils'
 
 export default {
   name: 'JusElementSlider',
   components: {
-    ElInputNumber,
     JusElementButton,
     JusElementMarker,
   },
@@ -460,7 +471,7 @@ export default {
     },
     getStopStyle(position, zIndex) {
       return {
-        'left': position + '%',
+        left: position + '%',
         'z-index': zIndex,
       }
     },

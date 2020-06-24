@@ -27,7 +27,7 @@ describe('Justto.App - Visualização de Gerenciamento', function() {
     cy.get('.el-table__expand-icon').first()
       .click({ force: true })
 
-      // Verifica se existem casos exibidos
+    // Verifica se existem casos exibidos
     cy.get('tbody>tr').first()
       .should('be.visible')
   })

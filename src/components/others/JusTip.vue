@@ -2,7 +2,8 @@
   <div class="jus-tip">
     <span
       class="jus-tip__throbber"
-      @click="open"/>
+      @click="open"
+    />
   </div>
 </template>
 

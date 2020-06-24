@@ -3,7 +3,8 @@
     <el-collapse v-model="activeCollapse">
       <el-collapse-item
         title="Ativas"
-        name="active">
+        name="active"
+      >
         <strategy-card
           v-for="(strategy, index) in filteredStrategie"
           :key="`${index}-${_uid}`"
@@ -14,7 +15,8 @@
       </el-collapse-item>
       <el-collapse-item
         title="Inativas"
-        name="unactive">
+        name="unactive"
+      >
         <strategy-card
           v-for="(strategy, index) in filteredStrategie"
           :key="`${index}-${_uid}`"
@@ -29,15 +31,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { VueNestable, VueNestableHandle } from 'vue-nestable'
 import StrategyCard from './StrategyCard'
 
 export default {
   name: 'PanelStrategy',
   components: {
     StrategyCard,
-    VueNestable,
-    VueNestableHandle,
   },
   props: {
     filterTerm: {
@@ -56,7 +55,7 @@ export default {
     filteredStrategie() {
       return this.strategies
         .filter(s => s.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-          .includes(this.filterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+          .includes(this.filterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')),
         )
     },
   },

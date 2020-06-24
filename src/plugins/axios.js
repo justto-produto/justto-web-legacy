@@ -8,7 +8,7 @@ import unavailableLoading from '@/utils/loading'
 const AUTH_TOKEN = localStorage.justoken
 
 if (AUTH_TOKEN) {
-  axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
+  axios.defaults.headers.common.Authorization = AUTH_TOKEN
 }
 
 const config = {
@@ -31,22 +31,22 @@ _axios.interceptors.request.use(
       }
     }
     if (!axios.defaults.headers.common.UserLanguage) {
-      axios.defaults.headers.common['UserLanguage'] = store.getters.getUserLanguage
+      axios.defaults.headers.common.UserLanguage = store.getters.getUserLanguage
     }
     if (!axios.defaults.headers.common.UserTimeZone) {
-      axios.defaults.headers.common['UserTimeZone'] = store.getters.getUserTimeZone
+      axios.defaults.headers.common.UserTimeZone = store.getters.getUserTimeZone
     }
     if (!axios.defaults.headers.common.UserBrowserName) {
-      axios.defaults.headers.common['UserBrowserName'] = store.getters.getUserBrowserName
+      axios.defaults.headers.common.UserBrowserName = store.getters.getUserBrowserName
     }
     if (!axios.defaults.headers.common.UserOS) {
-      axios.defaults.headers.common['UserOS'] = store.getters.getUserOS
+      axios.defaults.headers.common.UserOS = store.getters.getUserOS
     }
     return config
   },
   function(error) {
     return Promise.reject(error)
-  }
+  },
 )
 
 _axios.interceptors.response.use(
@@ -68,7 +68,7 @@ _axios.interceptors.response.use(
       store.dispatch('logout')
     }
     return Promise.reject(error)
-  }
+  },
 )
 
 Plugin.install = function(Vue, options) {

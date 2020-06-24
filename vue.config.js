@@ -16,7 +16,7 @@ module.exports = {
       return args
     })
   },
-  baseUrl: undefined,
+  // baseUrl: undefined,
   outputDir: undefined,
   assetsDir: undefined,
   runtimeCompiler: undefined,
@@ -26,7 +26,7 @@ module.exports = {
     sourceMap: true,
     loaderOptions: {
       css: {
-        localIdentName: '[hash:base64:5]',
+        // localIdentName: '[hash:base64:5]',
       },
     },
   },

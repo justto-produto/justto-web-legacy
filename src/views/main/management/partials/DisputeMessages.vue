@@ -1,5 +1,5 @@
 <template>
-  <div class="dispute-view-messages"/>
+  <div class="dispute-view-messages" />
 </template>
 
 <script>

@@ -2,17 +2,20 @@
   <div
     v-loading="loading"
     element-loading-background="rgba(247, 247, 247, 0.7)"
-    class="dispute-proprieties-view">
+    class="dispute-proprieties-view"
+  >
     <div
       v-for="(propriety, index) in disputeProprietiesList"
       :key="lineKey + index"
-      class="dispute-proprieties-view__line">
+      class="dispute-proprieties-view__line"
+    >
       <!-- KEY -->
       <div class="key">
         <div
           v-show="!editing[propriety.key + index]"
           class="label"
-          @click="focus(propriety.key, index)">
+          @click="focus(propriety.key, index)"
+        >
           {{ propriety.key + ':' }}
         </div>
         <el-input
@@ -20,14 +23,16 @@
           :ref="'input' + propriety.key + index"
           v-model="editable"
           @keyup.enter.native="blurKey(propriety.key, index)"
-          @blur="blurKey(propriety.key, index)" />
+          @blur="blurKey(propriety.key, index)"
+        />
       </div>
       <!-- VALUE -->
       <div class="value">
         <div
           v-show="!editing[propriety.value + index]"
           class="label"
-          @click="focus(propriety.value, index)">
+          @click="focus(propriety.value, index)"
+        >
           {{ propriety.value }}
         </div>
         <el-input
@@ -39,7 +44,8 @@
           @keydown.enter.exact.prevent.native
           @keydown.enter.shift.exact.prevent.native
           @keyup.enter.exact.native="blurValue(propriety.key, propriety.value, index)"
-          @blur="blurValue(propriety.key, propriety.value, index)" />
+          @blur="blurValue(propriety.key, propriety.value, index)"
+        />
       </div>
       <!-- ACTION -->
       <el-tooltip content="Remover propriedade">
@@ -47,13 +53,15 @@
           :underline="false"
           type="danger"
           icon="el-icon-delete"
-          @click="removePropriety(propriety.key)" />
+          @click="removePropriety(propriety.key)"
+        />
       </el-tooltip>
     </div>
     <el-tooltip content="Propriedade não editável">
       <div
         v-if="disputeProprieties['ENRIQUECIDO']"
-        class="dispute-proprieties-view__line">
+        class="dispute-proprieties-view__line"
+      >
         <div class="key">
           <div class="label">
             ENRIQUECIDO:
@@ -72,7 +80,8 @@
           v-model="newKey"
           :fetch-suggestions="getSuggestionsKeys"
           placeholder="Chave"
-          @keyup.enter.exact.native="newPropriety"/>
+          @keyup.enter.exact.native="newPropriety"
+        />
       </div>
       <div class="value">
         <el-input
@@ -82,14 +91,16 @@
           type="textarea"
           @keydown.enter.exact.prevent.native
           @keydown.enter.shift.exact.prevent.native
-          @keyup.enter.exact.native="newPropriety"/>
+          @keyup.enter.exact.native="newPropriety"
+        />
       </div>
       <el-tooltip content="Adicionar propriedade">
         <el-link
           :underline="false"
           type="primary"
           icon="el-icon-plus"
-          @click="newPropriety" />
+          @click="newPropriety"
+        />
       </el-tooltip>
     </div>
   </div>
@@ -186,13 +197,13 @@ export default {
     },
     getSuggestionsKeys(queryString, cb) {
       const keys = [
-        { 'value': 'COMARCA' },
-        { 'value': 'AREA' },
-        { 'value': 'FORO' },
-        { 'value': 'VARA' },
-        { 'value': 'SITUACAO' },
-        { 'value': 'TRIBUNAL' },
-        { 'value': 'ESTADO' },
+        { value: 'COMARCA' },
+        { value: 'AREA' },
+        { value: 'FORO' },
+        { value: 'VARA' },
+        { value: 'SITUACAO' },
+        { value: 'TRIBUNAL' },
+        { value: 'ESTADO' },
       ]
       cb(queryString ? keys.filter((key) => (key.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)) : keys)
     },

@@ -14,14 +14,16 @@
       :model="subdomainForm"
       :rules="subdomainFormRules"
       label-position="top"
-      @submit.native.prevent="submitForm">
+      @submit.native.prevent="submitForm"
+    >
       <span>https://</span>
       <el-form-item prop="subdomain">
         <el-input
           v-model="subdomainForm.subdomain"
           :disabled="creatingWorkspace"
           name="subdomain"
-          data-testid="subdomain-form"/>
+          data-testid="subdomain-form"
+        />
       </el-form-item>
       <span>.justto.app</span>
     </el-form>
@@ -30,11 +32,15 @@
       v-show="showAlert"
       :title="availabilityAlert.title"
       :type="availabilityAlert.type"
-      :closable="false"/>
+      :closable="false"
+    />
     <el-button
       type="primary"
       data-testid="subdomain-next"
-      @click="submitForm">Próximo</el-button>
+      @click="submitForm"
+    >
+      Próximo
+    </el-button>
   </div>
 </template>
 
@@ -99,7 +105,7 @@ export default {
   methods: {
     submitForm() {
       if (!this.creatingWorkspace) {
-        this.$refs['subdomainForm'].validate(valid => {
+        this.$refs.subdomainForm.validate(valid => {
           if (valid) {
             this.$emit('onboarding:createSubdomain', { subdomain: this.subdomainForm.subdomain })
           } else {

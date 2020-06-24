@@ -1,58 +1,69 @@
 <template lang="html">
   <div
     :class="tableActions ? 'jus-dispute-actions--table' : 'jus-dispute-actions--dispute'"
-    class="jus-dispute-actions">
+    class="jus-dispute-actions"
+  >
     <el-tooltip
       v-if="!tableActions"
-      content="Voltar">
+      content="Voltar"
+    >
       <router-link to="/management">
         <jus-icon
           class="back"
-          icon="back"/>
+          icon="back"
+        />
       </router-link>
     </el-tooltip>
     <el-tooltip
       v-if="canSettled"
-      :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'">
+      :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="settled"
-        @click="disputeAction('settled')">
-        <jus-icon icon="win"/>
+        @click="disputeAction('settled')"
+      >
+        <jus-icon icon="win" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="canUnsettled"
-      content="Perder">
+      content="Perder"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="unsettled"
-        @click="disputeAction('unsettled')">
-        <jus-icon icon="lose"/>
+        @click="disputeAction('unsettled')"
+      >
+        <jus-icon icon="lose" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="dispute.paused"
-      content="Retomar">
+      content="Retomar"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="resume"
-        @click="disputeAction('resume')">
-        <jus-icon icon="start-again"/>
+        @click="disputeAction('resume')"
+      >
+        <jus-icon icon="start-again" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-else
-      content="Pausar">
+      content="Pausar"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="paused"
-        @click="disputeAction('paused')">
-        <jus-icon icon="pause"/>
+        @click="disputeAction('paused')"
+      >
+        <jus-icon icon="pause" />
       </el-button>
     </el-tooltip>
     <el-tooltip content="Reiniciar disputa">
@@ -60,98 +71,117 @@
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="restart-engagement"
-        @click="disputeAction('restart-engagement')">
-        <jus-icon icon="refresh"/>
+        @click="disputeAction('restart-engagement')"
+      >
+        <jus-icon icon="refresh" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="canResendMessage"
-      content="Reenviar mensagens automáticas">
+      content="Reenviar mensagens automáticas"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="resend-messages"
-        @click="disputeAction('resend-messages')">
-        <jus-icon icon="resend-messages"/>
+        @click="disputeAction('resend-messages')"
+      >
+        <jus-icon icon="resend-messages" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="!tableActions"
-      content="Cancelar mensagens automáticas">
+      content="Cancelar mensagens automáticas"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="cancel-messages"
-        @click="disputeAction('cancel-messages')">
-        <jus-icon icon="cancel-messages"/>
+        @click="disputeAction('cancel-messages')"
+      >
+        <jus-icon icon="cancel-messages" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="!tableActions"
-      content="Alterar negociador">
+      content="Alterar negociador"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="openEditNegotiatorsDialog()">
+        @click="openEditNegotiatorsDialog()"
+      >
         <!-- @click="disputeAction('edit-negotiators')"> -->
-        <jus-icon icon="delegate"/>
+        <jus-icon icon="delegate" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="!tableActions"
-      content="Enriquecer disputa">
+      content="Enriquecer disputa"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="disputeAction('enrich')">
-        <jus-icon icon="enrich"/>
+        @click="disputeAction('enrich')"
+      >
+        <jus-icon icon="enrich" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="canSendCounterproposal"
-      content="Contraproposta manual">
+      content="Contraproposta manual"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="disputeAction('counterproposal')">
+        @click="disputeAction('counterproposal')"
+      >
         <jus-icon icon="proposal2" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="!canSendCounterproposal"
-      content="Retornar para negociação">
+      content="Retornar para negociação"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="disputeAction('renegotiate')">
+        @click="disputeAction('renegotiate')"
+      >
         <jus-icon icon="move-to-running" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="canMarkAsNotRead"
-      content="Marcar como não lida">
+      content="Marcar como não lida"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="setAsUnread()">
-        <jus-icon icon="unread"/>
+        @click="setAsUnread()"
+      >
+        <jus-icon icon="unread" />
       </el-button>
     </el-tooltip>
     <el-tooltip
       v-if="tableActions"
-      content="Abrir disputa em nova aba">
+      content="Abrir disputa em nova aba"
+    >
       <el-button
         type="text"
-        @click="openNewTab()">
+        @click="openNewTab()"
+      >
         <jus-icon icon="external-link" />
       </el-button>
     </el-tooltip>
     <el-tooltip
-      content="Enviar anexo">
+      content="Enviar anexo"
+    >
       <el-button
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
-        @click="handleAttachmentDialogVisable()">
+        @click="handleAttachmentDialogVisable()"
+      >
         <jus-icon icon="upload-file" />
       </el-button>
     </el-tooltip>
@@ -160,8 +190,9 @@
         :type="tableActions ? 'text' : ''"
         :plain="!tableActions"
         data-testid="favorite"
-        @click="disputeAction(dispute.favorite ? 'disfavor' : 'favorite')">
-        <jus-icon :icon="dispute.favorite ? 'golden-star' : 'star'"/>
+        @click="disputeAction(dispute.favorite ? 'disfavor' : 'favorite')"
+      >
+        <jus-icon :icon="dispute.favorite ? 'golden-star' : 'star'" />
       </el-button>
     </el-tooltip>
     <!-- TAGS -->
@@ -175,12 +206,14 @@
     </el-tooltip> -->
     <el-tooltip
       v-if="!tableActions"
-      :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'">
+      :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'"
+    >
       <el-button
         :plain="!tableActions"
         :icon="collapsed ? 'el-icon-arrow-left' : 'el-icon-arrow-right'"
         type="text"
-        @click="togleCollapsed" />
+        @click="togleCollapsed"
+      />
     </el-tooltip>
     <el-dialog
       :close-on-click-modal="false"
@@ -191,40 +224,47 @@
       title="Acordo aceito"
       class="dispute-view-actions__choose-unsettled-dialog"
       width="600px"
-      data-testid="choose-unsettled-dialog">
+      data-testid="choose-unsettled-dialog"
+    >
       <p>Confirme o valor do acordo nos campos abaixo:</p>
       <el-form
         v-loading="modalLoading"
         ref="counterOfferForm"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
-        label-position="top">
+        label-position="top"
+      >
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
               label="Valor"
-              prop="lastCounterOfferValue">
+              prop="lastCounterOfferValue"
+            >
               <money
                 v-model="counterOfferForm.lastCounterOfferValue"
                 class="el-input__inner"
                 data-testid="counterproposal-value-input"
-                maxlength="16" />
+                maxlength="16"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item
               label="Proposto por"
-              prop="selectedRoleId">
+              prop="selectedRoleId"
+            >
               <el-select
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
                 style="width: 100%;"
-                data-testid="counterproposal-claimant-input">
+                data-testid="counterproposal-claimant-input"
+              >
                 <el-option
                   v-for="(claimant, index) in disputeClaimants"
                   :key="`${index}-${claimant.id}`"
                   :label="claimant.name"
-                  :value="claimant.id" />
+                  :value="claimant.id"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -234,11 +274,13 @@
         <el-button
           :disabled="modalLoading"
           plain
-          @click="settledDialogVisible = false">Cancelar</el-button>
+          @click="settledDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           :loading="modalLoading"
           type="primary"
-          @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)">Continuar</el-button>
+          @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)"
+        >Continuar</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -250,10 +292,11 @@
       title="Perder"
       class="jus-dispute-actions__choose-unsettled-dialog"
       width="460px"
-      data-testid="choose-unsettled-dialog">
+      data-testid="choose-unsettled-dialog"
+    >
       <div class="el-message-box__content">
         <div class="el-message-box__container">
-          <div class="el-message-box__status el-icon-warning"/>
+          <div class="el-message-box__status el-icon-warning" />
           <div class="el-message-box__message">
             <p>Tem certeza que deseja realizar esta ação?</p>
           </div>
@@ -263,12 +306,14 @@
         v-model="unsettledType"
         data-testid="select-unsettled"
         style="margin: 10px 0px;"
-        placeholder="Escolha o motivo da perda">
+        placeholder="Escolha o motivo da perda"
+      >
         <el-option
           v-for="(type, index) in unsettledTypes"
           :key="index"
           :label="type"
-          :value="index"/>
+          :value="index"
+        />
       </el-select>
       <el-form
         v-loading="modalLoading"
@@ -276,32 +321,38 @@
         ref="counterOfferForm"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
-        label-position="top">
+        label-position="top"
+      >
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
               label="Valor"
-              prop="lastCounterOfferValue">
+              prop="lastCounterOfferValue"
+            >
               <money
                 v-model="counterOfferForm.lastCounterOfferValue"
                 class="el-input__inner"
                 data-testid="counterproposal-value-input"
-                maxlength="16" />
+                maxlength="16"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item
               label="Proposto por"
-              prop="selectedRoleId">
+              prop="selectedRoleId"
+            >
               <el-select
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
-                data-testid="counterproposal-claimant-input">
+                data-testid="counterproposal-claimant-input"
+              >
                 <el-option
                   v-for="(claimant, index) in disputeClaimants"
                   :key="`${index}-${claimant.id}`"
                   :label="claimant.name"
-                  :value="claimant.id" />
+                  :value="claimant.id"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -311,13 +362,15 @@
         <el-button
           :disabled="modalLoading"
           plain
-          @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+          @click="chooseUnsettledDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           :loading="modalLoading"
           :disabled="!unsettledType"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="disputeAction('send-unsettled')">
+          @click.prevent="disputeAction('send-unsettled')"
+        >
           Continuar
         </el-button>
       </span>
@@ -329,31 +382,36 @@
       :visible.sync="editNegotiatorDialogVisible"
       append-to-body
       title="Editar negociadores da disputa"
-      width="604px">
+      width="604px"
+    >
       <el-form
         v-loading="modalLoading"
         ref="negotiatorsForm"
         :model="negotiatorsForm"
         :rules="negotiatorsRules"
         label-position="top"
-        @submit.native.prevent="editNegotiator">
+        @submit.native.prevent="editNegotiator"
+      >
         <el-transfer
+          v-model="disputeNegotiators"
           :titles="['Equipe', 'Disputa']"
           :button-texts="['Remover', 'Adicionar']"
           :data="workspaceNegotiators"
-          v-model="disputeNegotiators"
           filter-placeholder="Buscar"
-          filterable/>
+          filterable
+        />
       </el-form>
       <span slot="footer">
         <el-button
           :disabled="modalLoading"
           plain
-          @click="editNegotiatorDialogVisible = false">Cancelar</el-button>
+          @click="editNegotiatorDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           :loading="modalLoading"
           type="primary"
-          @click.prevent="disputeAction('edit-negotiators', disputeNegotiators)">Editar dados</el-button>
+          @click.prevent="disputeAction('edit-negotiators', disputeNegotiators)"
+        >Editar dados</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -364,38 +422,45 @@
       append-to-body
       title="Enviar contraproposta manual"
       width="600px"
-      class="dispute-view__counterproposal-dialog">
+      class="dispute-view__counterproposal-dialog"
+    >
       <el-form
         v-loading="modalLoading"
         ref="counterOfferForm"
         :model="counterOfferForm"
-        :rules="counterOfferFormRules">
+        :rules="counterOfferFormRules"
+      >
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
               label="Valor"
-              prop="lastCounterOfferValue">
+              prop="lastCounterOfferValue"
+            >
               <money
                 v-model="counterOfferForm.lastCounterOfferValue"
                 class="el-input__inner"
                 data-testid="counterproposal-value-input"
-                maxlength="16" />
+                maxlength="16"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item
               label="Proposto por"
-              prop="selectedRoleId">
+              prop="selectedRoleId"
+            >
               <el-select
                 v-model="counterOfferForm.selectedRoleId"
                 placeholder="Autor da contraproposta"
                 style="width: 100%;"
-                data-testid="counterproposal-claimant-input">
+                data-testid="counterproposal-claimant-input"
+              >
                 <el-option
                   v-for="(claimant, index) in disputeClaimants"
                   :key="`${index}-${claimant.id}`"
                   :label="claimant.name"
-                  :value="claimant.id" />
+                  :value="claimant.id"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -404,11 +469,13 @@
           <el-col :span="24">
             <el-form-item
               label="Nota"
-              prop="note">
+              prop="note"
+            >
               <el-input
                 v-model="counterOfferForm.note"
                 type="textarea"
-                rows="4" />
+                rows="4"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -417,11 +484,13 @@
         <el-button
           :disabled="modalLoading"
           plain
-          @click="counterproposalDialogVisible = false">Cancelar</el-button>
+          @click="counterproposalDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           :loading="modalLoading"
           type="primary"
-          @click.prevent="disputeAction('send-counterproposal')">Atualizar contraproposta</el-button>
+          @click.prevent="disputeAction('send-counterproposal')"
+        >Atualizar contraproposta</el-button>
       </span>
     </el-dialog>
     <el-dialog
