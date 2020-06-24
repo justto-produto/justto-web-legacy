@@ -1,6 +1,8 @@
 <template>
   <div class="enrichment-step">
-    <h2 class="new-import-view__title">Enriquecimento</h2>
+    <h2 class="new-import-view__title">
+      Enriquecimento
+    </h2>
     <p>
       A inteligência artificial da nossa plataforma, junto com os dados já obtidos pelo nosso sistema, aprende
       cada vez mais sobre o perfil dos usuários e seus comportamentos, escolhendo a estratégia mais apropriada
@@ -8,27 +10,34 @@
     </p>
     <el-card
       shadow="never"
-      class="el-card--dashed">
+      class="el-card--dashed"
+    >
       <div
         v-if="loading && !enriched"
-        class="el-loading-spinner">
+        class="el-loading-spinner"
+      >
         <svg
           viewBox="25 25 50 50"
-          class="circular">
+          class="circular"
+        >
           <circle
             cx="50"
             cy="50"
             r="20"
             fill="none"
-            class="path"/>
+            class="path"
+          />
         </svg>
       </div>
-      <span v-else><i class="el-icon-loading"/> Redirecionando...</span>
+      <span v-else><i class="el-icon-loading" /> Redirecionando...</span>
       <h3 v-show="!enriched && !loading">
         Caso exista em nosso banco de dados informações adicionais, iremos enriquecer as seguintes entidades:
       </h3>
-      <h3 v-show="!enriched && loading">Nosso sistema está coletando informações...</h3>
-      <h3 v-show="enriched">Os dados foram enriquecidos
+      <h3 v-show="!enriched && loading">
+        Nosso sistema está coletando informações...
+      </h3>
+      <h3 v-show="enriched">
+        Os dados foram enriquecidos
         <span v-show="enriched && revision">, mas nós detectamos algumas disputas com informações que necessitam da sua revisão</span>
       </h3>
       <p v-show="enriched && revision">
@@ -40,17 +49,26 @@
         <li>
           <el-checkbox
             v-model="checked1"
-            class="el-checkbox--status">Dados de Contato das Partes</el-checkbox>
+            class="el-checkbox--status"
+          >
+            Dados de Contato das Partes
+          </el-checkbox>
         </li>
         <li>
           <el-checkbox
             v-model="checked2"
-            class="el-checkbox--status">Dados de Contato dos Advogados</el-checkbox>
+            class="el-checkbox--status"
+          >
+            Dados de Contato dos Advogados
+          </el-checkbox>
         </li>
         <li>
           <el-checkbox
             v-model="checked3"
-            class="el-checkbox--status">Dados dos Processos Judiciais</el-checkbox>
+            class="el-checkbox--status"
+          >
+            Dados dos Processos Judiciais
+          </el-checkbox>
         </li>
       </ul>
     </el-card>

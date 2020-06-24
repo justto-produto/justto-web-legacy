@@ -14,18 +14,19 @@
       v-if="showError"
       title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
-      type="error"/>
+      type="error"
+    />
     <el-button
       type="primary"
-      @click="readyWorkspace">Inserir primeiras disputas</el-button>
+      @click="readyWorkspace"
+    >
+      Inserir primeiras disputas
+    </el-button>
   </div>
 </template>
 
 <script>
 export default {
-  components: {
-    JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
-  },
   props: {
     isGuest: {
       type: Boolean,

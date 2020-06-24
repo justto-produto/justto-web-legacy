@@ -2,14 +2,17 @@
   <el-container>
     <el-aside
       class="container-aside"
-      width="auto">
+      width="auto"
+    >
       <div
         :class="{'aside-logo--colapsed': isCollapse}"
-        class="aside-logo">
+        class="aside-logo"
+      >
         <router-link to="/">
           <img
             class="aside-logo__logo"
-            src="@/assets/logo-small.svg">
+            src="@/assets/logo-small.svg"
+          >
         </router-link>
       </div>
       <el-menu
@@ -18,11 +21,13 @@
         :collapse="isCollapse"
         :default-active="$route.path"
         router
-        class="el-menu--main-menu">
+        class="el-menu--main-menu"
+      >
         <el-menu-item index="/">
           <jus-icon
             icon="dashboard"
-            class="el-menu__icon"/>
+            class="el-menu__icon"
+          />
           <span slot="title">Dashboard</span>
         </el-menu-item>
         <!-- <transition name="fade">
@@ -32,33 +37,40 @@
         </transition> -->
         <el-menu-item
           index="/management"
-          data-testid="menu-management">
+          data-testid="menu-management"
+        >
           <jus-icon
             icon="management"
-            class="el-menu__icon"/>
+            class="el-menu__icon"
+          />
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
         <el-menu-item
           index="/import"
-          data-testid="menu-import">
+          data-testid="menu-import"
+        >
           <jus-icon
             icon="import"
-            class="el-menu__icon"/>
+            class="el-menu__icon"
+          />
           <span slot="title">Importação</span>
         </el-menu-item>
         <el-menu-item
           v-if="$store.getters.isJusttoAdmin"
           index="/billing"
-          data-testid="menu-financial">
+          data-testid="menu-financial"
+        >
           <jus-icon
             icon="coins"
-            class="el-menu__icon"/>
+            class="el-menu__icon"
+          />
           <span slot="title">Financeiro</span>
         </el-menu-item>
       </el-menu>
       <div
         v-show="$store.getters.workspaceMembers.length && $store.getters.isAdminProfile"
-        class="jus-team-menu__title">
+        class="jus-team-menu__title"
+      >
         TIME
       </div>
       <vue-perfect-scrollbar v-if="$store.getters.isAdminProfile">
@@ -69,7 +81,7 @@
       <jus-header-main />
       <el-main>
         <transition name="fade">
-          <router-view/>
+          <router-view />
         </transition>
       </el-main>
     </el-container>

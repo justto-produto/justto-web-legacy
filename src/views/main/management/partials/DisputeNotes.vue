@@ -2,30 +2,37 @@
   <ul
     v-loading="loading"
     v-chat-scroll="{always: false, smooth: true, scrollonremoved: true }"
-    class="dispute-view-occurrences">
+    class="dispute-view-occurrences"
+  >
     <li
       v-for="(occurrence, index) in occurrences"
       :key="index + new Date().getTime()"
-      class="dispute-view-occurrences__occurrence">
+      class="dispute-view-occurrences__occurrence"
+    >
       <div
         v-if="occurrence.type === 'NOTE'"
         shadow="never"
         class="dispute-view-occurrences__note"
-        data-testid="message-box">
+        data-testid="message-box"
+      >
         <div class="dispute-view-occurrences__card-box">
           <el-card
             v-loading="noteLoading === occurrence.id"
             class="dispute-view-occurrences__card dispute-view-occurrences__card--note"
-            shadow="never">
+            shadow="never"
+          >
             <div
               slot="header"
-              class="dispute-view-occurrences__card--note-header">
+              class="dispute-view-occurrences__card--note-header"
+            >
               <i
                 class="el-icon-edit"
-                @click="openEditDialog(occurrence)" />
+                @click="openEditDialog(occurrence)"
+              />
               <i
                 class="el-icon-delete"
-                @click="removeNote(occurrence, index)" />
+                @click="removeNote(occurrence, index)"
+              />
             </div>
             <span v-html="buildContent(occurrence)" />
           </el-card>
@@ -41,26 +48,31 @@
       :visible.sync="editDialog"
       width="60%"
       title="Editar Nota"
-      append-to-body>
+      append-to-body
+    >
       <el-input
         v-model="newNoteContent"
         :disabled="editDialogLoading"
         class="dispute-view-occurrences__textarea"
-        type="textarea" />
+        type="textarea"
+      />
       <span
         slot="footer"
-        class="dialog-footer">
+        class="dialog-footer"
+      >
         <el-button
           :disabled="editDialogLoading"
           plain
-          @click="editDialog = false">
+          @click="editDialog = false"
+        >
           Cancelar
         </el-button>
         <el-button
           v-loading="editDialogLoading"
           :disabled="!newNoteContent.trim()"
           type="primary"
-          @click="editNote(newNoteContent)">
+          @click="editNote(newNoteContent)"
+        >
           Editar nota
         </el-button>
       </span>
@@ -68,7 +80,8 @@
     <li
       v-if="!loading && !occurrences.length"
       class="dispute-view-occurrences__empty"
-      data-testid="note-empty">
+      data-testid="note-empty"
+    >
       <jus-icon icon="empty-screen-filter" />
       Não foram encontradas notas.
     </li>

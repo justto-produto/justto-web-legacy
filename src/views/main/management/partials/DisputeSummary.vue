@@ -10,7 +10,9 @@
       class="dispute-view__steps el-steps--dots"
     >
       <el-step>
-        <template slot="title">Enriquecimento</template>
+        <template slot="title">
+          Enriquecimento
+        </template>
         <template slot="description">
           <ul>
             <li>Emails: {{ dispute.enrichedEmails }}</li>
@@ -19,7 +21,9 @@
         </template>
       </el-step>
       <el-step>
-        <template slot="title">Engajamento</template>
+        <template slot="title">
+          Engajamento
+        </template>
         <template slot="description">
           <el-checkbox
             v-model="scheduled"
@@ -30,7 +34,9 @@
         </template>
       </el-step>
       <el-step>
-        <template slot="title">Interação</template>
+        <template slot="title">
+          Interação
+        </template>
         <template slot="description">
           <ul>
             <li>Emails: {{ dispute.sentEmailMessages }}</li>
@@ -54,7 +60,9 @@
         </template>
       </el-step>
       <el-step v-if="dispute.status">
-        <template slot="title">Status</template>
+        <template slot="title">
+          Status
+        </template>
         <template slot="description">
           {{ $t('occurrence.type.' + dispute.status) | capitalize }}
           <el-select

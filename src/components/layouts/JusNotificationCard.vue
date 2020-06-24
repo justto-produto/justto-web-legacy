@@ -1,8 +1,8 @@
 <template>
   <div class="jus-notification-card">
-    <i class="el-icon-error"/>
+    <i class="el-icon-error" />
     <div class="jus-notification-card__header">
-      <jus-avatar-user size="sm"/>
+      <jus-avatar-user size="sm" />
       <span class="jus-notification-card__title">{{ title }}</span>
       <span class="jus-notification-card__date">{{ date }}</span>
     </div>

@@ -2,7 +2,8 @@
   <div>
     <div
       :class="{'active': active}"
-      class="management-actions">
+      class="management-actions"
+    >
       <div class="management-actions__length">
         <i class="el-icon-check" /> {{ selectedLenghtToShow }}
       </div>
@@ -10,73 +11,85 @@
         <el-button
           plain
           data-testid="batch-settled"
-          @click="sendBatchAction('SETTLED')">
+          @click="sendBatchAction('SETTLED')"
+        >
           {{ $t('action.SETTLED') }}
         </el-button>
         <el-button
           plain
           data-testid="batch-unsettled"
-          @click="sendBatchAction('UNSETTLED')">
+          @click="sendBatchAction('UNSETTLED')"
+        >
           {{ $t('action.UNSETTLED') }}
         </el-button>
         <el-button
           plain
           data-testid="batch-paused"
-          @click="sendBatchAction('PAUSED')">
+          @click="sendBatchAction('PAUSED')"
+        >
           {{ $t('action.PAUSED') }}
         </el-button>
         <el-button
           plain
           data-testid="batch-resume"
-          @click="sendBatchAction('RESUME')">
+          @click="sendBatchAction('RESUME')"
+        >
           {{ $t('action.RESUME') }}
         </el-button>
         <el-button
           plain
           data-testid="batch-restartengagement"
-          @click="sendBatchAction('RESTART_ENGAGEMENT')">
+          @click="sendBatchAction('RESTART_ENGAGEMENT')"
+        >
           REINICIAR
         </el-button>
         <el-button
           plain
           data-testid="batch-chageexpirationdate"
-          @click="sendBatchAction('CHANGE_EXPIRATION_DATE')">
+          @click="sendBatchAction('CHANGE_EXPIRATION_DATE')"
+        >
           DATA LIMITE
         </el-button>
         <el-button
           plain
           data-testid="batch-changestrategy"
-          @click="sendBatchAction('CHANGE_STRATEGY')">
+          @click="sendBatchAction('CHANGE_STRATEGY')"
+        >
           ESTRATÉGIAS
         </el-button>
         <el-button
           plain
           data-testid="batch-changestrategy"
-          @click="sendBatchAction('CHANGE_NEGOTIATOR')">
+          @click="sendBatchAction('CHANGE_NEGOTIATOR')"
+        >
           NEGOCIADORES
         </el-button>
         <el-button
           plain
           data-testid="batch-enrich"
-          @click="sendBatchAction('ENRICH')">
+          @click="sendBatchAction('ENRICH')"
+        >
           {{ $t('action.ENRICH') }}
         </el-button>
         <el-button
           plain
           data-testid="batch-delete"
-          @click="sendBatchAction('DELETE')">
+          @click="sendBatchAction('DELETE')"
+        >
           {{ $t('action.DELETE') }}
         </el-button>
         <el-button
           plain
           data-testid="batch-resendmessage"
-          @click="sendBatchAction('RESEND_MESSAGE')">
+          @click="sendBatchAction('RESEND_MESSAGE')"
+        >
           {{ $t('action.RESEND_MESSAGE') }}
         </el-button>
       </div>
       <i
         class="el-icon-close"
-        @click="clearSelection()"/>
+        @click="clearSelection()"
+      />
     </div>
     <el-dialog
       :close-on-click-modal="false"
@@ -84,27 +97,32 @@
       title="Perder"
       class="management-actions__dialog"
       width="460px"
-      data-testid="unsettled-dialog">
+      data-testid="unsettled-dialog"
+    >
       <el-select
         v-loading="$store.state.loading"
         v-model="unsettledType"
         data-testid="select-unsettled"
-        placeholder="Escolha o motivo da perda">
+        placeholder="Escolha o motivo da perda"
+      >
         <el-option
           v-for="(type, index) in unsettledTypes"
           :key="index"
           :label="type"
-          :value="index" />
+          :value="index"
+        />
       </el-select>
       <span slot="footer">
         <el-button
           plain
-          @click="chooseUnsettledDialogVisible = false">Cancelar</el-button>
+          @click="chooseUnsettledDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           :disabled="!unsettledType"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('unsettled')">
+          @click.prevent="doAction('unsettled')"
+        >
           Continuar
         </el-button>
       </span>
@@ -115,26 +133,31 @@
       title="Alterar estratégia"
       class="management-actions__dialog"
       width="460px"
-      data-testid="strategy-dialog">
+      data-testid="strategy-dialog"
+    >
       <el-select
         v-model="newStrategyId"
         placeholder="Escolha a nova estratégia"
-        data-testid="select-unsettled">
+        data-testid="select-unsettled"
+      >
         <el-option
           v-for="strategy in strategies"
           :key="strategy.id"
           :value="strategy.id"
-          :label="strategy.name"/>
+          :label="strategy.name"
+        />
       </el-select>
       <span slot="footer">
         <el-button
           plain
-          @click="changeStrategyDialogVisible = false">Cancelar</el-button>
+          @click="changeStrategyDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           :disabled="!newStrategyId"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('CHANGE_STRATEGY')">
+          @click.prevent="doAction('CHANGE_STRATEGY')"
+        >
           Alterar
         </el-button>
       </span>
@@ -145,7 +168,8 @@
       title="Alterar data limite da negociação"
       class="management-actions__dialog"
       width="460px"
-      data-testid="expiration-dialog">
+      data-testid="expiration-dialog"
+    >
       <el-date-picker
         v-model="newExpirationDate"
         :clearable="false"
@@ -153,16 +177,19 @@
         format="dd/MM/yyyy"
         type="date"
         placeholder="Escolha a data limite"
-        value-format="yyyy-MM-dd" />
+        value-format="yyyy-MM-dd"
+      />
       <span slot="footer">
         <el-button
           plain
-          @click="changeExpirationDialogVisible = false">Cancelar</el-button>
+          @click="changeExpirationDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           :disabled="!newExpirationDate"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('CHANGE_EXPIRATION_DATE')">
+          @click.prevent="doAction('CHANGE_EXPIRATION_DATE')"
+        >
           Alterar
         </el-button>
       </span>
@@ -172,12 +199,14 @@
       :visible.sync="changeNegotiatorDialogVisible"
       title="Alterar negociadores"
       class="management-actions__dialog"
-      width="604px">
+      width="604px"
+    >
       <div
         v-if="disputeNegotiatorMap.length"
-        class="el-message-box__content">
+        class="el-message-box__content"
+      >
         <div class="el-message-box__container">
-          <div class="el-message-box__status el-icon-info"/>
+          <div class="el-message-box__status el-icon-info" />
           <div class="el-message-box__message">
             <p>
               Alterando
@@ -191,22 +220,25 @@
       <br>
       <el-transfer
         v-loading="changeNegotiatorDialogLoading"
+        v-model="disputeNegotiators"
         :titles="['Equipe', 'Disputa']"
         :button-texts="['Remover', 'Adicionar']"
         :data="workspaceNegotiators"
-        v-model="disputeNegotiators"
         filter-placeholder="Buscar"
-        filterable />
+        filterable
+      />
       <span slot="footer">
         <el-button
           :disabled="changeNegotiatorDialogLoading"
           plain
-          @click="changeNegotiatorDialogVisible = false">Cancelar</el-button>
+          @click="changeNegotiatorDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           :loading="changeNegotiatorDialogLoading"
           :disabled="!disputeNegotiators.length"
           type="primary"
-          @click="changeNegotiator()">
+          @click="changeNegotiator()"
+        >
           Alterar
         </el-button>
       </span>
@@ -296,18 +328,18 @@ export default {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds,
       }
-      if (this.unsettledType) params['unsettledReasons'] = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+      if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       switch (action) {
         case 'CHANGE_STRATEGY':
-          params['strategyId'] = this.newStrategyId
+          params.strategyId = this.newStrategyId
           break
         case 'CHANGE_EXPIRATION_DATE':
-          params['expirationDate'] = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
+          params.expirationDate = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
           break
       }
       if (this.isSelectedAll) {
-        params['allSelected'] = true
-        params['disputeIds'] = []
+        params.allSelected = true
+        params.disputeIds = []
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
         this.chooseUnsettledDialogVisible = false
@@ -377,7 +409,7 @@ export default {
       const reengagement = []
       for (const selected of selecteds) {
         reengagement.push(
-          this.$store.dispatch('enrichDispute', selected)
+          this.$store.dispatch('enrichDispute', selected),
         )
       }
       Promise.all(reengagement).then(() => {

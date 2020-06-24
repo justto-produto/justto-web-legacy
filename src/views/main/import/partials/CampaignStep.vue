@@ -1,8 +1,11 @@
 <template>
   <div
     v-loading="$store.state.loading"
-    class="campaign-step">
-    <h2 class="new-import-view__title">Configuração de campanhas</h2>
+    class="campaign-step"
+  >
+    <h2 class="new-import-view__title">
+      Configuração de campanhas
+    </h2>
     <p>
       O sistema trabalha com o conceito de campanhas. Campanha é um agrupamento de
       disputas dentro da mesma importação com um réu em comum. Por isso, ao importar,
@@ -13,19 +16,22 @@
     <el-alert
       v-if="duplicatedDisputesLoading"
       :closable="false"
-      type="info">
+      type="info"
+    >
       <div class="el-loading-parent--relative">
         <div class="el-loading-mask">
           <div class="el-loading-spinner">
             <svg
               viewBox="25 25 50 50"
-              class="circular">
+              class="circular"
+            >
               <circle
                 cx="50"
                 cy="50"
                 r="20"
                 fill="none"
-                class="path" />
+                class="path"
+              />
             </svg>
           </div>
         </div>
@@ -37,12 +43,14 @@
     </el-alert>
     <el-alert
       v-if="!duplicatedDisputesLoading && duplicatedDisputes.length"
-      type="error">
+      type="error"
+    >
       <h2>Atenção!</h2>
       Foram encontradas disputa(s) duplicada(s) e/ou expirada(s):
       <ul
         v-for="(d, index) in duplicatedDisputes"
-        :key="d.code + index">
+        :key="d.code + index"
+      >
         <li>
           {{ d.code }} - Disputa
           <span v-if="d.status === 'DUPLICATE'">
@@ -66,13 +74,15 @@
     <div class="import-view__container">
       <div
         v-if="!duplicatedDisputesLoading"
-        class="import-view__content">
+        class="import-view__content"
+      >
         <jus-import-feedback-card
           v-for="(mappedCampaign, index) in mappedCampaigns"
-          :mapped-campaign.sync="mappedCampaign"
           :key="mappedCampaign.cluster"
+          :mapped-campaign.sync="mappedCampaign"
           :index="index + 1"
-          data-testid="import-feedback" />
+          data-testid="import-feedback"
+        />
       </div>
     </div>
   </div>

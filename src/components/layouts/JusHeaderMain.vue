@@ -8,14 +8,17 @@
           :fetch-suggestions="search"
           :debounce="800"
           popper-class="jus-header-main__autocomplete"
-          placeholder="Busque aqui as suas disputas">
+          placeholder="Busque aqui as suas disputas"
+        >
           <template slot-scope="{ item }">
             <jus-dispute-resume
               v-if="item.id"
-              :dispute="item" />
+              :dispute="item"
+            />
             <span
               v-else
-              style="background-color: white;display: block;padding: 0 20px;">
+              style="background-color: white;display: block;padding: 0 20px;"
+            >
               Não foram encontradas disputas para esta busca. Tente buscar pelo número do processo.
             </span>
           </template>
@@ -24,44 +27,49 @@
       <div class="jus-header-main__info">
         <el-tooltip
           v-if="$store.getters.isJusttoAdmin"
-          content="Modo anônimo">
+          content="Modo anônimo"
+        >
           <el-switch v-model="ghostMode" />
         </el-tooltip>
         <el-dropdown
           trigger="click"
-          placement="bottom-start">
+          placement="bottom-start"
+        >
           <span class="el-dropdown-link">
             <jus-avatar-user
               :name="name"
-              size="sm" />
+              size="sm"
+            />
             <div class="jus-header-main__name">
               <div style="text-transform: capitalize;">
                 {{ name }}
               </div>
               <span>{{ teamName }}</span>
             </div>
-            <jus-icon icon="expand-dropdown"/>
+            <jus-icon icon="expand-dropdown" />
           </span>
           <el-dropdown-menu slot="dropdown">
             <div class="jus-header-main__version">
               Versão {{ appVersion }}
             </div>
             <router-link to="/configuration">
-              <el-dropdown-item >
+              <el-dropdown-item>
                 Configurações
               </el-dropdown-item>
             </router-link>
             <a
               v-if="workspaces.length"
               href="#"
-              @click.prevent="changeWorkspace">
+              @click.prevent="changeWorkspace"
+            >
               <el-dropdown-item>
                 Alterar equipe
               </el-dropdown-item>
             </a>
             <a
               href="#"
-              @click="logout()">
+              @click="logout()"
+            >
               <el-dropdown-item divided>
                 Sair
               </el-dropdown-item>
@@ -72,29 +80,35 @@
           :close-on-click-modal="false"
           :visible.sync="changeWorkspaceDialogVisible"
           title="Alterar Equipe"
-          width="40%">
+          width="40%"
+        >
           <el-select
             v-model="selectedWorkspace"
             placeholder="Selecione"
             filterable
-            data-testid="select-workspace">
+            data-testid="select-workspace"
+          >
             <el-option
               v-for="(workspace, index) in workspaces"
               :key="workspace.id"
               :value="index"
               :label="workspace.workspace.teamName"
-              data-testid="select-workspace"/>
+              data-testid="select-workspace"
+            />
           </el-select>
           <span
             slot="footer"
-            class="dialog-footer">
+            class="dialog-footer"
+          >
             <el-button
               plain
-              @click="changeWorkspaceDialogVisible = false">Cancelar</el-button>
+              @click="changeWorkspaceDialogVisible = false"
+            >Cancelar</el-button>
             <el-button
               :disabled="selectedWorkspace === ''"
               type="primary"
-              @click="goToWorkspace">Alterar</el-button>
+              @click="goToWorkspace"
+            >Alterar</el-button>
           </span>
         </el-dialog>
       </div>

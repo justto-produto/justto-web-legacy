@@ -7,17 +7,20 @@
           <el-button
             plain
             data-testid="download-model"
-            @click="downloadModel()">
+            @click="downloadModel()"
+          >
             Baixar planilha modelo
           </el-button>
           <el-button
             type="primary"
             data-testid="upload-button"
-            @click="importDialogVisible = true">
+            @click="importDialogVisible = true"
+          >
             <jus-icon
               icon="upload-file"
               is-white
-              style="width: 17px;vertical-align: top;margin-right: 4px;" />
+              style="width: 17px;vertical-align: top;margin-right: 4px;"
+            />
             Nova importação de disputas
           </el-button>
         </div>
@@ -25,14 +28,18 @@
       <el-table
         :data="importsHistoryPaged"
         height="100%"
-        style="width: 100%">
+        style="width: 100%"
+      >
         <el-table-column label="Arquivo">
-          <template slot-scope="scope">{{ scope.row.file_name }}</template>
+          <template slot-scope="scope">
+            {{ scope.row.file_name }}
+          </template>
         </el-table-column>
         <el-table-column label="Importado por">
           <template
             v-if="scope.row.created_name"
-            slot-scope="scope">
+            slot-scope="scope"
+          >
             {{ scope.row.created_name }}
             <span v-if="scope.row.created_by">({{ scope.row.created_by }})</span>
           </template>
@@ -51,17 +58,22 @@
         <el-table-column
           width="90"
           label="Linhas"
-          align="center">
-          <template slot-scope="scope">{{ scope.row.rows }}</template>
+          align="center"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.rows }}
+          </template>
         </el-table-column>
         <el-table-column
           width="90"
           align="center"
-          label="Baixar">
+          label="Baixar"
+        >
           <template slot-scope="scope">
             <a
               :href="scope.row.file_url"
-              target="_blank">
+              target="_blank"
+            >
               <jus-icon icon="download-sheet" />
             </a>
           </template>
@@ -71,7 +83,8 @@
           :distance="1"
           spinner="spiral"
           force-use-infinite-wrapper=".el-table__body-wrapper"
-          @infinite="infiniteHandler">
+          @infinite="infiniteHandler"
+        >
           <div slot="no-more" />
           <div slot="no-results" />
         </infinite-loading>

@@ -4,15 +4,18 @@
     :right-card-collapsed="isCollapsed"
     full-screen
     right-card-width="320"
-    class="dispute-view">
+    class="dispute-view"
+  >
     <template
       v-if="false"
-      slot="title">
+      slot="title"
+    >
       <h1
         v-if="dispute"
-        class="dispute-view__title">
+        class="dispute-view__title"
+      >
         <router-link to="/management">
-          <jus-icon icon="back"/>
+          <jus-icon icon="back" />
         </router-link>
         Disputa #{{ dispute.id }}
       </h1>
@@ -22,19 +25,22 @@
       <JusDragArea>
         <div
           ref="sectionMessages"
-          class="dispute-view__section-messages">
+          class="dispute-view__section-messages"
+        >
           <!-- DRAGGING -->
           <vue-draggable-resizable
             v-if="typingTab !== '3'"
             ref="resizable"
             :handles="['tm']"
             :y="y"
-            @dragging="onDrag" />
+            @dragging="onDrag"
+          />
           <!-- ACTIONS -->
           <jus-dispute-actions
             :dispute="dispute"
             :is-collapsed.sync="isCollapsed"
-            @fetch-data="fetchData" />
+            @fetch-data="fetchData"
+          />
           <!-- MESSAGES -->
           <dispute-occurrences
             v-if="['1', '3'].includes(typingTab)"
@@ -43,25 +49,31 @@
             :dispute-id="id"
             :typing-tab.sync="typingTab"
             data-testid="dispute-messages"
-            @dispute:reply="startReply">
+            @dispute:reply="startReply"
+          >
             <dispute-tips v-if="typingTab === '1'" />
           </dispute-occurrences>
           <dispute-notes
             v-else-if="typingTab === '2'"
-            :dispute-id="id" />
+            :dispute-id="id"
+          />
           <dispute-negotiation
             v-else-if="typingTab === '4'"
-            :dispute="dispute"/>
+            :dispute="dispute"
+          />
           <div
             :style="{ height: sendMessageHeightComputed }"
-            class="dispute-view__send-message">
+            class="dispute-view__send-message"
+          >
             <div
               v-show="selectedContacts && selectedContacts.length && typingTab === '1'"
-              class="dispute-view__send-to">
+              class="dispute-view__send-to"
+            >
               Destinatário(s):
               <span
                 v-for="(selected, index) in selectedContacts"
-                :key="selected.id">
+                :key="selected.id"
+              >
                 <span v-if="index === 0">
                   <span v-if="selected.number">{{ selected.number | phoneMask }}</span>
                   <span v-else-if="selected.address">{{ selected.address | phoneMask }}</span>
@@ -71,20 +83,23 @@
                 <div slot="content">
                   <span
                     v-for="(selected, index) in selectedContacts"
-                    :key="selected.id">
+                    :key="selected.id"
+                  >
                     <span v-if="index !== 0">
                       <div v-if="selected.number">
                         <jus-icon
                           icon="phone"
                           is-white
-                          style="width: 14px;vertical-align: top;" />
+                          style="width: 14px;vertical-align: top;"
+                        />
                         {{ selected.number | phoneMask }}
                       </div>
                       <div v-else-if="selected.address">
                         <jus-icon
                           icon="email"
                           is-white
-                          style="width: 14px;vertical-align: top;" />
+                          style="width: 14px;vertical-align: top;"
+                        />
                         {{ selected.address }}
                       </div>
                     </span>
@@ -99,36 +114,43 @@
               ref="messageTab"
               v-model="typingTab"
               :before-leave="handleBeforeLeaveTabs"
-              @tab-click="handleTabClick">
+              @tab-click="handleTabClick"
+            >
               <el-tab-pane
                 v-loading="loadingTextarea"
                 label="Comunicação"
-                name="1">
+                name="1"
+              >
                 <el-card
                   v-loading="isPaused"
                   element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
                   element-loading-spinner="el-icon-video-pause"
                   element-loading-background="#fff"
                   class="dispute-view__send-message-box"
-                  shadow="always">
+                  shadow="always"
+                >
                   <div
                     v-if="validName"
                     :class="{ 'show-toolbar': messageType === 'email' }"
-                    class="dispute-view__quill">
+                    class="dispute-view__quill"
+                  >
                     <quill-editor
                       ref="messageEditor"
                       :options="editorOptions"
                       data-testid="email-editor"
-                      @focus="$refs.disputeOverview.overviewTab = 'roles'"/>
+                      @focus="$refs.disputeOverview.overviewTab = 'roles'"
+                    />
                   </div>
                   <div class="dispute-view__send-message-actions">
                     <el-tooltip
                       v-if="!validName"
-                      content="Atualize sue nome em suas configurações de perfil para enviar mensagens">
+                      content="Atualize sue nome em suas configurações de perfil para enviar mensagens"
+                    >
                       <div class="dispute-view__disabled-text">
                         <jus-icon
                           icon="warn-dark"
-                          style="vertical-align: bottom;" />
+                          style="vertical-align: bottom;"
+                        />
                         Configure um nome em seu perfil
                       </div>
                     </el-tooltip>
@@ -137,27 +159,32 @@
                         <a
                           href="#"
                           data-testid="select-email"
-                          @click.prevent="setMessageType('email')">
+                          @click.prevent="setMessageType('email')"
+                        >
                           <jus-icon
                             :is-active="messageType === 'email'"
-                            icon="email"/>
+                            icon="email"
+                          />
                         </a>
                       </el-tooltip>
                       <el-tooltip content="Enviar Whatsapp">
                         <a
                           href="#"
                           data-testid="select-whatsapp"
-                          @click.prevent="setMessageType('whatsapp')">
+                          @click.prevent="setMessageType('whatsapp')"
+                        >
                           <jus-icon
                             :is-active="messageType === 'whatsapp'"
-                            icon="whatsapp"/>
+                            icon="whatsapp"
+                          />
                         </a>
                       </el-tooltip>
                     </div>
                     <div>
                       <el-tooltip
                         :key="buttonKey"
-                        :disabled="!validName || invalidReceiver === false">
+                        :disabled="!validName || invalidReceiver === false"
+                      >
                         <div slot="content">
                           <span v-if="!activeRole.personId">
                             Escolha um destinatário ao lado para receber sua mensagem
@@ -172,7 +199,8 @@
                             type="primary"
                             size="medium"
                             data-testid="submit-message"
-                            @click="sendMessage()">
+                            @click="sendMessage()"
+                          >
                             Enviar mensagem
                           </el-button>
                         </span>
@@ -180,7 +208,8 @@
                           v-else
                           type="primary"
                           size="medium"
-                          @click="$router.push('/configuration')">
+                          @click="$router.push('/configuration')"
+                        >
                           Configurações
                         </el-button>
                       </el-tooltip>
@@ -191,23 +220,27 @@
               <el-tab-pane
                 v-loading="loadingTextarea"
                 label="Notas"
-                name="2">
+                name="2"
+              >
                 <el-card
                   shadow="always"
-                  class="dispute-view__send-message-box">
+                  class="dispute-view__send-message-box"
+                >
                   <div class="dispute-view__quill">
                     <quill-editor
                       ref="noteEditor"
                       :options="editorOptions"
                       class="dispute-view__quill-note"
-                      data-testid="input-note" />
+                      data-testid="input-note"
+                    />
                   </div>
                   <div class="dispute-view__send-message-actions note">
                     <el-button
                       size="medium"
                       type="primary"
                       data-testid="submit-note"
-                      @click="sendNote()">
+                      @click="sendNote()"
+                    >
                       Salvar nota
                     </el-button>
                   </div>
@@ -216,8 +249,9 @@
               <el-tab-pane
                 label="Ocorrências"
                 name="3"
-                style="padding: 10px;" />
-                <!-- <el-tab-pane v-if="this.$store.getters.isJusttoAdmin" label="Negociação" name="4" style="padding: 10px;" /> -->
+                style="padding: 10px;"
+              />
+              <!-- <el-tab-pane v-if="this.$store.getters.isJusttoAdmin" label="Negociação" name="4" style="padding: 10px;" /> -->
             </el-tabs>
           </div>
         </div>
@@ -232,7 +266,8 @@
         :active-role-id.sync="activeRoleId"
         data-testid="dispute-overview"
         @fetch-data="fetchData"
-        @updateActiveRole="updateActiveRole" />
+        @updateActiveRole="updateActiveRole"
+      />
     </template>
   </JusViewMain>
 </template>
@@ -287,8 +322,8 @@ export default {
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
-            [{ 'header': 1 }, { 'header': 2 }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ header: 1 }, { header: 2 }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
             ['blockquote'],
             ['clean'],
           ],
@@ -315,6 +350,8 @@ export default {
           return false
         }
       }
+
+      return null
     },
     dispute() {
       return this.$store.getters.dispute
@@ -354,6 +391,8 @@ export default {
         case 'whatsapp':
           return this.activeRole.invalidPhone
       }
+
+      return ''
     },
   },
   watch: {
@@ -442,7 +481,8 @@ export default {
         this.activeRole = Object.assign(params.activeRole, {
           invalidEmail: !params.activeRole.emails.length || !params.activeRole.emails.filter(e => e.selected === true).length,
           invalidPhone: !params.activeRole.phones.length || !params.activeRole.phones.filter(e => e.selected === true).length,
-          invalidOab: !params.activeRole.oabs.length || !params.activeRole.oabs.filter(e => e.selected === true).length })
+          invalidOab: !params.activeRole.oabs.length || !params.activeRole.oabs.filter(e => e.selected === true).length,
+        })
       } else {
         this.activeRole = {}
       }

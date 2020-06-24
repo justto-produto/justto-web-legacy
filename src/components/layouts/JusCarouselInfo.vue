@@ -5,10 +5,12 @@
     arrow="always"
     height="107px"
     trigger="click"
-    class="el-carousel__container--profile">
+    class="el-carousel__container--profile"
+  >
     <el-carousel-item
       v-for="item in items"
-      :key="item.title">
+      :key="item.title"
+    >
       <div class="el-carousel__item-main">
         <h2>{{ item.title }}</h2>
         <span>Metas cumpridas<br>no mês</span>

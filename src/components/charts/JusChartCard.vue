@@ -4,7 +4,8 @@
       v-for="dataset in datasets"
       :key="dataset.label"
       :style="'background:' + dataset.color"
-      class="chart-card-view__card">
+      class="chart-card-view__card"
+    >
       <div :class="'chart-card-view__icon ' + dataset.label">
         <i :class="dataset.icon" />
       </div>

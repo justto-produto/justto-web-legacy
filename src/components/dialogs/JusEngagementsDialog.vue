@@ -4,7 +4,8 @@
       :close-on-click-modal="false"
       :visible.sync="dialog"
       width="80%"
-      class="jus-engagements-dialog">
+      class="jus-engagements-dialog"
+    >
       <template slot="title">
         <h2>Estratégia de engajamento das partes</h2>
         <p v-if="!isManual">
@@ -19,17 +20,22 @@
       <el-collapse
         v-loading="$store.state.loading"
         v-else
-        class="jus-engagements-dialog__engagement el-collapse--bordered">
+        class="jus-engagements-dialog__engagement el-collapse--bordered"
+      >
         <div
           v-for="step in strategyEngagements"
-          :key="step.id">
+          :key="step.id"
+        >
           <div v-if="!step.archived">
             <div
               v-if="step.communicationType != 'DELAY'"
-              class="jus-engagements-dialog__step">Envio</div>
+              class="jus-engagements-dialog__step"
+            >
+              Envio
+            </div>
             <el-collapse-item v-if="step.communicationType !== 'DELAY'">
               <template slot="title">
-                <jus-icon :icon="getIcon(step.communicationType)"/> {{ step.name | capitalize }}
+                <jus-icon :icon="getIcon(step.communicationType)" /> {{ step.name | capitalize }}
               </template>
               <div v-if="step.template">
                 <h3>{{ step.template.title }}</h3>
@@ -38,16 +44,20 @@
                   v-if="$store.getters.isJusttoAdmin"
                   plain
                   style="margin: 12px auto; display: block"
-                  @click="openEditDialog(step)">Editar template
+                  @click="openEditDialog(step)"
+                >
+                  Editar template
                 </el-button>
               </div>
             </el-collapse-item>
             <div
               v-else
-              class="jus-engagements-dialog__wait">
+              class="jus-engagements-dialog__wait"
+            >
               <jus-icon
                 :icon="getIcon(step.communicationType)"
-                is-active/> {{ step.name }}
+                is-active
+              /> {{ step.name }}
             </div>
           </div>
         </div>
@@ -55,19 +65,22 @@
     </el-dialog>
     <el-dialog
       :visible.sync="editDialog"
-      width="70%">
+      width="70%"
+    >
       <div v-if="!preview">
         <el-input
           v-if="communication.template"
           v-model="communication.template.title"
-          :disabled="editDialogLoading" />
+          :disabled="editDialogLoading"
+        />
         <br><br>
         <el-input
           v-if="communication.template"
           v-model="communication.template.body"
           :disabled="editDialogLoading"
           class="jus-engagements-dialog__textarea"
-          type="textarea" />
+          type="textarea"
+        />
       </div>
       <div v-else>
         <h2 style="margin: 20px;">
@@ -78,22 +91,26 @@
       </div>
       <span
         slot="footer"
-        class="dialog-footer">
+        class="dialog-footer"
+      >
         <el-button
           :disabled="editDialogLoading"
           :icon="preview ? 'el-icon-edit' : 'el-icon-view'"
           plain
-          @click="preview = !preview">
+          @click="preview = !preview"
+        >
           {{ preview ? 'Voltar' : 'Visualizar' }}
         </el-button>
         <el-button
           :disabled="editDialogLoading"
           plain
-          @click="editDialog = false">Cancelar</el-button>
+          @click="editDialog = false"
+        >Cancelar</el-button>
         <el-button
           v-loading="editDialogLoading"
           type="primary"
-          @click="editTemplate">Editar template</el-button>
+          @click="editTemplate"
+        >Editar template</el-button>
       </span>
     </el-dialog>
   </div>

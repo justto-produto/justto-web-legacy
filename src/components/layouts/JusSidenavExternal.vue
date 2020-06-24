@@ -2,14 +2,17 @@
   <div class="jus-sidenav-external">
     <a
       href="#"
-      @click.prevent="$router.push('/login')">
+      @click.prevent="$router.push('/login')"
+    >
       <img
         class="jus-sidenav-external__logo"
-        src="@/assets/logo.svg">
+        src="@/assets/logo.svg"
+      >
     </a>
     <div
       v-if="showPlans"
-      class="jus-sidenav-external__title">
+      class="jus-sidenav-external__title"
+    >
       <div>
         <span>15</span>
         <span>dias de teste<br>gratuito</span>
@@ -23,10 +26,12 @@
     </div>
     <div
       v-if="showExit"
-      class="jus-sidenav-external__exit">
+      class="jus-sidenav-external__exit"
+    >
       <a
         href="#"
-        @click="$router.push('login')">Sair</a>
+        @click="$router.push('login')"
+      >Sair</a>
     </div>
     <!-- <el-dialog
       v-if="showPlans"

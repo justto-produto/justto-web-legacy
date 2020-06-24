@@ -4,7 +4,8 @@
       v-loading="true"
       :element-loading-text="content"
       element-loading-background="rgba(0, 0, 0, 0)"
-      class="jus-loader__spinner" />
+      class="jus-loader__spinner"
+    />
   </div>
 </template>
 

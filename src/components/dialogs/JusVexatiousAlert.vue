@@ -4,7 +4,8 @@
     trigger="click"
     class="jus-vexatious-alert"
     popper-class="jus-vexatious-alert el-popover--dark"
-    @show="fetchAlerts">
+    @show="fetchAlerts"
+  >
     <div class="title">
       Muitas disputas envolvendo esta pessoa
     </div>
@@ -12,7 +13,8 @@
       v-loading="loading"
       element-loading-spinner="el-icon-loading"
       element-loading-text="Buscando detalhes..."
-      class="body">
+      class="body"
+    >
       <div v-if="alerts">
         {{ name | firstName }} possui <b>{{ Math.round(alerts.globalTotalValue) }}</b> disputas em nossa plataforma.
         <span v-if="alerts.globalTotalValue !== alerts.workspaceTotalValue">
@@ -25,7 +27,8 @@
     </div>
     <jus-icon
       slot="reference"
-      icon="alert-active" />
+      icon="alert-active"
+    />
   </el-popover>
 </template>
 
