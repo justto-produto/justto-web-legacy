@@ -48,7 +48,9 @@
                   type="date"
                   placeholder="Início da vigência"
                 />
-            <el-form-item/></el-form-item></el-col>
+                <el-form-item />
+              </el-form-item>
+            </el-col>
           </el-row>
 
           <el-row>
@@ -67,7 +69,9 @@
                     :value="day"
                   />
                 </el-select>
-            <el-form-item/></el-form-item></el-col>
+                <el-form-item />
+              </el-form-item>
+            </el-col>
 
             <el-col :span="11">
               <el-form-item
@@ -84,7 +88,9 @@
                     :value="day"
                   />
                 </el-select>
-            <el-form-item/></el-form-item></el-col>
+                <el-form-item />
+              </el-form-item>
+            </el-col>
           </el-row>
 
           <el-row>
@@ -101,7 +107,9 @@
                     label="teste"
                   />
                 </el-select>
-            <el-form-item/></el-form-item></el-col>
+                <el-form-item />
+              </el-form-item>
+            </el-col>
 
             <el-col :span="11">
               <el-form-item
@@ -111,7 +119,136 @@
                   v-model="contract.monthlySubscriptionFee"
                   placeholder="Mensalidade"
                 />
-            <el-form-item/></el-form-item></el-col>
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col
+              v-for="(tariffLabel, tariffKey, tariffCount) in tariffTypes"
+              :key="tariffCount"
+              :span="11"
+            >
+              <el-form-item
+                v-if="contract.tariffs"
+                :label="tariffLabel"
+              >
+                <el-input v-model="contract.tariffs[tariffKey]" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-collapse-item>
+
+        <el-collapse-item
+          name="newContract"
+          title="Novo contrato"
+        >
+          <el-row>
+            <el-col :span="11">
+              <el-form-item
+                prop="status"
+              >
+                <el-select
+                  v-model="newContract.status"
+                  placeholder="Status"
+                >
+                  <el-option
+                    label="ATIVO"
+                    value="ACTIVE"
+                  />
+
+                  <el-option
+                    label="TRIAL"
+                    value="TRIAL"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="11">
+              <el-form-item
+                prop="startedDate"
+              >
+                <el-date-picker
+                  v-model="newContract.startedDate"
+                  type="date"
+                  placeholder="Início da vigência"
+                />
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="11">
+              <el-form-item
+                prop="invoiceDueDays"
+              >
+                <el-select
+                  v-model="newContract.invoiceDueDays"
+                  placeholder="Vencimento"
+                >
+                  <el-option
+                    v-for="(day, dayCount) in 31"
+                    :key="dayCount"
+                    :label="day"
+                    :value="day"
+                  />
+                </el-select>
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="11">
+              <el-form-item
+                prop="invoiceClosingDay"
+              >
+                <el-select
+                  v-model="newContract.invoiceClosingDay"
+                  placeholder="Fechamento"
+                >
+                  <el-option
+                    v-for="(day, dayCount) in 31"
+                    :key="dayCount"
+                    :label="day"
+                    :value="day"
+                  />
+                </el-select>
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="11">
+              <el-form-item
+                prop="plan"
+              >
+                <el-select
+                  v-model="newContract.planId"
+                  placeholder="Plano"
+                >
+                  <el-option
+                    :value="5"
+                    label="teste"
+                  />
+                </el-select>
+                <el-form-item />
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="11">
+              <el-form-item
+                prop="monthlySubscriptionFee"
+              >
+                <el-input
+                  v-model="newContract.monthlySubscriptionFee"
+                  placeholder="Mensalidade"
+                />
+                <el-form-item />
+              </el-form-item>
+            </el-col>
           </el-row>
 
           <el-row>
@@ -121,7 +258,7 @@
               :span="11"
             >
               <el-form-item :label="tariffLabel">
-                <el-input v-model="contract.tariffs[tariffKey]" />
+                <el-input v-model="newContract.tariffs[tariffKey]" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -130,11 +267,13 @@
     </el-form>
     <span
       slot="footer"
-      class="dialog-footer">
+      class="dialog-footer"
+    >
       <el-button @click="dialogFormVisible = false">Cancelar</el-button>
       <el-button
         type="primary"
-        @click="dialogFormVisible = false">Salvar</el-button>
+        @click="dialogFormVisible = false"
+      >Salvar</el-button>
     </span>
   </el-dialog>
 </template>
@@ -163,6 +302,9 @@ export default {
         monthlySubscriptionFee: 0,
       },
       tariffTypes: TARIFF_TYPES,
+      newContract: {
+        tariffs: { },
+      },
     }
   },
   methods: {
