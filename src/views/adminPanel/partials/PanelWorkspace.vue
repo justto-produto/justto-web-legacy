@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="panel-workspace-view">
     <el-table
-      :key="tableKey"
       v-loading="loading"
+      :key="tableKey"
       :data="filteredWorkspaces"
       width="100%"
       @expand-change="getUsersByWorkspace"

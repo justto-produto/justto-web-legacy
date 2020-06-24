@@ -63,8 +63,8 @@
             class="dashboard-view__dataset"
           />
           <jus-chart-table
-            v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart"
             v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
+            v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart"
             :data="disputeStatusSummaryWithWarn"
             class="dashboard-view__dataset"
           />

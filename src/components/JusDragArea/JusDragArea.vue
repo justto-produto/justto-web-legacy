@@ -1,7 +1,7 @@
 <template>
   <article
-    ref="dragAreaElm"
     v-loading="isAttachmentLoading"
+    ref="dragAreaElm"
     :class="{
       'jus-drag-area--dragging': maskIsVisible
     }"

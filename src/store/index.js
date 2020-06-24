@@ -11,6 +11,7 @@ import importModule from './modules/import'
 import messageModule from './modules/message'
 import personModule from './modules/person/index'
 import socketModule from './modules/socket/index'
+import strategyAdminPanelModule from './modules/strategy-adminpanel'
 import strategyModule from './modules/strategy'
 import tagModule from './modules/tag'
 import userModule from './modules/user'
@@ -65,6 +66,7 @@ export default new Vuex.Store({
     messageModule,
     personModule,
     socketModule,
+    strategyAdminPanelModule,
     strategyModule,
     tagModule,
     userModule,

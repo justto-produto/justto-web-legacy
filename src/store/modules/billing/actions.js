@@ -15,20 +15,30 @@ const actions = {
       mutation: 'setAllCustomers',
     }),
 
-  addCustomer: ({ dispatch, state }, customerData) =>
+  associateCustomer: ({ dispatch, state }, customerId) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerId}/${state.query.workspaceId}`,
+      method: 'patch',
+    }).then(() => dispatch('getMyCusomers')),
+
+  addCustomer: ({ dispatch }, customerData) =>
     axiosDispatcher({
       url: 'api/billing/customer',
       method: 'post',
       data: customerData,
-    }).then(res => axiosDispatcher({
-      url: `api/billing/customer/${res.id}/${state.query.workspaceId}`,
-      method: 'patch',
-    }).then(() => dispatch('getMyCusomers'))),
+    }).then(res => dispatch('associateCustomer', res.id)),
 
   unlinkCustomer: ({ dispatch, state }, customerId) =>
     axiosDispatcher({
       url: `api/billing/customer/${customerId}/${state.query.workspaceId}`,
       method: 'delete',
+    }).then(() => dispatch('getMyCusomers')),
+
+  updateCustomer: ({ dispatch }, customerData) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerData.id}`,
+      method: 'patch',
+      data: customerData,
     }).then(() => dispatch('getMyCusomers')),
 
   getContracts: ({ state }) => {
@@ -66,6 +76,10 @@ const actions = {
     commit('setCustomer', customerData)
     dispatch('getTransactions')
   },
+  setCustomerId: ({ commit }, customerId) => {
+    commit('setCustomerId', customerId)
+  },
+
   setRangeDate: ({ commit, dispatch }, rangeDate) => {
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
@@ -87,7 +101,19 @@ const actions = {
     commit('setType', '')
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
-    dispatch('getTransactions')
+  },
+
+  postTransaction: ({ state, dispatch }, params) => {
+    axiosDispatcher({
+      url: '/api/billing/transaction',
+      method: 'POST',
+      data: {
+        ...params,
+        customerId: state.currentCustomer.customerId,
+      },
+    }).then(() => {
+      dispatch('getTransactions')
+    })
   },
 
   cancelTransaction: ({ dispatch }, params) => {

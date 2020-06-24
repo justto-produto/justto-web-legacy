@@ -79,8 +79,8 @@
                   prop="phone"
                 >
                   <el-input
-                    v-model="profileForm.phone"
                     v-mask="['(##) ####-####', '(##) #####-####']"
+                    v-model="profileForm.phone"
                   >
                     <el-button
                       slot="append"

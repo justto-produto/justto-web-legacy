@@ -9,9 +9,9 @@
       </el-aside>
       <el-main class="display-flex">
         <el-form
+          v-loading="showLoading"
           v-if="!workspaces.length"
           ref="loginForm"
-          v-loading="showLoading"
           :model="loginForm"
           :rules="rules"
           label-position="top"
@@ -102,9 +102,9 @@
           </el-row>
         </el-form>
         <el-form
+          v-loading="showLoading"
           v-else
           ref="workspaceForm"
-          v-loading="showLoading"
           :model="workspaceForm"
           :rules="workspaceRules"
           label-position="top"

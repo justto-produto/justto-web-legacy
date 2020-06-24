@@ -74,7 +74,7 @@
         </div>
         <el-card
           v-else-if="occurrence.type === 'LOG' ||
-            (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
+          (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
           shadow="never"
           class="dispute-view-occurrences__log el-card--bg-warning"
         >

@@ -735,8 +735,8 @@
         width="70%"
       >
         <el-form
-          ref="disputeForm"
           v-loading="editDisputeDialogLoading"
+          ref="disputeForm"
           :model="disputeForm"
           :rules="disputeFormRules"
           label-position="top"
@@ -750,8 +750,8 @@
                 prop="disputeCode"
               >
                 <el-input
-                  v-model="disputeForm.disputeCode"
                   v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
+                  v-model="disputeForm.disputeCode"
                 />
               </el-form-item>
             </el-col>
@@ -977,8 +977,8 @@
           </ul>
         </el-alert>
         <el-form
-          ref="roleForm"
           v-loading="editRoleDialogLoading"
+          ref="roleForm"
           :model="roleForm"
           :rules="roleRules"
           label-position="top"
@@ -999,8 +999,8 @@
             prop="documentNumber"
           >
             <el-input
-              v-model="roleForm.documentNumber"
               v-mask="['###.###.###-##', '##.###.###/####-##']"
+              v-model="roleForm.documentNumber"
               @change="documentNumberHasChanged = true"
             />
           </el-form-item>
@@ -1090,8 +1090,8 @@
             prop="phone"
           >
             <el-input
-              v-model="roleForm.phone"
               v-mask="['(##) ####-####', '(##) #####-####']"
+              v-model="roleForm.phone"
               @keydown.enter.native="addPhone()"
               @blur="addPhone()"
             >
@@ -1317,8 +1317,8 @@
             prop="document"
           >
             <el-input
-              v-model="addBankForm.document"
               v-mask="['###.###.###-##', '##.###.###/####-##']"
+              v-model="addBankForm.document"
             />
           </el-form-item>
           <el-form-item

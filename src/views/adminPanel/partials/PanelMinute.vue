@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="panel-minute-view">
     <el-table
-      :key="tableKey"
       v-loading="loadingMinutes"
+      :key="tableKey"
       :data="filteredMinutes"
       width="100%"
     >

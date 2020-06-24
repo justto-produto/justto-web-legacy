@@ -13,8 +13,8 @@
         :md="right"
       >
         <swiper
-          ref="swiper"
           v-loading="$store.state.loading"
+          ref="swiper"
           :options="swiperOption"
           class="swiper-box"
           @slideChange="slideChange"
