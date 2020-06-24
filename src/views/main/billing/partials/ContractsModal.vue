@@ -45,8 +45,9 @@
               >
                 <el-date-picker
                   v-model="contract.startedDate"
-                  type="date"
                   placeholder="Início da vigência"
+                  type="date"
+                  value-format="yyyy-MM-dd"
                 />
                 <el-form-item />
               </el-form-item>
@@ -172,8 +173,9 @@
               >
                 <el-date-picker
                   v-model="newContract.startedDate"
-                  type="date"
                   placeholder="Início da vigência"
+                  type="date"
+                  value-format="yyyy-MM-dd"
                 />
                 <el-form-item />
               </el-form-item>
@@ -272,14 +274,17 @@
       <el-button @click="dialogFormVisible = false">Cancelar</el-button>
       <el-button
         type="primary"
-        @click="dialogFormVisible = false"
-      >Salvar</el-button>
+        @click.native="saveContract"
+      >
+        Salvar
+      </el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
 import { TARIFF_TYPES } from '@/constants/billing'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'ContractsModal',
@@ -308,8 +313,31 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'addContract',
+      'updateContract',
+    ]),
     makeContractName(contract) {
       return `Contrato #${contract.id} - ${contract.startedDate}`
+    },
+    saveContract() {
+      const {
+        clientData: { customerId },
+        form,
+        newContract,
+      } = this
+
+      form.contracts.map(contract => this.updateContract({
+        customerId,
+        contract,
+      }))
+
+      if (newContract.status) {
+        this.addContract({
+          customerId,
+          contract: newContract,
+        })
+      }
     },
   },
 }

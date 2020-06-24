@@ -47,6 +47,21 @@ const actions = {
       mutation: 'setContracts',
     })
   },
+
+  addContract: ({ dispatch }, { customerId, contract }) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerId}/contract`,
+      method: 'post',
+      data: contract,
+    }).then(() => dispatch('getMyCusomers')),
+
+  updateContract: ({ dispatch }, { customerId, contract }) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerId}/contract/${contract.id}`,
+      method: 'patch',
+      data: contract,
+    }).then(() => dispatch('getMyCusomers')),
+
   getTransactions: ({ state }) => {
     const query = {
       ...state.query,
