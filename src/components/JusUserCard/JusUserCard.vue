@@ -77,6 +77,11 @@ export default {
       userDataBind: this.userData,
     }
   },
+  watch: {
+    userData(current) {
+      this.userDataBind = current
+    }
+  },
   computed: {
     contractStatus() {
       const contracts = this.userDataBind.contracts

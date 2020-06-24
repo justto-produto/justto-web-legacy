@@ -126,7 +126,19 @@ export default {
       this.dialogFormVisible = true
     },
     handleClose(userData) {
-      this.unlinkCustomer(userData.id)
+      this.$confirm('Tem certeza que deseja desvincular este cliente dassa workspace?', 'Atenção', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning'
+      }).then(() => {
+        this.unlinkCustomer(userData.id).then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Cliente desvinculado com sucesso.',
+          })
+        })
+      })
     },
     addClient() {
       const name = this.inputValue
