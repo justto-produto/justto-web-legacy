@@ -175,7 +175,7 @@ export default {
       },
       filterDisputesActionParams: {
         icon: 'management',
-        label: 'Filtrar gerenciamento',
+        label: 'Visualizar disputas no gerenciamento',
         trigger: 'showDisputes',
       },
       addTransactionActionParams: {
