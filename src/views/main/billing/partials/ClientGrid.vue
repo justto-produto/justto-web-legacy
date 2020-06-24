@@ -129,7 +129,7 @@ export default {
       this.$confirm('Tem certeza que deseja desvincular este cliente dassa workspace?', 'Atenção', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.unlinkCustomer(userData.id).then(() => {
           this.$jusNotification({

@@ -77,11 +77,6 @@ export default {
       userDataBind: this.userData,
     }
   },
-  watch: {
-    userData(current) {
-      this.userDataBind = current
-    }
-  },
   computed: {
     contractStatus() {
       const contracts = this.userDataBind.contracts
@@ -98,6 +93,11 @@ export default {
         default:
           return { label: 'VAZIO', type: 'info' }
       }
+    },
+  },
+  watch: {
+    userData(current) {
+      this.userDataBind = current
     },
   },
   methods: {
