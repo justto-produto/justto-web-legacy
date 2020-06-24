@@ -56,9 +56,9 @@ describe('Disputa', function() {
 
     // Edita campo Estrategia
     // cy.get('[data-testid=strategy-input]')
-      // .click()
-      // .contains('Cobrança')
-      // .click()
+    // .click()
+    // .contains('Cobrança')
+    // .click()
 
     // Edita campo Alçada Máxima
     cy.get('[data-testid=bondary-input]')
@@ -120,7 +120,7 @@ describe('Disputa', function() {
 
     // Verifica se valores correspondem
     // cy.get('[data-testid=overview-strategy]')
-      // .contains('Cobrança')
+    // .contains('Cobrança')
 
     cy.wait(1000)
 

@@ -92,7 +92,7 @@ describe('Disputa', function() {
 
     // Clica em 'vusualizar email'
     // cy.get('[data-testid=show-email]').last()
-      // .click({ force: true })
+    // .click({ force: true })
 
     // Mensagem deve ser a enviada
     cy.get('[data-testid=message-box]')

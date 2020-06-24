@@ -1,23 +1,27 @@
 <template>
   <jus-view-main
     :key="key"
-    class="dashboard-view">
+    class="dashboard-view"
+  >
     <template slot="main">
       <div
         v-if="$store.getters.isAdminProfile"
-        class="mb10">
+        class="mb10"
+      >
         <el-select
           v-model="selectedMemberId"
           filterable
           clearable
           placeholder="Filtrar por membro da equipe"
           @change="getDashboard"
-          @clear="selectedMember = null">
+          @clear="selectedMember = null"
+        >
           <el-option
             v-for="member in members"
             :key="member.person.id"
             :value="member.person.id"
-            :label="member.person.name"/>
+            :label="member.person.name"
+          />
         </el-select>
       </div>
       <el-row :class="{ showFilter: $store.getters.isAdminProfile }">
@@ -25,7 +29,8 @@
           v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
           :md="14"
           :sm="24"
-          class="dashboard-view__graph">
+          class="dashboard-view__graph"
+        >
           <div class="dashboard-view__graph-header">
             <div>
               <b>Disputas ativas</b>
@@ -33,16 +38,17 @@
             </div>
             <el-dropdown
               trigger="click"
-              @command="command">
+              @command="command"
+            >
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="{command: 'reload', param: 'DISPUTE_STATUS_SUMMARY_WITH_WARN'}">
-                  <i class="el-icon-refresh"/> Atualizar
+                  <i class="el-icon-refresh" /> Atualizar
                 </el-dropdown-item>
-                <el-dropdown-item :command="{command: 'switchType', param: 'disputeStatusSummaryWithWarnIsChart'}" >
-                  <i :class="disputeStatusSummaryWithWarnIsChart ? 'el-icon-notebook-2' : 'el-icon-data-analysis'"/> {{ disputeStatusSummaryWithWarnIsChart ? 'Tabela' : 'Gráfico' }}
+                <el-dropdown-item :command="{command: 'switchType', param: 'disputeStatusSummaryWithWarnIsChart'}">
+                  <i :class="disputeStatusSummaryWithWarnIsChart ? 'el-icon-notebook-2' : 'el-icon-data-analysis'" /> {{ disputeStatusSummaryWithWarnIsChart ? 'Tabela' : 'Gráfico' }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -54,15 +60,18 @@
             :data="disputeStatusSummaryWithWarn"
             :options="opt"
             stacked
-            class="dashboard-view__dataset"/>
+            class="dashboard-view__dataset"
+          />
           <jus-chart-table
             v-loading="loading === true || loading === 'DISPUTE_STATUS_SUMMARY_WITH_WARN'"
             v-else-if="disputeStatusSummaryWithWarn && !disputeStatusSummaryWithWarnIsChart"
             :data="disputeStatusSummaryWithWarn"
-            class="dashboard-view__dataset"/>
+            class="dashboard-view__dataset"
+          />
           <div
             v-else
-            class="dashboard-view__empty">
+            class="dashboard-view__empty"
+          >
             {{ emptyMessage }}
           </div>
         </el-col>
@@ -70,7 +79,8 @@
           v-loading="loading === true || loading === 'DISPUTE_AVG_RESPONSE_TIME'"
           :md="10"
           :sm="24"
-          class="dashboard-view__graph">
+          class="dashboard-view__graph"
+        >
           <div class="dashboard-view__graph-header">
             <div>
               <b>Tempo médio de resposta do negociador</b>
@@ -78,13 +88,14 @@
             </div>
             <el-dropdown
               trigger="click"
-              @command="reload">
+              @command="reload"
+            >
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="DISPUTE_AVG_RESPONSE_TIME">
-                  <i class="el-icon-refresh"/> Atualizar
+                  <i class="el-icon-refresh" /> Atualizar
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -97,10 +108,12 @@
             :options="opt"
             annotation="Tempo ideal"
             sufix="horas"
-            class="dashboard-view__dataset" />
+            class="dashboard-view__dataset"
+          />
           <div
             v-else
-            class="dashboard-view__empty">
+            class="dashboard-view__empty"
+          >
             {{ emptyMessage }}
           </div>
         </el-col>
@@ -108,7 +121,8 @@
           v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'"
           :md="16"
           :sm="24"
-          class="dashboard-view__graph">
+          class="dashboard-view__graph"
+        >
           <div class="dashboard-view__graph-header">
             <div>
               <b>Monitor de disputas</b>
@@ -116,13 +130,14 @@
             </div>
             <el-dropdown
               trigger="click"
-              @command="reload">
+              @command="reload"
+            >
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="MONITORING_DISPUTE_BY_TIME">
-                  <i class="el-icon-refresh"/> Atualizar
+                  <i class="el-icon-refresh" /> Atualizar
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -134,10 +149,12 @@
             :data="monitoringDisputeByTime"
             :options="monitoringDisputeByTimeOptions"
             filterable
-            class="dashboard-view__dataset" />
+            class="dashboard-view__dataset"
+          />
           <div
             v-else
-            class="dashboard-view__empty">
+            class="dashboard-view__empty"
+          >
             {{ emptyMessage }}
           </div>
         </el-col>
@@ -145,7 +162,8 @@
           v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'"
           :md="8"
           :sm="24"
-          class="dashboard-view__graph">
+          class="dashboard-view__graph"
+        >
           <div class="dashboard-view__graph-header">
             <div>
               <b>Resumo</b>
@@ -153,13 +171,14 @@
             </div>
             <el-dropdown
               trigger="click"
-              @command="reload">
+              @command="reload"
+            >
               <span class="el-dropdown-link">
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">
-                  <i class="el-icon-refresh"/> Atualizar
+                  <i class="el-icon-refresh" /> Atualizar
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -167,10 +186,12 @@
           <jus-chart-card
             v-if="disputeMonetarySummaries"
             :data="disputeMonetarySummaries"
-            class="dashboard-view__dataset" />
+            class="dashboard-view__dataset"
+          />
           <div
             v-else
-            class="dashboard-view__empty">
+            class="dashboard-view__empty"
+          >
             {{ emptyMessage }}
           </div>
         </el-col>
@@ -357,6 +378,7 @@ export default {
         this.$store.commit('clearDisputeQuery')
         this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
         for (const key in filters) {
+          // eslint-disable-next-line no-prototype-builtins
           if (filters.hasOwnProperty(key)) {
             this.$store.commit('updateDisputeQuery', { key, value: filters[key] })
           }

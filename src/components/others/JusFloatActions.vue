@@ -3,13 +3,16 @@
     <div
       v-for="action in actions"
       :key="action.name"
-      class="float-actions__action-containet">
+      class="float-actions__action-containet"
+    >
       <el-tooltip
-        v-if="true"
-        :content="action.label">
+        v-if="action.condition(scope.value)"
+        :content="action.label"
+      >
         <el-button
           type="text"
-          @click="emitAction(action.trigger)">
+          @click="emitAction(action.trigger)"
+        >
           <jus-icon
             :icon="action.icon"
             class="float-actions__action-icon"

@@ -14,10 +14,12 @@
     @keydown.left="onLeftKeyDown"
     @keydown.right="onRightKeyDown"
     @keydown.down.prevent="onLeftKeyDown"
-    @keydown.up.prevent="onRightKeyDown">
+    @keydown.up.prevent="onRightKeyDown"
+  >
     <div
       v-if="object"
-      class="teste">
+      class="teste"
+    >
       <span class="teste2">{{ object.label }}</span>
       <span>
         R$ {{ formatValue }}<br>
@@ -26,7 +28,8 @@
     </div>
     <div
       :class="{ 'hover': hovering, 'dragging': dragging }"
-      class="el-slider__button"/>
+      class="el-slider__button"
+    />
   </div>
 </template>
 

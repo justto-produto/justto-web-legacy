@@ -1,7 +1,8 @@
 <template>
   <span
     :class="typeClass"
-    class="jus-status-dot"/>
+    class="jus-status-dot"
+  />
 </template>
 
 <script>
@@ -17,6 +18,8 @@ export default {
       if (this.type) {
         return 'jus-status-dot--' + this.type
       }
+
+      return ''
     },
   },
 }

@@ -5,39 +5,47 @@
       :key="tableKey"
       :data="filteredWorkspaces"
       width="100%"
-      @expand-change="getUsersByWorkspace">
+      @expand-change="getUsersByWorkspace"
+    >
       <el-table-column
         type="expand"
         fixed="left"
-        width="50px">
+        width="50px"
+      >
         <template slot-scope="props">
           <el-table
             :key="usersTableKey"
             :data="users[props.row.id]"
             size="small"
-            width="100%">
+            width="100%"
+          >
             <el-table-column
               prop="name"
-              label="Nome"/>
+              label="Nome"
+            />
             <el-table-column
               prop="profile"
-              label="Perfil">
+              label="Perfil"
+            >
               <template slot-scope="props2">
                 {{ $t('profile.' + props2.row.profile) | capitalize }}
               </template>
             </el-table-column>
             <el-table-column
               align="right"
-              fixed="right">
+              fixed="right"
+            >
               <template slot-scope="props2">
                 <el-tooltip
                   :open-delay="800"
-                  content="Remover usuário">
+                  content="Remover usuário"
+                >
                   <el-button
                     type="text"
                     icon="el-icon-delete"
                     style="color: #FF4B54"
-                    @click="removeWorkspaceUser(props.row.id, props2.row.id)"/>
+                    @click="removeWorkspaceUser(props.row.id, props2.row.id)"
+                  />
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -46,136 +54,161 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        label="Nome">
+        label="Nome"
+      >
         <template slot-scope="props">
           <el-input
             v-show="props.row.editing"
             :ref="'input' + props.row.id"
             v-model="props.row.name"
             @keyup.enter.native="props.row.editing = false, editWorkspaceName(props.row)"
-            @blur="props.row.editing = false, editWorkspaceName(props.row)" />
+            @blur="props.row.editing = false, editWorkspaceName(props.row)"
+          />
           <div
             v-show="!props.row.editing"
             class="label panel-workspace-view__editable-label"
-            @click="props.row.editing = true ,focusInput(props.row.id, props.row.name)">
+            @click="props.row.editing = true ,focusInput(props.row.id, props.row.name)"
+          >
             {{ props.row.name }}
             <jus-icon
               class="edit-icon"
-              icon="edit" />
+              icon="edit"
+            />
           </div>
         </template>
       </el-table-column>
       <el-table-column
         prop="teamName"
-        label="Nome de exibição"/>
+        label="Nome de exibição"
+      />
       <el-table-column
         prop="status"
         label="Status"
-        width="80px">
+        width="80px"
+      >
         <template slot-scope="props">
           {{ $t('workspace.' + props.row.status) | capitalize }}
         </template>
       </el-table-column>
       <el-table-column
         fixed="right"
-        align="right">
+        align="right"
+      >
         <template
           slot="header"
-          slot-scope="scope">
+        >
           <el-input
             v-model="search"
             size="mini"
             placeholder="Buscar"
-            @input="resetPage"/>
+            @input="resetPage"
+          />
         </template>
         <template slot-scope="props">
           <el-tooltip
             :open-delay="800"
-            :content="props.row.status === 'DISABLED' ? 'Equipe desabilitada' : 'Convidar usuário'">
+            :content="props.row.status === 'DISABLED' ? 'Equipe desabilitada' : 'Convidar usuário'"
+          >
             <span style="margin-right:10px;">
               <el-button
                 :disabled="props.row.status === 'DISABLED'"
                 size="mini"
                 type=""
                 icon="el-icon-plus"
-                @click="addUserDialog(props.row)"/>
+                @click="addUserDialog(props.row)"
+              />
             </span>
           </el-tooltip>
           <el-tooltip
             :open-delay="800"
-            content="Editar equipe">
+            content="Editar equipe"
+          >
             <el-button
               size="mini"
               type=""
               icon="el-icon-edit"
-              @click="editWorkspaceDialog(props.row)"/>
+              @click="editWorkspaceDialog(props.row)"
+            />
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
     <el-backtop
       ref="backTop"
-      target=".panel-workspace-view" />
+      target=".panel-workspace-view"
+    />
     <el-pagination
       v-show="!search"
       :page-size="pageSize"
       :current-page="page"
       :total="workspaces.length"
       layout="prev, pager, next"
-      @current-change="handleCurrentChange"/>
+      @current-change="handleCurrentChange"
+    />
     <el-dialog
       :visible.sync="addUserDialogVisible"
       title="Convidar usuário"
       width="50%"
-      @submit.native.prevent="addUser">
+      @submit.native.prevent="addUser"
+    >
       <el-form
         ref="userForm"
         :model="userForm"
         :rules="userRules"
-        label-position="top">
+        label-position="top"
+      >
         <el-form-item
           label="E-mail"
-          prop="email">
+          prop="email"
+        >
           <el-input v-model="userForm.email" />
         </el-form-item>
         <el-form-item
           label="Perfil"
-          prop="profile">
+          prop="profile"
+        >
           <el-select v-model="userForm.profile">
             <el-option
               v-for="item in ['NEGOTIATOR', 'ADMINISTRATOR']"
               :key="item"
               :label="$t('profile.' + item).toUpperCase()"
-              :value="item" />
+              :value="item"
+            />
           </el-select>
         </el-form-item>
       </el-form>
       <span
         slot="footer"
-        class="dialog-footer">
+        class="dialog-footer"
+      >
         <el-button
           plain
-          @click="addUserDialogVisible = false">Cancelar</el-button>
+          @click="addUserDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           type="primary"
-          @click="addUser">Convidar</el-button>
+          @click="addUser"
+        >Convidar</el-button>
       </span>
     </el-dialog>
     <el-dialog
       :visible.sync="editWorkspaceDialogVisible"
       title="Editar equipe"
       width="50%"
-      @submit.native.prevent="editWorkspace">
+      @submit.native.prevent="editWorkspace"
+    >
       <el-form
         ref="workspaceForm"
         :model="workspaceForm"
         :rules="workspaceRules"
-        label-position="top">
+        label-position="top"
+      >
         <h3>Alterar nome da equipe</h3>
         <el-alert
           :closable="false"
           type="info"
-          show-icon>
+          show-icon
+        >
           <span slot="title">
             Este nome <strong>NÃO</strong> irá aparecer nas mensagens automáticas. Utilize-o para organização interna.
           </span>
@@ -183,14 +216,16 @@
         <br>
         <el-form-item
           label="Nome da equipe"
-          prop="name">
+          prop="name"
+        >
           <el-input v-model="workspaceForm.name" />
         </el-form-item>
         <h3>Alterar nome da empresa/escritório</h3>
         <el-alert
           :closable="false"
           type="info"
-          show-icon>
+          show-icon
+        >
           <span slot="title">
             Este nome <strong>IRÁ</strong> aparecer em todas as mensagens automáticas enviadas pela Justto.
           </span>
@@ -198,35 +233,41 @@
         <br>
         <el-form-item
           label="Nome de exibição"
-          prop="teamName">
+          prop="teamName"
+        >
           <el-input v-model="workspaceForm.teamName" />
         </el-form-item>
         <h3>Configurações gerais da equipe</h3>
         <el-form-item
           label="Status"
-          prop="status">
+          prop="status"
+        >
           <el-select v-model="workspaceForm.status">
             <el-option
               v-for="item in ['READY', 'DISABLED']"
               :key="item"
               :label="$t('workspace.' + item).toUpperCase()"
-              :value="item" />
+              :value="item"
+            />
           </el-select>
         </el-form-item>
         <el-form-item
           label="Como detectar possíveis ofensores em sua carteira?"
-          prop="vexatiousType">
+          prop="vexatiousType"
+        >
           <el-select v-model="workspaceForm.properties.VEXATIOUS_TYPE">
             <el-option
               v-for="type in ['QUANTITY', 'AVERAGE']"
               :key="type"
               :label="$t(`threshold.${type}`)"
-              :value="type" />
+              :value="type"
+            />
           </el-select>
         </el-form-item>
         <el-form-item
           v-if="workspaceForm.properties.VEXATIOUS_TYPE"
-          prop="vexatiousThreshold">
+          prop="vexatiousThreshold"
+        >
           <span slot="label">
             <span v-if="workspaceForm.properties.VEXATIOUS_TYPE === 'QUANTITY'">Quantas disputas uma mesma pessoa precisa ter para ser qualificado como possível ofensor?</span>
             <span v-else>Qual percentual acima da média de disputas uma pessoa precisa ter para ser qualificado como possível ofensor?</span>
@@ -234,18 +275,22 @@
           <money
             v-model="workspaceForm.properties.VEXATIOUS_THRESHOLD"
             v-bind="vexatiousTypeMask"
-            class="el-input__inner" />
+            class="el-input__inner"
+          />
         </el-form-item>
       </el-form>
       <span
         slot="footer"
-        class="dialog-footer">
+        class="dialog-footer"
+      >
         <el-button
           plain
-          @click="editWorkspaceDialogVisible = false">Cancelar</el-button>
+          @click="editWorkspaceDialogVisible = false"
+        >Cancelar</el-button>
         <el-button
           type="primary"
-          @click="editWorkspace">Editar</el-button>
+          @click="editWorkspace"
+        >Editar</el-button>
       </span>
     </el-dialog>
   </div>
@@ -374,7 +419,8 @@ export default {
         email: '',
         profile: '',
         workspaceId: workspace.id,
-        workspaceSubdomain: workspace.subDomain }
+        workspaceSubdomain: workspace.subDomain,
+      }
       this.addUserDialogVisible = true
     },
     addUser() {
@@ -389,7 +435,7 @@ export default {
               profile: this.userForm.profile,
             }],
             headers: {
-              'Workspace': this.userForm.workspaceSubdomain,
+              Workspace: this.userForm.workspaceSubdomain,
             },
           }).then(response => {
             this.$jusNotification({

@@ -1,10 +1,13 @@
 <template>
   <div class="columns-step">
-    <h2 class="new-import-view__title">Mapeamento de colunas</h2>
+    <h2 class="new-import-view__title">
+      Mapeamento de colunas
+    </h2>
     <el-row :gutter="60">
       <el-col
         :span="12"
-        data-testid="import-columns">
+        data-testid="import-columns"
+      >
         <h3>Colunas do arquivo</h3>
         <p>
           Estas são as colunas do seu arquivo. Os dados em roxo, acima do campo, são os dados da primeira linha de cada
@@ -16,7 +19,8 @@
           :key="`${column.id}-${column.name}`"
           class="file-column"
           @drop="dropTag($event, column)"
-          @dragover.prevent>
+          @dragover.prevent
+        >
           <div class="file-column__name">
             <span class="file-column__title">{{ column.name }}</span>
             <span class="file-column__example">{{ column.example }}</span>
@@ -25,7 +29,8 @@
             :closable="column.tag !== null"
             :class="{'el-tag--dropzone-active': column.tag}"
             class="el-tag--dropzone"
-            @close="removeTag(column)">
+            @close="removeTag(column)"
+          >
             <span v-if="column.tag">
               <span v-if="column.index !== undefined && column.index !== null">
                 {{ $t('fields.' + getColumnTitle(column.tag.id)) }} {{ column.index + 1 }} -
@@ -37,14 +42,17 @@
         </div>
         <div
           v-loading="true"
-          v-show="loading">
+          v-show="loading"
+        >
           <div
             v-for="item in [1,2,3,4,5]"
             :key="item"
-            class="file-column">
+            class="file-column"
+          >
             <div
               :item="item"
-              class="file-column__name">
+              class="file-column__name"
+            >
               <span class="file-column__title">coluna</span>
               <span class="file-column__example">exemplo</span>
             </div>
@@ -56,7 +64,8 @@
       </el-col>
       <el-col
         :span="12"
-        data-testid="import-tags">
+        data-testid="import-tags"
+      >
         <h3>Campos do Sistema</h3>
         <p>
           Estes são os campos do sistema. Para mapeá-los, você deve arrastar os campos abaixo para a coluna
@@ -66,17 +75,20 @@
         <el-collapse
           v-loading="loadingTags"
           value="1"
-          class="el-collapse--drag">
+          class="el-collapse--drag"
+        >
           <el-collapse-item
             title="Dados do conflito"
-            name="1">
+            name="1"
+          >
             <span
               v-for="(tag, index) in disputeTags"
               :key="`${tag.id}-${tag.name}`"
               :class="{'el-tag--drag-active': !isAvailable(tag)}"
               class="el-tag--drag-container"
               draggable="true"
-              @dragstart.self="dragTag($event, JSON.stringify({ tag, index }))">
+              @dragstart.self="dragTag($event, JSON.stringify({ tag, index }))"
+            >
               <el-tag class="el-tag--drag">
                 {{ $t(tag.key) | capitalize }}
               </el-tag>
@@ -87,12 +99,14 @@
           Partes contrárias
           <a
             href="#"
-            @click="addTagList(claimantParties)"><i class="el-icon-plus right"/></a>
+            @click="addTagList(claimantParties)"
+          ><i class="el-icon-plus right" /></a>
         </h3>
         <div
           v-for="(claimantPartyIndex, index) in claimantParties"
           :key="'claimantParty' + claimantPartyIndex"
-          class="drag-group">
+          class="drag-group"
+        >
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Parte Contrária ' + claimantPartyIndex">
               <span
@@ -101,7 +115,8 @@
                 :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
                 class="el-tag--drag-container"
                 draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))"
+              >
                 <el-tag class="el-tag--drag">
                   Parte contrária {{ claimantPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
@@ -111,23 +126,27 @@
           <a
             v-if="claimantPartyIndex !== 1 && claimantParties.length === claimantPartyIndex"
             href="#"
-            @click="removeTagList(claimantParties, tags.claimantParty.tags)">
-            <i class="el-icon-delete"/>
+            @click="removeTagList(claimantParties, tags.claimantParty.tags)"
+          >
+            <i class="el-icon-delete" />
           </a>
           <span
             v-else
-            style="margin-left: 24px;"/>
+            style="margin-left: 24px;"
+          />
         </div>
         <h3 v-show="!loadingTags">
           Advogados
           <a
             href="#"
-            @click="addTagList(claimantLawyers)"><i class="el-icon-plus right"/></a>
+            @click="addTagList(claimantLawyers)"
+          ><i class="el-icon-plus right" /></a>
         </h3>
         <div
           v-for="(claimantLawyerIndex, index) in claimantLawyers"
           :key="'claimantLawyer' + claimantLawyerIndex"
-          class="drag-group">
+          class="drag-group"
+        >
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Advogado ' + claimantLawyerIndex">
               <span
@@ -136,7 +155,8 @@
                 :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
                 class="el-tag--drag-container"
                 draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))"
+              >
                 <el-tag class="el-tag--drag">
                   Advogado {{ claimantLawyerIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
@@ -146,23 +166,27 @@
           <a
             v-if="claimantLawyerIndex !== 1 && claimantLawyers.length === claimantLawyerIndex"
             href="#"
-            @click="removeTagList(claimantLawyers)">
-            <i class="el-icon-delete"/>
+            @click="removeTagList(claimantLawyers)"
+          >
+            <i class="el-icon-delete" />
           </a>
           <span
             v-else
-            style="margin-left: 24px;"/>
+            style="margin-left: 24px;"
+          />
         </div>
         <h3 v-show="!loadingTags">
           Réus
           <a
             href="#"
-            @click="addTagList(respondentParties)"><i class="el-icon-plus right"/></a>
+            @click="addTagList(respondentParties)"
+          ><i class="el-icon-plus right" /></a>
         </h3>
         <div
           v-for="(respondentPartyIndex, index) in respondentParties"
           :key="respondentPartyIndex"
-          class="drag-group">
+          class="drag-group"
+        >
           <el-collapse class="el-collapse--drag">
             <el-collapse-item :title="'Réu ' + respondentPartyIndex">
               <span
@@ -171,7 +195,8 @@
                 :class="{'el-tag--drag-active': !isMultipleAvailable(tag, index)}"
                 class="el-tag--drag-container"
                 draggable="true"
-                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))">
+                @dragstart.self="dragTag($event, JSON.stringify({tag, index}))"
+              >
                 <el-tag class="el-tag--drag">
                   Réu {{ respondentPartyIndex + ' - ' }}{{ $t(tag.key) | capitalize }}
                 </el-tag>
@@ -181,12 +206,14 @@
           <a
             v-if="respondentPartyIndex !== 1 && respondentParties.length === respondentPartyIndex"
             href="#"
-            @click="removeTagList(respondentParties)">
-            <i class="el-icon-delete"/>
+            @click="removeTagList(respondentParties)"
+          >
+            <i class="el-icon-delete" />
           </a>
           <span
             v-else
-            style="margin-left: 24px;"/>
+            style="margin-left: 24px;"
+          />
         </div>
       </el-col>
     </el-row>
@@ -267,6 +294,7 @@ export default {
           element.index = data.index
         }
       })
+      // eslint-disable-next-line no-self-assign
       this.columns = this.columns
     },
     removeTag(column) {
@@ -321,6 +349,7 @@ export default {
           }
         }
       })
+      // eslint-disable-next-line no-self-assign
       this.columns = this.columns
     },
     matchTagId(id, tags) {
@@ -335,6 +364,7 @@ export default {
     getColumnTitle(id) {
       let title = ''
       for (const tagList in this.tags) {
+        // eslint-disable-next-line no-prototype-builtins
         if (this.tags.hasOwnProperty(tagList)) {
           if (this.tags[tagList] && this.tags[tagList].tags) {
             this.tags[tagList].tags.map(tag => {

@@ -2,21 +2,25 @@
   <div
     :class="{'jus-filter-button--collapse': isCollapsed}"
     class="jus-filter-button"
-    @keyup.esc="toggle()">
+    @keyup.esc="toggle()"
+  >
     <el-input
       ref="filterInput"
       v-model="term"
-      @blur="blur()">
+      @blur="blur()"
+    >
       <el-button
         slot="prepend"
-        @click="toggle()">
+        @click="toggle()"
+      >
         <jus-icon icon="search" />
       </el-button>
       <i
         v-if="!isCollapsed"
         slot="suffix"
         class="el-input__icon el-icon-close"
-        @click="toggle()" />
+        @click="toggle()"
+      />
     </el-input>
   </div>
 </template>

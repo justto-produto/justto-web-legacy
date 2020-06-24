@@ -2,13 +2,15 @@
   <el-row class="admin-panel-view">
     <el-col
       :span="left"
-      style="transition: width ease 1s;">
+      style="transition: width ease 1s;"
+    >
       <jus-sidenav-external show-exit>
         <el-menu
           default-active="0"
           class="el-menu-vertical-demo"
           background-color="#f7f7f7"
-          @select="changeMenuIndex">
+          @select="changeMenuIndex"
+        >
           <el-menu-item index="0">
             <i class="el-icon-s-cooperation" /> Equipes
           </el-menu-item>

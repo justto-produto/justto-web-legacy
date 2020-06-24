@@ -2,7 +2,8 @@
   <el-dialog
     :close-on-click-modal="false"
     :visible.sync="visibleFilters"
-    @open="restoreFilters()">
+    @open="restoreFilters()"
+  >
     <template slot="title">
       <h2>Filtrar {{ activeTabLabel }}</h2>
     </template>
@@ -11,12 +12,14 @@
         v-loading="loading"
         :model="filters"
         label-position="top"
-        style="margin-bottom: -22px;">
+        style="margin-bottom: -22px;"
+      >
         <el-row :gutter="20">
           <!--  CAMPANHA -->
           <el-col
             v-if="!loading"
-            :span="12">
+            :span="12"
+          >
             <el-form-item label="Campanha">
               <el-select
                 v-model="filters.campaigns"
@@ -24,19 +27,22 @@
                 filterable
                 data-testid="filter-campaign"
                 placeholder="Selecione uma opção"
-                @clear="clearCampaign">
+                @clear="clearCampaign"
+              >
                 <el-option
                   v-for="campaign in campaigns"
                   :key="campaign"
                   :value="campaign"
-                  :label="campaign"/>
+                  :label="campaign"
+                />
               </el-select>
             </el-form-item>
           </el-col>
           <!-- ESTRATÉGIA -->
           <el-col
             v-if="!loading"
-            :span="12">
+            :span="12"
+          >
             <el-form-item label="Estratégia">
               <el-select
                 v-model="filters.strategy"
@@ -44,19 +50,22 @@
                 filterable
                 data-testid="filter-strategy"
                 placeholder="Selecione uma opção"
-                @clear="clearStrategy">
+                @clear="clearStrategy"
+              >
                 <el-option
                   v-for="strategy in strategies"
                   :key="strategy.id"
                   :value="strategy.id"
-                  :label="strategy.name"/>
+                  :label="strategy.name"
+                />
               </el-select>
             </el-form-item>
           </el-col>
           <!-- DATA DO ACORDO -->
           <el-col
             v-if="isNewAgreements"
-            :span="12">
+            :span="12"
+          >
             <el-form-item :label="isNewAgreementsLabel">
               <el-date-picker
                 v-model="filters.dealDate"
@@ -69,7 +78,8 @@
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
                 value-format="yyyy-MM-dd"
-                @change="changeDealDate" />
+                @change="changeDealDate"
+              />
             </el-form-item>
           </el-col>
           <!-- ÚLTIMA INTERAÇÃO -->
@@ -114,7 +124,8 @@
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
                 value-format="yyyy-MM-dd"
-                @change="changeExpirationDate" />
+                @change="changeExpirationDate"
+              />
             </el-form-item>
           </el-col>
           <!-- IMPORTAÇÃO -->
@@ -131,7 +142,8 @@
                 start-placeholder="Data inicial"
                 end-placeholder="Data final"
                 value-format="yyyy-MM-dd"
-                @change="changeimportingDate" />
+                @change="changeimportingDate"
+              />
             </el-form-item>
           </el-col>
           <!-- TAGS -->
@@ -159,7 +171,8 @@
           <!-- RÉU -->
           <el-col
             v-if="!loading && isAll"
-            :span="12">
+            :span="12"
+          >
             <el-form-item label="Réu">
               <el-select
                 v-model="filters.respondentNames"
@@ -168,12 +181,14 @@
                 data-testid="filter-respondent"
                 placeholder="Selecione uma opção"
                 clearable
-                @clear="clearRespondent">
+                @clear="clearRespondent"
+              >
                 <el-option
                   v-for="respondent in respondents"
                   :key="respondent"
                   :value="respondent"
-                  :label="respondent"/>
+                  :label="respondent"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -181,14 +196,16 @@
           <el-col :span="12">
             <el-form-item
               label="Exibir ocorrências:"
-              class="management-filters__switch">
+              class="management-filters__switch"
+            >
               <div>
                 <div>
                   <jus-icon icon="star" /> Somente favoritas
                 </div>
                 <el-switch
                   v-model="filters.onlyFavorite"
-                  data-testid="filters-favorite" />
+                  data-testid="filters-favorite"
+                />
               </div>
               <div>
                 <div>
@@ -196,24 +213,28 @@
                 </div>
                 <el-switch
                   v-model="filters.onlyPaused"
-                  data-testid="filters-only-paused" />
+                  data-testid="filters-only-paused"
+                />
               </div>
             </el-form-item>
           </el-col>
           <!-- FAVORITOS -->
           <el-col
             v-if="isInteration"
-            :span="12">
+            :span="12"
+          >
             <el-form-item
               label="Exibir ocorrências:"
-              class="management-filters__switch management-filters__switch--invisible">
-              <div >
+              class="management-filters__switch management-filters__switch--invisible"
+            >
+              <div>
                 <div>
                   <jus-icon icon="eye" /> Somente não visualizadas
                 </div>
                 <el-switch
                   v-model="filters.onlyNotVisualized"
-                  data-testid="filters-only-not-visualized" />
+                  data-testid="filters-only-not-visualized"
+                />
               </div>
               <div>
                 <div>
@@ -221,26 +242,30 @@
                 </div>
                 <el-switch
                   v-model="filters.hasCounterproposal"
-                  data-testid="filters-has-counterproposal" />
+                  data-testid="filters-has-counterproposal"
+                />
               </div>
             </el-form-item>
           </el-col>
           <!-- MEIO DE INTERAÇÃO -->
           <el-col
             v-if="isInteration"
-            :span="12">
+            :span="12"
+          >
             <el-form-item label="Meio de interação">
               <el-select
                 v-model="filters.lastInteractionType"
                 data-testid="filter-setinteraction"
                 placeholder="Selecione uma opção"
                 multiple
-                @clear="clearInteraction">
+                @clear="clearInteraction"
+              >
                 <el-option
                   v-for="interaction in interactions"
                   :key="interaction.key"
                   :value="interaction.key"
-                  :label="interaction.value"/>
+                  :label="interaction.value"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -276,13 +301,15 @@
           <!-- STATUS -->
           <el-col
             v-if="isAll"
-            :span="24">
+            :span="24"
+          >
             <el-form-item label="Status">
               <el-checkbox-group v-model="filters.status">
                 <el-checkbox
                   v-for="status in statuses"
+                  :key="status"
                   :label="status"
-                  :key="status">
+                >
                   {{ $t('occurrence.type.' + status) | capitalize }}
                 </el-checkbox>
               </el-checkbox-group>
@@ -315,11 +342,13 @@
     <span slot="footer">
       <el-button
         plain
-        @click="clearFilters()">Limpar filtros</el-button>
+        @click="clearFilters()"
+      >Limpar filtros</el-button>
       <el-button
         data-testid="filter-applyfilter"
         type="primary"
-        @click="applyFilters()">
+        @click="applyFilters()"
+      >
         Aplicar filtros
       </el-button>
     </span>
@@ -379,6 +408,8 @@ export default {
         case '3':
           return 'Data de Finalização (ganho/perdido)'
       }
+
+      return ''
     },
     isAll() {
       return this.tabIndex === '3'
@@ -421,6 +452,8 @@ export default {
         case '3':
           return 'Todos'
       }
+
+      return ''
     },
     statuses() {
       return [

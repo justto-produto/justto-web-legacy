@@ -76,6 +76,10 @@ const actions = {
     commit('setCustomer', customerData)
     dispatch('getTransactions')
   },
+  setCustomerId: ({ commit }, customerId) => {
+    commit('setCustomerId', customerId)
+  },
+
   setRangeDate: ({ commit, dispatch }, rangeDate) => {
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
@@ -97,7 +101,19 @@ const actions = {
     commit('setType', '')
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
-    dispatch('getTransactions')
+  },
+
+  postTransaction: ({ state, dispatch }, params) => {
+    axiosDispatcher({
+      url: '/api/billing/transaction',
+      method: 'POST',
+      data: {
+        ...params,
+        customerId: state.currentCustomer.customerId,
+      },
+    }).then(() => {
+      dispatch('getTransactions')
+    })
   },
 
   cancelTransaction: ({ dispatch }, params) => {

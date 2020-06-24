@@ -20,7 +20,7 @@
         @click.native="showFormCard"
       >
         <span>Adicionar um cliente</span>
-        <i class="el-icon-plus client-grid__icon"/>
+        <i class="el-icon-plus client-grid__icon" />
       </el-card>
 
       <el-card
@@ -53,7 +53,6 @@
       v-if="dialogFormVisible"
       :client-data="form"
     />
-
   </div>
 </template>
 

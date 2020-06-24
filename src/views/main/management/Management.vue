@@ -1,18 +1,21 @@
 <template>
   <jus-view-main
     :loading-main="loadingDisputes"
-    class="view-management">
+    class="view-management"
+  >
     <template slot="main">
       <management-actions
         :active="multiActive"
         :selected-ids.sync="selectedIds"
-        @disputes:clear="clearSelection"/>
+        @disputes:clear="clearSelection"
+      />
       <div class="view-management__filters">
         <el-tabs
           ref="disputeTabs"
-          :before-leave="handleChangeTab"
           v-model="activeTab"
-          class="view-management__tabs">
+          :before-leave="handleChangeTab"
+          class="view-management__tabs"
+        >
           <el-tab-pane name="0">
             <span slot="label">
               Sem resposta
@@ -22,7 +25,8 @@
                 :max="99"
                 data-testid="badge-tab0"
                 type="primary"
-                class="el-badge--absolute" />
+                class="el-badge--absolute"
+              />
             </span>
           </el-tab-pane>
           <el-tab-pane name="1">
@@ -34,13 +38,15 @@
                 :max="99"
                 data-testid="badge-tab1"
                 type="primary"
-                class="el-badge--absolute" />
+                class="el-badge--absolute"
+              />
             </span>
           </el-tab-pane>
           <el-tab-pane
             name="2"
             label="Com Interação"
-            data-testid="tab-pproposal-accepted">
+            data-testid="tab-pproposal-accepted"
+          >
             <span slot="label">
               Proposta aceita
               <el-badge
@@ -49,12 +55,14 @@
                 :max="99"
                 data-testid="badge-tab2"
                 type="primary"
-                class="el-badge--absolute" />
+                class="el-badge--absolute"
+              />
             </span>
           </el-tab-pane>
           <el-tab-pane
             name="3"
-            label="Com Interação">
+            label="Com Interação"
+          >
             <span slot="label">Todos</span>
           </el-tab-pane>
         </el-tabs>
@@ -62,24 +70,29 @@
           <el-input
             v-model="term"
             clearable
-            prefix-icon="el-icon-search" />
+            prefix-icon="el-icon-search"
+          />
           <el-button
             :plain="!hasFilters"
             :type="hasFilters ? 'primary' : ''"
-            @click="filtersVisible = true">
+            @click="filtersVisible = true"
+          >
             <jus-icon
               :is-white="hasFilters"
               icon="filter"
-              data-testid="management-filterbtn" />
+              data-testid="management-filterbtn"
+            />
             Filtrar
           </el-button>
           <el-tooltip content="Importar disputas">
             <el-button
               plain
-              @click="showImportDialog">
+              @click="showImportDialog"
+            >
               <jus-icon
                 icon="upload-file"
-                style="width: 20px;" />
+                style="width: 20px;"
+              />
             </el-button>
           </el-tooltip>
           <el-tooltip content="Exportar disputas">
@@ -88,21 +101,25 @@
               plain
               icon="el-icon-download"
               data-testid="export-disputes"
-              @click="showExportDisputesDialog" />
+              @click="showExportDisputesDialog"
+            />
           </el-tooltip>
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
         </div>
       </div>
       <management-filters
         :visible.sync="filtersVisible"
-        :tab-index="activeTab" />
+        :tab-index="activeTab"
+      />
       <div style="min-height: 44px;position: relative;">
         <management-prescriptions
           :active-tab="activeTab"
-          @management:getDisputes="getDisputes" />
+          @management:getDisputes="getDisputes"
+        />
         <div
           v-show="disputesTotalLength"
-          style="right: 0px;position: absolute;top: 13px;">
+          style="right: 0px;position: absolute;top: 13px;"
+        >
           Exibindo {{ disputes.length }} de {{ disputesTotalLength }} disputa<span v-show="disputesTotalLength > 1">s</span>
         </div>
       </div>
@@ -111,22 +128,28 @@
         :active-tab.sync="activeTab"
         :selected-ids.sync="selectedIds"
         :loading-disputes.sync="loadingDisputes"
-        @getDisputes="getDisputes" />
+        @getDisputes="getDisputes"
+      />
       <div
         v-show="hasNew"
         class="el-notification info right"
-        style="bottom: 100px;z-index: 1980;">
+        style="bottom: 100px;z-index: 1980;"
+      >
         <i class="el-notification__icon el-icon-info" />
         <div class="el-notification__group is-with-icon">
-          <h2 class="el-notification__title">Há atualizações nas<br>disputas</h2>
+          <h2 class="el-notification__title">
+            Há atualizações nas<br>disputas
+          </h2>
           <div class="el-notification__content">
             <a
               href="#"
-              @click.prevent="getDisputes">Clique aqui para recarregar</a>
+              @click.prevent="getDisputes"
+            >Clique aqui para recarregar</a>
           </div>
           <div
             class="el-notification__closeBtn el-icon-close"
-            @click="$store.commit('disputeSetHasNew', false)" />
+            @click="$store.commit('disputeSetHasNew', false)"
+          />
         </div>
       </div>
       <el-dialog
@@ -136,19 +159,24 @@
         append-to-body
         class="view-management__export-dialog"
         title="Exportar disputas"
-        width="50%">
+        width="50%"
+      >
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
           <el-checkbox
-            :indeterminate="isIndeterminate"
             v-model="isSelectedAllColumns"
-            @change="invertSelectionColumns">Nome do campo ({{ checkedNodes }} de {{ columns.length }})</el-checkbox>
+            :indeterminate="isIndeterminate"
+            @change="invertSelectionColumns"
+          >
+            Nome do campo ({{ checkedNodes }} de {{ columns.length }})
+          </el-checkbox>
           <el-input
             v-model="filterQuery"
             size="small"
             placeholder="Buscar"
             prefix-icon="el-icon-search"
-            clearable />
+            clearable
+          />
         </div>
         <el-tree
           ref="tree"
@@ -159,25 +187,30 @@
           draggable
           show-checkbox
           @check="handlerChangeTree"
-          @node-drag-end="nodeDragEnd">
+          @node-drag-end="nodeDragEnd"
+        >
           <span
             slot-scope="{ node }"
-            class="custom-tree-node">
+            class="custom-tree-node"
+          >
             <span>{{ node.label | capitalize }}</span>
             <jus-icon
               class="drag-icon"
-              icon="menu-hamburger"/>
+              icon="menu-hamburger"
+            />
           </span>
         </el-tree>
         <span slot="footer">
           <el-button
             :disabled="loadingExport"
             plain
-            @click="exportDisputesDialog = false">Cancelar</el-button>
+            @click="exportDisputesDialog = false"
+          >Cancelar</el-button>
           <el-button
             :loading="loadingExport"
             type="primary"
-            @click.prevent="exportDisputes">
+            @click.prevent="exportDisputes"
+          >
             Exportar
           </el-button>
         </span>
@@ -285,8 +318,8 @@ export default {
     this.$store.dispatch('getExportColumns').then(response => {
       Object.keys(response).forEach(key => {
         this.columns.push({
-          'key': key,
-          'label': response[key],
+          key: key,
+          label: response[key],
         })
       })
     }).finally(() => {

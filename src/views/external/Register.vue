@@ -3,11 +3,15 @@
     <el-container>
       <el-aside
         width="50%"
-        class="hidden-sm-and-down">
-        <jus-sidenav-external show-plans/>
+        class="hidden-sm-and-down"
+      >
+        <jus-sidenav-external show-plans />
       </el-aside>
       <el-main class="display-flex position-relative">
-        <jus-button-back src="http://justto.com.br" />
+        <jus-button-back
+          src="http://justto.com.br"
+          text="Voltar"
+        />
         <el-form
           v-loading="showLoading"
           ref="registerForm"
@@ -15,71 +19,87 @@
           :rules="rules"
           class="external-view__form"
           label-position="top"
-          @submit.native.prevent="submitForm">
-          <h1 class="external-view__title">Cadastre-se</h1>
+          @submit.native.prevent="submitForm"
+        >
+          <h1 class="external-view__title">
+            Cadastre-se
+          </h1>
           <el-alert
             v-show="showError"
             :title="errorMessage"
             type="error"
             data-testid="register-failure"
-            @close="showError = false"/>
+            @close="showError = false"
+          />
           <el-alert
             v-show="showSuccess"
             title="Cadastro realizado com sucesso! Acesse seu email para prosseguir."
             type="success"
             data-testid="register-success"
-            @close="showSuccess = false" />
+            @close="showSuccess = false"
+          />
           <el-form-item
             label="Nome"
-            prop="name">
+            prop="name"
+          >
             <el-input
               v-model="registerForm.name"
               name="register-name"
-              data-testid="register-name"/>
+              data-testid="register-name"
+            />
           </el-form-item>
           <el-form-item
             label="Email"
-            prop="email">
+            prop="email"
+          >
             <el-input
               v-model="registerForm.email"
               name="register-email"
-              data-testid="register-email"/>
+              data-testid="register-email"
+            />
           </el-form-item>
           <el-form-item
             label="Senha"
-            prop="password">
+            prop="password"
+          >
             <el-input
               v-model="registerForm.password"
               :type="passwordType"
               name="register-password"
-              data-testid="register-password"/>
+              data-testid="register-password"
+            />
             <div class="el-button--input-float">
               <jus-icon
                 :icon="showPassword ? 'hide' : 'eye'"
                 class="external-view__show-password"
-                @click.native="switchShowPassword"/>
+                @click.native="switchShowPassword"
+              />
             </div>
           </el-form-item>
           <el-button
             native-type="submit"
             class="external-view__submit"
             type="primary"
-            data-testid="submit">
+            data-testid="submit"
+          >
             Cadastrar
           </el-button>
           <el-row class="external-view__info">
             Ao clicar no botão, eu concordo com os
             <a
               href="https://justto.com.br/termos-de-uso/"
-              target="_blank"> Termos de Uso</a> e
+              target="_blank"
+            > Termos de Uso</a> e
             <a
               data-testid="contract-terms"
               href="https://justto.com.br/termos-de-contratacao/"
-              target="_blank">Termos Gerais de Contratação.</a>
+              target="_blank"
+            >Termos Gerais de Contratação.</a>
             <br><br>
             Já possui conta? <a
               href="login"
-              @click.prevent="$router.push('login')"> Clique aqui para acessar.</a>
+              @click.prevent="$router.push('login')"
+            > Clique aqui para acessar.</a>
           </el-row>
         </el-form>
       </el-main>
@@ -131,7 +151,7 @@ export default {
   methods: {
     submitForm() {
       const self = this
-      this.$refs['registerForm'].validate(valid => {
+      this.$refs.registerForm.validate(valid => {
         self.showError = false
         self.showSuccess = false
         if (valid) {
