@@ -83,6 +83,7 @@ const actions = {
   setRangeDate: ({ commit, dispatch }, rangeDate) => {
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
+    dispatch('getBillingDashboard')
     dispatch('getTransactions')
   },
   setTerm: ({ commit, dispatch }, term) => {
@@ -101,6 +102,8 @@ const actions = {
     commit('setType', '')
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
+    commit('setTransactions', [])
+    dispatch('getBillingDashboard')
   },
 
   postTransaction: ({ state, dispatch }, params) => {
