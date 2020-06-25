@@ -16,15 +16,16 @@
           :name="contractCount"
           :title="makeContractName(contract)"
         >
-          <el-row>
-            <el-col :span="11">
+          <el-row :gutter="24">
+            <el-col :span="12">
               <el-form-item
                 prop="status"
+                label="Status"
               >
                 <el-select
                   v-if="!!form.contracts.length"
                   v-model="contract.status"
-                  placeholder="Status"
+                  placeholder="Ex.: ATIVO"
                 >
                   <el-option
                     label="ATIVO"
@@ -39,9 +40,10 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="11">
+            <el-col :span="12">
               <el-form-item
                 prop="startedDate"
+                label="Início da vigência"
               >
                 <el-date-picker
                   v-model="contract.startedDate"
@@ -54,14 +56,15 @@
             </el-col>
           </el-row>
 
-          <el-row>
-            <el-col :span="11">
+          <el-row :gutter="24">
+            <el-col :span="12">
               <el-form-item
                 prop="invoiceDueDays"
+                label="Vencimento"
               >
                 <el-select
                   v-model="contract.invoiceDueDays"
-                  placeholder="Vencimento"
+                  placeholder="Dia do mês"
                 >
                   <el-option
                     v-for="(day, dayCount) in 31"
@@ -74,13 +77,14 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="11">
+            <el-col :span="12">
               <el-form-item
                 prop="invoiceClosingDay"
+                label="Fechamento"
               >
                 <el-select
                   v-model="contract.invoiceClosingDay"
-                  placeholder="Fechamento"
+                  placeholder="Dia do mês"
                 >
                   <el-option
                     v-for="(day, dayCount) in 31"
@@ -94,10 +98,11 @@
             </el-col>
           </el-row>
 
-          <el-row>
-            <el-col :span="11">
+          <el-row :gutter="24">
+            <el-col :span="12">
               <el-form-item
                 prop="plan"
+                label="Plano"
               >
                 <el-select
                   v-model="contract.planId"
@@ -112,24 +117,25 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="11">
+            <el-col :span="12">
               <el-form-item
                 prop="monthlySubscriptionFee"
+                label="Mensalidade"
               >
                 <el-input
                   v-model="contract.monthlySubscriptionFee"
-                  placeholder="Mensalidade"
+                  placeholder="Valor da mensalidade"
                 />
                 <el-form-item />
               </el-form-item>
             </el-col>
           </el-row>
 
-          <el-row>
+          <el-row :gutter="24">
             <el-col
               v-for="(tariffLabel, tariffKey, tariffCount) in tariffTypes"
               :key="tariffCount"
-              :span="11"
+              :span="12"
             >
               <el-form-item
                 v-if="contract.tariffs"
@@ -145,14 +151,15 @@
           name="newContract"
           title="Novo contrato"
         >
-          <el-row>
-            <el-col :span="11">
+          <el-row :gutter="24">
+            <el-col :span="12">
               <el-form-item
                 prop="status"
+                label="Status"
               >
                 <el-select
                   v-model="newContract.status"
-                  placeholder="Status"
+                  placeholder="Ex.: ATIVO"
                 >
                   <el-option
                     label="ATIVO"
@@ -167,9 +174,10 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="11">
+            <el-col :span="12">
               <el-form-item
                 prop="startedDate"
+                label="Início da vigência"
               >
                 <el-date-picker
                   v-model="newContract.startedDate"
@@ -182,14 +190,15 @@
             </el-col>
           </el-row>
 
-          <el-row>
-            <el-col :span="11">
+          <el-row :gutter="24">
+            <el-col :span="12">
               <el-form-item
                 prop="invoiceDueDays"
+                label="Vencimento"
               >
                 <el-select
                   v-model="newContract.invoiceDueDays"
-                  placeholder="Vencimento"
+                  placeholder="Dia do mês"
                 >
                   <el-option
                     v-for="(day, dayCount) in 31"
@@ -202,13 +211,14 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="11">
+            <el-col :span="12">
               <el-form-item
                 prop="invoiceClosingDay"
+                label="Fechamento"
               >
                 <el-select
                   v-model="newContract.invoiceClosingDay"
-                  placeholder="Fechamento"
+                  placeholder="Dia do mês"
                 >
                   <el-option
                     v-for="(day, dayCount) in 31"
@@ -222,10 +232,11 @@
             </el-col>
           </el-row>
 
-          <el-row>
-            <el-col :span="11">
+          <el-row :gutter="24">
+            <el-col :span="12">
               <el-form-item
                 prop="plan"
+                label="Plano"
               >
                 <el-select
                   v-model="newContract.planId"
@@ -240,24 +251,25 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="11">
+            <el-col :span="12">
               <el-form-item
                 prop="monthlySubscriptionFee"
+                label="Mensalidade"
               >
                 <el-input
                   v-model="newContract.monthlySubscriptionFee"
-                  placeholder="Mensalidade"
+                  placeholder="Valor da mensalidade"
                 />
                 <el-form-item />
               </el-form-item>
             </el-col>
           </el-row>
 
-          <el-row>
+          <el-row :gutter="24">
             <el-col
               v-for="(tariffLabel, tariffKey, tariffCount) in tariffTypes"
               :key="tariffCount"
-              :span="11"
+              :span="12"
             >
               <el-form-item :label="tariffLabel">
                 <el-input v-model="newContract.tariffs[tariffKey]" />
@@ -300,7 +312,7 @@ export default {
       isFormVisible: true,
       formRules: {
         status: '',
-        startedDate: '',
+        startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'blur' }],
         invoiceDueDays: 0,
         invoiceClosingDay: 0,
         plan: 0,
