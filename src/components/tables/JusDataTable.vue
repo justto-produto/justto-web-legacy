@@ -52,16 +52,18 @@
       <template slot-scope="scope">
         <span class="data-table__dispute-link">
           <el-link
+            v-if="scope.row.referenceId"
             :underline="false"
             :href="`https://justto.app/#/management/dispute/${scope.row.referenceId}`"
             target="_blank"
           >
-            {{ scope.row.referenceId || '-' }}
+            {{ scope.row.referenceId }}
             <jus-icon
               icon="external-link"
               class="data-table__dispute-link-icon"
             />
           </el-link>
+          <span v-else>-</span>
         </span>
       </template>
     </el-table-column>
@@ -130,7 +132,7 @@ export default {
           icon: 'trash',
           label: 'Cancelar lançamento',
           trigger: 'cancelTransaction',
-          condition: (value) => !value,
+          condition: (value) => !!value,
         },
       ],
     }

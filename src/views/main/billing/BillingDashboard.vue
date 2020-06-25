@@ -180,7 +180,7 @@ export default {
       },
       addTransactionActionParams: {
         icon: 'add',
-        label: 'Novo lançamento',
+        label: 'Criar lançamento manual',
         trigger: 'addTransaction',
       },
       addTransactionDialogVisable: false,
