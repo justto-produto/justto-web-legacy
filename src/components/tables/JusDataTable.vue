@@ -1,5 +1,7 @@
 <template>
   <el-table
+    v-loading="loading"
+    :element-loading-text="loadingText"
     :data="data"
     size="mini"
     height="100%"
@@ -123,6 +125,14 @@ export default {
     data: {
       type: Array,
       required: true,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+    loadingText: {
+      type: String,
+      default: 'Carregando...',
     },
   },
   data() {

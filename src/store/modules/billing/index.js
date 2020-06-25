@@ -21,6 +21,7 @@ const billing = {
       size: 9999,
     },
     billingDashboard: {},
+    tableLoading: false,
   },
   mutations: mutations,
   actions: actions,

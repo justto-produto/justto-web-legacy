@@ -83,6 +83,8 @@
         >
           <JusDataTable
             :data="transactionsList"
+            :loading="tableLoading"
+            loading-text="Aguarde enquanto buscamos seus lançamentos financeiros ..."
             class="billing-view__data-table"
             @floatAction="handlerAction"
           />
@@ -199,12 +201,15 @@ export default {
     ...mapGetters([
       'billingDashboard',
       'isJusttoAdmin',
+      'tableLoading',
       'transactions',
       'workspaceId',
     ]),
 
     tableSubtitle() {
-      if (this.activeTypeFilter) {
+      if (this.tableLoading) {
+        return `Buscando lançamentos para ${this.activeTypeFilter.toUpperCase()}`
+      } else if (this.activeTypeFilter) {
         return `Exibindo ${this.transactionsList.length} de ${this.transactions.totalElements || 0} resultados para o filtro ${this.activeTypeFilter.toUpperCase()}`
       } else {
         return 'Selecione um tipo de lançamento para exibir'
