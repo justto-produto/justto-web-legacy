@@ -3,55 +3,40 @@
     shadow="hover"
     class="jus-user-card"
   >
-    <div
-      slot="header"
-      class="jus-user-card__header"
-    >
-      <div>
-        <i
-          class="el-icon-close jus-user-card__icon jus-user-card__icon--danger"
-          @click="emitCloseEvent"
-        />
-
-        <i
-          class="el-icon-edit jus-user-card__icon jus-user-card__icon--info"
-          @click="emitEditEvent"
-        />
-      </div>
-
-      <div>
-        <el-tooltip content="Contrato">
-          <el-tag
-            :type="contractStatus.type"
-            effect="dark"
-            size="small"
-          >
-            {{ contractStatus.label }}
-          </el-tag>
-        </el-tooltip>
-      </div>
-    </div>
-
     <div class="jus-user-card__wrapper">
-      <jus-avatar-user
-        :name="userDataBind.name"
-        size="lg"
-        shape="circle"
-        class="jus-user-card__avatar"
-      />
-
       <JusTextEditable
         :value="userDataBind.name"
+        type="title"
         class="jus-user-card__title"
         @hasEdition="emitEditTitle"
       />
 
       <div class="jus-user-card__actions">
+        <div class="jus-user-card__actions-row">
+          <el-tooltip content="Desassociar cliente da workspace">
+            <el-button
+              type="danger"
+              icon="el-icon-close"
+              circle
+              @click="emitCloseEvent"
+            />
+          </el-tooltip>
+
+          <el-tooltip content="Contratos do cliente">
+            <el-button
+              type="info"
+              icon="el-icon-edit"
+              circle
+              @click="emitEditEvent"
+            />
+          </el-tooltip>
+        </div>
+
         <el-button
           type="primary"
           @click.native="emitSeeMore"
         >
-          Ver mais
+          Ver lançamentos
         </el-button>
       </div>
     </div>
@@ -127,7 +112,7 @@ export default {
   .jus-user-card__header {
     align-items: center;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
   }
 
   .jus-user-card__icon {
@@ -149,23 +134,25 @@ export default {
   }
 
   .jus-user-card__title {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-weight: 700;
+    height: 40px;
     text-align: center;
-    margin: 16px 0;
   }
 
   .jus-user-card__actions {
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 
-    .jus-user-card__button {
-      margin-right: 16px;
-
-      &:last-child {
-        margin-right: 0;
-      }
+    .jus-user-card__actions-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+      width: 100%;
     }
   }
 }
@@ -180,9 +167,8 @@ export default {
       align-items: center;
       display: flex;
       flex-direction: column;
-      height: 100%;
       justify-content: space-between;
-      min-height: 250px;
+      min-height: 200px;
       width: 100%;
 
       .jus-user-card__avatar {

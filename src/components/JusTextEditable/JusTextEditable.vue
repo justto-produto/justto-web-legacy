@@ -25,7 +25,8 @@
       {{ value }}
       <jus-icon
         class="edit-icon"
-        icon="edit"/>
+        icon="edit"
+      />
     </span>
   </div>
 </template>
