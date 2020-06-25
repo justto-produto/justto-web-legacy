@@ -24,9 +24,19 @@
       {{ cardTitle | capitalize }}
     </span>
 
-    <span class="jus-financial-card__cash">
-      {{ data.revenue | currency }}
-    </span>
+    <div class="jus-financial-card__cash">
+      <span>{{ data.revenue | currency }}</span>
+      <span
+        v-if="data.archived"
+        class="jus-financial-card__alerts">
+        <el-tooltip :content="totalArchivedTooltip">
+          <span class="jus-financial-card__span">
+            {{ totalArchived }}
+          </span>
+        </el-tooltip>
+      </span>
+    </div>
+
   </el-card>
 </template>
 
@@ -54,6 +64,22 @@ export default {
       const title = this.data.title
 
       return title + computedTotal
+    },
+
+    totalArchivedTooltip() {
+      return `${this.data.archived.total} disputa${this.isPlural} exluída${this.isPlural} correspondente${this.isPlural} a ${this.archivedRevenue}`
+    },
+
+    totalArchived() {
+      return `${this.data.archived.total} disputa${this.isPlural} excluída${this.isPlural} (${this.archivedRevenue})`
+    },
+
+    archivedRevenue() {
+      return this.$options.filters.currency(this.data.archived.revenue)
+    },
+
+    isPlural() {
+      return this.data.archived.total > 1 ? 's' : ''
     },
   },
   methods: {
@@ -112,8 +138,26 @@ export default {
 
   .jus-financial-card__cash {
     color: $--color-primary-light-3;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
+    display: flex;
+    flex-direction: column;
+
+    .jus-financial-card__alerts {
+      line-height: 0;
+      margin-top: 4px;
+
+      .jus-financial-card__span {
+        color: $--color-text-primary;
+        font-size: 12px;
+        font-style: italic;
+        font-weight: normal;
+      }
+
+      .jus-financial-card__icon {
+        margin-right: 2px;
+      }
+    }
   }
 }
 </style>
@@ -126,7 +170,7 @@ export default {
     gap: 8px;
     grid-template-rows: repeat(2, auto);
     height: 100%;
-    padding: 24px;
+    padding: 32px 24px;
     position: relative;
   }
 }

@@ -289,7 +289,7 @@
       slot="footer"
       class="dialog-footer"
     >
-      <el-button @click="dialogFormVisible = false">Cancelar</el-button>
+      <el-button @click="closeModal">Cancelar</el-button>
       <el-button
         type="primary"
         @click.native="saveContract"
@@ -356,6 +356,11 @@ export default {
           contract: newContract,
         })
       }
+
+      this.closeModal()
+    },
+    closeModal() {
+      this.isFormVisible = false
     },
   },
 }
@@ -363,6 +368,11 @@ export default {
 
 <style lang="scss">
 .contracts-modal {
+  .el-dialog {
+    max-height: 100%;
+    overflow: auto;
+  }
+
   .el-row {
     display: flex;
     flex-wrap: wrap;
