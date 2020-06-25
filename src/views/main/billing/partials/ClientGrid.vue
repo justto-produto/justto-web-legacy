@@ -29,7 +29,7 @@
         class="client-grid__form-card"
       >
         <span class="client-grid__form-title">
-          Escreva o nome do cliente!
+          Digite o nome do cliente abaixo para buscar um existente ou criar um novo.
         </span>
 
         <el-autocomplete
@@ -41,10 +41,11 @@
         />
 
         <el-button
+          v-if="inputValue"
           type="primary"
           @click.native="addClient"
         >
-          Ok!
+          Vincular cliente
         </el-button>
       </el-card>
     </jus-grid>
@@ -191,18 +192,18 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 348px;
     justify-content: center;
 
     .client-grid__form-title {
       display: block;
       font-size: 14px;
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 16px;
     }
 
     .client-grid__autocomplete {
       margin-bottom: 24px;
+      width: 100%;
     }
   }
 }

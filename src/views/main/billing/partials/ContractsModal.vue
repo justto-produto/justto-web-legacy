@@ -141,7 +141,10 @@
                 v-if="contract.tariffs"
                 :label="tariffLabel"
               >
-                <el-input v-model="contract.tariffs[tariffKey]" />
+                <el-input
+                  v-model="contract.tariffs[tariffKey]"
+                  placeholder="Valor em reais"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -272,7 +275,10 @@
               :span="12"
             >
               <el-form-item :label="tariffLabel">
-                <el-input v-model="newContract.tariffs[tariffKey]" />
+                <el-input
+                  v-model="newContract.tariffs[tariffKey]"
+                  placeholder="Valor em reais"
+                />
               </el-form-item>
             </el-col>
           </el-row>
