@@ -176,7 +176,6 @@ export default {
     font-size: 18px;
     font-weight: 700;
     height: 100%;
-    min-height: 348px;
     justify-content: center;
   }
 
