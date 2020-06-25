@@ -62,7 +62,8 @@ const actions = {
       data: contract,
     }).then(() => dispatch('getMyCusomers')),
 
-  getTransactions: ({ state }) => {
+  getTransactions: ({ commit, state }) => {
+    commit('setTableLoading', true)
     const query = {
       ...state.query,
       customerId: state.currentCustomer.customerId,
@@ -71,6 +72,8 @@ const actions = {
     return axiosDispatcher({
       url: `api/billing/transaction${queryBuilder(query)}`,
       mutation: 'setTransactions',
+    }).finally(() => {
+      commit('setTableLoading', false)
     })
   },
 

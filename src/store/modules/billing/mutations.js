@@ -15,6 +15,7 @@ const mutations = {
   setWorkspaceId: (state, workspaceId) => (state.query.workspaceId = workspaceId),
   setType: (state, type) => (state.query.type = type),
   setTerm: (state, term) => (state.query.term = term),
+  setTableLoading: (state, tableLoading) => (state.tableLoading = tableLoading),
 }
 
 export default mutations
