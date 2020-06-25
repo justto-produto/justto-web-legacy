@@ -9,6 +9,7 @@
     "comma-dangle": ["error", "always-multiline"],
     "no-var": "error",
     "prefer-const":"warn",
+    "no-debugger": "warn",
     "standard/no-callback-literal": 0,
     "vue/max-attributes-per-line": [
       "error",

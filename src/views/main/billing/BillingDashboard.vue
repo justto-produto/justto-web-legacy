@@ -55,8 +55,10 @@
         />
         <jus-financial-card
           v-grid-item.col-1.row-2
-          :data="totalCard"
+          :data="totalCard.data"
+          :actions="totalCard.actions"
           highlighted
+          @cardAction="handlerAction"
         />
       </jus-grid>
 
@@ -72,7 +74,7 @@
             @input="filterByTerm"
           />
           <span class="billing-view__table-filter-counter">
-            Exibindo {{ transactionsList.length }} de {{ transactions.totalElements || 0 }} resultados
+            {{ tableSubtitle }}
           </span>
         </div>
         <el-card
@@ -190,6 +192,7 @@ export default {
         note: '',
         occurredDate: '',
       },
+      activeTypeFilter: '',
     }
   },
   computed: {
@@ -199,6 +202,14 @@ export default {
       'transactions',
       'workspaceId',
     ]),
+
+    tableSubtitle() {
+      if (this.activeTypeFilter) {
+        return `Exibindo ${this.transactionsList.length} de ${this.transactions.totalElements || 0} resultados para o filtro ${this.activeTypeFilter.toUpperCase()}`
+      } else {
+        return 'Selecione um tipo de lançamento para exibir'
+      }
+    },
 
     transactionsList() {
       return this.transactions.content ? this.transactions.content : []
@@ -215,17 +226,27 @@ export default {
             return { data, actions: [this.filterTransactionsActionParams, this.filterDisputesActionParams] }
           }
         })
-      }
-
-      return null
+      } return null
     },
 
     totalCard() {
       let revenue = 0
+      let total = 0
       if (this.billingDashboard) {
-        for (const d of Array.from(this.billingDashboard)) revenue += d.revenue
+        for (const d of Array.from(this.billingDashboard)) {
+          revenue += d.revenue
+          total += d.total
+        }
       }
-      return { title: 'total', revenue }
+      return {
+        data: {
+          type: '',
+          title: 'total',
+          revenue,
+          total,
+        },
+        actions: [this.filterTransactionsActionParams],
+      }
     },
 
     initialDateRange() {
@@ -271,6 +292,7 @@ export default {
       this.rangeDebounce = setTimeout(() => {
         this.setRangeDate(this.dateRange)
       }, 800)
+      this.activeTypeFilter = this.activeTypeFilter ? this.activeTypeFilter : 'TOTAL'
     },
 
     handlerAction(evt) {
@@ -280,6 +302,7 @@ export default {
 
     showTransactionsAction(evt) {
       const type = evt.eventProps.customProps.type !== 'OTHERS' ? evt.eventProps.customProps.type : 'MANUAL'
+      this.activeTypeFilter = evt.eventProps.customProps.title
       this.setType(type)
     },
 
