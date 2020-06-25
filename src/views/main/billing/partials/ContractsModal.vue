@@ -141,7 +141,10 @@
                 v-if="contract.tariffs"
                 :label="tariffLabel"
               >
-                <el-input v-model="contract.tariffs[tariffKey]" />
+                <el-input
+                  v-model="contract.tariffs[tariffKey]"
+                  placeholder="Valor em reais"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -272,7 +275,10 @@
               :span="12"
             >
               <el-form-item :label="tariffLabel">
-                <el-input v-model="newContract.tariffs[tariffKey]" />
+                <el-input
+                  v-model="newContract.tariffs[tariffKey]"
+                  placeholder="Valor em reais"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -283,7 +289,7 @@
       slot="footer"
       class="dialog-footer"
     >
-      <el-button @click="dialogFormVisible = false">Cancelar</el-button>
+      <el-button @click="closeModal">Cancelar</el-button>
       <el-button
         type="primary"
         @click.native="saveContract"
@@ -350,6 +356,11 @@ export default {
           contract: newContract,
         })
       }
+
+      this.closeModal()
+    },
+    closeModal() {
+      this.isFormVisible = false
     },
   },
 }
@@ -357,6 +368,11 @@ export default {
 
 <style lang="scss">
 .contracts-modal {
+  .el-dialog {
+    max-height: 100%;
+    overflow: auto;
+  }
+
   .el-row {
     display: flex;
     flex-wrap: wrap;
