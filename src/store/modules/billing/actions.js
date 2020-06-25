@@ -86,9 +86,8 @@ const actions = {
     })
   },
 
-  setCustomer: ({ commit, dispatch }, customerData) => {
+  setCustomer: ({ commit }, customerData) => {
     commit('setCustomer', customerData)
-    dispatch('getTransactions')
   },
   setCustomerId: ({ commit }, customerId) => {
     commit('setCustomerId', customerId)
@@ -111,13 +110,12 @@ const actions = {
   setWorkspaceId: ({ commit }, workspaceId) => {
     commit('setWorkspaceId', workspaceId)
   },
-  clearTransactionsQuery: ({ commit, dispatch }, rangeDate) => {
+  clearTransactionsQuery: ({ commit }, rangeDate) => {
     commit('setTerm', '')
     commit('setType', '')
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
     commit('setTransactions', [])
-    dispatch('getBillingDashboard')
   },
 
   postTransaction: ({ state, dispatch }, params) => {
