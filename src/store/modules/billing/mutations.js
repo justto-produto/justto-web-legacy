@@ -10,12 +10,17 @@ const mutations = {
   setContracts: (state, contracts) => (state.currentCustomer.contracts = contracts),
   setBillingDashboard: (state, billingDashboard) => (state.billingDashboard = billingDashboard),
   setTransactions: (state, transactions) => (state.currentCustomer.transactions = transactions),
+  pushTransactions: (state, transactions) => {
+    (state.currentCustomer.transactions.content.push(...transactions.content))
+  },
   setStartDate: (state, startDate) => (state.query.startDate = startDate),
   setFinishDate: (state, finishDate) => (state.query.finishDate = finishDate),
   setWorkspaceId: (state, workspaceId) => (state.query.workspaceId = workspaceId),
   setType: (state, type) => (state.query.type = type),
   setTerm: (state, term) => (state.query.term = term),
   setTableLoading: (state, tableLoading) => (state.tableLoading = tableLoading),
+  addTransactionsQueryPage: (state) => (state.query.page += 1),
+  resetTransactionsQueryPage: (state) => (state.query.page = 1),
 }
 
 export default mutations

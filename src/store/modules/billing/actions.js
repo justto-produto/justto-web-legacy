@@ -62,8 +62,13 @@ const actions = {
       data: contract,
     }).then(() => dispatch('getMyCusomers')),
 
-  getTransactions: ({ commit, state }) => {
-    commit('setTableLoading', true)
+  getTransactions: ({ commit, state }, command) => {
+    if (command) {
+      commit('addTransactionsQueryPage')
+    } else {
+      commit('resetTransactionsQueryPage')
+      commit('setTableLoading', true)
+    }
     const query = {
       ...state.query,
       customerId: state.currentCustomer.customerId,
@@ -71,7 +76,7 @@ const actions = {
 
     return axiosDispatcher({
       url: `api/billing/transaction${queryBuilder(query)}`,
-      mutation: 'setTransactions',
+      mutation: command ? 'pushTransactions' : 'setTransactions',
     }).finally(() => {
       commit('setTableLoading', false)
     })
@@ -118,7 +123,7 @@ const actions = {
     commit('setType', '')
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
-    commit('setTransactions', [])
+    commit('setTransactions', {})
   },
 
   postTransaction: ({ state, dispatch }, params) => {
