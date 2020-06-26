@@ -327,20 +327,20 @@ export default {
   data() {
     return {
       form: this.clientData,
-      isFormVisible: this.visible,
+      isFormVisible: false,
       formRules: {
-        status: '',
         startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'blur' }],
-        invoiceDueDays: 0,
-        invoiceClosingDay: 0,
-        plan: null,
-        monthlySubscriptionFee: 0,
       },
       tariffTypes: TARIFF_TYPES,
       newContract: {
         tariffs: { },
       },
     }
+  },
+  watch: {
+    visible(current) {
+      this.isFormVisible = true
+    },
   },
   methods: {
     ...mapActions([
