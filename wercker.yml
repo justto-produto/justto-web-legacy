@@ -17,13 +17,16 @@ build:
         packages: curl
     - script:
       name: Configure git
-      code: git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
+      code: |
+      git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
+      git remote set-url origin https://dev%40justto.com.br:hMcF2TEAz6Ec@gitlab.com/Justto/front-end/justto-web.git
     - script:
       name: Prepare release branch
       code: |
         git clean -fdx
         git reset --hard
         git checkout release
+        git pull origin release
         git merge develop --commit -m "Merge com a develop para release"
     - script:
         name: Run npm i
@@ -38,8 +41,6 @@ build:
     - script:
         name: Update tag version
         code: |
-          git remote set-url origin https://dev%40justto.com.br:hMcF2TEAz6Ec@gitlab.com/Justto/front-end/justto-web.git
-          git pull origin release
           git add .
           git commit -m 'Release da versao '${CURRENT_VERSION} || echo 'Nada a commitar.'
           git push origin release
