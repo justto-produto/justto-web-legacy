@@ -21,6 +21,7 @@ const billing = {
       size: 20,
       page: 1,
     },
+    plans: [],
     billingDashboard: {},
     tableLoading: false,
   },

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :visible.sync="isFormVisible"
+    :visible.sync="visible"
     :title="`Contratos de ${form.customerName}`"
     class="contracts-modal"
   >
@@ -109,8 +109,10 @@
                   placeholder="Plano"
                 >
                   <el-option
-                    :value="5"
-                    label="teste"
+                    v-for="(plan, index) in plans"
+                    :key="index"
+                    :value="plan.id"
+                    :label="plan.name"
                   />
                 </el-select>
                 <el-form-item />
@@ -311,6 +313,10 @@ export default {
       type: Object,
       required: true,
     },
+    plans: {
+      type: Array,
+      default: () => [],
+    },
     visible: {
       type: Boolean,
       default: false,
@@ -325,7 +331,7 @@ export default {
         startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'blur' }],
         invoiceDueDays: 0,
         invoiceClosingDay: 0,
-        plan: 0,
+        plan: null,
         monthlySubscriptionFee: 0,
       },
       tariffTypes: TARIFF_TYPES,
