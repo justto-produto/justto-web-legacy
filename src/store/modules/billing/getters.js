@@ -4,6 +4,7 @@ const getters = {
   getCurrentCustomer: state => state.currentCustomer,
   transactions: state => state.currentCustomer.transactions,
   billingDashboard: state => state.billingDashboard,
+  tableLoading: state => state.tableLoading,
 }
 
 export default getters

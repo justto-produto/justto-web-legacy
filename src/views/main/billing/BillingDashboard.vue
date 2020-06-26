@@ -83,8 +83,12 @@
         >
           <JusDataTable
             :data="transactionsList"
+            :pagination="transactionsPagination"
+            :loading="tableLoading"
+            loading-text="Aguarde enquanto buscamos seus lançamentos financeiros ..."
             class="billing-view__data-table"
             @floatAction="handlerAction"
+            @infiniteHandler="infiniteHandler"
           />
         </el-card>
       </article>
@@ -195,16 +199,24 @@ export default {
       activeTypeFilter: '',
     }
   },
+  watch: {
+    workspaceId(current, _old, next) {
+      if (current !== next) this.$router.push('/billing')
+    },
+  },
   computed: {
     ...mapGetters([
       'billingDashboard',
       'isJusttoAdmin',
+      'tableLoading',
       'transactions',
       'workspaceId',
     ]),
 
     tableSubtitle() {
-      if (this.activeTypeFilter) {
+      if (this.tableLoading) {
+        return `Buscando lançamentos para ${this.activeTypeFilter.toUpperCase()}`
+      } else if (this.activeTypeFilter) {
         return `Exibindo ${this.transactionsList.length} de ${this.transactions.totalElements || 0} resultados para o filtro ${this.activeTypeFilter.toUpperCase()}`
       } else {
         return 'Selecione um tipo de lançamento para exibir'
@@ -213,6 +225,12 @@ export default {
 
     transactionsList() {
       return this.transactions.content ? this.transactions.content : []
+    },
+
+    transactionsPagination() {
+      const transactionsPagable = JSON.parse(JSON.stringify(this.transactions))
+      delete transactionsPagable.content
+      return transactionsPagable
     },
 
     dataCards() {
@@ -271,6 +289,7 @@ export default {
       'cancelTransaction',
       'clearTransactionsQuery',
       'getBillingDashboard',
+      'getTransactions',
       'postTransaction',
       'setCustomerId',
       'setManagementFilters',
@@ -351,6 +370,27 @@ export default {
         })
       })
     },
+
+    infiniteHandler($state) {
+      this.getTransactions('isInfinit').then(response => {
+        console.log(response)
+        if (response.last) {
+          $state.complete()
+        } else {
+          $state.loaded()
+        }
+      })
+
+      // this.$store.commit('addTransactionQueryPage')
+      // this.$store.dispatch('getTransactions', 'nextPage').then(response => {
+      //   if (response.last) {
+      //     $state.complete()
+      //   } else {
+      //     $state.loaded()
+      //   }
+      // })
+    },
+
   },
 }
 </script>
