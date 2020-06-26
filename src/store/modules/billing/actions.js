@@ -11,7 +11,7 @@ const actions = {
 
   getAllCustomers: () =>
     axiosDispatcher({
-      url: 'api/billing/customer',
+      url: `api/billing/customer/?size=${9999}`,
       mutation: 'setAllCustomers',
     }),
 
