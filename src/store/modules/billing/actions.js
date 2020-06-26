@@ -142,6 +142,7 @@ const actions = {
       },
     }).then(() => {
       dispatch('getTransactions')
+      dispatch('getBillingDashboard')
     })
   },
 

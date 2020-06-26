@@ -397,10 +397,12 @@ export default {
 
 <style lang="scss" scoped>
 .billing-view {
+  overflow: auto;
+
   .billing-view__slot-main {
     height: 100%;
     display: grid;
-    grid-template-rows: repeat(2, auto) 1fr;
+    grid-template-rows: repeat(2, auto) minmax(400px, 1fr);
     gap: 20px;
     position: relative;
 
@@ -431,11 +433,10 @@ export default {
     }
 
     .billing-view__table {
-      padding-top: 12px;
+      padding-top: 8px;
       display: grid;
       gap: 8px;
       grid-template-rows: auto 1fr;
-      overflow: hidden;
 
       .billing-view__table-header {
         display: flex;
