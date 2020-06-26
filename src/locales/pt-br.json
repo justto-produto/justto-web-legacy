@@ -9,7 +9,7 @@
     "mappedCampaign": "nome da campanha",
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
-    "materialDamage": "danos materiais",
+    "materialDamage": "valor dano material",
     "externalId": "código interno da disputa",
     "description": "descrição",
     "provisionedValue": "Valor Provisionado",
