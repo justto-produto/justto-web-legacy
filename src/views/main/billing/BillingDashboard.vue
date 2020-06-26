@@ -367,6 +367,14 @@ export default {
         this[evt.eventProps.trigger]({
           id: evt.eventProps.customProps.id,
           data: { reason: value },
+        }).then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Lançamento cancelado com sucesso',
+          })
+        }).catch(error => {
+          this.$jusNotification({ error })
         })
       })
     },
@@ -380,17 +388,7 @@ export default {
           $state.loaded()
         }
       })
-
-      // this.$store.commit('addTransactionQueryPage')
-      // this.$store.dispatch('getTransactions', 'nextPage').then(response => {
-      //   if (response.last) {
-      //     $state.complete()
-      //   } else {
-      //     $state.loaded()
-      //   }
-      // })
     },
-
   },
 }
 </script>
