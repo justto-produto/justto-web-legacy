@@ -83,10 +83,12 @@
         >
           <JusDataTable
             :data="transactionsList"
+            :pagination="transactionsPagination"
             :loading="tableLoading"
             loading-text="Aguarde enquanto buscamos seus lançamentos financeiros ..."
             class="billing-view__data-table"
             @floatAction="handlerAction"
+            @infiniteHandler="infiniteHandler"
           />
         </el-card>
       </article>
@@ -197,6 +199,11 @@ export default {
       activeTypeFilter: '',
     }
   },
+  watch: {
+    workspaceId(current, _old, next) {
+      if (current !== next) this.$router.push('/billing')
+    },
+  },
   computed: {
     ...mapGetters([
       'billingDashboard',
@@ -218,6 +225,12 @@ export default {
 
     transactionsList() {
       return this.transactions.content ? this.transactions.content : []
+    },
+
+    transactionsPagination() {
+      const transactionsPagable = JSON.parse(JSON.stringify(this.transactions))
+      delete transactionsPagable.content
+      return transactionsPagable
     },
 
     dataCards() {
@@ -276,6 +289,7 @@ export default {
       'cancelTransaction',
       'clearTransactionsQuery',
       'getBillingDashboard',
+      'getTransactions',
       'postTransaction',
       'setCustomerId',
       'setManagementFilters',
@@ -356,6 +370,27 @@ export default {
         })
       })
     },
+
+    infiniteHandler($state) {
+      this.getTransactions('isInfinit').then(response => {
+        console.log(response)
+        if (response.last) {
+          $state.complete()
+        } else {
+          $state.loaded()
+        }
+      })
+
+      // this.$store.commit('addTransactionQueryPage')
+      // this.$store.dispatch('getTransactions', 'nextPage').then(response => {
+      //   if (response.last) {
+      //     $state.complete()
+      //   } else {
+      //     $state.loaded()
+      //   }
+      // })
+    },
+
   },
 }
 </script>

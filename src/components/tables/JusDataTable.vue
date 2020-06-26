@@ -112,6 +112,21 @@
         </span>
       </transition>
     </template>
+    <infinite-loading
+      v-if="pagination.totalElements >= 20"
+      slot="append"
+      :distance="20"
+      spinner="spiral"
+      force-use-infinite-wrapper=".el-table__body-wrapper"
+      @infinite="infiniteHandler"
+    >
+      <div slot="no-more">
+        Fim dos lançamentos
+      </div>
+      <div slot="no-results">
+        Fim dos lançamentos
+      </div>
+    </infinite-loading>
   </el-table>
 </template>
 
@@ -119,12 +134,17 @@
 export default {
   name: 'JusDataTable',
   components: {
+    InfiniteLoading: () => import('vue-infinite-loading'),
     JusFloatActions: () => import('@/components/others/JusFloatActions'),
   },
   props: {
     data: {
       type: Array,
       required: true,
+    },
+    pagination: {
+      type: Object,
+      required: false,
     },
     loading: {
       type: Boolean,
@@ -157,6 +177,10 @@ export default {
 
     transactionResume(transaction) {
       return this.$options.filters.capitalize(this.$t(`transactions.${transaction.type}`)) + (transaction.type !== 'MANUAL' ? ' na disputa #' + transaction.referenceId + '<br>' + transaction.code : '')
+    },
+
+    infiniteHandler($state) {
+      this.$emit('infiniteHandler', $state)
     },
   },
 }

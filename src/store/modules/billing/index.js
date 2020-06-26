@@ -10,7 +10,7 @@ const billing = {
       contracts: [],
       customerId: 70,
       customerName: '',
-      transactions: [],
+      transactions: {},
     },
     query: {
       startDate: '',
@@ -18,7 +18,8 @@ const billing = {
       workspaceId: null,
       type: '',
       term: '',
-      size: 9999,
+      size: 20,
+      page: 1,
     },
     billingDashboard: {},
     tableLoading: false,
