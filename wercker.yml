@@ -18,8 +18,8 @@ build:
     - script:
       name: Configure git
       code: |
-      git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
-      git remote set-url origin https://dev%40justto.com.br:hMcF2TEAz6Ec@gitlab.com/Justto/front-end/justto-web.git
+        git config --global user.name "wercker" && git config --global user.email "dev@justto.com.br"
+        git remote set-url origin https://dev%40justto.com.br:hMcF2TEAz6Ec@gitlab.com/Justto/front-end/justto-web.git
     - script:
       name: Prepare release branch
       code: |
