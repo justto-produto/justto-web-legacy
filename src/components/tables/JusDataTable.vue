@@ -19,7 +19,11 @@
       label="Lançamento"
     >
       <template slot-scope="scope">
-        <span v-html="transactionResume(scope.row)" />
+        <el-tooltip
+          :disabled="scope.row.type !== 'MANUAL'"
+          :content="transactionNote(scope.row.note)">
+          <span v-html="transactionResume(scope.row)" />
+        </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column
@@ -177,6 +181,10 @@ export default {
 
     transactionResume(transaction) {
       return this.$options.filters.capitalize(this.$t(`transactions.${transaction.type}`)) + (transaction.type !== 'MANUAL' ? ' na disputa #' + transaction.referenceId + '<br>' + transaction.code : '')
+    },
+
+    transactionNote(note) {
+      return note || 'Ops! Não há nota para este lançamento.'
     },
 
     infiniteHandler($state) {
