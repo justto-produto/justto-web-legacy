@@ -19,7 +19,9 @@
       label="Lançamento"
     >
       <template slot-scope="scope">
-        <el-tooltip :content="transactionNote(scope.row.note)">
+        <el-tooltip
+          :disabled="scope.row.type !== 'MANUAL'"
+          :content="transactionNote(scope.row.note)">
           <span v-html="transactionResume(scope.row)" />
         </el-tooltip>
       </template>
