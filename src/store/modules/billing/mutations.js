@@ -10,9 +10,7 @@ const mutations = {
   setContracts: (state, contracts) => (state.currentCustomer.contracts = contracts),
   setBillingDashboard: (state, billingDashboard) => (state.billingDashboard = billingDashboard),
   setTransactions: (state, transactions) => (state.currentCustomer.transactions = transactions),
-  pushTransactions: (state, transactions) => {
-    (state.currentCustomer.transactions.content.push(...transactions.content))
-  },
+  pushTransactions: (state, transactions) => (state.currentCustomer.transactions.content.push(...transactions.content)),
   setStartDate: (state, startDate) => (state.query.startDate = startDate),
   setFinishDate: (state, finishDate) => (state.query.finishDate = finishDate),
   setWorkspaceId: (state, workspaceId) => (state.query.workspaceId = workspaceId),

@@ -199,6 +199,11 @@ export default {
       activeTypeFilter: '',
     }
   },
+  watch: {
+    workspaceId(current, _old, next) {
+      if (current !== next) this.$router.push('/billing')
+    },
+  },
   computed: {
     ...mapGetters([
       'billingDashboard',

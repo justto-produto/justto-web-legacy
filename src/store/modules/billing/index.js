@@ -10,7 +10,7 @@ const billing = {
       contracts: [],
       customerId: 70,
       customerName: '',
-      transactions: [],
+      transactions: {},
     },
     query: {
       startDate: '',
