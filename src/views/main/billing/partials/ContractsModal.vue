@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :visible.sync="visible"
+    :visible.sync="isFormVisible"
     :title="`Contratos de ${form.customerName}`"
     class="contracts-modal"
   >
