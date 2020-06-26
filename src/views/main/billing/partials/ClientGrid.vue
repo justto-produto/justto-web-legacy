@@ -52,6 +52,7 @@
 
     <ContractsModal
       :client-data="form"
+      :plans="plans"
       :visible="dialogFormVisible"
     />
   </div>
@@ -80,8 +81,9 @@ export default {
       currentCustomer: 'getCurrentCustomer',
       custumerList: 'getMyCusomers',
       custumerSuggestions: 'getAllCusomers',
-      workspaceId: 'workspaceId',
       isJusttoAdmin: 'isJusttoAdmin',
+      plans: 'getPlans',
+      workspaceId: 'workspaceId',
     }),
   },
   beforeMount() {
@@ -90,6 +92,7 @@ export default {
     this.getMyCusomers()
     this.getAllCustomers()
     this.setWorkspaceId(this.workspaceId)
+    this.getPlans()
 
     this.form = this.currentCustomer
   },
@@ -99,6 +102,7 @@ export default {
       'associateCustomer',
       'getAllCustomers',
       'getMyCusomers',
+      'getPlans',
       'setCustomer',
       'setWorkspaceId',
       'unlinkCustomer',

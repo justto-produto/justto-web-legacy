@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :visible.sync="isFormVisible"
+    :visible.sync="visible"
     :title="`Contratos de ${form.customerName}`"
     class="contracts-modal"
   >
@@ -109,8 +109,10 @@
                   placeholder="Plano"
                 >
                   <el-option
-                    :value="5"
-                    label="teste"
+                    v-for="(plan, index) in plans"
+                    :key="index"
+                    :value="plan.id"
+                    :label="plan.name"
                   />
                 </el-select>
                 <el-form-item />
@@ -246,8 +248,10 @@
                   placeholder="Plano"
                 >
                   <el-option
-                    :value="5"
-                    label="teste"
+                    v-for="(plan, index) in plans"
+                    :key="index"
+                    :value="plan.id"
+                    :label="plan.name"
                   />
                 </el-select>
                 <el-form-item />
@@ -310,6 +314,10 @@ export default {
     clientData: {
       type: Object,
       required: true,
+    },
+    plans: {
+      type: Array,
+      default: () => [],
     },
     visible: {
       type: Boolean,
