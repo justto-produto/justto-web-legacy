@@ -248,8 +248,10 @@
                   placeholder="Plano"
                 >
                   <el-option
-                    :value="5"
-                    label="teste"
+                    v-for="(plan, index) in plans"
+                    :key="index"
+                    :value="plan.id"
+                    :label="plan.name"
                   />
                 </el-select>
                 <el-form-item />
