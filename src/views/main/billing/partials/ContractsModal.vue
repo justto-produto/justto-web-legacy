@@ -2,6 +2,7 @@
   <el-dialog
     :visible.sync="isFormVisible"
     :title="`Contratos de ${form.customerName}`"
+    :close-on-click-modal="false"
     class="contracts-modal"
   >
     <el-form
