@@ -311,11 +311,15 @@ export default {
       type: Object,
       required: true,
     },
+    visible: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       form: this.clientData,
-      isFormVisible: true,
+      isFormVisible: this.visible,
       formRules: {
         status: '',
         startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'blur' }],
@@ -358,6 +362,12 @@ export default {
       }
 
       this.closeModal()
+
+      this.$jusNotification({
+        type: 'success',
+        title: 'Yay!',
+        message: 'Contratos editados com sucesso.',
+      })
     },
     closeModal() {
       this.isFormVisible = false

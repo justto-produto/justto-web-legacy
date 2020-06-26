@@ -51,8 +51,8 @@
     </jus-grid>
 
     <ContractsModal
-      v-if="dialogFormVisible"
       :client-data="form"
+      :visible="dialogFormVisible"
     />
   </div>
 </template>
