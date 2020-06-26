@@ -62,6 +62,12 @@ const actions = {
       data: contract,
     }).then(() => dispatch('getMyCusomers')),
 
+  getPlans: () => axiosDispatcher({
+    url: 'api/billing/plans',
+    method: 'get',
+    mutation: 'setPlans',
+  }),
+
   getTransactions: ({ commit, state }, command) => {
     if (command) {
       commit('addTransactionsQueryPage')
