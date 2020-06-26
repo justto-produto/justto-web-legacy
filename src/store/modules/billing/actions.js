@@ -48,11 +48,14 @@ const actions = {
     })
   },
 
-  addContract: ({ dispatch }, { customerId, contract }) =>
+  addContract: ({ dispatch, state }, { customerId, contract }) =>
     axiosDispatcher({
       url: `api/billing/customer/${customerId}/contract`,
       method: 'post',
-      data: contract,
+      data: {
+        ...contract,
+        workspaceId: state.query.workspaceId,
+      },
     }).then(() => dispatch('getMyCusomers')),
 
   updateContract: ({ dispatch }, { customerId, contract }) =>
