@@ -124,7 +124,7 @@ export default {
     handleEdit(userData) {
       this.setCustomer(userData)
       this.form = this.currentCustomer
-      this.dialogFormVisible = true
+      this.dialogFormVisible = !this.dialogFormVisible
     },
     handleClose(userData) {
       this.$confirm('Tem certeza que deseja desvincular este cliente dassa workspace?', 'Atenção', {
