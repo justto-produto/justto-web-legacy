@@ -330,7 +330,7 @@ export default {
       form: this.clientData,
       isFormVisible: false,
       formRules: {
-        startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'blur' }],
+        startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'submit' }],
       },
       tariffTypes: TARIFF_TYPES,
       newContract: {
