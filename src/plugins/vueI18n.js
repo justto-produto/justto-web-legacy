@@ -15,9 +15,11 @@ function loadLocaleMessages() {
       messages[locale] = locales(key)
     }
   })
+  // eslint-disable-next-line no-prototype-builtins
   if (messages.hasOwnProperty('en')) {
-    messages['en'].el = Object.assign(enLocale.el, messages['en'].el)
+    messages.en.el = Object.assign(enLocale.el, messages.en.el)
   }
+  // eslint-disable-next-line no-prototype-builtins
   if (messages.hasOwnProperty('pt-br')) {
     messages['pt-br'].el = Object.assign(brlocale.el, messages['pt-br'].el)
   }

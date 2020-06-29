@@ -2,10 +2,17 @@
   <jus-view-main
     :loading-container="false"
     full-screen
-    class="billing-view">
+    class="billing-view"
+  >
     <div
       slot="main"
-      class="billing-view__slot-main">
+      class="billing-view__slot-main"
+    >
+
+      <JusButtonBack
+        to="/billing"
+        class="billing-view__back-button"
+      />
 
       <JusButtonBack
         to="/billing"
@@ -48,8 +55,10 @@
         />
         <jus-financial-card
           v-grid-item.col-1.row-2
-          :data="totalCard"
+          :data="totalCard.data"
+          :actions="totalCard.actions"
           highlighted
+          @cardAction="handlerAction"
         />
       </jus-grid>
 
@@ -65,16 +74,21 @@
             @input="filterByTerm"
           />
           <span class="billing-view__table-filter-counter">
-            Exibindo {{ transactionsList.length }} de {{ transactions.totalElements || 0 }} resultados
+            {{ tableSubtitle }}
           </span>
         </div>
         <el-card
           class="billing-view__table-body"
-          shadow="never">
+          shadow="never"
+        >
           <JusDataTable
             :data="transactionsList"
+            :pagination="transactionsPagination"
+            :loading="tableLoading"
+            loading-text="Aguarde enquanto buscamos seus lançamentos financeiros ..."
             class="billing-view__data-table"
             @floatAction="handlerAction"
+            @infiniteHandler="infiniteHandler"
           />
         </el-card>
       </article>
@@ -167,12 +181,12 @@ export default {
       },
       filterDisputesActionParams: {
         icon: 'management',
-        label: 'Filtrar gerenciamento',
+        label: 'Visualizar disputas no gerenciamento',
         trigger: 'showDisputes',
       },
       addTransactionActionParams: {
         icon: 'add',
-        label: 'Novo lançamento',
+        label: 'Criar lançamento manual',
         trigger: 'addTransaction',
       },
       addTransactionDialogVisable: false,
@@ -182,18 +196,41 @@ export default {
         note: '',
         occurredDate: '',
       },
+      activeTypeFilter: '',
     }
+  },
+  watch: {
+    workspaceId(current, _old, next) {
+      if (current !== next) this.$router.push('/billing')
+    },
   },
   computed: {
     ...mapGetters([
       'billingDashboard',
       'isJusttoAdmin',
+      'tableLoading',
       'transactions',
       'workspaceId',
     ]),
 
+    tableSubtitle() {
+      if (this.tableLoading) {
+        return `Buscando lançamentos para ${this.activeTypeFilter.toUpperCase()}`
+      } else if (this.activeTypeFilter) {
+        return `Exibindo ${this.transactionsList.length} de ${this.transactions.totalElements || 0} resultados para o filtro ${this.activeTypeFilter.toUpperCase()}`
+      } else {
+        return 'Selecione um tipo de lançamento para exibir'
+      }
+    },
+
     transactionsList() {
       return this.transactions.content ? this.transactions.content : []
+    },
+
+    transactionsPagination() {
+      const transactionsPagable = JSON.parse(JSON.stringify(this.transactions))
+      delete transactionsPagable.content
+      return transactionsPagable
     },
 
     dataCards() {
@@ -207,15 +244,27 @@ export default {
             return { data, actions: [this.filterTransactionsActionParams, this.filterDisputesActionParams] }
           }
         })
-      }
+      } return null
     },
 
     totalCard() {
       let revenue = 0
+      let total = 0
       if (this.billingDashboard) {
-        for (const d of Array.from(this.billingDashboard)) revenue += d.revenue
+        for (const d of Array.from(this.billingDashboard)) {
+          revenue += d.revenue
+          total += d.total
+        }
       }
-      return { title: 'total', revenue }
+      return {
+        data: {
+          type: '',
+          title: 'total',
+          revenue,
+          total,
+        },
+        actions: [this.filterTransactionsActionParams],
+      }
     },
 
     initialDateRange() {
@@ -240,6 +289,7 @@ export default {
       'cancelTransaction',
       'clearTransactionsQuery',
       'getBillingDashboard',
+      'getTransactions',
       'postTransaction',
       'setCustomerId',
       'setManagementFilters',
@@ -261,6 +311,7 @@ export default {
       this.rangeDebounce = setTimeout(() => {
         this.setRangeDate(this.dateRange)
       }, 800)
+      this.activeTypeFilter = this.activeTypeFilter ? this.activeTypeFilter : 'TOTAL'
     },
 
     handlerAction(evt) {
@@ -270,6 +321,7 @@ export default {
 
     showTransactionsAction(evt) {
       const type = evt.eventProps.customProps.type !== 'OTHERS' ? evt.eventProps.customProps.type : 'MANUAL'
+      this.activeTypeFilter = evt.eventProps.customProps.title
       this.setType(type)
     },
 
@@ -315,7 +367,26 @@ export default {
         this[evt.eventProps.trigger]({
           id: evt.eventProps.customProps.id,
           data: { reason: value },
+        }).then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Lançamento cancelado com sucesso',
+          })
+        }).catch(error => {
+          this.$jusNotification({ error })
         })
+      })
+    },
+
+    infiniteHandler($state) {
+      this.getTransactions('isInfinit').then(response => {
+        console.log(response)
+        if (response.last) {
+          $state.complete()
+        } else {
+          $state.loaded()
+        }
       })
     },
   },
@@ -324,10 +395,12 @@ export default {
 
 <style lang="scss" scoped>
 .billing-view {
+  overflow: auto;
+
   .billing-view__slot-main {
     height: 100%;
     display: grid;
-    grid-template-rows: repeat(2, auto) 1fr;
+    grid-template-rows: repeat(2, auto) minmax(400px, 1fr);
     gap: 20px;
     position: relative;
 
@@ -358,11 +431,10 @@ export default {
     }
 
     .billing-view__table {
-      padding-top: 12px;
+      padding-top: 8px;
       display: grid;
       gap: 8px;
       grid-template-rows: auto 1fr;
-      overflow: hidden;
 
       .billing-view__table-header {
         display: flex;

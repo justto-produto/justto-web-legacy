@@ -20,7 +20,7 @@
         @click.native="showFormCard"
       >
         <span>Adicionar um cliente</span>
-        <i class="el-icon-plus client-grid__icon"/>
+        <i class="el-icon-plus client-grid__icon" />
       </el-card>
 
       <el-card
@@ -29,7 +29,7 @@
         class="client-grid__form-card"
       >
         <span class="client-grid__form-title">
-          Escreva o nome do cliente!
+          Digite o nome do cliente abaixo para buscar um existente ou criar um novo.
         </span>
 
         <el-autocomplete
@@ -41,53 +41,20 @@
         />
 
         <el-button
+          v-if="inputValue"
           type="primary"
           @click.native="addClient"
         >
-          Ok!
+          Vincular cliente
         </el-button>
       </el-card>
     </jus-grid>
 
-    <el-dialog
-      :visible.sync="dialogFormVisible"
-      title="Editar dados do cliente"
-    >
-      <el-form
-        v-if="form"
-        :model="form"
-      >
-        <el-form-item label="Nome">
-          <el-input
-            v-model="form.customerName"
-            autocomplete="off"
-          />
-        </el-form-item>
-        <el-form-item label="Contrato">
-          <el-select
-            v-if="!!form.contracts.length"
-            v-model="form.contracts[form.contracts.length - 1].status"
-            placeholder="Selecione o estado do contrato"
-          >
-            <el-option
-              label="ATIVO"
-              value="ACTIVE"/>
-            <el-option
-              label="TRIAL"
-              value="TRIAL"/>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancelar</el-button>
-        <el-button
-          type="primary"
-          @click="dialogFormVisible = false">Salvar</el-button>
-      </span>
-    </el-dialog>
-
+    <ContractsModal
+      :client-data="form"
+      :plans="plans"
+      :visible="dialogFormVisible"
+    />
   </div>
 </template>
 
@@ -99,6 +66,7 @@ export default {
   components: {
     JusGrid: () => import('@/components/JusGrid/JusGrid'),
     JusUserCard: () => import('@/components/JusUserCard/JusUserCard'),
+    ContractsModal: () => import('./ContractsModal'),
   },
   data() {
     return {
@@ -113,8 +81,9 @@ export default {
       currentCustomer: 'getCurrentCustomer',
       custumerList: 'getMyCusomers',
       custumerSuggestions: 'getAllCusomers',
-      workspaceId: 'workspaceId',
       isJusttoAdmin: 'isJusttoAdmin',
+      plans: 'getPlans',
+      workspaceId: 'workspaceId',
     }),
   },
   beforeMount() {
@@ -123,6 +92,7 @@ export default {
     this.getMyCusomers()
     this.getAllCustomers()
     this.setWorkspaceId(this.workspaceId)
+    this.getPlans()
 
     this.form = this.currentCustomer
   },
@@ -132,6 +102,7 @@ export default {
       'associateCustomer',
       'getAllCustomers',
       'getMyCusomers',
+      'getPlans',
       'setCustomer',
       'setWorkspaceId',
       'unlinkCustomer',
@@ -157,10 +128,22 @@ export default {
     handleEdit(userData) {
       this.setCustomer(userData)
       this.form = this.currentCustomer
-      this.dialogFormVisible = true
+      this.dialogFormVisible = !this.dialogFormVisible
     },
     handleClose(userData) {
-      this.unlinkCustomer(userData.id)
+      this.$confirm('Tem certeza que deseja desvincular este cliente dassa workspace?', 'Atenção', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        type: 'warning',
+      }).then(() => {
+        this.unlinkCustomer(userData.id).then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Cliente desvinculado com sucesso.',
+          })
+        })
+      })
     },
     addClient() {
       const name = this.inputValue
@@ -198,7 +181,6 @@ export default {
     font-size: 18px;
     font-weight: 700;
     height: 100%;
-    min-height: 348px;
     justify-content: center;
   }
 
@@ -214,18 +196,18 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 348px;
     justify-content: center;
 
     .client-grid__form-title {
       display: block;
       font-size: 14px;
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 16px;
     }
 
     .client-grid__autocomplete {
       margin-bottom: 24px;
+      width: 100%;
     }
   }
 }

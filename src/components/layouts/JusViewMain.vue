@@ -1,36 +1,41 @@
 <template>
   <div
     :class="{'fullScreen': fullScreen}"
-    class="jus-main-view">
+    class="jus-main-view"
+  >
     <!-- TITLE SLOT -->
     <!-- <div v-if="this.$slots['title']" class="jus-main-view__title">
       <slot name="title"/>
     </div> -->
     <div
       v-loading="loadingContainer"
-      class="jus-main-view__container">
+      class="jus-main-view__container"
+    >
       <!-- LEFT CARD SLOT -->
       <div v-if="this.$slots['left-card']">
         <el-card
           :style="{width: leftCardWidth + 'px'}"
-          class="jus-main-view__left-card">
-          <slot name="left-card"/>
+          class="jus-main-view__left-card"
+        >
+          <slot name="left-card" />
         </el-card>
       </div>
       <!-- MAIN CARD SLOT -->
       <el-card
         v-loading="loadingMain"
         element-loading-text="Carregando disputas..."
-        class="jus-main-view__main-card">
-        <slot name="main"/>
+        class="jus-main-view__main-card"
+      >
+        <slot name="main" />
       </el-card>
       <!-- RIGHT CARD SLOT -->
       <div v-if="this.$slots['right-card']">
         <el-card
           :class="{'jus-main-view__zero-width': rightCardCollapsed}"
           :style="{width: rightCardWidth + 'px'}"
-          class="jus-main-view__right-card">
-          <slot name="right-card"/>
+          class="jus-main-view__right-card"
+        >
+          <slot name="right-card" />
         </el-card>
       </div>
     </div>

@@ -13,55 +13,67 @@
       :model="syncForm"
       :rules="syncFormRules"
       label-position="top"
-      @submit.native.prevent="submitForm">
+      @submit.native.prevent="submitForm"
+    >
       <el-form-item
         label="E-mail de trabalho"
         prop="email"
-        type="text">
+        type="text"
+      >
         <el-input
           v-model="syncForm.email"
           :readonly="synced"
-          name="email"/>
+          name="email"
+        />
       </el-form-item>
       <el-form-item
         v-if="!synced"
         label="Senha do e-mail"
-        prop="password">
+        prop="password"
+      >
         <el-input
           v-model="syncForm.password"
           type="password"
-          name="password"/>
+          name="password"
+        />
       </el-form-item>
     </el-form>
     <el-alert
       v-if="showSuccess"
       title="E-mail sincronizado com sucesso!"
-      type="success"/>
+      type="success"
+    />
     <el-alert
       v-if="showError"
       title="Não conseguimos sincronizar o seu e-mail. Verifique as credenciais e tente novamente."
-      type="error"/>
+      type="error"
+    />
     <div class="email-step--status">
       Status:
       <strong>{{ message }}</strong>
-      <JusStatusDot :type="type"/>
+      <JusStatusDot :type="type" />
     </div>
     <el-button
       v-if="!synced"
       type="primary"
-      @click="syncEmail">
+      @click="syncEmail"
+    >
       Sincronizar
     </el-button>
     <el-button
       v-if="synced"
       type="primary"
-      @click="$emit('onboarding:step:next')">
+      @click="$emit('onboarding:step:next')"
+    >
       Próximo
     </el-button>
     <el-button
       v-if="!synced"
       type="text"
-      @click="nextStep()">Pular</el-button>
+      @click="nextStep()"
+    >
+      Pular
+    </el-button>
   </div>
 </template>
 
@@ -108,7 +120,7 @@ export default {
     syncEmail() {
       this.showSuccess = false
       this.showError = false
-      this.$refs['syncForm'].validate((valid) => {
+      this.$refs.syncForm.validate((valid) => {
         if (valid) {
           this.$store.dispatch('showLoading')
           this.$store.dispatch('syncInbox', this.syncForm)

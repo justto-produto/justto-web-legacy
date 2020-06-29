@@ -25,7 +25,8 @@
       {{ value }}
       <jus-icon
         class="edit-icon"
-        icon="edit"/>
+        icon="edit"
+      />
     </span>
   </div>
 </template>
@@ -49,6 +50,11 @@ export default {
       inputValue: this.value,
       isEditing: false,
     }
+  },
+  watch: {
+    value(current) {
+      this.inputValue = current
+    },
   },
   methods: {
     editionHandler(evt) {

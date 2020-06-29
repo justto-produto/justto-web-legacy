@@ -11,7 +11,7 @@ const actions = {
 
   getAllCustomers: () =>
     axiosDispatcher({
-      url: 'api/billing/customer',
+      url: `api/billing/customer/?size=${9999}`,
       mutation: 'setAllCustomers',
     }),
 
@@ -47,7 +47,37 @@ const actions = {
       mutation: 'setContracts',
     })
   },
-  getTransactions: ({ state }) => {
+
+  addContract: ({ dispatch, state }, { customerId, contract }) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerId}/contract`,
+      method: 'post',
+      data: {
+        ...contract,
+        workspaceId: state.query.workspaceId,
+      },
+    }).then(() => dispatch('getMyCusomers')),
+
+  updateContract: ({ dispatch }, { customerId, contract }) =>
+    axiosDispatcher({
+      url: `api/billing/customer/${customerId}/contract/${contract.id}`,
+      method: 'patch',
+      data: contract,
+    }).then(() => dispatch('getMyCusomers')),
+
+  getPlans: () => axiosDispatcher({
+    url: 'api/billing/plans',
+    method: 'get',
+    mutation: 'setPlans',
+  }),
+
+  getTransactions: ({ commit, state }, command) => {
+    if (command) {
+      commit('addTransactionsQueryPage')
+    } else {
+      commit('resetTransactionsQueryPage')
+      commit('setTableLoading', true)
+    }
     const query = {
       ...state.query,
       customerId: state.currentCustomer.customerId,
@@ -55,7 +85,9 @@ const actions = {
 
     return axiosDispatcher({
       url: `api/billing/transaction${queryBuilder(query)}`,
-      mutation: 'setTransactions',
+      mutation: command ? 'pushTransactions' : 'setTransactions',
+    }).finally(() => {
+      commit('setTableLoading', false)
     })
   },
 
@@ -71,10 +103,8 @@ const actions = {
     })
   },
 
-  setCustomer: ({ commit, dispatch }, customerData) => {
-    if (!customerData.contracts.length) customerData.contracts.push({})
+  setCustomer: ({ commit }, customerData) => {
     commit('setCustomer', customerData)
-    dispatch('getTransactions')
   },
   setCustomerId: ({ commit }, customerId) => {
     commit('setCustomerId', customerId)
@@ -83,6 +113,7 @@ const actions = {
   setRangeDate: ({ commit, dispatch }, rangeDate) => {
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
+    dispatch('getBillingDashboard')
     dispatch('getTransactions')
   },
   setTerm: ({ commit, dispatch }, term) => {
@@ -96,11 +127,12 @@ const actions = {
   setWorkspaceId: ({ commit }, workspaceId) => {
     commit('setWorkspaceId', workspaceId)
   },
-  clearTransactionsQuery: ({ commit, dispatch }, rangeDate) => {
+  clearTransactionsQuery: ({ commit }, rangeDate) => {
     commit('setTerm', '')
     commit('setType', '')
     commit('setStartDate', rangeDate[0])
     commit('setFinishDate', rangeDate[1])
+    commit('setTransactions', {})
   },
 
   postTransaction: ({ state, dispatch }, params) => {
@@ -113,16 +145,18 @@ const actions = {
       },
     }).then(() => {
       dispatch('getTransactions')
+      dispatch('getBillingDashboard')
     })
   },
 
   cancelTransaction: ({ dispatch }, params) => {
-    axiosDispatcher({
+    return axiosDispatcher({
       url: `api/billing/transaction/${params.id}/cancel`,
       method: 'POST',
       data: params.data,
     }).then(() => {
       dispatch('getTransactions')
+      dispatch('getBillingDashboard')
     })
   },
 }

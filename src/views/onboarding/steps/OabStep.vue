@@ -9,26 +9,32 @@
         :inline="true"
         :model="oabForm"
         label-position="top"
-        @submit.native.prevent="submitForm">
+        @submit.native.prevent="submitForm"
+      >
         <el-form-item
           label="OAB"
-          prop="oab">
+          prop="oab"
+        >
           <el-input
             v-model="oabForm.oab"
-            name="oab"/>
+            name="oab"
+          />
         </el-form-item>
         <el-form-item
           label="UF"
-          prop="state">
+          prop="state"
+        >
           <el-select
             v-model="oabForm.state"
             filterable
-            placeholder="">
+            placeholder=""
+          >
             <el-option
               v-for="state in $store.state.statesList"
               :key="state"
               :label="state"
-              :value="state"/>
+              :value="state"
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -37,14 +43,21 @@
       v-if="showError"
       title="Houve uma falha de conexão com o servidor.
       Tente novamente ou entre em contato com o administrador do sistema."
-      type="error"/>
+      type="error"
+    />
     <el-button
       :disabled="!oabForm.oab || !oabForm.state"
       type="primary"
-      @click="submitForm">Próximo</el-button>
+      @click="submitForm"
+    >
+      Próximo
+    </el-button>
     <el-button
       type="text"
-      @click="skip">Pular</el-button>
+      @click="skip"
+    >
+      Pular
+    </el-button>
   </div>
 </template>
 
@@ -68,7 +81,7 @@ export default {
   methods: {
     submitForm() {
       this.showError = false
-      this.$refs['oabForm'].validate((valid) => {
+      this.$refs.oabForm.validate((valid) => {
         if (valid) {
           if (this.hasChanges()) {
             this.$store.dispatch('showLoading')
@@ -88,7 +101,7 @@ export default {
     },
     skip() {
       this.$emit('onboarding:step:next')
-      this.$refs['oabForm'].resetFields()
+      this.$refs.oabForm.resetFields()
     },
     hasChanges() {
       if (this.$store.state.accountModule.oabNumber !== this.oabForm.oab ||

@@ -3,11 +3,12 @@
     <el-container>
       <el-aside
         width="50%"
-        class="hidden-sm-and-down">
+        class="hidden-sm-and-down"
+      >
         <jus-sidenav-external />
       </el-aside>
       <el-main class="display-flex position-relative">
-        <jus-button-back to="/login"/>
+        <jus-button-back to="/login" />
         <el-form
           v-loading="showLoading"
           ref="newPasswordForm"
@@ -15,21 +16,26 @@
           :rules="rules"
           label-position="top"
           class="external-view__form"
-          @submit.native.prevent="submitForm">
-          <h1 class="external-view__title">Nova senha</h1>
+          @submit.native.prevent="submitForm"
+        >
+          <h1 class="external-view__title">
+            Nova senha
+          </h1>
           <el-alert
             v-show="showSuccess"
             type="success"
             show-icon
             title=""
             data-testid="new-password-success"
-            @close="showSuccess = false">
-            <template slot="title"/>
+            @close="showSuccess = false"
+          >
+            <template slot="title" />
             Senha alterada com sucesso!
             <br>
             <router-link
               to="/login"
-              data-testid="go-login">
+              data-testid="go-login"
+            >
               Clique aqui para acessar.
             </router-link>
           </el-alert>
@@ -39,37 +45,44 @@
             show-icon
             title=""
             data-testid="new-password-failure"
-            @close="showError = false">
-            <template slot="title"/>
+            @close="showError = false"
+          >
+            <template slot="title" />
             Não foi possível identificar sua requisição de alteração de senha.
             <br>
             <router-link
               to="/forgot-password"
-              data-testid="try-again">
+              data-testid="try-again"
+            >
               Clique aqui para tentar novamente.
             </router-link>
           </el-alert>
           <el-form-item
             label="Senha"
-            prop="password">
+            prop="password"
+          >
             <el-input
               v-model="newPasswordForm.password"
               type="password"
-              data-testid="new-password"/>
+              data-testid="new-password"
+            />
           </el-form-item>
           <el-form-item
             label="Confirmar senha"
-            prop="confirmPassword">
+            prop="confirmPassword"
+          >
             <el-input
               v-model="newPasswordForm.confirmPassword"
               type="password"
-              data-testid="confirm-password"/>
+              data-testid="confirm-password"
+            />
           </el-form-item>
           <el-button
             native-type="submit"
             class="external-view__submit"
             type="primary"
-            data-testid="submit">
+            data-testid="submit"
+          >
             Alterar
           </el-button>
         </el-form>

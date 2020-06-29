@@ -4,46 +4,54 @@
       v-loading="loadingMinutes"
       :key="tableKey"
       :data="filteredMinutes"
-      width="100%">
+      width="100%"
+    >
       <el-table-column
         class-name="panel-minute-view__name"
         prop="name"
-        label="Nome">
+        label="Nome"
+      >
         <template slot-scope="props">
           <el-input
             v-show="props.row.editing"
             :ref="'input' + props.row.id"
             v-model="props.row.name"
             @keyup.enter.native="props.row.editing = false, editMinuteName(props.row)"
-            @blur="props.row.editing = false, editMinuteName(props.row)" />
+            @blur="props.row.editing = false, editMinuteName(props.row)"
+          />
           <div
             v-show="!props.row.editing"
             class="label panel-minute-view__editable-label"
-            @click="props.row.editing = true ,focusInput(props.row.id, props.row.name)">
+            @click="props.row.editing = true ,focusInput(props.row.id, props.row.name)"
+          >
             {{ props.row.name }}
             <jus-icon
               class="edit-icon"
-              icon="edit"/>
+              icon="edit"
+            />
           </div>
         </template>
       </el-table-column>
       <el-table-column
         align="right"
-        width="400px">
-        <template
+        width="400px"
+      >
+        <div
           slot="header"
-          slot-scope="scope">
+        >
           <el-input
             v-model="search"
-            placeholder="Buscar"/>
+            placeholder="Buscar"
+          />
           <el-button
             type="primary"
             icon="el-icon-plus"
-            @click="addMinute">
+            @click="addMinute"
+          >
             Adicionar
           </el-button>
-        </template>
-        <template slot-scope="props">
+        </div>
+        <div slot-scope="props">
           <el-button
             v-if="props.row.privateDocumentModel"
             content="Excluir"
@@ -51,7 +59,8 @@
             type="danger"
             plain
             icon="el-icon-delete"
-            @click="deleteMinute(props.row.id)">
+            @click="deleteMinute(props.row.id)"
+          >
             Excluir
           </el-button>
           <el-button
@@ -59,10 +68,11 @@
             type="primary"
             plain
             icon="el-icon-edit"
-            @click="editMinute(props.row.url)">
+            @click="editMinute(props.row.url)"
+          >
             Editar documento
           </el-button>
-        </template>
+        </div>
       </el-table-column>
     </el-table>
     <el-dialog
@@ -71,15 +81,18 @@
       :close-on-click-modal="false"
       :class="{ 'panel-minute-view__dialog--full': fullscreen, 'panel-minute-view__dialog--large': !fullscreen }"
       title="Editar minuta"
-      class="panel-minute-view__dialog">
+      class="panel-minute-view__dialog"
+    >
       <i
         :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'"
         class="panel-minute-view__fullscreen-icon"
-        @click="fullscreen = !fullscreen" />
+        @click="fullscreen = !fullscreen"
+      />
       <iframe
         :src="editDialogUrl"
-        frameborder="0"/>
-      <JusVariablesCard :variables="types"/>
+        frameborder="0"
+      />
+      <JusVariablesCard :variables="types" />
     </el-dialog>
   </div>
 </template>

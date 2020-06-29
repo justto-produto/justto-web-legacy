@@ -3,18 +3,22 @@
     :close-on-click-modal="false"
     :visible.sync="visible"
     class="jus-import-dialog"
-    title="Nova importação de disputas">
+    title="Nova importação de disputas"
+  >
     <label
       for="fileupload"
       @dragover.prevent
-      @drop.prevent="handleFile($event)">
+      @drop.prevent="handleFile($event)"
+    >
       <el-card
         class="el-card--dashed-hover"
-        shadow="never">
+        shadow="never"
+      >
         <div v-if="isInitial">
           <jus-icon
             icon="upload-file"
-            is-active />
+            is-active
+          />
           <div>
             <br>
             Clique aqui e importe sua planilha nos<br> formatos XLSX, CSV ou XLS.
@@ -24,7 +28,8 @@
           <br><br>
           <div
             v-loading="true"
-            class="import-view__loading" />
+            class="import-view__loading"
+          />
           <div>
             <br><br><br>
             Carregando...
@@ -43,18 +48,22 @@
         ref="fileupload"
         type="file"
         class="jus-import-dialog__upload"
-        @change="handleFile($event)">
+        @change="handleFile($event)"
+      >
     </label>
     <span
       slot="footer"
-      class="dialog-footer">
+      class="dialog-footer"
+    >
       <el-button
         plain
-        @click="closeDialog">Cancelar</el-button>
+        @click="closeDialog"
+      >Cancelar</el-button>
       <el-button
         :disabled="!isSuccess"
         type="primary"
-        @click="startImport">Importar</el-button>
+        @click="startImport"
+      >Importar</el-button>
     </span>
   </el-dialog>
 </template>

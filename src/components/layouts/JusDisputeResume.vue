@@ -2,7 +2,8 @@
   <div
     :class="{ 'jus-dispute-resume__disabled': disabled }"
     class="jus-dispute-resume"
-    @click="click">
+    @click="click"
+  >
     <h4 data-testid="dispute-title">
       Disputa #{{ dispute.id }} |
       Campanha: {{ dispute.campaign.name | capitalize }} |
@@ -21,27 +22,32 @@
     </h4>
     <el-row
       :gutter="20"
-      data-testid="dipute-info">
+      data-testid="dipute-info"
+    >
       <el-col :span="10">
         <div>Estratégia: {{ dispute.campaign.strategy }}</div>
         <div>Status: <span>{{ $t('occurrence.type.' + dispute.status) | capitalize }}</span></div>
         <div
           v-for="(claiment, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'PARTY')"
-          :key="dispute.id + claiment.name + index + 'claimant'">
+          :key="dispute.id + claiment.name + index + 'claimant'"
+        >
           Parte contrária: {{ claiment.name }}
         </div>
         <div
           v-for="(lawyer, index) in getClaimants(dispute.disputeRoles, 'CLAIMANT', 'LAWYER')"
-          :key="dispute.id + lawyer.name + index + 'lawyer'">
+          :key="dispute.id + lawyer.name + index + 'lawyer'"
+        >
           Advogado: {{ lawyer.name }}
         </div>
       </el-col>
       <el-col :span="7">
         <div>Campanha: {{ dispute.campaign.name }}</div>
-        <div v-if="dispute.expirationDate">Fim da negociação:
+        <div v-if="dispute.expirationDate">
+          Fim da negociação:
           <span>{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
         </div>
-        <div v-if="dispute.disputeDealDate">Data do acordo:
+        <div v-if="dispute.disputeDealDate">
+          Data do acordo:
           <span>{{ dispute.disputeDealDate.dateTime | moment('DD/MM/YY') }}</span>
         </div>
         <div v-if="dispute.lastInteraction">
@@ -52,10 +58,18 @@
       <el-col :span="7">
         <div>Alçada máxima: {{ dispute.disputeUpperRange | currency }}</div>
         <div>Valor proposto: {{ dispute.lastOfferValue | currency }}</div>
-        <div v-if="dispute.lastCounterOfferValue">Contraproposta: {{ dispute.lastCounterOfferValue | currency }}</div>
-        <div v-if="dispute.disputeDealValue">Valor do acordo: {{ dispute.disputeDealValue | currency }}</div>
-        <div v-if="dispute.materialDamage">Dano material: {{ dispute.materialDamage | currency }}</div>
-        <div v-if="dispute.requestedValue">Valor do processo: {{ dispute.requestedValue | currency }}</div>
+        <div v-if="dispute.lastCounterOfferValue">
+          Contraproposta: {{ dispute.lastCounterOfferValue | currency }}
+        </div>
+        <div v-if="dispute.disputeDealValue">
+          Valor do acordo: {{ dispute.disputeDealValue | currency }}
+        </div>
+        <div v-if="dispute.materialDamage">
+          Dano material: {{ dispute.materialDamage | currency }}
+        </div>
+        <div v-if="dispute.requestedValue">
+          Valor do processo: {{ dispute.requestedValue | currency }}
+        </div>
       </el-col>
     </el-row>
   </div>

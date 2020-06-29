@@ -2,7 +2,8 @@
   <div class="dispute-overview-view">
     <h2
       class="dispute-overview-view__title"
-      data-testid="dispute-id">
+      data-testid="dispute-id"
+    >
       Disputa #{{ dispute.id }}
       <el-tooltip content="Excluir disputa">
         <el-button
@@ -11,8 +12,9 @@
           data-testid="remove"
           class="right"
           size="mini"
-          @click="removeDispute()">
-          <i class="el-icon-delete"/>
+          @click="removeDispute()"
+        >
+          <i class="el-icon-delete" />
         </el-button>
       </el-tooltip>
     </h2>
@@ -23,11 +25,13 @@
       <el-tabs
         v-model="overviewTab"
         class="dispute-overview-view__tabs"
-        stretch>
+        stretch
+      >
         <!-- INFORMAÇÕES GERAIS -->
         <el-tab-pane
           name="general"
-          class="dispute-overview-view__tabs-content">
+          class="dispute-overview-view__tabs-content"
+        >
           <span slot="label">
             <el-tooltip content="Informações gerais">
               <i class="el-icon-info" />
@@ -36,44 +40,51 @@
           <div>
             <div
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Etiquetas:</span>
               <jus-tags />
             </div>
             <div
               v-if="dispute.createAt"
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Data de importação:</span>
               <span>{{ dispute.createAt.dateTime | moment('DD/MM/YY') }}</span>
             </div>
             <div
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Processo:</span>
               <span>{{ dispute.code }}</span>
             </div>
             <div
               v-if="dispute.campaign"
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Campanha:</span>
               <span>{{ dispute.campaign.name }}</span>
             </div>
             <div
               v-if="dispute.strategyName"
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Estratégia:</span>
               <span data-testid="overview-strategy">{{ dispute.strategyName }}</span>
             </div>
             <div
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Status:</span>
               <el-tooltip
                 v-if="dispute.status === 'PENDING'"
-                content="Faltam dados de contato da parte ou do advogado da parte">
+                content="Faltam dados de contato da parte ou do advogado da parte"
+              >
                 <span data-testid="overview-status">
                   {{ $t('occurrence.type.' + dispute.status) | capitalize }}
                   <el-tooltip content="Selecione">
@@ -91,34 +102,40 @@
             <div
               v-if="dispute.classification"
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Classificação:</span>
               <span>{{ dispute.classification.name | capitalize }}</span>
             </div>
             <div
               v-if="dispute.provisionedValue > 0"
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Valor Provisionado:</span>
               <span data-testid="overview-provisioned-value">{{ dispute.provisionedValue | currency }}</span>
             </div>
             <div
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Alçada máxima:</span>
               <span data-testid="overview-upperrange">{{ dispute.disputeUpperRange | currency }}</span>
             </div>
             <div
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Valor proposto<span v-if="dispute.lastOfferName"> por {{ dispute.lastOfferName | firstName }}</span>:</span>
               <span data-testid="overview-proposal">
                 <el-tooltip
                   v-if="dispute.lastOfferName"
-                  :content="'Proposto por: ' + dispute.lastOfferName">
+                  :content="'Proposto por: ' + dispute.lastOfferName"
+                >
                   <jus-avatar-user
                     :name="dispute.lastOfferName"
-                    size="mini" />
+                    size="mini"
+                  />
                 </el-tooltip>
                 {{ dispute.lastOfferValue | currency }}
               </span>
@@ -126,64 +143,88 @@
             <div
               v-if="dispute.lastCounterOfferValue > 0 && dispute.disputeUpperRange"
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Contraproposta<span v-if="dispute.lastCounterOfferName"> por {{ dispute.lastCounterOfferName | firstName }}</span>:</span>
               <span data-testid="overview-counterproposal">
                 <el-tooltip
                   v-if="dispute.lastCounterOfferName"
-                  :content="'Proposto por: ' + dispute.lastCounterOfferName">
+                  :content="'Proposto por: ' + dispute.lastCounterOfferName"
+                >
                   <jus-avatar-user
                     :name="dispute.lastCounterOfferName"
-                    size="mini" />
+                    size="mini"
+                  />
                 </el-tooltip>
                 {{ dispute.lastCounterOfferValue | currency }}
               </span>
             </div>
             <div
               v-if="(dispute.status === 'ACCEPTED' || dispute.status === 'CHECKOUT' || dispute.status === 'SETTLED') && dispute.disputeDealValue"
-              class="dispute-overview-view__info-line">
+              class="dispute-overview-view__info-line"
+            >
               <span class="title">Valor do acordo:</span>
               <span>{{ dispute.disputeDealValue | currency }}</span>
             </div>
             <div
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Fim da negociação:</span>
               <span
                 v-if="dispute.expirationDate"
-                data-testid="overview-expirationdate">{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
+                data-testid="overview-expirationdate"
+              >{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
             </div>
-
             <div
               v-if="dispute.materialDamage"
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Dano material:</span>
               <span
                 v-if="dispute.materialDamage"
-                data-testid="overview-materialdamage">{{ dispute.materialDamage | currency }}</span>
+                data-testid="overview-materialdamage"
+              >{{ dispute.materialDamage | currency }}</span>
             </div>
+            <div
+              v-if="dispute.moralDamage"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline"
+            >
+              <span class="title">Dano moral:</span>
+              <span
+                v-if="dispute.moralDamage"
+                data-testid="overview-moralDamage"
+              >{{ dispute.moralDamage | currency }}</span>
+            </div>
+
             <div
               v-if="dispute.requestedValue"
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Valor do processo:</span>
               <span
                 v-if="dispute.requestedValue"
-                data-testid="overview-requestedvalue">{{ dispute.requestedValue | currency }}</span>
+                data-testid="overview-requestedvalue"
+              >{{ dispute.requestedValue | currency }}</span>
             </div>
             <div
               v-if="dispute.externalId"
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Código interno:</span>
               <span
                 v-if="dispute.externalId"
-                data-testid="overview-externalid">{{ dispute.externalId }}</span>
+                data-testid="overview-externalid"
+              >{{ dispute.externalId }}</span>
             </div>
             <div
               class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline">
+              data-testid="dispute-infoline"
+            >
               <span class="title">Configurações:</span>
               <span class="configurations">
                 Enriquecer automaticamente na importação?
@@ -212,18 +253,21 @@
             </div>
             <div
               v-if="computedDescription"
-              class="dispute-overview-view__info-line">
+              class="dispute-overview-view__info-line"
+            >
               <span class="title">Descrição:</span>
               <span>
                 <span
                   :class="{ 'right': computedDescription.length < 25 }"
-                  data-testid="overview-description">
+                  data-testid="overview-description"
+                >
                   {{ computedDescription }}
                   <span v-if="dispute.description.length > 140">
                     <a
                       href="#"
                       class="dispute-overview-view__see-more"
-                      @click.prevent="descriptionCollapse = !descriptionCollapse">
+                      @click.prevent="descriptionCollapse = !descriptionCollapse"
+                    >
                       {{ descriptionCollapse ? 'ver mais': 'ver menos' }}
                       <i :class="descriptionCollapse ? 'el-icon-arrow-down': 'el-icon-arrow-up'" />
                     </a>
@@ -233,14 +277,16 @@
             </div>
             <div
               v-if="dispute.bankAccounts && dispute.bankAccounts.length"
-              class="dispute-overview-view__info-line">
+              class="dispute-overview-view__info-line"
+            >
               <span class="title">Conta(s) bancária(s):</span>
               <el-collapse value="0">
                 <el-collapse-item
                   v-for="(bankAccount, index) in dispute.bankAccounts"
                   :key="`${index}-${bankAccount.id}`"
                   :name="index"
-                  class="dispute-overview-view__bank-collapse">
+                  class="dispute-overview-view__bank-collapse"
+                >
                   <template slot="title">
                     <div>
                       {{ bankAccount.name || bankAccount.document | cpfCnpjMask }}
@@ -272,13 +318,17 @@
             <el-button
               type="primary"
               data-testid="edit-dispute"
-              @click="openDisputeDialog()">Editar</el-button>
+              @click="openDisputeDialog()"
+            >
+              Editar
+            </el-button>
           </div>
         </el-tab-pane>
         <!-- PARTES DA DISPUTA -->
         <el-tab-pane
           name="roles"
-          class="dispute-overview-view__tabs-content">
+          class="dispute-overview-view__tabs-content"
+        >
           <span slot="label">
             <el-tooltip content="Partes da disputa">
               <i class="el-icon-user-solid" />
@@ -290,27 +340,32 @@
             accordion
             class="el-collapse--bordered"
             style="margin: 20px 0 0"
-            @change="handleChange">
+            @change="handleChange"
+          >
             <el-collapse-item
               v-for="(role, index) in disputeRolesSort"
               :key="`${index}-${role.personId}`"
               :name="role.id"
               class="dispute-overview-view__role-collapse"
-              data-testid="expand-party">
+              data-testid="expand-party"
+            >
               <template slot="title">
                 <i
                   v-if="showNamesake(role) || showVexatious(role.personProperties)"
                   class="el-icon-warning-outline el-icon-pulse"
-                  style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
+                  style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;"
+                />
                 <i
                   v-if="showIsDead(role)"
                   class="el-icon-warning-outline el-icon-pulse"
-                  style="color: rgb(255, 75, 84);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;" />
+                  style="color: rgb(255, 75, 84);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;"
+                />
                 <div class="dispute-overview-view__name">
                   <span
                     v-for="r in role.roles"
                     :key="r.id"
-                    class="dispute-overview-view__role-icon">
+                    class="dispute-overview-view__role-icon"
+                  >
                     <el-tooltip :content="buildRoleTitle(role.party, r)">
                       <i :class="getRoleIcon(role.party, r)" />
                     </el-tooltip>
@@ -320,9 +375,10 @@
               </template>
               <p
                 v-if="showNamesake(role)"
-                style="margin-top: 0">
+                style="margin-top: 0"
+              >
                 <span v-if="namesakeProcessing">
-                  <i class="el-icon-warning"/>
+                  <i class="el-icon-warning" />
                   Documento correto enviado para tratamento no sistema. Isso pode levar algum tempo.
                 </span>
                 <span v-else>
@@ -334,7 +390,8 @@
                 :loading="namesakeButtonLoading || namesakeProcessing"
                 :type="namesakeProcessing ? 'success' : 'warning'"
                 style="width: 100%; margin-bottom: 14px;"
-                @click="namesakeDialog(role.name, role.personId)">
+                @click="namesakeDialog(role.name, role.personId)"
+              >
                 <span v-if="namesakeProcessing">Enriquecendo...</span>
                 <span v-else>Tratar homônimos</span>
               </el-button>
@@ -342,7 +399,8 @@
                 v-if="showIsDead(role)"
                 class="mb10"
                 title="Possível óbito"
-                type="error">
+                type="error"
+              >
                 Algumas de nossas bases de informações constam que a parte possivelmente encontra-se em óbito.
               </el-alert>
               <div class="dispute-overview-view__info-line">
@@ -355,37 +413,44 @@
                 <span class="title">Função:</span>
                 <span
                   v-for="(title, index) in roleTitleSort(role.roles)"
-                  :key="`${index}-${title.index}`">
+                  :key="`${index}-${title.index}`"
+                >
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
                     v-if="showVexatious(role.personProperties)"
                     :document-number="role.documentNumber"
-                    :name="role.name" />
+                    :name="role.name"
+                  />
                 </span>
               </div>
               <div
                 v-show="role.documentNumber"
-                class="dispute-overview-view__info-line">
+                class="dispute-overview-view__info-line"
+              >
                 <span class="title">CPF/CNPJ:</span>
                 <span>{{ role.documentNumber | cpfCnpjMask }}</span>
               </div>
               <div
                 v-show="role.phones.length"
-                class="dispute-overview-view__info-line">
+                class="dispute-overview-view__info-line"
+              >
                 <span class="title">Telefone(s):</span>
                 <span
                   v-for="(phone, index) in role.phones.filter(p => !p.archived)"
                   :key="`${index}-${phone.id}`"
-                  :class="{'is-main': phone.isMain}">
+                  :class="{'is-main': phone.isMain}"
+                >
                   <el-radio
                     v-model="selectedPhone"
                     :label="phone.id"
                     :disabled="!phone.isMobile"
                     data-testid="radio-whatsapp"
-                    @change="updateDisputeRole(role, 'whatsapp')">
+                    @change="updateDisputeRole(role, 'whatsapp')"
+                  >
                     <el-tooltip
                       :content="buildContactStatus(phone)"
-                      :open-delay="500">
+                      :open-delay="500"
+                    >
                       <span :class="phone.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
                         {{ phone.number | phoneMask }}<span v-if="phone.source === 'ENRICHMENT'">*</span>
                       </span>
@@ -395,31 +460,37 @@
                   <el-tooltip content="Este número não receberá mensagens automáticas">
                     <jus-icon
                       v-show="!phone.isMain"
-                      icon="not-main-phone-active" />
+                      icon="not-main-phone-active"
+                    />
                   </el-tooltip>
                   <el-tooltip content="Telefone inválido">
                     <jus-icon
                       v-show="!phone.isValid"
-                      icon="warn-dark" />
+                      icon="warn-dark"
+                    />
                   </el-tooltip>
                   <!-- </div> -->
                 </span>
               </div>
               <div
                 v-show="role.emails.length"
-                class="dispute-overview-view__info-line">
+                class="dispute-overview-view__info-line"
+              >
                 <span class="title">E-mail(s):</span>
                 <span
                   v-for="(email, index) in role.emails.filter(e => !e.archived)"
                   :key="`${index}-${email.id}`"
-                  :class="{'is-main': email.isMain}">
+                  :class="{'is-main': email.isMain}"
+                >
                   <el-checkbox
                     v-model="email.selected"
                     data-testid="checkbox-email"
-                    @change="updateDisputeRole(role, 'email')" />
+                    @change="updateDisputeRole(role, 'email')"
+                  />
                   <el-tooltip
                     :content="buildContactStatus(email)"
-                    :open-delay="500">
+                    :open-delay="500"
+                  >
                     <span :class="email.source === 'ENRICHMENT' ? 'dispute-overview-view__is-enriched' : ''">
                       {{ email.address }}<span v-if="email.source === 'ENRICHMENT'">*</span>
                     </span>
@@ -428,57 +499,71 @@
                     <el-tooltip content="Este e-mail não receberá mensagens automáticas">
                       <jus-icon
                         v-show="!email.isMain"
-                        icon="not-main-email-active" />
+                        icon="not-main-email-active"
+                      />
                     </el-tooltip>
                     <el-tooltip content="E-mail inválido">
                       <jus-icon
                         v-show="!email.isValid"
-                        icon="warn-dark" />
+                        icon="warn-dark"
+                      />
                     </el-tooltip>
                   </div>
                 </span>
               </div>
               <div
                 v-show="role.oabs.length"
-                class="dispute-overview-view__info-line">
+                class="dispute-overview-view__info-line"
+              >
                 <span class="title">OAB(s):</span>
                 <span
                   v-for="(oab, index) in role.oabs.filter(o => !o.archived)"
                   :key="`${index}-${oab.id}`"
-                  :class="{'is-main': oab.isMain}">
+                  :class="{'is-main': oab.isMain}"
+                >
                   <el-checkbox
                     v-model="oab.selected"
-                    @change="updateDisputeRole(role, 'cna')" />
+                    @change="updateDisputeRole(role, 'cna')"
+                  />
                   <span>{{ oab.number + '-' + oab.state || '' }}</span>
                   <div class="alerts">
                     <el-tooltip content="OAB inválido">
                       <jus-icon
                         v-show="!oab.isValid"
-                        icon="warn-dark" />
+                        icon="warn-dark"
+                      />
                     </el-tooltip>
                   </div>
                 </span>
               </div>
               <div
                 v-if="role.bankAccounts && role.bankAccounts.length"
-                class="dispute-overview-view__info-line">
+                class="dispute-overview-view__info-line"
+              >
                 <span class="title">Conta(s) bancária(s):</span>
                 <el-tooltip content="Selecione as contas bancárias que serão vinculadas à Disputa">
                   <i
                     class="el-icon-question right"
-                    style="margin-top: 5px;" />
+                    style="margin-top: 5px;"
+                  />
                 </el-tooltip>
                 <el-checkbox-group
                   v-model="disputeBankAccountsIds"
-                  class="dispute-overview-view__bank-checkbox">
+                  class="dispute-overview-view__bank-checkbox"
+                >
                   <el-checkbox
                     v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
-                    :label="bankAccount.id"
                     :key="`${index}-${bankAccount.id}`"
+                    :label="bankAccount.id"
                     border
-                    class="bordered">
-                    <div v-show="bankAccount.name"><strong>Nome:</strong> {{ bankAccount.name }}</div>
-                    <div v-show="bankAccount.email"><strong>E-mail:</strong> {{ bankAccount.email }}</div>
+                    class="bordered"
+                  >
+                    <div v-show="bankAccount.name">
+                      <strong>Nome:</strong> {{ bankAccount.name }}
+                    </div>
+                    <div v-show="bankAccount.email">
+                      <strong>E-mail:</strong> {{ bankAccount.email }}
+                    </div>
                     <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }}</div>
                     <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
                     <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
@@ -489,28 +574,37 @@
               </div>
               <div
                 v-if="!role.roles.includes('NEGOTIATOR')"
-                class="dispute-overview-view__actions">
+                class="dispute-overview-view__actions"
+              >
                 <el-button
                   plain
-                  @click="removeRole(role)">Excluir</el-button>
+                  @click="removeRole(role)"
+                >
+                  Excluir
+                </el-button>
                 <el-button
                   type="primary"
                   data-testid="edit-part"
-                  @click="openRoleDialog(role)">Editar</el-button>
+                  @click="openRoleDialog(role)"
+                >
+                  Editar
+                </el-button>
               </div>
             </el-collapse-item>
             <el-button
               class="dispute-overview-view__add-role mb20"
               plain
               icon="el-icon-plus"
-              @click.prevent="newRoleDialogVisible = true">
+              @click.prevent="newRoleDialogVisible = true"
+            >
               Cadastrar parte
             </el-button>
           </el-collapse>
         </el-tab-pane>
         <el-tab-pane
           name="proprieties"
-          class="dispute-overview-view__tabs-content">
+          class="dispute-overview-view__tabs-content"
+        >
           <span slot="label">
             <el-tooltip content="Propriedades adicionais">
               <i class="el-icon-s-tools" />
@@ -520,7 +614,8 @@
         </el-tab-pane>
         <el-tab-pane
           name="attachments"
-          class="dispute-overview-view__attachment-tab">
+          class="dispute-overview-view__attachment-tab"
+        >
           <span slot="label">
             <el-tooltip content="Anexos">
               <i class="el-icon-paperclip" />
@@ -536,16 +631,27 @@
         :close-on-click-modal="false"
         :visible.sync="namesakeDialogVisible"
         title="Tratar homônimo"
-        width="70%">
+        width="70%"
+      >
         <p>Selecione um dos registros abaixo para correção de homônimo e enriquecimento da parte.</p>
         <div v-loading="namesakeDialogLoading">
           <div v-show="selectedNamesake">
             <p>Pessoa selecionada:</p>
-            <div v-show="selectedNamesake.name">Nome: <b>{{ selectedNamesake.name }}</b></div>
-            <div v-show="selectedNamesake.document">Documento: <b>{{ selectedNamesake.document | cpfCnpjMask }}</b></div>
-            <div v-show="selectedNamesake.city">Cidade: <b>{{ selectedNamesake.city }}</b></div>
-            <div v-show="selectedNamesake.uf">UF: <b>{{ selectedNamesake.uf }}</b></div>
-            <div v-show="selectedNamesake.dateOfBirth">Nascimento: <b>{{ selectedNamesake.dateOfBirth | moment('DD/MM/YYYY') }}</b></div>
+            <div v-show="selectedNamesake.name">
+              Nome: <b>{{ selectedNamesake.name }}</b>
+            </div>
+            <div v-show="selectedNamesake.document">
+              Documento: <b>{{ selectedNamesake.document | cpfCnpjMask }}</b>
+            </div>
+            <div v-show="selectedNamesake.city">
+              Cidade: <b>{{ selectedNamesake.city }}</b>
+            </div>
+            <div v-show="selectedNamesake.uf">
+              UF: <b>{{ selectedNamesake.uf }}</b>
+            </div>
+            <div v-show="selectedNamesake.dateOfBirth">
+              Nascimento: <b>{{ selectedNamesake.dateOfBirth | moment('DD/MM/YYYY') }}</b>
+            </div>
           </div>
           <div class="dispute-overview-view__namesake-filters">
             <div class="dispute-overview-view__namesake-filter">
@@ -554,12 +660,14 @@
                 v-model="cityFilter"
                 clearable
                 filterable
-                default-first-option>
+                default-first-option
+              >
                 <el-option
                   v-for="city in cityList"
                   :key="city"
                   :label="city"
-                  :value="city" />
+                  :value="city"
+                />
               </el-select>
             </div>
             <div class="dispute-overview-view__namesake-filter">
@@ -568,12 +676,14 @@
                 v-model="ufFilter"
                 clearable
                 filterable
-                default-first-option>
+                default-first-option
+              >
                 <el-option
                   v-for="uf in ufList"
                   :key="uf"
                   :label="uf"
-                  :value="uf" />
+                  :value="uf"
+                />
               </el-select>
             </div>
           </div>
@@ -582,14 +692,17 @@
             class="dispute-overview-view__namesake-table"
             highlight-current-row
             style="width: 100%"
-            @current-change="handleCurrentChange">
+            @current-change="handleCurrentChange"
+          >
             <el-table-column
               label="Nome"
-              prop="name" />
+              prop="name"
+            />
             <el-table-column
               label="Documento"
               prop="document"
-              width="160px">
+              width="160px"
+            >
               <template slot-scope="scope">
                 <span>
                   {{ scope.row.document | cpfCnpjMask }}
@@ -598,56 +711,66 @@
             </el-table-column>
             <el-table-column
               label="Cidade"
-              prop="city" />
+              prop="city"
+            />
             <el-table-column
               label="UF"
               prop="uf"
-              width="70px" />
+              width="70px"
+            />
             <el-table-column
               label="Nascimento"
               prop="dateOfBirth"
-              width="140px" />
+              width="140px"
+            />
           </el-table>
         </div>
         <span slot="footer">
           <el-button
             :disabled="namesakeDialogLoading"
             plain
-            @click="closeNamesakes">Cancelar</el-button>
+            @click="closeNamesakes"
+          >Cancelar</el-button>
           <el-button
             :loading="namesakeDialogLoading"
             :disabled="!selectedNamesake"
             type="primary"
-            @click="selectNamesake()">Tratar</el-button>
+            @click="selectNamesake()"
+          >Tratar</el-button>
         </span>
       </el-dialog>
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="editDisputeDialogVisible"
         title="Editar disputa"
-        width="70%">
+        width="70%"
+      >
         <el-form
           v-loading="editDisputeDialogLoading"
           ref="disputeForm"
           :model="disputeForm"
           :rules="disputeFormRules"
           label-position="top"
-          @submit.native.prevent="editDispute">
+          @submit.native.prevent="editDispute"
+        >
           <h3>Detalhes da Disputa</h3>
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item
                 label="Número do Processo"
-                prop="disputeCode">
+                prop="disputeCode"
+              >
                 <el-input
                   v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
-                  v-model="disputeForm.disputeCode" />
+                  v-model="disputeForm.disputeCode"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item
                 label="Código interno"
-                prop="externalId">
+                prop="externalId"
+              >
                 <el-input v-model="disputeForm.externalId" />
               </el-form-item>
             </el-col>
@@ -657,17 +780,20 @@
             <el-col :span="24">
               <el-form-item
                 label="Estratégia"
-                prop="disputeStrategy">
+                prop="disputeStrategy"
+              >
                 <el-select
                   v-model="selectedStrategyId"
                   placeholder="Escolha a nova estratégia"
                   filterable
-                  data-testid="strategy-input">
+                  data-testid="strategy-input"
+                >
                   <el-option
                     v-for="(strategy, index) in strategies"
                     :key="`${strategy.id}-${index}`"
                     :label="strategy.name"
-                    :value="strategy.id" />
+                    :value="strategy.id"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -675,7 +801,8 @@
           <el-row :gutter="20">
             <el-col
               :span="24"
-              class="dispute-overview-view__select-switch">
+              class="dispute-overview-view__select-switch"
+            >
               <div class="content">
                 <div>Engajar autor se não tiver advogado</div>
                 <p>
@@ -686,7 +813,8 @@
             </el-col>
             <el-col
               :span="24"
-              class="dispute-overview-view__select-switch">
+              class="dispute-overview-view__select-switch"
+            >
               <div class="content">
                 <div>Engajar autor se advogado não possuir contatos válidos para ser engajado</div>
                 <p>
@@ -702,103 +830,132 @@
               <el-form-item
                 :rules="validateLastOfferValue"
                 label="Valor"
-                prop="lastOfferValue">
+                prop="lastOfferValue"
+              >
                 <money
                   v-model="disputeForm.lastOfferValue"
                   class="el-input__inner"
                   data-testid="proposal-value-input"
-                  @change.native="lastOfferValueHasChanged = true"/>
+                  @change.native="lastOfferValueHasChanged = true"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="16">
               <el-form-item
                 label="Proposto por"
-                prop="lastOfferValueName">
+                prop="lastOfferValueName"
+              >
                 <el-select
                   v-model="selectedNegotiatorId"
                   filterable
                   placeholder="Autor da contraproposta"
-                  data-testid="proposal-negotiator-input">
+                  data-testid="proposal-negotiator-input"
+                >
                   <el-option
                     v-for="(negotiator, index) in disputeNegotiations"
                     :key="`${index}-${negotiator.id}`"
                     :label="negotiator.name"
-                    :value="negotiator.id" />
+                    :value="negotiator.id"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <h3>Outras configurações</h3>
           <el-row :gutter="20">
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item
                 :rules="validateDisputeUpperRange"
                 label="Alçada máxima"
-                prop="disputeUpperRange">
+                prop="disputeUpperRange"
+              >
                 <money
                   v-model="disputeForm.disputeUpperRange"
                   class="el-input__inner"
                   data-testid="bondary-input"
                   @blur.native="checkZeroUpperRange"
-                  @change.native="disputeUpperRangeHasChanged = true"/>
+                  @change.native="disputeUpperRangeHasChanged = true"
+                />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item
                 label="Fim da negociação"
-                prop="expirationDate">
+                prop="expirationDate"
+              >
                 <el-date-picker
                   v-model="disputeForm.expirationDate"
                   :clearable="false"
                   data-testid="expiration-date-input"
                   format="dd/MM/yyyy"
                   type="date"
-                  value-format="yyyy-MM-dd" />
+                  value-format="yyyy-MM-dd"
+                />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="12">
               <el-form-item
                 label="Classificação"
-                prop="classification">
+                prop="classification"
+              >
                 <el-input v-model="disputeForm.classification" />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item
                 label="Dano material"
-                prop="materialDamage">
+                prop="materialDamage"
+              >
                 <money
                   v-model="disputeForm.materialDamage"
-                  class="el-input__inner"/>
+                  class="el-input__inner"
+                />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
+              <el-form-item
+                label="Dano moral"
+                prop="moralDamage"
+              >
+                <money
+                  v-model="disputeForm.moralDamage"
+                  class="el-input__inner"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
               <el-form-item
                 label="Valor do processo"
-                prop="requestedValue">
+                prop="requestedValue"
+              >
                 <money
                   v-model="disputeForm.requestedValue"
-                  class="el-input__inner"/>
+                  class="el-input__inner"
+                />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item
                 label="Valor Provisionado"
-                prop="provisionedValue">
+                prop="provisionedValue"
+              >
                 <money
                   v-model="disputeForm.provisionedValue"
-                  class="el-input__inner"/>
+                  class="el-input__inner"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="24">
               <el-form-item
                 label="Descrição"
-                prop="description">
+                prop="description"
+              >
                 <el-input
                   v-model="disputeForm.description"
                   type="textarea"
                   rows="3"
-                  data-testid="description-input"/>
+                  data-testid="description-input"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -806,32 +963,40 @@
         <span slot="footer">
           <el-button
             plain
-            @click="editDisputeDialogVisible = false">Cancelar</el-button>
+            @click="editDisputeDialogVisible = false"
+          >Cancelar</el-button>
           <el-button
             :loading="editDisputeDialogLoading"
             type="primary"
             data-testid="confirm-edit-data"
-            @click="editDispute()">Editar dados</el-button>
+            @click="editDispute()"
+          >Editar dados</el-button>
         </span>
       </el-dialog>
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="editRoleDialogVisible"
-        width="40%">
+        width="40%"
+      >
         <span
           slot="title"
-          class="el-dialog__title">
+          class="el-dialog__title"
+        >
           Alterar dados de {{ roleForm.title }}
         </span>
         <el-alert
           v-show="editRoleDialogError"
           type="error"
-          @close="editRoleDialogError = false">
-          <ul><li
-            v-for="(error, index) in editRoleDialogErrorList"
-            :key="`${index}-${error}`">
-            {{ error }}
-          </li></ul>
+          @close="editRoleDialogError = false"
+        >
+          <ul>
+            <li
+              v-for="(error, index) in editRoleDialogErrorList"
+              :key="`${index}-${error}`"
+            >
+              {{ error }}
+            </li>
+          </ul>
         </el-alert>
         <el-form
           v-loading="editRoleDialogLoading"
@@ -839,39 +1004,48 @@
           :model="roleForm"
           :rules="roleRules"
           label-position="top"
-          @submit.native.prevent>
+          @submit.native.prevent
+        >
           <el-form-item
             label="Nome"
-            prop="name">
+            prop="name"
+          >
             <el-input
               v-model="roleForm.name"
-              autofocus="" />
+              autofocus=""
+            />
           </el-form-item>
           <el-form-item
             :rules="validateDocumentNumber"
             label="CPF/CNPJ"
-            prop="documentNumber">
+            prop="documentNumber"
+          >
             <el-input
               v-mask="['###.###.###-##', '##.###.###/####-##']"
               v-model="roleForm.documentNumber"
-              @change="documentNumberHasChanged = true" />
+              @change="documentNumberHasChanged = true"
+            />
           </el-form-item>
           <div
             v-if="roleForm.roles && roleForm.roles.includes('LAWYER')"
-            class="dispute-overview-view__oab-form">
+            class="dispute-overview-view__oab-form"
+          >
             <el-form-item
               class="oab"
               label="OAB"
-              prop="oab">
+              prop="oab"
+            >
               <el-input
                 v-model="roleForm.oab"
                 @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
-                @blur="addOab(roleForm.personId, roleForm.oabs)"/>
+                @blur="addOab(roleForm.personId, roleForm.oabs)"
+              />
             </el-form-item>
             <el-form-item
               class="state"
               label="Estado"
-              prop="state">
+              prop="state"
+            >
               <el-select
                 v-model="roleForm.state"
                 :default-first-option="true"
@@ -880,18 +1054,21 @@
                 filterable
                 @keydown.enter.native="addOab(roleForm.personId, roleForm.oabs)"
                 @change="addOab(roleForm.personId, roleForm.oabs)"
-                @blur="addOab(roleForm.personId, roleForm.oabs)">
+                @blur="addOab(roleForm.personId, roleForm.oabs)"
+              >
                 <el-option
                   v-for="(state, index) in $store.state.statesList"
                   :key="`${index}-${state}`"
                   :label="state"
-                  :value="state"/>
+                  :value="state"
+                />
               </el-select>
             </el-form-item>
             <el-button
               class="button"
               type="primary"
-              @click="addOab(roleForm.personId, roleForm.oabs)">
+              @click="addOab(roleForm.personId, roleForm.oabs)"
+            >
               <jus-icon icon="add-white" />
             </el-button>
           </div>
@@ -900,7 +1077,8 @@
             :data="roleForm.oabs"
             :show-header="false"
             fit
-            class="el-table--list">
+            class="el-table--list"
+          >
             <el-table-column>
               <template slot-scope="scope">
                 <span>
@@ -912,14 +1090,17 @@
               fixed="right"
               align="right"
               width="48px"
-              class-name="visible">
+              class-name="visible"
+            >
               <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
-                  content="Remover">
+                  content="Remover"
+                >
                   <a
                     href="#"
-                    @click.prevent="removeOab(scope.$index)">
+                    @click.prevent="removeOab(scope.$index)"
+                  >
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
@@ -928,15 +1109,18 @@
           </el-table>
           <el-form-item
             label="Telefone"
-            prop="phone">
+            prop="phone"
+          >
             <el-input
               v-mask="['(##) ####-####', '(##) #####-####']"
               v-model="roleForm.phone"
               @keydown.enter.native="addPhone()"
-              @blur="addPhone()">
+              @blur="addPhone()"
+            >
               <el-button
                 slot="append"
-                @click="addPhone()">
+                @click="addPhone()"
+              >
                 <jus-icon icon="add-white" />
               </el-button>
             </el-input>
@@ -945,7 +1129,8 @@
             :data="roleForm.phones"
             :show-header="false"
             fit
-            class="el-table--list">
+            class="el-table--list"
+          >
             <el-table-column>
               <template slot-scope="scope">
                 <span>
@@ -957,27 +1142,33 @@
               fixed="right"
               align="right"
               width="114px"
-              class-name="visible slot-scope">
+              class-name="visible slot-scope"
+            >
               <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
-                  :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                  :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
+                >
                   <span class="dispute-overview-view__switch-main">
                     <jus-icon
                       v-if="scope.row.isMain"
-                      icon="phone-active" />
+                      icon="phone-active"
+                    />
                     <jus-icon
                       v-else
-                      icon="not-main-phone-active" />
+                      icon="not-main-phone-active"
+                    />
                     <el-switch v-model="scope.row.isMain" />
                   </span>
                 </el-tooltip>
                 <el-tooltip
                   :open-delay="500"
-                  content="Remover">
+                  content="Remover"
+                >
                   <a
                     href="#"
-                    @click.prevent="removePhone(scope.$index)">
+                    @click.prevent="removePhone(scope.$index)"
+                  >
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
@@ -986,16 +1177,19 @@
           </el-table>
           <el-form-item
             label="E-mail"
-            prop="email">
+            prop="email"
+          >
             <el-input
               v-model="roleForm.email"
               data-testid="input-email"
               @keydown.enter.native="addEmail()"
-              @blur="addEmail()">
+              @blur="addEmail()"
+            >
               <el-button
                 slot="append"
                 data-testid="add-email"
-                @click="addEmail()">
+                @click="addEmail()"
+              >
                 <jus-icon icon="add-white" />
               </el-button>
             </el-input>
@@ -1004,7 +1198,8 @@
             :data="roleForm.emails"
             :show-header="false"
             fit
-            class="el-table--list">
+            class="el-table--list"
+          >
             <el-table-column>
               <template slot-scope="scope">
                 <span>
@@ -1016,27 +1211,33 @@
               fixed="right"
               align="right"
               width="114px"
-              class-name="visible slot-scope">
+              class-name="visible slot-scope"
+            >
               <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
-                  :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'">
+                  :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
+                >
                   <span class="dispute-overview-view__switch-main">
                     <jus-icon
                       v-if="scope.row.isMain"
-                      icon="email-active" />
+                      icon="email-active"
+                    />
                     <jus-icon
                       v-else
-                      icon="not-main-email-active" />
+                      icon="not-main-email-active"
+                    />
                     <el-switch v-model="scope.row.isMain" />
                   </span>
                 </el-tooltip>
                 <el-tooltip
                   :open-delay="500"
-                  content="Remover">
+                  content="Remover"
+                >
                   <a
                     href="#"
-                    @click.prevent="removeEmail(scope.$index)">
+                    @click.prevent="removeEmail(scope.$index)"
+                  >
                     <jus-icon icon="trash" />
                   </a>
                 </el-tooltip>
@@ -1048,9 +1249,10 @@
             <a
               href="#"
               style="float: right;width: 16px;margin-top: 1px;margin-right: 23px;"
-              @click.prevent="openAddBankDialog()">
+              @click.prevent="openAddBankDialog()"
+            >
               <el-tooltip content="Adicionar conta bancária">
-                <jus-icon icon="add-bold"/>
+                <jus-icon icon="add-bold" />
               </el-tooltip>
             </a>
           </h4>
@@ -1058,7 +1260,8 @@
             :data="roleForm.bankAccounts"
             :show-header="false"
             fit
-            class="el-table--list">
+            class="el-table--list"
+          >
             <el-table-column>
               <template slot-scope="scope">
                 <span>
@@ -1073,11 +1276,13 @@
               fixed="right"
               align="right"
               width="48px"
-              class-name="visible">
+              class-name="visible"
+            >
               <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
-                  content="Remover">
+                  content="Remover"
+                >
                   <a
                     href="#"
                     @click.prevent="removeBankData(scope.$index, scope.row.id)"
@@ -1092,12 +1297,14 @@
         <span slot="footer">
           <el-button
             plain
-            @click="editRoleDialogVisible = false">Cancelar</el-button>
+            @click="editRoleDialogVisible = false"
+          >Cancelar</el-button>
           <el-button
             :loading="editRoleDialogLoading"
             type="primary"
             data-testid="edit-data-part"
-            @click="editRole">
+            @click="editRole"
+          >
             Editar dados
           </el-button>
         </span>
@@ -1106,83 +1313,100 @@
         :close-on-click-modal="false"
         :visible.sync="addBankDialogVisible"
         title="Adicionar conta bancária"
-        width="40%">
+        width="40%"
+      >
         <el-form
           ref="addBankForm"
           :model="addBankForm"
           :rules="addBankRules"
           label-position="top"
-          @submit.native.prevent>
+          @submit.native.prevent
+        >
           <el-form-item
             label="Nome"
-            prop="name">
+            prop="name"
+          >
             <el-input v-model="addBankForm.name" />
           </el-form-item>
           <el-form-item
             label="Email"
-            prop="email">
+            prop="email"
+          >
             <el-input v-model="addBankForm.email" />
           </el-form-item>
           <el-form-item
             label="CPF ou CNPJ"
-            prop="document">
+            prop="document"
+          >
             <el-input
               v-mask="['###.###.###-##', '##.###.###/####-##']"
-              v-model="addBankForm.document" />
+              v-model="addBankForm.document"
+            />
           </el-form-item>
           <el-form-item
             label="Banco"
-            prop="bank">
+            prop="bank"
+          >
             <el-select
               v-model="addBankForm.bank"
               filterable
-              placeholder="">
+              placeholder=""
+            >
               <el-option
                 v-for="bank in banks"
                 :key="bank.code"
                 :label="bank.code + ' - ' + bank.name"
-                :value="bank.code + ' - ' + bank.name" />
+                :value="bank.code + ' - ' + bank.name"
+              />
             </el-select>
           </el-form-item>
           <el-form-item
             label="Agência"
-            prop="agency">
+            prop="agency"
+          >
             <el-input v-model="addBankForm.agency" />
           </el-form-item>
           <el-form-item
             label="Número do Conta"
-            prop="number">
+            prop="number"
+          >
             <el-input v-model="addBankForm.number" />
           </el-form-item>
           <el-form-item
             label="Tipo de Conta"
-            prop="type">
+            prop="type"
+          >
             <el-select
               v-model="addBankForm.type"
               placeholder=""
-              class="select">
+              class="select"
+            >
               <el-option
                 v-for="type in [{ label: 'Poupança', type: 'SAVING' },{ label: 'Corrente', type: 'CHECKING' }]"
                 :key="type.type"
                 :label="type.label"
-                :value="type.type" />
+                :value="type.type"
+              />
             </el-select>
           </el-form-item>
         </el-form>
         <span slot="footer">
           <el-button
             plain
-            @click="addBankDialogVisible = false">Cancelar</el-button>
+            @click="addBankDialogVisible = false"
+          >Cancelar</el-button>
           <el-button
             type="primary"
-            @click="addBankData()">Adicionar</el-button>
+            @click="addBankData()"
+          >Adicionar</el-button>
         </span>
       </el-dialog>
       <dispute-add-role
         :visible.sync="newRoleDialogVisible"
         :dispute-id="dispute.id"
         :document-numbers="documentNumbers"
-        :oabs= "oabs" />
+        :oabs="oabs"
+      />
     </div>
   </div>
 </template>
@@ -1240,6 +1464,7 @@ export default {
         disputeCode: '',
         zeroUpperRange: false,
         materialDamage: '',
+        moralDamage: '',
         requestedValue: '',
         externalId: '',
         provisionedValue: '',
@@ -1476,7 +1701,7 @@ export default {
       return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
     },
     showVexatious(personProperties) {
-      if (personProperties['IS_VEXATIOUS_AUTHOR'] === 'true' || personProperties['IS_VEXATIOUS_LAWYER'] === 'true' || personProperties['IS_VEXATIOUS_PARTY'] === 'true') return true
+      if (personProperties.IS_VEXATIOUS_AUTHOR === 'true' || personProperties.IS_VEXATIOUS_LAWYER === 'true' || personProperties.IS_VEXATIOUS_PARTY === 'true') return true
       return false
     },
     showIsDead(role) {
@@ -1677,6 +1902,7 @@ export default {
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
       this.disputeForm.materialDamage = dispute.materialDamage || ''
+      this.disputeForm.moralDamage = dispute.moralDamage || ''
       this.disputeForm.requestedValue = dispute.requestedValue || ''
       this.disputeForm.externalId = dispute.externalId || ''
       this.disputeForm.provisionedValue = dispute.provisionedValue || ''
@@ -1730,6 +1956,8 @@ export default {
             disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
             if (this.disputeForm.materialDamage) disputeToEdit.materialDamage = this.disputeForm.materialDamage
             else disputeToEdit.materialDamage = null
+            if (this.disputeForm.moralDamage) disputeToEdit.moralDamage = this.disputeForm.moralDamage
+            else disputeToEdit.moralDamage = null
             if (this.disputeForm.requestedValue) disputeToEdit.requestedValue = this.disputeForm.requestedValue
             else disputeToEdit.requestedValue = null
             if (this.disputeForm.externalId) disputeToEdit.externalId = this.disputeForm.externalId
@@ -1843,7 +2071,7 @@ export default {
               this.$store.dispatch('unlinkDisputeBankAccounts', {
                 disputeId: this.dispute.id,
                 bankAccountId: id,
-              })
+              }),
             )
           }
           Promise.all(promise).then(() => {
@@ -1887,7 +2115,7 @@ export default {
                 this.$store.dispatch('restartEngagementByContact', {
                   disputeId: this.dispute.id,
                   contact: contact.address || contact.number,
-                })
+                }),
               )
             }
             Promise.all(contacts).then(() => {
@@ -1937,7 +2165,7 @@ export default {
           if (!mappedEmails.includes(email.address)) return email.address
         })
       }
-      return [ ...changed.newPhones, ...changed.newEmails ]
+      return [...changed.newPhones, ...changed.newEmails]
     },
     addPhone() {
       let isValid = true

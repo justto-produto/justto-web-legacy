@@ -2,7 +2,8 @@
   <img
     v-if="iconPath"
     :src="iconPath"
-    draggable="false">
+    draggable="false"
+  >
 </template>
 
 <script>
@@ -30,7 +31,7 @@ export default {
           this.icon +
           (this.isActive ? '-active' : '') +
           (this.isWhite ? '-white' : '') +
-          '.svg'
+          '.svg',
         )
       }
       return false

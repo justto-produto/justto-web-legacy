@@ -9,6 +9,7 @@
     "comma-dangle": ["error", "always-multiline"],
     "no-var": "error",
     "prefer-const":"warn",
+    "no-debugger": "warn",
     "standard/no-callback-literal": 0,
     "vue/max-attributes-per-line": [
       "error",
@@ -28,12 +29,7 @@
       }
     ],
     "vue/no-textarea-mustache": "error",
-    "vue/no-unused-vars": [
-      "error",
-      {
-        "ignorePattern": "^_"
-      }
-    ],
+    "vue/no-unused-vars": "error",
     "vue/require-valid-default-prop": "error",
     "vue/return-in-computed-property": [
       "error",
