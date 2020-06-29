@@ -135,13 +135,13 @@
 
           <el-row :gutter="24">
             <el-col
-              v-for="(tariffLabel, tariffKey, tariffCount) in tariffTypes"
+              v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
               :key="tariffCount"
               :span="12"
             >
               <el-form-item
                 v-if="contract.tariffs"
-                :label="tariffLabel"
+                :label="tariffValue.label"
               >
                 <el-input
                   v-model="contract.tariffs[tariffKey]"
@@ -274,11 +274,11 @@
 
           <el-row :gutter="24">
             <el-col
-              v-for="(tariffLabel, tariffKey, tariffCount) in tariffTypes"
+              v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
               :key="tariffCount"
               :span="12"
             >
-              <el-form-item :label="tariffLabel">
+              <el-form-item :label="tariffValue.label">
                 <el-input
                   v-model="newContract.tariffs[tariffKey]"
                   placeholder="Valor em reais"
@@ -333,7 +333,12 @@ export default {
       },
       tariffTypes: TARIFF_TYPES,
       newContract: {
-        tariffs: { },
+        tariffs: {
+          IMPORTED_DISPUTE: TARIFF_TYPES.IMPORTED_DISPUTE.defaultValue,
+          INTERACTION: TARIFF_TYPES.INTERACTION.defaultValue,
+          DISPUTE_ACCEPTED: TARIFF_TYPES.DISPUTE_ACCEPTED.defaultValue,
+          SETTLED_DISPUTE: TARIFF_TYPES.SETTLED_DISPUTE.defaultValue,
+        },
       },
     }
   },
