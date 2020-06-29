@@ -150,12 +150,13 @@ const actions = {
   },
 
   cancelTransaction: ({ dispatch }, params) => {
-    axiosDispatcher({
+    return axiosDispatcher({
       url: `api/billing/transaction/${params.id}/cancel`,
       method: 'POST',
       data: params.data,
     }).then(() => {
       dispatch('getTransactions')
+      dispatch('getBillingDashboard')
     })
   },
 }
