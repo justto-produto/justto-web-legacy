@@ -136,13 +136,13 @@
 
           <el-row :gutter="24">
             <el-col
-              v-for="(tariffLabel, tariffKey, tariffCount) in tariffTypes"
+              v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
               :key="tariffCount"
               :span="12"
             >
               <el-form-item
                 v-if="contract.tariffs"
-                :label="tariffLabel"
+                :label="tariffValue.label"
               >
                 <money
                   v-model="contract.tariffs[tariffKey]"
@@ -275,11 +275,11 @@
 
           <el-row :gutter="24">
             <el-col
-              v-for="(tariffLabel, tariffKey, tariffCount) in tariffTypes"
+              v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
               :key="tariffCount"
               :span="12"
             >
-              <el-form-item :label="tariffLabel">
+              <el-form-item :label="tariffValue.label">
                 <money
                   v-model="newContract.tariffs[tariffKey]"
                   class="el-input__inner"
@@ -330,17 +330,16 @@ export default {
       form: this.clientData,
       isFormVisible: false,
       formRules: {
-        startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'blur' }],
+        startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'submit' }],
       },
       tariffTypes: TARIFF_TYPES,
       newContract: {
-        tariffs: {},
-        monthlySubscriptionFee: '',
-        invoiceClosingDay: '',
-        invoiceDueDays: '',
-        startedDate: '',
-        status: '',
-        planId: 1,
+        tariffs: {
+          IMPORTED_DISPUTE: TARIFF_TYPES.IMPORTED_DISPUTE.defaultValue,
+          INTERACTION: TARIFF_TYPES.INTERACTION.defaultValue,
+          DISPUTE_ACCEPTED: TARIFF_TYPES.DISPUTE_ACCEPTED.defaultValue,
+          SETTLED_DISPUTE: TARIFF_TYPES.SETTLED_DISPUTE.defaultValue,
+        },
       },
     }
   },

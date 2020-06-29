@@ -1,6 +1,18 @@
 export const TARIFF_TYPES = Object.freeze({
-  DISPUTE_ACCEPTED: 'Disputa aceita',
-  IMPORTED_DISPUTE: 'Importação',
-  INTERACTION: 'Interação',
-  SETTLED_DISPUTE: 'Acordo fechado',
+  IMPORTED_DISPUTE: {
+    label: 'Importação',
+    defaultValue: 0,
+  },
+  INTERACTION: {
+    label: 'Interação',
+    defaultValue: 12,
+  },
+  DISPUTE_ACCEPTED: {
+    label: 'Disputa aceita',
+    defaultValue: 18,
+  },
+  SETTLED_DISPUTE: {
+    label: 'Acordo fechado',
+    defaultValue: 300,
+  },
 })
