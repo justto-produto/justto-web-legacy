@@ -51,6 +51,11 @@ export default {
       isEditing: false,
     }
   },
+  watch: {
+    value(current) {
+      this.inputValue = current
+    },
+  },
   methods: {
     editionHandler(evt) {
       this.isEditing = true

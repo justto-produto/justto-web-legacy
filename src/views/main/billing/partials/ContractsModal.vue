@@ -68,10 +68,10 @@
                   placeholder="Dia do mês"
                 >
                   <el-option
-                    v-for="(day, dayCount) in 31"
-                    :key="dayCount"
-                    :label="day"
-                    :value="day"
+                    v-for="(day, dayCount) in 29"
+                    :key="dayCount - 1"
+                    :label="day - 1"
+                    :value="day - 1"
                   />
                 </el-select>
                 <el-form-item />
@@ -88,10 +88,10 @@
                   placeholder="Dia do mês"
                 >
                   <el-option
-                    v-for="(day, dayCount) in 31"
-                    :key="dayCount"
-                    :label="day"
-                    :value="day"
+                    v-for="(day, dayCount) in 29"
+                    :key="dayCount - 1"
+                    :label="day - 1"
+                    :value="day - 1"
                   />
                 </el-select>
                 <el-form-item />
@@ -125,9 +125,9 @@
                 prop="monthlySubscriptionFee"
                 label="Mensalidade"
               >
-                <el-input
+                <money
                   v-model="contract.monthlySubscriptionFee"
-                  placeholder="Valor da mensalidade"
+                  class="el-input__inner"
                 />
                 <el-form-item />
               </el-form-item>
@@ -144,9 +144,9 @@
                 v-if="contract.tariffs"
                 :label="tariffValue.label"
               >
-                <el-input
+                <money
                   v-model="contract.tariffs[tariffKey]"
-                  placeholder="Valor em reais"
+                  class="el-input__inner"
                 />
               </el-form-item>
             </el-col>
@@ -207,10 +207,10 @@
                   placeholder="Dia do mês"
                 >
                   <el-option
-                    v-for="(day, dayCount) in 31"
-                    :key="dayCount"
-                    :label="day"
-                    :value="day"
+                    v-for="(day, dayCount) in 29"
+                    :key="dayCount - 1"
+                    :label="day - 1"
+                    :value="day - 1"
                   />
                 </el-select>
                 <el-form-item />
@@ -227,10 +227,10 @@
                   placeholder="Dia do mês"
                 >
                   <el-option
-                    v-for="(day, dayCount) in 31"
-                    :key="dayCount"
-                    :label="day"
-                    :value="day"
+                    v-for="(day, dayCount) in 29"
+                    :key="dayCount - 1"
+                    :label="day - 1"
+                    :value="day - 1"
                   />
                 </el-select>
                 <el-form-item />
@@ -264,9 +264,9 @@
                 prop="monthlySubscriptionFee"
                 label="Mensalidade"
               >
-                <el-input
+                <money
                   v-model="newContract.monthlySubscriptionFee"
-                  placeholder="Valor da mensalidade"
+                  class="el-input__inner"
                 />
                 <el-form-item />
               </el-form-item>
@@ -280,9 +280,9 @@
               :span="12"
             >
               <el-form-item :label="tariffValue.label">
-                <el-input
+                <money
                   v-model="newContract.tariffs[tariffKey]"
-                  placeholder="Valor em reais"
+                  class="el-input__inner"
                 />
               </el-form-item>
             </el-col>
