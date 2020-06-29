@@ -175,7 +175,9 @@
                     <strong>{{ member.person.name }}: </strong>
                     <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                   </div>
-                  <div class="actions">
+                  <div
+                    v-if="!isJusttoUser(member.person.emailIds)"
+                    class="actions">
                     <a
                       href="#"
                       @click.prevent="showEditMember(member)"
@@ -185,7 +187,14 @@
                     <a
                       href="#"
                       @click.prevent="removeMember(member.id, member.person.name)"
-                    ><jus-icon icon="trash" /></a>
+                    >
+                      <jus-icon icon="trash" />
+                    </a>
+                  </div>
+                  <div v-else>
+                    <el-tooltip content="Esse usuário é um Administrador Justto e não pode ser editado ou removido.">
+                      <jus-icon icon="emoji" />
+                    </el-tooltip>
                   </div>
                 </div>
               </div>
@@ -434,6 +443,7 @@
 <script>
 import { mask } from 'vue-the-mask'
 import { validatePhone } from '@/utils/validations'
+// import { isJusttoUser } from '@/utils/jusUtils'
 
 export default {
   name: 'Configuration',
@@ -519,6 +529,12 @@ export default {
     }
   },
   methods: {
+    isJusttoUser(emails) {
+      // for (const email of emails) {
+      //   if (isJusttoUser(email.address)) return true
+      // }
+      return true
+    },
     handleTabClick(tab) {
       if (tab.name === 'blacklist') {
         this.$store.dispatch('getWorkspace')

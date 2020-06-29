@@ -1,5 +1,6 @@
 import router from '@/router'
 import axiosDispatcher from '@/store/axiosDispatcher.js'
+import { isJusttoUser } from '@/utils/jusUtils'
 
 const account = {
   state: {
@@ -151,7 +152,7 @@ const account = {
     accountId: state => state.id,
     accountEmail: state => state.email,
     isJusttoAdmin: state => {
-      if (state.email.endsWith('@justto.com.br')) return true
+      if (isJusttoUser(state.email)) return true
       return false
     },
   },

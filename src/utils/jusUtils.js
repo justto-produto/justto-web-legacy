@@ -268,6 +268,11 @@ const filterByTerm = function(term, array, key1, key2) {
   return array ? array.filter(i => normalizeString(i[key1]).includes(term) || normalizeString(i[key2]).includes(term)) : []
 }
 
+const isJusttoUser = function(email) {
+  if (email.endsWith('@justto.com.br')) return true
+  else return false
+}
+
 export {
   buildRoleTitle,
   getRoleIcon,
@@ -279,6 +284,7 @@ export {
   getInteractionIcon,
   getLastInteractionTooltip,
   isBase64,
+  isJusttoUser,
   uuidv4,
   getDocumentStep,
   getTracktitleByAction,
