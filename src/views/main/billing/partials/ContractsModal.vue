@@ -275,13 +275,13 @@
 
           <el-row :gutter="24">
             <el-col
-              v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
+              v-for="(tariff, tariffCount) in newContract.tariffs"
               :key="tariffCount"
               :span="12"
             >
-              <el-form-item :label="tariffValue.label">
+              <el-form-item :label="tariff.type">
                 <el-input
-                  v-model="newContract.tariffs[tariffKey]"
+                  v-model="tariff.value"
                   placeholder="Valor em reais"
                 />
               </el-form-item>
@@ -308,6 +308,8 @@
 <script>
 import { TARIFF_TYPES } from '@/constants/billing'
 import { mapActions } from 'vuex'
+import { ContractModel } from '@/models/billing/Contract.model'
+import { TariffModel } from '@/models/billing/Tariff.model'
 
 export default {
   name: 'ContractsModal',
@@ -333,20 +335,21 @@ export default {
         startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'submit' }],
       },
       tariffTypes: TARIFF_TYPES,
-      newContract: {
-        tariffs: {
-          IMPORTED_DISPUTE: TARIFF_TYPES.IMPORTED_DISPUTE.defaultValue,
-          INTERACTION: TARIFF_TYPES.INTERACTION.defaultValue,
-          DISPUTE_ACCEPTED: TARIFF_TYPES.DISPUTE_ACCEPTED.defaultValue,
-          SETTLED_DISPUTE: TARIFF_TYPES.SETTLED_DISPUTE.defaultValue,
-        },
-      },
+      newContract: { },
     }
   },
   watch: {
     visible(current) {
       this.isFormVisible = true
     },
+  },
+  beforeMount() {
+    const tariffs = []
+    Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel(key)))
+    const newContract = new ContractModel()
+    newContract.tariffs = tariffs
+
+    this.newContract = newContract
   },
   methods: {
     ...mapActions([
@@ -369,9 +372,27 @@ export default {
       }))
 
       if (newContract.status) {
+        const {
+          invoiceClosingDay,
+          invoiceDueDays,
+          monthlySubscriptionFee,
+          plan,
+          startedDate,
+          status,
+          tariffs,
+        } = newContract
+
         this.addContract({
           customerId,
-          contract: newContract,
+          contract: {
+            invoiceClosingDay,
+            invoiceDueDays,
+            monthlySubscriptionFee,
+            plan,
+            startedDate,
+            status,
+            tariffs,
+          },
         })
       }
 
