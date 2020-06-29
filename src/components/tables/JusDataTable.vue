@@ -57,19 +57,30 @@
     >
       <template slot-scope="scope">
         <span class="data-table__dispute-link">
-          <el-link
-            v-if="scope.row.referenceId"
-            :underline="false"
-            :href="`https://justto.app/#/management/dispute/${scope.row.referenceId}`"
-            target="_blank"
+          <el-tooltip
+            :disabled="true"
+            content="Esta disputa foi excluída"
           >
-            {{ scope.row.referenceId }}
-            <jus-icon
-              icon="external-link"
-              class="data-table__dispute-link-icon"
-            />
-          </el-link>
-          <span v-else>-</span>
+            <el-link
+              v-if="scope.row.referenceId"
+              :underline="false"
+              :disabled="false"
+              :href="`https://justto.app/#/management/dispute/${scope.row.referenceId}`"
+              target="_blank"
+            >
+              {{ scope.row.referenceId }}
+              <jus-icon
+                v-if="true"
+                icon="external-link"
+                class="data-table__dispute-link-icon"
+              />
+              <i
+                v-else
+                class="el-icon-warning-outline data-table__dispute-link-icon data-table__dispute-link-icon--alert"
+              />
+            </el-link>
+            <span v-else>-</span>
+          </el-tooltip>
         </span>
       </template>
     </el-table-column>
@@ -195,6 +206,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .data-table {
   .data-table__dispute-link {
     .data-table__dispute-link-icon {
@@ -202,6 +215,12 @@ export default {
       width: 16px;
       margin-left: 4px;
       margin-top: 1px;
+
+      &--alert {
+        color: $--color-danger;
+        display: inline !important;
+        font-size: 16px;
+      }
     }
 
     &:hover .data-table__dispute-link-icon {
