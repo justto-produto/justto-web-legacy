@@ -57,19 +57,30 @@
     >
       <template slot-scope="scope">
         <span class="data-table__dispute-link">
-          <el-link
-            v-if="scope.row.referenceId"
-            :underline="false"
-            :href="`https://justto.app/#/management/dispute/${scope.row.referenceId}`"
-            target="_blank"
+          <el-tooltip
+            :disabled="!scope.row.disputeArchived"
+            content="Esta disputa foi excluída"
           >
-            {{ scope.row.referenceId }}
-            <jus-icon
-              icon="external-link"
-              class="data-table__dispute-link-icon"
-            />
-          </el-link>
-          <span v-else>-</span>
+            <el-link
+              v-if="scope.row.referenceId"
+              :underline="false"
+              :disabled="scope.row.disputeArchived"
+              :href="disputeLink(scope.row.referenceId)"
+              target="_blank"
+            >
+              {{ scope.row.referenceId }}
+              <jus-icon
+                v-if="!scope.row.disputeArchived"
+                icon="external-link"
+                class="data-table__dispute-link-icon"
+              />
+              <i
+                v-else
+                class="el-icon-warning-outline data-table__dispute-link-icon data-table__dispute-link-icon--alert"
+              />
+            </el-link>
+            <span v-else>-</span>
+          </el-tooltip>
         </span>
       </template>
     </el-table-column>
@@ -187,6 +198,10 @@ export default {
       return note || 'Ops! Não há nota para este lançamento.'
     },
 
+    disputeLink(disputeId) {
+      return `https://justto.app/#/management/dispute/${disputeId}`
+    },
+
     infiniteHandler($state) {
       this.$emit('infiniteHandler', $state)
     },
@@ -195,6 +210,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .data-table {
   .data-table__dispute-link {
     .data-table__dispute-link-icon {
@@ -202,6 +219,12 @@ export default {
       width: 16px;
       margin-left: 4px;
       margin-top: 1px;
+
+      &.data-table__dispute-link-icon--alert {
+        color: $--color-danger;
+        display: inline;
+        font-size: 16px;
+      }
     }
 
     &:hover .data-table__dispute-link-icon {
