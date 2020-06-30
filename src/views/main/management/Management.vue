@@ -312,6 +312,19 @@ export default {
     this.$store.dispatch('getNearExpirations')
   },
   created() {
+    const query = this.$route.query
+
+    if (Object.keys(query).length) {
+      this.$store.commit('clearDisputeQuery')
+      this.$store.commit('addPrescription', query.prescription)
+      this.$store.commit('updateDisputeQuery', { key: 'status', value: query.status || [] })
+      this.$store.commit('updateDisputeQuery', { key: 'startDate', value: query.startDate })
+      this.$store.commit('updateDisputeQuery', { key: 'finishDate', value: query.finishDate })
+      this.$store.commit('updateDisputeQuery', { key: 'transactionType', value: query.transactionType })
+      this.$store.commit('setDisputeHasFilters', query.disputeHasFilters)
+      this.$store.commit('setDisputesTab', query.disputeTab)
+    }
+
     this.getDisputes()
   },
   mounted() {
