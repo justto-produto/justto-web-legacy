@@ -58,19 +58,19 @@
       <template slot-scope="scope">
         <span class="data-table__dispute-link">
           <el-tooltip
-            :disabled="true"
+            :disabled="!scope.row.disputeArchived"
             content="Esta disputa foi excluída"
           >
             <el-link
               v-if="scope.row.referenceId"
               :underline="false"
-              :disabled="false"
+              :disabled="scope.row.disputeArchived"
               :href="`https://justto.app/#/management/dispute/${scope.row.referenceId}`"
               target="_blank"
             >
               {{ scope.row.referenceId }}
               <jus-icon
-                v-if="true"
+                v-if="!scope.row.disputeArchived"
                 icon="external-link"
                 class="data-table__dispute-link-icon"
               />
