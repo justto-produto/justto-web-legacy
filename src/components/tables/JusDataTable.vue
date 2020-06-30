@@ -65,7 +65,7 @@
               v-if="scope.row.referenceId"
               :underline="false"
               :disabled="scope.row.disputeArchived"
-              :href="`https://justto.app/#/management/dispute/${scope.row.referenceId}`"
+              :href="disputeLink(scope.row.referenceId)"
               target="_blank"
             >
               {{ scope.row.referenceId }}
@@ -198,6 +198,10 @@ export default {
       return note || 'Ops! Não há nota para este lançamento.'
     },
 
+    disputeLink(disputeId) {
+      return `https://justto.app/#/management/dispute/${disputeId}`
+    },
+
     infiniteHandler($state) {
       this.$emit('infiniteHandler', $state)
     },
@@ -216,9 +220,9 @@ export default {
       margin-left: 4px;
       margin-top: 1px;
 
-      &--alert {
+      &.data-table__dispute-link-icon--alert {
         color: $--color-danger;
-        display: inline !important;
+        display: inline;
         font-size: 16px;
       }
     }
