@@ -193,7 +193,7 @@
                   </div>
                   <div v-else>
                     <el-tooltip content="Esse usuário é um Administrador Justto e não pode ser editado ou removido.">
-                      <jus-icon icon="emoji" />
+                      <jus-icon icon="admin" />
                     </el-tooltip>
                   </div>
                 </div>
