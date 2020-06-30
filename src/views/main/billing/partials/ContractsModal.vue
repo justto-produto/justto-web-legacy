@@ -330,7 +330,26 @@ export default {
       form: this.clientData,
       isFormVisible: false,
       formRules: {
-        startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'submit' }],
+        invoiceClosingDay: [{ required: true, message: 'Campo obrigatório', trigger: ['submit'] }],
+        invoiceDueDays: [{ required: true, message: 'Campo obrigatório', trigger: ['submit'] }],
+        monthlySubscriptionFee: [
+          { required: true, message: 'Campo obrigatório', trigger: ['submit'] },
+          {
+            validator: (_rule, value) => /(\d*)[.](\d*)/.exec(value),
+            message: 'O valor da mensalidade precisa ser um número',
+            trigger: ['submit'],
+          },
+        ],
+        plan: [{ required: true, message: 'Campo obrigatório', trigger: ['submit'] }],
+        startedDate: [
+          { required: true, message: 'Campo obrigatório', trigger: ['submit'] },
+          {
+            validator: (_rule, value) => /(\d{4})-(\d{2})-(\d{2})/.exec(value),
+            message: 'Use uma data no formato correto: AAAA-MM-DD',
+            trigger: ['submit'],
+          },
+        ],
+        status: [{ required: true, message: 'Campo obrigatório', trigger: ['submit'] }],
       },
       tariffTypes: TARIFF_TYPES,
       newContract: {
