@@ -25,8 +25,8 @@ build:
       code: |
         git clean -fdx
         git reset --hard
-        git checkout release
-        git pull origin release
+        git checkout master
+        git pull origin master
         git merge develop --commit -m "Merge com a develop para release"
     - script:
         name: Run npm i
@@ -43,7 +43,7 @@ build:
         code: |
           git add .
           git commit -m 'Release da versao '${CURRENT_VERSION} || echo 'Nada a commitar.'
-          git push origin release
+          git push origin master
     - internal/docker-build:
       dockerfile: DockerfileWercker
       image-name: gcr.io/justto-ml/$PROJECT_NAME
