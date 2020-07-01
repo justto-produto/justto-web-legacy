@@ -3,10 +3,10 @@
     <div
       v-for="action in actions"
       :key="action.name"
-      class="float-actions__action-containet"
+      class="float-actions__action-wrapper"
     >
       <el-tooltip
-        v-if="action.condition(scope.value)"
+        v-if="action.condition(scope)"
         :content="action.label"
       >
         <el-button
@@ -65,9 +65,12 @@ export default {
   right: 0;
   top: 0;
 
-  .float-actions__action-containet {
-    display: flex;
-    align-items: center;
+  .float-actions__action-wrapper {
+    margin-left: 8px;
+
+    &:first-child {
+      margin-left: 0;
+    }
   }
 
   .float-actions__action-icon {

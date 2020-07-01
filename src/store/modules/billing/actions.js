@@ -149,6 +149,17 @@ const actions = {
     })
   },
 
+  patchTransaction: ({ dispatch }, transaction) => {
+    return axiosDispatcher({
+      url: `api/billing/transaction/manual/${transaction.id}`,
+      method: 'PATCH',
+      data: transaction,
+    }).then(() => {
+      dispatch('getTransactions')
+      dispatch('getBillingDashboard')
+    })
+  },
+
   cancelTransaction: ({ dispatch }, params) => {
     return axiosDispatcher({
       url: `api/billing/transaction/${params.id}/cancel`,

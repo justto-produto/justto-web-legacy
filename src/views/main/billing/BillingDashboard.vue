@@ -8,7 +8,6 @@
       slot="main"
       class="billing-view__slot-main"
     >
-
       <JusButtonBack
         to="/billing"
         class="billing-view__back-button"
@@ -43,12 +42,13 @@
         :rows="2"
         :columns="4"
         class="billing-view__cards"
-        flow="column">
+        flow="column"
+      >
         <jus-financial-card
-          v-grid-item.col-1.row-1
-          v-grid-item.col-1.row-2:v-if="index === 6"
           v-for="(card, index) in dataCards"
           :key="index"
+          v-grid-item.col-1.row-1
+          v-grid-item.col-1.row-2:v-if="index === 6"
           :data="card.data"
           :actions="card.actions"
           @cardAction="handlerAction"
@@ -97,17 +97,20 @@
         :close-on-click-modal="false"
         :show-close="false"
         :visible.sync="addTransactionDialogVisable"
-        title="Novo Lançamento"
-        width="50%">
+        :title="addTransactionForm.title"
+        width="50%"
+      >
         <el-form
-          v-loading="modalLoading"
           ref="addTransactionForm"
-          :model="addTransactionForm">
+          v-loading="modalLoading"
+          :model="addTransactionForm"
+        >
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item
                 label="Valor"
-                prop="value">
+                prop="value"
+              >
                 <money
                   v-model="addTransactionForm.value"
                   class="el-input__inner"
@@ -118,7 +121,8 @@
             <el-col :span="12">
               <el-form-item
                 label="Data"
-                prop="occurredDate">
+                prop="occurredDate"
+              >
                 <el-date-picker
                   v-model="addTransactionForm.occurredDate"
                   format="dd/MM/yyyy"
@@ -132,7 +136,8 @@
             <el-col>
               <el-form-item
                 label="Nota"
-                prop="note">
+                prop="note"
+              >
                 <el-input
                   v-model="addTransactionForm.note"
                   type="textarea"
@@ -145,14 +150,19 @@
         <div slot="footer">
           <el-button
             :disabled="modalLoading"
-            @click="addTransactionDialogVisable = false">Cancelar</el-button>
+            @click="addTransactionDialogVisable = false"
+          >
+            Cancelar
+          </el-button>
           <el-button
             :loading="modalLoading"
             type="primary"
-            @click.prevent="addTransaction()">Continuar</el-button>
+            @click.prevent="handlerModalTrigger(addTransactionForm.trigger)"
+          >
+            Continuar
+          </el-button>
         </div>
       </el-dialog>
-
     </div>
   </jus-view-main>
 </template>
@@ -192,9 +202,11 @@ export default {
       addTransactionDialogVisable: false,
       modalLoading: false,
       addTransactionForm: {
-        value: '',
         note: '',
         occurredDate: '',
+        title: '',
+        trigger: '',
+        value: '',
       },
       activeTypeFilter: '',
     }
@@ -288,6 +300,7 @@ export default {
     ...mapActions([
       'cancelTransaction',
       'clearTransactionsQuery',
+      'patchTransaction',
       'getBillingDashboard',
       'getTransactions',
       'postTransaction',
@@ -338,20 +351,74 @@ export default {
       this.$router.push('/management')
     },
 
+    handlerModalTrigger(trigger) {
+      this[trigger]()
+    },
+
     addTransactionAction(evt) {
-      this.addTransactionForm.value = ''
       this.addTransactionForm.note = ''
       this.addTransactionForm.occurredDate = this.$moment(new Date()).format('YYYY-MM-DD')
+      this.addTransactionForm.title = 'Adicionar Lançamento'
+      this.addTransactionForm.trigger = evt.eventProps.trigger
+      this.addTransactionForm.value = ''
+
       this.addTransactionDialogVisable = true
     },
 
     addTransaction() {
       this.modalLoading = true
-      this.postTransaction(this.addTransactionForm).then(() => {
+
+      const transaction = this.addTransactionForm
+      delete transaction.title
+      delete transaction.trigger
+
+      this.postTransaction(transaction).then(() => {
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
           message: 'Lançamento realizado com sucesso',
+        })
+      }).finally(() => {
+        this.modalLoading = false
+        this.addTransactionDialogVisable = false
+      })
+    },
+
+    editTransactionAction(evt) {
+      const {
+        customProps: {
+          id,
+          note,
+          occurredDate,
+          value,
+        },
+        trigger,
+      } = evt.eventProps
+
+      this.addTransactionForm = {
+        id,
+        note,
+        occurredDate,
+        title: 'Editar lançamento',
+        trigger,
+        value,
+      }
+
+      this.addTransactionDialogVisable = true
+    },
+
+    editTransaction() {
+      this.modalLoading = true
+
+      const transaction = this.addTransactionForm
+      delete transaction.title
+      delete transaction.trigger
+
+      this.patchTransaction(transaction).then(() => {
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: 'Lançamento editado com sucesso',
         })
       }).finally(() => {
         this.modalLoading = false

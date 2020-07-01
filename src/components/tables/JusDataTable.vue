@@ -21,7 +21,8 @@
       <template slot-scope="scope">
         <el-tooltip
           :disabled="scope.row.type !== 'MANUAL'"
-          :content="transactionNote(scope.row.note)">
+          :content="transactionNote(scope.row.note)"
+        >
           <span v-html="transactionResume(scope.row)" />
         </el-tooltip>
       </template>
@@ -163,10 +164,16 @@ export default {
     return {
       availableActions: [
         {
+          icon: 'edit',
+          label: 'Editar lançamento',
+          trigger: 'editTransaction',
+          condition: (scope) => scope.type === 'MANUAL',
+        },
+        {
           icon: 'trash',
           label: 'Cancelar lançamento',
           trigger: 'cancelTransaction',
-          condition: (value) => !!value,
+          condition: (scope) => !!scope.value,
         },
       ],
     }
