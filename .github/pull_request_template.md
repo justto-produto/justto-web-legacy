@@ -1,6 +1,5 @@
 ## Task
-Link ou id da task no Jira.
-> Ex.: SAAS-123
+> Link ou id da task no Jira. Ex.: SAAS-123
 
 ## Mudanças
 > Mudanças realizadas no projeto.
@@ -9,7 +8,7 @@ Link ou id da task no Jira.
 > Caso contenha mudanças visuais, adicione uma screenshot.
 
 ## Checklist
-- [] Não foram adicionados erros no console
-- [] Alterações validadas localmente
-- [] Todos os testes estão passando localmente
-- [] Testes para novas funcionalidades adicionados
+- [ ] Não foram adicionados erros no console
+- [ ] Alterações validadas localmente
+- [ ] Todos os testes estão passando localmente
+- [ ] Testes para novas funcionalidades adicionados
