@@ -1,4 +1,4 @@
-[![wercker status](https://app.wercker.com/status/05b7de415f5b4c9f8fd128edd932c80e/s/master "wercker status")](https://app.wercker.com/project/byKey/05b7de415f5b4c9f8fd128edd932c80e)
+[![wercker status](https://app.wercker.com/status/05b7de415f5b4c9f8fd128edd932c80e/s/ "wercker status")](https://app.wercker.com/project/byKey/05b7de415f5b4c9f8fd128edd932c80e)
 
 # Justto Web 2.0
 
