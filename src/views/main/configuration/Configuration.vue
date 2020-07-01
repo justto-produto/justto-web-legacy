@@ -171,10 +171,15 @@
                 :key="member.id"
               >
                 <div class="configuration-view__members-list">
-                  <div class="member">
-                    <strong>{{ member.person.name }}: </strong>
-                    <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
-                  </div>
+                  <el-tooltip
+                    :content="member.accountEmail || 'Sem e-mail'"
+                    :open-delay="500"
+                  >
+                    <div class="member">
+                      <strong>{{ member.person.name }}: </strong>
+                      <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
+                    </div>
+                  </el-tooltip>
                   <div class="actions">
                     <div v-if="isJusttoAdmin || !isJusttoUser(member.accountEmail)">
                       <a
