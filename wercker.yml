@@ -12,7 +12,7 @@ build:
     - script:
       name: Configure project informations
       code: |
-        export PROJECT_NAME=justto-web
+        export PROJECT_NAME=justto-web-homol
         unset VUE_APP_BASE_URL
     - install-packages:
         packages: curl
