@@ -59,6 +59,7 @@ const actions = {
         planId: contract.planId,
         startedDate: contract.startedDate,
         status: contract.status,
+        tariffs: contract.tariffs,
         workspaceId: state.query.workspaceId,
       },
     }).then(() => dispatch('getMyCusomers')),

@@ -4,6 +4,7 @@
     :title="`Contratos de ${form.customerName}`"
     :close-on-click-modal="false"
     class="contracts-modal"
+    width="50%"
   >
     <el-form
       v-if="form"
@@ -49,6 +50,7 @@
                   v-model="contract.startedDate"
                   placeholder="Início da vigência"
                   type="date"
+                  format="dd/MM/yyyy"
                   value-format="yyyy-MM-dd"
                 />
                 <el-form-item />
@@ -181,6 +183,7 @@
                   v-model="newContract.startedDate"
                   placeholder="Início da vigência"
                   type="date"
+                  format="dd/MM/yyyy"
                   value-format="yyyy-MM-dd"
                 />
                 <el-form-item />
