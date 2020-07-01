@@ -552,7 +552,7 @@ export default {
     memberEmail(email) {
       return email || 'Sem e-mail'
     },
-    canDoAction(email) {
+    canDoActions(email) {
       return this.isJusttoAdmin || !this.isJusttoUser(email)
     },
     handleTabClick(tab) {
