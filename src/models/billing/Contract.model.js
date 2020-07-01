@@ -17,13 +17,17 @@ export class ContractModel {
    * @param {Array<TariffModel>} tariffs List of tariffs
    */
   constructor(
-    status,
-    startedDate = '1970-01-01',
-    invoiceDueDays = 0,
-    invoiceClosingDay = 0,
-    plan,
-    monthlySubscriptionFee,
-    tariffs = []) {
+    {
+      id,
+      status,
+      startedDate = '1970-01-01',
+      invoiceDueDays = 0,
+      invoiceClosingDay = 0,
+      plan,
+      monthlySubscriptionFee,
+      tariffs = [],
+    }) {
+    this._id = id
     this._status = status
     this._startedDate = startedDate
     this._invoiceDueDays = invoiceDueDays
@@ -31,6 +35,10 @@ export class ContractModel {
     this._plan = plan
     this._monthlySubscriptionFee = monthlySubscriptionFee
     this._tariffs = tariffs
+  }
+
+  get id() {
+    return this._id
   }
 
   get status() {

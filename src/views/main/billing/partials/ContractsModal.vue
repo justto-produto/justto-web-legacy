@@ -131,16 +131,13 @@
 
           <el-row :gutter="24">
             <el-col
-              v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
+              v-for="(tariff, tariffCount) in contract.tariffs"
               :key="tariffCount"
               :span="12"
             >
-              <el-form-item
-                v-if="contract.tariffs"
-                :label="tariffValue.label"
-              >
+              <el-form-item :label="tariffTypes[tariff.type].label">
                 <money
-                  v-model="contract.tariffs[tariffKey]"
+                  v-model="tariff.value"
                   class="el-input__inner"
                 />
               </el-form-item>
@@ -274,9 +271,9 @@
               :key="tariffCount"
               :span="12"
             >
-              <el-form-item :label="tariffValue.label">
+              <el-form-item :label="tariffTypes[tariff.type].label">
                 <money
-                  v-model="newContract.tariffs[tariffKey]"
+                  v-model="tariff.value"
                   class="el-input__inner"
                 />
               </el-form-item>
@@ -324,7 +321,7 @@ export default {
   },
   data() {
     return {
-      form: this.clientData,
+      form: { },
       isFormVisible: false,
       formRules: {
         invoiceClosingDay: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
@@ -346,7 +343,14 @@ export default {
   beforeMount() {
     const tariffs = []
     Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel(key)))
-    const newContract = new ContractModel()
+
+    const contracts = []
+    this.clientData.contracts.map(contract => contracts.push(new ContractModel(contract)))
+    this.form.contracts = contracts
+
+    console.log('SUCK MY DICK', this.form.contracts)
+
+    const newContract = new ContractModel({})
     newContract.tariffs = tariffs
 
     this.newContract = newContract

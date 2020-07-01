@@ -51,7 +51,7 @@
     </jus-grid>
 
     <ContractsModal
-      :client-data="form"
+      :client-data="currentCustomer"
       :plans="plans"
       :visible="dialogFormVisible"
     />

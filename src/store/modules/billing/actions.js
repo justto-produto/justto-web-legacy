@@ -53,7 +53,12 @@ const actions = {
       url: `api/billing/customer/${customerId}/contract`,
       method: 'post',
       data: {
-        ...contract,
+        invoiceClosingDay: contract.invoiceClosingDay,
+        invoiceDueDays: contract.invoiceDueDays,
+        monthlySubscriptionFee: contract.monthlySubscriptionFee,
+        planId: contract.planId,
+        startedDate: contract.startedDate,
+        status: contract.status,
         workspaceId: state.query.workspaceId,
       },
     }).then(() => dispatch('getMyCusomers')),
