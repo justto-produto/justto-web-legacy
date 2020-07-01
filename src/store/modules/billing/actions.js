@@ -1,4 +1,5 @@
 import axiosDispatcher from '@/store/axiosDispatcher.js'
+import moment from 'moment'
 import { queryBuilder } from '@/utils/jusUtils'
 
 const actions = {
@@ -144,8 +145,11 @@ const actions = {
         customerId: state.currentCustomer.customerId,
       },
     }).then(() => {
-      dispatch('getTransactions')
       dispatch('getBillingDashboard')
+      const isAfter = moment(params.occurredDate).isAfter(state.query.startDate)
+      const isBefore = moment(params.occurredDate).isBefore(state.query.endDate)
+      const isSame = moment(params.occurredDate).isSame(state.query.startDate || state.query.endDate)
+      if (state.query.type === 'MANUAL' && ((isBefore && isAfter) || isSame)) dispatch('getTransactions')
     })
   },
 
@@ -155,8 +159,8 @@ const actions = {
       method: 'POST',
       data: params.data,
     }).then(() => {
-      dispatch('getTransactions')
       dispatch('getBillingDashboard')
+      dispatch('getTransactions')
     })
   },
 }
