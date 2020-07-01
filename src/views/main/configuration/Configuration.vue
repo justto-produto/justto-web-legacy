@@ -167,7 +167,7 @@
                 Membros da equipe
               </h3>
               <div
-                v-for="member in teamMembers"
+                v-for="member in workspaceMembersSorted"
                 :key="member.id"
               >
                 <div class="configuration-view__members-list">
@@ -175,26 +175,26 @@
                     <strong>{{ member.person.name }}: </strong>
                     <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                   </div>
-                  <div
-                    v-if="!isJusttoUser(member.person.emailIds)"
-                    class="actions">
-                    <a
-                      href="#"
-                      @click.prevent="showEditMember(member)"
-                    >
-                      <jus-icon icon="edit" />
-                    </a>
-                    <a
-                      href="#"
-                      @click.prevent="removeMember(member.id, member.person.name)"
-                    >
-                      <jus-icon icon="trash" />
-                    </a>
-                  </div>
-                  <div v-else>
-                    <el-tooltip content="Esse usuário é um Administrador Justto e não pode ser editado ou removido.">
-                      <jus-icon icon="admin" />
-                    </el-tooltip>
+                  <div class="actions">
+                    <div v-if="isJusttoAdmin || !isJusttoUser(member.accountEmail)">
+                      <a
+                        href="#"
+                        @click.prevent="showEditMember(member)"
+                      >
+                        <jus-icon icon="edit" />
+                      </a>
+                      <a
+                        href="#"
+                        @click.prevent="removeMember(member.id, member.person.name)"
+                      >
+                        <jus-icon icon="trash" />
+                      </a>
+                    </div>
+                    <div v-else>
+                      <el-tooltip content="Esse usuário é um Administrador Justto e não pode ser editado ou removido.">
+                        <jus-icon icon="admin" />
+                      </el-tooltip>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -443,7 +443,8 @@
 <script>
 import { mask } from 'vue-the-mask'
 import { validatePhone } from '@/utils/validations'
-// import { isJusttoUser } from '@/utils/jusUtils'
+import { mapGetters } from 'vuex'
+import { isJusttoUser } from '@/utils/jusUtils'
 
 export default {
   name: 'Configuration',
@@ -489,16 +490,17 @@ export default {
       person: {},
       teamName: '',
       companyName: '',
-      teamMembers: [],
       currentEditMember: {},
       vexatiousThreshold: '',
       vexatiousType: '',
     }
   },
   computed: {
-    isAdminProfile() {
-      return this.$store.getters.isAdminProfile
-    },
+    ...mapGetters([
+      'isAdminProfile',
+      'isJusttoAdmin',
+      'workspaceMembersSorted',
+    ]),
     passwordType() {
       return this.showPassword ? 'text' : 'password'
     },
@@ -529,11 +531,10 @@ export default {
     }
   },
   methods: {
-    isJusttoUser(emails) {
-      // for (const email of emails) {
-      //   if (isJusttoUser(email.address)) return true
-      // }
-      return true
+    isJusttoUser(email) {
+      if (email) {
+        return isJusttoUser(email)
+      } return false
     },
     handleTabClick(tab) {
       if (tab.name === 'blacklist') {
@@ -552,11 +553,7 @@ export default {
       })
     },
     getMembers() {
-      this.$store.dispatch('getWorkspaceMembers').then(response => {
-        this.teamMembers = response
-          .sort((a, b) => a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0)
-          .filter(r => !r.archived)
-      })
+      this.$store.dispatch('getWorkspaceMembers')
     },
     changeName() {
       if (this.person.name) {
@@ -850,15 +847,25 @@ export default {
   &__members-list {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 8px;
+    min-height: 22px;
     a + a {
       margin-left: 10px;
     }
+    .member {
+      max-width: 340px;
+    }
     .actions {
       min-width: 42px;
+      justify-content: flex-end;
+      display: none;
     }
     img {
-      width: 16px;
+      width: 18px;
+      height: 18px;
+    }
+    &:hover .actions{
+      display: flex;
     }
   }
   .el-dialog {
