@@ -339,6 +339,9 @@ export default {
     visible(current) {
       this.isFormVisible = true
     },
+    clientData(current) {
+      this.form.contracts = current.contracts
+    },
   },
   beforeMount() {
     const tariffs = []
