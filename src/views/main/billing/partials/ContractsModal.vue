@@ -26,16 +26,13 @@
                 <el-select
                   v-if="!!form.contracts.length"
                   v-model="contract.status"
-                  placeholder="Ex.: ATIVO"
+                  placeholder="Ex.: Ativo"
                 >
                   <el-option
-                    label="ATIVO"
-                    value="ACTIVE"
-                  />
-
-                  <el-option
-                    label="TRIAL"
-                    value="TRIAL"
+                    v-for="(status, key, index) in contractStatus"
+                    :key="index"
+                    :label="status"
+                    :value="key"
                   />
                 </el-select>
               </el-form-item>
@@ -157,16 +154,13 @@
               >
                 <el-select
                   v-model="newContract.status"
-                  placeholder="Ex.: ATIVO"
+                  placeholder="Ex.: Ativo"
                 >
                   <el-option
-                    label="ATIVO"
-                    value="ACTIVE"
-                  />
-
-                  <el-option
-                    label="TRIAL"
-                    value="TRIAL"
+                    v-for="(status, key, index) in contractStatus"
+                    :key="index"
+                    :label="status"
+                    :value="key"
                   />
                 </el-select>
               </el-form-item>
@@ -335,6 +329,9 @@ export default {
       newContract: { },
     }
   },
+  computed: {
+    contractStatus: self => self.$t('billing.contract.status'),
+  },
   watch: {
     visible(current) {
       this.isFormVisible = true
@@ -347,8 +344,6 @@ export default {
     const contracts = []
     this.clientData.contracts.map(contract => contracts.push(new ContractModel(contract)))
     this.form.contracts = contracts
-
-    console.log('SUCK MY DICK', this.form.contracts)
 
     const newContract = new ContractModel({})
     newContract.tariffs = tariffs
