@@ -89,7 +89,7 @@
         <el-button
           v-if="newRole.party"
           type="text"
-          @click="secondStep = true"
+          @click="continueWithoutDocument"
         >
           Continuar sem documento
         </el-button>
@@ -278,13 +278,17 @@
       <el-button
         plain
         @click="dialogVisible = false"
-      >Cancelar</el-button>
+      >
+        Cancelar
+      </el-button>
       <el-button
         :loading="registerLoading"
         :disabled="!secondStep"
         type="primary"
         @click="registerRole"
-      >Cadastrar</el-button>
+      >
+        Cadastrar
+      </el-button>
     </span>
   </el-dialog>
 </template>
@@ -380,6 +384,12 @@ export default {
     },
   },
   methods: {
+    continueWithoutDocument() {
+      this.newRole.documentNumber = this.newRole.searchDocumentNumber
+      this.newRole.oab = this.newRole.searchOabNumber
+      this.newRole.state = this.newRole.searchOabState
+      this.secondStep = true
+    },
     searchPerson() {
       let isValid = true
       let fields

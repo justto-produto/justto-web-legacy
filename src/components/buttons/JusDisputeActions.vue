@@ -624,7 +624,7 @@ export default {
     },
     respondentsResume() {
       if (this.dispute && this.dispute.disputeRoles) {
-        return getRoles(this.dispute.disputeRoles, 'RESPONDENT').map(role => {
+        return getRoles(this.dispute.disputeRoles, 'RESPONDENT', 'PARTY').map(role => {
           return role.name
         }).join(', ')
       }

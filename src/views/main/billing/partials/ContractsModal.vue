@@ -7,7 +7,8 @@
   >
     <el-form
       v-if="form"
-      :model="form"
+      ref="contractForm"
+      :model="newContract"
       :rules="formRules"
     >
       <el-collapse>
@@ -20,7 +21,6 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
-                prop="status"
                 label="Status"
               >
                 <el-select
@@ -43,7 +43,6 @@
 
             <el-col :span="12">
               <el-form-item
-                prop="startedDate"
                 label="Início da vigência"
               >
                 <el-date-picker
@@ -60,7 +59,6 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
-                prop="invoiceDueDays"
                 label="Vencimento"
               >
                 <el-select
@@ -68,10 +66,10 @@
                   placeholder="Dia do mês"
                 >
                   <el-option
-                    v-for="(day, dayCount) in 31"
-                    :key="dayCount"
-                    :label="day"
-                    :value="day"
+                    v-for="(day, dayCount) in 29"
+                    :key="dayCount - 1"
+                    :label="day - 1"
+                    :value="day - 1"
                   />
                 </el-select>
                 <el-form-item />
@@ -80,7 +78,6 @@
 
             <el-col :span="12">
               <el-form-item
-                prop="invoiceClosingDay"
                 label="Fechamento"
               >
                 <el-select
@@ -88,10 +85,10 @@
                   placeholder="Dia do mês"
                 >
                   <el-option
-                    v-for="(day, dayCount) in 31"
-                    :key="dayCount"
-                    :label="day"
-                    :value="day"
+                    v-for="(day, dayCount) in 29"
+                    :key="dayCount - 1"
+                    :label="day - 1"
+                    :value="day - 1"
                   />
                 </el-select>
                 <el-form-item />
@@ -102,7 +99,6 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
-                prop="plan"
                 label="Plano"
               >
                 <el-select
@@ -122,12 +118,11 @@
 
             <el-col :span="12">
               <el-form-item
-                prop="monthlySubscriptionFee"
                 label="Mensalidade"
               >
-                <el-input
+                <money
                   v-model="contract.monthlySubscriptionFee"
-                  placeholder="Valor da mensalidade"
+                  class="el-input__inner"
                 />
                 <el-form-item />
               </el-form-item>
@@ -144,9 +139,9 @@
                 v-if="contract.tariffs"
                 :label="tariffValue.label"
               >
-                <el-input
+                <money
                   v-model="contract.tariffs[tariffKey]"
-                  placeholder="Valor em reais"
+                  class="el-input__inner"
                 />
               </el-form-item>
             </el-col>
@@ -207,10 +202,10 @@
                   placeholder="Dia do mês"
                 >
                   <el-option
-                    v-for="(day, dayCount) in 31"
-                    :key="dayCount"
-                    :label="day"
-                    :value="day"
+                    v-for="(day, dayCount) in 29"
+                    :key="dayCount - 1"
+                    :label="day - 1"
+                    :value="day - 1"
                   />
                 </el-select>
                 <el-form-item />
@@ -227,10 +222,10 @@
                   placeholder="Dia do mês"
                 >
                   <el-option
-                    v-for="(day, dayCount) in 31"
-                    :key="dayCount"
-                    :label="day"
-                    :value="day"
+                    v-for="(day, dayCount) in 29"
+                    :key="dayCount - 1"
+                    :label="day - 1"
+                    :value="day - 1"
                   />
                 </el-select>
                 <el-form-item />
@@ -241,7 +236,7 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
-                prop="plan"
+                prop="planId"
                 label="Plano"
               >
                 <el-select
@@ -264,9 +259,9 @@
                 prop="monthlySubscriptionFee"
                 label="Mensalidade"
               >
-                <el-input
+                <money
                   v-model="newContract.monthlySubscriptionFee"
-                  placeholder="Valor da mensalidade"
+                  class="el-input__inner"
                 />
                 <el-form-item />
               </el-form-item>
@@ -279,10 +274,10 @@
               :key="tariffCount"
               :span="12"
             >
-              <el-form-item :label="tariff.type">
-                <el-input
-                  v-model="tariff.value"
-                  placeholder="Valor em reais"
+              <el-form-item :label="tariffValue.label">
+                <money
+                  v-model="newContract.tariffs[tariffKey]"
+                  class="el-input__inner"
                 />
               </el-form-item>
             </el-col>
@@ -297,7 +292,7 @@
       <el-button @click="closeModal">Cancelar</el-button>
       <el-button
         type="primary"
-        @click.native="saveContract"
+        @click.native.prevent="validateForm"
       >
         Salvar
       </el-button>
@@ -332,7 +327,12 @@ export default {
       form: this.clientData,
       isFormVisible: false,
       formRules: {
-        startedDate: [{ required: true, message: 'Please input Activity name', trigger: 'submit' }],
+        invoiceClosingDay: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        invoiceDueDays: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        monthlySubscriptionFee: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        planId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        startedDate: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        status: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       tariffTypes: TARIFF_TYPES,
       newContract: { },
@@ -359,50 +359,51 @@ export default {
     makeContractName(contract) {
       return `Contrato #${contract.id} - ${contract.startedDate}`
     },
+    validateForm() {
+      const formRef = this.$refs.contractForm
+      formRef.clearValidate()
+      formRef.validate(isValid => isValid ? this.addNewContract() : false)
+
+      this.saveContract()
+    },
+    addNewContract() {
+      const {
+        clientData: { customerId },
+        newContract,
+      } = this
+
+      this.addContract({
+        customerId,
+        contract: newContract,
+      }).then(() => this.$jusNotification({
+        type: 'success',
+        title: 'Yay!',
+        message: 'Contrato adicionado com sucesso.',
+      }),
+      )
+    },
     saveContract() {
       const {
         clientData: { customerId },
         form,
-        newContract,
       } = this
 
-      form.contracts.map(contract => this.updateContract({
-        customerId,
-        contract,
-      }))
+      const formPromises = []
 
-      if (newContract.status) {
-        const {
-          invoiceClosingDay,
-          invoiceDueDays,
-          monthlySubscriptionFee,
-          plan,
-          startedDate,
-          status,
-          tariffs,
-        } = newContract
-
-        this.addContract({
+      form.contracts.map(contract => {
+        formPromises.push(this.updateContract({
           customerId,
-          contract: {
-            invoiceClosingDay,
-            invoiceDueDays,
-            monthlySubscriptionFee,
-            plan,
-            startedDate,
-            status,
-            tariffs,
-          },
-        })
-      }
+          contract,
+        }))
+      })
 
-      this.closeModal()
-
-      this.$jusNotification({
+      Promise.all(formPromises).then(() => this.$jusNotification({
         type: 'success',
         title: 'Yay!',
         message: 'Contratos editados com sucesso.',
-      })
+      }))
+
+      this.closeModal()
     },
     closeModal() {
       this.isFormVisible = false

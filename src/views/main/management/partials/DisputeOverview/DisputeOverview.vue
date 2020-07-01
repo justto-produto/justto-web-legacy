@@ -176,7 +176,6 @@
                 data-testid="overview-expirationdate"
               >{{ dispute.expirationDate.dateTime | moment('DD/MM/YY') }}</span>
             </div>
-
             <div
               v-if="dispute.materialDamage"
               class="dispute-overview-view__info-line"
@@ -188,6 +187,18 @@
                 data-testid="overview-materialdamage"
               >{{ dispute.materialDamage | currency }}</span>
             </div>
+            <div
+              v-if="dispute.moralDamage"
+              class="dispute-overview-view__info-line"
+              data-testid="dispute-infoline"
+            >
+              <span class="title">Dano moral:</span>
+              <span
+                v-if="dispute.moralDamage"
+                data-testid="overview-moralDamage"
+              >{{ dispute.moralDamage | currency }}</span>
+            </div>
+
             <div
               v-if="dispute.requestedValue"
               class="dispute-overview-view__info-line"
@@ -852,7 +863,7 @@
           </el-row>
           <h3>Outras configurações</h3>
           <el-row :gutter="20">
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item
                 :rules="validateDisputeUpperRange"
                 label="Alçada máxima"
@@ -867,7 +878,7 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item
                 label="Fim da negociação"
                 prop="expirationDate"
@@ -882,7 +893,7 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="12">
               <el-form-item
                 label="Classificação"
                 prop="classification"
@@ -890,7 +901,7 @@
                 <el-input v-model="disputeForm.classification" />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item
                 label="Dano material"
                 prop="materialDamage"
@@ -901,7 +912,18 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
+              <el-form-item
+                label="Dano moral"
+                prop="moralDamage"
+              >
+                <money
+                  v-model="disputeForm.moralDamage"
+                  class="el-input__inner"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
               <el-form-item
                 label="Valor do processo"
                 prop="requestedValue"
@@ -912,7 +934,7 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item
                 label="Valor Provisionado"
                 prop="provisionedValue"
@@ -1442,6 +1464,7 @@ export default {
         disputeCode: '',
         zeroUpperRange: false,
         materialDamage: '',
+        moralDamage: '',
         requestedValue: '',
         externalId: '',
         provisionedValue: '',
@@ -1879,6 +1902,7 @@ export default {
       this.disputeForm.expirationDate = dispute.expirationDate.dateTime
       this.disputeForm.description = dispute.description
       this.disputeForm.materialDamage = dispute.materialDamage || ''
+      this.disputeForm.moralDamage = dispute.moralDamage || ''
       this.disputeForm.requestedValue = dispute.requestedValue || ''
       this.disputeForm.externalId = dispute.externalId || ''
       this.disputeForm.provisionedValue = dispute.provisionedValue || ''
@@ -1932,6 +1956,8 @@ export default {
             disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
             if (this.disputeForm.materialDamage) disputeToEdit.materialDamage = this.disputeForm.materialDamage
             else disputeToEdit.materialDamage = null
+            if (this.disputeForm.moralDamage) disputeToEdit.moralDamage = this.disputeForm.moralDamage
+            else disputeToEdit.moralDamage = null
             if (this.disputeForm.requestedValue) disputeToEdit.requestedValue = this.disputeForm.requestedValue
             else disputeToEdit.requestedValue = null
             if (this.disputeForm.externalId) disputeToEdit.externalId = this.disputeForm.externalId
