@@ -115,9 +115,7 @@ export default {
       if (current) {
         this.$store.dispatch('validateGeneseRunner').then(response => {
           this.duplicatedDisputes = response.disputes
-        }).finally(() => {
-          setTimeout(() => { this.duplicatedDisputesLoading = false }, 1000)
-        })
+        }).finally(() => (this.duplicatedDisputesLoading = false))
       }
     },
   },
@@ -128,6 +126,10 @@ export default {
         this.$store.dispatch('hideLoading')
       })
     }
+
+    this.$store.dispatch('validateGeneseRunner').then(response => {
+      this.duplicatedDisputes = response.disputes
+    }).finally(() => (this.duplicatedDisputesLoading = false))
   },
 }
 </script>
