@@ -11,7 +11,11 @@ const getters = {
   workspaceMembers: state => state.members,
   workspaceMembersSorted: state =>
     state.members
-      .sort((a, b) => a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0)
+      .sort((a, b) => {
+        if (a.person.name < b.person.name) return -1
+        else if (a.person.name > b.person.name) return 1
+        else return 0
+      })
       .filter(r => !r.archived),
   redirectNewWorkspace: state => state.redirectNewWorkspace,
   isAdminProfile: state => state.profile === 'ADMINISTRATOR',
