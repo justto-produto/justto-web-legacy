@@ -67,7 +67,15 @@ const actions = {
     axiosDispatcher({
       url: `api/billing/customer/${customerId}/contract/${contract.id}`,
       method: 'patch',
-      data: contract,
+      data: {
+        invoiceClosingDay: contract.invoiceClosingDay,
+        invoiceDueDays: contract.invoiceDueDays,
+        monthlySubscriptionFee: contract.monthlySubscriptionFee,
+        planId: contract.planId,
+        startedDate: contract.startedDate,
+        status: contract.status,
+        tariffs: contract.tariffs,
+      },
     }).then(() => dispatch('getMyCusomers')),
 
   getPlans: () => axiosDispatcher({
