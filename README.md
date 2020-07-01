@@ -1,4 +1,6 @@
-# Justto Web 2.0 [![wercker status](https://app.wercker.com/status/a35117f11c094f18132e51e83cc975d0/s/ "wercker status")](https://app.wercker.com/project/byKey/a35117f11c094f18132e51e83cc975d0)
+[![wercker status](https://app.wercker.com/status/05b7de415f5b4c9f8fd128edd932c80e/s/ "wercker status")](https://app.wercker.com/project/byKey/05b7de415f5b4c9f8fd128edd932c80e)
+
+# Justto Web 2.0
 
 Novo sistema web da Justto que agora funciona. :heart:
 
