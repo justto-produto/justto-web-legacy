@@ -172,27 +172,35 @@
               >
                 <div class="configuration-view__members-list">
                   <el-tooltip
-                    :content="member.accountEmail || 'Sem e-mail'"
+                    :content="memberEmail(member.accountEmail)"
                     :open-delay="500"
                   >
-                    <div class="member">
+                    <div class="configuration-view__member">
                       <strong>{{ member.person.name }}: </strong>
                       <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
                     </div>
                   </el-tooltip>
-                  <div class="actions">
+                  <div class="configuration-view__actions">
                     <div v-if="isJusttoAdmin || !isJusttoUser(member.accountEmail)">
                       <a
                         href="#"
+                        class="configuration-view__link"
                         @click.prevent="showEditMember(member)"
                       >
-                        <jus-icon icon="edit" />
+                        <jus-icon
+                          icon="edit"
+                          class="configuration-view__icon"
+                        />
                       </a>
                       <a
                         href="#"
+                        class="configuration-view__link"
                         @click.prevent="removeMember(member.id, member.person.name)"
                       >
-                        <jus-icon icon="trash" />
+                        <jus-icon
+                          icon="trash"
+                          class="configuration-view__icon"
+                        />
                       </a>
                     </div>
                     <div v-else>
@@ -541,6 +549,9 @@ export default {
         return isJusttoUser(email)
       } return false
     },
+    memberEmail(email) {
+      return email || 'Sem e-mail'
+    },
     handleTabClick(tab) {
       if (tab.name === 'blacklist') {
         this.$store.dispatch('getWorkspace')
@@ -849,30 +860,37 @@ export default {
       width: 100%;
     }
   }
-  &__members-list {
+
+  .configuration-view__members-list {
     display: flex;
     justify-content: space-between;
     margin-top: 8px;
     min-height: 22px;
-    a + a {
+
+    .configuration-view__link + .configuration-view__link {
       margin-left: 10px;
     }
-    .member {
+
+    .configuration-view__member {
       max-width: 340px;
     }
-    .actions {
+
+    .configuration-view__actions {
       min-width: 42px;
       justify-content: flex-end;
       display: none;
+
+      .configuration-view__icon {
+        width: 18px;
+        height: 18px;
+      }
     }
-    img {
-      width: 18px;
-      height: 18px;
-    }
-    &:hover .actions{
+
+    &:hover .configuration-view__actions{
       display: flex;
     }
   }
+
   .el-dialog {
     .el-select {
       width: 100%;
