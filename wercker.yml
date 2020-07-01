@@ -24,8 +24,6 @@ build:
       code: |
         git clean -fdx
         git reset --hard
-        git checkout release
-        git merge develop --commit -m "Merge com a develop para release"
     - script:
         name: Run npm i
         code: |
@@ -33,17 +31,9 @@ build:
     - script:
         name: Run npm run release
         code: |
-          npm run release
+          npm run build
           export CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo $CURRENT_VERSION
-    - script:
-        name: Update tag version
-        code: |
-          git remote set-url origin https://dev%40justto.com.br:hMcF2TEAz6Ec@gitlab.com/Justto/front-end/justto-web.git
-          git pull origin release
-          git add .
-          git commit -m 'Release da versao '${CURRENT_VERSION} || echo 'Nada a commitar.'
-          git push origin release
     - internal/docker-build:
       dockerfile: DockerfileWercker
       image-name: gcr.io/justto-ml/$PROJECT_NAME
