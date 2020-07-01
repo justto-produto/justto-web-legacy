@@ -151,10 +151,7 @@ const account = {
     isLoggedIn: state => !!state.token,
     accountId: state => state.id,
     accountEmail: state => state.email,
-    isJusttoAdmin: state => {
-      if (isJusttoUser(state.email)) return true
-      return false
-    },
+    isJusttoAdmin: state => isJusttoUser(state.email),
   },
 }
 

@@ -269,7 +269,7 @@ const filterByTerm = function(term, array, key1, key2) {
 }
 
 const isJusttoUser = function(email) {
-  if (email.endsWith('@justto.com.br')) return true
+  if (email) return email.endsWith('@justto.com.br')
   else return false
 }
 

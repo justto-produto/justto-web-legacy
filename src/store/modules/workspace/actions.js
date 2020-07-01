@@ -83,15 +83,9 @@ const actions = {
     })
   },
   getWorkspaceMembers({ commit, dispatch }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/workspaces/members?size=999&')
-        .then(response => {
-          commit('setWorkspaceMembers', response.data.content)
-          resolve(response.data.content)
-        }).catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: 'api/workspaces/members?size=999&',
+      mutation: 'setWorkspaceMembers',
     })
   },
   removeWorkspaceMember({ commit }, id) {

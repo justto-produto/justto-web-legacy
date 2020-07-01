@@ -177,11 +177,11 @@
                   >
                     <div class="configuration-view__member">
                       <strong>{{ member.person.name }}: </strong>
-                      <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
+                      <span> {{ $t(`profile.${member.profile}`) | capitalize }}(a)</span>
                     </div>
                   </el-tooltip>
                   <div class="configuration-view__actions">
-                    <div v-if="isJusttoAdmin || !isJusttoUser(member.accountEmail)">
+                    <div v-if="canDoActions(member.accountEmail)">
                       <a
                         href="#"
                         class="configuration-view__link"
@@ -551,6 +551,9 @@ export default {
     },
     memberEmail(email) {
       return email || 'Sem e-mail'
+    },
+    canDoAction(email) {
+      return this.isJusttoAdmin || !this.isJusttoUser(email)
     },
     handleTabClick(tab) {
       if (tab.name === 'blacklist') {
