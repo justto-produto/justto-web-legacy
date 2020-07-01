@@ -340,15 +340,20 @@ export default {
 
     showDisputesAction(evt) {
       const type = evt.eventProps.customProps.type
-      this.$store.commit('clearDisputeQuery')
-      this.$store.commit('addPrescription', 'BILLING_TRANSACTION')
-      this.$store.commit('updateDisputeQuery', { key: 'status', value: [] })
-      this.$store.commit('updateDisputeQuery', { key: 'startDate', value: this.dateRange[0] })
-      this.$store.commit('updateDisputeQuery', { key: 'finishDate', value: this.dateRange[1] })
-      this.$store.commit('updateDisputeQuery', { key: 'transactionType', value: type })
-      this.$store.commit('setDisputeHasFilters', true)
-      this.$store.commit('setDisputesTab', '3')
-      this.$router.push('/management')
+
+      const managementRoute = this.$router.resolve({
+        name: 'management',
+        query: {
+          status: [],
+          startDate: this.dateRange[0],
+          finishDate: this.dateRange[1],
+          transactionType: type,
+          prescription: 'BILLING_TRANSACTION',
+          disputeHasFilters: true,
+          disputesTab: 3,
+        },
+      })
+      window.open(managementRoute.href, '_blank')
     },
 
     handlerModalTrigger(trigger) {
