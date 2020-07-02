@@ -83,24 +83,9 @@ const actions = {
     })
   },
   getWorkspaceMembers({ commit, dispatch }) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.get('api/workspaces/members?size=999&')
-        .then(response => {
-          const promises = []
-          for (const member of response.data.content) {
-            promises.push(dispatch('getPerson', member.personId))
-          }
-          Promise.all(promises).then(responses => {
-            for (let i = 0; i < response.data.content.length; i++) {
-              response.data.content[i].person = responses[i]
-            }
-            resolve(response.data.content)
-            commit('setWorkspaceMembers', response.data.content)
-          })
-        }).catch(error => {
-          reject(error)
-        })
+    return axiosDispatcher({
+      url: 'api/workspaces/members?size=999&',
+      mutation: 'setWorkspaceMembers',
     })
   },
   removeWorkspaceMember({ commit }, id) {
