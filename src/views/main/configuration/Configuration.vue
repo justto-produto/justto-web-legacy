@@ -205,7 +205,10 @@
                     </div>
                     <div v-else>
                       <el-tooltip content="Esse usuário é um Administrador Justto e não pode ser editado ou removido.">
-                        <jus-icon icon="admin" />
+                        <jus-icon
+                          icon="admin"
+                          class="configuration-view__icon"
+                        />
                       </el-tooltip>
                     </div>
                   </div>
@@ -553,7 +556,7 @@ export default {
       return email || 'Sem e-mail'
     },
     canDoActions(email) {
-      return this.isJusttoAdmin || !this.isJusttoUser(email)
+      return this.isJusttoUser || !this.isJusttoUser(email)
     },
     handleTabClick(tab) {
       if (tab.name === 'blacklist') {
@@ -879,8 +882,7 @@ export default {
     }
 
     .configuration-view__actions {
-      min-width: 42px;
-      justify-content: flex-end;
+      float: right;
       display: none;
 
       .configuration-view__icon {
@@ -890,7 +892,7 @@ export default {
     }
 
     &:hover .configuration-view__actions{
-      display: flex;
+      display: inline;
     }
   }
 

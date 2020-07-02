@@ -268,10 +268,7 @@ const filterByTerm = function(term, array, key1, key2) {
   return array ? array.filter(i => normalizeString(i[key1]).includes(term) || normalizeString(i[key2]).includes(term)) : []
 }
 
-const isJusttoUser = function(email) {
-  if (email) return email.endsWith('@justto.com.br')
-  else return false
-}
+const isJusttoUser = (email = '') => email.endsWith('@justto.com.br')
 
 export {
   buildRoleTitle,
