@@ -24,4 +24,7 @@ export const CONTRACT_STATUS = Object.freeze({
   TRIAL: {
     label: 'Trial',
   },
+  INACTIVE: {
+    label: 'Inativo',
+  },
 })
