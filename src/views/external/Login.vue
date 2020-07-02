@@ -307,16 +307,10 @@ export default {
             this.getMembersAndRedirect(selectedWorkspace)
           } else {
             this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then(() => {
-              this.getMyWorkspaces().then((response) => {
-                console.log(response)
-                const ind = this.workspaceForm.selectedWorkspaceIndex
-                console.log(ind)
-
-                // const workspaceFiltered =  this.workspaces.filter(w => {
-                //   return w.workspace.id === selectedWorkspace.workspace.id
-                // })[0]
-
-                this.getMembersAndRedirect(this.workspaces[this.workspaceForm.selectedWorkspaceIndex])
+              this.$store.dispatch('login', this.loginForm).then(() => {
+                this.getMyWorkspaces().then((response) => {
+                  this.getMembersAndRedirect(this.workspaces[this.workspaceForm.selectedWorkspaceIndex])
+                })
               })
             })
           }
