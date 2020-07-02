@@ -167,25 +167,50 @@
                 Membros da equipe
               </h3>
               <div
-                v-for="member in teamMembers"
+                v-for="member in workspaceMembersSorted"
                 :key="member.id"
               >
                 <div class="configuration-view__members-list">
-                  <div class="member">
-                    <strong>{{ member.person.name }}: </strong>
-                    <span> {{ $t('profile.' + member.profile) | capitalize }}(a)</span>
-                  </div>
-                  <div class="actions">
-                    <a
-                      href="#"
-                      @click.prevent="showEditMember(member)"
-                    >
-                      <jus-icon icon="edit" />
-                    </a>
-                    <a
-                      href="#"
-                      @click.prevent="removeMember(member.id, member.person.name)"
-                    ><jus-icon icon="trash" /></a>
+                  <el-tooltip
+                    :content="memberEmail(member.accountEmail)"
+                    :open-delay="500"
+                  >
+                    <div class="configuration-view__member">
+                      <strong>{{ member.person.name }}: </strong>
+                      <span> {{ $t(`profile.${member.profile}`) | capitalize }}(a)</span>
+                    </div>
+                  </el-tooltip>
+                  <div class="configuration-view__actions">
+                    <div v-if="canDoActions(member.accountEmail)">
+                      <a
+                        href="#"
+                        class="configuration-view__link"
+                        @click.prevent="showEditMember(member)"
+                      >
+                        <jus-icon
+                          icon="edit"
+                          class="configuration-view__icon"
+                        />
+                      </a>
+                      <a
+                        href="#"
+                        class="configuration-view__link"
+                        @click.prevent="removeMember(member.id, member.person.name)"
+                      >
+                        <jus-icon
+                          icon="trash"
+                          class="configuration-view__icon"
+                        />
+                      </a>
+                    </div>
+                    <div v-else>
+                      <el-tooltip content="Esse usuário é um Administrador Justto e não pode ser editado ou removido.">
+                        <jus-icon
+                          icon="admin"
+                          class="configuration-view__icon"
+                        />
+                      </el-tooltip>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -434,6 +459,8 @@
 <script>
 import { mask } from 'vue-the-mask'
 import { validatePhone } from '@/utils/validations'
+import { mapGetters } from 'vuex'
+import { isJusttoUser } from '@/utils/jusUtils'
 
 export default {
   name: 'Configuration',
@@ -479,16 +506,17 @@ export default {
       person: {},
       teamName: '',
       companyName: '',
-      teamMembers: [],
       currentEditMember: {},
       vexatiousThreshold: '',
       vexatiousType: '',
     }
   },
   computed: {
-    isAdminProfile() {
-      return this.$store.getters.isAdminProfile
-    },
+    ...mapGetters([
+      'isAdminProfile',
+      'isJusttoAdmin',
+      'workspaceMembersSorted',
+    ]),
     passwordType() {
       return this.showPassword ? 'text' : 'password'
     },
@@ -519,6 +547,17 @@ export default {
     }
   },
   methods: {
+    isJusttoUser(email) {
+      if (email) {
+        return isJusttoUser(email)
+      } return false
+    },
+    memberEmail(email) {
+      return email || 'Sem e-mail'
+    },
+    canDoActions(email) {
+      return this.isJusttoUser || !this.isJusttoUser(email)
+    },
     handleTabClick(tab) {
       if (tab.name === 'blacklist') {
         this.$store.dispatch('getWorkspace')
@@ -536,11 +575,7 @@ export default {
       })
     },
     getMembers() {
-      this.$store.dispatch('getWorkspaceMembers').then(response => {
-        this.teamMembers = response
-          .sort((a, b) => a.person.name < b.person.name ? -1 : a.person.name > b.person.name ? 1 : 0)
-          .filter(r => !r.archived)
-      })
+      this.$store.dispatch('getWorkspaceMembers')
     },
     changeName() {
       if (this.person.name) {
@@ -831,20 +866,36 @@ export default {
       width: 100%;
     }
   }
-  &__members-list {
+
+  .configuration-view__members-list {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
-    a + a {
+    margin-top: 8px;
+    min-height: 22px;
+
+    .configuration-view__link + .configuration-view__link {
       margin-left: 10px;
     }
-    .actions {
-      min-width: 42px;
+
+    .configuration-view__member {
+      max-width: 340px;
     }
-    img {
-      width: 16px;
+
+    .configuration-view__actions {
+      float: right;
+      display: none;
+
+      .configuration-view__icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    &:hover .configuration-view__actions{
+      display: inline;
     }
   }
+
   .el-dialog {
     .el-select {
       width: 100%;
