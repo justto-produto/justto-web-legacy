@@ -8,7 +8,7 @@ const billing = {
     myCustomers: [],
     currentCustomer: {
       contracts: [],
-      customerId: 70,
+      customerId: null,
       customerName: '',
       transactions: {},
     },

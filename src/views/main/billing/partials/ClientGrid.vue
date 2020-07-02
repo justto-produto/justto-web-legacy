@@ -71,7 +71,6 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
-      form: null,
       formCardIsVisible: false,
       inputValue: '',
     }
@@ -93,8 +92,6 @@ export default {
     this.getAllCustomers()
     this.setWorkspaceId(this.workspaceId)
     this.getPlans()
-
-    this.form = this.currentCustomer
   },
   methods: {
     ...mapActions([

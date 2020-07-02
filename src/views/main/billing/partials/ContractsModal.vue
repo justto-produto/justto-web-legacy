@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="isFormVisible"
-    :title="`Contratos de ${form.customerName}`"
+    :title="`Contratos de ${clientData.customerName}`"
     :close-on-click-modal="false"
     class="contracts-modal"
     width="50%"
@@ -14,7 +14,7 @@
     >
       <el-collapse>
         <el-collapse-item
-          v-for="(contract, contractCount) in form.contracts"
+          v-for="(contract, contractCount) in clientData.contracts"
           :key="contractCount"
           :name="contractCount"
           :title="makeContractName(contract)"
@@ -25,7 +25,7 @@
                 label="Status"
               >
                 <el-select
-                  v-if="!!form.contracts.length"
+                  v-if="!!clientData.contracts.length"
                   v-model="contract.status"
                   placeholder="Ex.: Ativo"
                 >
@@ -296,17 +296,13 @@
 
 <script>
 import { TARIFF_TYPES } from '@/constants/billing'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { ContractModel } from '@/models/billing/Contract.model'
 import { TariffModel } from '@/models/billing/Tariff.model'
 
 export default {
   name: 'ContractsModal',
   props: {
-    clientData: {
-      type: Object,
-      required: true,
-    },
     plans: {
       type: Array,
       default: () => [],
@@ -333,28 +329,21 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      clientData: 'getCurrentCustomer',
+    }),
     contractStatus: self => self.$t('billing.contract.status'),
   },
   watch: {
     visible(current) {
       this.isFormVisible = true
     },
-    clientData(current) {
-      this.form.contracts = current.contracts
-    },
   },
   beforeMount() {
     const tariffs = []
     Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel(key)))
 
-    const contracts = []
-    this.clientData.contracts.map(contract => contracts.push(new ContractModel(contract)))
-    this.form.contracts = contracts
-
-    const newContract = new ContractModel({})
-    newContract.tariffs = tariffs
-
-    this.newContract = newContract
+    this.newContract = new ContractModel({ tariffs })
   },
   methods: {
     ...mapActions([
@@ -389,15 +378,14 @@ export default {
     },
     saveContract() {
       const {
-        clientData: { customerId },
-        form,
+        clientData,
       } = this
 
       const formPromises = []
 
-      form.contracts.map(contract => {
+      clientData.contracts.map(contract => {
         formPromises.push(this.updateContract({
-          customerId,
+          customerId: clientData.customerId,
           contract,
         }))
       })
