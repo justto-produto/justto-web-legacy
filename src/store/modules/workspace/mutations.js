@@ -42,7 +42,7 @@ const mutations = {
     localStorage.removeItem('jusperson')
   },
   setWorkspaceMembers(state, members) {
-    state.members = members
+    state.members = members.content
   },
   setBlackList(state, blackList) {
     if (blackList) state.blackList = blackList
