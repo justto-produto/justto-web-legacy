@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="panel-minute-view">
     <el-table
-      v-loading="loadingMinutes"
       :key="tableKey"
+      v-loading="loadingMinutes"
       :data="filteredMinutes"
       width="100%"
     >
@@ -34,10 +34,11 @@
       </el-table-column>
       <el-table-column
         align="right"
-        width="400px"
+        width="360px"
       >
         <div
           slot="header"
+          style="display: flex"
         >
           <el-input
             v-model="search"
