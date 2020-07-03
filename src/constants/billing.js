@@ -16,3 +16,15 @@ export const TARIFF_TYPES = Object.freeze({
     defaultValue: 300,
   },
 })
+
+export const CONTRACT_STATUS = Object.freeze({
+  ACTIVE: {
+    label: 'Ativo',
+  },
+  TRIAL: {
+    label: 'Trial',
+  },
+  INACTIVE: {
+    label: 'Inativo',
+  },
+})

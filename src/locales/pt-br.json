@@ -261,5 +261,14 @@
   "threshold": {
     "QUANTITY": "Por contagem de disputas",
     "AVERAGE": "Por percentual acima da média"
+  },
+  "billing": {
+    "contract": {
+      "status": {
+        "ACTIVE": "Ativo",
+        "TRIAL": "Trial",
+        "INACTIVE": "Inativo"
+      }
+    }
   }
 }
