@@ -54,7 +54,13 @@ const actions = {
       url: `api/billing/customer/${customerId}/contract`,
       method: 'post',
       data: {
-        ...contract,
+        invoiceClosingDay: contract.invoiceClosingDay,
+        invoiceDueDays: contract.invoiceDueDays,
+        monthlySubscriptionFee: contract.monthlySubscriptionFee,
+        planId: contract.planId,
+        startedDate: contract.startedDate,
+        status: contract.status,
+        tariffs: contract.tariffs,
         workspaceId: state.query.workspaceId,
       },
     }).then(() => dispatch('getMyCusomers')),
@@ -63,7 +69,15 @@ const actions = {
     axiosDispatcher({
       url: `api/billing/customer/${customerId}/contract/${contract.id}`,
       method: 'patch',
-      data: contract,
+      data: {
+        invoiceClosingDay: contract.invoiceClosingDay,
+        invoiceDueDays: contract.invoiceDueDays,
+        monthlySubscriptionFee: contract.monthlySubscriptionFee,
+        planId: contract.planId,
+        startedDate: contract.startedDate,
+        status: contract.status,
+        tariffs: contract.tariffs,
+      },
     }).then(() => dispatch('getMyCusomers')),
 
   getPlans: () => axiosDispatcher({
@@ -150,6 +164,17 @@ const actions = {
       const isBefore = moment(params.occurredDate).isBefore(state.query.endDate)
       const isSame = moment(params.occurredDate).isSame(state.query.startDate || state.query.endDate)
       if (state.query.type === 'MANUAL' && ((isBefore && isAfter) || isSame)) dispatch('getTransactions')
+    })
+  },
+
+  patchTransaction: ({ dispatch }, transaction) => {
+    return axiosDispatcher({
+      url: `api/billing/transaction/manual/${transaction.id}`,
+      method: 'PATCH',
+      data: transaction,
+    }).then(() => {
+      dispatch('getTransactions')
+      dispatch('getBillingDashboard')
     })
   },
 
