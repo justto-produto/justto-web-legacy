@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="isFormVisible"
-    :title="`Contratos de ${clientData.customerName}`"
+    :title="`Contratos de ${form.customerName}`"
     :close-on-click-modal="false"
     class="contracts-modal"
     width="50%"
@@ -14,7 +14,7 @@
     >
       <el-collapse>
         <el-collapse-item
-          v-for="(contract, contractCount) in clientData.contracts"
+          v-for="(contract, contractCount) in form.contracts"
           :key="contractCount"
           :name="contractCount"
           :title="makeContractName(contract)"
@@ -25,7 +25,7 @@
                 label="Status"
               >
                 <el-select
-                  v-if="!!clientData.contracts.length"
+                  v-if="!!form.contracts.length"
                   v-model="contract.status"
                   placeholder="Ex.: Ativo"
                 >
@@ -335,13 +335,31 @@ export default {
     contractStatus: self => self.$t('billing.contract.status'),
   },
   watch: {
+    clientData(current) {
+      this.form = current
+      this.form.contracts.map(contract => {
+        const types = Object.keys(TARIFF_TYPES)
+
+        types.map(type => {
+          const tariffAlreadyExists = contract.tariffs.filter(tariff => tariff.type === type).length > 0
+
+          if (!tariffAlreadyExists) {
+            contract.tariffs.push({
+              type,
+              value: 0,
+            })
+          }
+        })
+      })
+    },
     visible(current) {
       this.isFormVisible = true
     },
   },
   beforeMount() {
+    this.form = this.clientData
     const tariffs = []
-    Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel(key)))
+    Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel({ type: key })))
 
     this.newContract = new ContractModel({ tariffs })
   },
@@ -350,6 +368,15 @@ export default {
       'addContract',
       'updateContract',
     ]),
+    getTariffIndex(contract, tariffType) {
+      let tariffIndex = -1
+
+      contract.tariffs.map((tariff, index) => {
+        if (tariff.type === tariffType) return (tariffIndex = index)
+      })
+
+      return tariffIndex
+    },
     makeContractName(contract) {
       return `Contrato #${contract.id} - ${contract.startedDate}`
     },
@@ -362,7 +389,7 @@ export default {
     },
     addNewContract() {
       const {
-        clientData: { customerId },
+        form: { customerId },
         newContract,
       } = this
 
@@ -378,14 +405,14 @@ export default {
     },
     saveContract() {
       const {
-        clientData,
+        form,
       } = this
 
       const formPromises = []
 
-      clientData.contracts.map(contract => {
+      form.contracts.map(contract => {
         formPromises.push(this.updateContract({
-          customerId: clientData.customerId,
+          customerId: form.customerId,
           contract,
         }))
       })
