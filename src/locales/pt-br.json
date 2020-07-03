@@ -12,7 +12,7 @@
     "materialDamage": "valor dano material",
     "externalId": "código interno da disputa",
     "description": "descrição",
-    "provisionedValue": "Valor Provisionado",
+    "provisionedValue": "valor provisionado",
     "status": {
       "ACCEPTED": "aceita",
       "CHECKOUT": "sem dados bancarios",
