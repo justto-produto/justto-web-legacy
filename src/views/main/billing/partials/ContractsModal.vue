@@ -353,21 +353,24 @@ export default {
       })
     },
     visible(current) {
+      this.resetNewContract()
       this.isFormVisible = true
     },
   },
   beforeMount() {
     this.form = this.clientData
-    const tariffs = []
-    Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel({ type: key })))
-
-    this.newContract = new ContractModel({ tariffs })
+    this.resetNewContract()
   },
   methods: {
     ...mapActions([
       'addContract',
       'updateContract',
     ]),
+    resetNewContract() {
+      const tariffs = []
+      Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel({ type: key })))
+      this.newContract = new ContractModel({ tariffs })
+    },
     getTariffIndex(contract, tariffType) {
       let tariffIndex
 
