@@ -109,7 +109,7 @@
         :prefix-icon="deadline === null ? 'el-icon-circle-check-outline' : 'el-icon-circle-check el-input__icon--success'"
         :picker-options="datePickerOptions"
         type="date"
-        format="dd-MM-yyyy"
+        format="dd/MM/yyyy"
         placeholder="Defina a data limite para a negociação"
         data-testid="feedback-datapicker"
         value-format="yyyy-MM-dd"
@@ -255,7 +255,7 @@ export default {
       return this.$store.state.workspaceModule.members
     },
     campaignTitle() {
-      return this.campaignName ? this.campaignName : this.initialCampaignName ? this.initialCampaignName : 'Campanha ' + this.index
+      return this.campaignName ? this.campaignName : `Campanha ${this.index}`
     },
     isPaymentStrategy() {
       let isStrategy = false
@@ -329,20 +329,19 @@ export default {
     this.contactPartyWhenInvalidLowyer = preferences.contactPartyWhenInvalidLowyer || false
     this.skipEnrichment = preferences.skipEnrichment || false
     this.denySavingDeposit = preferences.denySavingDeposit || false
-    this.initialCampaignName = this.mappedCampaign.name
-    this.mappedCampaign.campaign = {}
+
     this.mappedCampaign.businessHoursEngagement = this.businessHoursEngagement
     this.mappedCampaign.contactPartyWhenNoLowyer = this.contactPartyWhenNoLowyer
     this.mappedCampaign.contactPartyWhenInvalidLowyer = this.contactPartyWhenInvalidLowyer
     this.mappedCampaign.skipEnrichment = this.skipEnrichment
     this.mappedCampaign.denySavingDeposit = this.denySavingDeposit
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
-    if (this.mappedCampaign.respondent) {
-      this.respondent = this.mappedCampaign.respondent
-    }
-    if (this.mappedCampaign.deadline &&
-        this.$moment(new Date(this.mappedCampaign.deadline)).isValid() &&
-        (this.$moment(new Date(this.mappedCampaign.deadline)) >= this.$moment(new Date()))) {
+
+    this.campaignName = this.mappedCampaign.campaign || ''
+    this.respondent = this.mappedCampaign.respondent || ''
+    this.mapEmails(this.mappedCampaign.negotiatoremail)
+
+    if (this.mappedCampaign.deadline && this.$moment(new Date(this.mappedCampaign.deadline)).isValid()) {
       this.deadline = this.mappedCampaign.deadline
     }
   },
@@ -356,6 +355,23 @@ export default {
         dangerouslyUseHTMLString: true,
       })
     },
+
+    mapEmails(emails) {
+      // emails = 'lucas@justto.com.br, guilherme@justto.com.br, aaaa@a.com, teste@invalid, a@a.com, gustavo@justto.com.br, teste, invalido, aaaa.com , ,'
+      const emailsList = emails.split(',')
+      const vefiryEmail = /\S+@\S+\.\S+/
+      for (let email of emailsList) {
+        email = email.trim()
+        if (vefiryEmail.test(email)) {
+          for (const negotiator of this.negotiatorsList) {
+            if (email === negotiator.accountEmail) {
+              this.negotiatorIds.push(negotiator.personId)
+            }
+          }
+        }
+      }
+    },
+
     // showHelpBox: (i) => helpBox(i)
   },
 }
