@@ -350,7 +350,7 @@ export default {
           transactionType: type,
           prescription: 'BILLING_TRANSACTION',
           disputeHasFilters: true,
-          disputesTab: 3,
+          disputeTab: 3,
         },
       })
       window.open(managementRoute.href, '_blank')
