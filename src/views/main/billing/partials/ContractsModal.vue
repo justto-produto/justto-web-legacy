@@ -130,13 +130,13 @@
 
           <el-row :gutter="24">
             <el-col
-              v-for="(tariff, tariffCount) in contract.tariffs"
+              v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
               :key="tariffCount"
               :span="12"
             >
-              <el-form-item :label="tariffTypes[tariff.type].label">
+              <el-form-item :label="tariffValue.label">
                 <money
-                  v-model="tariff.value"
+                  v-model="contract.tariffs[getTariffIndex(contract, tariffKey)].value"
                   class="el-input__inner"
                 />
               </el-form-item>
@@ -369,11 +369,13 @@ export default {
       'updateContract',
     ]),
     getTariffIndex(contract, tariffType) {
-      let tariffIndex = -1
+      let tariffIndex
 
       contract.tariffs.map((tariff, index) => {
         if (tariff.type === tariffType) return (tariffIndex = index)
       })
+
+      console.table({ tariffIndex, tariffType })
 
       return tariffIndex
     },
