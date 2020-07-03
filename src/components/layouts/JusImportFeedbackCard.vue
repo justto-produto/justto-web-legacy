@@ -339,6 +339,7 @@ export default {
 
     this.campaignName = this.mappedCampaign.campaign || ''
     this.respondent = this.mappedCampaign.respondent || ''
+    this.mapEmails(this.mappedCampaign.negotiatoremail)
 
     if (this.mappedCampaign.deadline && this.$moment(new Date(this.mappedCampaign.deadline)).isValid()) {
       this.deadline = this.mappedCampaign.deadline
@@ -354,6 +355,23 @@ export default {
         dangerouslyUseHTMLString: true,
       })
     },
+
+    mapEmails(emails) {
+      // emails = 'lucas@justto.com.br, guilherme@justto.com.br, aaaa@a.com, teste@invalid, a@a.com, gustavo@justto.com.br, teste, invalido, aaaa.com , ,'
+      const emailsList = emails.split(',')
+      const vefiryEmail = /\S+@\S+\.\S+/
+      for (let email of emailsList) {
+        email = email.trim()
+        if (vefiryEmail.test(email)) {
+          for (const negotiator of this.negotiatorsList) {
+            if (email === negotiator.accountEmail) {
+              this.negotiatorIds.push(negotiator.personId)
+            }
+          }
+        }
+      }
+    },
+
     // showHelpBox: (i) => helpBox(i)
   },
 }
