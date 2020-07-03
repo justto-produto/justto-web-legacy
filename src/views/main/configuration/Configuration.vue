@@ -556,7 +556,7 @@ export default {
       return email || 'Sem e-mail'
     },
     canDoActions(email) {
-      return this.isJusttoUser || !this.isJusttoUser(email)
+      return !this.isJusttoUser(email) || this.isJusttoAdmin
     },
     handleTabClick(tab) {
       if (tab.name === 'blacklist') {
