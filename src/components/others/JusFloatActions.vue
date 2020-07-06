@@ -67,6 +67,8 @@ export default {
 
   .float-actions__action-wrapper {
     margin-left: 8px;
+    display: flex;
+    align-items: center;
 
     &:first-child {
       margin-left: 0;

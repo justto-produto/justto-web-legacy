@@ -2,24 +2,24 @@
   <section class="panel-strategy">
     <el-collapse v-model="activeCollapse">
       <el-collapse-item
-        title="Ativas"
+        :title="`Ativas (${activeStrategies.length})`"
         name="active"
       >
         <strategy-card
-          v-for="(strategy, index) in filteredStrategie"
-          :key="`${index}-${_uid}`"
+          v-for="(strategy) in activeStrategies"
+          :key="strategy.id"
           :strategy="strategy"
           class="panel-strategy__card"
           @changeEstrategyData="updateStrategy"
         />
       </el-collapse-item>
       <el-collapse-item
-        title="Inativas"
+        :title="`Inativas (${inactiveStrategies.length})`"
         name="unactive"
       >
         <strategy-card
-          v-for="(strategy, index) in filteredStrategie"
-          :key="`${index}-${_uid}`"
+          v-for="(strategy) in inactiveStrategies"
+          :key="strategy.id"
           :strategy="strategy"
           class="panel-strategy__card"
           @changeEstrategyData="updateStrategy"
@@ -31,6 +31,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { filterByTerm } from '@/utils/jusUtils'
 import StrategyCard from './StrategyCard'
 
 export default {
@@ -52,25 +53,44 @@ export default {
       strategies: 'getStrategies',
     }),
 
-    filteredStrategie() {
-      return this.strategies
-        .filter(s => s.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-          .includes(this.filterTerm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')),
-        )
+    filteredStrategies() {
+      const teste = filterByTerm(this.filterTerm, this.strategies, 'name')
+      console.log(teste)
+      return teste
+    },
+
+    activeStrategies() {
+      const teste = this.filteredStrategies.filter(s => s.isActive)
+      console.log(teste)
+      return teste
+    },
+
+    inactiveStrategies() {
+      return this.filteredStrategies.filter(s => !s.isActive)
     },
   },
   methods: {
     ...mapActions(['updateStrategy']),
+
+    mainButtonHandler() {
+      this.$prompt('Digite o nome da estratégia', 'Criar estratégia', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => !!value,
+        inputErrorMessage: 'Campo obrigatório',
+      }).then(({ value }) => {
+        this.addStrategy(value)
+      })
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/nestable.scss';
-
 .panel-strategy {
   background-color: #fff;
   padding: 40px;
+  overflow: auto;
 
   .panel-strategy__card {
     margin-bottom: 32px;

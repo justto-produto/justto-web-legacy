@@ -94,16 +94,6 @@
         fixed="right"
         align="right"
       >
-        <template
-          slot="header"
-        >
-          <el-input
-            v-model="search"
-            size="mini"
-            placeholder="Buscar"
-            @input="resetPage"
-          />
-        </template>
         <template slot-scope="props">
           <el-tooltip
             :open-delay="800"
@@ -136,14 +126,6 @@
     <el-backtop
       ref="backTop"
       target=".panel-workspace-view"
-    />
-    <el-pagination
-      v-show="!search"
-      :page-size="pageSize"
-      :current-page="page"
-      :total="workspaces.length"
-      layout="prev, pager, next"
-      @current-change="handleCurrentChange"
     />
     <el-dialog
       :visible.sync="addUserDialogVisible"
@@ -297,17 +279,22 @@
 </template>
 
 <script>
+import { filterByTerm } from '@/utils/jusUtils'
+
 export default {
   name: 'PanelWorkspace',
+  props: {
+    filterTerm: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       loading: false,
       addUserDialogVisible: false,
       editWorkspaceDialogVisible: false,
       workspaceNameToEdit: '',
-      search: '',
-      page: 1,
-      pageSize: 20,
       workspaces: [],
       tableKey: 0,
       usersTableKey: 0,
@@ -337,21 +324,12 @@ export default {
       workspaceRules: {
         name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
+      debounce: () => {},
     }
   },
   computed: {
     filteredWorkspaces() {
-      if (this.search) {
-        return this.workspaces.filter(data => {
-          return !this.search ||
-          data.name.toLowerCase().includes(this.search.toLowerCase()) ||
-          data.teamName.toLowerCase().includes(this.search.toLowerCase())
-        })
-      } else {
-        const start = this.page === 1 ? 0 : ((this.page - 1) * this.pageSize)
-        const end = (this.page * this.pageSize)
-        return this.workspaces.slice(start, end)
-      }
+      return filterByTerm(this.filterTerm, this.workspaces, 'name', 'teamName')
     },
     vexatiousTypeMask() {
       return {
@@ -406,13 +384,6 @@ export default {
           this.$jusNotification({ error })
         })
       }
-    },
-    handleCurrentChange(page) {
-      this.page = page
-      if (this.$refs.backTop && this.$refs.backTop.$el.click) this.$refs.backTop.$el.click()
-    },
-    resetPage() {
-      this.page = 1
     },
     addUserDialog(workspace) {
       this.userForm = {

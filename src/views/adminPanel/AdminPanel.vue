@@ -40,18 +40,19 @@
         <div class="admin-panel-view__panel-header">
           <h1>{{ $t('panel.' + menuIndex) }}</h1>
           <div class="admin-panel-view__header-options">
-            <!-- <el-button
-              v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
-              type="primary"
-              icon="el-icon-plus"
-              @click="add">
-              Adicionar
-            </el-button> -->
             <el-input
               v-model="filterTerm"
               prefix-icon="el-icon-search"
               placeholder="Buscar"
             />
+            <el-button
+              v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
+              type="primary"
+              icon="el-icon-plus"
+              class="admin-panel-view__header-button"
+              @click="mainButtonHandler">
+              Adicionar
+            </el-button>
           </div>
         </div>
         <panel-workspace
@@ -121,8 +122,9 @@ export default {
     changeMenuIndex(index) {
       this.menuIndex = index
     },
-    add() {
-      this.$refs[`panel${this.menuIndex}`].add()
+
+    mainButtonHandler() {
+      this.$refs[`panel${this.menuIndex}`].mainButtonHandler()
     },
   },
 }
@@ -138,9 +140,16 @@ export default {
   &__panel-header {
     display: flex;
     justify-content: space-between;
+
   }
   &__header-options {
-    margin: 20px 48px 0px;
+    display: flex;
+    margin: 20px 0;
+    margin-right: 40px;
+
+    .admin-panel-view__header-button {
+      margin-left: 16px;
+    }
   }
   .el-col.content {
     h1 {
