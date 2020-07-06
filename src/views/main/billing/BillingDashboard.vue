@@ -21,21 +21,22 @@
       <article class="billing-view__range">
         <h2 class="billing-view__range-title">
           Cobrança do período
+          <el-date-picker
+            v-model="dateRange"
+            :clearable="false"
+            type="daterange"
+            align="right"
+            format="dd/MM/yyyy"
+            unlink-panels
+            range-separator="-"
+            start-placeholder="Data inicial"
+            end-placeholder="Data final"
+            value-format="yyyy-MM-dd"
+            class="billing-view__range-input"
+            @input="filterByRangeDate"
+          />
+          - {{ getCurrentCustomer.customerName }}
         </h2>
-        <el-date-picker
-          v-model="dateRange"
-          :clearable="false"
-          type="daterange"
-          align="right"
-          format="dd/MM/yyyy"
-          unlink-panels
-          range-separator="-"
-          start-placeholder="Data inicial"
-          end-placeholder="Data final"
-          value-format="yyyy-MM-dd"
-          class="billing-view__range-input"
-          @input="filterByRangeDate"
-        />
       </article>
 
       <jus-grid
@@ -211,14 +212,10 @@ export default {
       activeTypeFilter: '',
     }
   },
-  watch: {
-    workspaceId(current, _old, next) {
-      if (current !== next) this.$router.push('/billing')
-    },
-  },
   computed: {
     ...mapGetters([
       'billingDashboard',
+      'getCurrentCustomer',
       'isJusttoAdmin',
       'tableLoading',
       'transactions',
@@ -284,6 +281,11 @@ export default {
         this.$moment(new Date()).startOf('month').format('YYYY-MM-DD'),
         this.$moment(new Date()).endOf('month').format('YYYY-MM-DD'),
       ]
+    },
+  },
+  watch: {
+    workspaceId(current, _old, next) {
+      if (current !== next) this.$router.push('/billing')
     },
   },
   beforeMount() {
