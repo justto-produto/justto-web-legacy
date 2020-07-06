@@ -19,12 +19,15 @@
       label="Lançamento"
     >
       <template slot-scope="scope">
-        <el-tooltip
-          :disabled="scope.row.type !== 'MANUAL'"
-          :content="transactionNote(scope.row.note)"
-        >
-          <span v-html="transactionResume(scope.row)" />
-        </el-tooltip>
+        <span v-html="transactionResume(scope.row)" />
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Nota"
+      width="150"
+    >
+      <template slot-scope="scope">
+        <span>{{ transactionTableNote(scope.row.note, scope.row.type) }}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -198,11 +201,11 @@ export default {
     },
 
     transactionResume(transaction) {
-      return this.$options.filters.capitalize(this.$t(`transactions.${transaction.type}`)) + (transaction.type !== 'MANUAL' ? ' na disputa #' + transaction.referenceId + '<br>' + transaction.code : '')
+      return this.$options.filters.capitalize(this.$t(`transactions.${transaction.type}`)) + (!['MANUAL', 'SUBSCRIPTION'].includes(transaction.type) ? ' na disputa #' + transaction.referenceId + '<br>' + transaction.code : '')
     },
 
-    transactionNote(note) {
-      return note || 'Ops! Não há nota para este lançamento.'
+    transactionTableNote(note, type) {
+      return type !== 'MANUAL' ? '-' : note || '-'
     },
 
     disputeLink(disputeId) {

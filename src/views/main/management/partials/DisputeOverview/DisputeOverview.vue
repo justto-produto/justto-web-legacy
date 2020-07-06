@@ -935,7 +935,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item
-                label="Valor Provisionado"
+                label="Valor provisionado"
                 prop="provisionedValue"
               >
                 <money
