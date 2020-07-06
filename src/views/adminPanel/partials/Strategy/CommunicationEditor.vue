@@ -6,6 +6,7 @@
     :class="{
       'communication-editor__dialog--full': inFullScreen,
     }"
+    class="communication-editor__dialog"
     width="750px"
   >
     <div class="communication-editor show-toolbar">
@@ -107,16 +108,18 @@ export default {
 </style>
 
 <style lang="scss">
-.el-dialog__body {
-  display: grid;
-  gap: 24px;
-  grid-template-columns: 1fr auto;
-  // super gamb for calc total height of dialog ¯\_(ツ)_/¯
-  height: calc(100% - (60px + 57px));
-}
+.communication-editor__dialog {
+  .el-dialog__body {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 1fr auto;
+    // super gamb for calc total height of dialog ¯\_(ツ)_/¯
+    height: calc(100% - (60px + 57px));
+  }
 
-.el-dialog {
-  transition-duration: .2s;
+  .el-dialog {
+    transition-duration: .2s;
+  }
 }
 
 .communication-editor__dialog--full > .el-dialog {
