@@ -325,11 +325,20 @@ export default {
         name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
       debounce: () => {},
+      filterTermDebounced: '',
     }
+  },
+  watch: {
+    filterTerm(current) {
+      clearTimeout(this.debounce)
+      this.debounce = setTimeout(() => {
+        this.filterTermDebounced = current
+      }, 800)
+    },
   },
   computed: {
     filteredWorkspaces() {
-      return filterByTerm(this.filterTerm, this.workspaces, 'name', 'teamName')
+      return filterByTerm(this.filterTermDebounced, this.workspaces, 'name', 'teamName')
     },
     vexatiousTypeMask() {
       return {

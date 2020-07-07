@@ -9,7 +9,7 @@
   >
     <el-table-column
       label="Data"
-      width="80"
+      width="75"
     >
       <template slot-scope="scope">
         <span>{{ scope.row.occurredDate | moment('DD/MM/YY') }}</span>
@@ -24,7 +24,7 @@
     </el-table-column>
     <el-table-column
       label="Nota"
-      width="150"
+      width="140"
     >
       <template slot-scope="scope">
         <span>{{ transactionTableNote(scope.row.note, scope.row.type) }}</span>
@@ -32,7 +32,7 @@
     </el-table-column>
     <el-table-column
       label="Tipo"
-      width="150"
+      width="90"
     >
       <template slot-scope="scope">
         <span>{{ $t(`transactions.${scope.row.type}`) | capitalize }}</span>
@@ -41,6 +41,7 @@
     <el-table-column
       prop="respondent"
       label="Réu"
+      width="130"
     >
       <template slot-scope="scope">
         <span>{{ scope.row.respondent || '-' }}</span>
@@ -90,7 +91,7 @@
     </el-table-column>
     <el-table-column
       label="ID Interno"
-      width="140"
+      width="100"
     >
       <template slot-scope="scope">
         <span>{{ scope.row.externalId || '-' }}</span>
