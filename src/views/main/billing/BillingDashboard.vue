@@ -35,7 +35,7 @@
             class="billing-view__range-input"
             @input="filterByRangeDate"
           />
-          - {{ getCurrentCustomer.customerName }}
+          de {{ getCurrentCustomer.customerName }}
         </h2>
       </article>
 
@@ -533,7 +533,7 @@ export default {
     .billing-view__range {
       .billing-view__range-input {
         padding: 4px 0;
-        margin-left: 8px !important;
+        margin: 0 4px !important;
         width: 298px;
 
         .el-icon-date, .el-range__close-icon {
