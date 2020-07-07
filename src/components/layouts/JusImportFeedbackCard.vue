@@ -357,7 +357,6 @@ export default {
     },
 
     mapEmails(emails) {
-      // emails = 'lucas@justto.com.br, guilherme@justto.com.br, aaaa@a.com, teste@invalid, a@a.com, gustavo@justto.com.br, teste, invalido, aaaa.com , ,'
       const emailsList = emails.split(',')
       const vefiryEmail = /\S+@\S+\.\S+/
       for (let email of emailsList) {
@@ -371,8 +370,6 @@ export default {
         }
       }
     },
-
-    // showHelpBox: (i) => helpBox(i)
   },
 }
 </script>
