@@ -7,6 +7,7 @@
     "negotiatorEmail": "email do negociador",
     "mappedStrategy": "nome da estratégia",
     "mappedCampaign": "nome da campanha",
+    "mappedNote": "notas da disputa",
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
     "materialDamage": "valor dano material",
