@@ -95,7 +95,20 @@
               />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Exportar disputas">
+          <el-tooltip content="Exportação temporariamente bloqueada. Fale com seu Key Account.">
+            <span
+              class="wrapper"
+              style="margin-left: 8px">
+              <el-button
+                :disabled="true"
+                plain
+                icon="el-icon-download"
+                data-testid="export-disputes"
+                @click="showExportDisputesDialog"
+              />
+            </span>
+          </el-tooltip>
+          <!-- <el-tooltip content="Exportar disputas">
             <el-button
               :disabled="disputes.length === 0"
               plain
@@ -103,7 +116,7 @@
               data-testid="export-disputes"
               @click="showExportDisputesDialog"
             />
-          </el-tooltip>
+          </el-tooltip> -->
           <jus-import-dialog :dialog-visible.sync="importDialogVisible" />
         </div>
       </div>

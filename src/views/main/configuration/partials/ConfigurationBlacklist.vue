@@ -13,7 +13,9 @@
         align="right"
         width="400px"
       >
-        <div slot="header">
+        <div
+          class="configuration-blackList-view__column-header"
+          slot="header">
           <el-input
             v-model="search"
             placeholder="Buscar"
@@ -169,6 +171,9 @@ export default {
 <style lang="scss">
 .configuration-blackList-view {
   th.is-right .cell {
+    display: flex;
+  }
+  .configuration-blackList-view__column-header {
     display: flex;
   }
   .el-alert {
