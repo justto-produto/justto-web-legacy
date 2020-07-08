@@ -50,7 +50,7 @@ export default {
   },
   data: () => ({
     activeCollapse: ['active'],
-    loading: false,
+    loading: true,
   }),
   computed: {
     ...mapGetters({
@@ -70,7 +70,6 @@ export default {
     },
   },
   beforeMount() {
-    this.loading = true
     this.getStrategies().finally(() => {
       this.loading = false
     })
