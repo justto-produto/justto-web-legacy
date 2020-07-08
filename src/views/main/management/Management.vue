@@ -95,12 +95,14 @@
               />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Exportação temporariamente bloqueada. Fale com seu Key Account.">
+          <el-tooltip
+            :disabled="$store.getters.isJusttoAdmin"
+            content="Exportação temporariamente bloqueada. Fale com seu Key Account.">
             <span
               class="wrapper"
               style="margin-left: 8px">
               <el-button
-                :disabled="true"
+                :disabled="!$store.getters.isJusttoAdmin"
                 plain
                 icon="el-icon-download"
                 data-testid="export-disputes"
