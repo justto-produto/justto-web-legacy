@@ -76,8 +76,9 @@ export default {
   },
   methods: {
     ...mapActions([
-      'updateStrategy',
+      'addStrategy',
       'getStrategies',
+      'updateStrategy',
     ]),
 
     mainButtonHandler() {
@@ -87,7 +88,7 @@ export default {
         inputValidator: (value) => !!value,
         inputErrorMessage: 'Campo obrigatório',
       }).then(({ value }) => {
-        this.addStrategy(value)
+        this.addStrategy({ name: value })
       })
     },
   },
