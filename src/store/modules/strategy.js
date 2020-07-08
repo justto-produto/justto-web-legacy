@@ -8,7 +8,7 @@ const strategy = {
     },
   },
   actions: {
-    getStrategies({ commit }) {
+    getStrategiesList({ commit }) {
       return new Promise((resolve, reject) => {
         // eslint-disable-next-line
         axios.get('api/strategies/list')
