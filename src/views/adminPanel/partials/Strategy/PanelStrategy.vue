@@ -1,6 +1,9 @@
 <template>
   <section class="panel-strategy">
-    <el-collapse v-model="activeCollapse">
+    <el-collapse
+      v-model="activeCollapse"
+      v-loading="loading"
+    >
       <el-collapse-item
         :title="`Ativas (${activeStrategies.length})`"
         name="active"
@@ -47,6 +50,7 @@ export default {
   },
   data: () => ({
     activeCollapse: ['active'],
+    loading: true,
   }),
   computed: {
     ...mapGetters({
@@ -54,23 +58,27 @@ export default {
     }),
 
     filteredStrategies() {
-      const teste = filterByTerm(this.filterTerm, this.strategies, 'name')
-      console.log(teste)
-      return teste
+      return filterByTerm(this.filterTerm, this.strategies, 'name')
     },
 
     activeStrategies() {
-      const teste = this.filteredStrategies.filter(s => s.isActive)
-      console.log(teste)
-      return teste
+      return this.filteredStrategies.filter(s => s.active)
     },
 
     inactiveStrategies() {
-      return this.filteredStrategies.filter(s => !s.isActive)
+      return this.filteredStrategies.filter(s => !s.active)
     },
   },
+  beforeMount() {
+    this.getStrategies().finally(() => {
+      this.loading = false
+    })
+  },
   methods: {
-    ...mapActions(['updateStrategy']),
+    ...mapActions([
+      'updateStrategy',
+      'getStrategies',
+    ]),
 
     mainButtonHandler() {
       this.$prompt('Digite o nome da estratégia', 'Criar estratégia', {

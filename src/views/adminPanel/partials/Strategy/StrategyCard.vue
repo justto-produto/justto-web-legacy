@@ -3,7 +3,7 @@
     <div class="strategy-card__icon-area">
       <i
         :class="{
-          [`el-icon-${strategyData.isPrivate ? 'lock' : 'unlock'}`]: true
+          [`el-icon-${strategyData.privateStrategy ? 'lock' : 'unlock'}`]: true
       }"/>
     </div>
 
@@ -15,8 +15,12 @@
       />
     </div>
 
+    <div class="strategy-card__messages-area">
+      <strategy-communication :communications="strategyData.triggers" />
+    </div>
+
     <div class="strategy-card__workspaces-area">
-      <jus-tag-container
+      <!-- <jus-tag-container
         :options="[
           { id: 1, name: 'Mock Workspace' },
           { id: 2, name: 'Test 1' },
@@ -26,11 +30,7 @@
         placeholder="Todos os times possuem acesso a esta estratégia."
         title="Times"
         @change="changeEstrategyData($event, 'workspaces')"
-      />
-    </div>
-
-    <div class="strategy-card__messages-area">
-      <strategy-communication />
+      /> -->
     </div>
 
     <div class="strategy-card__strategies-area">
@@ -90,7 +90,7 @@ export default {
       display: grid;
       grid-template-areas:
         'icon-area name-area name-area name-area'
-        'icon-area workspaces-area messages-area strategies-area';
+        'icon-area messages-area workspaces-area strategies-area';
       grid-template-columns: 32px repeat(3, 1fr);
       grid-template-rows: repeat(2, minmax(40px, auto));
       gap: 16px;

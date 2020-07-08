@@ -5,6 +5,7 @@ const StrategyMutations = {
       if (strategy.id === strategyData.id) strategies[index] = strategyData
     })
   },
+  setStrategies: (state, strategies) => (state.strategies = strategies),
 }
 
 export default StrategyMutations
