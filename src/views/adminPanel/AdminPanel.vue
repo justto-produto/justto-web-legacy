@@ -36,7 +36,8 @@
       <el-col
         v-if="right > 0"
         :span="right"
-        class="content">
+        class="content"
+      >
         <div class="admin-panel-view__panel-header">
           <h1>{{ $t('panel.' + menuIndex) }}</h1>
           <div class="admin-panel-view__header-options">
@@ -50,7 +51,8 @@
               type="primary"
               icon="el-icon-plus"
               class="admin-panel-view__header-button"
-              @click="mainButtonHandler">
+              @click="mainButtonHandler"
+            >
               Adicionar
             </el-button>
           </div>
