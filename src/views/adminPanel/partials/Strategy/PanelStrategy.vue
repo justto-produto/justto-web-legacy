@@ -57,27 +57,29 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="dialogIsVisible = false">Cancelar</el-button>
+        <el-button @click="dialogIsVisible = false">
+          Cancelar
+        </el-button>
         <el-button
           type="primary"
           @click="saveStrategyCopy"
-        >Salvar</el-button>
+        >
+          Salvar
+        </el-button>
       </span>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import { JusTagContainer } from '@/components/JusTagContainer'
-import StrategyCard from './StrategyCard'
 import { mapActions, mapGetters } from 'vuex'
 import { filterByTerm } from '@/utils/jusUtils'
 
 export default {
   name: 'PanelStrategy',
   components: {
-    JusTagContainer,
-    StrategyCard,
+    JusTagContainer: () => import('@/components/JusTagContainer'),
+    StrategyCard: () => import('./StrategyCard'),
   },
   props: {
     filterTerm: {
