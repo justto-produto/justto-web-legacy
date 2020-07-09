@@ -4,7 +4,8 @@
       <i
         :class="{
           [`el-icon-${strategyData.privateStrategy ? 'lock' : 'unlock'}`]: true
-      }"/>
+        }"
+      />
     </div>
 
     <div class="strategy-card__name-area">
@@ -13,6 +14,17 @@
         type="title"
         @hasEdition="changeEstrategyData($event, 'name')"
       />
+    </div>
+
+    <div class="strategy-card__action-area">
+      <el-tooltip content="Copiar estratégia">
+        <el-button
+          type="text"
+          icon="el-icon-copy-document"
+          class="strategy-card__action-button"
+          @click.native="emitCopyStrategy"
+        />
+      </el-tooltip>
     </div>
 
     <div class="strategy-card__messages-area">
@@ -70,6 +82,12 @@ export default {
       this.strategyData[key] = val
       this.$emit('changeEstrategyData', this.strategyData)
     },
+    emitCopyStrategy() {
+      this.$emit('copyStrategy', {
+        ...this.strategyData,
+        name: `${this.strategyData.name} (Cópia)`,
+      })
+    },
   },
 }
 </script>
@@ -89,11 +107,22 @@ export default {
     & > .el-card__body {
       display: grid;
       grid-template-areas:
-        'icon-area name-area name-area name-area'
+        'icon-area name-area name-area action-area'
         'icon-area messages-area workspaces-area strategies-area';
       grid-template-columns: 32px repeat(3, 1fr);
       grid-template-rows: repeat(2, minmax(40px, auto));
       gap: 16px;
+
+      &:hover {
+        .strategy-card__action-area {
+          display: flex;
+          justify-content: flex-end;
+
+          .strategy-card__action-button {
+            font-size: 16px;
+          }
+        }
+      }
 
       .strategy-card__icon-area {
         grid-area: icon-area;
@@ -105,6 +134,11 @@ export default {
 
       .strategy-card__name-area {
         grid-area: name-area;
+      }
+
+      .strategy-card__action-area {
+        display: none;
+        grid-area: action-area;
       }
 
       .strategy-card__workspaces-area {
