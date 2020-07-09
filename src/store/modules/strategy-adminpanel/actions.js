@@ -11,6 +11,11 @@ const StrategyActions = {
     method: 'POST',
     data: strategy,
   }).then(() => dispatch('getStrategies')),
+
+  getStrategyAvailableWorkspaces: ({ _ }, strategyId) => axiosDispatcher({
+    url: `/api/strategy/${strategyId}/workspace/available`,
+    mutation: 'setStrategyAvailableWorkspaces',
+  }),
 }
 
 export default StrategyActions

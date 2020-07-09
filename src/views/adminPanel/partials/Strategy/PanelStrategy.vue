@@ -11,9 +11,12 @@
         <strategy-card
           v-for="(strategy) in activeStrategies"
           :key="strategy.id"
+          :available-workspaces="workspaces"
           :strategy="strategy"
           class="panel-strategy__card"
           @changeEstrategyData="updateStrategy"
+          @copyStrategy="copyStrategyHandler"
+          @loadWorkspaces="getStrategyAvailableWorkspaces"
         />
       </el-collapse-item>
       <el-collapse-item
@@ -29,18 +32,54 @@
         />
       </el-collapse-item>
     </el-collapse>
+
+    <el-dialog
+      title="Copiar estratégia"
+      :visible.sync="dialogIsVisible"
+    >
+      <el-form :model="strategyCopy">
+        <el-form-item label="Nome">
+          <el-input
+            v-model="strategyCopy.name"
+            autocomplete="off"
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <JusTagContainer
+            :options="workspaces"
+            :tag-list="strategyCopy.workspaces"
+            title="Equipes"
+          />
+        </el-form-item>
+      </el-form>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogIsVisible = false">
+          Cancelar
+        </el-button>
+        <el-button
+          type="primary"
+          @click="saveStrategyCopy"
+        >
+          Salvar
+        </el-button>
+      </span>
+    </el-dialog>
   </section>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { filterByTerm } from '@/utils/jusUtils'
-import StrategyCard from './StrategyCard'
 
 export default {
   name: 'PanelStrategy',
   components: {
-    StrategyCard,
+    JusTagContainer: () => import('@/components/JusTagContainer'),
+    StrategyCard: () => import('./StrategyCard'),
   },
   props: {
     filterTerm: {
@@ -51,10 +90,13 @@ export default {
   data: () => ({
     activeCollapse: ['active'],
     loading: true,
+    dialogIsVisible: false,
+    strategyCopy: { },
   }),
   computed: {
     ...mapGetters({
       strategies: 'getStrategies',
+      workspaces: 'getStrategyAvailableWorkspaces',
     }),
 
     filteredStrategies() {
@@ -78,6 +120,7 @@ export default {
     ...mapActions([
       'addStrategy',
       'getStrategies',
+      'getStrategyAvailableWorkspaces',
       'updateStrategy',
     ]),
 
@@ -90,6 +133,19 @@ export default {
       }).then(({ value }) => {
         this.addStrategy({ name: value })
       })
+    },
+
+    copyStrategyHandler(strategy) {
+      this.strategyCopy = strategy
+      this.getStrategyAvailableWorkspaces(strategy.id).then(({ workspaces }) => {
+        delete this.strategyCopy.id
+        this.dialogIsVisible = true
+      })
+    },
+
+    saveStrategyCopy() {
+      this.addStrategy(this.strategyCopy)
+      this.dialogIsVisible = false
     },
   },
 }
