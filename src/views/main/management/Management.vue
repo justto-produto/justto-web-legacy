@@ -176,6 +176,7 @@
         title="Exportar disputas"
         width="50%"
       >
+        <p>*Seu relatório será enviado pro seu email</p>
         <p>Selecione e ordene as colunas desejadas para exportação:</p>
         <div class="view-management__export-dialog-options">
           <el-checkbox
@@ -220,13 +221,15 @@
             :disabled="loadingExport"
             plain
             @click="exportDisputesDialog = false"
-          >Cancelar</el-button>
+          >
+            Cancelar
+          </el-button>
           <el-button
             :loading="loadingExport"
             type="primary"
             @click.prevent="exportDisputes"
           >
-            Exportar
+            Exportar e enviar para email
           </el-button>
         </span>
       </el-dialog>
@@ -460,6 +463,9 @@ export default {
           // SEGMENT TRACK
           this.$jusSegment('Exportar disputas')
           localStorage.setItem('jusexportcolumns', JSON.stringify(this.$refs.tree.getCheckedKeys()))
+          this.$alert('Solicitação realizada com sucesso, por favor aguarde nosso email com seu relatório', 'Exportação de relatórios', {
+            confirmButtonText: 'Ok',
+          })
         })
         .catch(error => {
           this.$jusNotification({ error })
