@@ -32,17 +32,14 @@
     </div>
 
     <div class="strategy-card__workspaces-area">
-      <!-- <jus-tag-container
-        :options="[
-          { id: 1, name: 'Mock Workspace' },
-          { id: 2, name: 'Test 1' },
-          { id: 3, name: 'Test 2' },
-        ]"
+      <jus-tag-container
+        :options="availableWorkspaces"
         :tag-list="strategyData.workspaces"
         placeholder="Todos os times possuem acesso a esta estratégia."
         title="Times"
         @change="changeEstrategyData($event, 'workspaces')"
-      /> -->
+        @showInput="loadWorkspaces"
+      />
     </div>
 
     <div class="strategy-card__strategies-area">
@@ -71,6 +68,10 @@ export default {
       type: Object,
       required: true,
     },
+    availableWorkspaces: {
+      type: Array,
+      default: null,
+    },
   },
   data() {
     return {
@@ -82,11 +83,16 @@ export default {
       this.strategyData[key] = val
       this.$emit('changeEstrategyData', this.strategyData)
     },
+
     emitCopyStrategy() {
       this.$emit('copyStrategy', {
         ...this.strategyData,
         name: `${this.strategyData.name} (Cópia)`,
       })
+    },
+
+    loadWorkspaces() {
+      this.$emit('loadWorkspaces', this.strategyData.id)
     },
   },
 }
