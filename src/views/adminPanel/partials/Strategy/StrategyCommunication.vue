@@ -2,14 +2,17 @@
   <article class="strategy-communication">
     <ul class="strategy-communication__list">
       <el-popover
-        v-for="(recipient, index) in recipients"
+        v-for="(recipient, key, index) in recipients"
         :key="index"
         :title="recipient.name"
         :open-delay="200"
         placement="bottom-start"
         trigger="hover"
       >
-        <CommunicationPopover @edit-communication="handleEditCommunication" />
+        <CommunicationPopover
+          :communications="recipient"
+          @edit-communication="handleEditCommunication"
+        />
 
         <li
           slot="reference"
@@ -59,10 +62,6 @@ export default {
   },
   data() {
     return {
-      recipients: [
-        { name: 'Parte', emails: 3, sms: 3 },
-        { name: 'Advogados', emails: 5, sms: 2 },
-      ],
       communicationData: null,
       isVisible: false,
       variables: {
@@ -77,6 +76,40 @@ export default {
     },
     communication() {
       return this.communicationData
+    },
+    partyCommunications() {
+      return this.concatedCommunications.filter(c => c.recipients.includes('PARTY'))
+    },
+    lowyerCommunications() {
+      return this.concatedCommunications.filter(c => c.recipients.includes('LAWYER'))
+    },
+    recipients() {
+      return {
+        PARTY: {
+          name: 'Parte',
+          emails: this.partyCommunications.filter(c => c.type === 'EMAIL').length,
+          sms: this.partyCommunications.filter(c => c.type === 'SMS').length,
+          communications: this.partyCommunications,
+        },
+        LAWYER: {
+          name: 'Advogado',
+          emails: this.lowyerCommunications.filter(c => c.type === 'EMAIL').length,
+          sms: this.lowyerCommunications.filter(c => c.type === 'SMS').length,
+          communications: this.lowyerCommunications,
+        },
+      }
+    },
+
+    concatedCommunications() {
+      if (this.communications.length) {
+        let comm = []
+        for (const c of this.communications) {
+          comm = comm.concat(c.communications)
+        }
+        return comm
+      } else {
+        return []
+      }
     },
   },
   methods: {
