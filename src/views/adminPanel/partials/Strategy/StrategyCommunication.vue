@@ -3,7 +3,7 @@
     <ul class="strategy-communication__list">
       <el-popover
         v-for="(recipient, key, index) in recipients"
-        :key="index"
+        :key="key + index"
         :title="recipient.name"
         :open-delay="200"
         placement="bottom-start"
@@ -78,10 +78,10 @@ export default {
       return this.communicationData
     },
     partyCommunications() {
-      return this.concatedCommunications.filter(c => c.recipients.includes('PARTY'))
+      return this.concatedCommunications.filter(c => c && c.recipients.includes('PARTY'))
     },
     lowyerCommunications() {
-      return this.concatedCommunications.filter(c => c.recipients.includes('LAWYER'))
+      return this.concatedCommunications.filter(c => c && c.recipients.includes('LAWYER'))
     },
     recipients() {
       return {
