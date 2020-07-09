@@ -726,6 +726,7 @@ export default {
       })
     },
     inviteTeammate() {
+      this.inviteForm.email = this.inviteForm.email.trim()
       this.$refs.inviteForm.validate((valid) => {
         if (valid) {
           this.loadingInvite = true
