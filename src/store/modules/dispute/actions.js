@@ -2,7 +2,7 @@ import Vue from 'vue'
 import axiosDispatcher from '@/store/axiosDispatcher.js'
 import { queryBuilder } from '@/utils/jusUtils'
 
-const FileSaver = require('file-saver')
+// const FileSaver = require('file-saver')
 let removeDebounce = 0
 
 const disputeActions = {
@@ -168,14 +168,14 @@ const disputeActions = {
         responseType: 'arraybuffer',
         ContentType: 'application/json; charset=utf-8',
       }).then(response => {
-        const blob = new Blob([
-          new Uint8Array([0xEF, 0xBB, 0xBF]),
-          response.data,
-        ], {
-          type: 'text/plain;charset=utf-8',
-        })
-        const fileName = new Date().getTime() + '.csv'
-        FileSaver.saveAs(blob, fileName)
+        // const blob = new Blob([
+        //   new Uint8Array([0xEF, 0xBB, 0xBF]),
+        //   response.data,
+        // ], {
+        //   type: 'text/plain;charset=utf-8',
+        // })
+        // const fileName = new Date().getTime() + '.csv'
+        // FileSaver.saveAs(blob, fileName)
         resolve(response)
       }).catch(error => {
         reject(error)
