@@ -6,6 +6,7 @@ const StrategyMutations = {
     })
   },
   setStrategies: (state, strategies) => (state.strategies = strategies),
+  setStrategyAvailableWorkspaces: (state, workspaces) => (state.strategyAvailableWorkspaces = workspaces),
 }
 
 export default StrategyMutations
