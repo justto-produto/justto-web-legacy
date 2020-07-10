@@ -97,10 +97,11 @@ export default {
   computed: {
     communications: self => self.recipient.communications,
     communicationTypes: () => {
-      const type = STRATEGY_COMMUNICATION_TYPES
+      const type = {}
+      Object.assign(type, STRATEGY_COMMUNICATION_TYPES)
       delete type.EMAIL_CNA
 
-      return Object.values(STRATEGY_COMMUNICATION_TYPES)
+      return Object.values(type)
     },
     emailCount: self => self.recipient.emails,
     recipientName: self => self.recipient.name,
@@ -113,11 +114,7 @@ export default {
 
     editCommunicationName(communicationId) {
       this.editInput = communicationId
-
-      // Await render input ¯\_(ツ)_/¯
-      setTimeout(() => {
-        this.$refs[`edit-input-${communicationId}`].$refs.input.focus()
-      }, 200)
+      this.$nextTick(() => this.$refs[`edit-input-${communicationId}`].$refs.input.focus())
     },
     editCommunication(communication) {
       this.$emit('edit-communication', communication)

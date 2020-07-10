@@ -87,14 +87,14 @@ export default {
       return {
         PARTY: {
           name: 'Parte',
-          emails: this.partyCommunications.filter(c => c.type === 'EMAIL').length,
-          sms: this.partyCommunications.filter(c => c.type === 'SMS').length,
+          emails: this.partyCommunications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
+          sms: this.partyCommunications.filter(c => c && c.type === 'SMS').length,
           communications: this.partyCommunications,
         },
         LAWYER: {
           name: 'Advogado',
-          emails: this.lowyerCommunications.filter(c => c.type === 'EMAIL').length,
-          sms: this.lowyerCommunications.filter(c => c.type === 'SMS').length,
+          emails: this.lowyerCommunications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
+          sms: this.lowyerCommunications.filter(c => c && c.type === 'SMS').length,
           communications: this.lowyerCommunications,
         },
       }
