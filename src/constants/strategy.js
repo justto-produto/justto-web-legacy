@@ -1,6 +1,11 @@
-export const STRATEGY_COMMUNICATION_TYPES = Object.freeze({
+export const STRATEGY_COMMUNICATION_TYPES = {
   EMAIL: {
     key: 'EMAIL',
+    label: 'E-mail',
+    icon: 'email',
+  },
+  EMAIL_CNA: {
+    key: 'EMAIL_CNA',
     label: 'E-mail',
     icon: 'email',
   },
@@ -14,4 +19,4 @@ export const STRATEGY_COMMUNICATION_TYPES = Object.freeze({
     label: 'Espera',
     icon: 'clock',
   },
-})
+}
