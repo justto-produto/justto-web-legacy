@@ -2,7 +2,7 @@
   <div class="communication-popover">
     <div class="communication-popover__drag-list">
       <el-tree
-        :data="data"
+        :data="communications"
         :allow-drop="allowDrop"
         node-key="id"
         draggable
@@ -15,7 +15,7 @@
 
           <div class="communication-popover__item-text-container">
             <jus-icon
-              :icon="translateTypeToIcon(data.communicationType)"
+              :icon="translateTypeToIcon(data.type)"
               class="communication-popover__message-icon"
             />
 
@@ -83,32 +83,28 @@ import { STRATEGY_COMMUNICATION_TYPES } from '@/constants/strategy'
 
 export default {
   name: 'CommunicationPopover',
+  props: {
+    recipient: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
-      data: [
-        {
-          id: 1,
-          name: '1º E-mail Advogado',
-          communicationType: 'EMAIL',
-          message: 'lorem ipsum dolor sit amet',
-        },
-        {
-          id: 2,
-          name: 'Espera 3 horas',
-          communicationType: 'DELAY',
-        },
-        {
-          id: 3,
-          name: 'Envia SMS para Advogado',
-          communicationType: 'SMS',
-          message: 'lorem ipsum dolor sit amet',
-        },
-      ],
       editInput: null,
     }
   },
   computed: {
-    communicationTypes: () => Object.values(STRATEGY_COMMUNICATION_TYPES),
+    communications: self => self.recipient.communications,
+    communicationTypes: () => {
+      const type = STRATEGY_COMMUNICATION_TYPES
+      delete type.EMAIL_CNA
+
+      return Object.values(STRATEGY_COMMUNICATION_TYPES)
+    },
+    emailCount: self => self.recipient.emails,
+    recipientName: self => self.recipient.name,
+    smsCount: self => self.recipient.sms,
   },
   methods: {
     allowDrop: (_draggingNode, _dropNode, type) => type !== 'inner',

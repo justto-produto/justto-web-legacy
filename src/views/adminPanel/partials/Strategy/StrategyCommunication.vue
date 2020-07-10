@@ -10,7 +10,7 @@
         trigger="hover"
       >
         <CommunicationPopover
-          :communications="recipient"
+          :recipient="recipient"
           @edit-communication="handleEditCommunication"
         />
 
