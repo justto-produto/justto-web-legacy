@@ -24,7 +24,6 @@
     </el-table-column>
     <el-table-column
       label="Nota"
-      width="140"
     >
       <template slot-scope="scope">
         <span>{{ transactionTableNote(scope.row.note, scope.row.type) }}</span>
@@ -32,7 +31,7 @@
     </el-table-column>
     <el-table-column
       label="Tipo"
-      width="90"
+      width="110"
     >
       <template slot-scope="scope">
         <span>{{ $t(`transactions.${scope.row.type}`) | capitalize }}</span>
@@ -41,7 +40,7 @@
     <el-table-column
       prop="respondent"
       label="Réu"
-      width="130"
+      width="160"
     >
       <template slot-scope="scope">
         <span>{{ scope.row.respondent || '-' }}</span>
