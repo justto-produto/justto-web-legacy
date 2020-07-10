@@ -5,6 +5,8 @@
         :class="{
           [`el-icon-${strategyData.privateStrategy ? 'lock' : 'unlock'}`]: true
         }"
+        class="strategy-card__icon"
+        @click="changeEstrategyPrivacy()"
       />
     </div>
 
@@ -45,7 +47,7 @@
     <div class="strategy-card__strategies-area">
       <jus-tag-container
         :tag-list="[{name: 'Pagamento'}]"
-        @change="changeEstrategyData($event, 'workspaces')"
+        @change="changeEstrategyData($event, 'types')"
       />
     </div>
   </el-card>
@@ -81,6 +83,11 @@ export default {
   methods: {
     changeEstrategyData(val, key) {
       this.strategyData[key] = val
+      this.$emit('changeEstrategyData', this.strategyData)
+    },
+
+    changeEstrategyPrivacy() {
+      this.strategyData.privateStrategy = !this.strategyData.privateStrategy
       this.$emit('changeEstrategyData', this.strategyData)
     },
 
@@ -134,6 +141,7 @@ export default {
         grid-area: icon-area;
 
         & > i {
+          cursor: pointer;
           font-size: 32px;
         }
       }
