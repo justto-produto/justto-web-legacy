@@ -69,7 +69,7 @@
           data-testid="batch-enrich"
           @click="sendBatchAction('ENRICH_DISPUTE')"
         >
-          {{ $t('action.ENRICH') }}
+          {{ $t('action.ENRICH_DISPUTE') }}
         </el-button>
         <el-button
           plain
