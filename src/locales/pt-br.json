@@ -136,6 +136,7 @@
     "FAVORITE": "favoritar",
     "DISFAVOR": "desfavoritar",
     "ENRICH": "enriquecer",
+    "ENRICH_DISPUTE": "enriquecer",
     "CHANGE_NEGOTIATOR": "altera negociador",
     "CHANGE_CAMPAIGN": "alterar campanha",
     "CANCEL_MESSAGES": "cancelar mensagens agendadas",
