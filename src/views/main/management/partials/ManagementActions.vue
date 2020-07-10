@@ -67,9 +67,9 @@
         <el-button
           plain
           data-testid="batch-enrich"
-          @click="sendBatchAction('ENRICH')"
+          @click="sendBatchAction('ENRICH_DISPUTE')"
         >
-          {{ $t('action.ENRICH') }}
+          {{ $t('action.ENRICH_DISPUTE') }}
         </el-button>
         <el-button
           plain
@@ -385,8 +385,9 @@ export default {
           title: this.$options.filters.capitalize(this.$t('action.' + action.toUpperCase())),
           content: 'Tem certeza que deseja realizar esta ação em lote?',
         }
-        if (action === 'ENRICH' &&
-            this.$store.getters.disputes.filter(d => this.selectedIds.includes(d.id) && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(d.status)).length) {
+        if (action === 'ENRICH_DISPUTE' &&
+            this.$store.getters.disputes.filter(d => this.selectedIds.includes(d.id) &&
+            ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(d.status)).length) {
           message.title = 'Atenção!'
           message.content = `Você está solicitando o <b>ENRIQUECIMENTO</b> de disputas que já
           foram finalizadas. Este processo irá agendar novamente as mensagens
@@ -399,36 +400,9 @@ export default {
           dangerouslyUseHTMLString: true,
           cancelButtonClass: 'is-plain',
         }).then(() => {
-          if (action === 'ENRICH') this.enrichDisputes(action)
-          else this.doAction(action)
+          this.doAction(action)
         })
       }
-    },
-    enrichDisputes(action) {
-      const selecteds = this.selectedIds
-      const reengagement = []
-      for (const selected of selecteds) {
-        reengagement.push(
-          this.$store.dispatch('enrichDispute', selected),
-        )
-      }
-      Promise.all(reengagement).then(() => {
-        this.$jusSegment('Reiniciar engajamento em massa')
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada com sucesso.',
-          type: 'success',
-          dangerouslyUseHTMLString: true,
-        })
-      }).catch(e => {
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Ação <strong>' + this.$t('action.' + action.toUpperCase()) + '</strong> realizada. Parece que algumas das disputas selecionadas não foram enriquecidas.',
-          type: 'warning',
-          dangerouslyUseHTMLString: true,
-        })
-      })
-      this.selectedIdsComp = []
     },
     clearSelection() {
       this.$emit('disputes:clear')
