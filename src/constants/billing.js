@@ -19,12 +19,15 @@ export const TARIFF_TYPES = Object.freeze({
 
 export const CONTRACT_STATUS = Object.freeze({
   ACTIVE: {
+    key: 'ACTIVE',
     label: 'Ativo',
   },
   TRIAL: {
+    key: 'TRIAL',
     label: 'Trial',
   },
   INACTIVE: {
+    key: 'INACTIVE',
     label: 'Inativo',
   },
 })

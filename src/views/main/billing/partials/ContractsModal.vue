@@ -17,8 +17,20 @@
           v-for="(contract, contractCount) in form.contracts"
           :key="contractCount"
           :name="contractCount"
-          :title="makeContractName(contract)"
         >
+          <template #title>
+            <span>{{ makeContractName(contract) }}</span>
+            <el-tag
+              v-for="flag in getFlags(contract)"
+              :key="`${flag.label}`"
+              :type="flag.theme"
+              effect="dark"
+              size="small"
+              class="contract-modal__flag"
+            >
+              {{ flag.label }}
+            </el-tag>
+          </template>
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
@@ -295,7 +307,7 @@
 </template>
 
 <script>
-import { TARIFF_TYPES } from '@/constants/billing'
+import { CONTRACT_STATUS, TARIFF_TYPES } from '@/constants/billing'
 import { mapActions, mapGetters } from 'vuex'
 import { ContractModel } from '@/models/billing/Contract.model'
 import { TariffModel } from '@/models/billing/Tariff.model'
@@ -433,6 +445,17 @@ export default {
     closeModal() {
       this.isFormVisible = false
     },
+    getFlags(contract) {
+      const flags = []
+      if (contract.status === CONTRACT_STATUS.INACTIVE.key) {
+        flags.push({
+          ...CONTRACT_STATUS.INACTIVE,
+          theme: 'danger',
+        })
+      }
+
+      return flags
+    },
   },
 }
 </script>
@@ -442,6 +465,10 @@ export default {
   .el-dialog {
     max-height: 100%;
     overflow: auto;
+  }
+
+  .contract-modal__flag {
+    margin-left: 8px;
   }
 
   .el-row {
