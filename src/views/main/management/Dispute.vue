@@ -430,6 +430,7 @@ export default {
       this.y = parseInt(localStorage.getItem('jusoffsetheight')) || this.$refs.sectionMessages.offsetHeight - 208
     }, 800)
     window.addEventListener('resize', this.updateWindowHeight)
+    this.typingTab = localStorage.getItem('jusoccurrencestab') || '1'
   },
   beforeDestroy() {
     this.unsubscribeOccurrences(this.id)
@@ -525,6 +526,7 @@ export default {
     handleTabClick(tab) {
       if (!['1', '3'].includes(tab.name)) this.activeRoleId = 0
       this.typingTab = tab.name
+      localStorage.setItem('jusoccurrencestab', tab.name)
     },
     handleBeforeLeaveTabs() {
       this.$store.commit('clearOccurrencesSize')
