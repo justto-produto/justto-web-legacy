@@ -14,7 +14,7 @@
     >
       <el-collapse>
         <el-collapse-item
-          v-for="(contract, contractCount) in form.contracts"
+          v-for="(contract, contractCount) in filteredContracts"
           :key="contractCount"
           :name="contractCount"
         >
@@ -22,10 +22,10 @@
             <span>{{ makeContractName(contract) }}</span>
             <el-tag
               v-for="flag in getFlags(contract)"
-              :key="`${flag.label}`"
+              :key="`${flag.label}-${new Date().getTime()}`"
               :type="flag.theme"
               effect="dark"
-              size="small"
+              size="mini"
               class="contract-modal__flag"
             >
               {{ flag.label }}
@@ -288,6 +288,13 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row :gutter="24">
+            <el-col>
+              <el-form-item label="Contrato vinculado a workspace">
+                <el-switch v-model="hasWorkspace" />
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-collapse-item>
       </el-collapse>
     </el-form>
@@ -338,13 +345,24 @@ export default {
       },
       tariffTypes: TARIFF_TYPES,
       newContract: { },
+      hasWorkspace: false,
     }
   },
   computed: {
     ...mapGetters({
       clientData: 'getCurrentCustomer',
+      workspaceId: 'currentWorkspace',
     }),
     contractStatus: self => self.$t('billing.contract.status'),
+    filteredContracts() {
+      const filteredContracts = this.form.contracts
+        .filter(contract =>
+          (contract.status === CONTRACT_STATUS.ACTIVE.key || contract.status === CONTRACT_STATUS.INACTIVE.key) &&
+          contract.workspaceId === this.workspaceId,
+        )
+
+      return filteredContracts.length ? filteredContracts : this.form.contracts
+    },
   },
   watch: {
     clientData(current) {
@@ -363,6 +381,13 @@ export default {
           }
         })
       })
+    },
+    hasWorkspace(current) {
+      console.log('SUCK MY DICK', current)
+      const { newContract } = this
+      current
+        ? newContract.workspaceId = this.workspaceId
+        : newContract.workspaceId = null
     },
     visible(current) {
       this.resetNewContract()
@@ -447,6 +472,13 @@ export default {
     },
     getFlags(contract) {
       const flags = []
+      if (contract.workspaceId === this.workspaceId) {
+        flags.push({
+          label: 'Exclusivo',
+          theme: 'info',
+        })
+      }
+
       if (contract.status === CONTRACT_STATUS.INACTIVE.key) {
         flags.push({
           ...CONTRACT_STATUS.INACTIVE,
