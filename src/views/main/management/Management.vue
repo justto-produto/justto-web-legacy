@@ -161,46 +161,89 @@
         title="Exportar disputas"
         width="50%"
       >
-        <p>*Seu relatório será enviado pro seu email</p>
-        <p>Selecione e ordene as colunas desejadas para exportação:</p>
-        <div class="view-management__export-dialog-options">
-          <el-checkbox
-            v-model="isSelectedAllColumns"
-            :indeterminate="isIndeterminate"
-            @change="invertSelectionColumns"
-          >
-            Nome do campo ({{ checkedNodes }} de {{ columns.length }})
-          </el-checkbox>
-          <el-input
-            v-model="filterQuery"
-            size="small"
-            placeholder="Buscar"
-            prefix-icon="el-icon-search"
-            clearable
-          />
+        <div class="view-management__export-dialog-titles">
+          <span class="view-management__export-dialog-title">Historico de exportações</span>
+          <p class="view-management__export-dialog-subtitle">Acompanhe o andamento de suas solicitações: </p>
         </div>
-        <el-tree
-          ref="tree"
-          :data="columns"
-          :allow-drop="allowDrop"
-          :filter-node-method="filterColumns"
-          node-key="key"
-          draggable
-          show-checkbox
-          @check="handlerChangeTree"
-          @node-drag-end="nodeDragEnd"
+        <el-card
+          shadow="never"
+          class="view-management__export-dialog-card"
         >
-          <span
-            slot-scope="{ node }"
-            class="custom-tree-node"
+          <el-table
+            height="150"
+            empty-text="Você ainda não realizou exportações..."
           >
-            <span>{{ node.label | capitalize }}</span>
-            <jus-icon
-              class="drag-icon"
-              icon="menu-hamburger"
+            <el-table-column
+              prop="date"
+              label="Situação"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="name"
+              label="Requisição"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="address"
+              label="Conclusão"
+            >
+            </el-table-column>
+          </el-table>
+        </el-card>
+        <div class="view-management__export-dialog-titles">
+          <span class="view-management__export-dialog-title">Nova exportação</span>
+          <p class="view-management__export-dialog-subtitle">Selecione e ordene as colunas desejadas para exportação: </p>
+        </div>
+        <el-card
+          shadow="never"
+          class="view-management__export-dialog-card"
+        >
+          <div class="view-management__export-dialog-options">
+            <el-checkbox
+              v-model="isSelectedAllColumns"
+              :indeterminate="isIndeterminate"
+              @change="invertSelectionColumns"
+            >
+              Nome do campo ({{ checkedNodes }} de {{ columns.length }})
+            </el-checkbox>
+            <el-input
+              v-model="filterQuery"
+              size="small"
+              placeholder="Buscar"
+              prefix-icon="el-icon-search"
+              clearable
             />
-          </span>
-        </el-tree>
+          </div>
+          <el-tree
+            ref="tree"
+            :data="columns"
+            :allow-drop="allowDrop"
+            :filter-node-method="filterColumns"
+            node-key="key"
+            draggable
+            show-checkbox
+            @check="handlerChangeTree"
+            @node-drag-end="nodeDragEnd"
+          >
+            <span
+              slot-scope="{ node }"
+              class="custom-tree-node"
+            >
+              <span>{{ node.label | capitalize }}</span>
+              <jus-icon
+                class="drag-icon"
+                icon="menu-hamburger"
+              />
+            </span>
+          </el-tree>
+          <a
+            href="#"
+            class="view-management__export-dialog-link"
+            @click="showAllNodesHandler"
+          >
+            {{ showAllNodesButton }}
+          </a>
+        </el-card>
         <span slot="footer">
           <el-button
             :disabled="loadingExport"
@@ -225,6 +268,8 @@
 <script>
 import { filterByTerm } from '@/utils/jusUtils'
 
+const defaultCheckedKeys = ['DISPUTE_CODE', 'EXTERNAL_ID', 'FIRST_CLAIMANT', 'LAWYER_PARTY_NAMES', 'RESPONDENT_NAMES', 'UPPER_RANGE', 'UPPER_RANGE_SAVING_VALUE', 'STATUS', 'CLASSIFICATION', 'DESCRIPTION']
+
 export default {
   name: 'Management',
   components: {
@@ -248,10 +293,21 @@ export default {
       checkedNodes: 0,
       filterQuery: '',
       filteredNodes: {},
-      columns: [],
+      columnsList: [],
+      showAllNodes: false,
     }
   },
   computed: {
+    columns() {
+      if (this.filterQuery || this.showAllNodes) {
+        return this.columnsList
+      } else {
+        return this.columnsList.filter(n => defaultCheckedKeys.includes(n.key))
+      }
+    },
+    showAllNodesButton() {
+      return this.showAllNodes ? 'Exibir apenas apenas campos sugeridos' : 'Exibir mais opções de campos'
+    },
     loadingDisputes() {
       return this.$store.getters.loadingDisputes
     },
@@ -333,7 +389,7 @@ export default {
   mounted() {
     this.$store.dispatch('getExportColumns').then(response => {
       Object.keys(response).forEach(key => {
-        this.columns.push({
+        this.columnsList.push({
           key: key,
           label: response[key],
         })
@@ -344,10 +400,13 @@ export default {
     })
   },
   methods: {
+    showAllNodesHandler() {
+      this.showAllNodes = !this.showAllNodes
+    },
     filterColumns(value, data) {
       this.filteredNodes = filterByTerm(value, this.columns, 'label')
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
-      if (!value) return true
+      if (!value && this.showAllNodes) return true
       return data.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')) !== -1
     },
     handlerChangeTree(value, obj) {
@@ -431,15 +490,14 @@ export default {
     },
     showExportDisputesDialog() {
       this.exportDisputesDialog = true
-      const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
-      setTimeout(() => {
-        if (jusexportcolumns) {
-          this.$refs.tree.setCheckedKeys(jusexportcolumns)
-        } else {
-          this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
-        }
+      this.$nextTick(() => {
+        this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
-      }, 200)
+      })
+      // setTimeout(() => {
+      //   this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
+      //   this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
+      // }, 200)
     },
     exportDisputes() {
       this.loadingExport = true
@@ -447,7 +505,6 @@ export default {
         .then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Exportar disputas')
-          localStorage.setItem('jusexportcolumns', JSON.stringify(this.$refs.tree.getCheckedKeys()))
           this.$alert('Solicitação realizada com sucesso, por favor aguarde nosso email com seu relatório', 'Exportação de relatórios', {
             confirmButtonText: 'Ok',
           })
@@ -470,6 +527,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .view-management {
   &__filters {
     display: flex;
@@ -509,21 +568,66 @@ export default {
         cursor: grab;
       }
     }
-    &-options {
+
+    .view-management__export-dialog-titles {
+      color: $--color-text-secondary;
+      margin-top: 24px;
+
+      .view-management__export-dialog-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .view-management__export-dialog-subtitle {
+        margin: 8px 16px;
+      }
+
+      &:last-child {
+        margin-top: 0px;
+      }
+    }
+
+    .view-management__export-dialog-options {
+      background-color: $--color-white;
       margin-bottom: 4px;
+      position: sticky;
+      height: 42px;
+      top: 0;
+      padding-top: 12px;
+      z-index: 99;
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       .el-input {
         width: 200px;
         margin-right: 10px;
       }
+
       .el-checkbox {
-        margin-left: 24px;
         font-weight: 500;
         &__label {
           color: #343c4b !important;
         }
+      }
+    }
+
+    .view-management__export-dialog-link {
+      display: block;
+      margin-top: 8px;
+    }
+
+    .view-management__export-dialog-card {
+      overflow: auto;
+
+      .el-card__body {
+        padding: 0 16px 16px 16px;
+        max-height: 348px;
+        overflow: auto;
+      }
+
+      .el-tree-node__expand-icon.is-leaf {
+        display: none;
       }
     }
   }
