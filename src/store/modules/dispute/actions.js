@@ -160,7 +160,7 @@ const disputeActions = {
         })
     })
   },
-  exportDisputes({ state }, colums) {
+  exportDisputes({ state, dispatch }, colums) {
     return new Promise((resolve, reject) => {
       const stringColums = colums.toString()
       // eslint-disable-next-line
@@ -176,10 +176,19 @@ const disputeActions = {
         // })
         // const fileName = new Date().getTime() + '.csv'
         // FileSaver.saveAs(blob, fileName)
+        dispatch('getExportHistory')
         resolve(response)
       }).catch(error => {
         reject(error)
       })
+    })
+  },
+  getExportHistory({ commit, state }, command) {
+    if (command) commit('addExportHistoryPage')
+    else commit('resetExportHistoryPage')
+    axiosDispatcher({
+      url: `api/disputes/my/exports?size=10&page=${state.exportHistoryPage}`,
+      mutation: command ? 'pushExportHistory' : 'setExportHistory',
     })
   },
   editRole({ commit }, params) {

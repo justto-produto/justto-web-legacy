@@ -12,6 +12,7 @@ const disputeGetters = {
   disputeHasFilters: state => state.hasFilters,
   disputeStatuses: state => state.statuses,
   disputeHasNew: state => state.hasNew,
+  exportHistory: state => state.exportHistory,
   respondents: state => state.respondents,
   filterSummary: state => (disputePhase, summarys) => {
     const filteredSummarys = summarys.filter(s => s.disputePhase === disputePhase)

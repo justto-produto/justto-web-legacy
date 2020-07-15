@@ -3,8 +3,9 @@
     <div
       v-loading="true"
       :element-loading-text="content"
-      element-loading-background="rgba(0, 0, 0, 0)"
+      :class="color"
       class="jus-loader__spinner"
+      element-loading-background="rgba(0, 0, 0, 0)"
     />
   </div>
 </template>
@@ -17,15 +18,34 @@ export default {
       default: '',
       type: String,
     },
+    color: {
+      default: 'main',
+      type: String,
+    },
   },
 }
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .jus-loader {
-  &__spinner {
-    height: 30px;
-    width: 140px;
+  .jus-loader__spinner {
+    height: 20px;
+
+    .el-loading-spinner {
+      .circular{
+        width: 20px;
+      }
+    }
+  }
+
+  .warning {
+    .el-loading-spinner {
+      .circular .path {
+        stroke: $--color-warning !important;
+      }
+    }
   }
 }
 </style>
