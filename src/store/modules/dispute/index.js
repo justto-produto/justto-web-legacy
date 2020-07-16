@@ -38,6 +38,8 @@ const dispute = {
     statuses: {},
     respondents: [],
     partyAnalysis: {},
+    exportHistory: {},
+    exportHistoryPage: 0,
   },
   mutations: mutations,
   actions: actions,
