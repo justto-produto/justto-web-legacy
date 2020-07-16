@@ -12,6 +12,12 @@ const StrategyActions = {
     data: strategy,
   }).then(() => dispatch('getStrategies')),
 
+  cloneStrategy: ({ dispatch }, { strategyClone, originId }) => axiosDispatcher({
+    url: `/api/strategy/${originId}/clone`,
+    method: 'POST',
+    data: strategyClone,
+  }).then(() => dispatch('getStrategies')),
+
   updateStrategy: ({ dispatch }, strategy) => axiosDispatcher({
     url: `/api/strategy/${strategy.id}`,
     method: 'PATCH',

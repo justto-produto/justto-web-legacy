@@ -119,6 +119,7 @@ export default {
   methods: {
     ...mapActions([
       'addStrategy',
+      'cloneStrategy',
       'getStrategies',
       'getStrategyAvailableWorkspaces',
       'updateStrategy',
@@ -137,14 +138,25 @@ export default {
 
     copyStrategyHandler(strategy) {
       this.strategyCopy = strategy
-      this.getStrategyAvailableWorkspaces(strategy.id).then(({ workspaces }) => {
-        delete this.strategyCopy.id
-        this.dialogIsVisible = true
-      })
+      this.getStrategyAvailableWorkspaces(strategy.id)
+        .then(() => (this.dialogIsVisible = true))
     },
 
     saveStrategyCopy() {
-      this.addStrategy(this.strategyCopy)
+      const workspaceIds = []
+      this.strategyCopy.workspaces.map((workspace) => {
+        workspaceIds.push(workspace.id)
+      })
+
+      const strategyClone = {
+        newName: this.strategyCopy.name,
+        workspaceIds,
+      }
+
+      this.cloneStrategy({
+        strategyClone,
+        originId: this.strategyCopy.id,
+      })
       this.dialogIsVisible = false
     },
   },
