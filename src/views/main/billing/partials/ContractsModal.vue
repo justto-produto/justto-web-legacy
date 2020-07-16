@@ -383,7 +383,6 @@ export default {
       })
     },
     hasWorkspace(current) {
-      console.log('SUCK MY DICK', current)
       const { newContract } = this
       current
         ? newContract.workspaceId = this.workspaceId
