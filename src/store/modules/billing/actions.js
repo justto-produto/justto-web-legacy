@@ -61,7 +61,7 @@ const actions = {
         startedDate: contract.startedDate,
         status: contract.status,
         tariffs: contract.tariffs,
-        workspaceId: state.query.workspaceId,
+        workspaceId: contract.workspaceId,
       },
     }).then(() => dispatch('getMyCusomers')),
 
