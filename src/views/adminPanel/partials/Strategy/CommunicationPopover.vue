@@ -4,7 +4,6 @@
       <el-tree
         :data="communications"
         :allow-drop="allowDrop"
-        node-key="id"
         draggable
       >
         <div

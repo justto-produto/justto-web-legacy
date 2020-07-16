@@ -62,9 +62,10 @@ export default {
       this.$nextTick(() => this.$refs.textInput.$el.children[0].focus())
     },
     saveChanges() {
-      console.log('asdjhas', this.inputValue)
-      this.$emit('hasEdition', this.inputValue)
-      this.isEditing = false
+      if (this.isEditing) {
+        this.$emit('hasEdition', this.inputValue)
+        this.isEditing = false
+      }
     },
   },
 }
