@@ -10,8 +10,14 @@ const account = {
     token: localStorage.getItem('justoken') || '',
   },
   mutations: {
-    setToken(state, token) {
+    setToken(state, resp) {
+      const token = resp.token
+      // eslint-disable-next-line
+      delete axios.defaults.headers.common['Authorization']
       if (token) state.token = token
+      // eslint-disable-next-line
+      axios.defaults.headers.common['Authorization'] = token
+      localStorage.setItem('justoken', token)
     },
     logout(state) {
       state.id = ''
@@ -33,68 +39,36 @@ const account = {
       })
     },
     register({ commit }, loginForm) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.post('api/accounts/register', loginForm)
-          .then(response => {
-            resolve(response)
-          }).catch(error => {
-            reject(error)
-          })
+      return axiosDispatcher({
+        url: 'api/accounts/register',
+        method: 'POST',
+        data: loginForm,
       })
     },
     activate({ commit }, token) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.put('api/accounts/activate/' + token)
-          .then(response => {
-            resolve(response)
-          })
-          .catch(error => {
-            reject(error)
-          })
+      return axiosDispatcher({
+        url: `api/accounts/activate/${token}`,
+        method: 'PUT',
       })
     },
     login({ commit }, credentials) {
       // eslint-disable-next-line
-      delete axios.defaults.headers.common['Authorization']
-      // eslint-disable-next-line
       delete axios.defaults.headers.common['Workspace']
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.post('api/accounts/token', credentials)
-          .then(response => {
-            const token = response.data.token
-            // eslint-disable-next-line
-            axios.defaults.headers.common['Authorization'] = token
-            localStorage.setItem('justoken', token)
-            commit('setToken', token)
-            resolve(response)
-          })
-          .catch(error => {
-            localStorage.removeItem('justoken')
-            reject(error)
-          })
+      return axiosDispatcher({
+        url: 'api/accounts/token',
+        method: 'POST',
+        data: credentials,
+        mutation: 'setToken',
+      }).catch(() => {
+        localStorage.removeItem('justoken')
       })
     },
     refreshToken({ commit }) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.get('api/accounts/refresh-token')
-          .then(response => {
-            // eslint-disable-next-line
-            delete axios.defaults.headers.common['Authorization']
-            const token = response.data.token
-            // eslint-disable-next-line
-            axios.defaults.headers.common['Authorization'] = token
-            localStorage.setItem('justoken', token)
-            commit('setToken', token)
-            resolve(response)
-          })
-          .catch(error => {
-            localStorage.removeItem('justoken')
-            reject(error)
-          })
+      return axiosDispatcher({
+        url: 'api/accounts/refresh-token',
+        mutation: 'setToken',
+      }).catch(() => {
+        localStorage.removeItem('justoken')
       })
     },
     logout({ commit }, options) {
@@ -110,39 +84,30 @@ const account = {
       } else router.push('/login')
     },
     forgotPassword({ commit }, email) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.put('api/accounts/reset-password?email=' + email)
-          .then(response => {
-            resolve(response)
-          })
-          .catch(error => {
-            reject(error)
-          })
+      return axiosDispatcher({
+        url: `api/accounts/reset-password?email=${email}`,
+        method: 'PUT',
       })
     },
     resetPassword({ commit }, data) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.put('api/accounts/new-password/' + data.token, { password: data.password })
-          .then(response => {
-            resolve(response)
-          })
-          .catch(error => {
-            reject(error)
-          })
+      return axiosDispatcher({
+        url: `api/accounts/new-password/${data.token}`,
+        method: 'PUT',
+        data: { password: data.password },
       })
     },
     updatePassword({ commit }, form) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.post('api/accounts/my/update-password', form)
-          .then(response => {
-            resolve(response)
-          })
-          .catch(error => {
-            reject(error)
-          })
+      return axiosDispatcher({
+        url: 'api/accounts/my/update-password',
+        method: 'POST',
+        data: form,
+      })
+    },
+    ensureWorkspaceAccesss({ commit }, workspaceId) {
+      return axiosDispatcher({
+        url: `api/accounts/workspaces/ensure-workspace-accesss/${workspaceId}`,
+        method: 'PATCH',
+        mutation: 'setToken',
       })
     },
   },
