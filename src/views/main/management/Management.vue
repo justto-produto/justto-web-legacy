@@ -606,7 +606,7 @@ export default {
       }
     },
     exportDateTime(requestTime) {
-      return this.$moment(requestTime).format('DD/MM/YYYY | hh:mm')
+      return this.$moment(requestTime * 1000).format('DD/MM/YYYY | HH:mm')
     },
     buildSituationTooltip(request) {
       if (this.exportSituation(request) === 'FAILED') {
@@ -761,6 +761,8 @@ export default {
 .el-table {
   .finished-row {
     color: $--color-success;
+    color: #28ac5c;
+    // font-weight: bold;
   }
   .failed-row {
     color: $--color-danger;
