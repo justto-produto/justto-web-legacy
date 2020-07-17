@@ -187,12 +187,6 @@ const actions = {
       })
     })
   },
-  ensureWorkspaceAccesss({ commit }, workspaceId) {
-    return axiosDispatcher({
-      url: `api/accounts/workspaces/ensure-workspace-accesss/${workspaceId}`,
-      method: 'PATCH',
-    })
-  },
 }
 
 export default actions

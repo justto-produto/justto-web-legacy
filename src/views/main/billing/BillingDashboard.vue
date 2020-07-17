@@ -455,7 +455,6 @@ export default {
 
     infiniteHandler($state) {
       this.getTransactions('isInfinit').then(response => {
-        console.log(response)
         if (response.last) {
           $state.complete()
         } else {

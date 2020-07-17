@@ -831,12 +831,23 @@
                 label="Valor"
                 prop="lastOfferValue"
               >
-                <money
-                  v-model="disputeForm.lastOfferValue"
-                  class="el-input__inner"
-                  data-testid="proposal-value-input"
-                  @change.native="lastOfferValueHasChanged = true"
-                />
+                <el-tooltip
+                  content="Alçada máxima zerada. Coloque uma alçada máxima para poder alterar o valor proposto."
+                  :disabled="!!disputeForm.disputeUpperRange"
+                >
+                  <div
+                    class="el-input"
+                    :class="{ 'is-disabled': !disputeForm.disputeUpperRange }"
+                  >
+                    <money
+                      :disabled="!disputeForm.disputeUpperRange"
+                      v-model="disputeForm.lastOfferValue"
+                      class="el-input__inner"
+                      data-testid="proposal-value-input"
+                      @change.native="lastOfferValueHasChanged = true"
+                    />
+                  </div>
+                </el-tooltip>
               </el-form-item>
             </el-col>
             <el-col :span="16">
@@ -846,6 +857,7 @@
               >
                 <el-select
                   v-model="selectedNegotiatorId"
+                  :disabled="!disputeForm.disputeUpperRange"
                   filterable
                   placeholder="Autor da contraproposta"
                   data-testid="proposal-negotiator-input"
@@ -1566,7 +1578,7 @@ export default {
       return []
     },
     validateLastOfferValue() {
-      if (this.lastOfferValueHasChanged) {
+      if (this.lastOfferValueHasChanged && this.disputeForm.disputeUpperRange) {
         return [{ validator: validateZero, message: 'Valor precisa ser acima de 0', trigger: 'submit' }]
       }
       return []
@@ -1915,7 +1927,6 @@ export default {
     },
     checkZeroUpperRange() {
       if (this.disputeForm.zeroUpperRange) {
-        this.disputeForm.lastOfferValue = 0
         this.$nextTick(() => { this.$refs.disputeForm.validate() })
       }
     },
@@ -1948,11 +1959,11 @@ export default {
             disputeToEdit.code = this.disputeForm.disputeCode
             disputeToEdit.provisionedValue = this.disputeForm.provisionedValue
             disputeToEdit.classification = { name: this.disputeForm.classification }
-            disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
-            disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
             disputeToEdit.contactPartyWhenNoLowyer = this.disputeForm.contactPartyWhenNoLowyer
             disputeToEdit.contactPartyWhenInvalidLowyer = this.disputeForm.contactPartyWhenInvalidLowyer
             disputeToEdit.denySavingDeposit = this.disputeForm.denySavingDeposit
+            disputeToEdit.lastOfferRoleId = this.selectedNegotiatorId
+            disputeToEdit.lastOfferValue = this.disputeForm.lastOfferValue
             if (this.disputeForm.materialDamage) disputeToEdit.materialDamage = this.disputeForm.materialDamage
             else disputeToEdit.materialDamage = null
             if (this.disputeForm.moralDamage) disputeToEdit.moralDamage = this.disputeForm.moralDamage
@@ -2631,6 +2642,10 @@ export default {
   }
   &__attachment-tab {
     height: 100%;
+  }
+
+  .el-input.is-disabled .el-input__inner {
+    cursor: not-allowed;
   }
 }
 </style>

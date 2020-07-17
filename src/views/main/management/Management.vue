@@ -161,46 +161,160 @@
         title="Exportar disputas"
         width="50%"
       >
-        <p>*Seu relatório será enviado pro seu email</p>
-        <p>Selecione e ordene as colunas desejadas para exportação:</p>
-        <div class="view-management__export-dialog-options">
-          <el-checkbox
-            v-model="isSelectedAllColumns"
-            :indeterminate="isIndeterminate"
-            @change="invertSelectionColumns"
-          >
-            Nome do campo ({{ checkedNodes }} de {{ columns.length }})
-          </el-checkbox>
-          <el-input
-            v-model="filterQuery"
-            size="small"
-            placeholder="Buscar"
-            prefix-icon="el-icon-search"
-            clearable
-          />
+        <div class="view-management__export-dialog-titles">
+          <span class="view-management__export-dialog-title">Historico de exportações</span>
+          <p class="view-management__export-dialog-subtitle">Acompanhe o andamento de suas solicitações: </p>
         </div>
-        <el-tree
-          ref="tree"
-          :data="columns"
-          :allow-drop="allowDrop"
-          :filter-node-method="filterColumns"
-          node-key="key"
-          draggable
-          show-checkbox
-          @check="handlerChangeTree"
-          @node-drag-end="nodeDragEnd"
+        <el-card
+          shadow="never"
+          class="view-management__export-dialog-card"
         >
-          <span
-            slot-scope="{ node }"
-            class="custom-tree-node"
+          <el-table
+            :data="exportHistory.content"
+            :row-class-name="exportHistoryRowClass"
+            height="150"
+            empty-text="Você ainda não realizou exportações..."
           >
-            <span>{{ node.label | capitalize }}</span>
-            <jus-icon
-              class="drag-icon"
-              icon="menu-hamburger"
+            <el-table-column
+              label="Situação"
+              align="center"
+              header-align="center"
+            >
+              <template slot-scope="scope">
+                <el-tooltip
+                  :disabled="!exportSituation(scope.row) === 'QUEUE'"
+                  :content="buildSituationTooltip(scope.row)"
+                >
+                  <span>
+                    <i
+                      v-if="scope.row.error"
+                      class="el-icon-warning"
+                    />
+                    {{ $t(`dispute.export.${exportSituation(scope.row)}`).toUpperCase() }}
+                  </span>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="Requisição"
+              align="center"
+              header-align="center"
+            >
+              <template slot-scope="scope">
+                <span>{{ exportDateTime(scope.row.requestedAt) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="Conclusão"
+              align="center"
+              header-align="center"
+            >
+              <template slot-scope="scope">
+                <jus-icon
+                  v-if="exportSituation(scope.row) === 'QUEUE'"
+                  icon="clock"
+                />
+                <JusLoader
+                  v-if="exportSituation(scope.row) === 'PROCESSING'"
+                  color="warning"
+                />
+                <span v-if="['FINISHED', 'FAILED'].includes(exportSituation(scope.row))">
+                  {{ exportDateTime(scope.row.exportFinishedAt) }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              width="40"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <el-tooltip
+                  v-if="exportSituation(scope.row) === 'FINISHED'"
+                  content="Baixar relatório"
+                >
+                  <a
+                    :href="scope.row.httpUrl"
+                    target="_blank"
+                  >
+                    <jus-icon
+                      icon="download-sheet"
+                      class="view-management__export-dialog-table-icon"
+                    />
+                  </a>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+            <infinite-loading
+              v-if="exportHistory.totalElements >= 10"
+              slot="append"
+              :distance="10"
+              spinner="spiral"
+              force-use-infinite-wrapper=".el-table__body-wrapper"
+              @infinite="infiniteHandler"
+            >
+              <div slot="no-more">
+                Fim do historico
+              </div>
+              <div slot="no-results">
+                Fim do historico
+              </div>
+            </infinite-loading>
+          </el-table>
+        </el-card>
+        <div class="view-management__export-dialog-titles">
+          <span class="view-management__export-dialog-title">Nova exportação</span>
+          <p class="view-management__export-dialog-subtitle">Selecione e ordene as colunas desejadas para exportação: </p>
+        </div>
+        <el-card
+          shadow="never"
+          class="view-management__export-dialog-card"
+        >
+          <div class="view-management__export-dialog-options">
+            <el-checkbox
+              v-model="isSelectedAllColumns"
+              :indeterminate="isIndeterminate"
+              @change="invertSelectionColumns"
+            >
+              Nome do campo ({{ checkedNodes }} de {{ columns.length }})
+            </el-checkbox>
+            <el-input
+              v-model="filterQuery"
+              size="small"
+              placeholder="Buscar"
+              prefix-icon="el-icon-search"
+              clearable
             />
-          </span>
-        </el-tree>
+          </div>
+          <el-tree
+            ref="tree"
+            :data="columns"
+            :allow-drop="allowDrop"
+            :filter-node-method="filterColumns"
+            node-key="key"
+            draggable
+            show-checkbox
+            @check="handlerChangeTree"
+            @node-drag-end="nodeDragEnd"
+          >
+            <span
+              slot-scope="{ node }"
+              class="custom-tree-node"
+            >
+              <span>{{ node.label | capitalize }}</span>
+              <jus-icon
+                class="drag-icon"
+                icon="menu-hamburger"
+              />
+            </span>
+          </el-tree>
+          <a
+            href="#"
+            class="view-management__export-dialog-link"
+            @click="showAllNodesHandler"
+          >
+            {{ showAllNodesButton }}
+          </a>
+        </el-card>
         <span slot="footer">
           <el-button
             :disabled="loadingExport"
@@ -224,6 +338,9 @@
 
 <script>
 import { filterByTerm } from '@/utils/jusUtils'
+import { mapActions, mapGetters } from 'vuex'
+
+const defaultCheckedKeys = ['DISPUTE_CODE', 'EXTERNAL_ID', 'FIRST_CLAIMANT', 'LAWYER_PARTY_NAMES', 'RESPONDENT_NAMES', 'UPPER_RANGE', 'UPPER_RANGE_SAVING_VALUE', 'STATUS', 'CLASSIFICATION', 'DESCRIPTION']
 
 export default {
   name: 'Management',
@@ -233,6 +350,7 @@ export default {
     ManagementActions: () => import('./partials/ManagementActions'),
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
     JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
+    JusLoader: () => import('@/components/others/JusLoader'),
   },
   data() {
     return {
@@ -248,10 +366,24 @@ export default {
       checkedNodes: 0,
       filterQuery: '',
       filteredNodes: {},
-      columns: [],
+      columnsList: [],
+      showAllNodes: false,
     }
   },
   computed: {
+    ...mapGetters([
+      'exportHistory',
+    ]),
+    columns() {
+      if (this.filterQuery || this.showAllNodes) {
+        return this.columnsList
+      } else {
+        return this.columnsList.filter(n => defaultCheckedKeys.includes(n.key))
+      }
+    },
+    showAllNodesButton() {
+      return this.showAllNodes ? 'Exibir apenas apenas campos sugeridos' : 'Exibir mais opções de campos'
+    },
     loadingDisputes() {
       return this.$store.getters.loadingDisputes
     },
@@ -331,9 +463,9 @@ export default {
     this.getDisputes()
   },
   mounted() {
-    this.$store.dispatch('getExportColumns').then(response => {
+    this.getExportColumns().then(response => {
       Object.keys(response).forEach(key => {
-        this.columns.push({
+        this.columnsList.push({
           key: key,
           label: response[key],
         })
@@ -344,10 +476,17 @@ export default {
     })
   },
   methods: {
+    ...mapActions([
+      'getExportColumns',
+      'getExportHistory',
+    ]),
+    showAllNodesHandler() {
+      this.showAllNodes = !this.showAllNodes
+    },
     filterColumns(value, data) {
       this.filteredNodes = filterByTerm(value, this.columns, 'label')
       this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
-      if (!value) return true
+      if (!value && this.showAllNodes) return true
       return data.label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')) !== -1
     },
     handlerChangeTree(value, obj) {
@@ -430,16 +569,12 @@ export default {
       this.getDisputes()
     },
     showExportDisputesDialog() {
+      this.getExportHistory()
       this.exportDisputesDialog = true
-      const jusexportcolumns = JSON.parse(localStorage.getItem('jusexportcolumns'))
-      setTimeout(() => {
-        if (jusexportcolumns) {
-          this.$refs.tree.setCheckedKeys(jusexportcolumns)
-        } else {
-          this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
-        }
+      this.$nextTick(() => {
+        this.$refs.tree.setCheckedKeys(this.columns.map(c => c.key))
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
-      }, 200)
+      })
     },
     exportDisputes() {
       this.loadingExport = true
@@ -447,7 +582,6 @@ export default {
         .then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Exportar disputas')
-          localStorage.setItem('jusexportcolumns', JSON.stringify(this.$refs.tree.getCheckedKeys()))
           this.$alert('Solicitação realizada com sucesso, por favor aguarde nosso email com seu relatório', 'Exportação de relatórios', {
             confirmButtonText: 'Ok',
           })
@@ -460,6 +594,50 @@ export default {
           this.exportDisputesDialog = false
         })
     },
+    exportSituation(request) {
+      if (request.error) {
+        return 'FAILED'
+      } else if (request.exportFinishedAt) {
+        return 'FINISHED'
+      } else if (request.exportStartedAt) {
+        return 'PROCESSING'
+      } else {
+        return 'QUEUE'
+      }
+    },
+    exportDateTime(requestTime) {
+      return this.$moment(requestTime * 1000).format('DD/MM/YYYY | HH:mm')
+    },
+    buildSituationTooltip(request) {
+      if (this.exportSituation(request) === 'FAILED') {
+        return `Exportação iniciada em: ${this.exportDateTime(request.exportStartedAt)} <br> Falha na exportação: ${request.error} <br> `
+      } else if (this.exportSituation(request) === 'QUEUE') {
+        return 'A exportação está na fila e será iniciada em breve'
+      } else {
+        return `Exportação iniciada em: ${this.exportDateTime(request.exportStartedAt)}`
+      }
+    },
+    exportHistoryRowClass({ row }) {
+      switch (this.exportSituation(row)) {
+        case 'FAILED':
+          return 'failed-row'
+        case 'FINISHED':
+          return 'finished-row'
+        case 'PROCESSING':
+          return 'processing-row'
+        case 'QUEUE':
+          return 'queue-row'
+      }
+    },
+    infiniteHandler($state) {
+      this.getExportHistory('isInfinit').then(response => {
+        if (response.last) {
+          $state.complete()
+        } else {
+          $state.loaded()
+        }
+      })
+    },
     showImportDialog() {
       // SEGMENT TRACK
       this.$jusSegment('Botão importação rápida')
@@ -470,6 +648,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .view-management {
   &__filters {
     display: flex;
@@ -509,23 +689,89 @@ export default {
         cursor: grab;
       }
     }
-    &-options {
+
+    .view-management__export-dialog-table-icon {
+      width: 14px;
+    }
+
+    .view-management__export-dialog-titles {
+      color: $--color-text-secondary;
+      margin-top: 24px;
+
+      .view-management__export-dialog-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .view-management__export-dialog-subtitle {
+        margin: 8px 16px;
+      }
+
+      &:last-child {
+        margin-top: 0px;
+      }
+    }
+
+    .view-management__export-dialog-options {
+      background-color: $--color-white;
       margin-bottom: 4px;
+      position: sticky;
+      height: 42px;
+      top: 0;
+      padding-top: 12px;
+      z-index: 99;
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       .el-input {
         width: 200px;
         margin-right: 10px;
       }
+
       .el-checkbox {
-        margin-left: 24px;
         font-weight: 500;
         &__label {
           color: #343c4b !important;
         }
       }
     }
+
+    .view-management__export-dialog-link {
+      display: block;
+      margin-top: 8px;
+    }
+
+    .view-management__export-dialog-card {
+      overflow: auto;
+
+      .el-card__body {
+        padding: 0 16px 16px 16px;
+        max-height: 348px;
+        overflow: auto;
+      }
+
+      .el-tree-node__expand-icon.is-leaf {
+        display: none;
+      }
+    }
+  }
+
+}
+.el-table {
+  .finished-row {
+    color: $--color-success;
+    color: #28ac5c;
+    // font-weight: bold;
+  }
+  .failed-row {
+    color: $--color-danger;
+  }
+  .processing-row {
+    color: $--color-warning;
+  }
+  .queue-row {
+    color: $--color-text-regular;
   }
 }
 </style>

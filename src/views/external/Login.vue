@@ -307,10 +307,8 @@ export default {
             this.getMembersAndRedirect(selectedWorkspace)
           } else {
             this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then(() => {
-              this.$store.dispatch('login', this.loginForm).then(() => {
-                this.getMyWorkspaces().then((response) => {
-                  this.getMembersAndRedirect(this.workspaces[this.workspaceForm.selectedWorkspaceIndex])
-                })
+              this.getMyWorkspaces().then((response) => {
+                this.getMembersAndRedirect(selectedWorkspace)
               })
             })
           }

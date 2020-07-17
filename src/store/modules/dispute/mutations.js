@@ -176,6 +176,10 @@ const disputeMutations = {
   addPartyAnalysis(state, analysis) {
     state.partyAnalysis[analysis.payload] = analysis.data
   },
+  setExportHistory: (state, history) => (state.exportHistory = history),
+  pushExportHistory: (state, history) => (state.exportHistory.content.push(...history.content)),
+  addExportHistoryPage: (state) => (state.exportHistoryPage += 1),
+  resetExportHistoryPage: (state) => (state.exportHistoryPage = 0),
 }
 
 export default disputeMutations

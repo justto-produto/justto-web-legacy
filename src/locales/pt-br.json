@@ -26,6 +26,12 @@
       "RUNNING": "em negociação",
       "SETTLED": "ganha",
       "UNSETTLED": "perdida"
+    },
+    "export": {
+      "FAILED": "falha",
+      "FINISHED": "finalizado",
+      "PROCESSING": "processando",
+      "QUEUE": "aguardando"
     }
   },
   "transactions": {

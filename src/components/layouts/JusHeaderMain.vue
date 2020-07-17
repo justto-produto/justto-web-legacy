@@ -103,12 +103,16 @@
             <el-button
               plain
               @click="changeWorkspaceDialogVisible = false"
-            >Cancelar</el-button>
+            >
+              Cancelar
+            </el-button>
             <el-button
               :disabled="selectedWorkspace === ''"
               type="primary"
-              @click="goToWorkspace"
-            >Alterar</el-button>
+              @click="getMembersAndRedirect"
+            >
+              Alterar
+            </el-button>
           </span>
         </el-dialog>
       </div>
@@ -125,7 +129,7 @@ export default {
   data() {
     return {
       dispute: '',
-      workspaces: [],
+      workspacesList: [],
       selectedWorkspace: '',
       changeWorkspaceDialogVisible: false,
     }
@@ -143,6 +147,9 @@ export default {
     whatsappStatus() {
       return this.$store.getters.whatsappStatus
     },
+    workspaces() {
+      return this.workspacesList.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
+    },
     ghostMode: {
       get() {
         return this.$store.getters.ghostMode
@@ -153,9 +160,7 @@ export default {
     },
   },
   beforeMount() {
-    this.$store.dispatch('myWorkspace').then(response => {
-      this.workspaces = response.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
-    })
+    this.getMyWorkspaces()
   },
   methods: {
     logout() {
@@ -184,28 +189,22 @@ export default {
       }, 800)
     },
     changeWorkspace() {
-      this.$store.dispatch('myWorkspace').then(response => {
-        this.workspaces = response.filter(w => w.workspace.id !== this.$store.getters.workspaceId)
-      })
+      this.getMyWorkspaces()
       this.selectedWorkspace = ''
       this.changeWorkspaceDialogVisible = true
     },
-    goToWorkspace() {
+    goToWorkspace(workspace) {
       const loading = this.$loading({
         lock: true,
         text: 'Alterando Equipe...',
       })
-      const workspace = this.workspaces[this.selectedWorkspace]
       const oldWorkspace = this.$store.getters.workspaceTeamName
       if (workspace.workspace) this.$store.commit('setWorkspace', workspace.workspace)
       if (workspace.profile) this.$store.commit('setProfile', workspace.profile)
       if (workspace.person) this.$store.commit('setLoggedPerson', workspace.person)
       this.$store.dispatch('getWorkspaceMembers')
         .then(() => {
-          // SEGMENT TRACK
-          this.$jusSegment('Troca de time/workspace', {
-            description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}`,
-          })
+          this.$jusSegment('Troca de time/workspace', { description: `Alterado de ${workspace.workspace.name} para ${oldWorkspace}` })
           this.$router.go('/management')
           this.changeWorkspaceDialogVisible = true
         }).catch(error => {
@@ -215,6 +214,38 @@ export default {
             loading.close()
           }, 1000)
         })
+    },
+    getMembersAndRedirect() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Alterando Equipe...',
+      })
+      const selectedWorkspace = this.workspaces[this.selectedWorkspace]
+      if (selectedWorkspace.person) {
+        this.goToWorkspace(selectedWorkspace)
+      } else {
+        this.$store.dispatch('ensureWorkspaceAccesss', selectedWorkspace.workspace.id).then(() => {
+          this.getMyWorkspaces().then((response) => {
+            this.goToWorkspace(selectedWorkspace)
+          }).finally(() => {
+            setTimeout(() => {
+              loading.close()
+            }, 1000)
+          })
+        })
+      }
+    },
+    getMyWorkspaces() {
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch('myWorkspace').then(response => {
+          this.workspacesList = response
+        }).then(response => {
+          resolve(response)
+        }).catch(error => {
+          this.$jusNotification({ error })
+          reject(error)
+        })
+      })
     },
   },
 }
