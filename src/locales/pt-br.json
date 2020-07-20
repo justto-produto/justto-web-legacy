@@ -8,6 +8,8 @@
     "mappedStrategy": "nome da estratégia",
     "mappedCampaign": "nome da campanha",
     "mappedNote": "notas da disputa",
+    "mappedLinks": "links de documentos externos",
+    "mappedLinkNames": "nomes de documentos externos",
     "code": "nº do processo",
     "expirationDate": "fim da negociação",
     "materialDamage": "valor dano material",
