@@ -57,6 +57,7 @@
             </el-button>
           </div>
         </div>
+        <div v-if="!menuIndex" />
         <panel-workspace
           v-if="menuIndex === '0'"
           ref="panel1"
@@ -106,7 +107,7 @@ export default {
   },
   data() {
     return {
-      menuIndex: '0',
+      menuIndex: '',
       left: 12,
       right: 0,
       filterTerm: '',
