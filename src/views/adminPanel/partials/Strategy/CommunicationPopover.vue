@@ -141,24 +141,22 @@ export default {
     handleEditCommunication(communication) {
       this.$emit('edit-communication', communication)
     },
-    handleAddCommunication(communicationType) {
-      const isDelay = communicationType === 'DELAY'
-      const newCommunication = {
-        name: isDelay ? 'Espera 3h' : 'Nova comunicação',
-        active: true,
-        duration: isDelay ? 10800 : null,
-        recipients: [this.recipient.name],
-        parties: ['CLAIMANT', 'RESPONDENT'],
-        triggerType: 'ENGAGEMENT',
-        communicationType,
-      }
+    // handleAddCommunication(communicationType) {
+    //   const isDelay = communicationType === 'DELAY'
+    //   const newCommunication = {
+    //     name: isDelay ? 'Espera 3h' : 'Nova comunicação',
+    //     active: true,
+    //     duration: isDelay ? 10800 : null,
+    //     recipients: [this.recipient.name],
+    //     parties: ['CLAIMANT', 'RESPONDENT'],
+    //     triggerType: 'ENGAGEMENT',
+    //     communicationType,
+    //   }
 
-      this.addCommunication({ newCommunication, strategyId: this.strategyId }).then(response => {
-        this.handleEditCommunicationName(response.id)
-      })
-
-      // return this.editCommunicationName(id)
-    },
+    //   this.addCommunication({ newCommunication, strategyId: this.strategyId }).then(response => {
+    //     this.handleEditCommunicationName(response.id)
+    //   })
+    // },
     handleSortCommunications() {
       const sortedIds = this.recipient.communications.map(c => c.id)
       this.sortCommunications({ sortedIds, strategyId: this.strategyId })
@@ -168,9 +166,7 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'warning',
-      }).then(() => {
-        this.deleteCommunication({ communicationId, strategyId: this.strategyId })
-      })
+      }).then(() => this.deleteCommunication({ communicationId, strategyId: this.strategyId }))
     },
   },
 }

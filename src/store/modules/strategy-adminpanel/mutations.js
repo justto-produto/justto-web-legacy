@@ -1,4 +1,5 @@
 const findStrategyIndex = (strategies, strategyId) => strategies.findIndex(s => s.id === strategyId)
+const findCommunicationIndex = (communications, communicationId) => communications.findIndex(c => c.id === communicationId)
 
 const StrategyMutations = {
   updateStrategy: (state, strategyData) => {
@@ -25,8 +26,12 @@ const StrategyMutations = {
   setStrategyAvailableWorkspaces: (state, workspaces) => (state.strategyAvailableWorkspaces = workspaces),
   addCommunications: (state, { response, strategyId }) => {
     const strategyIndex = findStrategyIndex(state.strategies, strategyId)
-    // const strategyIndex = state.strategies.findIndex(s => s.id === strategyId)
     state.strategies[strategyIndex].communications.push(response)
+  },
+  deleteCommunication: (state, { communicationId, strategyId }) => {
+    const strategyIndex = findStrategyIndex(state.strategies, strategyId)
+    const communicationIndex = findCommunicationIndex(state.strategies[strategyIndex].communications, communicationId)
+    state.strategies[strategyIndex].communications.splice(communicationIndex, 1)
   },
 }
 

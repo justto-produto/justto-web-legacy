@@ -53,10 +53,10 @@ const StrategyActions = {
     data: sortedIds,
   }),
 
-  deleteCommunication: ({ _ }, { communicationId, strategyId }) => axiosDispatcher({
+  deleteCommunication: ({ commit }, { communicationId, strategyId }) => axiosDispatcher({
     url: `${strategyPath}/${strategyId}/communication/${communicationId}`,
     method: 'DELETE',
-  }),
+  }).then(() => commit('deleteCommunication', { communicationId, strategyId })),
 }
 
 export default StrategyActions
