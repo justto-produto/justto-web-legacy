@@ -4,13 +4,14 @@
       <el-popover
         v-for="(recipient, key, index) in recipients"
         :key="key + index"
-        :title="recipient.name"
+        :title="translateRecipientName(recipient.name)"
         :open-delay="200"
         placement="bottom-start"
         trigger="hover"
       >
         <CommunicationPopover
           :recipient="recipient"
+          :strategyId="strategyId"
           @edit-communication="handleEditCommunication"
         />
 
@@ -19,7 +20,7 @@
           class="strategy-communication__list-item"
         >
           <span class="strategy-communication__name">
-            {{ recipient.name }}
+            {{ translateRecipientName(recipient.name) }}
           </span>
           <div class="strategy-communication__email">
             <jus-icon
@@ -59,6 +60,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    strategyId: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
@@ -78,37 +83,25 @@ export default {
       return this.communicationData
     },
     partyCommunications() {
-      return this.concatedCommunications.filter(c => c && c.recipients.includes('PARTY'))
+      return this.communications.filter(c => c && (c.recipients.includes('PARTY') || c.type === 'DELAY'))
     },
-    lowyerCommunications() {
-      return this.concatedCommunications.filter(c => c && c.recipients.includes('LAWYER'))
+    lawyerCommunications() {
+      return this.communications.filter(c => c && (c.recipients.includes('LAWYER') || c.type === 'DELAY'))
     },
     recipients() {
       return {
         PARTY: {
-          name: 'Parte',
+          name: 'PARTY',
           emails: this.partyCommunications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
           sms: this.partyCommunications.filter(c => c && c.type === 'SMS').length,
           communications: this.partyCommunications,
         },
         LAWYER: {
-          name: 'Advogado',
-          emails: this.lowyerCommunications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
-          sms: this.lowyerCommunications.filter(c => c && c.type === 'SMS').length,
-          communications: this.lowyerCommunications,
+          name: 'LAWYER',
+          emails: this.lawyerCommunications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
+          sms: this.lawyerCommunications.filter(c => c && c.type === 'SMS').length,
+          communications: this.lawyerCommunications,
         },
-      }
-    },
-
-    concatedCommunications() {
-      if (this.communications.length) {
-        let comm = []
-        for (const c of this.communications) {
-          comm = comm.concat(c.communications)
-        }
-        return comm
-      } else {
-        return []
       }
     },
   },
@@ -116,6 +109,10 @@ export default {
     handleEditCommunication(communication) {
       this.isVisible = true
       this.communicationData = communication
+    },
+
+    translateRecipientName(name) {
+      return this.$options.filters.capitalize(this.$t(`recipients.${name}`))
     },
   },
 }

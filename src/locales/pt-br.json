@@ -102,6 +102,10 @@
   "attributeBoundary": {
     "boundary": "alçada máxima"
   },
+  "recipients": {
+    "LAWYER": "advogado",
+    "PARTY": "autor"
+  },
   "occurrence": {
     "type": {
       "ENRICHMENT": "enriquecimento",

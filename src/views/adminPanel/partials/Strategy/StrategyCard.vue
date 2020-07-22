@@ -1,13 +1,15 @@
 <template>
   <el-card class="strategy-card">
     <div class="strategy-card__icon-area">
-      <i
-        :class="{
-          [`el-icon-${strategyData.privateStrategy ? 'lock' : 'unlock'}`]: true
-        }"
-        class="strategy-card__icon"
-        @click="changeEstrategyPrivacy()"
-      />
+      <el-tooltip :content="strategyData.privateStrategy ? 'Estratégia privada' : 'Estratégia pública'">
+        <i
+          :class="{
+            [`el-icon-${strategyData.privateStrategy ? 'lock' : 'unlock'}`]: true
+          }"
+          class="strategy-card__icon"
+          @click="changeEstrategyPrivacy()"
+        />
+      </el-tooltip>
     </div>
 
     <div class="strategy-card__name-area">
@@ -30,11 +32,14 @@
     </div>
 
     <div class="strategy-card__messages-area">
-      <strategy-communication :communications="strategyData.triggers" />
+      <StrategyCommunication
+        :communications="strategyData.communications"
+        :strategyId="strategy.id"
+      />
     </div>
 
     <div class="strategy-card__workspaces-area">
-      <jus-tag-container
+      <JusTagContainer
         :options="availableWorkspaces"
         :tag-list="strategyData.workspaces"
         placeholder="Todos os times possuem acesso a esta estratégia."
@@ -45,7 +50,7 @@
     </div>
 
     <div class="strategy-card__strategies-area">
-      <jus-tag-container
+      <JusTagContainer
         :tag-list="[{name: 'Pagamento'}]"
         @change="changeEstrategyData($event, 'types')"
       />
@@ -112,6 +117,7 @@ export default {
   padding: 40px;
 
   .strategy-card {
+    position: relative;
     &:hover {
       border: 1px solid $--color-primary;
       color: $--color-primary;
@@ -128,8 +134,10 @@ export default {
 
       &:hover {
         .strategy-card__action-area {
-          display: flex;
-          justify-content: flex-end;
+          display: block;
+          position: absolute;
+          top: 16px;
+          right: 16px;
 
           .strategy-card__action-button {
             font-size: 16px;

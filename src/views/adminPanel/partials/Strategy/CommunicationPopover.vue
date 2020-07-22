@@ -5,6 +5,7 @@
         :data="communications"
         :allow-drop="allowDrop"
         draggable
+        @node-drop="handleSortCommunications"
       >
         <div
           slot-scope="{ data }"
@@ -22,8 +23,8 @@
               v-if="editInput === data.id"
               :ref="`edit-input-${data.id}`"
               v-model="data.name"
-              @keyup.native.enter="handleCloseInput"
-              @blur="handleCloseInput"
+              @keyup.native.enter="handleCloseInput(data)"
+              @blur="handleCloseInput(data)"
             />
 
             <span v-else>
@@ -31,23 +32,29 @@
             </span>
           </div>
           <div class="communication-popover__item-actions">
-            <jus-icon
-              icon="edit"
-              class="communication-popover__item-action-icon"
-              @click.native="editCommunicationName(data.id)"
-            />
+            <el-tooltip content="Editar título">
+              <jus-icon
+                icon="edit"
+                class="communication-popover__item-action-icon"
+                @click.native="handleEditCommunicationName(data.id)"
+              />
+            </el-tooltip>
 
-            <jus-icon
-              icon="doc"
-              class="communication-popover__item-action-icon"
-              @click.native="editCommunication(data)"
-            />
+            <el-tooltip content="Editar mensagem">
+              <jus-icon
+                icon="doc"
+                class="communication-popover__item-action-icon"
+                @click.native="handleEditCommunication(data)"
+              />
+            </el-tooltip>
 
-            <jus-icon
-              icon="trash"
-              class="communication-popover__item-action-icon"
-              @click.native="deleteCommunication(data.id)"
-            />
+            <el-tooltip content="Excluir mensagem">
+              <jus-icon
+                icon="trash"
+                class="communication-popover__item-action-icon"
+                @click.native="handleDeleteCommunication(data.id)"
+              />
+            </el-tooltip>
           </div>
         </div>
       </el-tree>
@@ -63,7 +70,7 @@
           v-for="(item, index) in communicationTypes"
           :key="index"
           class="communication-popover__message-types-item"
-          @click="addCommunication(item.key)"
+          @click="handleAddCommunication(item.key)"
         >
           <jus-icon
             :icon="item.icon"
@@ -79,6 +86,7 @@
 
 <script>
 import { STRATEGY_COMMUNICATION_TYPES } from '@/constants/strategy'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'CommunicationPopover',
@@ -86,6 +94,10 @@ export default {
     recipient: {
       type: Object,
       default: null,
+    },
+    strategyId: {
+      type: Number,
+      required: true,
     },
   },
   data() {
@@ -107,41 +119,54 @@ export default {
     smsCount: self => self.recipient.sms,
   },
   methods: {
+    ...mapActions([
+      'addCommunication',
+      'deleteCommunication',
+      'editCommunicationName',
+      'sortCommunications',
+    ]),
     allowDrop: (_draggingNode, _dropNode, type) => type !== 'inner',
     translateTypeToIcon: communicationType =>
       STRATEGY_COMMUNICATION_TYPES[communicationType].icon,
 
-    editCommunicationName(communicationId) {
+    handleEditCommunicationName(communicationId) {
       this.editInput = communicationId
       this.$nextTick(() => this.$refs[`edit-input-${communicationId}`].$refs.input.focus())
     },
-    editCommunication(communication) {
+    handleCloseInput(communication) {
+      this.editInput = null
+      console.log(communication)
+      this.editCommunicationName({ communication, strategyId: this.strategyId })
+    },
+    handleEditCommunication(communication) {
       this.$emit('edit-communication', communication)
     },
-    handleCloseInput() {
-      this.editInput = null
-    },
-    addCommunication(communicationType) {
-      // TODO: Remove id generation, when unmock API
-      let id = 0
-      this.data.map(message => {
-        if (message.id >= id) id = message.id + 1
-      })
+    // handleAddCommunication(communicationType) {
+    //   const isDelay = communicationType === 'DELAY'
+    //   const newCommunication = {
+    //     name: isDelay ? 'Espera 3h' : 'Nova comunicação',
+    //     active: true,
+    //     duration: isDelay ? 10800 : null,
+    //     recipients: [this.recipient.name],
+    //     parties: ['CLAIMANT', 'RESPONDENT'],
+    //     triggerType: 'ENGAGEMENT',
+    //     communicationType,
+    //   }
 
-      this.data.push({
-        id,
-        name: '',
-        communicationType,
-      })
-
-      return this.editCommunicationName(id)
+    //   this.addCommunication({ newCommunication, strategyId: this.strategyId }).then(response => {
+    //     this.handleEditCommunicationName(response.id)
+    //   })
+    // },
+    handleSortCommunications() {
+      const sortedIds = this.recipient.communications.map(c => c.id)
+      this.sortCommunications({ sortedIds, strategyId: this.strategyId })
     },
-    deleteCommunication(communicationId) {
-      this.data.map((communication, index) => {
-        if (communication.id === communicationId) {
-          return this.data.splice(index, 1)
-        }
-      })
+    handleDeleteCommunication(communicationId) {
+      this.$confirm('Tem certeza que deseja fazer isso?', 'Excluir mensagem', {
+        confirmButtonText: 'Excluir',
+        cancelButtonText: 'Cancelar',
+        type: 'warning',
+      }).then(() => this.deleteCommunication({ communicationId, strategyId: this.strategyId }))
     },
   },
 }
@@ -155,8 +180,12 @@ export default {
   gap: 24px;
   grid-template-columns: 1fr 150px;
   width: 600px;
+  overflow: hidden;
 
   .communication-popover__drag-list {
+    max-height: 92vh;
+    overflow: auto;
+
     .communication-popover__item {
       align-items: center;
       display: grid;
