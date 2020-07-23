@@ -24,7 +24,7 @@ const StrategyMutations = {
     state.strategies = strategies
   },
   setStrategyAvailableWorkspaces: (state, workspaces) => (state.strategyAvailableWorkspaces = workspaces),
-  setAvaliableVariablesToTemplate: (state, variables) => (state.avaliableTemplateVariables = variables),
+  setAvaliableVariablesToTemplate: (state, variables) => (state.avaliableVariablesToTemplate = variables),
 
   addCommunications: (state, { response, strategyId }) => {
     const strategyIndex = findStrategyIndex(state.strategies, strategyId)

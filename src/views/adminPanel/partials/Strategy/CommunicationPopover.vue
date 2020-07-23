@@ -183,7 +183,7 @@ export default {
   overflow: hidden;
 
   .communication-popover__drag-list {
-    max-height: 92vh;
+    max-height: calc(100vh - 80px);
     overflow: auto;
 
     .communication-popover__item {
