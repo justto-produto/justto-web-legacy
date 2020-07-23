@@ -10,7 +10,7 @@ const StrategyMutations = {
   },
   setStrategies: (state, strategies) => {
     for (const strategie of strategies) {
-      if (strategie.triggers.length) {
+      if (strategie.triggers && strategie.triggers.length) {
         let comm = []
         for (const t of strategie.triggers) {
           comm = comm.concat(t.communications)
