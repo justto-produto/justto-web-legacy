@@ -11,7 +11,33 @@
           slot-scope="{ data }"
           class="communication-popover__item"
         >
-          <jus-icon icon="menu-hamburger" />
+          <jus-icon
+            class="communication-popover__menu-hamburger"
+            icon="menu-hamburger"
+          />
+
+          <div class="communication-popover__recipients">
+            <el-tooltip
+              v-if="data.type !== 'DELAY'"
+              content="Autor"
+            >
+              <i
+                :class="{ 'is-inactive-recipient': !isRecipient(data.recipients, 'PARTY') }"
+                class="el-icon-user-solid"
+                @click="handleCommunicationRecipient(data, 'PARTY')"
+              />
+            </el-tooltip>
+            <el-tooltip
+              v-if="data.type !== 'DELAY'"
+              content="Advogado"
+            >
+              <i
+                :class="{ 'is-inactive-recipient': !isRecipient(data.recipients, 'LAWYER') }"
+                class="el-icon-s-custom"
+                @click="handleCommunicationRecipient(data, 'LAWYER')"
+              />
+            </el-tooltip>
+          </div>
 
           <div class="communication-popover__item-text-container">
             <jus-icon
@@ -40,7 +66,9 @@
               />
             </el-tooltip>
 
-            <el-tooltip content="Editar mensagem">
+            <el-tooltip
+              v-if="data.type !== 'DELAY'"
+              content="Editar mensagem">
               <jus-icon
                 icon="doc"
                 class="communication-popover__item-action-icon"
@@ -117,14 +145,18 @@ export default {
     emailCount: self => self.recipient.emails,
     recipientName: self => self.recipient.name,
     smsCount: self => self.recipient.sms,
+
   },
   methods: {
     ...mapActions([
       'addCommunication',
       'deleteCommunication',
-      'editCommunicationName',
+      'editCommunication',
       'sortCommunications',
     ]),
+    isRecipient(recipients, recipient) {
+      return recipients.includes(recipient)
+    },
     allowDrop: (_draggingNode, _dropNode, type) => type !== 'inner',
     translateTypeToIcon: communicationType =>
       STRATEGY_COMMUNICATION_TYPES[communicationType].icon,
@@ -135,8 +167,7 @@ export default {
     },
     handleCloseInput(communication) {
       this.editInput = null
-      console.log(communication)
-      this.editCommunicationName({ communication, strategyId: this.strategyId })
+      this.editCommunication({ communication, strategyId: this.strategyId })
     },
     handleEditCommunication(communication) {
       this.$emit('edit-communication', communication.id)
@@ -157,6 +188,15 @@ export default {
     //     this.handleEditCommunicationName(response.id)
     //   })
     // },
+    handleCommunicationRecipient(communication, recipient) {
+      if (this.isRecipient(communication.recipients, recipient)) {
+        const recipientIndex = communication.recipients.findIndex(r => r === recipient)
+        communication.recipients.splice(recipientIndex, 1)
+      } else {
+        communication.recipients.push(recipient)
+      }
+      this.editCommunication({ communication, strategyId: this.strategyId })
+    },
     handleSortCommunications() {
       const sortedIds = this.recipient.communications.map(c => c.id)
       this.sortCommunications({ sortedIds, strategyId: this.strategyId })
@@ -189,8 +229,8 @@ export default {
     .communication-popover__item {
       align-items: center;
       display: grid;
-      grid-template-columns: 32px 1fr auto;
-      gap: 24px;
+      grid-template-columns: 18px 38px 1fr auto;
+      gap: 16px;
       padding: 16px 0;
       padding-right: 24px;
       width: 100%;
@@ -199,6 +239,23 @@ export default {
       > .communication-popover__item-actions
       > .communication-popover__item-action-icon {
         display: block;
+      }
+
+      .communication-popover__menu-hamburger {
+        width: 18px;
+      }
+
+      .communication-popover__recipients {
+        .el-icon-user-solid, .el-icon-s-custom {
+          cursor: pointer;
+          font-size: 18px;
+          margin-left: 2px;
+
+          &.is-inactive-recipient {
+            color: $--color-text-secondary;
+          }
+        }
+
       }
 
       .communication-popover__item-text-container {
@@ -215,14 +272,17 @@ export default {
       }
 
       .communication-popover__item-actions {
-        display: grid;
-        gap: 8px;
-        grid-template-columns: repeat(2, auto) 1fr;
+        display: flex;
 
         .communication-popover__item-action-icon {
           cursor: pointer;
           display: none;
           height: 18px;
+          margin-left: 8px;
+
+          &:first-child {
+            margin-left: 0;
+          }
         }
       }
     }
