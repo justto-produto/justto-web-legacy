@@ -1,39 +1,34 @@
 <template>
-  <el-dialog
-    v-if="visible"
-    :visible.sync="visible"
-    :title="communicationData.name"
-    :class="{
-      'communication-editor__dialog--full': inFullScreen,
-    }"
-    class="communication-editor__dialog"
-    width="750px"
-  >
-    <div class="communication-editor show-toolbar">
-      <quill-editor
-        ref="textEditor"
-        v-model="communicationData.message"
-        :options="editorOptions"
-        class="communication-editor__quill"
-      />
-    </div>
+  <div>
+    <el-dialog
+      v-if="visible"
+      :visible.sync="isVisible"
+      :title="communication.name"
+      class="communication-editor__dialog"
+      width="750px"
+    >
+      <div class="communication-editor show-toolbar">
+        <quill-editor
+          ref="messageEditor"
+          v-model="communication.body"
+          :options="editorOptions"
+          class="communication-editor__quill"
+          @change="autosave"
+        />
+      </div>
 
-    <div>
-      <JusVariablesCard
-        v-if="variables"
-        :variables="variables"
-      />
-
-      <i
-        :class="inFullScreen ? 'el-icon-bottom-left' : 'el-icon-top-right'"
-        class="communication-editor__resize-icon"
-        @click="resize()"
-      />
-    </div>
-  </el-dialog>
+      <div>
+        <JusVariablesCard
+          v-if="variables"
+          :variables="variables"
+        />
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import { quillEditor } from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
@@ -42,17 +37,21 @@ import 'quill/dist/quill.bubble.css'
 export default {
   name: 'CommunicationEditor',
   components: {
-    quillEditor,
     JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
+    quillEditor,
   },
   props: {
-    communicationData: {
+    communicationTemplate: {
       type: Object,
       default: null,
     },
-    variables: {
-      type: Object,
-      default: null,
+    communicationId: {
+      type: Number,
+      required: true,
+    },
+    strategyId: {
+      type: Number,
+      required: true,
     },
     visible: {
       type: Boolean,
@@ -61,6 +60,7 @@ export default {
   },
   data() {
     return {
+      communication: {},
       editorOptions: {
         placeholder: 'Digite a mensagem aqui!',
         modules: {
@@ -72,26 +72,57 @@ export default {
           ],
         },
       },
-      inFullScreen: false,
+      saveDebounce: () => {},
     }
   },
   computed: {
-    modalIsVisible() {
-      return this.visible
+    ...mapGetters({
+      variables: 'getAvaliableVariablesToTemplate',
+    }),
+
+    isVisible: {
+      get() {
+        return this.visible
+      },
+      set(value) {
+        this.$emit('update:visible', value)
+      },
+    },
+  },
+  watch: {
+    communicationTemplate(current) {
+      if (current) {
+        this.communication = current
+        // this.$nextTick(() => {
+        //   this.$refs.messageEditor.quill.setText(this.communication.body)
+        // })
+      }
     },
   },
   methods: {
-    resize() {
-      this.inFullScreen = !this.inFullScreen
+    ...mapActions(['changeCommunicationTemplate']),
+
+    autosave({ _, html, text }) {
+      clearTimeout(this.saveDebounce)
+      this.saveDebounce = setTimeout(() => {
+        this.changeCommunicationTemplate({
+          template: this.communication,
+          communicationId: this.communicationId,
+          strategyId: this.strategyId,
+        })
+      }, 1000)
     },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .communication-editor {
   border: 1px solid #ccc;
   border-radius: 4px;
+  width: 100%;
 
   .communication-editor__quill {
     padding: 16px;
@@ -99,32 +130,37 @@ export default {
 }
 
 .communication-editor__resize-icon {
-  color: #adadad;
-  cursor: pointer;
   position: absolute;
-  right: 56px;
-  top: 32px;
+  color: $--color-text-secondary;
+  font-size: 16px;
+  top: 31px;
+  right: 53px;
+  cursor: pointer;
+  &:hover {
+    color: $--color-primary
+  }
 }
+
 </style>
 
 <style lang="scss">
 .communication-editor__dialog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 10px;
   .el-dialog__body {
-    display: grid;
-    gap: 24px;
-    grid-template-columns: 1fr auto;
-    // super gamb for calc total height of dialog ¯\_(ツ)_/¯
-    height: calc(100% - (60px + 57px));
+    display: flex;
+    height: 100%;
   }
 
   .el-dialog {
-    transition-duration: .2s;
+    width: 100% !important;
+    .el-dialog__body {
+      height: calc(100vh - 90px);
+    }
   }
-}
-
-.communication-editor__dialog--full > .el-dialog {
-  width: 100% !important;
-  height: 100%;
 }
 
 .show-toolbar {

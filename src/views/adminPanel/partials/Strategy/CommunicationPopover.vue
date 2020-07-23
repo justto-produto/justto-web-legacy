@@ -139,7 +139,7 @@ export default {
       this.editCommunicationName({ communication, strategyId: this.strategyId })
     },
     handleEditCommunication(communication) {
-      this.$emit('edit-communication', communication)
+      this.$emit('edit-communication', communication.id)
     },
     // handleAddCommunication(communicationType) {
     //   const isDelay = communicationType === 'DELAY'

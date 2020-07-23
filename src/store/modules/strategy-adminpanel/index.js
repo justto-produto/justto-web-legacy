@@ -6,6 +6,7 @@ const StrategyModule = {
   state: {
     strategies: [],
     strategyAvailableWorkspaces: [],
+    avaliableVariablesToTemplate: {},
   },
   actions,
   getters,
