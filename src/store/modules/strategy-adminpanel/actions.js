@@ -31,15 +31,18 @@ const StrategyActions = {
     mutation: 'setStrategyAvailableWorkspaces',
   }),
 
-  addCommunication({ commit }, { newCommunication, strategyId }) {
-    return axiosDispatcher({
-      url: `${strategyPath}/${strategyId}/communication`,
-      method: 'POST',
-      data: newCommunication,
-    }).then(response => {
-      commit('addCommunications', { response, strategyId })
-    })
-  },
+  getAvaliableVariablesToTemplate: ({ _ }) => axiosDispatcher({
+    url: `${strategyPath}/template/variable`,
+    mudation: 'setAvaliableVariablesToTemplate',
+  }),
+
+  addCommunication: ({ commit }, { newCommunication, strategyId }) => axiosDispatcher({
+    url: `${strategyPath}/${strategyId}/communication`,
+    method: 'POST',
+    data: newCommunication,
+  }).then(response => {
+    commit('addCommunications', { response, strategyId })
+  }),
 
   editCommunicationName: ({ _ }, { communication, strategyId }) => axiosDispatcher({
     url: `${strategyPath}/${strategyId}/communication/${communication.id}`,
@@ -57,6 +60,16 @@ const StrategyActions = {
     url: `${strategyPath}/${strategyId}/communication/${communicationId}`,
     method: 'DELETE',
   }).then(() => commit('deleteCommunication', { communicationId, strategyId })),
+
+  getCommunicationTemplate: ({ _ }, { communicationId, strategyId }) => axiosDispatcher({
+    url: `${strategyPath}/${strategyId}/communication/${communicationId}/template`,
+  }),
+
+  changeCommunicationTemplate: ({ _ }, { template, communicationId, strategyId }) => axiosDispatcher({
+    url: `${strategyPath}/${strategyId}/communication/${communicationId}/template`,
+    method: 'PUT',
+    data: template,
+  }),
 }
 
 export default StrategyActions

@@ -40,15 +40,18 @@
       </el-popover>
     </ul>
 
-    <communication-editor
-      :communication-data="communication"
-      :visible="editorIsVisible"
-      :variables="variables"
+    <CommunicationEditor
+      :communication-template="communicationToEdit"
+      :strategy-id="strategyId"
+      :communication-id="activeCommunicationId"
+      :visible.sync="editorDialogIsVisible"
     />
   </article>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'StrategyCommunication',
   components: {
@@ -67,21 +70,12 @@ export default {
   },
   data() {
     return {
-      communicationData: null,
-      isVisible: false,
-      variables: {
-        teste1: 'teste 1',
-        teste2: 'teste 2',
-      },
+      communicationToEdit: {},
+      activeCommunicationId: 0,
+      editorDialogIsVisible: false,
     }
   },
   computed: {
-    editorIsVisible() {
-      return this.isVisible
-    },
-    communication() {
-      return this.communicationData
-    },
     partyCommunications() {
       return this.communications.filter(c => c && (c.recipients.includes('PARTY') || c.type === 'DELAY'))
     },
@@ -106,9 +100,14 @@ export default {
     },
   },
   methods: {
-    handleEditCommunication(communication) {
-      this.isVisible = true
-      this.communicationData = communication
+    ...mapActions(['getCommunicationTemplate']),
+
+    handleEditCommunication(communicationId) {
+      this.getCommunicationTemplate({ communicationId, strategyId: this.strategyId }).then(response => {
+        this.activeCommunicationId = communicationId
+        this.communicationToEdit = response
+        this.editorDialogIsVisible = true
+      })
     },
 
     translateRecipientName(name) {

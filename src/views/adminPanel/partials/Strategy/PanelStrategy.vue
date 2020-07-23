@@ -112,15 +112,15 @@ export default {
     },
   },
   beforeMount() {
-    this.getStrategies().finally(() => {
-      this.loading = false
-    })
+    this.getStrategies().finally(() => (this.loading = false))
+    this.getAvaliableVariablesToTemplate()
   },
   methods: {
     ...mapActions([
       'addStrategy',
       'cloneStrategy',
       'getStrategies',
+      'getAvaliableVariablesToTemplate',
       'getStrategyAvailableWorkspaces',
       'updateStrategy',
     ]),
