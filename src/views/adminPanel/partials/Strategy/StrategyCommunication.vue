@@ -2,9 +2,7 @@
   <article class="strategy-communication">
     <ul class="strategy-communication__list">
       <el-popover
-        v-for="(recipient, key, index) in recipients"
-        :key="key + index"
-        :title="translateRecipientName(recipient.name)"
+        title="Mensagens"
         :open-delay="200"
         placement="bottom-start"
         trigger="hover"
@@ -20,7 +18,7 @@
           class="strategy-communication__list-item"
         >
           <span class="strategy-communication__name">
-            {{ translateRecipientName(recipient.name) }}
+            Mensagens
           </span>
           <div class="strategy-communication__email">
             <jus-icon
@@ -76,26 +74,11 @@ export default {
     }
   },
   computed: {
-    partyCommunications() {
-      return this.communications.filter(c => c && (c.recipients.includes('PARTY') || c.type === 'DELAY'))
-    },
-    lawyerCommunications() {
-      return this.communications.filter(c => c && (c.recipients.includes('LAWYER') || c.type === 'DELAY'))
-    },
-    recipients() {
+    recipient() {
       return {
-        PARTY: {
-          name: 'PARTY',
-          emails: this.partyCommunications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
-          sms: this.partyCommunications.filter(c => c && c.type === 'SMS').length,
-          communications: this.partyCommunications,
-        },
-        LAWYER: {
-          name: 'LAWYER',
-          emails: this.lawyerCommunications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
-          sms: this.lawyerCommunications.filter(c => c && c.type === 'SMS').length,
-          communications: this.lawyerCommunications,
-        },
+        emails: this.communications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
+        sms: this.communications.filter(c => c && c.type === 'SMS').length,
+        communications: this.communications,
       }
     },
   },

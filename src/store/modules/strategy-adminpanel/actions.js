@@ -44,7 +44,7 @@ const StrategyActions = {
     commit('addCommunications', { response, strategyId })
   }),
 
-  editCommunicationName: ({ _ }, { communication, strategyId }) => axiosDispatcher({
+  editCommunication: ({ _ }, { communication, strategyId }) => axiosDispatcher({
     url: `${strategyPath}/${strategyId}/communication/${communication.id}`,
     method: 'PATCH',
     data: communication,
