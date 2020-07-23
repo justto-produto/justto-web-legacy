@@ -33,7 +33,7 @@ const StrategyActions = {
 
   getAvaliableVariablesToTemplate: ({ _ }) => axiosDispatcher({
     url: `${strategyPath}/template/variable`,
-    mudation: 'setAvaliableVariablesToTemplate',
+    mutation: 'setAvaliableVariablesToTemplate',
   }),
 
   addCommunication: ({ commit }, { newCommunication, strategyId }) => axiosDispatcher({

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="communication-editor">
     <el-dialog
       v-if="visible"
       :visible.sync="isVisible"
@@ -7,14 +7,22 @@
       class="communication-editor__dialog"
       width="750px"
     >
-      <div class="communication-editor show-toolbar">
-        <quill-editor
-          ref="messageEditor"
-          v-model="communication.body"
-          :options="editorOptions"
-          class="communication-editor__quill"
-          @change="autosave"
+      <div class="communication-editor__data-area">
+        <el-input
+          v-model="communication.title"
+          @input="autosave"
+          placeholder="Título da mensagem"
         />
+
+        <div class="communication-editor__editor-fieldset show-toolbar">
+          <quill-editor
+            ref="messageEditor"
+            v-model="communication.body"
+            :options="editorOptions"
+            class="communication-editor__quill"
+            @input="autosave"
+          />
+        </div>
       </div>
 
       <div>
@@ -80,6 +88,19 @@ export default {
       variables: 'getAvaliableVariablesToTemplate',
     }),
 
+    htmlMessage() {
+      return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+          <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          </head>
+          <body>
+            ${this.communication.body}
+          </body>
+        </html>`
+    },
+
     isVisible: {
       get() {
         return this.visible
@@ -93,9 +114,6 @@ export default {
     communicationTemplate(current) {
       if (current) {
         this.communication = current
-        // this.$nextTick(() => {
-        //   this.$refs.messageEditor.quill.setText(this.communication.body)
-        // })
       }
     },
   },
@@ -105,12 +123,14 @@ export default {
     autosave({ _, html, text }) {
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
+        const communicationCopy = Object.assign({}, this.communication)
+        communicationCopy.body = this.htmlMessage
         this.changeCommunicationTemplate({
-          template: this.communication,
+          template: communicationCopy,
           communicationId: this.communicationId,
           strategyId: this.strategyId,
         })
-      }, 1000)
+      }, 3000)
     },
   },
 }
@@ -120,45 +140,57 @@ export default {
 @import '@/styles/colors.scss';
 
 .communication-editor {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
+  display: flex;
 
-  .communication-editor__quill {
-    padding: 16px;
+  .communication-editor__data-area {
+    width: 100%;
+
+    .communication-editor__editor-fieldset {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%;
+      height: calc(100% - 50px);
+      margin-top: 12px;
+
+      .communication-editor__quill {
+        padding: 16px;
+      }
+    }
   }
-}
 
-.communication-editor__resize-icon {
-  position: absolute;
-  color: $--color-text-secondary;
-  font-size: 16px;
-  top: 31px;
-  right: 53px;
-  cursor: pointer;
-  &:hover {
-    color: $--color-primary
+  .communication-editor__resize-icon {
+    position: absolute;
+    color: $--color-text-secondary;
+    font-size: 16px;
+    top: 31px;
+    right: 53px;
+    cursor: pointer;
+    &:hover {
+      color: $--color-primary
+    }
   }
 }
 
 </style>
 
 <style lang="scss">
-.communication-editor__dialog {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 10px;
-  .el-dialog__body {
+.communication-editor {
+  .communication-editor__dialog {
     display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
-  }
-
-  .el-dialog {
-    width: 100% !important;
+    padding: 10px;
     .el-dialog__body {
-      height: calc(100vh - 90px);
+      display: flex;
+      height: 100%;
+    }
+
+    .el-dialog {
+      width: 100% !important;
+      .el-dialog__body {
+        height: calc(100vh - 90px);
+      }
     }
   }
 }
