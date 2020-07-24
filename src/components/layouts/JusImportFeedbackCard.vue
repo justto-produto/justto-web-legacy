@@ -357,14 +357,16 @@ export default {
     },
 
     mapEmails(emails) {
-      const emailsList = emails.split(',')
-      const vefiryEmail = /\S+@\S+\.\S+/
-      for (let email of emailsList) {
-        email = email.trim()
-        if (vefiryEmail.test(email)) {
-          for (const negotiator of this.negotiatorsList) {
-            if (email === negotiator.accountEmail) {
-              this.negotiatorIds.push(negotiator.personId)
+      if (emails) {
+        const emailsList = emails.split(',')
+        const vefiryEmail = /\S+@\S+\.\S+/
+        for (let email of emailsList) {
+          email = email.trim()
+          if (vefiryEmail.test(email)) {
+            for (const negotiator of this.negotiatorsList) {
+              if (email === negotiator.accountEmail) {
+                this.negotiatorIds.push(negotiator.personId)
+              }
             }
           }
         }
