@@ -5,9 +5,11 @@
         :data="communications"
         :allow-drop="allowDrop"
         draggable
+        node-key="id"
         @node-drop="handleSortCommunications"
       >
         <div
+          v-if="data"
           slot-scope="{ data }"
           class="communication-popover__item"
         >
@@ -68,7 +70,8 @@
 
             <el-tooltip
               v-if="data.type !== 'DELAY'"
-              content="Editar mensagem">
+              content="Editar mensagem"
+            >
               <jus-icon
                 icon="doc"
                 class="communication-popover__item-action-icon"
@@ -158,7 +161,9 @@ export default {
 
     allowDrop: (_draggingNode, _dropNode, type) => type !== 'inner',
 
-    translateTypeToIcon: communicationType => STRATEGY_COMMUNICATION_TYPES[communicationType].icon,
+    translateTypeToIcon: communicationType => (STRATEGY_COMMUNICATION_TYPES[communicationType])
+      ? STRATEGY_COMMUNICATION_TYPES[communicationType].icon
+      : STRATEGY_COMMUNICATION_TYPES.UNKNOW.icon,
 
     handleEditCommunicationName(communicationId) {
       this.editInput = communicationId
@@ -171,7 +176,7 @@ export default {
     },
 
     handleEditCommunication(communication) {
-      this.$emit('edit-communication', communication.id)
+      this.$emit('edit-communication', communication.id, communication.name)
     },
 
     handleAddCommunication(communicationType) {
@@ -224,7 +229,7 @@ export default {
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr 150px;
-  width: 600px;
+  width: 700px;
   overflow: hidden;
 
   .communication-popover__drag-list {

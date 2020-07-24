@@ -3,7 +3,7 @@
     <el-dialog
       v-if="visible"
       :visible.sync="isVisible"
-      :title="communication.name"
+      :title="communicationName"
       class="communication-editor__dialog"
       width="750px"
     >
@@ -64,6 +64,10 @@ export default {
     visible: {
       type: Boolean,
       default: false,
+    },
+    communicationName: {
+      type: String,
+      default: '',
     },
   },
   data() {

@@ -5,7 +5,7 @@
         title="Mensagens"
         :open-delay="200"
         placement="bottom-start"
-        trigger="hover"
+        trigger="click"
       >
         <CommunicationPopover
           :recipient="recipient"
@@ -42,6 +42,7 @@
       :communication-template="communicationToEdit"
       :strategy-id="strategyId"
       :communication-id="activeCommunicationId"
+      :communication-name="communicationName"
       :visible.sync="editorDialogIsVisible"
     />
   </article>
@@ -70,6 +71,7 @@ export default {
     return {
       communicationToEdit: {},
       activeCommunicationId: 0,
+      communicationName: '',
       editorDialogIsVisible: false,
     }
   },
@@ -85,8 +87,9 @@ export default {
   methods: {
     ...mapActions(['getCommunicationTemplate']),
 
-    handleEditCommunication(communicationId) {
+    handleEditCommunication(communicationId, communicationName) {
       this.getCommunicationTemplate({ communicationId, strategyId: this.strategyId }).then(response => {
+        this.communicationName = communicationName
         this.activeCommunicationId = communicationId
         this.communicationToEdit = response
         this.editorDialogIsVisible = true
