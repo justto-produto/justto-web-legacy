@@ -19,4 +19,9 @@ export const STRATEGY_COMMUNICATION_TYPES = {
     label: 'Espera',
     icon: 'clock',
   },
+  UNKNOW: {
+    key: 'UNKNOW',
+    label: 'Desconhecido',
+    icon: 'empty-screen-filter',
+  },
 }
