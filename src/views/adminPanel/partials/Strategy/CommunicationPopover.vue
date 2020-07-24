@@ -148,7 +148,6 @@ export default {
     emailCount: self => self.recipient.emails,
     recipientName: self => self.recipient.name,
     smsCount: self => self.recipient.sms,
-
   },
   methods: {
     ...mapActions([
@@ -157,39 +156,46 @@ export default {
       'editCommunication',
       'sortCommunications',
     ]),
-    isRecipient(recipients, recipient) {
-      return recipients.includes(recipient)
-    },
+
+    isRecipient: (recipients, recipient) => recipients.includes(recipient),
+
     allowDrop: (_draggingNode, _dropNode, type) => type !== 'inner',
-    translateTypeToIcon: communicationType => (STRATEGY_COMMUNICATION_TYPES[communicationType]) ? STRATEGY_COMMUNICATION_TYPES[communicationType].icon
+
+    translateTypeToIcon: communicationType => (STRATEGY_COMMUNICATION_TYPES[communicationType])
+      ? STRATEGY_COMMUNICATION_TYPES[communicationType].icon
       : STRATEGY_COMMUNICATION_TYPES.UNKNOW.icon,
+
     handleEditCommunicationName(communicationId) {
       this.editInput = communicationId
-      this.$nextTick(() => this.$refs[`edit-input-${communicationId}`].$refs.input.focus())
+      this.$nextTick(() => this.$refs[`edit-input-${communicationId}`].focus())
     },
+
     handleCloseInput(communication) {
       this.editInput = null
       this.editCommunication({ communication, strategyId: this.strategyId })
     },
+
     handleEditCommunication(communication) {
       this.$emit('edit-communication', communication.id, communication.name)
     },
-    // handleAddCommunication(communicationType) {
-    //   const isDelay = communicationType === 'DELAY'
-    //   const newCommunication = {
-    //     name: isDelay ? 'Espera 3h' : 'Nova comunicação',
-    //     active: true,
-    //     duration: isDelay ? 10800 : null,
-    //     recipients: [this.recipient.name],
-    //     parties: ['CLAIMANT', 'RESPONDENT'],
-    //     triggerType: 'ENGAGEMENT',
-    //     communicationType,
-    //   }
 
-    //   this.addCommunication({ newCommunication, strategyId: this.strategyId }).then(response => {
-    //     this.handleEditCommunicationName(response.id)
-    //   })
-    // },
+    handleAddCommunication(communicationType) {
+      const isDelay = communicationType === 'DELAY'
+      const newCommunication = {
+        name: isDelay ? 'Espera 3h' : 'Nova comunicação',
+        active: true,
+        duration: isDelay ? 10800 : null,
+        recipients: [],
+        parties: ['CLAIMANT', 'RESPONDENT'],
+        triggerType: 'ENGAGEMENT',
+        type: communicationType,
+      }
+
+      this.addCommunication({ newCommunication, strategyId: this.strategyId }).then(response => {
+        this.handleEditCommunicationName(response.id)
+      })
+    },
+
     handleCommunicationRecipient(communication, recipient) {
       if (this.isRecipient(communication.recipients, recipient)) {
         const recipientIndex = communication.recipients.findIndex(r => r === recipient)
@@ -199,10 +205,12 @@ export default {
       }
       this.editCommunication({ communication, strategyId: this.strategyId })
     },
+
     handleSortCommunications() {
       const sortedIds = this.recipient.communications.map(c => c.id)
       this.sortCommunications({ sortedIds, strategyId: this.strategyId })
     },
+
     handleDeleteCommunication(communicationId) {
       this.$confirm('Tem certeza que deseja fazer isso?', 'Excluir mensagem', {
         confirmButtonText: 'Excluir',
@@ -221,7 +229,7 @@ export default {
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr 150px;
-  width: 800px;
+  width: 700px;
   overflow: hidden;
 
   .communication-popover__drag-list {

@@ -14,6 +14,11 @@ export const STRATEGY_COMMUNICATION_TYPES = {
     label: 'SMS',
     icon: 'sms',
   },
+  WHATSAPP: {
+    key: 'WHATSAPP',
+    label: 'Whats App',
+    icon: 'whatsapp',
+  },
   DELAY: {
     key: 'DELAY',
     label: 'Espera',

@@ -42,6 +42,7 @@ const StrategyActions = {
     data: newCommunication,
   }).then(response => {
     commit('addCommunications', { response, strategyId })
+    return response
   }),
 
   editCommunication: ({ _ }, { communication, strategyId }) => axiosDispatcher({
