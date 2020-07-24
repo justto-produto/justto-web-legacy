@@ -73,10 +73,12 @@ export default {
         placeholder: 'Digite a mensagem aqui!',
         modules: {
           toolbar: [
+            [{ font: [] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ color: [] }, { background: [] }],
             ['bold', 'italic', 'underline', 'strike'],
-            [{ header: 1 }, { header: 2 }],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['blockquote'],
+            [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
+            ['blockquote', 'link', 'image'],
           ],
         },
       },
@@ -155,6 +157,10 @@ export default {
       .communication-editor__quill {
         padding: 16px;
         height: calc(100% - 32px);
+      }
+
+      .communication-editor__textarea {
+        height: 100% !important;
       }
     }
   }
