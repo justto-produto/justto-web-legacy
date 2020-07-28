@@ -26,9 +26,12 @@
         <strategy-card
           v-for="(strategy) in inactiveStrategies"
           :key="strategy.id"
+          :available-workspaces="workspaces"
           :strategy="strategy"
           class="panel-strategy__card"
           @changeEstrategyData="updateStrategy"
+          @copyStrategy="copyStrategyHandler"
+          @loadWorkspaces="getStrategyAvailableWorkspaces"
         />
       </el-collapse-item>
     </el-collapse>

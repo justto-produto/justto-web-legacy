@@ -42,7 +42,8 @@
       <JusTagContainer
         :options="availableWorkspaces"
         :tag-list="strategyData.workspaces"
-        placeholder="Todos os times possuem acesso a esta estratégia."
+        :is-private="strategyData.privateStrategy"
+        :can-add-tag="strategyData.privateStrategy"
         title="Times"
         @change="changeEstrategyData($event, 'workspaces')"
         @showInput="loadWorkspaces"

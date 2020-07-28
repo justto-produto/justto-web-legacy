@@ -11,6 +11,7 @@
       class="jus-tag-container__placeholder"
     >
       <i
+        v-if="canAddTag"
         class="el-icon-plus jus-tag-container__button"
         @click="showInput"
       />
@@ -31,25 +32,16 @@
       </el-tag>
 
       <div v-if="inputVisible">
-        <el-input
-          v-if="!searchItems"
-          ref="saveTagInput"
-          v-model="inputValue"
-          class="jus-tag-container__input"
-          size="mini"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        />
-
         <el-autocomplete
-          v-else
           ref="saveTagInput"
           v-model="inputValue"
           :fetch-suggestions="suggestions"
+          :trigger-on-focus="false"
           class="jus-tag-container__input"
           size="mini"
           value-key="name"
           @select="handleSelect"
+          @blur="closeInput"
         />
       </div>
 
@@ -63,8 +55,7 @@
 </template>
 
 <script>
-import { querySearch } from '@/utils/AutoComplete.util'
-import _ from 'lodash'
+import { filterByTerm } from '@/utils/jusUtils'
 
 export default {
   name: 'JusTagContainer',
@@ -73,13 +64,17 @@ export default {
       type: Array,
       default: null,
     },
-    placeholder: {
-      type: String,
-      default: '',
+    isPrivate: {
+      type: Boolean,
+      default: true,
     },
     tagList: {
       type: Array,
       default: null,
+    },
+    canAddTag: {
+      type: Boolean,
+      default: true,
     },
     title: {
       type: String,
@@ -91,79 +86,43 @@ export default {
       tags: this.tagList,
       inputVisible: false,
       inputValue: '',
-      searchItems: [],
     }
   },
   computed: {
     placeholderIsVisible() {
       return !this.tags.length && this.placeholder && !this.inputVisible
     },
-  },
-  mounted() {
-    this.searchItems = this.options
+    placeholder() {
+      return this.isPrivate ? 'Nimgém pode ver essa estratégia. Associe um time ou torne-a pública.' : 'Todos os times possuem acesso a esta estratégia.'
+    },
   },
   methods: {
-    resetTags() {
-      const diff = []
-
-      for (let i = 0; i < this.tags.length; i++) {
-        for (let j = 0; j < this.options.length; j++) {
-          if (_.isEqual(this.tags[i], this.options[j])) {
-            diff.push(this.options[j])
-          }
-        }
-      }
-
-      this.searchItems = _.pullAll(this.options, diff)
-    },
     suggestions(queryString, callback) {
-      querySearch(
-        this.searchItems,
-        queryString,
-        this.filter(queryString),
-        callback,
-      )
+      callback(filterByTerm(this.inputValue, this.options, 'name'))
     },
-
-    filter: (queryString) =>
-      searchItem =>
-        searchItem.name
-          .toLowerCase()
-          .indexOf(queryString.toLowerCase()) === 0,
 
     handleClose(index) {
       this.tags.splice(index, 1)
-      this.resetTags()
       this.changeTags()
     },
+
     showInput() {
       this.$emit('showInput')
       this.inputVisible = true
-      this.$nextTick(_ => {
-        this.$refs.saveTagInput.focus()
-      })
+      this.$nextTick(() => { this.$refs.saveTagInput.focus() })
     },
-    handleInputConfirm() {
-      this.inputVisible = false
 
-      if (this.inputValue) {
-        this.tags.push({ name: this.inputValue })
-        this.changeTags()
-      }
-
-      this.clearInput()
-    },
     handleSelect(item) {
       this.tags.push(item)
-      this.resetTags()
-
-      this.inputVisible = false
-      this.clearInput()
+      this.inputValue = ''
+      this.closeInput()
       this.changeTags()
     },
-    clearInput() {
-      this.inputValue = ''
+
+    closeInput() {
+      if (!this.inputValue) this.inputVisible = false
     },
+
     changeTags() {
       this.$emit('change', this.tags)
     },
