@@ -48,12 +48,28 @@
             />
 
             <el-input
-              v-if="editInput === data.id"
+              v-if="editInput === data.id && data.type !== 'DELAY'"
               :ref="`edit-input-${data.id}`"
               v-model="data.name"
               @keyup.native.enter="handleCloseInput(data)"
               @blur="handleCloseInput(data)"
             />
+
+            <!-- <div v-else-if="editInput === data.id && data.type === 'DELAY'">
+              <span>Espera</span>
+
+              <el-input-number
+                :ref="`edit-input-${data.id}`"
+                v-model="data.duration"
+                :min="1"
+                :step="1"
+                class="communication-popover__delay-time-input"
+                @keyup.native.enter="handleCloseInput(data)"
+                @blur="handleCloseInput(data)"
+              />
+
+              <span>horas</span>
+            </div> -->
 
             <span v-else>
               {{ data.name }}
@@ -64,7 +80,7 @@
               <jus-icon
                 icon="edit"
                 class="communication-popover__item-action-icon"
-                @click.native="handleEditCommunicationName(data.id)"
+                @click.native="handleEditCommunicationName(data)"
               />
             </el-tooltip>
 
@@ -134,6 +150,7 @@ export default {
   data() {
     return {
       editInput: null,
+      // delayTime: null,
     }
   },
   computed: {
@@ -165,12 +182,20 @@ export default {
       ? STRATEGY_COMMUNICATION_TYPES[communicationType].icon
       : STRATEGY_COMMUNICATION_TYPES.UNKNOW.icon,
 
-    handleEditCommunicationName(communicationId) {
-      this.editInput = communicationId
-      this.$nextTick(() => this.$refs[`edit-input-${communicationId}`].focus())
+    handleEditCommunicationName(communication) {
+      this.editInput = communication.id
+      this.$nextTick(() => this.$refs[`edit-input-${communication.id}`].focus())
     },
 
     handleCloseInput(communication) {
+      // if (communication.type === 'DELAY') {
+      //   const delay = communication.duration
+      //   if (delay >= 24) {
+      //     this.name = `Espera ${(delay/24).toFixed()} dias e ${delay%24} horas`
+      //   } else {
+      //     this.name = `Espera ${communication.duration} horas`
+      //   }
+      // }
       this.editInput = null
       this.editCommunication({ communication, strategyId: this.strategyId })
     },
@@ -278,6 +303,16 @@ export default {
         .communication-popover__message-icon {
           width: 18px;
           margin-right: 8px;
+        }
+
+        .communication-popover__delay-time-input {
+          margin: 0 8px;
+          width: 150px;
+        }
+
+        .communication-popover__delay-unit-input {
+          margin-left: 8px;
+          width: 120px;
         }
       }
 

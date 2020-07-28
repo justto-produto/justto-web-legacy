@@ -39,7 +39,7 @@
           :trigger-on-focus="false"
           class="jus-tag-container__input"
           size="mini"
-          value-key="name"
+          value-key="teamName"
           @select="handleSelect"
           @blur="closeInput"
         />
@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     suggestions(queryString, callback) {
-      callback(filterByTerm(this.inputValue, this.options, 'name'))
+      callback(filterByTerm(this.inputValue, this.options, 'teamName'))
     },
 
     handleClose(index) {

@@ -547,6 +547,10 @@ const disputeActions = {
       url: `/api/disputes/negotiators/filter${queryBuilder({ ...state.query, ...params })}`,
     })
   },
+  getPrescriptions: () => axiosDispatcher({
+    url: 'api/disputes/prescriptions',
+    mutation: 'setPrescriptionsList',
+  }),
 }
 
 export default disputeActions

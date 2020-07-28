@@ -2,14 +2,15 @@
   <div class="management-prescriptions">
     <el-button
       v-for="prescription in prescriptions"
-      v-show="prescription.tabs.includes(activeTab)"
-      :key="prescription.name"
-      :type="buttonType(prescription.name)"
+      v-show="prescription.tabs.includes(parseInt(activeTab, 10))"
+      :ref="prescription.prescription"
+      :key="prescription.prescription"
+      :type="buttonType(prescription.prescription)"
       plain
       size="small"
-      @click="handlePrescriptionClick(prescription.name)"
+      @click="handlePrescriptionClick(prescription.prescription)"
     >
-      {{ $t(`prescription.${prescription.name}`) | capitalize }}
+      {{ prescription.description | capitalize }}
     </el-button>
     <jus-tags-filter @prescriptions:getDisputes="getDisputes" />
   </div>
@@ -28,28 +29,11 @@ export default {
       type: String,
     },
   },
-  data() {
-    return {
-      prescriptions: [
-        { name: 'ONLY_SMS_ENGAGEMENT', tabs: ['0'] },
-        { name: 'ONLY_EMAIL_ENGAGEMENT', tabs: ['0'] },
-        { name: 'HAS_ANSWER', tabs: ['1'] },
-        { name: 'COUNTERPROPOSAL_UP_TO_20', tabs: ['1'] },
-        { name: 'COUNTERPROPOSAL_OVER_20', tabs: ['1'] },
-        { name: 'ONLY_VISUALIZED', tabs: ['1'] },
-        { name: 'NO_DOCUMENT_TERM', tabs: ['2'] },
-        { name: 'PENDING_TO_SEND_SIGNING', tabs: ['2'] },
-        { name: 'DOCUMENT_WAITING_SIGNATURES', tabs: ['2'] },
-        { name: 'DOCUMENT_SIGNED', tabs: ['2'] },
-        { name: 'PENDING', tabs: ['3'] },
-        { name: 'UNSETTLED_WITH_MESSAGES', tabs: ['3'] },
-        { name: 'NAMESAKE', tabs: ['0', '3'] },
-        { name: 'NO_UPPER_RANGE', tabs: ['0', '1'] },
-      ],
-    }
-  },
   computed: {
-    ...mapGetters(['hasPrescription']),
+    ...mapGetters({
+      hasPrescription: 'hasPrescription',
+      prescriptions: 'prescriptionsList',
+    }),
   },
   methods: {
     handlePrescriptionClick(prescription) {
@@ -80,10 +64,21 @@ export default {
 .management-prescriptions {
   margin: 6px 192px 6px 0px;
   display: flex;
-  .el-button--primary.is-plain:focus {
-    color: #9461f7;
-    background: #f4effe;
-    border-color: #d4c0fc;
+
+  .el-button + .el-button {
+    &:focus {
+      color: #424242;
+      background: #fff;
+      border-color: #dcdfe6;
+    }
+  }
+
+  .el-button--primary.is-plain {
+    &:focus {
+      color: #9461f7;
+      background-color: #f4effe;
+      border-color: #d4c0fc;
+    }
   }
 }
 </style>

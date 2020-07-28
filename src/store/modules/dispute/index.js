@@ -40,6 +40,7 @@ const dispute = {
     partyAnalysis: {},
     exportHistory: {},
     exportHistoryPage: 0,
+    prescriptionsList: [],
   },
   mutations: mutations,
   actions: actions,

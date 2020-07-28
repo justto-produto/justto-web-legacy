@@ -461,6 +461,7 @@ export default {
     }
 
     this.getDisputes()
+    this.getPrescriptions()
   },
   mounted() {
     this.getExportColumns().then(response => {
@@ -479,6 +480,7 @@ export default {
     ...mapActions([
       'getExportColumns',
       'getExportHistory',
+      'getPrescriptions',
     ]),
     showAllNodesHandler() {
       this.showAllNodes = !this.showAllNodes
