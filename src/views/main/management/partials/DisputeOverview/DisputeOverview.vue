@@ -350,7 +350,7 @@
             >
               <template slot="title">
                 <i
-                  v-if="showNamesake(role) || showVexatious(role.personProperties)"
+                  v-if="(showNamesake(role) || showVexatious(role.personProperties)) && !role.roles.includes('NEGOTIATOR') "
                   class="el-icon-warning-outline el-icon-pulse"
                   style="color: rgb(255, 201, 0);position: absolute;top: 0px;left: 0px;font-size: 30px;background-color: #fff0;"
                 />
@@ -416,7 +416,7 @@
                 >
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
-                    v-if="showVexatious(role.personProperties)"
+                    v-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR')"
                     :document-number="role.documentNumber"
                     :name="role.name"
                   />
