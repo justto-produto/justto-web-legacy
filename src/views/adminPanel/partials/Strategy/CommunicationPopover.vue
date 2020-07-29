@@ -55,7 +55,7 @@
               @blur="handleCloseInput(data)"
             />
 
-            <!-- <div v-else-if="editInput === data.id && data.type === 'DELAY'">
+            <div v-else-if="editInput === data.id && data.type === 'DELAY'">
               <span>Espera</span>
 
               <el-input-number
@@ -69,7 +69,7 @@
               />
 
               <span>horas</span>
-            </div> -->
+            </div>
 
             <span v-else>
               {{ data.name }}
@@ -80,7 +80,7 @@
               <jus-icon
                 icon="edit"
                 class="communication-popover__item-action-icon"
-                @click.native="handleEditCommunicationName(data)"
+                @click.native="handleEditCommunicationName(data.id)"
               />
             </el-tooltip>
 
@@ -150,7 +150,6 @@ export default {
   data() {
     return {
       editInput: null,
-      // delayTime: null,
     }
   },
   computed: {
@@ -182,20 +181,20 @@ export default {
       ? STRATEGY_COMMUNICATION_TYPES[communicationType].icon
       : STRATEGY_COMMUNICATION_TYPES.UNKNOW.icon,
 
-    handleEditCommunicationName(communication) {
-      this.editInput = communication.id
-      this.$nextTick(() => this.$refs[`edit-input-${communication.id}`].focus())
+    handleEditCommunicationName(communicationId) {
+      this.editInput = communicationId
+      this.$nextTick(() => this.$refs[`edit-input-${communicationId}`].focus())
     },
 
     handleCloseInput(communication) {
-      // if (communication.type === 'DELAY') {
-      //   const delay = communication.duration
-      //   if (delay >= 24) {
-      //     this.name = `Espera ${(delay/24).toFixed()} dias e ${delay%24} horas`
-      //   } else {
-      //     this.name = `Espera ${communication.duration} horas`
-      //   }
-      // }
+      if (communication.type === 'DELAY') {
+        const delay = communication.duration
+        if (delay >= 24) {
+          communication.name = `Espera ${(delay / 24).toFixed()} dias e ${delay % 24} horas`
+        } else {
+          communication.name = `Espera ${communication.duration} horas`
+        }
+      }
       this.editInput = null
       this.editCommunication({ communication, strategyId: this.strategyId })
     },
@@ -209,7 +208,7 @@ export default {
       const newCommunication = {
         name: isDelay ? 'Espera 3h' : 'Nova comunicação',
         active: true,
-        duration: isDelay ? 10800 : null,
+        duration: isDelay ? 3 : null,
         recipients: [],
         parties: ['CLAIMANT', 'RESPONDENT'],
         triggerType: 'ENGAGEMENT',
