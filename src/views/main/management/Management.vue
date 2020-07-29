@@ -95,7 +95,7 @@
               />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Exportar disputas">
+          <el-tooltip content="Exportação">
             <el-button
               :disabled="disputes.length === 0"
               plain
@@ -158,7 +158,7 @@
         :show-close="false"
         append-to-body
         class="view-management__export-dialog"
-        title="Exportar disputas"
+        title="Exportação"
         width="50%"
       >
         <div class="view-management__export-dialog-titles">
@@ -262,10 +262,36 @@
           </el-table>
         </el-card>
         <div class="view-management__export-dialog-titles">
-          <span class="view-management__export-dialog-title">Nova exportação</span>
-          <p class="view-management__export-dialog-subtitle">Selecione e ordene as colunas desejadas para exportação: </p>
+          <span class="view-management__export-dialog-title">
+            Nova exportação
+            <el-button
+              plain
+              size="mini"
+              @click="changeExportType"
+            >
+              {{ isExportingProtocol ? 'Exportar disputas' : 'Exportar minutas' }}
+            </el-button>
+          </span>
+          <p class="view-management__export-dialog-subtitle">
+            {{
+              isExportingProtocol
+              ? 'Exporte as minutas para o seu emial'
+              : 'Selecione e ordene as colunas desejadas para exportação:'
+            }}
+          </p>
         </div>
         <el-card
+          v-show="isExportingProtocol"
+          shadow="never"
+          class="view-management__export-dialog-card"
+        >
+          <div class="view-management__dialog-card-container">
+            <span class="view-management__export-dialog-title">Exportar minuta</span>
+            <p>Os documentos serão enviadas para seu email assim que estiverem prontos</p>
+          </div>
+        </el-card>
+        <el-card
+          v-show="!isExportingProtocol"
           shadow="never"
           class="view-management__export-dialog-card"
         >
@@ -326,7 +352,7 @@
           <el-button
             :loading="loadingExport"
             type="primary"
-            @click.prevent="exportDisputes"
+            @click.prevent="handleExportReports"
           >
             Exportar e enviar para email
           </el-button>
@@ -368,6 +394,7 @@ export default {
       filteredNodes: {},
       columnsList: [],
       showAllNodes: false,
+      isExportingProtocol: false,
     }
   },
   computed: {
@@ -478,10 +505,15 @@ export default {
   },
   methods: {
     ...mapActions([
+      'exportDisputes',
+      'exportProtocols',
       'getExportColumns',
       'getExportHistory',
       'getPrescriptions',
     ]),
+    changeExportType() {
+      this.isExportingProtocol = !this.isExportingProtocol
+    },
     showAllNodesHandler() {
       this.showAllNodes = !this.showAllNodes
     },
@@ -578,23 +610,20 @@ export default {
         this.handlerChangeTree('', { checkedKeys: this.$refs.tree.getCheckedKeys() })
       })
     },
-    exportDisputes() {
+    handleExportReports() {
+      const action = this.isExportingProtocol ? this.exportProtocols() : this.exportDisputes(this.$refs.tree.getCheckedKeys())
       this.loadingExport = true
-      this.$store.dispatch('exportDisputes', this.$refs.tree.getCheckedKeys())
-        .then(() => {
-          // SEGMENT TRACK
-          this.$jusSegment('Exportar disputas')
-          this.$alert('Solicitação realizada com sucesso, por favor aguarde nosso email com seu relatório', 'Exportação de relatórios', {
-            confirmButtonText: 'Ok',
-          })
-        })
-        .catch(error => {
-          this.$jusNotification({ error })
-        })
-        .finally(() => {
-          this.loadingExport = false
-          this.exportDisputesDialog = false
-        })
+
+      action.then(() => {
+        // SEGMENT TRACK
+        this.$jusSegment(this.isExportingProtocol ? 'Exportar minutas' : 'Exportar disputas')
+        this.$alert('Solicitação realizada com sucesso, por favor aguarde nosso email com seu relatório', 'Exportação de relatórios', { confirmButtonText: 'Ok' })
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.loadingExport = false
+        this.exportDisputesDialog = false
+      })
     },
     exportSituation(request) {
       if (request.error) {
@@ -703,6 +732,9 @@ export default {
       .view-management__export-dialog-title {
         font-size: 20px;
         font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
 
       .view-management__export-dialog-subtitle {
@@ -746,6 +778,21 @@ export default {
 
     .view-management__export-dialog-card {
       overflow: auto;
+
+      .view-management__dialog-card-container {
+        height: 332px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: $--color-text-secondary;
+
+        .view-management__export-dialog-title {
+          font-size: 20px;
+          font-weight: bold;
+          margin-top: 16px;
+        }
+      }
 
       .el-card__body {
         padding: 0 16px 16px 16px;
