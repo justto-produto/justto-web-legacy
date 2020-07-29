@@ -161,26 +161,35 @@ const disputeActions = {
     })
   },
   exportDisputes({ state, dispatch }, colums) {
-    return new Promise((resolve, reject) => {
-      const stringColums = colums.toString()
-      // eslint-disable-next-line
-      axios.get('api/disputes/export'+ queryBuilder(state.query) + 'fileFormat=CSV&columnToExport=' + stringColums, {
-        responseType: 'arraybuffer',
-        ContentType: 'application/json; charset=utf-8',
-      }).then(response => {
-        // const blob = new Blob([
-        //   new Uint8Array([0xEF, 0xBB, 0xBF]),
-        //   response.data,
-        // ], {
-        //   type: 'text/plain;charset=utf-8',
-        // })
-        // const fileName = new Date().getTime() + '.csv'
-        // FileSaver.saveAs(blob, fileName)
-        dispatch('getExportHistory')
-        resolve(response)
-      }).catch(error => {
-        reject(error)
-      })
+    const stringColums = colums.toString()
+    return axiosDispatcher({
+      url: `api/disputes/export${queryBuilder(state.query)}fileFormat=CSV&columnToExport=${stringColums}`,
+    }).then(() => { dispatch('getExportHistory') })
+    // return new Promise((resolve, reject) => {
+    //   const stringColums = colums.toString()
+    //   // eslint-disable-next-line
+    //   axios.get('api/disputes/export'+ queryBuilder(state.query) + 'fileFormat=CSV&columnToExport=' + stringColums, {
+    //     responseType: 'arraybuffer',
+    //     ContentType: 'application/json; charset=utf-8',
+    //   }).then(response => {
+    //     // const blob = new Blob([
+    //     //   new Uint8Array([0xEF, 0xBB, 0xBF]),
+    //     //   response.data,
+    //     // ], {
+    //     //   type: 'text/plain;charset=utf-8',
+    //     // })
+    //     // const fileName = new Date().getTime() + '.csv'
+    //     // FileSaver.saveAs(blob, fileName)
+    //     dispatch('getExportHistory')
+    //     resolve(response)
+    //   }).catch(error => {
+    //     reject(error)
+    //   })
+    // })
+  },
+  exportProtocols({ state }) {
+    return axiosDispatcher({
+      url: `api/office/documents/export${queryBuilder(state.query)}`,
     })
   },
   getExportHistory({ commit, state }, command) {
