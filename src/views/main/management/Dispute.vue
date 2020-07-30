@@ -134,6 +134,33 @@
                     :class="{ 'show-toolbar': messageType === 'email' }"
                     class="dispute-view__quill"
                   >
+                    <el-popover
+                      v-if="messageType === 'email' && this.$store.getters.isJusttoAdmin"
+                      title="Anexar"
+                      trigger="click"
+                      popper-class="dispute-view__attach-popover"
+                      class="dispute-view__attach"
+                    >
+                      <el-checkbox-group
+                        v-if="disputeAttachments.length"
+                        v-model="selectedAttachments">
+                        <el-checkbox
+                          v-for="attachment in disputeAttachments"
+                          :label="attachment.id"
+                          :key="attachment.id"
+                          class="dispute-view__attach-checkbox"
+                          border
+                        >
+                          <i class="el-icon-document" />
+                          {{ attachment.name }}
+                        </el-checkbox>
+                      </el-checkbox-group>
+                      <span v-else>Não há nenhum anexo nessa disputa</span>
+                      <span slot="reference">
+                        <i class="el-icon-paperclip" />
+                        <b class="dispute-view__attach-counter">{{ selectedAttachments.length }}x</b>
+                      </span>
+                    </el-popover>
                     <quill-editor
                       ref="messageEditor"
                       :options="editorOptions"
@@ -274,6 +301,7 @@
 
 <script>
 import checkSimilarity from '@/utils/levenshtein'
+import { mapActions, mapGetters } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
 import { quillEditor } from 'vue-quill-editor'
 
@@ -318,6 +346,7 @@ export default {
       activeRole: {},
       isCollapsed: false,
       directContactAddress: '',
+      selectedAttachments: [],
       editorOptions: {
         placeholder: 'Escreva alguma coisa',
         modules: {
@@ -333,6 +362,8 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['disputeAttachments']),
+
     sendMessageHeightComputed() {
       switch (this.typingTab) {
         case '1':
@@ -424,6 +455,7 @@ export default {
     if (!(this.$store.getters.isJusttoAdmin && this.$store.getters.ghostMode)) {
       this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
     }
+    this.getDisputeAttachments(this.dispute.id)
   },
   mounted() {
     setTimeout(() => {
@@ -438,6 +470,8 @@ export default {
     window.removeEventListener('resize', this.updateWindowHeight)
   },
   methods: {
+    ...mapActions(['getDisputeAttachments']),
+
     updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
@@ -602,12 +636,14 @@ export default {
               externalIdentification,
             })
           }
-          this.$store.dispatch('send' + this.messageType, {
+          const messageData = {
             to,
             message: quillMessage,
             disputeId: this.dispute.id,
             externalIdentification,
-          }).then(() => {
+          }
+          if (this.messageType === 'email') messageData.attachments = this.selectedAttachments
+          this.$store.dispatch('send' + this.messageType, messageData).then(() => {
             // SEGMENT TRACK
             if (this.directContactAddress) {
               this.$jusSegment(`Envio de ${this.messageType} via resposta rápida`)
@@ -673,6 +709,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .dispute-view {
   &__section-messages {
     display: flex;
@@ -719,10 +757,27 @@ export default {
   }
   &__quill {
     height: calc(100% - 37px);
+    position: relative;
     &.show-toolbar {
       .ql-toolbar {
         display: inherit;
       }
+    }
+    .dispute-view__attach {
+      position: absolute;
+      top: 10px;
+      left: 348px;
+      cursor: pointer;
+
+      .el-icon-paperclip {
+        font-size: 18px;
+      }
+
+      .dispute-view__attach-counter {
+        font-size: 12px;
+      }
+
+      &:hover { color: $--color-primary }
     }
   }
   &__quill-note {
@@ -851,6 +906,33 @@ export default {
     right: 0 !important;
     &:hover {
       cursor: ns-resize;
+    }
+  }
+}
+
+.dispute-view__attach-popover {
+  max-width: 500px;
+  width: auto;
+  max-height: calc(100vh - 32px);
+  margin-bottom: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  .dispute-view__attach-checkbox {
+    display: flex;
+    align-items: center;
+    margin: 0 0 10px 0 !important;
+    padding: 8px 12px 8px 10px;
+    max-width: 100%;
+    height: auto;
+
+    &:last-child { margin-bottom: 0 !important }
+
+    .el-checkbox__label {
+      white-space: normal;
+      text-align: start;
+      word-break: break-word !important;
+      max-width: calc(100% - 14px);
     }
   }
 }
