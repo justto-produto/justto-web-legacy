@@ -189,12 +189,13 @@ export default {
     handleCloseInput(communication) {
       if (communication.type === 'DELAY') {
         const delay = communication.duration
-        if (delay >= 24) {
-          communication.name = `Espera ${(delay / 24).toFixed()} dias e ${delay % 24} horas`
-        } else {
-          communication.name = `Espera ${communication.duration} horas`
-        }
+        const days = parseInt((delay / 24).toFixed())
+        const hours = delay % 24
+        const daysText = `${days} dia${days > 1 ? 's' : ''}`
+        const hoursText = `${hours} hora${hours > 1 ? 's' : ''}`
+        communication.name = `Espera ${days ? daysText : ''} ${days && hours ? 'e' : ''} ${hours ? hoursText : ''}`
       }
+
       this.editInput = null
       this.editCommunication({ communication, strategyId: this.strategyId })
     },
