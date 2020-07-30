@@ -25,7 +25,7 @@ const disputeMutations = {
     state.disputeProprieties = disputeProprieties
   },
   setDisputeAttachments(state, disputeAttachments) {
-    state.disputeAttachments = disputeAttachments
+    state.disputeAttachments = disputeAttachments || []
   },
   setDisputeRoles(state, disputeRoles) {
     state.dispute.disputeRoles = disputeRoles
