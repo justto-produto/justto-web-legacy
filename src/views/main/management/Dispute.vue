@@ -135,7 +135,7 @@
                     class="dispute-view__quill"
                   >
                     <el-popover
-                      v-if="messageType === 'email' && this.$store.getters.isJusttoAdmin"
+                      v-if="messageType === 'email'"
                       title="Anexar"
                       trigger="click"
                       popper-class="dispute-view__attach-popover"
