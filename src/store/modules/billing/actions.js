@@ -82,7 +82,6 @@ const actions = {
 
   getPlans: () => axiosDispatcher({
     url: 'api/billing/plans',
-    method: 'get',
     mutation: 'setPlans',
   }),
 
