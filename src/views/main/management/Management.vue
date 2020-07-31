@@ -786,6 +786,7 @@ export default {
         justify-content: center;
         flex-direction: column;
         color: $--color-text-secondary;
+        text-align: center;
 
         .view-management__export-dialog-title {
           font-size: 20px;
