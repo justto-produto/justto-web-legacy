@@ -135,7 +135,14 @@ export default {
         inputValidator: (value) => !!value,
         inputErrorMessage: 'Campo obrigatório',
       }).then(({ value }) => {
-        this.addStrategy({ name: value })
+        this.addStrategy({ privateStrategy: true, name: value })
+          .then(() => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Estratégia criada com sucesso!',
+              type: 'success',
+            })
+          })
       })
     },
 
