@@ -142,6 +142,8 @@ export default {
               message: 'Estratégia criada com sucesso!',
               type: 'success',
             })
+
+            this.$emit('setFilter', value)
           })
       })
     },

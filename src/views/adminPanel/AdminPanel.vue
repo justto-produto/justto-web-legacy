@@ -77,6 +77,7 @@
           v-if="menuIndex === '3'"
           ref="panel3"
           :filter-term="filterTerm"
+          @set-filter="setFilter"
         />
         <panel-minute
           v-if="menuIndex === '4'"
@@ -125,9 +126,11 @@ export default {
     changeMenuIndex(index) {
       this.menuIndex = index
     },
-
     mainButtonHandler() {
       this.$refs[`panel${this.menuIndex}`].mainButtonHandler()
+    },
+    setFilter(value) {
+      this.filterTerm = value
     },
   },
 }
