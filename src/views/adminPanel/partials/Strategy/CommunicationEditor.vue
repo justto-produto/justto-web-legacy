@@ -136,10 +136,8 @@ export default {
     ...mapActions(['changeCommunicationTemplate']),
 
     autosave({ _, html, text }) {
-      console.log('AUTO SAVE')
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
-        console.log('AUTO SAVE REQUEST')
         this.changeCommunicationTemplate({
           template: this.template,
           communicationId: this.templateToEdit.id,
