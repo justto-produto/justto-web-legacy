@@ -36,6 +36,10 @@
       "QUEUE": "aguardando"
     }
   },
+  "triggers": {
+    "ENGAGEMENT": "engajamento",
+    "UNSETTLED": "perdido"
+  },
   "transactions": {
     "DISPUTE_ACCEPTED": "disputa aceita",
     "IMPORTED_DISPUTE": "disputa importada",

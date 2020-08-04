@@ -135,7 +135,7 @@
                     class="dispute-view__quill"
                   >
                     <el-popover
-                      v-if="messageType === 'email' && this.$store.getters.isJusttoAdmin"
+                      v-if="messageType === 'email'"
                       title="Anexar"
                       trigger="click"
                       popper-class="dispute-view__attach-popover"
@@ -301,7 +301,7 @@
 
 <script>
 import checkSimilarity from '@/utils/levenshtein'
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
 import { quillEditor } from 'vue-quill-editor'
 
@@ -455,7 +455,6 @@ export default {
     if (!(this.$store.getters.isJusttoAdmin && this.$store.getters.ghostMode)) {
       this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
     }
-    this.getDisputeAttachments(this.dispute.id)
   },
   mounted() {
     setTimeout(() => {
@@ -470,8 +469,6 @@ export default {
     window.removeEventListener('resize', this.updateWindowHeight)
   },
   methods: {
-    ...mapActions(['getDisputeAttachments']),
-
     updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
@@ -650,6 +647,7 @@ export default {
             } else {
               this.$jusSegment(`Envio de ${this.messageType} manual`)
             }
+            this.selectedAttachments = []
             this.$jusNotification({
               title: 'Yay!',
               message: this.messageType + ' enviado com sucesso.',

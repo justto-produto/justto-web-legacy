@@ -39,10 +39,9 @@
     </ul>
 
     <CommunicationEditor
-      :communication-template="communicationToEdit"
+      :template-to-edit="communicationToEdit"
       :strategy-id="strategyId"
-      :communication-id="activeCommunicationId"
-      :communication-name="communicationName"
+      :communication="communication"
       :visible.sync="editorDialogIsVisible"
     />
   </article>
@@ -58,8 +57,8 @@ export default {
     CommunicationPopover: () => import('./CommunicationPopover'),
   },
   props: {
-    communications: {
-      type: Array,
+    triggers: {
+      type: Object,
       default: () => [],
     },
     strategyId: {
@@ -70,27 +69,33 @@ export default {
   data() {
     return {
       communicationToEdit: {},
-      activeCommunicationId: 0,
-      communicationName: '',
+      communication: {},
       editorDialogIsVisible: false,
     }
   },
   computed: {
     recipient() {
-      return {
-        emails: this.communications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
-        sms: this.communications.filter(c => c && c.type === 'SMS').length,
-        communications: this.communications,
+      if (this.triggers.ENGAGEMENT) {
+        return {
+          emails: this.triggers.ENGAGEMENT.communicationsTypeSummary.EMAIL,
+          sms: this.triggers.ENGAGEMENT.communicationsTypeSummary.SMS,
+          communications: this.triggers.ENGAGEMENT.communications,
+        }
+      } else {
+        return {
+          emails: 0,
+          sms: 0,
+          communications: [],
+        }
       }
     },
   },
   methods: {
     ...mapActions(['getCommunicationTemplate']),
 
-    handleEditCommunication(communicationId, communicationName) {
-      this.getCommunicationTemplate({ communicationId, strategyId: this.strategyId }).then(response => {
-        this.communicationName = communicationName
-        this.activeCommunicationId = communicationId
+    handleEditCommunication(communication) {
+      this.getCommunicationTemplate({ communicationId: communication.id, strategyId: this.strategyId }).then(response => {
+        this.communication = communication
         this.communicationToEdit = response
         this.editorDialogIsVisible = true
       })

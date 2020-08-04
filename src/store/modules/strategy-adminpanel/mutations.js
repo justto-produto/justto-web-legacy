@@ -8,21 +8,7 @@ const StrategyMutations = {
       if (strategy.id === strategyData.id) strategies[index] = strategyData
     })
   },
-  setStrategies: (state, strategies) => {
-    for (const strategie of strategies) {
-      if (strategie.triggers && strategie.triggers.length) {
-        let comm = []
-        for (const t of strategie.triggers) {
-          comm = comm.concat(t.communications)
-        }
-        strategie.communications = comm
-      } else {
-        strategie.communications = []
-      }
-    }
-
-    state.strategies = strategies
-  },
+  setStrategies: (state, strategies) => (state.strategies = strategies),
   setStrategyAvailableWorkspaces: (state, workspaces) => (state.strategyAvailableWorkspaces = workspaces),
   setAvaliableVariablesToTemplate: (state, variables) => (state.avaliableVariablesToTemplate = variables),
 
