@@ -115,13 +115,29 @@ export default {
       ],
     }
   },
+  computed: {
+    strategyValidator() {
+      const rules = ['PAYMENT', 'RECOVERY']
+      return !rules.every(rule => Object.values(this.strategyTypes).includes(rule))
+    },
+  },
   mounted() {
     this.strategyTypes = this.strategyData.types
   },
   methods: {
     changeEstrategyData(val, key) {
-      this.strategyData[key] = val
-      this.$emit('changeEstrategyData', this.strategyData)
+      if (this.strategyValidator) {
+        this.strategyData[key] = val
+        this.$emit('changeEstrategyData', this.strategyData)
+      } else {
+        this.strategyTypes.pop()
+
+        this.$jusNotification({
+          title: 'Ops!',
+          message: 'Estratégia do tipo indenizatório e cobrança não podem serem adicionadas juntas. Por favor, valide os tipos já configurados nesta estratégia',
+          type: 'warning',
+        })
+      }
     },
     changeEstrategyPrivacy() {
       this.strategyData.privateStrategy = !this.strategyData.privateStrategy
