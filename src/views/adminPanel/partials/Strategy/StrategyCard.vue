@@ -45,7 +45,7 @@
 
     <div class="strategy-card__messages-area">
       <StrategyCommunication
-        :communications="strategyData.communications"
+        :triggers="strategyData.triggers"
         :strategyId="strategy.id"
       />
     </div>
@@ -74,14 +74,13 @@
 <script>
 import { JusTagContainer } from '@/components/JusTagContainer'
 import { JusTextEditable } from '@/components/JusTextEditable'
-import StrategyCommunication from './StrategyCommunication'
 
 export default {
   name: 'PanelStrategy',
   components: {
     JusTagContainer,
     JusTextEditable,
-    StrategyCommunication,
+    StrategyCommunication: () => import('./StrategyCommunication'),
   },
   props: {
     strategy: {
