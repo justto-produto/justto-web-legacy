@@ -3,7 +3,7 @@
     <el-dialog
       v-if="visible"
       :visible.sync="isVisible"
-      :title="`${communication.name} (${St('triggers.' + communication.triggerType)})`"
+      :title="`${communication.name} (${$t('triggers.' + communication.triggerType)})`"
       class="communication-editor__dialog"
       width="750px"
     >
