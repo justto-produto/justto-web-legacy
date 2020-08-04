@@ -57,8 +57,8 @@ export default {
     CommunicationPopover: () => import('./CommunicationPopover'),
   },
   props: {
-    communications: {
-      type: Array,
+    triggers: {
+      type: Object,
       default: () => [],
     },
     strategyId: {
@@ -75,10 +75,18 @@ export default {
   },
   computed: {
     recipient() {
-      return {
-        emails: this.communications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
-        sms: this.communications.filter(c => c && c.type === 'SMS').length,
-        communications: this.communications,
+      if (this.triggers.ENGAGEMENT) {
+        return {
+          emails: this.triggers.ENGAGEMENT.communicationsTypeSummary.EMAIL,
+          sms: this.triggers.ENGAGEMENT.communicationsTypeSummary.SMS,
+          communications: this.triggers.ENGAGEMENT.communications,
+        }
+      } else {
+        return {
+          emails: 0,
+          sms: 0,
+          communications: [],
+        }
       }
     },
   },
