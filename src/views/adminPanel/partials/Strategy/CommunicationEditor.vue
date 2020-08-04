@@ -13,8 +13,19 @@
           placeholder="Título da mensagem"
           @input="autosave"
         />
+        <el-input
+          v-if="communication.type == 'SMS'"
+          v-model="template.body"
+          class="text-area"
+          type="textarea"
+          :autosize="{ minRows: 23 }"
+          placeholder="Edite seu SMS aqui."
+        />
 
-        <div class="communication-editor__editor-fieldset show-toolbar">
+        <div
+          v-else
+          class="communication-editor__editor-fieldset show-toolbar"
+        >
           <quill-editor
             ref="messageEditor"
             v-model="template.body"
@@ -147,6 +158,17 @@ export default {
 
   .communication-editor__data-area {
     width: 100%;
+
+    .text-area {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      // width: 100%;
+      margin-top: 12px;
+
+      > .el-textarea__inner {
+        height: calc(100% - 50px);
+      }
+    }
 
     .communication-editor__editor-fieldset {
       border: 1px solid #ccc;
