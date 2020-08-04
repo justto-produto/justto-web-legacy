@@ -39,7 +39,24 @@
     </div>
 
     <div class="strategy-card__workspaces-area">
-      <JusTagContainer
+      <!-- {{ availableWorkspaces }} -->
+      {{ strategyData.workspaces.map(el => el.id) }}
+      <el-select
+        v-model="strategyData.workspaces"
+        multiple
+        placeholder="Select"
+        @change="changeEstrategyData($event, 'workspaces')"
+      >
+        <el-option
+          v-for="item in availableWorkspaces"
+          :key="`strategy${strategyData.id}-option${item.id}`"
+          :label="item.teamName"
+          :value="item.id"
+        >
+          <span class="label-item">{{ item.teamName }}</span>
+        </el-option>
+      </el-select>
+      <!-- <JusTagContainer
         :options="availableWorkspaces"
         :tag-list="strategyData.workspaces"
         :is-private="strategyData.privateStrategy"
@@ -47,27 +64,27 @@
         title="Times"
         @change="changeEstrategyData($event, 'workspaces')"
         @showInput="loadWorkspaces"
-      />
+      /> -->
     </div>
 
     <div class="strategy-card__strategies-area">
-      <JusTagContainer
+      <!-- <JusTagContainer
         :tag-list="[{name: 'Pagamento'}]"
         @change="changeEstrategyData($event, 'types')"
-      />
+      /> -->
     </div>
   </el-card>
 </template>
 
 <script>
-import { JusTagContainer } from '@/components/JusTagContainer'
+// import { JusTagContainer } from '@/components/JusTagContainer'
 import { JusTextEditable } from '@/components/JusTextEditable'
 import StrategyCommunication from './StrategyCommunication'
 
 export default {
   name: 'PanelStrategy',
   components: {
-    JusTagContainer,
+    // JusTagContainer,
     JusTextEditable,
     StrategyCommunication,
   },
@@ -85,6 +102,9 @@ export default {
     return {
       strategyData: this.strategy,
     }
+  },
+  mounted() {
+    this.loadWorkspaces()
   },
   methods: {
     changeEstrategyData(val, key) {
@@ -113,6 +133,19 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
+.label-item {
+    background-color: #f4effe;
+    border-color: #eadffd;
+    height: 32px;
+    padding: 0 10px;
+    line-height: 30px;
+    font-size: 12px;
+    color: #9461f7;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 4px;
+}
 
 .panel-strategy {
   padding: 40px;
