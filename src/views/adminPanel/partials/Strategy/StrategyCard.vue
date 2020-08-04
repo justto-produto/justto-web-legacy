@@ -39,12 +39,12 @@
     </div>
 
     <div class="strategy-card__workspaces-area">
-      <!-- {{ availableWorkspaces }} -->
-      {{ strategyData.workspaces.map(el => el.id) }}
       <el-select
-        v-model="strategyData.workspaces"
+        v-model="associatedWorkspaces"
+        :placeholder="workspacesPlaceholder"
+        :disabled="!strategyData.privateStrategy"
         multiple
-        placeholder="Select"
+        filterable
         @change="changeEstrategyData($event, 'workspaces')"
       >
         <el-option
@@ -52,19 +52,8 @@
           :key="`strategy${strategyData.id}-option${item.id}`"
           :label="item.teamName"
           :value="item.id"
-        >
-          <span class="label-item">{{ item.teamName }}</span>
-        </el-option>
+        />
       </el-select>
-      <!-- <JusTagContainer
-        :options="availableWorkspaces"
-        :tag-list="strategyData.workspaces"
-        :is-private="strategyData.privateStrategy"
-        :can-add-tag="strategyData.privateStrategy"
-        title="Times"
-        @change="changeEstrategyData($event, 'workspaces')"
-        @showInput="loadWorkspaces"
-      /> -->
     </div>
 
     <div class="strategy-card__strategies-area">
@@ -77,14 +66,12 @@
 </template>
 
 <script>
-// import { JusTagContainer } from '@/components/JusTagContainer'
 import { JusTextEditable } from '@/components/JusTextEditable'
 import StrategyCommunication from './StrategyCommunication'
 
 export default {
   name: 'PanelStrategy',
   components: {
-    // JusTagContainer,
     JusTextEditable,
     StrategyCommunication,
   },
@@ -101,7 +88,13 @@ export default {
   data() {
     return {
       strategyData: this.strategy,
+      associatedWorkspaces: this.strategy.workspaces.map(w => w.id),
     }
+  },
+  computed: {
+    workspacesPlaceholder() {
+      return this.strategyData.privateStrategy ? 'Nimgém pode ver essa estratégia. Associe um time ou torne-a pública.' : 'Todos os times possuem acesso a esta estratégia.'
+    },
   },
   mounted() {
     this.loadWorkspaces()
@@ -134,18 +127,18 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.label-item {
-    background-color: #f4effe;
-    border-color: #eadffd;
-    height: 32px;
-    padding: 0 10px;
-    line-height: 30px;
-    font-size: 12px;
-    color: #9461f7;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 4px;
-}
+// .label-item {
+//     background-color: #f4effe;
+//     border-color: #eadffd;
+//     height: 32px;
+//     padding: 0 10px;
+//     line-height: 30px;
+//     font-size: 12px;
+//     color: #9461f7;
+//     border-width: 1px;
+//     border-style: solid;
+//     border-radius: 4px;
+// }
 
 .panel-strategy {
   padding: 40px;
