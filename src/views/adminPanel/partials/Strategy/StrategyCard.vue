@@ -7,7 +7,7 @@
             [`el-icon-${strategyData.privateStrategy ? 'lock' : 'unlock'}`]: true
           }"
           class="strategy-card__icon"
-          @click="changeEstrategyPrivacy()"
+          @click="changeStrategyPrivacy()"
         />
       </el-tooltip>
     </div>
@@ -16,7 +16,7 @@
       <jus-text-editable
         :value="strategyData.name"
         type="title"
-        @hasEdition="changeEstrategyData($event, 'name')"
+        @hasEdition="changeStrategyName($event)"
       />
     </div>
 
@@ -45,11 +45,12 @@
         :disabled="!strategyData.privateStrategy"
         multiple
         filterable
-        @change="changeEstrategyData($event, 'workspaces')"
+        @visible-change="loadWorkspaces"
+        @change="changeStrategyWorkspaces($event)"
       >
         <el-option
           v-for="item in availableWorkspaces"
-          :key="`strategy${strategyData.id}-option${item.id}`"
+          :key="`${strategyData.id}${item.id}`"
           :label="item.teamName"
           :value="item.id"
         />
@@ -66,12 +67,14 @@
 </template>
 
 <script>
+// import { JusTagContainer } from '@/components/JusTagContainer'
 import { JusTextEditable } from '@/components/JusTextEditable'
 import StrategyCommunication from './StrategyCommunication'
 
 export default {
   name: 'PanelStrategy',
   components: {
+    // JusTagContainer,
     JusTextEditable,
     StrategyCommunication,
   },
@@ -96,18 +99,20 @@ export default {
       return this.strategyData.privateStrategy ? 'Nimgém pode ver essa estratégia. Associe um time ou torne-a pública.' : 'Todos os times possuem acesso a esta estratégia.'
     },
   },
-  mounted() {
-    this.loadWorkspaces()
-  },
   methods: {
-    changeEstrategyData(val, key) {
-      this.strategyData[key] = val
-      this.$emit('changeEstrategyData', this.strategyData)
+    changeStrategyName(name) {
+      this.strategyData.name = name
+      this.$emit('changeStrategyData', this.strategyData)
     },
 
-    changeEstrategyPrivacy() {
+    changeStrategyWorkspaces() {
+      this.strategyData.workspaces = this.availableWorkspaces.filter(w => this.associatedWorkspaces.includes(w.id))
+      this.$emit('changeStrategyData', this.strategyData)
+    },
+
+    changeStrategyPrivacy() {
       this.strategyData.privateStrategy = !this.strategyData.privateStrategy
-      this.$emit('changeEstrategyData', this.strategyData)
+      this.$emit('changeStrategyData', this.strategyData)
     },
 
     emitCopyStrategy() {
@@ -126,19 +131,6 @@ export default {
 
 <style lang="scss">
 @import '@/styles/colors.scss';
-
-// .label-item {
-//     background-color: #f4effe;
-//     border-color: #eadffd;
-//     height: 32px;
-//     padding: 0 10px;
-//     line-height: 30px;
-//     font-size: 12px;
-//     color: #9461f7;
-//     border-width: 1px;
-//     border-style: solid;
-//     border-radius: 4px;
-// }
 
 .panel-strategy {
   padding: 40px;
