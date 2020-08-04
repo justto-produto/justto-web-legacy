@@ -13,8 +13,9 @@
           placeholder="Título da mensagem"
           @input="autosave"
         />
+        {{ template.contentType }}
         <el-input
-          v-if="communication.type == 'SMS'"
+          v-if="template.contentType == 'TEXT'"
           v-model="template.body"
           class="text-area"
           type="textarea"
