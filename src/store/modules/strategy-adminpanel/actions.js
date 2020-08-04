@@ -15,11 +15,12 @@ const StrategyActions = {
     mutation: 'addStrategy',
   }),
 
-  cloneStrategy: ({ dispatch }, { strategyClone, originId }) => axiosDispatcher({
+  cloneStrategy: ({ _ }, { strategyClone, originId }) => axiosDispatcher({
     url: `${strategyPath}/${originId}/clone`,
     method: 'POST',
     data: strategyClone,
-  }).then(() => dispatch('getStrategies')),
+    mutation: 'addStrategy',
+  }),
 
   updateStrategy: ({ dispatch }, strategy) => axiosDispatcher({
     url: `${strategyPath}/${strategy.id}`,
