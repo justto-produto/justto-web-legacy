@@ -34,7 +34,7 @@
     <div class="strategy-card__messages-area">
       <StrategyCommunication
         :communications="strategyData.communications"
-        :strategyId="strategy.id"
+        :strategy-id="strategy.id"
       />
     </div>
 
@@ -51,10 +51,20 @@
     </div>
 
     <div class="strategy-card__strategies-area">
-      <JusTagContainer
-        :tag-list="[{name: 'Pagamento'}]"
+      <el-select
+        v-model="strategyTypes"
+        filterable
+        multiple
+        placeholder="Selecionar tipos"
         @change="changeEstrategyData($event, 'types')"
-      />
+      >
+        <el-option
+          v-for="(type, index) in defaultStrategyTypes"
+          :key="index"
+          :label="type.name"
+          :value="type.value"
+        />
+      </el-select>
     </div>
   </el-card>
 </template>
@@ -84,26 +94,45 @@ export default {
   data() {
     return {
       strategyData: this.strategy,
+      strategyTypes: '',
+      defaultStrategyTypes: [
+        {
+          name: 'PAGAMENTO',
+          value: 'PAYMENT',
+        },
+        {
+          name: 'COBRANÇA',
+          value: 'RECOVERY',
+        },
+        {
+          name: 'OBRIGAÇÃO DE FAZER',
+          value: 'OBLIGATION',
+        },
+        {
+          name: 'DESCONTO',
+          value: 'DISCOUNT',
+        },
+      ],
     }
+  },
+  mounted() {
+    this.strategyTypes = this.strategyData.types
   },
   methods: {
     changeEstrategyData(val, key) {
       this.strategyData[key] = val
       this.$emit('changeEstrategyData', this.strategyData)
     },
-
     changeEstrategyPrivacy() {
       this.strategyData.privateStrategy = !this.strategyData.privateStrategy
       this.$emit('changeEstrategyData', this.strategyData)
     },
-
     emitCopyStrategy() {
       this.$emit('copyStrategy', {
         ...this.strategyData,
         name: `${this.strategyData.name} (Cópia)`,
       })
     },
-
     loadWorkspaces() {
       this.$emit('loadWorkspaces', this.strategyData.id)
     },
