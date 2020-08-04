@@ -2,6 +2,9 @@ const findStrategyIndex = (strategies, strategyId) => strategies.findIndex(s => 
 const findCommunicationIndex = (communications, communicationId) => communications.findIndex(c => c.id === communicationId)
 
 const StrategyMutations = {
+  addStrategy: (state, strategy) => {
+    state.strategies.push(strategy)
+  },
   updateStrategy: (state, strategyData) => {
     const { strategies } = state
     strategies.map((strategy, index) => {
