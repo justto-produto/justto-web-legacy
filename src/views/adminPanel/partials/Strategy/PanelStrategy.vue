@@ -143,7 +143,7 @@ export default {
               type: 'success',
             })
 
-            this.$emit('setFilter', value)
+            this.$emit('set-filter', value)
           })
       })
     },
