@@ -39,10 +39,9 @@
     </ul>
 
     <CommunicationEditor
-      :communication-template="communicationToEdit"
+      :template-to-edit="communicationToEdit"
       :strategy-id="strategyId"
-      :communication-id="activeCommunicationId"
-      :communication-name="communicationName"
+      :communication="communication"
       :visible.sync="editorDialogIsVisible"
     />
   </article>
@@ -70,8 +69,7 @@ export default {
   data() {
     return {
       communicationToEdit: {},
-      activeCommunicationId: 0,
-      communicationName: '',
+      communication: {},
       editorDialogIsVisible: false,
     }
   },
@@ -87,10 +85,9 @@ export default {
   methods: {
     ...mapActions(['getCommunicationTemplate']),
 
-    handleEditCommunication(communicationId, communicationName) {
-      this.getCommunicationTemplate({ communicationId, strategyId: this.strategyId }).then(response => {
-        this.communicationName = communicationName
-        this.activeCommunicationId = communicationId
+    handleEditCommunication(communication) {
+      this.getCommunicationTemplate({ communicationId: communication.id, strategyId: this.strategyId }).then(response => {
+        this.communication = communication
         this.communicationToEdit = response
         this.editorDialogIsVisible = true
       })
