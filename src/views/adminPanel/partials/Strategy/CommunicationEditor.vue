@@ -10,8 +10,8 @@
       <div class="communication-editor__data-area">
         <el-input
           v-model="template.title"
-          @input="autosave"
           placeholder="Título da mensagem"
+          @input="autosave"
         />
 
         <div class="communication-editor__editor-fieldset show-toolbar">
