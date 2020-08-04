@@ -1,14 +1,26 @@
 <template>
   <el-card class="strategy-card">
-    <div class="strategy-card__icon-area">
+
+    <div class="strategy-card__private-icon-area">
       <el-tooltip :content="strategyData.privateStrategy ? 'Estratégia privada' : 'Estratégia pública'">
         <i
           :class="{
             [`el-icon-${strategyData.privateStrategy ? 'lock' : 'unlock'}`]: true
           }"
           class="strategy-card__icon"
-          @click="changeEstrategyPrivacy()"
+          @click="changeStrategyPrivacy()"
         />
+      </el-tooltip>
+    </div>
+
+    <div class="strategy-card__active-icon-area">
+      <el-tooltip :content="strategyData.active ? 'Estratégia ativa' : 'Estratégia inativa'">
+        <span @click="changeStrategyActive()">
+          <jus-icon
+            :icon="strategyData.active ? 'eye' : 'hide'"
+            class="strategy-card__icon"
+          />
+        </span>
       </el-tooltip>
     </div>
 
@@ -92,8 +104,14 @@ export default {
       this.$emit('changeEstrategyData', this.strategyData)
     },
 
-    changeEstrategyPrivacy() {
+    changeStrategyPrivacy() {
       this.strategyData.privateStrategy = !this.strategyData.privateStrategy
+      this.$emit('changeEstrategyData', this.strategyData)
+    },
+
+    changeStrategyActive() {
+      console.log('foi?')
+      this.strategyData.active = !this.strategyData.active
       this.$emit('changeEstrategyData', this.strategyData)
     },
 
@@ -127,8 +145,8 @@ export default {
     & > .el-card__body {
       display: grid;
       grid-template-areas:
-        'icon-area name-area name-area action-area'
-        'icon-area messages-area workspaces-area strategies-area';
+        'private-icon-area name-area name-area action-area'
+        'active-icon-area messages-area workspaces-area strategies-area';
       grid-template-columns: 32px repeat(3, 1fr);
       grid-template-rows: repeat(2, minmax(40px, auto));
       gap: 16px;
@@ -146,12 +164,21 @@ export default {
         }
       }
 
-      .strategy-card__icon-area {
-        grid-area: icon-area;
+      .strategy-card__private-icon-area {
+        grid-area: private-icon-area;
 
         & > i {
           cursor: pointer;
           font-size: 32px;
+        }
+      }
+
+      .strategy-card__active-icon-area {
+        grid-area: active-icon-area;
+
+        .strategy-card__icon {
+          cursor: pointer;
+          width: 32px;
         }
       }
 

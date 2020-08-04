@@ -3,13 +3,13 @@
     <el-dialog
       v-if="visible"
       :visible.sync="isVisible"
-      :title="communicationName"
+      :title="`${communication.name} (${St('triggers.' + communication.triggerType)})`"
       class="communication-editor__dialog"
       width="750px"
     >
       <div class="communication-editor__data-area">
         <el-input
-          v-model="communication.title"
+          v-model="template.title"
           @input="autosave"
           placeholder="Título da mensagem"
         />
@@ -17,7 +17,7 @@
         <div class="communication-editor__editor-fieldset show-toolbar">
           <quill-editor
             ref="messageEditor"
-            v-model="communication.body"
+            v-model="template.body"
             :options="editorOptions"
             class="communication-editor__quill"
             @input="autosave"
@@ -49,12 +49,12 @@ export default {
     quillEditor,
   },
   props: {
-    communicationTemplate: {
+    templateToEdit: {
       type: Object,
       default: null,
     },
-    communicationId: {
-      type: Number,
+    communication: {
+      type: Object,
       required: true,
     },
     strategyId: {
@@ -65,14 +65,11 @@ export default {
       type: Boolean,
       default: false,
     },
-    communicationName: {
-      type: String,
-      default: '',
-    },
+
   },
   data() {
     return {
-      communication: {},
+      template: {},
       editorOptions: {
         placeholder: 'Digite a mensagem aqui!',
         modules: {
@@ -102,7 +99,7 @@ export default {
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           </head>
           <body>
-            ${this.communication.body}
+            ${this.template.body}
           </body>
         </html>`
     },
@@ -117,9 +114,9 @@ export default {
     },
   },
   watch: {
-    communicationTemplate(current) {
+    templateToEdit(current) {
       if (current) {
-        this.communication = current
+        this.template = current
       }
     },
   },
@@ -129,11 +126,11 @@ export default {
     autosave({ _, html, text }) {
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
-        const communicationCopy = Object.assign({}, this.communication)
+        const communicationCopy = Object.assign({}, this.template)
         communicationCopy.body = communicationCopy.contentType === 'HTML' ? this.htmlMessage : this.$refs.messageEditor.quill.getText()
         this.changeCommunicationTemplate({
           template: communicationCopy,
-          communicationId: this.communicationId,
+          communicationId: this.templateParams.id,
           strategyId: this.strategyId,
         })
       }, 2000)

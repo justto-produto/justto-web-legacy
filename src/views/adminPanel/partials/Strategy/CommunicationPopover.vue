@@ -58,11 +58,12 @@
             <div v-else-if="editInput === data.id && data.type === 'DELAY'">
               <span>Espera</span>
 
-              <el-input-number
+              <el-input
                 :ref="`edit-input-${data.id}`"
                 v-model="data.duration"
                 :min="1"
                 :step="1"
+                type="number"
                 class="communication-popover__delay-time-input"
                 @keyup.native.enter="handleCloseInput(data)"
                 @blur="handleCloseInput(data)"
@@ -201,7 +202,7 @@ export default {
     },
 
     handleEditCommunication(communication) {
-      this.$emit('edit-communication', communication.id, communication.name)
+      this.$emit('edit-communication', communication)
     },
 
     handleAddCommunication(communicationType) {
