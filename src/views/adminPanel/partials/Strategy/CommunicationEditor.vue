@@ -20,6 +20,7 @@
           type="textarea"
           :autosize="{ minRows: 23 }"
           placeholder="Edite seu SMS aqui."
+          @input="autosave"
         />
 
         <div
@@ -135,13 +136,13 @@ export default {
     ...mapActions(['changeCommunicationTemplate']),
 
     autosave({ _, html, text }) {
+      console.log('AUTO SAVE')
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
-        const communicationCopy = Object.assign({}, this.template)
-        communicationCopy.body = communicationCopy.contentType === 'HTML' ? this.htmlMessage : this.$refs.messageEditor.quill.getText()
+        console.log('AUTO SAVE REQUEST')
         this.changeCommunicationTemplate({
-          template: communicationCopy,
-          communicationId: this.templateParams.id,
+          template: this.template,
+          communicationId: this.templateToEdit.id,
           strategyId: this.strategyId,
         })
       }, 2000)
