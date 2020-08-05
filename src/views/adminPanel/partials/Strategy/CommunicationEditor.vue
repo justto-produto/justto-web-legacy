@@ -3,7 +3,7 @@
     <el-dialog
       v-if="visible"
       :visible.sync="isVisible"
-      :title="`${communication.name} (${$t('triggers.' + communication.triggerType)})`"
+      :title="communication.name"
       class="communication-editor__dialog"
       width="750px"
     >
@@ -127,10 +127,13 @@ export default {
   },
   watch: {
     templateToEdit(current) {
-      if (current) {
-        this.template = current
-      }
+      if (current) this.template = current
     },
+  },
+  beforeMount() {
+    if (!this.templateToEdit.contentType) {
+      this.template = this.communication.communicationType === 'EMAIL' ? 'HTML' : 'TEXT'
+    }
   },
   methods: {
     ...mapActions(['changeCommunicationTemplate']),
@@ -139,7 +142,7 @@ export default {
       console.log('AUTO SAVE')
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
-        console.log('AUTO SAVE REQUEST')
+        delete this.template.contentType
         this.changeCommunicationTemplate({
           template: this.template,
           communicationId: this.templateToEdit.id,
