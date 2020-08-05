@@ -28,7 +28,7 @@
       <jus-text-editable
         :value="strategyData.name"
         type="title"
-        @hasEdition="changeStrategyData($event, 'name')"
+        @hasEdition="changeStrategyData()"
       />
     </div>
 
@@ -46,7 +46,7 @@
     <div class="strategy-card__messages-area">
       <StrategyCommunication
         :triggers="strategyData.triggers"
-        :strategyId="strategy.id"
+        :strategy-id="strategy.id"
       />
     </div>
 
@@ -64,11 +64,11 @@
 
     <div class="strategy-card__strategies-area">
       <el-select
-        v-model="strategyTypes"
+        v-model="strategyData.types"
         filterable
         multiple
         placeholder="Selecionar tipos"
-        @change="changeStrategyData($event, 'types')"
+        @change="changeStrategyTypes()"
       >
         <el-option
           v-for="(type, index) in defaultStrategyTypes"
@@ -79,7 +79,7 @@
       </el-select>
 
       <div
-        v-if="istTypesNull"
+        v-if="!this.strategyData.types.length"
         class="strategies-area__alert"
       >
         Sem tipo a estratégia <strong>não funciona!</strong><br> Escolha ao menos um!
@@ -112,46 +112,26 @@ export default {
   data() {
     return {
       strategyData: this.strategy,
-      strategyTypes: '',
       defaultStrategyTypes: [
-        {
-          name: 'PAGAMENTO',
-          value: 'PAYMENT',
-        },
-        {
-          name: 'COBRANÇA',
-          value: 'RECOVERY',
-        },
-        {
-          name: 'OBRIGAÇÃO DE FAZER',
-          value: 'OBLIGATION',
-        },
-        {
-          name: 'DESCONTO',
-          value: 'DISCOUNT',
-        },
+        { name: 'PAGAMENTO', value: 'PAYMENT' },
+        { name: 'COBRANÇA', value: 'RECOVERY' },
+        { name: 'OBRIGAÇÃO DE FAZER', value: 'OBLIGATION' },
+        { name: 'DESCONTO', value: 'DISCOUNT' },
       ],
     }
   },
   computed: {
     strategyValidator() {
       const rules = ['PAYMENT', 'RECOVERY']
-      return !rules.every(rule => Object.values(this.strategyTypes).includes(rule))
+      return !rules.every(rule => Object.values(this.strategyData.types).includes(rule))
     },
-    istTypesNull() {
-      return Object.keys(this.strategyTypes).length === 0
-    },
-  },
-  mounted() {
-    this.strategyTypes = this.strategyData.types
   },
   methods: {
-    changeStrategyData(val, key) {
+    changeStrategyTypes() {
       if (this.strategyValidator) {
-        this.strategyData[key] = val
         this.$emit('changeStrategyData', this.strategyData)
       } else {
-        this.strategyTypes.pop()
+        this.strategyData.types.pop()
 
         this.$jusNotification({
           title: 'Ops!!',
@@ -159,6 +139,10 @@ export default {
           type: 'warning',
         })
       }
+    },
+
+    changeStrategyData(name) {
+      this.$emit('changeStrategyData', this.strategyData)
     },
 
     changeStrategyPrivacy() {
