@@ -16,7 +16,6 @@
           class="panel-strategy__card"
           @changeStrategyData="updateStrategy"
           @copyStrategy="copyStrategyHandler"
-          @loadWorkspaces="getStrategyAvailableWorkspaces"
         />
       </el-collapse-item>
       <el-collapse-item
@@ -31,7 +30,6 @@
           class="panel-strategy__card"
           @changeStrategyData="updateStrategy"
           @copyStrategy="copyStrategyHandler"
-          @loadWorkspaces="getStrategyAvailableWorkspaces"
         />
       </el-collapse-item>
     </el-collapse>
@@ -99,7 +97,7 @@ export default {
   computed: {
     ...mapGetters({
       strategies: 'getStrategies',
-      workspaces: 'getStrategyAvailableWorkspaces',
+      workspaces: 'availableWorkspaces',
     }),
 
     filteredStrategies() {
@@ -117,6 +115,7 @@ export default {
   beforeMount() {
     this.getStrategies().finally(() => (this.loading = false))
     this.getAvaliableVariablesToTemplate()
+    this.myWorkspace()
   },
   methods: {
     ...mapActions([
@@ -124,7 +123,7 @@ export default {
       'cloneStrategy',
       'getStrategies',
       'getAvaliableVariablesToTemplate',
-      'getStrategyAvailableWorkspaces',
+      'myWorkspace',
       'updateStrategy',
     ]),
 
@@ -141,8 +140,7 @@ export default {
 
     copyStrategyHandler(strategy) {
       this.strategyCopy = strategy
-      this.getStrategyAvailableWorkspaces(strategy.id)
-        .then(() => (this.dialogIsVisible = true))
+      this.dialogIsVisible = true
     },
 
     saveStrategyCopy() {

@@ -57,14 +57,13 @@
         :disabled="!strategyData.privateStrategy"
         multiple
         filterable
-        @visible-change="loadWorkspaces"
         @change="changeStrategyWorkspaces($event)"
       >
         <el-option
           v-for="item in availableWorkspaces"
-          :key="`${strategyData.id}${item.id}`"
-          :label="item.teamName"
-          :value="item.id"
+          :key="`${strategyData.id}${item.workspace.id}`"
+          :label="item.workspace.teamName"
+          :value="item.workspace.id"
         />
       </el-select>
     </div>
@@ -137,10 +136,6 @@ export default {
         ...this.strategyData,
         name: `${this.strategyData.name} (Cópia)`,
       })
-    },
-
-    loadWorkspaces() {
-      this.$emit('loadWorkspaces', this.strategyData.id)
     },
   },
 }

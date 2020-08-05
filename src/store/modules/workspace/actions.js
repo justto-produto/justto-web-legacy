@@ -5,6 +5,7 @@ const actions = {
     return axiosDispatcher({
       url: 'api/workspaces/my',
       headers: { Workspace: '' },
+      mutation: 'setAvailableWorkspaces',
     })
   },
   getWorkspace({ getters }) {
@@ -88,9 +89,9 @@ const actions = {
       mutation: 'setWorkspaceMembers',
     })
   },
-  getWorkspaces({ commit }) {
+  getWorkspaces({ _ }) {
     return axiosDispatcher({
-      url: 'api/workspaces',
+      url: 'api/workspaces?size=999&',
     })
   },
   removeWorkspaceMember({ commit }, id) {
