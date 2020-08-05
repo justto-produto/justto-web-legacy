@@ -46,6 +46,7 @@
                 <el-select
                   v-if="!!form.contracts.length"
                   v-model="contract.status"
+                  :disabled="isContractInactive(contract)"
                   placeholder="Ex.: Ativo"
                   @focus="inEdit[contractCount] = true"
                 >
