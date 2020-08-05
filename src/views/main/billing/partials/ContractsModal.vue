@@ -6,16 +6,22 @@
     class="contracts-modal"
     width="50%"
   >
+    <!-- {{ inEdit }} -->
     <el-form
       v-if="form"
       ref="contractForm"
       :model="newContract"
       :rules="formRules"
     >
-      <el-collapse>
+      <el-collapse
+        accordion
+        @item-click="resetNewContract"
+      >
         <el-collapse-item
           v-for="(contract, contractCount) in filteredContracts"
+          :id="`collapseItem${contractCount}`"
           :key="contractCount"
+          :ref="`collapseItem${contractCount}`"
           :name="contractCount"
         >
           <template #title>
@@ -31,6 +37,7 @@
               {{ flag.label }}
             </el-tag>
           </template>
+          <!-- Campos do formulário -->
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item
@@ -40,6 +47,7 @@
                   v-if="!!form.contracts.length"
                   v-model="contract.status"
                   placeholder="Ex.: Ativo"
+                  @focus="inEdit[contractCount] = true"
                 >
                   <el-option
                     v-for="(status, key, index) in contractStatus"
@@ -57,10 +65,12 @@
               >
                 <el-date-picker
                   v-model="contract.startedDate"
+                  :disabled="isContractInactive(contract)"
                   placeholder="Início da vigência"
                   type="date"
                   format="dd/MM/yyyy"
                   value-format="yyyy-MM-dd"
+                  @focus="inEdit[contractCount] = true"
                 />
                 <el-form-item />
               </el-form-item>
@@ -74,7 +84,9 @@
               >
                 <el-select
                   v-model="contract.invoiceDueDays"
+                  :disabled="isContractInactive(contract)"
                   placeholder="Dia do mês"
+                  @focus="inEdit[contractCount] = true"
                 >
                   <el-option
                     v-for="(day, dayCount) in 29"
@@ -93,7 +105,9 @@
               >
                 <el-select
                   v-model="contract.invoiceClosingDay"
+                  :disabled="isContractInactive(contract)"
                   placeholder="Dia do mês"
+                  @focus="inEdit[contractCount] = true"
                 >
                   <el-option
                     v-for="(day, dayCount) in 29"
@@ -114,7 +128,9 @@
               >
                 <el-select
                   v-model="contract.planId"
+                  :disabled="isContractInactive(contract)"
                   placeholder="Plano"
+                  @focus="inEdit[contractCount] = true"
                 >
                   <el-option
                     v-for="(plan, index) in plans"
@@ -133,13 +149,17 @@
               >
                 <money
                   v-model="contract.monthlySubscriptionFee"
+                  :disabled="isContractInactive(contract)"
+                  :class="{'is-inactive': isContractInactive(contract)}"
                   class="el-input__inner"
+                  @focus="inEdit[contractCount] = true"
                 />
                 <el-form-item />
               </el-form-item>
             </el-col>
           </el-row>
 
+          <!-- 4 últimos campos de baixo do formulário -->
           <el-row :gutter="24">
             <el-col
               v-for="(tariffValue, tariffKey, tariffCount) in tariffTypes"
@@ -149,13 +169,31 @@
               <el-form-item :label="tariffValue.label">
                 <money
                   v-model="contract.tariffs[getTariffIndex(contract, tariffKey)].value"
+                  :disabled="isContractInactive(contract)"
+                  :readonly="isContractInactive(contract)"
+                  :class="{'is-inactive': isContractInactive(contract)}"
                   class="el-input__inner"
+                  @focus="inEdit[contractCount] = true"
                 />
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row
+            v-if="!!inEdit[contractCount]"
+            :gutter="24"
+          >
+            <el-col class="text-right">
+              <el-button
+                type="primary"
+                @click.native.prevent="saveSingleContract(contract, contractCount)"
+              >
+                Salvar
+              </el-button>
+            </el-col>
+          </el-row>
         </el-collapse-item>
 
+        <!-- Novo Contrato -->
         <el-collapse-item
           name="newContract"
           title="Novo contrato"
@@ -290,15 +328,28 @@
           </el-row>
           <el-row :gutter="24">
             <el-col>
-              <el-form-item label="Contrato vinculado a workspace">
-                <el-switch v-model="hasWorkspace" />
+              <el-form-item>
+                <el-switch
+                  v-model="hasWorkspace"
+                  active-text="Exclusivo desta workspace"
+                />
               </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col class="text-right">
+              <el-button
+                type="primary"
+                @click.native.prevent="validateForm"
+              >
+                Salvar
+              </el-button>
             </el-col>
           </el-row>
         </el-collapse-item>
       </el-collapse>
     </el-form>
-    <span
+    <!-- <span
       slot="footer"
       class="dialog-footer"
     >
@@ -309,7 +360,7 @@
       >
         Salvar
       </el-button>
-    </span>
+    </span> -->
   </el-dialog>
 </template>
 
@@ -333,6 +384,7 @@ export default {
   },
   data() {
     return {
+      inEdit: { },
       form: { },
       isFormVisible: false,
       formRules: {
@@ -444,6 +496,34 @@ export default {
       }),
       )
     },
+    /**
+     * Valida se o contrato está com status Inativo
+     */
+    isContractInactive(contract) {
+      return contract.status === 'INACTIVE'
+    },
+    /**
+     * Salva um único contrato
+     */
+    saveSingleContract(contract, index) {
+      const { form } = this
+      this.updateContract({
+        customerId: form.customerId,
+        contract: contract,
+      }).then(() => {
+        // this.$refs[`collapseItem${index}`].hidde()
+        this.inEdit[index] = false
+        this.$forceUpdate()
+        this.$jusNotification({
+          type: 'success',
+          title: 'Yay!',
+          message: 'Contrato salvo com sucesso.',
+        })
+      })
+    },
+    /**
+     * Salva todos os contratos
+     */
     saveContract() {
       const {
         form,
@@ -523,6 +603,16 @@ export default {
         }
       }
     }
+  }
+}
+.is-inactive {
+  background-color: #f6f6f6;
+  border-color: #e4e7ed;
+  color: #424242;
+
+  cursor: not-allowed;
+  &:hover {
+    border-color: #e4e7ed;
   }
 }
 </style>
