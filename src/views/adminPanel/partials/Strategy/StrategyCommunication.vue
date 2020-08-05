@@ -8,7 +8,7 @@
         trigger="click"
       >
         <CommunicationPopover
-          :recipient="recipient"
+          :triggers="triggers"
           :strategyId="strategyId"
           @edit-communication="handleEditCommunication"
         />
@@ -25,24 +25,23 @@
               icon="email"
               class="strategy-communication__icon"
             />
-            {{ recipient.emails }}
+            {{ summary.emails }}
           </div>
           <span class="strategy-communication__sms">
             <jus-icon
               icon="sms"
               class="strategy-communication__icon"
             />
-            {{ recipient.sms }}
+            {{ summary.sms }}
           </span>
         </li>
       </el-popover>
     </ul>
 
     <CommunicationEditor
-      :communication-template="communicationToEdit"
+      :template-to-edit="communicationToEdit"
       :strategy-id="strategyId"
-      :communication-id="activeCommunicationId"
-      :communication-name="communicationName"
+      :communication="communication"
       :visible.sync="editorDialogIsVisible"
     />
   </article>
@@ -58,8 +57,8 @@ export default {
     CommunicationPopover: () => import('./CommunicationPopover'),
   },
   props: {
-    communications: {
-      type: Array,
+    triggers: {
+      type: Object,
       default: () => [],
     },
     strategyId: {
@@ -70,27 +69,26 @@ export default {
   data() {
     return {
       communicationToEdit: {},
-      activeCommunicationId: 0,
-      communicationName: '',
+      communication: {},
       editorDialogIsVisible: false,
     }
   },
   computed: {
-    recipient() {
-      return {
-        emails: this.communications.filter(c => c && ['EMAIL', 'EMAIL_CNA'].includes(c.type)).length,
-        sms: this.communications.filter(c => c && c.type === 'SMS').length,
-        communications: this.communications,
-      }
+    summary() {
+      if (this.triggers.ENGAGEMENT) {
+        return {
+          emails: this.triggers.ENGAGEMENT.communicationsTypeSummary.EMAIL,
+          sms: this.triggers.ENGAGEMENT.communicationsTypeSummary.SMS,
+        }
+      } return { emails: 0, sms: 0 }
     },
   },
   methods: {
     ...mapActions(['getCommunicationTemplate']),
 
-    handleEditCommunication(communicationId, communicationName) {
-      this.getCommunicationTemplate({ communicationId, strategyId: this.strategyId }).then(response => {
-        this.communicationName = communicationName
-        this.activeCommunicationId = communicationId
+    handleEditCommunication(communication) {
+      this.getCommunicationTemplate({ communicationId: communication.id, strategyId: this.strategyId }).then(response => {
+        this.communication = communication
         this.communicationToEdit = response
         this.editorDialogIsVisible = true
       })
