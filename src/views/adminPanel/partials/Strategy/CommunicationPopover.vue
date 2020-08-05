@@ -139,7 +139,7 @@ import { mapActions } from 'vuex'
 export default {
   name: 'CommunicationPopover',
   props: {
-    recipient: {
+    triggers: {
       type: Object,
       default: null,
     },
@@ -154,6 +154,17 @@ export default {
     }
   },
   computed: {
+    recipient() {
+      if (this.triggers.ENGAGEMENT) {
+        return {
+          communications: this.triggers.ENGAGEMENT.communications,
+        }
+      } else {
+        return {
+          communications: [],
+        }
+      }
+    },
     communications: self => self.recipient.communications,
     communicationTypes: () => {
       const type = {}
@@ -229,7 +240,7 @@ export default {
       } else {
         communication.recipients.push(recipient)
       }
-      this.editCommunication({ communication, strategyId: this.strategyId })
+      this.editCommunication({ communication, strategyId: this.strategyId, trigger: 'ENGAGEMENT' })
     },
 
     handleSortCommunications() {
@@ -242,7 +253,7 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'warning',
-      }).then(() => this.deleteCommunication({ communicationId, strategyId: this.strategyId }))
+      }).then(() => this.deleteCommunication({ communicationId, strategyId: this.strategyId, trigger: 'ENGAGEMENT' }))
     },
   },
 }

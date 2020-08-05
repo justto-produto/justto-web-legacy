@@ -3,18 +3,35 @@
     <el-dialog
       v-if="visible"
       :visible.sync="isVisible"
-      :title="`${communication.name} (${St('triggers.' + communication.triggerType)})`"
+      :title="communication.name"
       class="communication-editor__dialog"
-      width="750px"
     >
       <div class="communication-editor__data-area">
         <el-input
           v-model="template.title"
-          @input="autosave"
           placeholder="Título da mensagem"
+          @input="autosave"
         />
 
-        <div class="communication-editor__editor-fieldset show-toolbar">
+        <div
+          v-if="template.contentType === 'TEXT'"
+          class="communication-editor__editor-fieldset show-toolbar"
+        >
+          <el-input
+            v-model="template.body"
+            type="textarea"
+            maxlength="120"
+            show-word-limit
+            placeholder="Edite seu SMS aqui!"
+            class="communication-editor__textarea"
+            @input="autosave"
+          />
+        </div>
+
+        <div
+          v-else
+          class="communication-editor__editor-fieldset show-toolbar"
+        >
           <quill-editor
             ref="messageEditor"
             v-model="template.body"
@@ -71,7 +88,7 @@ export default {
     return {
       template: {},
       editorOptions: {
-        placeholder: 'Digite a mensagem aqui!',
+        placeholder: 'Edite seu e-mail aqui!',
         modules: {
           toolbar: [
             [{ font: [] }],
@@ -115,9 +132,7 @@ export default {
   },
   watch: {
     templateToEdit(current) {
-      if (current) {
-        this.template = current
-      }
+      if (current) this.template = current
     },
   },
   methods: {
@@ -126,11 +141,10 @@ export default {
     autosave({ _, html, text }) {
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
-        const communicationCopy = Object.assign({}, this.template)
-        communicationCopy.body = communicationCopy.contentType === 'HTML' ? this.htmlMessage : this.$refs.messageEditor.quill.getText()
+        this.template.communicationType = this.communication.type
         this.changeCommunicationTemplate({
-          template: communicationCopy,
-          communicationId: this.templateParams.id,
+          template: this.template,
+          communicationId: this.templateToEdit.id,
           strategyId: this.strategyId,
         })
       }, 2000)
@@ -159,10 +173,6 @@ export default {
         padding: 16px;
         height: calc(100% - 32px);
       }
-
-      .communication-editor__textarea {
-        height: 100% !important;
-      }
     }
   }
 
@@ -186,6 +196,8 @@ export default {
 </style>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .communication-editor {
   .communication-editor__dialog {
     display: flex;
@@ -200,8 +212,28 @@ export default {
 
     .el-dialog {
       width: 100% !important;
+      height: 100%;
+
       .el-dialog__body {
-        height: calc(100vh - 90px);
+        height: calc(100% - 104px);
+      }
+    }
+  }
+
+  .communication-editor__data-area {
+    .communication-editor__editor-fieldset {
+      .communication-editor__textarea {
+        height: 100%;
+
+        .el-textarea__inner {
+          border: none;
+          resize: none;
+          height: 100%;
+        }
+
+        .el-input__count {
+          color: $--color-text-secondary;
+        }
       }
     }
   }

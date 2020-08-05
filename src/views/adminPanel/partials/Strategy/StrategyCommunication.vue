@@ -8,7 +8,7 @@
         trigger="click"
       >
         <CommunicationPopover
-          :recipient="recipient"
+          :triggers="triggers"
           :strategyId="strategyId"
           @edit-communication="handleEditCommunication"
         />
@@ -25,14 +25,14 @@
               icon="email"
               class="strategy-communication__icon"
             />
-            {{ recipient.emails }}
+            {{ summary.emails }}
           </div>
           <span class="strategy-communication__sms">
             <jus-icon
               icon="sms"
               class="strategy-communication__icon"
             />
-            {{ recipient.sms }}
+            {{ summary.sms }}
           </span>
         </li>
       </el-popover>
@@ -74,20 +74,13 @@ export default {
     }
   },
   computed: {
-    recipient() {
+    summary() {
       if (this.triggers.ENGAGEMENT) {
         return {
           emails: this.triggers.ENGAGEMENT.communicationsTypeSummary.EMAIL,
           sms: this.triggers.ENGAGEMENT.communicationsTypeSummary.SMS,
-          communications: this.triggers.ENGAGEMENT.communications,
         }
-      } else {
-        return {
-          emails: 0,
-          sms: 0,
-          communications: [],
-        }
-      }
+      } return { emails: 0, sms: 0 }
     },
   },
   methods: {
