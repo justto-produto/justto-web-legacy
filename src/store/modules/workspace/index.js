@@ -18,6 +18,7 @@ const workspaceModule = {
     redirectNewWorkspace: false,
     blackList: workspace.blackList,
     properties: workspace.properties || {},
+    availableWorkspaces: [],
   },
   mutations: mutations,
   actions: actions,

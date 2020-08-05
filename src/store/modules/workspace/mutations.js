@@ -41,12 +41,11 @@ const mutations = {
     localStorage.removeItem('jusprofile')
     localStorage.removeItem('jusperson')
   },
-  setWorkspaceMembers(state, members) {
-    state.members = members.content
-  },
+  setWorkspaceMembers: (state, members) => (state.members = members.content),
   setBlackList(state, blackList) {
     if (blackList) state.blackList = blackList
   },
+  setAvailableWorkspaces: (state, workspacesList) => (state.availableWorkspaces = workspacesList),
 }
 
 export default mutations
