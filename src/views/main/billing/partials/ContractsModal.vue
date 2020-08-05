@@ -14,6 +14,7 @@
       :rules="formRules"
     >
       <el-collapse
+        ref="mainCollapse"
         accordion
         @item-click="resetNewContract"
       >
@@ -477,8 +478,6 @@ export default {
     validateForm() {
       const formRef = this.$refs.contractForm
       formRef.clearValidate()
-
-      this.saveContract()
       this.addNewContract()
     },
     addNewContract() {
@@ -496,12 +495,20 @@ export default {
         message: 'Contrato adicionado com sucesso.',
       }),
       )
+
+      this.hideCollapseItems()
     },
     /**
      * Valida se o contrato está com status Inativo
      */
     isContractInactive(contract) {
       return contract.status === 'INACTIVE'
+    },
+    /**
+     * Esconde todos os collapse-item
+     */
+    hideCollapseItems() {
+      this.$refs.mainCollapse.setActiveNames([])
     },
     /**
      * Salva um único contrato
@@ -512,7 +519,7 @@ export default {
         customerId: form.customerId,
         contract: contract,
       }).then(() => {
-        // this.$refs[`collapseItem${index}`].hidde()
+        this.hideCollapseItems()
         this.inEdit[index] = false
         this.$forceUpdate()
         this.$jusNotification({
@@ -524,6 +531,7 @@ export default {
     },
     /**
      * Salva todos os contratos
+     * @deprecated
      */
     saveContract() {
       const {
