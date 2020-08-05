@@ -133,8 +133,8 @@ export default {
         this.strategyTypes.pop()
 
         this.$jusNotification({
-          title: 'Ops!',
-          message: 'Estratégia do tipo indenizatório e cobrança não podem serem adicionadas juntas. Por favor, valide os tipos já configurados nesta estratégia',
+          title: 'Ops!!',
+          message: 'Estratégia com o tipo indenizatório e cobrança não pode existir. Por favor, verifique os tipos desta estratégia.',
           type: 'warning',
         })
       }
