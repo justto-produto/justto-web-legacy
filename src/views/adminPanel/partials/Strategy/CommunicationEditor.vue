@@ -7,6 +7,13 @@
       class="communication-editor__dialog"
     >
 
+      <div slot="title">
+        <span class="el-dialog__title">
+          {{ communication.name }}
+          <span class="communication-editor__status">{{ statusText }}</span>
+        </span>
+      </div>
+
       <div class="communication-editor__data-area">
         <div class="communication-editor__header">
           <div class="communication-editor__header-item">
@@ -120,6 +127,7 @@ export default {
   data() {
     return {
       template: {},
+      status: 'SAVED',
       editorOptions: {
         placeholder: 'Edite seu e-mail aqui!',
         modules: {
@@ -140,6 +148,20 @@ export default {
     ...mapGetters({
       variables: 'getAvaliableVariablesToTemplate',
     }),
+
+    statusText() {
+      switch (status) {
+        case 'FAILD':
+          return 'Falha ao salvar template'
+        case 'SAVING':
+          return 'Salvando template...'
+        case 'SAVED':
+        default: {
+          const lastUpdate = this.template.updatedAt
+          return `Template salvo ${lastUpdate.dateTime ? this.$moment(lastUpdate.dateTime).from(new Date()) : ''}`
+        }
+      }
+    },
 
     htmlMessage() {
       return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -174,12 +196,16 @@ export default {
     autosave({ _, html, text }) {
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
+        this.status = 'SAVING'
         this.template.communicationType = this.communication.type
         this.changeCommunicationTemplate({
           template: this.template,
           communicationId: this.templateToEdit.id,
           strategyId: this.strategyId,
-        })
+        }).then(response => {
+          this.template.updatedAt = response.updatedAt
+          this.status = 'SAVED'
+        }).catch(() => { this.status = 'FAILD' })
       }, 2000)
     },
 
@@ -195,6 +221,13 @@ export default {
 
 .communication-editor {
   display: flex;
+
+  .communication-editor__status {
+    color: $--color-text-secondary;
+    font-size: 14px;
+    font-weight: normal;
+    margin-left: 2px;
+  }
 
   .communication-editor__data-area {
     width: 100%;
