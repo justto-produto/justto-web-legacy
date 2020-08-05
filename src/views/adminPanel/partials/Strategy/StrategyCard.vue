@@ -28,7 +28,7 @@
       <jus-text-editable
         :value="strategyData.name"
         type="title"
-        @hasEdition="changeStrategyData($event, 'name')"
+        @hasEdition="changeStrategyData()"
       />
     </div>
 
@@ -46,29 +46,35 @@
     <div class="strategy-card__messages-area">
       <StrategyCommunication
         :triggers="strategyData.triggers"
-        :strategyId="strategy.id"
+        :strategy-id="strategy.id"
       />
     </div>
 
     <div class="strategy-card__workspaces-area">
-      <JusTagContainer
-        :options="availableWorkspaces"
-        :tag-list="strategyData.workspaces"
-        :is-private="strategyData.privateStrategy"
-        :can-add-tag="strategyData.privateStrategy"
-        title="Times"
-        @change="changeStrategyData($event, 'workspaces')"
-        @showInput="loadWorkspaces"
-      />
+      <el-select
+        v-model="associatedWorkspaces"
+        :placeholder="workspacesPlaceholder"
+        :disabled="!strategyData.privateStrategy"
+        multiple
+        filterable
+        @change="changeStrategyWorkspaces($event)"
+      >
+        <el-option
+          v-for="item in availableWorkspaces"
+          :key="`${strategyData.id}${item.workspace.id}`"
+          :label="item.workspace.teamName"
+          :value="item.workspace.id"
+        />
+      </el-select>
     </div>
 
     <div class="strategy-card__strategies-area">
       <el-select
-        v-model="strategyTypes"
+        v-model="strategyData.types"
         filterable
         multiple
         placeholder="Selecionar tipos"
-        @change="changeStrategyData($event, 'types')"
+        @change="changeStrategyTypes()"
       >
         <el-option
           v-for="(type, index) in defaultStrategyTypes"
@@ -89,13 +95,11 @@
 </template>
 
 <script>
-import { JusTagContainer } from '@/components/JusTagContainer'
 import { JusTextEditable } from '@/components/JusTextEditable'
 
 export default {
   name: 'PanelStrategy',
   components: {
-    JusTagContainer,
     JusTextEditable,
     StrategyCommunication: () => import('./StrategyCommunication'),
   },
@@ -112,46 +116,37 @@ export default {
   data() {
     return {
       strategyData: this.strategy,
-      strategyTypes: '',
+      associatedWorkspaces: this.strategy.workspaces.map(w => w.id),
       defaultStrategyTypes: [
-        {
-          name: 'PAGAMENTO',
-          value: 'PAYMENT',
-        },
-        {
-          name: 'COBRANÇA',
-          value: 'RECOVERY',
-        },
-        {
-          name: 'OBRIGAÇÃO DE FAZER',
-          value: 'OBLIGATION',
-        },
-        {
-          name: 'DESCONTO',
-          value: 'DISCOUNT',
-        },
+        { name: 'PAGAMENTO', value: 'PAYMENT' },
+        { name: 'COBRANÇA', value: 'RECOVERY' },
+        { name: 'OBRIGAÇÃO DE FAZER', value: 'OBLIGATION' },
+        { name: 'DESCONTO', value: 'DISCOUNT' },
       ],
     }
   },
   computed: {
     strategyValidator() {
       const rules = ['PAYMENT', 'RECOVERY']
-      return !rules.every(rule => Object.values(this.strategyTypes).includes(rule))
+      return !rules.every(rule => Object.values(this.strategyData.types).includes(rule))
+    },
+    workspacesPlaceholder() {
+      return this.strategyData.privateStrategy ? 'Nimgém pode ver essa estratégia. Associe um time ou torne-a pública.' : 'Todos os times possuem acesso a esta estratégia.'
     },
     istTypesNull() {
-      return Object.keys(this.strategyTypes).length === 0
+      return Object.keys(this.strategyData.types).length === 0
     },
   },
-  mounted() {
-    this.strategyTypes = this.strategyData.types
-  },
   methods: {
-    changeStrategyData(val, key) {
+    changeStrategyData() {
+      this.$emit('changeStrategyData', this.strategyData)
+    },
+
+    changeStrategyTypes() {
       if (this.strategyValidator) {
-        this.strategyData[key] = val
         this.$emit('changeStrategyData', this.strategyData)
       } else {
-        this.strategyTypes.pop()
+        this.strategyData.types.pop()
 
         this.$jusNotification({
           title: 'Ops!!',
@@ -159,6 +154,11 @@ export default {
           type: 'warning',
         })
       }
+    },
+
+    changeStrategyWorkspaces() {
+      this.strategyData.workspaces = this.availableWorkspaces.filter(w => this.associatedWorkspaces.includes(w.id))
+      this.$emit('changeStrategyData', this.strategyData)
     },
 
     changeStrategyPrivacy() {
@@ -176,9 +176,6 @@ export default {
         ...this.strategyData,
         name: `${this.strategyData.name} (Cópia)`,
       })
-    },
-    loadWorkspaces() {
-      this.$emit('loadWorkspaces', this.strategyData.id)
     },
   },
 }
