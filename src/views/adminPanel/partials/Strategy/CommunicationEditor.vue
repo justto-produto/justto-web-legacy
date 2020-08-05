@@ -6,12 +6,45 @@
       :title="communication.name"
       class="communication-editor__dialog"
     >
+
       <div class="communication-editor__data-area">
-        <el-input
-          v-model="template.title"
-          placeholder="Título da mensagem"
-          @input="autosave"
-        />
+        <div class="communication-editor__header">
+          <div class="communication-editor__header-item">
+            <span class="communication-editor__input-label">Assunto da mensagem: </span>
+            <el-input
+              v-model="template.title"
+              placeholder="Ex. Sobre disputa XPTO"
+              @input="autosave"
+            />
+          </div>
+
+          <div class="communication-editor__header-item">
+            <span class="communication-editor__input-label">Destinatários: </span>
+            <div class="communication-editor__header-item-options">
+              <span
+                :class="{ 'is-inactive-recipient': !communication.recipients.includes('PARTY') }"
+                class="communication-editor__option-party"
+                @click="handleCommunicationRecipient(communication, 'PARTY')"
+              >
+                <i class="el-icon-user-solid" /> Autor
+              </span>
+              <span
+                :class="{ 'is-inactive-recipient': !communication.recipients.includes('LAWYER') }"
+                class="communication-editor__option-party"
+                @click="handleCommunicationRecipient(communication, 'LAWYER')"
+              >
+                <i class="el-icon-s-custom" /> Advogado
+              </span>
+            </div>
+          </div>
+
+          <div class="communication-editor__header-item">
+            <span class="communication-editor__input-label">Gatilho: </span>
+            <span class="communication-editor__header-item-options">
+              {{ $t(`triggers.${communication.triggerType}`).toUpperCase() }}
+            </span>
+          </div>
+        </div>
 
         <div
           v-if="template.contentType === 'TEXT'"
@@ -149,6 +182,10 @@ export default {
         })
       }, 2000)
     },
+
+    handleCommunicationRecipient(communication, recipient) {
+      this.$emit('change-communication-recipient', { communication, recipient })
+    },
   },
 }
 </script>
@@ -161,12 +198,48 @@ export default {
 
   .communication-editor__data-area {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .communication-editor__header {
+      display: flex;
+      padding-right: 24px;
+
+      .communication-editor__header-item {
+        margin-left: 24px;
+        &:first-child { margin-left: 0; flex: 1; }
+
+        .communication-editor__header-item-options {
+          display: flex;
+          align-items: center;
+          height: 40px;
+
+          .is-inactive-recipient { color: $--color-text-secondary; }
+
+          .communication-editor__option-party {
+            margin-left:  16px;
+            cursor: pointer;
+            &:first-child { margin-left: 0; }
+
+            .el-icon-user-solid, .el-icon-s-custom {
+              font-size: 22px;
+            }
+          }
+        }
+      }
+
+      .communication-editor__input-label {
+        display: block;
+        color: $--color-text-secondary;
+        font-weight: bold;
+      }
+    }
 
     .communication-editor__editor-fieldset {
       border: 1px solid #ccc;
       border-radius: 4px;
       width: 100%;
-      height: calc(100% - 50px);
+      flex: 1;
       margin-top: 12px;
 
       .communication-editor__quill {
