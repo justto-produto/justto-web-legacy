@@ -85,7 +85,7 @@
       </el-select>
 
       <div
-        v-if="!this.strategyData.types.length"
+        v-if="istTypesNull"
         class="strategies-area__alert"
       >
         Sem tipo a estratégia <strong>não funciona!</strong><br> Escolha ao menos um!
@@ -132,6 +132,9 @@ export default {
     },
     workspacesPlaceholder() {
       return this.strategyData.privateStrategy ? 'Nimgém pode ver essa estratégia. Associe um time ou torne-a pública.' : 'Todos os times possuem acesso a esta estratégia.'
+    },
+    istTypesNull() {
+      return Object.keys(this.strategyData.types).length === 0
     },
   },
   methods: {
