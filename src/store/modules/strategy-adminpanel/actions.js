@@ -8,17 +8,19 @@ const StrategyActions = {
     mutation: 'setStrategies',
   }),
 
-  addStrategy: ({ dispatch }, strategy) => axiosDispatcher({
+  addStrategy: ({ _ }, strategy) => axiosDispatcher({
     url: strategyPath,
     method: 'POST',
     data: strategy,
-  }).then(() => dispatch('getStrategies')),
+    mutation: 'addStrategy',
+  }),
 
-  cloneStrategy: ({ dispatch }, { strategyClone, originId }) => axiosDispatcher({
+  cloneStrategy: ({ _ }, { strategyClone, originId }) => axiosDispatcher({
     url: `${strategyPath}/${originId}/clone`,
     method: 'POST',
     data: strategyClone,
-  }).then(() => dispatch('getStrategies')),
+    mutation: 'addStrategy',
+  }),
 
   updateStrategy: ({ dispatch }, strategy) => axiosDispatcher({
     url: `${strategyPath}/${strategy.id}`,
@@ -57,10 +59,10 @@ const StrategyActions = {
     data: sortedIds,
   }),
 
-  deleteCommunication: ({ commit }, { communicationId, strategyId }) => axiosDispatcher({
+  deleteCommunication: ({ commit }, { communicationId, strategyId, trigger }) => axiosDispatcher({
     url: `${strategyPath}/${strategyId}/communication/${communicationId}`,
     method: 'DELETE',
-  }).then(() => commit('deleteCommunication', { communicationId, strategyId })),
+  }).then(() => commit('deleteCommunication', { communicationId, strategyId, trigger })),
 
   getCommunicationTemplate: ({ _ }, { communicationId, strategyId }) => axiosDispatcher({
     url: `${strategyPath}/${strategyId}/communication/${communicationId}/template`,

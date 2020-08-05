@@ -2,6 +2,7 @@ const findStrategyIndex = (strategies, strategyId) => strategies.findIndex(s => 
 const findCommunicationIndex = (communications, communicationId) => communications.findIndex(c => c.id === communicationId)
 
 const StrategyMutations = {
+  addStrategy: (state, strategy) => (state.strategies.push(strategy)),
   updateStrategy: (state, strategyData) => {
     const { strategies } = state
     strategies.map((strategy, index) => {
@@ -14,12 +15,14 @@ const StrategyMutations = {
 
   addCommunications: (state, { response, strategyId }) => {
     const strategyIndex = findStrategyIndex(state.strategies, strategyId)
-    state.strategies[strategyIndex].communications.push(response)
+    let trigger = state.strategies[strategyIndex].triggers
+    if (!trigger[response.triggerType]) trigger[response.triggerType] = { communications: [] }
+    trigger[response.triggerType].communications.push(response)
   },
-  deleteCommunication: (state, { communicationId, strategyId }) => {
+  deleteCommunication: (state, { communicationId, strategyId, trigger }) => {
     const strategyIndex = findStrategyIndex(state.strategies, strategyId)
     const communicationIndex = findCommunicationIndex(state.strategies[strategyIndex].communications, communicationId)
-    state.strategies[strategyIndex].communications.splice(communicationIndex, 1)
+    state.strategies[strategyIndex].triggers[trigger].communications.splice(communicationIndex, 1)
   },
 }
 
