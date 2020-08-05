@@ -5,7 +5,6 @@
       :visible.sync="isVisible"
       :title="communication.name"
       class="communication-editor__dialog"
-      width="750px"
     >
       <div class="communication-editor__data-area">
         <el-input
@@ -13,15 +12,21 @@
           placeholder="Título da mensagem"
           @input="autosave"
         />
-        <el-input
-          v-if="communication.type == 'SMS'"
-          v-model="template.body"
-          class="text-area"
-          type="textarea"
-          :autosize="{ minRows: 23 }"
-          placeholder="Edite seu SMS aqui."
-          @input="autosave"
-        />
+
+        <div
+          v-if="template.contentType === 'TEXT'"
+          class="communication-editor__editor-fieldset show-toolbar"
+        >
+          <el-input
+            v-model="template.body"
+            type="textarea"
+            maxlength="120"
+            show-word-limit
+            placeholder="Edite seu SMS aqui!"
+            class="communication-editor__textarea"
+            @input="autosave"
+          />
+        </div>
 
         <div
           v-else
@@ -83,7 +88,7 @@ export default {
     return {
       template: {},
       editorOptions: {
-        placeholder: 'Digite a mensagem aqui!',
+        placeholder: 'Edite seu e-mail aqui!',
         modules: {
           toolbar: [
             [{ font: [] }],
@@ -130,19 +135,13 @@ export default {
       if (current) this.template = current
     },
   },
-  beforeMount() {
-    if (!this.templateToEdit.contentType) {
-      this.template = this.communication.communicationType === 'EMAIL' ? 'HTML' : 'TEXT'
-    }
-  },
   methods: {
     ...mapActions(['changeCommunicationTemplate']),
 
     autosave({ _, html, text }) {
-      console.log('AUTO SAVE')
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
-        delete this.template.contentType
+        this.template.communicationType = this.communication.type
         this.changeCommunicationTemplate({
           template: this.template,
           communicationId: this.templateToEdit.id,
@@ -163,17 +162,6 @@ export default {
   .communication-editor__data-area {
     width: 100%;
 
-    .text-area {
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      // width: 100%;
-      margin-top: 12px;
-
-      > .el-textarea__inner {
-        height: calc(100% - 50px);
-      }
-    }
-
     .communication-editor__editor-fieldset {
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -184,10 +172,6 @@ export default {
       .communication-editor__quill {
         padding: 16px;
         height: calc(100% - 32px);
-      }
-
-      .communication-editor__textarea {
-        height: 100% !important;
       }
     }
   }
@@ -212,6 +196,8 @@ export default {
 </style>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .communication-editor {
   .communication-editor__dialog {
     display: flex;
@@ -226,8 +212,28 @@ export default {
 
     .el-dialog {
       width: 100% !important;
+      height: 100%;
+
       .el-dialog__body {
-        height: calc(100vh - 90px);
+        height: calc(100% - 104px);
+      }
+    }
+  }
+
+  .communication-editor__data-area {
+    .communication-editor__editor-fieldset {
+      .communication-editor__textarea {
+        height: 100%;
+
+        .el-textarea__inner {
+          border: none;
+          resize: none;
+          height: 100%;
+        }
+
+        .el-input__count {
+          color: $--color-text-secondary;
+        }
       }
     }
   }

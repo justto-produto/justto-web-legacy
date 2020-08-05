@@ -57,10 +57,10 @@ const StrategyActions = {
     data: sortedIds,
   }),
 
-  deleteCommunication: ({ commit }, { communicationId, strategyId }) => axiosDispatcher({
+  deleteCommunication: ({ commit }, { communicationId, strategyId, trigger }) => axiosDispatcher({
     url: `${strategyPath}/${strategyId}/communication/${communicationId}`,
     method: 'DELETE',
-  }).then(() => commit('deleteCommunication', { communicationId, strategyId })),
+  }).then(() => commit('deleteCommunication', { communicationId, strategyId, trigger })),
 
   getCommunicationTemplate: ({ _ }, { communicationId, strategyId }) => axiosDispatcher({
     url: `${strategyPath}/${strategyId}/communication/${communicationId}/template`,
