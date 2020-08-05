@@ -65,6 +65,13 @@
           :value="type.value"
         />
       </el-select>
+
+      <div
+        v-if="istTypesNull"
+        class="strategies-area__alert"
+      >
+        Sem tipo a estratégia <strong>não funciona!</strong><br> Escolha ao menos um!
+      </div>
     </div>
   </el-card>
 </template>
@@ -119,6 +126,9 @@ export default {
     strategyValidator() {
       const rules = ['PAYMENT', 'RECOVERY']
       return !rules.every(rule => Object.values(this.strategyTypes).includes(rule))
+    },
+    istTypesNull() {
+      return Object.keys(this.strategyTypes).length === 0
     },
   },
   mounted() {
@@ -226,6 +236,11 @@ export default {
 
         & > .jus-tag-container {
           height: 100%;
+        }
+
+        .strategies-area__alert {
+          color: #ffd500;
+          padding: 5px;
         }
       }
     }
