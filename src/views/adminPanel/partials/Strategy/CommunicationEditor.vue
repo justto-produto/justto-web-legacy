@@ -158,7 +158,7 @@ export default {
         case 'SAVED':
         default: {
           const lastUpdate = this.template.updatedAt
-          return `Template salvo ${lastUpdate.dateTime ? this.$moment(lastUpdate.dateTime).from(new Date()) : ''}`
+          return `Template salvo ${lastUpdate && lastUpdate.dateTime ? this.$moment(lastUpdate.dateTime).from(new Date()) : ''}`
         }
       }
     },
