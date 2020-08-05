@@ -28,7 +28,7 @@
       <jus-text-editable
         :value="strategyData.name"
         type="title"
-        @hasEdition="changeEstrategyData($event, 'name')"
+        @hasEdition="changeStrategyData($event, 'name')"
       />
     </div>
 
@@ -57,16 +57,33 @@
         :is-private="strategyData.privateStrategy"
         :can-add-tag="strategyData.privateStrategy"
         title="Times"
-        @change="changeEstrategyData($event, 'workspaces')"
+        @change="changeStrategyData($event, 'workspaces')"
         @showInput="loadWorkspaces"
       />
     </div>
 
     <div class="strategy-card__strategies-area">
-      <JusTagContainer
-        :tag-list="[{name: 'Pagamento'}]"
-        @change="changeEstrategyData($event, 'types')"
-      />
+      <el-select
+        v-model="strategyTypes"
+        filterable
+        multiple
+        placeholder="Selecionar tipos"
+        @change="changeStrategyData($event, 'types')"
+      >
+        <el-option
+          v-for="(type, index) in defaultStrategyTypes"
+          :key="index"
+          :label="type.name"
+          :value="type.value"
+        />
+      </el-select>
+
+      <div
+        v-if="istTypesNull"
+        class="strategies-area__alert"
+      >
+        Sem tipo a estratégia <strong>não funciona!</strong><br> Escolha ao menos um!
+      </div>
     </div>
   </el-card>
 </template>
@@ -95,23 +112,63 @@ export default {
   data() {
     return {
       strategyData: this.strategy,
+      strategyTypes: '',
+      defaultStrategyTypes: [
+        {
+          name: 'PAGAMENTO',
+          value: 'PAYMENT',
+        },
+        {
+          name: 'COBRANÇA',
+          value: 'RECOVERY',
+        },
+        {
+          name: 'OBRIGAÇÃO DE FAZER',
+          value: 'OBLIGATION',
+        },
+        {
+          name: 'DESCONTO',
+          value: 'DISCOUNT',
+        },
+      ],
     }
   },
+  computed: {
+    strategyValidator() {
+      const rules = ['PAYMENT', 'RECOVERY']
+      return !rules.every(rule => Object.values(this.strategyTypes).includes(rule))
+    },
+    istTypesNull() {
+      return Object.keys(this.strategyTypes).length === 0
+    },
+  },
+  mounted() {
+    this.strategyTypes = this.strategyData.types
+  },
   methods: {
-    changeEstrategyData(val, key) {
-      this.strategyData[key] = val
-      this.$emit('changeEstrategyData', this.strategyData)
+    changeStrategyData(val, key) {
+      if (this.strategyValidator) {
+        this.strategyData[key] = val
+        this.$emit('changeStrategyData', this.strategyData)
+      } else {
+        this.strategyTypes.pop()
+
+        this.$jusNotification({
+          title: 'Ops!!',
+          message: 'Estratégia com o tipo indenizatório e cobrança não pode existir. Por favor, verifique os tipos desta estratégia.',
+          type: 'warning',
+        })
+      }
     },
 
     changeStrategyPrivacy() {
       this.strategyData.privateStrategy = !this.strategyData.privateStrategy
-      this.$emit('changeEstrategyData', this.strategyData)
+      this.$emit('changeStrategyData', this.strategyData)
     },
 
     changeStrategyActive() {
-      console.log('foi?')
       this.strategyData.active = !this.strategyData.active
-      this.$emit('changeEstrategyData', this.strategyData)
+      this.$emit('changeStrategyData', this.strategyData)
     },
 
     emitCopyStrategy() {
@@ -120,7 +177,6 @@ export default {
         name: `${this.strategyData.name} (Cópia)`,
       })
     },
-
     loadWorkspaces() {
       this.$emit('loadWorkspaces', this.strategyData.id)
     },
@@ -207,6 +263,11 @@ export default {
 
         & > .jus-tag-container {
           height: 100%;
+        }
+
+        .strategies-area__alert {
+          color: #ffd500;
+          padding: 5px;
         }
       }
     }
