@@ -32,12 +32,17 @@
           v-else
           class="communication-editor__editor-fieldset show-toolbar"
         >
-          <quill-editor
-            ref="messageEditor"
-            v-model="template.body"
-            :options="editorOptions"
-            class="communication-editor__quill"
-            @input="autosave"
+          <!-- <quill-editor
+-            ref="messageEditor"
+-            v-model="template.body"
+-            :options="editorOptions"
+-            class="communication-editor__quill"
+-            @input="autosave"
+-          /> -->
+          {{ template.body }} -- asdasda
+          <Editor
+            :text="template.body"
+            @update-text="autosave"
           />
         </div>
       </div>
@@ -54,16 +59,12 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { quillEditor } from 'vue-quill-editor'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
 
 export default {
   name: 'CommunicationEditor',
   components: {
     JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
-    quillEditor,
+    Editor: () => import('./Editor'),
   },
   props: {
     templateToEdit: {
