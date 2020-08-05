@@ -14,7 +14,7 @@
           :available-workspaces="workspaces"
           :strategy="strategy"
           class="panel-strategy__card"
-          @changeEstrategyData="updateStrategy"
+          @changeStrategyData="updateStrategy"
           @copyStrategy="copyStrategyHandler"
           @loadWorkspaces="getStrategyAvailableWorkspaces"
         />
@@ -29,7 +29,7 @@
           :available-workspaces="workspaces"
           :strategy="strategy"
           class="panel-strategy__card"
-          @changeEstrategyData="updateStrategy"
+          @changeStrategyData="updateStrategy"
           @copyStrategy="copyStrategyHandler"
           @loadWorkspaces="getStrategyAvailableWorkspaces"
         />

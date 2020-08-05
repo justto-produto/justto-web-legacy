@@ -16,7 +16,7 @@
       <jus-text-editable
         :value="strategyData.name"
         type="title"
-        @hasEdition="changeEstrategyData($event, 'name')"
+        @hasEdition="changeStrategyData($event, 'name')"
       />
     </div>
 
@@ -45,7 +45,7 @@
         :is-private="strategyData.privateStrategy"
         :can-add-tag="strategyData.privateStrategy"
         title="Times"
-        @change="changeEstrategyData($event, 'workspaces')"
+        @change="changeStrategyData($event, 'workspaces')"
         @showInput="loadWorkspaces"
       />
     </div>
@@ -56,7 +56,7 @@
         filterable
         multiple
         placeholder="Selecionar tipos"
-        @change="changeEstrategyData($event, 'types')"
+        @change="changeStrategyData($event, 'types')"
       >
         <el-option
           v-for="(type, index) in defaultStrategyTypes"
@@ -125,10 +125,10 @@ export default {
     this.strategyTypes = this.strategyData.types
   },
   methods: {
-    changeEstrategyData(val, key) {
+    changeStrategyData(val, key) {
       if (this.strategyValidator) {
         this.strategyData[key] = val
-        this.$emit('changeEstrategyData', this.strategyData)
+        this.$emit('changeStrategyData', this.strategyData)
       } else {
         this.strategyTypes.pop()
 
@@ -141,7 +141,7 @@ export default {
     },
     changeEstrategyPrivacy() {
       this.strategyData.privateStrategy = !this.strategyData.privateStrategy
-      this.$emit('changeEstrategyData', this.strategyData)
+      this.$emit('changeStrategyData', this.strategyData)
     },
     emitCopyStrategy() {
       this.$emit('copyStrategy', {
