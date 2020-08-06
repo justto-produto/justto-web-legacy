@@ -97,7 +97,7 @@ export default {
   computed: {
     ...mapGetters({
       strategies: 'getStrategies',
-      workspaces: 'availableWorkspaces',
+      workspaces: 'getAvailableWorkspaces',
     }),
 
     filteredStrategies() {
@@ -113,17 +113,17 @@ export default {
     },
   },
   beforeMount() {
-    this.getStrategies().finally(() => (this.loading = false))
+    this.getAvailableWorkspace()
     this.getAvaliableVariablesToTemplate()
-    this.myWorkspace()
+    this.getStrategies().finally(() => (this.loading = false))
   },
   methods: {
     ...mapActions([
       'addStrategy',
       'cloneStrategy',
-      'getStrategies',
       'getAvaliableVariablesToTemplate',
-      'myWorkspace',
+      'getAvailableWorkspace',
+      'getStrategies',
       'updateStrategy',
     ]),
 

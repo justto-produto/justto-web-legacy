@@ -1,3 +1,5 @@
+@import '@/styles/colors.scss';
+
 .el-select {
   .el-tag__close.el-icon-close {
     background-color: #f2f4f6;
@@ -9,6 +11,8 @@
   }
   .el-tag--info {
     color: #424242;
+    border-color: $--color-primary-light-8;
+    background-color: $--color-primary-light-9;
   }
 }
 

@@ -10,7 +10,7 @@ const StrategyMutations = {
     })
   },
   setStrategies: (state, strategies) => (state.strategies = strategies),
-  setStrategyAvailableWorkspaces: (state, workspaces) => (state.strategyAvailableWorkspaces = workspaces),
+  setAvailableWorkspace: (state, availableWorkspaces) => (state.availableWorkspaces = availableWorkspaces),
   setAvaliableVariablesToTemplate: (state, variables) => (state.avaliableVariablesToTemplate = variables),
 
   addCommunications: (state, { response, strategyId }) => {
