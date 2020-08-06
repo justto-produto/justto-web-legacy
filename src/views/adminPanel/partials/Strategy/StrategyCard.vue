@@ -157,7 +157,15 @@ export default {
     },
 
     changeStrategyWorkspaces() {
-      this.strategyData.workspaces = this.availableWorkspaces.filter(w => this.associatedWorkspaces.includes(w.id))
+      this.strategyData.workspaces = this.availableWorkspaces
+        .filter(w => this.associatedWorkspaces.includes(w.workspace.id))
+        .map(w => {
+          return {
+            id: w.workspace.id,
+            name: w.workspace.name,
+            teamName: w.workspace.teamName,
+          }
+        })
       this.$emit('changeStrategyData', this.strategyData)
     },
 
