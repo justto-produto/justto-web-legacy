@@ -8,9 +8,10 @@
         trigger="click"
       >
         <CommunicationPopover
+          ref="communicationsPopover"
           :triggers="triggers"
           :strategyId="strategyId"
-          @edit-communication="handleEditCommunication"
+          @edit-communication="handleEditTemplate"
         />
 
         <li
@@ -43,6 +44,7 @@
       :strategy-id="strategyId"
       :communication="communication"
       :visible.sync="editorDialogIsVisible"
+      @change-communication-recipient="handleEditCommunication"
     />
   </article>
 </template>
@@ -86,12 +88,17 @@ export default {
   methods: {
     ...mapActions(['getCommunicationTemplate']),
 
-    handleEditCommunication(communication) {
+    handleEditTemplate(communication) {
       this.getCommunicationTemplate({ communicationId: communication.id, strategyId: this.strategyId }).then(response => {
         this.communication = communication
         this.communicationToEdit = response
         this.editorDialogIsVisible = true
       })
+    },
+
+    handleEditCommunication(params) {
+      console.log(params)
+      this.$refs.communicationsPopover.handleCommunicationRecipient(params.communication, params.recipient)
     },
 
     translateRecipientName(name) {
