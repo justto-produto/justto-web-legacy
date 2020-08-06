@@ -6,7 +6,6 @@
     class="contracts-modal"
     width="50%"
   >
-    <!-- {{ inEdit }} -->
     <el-form
       v-if="form"
       ref="contractForm"
@@ -351,18 +350,6 @@
         </el-collapse-item>
       </el-collapse>
     </el-form>
-    <!-- <span
-      slot="footer"
-      class="dialog-footer"
-    >
-      <el-button @click="closeModal">Cancelar</el-button>
-      <el-button
-        type="primary"
-        @click.native.prevent="validateForm"
-      >
-        Salvar
-      </el-button>
-    </span> -->
   </el-dialog>
 </template>
 
