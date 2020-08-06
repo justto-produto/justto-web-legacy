@@ -759,8 +759,8 @@
         width="70%"
       >
         <el-form
-          v-loading="editDisputeDialogLoading"
           ref="disputeForm"
+          v-loading="editDisputeDialogLoading"
           :model="disputeForm"
           :rules="disputeFormRules"
           label-position="top"
@@ -774,8 +774,8 @@
                 prop="disputeCode"
               >
                 <el-input
-                  v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
                   v-model="disputeForm.disputeCode"
+                  v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
                 />
               </el-form-item>
             </el-col>
@@ -854,8 +854,8 @@
                     :class="{ 'is-disabled': !disputeForm.disputeUpperRange }"
                   >
                     <money
-                      :disabled="!disputeForm.disputeUpperRange"
                       v-model="disputeForm.lastOfferValue"
+                      :disabled="!disputeForm.disputeUpperRange"
                       class="el-input__inner"
                       data-testid="proposal-value-input"
                       @change.native="lastOfferValueHasChanged = true"
@@ -1024,8 +1024,8 @@
           </ul>
         </el-alert>
         <el-form
-          v-loading="editRoleDialogLoading"
           ref="roleForm"
+          v-loading="editRoleDialogLoading"
           :model="roleForm"
           :rules="roleRules"
           label-position="top"
@@ -1046,8 +1046,8 @@
             prop="documentNumber"
           >
             <el-input
-              v-mask="['###.###.###-##', '##.###.###/####-##']"
               v-model="roleForm.documentNumber"
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
               @change="documentNumberHasChanged = true"
             />
           </el-form-item>
@@ -1137,8 +1137,8 @@
             prop="phone"
           >
             <el-input
-              v-mask="['(##) ####-####', '(##) #####-####']"
               v-model="roleForm.phone"
+              v-mask="['(##) ####-####', '(##) #####-####']"
               @keydown.enter.native="addPhone()"
               @blur="addPhone()"
             >
@@ -1364,8 +1364,8 @@
             prop="document"
           >
             <el-input
-              v-mask="['###.###.###-##', '##.###.###/####-##']"
               v-model="addBankForm.document"
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
             />
           </el-form-item>
           <el-form-item
