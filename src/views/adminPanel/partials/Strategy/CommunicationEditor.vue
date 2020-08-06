@@ -216,6 +216,8 @@ export default {
 
   .communication-editor__data-area {
     .communication-editor__editor-fieldset {
+      overflow: scroll;
+
       .communication-editor__textarea {
         height: 100%;
 

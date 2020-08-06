@@ -294,11 +294,9 @@ export default {
   },
   methods: {
     showImagePrompt(command) {
-      this.$refs.imageModal.showModal({ command })
-    },
-    addCommand(data) {
-      if (data.command !== null) {
-        data.command(data.data)
+      const src = prompt('Enter the url of your image here')
+      if (src !== null) {
+        command({ src })
       }
     },
   },
