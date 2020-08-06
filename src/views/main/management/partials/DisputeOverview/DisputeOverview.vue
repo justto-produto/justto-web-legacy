@@ -58,18 +58,20 @@
               data-testid="dispute-infoline"
             >
               <span class="title">Processo:</span>
-              <span v-if="!!getDisputeProperties.ENDERECO_DO_PROCESSO">
+              <span
+                v-if="!!getDisputeProperties.ENDERECO_DO_PROCESSO"
+                class="code"
+              >
                 <a
+                  class="link"
                   :href="getDisputeProperties.ENDERECO_DO_PROCESSO"
                   target="_blank"
                 >
                   {{ dispute.code }}
-                  <sup>
-                    <jus-icon
-                      style="height: 0.75rem"
-                      icon="external-link"
-                    />
-                  </sup>
+                  <jus-icon
+                    class="icon"
+                    icon="external-link"
+                  />
                 </a>
               </span>
               <span v-else>{{ dispute.code }}</span>
@@ -425,8 +427,8 @@
               <div class="dispute-overview-view__info-line">
                 <span class="title">Função:</span>
                 <span
-                  v-for="(title, index) in roleTitleSort(role.roles)"
-                  :key="`${index}-${title.index}`"
+                  v-for="(title, title_index) in roleTitleSort(role.roles)"
+                  :key="`${title_index}-${title.index}`"
                 >
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
@@ -449,8 +451,8 @@
               >
                 <span class="title">Telefone(s):</span>
                 <span
-                  v-for="(phone, index) in role.phones.filter(p => !p.archived)"
-                  :key="`${index}-${phone.id}`"
+                  v-for="(phone, phone_index) in role.phones.filter(p => !p.archived)"
+                  :key="`${phone_index}-${phone.id}`"
                   :class="{'is-main': phone.isMain}"
                 >
                   <el-radio
@@ -491,8 +493,8 @@
               >
                 <span class="title">E-mail(s):</span>
                 <span
-                  v-for="(email, index) in role.emails.filter(e => !e.archived)"
-                  :key="`${index}-${email.id}`"
+                  v-for="(email, email_index) in role.emails.filter(e => !e.archived)"
+                  :key="`${email_index}-${email.id}`"
                   :class="{'is-main': email.isMain}"
                 >
                   <el-checkbox
@@ -530,8 +532,8 @@
               >
                 <span class="title">OAB(s):</span>
                 <span
-                  v-for="(oab, index) in role.oabs.filter(o => !o.archived)"
-                  :key="`${index}-${oab.id}`"
+                  v-for="(oab, oab_index) in role.oabs.filter(o => !o.archived)"
+                  :key="`${oab_index}-${oab.id}`"
                   :class="{'is-main': oab.isMain}"
                 >
                   <el-checkbox
@@ -565,8 +567,8 @@
                   class="dispute-overview-view__bank-checkbox"
                 >
                   <el-checkbox
-                    v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
-                    :key="`${index}-${bankAccount.id}`"
+                    v-for="(bankAccount, bank_account_index) in role.bankAccounts.filter(b => !b.archived)"
+                    :key="`${bank_account_index}-${bankAccount.id}`"
                     :label="bankAccount.id"
                     border
                     class="bordered"
@@ -1441,6 +1443,7 @@ import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 import DisputeAttachments from './sections/DisputeAttachments'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DisputeOverview',
@@ -1560,9 +1563,9 @@ export default {
     }
   },
   computed: {
-    getDisputeProperties() {
-      return this.$store.getters.disputeProprieties
-    },
+    ...mapGetters({
+      getDisputeProperties: 'disputeProprieties',
+    }),
     ufList() {
       const ufList = this.namesakeList.map(namesake => namesake.uf)
       return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
@@ -2371,6 +2374,21 @@ export default {
       }
       .jus-avatar-user {
         margin-right: 4px;
+      }
+    }
+    .code {
+      .link {
+        .icon {
+          height: 0.9rem;
+          display: none;
+        }
+      }
+      &:hover {
+        .link {
+          .icon {
+            display: inline;
+          }
+        }
       }
     }
     .configurations {
