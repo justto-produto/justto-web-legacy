@@ -45,7 +45,6 @@ const mutations = {
   setBlackList(state, blackList) {
     if (blackList) state.blackList = blackList
   },
-  setAvailableWorkspaces: (state, workspacesList) => (state.availableWorkspaces = workspacesList),
 }
 
 export default mutations

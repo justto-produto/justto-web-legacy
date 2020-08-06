@@ -8,6 +8,11 @@ const StrategyActions = {
     mutation: 'setStrategies',
   }),
 
+  getAvailableWorkspace: () => axiosDispatcher({
+    url: 'api/strategy/workspace/available',
+    mutation: 'setAvailableWorkspace',
+  }),
+
   addStrategy: ({ _ }, strategy) => axiosDispatcher({
     url: strategyPath,
     method: 'POST',
