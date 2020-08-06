@@ -167,7 +167,7 @@ export default {
     },
 
     changeStrategyWorkspaces() {
-      this.strategyData.workspaces = this.availableWorkspaces.filter(w => this.associatedWorkspaces.includes(w.workspace.id))
+      this.strategyData.workspaces = this.availableWorkspaces.filter(w => this.associatedWorkspaces.includes(w.id))
       this.$emit('changeStrategyData', this.strategyData)
     },
 
