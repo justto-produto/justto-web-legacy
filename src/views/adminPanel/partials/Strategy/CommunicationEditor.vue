@@ -3,10 +3,8 @@
     <el-dialog
       v-if="visible"
       :visible.sync="isVisible"
-      :title="communication.name"
       class="communication-editor__dialog"
     >
-
       <div slot="title">
         <span class="el-dialog__title">
           {{ communication.name }}
@@ -72,12 +70,9 @@
           v-else
           class="communication-editor__editor-fieldset show-toolbar"
         >
-          <quill-editor
-            ref="messageEditor"
-            v-model="template.body"
-            :options="editorOptions"
-            class="communication-editor__quill"
-            @input="autosave"
+          <Editor
+            :text="template.body"
+            @change-text="saveHtml($event)"
           />
         </div>
       </div>
@@ -94,16 +89,12 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { quillEditor } from 'vue-quill-editor'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
 
 export default {
   name: 'CommunicationEditor',
   components: {
     JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
-    quillEditor,
+    Editor: () => import('./Editor'),
   },
   props: {
     templateToEdit: {
@@ -148,7 +139,6 @@ export default {
     ...mapGetters({
       variables: 'getAvaliableVariablesToTemplate',
     }),
-
     statusText() {
       switch (status) {
         case 'FAILD':
@@ -162,20 +152,6 @@ export default {
         }
       }
     },
-
-    htmlMessage() {
-      return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-        <html xmlns="http://www.w3.org/1999/xhtml">
-          <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          </head>
-          <body>
-            ${this.template.body}
-          </body>
-        </html>`
-    },
-
     isVisible: {
       get() {
         return this.visible
@@ -193,11 +169,12 @@ export default {
   methods: {
     ...mapActions(['changeCommunicationTemplate']),
 
-    autosave({ _, html, text }) {
+    autosave() {
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
         this.status = 'SAVING'
         this.template.communicationType = this.communication.type
+
         this.changeCommunicationTemplate({
           template: this.template,
           communicationId: this.templateToEdit.id,
@@ -208,7 +185,20 @@ export default {
         }).catch(() => { this.status = 'FAILD' })
       }, 2000)
     },
-
+    saveHtml(text) {
+      const header = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+          <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          </head>
+          <body>
+            ${text}
+          </body>
+        </html>`
+      this.template.body = header
+      this.autosave()
+    },
     handleCommunicationRecipient(communication, recipient) {
       this.$emit('change-communication-recipient', { communication, recipient })
     },
@@ -328,6 +318,8 @@ export default {
 
   .communication-editor__data-area {
     .communication-editor__editor-fieldset {
+      overflow: scroll;
+
       .communication-editor__textarea {
         height: 100%;
 
