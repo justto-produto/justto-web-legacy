@@ -21,7 +21,6 @@ const getters = {
   isAdminProfile: state => state.profile === 'ADMINISTRATOR',
   workspaceBlackList: state => state.blackList,
   workspaceProperties: state => state.properties,
-  availableWorkspaces: state => state.availableWorkspaces,
 }
 
 export default getters

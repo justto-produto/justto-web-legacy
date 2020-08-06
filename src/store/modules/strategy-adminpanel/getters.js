@@ -1,6 +1,6 @@
 const StrategyGetters = {
   getStrategies: state => state.strategies,
-  getStrategyAvailableWorkspaces: state => state.strategyAvailableWorkspaces,
+  getAvailableWorkspaces: state => state.availableWorkspaces,
   getAvaliableVariablesToTemplate: state => state.avaliableVariablesToTemplate,
 }
 

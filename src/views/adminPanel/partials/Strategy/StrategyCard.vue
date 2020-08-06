@@ -53,19 +53,26 @@
     <div class="strategy-card__workspaces-area">
       <el-select
         v-model="associatedWorkspaces"
-        :placeholder="workspacesPlaceholder"
+        placeholder="Selecione um workspace"
         :disabled="!strategyData.privateStrategy"
         multiple
         filterable
         @change="changeStrategyWorkspaces($event)"
       >
         <el-option
-          v-for="item in availableWorkspaces"
-          :key="`${strategyData.id}${item.workspace.id}`"
-          :label="item.workspace.teamName"
-          :value="item.workspace.id"
+          v-for="workspace in availableWorkspaces"
+          :key="`${strategyData.id}${workspace.id}`"
+          :label="workspace.teamName"
+          :value="workspace.id"
         />
       </el-select>
+
+      <div
+        v-if="isWorkspacesNull"
+        class="strategy-card__select-alert"
+      >
+        {{ workspacesPlaceholder }}
+      </div>
     </div>
 
     <div class="strategy-card__strategies-area">
@@ -73,7 +80,7 @@
         v-model="strategyData.types"
         filterable
         multiple
-        placeholder="Selecionar tipos"
+        placeholder="Selecione tipos"
         @change="changeStrategyTypes()"
       >
         <el-option
@@ -86,9 +93,9 @@
 
       <div
         v-if="istTypesNull"
-        class="strategies-area__alert"
+        class="strategy-card__select-alert"
       >
-        Sem tipo a estratégia <strong>não funciona!</strong><br> Escolha ao menos um!
+        Sem tipo a estratégia <strong>não funciona!</strong> Escolha ao menos um!
       </div>
     </div>
   </el-card>
@@ -134,7 +141,10 @@ export default {
       return this.strategyData.privateStrategy ? 'Nimgém pode ver essa estratégia. Associe um time ou torne-a pública.' : 'Todos os times possuem acesso a esta estratégia.'
     },
     istTypesNull() {
-      return Object.keys(this.strategyData.types).length === 0
+      return !Object.keys(this.strategyData.types).length
+    },
+    isWorkspacesNull() {
+      return !this.associatedWorkspaces.length
     },
   },
   methods: {
@@ -157,15 +167,7 @@ export default {
     },
 
     changeStrategyWorkspaces() {
-      this.strategyData.workspaces = this.availableWorkspaces
-        .filter(w => this.associatedWorkspaces.includes(w.workspace.id))
-        .map(w => {
-          return {
-            id: w.workspace.id,
-            name: w.workspace.name,
-            teamName: w.workspace.teamName,
-          }
-        })
+      this.strategyData.workspaces = this.availableWorkspaces.filter(w => this.associatedWorkspaces.includes(w.workspace.id))
       this.$emit('changeStrategyData', this.strategyData)
     },
 
@@ -269,11 +271,14 @@ export default {
         & > .jus-tag-container {
           height: 100%;
         }
+      }
 
-        .strategies-area__alert {
-          color: #ffd500;
-          padding: 5px;
-        }
+      .strategy-card__select-alert {
+        color: $--color-text-secondary;
+        font-size: 12px;
+        line-height: 14px;
+        padding: 6px;
+        padding-bottom: 0;
       }
     }
   }

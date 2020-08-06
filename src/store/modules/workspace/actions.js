@@ -5,7 +5,6 @@ const actions = {
     return axiosDispatcher({
       url: 'api/workspaces/my',
       headers: { Workspace: '' },
-      mutation: 'setAvailableWorkspaces',
     })
   },
   getWorkspace({ getters }) {
