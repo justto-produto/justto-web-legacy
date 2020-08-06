@@ -58,7 +58,21 @@
               data-testid="dispute-infoline"
             >
               <span class="title">Processo:</span>
-              <span>{{ dispute.code }}</span>
+              <span v-if="!!getDisputeProperties.ENDERECO_DO_PROCESSO">
+                <a
+                  :href="getDisputeProperties.ENDERECO_DO_PROCESSO"
+                  target="_blank"
+                >
+                  {{ dispute.code }}
+                  <sup>
+                    <jus-icon
+                      style="height: 0.75rem"
+                      icon="external-link"
+                    />
+                  </sup>
+                </a>
+              </span>
+              <span v-else>{{ dispute.code }}</span>
             </div>
             <div
               v-if="dispute.campaign"
@@ -1546,6 +1560,9 @@ export default {
     }
   },
   computed: {
+    getDisputeProperties() {
+      return this.$store.getters.disputeProprieties
+    },
     ufList() {
       const ufList = this.namesakeList.map(namesake => namesake.uf)
       return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
