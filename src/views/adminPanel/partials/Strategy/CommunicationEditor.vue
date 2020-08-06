@@ -32,17 +32,9 @@
           v-else
           class="communication-editor__editor-fieldset show-toolbar"
         >
-          <!-- <quill-editor
--            ref="messageEditor"
--            v-model="template.body"
--            :options="editorOptions"
--            class="communication-editor__quill"
--            @input="autosave"
--          /> -->
-          {{ template.body }} -- asdasda
           <Editor
             :text="template.body"
-            @update-text="autosave"
+            @change-text="autosave($event)"
           />
         </div>
       </div>
@@ -87,7 +79,9 @@ export default {
   },
   data() {
     return {
-      template: {},
+      template: {
+        body: '',
+      },
       editorOptions: {
         placeholder: 'Edite seu e-mail aqui!',
         modules: {
@@ -140,6 +134,9 @@ export default {
     ...mapActions(['changeCommunicationTemplate']),
 
     autosave({ _, html, text }) {
+      if (html) {
+        this.template.body = html
+      }
       clearTimeout(this.saveDebounce)
       this.saveDebounce = setTimeout(() => {
         this.template.communicationType = this.communication.type
