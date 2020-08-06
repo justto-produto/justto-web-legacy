@@ -223,6 +223,7 @@ export default {
     width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
     .communication-editor__header {
       display: flex;
@@ -262,6 +263,7 @@ export default {
       border: 1px solid #ccc;
       border-radius: 4px;
       width: 100%;
+      height: 85%;
       flex: 1;
       margin-top: 12px;
 
@@ -299,8 +301,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
     padding: 10px;
+
     .el-dialog__body {
       display: flex;
       height: 100%;
@@ -318,7 +320,6 @@ export default {
 
   .communication-editor__data-area {
     .communication-editor__editor-fieldset {
-      overflow: scroll;
 
       .communication-editor__textarea {
         height: 100%;
