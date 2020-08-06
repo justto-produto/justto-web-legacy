@@ -205,16 +205,11 @@
       class="editor__content"
       :editor="editor"
     />
-    <ImageModal
-      ref="imageModal"
-      @onClose="addCommand"
-    />
   </div>
 </template>
 <script>
 
 import Icon from '@/components/Icon'
-import ImageModal from './ImageModal.vue'
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
 import {
   Blockquote,
@@ -247,7 +242,6 @@ export default {
     EditorMenuBar,
     EditorContent,
     Icon,
-    ImageModal,
   },
   props: {
     text: {
@@ -289,9 +283,10 @@ export default {
     }
   },
   mounted() {
+    this.editor.setContent(this.text)
     this.editor.on('update', ({ getHTML }) => {
       const text = getHTML()
-      this.$emit('change-text', { html: text })
+      this.$emit('change-text', text)
     })
   },
   beforeDestroy() {
