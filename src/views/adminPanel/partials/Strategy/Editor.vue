@@ -304,4 +304,13 @@ export default {
 </script>
 <style lang="scss">
 @import '@/styles/editor/main.scss';
+
+.editor {
+  height: 90%;
+
+  .editor__content {
+    overflow: scroll;
+    height: 100%;
+  }
+}
 </style>
