@@ -484,6 +484,7 @@ export default {
       )
 
       this.hideCollapseItems()
+      this.closeModal()
     },
     /**
      * Valida se o contrato está com status Inativo
