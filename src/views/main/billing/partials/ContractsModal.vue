@@ -20,9 +20,7 @@
       >
         <el-collapse-item
           v-for="(contract, contractCount) in filteredContracts"
-          :id="`collapseItem${contractCount}`"
           :key="contractCount"
-          :ref="`collapseItem${contractCount}`"
           :name="contractCount"
           class="transition-none"
         >
@@ -50,7 +48,6 @@
                   v-model="contract.status"
                   :disabled="isContractInactive(contract)"
                   placeholder="Ex.: Ativo"
-                  @focus="inEdit[contractCount] = true"
                 >
                   <el-option
                     v-for="(status, key, index) in contractStatus"
@@ -73,7 +70,6 @@
                   type="date"
                   format="dd/MM/yyyy"
                   value-format="yyyy-MM-dd"
-                  @focus="inEdit[contractCount] = true"
                 />
                 <el-form-item />
               </el-form-item>
@@ -89,7 +85,6 @@
                   v-model="contract.invoiceDueDays"
                   :disabled="isContractInactive(contract)"
                   placeholder="Dia do mês"
-                  @focus="inEdit[contractCount] = true"
                 >
                   <el-option
                     v-for="(day, dayCount) in 29"
@@ -110,7 +105,6 @@
                   v-model="contract.invoiceClosingDay"
                   :disabled="isContractInactive(contract)"
                   placeholder="Dia do mês"
-                  @focus="inEdit[contractCount] = true"
                 >
                   <el-option
                     v-for="(day, dayCount) in 29"
@@ -133,7 +127,6 @@
                   v-model="contract.planId"
                   :disabled="isContractInactive(contract)"
                   placeholder="Plano"
-                  @focus="inEdit[contractCount] = true"
                 >
                   <el-option
                     v-for="(plan, index) in plans"
@@ -155,7 +148,6 @@
                   :disabled="isContractInactive(contract)"
                   :class="{'is-inactive': isContractInactive(contract)}"
                   class="el-input__inner"
-                  @input="inEdit[contractCount] = true"
                 />
                 <el-form-item />
               </el-form-item>
@@ -176,13 +168,11 @@
                   :readonly="isContractInactive(contract)"
                   :class="{'is-inactive': isContractInactive(contract)}"
                   class="el-input__inner"
-                  @input="inEdit[contractCount] = true"
                 />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row
-            v-if="!!inEdit[contractCount]"
             :gutter="24"
           >
             <el-col class="text-right">
@@ -376,7 +366,6 @@ export default {
   },
   data() {
     return {
-      inEdit: { },
       form: { },
       isFormVisible: false,
       formRules: {
@@ -516,7 +505,6 @@ export default {
         contract: contract,
       }).then(() => {
         this.hideCollapseItems()
-        this.inEdit[index] = false
         this.$forceUpdate()
         this.$jusNotification({
           type: 'success',
