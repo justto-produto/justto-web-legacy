@@ -15,6 +15,7 @@
       <el-collapse
         ref="mainCollapse"
         accordion
+        class="transition-none"
         @item-click="resetNewContract"
       >
         <el-collapse-item
@@ -23,16 +24,17 @@
           :key="contractCount"
           :ref="`collapseItem${contractCount}`"
           :name="contractCount"
+          class="transition-none"
         >
           <template #title>
-            <span>{{ makeContractName(contract) }}</span>
+            <span>{{ contract.customTitle }}</span>
             <el-tag
-              v-for="flag in getFlags(contract)"
-              :key="`${flag.label}-${new Date().getTime()}`"
+              v-for="(flag, i) in contract.flags"
+              :key="i"
               :type="flag.theme"
               effect="dark"
               size="mini"
-              class="contract-modal__flag"
+              class="contract-modal__flag transition-none"
             >
               {{ flag.label }}
             </el-tag>
@@ -153,7 +155,7 @@
                   :disabled="isContractInactive(contract)"
                   :class="{'is-inactive': isContractInactive(contract)}"
                   class="el-input__inner"
-                  @focus="inEdit[contractCount] = true"
+                  @input="inEdit[contractCount] = true"
                 />
                 <el-form-item />
               </el-form-item>
@@ -174,7 +176,7 @@
                   :readonly="isContractInactive(contract)"
                   :class="{'is-inactive': isContractInactive(contract)}"
                   class="el-input__inner"
-                  @focus="inEdit[contractCount] = true"
+                  @input="inEdit[contractCount] = true"
                 />
               </el-form-item>
             </el-col>
@@ -327,6 +329,7 @@
               </el-form-item>
             </el-col>
           </el-row>
+
           <el-row :gutter="24">
             <el-col>
               <el-form-item>
@@ -402,7 +405,12 @@ export default {
           contract.workspaceId === this.workspaceId,
         )
 
-      return filteredContracts.length ? filteredContracts : this.form.contracts
+      // filteredContracts
+      return (filteredContracts.length ? filteredContracts : this.form.contracts).map(contract => ({
+        ...contract,
+        flags: this.getFlags(contract),
+        customTitle: this.makeContractName(contract),
+      }))
     },
   },
   watch: {
@@ -455,7 +463,7 @@ export default {
         if (tariff.type === tariffType) return (tariffIndex = index)
       })
 
-      console.table({ tariffIndex, tariffType })
+      // console.table({ tariffIndex, tariffType })
 
       return tariffIndex
     },
@@ -550,7 +558,7 @@ export default {
       const flags = []
       if (contract.workspaceId === this.workspaceId) {
         flags.push({
-          label: 'Exclusivo',
+          label: 'Exclusivo desta Workspace',
           theme: 'info',
         })
       }
@@ -611,5 +619,9 @@ export default {
   &:hover {
     border-color: #e4e7ed;
   }
+}
+
+.transition-none {
+  transition: none !important;
 }
 </style>
