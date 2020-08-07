@@ -154,7 +154,7 @@ export default {
 
     changeStrategyTypes() {
       if (this.strategyValidator) {
-        this.$emit('changeStrategyData', this.strategyData)
+        this.changeStrategyData()
       } else {
         this.strategyData.types.pop()
 
@@ -168,17 +168,17 @@ export default {
 
     changeStrategyWorkspaces() {
       this.strategyData.workspaces = this.availableWorkspaces.filter(w => this.associatedWorkspaces.includes(w.id))
-      this.$emit('changeStrategyData', this.strategyData)
+      this.changeStrategyData()
     },
 
     changeStrategyPrivacy() {
       this.strategyData.privateStrategy = !this.strategyData.privateStrategy
-      this.$emit('changeStrategyData', this.strategyData)
+      this.changeStrategyData()
     },
 
     changeStrategyActive() {
       this.strategyData.active = !this.strategyData.active
-      this.$emit('changeStrategyData', this.strategyData)
+      this.changeStrategyData()
     },
 
     emitCopyStrategy() {
