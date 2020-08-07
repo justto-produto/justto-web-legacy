@@ -9,43 +9,45 @@
       :key="lineKey + index"
       class="dispute-proprieties-view__line"
     >
-      <!-- KEY -->
-      <div class="key">
-        <div
-          v-show="!editing[propriety.key + index]"
-          class="label"
-          @click="focus(propriety.key, index)"
-        >
-          {{ propriety.key + ':' }}
+      <div class="edit">
+        <!-- KEY -->
+        <div class="key">
+          <div
+            v-show="!editing[propriety.key + index]"
+            class="label"
+            @click="focus(propriety.key, index)"
+          >
+            {{ propriety.key + ':' }}
+          </div>
+          <el-input
+            v-show="editing[propriety.key + index]"
+            :ref="'input' + propriety.key + index"
+            v-model="editable"
+            @keyup.enter.native="blurKey(propriety.key, index)"
+            @blur="blurKey(propriety.key, index)"
+          />
         </div>
-        <el-input
-          v-show="editing[propriety.key + index]"
-          :ref="'input' + propriety.key + index"
-          v-model="editable"
-          @keyup.enter.native="blurKey(propriety.key, index)"
-          @blur="blurKey(propriety.key, index)"
-        />
-      </div>
-      <!-- VALUE -->
-      <div class="value">
-        <div
-          v-show="!editing[propriety.value + index]"
-          class="label"
-          @click="focus(propriety.value, index)"
-        >
-          {{ propriety.value }}
+        <!-- VALUE -->
+        <div class="value">
+          <div
+            v-show="!editing[propriety.value + index]"
+            class="label"
+            @click="focus(propriety.value, index)"
+          >
+            <span> {{ propriety.value }} </span>
+          </div>
+          <el-input
+            v-show="editing[propriety.value + index]"
+            :ref="'input' + propriety.value + index"
+            v-model="editable"
+            :autosize="true"
+            type="textarea"
+            @keydown.enter.exact.prevent.native
+            @keydown.enter.shift.exact.prevent.native
+            @keyup.enter.exact.native="blurValue(propriety.key, propriety.value, index)"
+            @blur="blurValue(propriety.key, propriety.value, index)"
+          />
         </div>
-        <el-input
-          v-show="editing[propriety.value + index]"
-          :ref="'input' + propriety.value + index"
-          v-model="editable"
-          :autosize="true"
-          type="textarea"
-          @keydown.enter.exact.prevent.native
-          @keydown.enter.shift.exact.prevent.native
-          @keyup.enter.exact.native="blurValue(propriety.key, propriety.value, index)"
-          @blur="blurValue(propriety.key, propriety.value, index)"
-        />
       </div>
       <!-- ACTION -->
       <el-tooltip content="Remover propriedade">
@@ -218,21 +220,27 @@ export default {
   height: calc(100% - 24px);
   &__line {
     display: flex;
+    // flex-direction: column;
     align-items: flex-start;
-    .key {
-      white-space: nowrap;
-      .label {
-        font-weight: 600;
+    justify-content: space-between;
+    .edit {
+      display: flex;
+      flex-direction: column;
+      .key {
+        white-space: nowrap;
+        .label {
+          font-weight: 600;
+        }
+      }
+      .value {
+        width: 100%;
+        margin-left: 5px;
       }
     }
     .label {
       margin: 5px 0;
       word-break: break-all;
       border-bottom: 2px solid #FFFFFF00
-    }
-    .value {
-      width: 100%;
-      margin-left: 5px;
     }
     .el-link {
       margin-top: 6px;

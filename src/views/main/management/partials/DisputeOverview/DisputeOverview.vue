@@ -58,7 +58,23 @@
               data-testid="dispute-infoline"
             >
               <span class="title">Processo:</span>
-              <span>{{ dispute.code }}</span>
+              <span
+                v-if="!!getDisputeProperties.ENDERECO_DO_PROCESSO"
+                class="code"
+              >
+                <a
+                  class="link"
+                  :href="getDisputeProperties.ENDERECO_DO_PROCESSO"
+                  target="_blank"
+                >
+                  {{ dispute.code }}
+                  <jus-icon
+                    class="icon"
+                    icon="external-link"
+                  />
+                </a>
+              </span>
+              <span v-else>{{ dispute.code }}</span>
             </div>
             <div
               v-if="dispute.campaign"
@@ -411,8 +427,8 @@
               <div class="dispute-overview-view__info-line">
                 <span class="title">Função:</span>
                 <span
-                  v-for="(title, index) in roleTitleSort(role.roles)"
-                  :key="`${index}-${title.index}`"
+                  v-for="(title, title_index) in roleTitleSort(role.roles)"
+                  :key="`${title_index}-${title.index}`"
                 >
                   {{ buildRoleTitle(role.party, title) }}
                   <jus-vexatious-alert
@@ -435,8 +451,8 @@
               >
                 <span class="title">Telefone(s):</span>
                 <span
-                  v-for="(phone, index) in role.phones.filter(p => !p.archived)"
-                  :key="`${index}-${phone.id}`"
+                  v-for="(phone, phone_index) in role.phones.filter(p => !p.archived)"
+                  :key="`${phone_index}-${phone.id}`"
                   :class="{'is-main': phone.isMain}"
                 >
                   <el-radio
@@ -477,8 +493,8 @@
               >
                 <span class="title">E-mail(s):</span>
                 <span
-                  v-for="(email, index) in role.emails.filter(e => !e.archived)"
-                  :key="`${index}-${email.id}`"
+                  v-for="(email, email_index) in role.emails.filter(e => !e.archived)"
+                  :key="`${email_index}-${email.id}`"
                   :class="{'is-main': email.isMain}"
                 >
                   <el-checkbox
@@ -516,8 +532,8 @@
               >
                 <span class="title">OAB(s):</span>
                 <span
-                  v-for="(oab, index) in role.oabs.filter(o => !o.archived)"
-                  :key="`${index}-${oab.id}`"
+                  v-for="(oab, oab_index) in role.oabs.filter(o => !o.archived)"
+                  :key="`${oab_index}-${oab.id}`"
                   :class="{'is-main': oab.isMain}"
                 >
                   <el-checkbox
@@ -551,8 +567,8 @@
                   class="dispute-overview-view__bank-checkbox"
                 >
                   <el-checkbox
-                    v-for="(bankAccount, index) in role.bankAccounts.filter(b => !b.archived)"
-                    :key="`${index}-${bankAccount.id}`"
+                    v-for="(bankAccount, bank_account_index) in role.bankAccounts.filter(b => !b.archived)"
+                    :key="`${bank_account_index}-${bankAccount.id}`"
                     :label="bankAccount.id"
                     border
                     class="bordered"
@@ -745,8 +761,8 @@
         width="70%"
       >
         <el-form
-          v-loading="editDisputeDialogLoading"
           ref="disputeForm"
+          v-loading="editDisputeDialogLoading"
           :model="disputeForm"
           :rules="disputeFormRules"
           label-position="top"
@@ -760,8 +776,8 @@
                 prop="disputeCode"
               >
                 <el-input
-                  v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
                   v-model="disputeForm.disputeCode"
+                  v-mask="'XXXXXXX-XX.XXXX.X.XX.XXXX'"
                 />
               </el-form-item>
             </el-col>
@@ -840,8 +856,8 @@
                     :class="{ 'is-disabled': !disputeForm.disputeUpperRange }"
                   >
                     <money
-                      :disabled="!disputeForm.disputeUpperRange"
                       v-model="disputeForm.lastOfferValue"
+                      :disabled="!disputeForm.disputeUpperRange"
                       class="el-input__inner"
                       data-testid="proposal-value-input"
                       @change.native="lastOfferValueHasChanged = true"
@@ -1010,8 +1026,8 @@
           </ul>
         </el-alert>
         <el-form
-          v-loading="editRoleDialogLoading"
           ref="roleForm"
+          v-loading="editRoleDialogLoading"
           :model="roleForm"
           :rules="roleRules"
           label-position="top"
@@ -1032,8 +1048,8 @@
             prop="documentNumber"
           >
             <el-input
-              v-mask="['###.###.###-##', '##.###.###/####-##']"
               v-model="roleForm.documentNumber"
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
               @change="documentNumberHasChanged = true"
             />
           </el-form-item>
@@ -1123,8 +1139,8 @@
             prop="phone"
           >
             <el-input
-              v-mask="['(##) ####-####', '(##) #####-####']"
               v-model="roleForm.phone"
+              v-mask="['(##) ####-####', '(##) #####-####']"
               @keydown.enter.native="addPhone()"
               @blur="addPhone()"
             >
@@ -1350,8 +1366,8 @@
             prop="document"
           >
             <el-input
-              v-mask="['###.###.###-##', '##.###.###/####-##']"
               v-model="addBankForm.document"
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
             />
           </el-form-item>
           <el-form-item
@@ -1427,6 +1443,7 @@ import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 import DisputeAttachments from './sections/DisputeAttachments'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DisputeOverview',
@@ -1546,6 +1563,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      getDisputeProperties: 'disputeProprieties',
+    }),
     ufList() {
       const ufList = this.namesakeList.map(namesake => namesake.uf)
       return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
@@ -2354,6 +2374,21 @@ export default {
       }
       .jus-avatar-user {
         margin-right: 4px;
+      }
+    }
+    .code {
+      .link {
+        .icon {
+          height: 0.9rem;
+          display: none;
+        }
+      }
+      &:hover {
+        .link {
+          .icon {
+            display: inline;
+          }
+        }
       }
     }
     .configurations {
