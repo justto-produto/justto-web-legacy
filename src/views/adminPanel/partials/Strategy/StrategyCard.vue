@@ -1,6 +1,5 @@
 <template>
   <el-card class="strategy-card">
-
     <div class="strategy-card__private-icon-area">
       <el-tooltip :content="strategyData.privateStrategy ? 'Estratégia privada' : 'Estratégia pública'">
         <i
@@ -199,6 +198,8 @@ export default {
 
   .strategy-card {
     position: relative;
+    box-shadow: inherit !important;
+
     &:hover {
       border: 1px solid $--color-primary;
       color: $--color-primary;
