@@ -125,7 +125,7 @@ export default {
       strategyData: this.strategy,
       associatedWorkspaces: this.strategy.workspaces.map(w => w.id),
       defaultStrategyTypes: [
-        { name: 'PAGAMENTO', value: 'PAYMENT' },
+        { name: 'INDENIZATÓRIO DE VALOR', value: 'PAYMENT' },
         { name: 'COBRANÇA', value: 'RECOVERY' },
         { name: 'OBRIGAÇÃO DE FAZER', value: 'OBLIGATION' },
         { name: 'DESCONTO', value: 'DISCOUNT' },
