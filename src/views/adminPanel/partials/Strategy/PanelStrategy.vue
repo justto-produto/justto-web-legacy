@@ -33,42 +33,6 @@
         />
       </el-collapse-item>
     </el-collapse>
-
-    <el-dialog
-      title="Copiar estratégia"
-      :visible.sync="dialogIsVisible"
-    >
-      <el-form :model="strategyCopy">
-        <el-form-item label="Nome">
-          <el-input
-            v-model="strategyCopy.name"
-            autocomplete="off"
-          />
-        </el-form-item>
-
-        <el-form-item>
-          <JusTagContainer
-            :options="workspaces"
-            :tag-list="strategyCopy.workspaces"
-            title="Equipes"
-          />
-        </el-form-item>
-      </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="dialogIsVisible = false">
-          Cancelar
-        </el-button>
-        <el-button
-          type="primary"
-          @click="saveStrategyCopy"
-        >
-          Salvar
-        </el-button>
-      </span>
-    </el-dialog>
   </section>
 </template>
 
@@ -79,7 +43,6 @@ import { filterByTerm } from '@/utils/jusUtils'
 export default {
   name: 'PanelStrategy',
   components: {
-    JusTagContainer: () => import('@/components/JusTagContainer'),
     StrategyCard: () => import('./StrategyCard'),
   },
   props: {
@@ -91,8 +54,6 @@ export default {
   data: () => ({
     activeCollapse: ['active'],
     loading: true,
-    dialogIsVisible: false,
-    strategyCopy: { },
   }),
   computed: {
     ...mapGetters({
@@ -141,25 +102,29 @@ export default {
               message: 'Estratégia criada com sucesso!',
               type: 'success',
             })
-
             this.$emit('set-filter', value)
           })
       })
     },
 
     copyStrategyHandler(strategy) {
-      this.strategyCopy = strategy
-      this.dialogIsVisible = true
+      this.$prompt('Nome da nova estratégia', 'Copiar estratégia', {
+        confirmButtonText: 'Clonar',
+        cancelButtonText: 'Cancelar',
+        inputValue: `${strategy.name} (Cópia)`,
+      }).then(({ value }) => {
+        this.saveStrategyCopy(strategy, value)
+      })
     },
 
-    saveStrategyCopy() {
+    saveStrategyCopy(strategy, newName) {
       const workspaceIds = []
-      this.strategyCopy.workspaces.map((workspace) => {
+      for (const workspace in strategy.workspaces) {
         workspaceIds.push(workspace.id)
-      })
+      }
 
       const strategyClone = {
-        newName: this.strategyCopy.name,
+        newName,
         workspaceIds,
       }
 
@@ -167,7 +132,6 @@ export default {
         strategyClone,
         originId: this.strategyCopy.id,
       })
-      this.dialogIsVisible = false
     },
   },
 }

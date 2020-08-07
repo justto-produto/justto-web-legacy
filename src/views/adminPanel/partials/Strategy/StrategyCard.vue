@@ -1,5 +1,9 @@
 <template>
-  <el-card class="strategy-card">
+  <el-card
+    shadow="hover"
+    class="strategy-card"
+  >
+
     <div class="strategy-card__private-icon-area">
       <el-tooltip :content="strategyData.privateStrategy ? 'Estratégia privada' : 'Estratégia pública'">
         <i
@@ -102,12 +106,13 @@
 
 <script>
 import { JusTextEditable } from '@/components/JusTextEditable'
+import StrategyCommunication from './StrategyCommunication'
 
 export default {
   name: 'PanelStrategy',
   components: {
     JusTextEditable,
-    StrategyCommunication: () => import('./StrategyCommunication'),
+    StrategyCommunication,
   },
   props: {
     strategy: {
@@ -140,7 +145,7 @@ export default {
       return this.strategyData.privateStrategy ? 'Nimgém pode ver essa estratégia. Associe um time ou torne-a pública.' : 'Todos os times possuem acesso a esta estratégia.'
     },
     istTypesNull() {
-      return !Object.keys(this.strategyData.types).length
+      return !this.strategyData.types.length
     },
     isWorkspacesNull() {
       return !this.associatedWorkspaces.length
@@ -181,10 +186,7 @@ export default {
     },
 
     emitCopyStrategy() {
-      this.$emit('copyStrategy', {
-        ...this.strategyData,
-        name: `${this.strategyData.name} (Cópia)`,
-      })
+      this.$emit('copyStrategy', this.strategyData)
     },
   },
 }
