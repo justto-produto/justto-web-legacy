@@ -27,11 +27,12 @@ const StrategyActions = {
     mutation: 'addStrategy',
   }),
 
-  updateStrategy: ({ dispatch }, strategy) => axiosDispatcher({
+  updateStrategy: ({ commit }, strategy) => axiosDispatcher({
     url: `${strategyPath}/${strategy.id}`,
     method: 'PATCH',
     data: strategy,
-  }).then(() => dispatch('getStrategies')),
+    mutation: 'updateStrategy',
+  }),
 
   getStrategyAvailableWorkspaces: ({ _ }, strategyId) => axiosDispatcher({
     url: `${strategyPath}/${strategyId}/workspace/available`,
