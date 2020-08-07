@@ -463,7 +463,7 @@ export default {
         if (tariff.type === tariffType) return (tariffIndex = index)
       })
 
-      // console.table({ tariffIndex, tariffType })
+      console.table({ tariffIndex, tariffType })
 
       return tariffIndex
     },
