@@ -6,9 +6,9 @@
       :dispute-roles.sync="selectedDisputeRoles"
     />
     <el-table
-      v-loading="responseBoxLoading"
       ref="disputeTable"
       :key="disputeKey"
+      v-loading="responseBoxLoading"
       :data.sync="disputes"
       :row-class-name="tableRowClassName"
       :element-loading-text="responseBoxLoading ? 'Enviando mensagem...' : 'Atualizando informações...'"
@@ -443,10 +443,10 @@
         Destinatário: <b>{{ responseRow.lastReceivedMessage.message.sender | phoneMask }}</b>
         <br><br>
         <quill-editor
-          v-loading="responseBoxLoading"
           v-if="responseDialogVisible"
           ref="messageEditor"
           v-model="richMessage"
+          v-loading="responseBoxLoading"
           :class="{ 'show-toolbar': responseRow.lastReceivedMessage.message.communicationType === 'EMAIL' }"
           :options="editorOptions"
         />

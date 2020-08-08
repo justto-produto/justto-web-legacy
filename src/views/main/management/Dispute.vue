@@ -143,11 +143,12 @@
                     >
                       <el-checkbox-group
                         v-if="disputeAttachments.length"
-                        v-model="selectedAttachments">
+                        v-model="selectedAttachments"
+                      >
                         <el-checkbox
                           v-for="attachment in disputeAttachments"
-                          :label="attachment.id"
                           :key="attachment.id"
+                          :label="attachment.id"
                           class="dispute-view__attach-checkbox"
                           border
                         >

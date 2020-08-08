@@ -34,6 +34,11 @@ const StrategyActions = {
     mutation: 'updateStrategy',
   }),
 
+  deleteStrategy: ({ commit }, { strategyId }) => axiosDispatcher({
+    url: `${strategyPath}/${strategyId}`,
+    method: 'DELETE',
+  }).then(() => commit('deleteStrategy', { strategyId })),
+
   getStrategyAvailableWorkspaces: ({ _ }, strategyId) => axiosDispatcher({
     url: `${strategyPath}/${strategyId}/workspace/available`,
     mutation: 'setStrategyAvailableWorkspaces',
@@ -79,6 +84,12 @@ const StrategyActions = {
     method: 'PUT',
     data: template,
   }),
+  incrementStrategySize(state) {
+    state.strategySize = state.strategySize + 10
+  },
+  clearStrategySize(state) {
+    state.strategySize = state.strategyInitialSize
+  },
 }
 
 export default StrategyActions

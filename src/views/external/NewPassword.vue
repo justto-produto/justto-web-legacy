@@ -10,8 +10,8 @@
       <el-main class="display-flex position-relative">
         <jus-button-back to="/login" />
         <el-form
-          v-loading="showLoading"
           ref="newPasswordForm"
+          v-loading="showLoading"
           :model="newPasswordForm"
           :rules="rules"
           label-position="top"

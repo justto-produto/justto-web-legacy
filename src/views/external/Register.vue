@@ -13,8 +13,8 @@
           text="Voltar"
         />
         <el-form
-          v-loading="showLoading"
           ref="registerForm"
+          v-loading="showLoading"
           :model="registerForm"
           :rules="rules"
           class="external-view__form"

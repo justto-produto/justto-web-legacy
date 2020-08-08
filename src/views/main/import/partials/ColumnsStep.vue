@@ -41,8 +41,8 @@
           </el-tag>
         </div>
         <div
-          v-loading="true"
           v-show="loading"
+          v-loading="true"
         >
           <div
             v-for="item in [1,2,3,4,5]"

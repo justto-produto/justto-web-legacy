@@ -7,6 +7,8 @@ const StrategyModule = {
     strategies: [],
     availableWorkspaces: [],
     avaliableVariablesToTemplate: {},
+    strategyInitialSize: 20,
+    strategySize: 20,
   },
   actions,
   getters,

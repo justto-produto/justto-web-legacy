@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="panel-workspace-view">
     <el-table
-      v-loading="loading"
       :key="tableKey"
+      v-loading="loading"
       :data="filteredWorkspaces"
       width="100%"
       @expand-change="getUsersByWorkspace"
@@ -328,14 +328,6 @@ export default {
       filterTermDebounced: '',
     }
   },
-  watch: {
-    filterTerm(current) {
-      clearTimeout(this.debounce)
-      this.debounce = setTimeout(() => {
-        this.filterTermDebounced = current
-      }, 800)
-    },
-  },
   computed: {
     filteredWorkspaces() {
       return filterByTerm(this.filterTermDebounced, this.workspaces, 'name', 'teamName')
@@ -349,6 +341,14 @@ export default {
         precision: 0,
         masked: false,
       }
+    },
+  },
+  watch: {
+    filterTerm(current) {
+      clearTimeout(this.debounce)
+      this.debounce = setTimeout(() => {
+        this.filterTermDebounced = current
+      }, 800)
     },
   },
   beforeMount() {

@@ -1,49 +1,33 @@
 <template>
-  <section class="panel-strategy">
-    <el-collapse
-      v-model="activeCollapse"
-      v-loading="loading"
-    >
-      <el-collapse-item
-        :title="`Ativas (${activeStrategies.length})`"
-        name="active"
-      >
-        <strategy-card
-          v-for="(strategy) in activeStrategies"
-          :key="strategy.id"
-          :available-workspaces="workspaces"
-          :strategy="strategy"
-          class="panel-strategy__card"
-          @changeStrategyData="updateStrategy"
-          @copyStrategy="copyStrategyHandler"
-        />
-      </el-collapse-item>
-      <el-collapse-item
-        :title="`Inativas (${inactiveStrategies.length})`"
-        name="unactive"
-      >
-        <strategy-card
-          v-for="(strategy) in inactiveStrategies"
-          :key="strategy.id"
-          :available-workspaces="workspaces"
-          :strategy="strategy"
-          class="panel-strategy__card"
-          @changeStrategyData="updateStrategy"
-          @copyStrategy="copyStrategyHandler"
-        />
-      </el-collapse-item>
-    </el-collapse>
-  </section>
+  <!--   FIXME concluir infinite scroll     -->
+  <div
+    v-loading="$store.state.loading"
+    class="panel-strategy"
+  >
+    <table class="panel-strategy table-strategy">
+      <strategy-card
+        v-for="(strategy) in filteredStrategies"
+        :key="strategy.id"
+        :available-workspaces="workspaces"
+        :strategy="strategy"
+        @changeStrategyData="updateStrategy"
+        @copyStrategy="copyStrategyHandler"
+        @deleteStrategy="deleteStrategyHandler"
+      />
+    </table>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading'
 import { filterByTerm } from '@/utils/jusUtils'
 
 export default {
   name: 'PanelStrategy',
   components: {
     StrategyCard: () => import('./StrategyCard'),
+    InfiniteLoading,
   },
   props: {
     filterTerm: {
@@ -54,7 +38,28 @@ export default {
   data: () => ({
     activeCollapse: ['active'],
     loading: true,
+    filterTermApplied: '',
+    processingFilter: null,
+    infiniteId: +new Date(),
   }),
+  watch: {
+    filterTerm(newValue) {
+      /**
+       * FIXME refatorar esta merda para substituir por um debounce decente que controle sobrecarga,
+       * não deixando sobrescrever por dados antigos nem fazer consultas desnecessarias
+       */
+      if (this.processingFilter != null) {
+        try {
+          clearTimeout(this.processingFilter)
+        } catch (e) {}
+      }
+      this.processingFilter = setTimeout(() => {
+        if (this.filterTermApplied !== newValue) {
+          this.filterTermApplied = newValue
+        }
+      }, 400)
+    },
+  },
   computed: {
     ...mapGetters({
       strategies: 'getStrategies',
@@ -62,22 +67,18 @@ export default {
     }),
 
     filteredStrategies() {
-      return filterByTerm(this.filterTerm, this.strategies, 'name')
-    },
-
-    activeStrategies() {
-      return this.filteredStrategies.filter(s => s.active)
-    },
-
-    inactiveStrategies() {
-      return this.filteredStrategies.filter(s => !s.active)
+      this.$store.dispatch('showLoading')
+      const filteredStrategys = filterByTerm(this.filterTermApplied, this.strategies, 'name')
+      this.$store.dispatch('hideLoading')
+      return filteredStrategys
     },
   },
   beforeMount() {
     this.getAvailableWorkspace()
     this.getAvaliableVariablesToTemplate()
-    this.getStrategies().finally(() => (this.loading = false))
+    this.getStrategies().finally(() => (this.$store.dispatch('hideLoading')))
   },
+
   methods: {
     ...mapActions([
       'addStrategy',
@@ -86,7 +87,21 @@ export default {
       'getAvailableWorkspace',
       'getStrategies',
       'updateStrategy',
+      'deleteStrategy',
+      'incrementStrategySize',
+      'clearStrategySize',
     ]),
+
+    loadStrategy($state) {
+      this.$store.dispatch('getStrategies').then(response => {
+        if (response.last) {
+          $state.complete()
+        } else {
+          $state.loaded()
+          this.$store.commit('incrementStrategySize')
+        }
+      })
+    },
 
     mainButtonHandler() {
       this.$prompt('Digite o nome da estratégia', 'Criar estratégia', {
@@ -117,6 +132,18 @@ export default {
       })
     },
 
+    deleteStrategyHandler(strategy) {
+      this.$confirm('Tem certeza que deseja excluir esta estratégia? Esta ação é irreversível.', 'Atenção!', {
+        confirmButtonClass: 'confirm-remove-btn',
+        confirmButtonText: 'Excluir',
+        cancelButtonText: 'Cancelar',
+        type: 'error',
+        cancelButtonClass: 'is-plain',
+      }).then(() => {
+        this.deleteStrategy({ strategyId: strategy.id })
+      })
+    },
+
     saveStrategyCopy(strategy, newName) {
       const workspaceIds = []
       for (const workspace in strategy.workspaces) {
@@ -138,10 +165,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.table-strategy {
+	width: 100%;
+}
 .panel-strategy {
   background-color: #fff;
   padding: 40px;
   overflow: auto;
+  height: 100%;
 
   .panel-strategy__card {
     margin-bottom: 32px;

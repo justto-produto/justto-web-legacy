@@ -14,8 +14,9 @@
         width="400px"
       >
         <div
+          slot="header"
           class="configuration-blackList-view__column-header"
-          slot="header">
+        >
           <el-input
             v-model="search"
             placeholder="Buscar"
