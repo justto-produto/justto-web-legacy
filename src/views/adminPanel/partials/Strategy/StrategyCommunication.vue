@@ -85,8 +85,8 @@ export default {
     summary() {
       if (this.triggers.ENGAGEMENT) {
         return {
-          emails: this.triggers.ENGAGEMENT.communicationsTypeSummary.EMAIL,
-          sms: this.triggers.ENGAGEMENT.communicationsTypeSummary.SMS,
+          emails: this.triggers.ENGAGEMENT.communicationsTypeSummary ? this.triggers.ENGAGEMENT.communicationsTypeSummary.EMAIL : 0,
+          sms: this.triggers.ENGAGEMENT.communicationsTypeSummary ? this.triggers.ENGAGEMENT.communicationsTypeSummary.SMS : 0,
         }
       } return { emails: 0, sms: 0 }
     },

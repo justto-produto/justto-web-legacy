@@ -25,11 +25,13 @@ const StrategyMutations = {
     if (!trigger[response.triggerType]) {
       Vue.set(trigger, response.triggerType, { communications: [] })
     }
-    debugger
     Vue.set(trigger[response.triggerType].communications, trigger[response.triggerType].communications.length, response)
     const communicationType = response.type
-    const quantity = strategies[strategyIndex].triggers[response.triggerType].communicationsTypeSummary[communicationType]
-    Vue.set(strategies[strategyIndex].triggers[response.triggerType].communicationsTypeSummary, communicationType, (quantity + 1))
+    let quantity = 0
+    if (strategies[strategyIndex].triggers[response.triggerType].communicationsTypeSummary) {
+      quantity = strategies[strategyIndex].triggers[response.triggerType].communicationsTypeSummary[communicationType]
+      Vue.set(strategies[strategyIndex].triggers[response.triggerType].communicationsTypeSummary, communicationType, (quantity + 1))
+    }
   },
   deleteCommunication: (state, { communicationId, strategyId, trigger }) => {
     const { strategies } = state
