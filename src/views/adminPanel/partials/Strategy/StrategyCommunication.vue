@@ -1,17 +1,21 @@
 <template>
   <article class="strategy-communication">
-    <ul class="strategy-communication__list" @click="loadCommunications = true">
+    <ul
+      class="strategy-communication__list"
+      @click="loadCommunications = true"
+    >
       <el-popover
+        v-model="openMessages"
         title="Mensagens"
         :open-delay="200"
         placement="right-end"
         trigger="manual"
-        v-model="openMessages"
       >
-        <CommunicationPopover v-if="loadCommunications"
+        <CommunicationPopover
+          v-if="loadCommunications"
           ref="communicationsPopover"
           :triggers="triggers"
-          :strategyId="strategyId"
+          :strategy-id="strategyId"
           @edit-communication="handleEditTemplate"
         />
 
@@ -74,7 +78,7 @@ export default {
       communication: {},
       editorDialogIsVisible: false,
       loadCommunications: false,
-      openMessages: false
+      openMessages: false,
     }
   },
   computed: {

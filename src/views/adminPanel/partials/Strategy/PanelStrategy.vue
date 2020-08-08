@@ -1,18 +1,21 @@
 <template>
-    <!--   FIXME concluir infinite scroll     -->
-    <div class="panel-strategy" v-loading="$store.state.loading">
-        <table class="panel-strategy table-strategy">
-            <strategy-card
-                    v-for="(strategy) in filteredStrategies"
-                    :key="strategy.id"
-                    :available-workspaces="workspaces"
-                    :strategy="strategy"
-                    @changeStrategyData="updateStrategy"
-                    @copyStrategy="copyStrategyHandler"
-                    @deleteStrategy="deleteStrategyHandler"
-            />
-        </table>
-    </div>
+  <!--   FIXME concluir infinite scroll     -->
+  <div
+    v-loading="$store.state.loading"
+    class="panel-strategy"
+  >
+    <table class="panel-strategy table-strategy">
+      <strategy-card
+        v-for="(strategy) in filteredStrategies"
+        :key="strategy.id"
+        :available-workspaces="workspaces"
+        :strategy="strategy"
+        @changeStrategyData="updateStrategy"
+        @copyStrategy="copyStrategyHandler"
+        @deleteStrategy="deleteStrategyHandler"
+      />
+    </table>
+  </div>
 </template>
 
 <script>
@@ -24,7 +27,7 @@ export default {
   name: 'PanelStrategy',
   components: {
     StrategyCard: () => import('./StrategyCard'),
-    InfiniteLoading
+    InfiniteLoading,
   },
   props: {
     filterTerm: {
@@ -45,17 +48,17 @@ export default {
        * FIXME refatorar esta merda para substituir por um debounce decente que controle sobrecarga,
        * não deixando sobrescrever por dados antigos nem fazer consultas desnecessarias
        */
-      if(this.processingFilter != null) {
-        try{
+      if (this.processingFilter != null) {
+        try {
           clearTimeout(this.processingFilter)
-        }catch(e){}
+        } catch (e) {}
       }
-      this.processingFilter = setTimeout(()=>{
-            if(this.filterTermApplied !== newValue) {
-              this.filterTermApplied = newValue
-            }
-          },400)
-    }
+      this.processingFilter = setTimeout(() => {
+        if (this.filterTermApplied !== newValue) {
+          this.filterTermApplied = newValue
+        }
+      }, 400)
+    },
   },
   computed: {
     ...mapGetters({
@@ -65,7 +68,7 @@ export default {
 
     filteredStrategies() {
       this.$store.dispatch('showLoading')
-      let filteredStrategys = filterByTerm(this.filterTermApplied, this.strategies, 'name')
+      const filteredStrategys = filterByTerm(this.filterTermApplied, this.strategies, 'name')
       this.$store.dispatch('hideLoading')
       return filteredStrategys
     },
@@ -137,7 +140,7 @@ export default {
         type: 'error',
         cancelButtonClass: 'is-plain',
       }).then(() => {
-        this.deleteStrategy({ strategyId : strategy.id })
+        this.deleteStrategy({ strategyId: strategy.id })
       })
     },
 

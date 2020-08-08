@@ -19,8 +19,8 @@
 
     <jus-drag-area class="dispute-attachments__drag-area">
       <div
-        v-loading="deleteAttachmentLoading"
         v-if="filteredDisputeAttachments.length"
+        v-loading="deleteAttachmentLoading"
         class="dispute-attachments__attachment-list"
       >
         <el-card

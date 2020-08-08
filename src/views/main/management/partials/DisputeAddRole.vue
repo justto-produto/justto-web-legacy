@@ -7,8 +7,8 @@
     width="40%"
   >
     <el-form
-      v-loading="searchLoading || registerLoading"
       ref="newRole"
+      v-loading="searchLoading || registerLoading"
       :model="newRole"
       :rules="newRoleRules"
       label-position="top"
@@ -35,8 +35,8 @@
             prop="searchDocumentNumber"
           >
             <el-input
-              v-mask="['###.###.###-##', '##.###.###/####-##']"
               v-model="newRole.searchDocumentNumber"
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
               @keyup.enter.native="searchPerson"
             />
           </el-form-item>
@@ -100,8 +100,8 @@
           prop="documentNumber"
         >
           <el-input
-            v-mask="['###.###.###-##', '##.###.###/####-##']"
             v-model="newRole.documentNumber"
+            v-mask="['###.###.###-##', '##.###.###/####-##']"
             :disabled="disableDocumentNumber"
           />
         </el-form-item>
@@ -116,8 +116,8 @@
           prop="phone"
         >
           <el-input
-            v-mask="['(##) ####-####', '(##) #####-####']"
             v-model="newRole.phone"
+            v-mask="['(##) ####-####', '(##) #####-####']"
             @keydown.enter.native="addPhone()"
             @blur="addPhone()"
           >

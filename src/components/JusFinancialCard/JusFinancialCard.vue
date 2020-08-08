@@ -28,7 +28,8 @@
       <span>{{ data.revenue | currency }}</span>
       <span
         v-if="data.archived"
-        class="jus-financial-card__alerts">
+        class="jus-financial-card__alerts"
+      >
         <el-tooltip :content="totalArchivedTooltip">
           <span class="jus-financial-card__span">
             {{ totalArchived }}
@@ -36,7 +37,6 @@
         </el-tooltip>
       </span>
     </div>
-
   </el-card>
 </template>
 

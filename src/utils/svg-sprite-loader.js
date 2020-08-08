@@ -1,8 +1,8 @@
 ;(function(window, document) {
   'use strict'
 
-  let isSvg = document.createElementNS && document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
-  let localStorage = 'localStorage' in window && window.localStorage !== null ? window.localStorage : false
+  const isSvg = document.createElementNS && document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect
+  const localStorage = 'localStorage' in window && window.localStorage !== null ? window.localStorage : false
 
   function svgSpriteInjector(source, opts) {
     let file
@@ -27,8 +27,8 @@
   };
 
   function injector(filepath, opts) {
-    let name = 'injectedSVGSprite' + filepath
-    let revision = opts.revision
+    const name = 'injectedSVGSprite' + filepath
+    const revision = opts.revision
     let request
 
     // localStorage cache
@@ -64,7 +64,7 @@
   }
 
   function injectData(data) {
-    let body = document.body
+    const body = document.body
     body.insertAdjacentHTML('afterbegin', data)
     if (body.firstChild.tagName === 'svg') {
       body.firstChild.style.display = 'none'

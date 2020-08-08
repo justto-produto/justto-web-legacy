@@ -10,8 +10,8 @@
       <el-main class="display-flex position-relative">
         <jus-button-back to="login" />
         <el-form
-          v-loading="showLoading"
           ref="forgotForm"
+          v-loading="showLoading"
           :model="forgotForm"
           :rules="rules"
           class="external-view__form"

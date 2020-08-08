@@ -163,7 +163,9 @@
       >
         <div class="view-management__export-dialog-titles">
           <span class="view-management__export-dialog-title">Historico de exportações</span>
-          <p class="view-management__export-dialog-subtitle">Acompanhe o andamento de suas solicitações: </p>
+          <p class="view-management__export-dialog-subtitle">
+            Acompanhe o andamento de suas solicitações:
+          </p>
         </div>
         <el-card
           shadow="never"
@@ -275,8 +277,8 @@
           <p class="view-management__export-dialog-subtitle">
             {{
               isExportingProtocol
-              ? 'Exporte as minutas para o seu emial'
-              : 'Selecione e ordene as colunas desejadas para exportação:'
+                ? 'Exporte as minutas para o seu emial'
+                : 'Selecione e ordene as colunas desejadas para exportação:'
             }}
           </p>
         </div>
