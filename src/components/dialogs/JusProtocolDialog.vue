@@ -85,9 +85,9 @@
                 style="margin-bottom: 0px;"
               >
                 <el-input
-                  v-mask="['###.###.###-##', '##.###.###/####-##']"
                   :ref="'documentInput' + formKey"
                   v-model="documentForm.document[index]"
+                  v-mask="['###.###.###-##', '##.###.###/####-##']"
                   placeholder="Informe o CPF da parte para selecionar e-mail de assinatura"
                   size="small"
                   @input="clearValidate(index)"
@@ -234,8 +234,8 @@
         </div>
         <!-- VISUALIZAÇÃO DA MINUTA -->
         <div
-          v-loading="loadingPdf"
           v-if="step === 4"
+          v-loading="loadingPdf"
         >
           <object
             ref="pdfView"
@@ -292,8 +292,8 @@
           Enviar para Assinatura
         </el-button>
         <el-button
-          v-loading="loadingDownload"
           v-if="step === 3"
+          v-loading="loadingDownload"
           icon="el-icon-download"
           type="primary"
           @click="downloadDocument"

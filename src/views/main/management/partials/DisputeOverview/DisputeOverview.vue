@@ -247,7 +247,7 @@
                 Somente depósito em conta-corrente?
                 <div><i :class="dispute.denySavingDeposit ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.denySavingDeposit ? 'Sim' : 'Não ' }}</div>
                 Mensagens somente em horário comercial?
-                <div><i :class="dispute.businessHoursEngagement ? 'el-icon-check' : 'el-icon-close'" /> {{ dispute.businessHoursEngagement ? 'Sim' : 'Não ' }}</div>
+                <div><i :class="dispute.businessHoursEngagement ? 'el-icon-close' : 'el-icon-check'" /> {{ dispute.businessHoursEngagement ? 'Não' : 'Sim' }}</div>
                 Contactar autor?
                 <div>
                   <i :class="(dispute.contactPartyWhenNoLowyer || dispute.contactPartyWhenInvalidLowyer) ? 'el-icon-check' : 'el-icon-close'" />

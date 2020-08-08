@@ -228,8 +228,8 @@
     >
       <p>Confirme o valor do acordo nos campos abaixo:</p>
       <el-form
-        v-loading="modalLoading"
         ref="counterOfferForm"
+        v-loading="modalLoading"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
         label-position="top"
@@ -316,9 +316,9 @@
         />
       </el-select>
       <el-form
-        v-loading="modalLoading"
         v-if="isInsufficientUpperRange"
         ref="counterOfferForm"
+        v-loading="modalLoading"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
         label-position="top"
@@ -385,8 +385,8 @@
       width="604px"
     >
       <el-form
-        v-loading="modalLoading"
         ref="negotiatorsForm"
+        v-loading="modalLoading"
         :model="negotiatorsForm"
         :rules="negotiatorsRules"
         label-position="top"
@@ -425,8 +425,8 @@
       class="dispute-view__counterproposal-dialog"
     >
       <el-form
-        v-loading="modalLoading"
         ref="counterOfferForm"
+        v-loading="modalLoading"
         :model="counterOfferForm"
         :rules="counterOfferFormRules"
       >

@@ -100,8 +100,8 @@
       data-testid="unsettled-dialog"
     >
       <el-select
-        v-loading="$store.state.loading"
         v-model="unsettledType"
+        v-loading="$store.state.loading"
         data-testid="select-unsettled"
         placeholder="Escolha o motivo da perda"
       >
@@ -219,8 +219,8 @@
       </div>
       <br>
       <el-transfer
-        v-loading="changeNegotiatorDialogLoading"
         v-model="disputeNegotiators"
+        v-loading="changeNegotiatorDialogLoading"
         :titles="['Equipe', 'Disputa']"
         :button-texts="['Remover', 'Adicionar']"
         :data="workspaceNegotiators"
