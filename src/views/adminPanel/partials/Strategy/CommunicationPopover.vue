@@ -225,7 +225,7 @@ export default {
         active: true,
         duration: isDelay ? 3 : null,
         recipients: [],
-        parties: ['CLAIMANT', 'RESPONDENT'],
+        parties: ['CLAIMANT'],
         triggerType: 'ENGAGEMENT',
         type: communicationType,
       }

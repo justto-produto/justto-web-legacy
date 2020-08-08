@@ -1,13 +1,14 @@
 <template>
   <article class="strategy-communication">
-    <ul class="strategy-communication__list">
+    <ul class="strategy-communication__list" @click="loadCommunications = true">
       <el-popover
         title="Mensagens"
         :open-delay="200"
-        placement="bottom-start"
-        trigger="click"
+        placement="right-end"
+        trigger="manual"
+        v-model="openMessages"
       >
-        <CommunicationPopover
+        <CommunicationPopover v-if="loadCommunications"
           ref="communicationsPopover"
           :triggers="triggers"
           :strategyId="strategyId"
@@ -17,23 +18,22 @@
         <li
           slot="reference"
           class="strategy-communication__list-item"
+          @click="openMessages = !openMessages"
         >
-          <span class="strategy-communication__name">
-            Mensagens
-          </span>
+          <p>Mensagens</p>
           <div class="strategy-communication__email">
             <jus-icon
               icon="email"
               class="strategy-communication__icon"
             />
-            {{ summary.emails }}
+            {{ summary.emails || 0 }}
           </div>
           <span class="strategy-communication__sms">
             <jus-icon
               icon="sms"
               class="strategy-communication__icon"
             />
-            {{ summary.sms }}
+            {{ summary.sms || 0 }}
           </span>
         </li>
       </el-popover>
@@ -73,6 +73,8 @@ export default {
       communicationToEdit: {},
       communication: {},
       editorDialogIsVisible: false,
+      loadCommunications: false,
+      openMessages: false
     }
   },
   computed: {
@@ -88,6 +90,11 @@ export default {
   methods: {
     ...mapActions(['getCommunicationTemplate']),
 
+    handlePopoverClick() {
+      console.log(this.openedPopover)
+      this.openedPopover = !this.openedPopover
+      console.log(this.openedPopover)
+    },
     handleEditTemplate(communication) {
       this.getCommunicationTemplate({ communicationId: communication.id, strategyId: this.strategyId }).then(response => {
         this.communication = communication
