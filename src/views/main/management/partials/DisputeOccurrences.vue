@@ -108,7 +108,7 @@
                 >
                   Hora: {{ buildHour(merged) }}
                   <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                    - Para: {{ merged.interaction.message.receiver | phoneMask }}
+                      - Para: {{ merged.interaction.message.receiver | phoneMask }}
                   </span>
                   <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
                     - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
@@ -177,8 +177,7 @@
                     class="el-icon-close"
                     style="width: 14px;margin-bottom: -1.2px;"
                   />
-                  Mensagem agendada para {{ occurrence.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
-                  <strong>CANCELADA</strong>.
+                  Mensagem automática agendada foi <strong>CANCELADA</strong>.
                 </i>
                 <i v-else-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.type === 'SCHEDULER' && occurrence.interaction.message.status === 'WAITING'">
                   <br>
@@ -203,9 +202,34 @@
                     :key="merged.id + new Date().getTime()"
                     class="dispute-view-occurrences__log-info-content"
                   >
-                    Hora: {{ buildHour(merged) }}
+                    Em {{ buildHour(merged) }}
                     <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                      - Para: {{ merged.interaction.message.receiver | phoneMask }}
+                        criamos mensagem para
+                        <span v-if="merged.interaction.message.parameters && merged.interaction.message.parameters.RECEIVER_NAME">
+                            <b>{{merged.interaction.message.parameters.RECEIVER_NAME}}</b> no endereço
+                        </span>
+                        "<b>{{ merged.interaction.message.receiver | phoneMask }}</b>" <br>
+                        ->
+                        <span v-if="merged.interaction.type === 'SCHEDULER' && merged.interaction.message.scheduledTime">
+                            foi agendada para <u>{{ merged.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}</u>
+                        </span>
+                        Status:
+                        <span v-if="merged.interaction.message.status === 'CANCELED'">
+                            - Envio CANCELADO
+                        </span>
+                        <span v-if="merged.interaction.message.status === 'WAITING'">
+                            - Aguardando para ser enviada
+                        </span>
+                        <span v-if="merged.interaction.message.status === 'PROCESSED' || merged.interaction.message.status === 'PROCESSED_BY_USER'">
+                            - Enviada
+                        </span>
+                        <span v-if="merged.interaction.message.status === 'FAILED'">
+                            - Falhou o envio
+                        </span>
+                        <span v-if="merged.interaction.message.status === 'RETRYING'">
+                            - Tentando enviar novamente
+                        </span>
+                        <br>
                     </span>
                     <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
                       - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
