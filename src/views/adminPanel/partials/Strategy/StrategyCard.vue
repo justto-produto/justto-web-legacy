@@ -65,7 +65,9 @@
           </div>
           <div class="strategy-card__workspaces-area">
             <div v-if="strategyData.privateStrategy && !strategySelections['s'+strategyData.id]">
-              <span v-for="workspace in strategyData.workspaces"> {{ workspace.teamName }}, </span>
+              <span
+                      v-for="workspace in strategyData.workspaces"
+                      :key="workspace.id"> {{ workspace.teamName }}, </span>
             </div>
             <el-select
               v-if="strategyData.privateStrategy && strategySelections['s'+strategyData.id]"
@@ -78,13 +80,11 @@
             >
               <el-option
                 v-for="workspace in availableWorkspaces"
-                v-if="strategySelections['s'+strategyData.id]"
-                :key="`${strategyData.id}${workspace.id}`"
+                :key="`${strategyData.id}-${workspace.id}`"
                 :label="workspace.teamName"
                 :value="workspace.id"
               />
             </el-select>
-
             <div
               v-if="isWorkspacesNull"
               class="strategy-card__select-alert"
@@ -103,7 +103,6 @@
             >
               <el-option
                 v-for="(type, index) in defaultStrategyTypes"
-                v-if="strategySelections['s'+strategyData.id]"
                 :key="index"
                 :label="type.name"
                 :value="type.value"

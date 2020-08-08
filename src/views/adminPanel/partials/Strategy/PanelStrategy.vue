@@ -20,14 +20,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import InfiniteLoading from 'vue-infinite-loading'
 import { filterByTerm } from '@/utils/jusUtils'
 
 export default {
   name: 'PanelStrategy',
   components: {
     StrategyCard: () => import('./StrategyCard'),
-    InfiniteLoading,
   },
   props: {
     filterTerm: {
@@ -42,6 +40,19 @@ export default {
     processingFilter: null,
     infiniteId: +new Date(),
   }),
+  computed: {
+    ...mapGetters({
+      strategies: 'getStrategies',
+      workspaces: 'getAvailableWorkspaces',
+    }),
+
+    filteredStrategies() {
+      this.$store.dispatch('showLoading')
+      const filteredStrategys = filterByTerm(this.filterTermApplied, this.strategies, 'name')
+      this.$store.dispatch('hideLoading')
+      return filteredStrategys
+    },
+  },
   watch: {
     filterTerm(newValue) {
       /**
@@ -58,19 +69,6 @@ export default {
           this.filterTermApplied = newValue
         }
       }, 400)
-    },
-  },
-  computed: {
-    ...mapGetters({
-      strategies: 'getStrategies',
-      workspaces: 'getAvailableWorkspaces',
-    }),
-
-    filteredStrategies() {
-      this.$store.dispatch('showLoading')
-      const filteredStrategys = filterByTerm(this.filterTermApplied, this.strategies, 'name')
-      this.$store.dispatch('hideLoading')
-      return filteredStrategys
     },
   },
   beforeMount() {
@@ -166,7 +164,7 @@ export default {
 
 <style lang="scss" scoped>
 .table-strategy {
-	width: 100%;
+    width: 100%;
 }
 .panel-strategy {
   background-color: #fff;
