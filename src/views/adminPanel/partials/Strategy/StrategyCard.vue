@@ -30,7 +30,7 @@
             <jus-text-editable
               :value="strategyData.name"
               type="title"
-              @hasEdition="changeStrategyData()"
+              @hasEdition="changeStrategyData"
             />
           </div>
           <div class="strategy-card__action-area">
@@ -173,7 +173,8 @@ export default {
     },
   },
   methods: {
-    changeStrategyData() {
+    changeStrategyData(newValue) {
+      this.strategyData.name = newValue
       this.$emit('changeStrategyData', this.strategyData)
     },
 
