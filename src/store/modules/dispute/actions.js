@@ -223,6 +223,18 @@ const disputeActions = {
         })
     })
   },
+  setDisputeparty({ commit }, params) {
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line
+      axios.patch('api/disputes/' + params.disputeId + '/dispute-roles/' + params.disputeRoleId + '/' + params.disputeParty)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
   getNotVisualizeds({ commit }) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
