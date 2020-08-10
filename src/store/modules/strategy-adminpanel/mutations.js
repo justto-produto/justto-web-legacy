@@ -10,7 +10,7 @@ const StrategyMutations = {
     const strategyIndex = findStrategyIndex(strategies, strategyData.id)
     strategies[strategyIndex] = strategyData
   },
-  setStrategies: (state, strategies) => (state.strategies = strategies),
+  setStrategies: (state, strategies) => (state.strategies = strategies.content || strategies),
   setAvailableWorkspace: (state, availableWorkspaces) => (state.availableWorkspaces = availableWorkspaces),
   setAvaliableVariablesToTemplate: (state, variables) => (state.avaliableVariablesToTemplate = variables),
   deleteStrategy: (state, { strategyId }) => {
