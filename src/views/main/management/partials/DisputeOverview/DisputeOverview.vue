@@ -436,20 +436,20 @@
                     :document-number="role.documentNumber"
                     :name="role.name"
                   />
-                  </span>
-                  <el-select
-                          v-model="role.party"
-                          placeholder="Defina o polo desta parte"
-                          v-if="role.party === 'UNKNOW'"
-                          @change="setDisputeParty(role)"
-                  >
-                      <el-option
-                              v-for="party in disputePartys"
-                              :key="party.value"
-                              :label="party.label"
-                              :value="party.value"
-                      ></el-option>
-                  </el-select>
+                </span>
+                <el-select
+                  v-model="role.party"
+                  placeholder="Defina o polo desta parte"
+                  v-if="role.party === 'UNKNOW'"
+                  @change="setDisputeParty(role)"
+                >
+                  <el-option
+                    v-for="party in disputePartys"
+                    :key="party.value"
+                    :label="party.label"
+                    :value="party.value"
+                  />
+                </el-select>
               </div>
               <div
                 v-show="role.documentNumber"
@@ -1589,8 +1589,8 @@ export default {
         {
           value: 'UNKNOW',
           label: 'Desconhecido',
-        }
-      ]
+        },
+      ],
     }
   },
   computed: {
@@ -2351,24 +2351,24 @@ export default {
         })
       })
     },
-    setDisputeParty(role){
-      let params = {
+    setDisputeParty(role) {
+      const params = {
         disputeId: this.dispute.id,
         disputeRoleId: role.id,
-        disputeParty: role.party
+        disputeParty: role.party,
       }
       this.$jusSegment('Defiido função em participante da disputa', {
         page: this.$route.name,
       })
       this.$store.dispatch('setDisputeparty', params)
-      .then(() => {
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Função definida com sucesso!',
-          type: 'success',
-          dangerouslyUseHTMLString: true,
+        .then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Função definida com sucesso!',
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          })
         })
-      })
     },
   },
 }
