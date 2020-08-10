@@ -712,6 +712,7 @@ export default {
       .dispute-view-occurrences__card {
         margin-right: 8px;
       }
+
     }
     &.LOADING {
       opacity: 0.5;
@@ -809,6 +810,9 @@ export default {
       }
       table:not([style]) {
         width: 100%;
+      }
+      table, table tbody, table tbody *  {
+        background: none !important;
       }
       img {
         max-width: 100%;

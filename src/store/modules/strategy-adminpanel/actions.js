@@ -4,7 +4,7 @@ const strategyPath = '/api/strategy'
 
 const StrategyActions = {
   getStrategies: () => axiosDispatcher({
-    url: strategyPath,
+    url: `${strategyPath}?size=999&`,
     mutation: 'setStrategies',
   }),
 
