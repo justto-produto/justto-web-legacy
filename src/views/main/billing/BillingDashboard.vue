@@ -181,21 +181,6 @@ export default {
     return {
       dateRange: [],
       searchTerm: '',
-      filterTransactionsActionParams: {
-        icon: 'eye',
-        label: 'Ver lançamentos',
-        trigger: 'showTransactions',
-      },
-      filterDisputesActionParams: {
-        icon: 'management',
-        label: 'Visualizar disputas no gerenciamento',
-        trigger: 'showDisputes',
-      },
-      addTransactionActionParams: {
-        icon: 'add',
-        label: 'Criar lançamento manual',
-        trigger: 'addTransaction',
-      },
       addTransactionDialogVisable: false,
       modalLoading: false,
       addTransactionForm: {
@@ -217,6 +202,33 @@ export default {
       'transactions',
       'workspaceId',
     ]),
+
+    filterTransactionsActionParams() {
+      return {
+        icon: 'eye',
+        label: 'Ver lançamentos',
+        trigger: 'showTransactions',
+        visible: true,
+      }
+    },
+
+    filterDisputesActionParams() {
+      return {
+        icon: 'management',
+        label: 'Visualizar disputas no gerenciamento',
+        trigger: 'showDisputes',
+        visible: true,
+      }
+    },
+
+    addTransactionActionParams() {
+      return {
+        icon: 'add',
+        label: 'Criar lançamento manual',
+        trigger: 'addTransaction',
+        visible: !this.isJusttoAdmin,
+      }
+    },
 
     tableSubtitle() {
       if (this.tableLoading) {
