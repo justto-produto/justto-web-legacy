@@ -268,6 +268,14 @@
           Cancelar
         </el-button>
         <el-button
+                v-if="document.canEdit"
+                type="secondary"
+                :disabled="loading"
+                @click="backDocumentToEditing()"
+        >
+          Voltar documento para edição
+        </el-button>
+        <el-button
           v-if="[2, 4].includes(step)"
           :disabled="loading"
           plain
@@ -772,6 +780,28 @@ export default {
     visualizePdf() {
       this.loadingPdf = true
       this.step = 4
+    },
+    backDocumentToEditing() {
+      this.$confirm('Você vai cancelar o documento já enviado para assinatura. Tem certeza que deseja voltar para edição?', {
+        confirmButtonText: 'Voltar para edição',
+        cancelButtonText: 'Cancelar',
+        title: 'Atenção!',
+        type: 'warning',
+        cancelButtonClass: 'is-plain',
+      }).then(() => {
+        this.loading = true
+        this.$store.dispatch('backDocumentToEditing', this.disputeId).then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Ok, seu documento voltou para faze de edição!',
+            type: 'success',
+          })
+        }).catch(error => {
+          this.$jusNotification({ error })
+        }).finally(() => {
+          this.visible = false
+        })
+      })
     },
   },
 }

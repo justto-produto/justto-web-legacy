@@ -53,6 +53,12 @@ const actions = {
       method: 'DELETE',
     })
   },
+  backDocumentToEditing({ commit }, disputeId) {
+    return axiosDispatcher({
+      url: documents + disputeId + '/back-to-editing',
+      method: 'PATCH',
+    })
+  },
   addModel({ commit }, url) {
     return axiosDispatcher({
       url: documents + `model?url=${url}`,
