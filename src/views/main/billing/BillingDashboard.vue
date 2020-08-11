@@ -226,7 +226,7 @@ export default {
         icon: 'add',
         label: 'Criar lançamento manual',
         trigger: 'addTransaction',
-        visible: !this.isJusttoAdmin,
+        visible: this.isJusttoAdmin,
       }
     },
 
