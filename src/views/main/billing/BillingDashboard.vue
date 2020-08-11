@@ -9,11 +9,7 @@
       class="billing-view__slot-main"
     >
       <JusButtonBack
-        to="/billing"
-        class="billing-view__back-button"
-      />
-
-      <JusButtonBack
+        v-if="isJusttoAdmin"
         to="/billing"
         class="billing-view__back-button"
       />
