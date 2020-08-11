@@ -150,6 +150,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'JusDataTable',
   components: {
@@ -175,25 +176,31 @@ export default {
     },
   },
   data() {
-    return {
-      availableActions: [
+    return { }
+  },
+  computed: {
+    ...mapGetters([
+      'isJusttoAdmin',
+    ]),
+
+    availableActions() {
+      return [
         {
           icon: 'edit',
           label: 'Editar lançamento',
           trigger: 'editTransaction',
+          hide: !this.isJusttoAdmin,
           condition: (scope) => scope.type === 'MANUAL',
         },
         {
           icon: 'trash',
           label: 'Cancelar lançamento',
           trigger: 'cancelTransaction',
+          hide: !this.isJusttoAdmin,
           condition: (scope) => !!scope.value,
         },
-      ],
-    }
-  },
-  computed: {
-
+      ]
+    },
   },
   methods: {
     floatAction(evt) {
