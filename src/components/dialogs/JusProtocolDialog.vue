@@ -268,10 +268,10 @@
           Cancelar
         </el-button>
         <el-button
-                v-if="document.canEdit"
-                type="secondary"
-                :disabled="loading"
-                @click="backDocumentToEditing()"
+          v-if="document.canEdit"
+          :disabled="loading"
+          type="secondary"
+          @click="backDocumentToEditing"
         >
           Voltar documento para edição
         </el-button>
