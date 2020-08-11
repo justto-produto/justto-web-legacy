@@ -77,21 +77,29 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentCustomer: 'getCurrentCustomer',
       custumerList: 'getMyCusomers',
-      custumerSuggestions: 'getAllCusomers',
       isJusttoAdmin: 'isJusttoAdmin',
+      isAdminProfile: 'isAdminProfile',
+      currentCustomer: 'getCurrentCustomer',
+      custumerSuggestions: 'getAllCusomers',
       plans: 'getPlans',
       workspaceId: 'workspaceId',
     }),
   },
   beforeMount() {
-    if (!this.isJusttoAdmin) this.$router.go(-1)
-
+    this.getPlans()
     this.getMyCusomers()
     this.getAllCustomers()
     this.setWorkspaceId(this.workspaceId)
-    this.getPlans()
+
+    if (this.isAdminProfile && !this.isJusttoAdmin) {
+      this.getCustomerToRedirect().then(customer => {
+        this.$router.push(`/billing/${customer.id}`)
+      }).catch(() => {
+        console.log('CATCH')
+        this.$router.go(-1)
+      })
+    }
   },
   methods: {
     ...mapActions([
@@ -105,6 +113,24 @@ export default {
       'unlinkCustomer',
       'updateCustomer',
     ]),
+    getCustomerToRedirect() {
+      return new Promise((resolve, reject) => {
+        if (this.custumerList.length === 1) {
+          const customer = this.custumerList[0]
+          resolve(customer)
+        } else {
+          const planId = this.plans.find(plan => plan.name === 'Escritório').id
+          for (const customer of this.custumerList) {
+            for (const contract of customer.contracts) {
+              if (contract.planId === planId) {
+                resolve(customer)
+              }
+            }
+          }
+        }
+        reject(new Error('Sem customers com clientes com contratos do tipo Escritório.'))
+      })
+    },
     handleEditTitle(userData) {
       this.updateCustomer(userData)
     },
