@@ -87,19 +87,30 @@ export default {
     }),
   },
   beforeMount() {
-    this.getPlans()
-    this.getMyCusomers()
-    this.getAllCustomers()
-    this.setWorkspaceId(this.workspaceId)
-
-    if (this.isAdminProfile && !this.isJusttoAdmin) {
-      this.getCustomerToRedirect().then(customer => {
-        this.$router.push(`/billing/${customer.id}`)
-      }).catch(() => {
-        console.log('CATCH')
-        this.$router.go(-1)
-      })
-    }
+    this.getPlans().then(
+      () => {
+        this.getMyCusomers().then(
+          () => {
+            this.getAllCustomers().then(
+              () => {
+                this.setWorkspaceId(this.workspaceId)
+                this.$nextTick(
+                  () => {
+                    if (this.isAdminProfile && !this.isJusttoAdmin) {
+                      this.getCustomerToRedirect().then(customer => {
+                        this.$router.push(`/billing/${customer.id}`)
+                      }).catch(() => {
+                        this.$router.go(-1)
+                      })
+                    }
+                  },
+                )
+              },
+            )
+          },
+        )
+      },
+    )
   },
   methods: {
     ...mapActions([
@@ -127,8 +138,8 @@ export default {
               }
             }
           }
+          reject(new Error('Sem customers com clientes com contratos do tipo Escritório.'))
         }
-        reject(new Error('Sem customers com clientes com contratos do tipo Escritório.'))
       })
     },
     handleEditTitle(userData) {
