@@ -325,6 +325,7 @@
               <el-form-item>
                 <el-switch
                   v-model="hasWorkspace"
+                  :disabled="haveExclusiveContract"
                   active-text="Exclusivo desta workspace"
                 />
               </el-form-item>
@@ -389,10 +390,7 @@ export default {
     contractStatus: self => self.$t('billing.contract.status'),
     filteredContracts() {
       const filteredContracts = this.form.contracts
-        .filter(contract =>
-          (contract.status === CONTRACT_STATUS.ACTIVE.key || contract.status === CONTRACT_STATUS.INACTIVE.key) &&
-          contract.workspaceId === this.workspaceId,
-        )
+        .filter(contract => contract.status === CONTRACT_STATUS.ACTIVE.key || contract.status === CONTRACT_STATUS.INACTIVE.key)
 
       // filteredContracts
       return (filteredContracts.length ? filteredContracts : this.form.contracts).map(contract => ({
@@ -400,6 +398,11 @@ export default {
         flags: this.getFlags(contract),
         customTitle: this.makeContractName(contract),
       }))
+    },
+    haveExclusiveContract() {
+      const conditional = this.filteredContracts.some(c => c.workspaceIdNull === false)
+      this.changeHasWorkspaceValue(conditional)
+      return conditional
     },
   },
   watch: {
@@ -440,6 +443,9 @@ export default {
       'addContract',
       'updateContract',
     ]),
+    changeHasWorkspaceValue(newValue) {
+      this.hasWorkspace = newValue
+    },
     resetNewContract() {
       const tariffs = []
       Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel({ type: key })))
