@@ -1,10 +1,13 @@
 <template>
   <!--   FIXME concluir infinite scroll     -->
-  <div
-    v-loading="$store.state.loading"
+  <el-container
+    v-loading="loading"
     class="panel-strategy"
   >
-    <table class="panel-strategy table-strategy">
+    <table
+      v-if="filteredStrategies.length"
+      class="panel-strategy table-strategy"
+    >
       <strategy-card
         v-for="(strategy) in filteredStrategies"
         :key="strategy.id"
@@ -15,7 +18,11 @@
         @deleteStrategy="deleteStrategyHandler"
       />
     </table>
-  </div>
+    <label
+      v-else
+      v-text="'Sem dados.'"
+    />
+  </el-container>
 </template>
 
 <script>
@@ -47,9 +54,7 @@ export default {
     }),
 
     filteredStrategies() {
-      this.$store.dispatch('showLoading')
       const filteredStrategys = filterByTerm(this.filterTermApplied, this.strategies, 'name')
-      this.$store.dispatch('hideLoading')
       return filteredStrategys
     },
   },
@@ -74,11 +79,19 @@ export default {
   beforeMount() {
     this.getAvailableWorkspace()
     this.getAvaliableVariablesToTemplate()
-    this.getStrategies().finally(() => (this.$store.dispatch('hideLoading')))
+    this.getStrategies().finally(
+      () => {
+        this.$nextTick(
+          () => {
+            this.loading = false
+          },
+        )
+      },
+    )
   },
-
   methods: {
     ...mapActions([
+      'showLoading',
       'addStrategy',
       'cloneStrategy',
       'getAvaliableVariablesToTemplate',
@@ -91,6 +104,7 @@ export default {
     ]),
 
     loadStrategy($state) {
+      this.loading = true
       this.$store.dispatch('getStrategies').then(response => {
         if (response.last) {
           $state.complete()
@@ -98,6 +112,7 @@ export default {
           $state.loaded()
           this.$store.commit('incrementStrategySize')
         }
+        this.loading = false
       })
     },
 
