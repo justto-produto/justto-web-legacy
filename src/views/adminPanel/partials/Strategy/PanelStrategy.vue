@@ -71,6 +71,7 @@ export default {
   },
   watch: {
     filterTerm(newValue, oldValue) {
+      this.setActiveStrategy(null)
       clearTimeout(this.filterDebounce)
       if (this.filterTerm !== oldValue) {
         this.filterDebounce = setTimeout(() => {
@@ -86,6 +87,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      'setActiveStrategy',
       'showLoading',
       'addStrategy',
       'cloneStrategy',
@@ -110,6 +112,7 @@ export default {
     },
 
     mainButtonHandler() {
+      this.setActiveStrategy(null)
       this.$prompt('Digite o nome da estratégia', 'Criar estratégia', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancelar',
