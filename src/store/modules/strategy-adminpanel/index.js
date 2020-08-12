@@ -4,6 +4,7 @@ import mutations from './mutations'
 
 const StrategyModule = {
   state: {
+    activeStrategy: null,
     strategies: {},
     availableWorkspaces: [],
     avaliableVariablesToTemplate: {},

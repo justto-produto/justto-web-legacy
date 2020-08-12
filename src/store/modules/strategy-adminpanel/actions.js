@@ -4,8 +4,8 @@ import { queryBuilder } from '@/utils/jusUtils'
 const strategyPath = '/api/strategy'
 
 const StrategyActions = {
-  setLoadingStatus: ({ commit }) => {
-    commit()
+  setActiveStrategy: ({ commit, state }, strategyId) => {
+    commit('setActiveStrategy', state.activeStrategy === strategyId ? null : strategyId)
   },
 
   setFilterTerm: ({ commit, dispatch }, term) => {
