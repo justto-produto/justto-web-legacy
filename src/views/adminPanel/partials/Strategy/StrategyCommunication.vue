@@ -137,25 +137,24 @@ export default {
 <style lang="scss" scopped>
 @import '@/styles/colors.scss';
 
-.strategy-communication__popover-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  color: $--color-text-secondary;
-
-  .strategy-communication__close-icon:hover {
-    cursor: pointer;
-    color: $--color-text-regular;
-  }
-
-  .strategy-communication__title-popover {
-    font-weight: bold;
-  }
-}
-
 .strategy-communication {
   color: $--color-text-regular;
 
+  .strategy-communication__popover-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: $--color-text-secondary;
+
+    .strategy-communication__close-icon:hover {
+      cursor: pointer;
+      color: $--color-text-regular;
+    }
+
+    .strategy-communication__title-popover {
+      font-weight: bold;
+    }
+  }
   .strategy-communication__icon {
     width: 20px;
     position: relative;
