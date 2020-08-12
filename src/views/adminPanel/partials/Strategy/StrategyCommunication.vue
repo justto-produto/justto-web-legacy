@@ -2,17 +2,23 @@
   <article class="strategy-communication">
     <ul
       class="strategy-communication__list"
-      @click="loadCommunications = true"
+      @click="setActiveStrategy(strategyId)"
     >
       <el-popover
-        v-model="openMessages"
-        title="Mensagens"
+        :value="showPopover"
         :open-delay="200"
         placement="right-end"
         trigger="manual"
       >
+        <div class="strategy-communication__popover-header">
+          <span class="strategy-communication__title-popover">Mensagens</span>
+          <i
+            class="el-icon-close strategy-communication__close-icon"
+            @click="setActiveStrategy(null)"
+          />
+        </div>
         <CommunicationPopover
-          v-if="loadCommunications"
+          v-if="showPopover"
           ref="communicationsPopover"
           :triggers="triggers"
           :strategy-id="strategyId"
@@ -22,7 +28,6 @@
         <li
           slot="reference"
           class="strategy-communication__list-item"
-          @click="openMessages = !openMessages"
         >
           <p>Mensagens</p>
           <div class="strategy-communication__email">
@@ -54,7 +59,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'StrategyCommunication',
@@ -77,11 +82,12 @@ export default {
       communicationToEdit: {},
       communication: {},
       editorDialogIsVisible: false,
-      loadCommunications: false,
-      openMessages: false,
     }
   },
   computed: {
+    ...mapGetters([
+      'activeStrategy',
+    ]),
     summary() {
       if (this.triggers.ENGAGEMENT) {
         return {
@@ -90,9 +96,18 @@ export default {
         }
       } return { emails: 0, sms: 0 }
     },
+    showPopover: {
+      get() {
+        return this.activeStrategy === this.strategyId
+      },
+      set(val) {},
+    },
   },
   methods: {
-    ...mapActions(['getCommunicationTemplate']),
+    ...mapActions([
+      'getCommunicationTemplate',
+      'setActiveStrategy',
+    ]),
 
     handlePopoverClick() {
       console.log(this.openedPopover)
@@ -122,6 +137,22 @@ export default {
 <style lang="scss" scopped>
 @import '@/styles/colors.scss';
 
+.strategy-communication__popover-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: $--color-text-secondary;
+
+  .strategy-communication__close-icon:hover {
+    cursor: pointer;
+    color: $--color-text-regular;
+  }
+
+  .strategy-communication__title-popover {
+    font-weight: bold;
+  }
+}
+
 .strategy-communication {
   color: $--color-text-regular;
 
@@ -147,7 +178,6 @@ export default {
       gap: 16px;
       grid-template-areas: 'name-area email-area sms-area';
       grid-template-columns: auto repeat(2, 56px);
-      margin-bottom: 8px;
       padding: 8px 16px;
       width: 100%;
 

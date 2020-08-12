@@ -110,6 +110,12 @@
     "LAWYER": "advogado",
     "PARTY": "autor"
   },
+  "strategyTypes": {
+    "PAYMENT": "indenizatorio de valor",
+    "RECOVERY": "cobrança",
+    "OBLIGATION": "obrigação de fazer",
+    "DISCOUNT": "desconto"
+  },
   "occurrence": {
     "type": {
       "ENRICHMENT": "enriquecimento",

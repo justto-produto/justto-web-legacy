@@ -1,22 +1,21 @@
 import Vue from 'vue'
 
-const findStrategyIndex = (strategies, strategyId) => strategies.findIndex(s => s.id === strategyId)
+const findStrategyIndex = (strategies, strategyId) => strategies.content.findIndex(s => s.id === strategyId)
 const findCommunicationIndex = (communications, communicationId) => communications.findIndex(c => c.id === communicationId)
 
 const StrategyMutations = {
-  addStrategy: (state, strategy) => (state.strategies.push(strategy)),
-  updateStrategy: (state, strategyData) => {
-    const { strategies } = state
-    const strategyIndex = findStrategyIndex(strategies, strategyData.id)
-    strategies[strategyIndex] = strategyData
-  },
-  setStrategies: (state, strategies) => (state.strategies = strategies.content || strategies),
-  setAvailableWorkspace: (state, availableWorkspaces) => (state.availableWorkspaces = availableWorkspaces),
-  setAvaliableVariablesToTemplate: (state, variables) => (state.avaliableVariablesToTemplate = variables),
+  addStrategy: (state, strategy) => (state.strategies.content.push(strategy)),
   deleteStrategy: (state, { strategyId }) => {
-    const { strategies } = state
-    const strategyIndex = findStrategyIndex(strategies, strategyId)
-    strategies.splice(strategyIndex, 1)
+    const strategyIndex = findStrategyIndex(state.strategies, strategyId)
+    state.strategies.content.splice(strategyIndex, 1)
+  },
+  updateStrategy: (state, strategyData) => {
+    const strategyIndex = findStrategyIndex(state.strategies, strategyData.id)
+    state.strategies.content[strategyIndex] = strategyData
+  },
+  setStrategies: (state, strategies) => {
+    if (strategies.first) state.strategies = strategies
+    else state.strategies.content.push(...strategies.content)
   },
   addCommunications: (state, { response, strategyId }) => {
     const { strategies } = state
@@ -42,12 +41,13 @@ const StrategyMutations = {
     const quantity = strategies[strategyIndex].triggers[trigger].communicationsTypeSummary[communicationType]
     Vue.set(strategies[strategyIndex].triggers[trigger].communicationsTypeSummary, communicationType, (quantity - 1))
   },
-  incrementStrategySize(state) {
-    state.strategySize = state.strategySize + 10
-  },
-  clearStrategySize(state) {
-    state.strategySize = state.strategyInitialSize
-  },
+  setActiveStrategy: (state, activeStrategy) => (state.activeStrategy = activeStrategy),
+  setAvailableWorkspace: (state, availableWorkspaces) => (state.availableWorkspaces = availableWorkspaces),
+  setAvaliableVariablesToTemplate: (state, variables) => (state.avaliableVariablesToTemplate = variables),
+  setFilterTerm: (state, term) => (state.strategyQuery.name = term),
+  incrementStrategyQueryPage: (state) => (state.strategyQuery.page += 1),
+  resetStrategyQueryPage: (state) => (state.strategyQuery.page = 1),
+  setLoadingStrategies: (state, status) => (state.isLoadingStrategies = status),
 }
 
 export default StrategyMutations
