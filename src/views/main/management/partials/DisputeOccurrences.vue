@@ -204,32 +204,32 @@
                   >
                     Em {{ buildHour(merged) }}
                     <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                        criamos mensagem para
-                        <span v-if="merged.interaction.message.parameters && merged.interaction.message.parameters.RECEIVER_NAME">
-                            <b>{{merged.interaction.message.parameters.RECEIVER_NAME}}</b> no endereço
-                        </span>
-                        "<b>{{ merged.interaction.message.receiver | phoneMask }}</b>" <br>
-                        ->
-                        <span v-if="merged.interaction.type === 'SCHEDULER' && merged.interaction.message.scheduledTime">
-                            foi agendada para <u>{{ merged.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}</u>
-                        </span>
-                        Status:
-                        <span v-if="merged.interaction.message.status === 'CANCELED'">
-                            - Envio CANCELADO
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'WAITING'">
-                            - Aguardando para ser enviada
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'PROCESSED' || merged.interaction.message.status === 'PROCESSED_BY_USER'">
-                            - Enviada
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'FAILED'">
-                            - Falhou o envio
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'RETRYING'">
-                            - Tentando enviar novamente
-                        </span>
-                        <br>
+                      criamos mensagem para
+                      <span v-if="merged.interaction.message.parameters && merged.interaction.message.parameters.RECEIVER_NAME">
+                          <b>{{ merged.interaction.message.parameters.RECEIVER_NAME }}</b> no endereço
+                      </span>
+                      "<b>{{ merged.interaction.message.receiver | phoneMask }}</b>" <br>
+                      ->
+                      <span v-if="merged.interaction.type === 'SCHEDULER' && merged.interaction.message.scheduledTime">
+                        foi agendada para <u>{{ merged.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}</u>
+                      </span>
+                      Status:
+                      <span v-if="merged.interaction.message.status === 'CANCELED'">
+                        - Envio CANCELADO
+                      </span>
+                      <span v-if="merged.interaction.message.status === 'WAITING'">
+                        - Aguardando para ser enviada
+                      </span>
+                      <span v-if="merged.interaction.message.status === 'PROCESSED' || merged.interaction.message.status === 'PROCESSED_BY_USER'">
+                        - Enviada
+                      </span>
+                      <span v-if="merged.interaction.message.status === 'FAILED'">
+                        - Falhou o envio
+                      </span>
+                      <span v-if="merged.interaction.message.status === 'RETRYING'">
+                        - Tentando enviar novamente
+                      </span>
+                      <br>
                     </span>
                     <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
                       - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
@@ -712,6 +712,7 @@ export default {
       .dispute-view-occurrences__card {
         margin-right: 8px;
       }
+
     }
     &.LOADING {
       opacity: 0.5;
@@ -809,6 +810,9 @@ export default {
       }
       table:not([style]) {
         width: 100%;
+      }
+      table, table tbody, table tbody *  {
+        background: none !important;
       }
       img {
         max-width: 100%;

@@ -437,6 +437,19 @@
                     :name="role.name"
                   />
                 </span>
+                <el-select
+                  v-model="role.party"
+                  placeholder="Defina o polo desta parte"
+                  v-if="role.party === 'UNKNOW'"
+                  @change="setDisputeParty(role)"
+                >
+                  <el-option
+                    v-for="party in disputePartys"
+                    :key="party.value"
+                    :label="party.label"
+                    :value="party.value"
+                  />
+                </el-select>
               </div>
               <div
                 v-show="role.documentNumber"
@@ -1560,6 +1573,24 @@ export default {
       lastOfferValueHasChanged: false,
       cityFilter: null,
       ufFilter: null,
+      disputePartys: [
+        {
+          value: 'RESPONDENT',
+          label: 'Réu',
+        },
+        {
+          value: 'CLAIMANT',
+          label: 'Parte contrária',
+        },
+        {
+          value: 'IMPARTIAL',
+          label: 'Arbitro/Juiz/Mediador',
+        },
+        {
+          value: 'UNKNOW',
+          label: 'Desconhecido',
+        },
+      ],
     }
   },
   computed: {
@@ -2319,6 +2350,25 @@ export default {
           })
         })
       })
+    },
+    setDisputeParty(role) {
+      const params = {
+        disputeId: this.dispute.id,
+        disputeRoleId: role.id,
+        disputeParty: role.party,
+      }
+      this.$jusSegment('Defiido função em participante da disputa', {
+        page: this.$route.name,
+      })
+      this.$store.dispatch('setDisputeparty', params)
+        .then(() => {
+          this.$jusNotification({
+            title: 'Yay!',
+            message: 'Função definida com sucesso!',
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          })
+        })
     },
   },
 }
