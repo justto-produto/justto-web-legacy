@@ -18,7 +18,7 @@
         <jus-text-editable
           :value="strategyData.name"
           type="title"
-          @hasEdition="changeStrategyData"
+          @hasEdition="changeStrategyName"
         />
       </div>
 
@@ -59,14 +59,27 @@
       </div>
 
       <div class="strategy-card__flex-area">
-        <div v-if="strategyData.privateStrategy && !strategySelections['s'+strategyData.id]">
-          <span
+        <div
+          v-if="!strategySelections[`strategy${strategyData.id}`] || !strategyData.privateStrategy"
+          class="strategy-card__tags-area"
+        >
+          <el-tag
             v-for="workspace in strategyData.workspaces"
-            :key="workspace.id"> {{ workspace.teamName }},
+            :key="workspace.id"
+            class="strategy-card__tags"
+            size="small"
+          >
+            {{ workspace.teamName }}
+          </el-tag>
+          <span
+            v-if="isWorkspacesNull"
+            class="strategy-card__select-alert"
+          >
+            {{ workspacesPlaceholder }}
           </span>
         </div>
         <el-select
-          v-if="strategyData.privateStrategy && strategySelections['s'+strategyData.id]"
+          v-if="strategyData.privateStrategy && strategySelections[`strategy${strategyData.id}`]"
           v-model="associatedWorkspaces"
           placeholder="Selecione um workspace"
           :disabled="!strategyData.privateStrategy"
@@ -81,36 +94,43 @@
             :value="workspace.id"
           />
         </el-select>
-        <div
-          v-if="isWorkspacesNull"
-          class="strategy-card__select-alert"
-        >
-          {{ workspacesPlaceholder }}
-        </div>
       </div>
 
       <div class="strategy-card__flex-area">
+        <div
+          v-if="!strategySelections[`strategy${strategyData.id}`]"
+          class="strategy-card__tags-area"
+        >
+          <el-tag
+            v-for="(type, index) in strategyData.types"
+            :key="index"
+            class="strategy-card__tags"
+            size="small"
+          >
+            {{ $t(`strategyTypes.${type}`).toUpperCase() }}
+          </el-tag>
+          <span
+            v-if="istTypesNull"
+            class="strategy-card__select-alert"
+          >
+            Sem tipo a estratégia <strong>não funciona!</strong> Escolha ao menos um!
+          </span>
+        </div>
         <el-select
+          v-if="strategySelections[`strategy${strategyData.id}`]"
           v-model="strategyData.types"
           filterable
           multiple
           placeholder="Selecione tipos"
-          @focus="loadSelections4StrategyId(strategyData.id)"
           @change="changeStrategyTypes()"
         >
           <el-option
             v-for="(type, index) in defaultStrategyTypes"
             :key="index"
-            :label="type.name"
-            :value="type.value"
+            :label="$t(`strategyTypes.${type}`).toUpperCase()"
+            :value="type"
           />
         </el-select>
-        <div
-          v-if="istTypesNull"
-          class="strategy-card__select-alert"
-        >
-          Sem tipo a estratégia <strong>não funciona!</strong> Escolha ao menos um!
-        </div>
       </div>
     </div>
   </div>
@@ -140,12 +160,7 @@ export default {
     return {
       strategyData: this.strategy,
       associatedWorkspaces: this.strategy.workspaces.map(w => w.id),
-      defaultStrategyTypes: [
-        { name: 'INDENIZATÓRIO DE VALOR', value: 'PAYMENT' },
-        { name: 'COBRANÇA', value: 'RECOVERY' },
-        { name: 'OBRIGAÇÃO DE FAZER', value: 'OBLIGATION' },
-        { name: 'DESCONTO', value: 'DISCOUNT' },
-      ],
+      defaultStrategyTypes: ['PAYMENT', 'RECOVERY', 'OBLIGATION', 'DISCOUNT'],
       strategySelections: {},
     }
   },
@@ -165,13 +180,17 @@ export default {
     },
   },
   methods: {
-    changeStrategyData(newValue) {
-      this.strategyData.name = newValue
+    changeStrategyData() {
       this.$emit('changeStrategyData', this.strategyData)
     },
 
+    changeStrategyName(newValue) {
+      this.strategyData.name = newValue
+      this.changeStrategyData()
+    },
+
     loadSelections4StrategyId(id) {
-      this.$set(this.strategySelections, 's' + id, true)
+      this.$set(this.strategySelections, `strategy${id}`, true)
     },
 
     changeStrategyTypes() {
@@ -218,7 +237,7 @@ export default {
 @import '@/styles/colors.scss';
 
 .strategy-card {
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid $--color-cloudy-blue;
   position: relative;
   box-shadow: inherit !important;
@@ -280,11 +299,20 @@ export default {
       flex: 1;
       margin-left: 16px;
 
-      .strategy-card__select-alert {
-        color: $--color-text-secondary;
-        font-size: 12px;
-        line-height: 14px;
-        padding: 6px 6px 0 6px;
+      .strategy-card__tags-area {
+        border: solid 1px $--color-cloudy-blue;
+        border-radius: 2px;
+        padding: 4px;
+
+        .strategy-card__select-alert {
+          color: $--color-text-secondary;
+          font-size: 12px;
+        }
+
+        .strategy-card__tags {
+          color: $--color-text-regular;
+          margin: 2px;
+        }
       }
     }
   }
