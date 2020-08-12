@@ -4,11 +4,19 @@ import mutations from './mutations'
 
 const StrategyModule = {
   state: {
-    strategies: [],
+    strategies: {},
     availableWorkspaces: [],
     avaliableVariablesToTemplate: {},
-    strategyInitialSize: 20,
-    strategySize: 20,
+    isLoadingStrategies: false,
+    strategyQuery: {
+      size: 10,
+      page: 1,
+      name: '',
+      sort: [
+        'active,desc',
+        'name,asc',
+      ],
+    },
   },
   actions,
   getters,

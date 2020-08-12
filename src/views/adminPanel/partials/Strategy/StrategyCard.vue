@@ -1,124 +1,118 @@
 <template>
   <div
+    class="strategy-card"
     @click="loadSelections4StrategyId(strategyData.id)"
   >
-    <tr>
-      <td>
-        <div class="panel-strategy__card strategy-card el-card__body">
-          <div class="strategy-card__private-icon-area">
-            <el-tooltip :content="strategyData.privateStrategy ? 'Estratégia privada' : 'Estratégia pública'">
-              <i
-                :class="{
-                  [`el-icon-${strategyData.privateStrategy ? 'lock' : 'unlock'}`]: true
-                }"
-                class="strategy-card__icon"
-                @click="changeStrategyPrivacy()"
-              />
-            </el-tooltip>
-          </div>
-          <div class="strategy-card__active-icon-area">
-            <el-tooltip :content="strategyData.active ? 'Estratégia ativa' : 'Estratégia inativa'">
-              <span @click="changeStrategyActive()">
-                <jus-icon
-                  :icon="strategyData.active ? 'eye' : 'hide'"
-                  class="strategy-card__icon"
-                />
-              </span>
-            </el-tooltip>
-          </div>
-          <div class="strategy-card__name-area">
-            <jus-text-editable
-              :value="strategyData.name"
-              type="title"
-              @hasEdition="changeStrategyData"
-            />
-          </div>
-          <div class="strategy-card__action-area">
-            <el-tooltip content="Copiar estratégia">
-              <el-button
-                type="text"
-                plain
-                icon="el-icon-copy-document"
-                class="strategy-card__action-button"
-                @click.native="emitCopyStrategy"
-              />
-            </el-tooltip>
-            <el-tooltip content="Apagar estratégia">
-              <el-button
-                type="text"
-                plain
-                data-testid="remove"
-                class="strategy-card__action-button"
-                size="mini"
-                @click.native="emitDeleteStrategy"
-              >
-                <i class="el-icon-delete" />
-              </el-button>
-            </el-tooltip>
-          </div>
+    <div class="strategy-card__header">
+      <div class="strategy-card__private-icon-area">
+        <el-tooltip :content="strategyData.privateStrategy ? 'Estratégia privada' : 'Estratégia pública'">
+          <i
+            :class="`el-icon-${strategyData.privateStrategy ? 'lock' : 'unlock'}`"
+            class="strategy-card__icon"
+            @click="changeStrategyPrivacy()"
+          />
+        </el-tooltip>
+      </div>
 
-          <div class="strategy-card__messages-area">
-            <StrategyCommunication
-              :triggers="strategyData.triggers"
-              :strategy-id="strategy.id"
-            />
-          </div>
-          <div class="strategy-card__workspaces-area">
-            <div v-if="strategyData.privateStrategy && !strategySelections['s'+strategyData.id]">
-              <span
-                      v-for="workspace in strategyData.workspaces"
-                      :key="workspace.id"> {{ workspace.teamName }}, </span>
-            </div>
-            <el-select
-              v-if="strategyData.privateStrategy && strategySelections['s'+strategyData.id]"
-              v-model="associatedWorkspaces"
-              placeholder="Selecione um workspace"
-              :disabled="!strategyData.privateStrategy"
-              multiple
-              filterable
-              @change="changeStrategyWorkspaces($event)"
-            >
-              <el-option
-                v-for="workspace in availableWorkspaces"
-                :key="`${strategyData.id}-${workspace.id}`"
-                :label="workspace.teamName"
-                :value="workspace.id"
-              />
-            </el-select>
-            <div
-              v-if="isWorkspacesNull"
-              class="strategy-card__select-alert"
-            >
-              {{ workspacesPlaceholder }}
-            </div>
-          </div>
-          <div class="strategy-card__strategies-area">
-            <el-select
-              v-model="strategyData.types"
-              filterable
-              multiple
-              placeholder="Selecione tipos"
-              @focus="loadSelections4StrategyId(strategyData.id)"
-              @change="changeStrategyTypes()"
-            >
-              <el-option
-                v-for="(type, index) in defaultStrategyTypes"
-                :key="index"
-                :label="type.name"
-                :value="type.value"
-              />
-            </el-select>
+      <div class="strategy-card__name-area">
+        <jus-text-editable
+          :value="strategyData.name"
+          type="title"
+          @hasEdition="changeStrategyData"
+        />
+      </div>
 
-            <div
-              v-if="istTypesNull"
-              class="strategy-card__select-alert"
-            >
-              Sem tipo a estratégia <strong>não funciona!</strong> Escolha ao menos um!
-            </div>
-          </div>
+      <div class="strategy-card__action-area">
+        <el-tooltip content="Copiar estratégia">
+          <el-button
+            type="text"
+            icon="el-icon-copy-document"
+            @click.native="emitCopyStrategy"
+          />
+        </el-tooltip>
+        <el-tooltip content="Apagar estratégia">
+          <el-button
+            type="text"
+            icon="el-icon-delete"
+            @click.native="emitDeleteStrategy"
+          />
+        </el-tooltip>
+      </div>
+    </div>
+
+    <div class="strategy-card__body">
+      <div class="strategy-card__active-icon-area">
+        <el-tooltip :content="strategyData.active ? 'Estratégia ativa' : 'Estratégia inativa'">
+          <i
+            :class="`el-icon-${strategyData.active ? 'open' : 'turn-off'}`"
+            class="strategy-card__icon"
+            @click="changeStrategyActive()"
+          />
+        </el-tooltip>
+      </div>
+
+      <div class="strategy-card__flex-area">
+        <StrategyCommunication
+          :triggers="strategyData.triggers"
+          :strategy-id="strategy.id"
+        />
+      </div>
+
+      <div class="strategy-card__flex-area">
+        <div v-if="strategyData.privateStrategy && !strategySelections['s'+strategyData.id]">
+          <span
+            v-for="workspace in strategyData.workspaces"
+            :key="workspace.id"> {{ workspace.teamName }},
+          </span>
         </div>
-      </td>
-    </tr>
+        <el-select
+          v-if="strategyData.privateStrategy && strategySelections['s'+strategyData.id]"
+          v-model="associatedWorkspaces"
+          placeholder="Selecione um workspace"
+          :disabled="!strategyData.privateStrategy"
+          multiple
+          filterable
+          @change="changeStrategyWorkspaces($event)"
+        >
+          <el-option
+            v-for="workspace in availableWorkspaces"
+            :key="`${strategyData.id}-${workspace.id}`"
+            :label="workspace.teamName"
+            :value="workspace.id"
+          />
+        </el-select>
+        <div
+          v-if="isWorkspacesNull"
+          class="strategy-card__select-alert"
+        >
+          {{ workspacesPlaceholder }}
+        </div>
+      </div>
+
+      <div class="strategy-card__flex-area">
+        <el-select
+          v-model="strategyData.types"
+          filterable
+          multiple
+          placeholder="Selecione tipos"
+          @focus="loadSelections4StrategyId(strategyData.id)"
+          @change="changeStrategyTypes()"
+        >
+          <el-option
+            v-for="(type, index) in defaultStrategyTypes"
+            :key="index"
+            :label="type.name"
+            :value="type.value"
+          />
+        </el-select>
+        <div
+          v-if="istTypesNull"
+          class="strategy-card__select-alert"
+        >
+          Sem tipo a estratégia <strong>não funciona!</strong> Escolha ao menos um!
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -152,9 +146,7 @@ export default {
         { name: 'OBRIGAÇÃO DE FAZER', value: 'OBLIGATION' },
         { name: 'DESCONTO', value: 'DISCOUNT' },
       ],
-      strategySelections: {
-
-      },
+      strategySelections: {},
     }
   },
   computed: {
@@ -225,95 +217,77 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
-.panel-strategy {
-  padding: 40px;
+.strategy-card {
+  border-radius: 12px;
+  border: 1px solid $--color-cloudy-blue;
+  position: relative;
+  box-shadow: inherit !important;
+  margin-bottom: 24px;
+  padding: 24px;
 
-  .strategy-card {
-    position: relative;
-    box-shadow: inherit !important;
+  &:hover {
+    border: 1px solid $--color-primary;
+    color: $--color-primary;
+  }
 
-    &:hover {
-      border: 1px solid $--color-primary;
-      color: $--color-primary;
+  .strategy-card__header {
+    display: flex;
+    align-items: center;
+
+    .strategy-card__private-icon-area {
+      width: 32px;
+      cursor: pointer;
+      font-size: 32px;
     }
 
-      display: grid;
-      grid-template-areas:
-        'private-icon-area name-area name-area action-area'
-        'active-icon-area messages-area workspaces-area strategies-area';
-      grid-template-columns: 32px repeat(3, 1fr);
-      grid-template-rows: repeat(2, minmax(40px, auto));
-      gap: 16px;
+    .strategy-card__name-area {
+      width: calc(100% - 110px);
+      margin-left: 16px;
+    }
 
-      &:hover {
-        .strategy-card__action-area {
-          display: block;
-          position: absolute;
-          top: 16px;
-          right: 16px;
+    .strategy-card__action-area {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      display: none;
+      i {font-size: 16px;}
 
-          .strategy-card__action-button {
-            font-size: 16px;
-          }
-        }
+      .el-icon-delete {
+        color: $--color-danger;
       }
+    }
+  }
 
-      .strategy-card__private-icon-area {
-        grid-area: private-icon-area;
-
-        & > i {
-          cursor: pointer;
-          font-size: 32px;
-        }
-        margin: 15px;
-      }
-
-      .strategy-card__active-icon-area {
-        grid-area: active-icon-area;
-
-        .strategy-card__icon {
-          cursor: pointer;
-          width: 32px;
-        }
-      }
-
-      .strategy-card__name-area {
-        grid-area: name-area;
-      }
-
+  &:hover {
+    .strategy-card__header {
       .strategy-card__action-area {
-        display: none;
-        grid-area: action-area;
+        display: flex;
       }
+    }
+  }
 
-      .strategy-card__workspaces-area {
-        grid-area: workspaces-area;
+  .strategy-card__body {
+    margin-top: 16px;
+    display: flex;
 
-        & > .jus-tag-container {
-          height: 100%;
-        }
-      }
+    .strategy-card__active-icon-area {
+      width: 32px;
+      cursor: pointer;
+      font-size: 32px;
+    }
 
-      .strategy-card__messages-area {
-        grid-area: messages-area;
-      }
-
-      .strategy-card__strategies-area {
-        grid-area: strategies-area;
-
-        & > .jus-tag-container {
-          height: 100%;
-        }
-      }
+    .strategy-card__flex-area {
+      flex: 1;
+      margin-left: 16px;
 
       .strategy-card__select-alert {
         color: $--color-text-secondary;
         font-size: 12px;
         line-height: 14px;
-        padding: 6px;
-        padding-bottom: 0;
+        padding: 6px 6px 0 6px;
       }
-
+    }
   }
 }
+
 </style>

@@ -147,7 +147,6 @@ export default {
       gap: 16px;
       grid-template-areas: 'name-area email-area sms-area';
       grid-template-columns: auto repeat(2, 56px);
-      margin-bottom: 8px;
       padding: 8px 16px;
       width: 100%;
 

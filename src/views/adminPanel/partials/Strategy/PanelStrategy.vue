@@ -1,15 +1,11 @@
 <template>
-  <!--   FIXME concluir infinite scroll     -->
   <el-container
     v-loading="loading"
     class="panel-strategy"
   >
-    <table
-      v-if="filteredStrategies.length"
-      class="panel-strategy table-strategy"
-    >
+    <div v-if="strategiesContent.length">
       <strategy-card
-        v-for="(strategy) in filteredStrategies"
+        v-for="(strategy) in strategiesContent"
         :key="strategy.id"
         :available-workspaces="workspaces"
         :strategy="strategy"
@@ -17,21 +13,40 @@
         @copyStrategy="copyStrategyHandler"
         @deleteStrategy="deleteStrategyHandler"
       />
-    </table>
-    <label
+
+      <infinite-loading
+        v-if="strategies.totalElements >= 20"
+        spinner="spiral"
+        @infinite="loadStrategy"
+      >
+        <div slot="no-more">
+          Fim das estratégias
+        </div>
+        <div slot="no-results">
+          Fim das estratégias
+        </div>
+      </infinite-loading>
+    </div>
+
+    <div
       v-else
-      v-text="'Sem dados.'"
-    />
+      class="panel-strategy__empty"
+    >
+      <jusIcon icon="empty-screen-filter" />
+      <span class="panel-strategy__empty-label">
+        Nenhuma estratégia encontrada.
+      </span>
+    </div>
   </el-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { filterByTerm } from '@/utils/jusUtils'
 
 export default {
   name: 'PanelStrategy',
   components: {
+    InfiniteLoading: () => import('vue-infinite-loading'),
     StrategyCard: () => import('./StrategyCard'),
   },
   props: {
@@ -41,53 +56,33 @@ export default {
     },
   },
   data: () => ({
-    activeCollapse: ['active'],
-    loading: true,
-    filterTermApplied: '',
-    processingFilter: null,
-    infiniteId: +new Date(),
+    filterDebounce: null,
   }),
   computed: {
     ...mapGetters({
       strategies: 'getStrategies',
       workspaces: 'getAvailableWorkspaces',
+      loading: 'getStrategiesLoadingStatus',
     }),
 
-    filteredStrategies() {
-      const filteredStrategys = filterByTerm(this.filterTermApplied, this.strategies, 'name')
-      return filteredStrategys
+    strategiesContent() {
+      return this.strategies.content || []
     },
   },
   watch: {
-    filterTerm(newValue) {
-      /**
-       * FIXME refatorar esta merda para substituir por um debounce decente que controle sobrecarga,
-       * não deixando sobrescrever por dados antigos nem fazer consultas desnecessarias
-       */
-      if (this.processingFilter != null) {
-        try {
-          clearTimeout(this.processingFilter)
-        } catch (e) {}
+    filterTerm(newValue, oldValue) {
+      clearTimeout(this.filterDebounce)
+      if (this.filterTerm !== oldValue) {
+        this.filterDebounce = setTimeout(() => {
+          this.setFilterTerm(newValue)
+        }, 500)
       }
-      this.processingFilter = setTimeout(() => {
-        if (this.filterTermApplied !== newValue) {
-          this.filterTermApplied = newValue
-        }
-      }, 400)
     },
   },
   beforeMount() {
     this.getAvailableWorkspace()
     this.getAvaliableVariablesToTemplate()
-    this.getStrategies().finally(
-      () => {
-        this.$nextTick(
-          () => {
-            this.loading = false
-          },
-        )
-      },
-    )
+    this.getStrategies()
   },
   methods: {
     ...mapActions([
@@ -101,18 +96,16 @@ export default {
       'deleteStrategy',
       'incrementStrategySize',
       'clearStrategySize',
+      'setFilterTerm',
     ]),
 
     loadStrategy($state) {
-      this.loading = true
-      this.$store.dispatch('getStrategies').then(response => {
+      this.getStrategies('isInfinite').then(response => {
         if (response.last) {
           $state.complete()
         } else {
           $state.loaded()
-          this.$store.commit('incrementStrategySize')
         }
-        this.loading = false
       })
     },
 
@@ -178,31 +171,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.table-strategy {
-    width: 100%;
-}
+@import '@/styles/colors.scss';
+
 .panel-strategy {
   background-color: #fff;
-  padding: 40px;
-  overflow: auto;
+  padding: 32px;
   height: 100%;
+  overflow: auto;
 
-  .panel-strategy__card {
-    margin-bottom: 32px;
-  }
+  .panel-strategy__empty {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 
-}
-</style>
-
-<style lang="scss">
-.panel-strategy {
-  .el-collapse-item__header {
-    font-size: 20px;
-    font-weight: bold;
-    color: #adadad;
-  }
-  .el-collapse-item__arrow {
-    margin: 0 0 0 8px;
+    .panel-strategy__empty-label {
+      margin-top: 24px;
+      color: $--color-text-secondary;
+    }
   }
 }
 </style>

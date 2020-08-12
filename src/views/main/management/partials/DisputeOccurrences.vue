@@ -206,7 +206,7 @@
                     <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
                       criamos mensagem para
                       <span v-if="merged.interaction.message.parameters && merged.interaction.message.parameters.RECEIVER_NAME">
-                          <b>{{ merged.interaction.message.parameters.RECEIVER_NAME }}</b> no endereço
+                        <b>{{ merged.interaction.message.parameters.RECEIVER_NAME }}</b> no endereço
                       </span>
                       "<b>{{ merged.interaction.message.receiver | phoneMask }}</b>" <br>
                       ->
