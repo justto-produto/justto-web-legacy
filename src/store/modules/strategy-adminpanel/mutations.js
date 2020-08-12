@@ -18,28 +18,27 @@ const StrategyMutations = {
     else state.strategies.content.push(...strategies.content)
   },
   addCommunications: (state, { response, strategyId }) => {
-    const { strategies } = state
-    const strategyIndex = findStrategyIndex(strategies, strategyId)
-    const trigger = strategies[strategyIndex].triggers
-    if (!trigger[response.triggerType]) {
-      Vue.set(trigger, response.triggerType, { communications: [] })
-    }
-    Vue.set(trigger[response.triggerType].communications, trigger[response.triggerType].communications.length, response)
+    const strategyIndex = findStrategyIndex(state.strategies, strategyId)
+    const triggers = state.strategies.content[strategyIndex].triggers
+    const triggerType = response.triggerType
     const communicationType = response.type
-    let quantity = 0
-    if (strategies[strategyIndex].triggers[response.triggerType].communicationsTypeSummary) {
-      quantity = strategies[strategyIndex].triggers[response.triggerType].communicationsTypeSummary[communicationType]
-      Vue.set(strategies[strategyIndex].triggers[response.triggerType].communicationsTypeSummary, communicationType, (quantity + 1))
+    if (!triggers[triggerType]) {
+      Vue.set(triggers, triggerType, { communications: [] })
+      Vue.set(triggers[triggerType], 'communicationsTypeSummary', {})
     }
+    if (!triggers[triggerType].communicationsTypeSummary[communicationType]) {
+      Vue.set(triggers[triggerType].communicationsTypeSummary, communicationType, 0)
+    }
+    Vue.set(triggers[triggerType].communications, triggers[triggerType].communications.length, response)
+    state.strategies.content[strategyIndex].triggers[triggerType].communicationsTypeSummary[communicationType] += 1
   },
   deleteCommunication: (state, { communicationId, strategyId, trigger }) => {
-    const { strategies } = state
-    const strategyIndex = findStrategyIndex(strategies, strategyId)
-    const communicationIndex = findCommunicationIndex(strategies[strategyIndex].triggers[trigger].communications, communicationId)
-    const communicationType = strategies[strategyIndex].triggers[trigger].communications[communicationIndex].type
-    Vue.delete(strategies[strategyIndex].triggers[trigger].communications, communicationIndex)
-    const quantity = strategies[strategyIndex].triggers[trigger].communicationsTypeSummary[communicationType]
-    Vue.set(strategies[strategyIndex].triggers[trigger].communicationsTypeSummary, communicationType, (quantity - 1))
+    const strategyIndex = findStrategyIndex(state.strategies, strategyId)
+    const communications = state.strategies.content[strategyIndex].triggers[trigger].communications
+    const communicationIndex = findCommunicationIndex(communications, communicationId)
+    const communicationType = communications[communicationIndex].type
+    Vue.delete(communications, communicationIndex)
+    state.strategies.content[strategyIndex].triggers[trigger].communicationsTypeSummary[communicationType] -= 1
   },
   setActiveStrategy: (state, activeStrategy) => (state.activeStrategy = activeStrategy),
   setAvailableWorkspace: (state, availableWorkspaces) => (state.availableWorkspaces = availableWorkspaces),
