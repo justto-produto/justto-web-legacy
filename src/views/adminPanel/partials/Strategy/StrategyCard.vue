@@ -185,8 +185,16 @@ export default {
     },
 
     changeStrategyName(newValue) {
-      this.strategyData.name = newValue
-      this.changeStrategyData()
+      if (!newValue) {
+        this.$jusNotification({
+          title: 'Ops',
+          type: 'warning',
+          message: 'O nome da estratégia não pode ficar vazio',
+        })
+      } else {
+        this.strategyData.name = newValue
+        this.changeStrategyData()
+      }
     },
 
     loadSelections4StrategyId(id) {
