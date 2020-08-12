@@ -185,16 +185,8 @@ export default {
     },
 
     changeStrategyName(newValue) {
-      if (!newValue) {
-        this.$jusNotification({
-          title: 'Ops',
-          type: 'warning',
-          message: 'O nome da estratégia não pode ficar vazio',
-        })
-      } else {
-        this.strategyData.name = newValue
-        this.changeStrategyData()
-      }
+      this.strategyData.name = newValue
+      this.changeStrategyData()
     },
 
     loadSelections4StrategyId(id) {
@@ -315,7 +307,6 @@ export default {
         .strategy-card__select-alert {
           color: $--color-text-secondary;
           font-size: 12px;
-          line-height: 10px;
         }
 
         .strategy-card__tags {

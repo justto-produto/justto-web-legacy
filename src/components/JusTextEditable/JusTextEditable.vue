@@ -63,8 +63,16 @@ export default {
     },
     saveChanges() {
       if (this.isEditing) {
-        this.$emit('hasEdition', this.inputValue)
-        this.isEditing = false
+        if (!this.inputValue) {
+          this.$jusNotification({
+            title: 'Ops',
+            type: 'warning',
+            message: 'Este campo não pode ficar vazio',
+          })
+        } else {
+          this.$emit('hasEdition', this.inputValue)
+          this.isEditing = false
+        }
       }
     },
   },
