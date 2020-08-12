@@ -70,7 +70,25 @@
           v-else
           class="communication-editor__editor-fieldset show-toolbar"
         >
-          Editor
+          <!-- <ckeditor
+            v-model="editorData"
+            :editor="editor"
+            :config="editorConfig"
+          /> -->
+
+          <froala
+            id="edit"
+            v-model="template.body"
+            :tag="'textarea'"
+            :config="config"
+          />
+
+          {{ template.body }}
+          <button
+            @click="saveHtml(template.body)"
+          >
+            Salvar
+          </button>
         </div>
       </div>
 
@@ -85,6 +103,7 @@
 </template>
 
 <script>
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -116,6 +135,17 @@ export default {
       template: {},
       status: 'SAVED',
       saveDebounce: () => {},
+      editor: ClassicEditor,
+      editorData: '',
+      editorConfig: {},
+      editorDataFroala: '',
+      config: {
+        events: {
+          initialized: () => {
+            console.log('initialized')
+          },
+        },
+      },
     }
   },
   computed: {
