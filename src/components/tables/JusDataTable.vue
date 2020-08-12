@@ -165,7 +165,7 @@ export default {
     pagination: {
       type: Object,
       required: false,
-      default: () => ({}),
+      default: () => {},
     },
     loading: {
       type: Boolean,
@@ -191,14 +191,13 @@ export default {
           label: 'Editar lançamento',
           trigger: 'editTransaction',
           hide: !this.isJusttoAdmin,
-          condition: (scope) => scope.type === 'MANUAL',
+          condition: (scope) => (scope.type === 'MANUAL' && this.isJusttoAdmin),
         },
         {
           icon: 'trash',
           label: 'Cancelar lançamento',
           trigger: 'cancelTransaction',
-          hide: !this.isJusttoAdmin,
-          condition: (scope) => !!scope.value,
+          condition: (scope) => (!!scope.value && this.isJusttoAdmin),
         },
       ]
     },

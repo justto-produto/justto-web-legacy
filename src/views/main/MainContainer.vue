@@ -73,7 +73,7 @@
       >
         TIME
       </div>
-      <vue-perfect-scrollbar v-if="$store.getters.isAdminProfile">
+      <vue-perfect-scrollbar v-if="isAdminProfile">
         <jus-team-menu />
       </vue-perfect-scrollbar>
     </el-aside>

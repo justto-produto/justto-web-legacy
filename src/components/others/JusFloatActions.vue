@@ -2,7 +2,6 @@
   <div class="float-actions">
     <div
       v-for="action in actions"
-      v-show="!action.hide"
       :key="action.name"
       class="float-actions__action-wrapper"
     >
