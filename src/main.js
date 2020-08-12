@@ -74,16 +74,11 @@ import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
 import JusStatusDot from '@/components/others/JusStatusDot'
 
-import svgSpriteLoader from './utils/svg-sprite-loader'
-
 Vue.component('JusIcon', JusIcon)
 Vue.component('JusAvatarUser', JusAvatarUser)
 Vue.component('JusViewMain', JusViewMain)
 Vue.component('JusButtonBack', JusButtonBack)
 Vue.component('JusStatusDot', JusStatusDot)
-
-const __svg__ = { path: './assets/icons/editor/*.svg', name: './assets/[hash].sprite.svg' }
-svgSpriteLoader(__svg__.filename)
 
 // mask
 Vue.use(VueTheMask)

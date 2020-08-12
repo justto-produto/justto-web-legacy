@@ -70,10 +70,7 @@
           v-else
           class="communication-editor__editor-fieldset show-toolbar"
         >
-          <Editor
-            :text="template.body"
-            @change-text="saveHtml($event)"
-          />
+          Editor
         </div>
       </div>
 
@@ -94,7 +91,6 @@ export default {
   name: 'CommunicationEditor',
   components: {
     JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
-    Editor: () => import('./Editor'),
   },
   props: {
     templateToEdit: {
@@ -119,19 +115,6 @@ export default {
     return {
       template: {},
       status: 'SAVED',
-      editorOptions: {
-        placeholder: 'Edite seu e-mail aqui!',
-        modules: {
-          toolbar: [
-            [{ font: [] }],
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            [{ color: [] }, { background: [] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
-            ['blockquote', 'link', 'image'],
-          ],
-        },
-      },
       saveDebounce: () => {},
     }
   },
