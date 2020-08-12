@@ -1,5 +1,4 @@
 process.env.VUE_APP_VERSION = require('./package.json').version
-const SvgStore = require('webpack-svgstore-plugin')
 
 module.exports = {
   pluginOptions: {
