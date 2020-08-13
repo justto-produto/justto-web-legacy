@@ -1,12 +1,31 @@
 import axiosDispatcher from '@/store/axiosDispatcher.js'
+import { queryBuilder } from '@/utils/jusUtils'
 
 const strategyPath = '/api/strategy'
 
 const StrategyActions = {
-  getStrategies: () => axiosDispatcher({
-    url: `${strategyPath}?size=999&`,
-    mutation: 'setStrategies',
-  }),
+  setActiveStrategy: ({ commit, state }, strategyId) => {
+    commit('setActiveStrategy', state.activeStrategy === strategyId ? null : strategyId)
+  },
+
+  setFilterTerm: ({ commit, dispatch }, term) => {
+    commit('setFilterTerm', term)
+    dispatch('getStrategies')
+  },
+
+  getStrategies: ({ commit, state }, action) => {
+    if (action === 'isInfinite') {
+      commit('incrementStrategyQueryPage')
+    } else {
+      commit('setLoadingStrategies', true)
+      commit('resetStrategyQueryPage')
+    }
+
+    return axiosDispatcher({
+      url: `${strategyPath}${queryBuilder(state.strategyQuery)}`,
+      mutation: 'setStrategies',
+    }).finally(() => commit('setLoadingStrategies', false))
+  },
 
   getAvailableWorkspace: () => axiosDispatcher({
     url: 'api/strategy/workspace/available',

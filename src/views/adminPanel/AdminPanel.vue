@@ -45,6 +45,7 @@
               v-model="filterTerm"
               prefix-icon="el-icon-search"
               placeholder="Buscar"
+              clearable
             />
             <el-button
               v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
