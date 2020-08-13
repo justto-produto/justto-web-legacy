@@ -77,22 +77,29 @@
         </div>
       </div>
 
-      <div>
+      <div class="communication-editor__right-area">
         <JusVariablesCard
           :variables="variables"
           class="communication-editor__variables-card"
         />
+        <div class="communication-editor__footer">
+          <el-button
+            plain
+            class="communication-editor__footer-button"
+            @click="isVisible = false"
+          >
+            Cancelar
+          </el-button>
+          <el-button
+            type="primary"
+            class="communication-editor__footer-button"
+            @click="template.contentType === 'HTML' ? setHtmlHeader(template.body) : saveTemplate()"
+          >
+            Salvar
+          </el-button>
+        </div>
       </div>
 
-      <div slot="footer">
-        <el-button
-          icon="el-icon-edit"
-          type="primary"
-          @click="template.contentType === 'HTML' ? setHtmlHeader(template.body) : saveTemplate()"
-        >
-          Salvar
-        </el-button>
-      </div>
     </el-dialog>
   </div>
 </template>
@@ -246,38 +253,28 @@ export default {
     }
 
     .communication-editor__editor-fieldset {
+      border: 1px solid #ccc;
+      border-radius: 4px;
       width: 100%;
       height: 100%;
       flex: 1;
       margin-top: 12px;
-
-      .communication-editor__quill {
-        padding: 16px;
-        height: calc(100% - 32px);
-      }
     }
   }
 
-  .communication-editor__variables-card {
-    height: 90%;
-  }
+  .communication-editor__right-area {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 
-  .communication-editor__save {
-    width: 320px;
-    margin: 20px 10px;
-    font-size: 16px;
-    font-weight: 600;
-  }
+    .communication-editor__footer {
+      margin-top: 12px;
+      margin-left: 12px;
+      display: flex;
 
-  .communication-editor__resize-icon {
-    position: absolute;
-    color: $--color-text-secondary;
-    font-size: 16px;
-    top: 31px;
-    right: 53px;
-    cursor: pointer;
-    &:hover {
-      color: $--color-primary
+      .communication-editor__footer-button {
+        flex: 1;
+      }
     }
   }
 }
