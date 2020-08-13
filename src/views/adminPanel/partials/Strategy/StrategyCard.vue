@@ -158,13 +158,15 @@ export default {
   },
   data() {
     return {
-      strategyData: this.strategy,
       associatedWorkspaces: this.strategy.workspaces.map(w => w.id),
       defaultStrategyTypes: ['PAYMENT', 'RECOVERY', 'OBLIGATION', 'DISCOUNT'],
       strategySelections: {},
     }
   },
   computed: {
+    strategyData() {
+      return this.strategy
+    },
     strategyValidator() {
       const rules = ['PAYMENT', 'RECOVERY']
       return !rules.every(rule => Object.values(this.strategyData.types).includes(rule))
