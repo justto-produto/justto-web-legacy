@@ -169,7 +169,10 @@ export default {
       this.cloneStrategy({
         strategyClone,
         originId: strategy.id,
-      }).then(this.getStrategies)
+      }).then(() => {
+        this.$emit('set-filter', newName)
+        this.getStrategies()
+      })
     },
   },
 }
