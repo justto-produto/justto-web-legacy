@@ -8,7 +8,7 @@
       <div slot="title">
         <span class="el-dialog__title">
           {{ communication.name }}
-          <span class="communication-editor__status">{{ statusText }}</span>
+          <span class="communication-editor__status">{{ savedAt }}</span>
         </span>
       </div>
 
@@ -61,7 +61,6 @@
             show-word-limit
             placeholder="Edite seu SMS aqui!"
             class="communication-editor__textarea"
-            @input="autosave"
           />
         </div>
 
@@ -83,12 +82,13 @@
           :variables="variables"
           class="communication-editor__variables-card"
         />
+      </div>
 
+      <div slot="footer">
         <el-button
-          class="communication-editor__save"
-          type="secondary"
           icon="el-icon-edit"
-          @click="saveHtml(template.body)"
+          type="primary"
+          @click="template.contentType === 'HTML' ? setHtmlHeader(template.body) : saveTemplate()"
         >
           Salvar
         </el-button>
@@ -127,16 +127,9 @@ export default {
   data() {
     return {
       template: {},
-      status: 'SAVED',
-      saveDebounce: () => {},
       editorDataFroala: '',
       config: {
         heightMax: 500,
-        events: {
-          initialized: () => {
-            console.log('initialized')
-          },
-        },
       },
     }
   },
@@ -144,18 +137,9 @@ export default {
     ...mapGetters({
       variables: 'getAvaliableVariablesToTemplate',
     }),
-    statusText() {
-      switch (status) {
-        case 'FAILD':
-          return 'Falha ao salvar template'
-        case 'SAVING':
-          return 'Salvando template...'
-        case 'SAVED':
-        default: {
-          const lastUpdate = this.template.updatedAt
-          return `Template salvo ${lastUpdate && lastUpdate.dateTime ? this.$moment(lastUpdate.dateTime).from(new Date()) : ''}`
-        }
-      }
+    savedAt() {
+      const lastUpdate = this.template.updatedAt
+      return `Template salvo ${lastUpdate && lastUpdate.dateTime ? this.$moment(lastUpdate.dateTime).from(new Date()) : ''}`
     },
     isVisible: {
       get() {
@@ -174,37 +158,33 @@ export default {
   methods: {
     ...mapActions(['changeCommunicationTemplate']),
 
-    autosave() {
-      clearTimeout(this.saveDebounce)
-      this.saveDebounce = setTimeout(() => {
-        this.status = 'SAVING'
-        this.template.communicationType = this.communication.type
-
-        this.changeCommunicationTemplate({
-          template: this.template,
-          communicationId: this.templateToEdit.id,
-          strategyId: this.strategyId,
-        }).then(response => {
-          this.template.updatedAt = response.updatedAt
-          this.status = 'SAVED'
-          this.isVisible = false
-        }).catch(() => { this.status = 'FAILD' })
-      }, 2000)
+    saveTemplate() {
+      this.template.communicationType = this.communication.type
+      this.changeCommunicationTemplate({
+        template: this.template,
+        communicationId: this.templateToEdit.id,
+        strategyId: this.strategyId,
+      }).then(response => {
+        this.template.updatedAt = response.updatedAt
+        this.isVisible = false
+      })
     },
-    saveHtml(text) {
-      const header = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+    setHtmlHeader(body) {
+      const fullTemplate = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml">
           <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           </head>
           <body>
-            ${text}
+            ${body}
           </body>
         </html>`
-      this.template.body = header
-      this.autosave()
+      this.template.body = fullTemplate
+      this.saveTemplate()
     },
+
     handleCommunicationRecipient(communication, recipient) {
       this.$emit('change-communication-recipient', { communication, recipient })
     },
