@@ -3,7 +3,7 @@ const strategy = {
     list: [],
   },
   mutations: {
-    setStrategies(state, response) {
+    setImportedStrategies(state, response) {
       state.list = response
     },
   },
@@ -13,7 +13,7 @@ const strategy = {
         // eslint-disable-next-line
         axios.get('api/strategies/list')
           .then(response => {
-            commit('setStrategies', response.data)
+            commit('setImportedStrategies', response.data)
             resolve(response.data)
           })
           .catch(error => {
