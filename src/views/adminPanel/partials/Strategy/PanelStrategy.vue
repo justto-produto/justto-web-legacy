@@ -155,8 +155,10 @@ export default {
 
     saveStrategyCopy(strategy, newName) {
       const workspaceIds = []
-      for (const workspace in strategy.workspaces) {
-        workspaceIds.push(workspace.id)
+      for (const workspace of strategy.workspaces) {
+        if (workspace.id) {
+          workspaceIds.push(workspace.id)
+        }
       }
 
       const strategyClone = {
@@ -166,8 +168,8 @@ export default {
 
       this.cloneStrategy({
         strategyClone,
-        originId: this.strategyCopy.id,
-      })
+        originId: strategy.id,
+      }).then(this.getStrategies)
     },
   },
 }
