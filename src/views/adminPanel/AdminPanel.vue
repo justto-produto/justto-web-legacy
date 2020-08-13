@@ -39,12 +39,13 @@
         class="content"
       >
         <div class="admin-panel-view__panel-header">
-          <h1>{{ $t('panel.' + menuIndex) }}</h1>
+          <h1>{{ $t(`panel.${menuIndex}`) }}</h1>
           <div class="admin-panel-view__header-options">
             <el-input
               v-model="filterTerm"
               prefix-icon="el-icon-search"
               placeholder="Buscar"
+              clearable
             />
             <el-button
               v-if="['1', '2', '3', '4', '5'].includes(menuIndex)"
@@ -108,7 +109,7 @@ export default {
   },
   data() {
     return {
-      menuIndex: '',
+      menuIndex: -1,
       left: 12,
       right: 0,
       filterTerm: '',
