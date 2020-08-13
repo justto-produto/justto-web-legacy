@@ -101,7 +101,7 @@ export default {
 .jus-variables-card {
   border: 0;
   background-color: $--color-secondary-light-9;
-  margin-left: 10px;
+  margin-left: 12px;
   width: 320px;
   font-size: 12px;
 

@@ -8,7 +8,7 @@
       <div slot="title">
         <span class="el-dialog__title">
           {{ communication.name }}
-          <span class="communication-editor__status">{{ statusText }}</span>
+          <span class="communication-editor__status">{{ savedAt }}</span>
         </span>
       </div>
 
@@ -19,7 +19,6 @@
             <el-input
               v-model="template.title"
               placeholder="Ex. Sobre disputa XPTO"
-              @input="autosave"
             />
           </div>
 
@@ -62,7 +61,6 @@
             show-word-limit
             placeholder="Edite seu SMS aqui!"
             class="communication-editor__textarea"
-            @input="autosave"
           />
         </div>
 
@@ -70,19 +68,38 @@
           v-else
           class="communication-editor__editor-fieldset show-toolbar"
         >
-          <Editor
-            :text="template.body"
-            @change-text="saveHtml($event)"
+          <froala
+            id="edit"
+            v-model="template.body"
+            :tag="'textarea'"
+            :config="config"
           />
         </div>
       </div>
 
-      <div>
+      <div class="communication-editor__right-area">
         <JusVariablesCard
           :variables="variables"
           class="communication-editor__variables-card"
         />
+        <div class="communication-editor__footer">
+          <el-button
+            plain
+            class="communication-editor__footer-button"
+            @click="isVisible = false"
+          >
+            Cancelar
+          </el-button>
+          <el-button
+            type="primary"
+            class="communication-editor__footer-button"
+            @click="template.contentType === 'HTML' ? setHtmlHeader(template.body) : saveTemplate()"
+          >
+            Salvar
+          </el-button>
+        </div>
       </div>
+
     </el-dialog>
   </div>
 </template>
@@ -94,7 +111,6 @@ export default {
   name: 'CommunicationEditor',
   components: {
     JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
-    Editor: () => import('./Editor'),
   },
   props: {
     templateToEdit: {
@@ -118,39 +134,19 @@ export default {
   data() {
     return {
       template: {},
-      status: 'SAVED',
-      editorOptions: {
-        placeholder: 'Edite seu e-mail aqui!',
-        modules: {
-          toolbar: [
-            [{ font: [] }],
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            [{ color: [] }, { background: [] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
-            ['blockquote', 'link', 'image'],
-          ],
-        },
+      editorDataFroala: '',
+      config: {
+        heightMax: 500,
       },
-      saveDebounce: () => {},
     }
   },
   computed: {
     ...mapGetters({
       variables: 'getAvaliableVariablesToTemplate',
     }),
-    statusText() {
-      switch (status) {
-        case 'FAILD':
-          return 'Falha ao salvar template'
-        case 'SAVING':
-          return 'Salvando template...'
-        case 'SAVED':
-        default: {
-          const lastUpdate = this.template.updatedAt
-          return `Template salvo ${lastUpdate && lastUpdate.dateTime ? this.$moment(lastUpdate.dateTime).from(new Date()) : ''}`
-        }
-      }
+    savedAt() {
+      const lastUpdate = this.template.updatedAt
+      return `Template salvo ${lastUpdate && lastUpdate.dateTime ? this.$moment(lastUpdate.dateTime).from(new Date()) : ''}`
     },
     isVisible: {
       get() {
@@ -169,36 +165,33 @@ export default {
   methods: {
     ...mapActions(['changeCommunicationTemplate']),
 
-    autosave() {
-      clearTimeout(this.saveDebounce)
-      this.saveDebounce = setTimeout(() => {
-        this.status = 'SAVING'
-        this.template.communicationType = this.communication.type
-
-        this.changeCommunicationTemplate({
-          template: this.template,
-          communicationId: this.templateToEdit.id,
-          strategyId: this.strategyId,
-        }).then(response => {
-          this.template.updatedAt = response.updatedAt
-          this.status = 'SAVED'
-        }).catch(() => { this.status = 'FAILD' })
-      }, 2000)
+    saveTemplate() {
+      this.template.communicationType = this.communication.type
+      this.changeCommunicationTemplate({
+        template: this.template,
+        communicationId: this.templateToEdit.id,
+        strategyId: this.strategyId,
+      }).then(response => {
+        this.template.updatedAt = response.updatedAt
+        this.isVisible = false
+      })
     },
-    saveHtml(text) {
-      const header = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+    setHtmlHeader(body) {
+      const fullTemplate = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml">
           <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           </head>
           <body>
-            ${text}
+            ${body}
           </body>
         </html>`
-      this.template.body = header
-      this.autosave()
+      this.template.body = fullTemplate
+      this.saveTemplate()
     },
+
     handleCommunicationRecipient(communication, recipient) {
       this.$emit('change-communication-recipient', { communication, recipient })
     },
@@ -263,30 +256,25 @@ export default {
       border: 1px solid #ccc;
       border-radius: 4px;
       width: 100%;
-      height: 85%;
+      height: 100%;
       flex: 1;
       margin-top: 12px;
-
-      .communication-editor__quill {
-        padding: 16px;
-        height: calc(100% - 32px);
-      }
     }
   }
 
-  .communication-editor__variables-card {
+  .communication-editor__right-area {
     height: 100%;
-  }
+    display: flex;
+    flex-direction: column;
 
-  .communication-editor__resize-icon {
-    position: absolute;
-    color: $--color-text-secondary;
-    font-size: 16px;
-    top: 31px;
-    right: 53px;
-    cursor: pointer;
-    &:hover {
-      color: $--color-primary
+    .communication-editor__footer {
+      margin-top: 12px;
+      margin-left: 12px;
+      display: flex;
+
+      .communication-editor__footer-button {
+        flex: 1;
+      }
     }
   }
 }
