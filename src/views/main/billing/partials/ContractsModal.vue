@@ -468,7 +468,7 @@ export default {
     validateForm() {
       const formRef = this.$refs.contractForm
       formRef.clearValidate()
-      this.addNewContract()
+      formRef.validate(isValid => isValid ? this.addNewContract() : false)
     },
     addNewContract() {
       const {
