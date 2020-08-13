@@ -17,8 +17,6 @@
     "test:server": "npx vue-cli-service test:e2e --headless --browser chrome"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^21.0.0",
-    "@ckeditor/ckeditor5-vue": "^1.0.1",
     "@sentry/browser": "^5.15.5",
     "@sentry/integrations": "^5.15.5",
     "@vue/ui": "^0.5.6",

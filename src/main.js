@@ -74,8 +74,6 @@ import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
 import JusStatusDot from '@/components/others/JusStatusDot'
 
-import CKEditor from '@ckeditor/ckeditor5-vue'
-
 import 'froala-editor/js/plugins.pkgd.min.js'
 import 'froala-editor/js/third_party/embedly.min'
 import 'froala-editor/js/third_party/font_awesome.min'
@@ -90,7 +88,6 @@ Vue.component('JusViewMain', JusViewMain)
 Vue.component('JusButtonBack', JusButtonBack)
 Vue.component('JusStatusDot', JusStatusDot)
 
-Vue.use(CKEditor)
 Vue.use(VueFroala)
 
 // mask

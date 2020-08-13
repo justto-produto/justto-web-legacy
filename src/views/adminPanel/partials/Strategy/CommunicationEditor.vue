@@ -19,7 +19,6 @@
             <el-input
               v-model="template.title"
               placeholder="Ex. Sobre disputa XPTO"
-              @input="autosave"
             />
           </div>
 
@@ -70,25 +69,12 @@
           v-else
           class="communication-editor__editor-fieldset show-toolbar"
         >
-          <!-- <ckeditor
-            v-model="editorData"
-            :editor="editor"
-            :config="editorConfig"
-          /> -->
-
           <froala
             id="edit"
             v-model="template.body"
             :tag="'textarea'"
             :config="config"
           />
-
-          {{ template.body }}
-          <button
-            @click="saveHtml(template.body)"
-          >
-            Salvar
-          </button>
         </div>
       </div>
 
@@ -97,13 +83,21 @@
           :variables="variables"
           class="communication-editor__variables-card"
         />
+
+        <el-button
+          class="communication-editor__save"
+          type="secondary"
+          icon="el-icon-edit"
+          @click="saveHtml(template.body)"
+        >
+          Salvar
+        </el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -135,11 +129,9 @@ export default {
       template: {},
       status: 'SAVED',
       saveDebounce: () => {},
-      editor: ClassicEditor,
-      editorData: '',
-      editorConfig: {},
       editorDataFroala: '',
       config: {
+        heightMax: 500,
         events: {
           initialized: () => {
             console.log('initialized')
@@ -195,6 +187,7 @@ export default {
         }).then(response => {
           this.template.updatedAt = response.updatedAt
           this.status = 'SAVED'
+          this.isVisible = false
         }).catch(() => { this.status = 'FAILD' })
       }, 2000)
     },
@@ -273,10 +266,8 @@ export default {
     }
 
     .communication-editor__editor-fieldset {
-      border: 1px solid #ccc;
-      border-radius: 4px;
       width: 100%;
-      height: 85%;
+      height: 100%;
       flex: 1;
       margin-top: 12px;
 
@@ -288,7 +279,14 @@ export default {
   }
 
   .communication-editor__variables-card {
-    height: 100%;
+    height: 90%;
+  }
+
+  .communication-editor__save {
+    width: 320px;
+    margin: 20px 10px;
+    font-size: 16px;
+    font-weight: 600;
   }
 
   .communication-editor__resize-icon {
