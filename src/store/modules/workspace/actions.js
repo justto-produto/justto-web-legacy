@@ -131,7 +131,7 @@ const actions = {
       // eslint-disable-next-line
       axios.get('api/workspaces/strategies')
         .then(response => {
-          commit('setStrategies', response.data)
+          commit('setImportedStrategies', response.data)
           resolve(response.data)
         })
         .catch(error => {
