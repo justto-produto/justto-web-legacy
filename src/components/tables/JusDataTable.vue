@@ -190,7 +190,6 @@ export default {
           icon: 'edit',
           label: 'Editar lançamento',
           trigger: 'editTransaction',
-          hide: !this.isJusttoAdmin,
           condition: (scope) => (scope.type === 'MANUAL' && this.isJusttoAdmin),
         },
         {

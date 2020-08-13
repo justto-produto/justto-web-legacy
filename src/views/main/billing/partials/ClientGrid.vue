@@ -86,31 +86,38 @@ export default {
       workspaceId: 'workspaceId',
     }),
   },
-  beforeMount() {
-    this.getPlans().then(
-      () => {
-        this.getMyCusomers().then(
-          () => {
-            this.getAllCustomers().then(
-              () => {
-                this.setWorkspaceId(this.workspaceId)
-                this.$nextTick(
-                  () => {
-                    if (this.isAdminProfile && !this.isJusttoAdmin) {
-                      this.getCustomerToRedirect().then(customer => {
-                        this.$router.push(`/billing/${customer.id}`)
-                      }).catch(() => {
-                        this.$router.go(-1)
-                      })
-                    }
-                  },
-                )
-              },
-            )
-          },
-        )
-      },
-    )
+  created() {
+    if (this.isJusttoAdmin || this.isAdminProfile) {
+      this.getPlans().then(() => {
+        this.getMyCusomers().then(() => {
+          this.getAllCustomers().then(() => {
+            this.setWorkspaceId(this.workspaceId)
+            this.$nextTick(() => {
+              if (this.isAdminProfile && !this.isJusttoAdmin) {
+                this.getCustomerToRedirect().then(customer => {
+                  this.setCustomer(customer)
+                  this.$router.push(`/billing/${customer.id}`)
+                }).catch(() => {
+                  this.$router.go(-1)
+                  this.$jusNotification({
+                    title: 'Ops!',
+                    message: 'Nenhum cliente com contratos do tipo escritório nesta workspace.',
+                    type: 'error',
+                  })
+                })
+              }
+            })
+          })
+        })
+      })
+    } else {
+      this.$router.go(-1)
+      this.$jusNotification({
+        title: 'Ops!',
+        message: 'Você não pode entra ai. Fale com um administrador',
+        type: 'warning',
+      })
+    }
   },
   methods: {
     ...mapActions([

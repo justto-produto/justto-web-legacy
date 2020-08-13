@@ -59,7 +59,6 @@ export default {
     },
   },
   computed: {
-
     cardTitle() {
       const total = this.data.total
       const computedTotal = total >= 0 ? `: ${+total}` : ''

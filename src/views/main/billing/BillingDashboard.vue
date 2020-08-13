@@ -198,6 +198,7 @@ export default {
       'billingDashboard',
       'getCurrentCustomer',
       'isJusttoAdmin',
+      'isAdminProfile',
       'tableLoading',
       'transactions',
       'workspaceId',
@@ -296,13 +297,22 @@ export default {
       if (current !== next) this.$router.push('/billing')
     },
   },
-  beforeMount() {
+  created() {
     this.dateRange[0] = this.initialDateRange[0]
     this.dateRange[1] = this.initialDateRange[1]
     this.clearTransactionsQuery(this.initialDateRange)
     this.setCustomerId(this.$route.params.customerId)
     this.setWorkspaceId(this.workspaceId)
     this.getBillingDashboard()
+
+    if (!this.isJusttoAdmin && !this.isAdminProfile) {
+      this.$router.go(-1)
+      this.$jusNotification({
+        title: 'Ops!',
+        message: 'Você não pode entra ai. Fale com um administrador',
+        type: 'warning',
+      })
+    }
   },
   methods: {
     ...mapActions([
