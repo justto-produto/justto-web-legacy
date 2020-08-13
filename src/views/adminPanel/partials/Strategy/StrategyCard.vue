@@ -245,6 +245,7 @@ export default {
   box-shadow: inherit !important;
   margin-bottom: 24px;
   padding: 24px;
+  width: 100%;
 
   &:hover {
     border: 1px solid $--color-primary;

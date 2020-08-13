@@ -3,7 +3,10 @@
     v-loading="loading"
     class="panel-strategy"
   >
-    <div v-if="strategiesContent.length">
+    <div
+      v-if="strategiesContent.length"
+      class="panel-strategy__strategies-list"
+    >
       <strategy-card
         v-for="(strategy) in strategiesContent"
         :key="strategy.id"
@@ -186,6 +189,10 @@ export default {
   padding: 32px;
   height: 100%;
   overflow: auto;
+
+  .panel-strategy__strategies-list {
+    width: 100%;
+  }
 
   .panel-strategy__empty {
     width: 100%;
