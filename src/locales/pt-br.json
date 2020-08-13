@@ -208,6 +208,7 @@
     "3": "todos"
   },
   "panel": {
+    "-1": "Painel administrativo",
     "0": "Painel administrativo",
     "1": "Equipes",
     "2": "Usuários",
