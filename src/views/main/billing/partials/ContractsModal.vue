@@ -325,6 +325,7 @@
               <el-form-item>
                 <el-switch
                   v-model="hasWorkspace"
+                  :disabled="haveExclusiveContract"
                   active-text="Exclusivo desta workspace"
                 />
               </el-form-item>
@@ -389,10 +390,7 @@ export default {
     contractStatus: self => self.$t('billing.contract.status'),
     filteredContracts() {
       const filteredContracts = this.form.contracts
-        .filter(contract =>
-          (contract.status === CONTRACT_STATUS.ACTIVE.key || contract.status === CONTRACT_STATUS.INACTIVE.key) &&
-          contract.workspaceId === this.workspaceId,
-        )
+        .filter(contract => contract.status === CONTRACT_STATUS.ACTIVE.key || contract.status === CONTRACT_STATUS.INACTIVE.key)
 
       // filteredContracts
       return (filteredContracts.length ? filteredContracts : this.form.contracts).map(contract => ({
@@ -400,6 +398,18 @@ export default {
         flags: this.getFlags(contract),
         customTitle: this.makeContractName(contract),
       }))
+    },
+    haveExclusiveContract() {
+      const { newContract } = this
+      const conditional = this.filteredContracts.some(c => c.workspaceIdNull === false)
+      this.changeHasWorkspaceValue(conditional)
+      conditional
+        ? newContract.workspaceId = this.workspaceId
+        : newContract.workspaceId = null
+      return conditional
+    },
+    haveContracts() {
+      return this.filteredContracts.length > 0
     },
   },
   watch: {
@@ -419,6 +429,8 @@ export default {
           }
         })
       })
+
+      this.openNewContract()
     },
     hasWorkspace(current) {
       const { newContract } = this
@@ -440,6 +452,9 @@ export default {
       'addContract',
       'updateContract',
     ]),
+    changeHasWorkspaceValue(newValue) {
+      this.hasWorkspace = newValue
+    },
     resetNewContract() {
       const tariffs = []
       Object.keys(TARIFF_TYPES).map(key => tariffs.push(new TariffModel({ type: key })))
@@ -452,7 +467,7 @@ export default {
         if (tariff.type === tariffType) return (tariffIndex = index)
       })
 
-      console.table({ tariffIndex, tariffType })
+      // console.table({ tariffIndex, tariffType })
 
       return tariffIndex
     },
@@ -462,7 +477,7 @@ export default {
     validateForm() {
       const formRef = this.$refs.contractForm
       formRef.clearValidate()
-      this.addNewContract()
+      formRef.validate(isValid => isValid ? this.addNewContract() : false)
     },
     addNewContract() {
       const {
@@ -481,7 +496,6 @@ export default {
       )
 
       this.hideCollapseItems()
-      this.closeModal()
     },
     /**
      * Valida se o contrato está com status Inativo
@@ -559,6 +573,11 @@ export default {
       }
 
       return flags
+    },
+    openNewContract() {
+      if (this.haveContracts) {
+        this.newContract.startedDate = new Date()
+      }
     },
   },
 }

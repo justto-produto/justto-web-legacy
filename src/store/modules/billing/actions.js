@@ -63,7 +63,7 @@ const actions = {
         tariffs: contract.tariffs,
         workspaceId: contract.workspaceId,
       },
-    }).then(() => dispatch('getMyCusomers')),
+    }).then(() => dispatch('getContracts')),
 
   updateContract: ({ dispatch }, { customerId, contract }) =>
     axiosDispatcher({
