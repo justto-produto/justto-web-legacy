@@ -1,7 +1,6 @@
 const ManagementActions = {
-  setActiveactiveOccurrency({ commit }, occurrency) {
-    console.log('setActiveOccurrency', occurrency)
-    commit('setActiveOccurrency', occurrency)
+  setActiveactiveOccurrency({ commit, state }, occurrency) {
+    commit('setActiveOccurrency', state.activeOccurrency.id === occurrency.id ? {} : occurrency)
   }
 }
 
