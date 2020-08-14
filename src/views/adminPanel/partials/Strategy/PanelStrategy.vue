@@ -174,7 +174,6 @@ export default {
         originId: strategy.id,
       }).then(() => {
         this.$emit('set-filter', newName)
-        this.getStrategies()
       })
     },
   },
