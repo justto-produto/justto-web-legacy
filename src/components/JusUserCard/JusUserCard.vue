@@ -12,7 +12,9 @@
       />
 
       <div class="jus-user-card__actions">
-        <div class="jus-user-card__actions-row">
+        <div
+          v-if="isJusttoAdmin"
+          class="jus-user-card__actions-row">
           <el-tooltip content="Desassociar cliente da workspace">
             <el-button
               type="danger"
@@ -44,6 +46,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'JusUserCard',
   components: {
@@ -63,6 +66,8 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['isJusttoAdmin']),
+
     contractStatus() {
       const contracts = this.userDataBind.contracts
 
