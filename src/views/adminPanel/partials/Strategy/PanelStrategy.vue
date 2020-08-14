@@ -3,7 +3,10 @@
     v-loading="loading"
     class="panel-strategy"
   >
-    <div v-if="strategiesContent.length">
+    <div
+      v-if="strategiesContent.length"
+      class="panel-strategy__strategies-list"
+    >
       <strategy-card
         v-for="(strategy) in strategiesContent"
         :key="strategy.id"
@@ -155,8 +158,10 @@ export default {
 
     saveStrategyCopy(strategy, newName) {
       const workspaceIds = []
-      for (const workspace in strategy.workspaces) {
-        workspaceIds.push(workspace.id)
+      for (const workspace of strategy.workspaces) {
+        if (workspace.id) {
+          workspaceIds.push(workspace.id)
+        }
       }
 
       const strategyClone = {
@@ -166,7 +171,9 @@ export default {
 
       this.cloneStrategy({
         strategyClone,
-        originId: this.strategyCopy.id,
+        originId: strategy.id,
+      }).then(() => {
+        this.$emit('set-filter', newName)
       })
     },
   },
@@ -181,6 +188,10 @@ export default {
   padding: 32px;
   height: 100%;
   overflow: auto;
+
+  .panel-strategy__strategies-list {
+    width: 100%;
+  }
 
   .panel-strategy__empty {
     width: 100%;

@@ -1,21 +1,6 @@
 process.env.VUE_APP_VERSION = require('./package.json').version
-const SvgStore = require('webpack-svgstore-plugin')
 
 module.exports = {
-  configureWebpack: {
-    plugins: [
-      new SvgStore({
-        prefix: 'icon--',
-        svgoOptions: {
-          plugins: [
-            { cleanupIDs: false },
-            { collapseGroups: false },
-            { removeTitle: true },
-          ],
-        },
-      }),
-    ],
-  },
   pluginOptions: {
     i18n: {
       locale: 'pt-br',

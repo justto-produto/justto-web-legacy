@@ -108,7 +108,6 @@ export default {
       'getCommunicationTemplate',
       'setActiveStrategy',
     ]),
-
     handlePopoverClick() {
       console.log(this.openedPopover)
       this.openedPopover = !this.openedPopover
@@ -121,7 +120,6 @@ export default {
         this.editorDialogIsVisible = true
       })
     },
-
     handleEditCommunication(params) {
       console.log(params)
       this.$refs.communicationsPopover.handleCommunicationRecipient(params.communication, params.recipient)
