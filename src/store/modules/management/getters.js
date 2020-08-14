@@ -1,5 +1,5 @@
 const ManagementGetters = {
-  activeOccurrence: state => state.activeOccurrence
+  activeOccurrency: state => state.activeOccurrency
 }
 
 export default ManagementGetters
