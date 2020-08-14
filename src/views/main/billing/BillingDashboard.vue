@@ -9,11 +9,7 @@
       class="billing-view__slot-main"
     >
       <JusButtonBack
-        to="/billing"
-        class="billing-view__back-button"
-      />
-
-      <JusButtonBack
+        v-if="isJusttoAdmin"
         to="/billing"
         class="billing-view__back-button"
       />
@@ -185,21 +181,6 @@ export default {
     return {
       dateRange: [],
       searchTerm: '',
-      filterTransactionsActionParams: {
-        icon: 'eye',
-        label: 'Ver lançamentos',
-        trigger: 'showTransactions',
-      },
-      filterDisputesActionParams: {
-        icon: 'management',
-        label: 'Visualizar disputas no gerenciamento',
-        trigger: 'showDisputes',
-      },
-      addTransactionActionParams: {
-        icon: 'add',
-        label: 'Criar lançamento manual',
-        trigger: 'addTransaction',
-      },
       addTransactionDialogVisable: false,
       modalLoading: false,
       addTransactionForm: {
@@ -217,10 +198,38 @@ export default {
       'billingDashboard',
       'getCurrentCustomer',
       'isJusttoAdmin',
+      'isAdminProfile',
       'tableLoading',
       'transactions',
       'workspaceId',
     ]),
+
+    filterTransactionsActionParams() {
+      return {
+        icon: 'eye',
+        label: 'Ver lançamentos',
+        trigger: 'showTransactions',
+        visible: true,
+      }
+    },
+
+    filterDisputesActionParams() {
+      return {
+        icon: 'management',
+        label: 'Visualizar disputas no gerenciamento',
+        trigger: 'showDisputes',
+        visible: true,
+      }
+    },
+
+    addTransactionActionParams() {
+      return {
+        icon: 'add',
+        label: 'Criar lançamento manual',
+        trigger: 'addTransaction',
+        visible: this.isJusttoAdmin,
+      }
+    },
 
     tableSubtitle() {
       if (this.tableLoading) {
@@ -288,15 +297,22 @@ export default {
       if (current !== next) this.$router.push('/billing')
     },
   },
-  beforeMount() {
-    if (!this.isJusttoAdmin) this.$router.go(-1)
-
+  created() {
     this.dateRange[0] = this.initialDateRange[0]
     this.dateRange[1] = this.initialDateRange[1]
     this.clearTransactionsQuery(this.initialDateRange)
     this.setCustomerId(this.$route.params.customerId)
     this.setWorkspaceId(this.workspaceId)
     this.getBillingDashboard()
+
+    if (!this.isJusttoAdmin && !this.isAdminProfile) {
+      this.$router.go(-1)
+      this.$jusNotification({
+        title: 'Ops!',
+        message: 'Você não pode entra ai. Fale com um administrador',
+        type: 'warning',
+      })
+    }
   },
   methods: {
     ...mapActions([

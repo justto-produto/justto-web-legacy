@@ -56,7 +56,7 @@
           <span slot="title">Importação</span>
         </el-menu-item>
         <el-menu-item
-          v-if="$store.getters.isJusttoAdmin"
+          v-if="isJusttoAdmin || isAdminProfile"
           index="/billing"
           data-testid="menu-financial"
         >
@@ -68,12 +68,12 @@
         </el-menu-item>
       </el-menu>
       <div
-        v-show="$store.getters.workspaceMembers.length && $store.getters.isAdminProfile"
+        v-show="workspaceMembers.length && isAdminProfile"
         class="jus-team-menu__title"
       >
         TIME
       </div>
-      <vue-perfect-scrollbar v-if="$store.getters.isAdminProfile">
+      <vue-perfect-scrollbar v-if="isAdminProfile">
         <jus-team-menu />
       </vue-perfect-scrollbar>
     </el-aside>
@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'MainContainer',
   components: {
@@ -103,6 +104,11 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'isJusttoAdmin',
+      'isAdminProfile',
+      'workspaceMembers',
+    ]),
     workspace() {
       return this.$store.getters.workspaceSubdomain
     },
