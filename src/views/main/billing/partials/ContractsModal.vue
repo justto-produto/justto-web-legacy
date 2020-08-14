@@ -400,8 +400,12 @@ export default {
       }))
     },
     haveExclusiveContract() {
+      const { newContract } = this
       const conditional = this.filteredContracts.some(c => c.workspaceIdNull === false)
       this.changeHasWorkspaceValue(conditional)
+      conditional
+        ? newContract.workspaceId = this.workspaceId
+        : newContract.workspaceId = null
       return conditional
     },
   },
