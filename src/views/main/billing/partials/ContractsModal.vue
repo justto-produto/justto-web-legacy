@@ -575,7 +575,6 @@ export default {
       return flags
     },
     openNewContract() {
-      console.log(this.haveContracts)
       if (this.haveContracts) {
         this.newContract.startedDate = new Date()
       }
