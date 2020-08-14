@@ -408,6 +408,9 @@ export default {
         : newContract.workspaceId = null
       return conditional
     },
+    haveContracts() {
+      return this.filteredContracts.length > 0
+    },
   },
   watch: {
     clientData(current) {
@@ -426,6 +429,8 @@ export default {
           }
         })
       })
+
+      this.openNewContract()
     },
     hasWorkspace(current) {
       const { newContract } = this
@@ -568,6 +573,12 @@ export default {
       }
 
       return flags
+    },
+    openNewContract() {
+      console.log(this.haveContracts)
+      if (this.haveContracts) {
+        this.newContract.startedDate = new Date()
+      }
     },
   },
 }
