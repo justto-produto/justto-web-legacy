@@ -33,8 +33,8 @@
       <li
         v-for="(occurrence, occurrenceIndex) in datedOccurrence"
         :key="occurrenceIndex + new Date().getTime()"
-        class="dispute-view-occurrences__occurrence" >
-        <div>
+      >
+        <div class="dispute-view-occurrences__occurrence">
           <div
             v-if="!occurrence.id"
             class="dispute-view-occurrences__interaction OUTBOUND LOADING" >
@@ -187,13 +187,16 @@
               <div
                 :class="getDirection(occurrence.interaction)"
                 class="dispute-view-occurrences__card-info" >
-                <el-tooltip v-if="occurrence.merged">
+                <el-tooltip
+                  v-if="occurrence.merged"
+                  :disabled="false"
+                >
                   <div slot="content">
-                    <div
+                    Existem mais {{ occurrence.merged.length }} ocorrências parecidas com esta.
+                    <!-- <div
                       v-for="merged in occurrence.merged"
                       :key="merged.id + new Date().getTime()"
-                      class="dispute-view-occurrences__log-info-content"
-                    >
+                      class="dispute-view-occurrences__log-info-content">
                       Em {{ buildHour(merged) }}
                       <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
                         criamos mensagem para
@@ -226,7 +229,7 @@
                       <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
                         - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
                       </span>
-                    </div>
+                    </div> -->
                   </div>
                   <span
                     class="dispute-view-occurrences__expand-button"
@@ -283,110 +286,112 @@
             </div>
           </div>
           <!-- ESSA DIV AQUI -->
-
-          <div v-if="activeOccurrency.id === occurrence.id">
-            <div
-              v-for="(mergedOccurency, mergedOccurencyIndex) of activeOccurrency.merged"
-              :key="`${mergedOccurencyIndex}-`"
-              :class="getDirection(occurrence.interaction)"
-              class="dispute-view-occurrences__interaction dispute-view-occurrences__interaction-merged">
-              <div class="dispute-view-occurrences__avatar">
-                <el-tooltip
-                  :disabled="!buildName(mergedOccurency)"
-                  :content="buildName(mergedOccurency)"
-                >
-                  <jus-avatar-user
-                    :name="buildName(mergedOccurency)"
-                    shape="circle"
-                    size="sm"
-                  />
-                </el-tooltip>
-              </div>
-              <div class="dispute-view-occurrences__card-box">
-                <el-card
-                  :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
-                  shadow="never"
-                  class="dispute-view-occurrences__card"
-                  data-testid="message-box" >
-                  <div>
-                    <span :ref="getMessageRef(mergedOccurency)">
-                      <span v-html="buildContent(mergedOccurency)" />
-                      <span
-                        v-if="buildCommunicationType(mergedOccurency).startsWith('WHATSAPP') && buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt)"
-                        class="dispute-view-occurrences__whats-status"
-                      >
-                        <el-tooltip popper-class="mw400">
-                          <div
-                            slot="content"
-                            style="max-width: 400px;text-align: justify;"
-                          >
-                            <span v-html="buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt).message" />
-                          </div>
-                          <jus-icon :icon="buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt).icon" />
-                        </el-tooltip>
-                      </span>
-                      <span v-if="showResume(mergedOccurency)">
-                        <a
-                          href="#"
-                          data-testid="show-email"
-                          @click.prevent="showFullMessage(mergedOccurency.id)"
-                        > ver mais</a>
-                      </span>
+        </div>
+        <div
+          v-if="activeOccurrency.id === occurrence.id"
+          class="dispute-view-occurrences__occurrence-merged"
+        >
+          <div
+            v-for="(mergedOccurency, mergedOccurencyIndex) of activeOccurrency.merged"
+            :key="`${mergedOccurencyIndex}-`"
+            :class="getDirection(occurrence.interaction)"
+            class="dispute-view-occurrences__interaction dispute-view-occurrences__interaction-merged">
+            <div class="dispute-view-occurrences__avatar">
+              <el-tooltip
+                :disabled="!buildName(mergedOccurency)"
+                :content="buildName(mergedOccurency)"
+              >
+                <jus-avatar-user
+                  :name="buildName(mergedOccurency)"
+                  shape="circle"
+                  size="sm"
+                />
+              </el-tooltip>
+            </div>
+            <div class="dispute-view-occurrences__card-box">
+              <el-card
+                :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
+                shadow="never"
+                class="dispute-view-occurrences__card"
+                data-testid="message-box" >
+                <div>
+                  <span :ref="getMessageRef(mergedOccurency)">
+                    <span v-html="buildContent(mergedOccurency)" />
+                    <span
+                      v-if="buildCommunicationType(mergedOccurency).startsWith('WHATSAPP') && buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt)"
+                      class="dispute-view-occurrences__whats-status"
+                    >
+                      <el-tooltip popper-class="mw400">
+                        <div
+                          slot="content"
+                          style="max-width: 400px;text-align: justify;"
+                        >
+                          <span v-html="buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt).message" />
+                        </div>
+                        <jus-icon :icon="buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt).icon" />
+                      </el-tooltip>
                     </span>
+                    <span v-if="showResume(mergedOccurency)">
+                      <a
+                        href="#"
+                        data-testid="show-email"
+                        @click.prevent="showFullMessage(mergedOccurency.id)"
+                      > ver mais</a>
+                    </span>
+                  </span>
+                  <br>
+                  <i v-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.message.status === 'CANCELED'">
                     <br>
-                    <i v-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.message.status === 'CANCELED'">
-                      <br>
-                      <i
-                        class="el-icon-close"
-                        style="width: 14px;margin-bottom: -1.2px;"
-                      />
-                      Mensagem automática agendada foi <strong>CANCELADA</strong>.
-                    </i>
-                    <i v-else-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.type === 'SCHEDULER' && mergedOccurency.interaction.message.status === 'WAITING'">
-                      <br>
-                      <jus-icon
-                        icon="clock"
-                        style="width: 14px;margin-bottom: -1.2px;"
-                      />
-                      Mensagem agendada para
-                      {{ mergedOccurency.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
-                      que ainda não foi entregue.
-                    </i>
-                  </div>
-                </el-card>
-                <div
-                  :class="getDirection(mergedOccurency.interaction)"
-                  class="dispute-view-occurrences__card-info" >
-                  <el-tooltip :content="buildStatusTooltip(mergedOccurency)">
-                    <jus-icon :icon="buildStatusIcon(mergedOccurency)" />
-                  </el-tooltip>
-                  <div>•</div>
-                  <span v-text="buildHour(mergedOccurency)" />
-                  <div v-if="!!buildIcon(mergedOccurency)">
-                    •
-                  </div>
-                  <jus-icon
-                    v-if="!!buildIcon(mergedOccurency)"
-                    :icon="buildIcon(mergedOccurency)"
-                    :class="{'NEGOTIATOR': mergedOccurency.interaction && mergedOccurency.interaction.type.startsWith('NEGOTIATOR')}"
-                  />
-                  <div v-if="(mergedOccurency.interaction && mergedOccurency.interaction.message) && (mergedOccurency.interaction.message.receiver || mergedOccurency.interaction.message.parameters)">
-                    •
-                  </div>
-                  <span v-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.message.receiver && getDirection(mergedOccurency.interaction) === 'OUTBOUND'">
-                    Para: {{ mergedOccurency.interaction.message.receiver | phoneMask }}
-                  </span>
-                  <span v-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.message.parameters && getDirection(mergedOccurency.interaction) === 'INBOUND'">
-                    Por:
-                    <span v-if="![mergedOccurency.interaction.message.sender, mergedOccurency.interaction.message.parameters.SENDER].includes(mergedOccurency.interaction.message.parameters.SENDER_NAME)">
-                      {{ mergedOccurency.interaction.message.parameters.SENDER_NAME }}
-                      ({{ mergedOccurency.interaction.message.parameters.SENDER || mergedOccurency.interaction.message.sender | phoneMask }})
-                    </span>
-                    <span v-else>
-                      {{ mergedOccurency.interaction.message.parameters.SENDER || mergedOccurency.interaction.message.sender | phoneMask }}
-                    </span>
-                  </span>
+                    <i
+                      class="el-icon-close"
+                      style="width: 14px;margin-bottom: -1.2px;"
+                    />
+                    Mensagem automática agendada foi <strong>CANCELADA</strong>.
+                  </i>
+                  <i v-else-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.type === 'SCHEDULER' && mergedOccurency.interaction.message.status === 'WAITING'">
+                    <br>
+                    <jus-icon
+                      icon="clock"
+                      style="width: 14px;margin-bottom: -1.2px;"
+                    />
+                    Mensagem agendada para
+                    {{ mergedOccurency.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}
+                    que ainda não foi entregue.
+                  </i>
                 </div>
+              </el-card>
+              <div
+                :class="getDirection(mergedOccurency.interaction)"
+                class="dispute-view-occurrences__card-info" >
+                <el-tooltip :content="buildStatusTooltip(mergedOccurency)">
+                  <jus-icon :icon="buildStatusIcon(mergedOccurency)" />
+                </el-tooltip>
+                <div>•</div>
+                <span v-text="buildHour(mergedOccurency)" />
+                <div v-if="!!buildIcon(mergedOccurency)">
+                  •
+                </div>
+                <jus-icon
+                  v-if="!!buildIcon(mergedOccurency)"
+                  :icon="buildIcon(mergedOccurency)"
+                  :class="{'NEGOTIATOR': mergedOccurency.interaction && mergedOccurency.interaction.type.startsWith('NEGOTIATOR')}"
+                />
+                <div v-if="(mergedOccurency.interaction && mergedOccurency.interaction.message) && (mergedOccurency.interaction.message.receiver || mergedOccurency.interaction.message.parameters)">
+                  •
+                </div>
+                <span v-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.message.receiver && getDirection(mergedOccurency.interaction) === 'OUTBOUND'">
+                  Para: {{ mergedOccurency.interaction.message.receiver | phoneMask }}
+                </span>
+                <span v-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.message.parameters && getDirection(mergedOccurency.interaction) === 'INBOUND'">
+                  Por:
+                  <span v-if="![mergedOccurency.interaction.message.sender, mergedOccurency.interaction.message.parameters.SENDER].includes(mergedOccurency.interaction.message.parameters.SENDER_NAME)">
+                    {{ mergedOccurency.interaction.message.parameters.SENDER_NAME }}
+                    ({{ mergedOccurency.interaction.message.parameters.SENDER || mergedOccurency.interaction.message.sender | phoneMask }})
+                  </span>
+                  <span v-else>
+                    {{ mergedOccurency.interaction.message.parameters.SENDER || mergedOccurency.interaction.message.sender | phoneMask }}
+                  </span>
+                </span>
               </div>
             </div>
           </div>
@@ -452,11 +457,11 @@ export default {
   props: {
     disputeId: {
       type: String,
-      default: ''
+      default: '',
     },
     typingTab: {
       type: String,
-      default: '1'
+      default: '1',
     },
   },
   data() {
@@ -467,7 +472,7 @@ export default {
       messageDialogVisible: false,
       showFullMessageList: [],
       fullMessageBank: {},
-      infiniteId: +new Date()
+      infiniteId: +new Date(),
     }
   },
   computed: {
@@ -523,13 +528,13 @@ export default {
       } else {
         return 'getDisputeOccurrences'
       }
-    }
+    },
   },
   watch: {
     typingTab() {
       this.clearOccurrences()
       this.infiniteId += 1
-    }
+    },
   },
   mounted() {
     this.clearOccurrences()
@@ -806,13 +811,17 @@ export default {
         return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND || 'Desconhecido'}.</i>` }
       }
       return null
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss">
 @import '@/styles/colors.scss';
+
+.fix-display {
+  display: inline !important;
+}
 
 .dispute-view-occurrences {
   list-style: none;
@@ -823,6 +832,11 @@ export default {
   &__occurrence {
     display: flex;
     justify-content: center;
+  }
+  &__occurrence-merged {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
   }
   &__interaction {
     margin-top: 20px;
@@ -849,6 +863,7 @@ export default {
   }
   &__interaction-merged {
     padding-right: 4rem;
+    display: flex;
   }
   &__card {
     border-radius: 8px;
