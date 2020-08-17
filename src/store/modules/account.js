@@ -8,7 +8,7 @@ const account = {
     name: '',
     email: '',
     token: localStorage.getItem('justoken') || '',
-    devs: ['josewilliam@justto.com.br'],
+    devs: ['josewilliam@justto.com.br', 'lucas@justto.com.br', 'daniel@justto.com.br', 'gabriel@justto.com.br', 'guilherme@justto.com.br'],
   },
   mutations: {
     setToken(state, resp) {
