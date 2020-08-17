@@ -30,11 +30,11 @@ export default new Vuex.Store({
     loading: false,
     banksList: banksList,
     ghostMode: ghostMode,
-    statesList: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO']
+    statesList: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'],
   },
   getters: {
     banksList: state => state.banksList,
-    ghostMode: state => state.ghostMode
+    ghostMode: state => state.ghostMode,
   },
   mutations: {
     showLoading(state) {
@@ -46,7 +46,7 @@ export default new Vuex.Store({
     setGhostMode(state, value) {
       state.ghostMode = value
       localStorage.setItem('jusghostmode', value)
-    }
+    },
   },
   actions: {
     showLoading({ commit }) {
@@ -54,7 +54,7 @@ export default new Vuex.Store({
     },
     hideLoading({ commit }) {
       commit('hideLoading')
-    }
+    },
   },
   modules: {
     accountModule,
@@ -72,6 +72,6 @@ export default new Vuex.Store({
     strategyModule,
     tagModule,
     userModule,
-    workspaceModule
-  }
+    workspaceModule,
+  },
 })
