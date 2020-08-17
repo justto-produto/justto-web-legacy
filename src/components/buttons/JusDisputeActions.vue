@@ -368,7 +368,6 @@
           :loading="modalLoading"
           :disabled="!unsettledType"
           type="primary"
-          class="confirm-action-unsettled"
           @click.prevent="disputeAction('send-unsettled')"
         >
           Continuar
