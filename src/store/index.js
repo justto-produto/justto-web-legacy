@@ -8,6 +8,7 @@ import dashboardModule from './modules/dashboard'
 import disputeModule from './modules/dispute/index'
 import documentModule from './modules/document'
 import importModule from './modules/import'
+import managementModule from './modules/management'
 import messageModule from './modules/message'
 import personModule from './modules/person/index'
 import socketModule from './modules/socket/index'
@@ -63,6 +64,7 @@ export default new Vuex.Store({
     disputeModule,
     documentModule,
     importModule,
+    managementModule,
     messageModule,
     personModule,
     socketModule,

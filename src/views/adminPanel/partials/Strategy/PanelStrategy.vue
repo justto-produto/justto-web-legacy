@@ -63,13 +63,20 @@ export default {
   }),
   computed: {
     ...mapGetters({
+      isJusttoDev: 'isJusttoDev',
       strategies: 'getStrategies',
       workspaces: 'getAvailableWorkspaces',
       loading: 'getStrategiesLoadingStatus',
     }),
 
     strategiesContent() {
-      return this.strategies.content || []
+      return (this.strategies.content || []).filter(strategy => {
+        if (this.isJusttoDev) {
+          return true
+        } else {
+          return !strategy.name.startsWith('[TST]')
+        }
+      })
     },
   },
   watch: {
