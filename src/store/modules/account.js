@@ -8,6 +8,7 @@ const account = {
     name: '',
     email: '',
     token: localStorage.getItem('justoken') || '',
+    devs: ['josewilliam@justto.com.br'],
   },
   mutations: {
     setToken(state, resp) {
@@ -117,6 +118,7 @@ const account = {
     accountId: state => state.id,
     accountEmail: state => state.email,
     isJusttoAdmin: state => isJusttoUser(state.email),
+    isJusttoDev: state => state.devs.indexOf(state.email) !== -1,
   },
 }
 
