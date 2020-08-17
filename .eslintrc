@@ -12,7 +12,7 @@
     "no-debugger": "warn",
     "standard/no-callback-literal": 0,
     "vue/max-attributes-per-line": [
-      "error",
+      "warn",
       {
         "singleline": 1,
         "multiline": {
