@@ -254,7 +254,7 @@ export default {
 
     strategies() {
       const activeSrategies = this.$store.getters.strategyList.filter(s => !s.archived)
-      if (this.isJusttoAdmin) {
+      if (this.isJusttoDev) {
         return activeSrategies
       } else {
         return activeSrategies.filter(s => !s.name.startsWith('[TST]'))
