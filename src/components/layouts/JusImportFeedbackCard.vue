@@ -250,7 +250,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isJusttoAdmin']),
+    ...mapGetters(['isJusttoDev']),
 
     strategies() {
       const activeSrategies = this.$store.getters.strategyList.filter(s => !s.archived)
