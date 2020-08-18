@@ -260,7 +260,6 @@
               </el-tooltip>
             </div>
           </div>
-          <!-- ESSA DIV AQUI -->
         </div>
         <div
           v-if="activeOccurrency.id === occurrence.id"
