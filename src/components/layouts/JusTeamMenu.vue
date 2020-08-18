@@ -3,7 +3,7 @@
     <div class="jus-team-menu__members">
       <a
         v-for="member in members"
-        :key="member.id + member.personId"
+        :key="member.id + '-' + member.personId"
         class="jus-team-menu__member"
         @click.prevent="setFilterPersonId(member.person.id, member.person.name)"
       >
