@@ -24,7 +24,7 @@
     </infinite-loading>
     <div
       v-for="(datedOccurrence, date, index) in datedOccurrences"
-      :key="date + index + new Date().getTime()" >
+      :key="`${date}-${index}`" >
       <el-card
         class="dispute-view-occurrences__date el-card--bg-info"
         shadow="never" >
@@ -32,7 +32,7 @@
       </el-card>
       <li
         v-for="(occurrence, occurrenceIndex) in datedOccurrence"
-        :key="occurrenceIndex + new Date().getTime()"
+        :key="`occurrency-${occurrenceIndex}`"
       >
         <div class="dispute-view-occurrences__occurrence">
           <div
@@ -97,8 +97,8 @@
               <el-tooltip v-if="occurrence.merged">
                 <div slot="content">
                   <div
-                    v-for="merged in occurrence.merged"
-                    :key="merged.id + new Date().getTime()"
+                    v-for="(merged, mergedIndex) in occurrence.merged"
+                    :key="`merged-${mergedIndex}-#${merged.id}`"
                     class="dispute-view-occurrences__log-info-content"
                   >
                     Hora: {{ buildHour(merged) }}
@@ -268,7 +268,7 @@
         >
           <div
             v-for="(mergedOccurency, mergedOccurencyIndex) of activeOccurrency.merged"
-            :key="`${mergedOccurencyIndex}-`"
+            :key="`merged-${mergedOccurencyIndex}`"
             :class="getDirection(occurrence.interaction)"
             class="dispute-view-occurrences__interaction dispute-view-occurrences__interaction-merged">
             <div class="dispute-view-occurrences__avatar">
