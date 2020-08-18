@@ -26,7 +26,7 @@
     <div class="jus-variables-card__body">
       <div
         v-for="variable in filteredVariables"
-        :key="variable.value"
+        :key="variable.key"
         class="jus-variables-card__variable"
       >
         <span class="jus-variables-card__variable-description">
