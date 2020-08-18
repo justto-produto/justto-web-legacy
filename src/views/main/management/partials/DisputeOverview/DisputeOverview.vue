@@ -1811,16 +1811,19 @@ export default {
     },
   },
   created() {
-    if (this.disputeStatuses.unsettled) {
-      this.deleteTypes = this.disputeStatuses.unsettled
+    if (this.disputeStatuses.delete) {
+      this.deleteTypes = this.disputeStatuses.delete
     } else {
-      this.getDisputeStatuses('unsettled').then(response => {
+      this.getDisputeStatuses('delete').then(response => {
         this.deleteTypes = response
       })
     }
   },
   methods: {
-    ...mapActions(['removeDispute']),
+    ...mapActions([
+      'removeDispute',
+      'getDisputeStatuses',
+    ]),
 
     buildRoleTitle: (...i) => buildRoleTitle(...i),
     getRoleIcon: (...i) => getRoleIcon(...i),
@@ -1829,8 +1832,11 @@ export default {
     },
     deleteDispute() {
       this.modalLoading = true
-      // this.removeDispute(this.dispute.id, { reason: this.deleteTypes[this.deleteType] }).then(() => {
-      this.removeDispute(this.dispute.id).then(() => {
+      this.removeDispute({
+        disputeId: this.dispute.id,
+        reason: this.deleteType,
+      }).then(() => {
+      // this.removeDispute(this.dispute.id).then(() => {
         this.$router.push('/management')
       }).catch(error => {
         this.$jusNotification({ error })

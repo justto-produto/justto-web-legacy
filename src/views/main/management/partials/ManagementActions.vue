@@ -99,6 +99,14 @@
       width="460px"
       data-testid="unsettled-dialog"
     >
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja perder esta disputa?.</p>
+          </div>
+        </div>
+      </div>
       <el-select
         v-model="unsettledType"
         v-loading="$store.state.loading"
@@ -121,7 +129,7 @@
           :disabled="!unsettledType"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('unsettled')"
+          @click.prevent="doAction('UNSETTLED')"
         >
           Continuar
         </el-button>
@@ -248,6 +256,7 @@
       :show-close="false"
       :close-on-press-escape="false"
       :visible.sync="chooseDeleteDialogVisible"
+      class="management-actions__dialog"
       title="Excluir disputa"
       width="460px"
     >
@@ -261,7 +270,7 @@
       </div>
       <el-select
         v-model="deleteType"
-        style="margin: 10px 0px; width: 100%;"
+        style="width: 100%;"
         placeholder="Escolha o motivo da exclusão"
       >
         <el-option
@@ -273,17 +282,15 @@
       </el-select>
       <span slot="footer">
         <el-button
-          :disabled="modalLoading"
           plain
           @click="chooseDeleteDialogVisible = false"
         >
           Cancelar
         </el-button>
         <el-button
-          :loading="modalLoading"
           :disabled="!deleteType"
           type="primary"
-          @click.prevent="sendBatchAction('DELETE')"
+          @click.prevent="doAction('DELETE')"
         >
           Excluir
         </el-button>
@@ -322,6 +329,7 @@ export default {
       allSelectedDisputes: 0,
       unsettledTypes: [],
       unsettledType: '',
+      deleteTypes: [],
       deleteType: '',
       newStrategyId: '',
       newExpirationDate: '',
@@ -366,20 +374,18 @@ export default {
   created() {
     if (this.disputeStatuses.unsettled) {
       this.unsettledTypes = this.disputeStatuses.unsettled
-      this.deleteTypes = this.disputeStatuses.unsettled
     } else {
       this.getDisputeStatuses('unsettled').then(response => {
         this.unsettledTypes = response
+      })
+    }
+    if (this.disputeStatuses.delete) {
+      this.deleteTypes = this.disputeStatuses.delete
+    } else {
+      this.getDisputeStatuses('delete').then(response => {
         this.deleteTypes = response
       })
     }
-    // if (this.disputeStatuses.delete) {
-    //   this.deleteTypes = this.disputeStatuses.delete
-    // } else {
-    //   this.getDisputeStatuses(delete').then(response => {
-    //     this.deleteTypes = response
-    //   })
-    // }
     this.$store.dispatch('getMyStrategies')
   },
   methods: {
@@ -398,7 +404,7 @@ export default {
           params.expirationDate = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
           break
         case 'DELETE':
-          if (this.deleteType) params.deleteReason = { [this.deleteType]: this.deleteTypes[this.deleteType] }
+          if (this.deleteType) params.deleteReasons = { [this.deleteType]: this.deleteTypes[this.deleteType] }
           break
         case 'UNSETTLED':
           if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
@@ -665,7 +671,7 @@ export default {
   }
   &__dialog {
     .el-message-box__content {
-      padding: 10px 0;
+        padding: 10px 0;
     }
     .el-select, .el-date-editor.el-input, .el-transfer {
       width: 100%;
