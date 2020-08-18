@@ -143,8 +143,7 @@
                     <span v-html="buildContent(occurrence)" />
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)"
-                      class="dispute-view-occurrences__whats-status"
-                    >
+                      class="dispute-view-occurrences__whats-status" >
                       <el-tooltip popper-class="mw400">
                         <div
                           slot="content"
@@ -153,6 +152,19 @@
                           <span v-html="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).message" />
                         </div>
                         <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).icon" />
+                      </el-tooltip>
+                    </span>
+                    <span
+                      v-if="buildCommunicationType(occurrence).startsWith('EMAIL') && buildEmailStatus(occurrence)"
+                      class="dispute-view-occurrences__whats-status" >
+                      <el-tooltip popper-class="mw400">
+                        <div
+                          slot="content"
+                          style="max-width: 400px;text-align: justify;"
+                        >
+                          <span v-html="buildEmailStatus(occurrence).message" />
+                        </div>
+                        <jus-icon :icon="buildEmailStatus(occurrence).icon" />
                       </el-tooltip>
                     </span>
                     <span v-if="showResume(occurrence)">
@@ -192,44 +204,7 @@
                   :disabled="false"
                 >
                   <div slot="content">
-                    Existem mais {{ occurrence.merged.length }} ocorrências parecidas com esta.
-                    <!-- <div
-                      v-for="merged in occurrence.merged"
-                      :key="merged.id + new Date().getTime()"
-                      class="dispute-view-occurrences__log-info-content">
-                      Em {{ buildHour(merged) }}
-                      <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                        criamos mensagem para
-                        <span v-if="merged.interaction.message.parameters && merged.interaction.message.parameters.RECEIVER_NAME">
-                          <b>{{ merged.interaction.message.parameters.RECEIVER_NAME }}</b> no endereço
-                        </span>
-                        "<b>{{ merged.interaction.message.receiver | phoneMask }}</b>" <br>
-                        ->
-                        <span v-if="merged.interaction.type === 'SCHEDULER' && merged.interaction.message.scheduledTime">
-                          foi agendada para <u>{{ merged.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}</u>
-                        </span>
-                        Status:
-                        <span v-if="merged.interaction.message.status === 'CANCELED'">
-                          - Envio CANCELADO
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'WAITING'">
-                          - Aguardando para ser enviada
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'PROCESSED' || merged.interaction.message.status === 'PROCESSED_BY_USER'">
-                          - Enviada
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'FAILED'">
-                          - Falhou o envio
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'RETRYING'">
-                          - Tentando enviar novamente
-                        </span>
-                        <br>
-                      </span>
-                      <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
-                        - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
-                      </span>
-                    </div> -->
+                    Existem mais {{ occurrence.merged.length }} ocorrência(s) parecida(s) com esta.
                   </div>
                   <span
                     class="dispute-view-occurrences__expand-button"
@@ -811,6 +786,16 @@ export default {
         return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND || 'Desconhecido'}.</i>` }
       }
       return null
+    },
+
+    buildEmailStatus(occurrency) {
+      if (occurrency.interaction.message.status === 'FAILED') {
+        return {
+          message: occurrency.interaction.message.parameters.FAILED_SEND,
+          icon: 'alert',
+        }
+      }
+      return false
     },
   },
 }
