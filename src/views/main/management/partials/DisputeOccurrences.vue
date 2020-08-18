@@ -24,7 +24,7 @@
     </infinite-loading>
     <div
       v-for="(datedOccurrence, date, index) in datedOccurrences"
-      :key="date + index + new Date().getTime()" >
+      :key="`${date}-${index}`" >
       <el-card
         class="dispute-view-occurrences__date el-card--bg-info"
         shadow="never" >
@@ -32,7 +32,7 @@
       </el-card>
       <li
         v-for="(occurrence, occurrenceIndex) in datedOccurrence"
-        :key="occurrenceIndex + new Date().getTime()"
+        :key="`occurrency-${occurrenceIndex}`"
       >
         <div class="dispute-view-occurrences__occurrence">
           <div
@@ -97,8 +97,8 @@
               <el-tooltip v-if="occurrence.merged">
                 <div slot="content">
                   <div
-                    v-for="merged in occurrence.merged"
-                    :key="merged.id + new Date().getTime()"
+                    v-for="(merged, mergedIndex) in occurrence.merged"
+                    :key="`merged-${mergedIndex}-#${merged.id}`"
                     class="dispute-view-occurrences__log-info-content"
                   >
                     Hora: {{ buildHour(merged) }}
@@ -139,12 +139,13 @@
                 class="dispute-view-occurrences__card"
                 data-testid="message-box" >
                 <div>
-                  <span :ref="getMessageRef(occurrence)">
-                    <span v-html="buildContent(occurrence)" />
+                  <span >
+                    <span
+                      :ref="getMessageRef(occurrence)"
+                      v-html="buildContent(occurrence)"/>
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)"
-                      class="dispute-view-occurrences__whats-status"
-                    >
+                      class="dispute-view-occurrences__whats-status" >
                       <el-tooltip popper-class="mw400">
                         <div
                           slot="content"
@@ -161,6 +162,19 @@
                         data-testid="show-email"
                         @click.prevent="showFullMessage(occurrence.id)"
                       > ver mais</a>
+                    </span>
+                    <span
+                      v-if="buildCommunicationType(occurrence).startsWith('EMAIL') && buildEmailStatus(occurrence)"
+                      class="dispute-view-occurrences__whats-status" >
+                      <el-tooltip popper-class="mw400">
+                        <div
+                          slot="content"
+                          style="max-width: 400px;text-align: justify;"
+                        >
+                          <span v-html="buildEmailStatus(occurrence).message" />
+                        </div>
+                        <jus-icon :icon="buildEmailStatus(occurrence).icon" />
+                      </el-tooltip>
                     </span>
                   </span>
                   <br>
@@ -192,44 +206,7 @@
                   :disabled="false"
                 >
                   <div slot="content">
-                    Existem mais {{ occurrence.merged.length }} ocorrências parecidas com esta.
-                    <!-- <div
-                      v-for="merged in occurrence.merged"
-                      :key="merged.id + new Date().getTime()"
-                      class="dispute-view-occurrences__log-info-content">
-                      Em {{ buildHour(merged) }}
-                      <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                        criamos mensagem para
-                        <span v-if="merged.interaction.message.parameters && merged.interaction.message.parameters.RECEIVER_NAME">
-                          <b>{{ merged.interaction.message.parameters.RECEIVER_NAME }}</b> no endereço
-                        </span>
-                        "<b>{{ merged.interaction.message.receiver | phoneMask }}</b>" <br>
-                        ->
-                        <span v-if="merged.interaction.type === 'SCHEDULER' && merged.interaction.message.scheduledTime">
-                          foi agendada para <u>{{ merged.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}</u>
-                        </span>
-                        Status:
-                        <span v-if="merged.interaction.message.status === 'CANCELED'">
-                          - Envio CANCELADO
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'WAITING'">
-                          - Aguardando para ser enviada
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'PROCESSED' || merged.interaction.message.status === 'PROCESSED_BY_USER'">
-                          - Enviada
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'FAILED'">
-                          - Falhou o envio
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'RETRYING'">
-                          - Tentando enviar novamente
-                        </span>
-                        <br>
-                      </span>
-                      <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
-                        - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
-                      </span>
-                    </div> -->
+                    Existem mais {{ occurrence.merged.length }} ocorrência(s) parecida(s) com esta.
                   </div>
                   <span
                     class="dispute-view-occurrences__expand-button"
@@ -285,15 +262,13 @@
               </el-tooltip>
             </div>
           </div>
-          <!-- ESSA DIV AQUI -->
         </div>
         <div
           v-if="activeOccurrency.id === occurrence.id"
-          class="dispute-view-occurrences__occurrence-merged"
-        >
+          class="dispute-view-occurrences__occurrence-merged">
           <div
             v-for="(mergedOccurency, mergedOccurencyIndex) of activeOccurrency.merged"
-            :key="`${mergedOccurencyIndex}-`"
+            :key="`merged-${mergedOccurencyIndex}`"
             :class="getDirection(occurrence.interaction)"
             class="dispute-view-occurrences__interaction dispute-view-occurrences__interaction-merged">
             <div class="dispute-view-occurrences__avatar">
@@ -315,8 +290,10 @@
                 class="dispute-view-occurrences__card"
                 data-testid="message-box" >
                 <div>
-                  <span :ref="getMessageRef(mergedOccurency)">
-                    <span v-html="buildContent(mergedOccurency)" />
+                  <span>
+                    <span
+                      :ref="getMessageRef(mergedOccurency)"
+                      v-html="buildContent(mergedOccurency)" />
                     <span
                       v-if="buildCommunicationType(mergedOccurency).startsWith('WHATSAPP') && buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt)"
                       class="dispute-view-occurrences__whats-status"
@@ -337,6 +314,19 @@
                         data-testid="show-email"
                         @click.prevent="showFullMessage(mergedOccurency.id)"
                       > ver mais</a>
+                    </span>
+                    <span
+                      v-if="buildCommunicationType(mergedOccurency).startsWith('EMAIL') && buildEmailStatus(mergedOccurency)"
+                      class="dispute-view-occurrences__whats-status" >
+                      <el-tooltip popper-class="mw400">
+                        <div
+                          slot="content"
+                          style="max-width: 400px;text-align: justify;"
+                        >
+                          <span v-html="buildEmailStatus(mergedOccurency).message" />
+                        </div>
+                        <jus-icon :icon="buildEmailStatus(mergedOccurency).icon" />
+                      </el-tooltip>
                     </span>
                   </span>
                   <br>
@@ -472,6 +462,7 @@ export default {
       messageDialogVisible: false,
       showFullMessageList: [],
       fullMessageBank: {},
+      hideMessageBank: {},
       infiniteId: +new Date(),
     }
   },
@@ -811,6 +802,16 @@ export default {
         return { icon: 'alert', message: `Falha na entrega desta mensagem. Detalhes da falha: <i>${message.parameters.FAILED_SEND || 'Desconhecido'}.</i>` }
       }
       return null
+    },
+
+    buildEmailStatus(occurrency) {
+      if (occurrency.interaction.message.status === 'FAILED') {
+        return {
+          message: occurrency.interaction.message.parameters.FAILED_SEND,
+          icon: 'alert',
+        }
+      }
+      return false
     },
   },
 }
