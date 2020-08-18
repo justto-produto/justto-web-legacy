@@ -767,8 +767,8 @@ export default {
       if (this.vexatiousThreshold && this.vexatiousType) {
         this.$store.dispatch('editWorkpace', {
           properties: {
-            VEXATIOUS_THRESHOLD: this.vexatiousThreshold.toString(),
-            VEXATIOUS_TYPE: this.vexatiousType.toString(),
+            VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
+            VEXATIOUS_TYPE: (this.vexatiousType || '').toString(),
           },
           name: this.companyName,
         }).then(() => {
@@ -815,8 +815,8 @@ export default {
       if (this.companyName) {
         this.$store.dispatch('editWorkpace', {
           properties: {
-            VEXATIOUS_THRESHOLD: this.vexatiousThreshold.toString(),
-            VEXATIOUS_TYPE: this.vexatiousType.toString(),
+            VEXATIOUS_THRESHOLD: (this.vexatiousThreshold || '').toString(),
+            VEXATIOUS_TYPE: (this.vexatiousType || '').toString(),
           },
           name: this.companyName,
         }).then(() => {
