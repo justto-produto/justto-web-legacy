@@ -139,8 +139,10 @@
                 class="dispute-view-occurrences__card"
                 data-testid="message-box" >
                 <div>
-                  <span :ref="getMessageRef(occurrence)">
-                    <span v-html="buildContent(occurrence)" />
+                  <span >
+                    <span
+                      :ref="getMessageRef(occurrence)"
+                      v-html="buildContent(occurrence)"/>
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)"
                       class="dispute-view-occurrences__whats-status" >
@@ -263,8 +265,7 @@
         </div>
         <div
           v-if="activeOccurrency.id === occurrence.id"
-          class="dispute-view-occurrences__occurrence-merged"
-        >
+          class="dispute-view-occurrences__occurrence-merged">
           <div
             v-for="(mergedOccurency, mergedOccurencyIndex) of activeOccurrency.merged"
             :key="`merged-${mergedOccurencyIndex}`"
@@ -289,8 +290,10 @@
                 class="dispute-view-occurrences__card"
                 data-testid="message-box" >
                 <div>
-                  <span :ref="getMessageRef(mergedOccurency)">
-                    <span v-html="buildContent(mergedOccurency)" />
+                  <span>
+                    <span
+                      :ref="getMessageRef(mergedOccurency)"
+                      v-html="buildContent(mergedOccurency)" />
                     <span
                       v-if="buildCommunicationType(mergedOccurency).startsWith('WHATSAPP') && buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt)"
                       class="dispute-view-occurrences__whats-status"
@@ -311,6 +314,19 @@
                         data-testid="show-email"
                         @click.prevent="showFullMessage(mergedOccurency.id)"
                       > ver mais</a>
+                    </span>
+                    <span
+                      v-if="buildCommunicationType(mergedOccurency).startsWith('EMAIL') && buildEmailStatus(mergedOccurency)"
+                      class="dispute-view-occurrences__whats-status" >
+                      <el-tooltip popper-class="mw400">
+                        <div
+                          slot="content"
+                          style="max-width: 400px;text-align: justify;"
+                        >
+                          <span v-html="buildEmailStatus(mergedOccurency).message" />
+                        </div>
+                        <jus-icon :icon="buildEmailStatus(mergedOccurency).icon" />
+                      </el-tooltip>
                     </span>
                   </span>
                   <br>
@@ -446,6 +462,7 @@ export default {
       messageDialogVisible: false,
       showFullMessageList: [],
       fullMessageBank: {},
+      hideMessageBank: {},
       infiniteId: +new Date(),
     }
   },
