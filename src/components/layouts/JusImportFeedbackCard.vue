@@ -204,6 +204,7 @@
 
 <script>
 import { normalizeString } from '@/utils/jusUtils'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusImportFeedbackCard',
@@ -249,8 +250,15 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['isJusttoAdmin']),
+
     strategies() {
-      return this.$store.getters.strategyList.filter(s => !s.archived)
+      const activeSrategies = this.$store.getters.strategyList.filter(s => !s.archived)
+      if (this.isJusttoAdmin) {
+        return activeSrategies
+      } else {
+        return activeSrategies.filter(s => !s.name.startsWith('[TST]'))
+      }
     },
     negotiatorsList() {
       return this.$store.state.workspaceModule.members
