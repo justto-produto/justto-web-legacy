@@ -203,6 +203,7 @@
 </template>
 
 <script>
+import { normalizeString } from '@/utils/jusUtils'
 
 export default {
   name: 'JusImportFeedbackCard',
@@ -340,6 +341,7 @@ export default {
     this.campaignName = this.mappedCampaign.campaign || ''
     this.respondent = this.mappedCampaign.respondent || ''
     this.mapEmails(this.mappedCampaign.negotiatoremail)
+    this.mapStrategy(this.mappedCampaign.strategy)
 
     if (this.mappedCampaign.deadline && this.$moment(new Date(this.mappedCampaign.deadline)).isValid()) {
       this.deadline = this.mappedCampaign.deadline
@@ -354,6 +356,20 @@ export default {
         confirmButtonText: 'OK',
         dangerouslyUseHTMLString: true,
       })
+    },
+
+    mapStrategy(strategy) {
+      if (strategy) {
+        const matchedStrategies = []
+        for (const currentStrategy of this.strategies) {
+          if (normalizeString(currentStrategy.name).indexOf(normalizeString(strategy)) > -1) {
+            matchedStrategies.push(currentStrategy)
+          }
+        }
+        if (matchedStrategies.length === 1) {
+          this.strategy = matchedStrategies[0]
+        }
+      }
     },
 
     mapEmails(emails) {
