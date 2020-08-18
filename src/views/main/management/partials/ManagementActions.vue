@@ -283,7 +283,7 @@
           :loading="modalLoading"
           :disabled="!deleteType"
           type="primary"
-          @click.prevent="doAction('UNSETTLED')"
+          @click.prevent="sendBatchAction('DELETE')"
         >
           Excluir
         </el-button>
@@ -390,7 +390,6 @@ export default {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds,
       }
-      if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       switch (action) {
         case 'CHANGE_STRATEGY':
           params.strategyId = this.newStrategyId
@@ -398,12 +397,19 @@ export default {
         case 'CHANGE_EXPIRATION_DATE':
           params.expirationDate = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
           break
+        case 'DELETE':
+          if (this.deleteType) params.deleteReason = { [this.deleteType]: this.deleteTypes[this.deleteType] }
+          break
+        case 'UNSETTLED':
+          if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+          break
       }
       if (this.isSelectedAll) {
         params.allSelected = true
         params.disputeIds = []
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
+        this.chooseDeleteDialogVisible = false
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false

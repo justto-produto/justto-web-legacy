@@ -1829,7 +1829,7 @@ export default {
     },
     deleteDispute() {
       this.modalLoading = true
-      this.removeDispute(this.dispute.id).then(() => {
+      // this.removeDispute(this.dispute.id, { reason: this.deleteTypes[this.deleteType] }).then(() => {
         this.$router.push('/management')
       }).catch(error => {
         this.$jusNotification({ error })
