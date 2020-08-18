@@ -154,6 +154,13 @@
                         <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).icon" />
                       </el-tooltip>
                     </span>
+                    <span v-if="showResume(occurrence)">
+                      <a
+                        href="#"
+                        data-testid="show-email"
+                        @click.prevent="showFullMessage(occurrence.id)"
+                      > ver mais</a>
+                    </span>
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('EMAIL') && buildEmailStatus(occurrence)"
                       class="dispute-view-occurrences__whats-status" >
@@ -166,13 +173,6 @@
                         </div>
                         <jus-icon :icon="buildEmailStatus(occurrence).icon" />
                       </el-tooltip>
-                    </span>
-                    <span v-if="showResume(occurrence)">
-                      <a
-                        href="#"
-                        data-testid="show-email"
-                        @click.prevent="showFullMessage(occurrence.id)"
-                      > ver mais</a>
                     </span>
                   </span>
                   <br>
