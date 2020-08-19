@@ -116,14 +116,6 @@
               </span>
             </div>
             <div
-              v-if="dispute.classification"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Classificação:</span>
-              <span>{{ dispute.classification.name | capitalize }}</span>
-            </div>
-            <div
               class="dispute-overview-view__info-line"
               data-testid="dispute-infoline"
             >
@@ -288,6 +280,22 @@
                     </a>
                   </span>
                 </span>
+              </span>
+            </div>
+            <div
+              v-if="dispute.classification"
+              class="dispute-overview-view__info-line"
+            >
+              <span class="title">Classificação:</span>
+              <span class="classification">
+                {{ dispute.classification.name }}
+                <div
+                  v-for="subClassification in dispute.classification.classificationDetails"
+                  :key="subClassification.id"
+                >
+                  <i class="el-icon-right"/>
+                  {{ subClassification.name }}
+                </div>
               </span>
             </div>
             <div
@@ -2451,6 +2459,18 @@ export default {
         font-weight: 500;
       }
     }
+
+    .classification {
+      margin-top: 4px;
+      line-height: 18px;
+      flex-direction: column;
+
+      div {
+        margin: 8px;
+        font-weight: 500;
+      }
+    }
+
     .title {
       font-weight: 600;
     }
