@@ -64,7 +64,6 @@
         </el-button>
       </span>
     </el-dialog>
-
     <div
       v-loading="loading || linkBankAccountLoading"
       class="dispute-overview-view__loading"
