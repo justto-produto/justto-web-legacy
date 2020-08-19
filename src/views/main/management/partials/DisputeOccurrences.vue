@@ -87,7 +87,36 @@
                 />
               </span>
             </el-tooltip>
-            <span v-html="buildContent(occurrence)" />
+            <span class="occurrence-content" v-html="buildContent(occurrence)" />
+            <div v-if="canHandleUnknowParty(occurrence)" class="fast-occurrence-actions"><br>
+              <span v-if="getUnknowPartys(occurrence).length === 0" class="ok">Esta pendência já foi resolvida!</span>
+              <div
+                      v-for="role in getUnknowPartys(occurrence)"
+                      :key="`role-party-${role.id}`"
+              >
+                <a
+                  href="#"
+                  @click="openOptionsParty(role)"
+                  v-if="!handlePartyId['party_role' + role.id]">Definir polaridade de {{role.name}}</a>
+                <a
+                        href="#"
+                        @click="closeOptionsParty(role)"
+                        v-if="handlePartyId['party_role' + role.id]">Cancelar edição de polaridade de {{role.name}}</a>
+                <el-select
+                        v-model="role.party"
+                        placeholder="Defina o polo desta parte"
+                        v-if="role.party === 'UNKNOW' && handlePartyId['party_role' + role.id]"
+                        @change="setDisputeParty(role)"
+                >
+                  <el-option
+                          v-for="party in disputePartys"
+                          :key="party.value"
+                          :label="party.label"
+                          :value="party.value"
+                  />
+                </el-select>
+              </div>
+            </div>
             <span class="dispute-view-occurrences__log-info">
               <span v-text="buildHour(occurrence)" />
               <div>•</div>
@@ -464,6 +493,25 @@ export default {
       fullMessageBank: {},
       hideMessageBank: {},
       infiniteId: +new Date(),
+      handlePartyId: {},
+      disputePartys: [
+        {
+          value: 'RESPONDENT',
+          label: 'Réu',
+        },
+        {
+          value: 'CLAIMANT',
+          label: 'Parte contrária',
+        },
+        {
+          value: 'IMPARTIAL',
+          label: 'Arbitro/Juiz/Mediador',
+        },
+        {
+          value: 'UNKNOW',
+          label: 'Desconhecido',
+        },
+      ],
     }
   },
   computed: {
@@ -536,7 +584,31 @@ export default {
     getIconIsMerged(occurrency) {
       return this.activeOccurrency.id === occurrency.id ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
     },
-
+    openOptionsParty(role) {
+      this.$set(this.handlePartyId, 'party_role' + role.id, true)
+    },
+    closeOptionsParty(role) {
+      this.$set(this.handlePartyId, 'party_role' + role.id, false)
+    },
+    setDisputeParty(role) {
+      this.handlePartyId['party_role' + role.id] = false
+      const params = {
+        disputeId: this.disputeId,
+        disputeRoleId: role.id,
+        disputeParty: role.party,
+      }
+      this.$jusSegment('Defiido função em participante da disputa', {
+        page: this.$route.name,
+      })
+      this.$store.dispatch('setDisputeparty', params).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Função definida com sucesso!',
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+        })
+      })
+    },
     clearOccurrences() {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
@@ -665,7 +737,19 @@ export default {
       }
       return occurrence.description
     },
-
+    canHandleUnknowParty(occurrence) {
+      return occurrence.properties && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.UNKNOW_ROLE_IDS
+    },
+    getUnknowPartys(occurrence) {
+      let canHandleParty = this.canHandleUnknowParty(occurrence)
+      if (canHandleParty) {
+        let dispute = this.$store.getters.dispute
+        let roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
+        let filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOW')
+        return filteredRole
+      }
+      return canHandleParty
+    },
     buildContent(occurrence) {
       if (!occurrence) return ''
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
@@ -830,6 +914,21 @@ export default {
   padding: 0;
   margin: 0;
   height: 100%;
+  .fast-occurrence-actions{
+    .el-select {
+      width: 250px;
+      margin: 5px;
+    }
+    .ok {
+      text-decoration-line: underline;
+    }
+  }
+  .occurrence-content {
+    line-height: 30px;
+  }
+  .dispute-view-occurrences__log-info{
+    margin-top: 20px;
+  }
   &__occurrence {
     display: flex;
     justify-content: center;
