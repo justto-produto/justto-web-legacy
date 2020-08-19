@@ -18,7 +18,6 @@
         </el-button>
       </el-tooltip>
     </h2>
-
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -65,7 +64,6 @@
         </el-button>
       </span>
     </el-dialog>
-
     <div
       v-loading="loading || linkBankAccountLoading"
       class="dispute-overview-view__loading"
@@ -338,7 +336,6 @@
                 </span>
               </span>
             </div>
-
             <div
               v-if="classification"
               class="dispute-overview-view__info-line"
@@ -356,7 +353,6 @@
                 </span>
               </span>
             </div>
-
             <div
               v-if="dispute.bankAccounts && dispute.bankAccounts.length"
               class="dispute-overview-view__info-line"
