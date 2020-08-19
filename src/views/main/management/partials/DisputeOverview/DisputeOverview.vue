@@ -336,7 +336,6 @@
                 </span>
               </span>
             </div>
-
             <div
               v-if="classification"
               class="dispute-overview-view__info-line"
