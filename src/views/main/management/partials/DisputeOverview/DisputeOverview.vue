@@ -353,7 +353,6 @@
                 </span>
               </span>
             </div>
-
             <div
               v-if="dispute.bankAccounts && dispute.bankAccounts.length"
               class="dispute-overview-view__info-line"
