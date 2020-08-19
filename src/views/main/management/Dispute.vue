@@ -122,8 +122,8 @@
                 name="1"
               >
                 <el-card
-                  v-loading="isPaused"
-                  element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
+                  v-loading="isPaused || isPreNegotiation"
+                  :element-loading-text="loadingText"
                   element-loading-spinner="el-icon-video-pause"
                   element-loading-background="#fff"
                   class="dispute-view__send-message-box"
@@ -391,6 +391,14 @@ export default {
     },
     isPaused() {
       return this.dispute ? this.dispute.paused : false
+    },
+    isPreNegotiation() {
+      return this.dispute.status === 'PRE_NEGOTIATION'
+    },
+    loadingText() {
+      return this.isPaused
+        ? 'Disputa pausada. Retome a disputa para enviar mensagens'
+        : 'Disputa em pré-negociação. Inicie a disputa para enviar mensagens'
     },
     isFavorite() {
       return this.dispute ? this.dispute.favorite : false

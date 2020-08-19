@@ -163,6 +163,32 @@
         <jus-icon icon="unread" />
       </el-button>
     </el-tooltip>
+
+    <el-tooltip
+      v-if="dispute.status === 'PRE_NEGOTIATION'"
+      content="Marcar como não lida"
+    >
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="removeDispute({ disputeId: this.dispute.id, reason: 'DROPPED' })"
+      >
+        <jus-icon icon="hammer" />
+      </el-button>
+    </el-tooltip>
+    <el-tooltip
+      v-if="dispute.status === 'PRE_NEGOTIATION'"
+      content="Iniciar negociação"
+    >
+      <el-button
+        :type="tableActions ? 'text' : ''"
+        :plain="!tableActions"
+        @click="startNegotiation(dispute.id)"
+      >
+        <jus-icon icon="right-arrow" />
+      </el-button>
+    </el-tooltip>
+
     <el-tooltip
       v-if="tableActions"
       content="Abrir disputa em nova aba"
@@ -513,6 +539,7 @@
 <script>
 import { getRoles } from '@/utils/jusUtils'
 import { JusDragArea } from '@/components/JusDragArea'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'JusDisputeActions',
@@ -641,6 +668,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'startNegotiation',
+      'removeDispute',
+    ]),
+
     disputeAction(action, additionParams) {
       let message = {
         content: 'Tem certeza que deseja realizar esta ação?',

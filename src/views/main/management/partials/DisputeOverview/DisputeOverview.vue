@@ -330,13 +330,19 @@
             </div>
           </div>
           <div class="dispute-overview-view__actions">
-            <el-button
-              type="primary"
-              data-testid="edit-dispute"
-              @click="openDisputeDialog()"
+            <el-tooltip
+              :disabled="!dispute.status === 'PRE_NEGOTIATION'"
+              content="Disputas em pré-negociação não podem ser editadas"
             >
-              Editar
-            </el-button>
+              <el-button
+                :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                type="primary"
+                data-testid="edit-dispute"
+                @click="openDisputeDialog()"
+              >
+                Editar
+              </el-button>
+            </el-tooltip>
           </div>
         </el-tab-pane>
         <!-- PARTES DA DISPUTA -->
@@ -604,19 +610,31 @@
                 v-if="!role.roles.includes('NEGOTIATOR')"
                 class="dispute-overview-view__actions"
               >
-                <el-button
-                  plain
-                  @click="removeRole(role)"
+                <el-tooltip
+                  :disabled="!dispute.status === 'PRE_NEGOTIATION'"
+                  content="Disputas em pré-negociação não podem ser editadas"
                 >
-                  Excluir
-                </el-button>
-                <el-button
-                  type="primary"
-                  data-testid="edit-part"
-                  @click="openRoleDialog(role)"
+                  <el-button
+                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                    plain
+                    @click="removeRole(role)"
+                  >
+                    Excluir
+                  </el-button>
+                </el-tooltip>
+                <el-tooltip
+                  :disabled="!dispute.status === 'PRE_NEGOTIATION'"
+                  content="Disputas em pré-negociação não podem ser editadas"
                 >
-                  Editar
-                </el-button>
+                  <el-button
+                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                    type="primary"
+                    data-testid="edit-part"
+                    @click="openRoleDialog(role)"
+                  >
+                    Editar
+                  </el-button>
+                </el-tooltip>
               </div>
             </el-collapse-item>
             <el-button

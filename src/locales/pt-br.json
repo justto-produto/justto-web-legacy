@@ -27,7 +27,8 @@
       "REFUSED": "com proposta recusada",
       "RUNNING": "em negociação",
       "SETTLED": "ganha",
-      "UNSETTLED": "perdida"
+      "UNSETTLED": "perdida",
+      "PRE_NEGOTIATION": "pre-negociação"
     },
     "export": {
       "FAILED": "falha",
