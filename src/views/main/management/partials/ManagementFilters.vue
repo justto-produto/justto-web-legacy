@@ -443,6 +443,8 @@ export default {
     },
     activeTabLabel() {
       switch (this.tabIndex) {
+        case '-1':
+          return 'Pré-Negociação'
         case '0':
           return 'Sem resposta'
         case '1':

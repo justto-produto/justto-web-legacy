@@ -16,6 +16,19 @@
           :before-leave="handleChangeTab"
           class="view-management__tabs"
         >
+          <el-tab-pane name="-1">
+            <span slot="label">
+              Pré-Negociação
+              <el-badge
+                :hidden="!engagementLength"
+                :value="engagementLength"
+                :max="99"
+                data-testid="badge-tab-1"
+                type="primary"
+                class="el-badge--absolute"
+              />
+            </span>
+          </el-tab-pane>
           <el-tab-pane name="0">
             <span slot="label">
               Sem resposta
@@ -586,6 +599,11 @@ export default {
       // SEGMENT TRACK
       this.$jusSegment(`Navegação na aba ${this.$t('tab.' + tab).toUpperCase()}`)
       switch (tab) {
+        case '-1':
+          // PRE_NEGOTIATION
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
+          this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
+          break
         case '0':
           this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })

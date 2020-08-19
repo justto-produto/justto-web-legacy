@@ -202,6 +202,7 @@
     "unlinkDisputeBankAccounts": "desvinculada"
   },
   "tab": {
+    "-1": "pré-Negociação",
     "0": "sem resposta",
     "1": "em negociação",
     "2": "proposta aceita",

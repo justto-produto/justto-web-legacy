@@ -557,6 +557,9 @@ export default {
     disputes() {
       return this.$store.getters.disputes
     },
+    tab() {
+      return this.activeTab === '-1'
+    },
     tab0() {
       return this.activeTab === '0'
     },
