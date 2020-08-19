@@ -12,12 +12,58 @@
           data-testid="remove"
           class="right"
           size="mini"
-          @click="removeDispute()"
+          @click="openRemoveDisputeDialog()"
         >
           <i class="el-icon-delete" />
         </el-button>
       </el-tooltip>
     </h2>
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="chooseDeleteDialogVisible"
+      title="Excluir disputa"
+      width="460px"
+    >
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.</p>
+          </div>
+        </div>
+      </div>
+      <el-select
+        v-model="deleteType"
+        style="margin: 10px 0px;"
+        placeholder="Escolha o motivo da exclusão"
+      >
+        <el-option
+          v-for="(type, index) in deleteTypes"
+          :key="index"
+          :label="type"
+          :value="index"
+        />
+      </el-select>
+      <span slot="footer">
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="chooseDeleteDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          :loading="modalLoading"
+          :disabled="!deleteType"
+          type="primary"
+          @click.prevent="deleteDispute()"
+        >
+          Excluir
+        </el-button>
+      </span>
+    </el-dialog>
     <div
       v-loading="loading || linkBankAccountLoading"
       class="dispute-overview-view__loading"
@@ -1464,7 +1510,7 @@ import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 import DisputeAttachments from './sections/DisputeAttachments'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'DisputeOverview',
@@ -1494,6 +1540,9 @@ export default {
       namesakeDialogLoading: false,
       namesakeButtonLoading: false,
       namesakeProcessing: false,
+      deleteType: '',
+      deleteTypes: [],
+      modalLoading: false,
       selectedNamesake: '',
       selectedNamesakePersonId: '',
       selectedClaimantId: '',
@@ -1548,6 +1597,7 @@ export default {
       editRoleDialogLoading: false,
       editRoleDialogError: false,
       editRoleDialogErrorList: [],
+      chooseDeleteDialogVisible: false,
       descriptionCollapse: true,
       addBankDialogVisible: false,
       addBankForm: {
@@ -1604,6 +1654,7 @@ export default {
   computed: {
     ...mapGetters({
       getDisputeProperties: 'disputeProprieties',
+      disputeStatuses: 'disputeStatuses',
     }),
     ufList() {
       const ufList = this.namesakeList.map(namesake => namesake.uf)
@@ -1746,25 +1797,39 @@ export default {
       }
     },
   },
+  created() {
+    if (this.disputeStatuses.delete) {
+      this.deleteTypes = this.disputeStatuses.delete
+    } else {
+      this.getDisputeStatuses('delete').then(response => {
+        this.deleteTypes = response
+      })
+    }
+  },
   methods: {
+    ...mapActions([
+      'removeDispute',
+      'getDisputeStatuses',
+    ]),
+
     buildRoleTitle: (...i) => buildRoleTitle(...i),
     getRoleIcon: (...i) => getRoleIcon(...i),
-    removeDispute() {
-      this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
-        confirmButtonClass: 'confirm-remove-btn',
-        confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'error',
-        cancelButtonClass: 'is-plain',
+    openRemoveDisputeDialog() {
+      this.chooseDeleteDialogVisible = true
+    },
+    deleteDispute() {
+      this.modalLoading = true
+      this.removeDispute({
+        disputeId: this.dispute.id,
+        reason: this.deleteType,
       }).then(() => {
-        const loading = this.$loading({ lock: true })
-        this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
-          this.$router.push('/management')
-        }).catch(error => {
-          this.$jusNotification({ error })
-        }).finally(() => {
-          loading.close()
-        })
+      // this.removeDispute(this.dispute.id).then(() => {
+        this.$router.push('/management')
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.chooseDeleteDialogVisible = false
+        this.modalLoading = false
       })
     },
     showNamesake(role) {

@@ -275,12 +275,16 @@
           :disabled="modalLoading"
           plain
           @click="settledDialogVisible = false"
-        >Cancelar</el-button>
+        >
+          Cancelar
+        </el-button>
         <el-button
           :loading="modalLoading"
           type="primary"
           @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)"
-        >Continuar</el-button>
+        >
+          Continua
+        r</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -305,7 +309,6 @@
       <el-select
         v-model="unsettledType"
         data-testid="select-unsettled"
-        style="margin: 10px 0px;"
         placeholder="Escolha o motivo da perda"
       >
         <el-option
@@ -368,7 +371,6 @@
           :loading="modalLoading"
           :disabled="!unsettledType"
           type="primary"
-          class="confirm-action-unsettled"
           @click.prevent="disputeAction('send-unsettled')"
         >
           Continuar
