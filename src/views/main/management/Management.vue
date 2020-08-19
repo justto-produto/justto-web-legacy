@@ -19,14 +19,14 @@
           <el-tab-pane name="-1">
             <span slot="label">
               Pré-Negociação
-              <el-badge
-                :hidden="!engagementLength"
-                :value="engagementLength"
+              <!-- <el-badge
+                :hidden="!disputes.length"
+                :value="disputes.length"
                 :max="99"
                 data-testid="badge-tab-1"
                 type="primary"
                 class="el-badge--absolute"
-              />
+              /> -->
             </span>
           </el-tab-pane>
           <el-tab-pane name="0">
@@ -413,9 +413,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'exportHistory',
-    ]),
+    ...mapGetters({
+      disputes: 'disputes',
+      engagementLength: 'disputeNearExpirationsEngajement',
+      interactionLength: 'disputeNotVisualizedInteration',
+      newDealsLength: 'disputeNotVisualizedNewDeal',
+      hasFilters: 'disputeHasFilters',
+      hasNew: 'disputeHasNew',
+      exportHistory: 'exportHistory',
+      loadingDisputes: 'loadingDisputes',
+    }),
     columns() {
       if (this.filterQuery || this.showAllNodes) {
         return this.columnsList
@@ -425,27 +432,6 @@ export default {
     },
     showAllNodesButton() {
       return this.showAllNodes ? 'Exibir apenas apenas campos sugeridos' : 'Exibir mais opções de campos'
-    },
-    loadingDisputes() {
-      return this.$store.getters.loadingDisputes
-    },
-    hasFilters() {
-      return this.$store.getters.disputeHasFilters
-    },
-    engagementLength() {
-      return this.$store.getters.disputeNearExpirationsEngajement
-    },
-    interactionLength() {
-      return this.$store.getters.disputeNotVisualizedInteration
-    },
-    newDealsLength() {
-      return this.$store.getters.disputeNotVisualizedNewDeal
-    },
-    disputes() {
-      return this.$store.getters.disputes
-    },
-    hasNew() {
-      return this.$store.getters.disputeHasNew
     },
     activeTab: {
       get() { return this.$store.getters.disputeTab },

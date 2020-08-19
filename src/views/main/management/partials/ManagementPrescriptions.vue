@@ -12,10 +12,7 @@
     >
       {{ prescription.description | capitalize }}
     </el-button>
-    <jus-tags-filter
-      v-if="activeTab !== '-1'"
-      @prescriptions:getDisputes="getDisputes"
-    />
+    <jus-tags-filter @prescriptions:getDisputes="getDisputes" />
   </div>
 </template>
 
