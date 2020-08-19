@@ -18,7 +18,6 @@
         </el-button>
       </el-tooltip>
     </h2>
-
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
