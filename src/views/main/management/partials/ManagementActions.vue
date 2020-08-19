@@ -404,7 +404,7 @@ export default {
           params.expirationDate = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
           break
         case 'DELETE':
-          if (this.deleteType) params.deleteReasons = { [this.deleteType]: this.deleteTypes[this.deleteType] }
+          if (this.deleteType) params.reasonKey = this.deleteType
           break
         case 'UNSETTLED':
           if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
