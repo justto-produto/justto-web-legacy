@@ -13,6 +13,7 @@
         :content="action.label"
       >
         <jus-icon
+          v-if="action.visible"
           :icon="action.icon"
           class="jus-financial-card__icon"
           @click.native="emitAction(action.trigger)"
