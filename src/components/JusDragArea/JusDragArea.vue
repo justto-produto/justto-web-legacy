@@ -117,7 +117,7 @@ export default {
         })
       }).catch(error => {
         this.$emit('closeDialog')
-        this.isAttachmentLoading = false,
+        this.isAttachmentLoading = false
         this.$jusNotification({ error })
       })
     },
