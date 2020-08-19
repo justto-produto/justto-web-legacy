@@ -600,8 +600,7 @@ export default {
       this.$jusSegment(`Navegação na aba ${this.$t('tab.' + tab).toUpperCase()}`)
       switch (tab) {
         case '-1':
-          // PRE_NEGOTIATION
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['PRE_NEGOTIATION'] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
           break
         case '0':
