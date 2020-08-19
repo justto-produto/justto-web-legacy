@@ -137,7 +137,8 @@
       "RUNNING": "em negociação",
       "EXPIRED": "expirado",
       "FAVORITE": "favoritar",
-      "DISFAVOR": "desfavoritar"
+      "DISFAVOR": "desfavoritar",
+      "PRE_NEGOTIATION": "pre-negociação"
     }
   },
   "profile": {
