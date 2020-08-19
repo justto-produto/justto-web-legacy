@@ -329,11 +329,11 @@
               </el-collapse>
             </div>
           </div>
-          <div class="dispute-overview-view__actions">
-            <el-tooltip
-              :disabled="!dispute.status === 'PRE_NEGOTIATION'"
-              content="Disputas em pré-negociação não podem ser editadas"
-            >
+          <el-tooltip
+            :disabled="!dispute.status === 'PRE_NEGOTIATION'"
+            content="Disputas em pré-negociação não podem ser editadas"
+          >
+            <div class="dispute-overview-view__actions">
               <el-button
                 :disabled="dispute.status === 'PRE_NEGOTIATION'"
                 type="primary"
@@ -342,8 +342,8 @@
               >
                 Editar
               </el-button>
-            </el-tooltip>
-          </div>
+            </div>
+          </el-tooltip>
         </el-tab-pane>
         <!-- PARTES DA DISPUTA -->
         <el-tab-pane
@@ -606,13 +606,13 @@
                   </el-checkbox>
                 </el-checkbox-group>
               </div>
-              <div
-                v-if="!role.roles.includes('NEGOTIATOR')"
-                class="dispute-overview-view__actions"
+              <el-tooltip
+                :disabled="!dispute.status === 'PRE_NEGOTIATION'"
+                content="Disputas em pré-negociação não podem ser editadas"
               >
-                <el-tooltip
-                  :disabled="!dispute.status === 'PRE_NEGOTIATION'"
-                  content="Disputas em pré-negociação não podem ser editadas"
+                <div
+                  v-if="!role.roles.includes('NEGOTIATOR')"
+                  class="dispute-overview-view__actions"
                 >
                   <el-button
                     :disabled="dispute.status === 'PRE_NEGOTIATION'"
@@ -621,11 +621,6 @@
                   >
                     Excluir
                   </el-button>
-                </el-tooltip>
-                <el-tooltip
-                  :disabled="!dispute.status === 'PRE_NEGOTIATION'"
-                  content="Disputas em pré-negociação não podem ser editadas"
-                >
                   <el-button
                     :disabled="dispute.status === 'PRE_NEGOTIATION'"
                     type="primary"
@@ -634,8 +629,8 @@
                   >
                     Editar
                   </el-button>
-                </el-tooltip>
-              </div>
+                </div>
+              </el-tooltip>
             </el-collapse-item>
             <el-button
               class="dispute-overview-view__add-role mb20"
