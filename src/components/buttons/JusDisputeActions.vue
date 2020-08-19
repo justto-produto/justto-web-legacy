@@ -14,6 +14,7 @@
         />
       </router-link>
     </el-tooltip>
+
     <el-tooltip
       v-if="canSettled"
       :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'"
@@ -165,7 +166,7 @@
     </el-tooltip>
 
     <el-tooltip
-      v-if="dispute.status === 'PRE_NEGOTIATION'"
+      v-if="isPreNegotiation"
       content="Marcar como não lida"
     >
       <el-button
@@ -177,7 +178,7 @@
       </el-button>
     </el-tooltip>
     <el-tooltip
-      v-if="dispute.status === 'PRE_NEGOTIATION'"
+      v-if="isPreNegotiation"
       content="Iniciar negociação"
     >
       <el-button
@@ -241,6 +242,7 @@
         @click="togleCollapsed"
       />
     </el-tooltip>
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -583,6 +585,15 @@ export default {
         lastCounterOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
+    //   actionsList: [
+    //     {
+    //       name: '',
+    //       condition: () => {},
+    //       tooltip: () => {},
+    //       action: () => {},
+    //       icon: '',
+    //     },
+    //   ],
     }
   },
   computed: {
@@ -598,22 +609,25 @@ export default {
       return this.unsettledType && this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && ((this.dispute && !this.dispute.lastCounterOfferValue) || (this.dispute && this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange))
     },
     canSettled() {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
+      return this.dispute && this.dispute.status && !['SETTLED', 'PRE_NEGOTIATION'].includes(this.dispute.status)
     },
     canUnsettled() {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
+      return this.dispute && this.dispute.status && !['UNSETTLED', 'PRE_NEGOTIATION'].includes(this.dispute.status)
     },
     canResendMessage() {
       return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING'
     },
     canMarkAsNotRead() {
-      return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
+      return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PRE_NEGOTIATION'].includes(this.dispute.status)
     },
     canSendCounterproposal() {
-      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)
+      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED', 'PRE_NEGOTIATION'].includes(this.dispute.status)
     },
     checkUpperRangeCounterOffer() {
       return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
+    },
+    isPreNegotiation() {
+      return this.dispute.status === 'PRE_NEGOTIATION'
     },
     isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : null
