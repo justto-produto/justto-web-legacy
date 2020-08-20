@@ -168,7 +168,9 @@
     "CHANGE_STRATEGY": "alterar estratégia",
     "CHANGE_EXPIRATION_DATE": "alterar data limite",
     "RENEGOTIATE": "retornar para negociação",
-    "EDIT-NEGOTIATORS": "editar negociadores"
+    "EDIT-NEGOTIATORS": "editar negociadores",
+    "CONFIRM_FINAL_TERMINATION": "confirmar baixa definitiva",
+    "START_NEGOTIATON": "inicar negociação"
   },
   "fields": {
     "claimantParty": "Parte contrária",

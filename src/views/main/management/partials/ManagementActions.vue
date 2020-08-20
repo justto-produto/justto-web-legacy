@@ -85,6 +85,20 @@
         >
           {{ $t('action.RESEND_MESSAGE') }}
         </el-button>
+        <el-button
+          plain
+          data-testid="batch-resendmessage"
+          @click="sendBatchAction('CONFIRM_FINAL_TERMINATION')"
+        >
+          {{ $t('action.CONFIRM_FINAL_TERMINATION') }}
+        </el-button>
+        <el-button
+          plain
+          data-testid="batch-resendmessage"
+          @click="sendBatchAction('START_NEGOTIATON')"
+        >
+          {{ $t('action.START_NEGOTIATON') }}
+        </el-button>
       </div>
       <i
         class="el-icon-close"
