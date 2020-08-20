@@ -14,7 +14,7 @@
         >
           <el-button
             v-if="action.tabs.includes(activeTab)"
-            :data-testid="`batch-${action.name.toLowerCase}`"
+            :data-testid="`batch-${action.name.toLowerCase()}`"
             plain
             @click="sendBatchAction(action.name)"
           >
@@ -262,11 +262,11 @@ export default {
           tabs: ['0', '1', '2', '3'],
         },
         {
-          name: '',
+          name: 'CONFIRM_FINAL_TERMINATION',
           tabs: ['-1'],
         },
         {
-          name: '',
+          name: 'START_NEGOTIATON',
           tabs: ['-1'],
         },
       ],

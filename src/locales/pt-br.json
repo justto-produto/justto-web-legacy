@@ -149,7 +149,7 @@
     "RESTART_ENGAGEMENT": "reiniciar",
     "RESTART-ENGAGEMENT": "reiniciar disputa",
     "RESEND-MESSAGES": "reenviar mensagens automáticas",
-    "RESEND_MESSAGE": "reenviar msgs",
+    "RESEND_MESSAGE": "reenviar mensagems",
     "SETTLED": "ganhar",
     "UNSETTLED": "perder",
     "SEND-UNSETTLED": "perder",
@@ -168,7 +168,9 @@
     "CHANGE_STRATEGY": "estratégia",
     "CHANGE_EXPIRATION_DATE": "data limite",
     "RENEGOTIATE": "retornar para negociação",
-    "EDIT-NEGOTIATORS": "editar negociadores"
+    "EDIT-NEGOTIATORS": "editar negociadores",
+    "CONFIRM_FINAL_TERMINATION": "confirmar baixa definitiva",
+    "START_NEGOTIATON": "inicar negociação"
   },
   "fields": {
     "claimantParty": "Parte contrária",
