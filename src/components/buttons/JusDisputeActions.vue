@@ -487,7 +487,7 @@ export default {
           name: 'permanently-leave',
           icon: 'hammer',
           condition: () => this.isPreNegotiation,
-          action: () => this.permanentlyLeave(),
+          action: () => this.dropLawsuit(),
           tooltip: 'Confirmar baixa definitiva',
         },
         {
@@ -787,7 +787,7 @@ export default {
         this.$jusNotification({ error })
       })
     },
-    permanentlyLeave() {
+    dropLawsuit() {
       this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
