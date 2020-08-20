@@ -372,17 +372,17 @@ export default {
     },
   },
   created() {
-    if (this.disputeStatuses.unsettled) {
-      this.unsettledTypes = this.disputeStatuses.unsettled
+    if (this.disputeStatuses.UNSETTLED) {
+      this.unsettledTypes = this.disputeStatuses.UNSETTLED
     } else {
-      this.getDisputeStatuses('unsettled').then(response => {
+      this.getDisputeStatuses('UNSETTLED').then(response => {
         this.unsettledTypes = response
       })
     }
-    if (this.disputeStatuses.delete) {
-      this.deleteTypes = this.disputeStatuses.delete
+    if (this.disputeStatuses.ARCHIVED) {
+      this.deleteTypes = this.disputeStatuses.ARCHIVED
     } else {
-      this.getDisputeStatuses('delete').then(response => {
+      this.getDisputeStatuses('ARCHIVED').then(response => {
         this.deleteTypes = response
       })
     }
