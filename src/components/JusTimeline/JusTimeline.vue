@@ -55,6 +55,13 @@
         </div>
       </li>
     </ul>
+    <el-alert
+      v-else
+      class="jus-timeline__alert"
+      title="Dados do processo indisponíveis"
+      type="error"
+      center
+      :closable="false" />
   </el-container>
 </template>
 
@@ -70,32 +77,32 @@ export default {
   data() {
     return {
       disputeProgress: [
-        {
-          descricao: '1ª Instância',
-          codigo: '768279209.9874098-123',
-          distribuicao: '10/01/2020',
-          flags: ['Extinto', 'Extinto'],
-          eventos: [{
-            data: '10/01/2020',
-            descricao: 'Processo em Distibuição para sorteio',
-            flags: ['Distribuição'],
-          }],
-        },
-        {
-          descricao: '2ª Instância',
-          codigo: '768279209.9874098-123',
-          distribuicao: '10/01/2020',
-          flags: ['Extinto'],
-          eventos: [{
-            data: '10/01/2020',
-            descricao: 'Processo em Distibuição para sorteio',
-            flags: ['Distribuição'],
-          }, {
-            data: '15/01/2020',
-            descricao: 'Agendado audiência conciliação',
-            flags: ['Agenda'],
-          }],
-        },
+        // {
+        //   descricao: '1ª Instância',
+        //   codigo: '768279209.9874098-123',
+        //   distribuicao: '10/01/2020',
+        //   flags: ['Extinto', 'Extinto'],
+        //   eventos: [{
+        //     data: '10/01/2020',
+        //     descricao: 'Processo em Distibuição para sorteio',
+        //     flags: ['Distribuição'],
+        //   }],
+        // },
+        // {
+        //   descricao: '2ª Instância',
+        //   codigo: '768279209.9874098-123',
+        //   distribuicao: '10/01/2020',
+        //   flags: ['Extinto'],
+        //   eventos: [{
+        //     data: '10/01/2020',
+        //     descricao: 'Processo em Distibuição para sorteio',
+        //     flags: ['Distribuição'],
+        //   }, {
+        //     data: '15/01/2020',
+        //     descricao: 'Agendado audiência conciliação',
+        //     flags: ['Agenda'],
+        //   }],
+        // },
       ],
     }
   },
@@ -155,6 +162,10 @@ export default {
         }
       }
     }
+  }
+
+  .jus-timeline__alert {
+    margin-top: 16px;
   }
 }
 </style>
