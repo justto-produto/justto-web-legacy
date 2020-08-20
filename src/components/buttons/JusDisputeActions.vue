@@ -791,7 +791,11 @@ export default {
         cancelButtonClass: 'is-plain',
         showClose: false,
       }).then(() => {
-        this.removeDispute({ disputeId: this.dispute.id, reason: 'DROPPED' })
+        this.removeDispute({
+          disputeId: this.dispute.id, reason: 'DROPPED',
+        }).then(() => {
+          if (!this.tableActions) this.$router.push('/management')
+        })
       })
     },
     goToNegotiation() {

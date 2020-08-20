@@ -635,33 +635,40 @@
                     style="margin-top: 5px;"
                   />
                 </el-tooltip>
-                <el-checkbox-group
-                  v-model="disputeBankAccountsIds"
-                  class="dispute-overview-view__bank-checkbox"
+                <el-tooltip
+                  :disabled="dispute.status !== 'PRE_NEGOTIATION'"
+                  placement="left"
+                  content="Disputas em pré-negociação não podem ser editadas"
                 >
-                  <el-checkbox
-                    v-for="(bankAccount, bank_account_index) in role.bankAccounts.filter(b => !b.archived)"
-                    :key="`${bank_account_index}-${bankAccount.id}`"
-                    :label="bankAccount.id"
-                    border
-                    class="bordered"
+                  <el-checkbox-group
+                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                    v-model="disputeBankAccountsIds"
+                    class="dispute-overview-view__bank-checkbox"
                   >
-                    <div v-show="bankAccount.name">
-                      <strong>Nome:</strong> {{ bankAccount.name }}
-                    </div>
-                    <div v-show="bankAccount.email">
-                      <strong>E-mail:</strong> {{ bankAccount.email }}
-                    </div>
-                    <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }}</div>
-                    <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
-                    <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
-                    <div><strong>Conta:</strong> {{ bankAccount.number }}</div>
-                    <div><strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }}</div>
-                  </el-checkbox>
-                </el-checkbox-group>
+                    <el-checkbox
+                      v-for="(bankAccount, bank_account_index) in role.bankAccounts.filter(b => !b.archived)"
+                      :key="`${bank_account_index}-${bankAccount.id}`"
+                      :label="bankAccount.id"
+                      border
+                      class="bordered"
+                    >
+                      <div v-show="bankAccount.name">
+                        <strong>Nome:</strong> {{ bankAccount.name }}
+                      </div>
+                      <div v-show="bankAccount.email">
+                        <strong>E-mail:</strong> {{ bankAccount.email }}
+                      </div>
+                      <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }}</div>
+                      <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
+                      <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
+                      <div><strong>Conta:</strong> {{ bankAccount.number }}</div>
+                      <div><strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }}</div>
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </el-tooltip>
               </div>
               <el-tooltip
-                :disabled="!dispute.status === 'PRE_NEGOTIATION'"
+                :disabled="dispute.status !== 'PRE_NEGOTIATION'"
                 content="Disputas em pré-negociação não podem ser editadas"
               >
                 <div
@@ -686,14 +693,22 @@
                 </div>
               </el-tooltip>
             </el-collapse-item>
-            <el-button
-              class="dispute-overview-view__add-role mb20"
-              plain
-              icon="el-icon-plus"
-              @click.prevent="newRoleDialogVisible = true"
+            <el-tooltip
+              :disabled="dispute.status !== 'PRE_NEGOTIATION'"
+              content="Disputas em pré-negociação não podem ser editadas"
             >
-              Cadastrar parte
-            </el-button>
+              <span>
+                <el-button
+                  :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                  class="dispute-overview-view__add-role mb20"
+                  plain
+                  icon="el-icon-plus"
+                  @click.prevent="newRoleDialogVisible = true"
+                >
+                  Cadastrar parte
+                </el-button>
+              </span>
+            </el-tooltip>
           </el-collapse>
         </el-tab-pane>
         <el-tab-pane
@@ -1828,7 +1843,19 @@ export default {
     buildRoleTitle: (...i) => buildRoleTitle(...i),
     getRoleIcon: (...i) => getRoleIcon(...i),
     openRemoveDisputeDialog() {
-      this.chooseDeleteDialogVisible = true
+      if (this.dispute.status === 'PRE_NEGOTIATION') {
+        this.deleteType = 'DROPPED'
+        this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível', 'Atenção', {
+          confirmButtonText: 'Excluir',
+          cancelButtonText: 'Cancelar',
+          type: 'warning',
+          cancelButtonClass: 'is-plain',
+        }).then(() => {
+          this.deleteDispute()
+        })
+      } else {
+        this.chooseDeleteDialogVisible = true
+      }
     },
     deleteDispute() {
       this.modalLoading = true
@@ -1836,7 +1863,6 @@ export default {
         disputeId: this.dispute.id,
         reason: this.deleteType,
       }).then(() => {
-      // this.removeDispute(this.dispute.id).then(() => {
         this.$router.push('/management')
       }).catch(error => {
         this.$jusNotification({ error })
