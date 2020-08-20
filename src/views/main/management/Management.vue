@@ -17,7 +17,9 @@
           :before-leave="handleChangeTab"
           class="view-management__tabs"
         >
-          <el-tab-pane name="-1">
+          <el-tab-pane
+            v-if="isJusttoAdmin"
+            name="-1">
             <span slot="label">
               Pré-Negociação
               <!-- <el-badge
@@ -418,6 +420,7 @@ export default {
       disputes: 'disputes',
       engagementLength: 'disputeNearExpirationsEngajement',
       interactionLength: 'disputeNotVisualizedInteration',
+      isJusttoAdmin: 'isJusttoAdmin',
       newDealsLength: 'disputeNotVisualizedNewDeal',
       hasFilters: 'disputeHasFilters',
       hasNew: 'disputeHasNew',
