@@ -351,7 +351,7 @@
 <script>
 import { getRoles } from '@/utils/jusUtils'
 import { JusDragArea } from '@/components/JusDragArea'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'JusDisputeActions',
@@ -376,7 +376,6 @@ export default {
     return {
       settledValue: 0,
       unsettledType: null,
-      unsettledTypes: {},
       negotiatorsForm: {},
       negotiatorsRules: {},
       disputeNegotiators: [],
@@ -398,6 +397,8 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['disputeStatuses']),
+
     collapsed: {
       get() {
         return this.isCollapsed
@@ -522,6 +523,9 @@ export default {
         },
       ]
     },
+    unsettledTypes() {
+      return this.disputeStatuses.UNSETTLED
+    },
     canSettled() {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED' && !this.isPreNegotiation
     },
@@ -538,7 +542,7 @@ export default {
       return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING' && !this.isPreNegotiation
     },
     canRestartEngagement() {
-      return this.dispute && this.dispute.status && this.dispute.status === 'PENDING' && !this.isPreNegotiation
+      return this.dispute && this.dispute.status && this.dispute.status !== 'PENDING' && !this.isPreNegotiation
     },
     canMarkAsNotRead() {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
@@ -600,15 +604,6 @@ export default {
       }
       return []
     },
-  },
-  created() {
-    if (this.$store.getters.disputeStatuses.unsettled) {
-      this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
-    } else {
-      this.getDisputeStatuses('unsettled').then(response => {
-        this.unsettledTypes = response
-      })
-    }
   },
   methods: {
     ...mapActions([
