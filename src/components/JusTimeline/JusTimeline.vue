@@ -1,8 +1,11 @@
 <template>
-  <section
+  <el-container
     id="jus-timeline"
-    class="el-container is-vertical jus-timeline">
-    <ul class="jus-timeline__list">
+    v-loading="loading"
+    class="jus-timeline">
+    <ul
+      v-if="disputeProgress.length"
+      class="jus-timeline__list">
       <li
         v-for="(progress, progressIndex) in disputeProgress"
         :key="`progress-${progressIndex}`"
@@ -56,51 +59,68 @@
     <!--  -->
     <!-- <div class="block"> -->
     <!-- </div> -->
-  </section>
+  </el-container>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
-    disputeProgress: {
-      type: Array,
-      required: false,
-      default: () => [{
-        descricao: '2ª Instância',
-        codigo: '768279209.9874098-123',
-        distribuicao: '10/01/2020',
-        flags: ['Extinto'],
-        eventos: [{
-          data: '10/01/2020',
-          descricao: 'Processo em Distibuição para sorteio',
-          flags: ['Distribuição'],
-        }, {
-          data: '15/01/2020',
-          descricao: 'Agendado audiência conciliação',
-          flags: ['Agenda'],
-        }],
-      }, {
-        descricao: '1ª Instância',
-        codigo: '768279209.9874098-123',
-        distribuicao: '10/01/2020',
-        flags: ['Extinto'],
-        eventos: [{
-          data: '10/01/2020',
-          descricao: 'Processo em Distibuição para sorteio',
-          flags: ['Distribuição'],
-        }],
-      }],
+    disputeId: {
+      type: Number,
+      required: true,
     },
   },
   data() {
-    return {}
+    return {
+      disputeProgress: [
+        {
+          descricao: '1ª Instância',
+          codigo: '768279209.9874098-123',
+          distribuicao: '10/01/2020',
+          flags: ['Extinto', 'Extinto'],
+          eventos: [{
+            data: '10/01/2020',
+            descricao: 'Processo em Distibuição para sorteio',
+            flags: ['Distribuição'],
+          }],
+        },
+        {
+          descricao: '2ª Instância',
+          codigo: '768279209.9874098-123',
+          distribuicao: '10/01/2020',
+          flags: ['Extinto'],
+          eventos: [{
+            data: '10/01/2020',
+            descricao: 'Processo em Distibuição para sorteio',
+            flags: ['Distribuição'],
+          }, {
+            data: '15/01/2020',
+            descricao: 'Agendado audiência conciliação',
+            flags: ['Agenda'],
+          }],
+        },
+      ],
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'loading',
+    ]),
+  },
+  beforeMount() {
+    // this.showLoading()
+  },
+  methods: {
+    ...mapActions(['showLoading', 'hideLoading']),
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .jus-timeline {
-  background-color: white;
+  background-color: transparent;
+
   .jus-timeline__list {
     padding-inline-start: 8px;
 
@@ -120,12 +140,20 @@ export default {
         }
         .jus-timeline__header-flags {
           margin-top: 8px;
+          display: flex;
+          gap: 8px;
         }
       }
 
       .jus-timeline__body {
         margin-left: -24px;
         margin-top: 24px;
+
+        .jus-timeline__body-flags {
+          margin-top: 8px;
+          display: flex;
+          gap: 8px;
+        }
       }
     }
   }
