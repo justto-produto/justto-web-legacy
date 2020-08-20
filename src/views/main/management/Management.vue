@@ -6,6 +6,7 @@
     <template slot="main">
       <management-actions
         :active="multiActive"
+        :activeTab="activeTab"
         :selected-ids.sync="selectedIds"
         @disputes:clear="clearSelection"
       />
