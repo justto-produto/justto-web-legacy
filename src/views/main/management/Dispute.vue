@@ -449,7 +449,7 @@ export default {
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
     } else {
-      this.getDisputeStatuses('unsettled').then(response => {
+      this.getDisputeStatuses('UNSETTLED').then(response => {
         this.unsettledTypes = response
       })
     }

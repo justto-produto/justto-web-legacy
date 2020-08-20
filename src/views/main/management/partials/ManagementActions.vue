@@ -375,14 +375,14 @@ export default {
     if (this.disputeStatuses.unsettled) {
       this.unsettledTypes = this.disputeStatuses.unsettled
     } else {
-      this.getDisputeStatuses('unsettled').then(response => {
+      this.getDisputeStatuses('UNSETTLED').then(response => {
         this.unsettledTypes = response
       })
     }
     if (this.disputeStatuses.delete) {
       this.deleteTypes = this.disputeStatuses.delete
     } else {
-      this.getDisputeStatuses('delete').then(response => {
+      this.getDisputeStatuses('ARCHIVED').then(response => {
         this.deleteTypes = response
       })
     }

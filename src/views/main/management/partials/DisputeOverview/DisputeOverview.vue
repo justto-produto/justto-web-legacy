@@ -1801,7 +1801,7 @@ export default {
     if (this.disputeStatuses.delete) {
       this.deleteTypes = this.disputeStatuses.delete
     } else {
-      this.getDisputeStatuses('delete').then(response => {
+      this.getDisputeStatuses('ARCHIVED').then(response => {
         this.deleteTypes = response
       })
     }
