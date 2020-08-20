@@ -1798,8 +1798,8 @@ export default {
     },
   },
   created() {
-    if (this.disputeStatuses.delete) {
-      this.deleteTypes = this.disputeStatuses.delete
+    if (this.disputeStatuses.ARCHIVED) {
+      this.deleteTypes = this.disputeStatuses.ARCHIVED
     } else {
       this.getDisputeStatuses('ARCHIVED').then(response => {
         this.deleteTypes = response

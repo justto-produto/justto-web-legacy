@@ -363,7 +363,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['disputeAttachments']),
+    ...mapGetters([
+      'disputeAttachments',
+      'disputeStatuses',
+    ]),
 
     sendMessageHeightComputed() {
       switch (this.typingTab) {
@@ -446,8 +449,8 @@ export default {
   created() {
     this.id = this.$route.params.id.toString()
     this.fetchData()
-    if (this.$store.getters.disputeStatuses.unsettled) {
-      this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
+    if (this.disputeStatuses.UNSETTLED) {
+      this.unsettledTypes = this.disputeStatuses.UNSETTLED
     } else {
       this.getDisputeStatuses('UNSETTLED').then(response => {
         this.unsettledTypes = response
