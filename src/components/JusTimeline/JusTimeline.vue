@@ -4,7 +4,7 @@
     v-loading="loading"
     class="jus-timeline">
     <ul
-      v-if="disputeProgress.length"
+      v-if="!loading && disputeProgress.length"
       class="jus-timeline__list">
       <li
         v-for="(progress, progressIndex) in disputeProgress"
@@ -62,7 +62,7 @@
 import { mapGetters, mapActions } from 'vuex'
 export default {
   props: {
-    disputeId: {
+    dispute: {
       type: Number,
       required: true,
     },
@@ -105,7 +105,10 @@ export default {
     ]),
   },
   beforeMount() {
-    // this.showLoading()
+    this.showLoading()
+  },
+  created() {
+    setTimeout(this.hideLoading, 5000)
   },
   methods: {
     ...mapActions(['showLoading', 'hideLoading']),
