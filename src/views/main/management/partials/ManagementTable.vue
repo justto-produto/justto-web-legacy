@@ -480,8 +480,10 @@
     </el-dialog>
     <el-dialog
       :visible.sync="disputeTimelineModal"
-      @close="disputeTimelineModal = false">
-      <jus-timeline />
+      @close="hideTimelineModal">
+      <jus-timeline
+        v-if="currentDisputeId"
+        :dispute="currentDisputeId" />
     </el-dialog>
   </div>
 </template>
@@ -530,6 +532,7 @@ export default {
   },
   data() {
     return {
+      currentDisputeId: null,
       disputeTimelineModal: false,
       showEmpty: false,
       showEmptyDebounce: '',
@@ -606,7 +609,16 @@ export default {
   },
   methods: {
     openTimelineModal(dispute) {
-      this.disputeTimelineModal = !this.disputeTimelineModal
+      this.currentDisputeId = dispute.id
+      this.$nextTick(() => {
+        this.disputeTimelineModal = true
+      })
+    },
+    hideTimelineModal() {
+      this.diputeTimelineModal = false
+      this.$nextTick(() => {
+        this.currentDisputeId = null
+      })
     },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
