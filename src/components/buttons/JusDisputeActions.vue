@@ -515,6 +515,7 @@
 <script>
 import { getRoles } from '@/utils/jusUtils'
 import { JusDragArea } from '@/components/JusDragArea'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'JusDisputeActions',
@@ -539,7 +540,6 @@ export default {
     return {
       settledValue: 0,
       unsettledType: null,
-      unsettledTypes: {},
       negotiatorsForm: {},
       negotiatorsRules: {},
       disputeNegotiators: [],
@@ -561,6 +561,8 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['disputeStatuses']),
+
     collapsed: {
       get() {
         return this.isCollapsed
@@ -568,6 +570,9 @@ export default {
       set(value) {
         this.$emit('update:isCollapsed', value)
       },
+    },
+    unsettledTypes() {
+      return this.disputeStatuses.UNSETTLED
     },
     isInsufficientUpperRange() {
       return this.unsettledType && this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && ((this.dispute && !this.dispute.lastCounterOfferValue) || (this.dispute && this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange))
@@ -632,15 +637,6 @@ export default {
       }
       return []
     },
-  },
-  created() {
-    if (this.$store.getters.disputeStatuses.unsettled) {
-      this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
-    } else {
-      this.$store.dispatch('getDisputeStatuses', 'UNSETTLED').then(response => {
-        this.unsettledTypes = response
-      })
-    }
   },
   methods: {
     disputeAction(action, additionParams) {
