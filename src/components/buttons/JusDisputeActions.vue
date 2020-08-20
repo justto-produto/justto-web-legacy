@@ -393,7 +393,19 @@ export default {
         lastCounterOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         selectedRoleId: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
-      actionsList: [
+    }
+  },
+  computed: {
+    collapsed: {
+      get() {
+        return this.isCollapsed
+      },
+      set(value) {
+        this.$emit('update:isCollapsed', value)
+      },
+    },
+    actionsList() {
+      return [
         {
           name: 'settled',
           icon: 'win',
@@ -506,17 +518,7 @@ export default {
           action: () => this.handleAttachmentDialogVisable(),
           tooltip: this.dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito',
         },
-      ],
-    }
-  },
-  computed: {
-    collapsed: {
-      get() {
-        return this.isCollapsed
-      },
-      set(value) {
-        this.$emit('update:isCollapsed', value)
-      },
+      ]
     },
     canSettled() {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED' && !this.isPreNegotiation

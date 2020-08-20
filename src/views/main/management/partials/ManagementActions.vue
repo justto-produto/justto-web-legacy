@@ -216,60 +216,6 @@ export default {
       unsettledType: '',
       newStrategyId: '',
       newExpirationDate: '',
-      actionsList: [
-        {
-          name: 'SETTLED',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'UNSETTLED',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'PAUSED',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'RESUME',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'RESTART_ENGAGEMENT',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'CHANGE_EXPIRATION_DATE',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'CHANGE_STRATEGY',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'CHANGE_NEGOTIATOR',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'ENRICH_DISPUTE',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'DELETE',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'RESEND_MESSAGE',
-          tabs: ['0', '1', '2', '3'],
-        },
-        {
-          name: 'CONFIRM_FINAL_TERMINATION',
-          tabs: ['-1'],
-        },
-        {
-          name: 'START_NEGOTIATON',
-          tabs: ['-1'],
-        },
-      ],
     }
   },
   computed: {
@@ -280,6 +226,23 @@ export default {
       set(ids) {
         this.$emit('update:selectedIds', ids)
       },
+    },
+    actionsList() {
+      return [
+        { name: 'SETTLED', tabs: ['0', '1', '2', '3'] },
+        { name: 'UNSETTLED', tabs: ['0', '1', '2', '3'] },
+        { name: 'PAUSED', tabs: ['0', '1', '2', '3'] },
+        { name: 'RESUME', tabs: ['0', '1', '2', '3'] },
+        { name: 'RESTART_ENGAGEMENT', tabs: ['0', '1', '2', '3'] },
+        { name: 'CHANGE_EXPIRATION_DATE', tabs: ['0', '1', '2', '3'] },
+        { name: 'CHANGE_STRATEGY', tabs: ['0', '1', '2', '3'] },
+        { name: 'CHANGE_NEGOTIATOR', tabs: ['0', '1', '2', '3'] },
+        { name: 'ENRICH_DISPUTE', tabs: ['0', '1', '2', '3'] },
+        { name: 'DELETE', tabs: ['0', '1', '2', '3'] },
+        { name: 'RESEND_MESSAGE', tabs: ['0', '1', '2', '3'] },
+        { name: 'DROP_LAWSUIT', tabs: ['-1'] },
+        { name: 'START_NEGOTIATON', tabs: ['-1'] },
+      ]
     },
     strategies() {
       return this.$store.getters.strategyList
@@ -324,6 +287,10 @@ export default {
       }
       if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       switch (action) {
+        case 'DROP_LAWSUIT':
+          params.reasonKey = 'DROPPED'
+          params.type = 'DELETE'
+          break
         case 'CHANGE_STRATEGY':
           params.strategyId = this.newStrategyId
           break

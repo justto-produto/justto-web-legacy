@@ -169,7 +169,7 @@
     "CHANGE_EXPIRATION_DATE": "data limite",
     "RENEGOTIATE": "retornar para negociação",
     "EDIT-NEGOTIATORS": "editar negociadores",
-    "CONFIRM_FINAL_TERMINATION": "confirmar baixa definitiva",
+    "DROP_LAWSUIT": "confirmar baixa definitiva",
     "START_NEGOTIATON": "inicar negociação"
   },
   "fields": {
