@@ -115,6 +115,10 @@ export default {
             type: 'success',
           })
         })
+      }).catch(error => {
+        this.$emit('closeDialog')
+        this.isAttachmentLoading = false
+        this.$jusNotification({ error })
       })
     },
   },

@@ -35,6 +35,14 @@
       width="460px"
       data-testid="unsettled-dialog"
     >
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja perder esta disputa?.</p>
+          </div>
+        </div>
+      </div>
       <el-select
         v-model="unsettledType"
         v-loading="$store.state.loading"
@@ -57,7 +65,7 @@
           :disabled="!unsettledType"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('unsettled')"
+          @click.prevent="doAction('UNSETTLED')"
         >
           Continuar
         </el-button>
@@ -179,11 +187,57 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="chooseDeleteDialogVisible"
+      class="management-actions__dialog"
+      title="Excluir disputa"
+      width="460px"
+    >
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.</p>
+          </div>
+        </div>
+      </div>
+      <el-select
+        v-model="deleteType"
+        style="width: 100%;"
+        placeholder="Escolha o motivo da exclusão"
+      >
+        <el-option
+          v-for="(type, index) in deleteTypes"
+          :key="index"
+          :label="type"
+          :value="index"
+        />
+      </el-select>
+      <span slot="footer">
+        <el-button
+          plain
+          @click="chooseDeleteDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          :disabled="!deleteType"
+          type="primary"
+          @click.prevent="doAction('DELETE')"
+        >
+          Excluir
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getTracktitleByAction } from '@/utils/jusUtils'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ManagementActions',
@@ -208,17 +262,22 @@ export default {
       changeNegotiatorDialogVisible: false,
       changeExpirationDialogVisible: false,
       changeNegotiatorDialogLoading: false,
+      chooseDeleteDialogVisible: false,
       disputeNegotiators: [],
       disputeNegotiatorMap: [],
       currentDisputeNegotiator: 0,
       allSelectedDisputes: 0,
       unsettledTypes: [],
       unsettledType: '',
+      deleteTypes: [],
+      deleteType: '',
       newStrategyId: '',
       newExpirationDate: '',
     }
   },
   computed: {
+    ...mapGetters(['disputeStatuses']),
+
     selectedIdsComp: {
       get() {
         return this.selectedIds
@@ -270,22 +329,30 @@ export default {
     },
   },
   created() {
-    if (this.$store.getters.disputeStatuses.unsettled) {
-      this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
+    if (this.disputeStatuses.unsettled) {
+      this.unsettledTypes = this.disputeStatuses.unsettled
     } else {
-      this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
+      this.getDisputeStatuses('unsettled').then(response => {
         this.unsettledTypes = response
+      })
+    }
+    if (this.disputeStatuses.delete) {
+      this.deleteTypes = this.disputeStatuses.delete
+    } else {
+      this.getDisputeStatuses('delete').then(response => {
+        this.deleteTypes = response
       })
     }
     this.$store.dispatch('getMyStrategies')
   },
   methods: {
+    ...mapActions(['getDisputeStatuses']),
+
     doAction(action) {
       const params = {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds,
       }
-      if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       switch (action) {
         case 'DROP_LAWSUIT':
           params.reasonKey = 'DROPPED'
@@ -297,12 +364,19 @@ export default {
         case 'CHANGE_EXPIRATION_DATE':
           params.expirationDate = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
           break
+        case 'DELETE':
+          if (this.deleteType) params.reasonKey = this.deleteType
+          break
+        case 'UNSETTLED':
+          if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+          break
       }
       if (this.isSelectedAll) {
         params.allSelected = true
         params.disputeIds = []
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
+        this.chooseDeleteDialogVisible = false
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
@@ -315,7 +389,7 @@ export default {
         })
         // SEGMENT TRACK
         this.$jusSegment(getTracktitleByAction(action, true), { amount: this.selectedIds.length })
-        if (action === 'unsettled') {
+        if (action === 'UNSETTLED') {
           setTimeout(() => {
             this.$jusNotification({
               title: 'Atenção!',
@@ -333,6 +407,9 @@ export default {
       if (action === 'UNSETTLED') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = ''
+      } else if (action === 'DELETE') {
+        this.chooseDeleteDialogVisible = true
+        this.deleteType = ''
       } else if (action === 'CHANGE_STRATEGY') {
         this.changeStrategyDialogVisible = true
         this.newStrategyId = ''
@@ -555,7 +632,7 @@ export default {
   }
   &__dialog {
     .el-message-box__content {
-      padding: 10px 0;
+        padding: 10px 0;
     }
     .el-select, .el-date-editor.el-input, .el-transfer {
       width: 100%;

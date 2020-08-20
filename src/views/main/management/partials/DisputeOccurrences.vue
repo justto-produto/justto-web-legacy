@@ -24,7 +24,7 @@
     </infinite-loading>
     <div
       v-for="(datedOccurrence, date, index) in datedOccurrences"
-      :key="date + index + new Date().getTime()" >
+      :key="`${date}-${index}`" >
       <el-card
         class="dispute-view-occurrences__date el-card--bg-info"
         shadow="never" >
@@ -32,7 +32,7 @@
       </el-card>
       <li
         v-for="(occurrence, occurrenceIndex) in datedOccurrence"
-        :key="occurrenceIndex + new Date().getTime()"
+        :key="`occurrency-${occurrenceIndex}`"
       >
         <div class="dispute-view-occurrences__occurrence">
           <div
@@ -87,34 +87,76 @@
                 />
               </span>
             </el-tooltip>
-            <span v-html="buildContent(occurrence)" />
-            <span class="dispute-view-occurrences__log-info">
-              <span v-text="buildHour(occurrence)" />
-              <div>•</div>
-              <el-tooltip :content="buildStatusTooltip(occurrence)">
-                <jus-icon :icon="buildStatusIcon(occurrence)" />
-              </el-tooltip>
-              <el-tooltip v-if="occurrence.merged">
-                <div slot="content">
-                  <div
-                    v-for="merged in occurrence.merged"
-                    :key="merged.id + new Date().getTime()"
-                    class="dispute-view-occurrences__log-info-content"
-                  >
-                    Hora: {{ buildHour(merged) }}
-                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                      - Para: {{ merged.interaction.message.receiver | phoneMask }}
-                    </span>
-                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
-                      - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
-                    </span>
-                  </div>
-                </div>
-                <span>
-                  (+{{ occurrence.merged.length }})
+            <span class="occurrence-content" v-html="buildContent(occurrence)" />
+            <div v-if="canHandleUnknowParty(occurrence)" class="fast-occurrence-actions"><br>
+              <span v-if="getUnknowPartys(occurrence).length === 0" class="ok">Esta pendência já foi resolvida!</span>
+              <div
+                v-for="role in getUnknowPartys(occurrence)"
+                :key="`role-party-${role.id}`"
+                class="fast-occurrence-actions__items">
+                <span></span>
+                <a
+                  href="#"
+                  @click="openOptionsParty(role)"
+                  v-if="!handlePartyId['party_role' + role.id]">
+                  Definir polaridade de {{ role.name }}
+                </a>
+                <span class="fast-occurrence-actions__select-container">
+                  <el-select
+                    v-model="role.party"
+                    size="mini"
+                    placeholder="Defina o polo desta parte"
+                    v-if="role.party === 'UNKNOW' && handlePartyId['party_role' + role.id]"
+                    @change="setDisputeParty(role)">
+                    <el-option
+                      v-for="party in disputePartys"
+                      :key="party.value"
+                      :label="party.label"
+                      :value="party.value"
+                    />
+                  </el-select>
+                  <el-tooltip
+                    v-if="handlePartyId['party_role' + role.id]"
+                    class="fast-occurrence-actions__cancel-tooltip" >
+                    <div slot="content">
+                      Cancelar edição de polaridade de {{ role.name }}
+                    </div>
+                    <el-button
+                      size="mini"
+                      icon="el-icon-close"
+                      circle
+                      @click="closeOptionsParty(role)" />
+                  </el-tooltip>
                 </span>
-              </el-tooltip>
-            </span>
+              </div>
+              <span class="fast-occurrence__log-info">
+                  <span v-text="buildHour(occurrence)" />
+                  <div>•</div>
+                  <el-tooltip :content="buildStatusTooltip(occurrence)">
+                    <jus-icon :icon="buildStatusIcon(occurrence)" />
+                  </el-tooltip>
+                  <el-tooltip v-if="occurrence.merged">
+                    <div slot="content">
+                      <div
+                        v-for="(merged, mergedIndex) in occurrence.merged"
+                        :key="`merged-${mergedIndex}-#${merged.id}`"
+                        class="dispute-view-occurrences__log-info-content"
+                      >
+                        Hora: {{ buildHour(merged) }}
+                        <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
+                          - Para: {{ merged.interaction.message.receiver | phoneMask }}
+                        </span>
+                        <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
+                          - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
+                        </span>
+                      </div>
+                    </div>
+                    <span>
+                      (+{{ occurrence.merged.length }})
+                    </span>
+                  </el-tooltip>
+                </span>
+            </div>
           </el-card>
           <div
             v-else-if="occurrence.type !== 'NOTE'"
@@ -139,12 +181,13 @@
                 class="dispute-view-occurrences__card"
                 data-testid="message-box" >
                 <div>
-                  <span :ref="getMessageRef(occurrence)">
-                    <span v-html="buildContent(occurrence)" />
+                  <span >
+                    <span
+                      :ref="getMessageRef(occurrence)"
+                      v-html="buildContent(occurrence)"/>
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)"
-                      class="dispute-view-occurrences__whats-status"
-                    >
+                      class="dispute-view-occurrences__whats-status" >
                       <el-tooltip popper-class="mw400">
                         <div
                           slot="content"
@@ -161,6 +204,19 @@
                         data-testid="show-email"
                         @click.prevent="showFullMessage(occurrence.id)"
                       > ver mais</a>
+                    </span>
+                    <span
+                      v-if="buildCommunicationType(occurrence).startsWith('EMAIL') && buildEmailStatus(occurrence)"
+                      class="dispute-view-occurrences__whats-status" >
+                      <el-tooltip popper-class="mw400">
+                        <div
+                          slot="content"
+                          style="max-width: 400px;text-align: justify;"
+                        >
+                          <span v-html="buildEmailStatus(occurrence).message" />
+                        </div>
+                        <jus-icon :icon="buildEmailStatus(occurrence).icon" />
+                      </el-tooltip>
                     </span>
                   </span>
                   <br>
@@ -192,44 +248,7 @@
                   :disabled="false"
                 >
                   <div slot="content">
-                    Existem mais {{ occurrence.merged.length }} ocorrências parecidas com esta.
-                    <!-- <div
-                      v-for="merged in occurrence.merged"
-                      :key="merged.id + new Date().getTime()"
-                      class="dispute-view-occurrences__log-info-content">
-                      Em {{ buildHour(merged) }}
-                      <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                        criamos mensagem para
-                        <span v-if="merged.interaction.message.parameters && merged.interaction.message.parameters.RECEIVER_NAME">
-                          <b>{{ merged.interaction.message.parameters.RECEIVER_NAME }}</b> no endereço
-                        </span>
-                        "<b>{{ merged.interaction.message.receiver | phoneMask }}</b>" <br>
-                        ->
-                        <span v-if="merged.interaction.type === 'SCHEDULER' && merged.interaction.message.scheduledTime">
-                          foi agendada para <u>{{ merged.interaction.message.scheduledTime.dateTime | moment('DD/MM[ às ]HH:mm') }}</u>
-                        </span>
-                        Status:
-                        <span v-if="merged.interaction.message.status === 'CANCELED'">
-                          - Envio CANCELADO
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'WAITING'">
-                          - Aguardando para ser enviada
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'PROCESSED' || merged.interaction.message.status === 'PROCESSED_BY_USER'">
-                          - Enviada
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'FAILED'">
-                          - Falhou o envio
-                        </span>
-                        <span v-if="merged.interaction.message.status === 'RETRYING'">
-                          - Tentando enviar novamente
-                        </span>
-                        <br>
-                      </span>
-                      <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
-                        - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
-                      </span>
-                    </div> -->
+                    Existem mais {{ occurrence.merged.length }} ocorrência(s) parecida(s) com esta.
                   </div>
                   <span
                     class="dispute-view-occurrences__expand-button"
@@ -285,15 +304,13 @@
               </el-tooltip>
             </div>
           </div>
-          <!-- ESSA DIV AQUI -->
         </div>
         <div
           v-if="activeOccurrency.id === occurrence.id"
-          class="dispute-view-occurrences__occurrence-merged"
-        >
+          class="dispute-view-occurrences__occurrence-merged">
           <div
             v-for="(mergedOccurency, mergedOccurencyIndex) of activeOccurrency.merged"
-            :key="`${mergedOccurencyIndex}-`"
+            :key="`merged-${mergedOccurencyIndex}`"
             :class="getDirection(occurrence.interaction)"
             class="dispute-view-occurrences__interaction dispute-view-occurrences__interaction-merged">
             <div class="dispute-view-occurrences__avatar">
@@ -315,8 +332,10 @@
                 class="dispute-view-occurrences__card"
                 data-testid="message-box" >
                 <div>
-                  <span :ref="getMessageRef(mergedOccurency)">
-                    <span v-html="buildContent(mergedOccurency)" />
+                  <span>
+                    <span
+                      :ref="getMessageRef(mergedOccurency)"
+                      v-html="buildContent(mergedOccurency)" />
                     <span
                       v-if="buildCommunicationType(mergedOccurency).startsWith('WHATSAPP') && buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt)"
                       class="dispute-view-occurrences__whats-status"
@@ -337,6 +356,19 @@
                         data-testid="show-email"
                         @click.prevent="showFullMessage(mergedOccurency.id)"
                       > ver mais</a>
+                    </span>
+                    <span
+                      v-if="buildCommunicationType(mergedOccurency).startsWith('EMAIL') && buildEmailStatus(mergedOccurency)"
+                      class="dispute-view-occurrences__whats-status" >
+                      <el-tooltip popper-class="mw400">
+                        <div
+                          slot="content"
+                          style="max-width: 400px;text-align: justify;"
+                        >
+                          <span v-html="buildEmailStatus(mergedOccurency).message" />
+                        </div>
+                        <jus-icon :icon="buildEmailStatus(mergedOccurency).icon" />
+                      </el-tooltip>
                     </span>
                   </span>
                   <br>
@@ -472,7 +504,27 @@ export default {
       messageDialogVisible: false,
       showFullMessageList: [],
       fullMessageBank: {},
+      hideMessageBank: {},
       infiniteId: +new Date(),
+      handlePartyId: {},
+      disputePartys: [
+        {
+          value: 'RESPONDENT',
+          label: 'Réu',
+        },
+        {
+          value: 'CLAIMANT',
+          label: 'Parte contrária',
+        },
+        {
+          value: 'IMPARTIAL',
+          label: 'Arbitro/Juiz/Mediador',
+        },
+        {
+          value: 'UNKNOW',
+          label: 'Desconhecido',
+        },
+      ],
     }
   },
   computed: {
@@ -545,7 +597,31 @@ export default {
     getIconIsMerged(occurrency) {
       return this.activeOccurrency.id === occurrency.id ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
     },
-
+    openOptionsParty(role) {
+      this.$set(this.handlePartyId, 'party_role' + role.id, true)
+    },
+    closeOptionsParty(role) {
+      this.$set(this.handlePartyId, 'party_role' + role.id, false)
+    },
+    setDisputeParty(role) {
+      this.handlePartyId['party_role' + role.id] = false
+      const params = {
+        disputeId: this.disputeId,
+        disputeRoleId: role.id,
+        disputeParty: role.party,
+      }
+      this.$jusSegment('Defiido função em participante da disputa', {
+        page: this.$route.name,
+      })
+      this.$store.dispatch('setDisputeparty', params).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Função definida com sucesso!',
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+        })
+      })
+    },
     clearOccurrences() {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
@@ -674,7 +750,19 @@ export default {
       }
       return occurrence.description
     },
-
+    canHandleUnknowParty(occurrence) {
+      return occurrence.properties && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.UNKNOW_ROLE_IDS
+    },
+    getUnknowPartys(occurrence) {
+      let canHandleParty = this.canHandleUnknowParty(occurrence)
+      if (canHandleParty) {
+        let dispute = this.$store.getters.dispute
+        let roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
+        let filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOW')
+        return filteredRole
+      }
+      return canHandleParty
+    },
     buildContent(occurrence) {
       if (!occurrence) return ''
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
@@ -812,6 +900,16 @@ export default {
       }
       return null
     },
+
+    buildEmailStatus(occurrency) {
+      if (occurrency.interaction.message.status === 'FAILED') {
+        return {
+          message: occurrency.interaction.message.parameters.FAILED_SEND,
+          icon: 'alert',
+        }
+      }
+      return false
+    },
   },
 }
 </script>
@@ -829,6 +927,49 @@ export default {
   padding: 0;
   margin: 0;
   height: 100%;
+
+  .fast-occurrence-actions{
+
+    .ok {
+      text-decoration-line: underline;
+      padding-top: 0.75rem;
+    }
+
+    .fast-occurrence-actions__items {
+      padding-top: 0.75rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+      .fast-occurrence-actions__select-container {
+        .el-select {
+          width: 250px;
+          text-align: center;
+        }
+
+        .fast-occurrence-actions__cancel-tooltip {
+          margin-left: 0.5rem;
+          background-color: #9461f7;
+          color: white;
+          border: none;
+        }
+      }
+
+    }
+
+    .fast-occurrence__log-info {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+  }
+  .occurrence-content {
+    line-height: 30px;
+  }
+  .dispute-view-occurrences__log-info{
+    margin-top: 20px;
+  }
   &__occurrence {
     display: flex;
     justify-content: center;

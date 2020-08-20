@@ -302,7 +302,7 @@
 
 <script>
 import checkSimilarity from '@/utils/levenshtein'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
 import { quillEditor } from 'vue-quill-editor'
 
@@ -457,7 +457,7 @@ export default {
     if (this.$store.getters.disputeStatuses.unsettled) {
       this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
     } else {
-      this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
+      this.getDisputeStatuses('unsettled').then(response => {
         this.unsettledTypes = response
       })
     }
@@ -478,6 +478,8 @@ export default {
     window.removeEventListener('resize', this.updateWindowHeight)
   },
   methods: {
+    ...mapActions(['getDisputeStatuses']),
+
     updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },
