@@ -38,8 +38,7 @@
             trigger="hover"
             popper-class="el-popover--dark"
             @show="getMessageSummary(scope.row.lastOutboundInteraction, scope.row.id)"
-            @hide="messageSummary = {}"
-          >
+            @hide="messageSummary = {}">
             <strong>
               <jus-icon
                 :icon="getInteractionIcon(scope.row.lastOutboundInteraction)"
@@ -106,7 +105,16 @@
         prop="code"
       >
         <template slot-scope="scope">
-          {{ scope.row.code }}
+          <el-link
+            class="proccess-code"
+            @click="openTimelineModal(scope.row)">
+            {{ scope.row.code }}
+            <jus-icon
+              style="height: 0.75rem;"
+              icon="external-link"
+              class="data-table__dispute-link-icon"
+            />
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column
@@ -470,6 +478,11 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :visible.sync="disputeTimelineModal"
+      @close="disputeTimelineModal = false">
+      <jus-timeline />
+    </el-dialog>
   </div>
 </template>
 
@@ -494,6 +507,7 @@ Quill.register(SizeStyle, true)
 export default {
   name: 'ManagementTable',
   components: {
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
     InfiniteLoading: () => import('vue-infinite-loading'),
@@ -516,6 +530,7 @@ export default {
   },
   data() {
     return {
+      disputeTimelineModal: false,
       showEmpty: false,
       showEmptyDebounce: '',
       disputeActionsRow: 0,
@@ -590,6 +605,9 @@ export default {
     this.$store.commit('resetDisputeQueryPage')
   },
   methods: {
+    openTimelineModal(dispute) {
+      this.disputeTimelineModal = !this.disputeTimelineModal
+    },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
     },
