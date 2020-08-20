@@ -170,7 +170,7 @@
           </el-col> -->
           <!-- RÉU -->
           <el-col
-            v-if="!loading && isAll"
+            v-if="!loading && isAll || isPreNegotiation"
             :span="12"
           >
             <el-form-item label="Réu">
@@ -207,7 +207,7 @@
                   data-testid="filters-favorite"
                 />
               </div>
-              <div>
+              <div v-if="!isPreNegotiation">
                 <div>
                   <jus-icon icon="pause" /> Somente pausadas
                 </div>
@@ -391,6 +391,9 @@ export default {
       set(value) {
         this.$emit('update:visible', value)
       },
+    },
+    isPreNegotiation() {
+      return this.tabIndex === '-1'
     },
     isEngagement() {
       return this.tabIndex === '0'
