@@ -440,7 +440,7 @@ export default {
         {
           name: 'restart-engagement',
           icon: 'refresh',
-          condition: () => this.canRestartEngagement,
+          condition: () => !this.isPreNegotiation,
           action: () => this.disputeAction('restart-engagement'),
           tooltip: 'Reiniciar disputa',
         },
@@ -518,7 +518,7 @@ export default {
           name: 'favorite',
           icon: this.dispute.favorite ? 'golden-star' : 'star',
           condition: () => !this.isPreNegotiation,
-          action: () => this.handleAttachmentDialogVisable(),
+          action: () => this.disputeAction(this.dispute.favorite ? 'disfavor' : 'favorite'),
           tooltip: this.dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito',
         },
       ]
@@ -540,9 +540,6 @@ export default {
     },
     canResendMessage() {
       return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING' && !this.isPreNegotiation
-    },
-    canRestartEngagement() {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'PENDING' && !this.isPreNegotiation
     },
     canMarkAsNotRead() {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
