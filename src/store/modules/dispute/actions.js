@@ -187,6 +187,13 @@ const disputeActions = {
     //   })
     // })
   },
+  getDisputeTimeline({ commit }, disputeCode) {
+    commit('showLoading')
+    return axiosDispatcher({
+      url: `/api/fusion/lawsuit/timeline/${disputeCode}`,
+      mutation: 'setDisputeTimeline',
+    }).finally(() => commit('hideLoading'))
+  },
   exportProtocols({ state }) {
     return axiosDispatcher({
       url: `api/office/documents/export${queryBuilder(state.query)}`,
