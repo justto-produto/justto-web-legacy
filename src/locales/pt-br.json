@@ -27,7 +27,8 @@
       "REFUSED": "com proposta recusada",
       "RUNNING": "em negociação",
       "SETTLED": "ganha",
-      "UNSETTLED": "perdida"
+      "UNSETTLED": "perdida",
+      "PRE_NEGOTIATION": "pre-negociação"
     },
     "export": {
       "FAILED": "falha",
@@ -136,7 +137,8 @@
       "RUNNING": "em negociação",
       "EXPIRED": "expirado",
       "FAVORITE": "favoritar",
-      "DISFAVOR": "desfavoritar"
+      "DISFAVOR": "desfavoritar",
+      "PRE_NEGOTIATION": "pre-negociação"
     }
   },
   "profile": {
@@ -144,10 +146,10 @@
     "ADMINISTRATOR": "administrador"
   },
   "action": {
-    "RESTART_ENGAGEMENT": "reiniciar disputa",
+    "RESTART_ENGAGEMENT": "reiniciar",
     "RESTART-ENGAGEMENT": "reiniciar disputa",
     "RESEND-MESSAGES": "reenviar mensagens automáticas",
-    "RESEND_MESSAGE": "reenviar msgs",
+    "RESEND_MESSAGE": "reenviar mensagems",
     "SETTLED": "ganhar",
     "UNSETTLED": "perder",
     "SEND-UNSETTLED": "perder",
@@ -159,14 +161,16 @@
     "DISFAVOR": "desfavoritar",
     "ENRICH": "enriquecer",
     "ENRICH_DISPUTE": "enriquecer",
-    "CHANGE_NEGOTIATOR": "altera negociador",
+    "CHANGE_NEGOTIATOR": "negociadores",
     "CHANGE_CAMPAIGN": "alterar campanha",
     "CANCEL_MESSAGES": "cancelar mensagens agendadas",
     "CANCEL-MESSAGES": "cancelar mensagens agendadas",
-    "CHANGE_STRATEGY": "alterar estratégia",
-    "CHANGE_EXPIRATION_DATE": "alterar data limite",
+    "CHANGE_STRATEGY": "estratégia",
+    "CHANGE_EXPIRATION_DATE": "data limite",
     "RENEGOTIATE": "retornar para negociação",
-    "EDIT-NEGOTIATORS": "editar negociadores"
+    "EDIT-NEGOTIATORS": "editar negociadores",
+    "DROP_LAWSUIT": "confirmar baixa definitiva",
+    "START_NEGOTIATON": "inicar negociação"
   },
   "fields": {
     "claimantParty": "Parte contrária",
@@ -202,6 +206,7 @@
     "unlinkDisputeBankAccounts": "desvinculada"
   },
   "tab": {
+    "-1": "pré-Negociação",
     "0": "sem resposta",
     "1": "em negociação",
     "2": "proposta aceita",

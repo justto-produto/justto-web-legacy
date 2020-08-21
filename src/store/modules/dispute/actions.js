@@ -447,6 +447,12 @@ const disputeActions = {
         })
     })
   },
+  startNegotiation({ _ }, disputeId) {
+    return axiosDispatcher({
+      url: `/api/disputes/${disputeId}/start-negotiation`,
+      method: 'PATCH',
+    })
+  },
   disputeSetVisualized({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

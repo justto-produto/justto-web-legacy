@@ -8,83 +8,19 @@
         <i class="el-icon-check" /> {{ selectedLenghtToShow }}
       </div>
       <div>
-        <el-button
-          plain
-          data-testid="batch-settled"
-          @click="sendBatchAction('SETTLED')"
+        <span
+          v-for="action in actionsList"
+          :key="action.name"
         >
-          {{ $t('action.SETTLED') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-unsettled"
-          @click="sendBatchAction('UNSETTLED')"
-        >
-          {{ $t('action.UNSETTLED') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-paused"
-          @click="sendBatchAction('PAUSED')"
-        >
-          {{ $t('action.PAUSED') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-resume"
-          @click="sendBatchAction('RESUME')"
-        >
-          {{ $t('action.RESUME') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-restartengagement"
-          @click="sendBatchAction('RESTART_ENGAGEMENT')"
-        >
-          REINICIAR
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-chageexpirationdate"
-          @click="sendBatchAction('CHANGE_EXPIRATION_DATE')"
-        >
-          DATA LIMITE
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-changestrategy"
-          @click="sendBatchAction('CHANGE_STRATEGY')"
-        >
-          ESTRATÉGIAS
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-changestrategy"
-          @click="sendBatchAction('CHANGE_NEGOTIATOR')"
-        >
-          NEGOCIADORES
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-enrich"
-          @click="sendBatchAction('ENRICH_DISPUTE')"
-        >
-          {{ $t('action.ENRICH_DISPUTE') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-delete"
-          @click="sendBatchAction('DELETE')"
-        >
-          {{ $t('action.DELETE') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-resendmessage"
-          @click="sendBatchAction('RESEND_MESSAGE')"
-        >
-          {{ $t('action.RESEND_MESSAGE') }}
-        </el-button>
+          <el-button
+            v-if="action.tabs.includes(activeTab)"
+            :data-testid="`batch-${action.name.toLowerCase()}`"
+            plain
+            @click="sendBatchAction(action.name)"
+          >
+            {{ $t(`action.${action.name}`) }}
+          </el-button>
+        </span>
       </div>
       <i
         class="el-icon-close"
@@ -310,6 +246,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    activeTab: {
+      type: String,
+      required: true,
+    },
     selectedIds: {
       type: Array,
       default: () => [],
@@ -345,6 +285,23 @@ export default {
       set(ids) {
         this.$emit('update:selectedIds', ids)
       },
+    },
+    actionsList() {
+      return [
+        { name: 'SETTLED', tabs: ['0', '1', '2', '3'] },
+        { name: 'UNSETTLED', tabs: ['0', '1', '2', '3'] },
+        { name: 'PAUSED', tabs: ['0', '1', '2', '3'] },
+        { name: 'RESUME', tabs: ['0', '1', '2', '3'] },
+        { name: 'RESTART_ENGAGEMENT', tabs: ['0', '1', '2', '3'] },
+        { name: 'CHANGE_EXPIRATION_DATE', tabs: ['0', '1', '2', '3'] },
+        { name: 'CHANGE_STRATEGY', tabs: ['0', '1', '2', '3'] },
+        { name: 'CHANGE_NEGOTIATOR', tabs: ['0', '1', '2', '3'] },
+        { name: 'ENRICH_DISPUTE', tabs: ['0', '1', '2', '3'] },
+        { name: 'DELETE', tabs: ['0', '1', '2', '3'] },
+        { name: 'RESEND_MESSAGE', tabs: ['0', '1', '2', '3'] },
+        { name: 'DROP_LAWSUIT', tabs: ['-1'] },
+        { name: 'START_NEGOTIATON', tabs: ['-1'] },
+      ]
     },
     strategies() {
       return this.$store.getters.strategyList
@@ -397,6 +354,10 @@ export default {
         disputeIds: this.selectedIds,
       }
       switch (action) {
+        case 'DROP_LAWSUIT':
+          params.reasonKey = 'DISPUTE_DROPPED'
+          params.type = 'DELETE'
+          break
         case 'CHANGE_STRATEGY':
           params.strategyId = this.newStrategyId
           break
