@@ -43,6 +43,7 @@ const actions = {
         id: state.id,
         teamName: state.teamName,
         status: state.status,
+        blacklist: state.blackList,
         name: params.name,
         properties: params.properties,
       }).then(response => {
@@ -139,7 +140,7 @@ const actions = {
         })
     })
   },
-  patchBlackList({ commit }, blackList) {
+  patchBlackList({ _ }, blackList) {
     return axiosDispatcher({
       url: 'api/workspaces/blacklist',
       method: 'patch',
