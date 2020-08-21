@@ -4,26 +4,34 @@
     v-loading="loading"
     class="jus-timeline">
     <ul
-      v-if="!loading && disputeProgress.length"
+      v-if="!loading && (disputeTimeline.lawsuits || []).length"
       class="jus-timeline__list">
       <li
-        v-for="(progress, progressIndex) in disputeProgress"
+        v-for="(progress, progressIndex) in (disputeTimeline.lawsuits)"
         :key="`progress-${progressIndex}`"
         class="jus-timeline__list-item">
         <div class="jus-timeline__header">
           <div class="jus-timeline__header-title">
-            {{ progress.descricao }} - {{ progress.codigo }}
+            {{ progress.description || 1 }}ª Instância -
+            <el-link
+              class="jus-timeline__header-link"
+              target="_blank"
+              :underline="false"
+              :href="progress.url">
+              {{ progress.code }}
+              <sup><i class="el-icon-link el-icon--right" /></sup>
+            </el-link>
           </div>
           <div class="jus-timeline__header-subtitle">
-            Distribuído em {{ progress.distribuicao }}
+            Distribuído em {{ progress.date }}
           </div>
-          <div class="jus-timeline__header-flags">
+          <div class="jus-timeline__header-tags">
             <el-tag
-              v-for="(flag, flagIndex) in progress.flags"
-              :key="`flag-evento-${flagIndex}`"
+              v-for="(tag, flagIndex) in progress.tags"
+              :key="`tag-evento-${flagIndex}`"
               type="secondary"
               size="small">
-              <strong>{{ flag }}</strong>
+              <strong>{{ tag }}</strong>
             </el-tag>
           </div>
         </div>
@@ -31,22 +39,22 @@
         <div class="jus-timeline__body">
           <el-timeline>
             <el-timeline-item
-              v-for="(event, eventIndex) in progress.eventos"
-              :key="`event-${eventIndex}`"
-              :timestamp="event.data"
+              v-for="(movement, eventIndex) in progress.movements"
+              :key="`movement-${eventIndex}`"
+              :timestamp="movement.date"
               placement="top"
             >
-              <div class="jus-timeline__body-event">
+              <div class="jus-timeline__body-movement">
                 <div class="jus-timeline__body-description">
-                  {{ event.descricao }}
+                  {{ movement.description }}
                 </div>
-                <div class="jus-timeline__body-flags">
+                <div class="jus-timeline__body-tags">
                   <el-tag
-                    v-for="(flag, flagIndex) in event.flags"
-                    :key="`flag-event-${flagIndex}`"
+                    v-for="(tag, tagIndex) in (movement.tags || [])"
+                    :key="`tag-movement-${tagIndex}`"
                     type="secondary"
                     size="small">
-                    <strong>{{ flag }}</strong>
+                    <strong>{{ tag }}</strong>
                   </el-tag>
                 </div>
               </div>
@@ -55,67 +63,25 @@
         </div>
       </li>
     </ul>
-    <el-alert
+    <div
       v-else
-      class="jus-timeline__alert"
-      title="Dados do processo indisponíveis"
-      type="error"
-      center
-      :closable="false" />
+      class="jus-timeline__empty" >
+      <jusIcon icon="empty-screen-filter" />
+      <span class="jus-timeline__empty-label">
+        Dados do processo indisponíveis.
+      </span>
+    </div>
   </el-container>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 export default {
-  props: {
-    dispute: {
-      type: Number,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      disputeProgress: [
-        // {
-        //   descricao: '1ª Instância',
-        //   codigo: '768279209.9874098-123',
-        //   distribuicao: '10/01/2020',
-        //   flags: ['Extinto', 'Extinto'],
-        //   eventos: [{
-        //     data: '10/01/2020',
-        //     descricao: 'Processo em Distibuição para sorteio',
-        //     flags: ['Distribuição'],
-        //   }],
-        // },
-        // {
-        //   descricao: '2ª Instância',
-        //   codigo: '768279209.9874098-123',
-        //   distribuicao: '10/01/2020',
-        //   flags: ['Extinto'],
-        //   eventos: [{
-        //     data: '10/01/2020',
-        //     descricao: 'Processo em Distibuição para sorteio',
-        //     flags: ['Distribuição'],
-        //   }, {
-        //     data: '15/01/2020',
-        //     descricao: 'Agendado audiência conciliação',
-        //     flags: ['Agenda'],
-        //   }],
-        // },
-      ],
-    }
-  },
   computed: {
     ...mapGetters([
       'loading',
+      'disputeTimeline',
     ]),
-  },
-  beforeMount() {
-    this.showLoading()
-  },
-  created() {
-    setTimeout(this.hideLoading, 5000)
   },
   methods: {
     ...mapActions(['showLoading', 'hideLoading']),
@@ -124,6 +90,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles/colors.scss';
+
 .jus-timeline {
   background-color: transparent;
 
@@ -138,13 +106,26 @@ export default {
           color: #424242;
           letter-spacing: 0px;
           font: normal normal bold 23px/35px Montserrat;
+
+          word-break: break-all;
+
+          .jus-timeline__header-link {
+            color: #424242;
+            letter-spacing: 0px;
+            font: normal normal bold 23px/35px Montserrat;
+            word-break: break-all;
+            margin-bottom: 8px;
+            &:hover {
+              color: $--color-primary;
+            }
+          }
         }
         .jus-timeline__header-subtitle {
           font: normal normal medium 17px/22px Montserrat;
           letter-spacing: 0px;
           color: #ADADAD;
         }
-        .jus-timeline__header-flags {
+        .jus-timeline__header-tags {
           margin-top: 8px;
           display: flex;
           gap: 8px;
@@ -155,7 +136,7 @@ export default {
         margin-left: -24px;
         margin-top: 24px;
 
-        .jus-timeline__body-flags {
+        .jus-timeline__body-tags {
           margin-top: 8px;
           display: flex;
           gap: 8px;
@@ -164,8 +145,18 @@ export default {
     }
   }
 
-  .jus-timeline__alert {
-    margin-top: 16px;
+  .jus-timeline__empty {
+    margin: 32px auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .jus-timeline__empty-label {
+      margin-top: 24px;
+      color: $--color-text-secondary;
+    }
   }
 }
 </style>
