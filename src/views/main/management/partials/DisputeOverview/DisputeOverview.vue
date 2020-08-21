@@ -1536,22 +1536,22 @@
         :document-numbers="documentNumbers"
         :oabs="oabs"
       />
+      <el-dialog
+        v-loading="loading"
+        width="65%"
+        class="dialog-timeline"
+        :visible.sync="disputeTimelineModal"
+        @close="hideTimelineModal">
+        <div
+          slot="title"
+          class="dialog-timeline__title">
+          <span v-if="disputeTimeline.lastUpdated">
+            Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
+          </span>
+        </div>
+        <jus-timeline />
+      </el-dialog>
     </div>
-    <el-dialog
-      v-loading="loading"
-      width="65%"
-      class="dialog-timeline"
-      :visible.sync="disputeTimelineModal"
-      @close="hideTimelineModal">
-      <div
-        slot="title"
-        class="dialog-timeline__title">
-        <span v-if="disputeTimeline.lastUpdated">
-          Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
-        </span>
-      </div>
-      <jus-timeline />
-    </el-dialog>
   </div>
 </template>
 
@@ -2531,8 +2531,6 @@ export default {
   overflow: hidden;
   position: relative;
 
-  .dispute-overview-view__
-
   .dispute-overview-view__loading {
     height: 100%;
   }
@@ -2578,13 +2576,14 @@ export default {
       }
     }
     .code {
+      margin-left: 12px;
       .icon {
         height: 0.9rem;
-        display: none;
+        visibility: hidden;
       }
       &:hover {
         .icon {
-          display: inline;
+          visibility: visible;
         }
       }
     }
