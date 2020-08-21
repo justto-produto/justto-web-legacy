@@ -518,7 +518,7 @@ export default {
           name: 'favorite',
           icon: this.dispute.favorite ? 'golden-star' : 'star',
           condition: () => !this.isPreNegotiation,
-          action: () => this.disputeAction(this.dispute.favorite ? 'disfavor' : favorite),
+          action: () => this.disputeAction(this.dispute.favorite ? 'disfavor' : 'favorite'),
           tooltip: this.dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito',
         },
       ]
