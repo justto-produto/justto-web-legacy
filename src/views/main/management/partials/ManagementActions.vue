@@ -8,83 +8,19 @@
         <i class="el-icon-check" /> {{ selectedLenghtToShow }}
       </div>
       <div>
-        <el-button
-          plain
-          data-testid="batch-settled"
-          @click="sendBatchAction('SETTLED')"
+        <span
+          v-for="action in actionsList"
+          :key="action.name"
         >
-          {{ $t('action.SETTLED') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-unsettled"
-          @click="sendBatchAction('UNSETTLED')"
-        >
-          {{ $t('action.UNSETTLED') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-paused"
-          @click="sendBatchAction('PAUSED')"
-        >
-          {{ $t('action.PAUSED') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-resume"
-          @click="sendBatchAction('RESUME')"
-        >
-          {{ $t('action.RESUME') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-restartengagement"
-          @click="sendBatchAction('RESTART_ENGAGEMENT')"
-        >
-          REINICIAR
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-chageexpirationdate"
-          @click="sendBatchAction('CHANGE_EXPIRATION_DATE')"
-        >
-          DATA LIMITE
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-changestrategy"
-          @click="sendBatchAction('CHANGE_STRATEGY')"
-        >
-          ESTRATÉGIAS
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-changestrategy"
-          @click="sendBatchAction('CHANGE_NEGOTIATOR')"
-        >
-          NEGOCIADORES
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-enrich"
-          @click="sendBatchAction('ENRICH_DISPUTE')"
-        >
-          {{ $t('action.ENRICH_DISPUTE') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-delete"
-          @click="sendBatchAction('DELETE')"
-        >
-          {{ $t('action.DELETE') }}
-        </el-button>
-        <el-button
-          plain
-          data-testid="batch-resendmessage"
-          @click="sendBatchAction('RESEND_MESSAGE')"
-        >
-          {{ $t('action.RESEND_MESSAGE') }}
-        </el-button>
+          <el-button
+            v-if="action.tabs.includes(activeTab)"
+            :data-testid="`batch-${action.name.toLowerCase()}`"
+            plain
+            @click="sendBatchAction(action.name)"
+          >
+            {{ $t(`action.${action.name}`) }}
+          </el-button>
+        </span>
       </div>
       <i
         class="el-icon-close"
@@ -99,6 +35,14 @@
       width="460px"
       data-testid="unsettled-dialog"
     >
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja perder esta disputa?.</p>
+          </div>
+        </div>
+      </div>
       <el-select
         v-model="unsettledType"
         v-loading="$store.state.loading"
@@ -121,7 +65,7 @@
           :disabled="!unsettledType"
           type="primary"
           class="confirm-action-unsettled"
-          @click.prevent="doAction('unsettled')"
+          @click.prevent="doAction('UNSETTLED')"
         >
           Continuar
         </el-button>
@@ -243,11 +187,57 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="chooseDeleteDialogVisible"
+      class="management-actions__dialog"
+      title="Excluir disputa"
+      width="460px"
+    >
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.</p>
+          </div>
+        </div>
+      </div>
+      <el-select
+        v-model="deleteType"
+        style="width: 100%;"
+        placeholder="Escolha o motivo da exclusão"
+      >
+        <el-option
+          v-for="(type, index) in deleteTypes"
+          :key="index"
+          :label="type"
+          :value="index"
+        />
+      </el-select>
+      <span slot="footer">
+        <el-button
+          plain
+          @click="chooseDeleteDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          :disabled="!deleteType"
+          type="primary"
+          @click.prevent="doAction('DELETE')"
+        >
+          Excluir
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getTracktitleByAction } from '@/utils/jusUtils'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'ManagementActions',
@@ -255,6 +245,10 @@ export default {
     active: {
       type: Boolean,
       default: false,
+    },
+    activeTab: {
+      type: String,
+      required: true,
     },
     selectedIds: {
       type: Array,
@@ -268,17 +262,22 @@ export default {
       changeNegotiatorDialogVisible: false,
       changeExpirationDialogVisible: false,
       changeNegotiatorDialogLoading: false,
+      chooseDeleteDialogVisible: false,
       disputeNegotiators: [],
       disputeNegotiatorMap: [],
       currentDisputeNegotiator: 0,
       allSelectedDisputes: 0,
       unsettledTypes: [],
       unsettledType: '',
+      deleteTypes: [],
+      deleteType: '',
       newStrategyId: '',
       newExpirationDate: '',
     }
   },
   computed: {
+    ...mapGetters(['disputeStatuses']),
+
     selectedIdsComp: {
       get() {
         return this.selectedIds
@@ -286,6 +285,23 @@ export default {
       set(ids) {
         this.$emit('update:selectedIds', ids)
       },
+    },
+    actionsList() {
+      return [
+        { name: 'SETTLED', tabs: ['0', '1', '2', '3'] },
+        { name: 'UNSETTLED', tabs: ['0', '1', '2', '3'] },
+        { name: 'PAUSED', tabs: ['0', '1', '2', '3'] },
+        { name: 'RESUME', tabs: ['0', '1', '2', '3'] },
+        { name: 'RESTART_ENGAGEMENT', tabs: ['0', '1', '2', '3'] },
+        { name: 'CHANGE_EXPIRATION_DATE', tabs: ['0', '1', '2', '3'] },
+        { name: 'CHANGE_STRATEGY', tabs: ['0', '1', '2', '3'] },
+        { name: 'CHANGE_NEGOTIATOR', tabs: ['0', '1', '2', '3'] },
+        { name: 'ENRICH_DISPUTE', tabs: ['0', '1', '2', '3'] },
+        { name: 'DELETE', tabs: ['0', '1', '2', '3'] },
+        { name: 'RESEND_MESSAGE', tabs: ['0', '1', '2', '3'] },
+        { name: 'DROP_LAWSUIT', tabs: ['-1'] },
+        { name: 'START_NEGOTIATON', tabs: ['-1'] },
+      ]
     },
     strategies() {
       return this.$store.getters.strategyList
@@ -313,28 +329,46 @@ export default {
     },
   },
   created() {
-    if (this.$store.getters.disputeStatuses.unsettled) {
-      this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
+    if (this.disputeStatuses.UNSETTLED) {
+      this.unsettledTypes = this.disputeStatuses.UNSETTLED
     } else {
-      this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
+      this.getDisputeStatuses('UNSETTLED').then(response => {
         this.unsettledTypes = response
+      })
+    }
+    if (this.disputeStatuses.ARCHIVED) {
+      this.deleteTypes = this.disputeStatuses.ARCHIVED
+    } else {
+      this.getDisputeStatuses('ARCHIVED').then(response => {
+        this.deleteTypes = response
       })
     }
     this.$store.dispatch('getMyStrategies')
   },
   methods: {
+    ...mapActions(['getDisputeStatuses']),
+
     doAction(action) {
       const params = {
         type: action.toUpperCase(),
         disputeIds: this.selectedIds,
       }
-      if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
       switch (action) {
+        case 'DROP_LAWSUIT':
+          params.reasonKey = 'DISPUTE_DROPPED'
+          params.type = 'DELETE'
+          break
         case 'CHANGE_STRATEGY':
           params.strategyId = this.newStrategyId
           break
         case 'CHANGE_EXPIRATION_DATE':
           params.expirationDate = { dateTime: this.$moment(this.newExpirationDate).endOf('day').format('YYYY-MM-DD[T]HH:mm:ss[Z]') }
+          break
+        case 'DELETE':
+          if (this.deleteType) params.reasonKey = this.deleteType
+          break
+        case 'UNSETTLED':
+          if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
           break
       }
       if (this.isSelectedAll) {
@@ -342,6 +376,7 @@ export default {
         params.disputeIds = []
       }
       this.$store.dispatch('sendBatchAction', params).then(response => {
+        this.chooseDeleteDialogVisible = false
         this.chooseUnsettledDialogVisible = false
         this.changeStrategyDialogVisible = false
         this.changeExpirationDialogVisible = false
@@ -354,7 +389,7 @@ export default {
         })
         // SEGMENT TRACK
         this.$jusSegment(getTracktitleByAction(action, true), { amount: this.selectedIds.length })
-        if (action === 'unsettled') {
+        if (action === 'UNSETTLED') {
           setTimeout(() => {
             this.$jusNotification({
               title: 'Atenção!',
@@ -372,6 +407,9 @@ export default {
       if (action === 'UNSETTLED') {
         this.chooseUnsettledDialogVisible = true
         this.unsettledType = ''
+      } else if (action === 'DELETE') {
+        this.chooseDeleteDialogVisible = true
+        this.deleteType = ''
       } else if (action === 'CHANGE_STRATEGY') {
         this.changeStrategyDialogVisible = true
         this.newStrategyId = ''
@@ -594,7 +632,7 @@ export default {
   }
   &__dialog {
     .el-message-box__content {
-      padding: 10px 0;
+        padding: 10px 0;
     }
     .el-select, .el-date-editor.el-input, .el-transfer {
       width: 100%;

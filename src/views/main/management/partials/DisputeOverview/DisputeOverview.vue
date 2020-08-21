@@ -12,12 +12,58 @@
           data-testid="remove"
           class="right"
           size="mini"
-          @click="removeDispute()"
+          @click="openRemoveDisputeDialog()"
         >
           <i class="el-icon-delete" />
         </el-button>
       </el-tooltip>
     </h2>
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :visible.sync="chooseDeleteDialogVisible"
+      title="Excluir disputa"
+      width="460px"
+    >
+      <div class="el-message-box__content">
+        <div class="el-message-box__container">
+          <div class="el-message-box__status el-icon-warning" />
+          <div class="el-message-box__message">
+            <p>Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.</p>
+          </div>
+        </div>
+      </div>
+      <el-select
+        v-model="deleteType"
+        style="margin: 10px 0px;"
+        placeholder="Escolha o motivo da exclusão"
+      >
+        <el-option
+          v-for="(type, index) in deleteTypes"
+          :key="index"
+          :label="type"
+          :value="index"
+        />
+      </el-select>
+      <span slot="footer">
+        <el-button
+          :disabled="modalLoading"
+          plain
+          @click="chooseDeleteDialogVisible = false"
+        >
+          Cancelar
+        </el-button>
+        <el-button
+          :loading="modalLoading"
+          :disabled="!deleteType"
+          type="primary"
+          @click.prevent="deleteDispute()"
+        >
+          Excluir
+        </el-button>
+      </span>
+    </el-dialog>
     <div
       v-loading="loading || linkBankAccountLoading"
       class="dispute-overview-view__loading"
@@ -114,14 +160,6 @@
                   <span v-if="dispute.paused">(pausada)</span>
                 </span>
               </span>
-            </div>
-            <div
-              v-if="dispute.classification"
-              class="dispute-overview-view__info-line"
-              data-testid="dispute-infoline"
-            >
-              <span class="title">Classificação:</span>
-              <span>{{ dispute.classification.name | capitalize }}</span>
             </div>
             <div
               class="dispute-overview-view__info-line"
@@ -291,6 +329,22 @@
               </span>
             </div>
             <div
+              v-if="dispute.classification"
+              class="dispute-overview-view__info-line"
+            >
+              <span class="title">Classificação:</span>
+              <span class="classification">
+                {{ dispute.classification.name }}
+                <div
+                  v-for="subClassification in dispute.classification.classificationDetails"
+                  :key="subClassification.id"
+                >
+                  <i class="el-icon-right"/>
+                  {{ subClassification.name }}
+                </div>
+              </span>
+            </div>
+            <div
               v-if="dispute.bankAccounts && dispute.bankAccounts.length"
               class="dispute-overview-view__info-line"
             >
@@ -329,15 +383,21 @@
               </el-collapse>
             </div>
           </div>
-          <div class="dispute-overview-view__actions">
-            <el-button
-              type="primary"
-              data-testid="edit-dispute"
-              @click="openDisputeDialog()"
-            >
-              Editar
-            </el-button>
-          </div>
+          <el-tooltip
+            :disabled="!dispute.status === 'PRE_NEGOTIATION'"
+            content="Disputas em pré-negociação não podem ser editadas"
+          >
+            <div class="dispute-overview-view__actions">
+              <el-button
+                :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                type="primary"
+                data-testid="edit-dispute"
+                @click="openDisputeDialog()"
+              >
+                Editar
+              </el-button>
+            </div>
+          </el-tooltip>
         </el-tab-pane>
         <!-- PARTES DA DISPUTA -->
         <el-tab-pane
@@ -575,58 +635,80 @@
                     style="margin-top: 5px;"
                   />
                 </el-tooltip>
-                <el-checkbox-group
-                  v-model="disputeBankAccountsIds"
-                  class="dispute-overview-view__bank-checkbox"
+                <el-tooltip
+                  :disabled="dispute.status !== 'PRE_NEGOTIATION'"
+                  placement="left"
+                  content="Disputas em pré-negociação não podem ser editadas"
                 >
-                  <el-checkbox
-                    v-for="(bankAccount, bank_account_index) in role.bankAccounts.filter(b => !b.archived)"
-                    :key="`${bank_account_index}-${bankAccount.id}`"
-                    :label="bankAccount.id"
-                    border
-                    class="bordered"
+                  <el-checkbox-group
+                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                    v-model="disputeBankAccountsIds"
+                    class="dispute-overview-view__bank-checkbox"
                   >
-                    <div v-show="bankAccount.name">
-                      <strong>Nome:</strong> {{ bankAccount.name }}
-                    </div>
-                    <div v-show="bankAccount.email">
-                      <strong>E-mail:</strong> {{ bankAccount.email }}
-                    </div>
-                    <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }}</div>
-                    <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
-                    <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
-                    <div><strong>Conta:</strong> {{ bankAccount.number }}</div>
-                    <div><strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }}</div>
-                  </el-checkbox>
-                </el-checkbox-group>
+                    <el-checkbox
+                      v-for="(bankAccount, bank_account_index) in role.bankAccounts.filter(b => !b.archived)"
+                      :key="`${bank_account_index}-${bankAccount.id}`"
+                      :label="bankAccount.id"
+                      border
+                      class="bordered"
+                    >
+                      <div v-show="bankAccount.name">
+                        <strong>Nome:</strong> {{ bankAccount.name }}
+                      </div>
+                      <div v-show="bankAccount.email">
+                        <strong>E-mail:</strong> {{ bankAccount.email }}
+                      </div>
+                      <div><strong>Documento:</strong> {{ bankAccount.document | cpfCnpjMask }}</div>
+                      <div><strong>Banco:</strong> {{ bankAccount.bank }}</div>
+                      <div><strong>Agência:</strong> {{ bankAccount.agency }}</div>
+                      <div><strong>Conta:</strong> {{ bankAccount.number }}</div>
+                      <div><strong>Tipo:</strong> {{ bankAccount.type === 'SAVING' ? 'Poupança' : 'Corrente' }}</div>
+                    </el-checkbox>
+                  </el-checkbox-group>
+                </el-tooltip>
               </div>
-              <div
-                v-if="!role.roles.includes('NEGOTIATOR')"
-                class="dispute-overview-view__actions"
+              <el-tooltip
+                :disabled="dispute.status !== 'PRE_NEGOTIATION'"
+                content="Disputas em pré-negociação não podem ser editadas"
               >
-                <el-button
-                  plain
-                  @click="removeRole(role)"
+                <div
+                  v-if="!role.roles.includes('NEGOTIATOR')"
+                  class="dispute-overview-view__actions"
                 >
-                  Excluir
-                </el-button>
-                <el-button
-                  type="primary"
-                  data-testid="edit-part"
-                  @click="openRoleDialog(role)"
-                >
-                  Editar
-                </el-button>
-              </div>
+                  <el-button
+                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                    plain
+                    @click="removeRole(role)"
+                  >
+                    Excluir
+                  </el-button>
+                  <el-button
+                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                    type="primary"
+                    data-testid="edit-part"
+                    @click="openRoleDialog(role)"
+                  >
+                    Editar
+                  </el-button>
+                </div>
+              </el-tooltip>
             </el-collapse-item>
-            <el-button
-              class="dispute-overview-view__add-role mb20"
-              plain
-              icon="el-icon-plus"
-              @click.prevent="newRoleDialogVisible = true"
+            <el-tooltip
+              :disabled="dispute.status !== 'PRE_NEGOTIATION'"
+              content="Disputas em pré-negociação não podem ser editadas"
             >
-              Cadastrar parte
-            </el-button>
+              <span>
+                <el-button
+                  :disabled="dispute.status === 'PRE_NEGOTIATION'"
+                  class="dispute-overview-view__add-role mb20"
+                  plain
+                  icon="el-icon-plus"
+                  @click.prevent="newRoleDialogVisible = true"
+                >
+                  Cadastrar parte
+                </el-button>
+              </span>
+            </el-tooltip>
           </el-collapse>
         </el-tab-pane>
         <el-tab-pane
@@ -1456,7 +1538,7 @@ import { getRoles, buildRoleTitle, getRoleIcon } from '@/utils/jusUtils'
 import { validateName, validateCpf, validatePhone, validateZero } from '@/utils/validations'
 
 import DisputeAttachments from './sections/DisputeAttachments'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'DisputeOverview',
@@ -1486,6 +1568,9 @@ export default {
       namesakeDialogLoading: false,
       namesakeButtonLoading: false,
       namesakeProcessing: false,
+      deleteType: '',
+      deleteTypes: [],
+      modalLoading: false,
       selectedNamesake: '',
       selectedNamesakePersonId: '',
       selectedClaimantId: '',
@@ -1540,6 +1625,7 @@ export default {
       editRoleDialogLoading: false,
       editRoleDialogError: false,
       editRoleDialogErrorList: [],
+      chooseDeleteDialogVisible: false,
       descriptionCollapse: true,
       addBankDialogVisible: false,
       addBankForm: {
@@ -1596,6 +1682,7 @@ export default {
   computed: {
     ...mapGetters({
       getDisputeProperties: 'disputeProprieties',
+      disputeStatuses: 'disputeStatuses',
     }),
     ufList() {
       const ufList = this.namesakeList.map(namesake => namesake.uf)
@@ -1738,25 +1825,50 @@ export default {
       }
     },
   },
+  created() {
+    if (this.disputeStatuses.ARCHIVED) {
+      this.deleteTypes = this.disputeStatuses.ARCHIVED
+    } else {
+      this.getDisputeStatuses('ARCHIVED').then(response => {
+        this.deleteTypes = response
+      })
+    }
+  },
   methods: {
+    ...mapActions([
+      'removeDispute',
+      'getDisputeStatuses',
+    ]),
+
     buildRoleTitle: (...i) => buildRoleTitle(...i),
     getRoleIcon: (...i) => getRoleIcon(...i),
-    removeDispute() {
-      this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível.', 'Atenção!', {
-        confirmButtonClass: 'confirm-remove-btn',
-        confirmButtonText: 'Excluir',
-        cancelButtonText: 'Cancelar',
-        type: 'error',
-        cancelButtonClass: 'is-plain',
-      }).then(() => {
-        const loading = this.$loading({ lock: true })
-        this.$store.dispatch('removeDispute', this.dispute.id).then(() => {
-          this.$router.push('/management')
-        }).catch(error => {
-          this.$jusNotification({ error })
-        }).finally(() => {
-          loading.close()
+    openRemoveDisputeDialog() {
+      if (this.dispute.status === 'PRE_NEGOTIATION') {
+        this.deleteType = 'DROPPED'
+        this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível', 'Atenção', {
+          confirmButtonText: 'Excluir',
+          cancelButtonText: 'Cancelar',
+          type: 'warning',
+          cancelButtonClass: 'is-plain',
+        }).then(() => {
+          this.deleteDispute()
         })
+      } else {
+        this.chooseDeleteDialogVisible = true
+      }
+    },
+    deleteDispute() {
+      this.modalLoading = true
+      this.removeDispute({
+        disputeId: this.dispute.id,
+        reason: this.deleteType,
+      }).then(() => {
+        this.$router.push('/management')
+      }).catch(error => {
+        this.$jusNotification({ error })
+      }).finally(() => {
+        this.chooseDeleteDialogVisible = false
+        this.modalLoading = false
       })
     },
     showNamesake(role) {
@@ -2451,6 +2563,18 @@ export default {
         font-weight: 500;
       }
     }
+
+    .classification {
+      margin-top: 4px;
+      line-height: 18px;
+      flex-direction: column;
+
+      div {
+        margin: 8px;
+        font-weight: 500;
+      }
+    }
+
     .title {
       font-weight: 600;
     }

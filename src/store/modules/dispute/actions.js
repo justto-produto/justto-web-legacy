@@ -436,15 +436,21 @@ const disputeActions = {
         })
     })
   },
-  removeDispute({ commit }, disputeId) {
+  removeDispute({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.delete('api/disputes/' + disputeId)
+      axios.delete(`api/disputes/${params.disputeId}/${params.reason}`)
         .then(response => {
           resolve(response.data)
         }).catch(error => {
           reject(error)
         })
+    })
+  },
+  startNegotiation({ _ }, disputeId) {
+    return axiosDispatcher({
+      url: `/api/disputes/${disputeId}/start-negotiation`,
+      method: 'PATCH',
     })
   },
   disputeSetVisualized({ commit }, params) {

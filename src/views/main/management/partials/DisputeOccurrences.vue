@@ -81,13 +81,15 @@
                 :class="{ 'dispute-view-occurrences__log-canceled': occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.status === 'CANCELED'}"
                 class="dispute-view-occurrences__log-icon"
               >
+                <!-- {{ buildIcon(occurrence) }} -->
+                <!-- {{ occurrence.interaction }} -->
                 <jus-icon
                   :icon="buildIcon(occurrence)"
                   :class="buildIcon(occurrence)"
                 />
               </span>
             </el-tooltip>
-            <span v-html="buildContent(occurrence)" />
+            <span class="occurrence-content" v-html="buildContent(occurrence)" />
             <span class="dispute-view-occurrences__log-info">
               <span v-text="buildHour(occurrence)" />
               <div>•</div>
@@ -115,6 +117,75 @@
                 </span>
               </el-tooltip>
             </span>
+            <div v-if="canHandleUnknowParty(occurrence)" class="fast-occurrence-actions"><br>
+              <span v-if="getUnknowPartys(occurrence).length === 0" class="ok">Esta pendência já foi resolvida!</span>
+              <div
+                v-for="role in getUnknowPartys(occurrence)"
+                :key="`role-party-${role.id}`"
+                class="fast-occurrence-actions__items">
+                <span></span>
+                <a
+                  href="#"
+                  @click="openOptionsParty(role)"
+                  v-if="!handlePartyId['party_role' + role.id]">
+                  Definir polaridade de {{ role.name }}
+                </a>
+                <span class="fast-occurrence-actions__select-container">
+                  <el-select
+                    v-model="role.party"
+                    size="mini"
+                    placeholder="Defina o polo desta parte"
+                    v-if="role.party === 'UNKNOW' && handlePartyId['party_role' + role.id]"
+                    @change="setDisputeParty(role)">
+                    <el-option
+                      v-for="party in disputePartys"
+                      :key="party.value"
+                      :label="party.label"
+                      :value="party.value"
+                    />
+                  </el-select>
+                  <el-tooltip
+                    v-if="handlePartyId['party_role' + role.id]"
+                    class="fast-occurrence-actions__cancel-tooltip" >
+                    <div slot="content">
+                      Cancelar edição de polaridade de {{ role.name }}
+                    </div>
+                    <el-button
+                      size="mini"
+                      icon="el-icon-close"
+                      circle
+                      @click="closeOptionsParty(role)" />
+                  </el-tooltip>
+                </span>
+              </div>
+              <span class="fast-occurrence__log-info">
+                <span v-text="buildHour(occurrence)" />
+                <div>•</div>
+                <el-tooltip :content="buildStatusTooltip(occurrence)">
+                  <jus-icon :icon="buildStatusIcon(occurrence)" />
+                </el-tooltip>
+                <el-tooltip v-if="occurrence.merged">
+                  <div slot="content">
+                    <div
+                      v-for="(merged, mergedIndex) in occurrence.merged"
+                      :key="`merged-${mergedIndex}-#${merged.id}`"
+                      class="dispute-view-occurrences__log-info-content"
+                    >
+                      Hora: {{ buildHour(merged) }}
+                      <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
+                        - Para: {{ merged.interaction.message.receiver | phoneMask }}
+                      </span>
+                      <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
+                        - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
+                      </span>
+                    </div>
+                  </div>
+                  <span>
+                    (+{{ occurrence.merged.length }})
+                  </span>
+                </el-tooltip>
+              </span>
+            </div>
           </el-card>
           <div
             v-else-if="occurrence.type !== 'NOTE'"
@@ -464,6 +535,25 @@ export default {
       fullMessageBank: {},
       hideMessageBank: {},
       infiniteId: +new Date(),
+      handlePartyId: {},
+      disputePartys: [
+        {
+          value: 'RESPONDENT',
+          label: 'Réu',
+        },
+        {
+          value: 'CLAIMANT',
+          label: 'Parte contrária',
+        },
+        {
+          value: 'IMPARTIAL',
+          label: 'Arbitro/Juiz/Mediador',
+        },
+        {
+          value: 'UNKNOW',
+          label: 'Desconhecido',
+        },
+      ],
     }
   },
   computed: {
@@ -536,7 +626,31 @@ export default {
     getIconIsMerged(occurrency) {
       return this.activeOccurrency.id === occurrency.id ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
     },
-
+    openOptionsParty(role) {
+      this.$set(this.handlePartyId, 'party_role' + role.id, true)
+    },
+    closeOptionsParty(role) {
+      this.$set(this.handlePartyId, 'party_role' + role.id, false)
+    },
+    setDisputeParty(role) {
+      this.handlePartyId['party_role' + role.id] = false
+      const params = {
+        disputeId: this.disputeId,
+        disputeRoleId: role.id,
+        disputeParty: role.party,
+      }
+      this.$jusSegment('Defiido função em participante da disputa', {
+        page: this.$route.name,
+      })
+      this.$store.dispatch('setDisputeparty', params).then(() => {
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Função definida com sucesso!',
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+        })
+      })
+    },
     clearOccurrences() {
       this.$store.commit('clearOccurrencesSize')
       this.$store.commit('clearDisputeOccurrences')
@@ -665,7 +779,19 @@ export default {
       }
       return occurrence.description
     },
-
+    canHandleUnknowParty(occurrence) {
+      return occurrence.properties && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.UNKNOW_ROLE_IDS
+    },
+    getUnknowPartys(occurrence) {
+      let canHandleParty = this.canHandleUnknowParty(occurrence)
+      if (canHandleParty) {
+        let dispute = this.$store.getters.dispute
+        let roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
+        let filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOW')
+        return filteredRole
+      }
+      return canHandleParty
+    },
     buildContent(occurrence) {
       if (!occurrence) return ''
       if (occurrence.type === 'LOG' || (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))) {
@@ -729,9 +855,9 @@ export default {
     },
 
     buildHour(occurrence) {
-      if (occurrence.executionDateTime) {
-        return this.$moment(occurrence.executionDateTime.dateTime).format('HH:mm')
-      }
+      // if (occurrence.executionDateTime) {
+      //   return this.$moment(occurrence.executionDateTime.dateTime).format('HH:mm')
+      // }
       return this.$moment(occurrence.createAt.dateTime).format('HH:mm')
     },
 
@@ -830,6 +956,49 @@ export default {
   padding: 0;
   margin: 0;
   height: 100%;
+
+  .fast-occurrence-actions{
+
+    .ok {
+      text-decoration-line: underline;
+      padding-top: 0.75rem;
+    }
+
+    .fast-occurrence-actions__items {
+      padding-top: 0.75rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+      .fast-occurrence-actions__select-container {
+        .el-select {
+          width: 250px;
+          text-align: center;
+        }
+
+        .fast-occurrence-actions__cancel-tooltip {
+          margin-left: 0.5rem;
+          background-color: #9461f7;
+          color: white;
+          border: none;
+        }
+      }
+
+    }
+
+    .fast-occurrence__log-info {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+  }
+  .occurrence-content {
+    line-height: 30px;
+  }
+  .dispute-view-occurrences__log-info{
+    margin-top: 10px;
+  }
   &__occurrence {
     display: flex;
     justify-content: center;

@@ -322,7 +322,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="tab0 || tab1 || tab3"
+        v-if="tab || tab0 || tab1 || tab3"
         :sortable="false"
         prop="expirationDate"
         label="Fim da negociação"
@@ -574,6 +574,9 @@ export default {
     },
     disputes() {
       return this.$store.getters.disputes
+    },
+    tab() {
+      return this.activeTab === '-1'
     },
     tab0() {
       return this.activeTab === '0'

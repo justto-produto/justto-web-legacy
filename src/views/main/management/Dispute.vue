@@ -122,8 +122,8 @@
                 name="1"
               >
                 <el-card
-                  v-loading="isPaused"
-                  element-loading-text="Disputa pausada, retome a disputa para enviar novas mensagens."
+                  v-loading="isPaused || isPreNegotiation"
+                  :element-loading-text="loadingText"
                   element-loading-spinner="el-icon-video-pause"
                   element-loading-background="#fff"
                   class="dispute-view__send-message-box"
@@ -302,7 +302,7 @@
 
 <script>
 import checkSimilarity from '@/utils/levenshtein'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { JusDragArea } from '@/components/JusDragArea'
 import { quillEditor } from 'vue-quill-editor'
 
@@ -363,7 +363,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['disputeAttachments']),
+    ...mapGetters([
+      'disputeAttachments',
+      'disputeStatuses',
+    ]),
 
     sendMessageHeightComputed() {
       switch (this.typingTab) {
@@ -391,6 +394,14 @@ export default {
     },
     isPaused() {
       return this.dispute ? this.dispute.paused : false
+    },
+    isPreNegotiation() {
+      return this.dispute.status === 'PRE_NEGOTIATION'
+    },
+    loadingText() {
+      return this.isPaused
+        ? 'Disputa pausada. Retome a disputa para enviar mensagens'
+        : 'Disputa em pré-negociação. Inicie a disputa para enviar mensagens'
     },
     isFavorite() {
       return this.dispute ? this.dispute.favorite : false
@@ -446,10 +457,10 @@ export default {
   created() {
     this.id = this.$route.params.id.toString()
     this.fetchData()
-    if (this.$store.getters.disputeStatuses.unsettled) {
-      this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
+    if (this.disputeStatuses.UNSETTLED) {
+      this.unsettledTypes = this.disputeStatuses.UNSETTLED
     } else {
-      this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
+      this.getDisputeStatuses('UNSETTLED').then(response => {
         this.unsettledTypes = response
       })
     }
@@ -470,6 +481,8 @@ export default {
     window.removeEventListener('resize', this.updateWindowHeight)
   },
   methods: {
+    ...mapActions(['getDisputeStatuses']),
+
     updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
     },

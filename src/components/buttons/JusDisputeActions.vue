@@ -9,201 +9,35 @@
     >
       <router-link to="/management">
         <jus-icon
-          class="back"
+          class="jus-dispute-actions__back-button"
           icon="back"
         />
       </router-link>
     </el-tooltip>
-    <el-tooltip
-      v-if="canSettled"
-      :content="dispute.status === 'CHECKOUT' || dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo'"
+
+    <span
+      v-for="action in actionsList"
+      :key="action.name"
     >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        data-testid="settled"
-        @click="disputeAction('settled')"
+      <el-tooltip
+        v-if="action.condition()"
+        :content="action.tooltip"
       >
-        <jus-icon icon="win" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="canUnsettled"
-      content="Perder"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        data-testid="unsettled"
-        @click="disputeAction('unsettled')"
-      >
-        <jus-icon icon="lose" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="dispute.paused"
-      content="Retomar"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        data-testid="resume"
-        @click="disputeAction('resume')"
-      >
-        <jus-icon icon="start-again" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-else
-      content="Pausar"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        data-testid="paused"
-        @click="disputeAction('paused')"
-      >
-        <jus-icon icon="pause" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip content="Reiniciar disputa">
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        data-testid="restart-engagement"
-        @click="disputeAction('restart-engagement')"
-      >
-        <jus-icon icon="refresh" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="canResendMessage"
-      content="Reenviar mensagens automáticas"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        data-testid="resend-messages"
-        @click="disputeAction('resend-messages')"
-      >
-        <jus-icon icon="resend-messages" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="!tableActions"
-      content="Cancelar mensagens automáticas"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        data-testid="cancel-messages"
-        @click="disputeAction('cancel-messages')"
-      >
-        <jus-icon icon="cancel-messages" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="!tableActions"
-      content="Alterar negociador"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        @click="openEditNegotiatorsDialog()"
-      >
-        <!-- @click="disputeAction('edit-negotiators')"> -->
-        <jus-icon icon="delegate" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="!tableActions"
-      content="Enriquecer disputa"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        @click="disputeAction('enrich')"
-      >
-        <jus-icon icon="enrich" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="canSendCounterproposal"
-      content="Contraproposta manual"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        @click="disputeAction('counterproposal')"
-      >
-        <jus-icon icon="proposal2" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="!canSendCounterproposal"
-      content="Retornar para negociação"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        @click="disputeAction('renegotiate')"
-      >
-        <jus-icon icon="move-to-running" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="canMarkAsNotRead"
-      content="Marcar como não lida"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        @click="setAsUnread()"
-      >
-        <jus-icon icon="unread" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      v-if="tableActions"
-      content="Abrir disputa em nova aba"
-    >
-      <el-button
-        type="text"
-        @click="openNewTab()"
-      >
-        <jus-icon icon="external-link" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip
-      content="Enviar anexo"
-    >
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        @click="handleAttachmentDialogVisable()"
-      >
-        <jus-icon icon="upload-file" />
-      </el-button>
-    </el-tooltip>
-    <el-tooltip :content="dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito'">
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        data-testid="favorite"
-        @click="disputeAction(dispute.favorite ? 'disfavor' : 'favorite')"
-      >
-        <jus-icon :icon="dispute.favorite ? 'golden-star' : 'star'" />
-      </el-button>
-    </el-tooltip>
-    <!-- TAGS -->
-    <!-- <el-tooltip v-if="tableActions" content="Gerenciar etiquetas">
-      <el-button
-        :type="tableActions ? 'text' : ''"
-        :plain="!tableActions"
-        @click="disputeAction(dispute.favorite ? 'disfavor' : 'favorite')">
-        <i class="el-icon-collection-tag" />
-      </el-button>
-    </el-tooltip> -->
+        <el-button
+          :type="tableActions ? 'text' : ''"
+          :plain="!tableActions"
+          :data-testid="action.name"
+          class="jus-dispute-actions__actions-buttons"
+          @click="action.action()"
+        >
+          <jus-icon
+            :icon="action.icon"
+            class="jus-dispute-actions__actions-icons"
+          />
+        </el-button>
+      </el-tooltip>
+    </span>
+
     <el-tooltip
       v-if="!tableActions"
       :content="collapsed ? 'Exibir informações da disputa' : 'Ocultar informações da disputa'"
@@ -212,9 +46,11 @@
         :plain="!tableActions"
         :icon="collapsed ? 'el-icon-arrow-left' : 'el-icon-arrow-right'"
         type="text"
+        class="jus-dispute-actions__collapse-button"
         @click="togleCollapsed"
       />
     </el-tooltip>
+
     <el-dialog
       :close-on-click-modal="false"
       :show-close="false"
@@ -275,12 +111,16 @@
           :disabled="modalLoading"
           plain
           @click="settledDialogVisible = false"
-        >Cancelar</el-button>
+        >
+          Cancelar
+        </el-button>
         <el-button
           :loading="modalLoading"
           type="primary"
           @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)"
-        >Continuar</el-button>
+        >
+          Continua
+        r</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -305,7 +145,6 @@
       <el-select
         v-model="unsettledType"
         data-testid="select-unsettled"
-        style="margin: 10px 0px;"
         placeholder="Escolha o motivo da perda"
       >
         <el-option
@@ -368,7 +207,6 @@
           :loading="modalLoading"
           :disabled="!unsettledType"
           type="primary"
-          class="confirm-action-unsettled"
           @click.prevent="disputeAction('send-unsettled')"
         >
           Continuar
@@ -513,6 +351,7 @@
 <script>
 import { getRoles } from '@/utils/jusUtils'
 import { JusDragArea } from '@/components/JusDragArea'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'JusDisputeActions',
@@ -537,7 +376,6 @@ export default {
     return {
       settledValue: 0,
       unsettledType: null,
-      unsettledTypes: {},
       negotiatorsForm: {},
       negotiatorsRules: {},
       disputeNegotiators: [],
@@ -559,6 +397,8 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['disputeStatuses']),
+
     collapsed: {
       get() {
         return this.isCollapsed
@@ -567,29 +407,163 @@ export default {
         this.$emit('update:isCollapsed', value)
       },
     },
-    isInsufficientUpperRange() {
-      return this.unsettledType && this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && ((this.dispute && !this.dispute.lastCounterOfferValue) || (this.dispute && this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange))
+    actionsList() {
+      return [
+        {
+          name: 'settled',
+          icon: 'win',
+          condition: () => this.canSettled,
+          action: () => this.disputeAction('settled'),
+          tooltip: this.dispute.status === 'CHECKOUT' || this.dispute.status === 'ACCEPTED' ? 'Ganhar' : 'Aceitar acordo',
+        },
+        {
+          name: 'unsettled',
+          icon: 'lose',
+          condition: () => this.canUnsettled,
+          action: () => this.disputeAction('unsettled'),
+          tooltip: 'Perder',
+        },
+        {
+          name: 'resume',
+          icon: 'start-again',
+          condition: () => this.canResume,
+          action: () => this.disputeAction('resume'),
+          tooltip: 'Retomar',
+        },
+        {
+          name: 'paused',
+          icon: 'pause',
+          condition: () => this.canPause,
+          action: () => this.disputeAction('paused'),
+          tooltip: 'Pausar',
+        },
+        {
+          name: 'restart-engagement',
+          icon: 'refresh',
+          condition: () => this.canRestartEngagement,
+          action: () => this.disputeAction('restart-engagement'),
+          tooltip: 'Reiniciar disputa',
+        },
+        {
+          name: 'cancel-messages',
+          icon: 'cancel-messages',
+          condition: () => !this.tableActions && !this.isPreNegotiation,
+          action: () => this.disputeAction('cancel-messages'),
+          tooltip: 'Cancelar mensagens automáticas',
+        },
+        {
+          name: 'change-negotiators',
+          icon: 'delegate',
+          condition: () => !this.tableActions && !this.isPreNegotiation,
+          action: () => this.openEditNegotiatorsDialog(),
+          tooltip: 'Alterar negociador',
+        },
+        {
+          name: 'enrich',
+          icon: 'enrich',
+          condition: () => !this.tableActions && !this.isPreNegotiation,
+          action: () => this.disputeAction('enrich'),
+          tooltip: 'Enriquecer disputa',
+        },
+        {
+          name: 'counterproposal',
+          icon: 'proposal',
+          condition: () => this.canSendCounterproposal,
+          action: () => this.disputeAction('counterproposal'),
+          tooltip: 'Contraproposta manual',
+        },
+        {
+          name: 'renegotiate',
+          icon: 'move-to-running',
+          condition: () => this.canMoveToRunning,
+          action: () => this.disputeAction('renegotiate'),
+          tooltip: 'Retornar para negociação',
+        },
+        {
+          name: 'set-unread',
+          icon: 'unread',
+          condition: () => this.canMarkAsNotRead,
+          action: () => this.setAsUnread(),
+          tooltip: 'Marcar como não lida',
+        },
+        {
+          name: 'permanently-leave',
+          icon: 'hammer',
+          condition: () => this.isPreNegotiation,
+          action: () => this.dropLawsuit(),
+          tooltip: 'Confirmar baixa definitiva',
+        },
+        {
+          name: 'start-negotiation',
+          icon: 'right-arrow',
+          condition: () => this.isPreNegotiation,
+          action: () => this.goToNegotiation(),
+          tooltip: 'Iniciar negociação',
+        },
+        {
+          name: 'open-new-tab',
+          icon: 'external-link',
+          condition: () => this.tableActions,
+          action: () => this.openNewTab(),
+          tooltip: 'Abrir disputa em nova aba',
+        },
+        {
+          name: 'upload-file',
+          icon: 'upload-file',
+          condition: () => !this.isPreNegotiation,
+          action: () => this.handleAttachmentDialogVisable(),
+          tooltip: 'Enviar anexo',
+        },
+        {
+          name: 'favorite',
+          icon: this.dispute.favorite ? 'golden-star' : 'star',
+          condition: () => !this.isPreNegotiation,
+          action: () => this.handleAttachmentDialogVisable(),
+          tooltip: this.dispute.favorite ? 'Desmarcar como favorito' : 'Marcar como favorito',
+        },
+      ]
+    },
+    unsettledTypes() {
+      return this.disputeStatuses.UNSETTLED
     },
     canSettled() {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED'
+      return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED' && !this.isPreNegotiation
     },
     canUnsettled() {
-      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED'
+      return this.dispute && this.dispute.status && this.dispute.status !== 'UNSETTLED' && !this.isPreNegotiation
+    },
+    canResume() {
+      return this.dispute && this.dispute.paused && !this.isPreNegotiation
+    },
+    canPause() {
+      return this.dispute && !this.dispute.paused && !this.isPreNegotiation
     },
     canResendMessage() {
-      return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING'
+      return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING' && !this.isPreNegotiation
+    },
+    canRestartEngagement() {
+      return this.dispute && this.dispute.status && this.dispute.status !== 'PENDING' && !this.isPreNegotiation
     },
     canMarkAsNotRead() {
-      return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status)
+      return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
     },
     canSendCounterproposal() {
-      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status)
+      return this.dispute && this.dispute.status && !['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+    },
+    canMoveToRunning() {
+      return this.dispute && this.dispute.status && ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) && !this.isPreNegotiation
+    },
+    isPreNegotiation() {
+      return this.dispute.status === 'PRE_NEGOTIATION'
+    },
+    isAccepted() {
+      return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : null
     },
     checkUpperRangeCounterOffer() {
       return this.counterOfferForm.lastCounterOfferValue > this.dispute.disputeUpperRange
     },
-    isAccepted() {
-      return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : null
+    isInsufficientUpperRange() {
+      return this.unsettledType && this.unsettledType === 'INSUFFICIENT_UPPER_RANGE' && ((this.dispute && !this.dispute.lastCounterOfferValue) || (this.dispute && this.dispute.lastCounterOfferValue <= this.dispute.disputeUpperRange))
     },
     workspaceNegotiators() {
       return this.$store.getters.workspaceMembers.map(member => {
@@ -631,16 +605,16 @@ export default {
       return []
     },
   },
-  created() {
-    if (this.$store.getters.disputeStatuses.unsettled) {
-      this.unsettledTypes = this.$store.getters.disputeStatuses.unsettled
-    } else {
-      this.$store.dispatch('getDisputeStatuses', 'unsettled').then(response => {
-        this.unsettledTypes = response
-      })
-    }
-  },
   methods: {
+    ...mapActions([
+      'disputeSetVisualized',
+      'getDisputeStatuses',
+      'removeDispute',
+      'sendDisputeAction',
+      'sendDisputeNote',
+      'startNegotiation',
+    ]),
+
     disputeAction(action, additionParams) {
       let message = {
         content: 'Tem certeza que deseja realizar esta ação?',
@@ -768,7 +742,7 @@ export default {
           this.modalLoading = true
           let params = { action: action, disputeId: this.dispute.id }
           if (additionParams) params = { ...params, ...additionParams }
-          this.$store.dispatch('sendDisputeAction', params).then(() => {
+          this.sendDisputeAction(params).then(() => {
             resolve()
             this.$jusNotification({
               title: 'Yay!',
@@ -801,7 +775,7 @@ export default {
       })
     },
     setAsUnread() {
-      this.$store.dispatch('disputeSetVisualized', {
+      this.disputeSetVisualized({
         visualized: false,
         disputeId: this.dispute.id,
       }).then(() => {
@@ -809,6 +783,23 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
       })
+    },
+    dropLawsuit() {
+      this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+        cancelButtonClass: 'is-plain',
+        showClose: false,
+      }).then(() => {
+        this.removeDispute({
+          disputeId: this.dispute.id, reason: 'DISPUTE_DROPPED',
+        }).then(() => {
+          if (!this.tableActions) this.$router.push('/management')
+        })
+      })
+    },
+    goToNegotiation() {
+      this.startNegotiation(this.dispute.id)
     },
     openNewTab() {
       const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
@@ -901,7 +892,7 @@ export default {
                   this.modalLoading = true
                   const people = this.disputeClaimants.filter(d => d.id === this.counterOfferForm.selectedRoleId)[0]
                   const note = '<b>Contraproposta manual no valor de ' + this.$options.filters.currency(this.counterOfferForm.lastCounterOfferValue) + ', realizada por ' + people.name + ', com a nota:</b> <br/>' + this.counterOfferForm.note
-                  this.$store.dispatch('sendDisputeNote', {
+                  this.sendDisputeNote({
                     note,
                     disputeId: this.dispute.id,
                   }).then(() => {
@@ -997,43 +988,51 @@ export default {
       height: 300px;
     }
   }
-  img {
-    width: 16px;
-    height: 16px;
+
+  .jus-dispute-actions__actions-buttons {
+    .jus-dispute-actions__actions-icons {
+      width: 16px;
+      height: 16px;
+    }
   }
-  &--dispute {
-    padding: 11px 0px 11px 20px;
+
+  &.jus-dispute-actions--dispute {
+    padding: 12px 0px 12px 20px;
     box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.06);
     z-index: 1;
-    .el-button {
-      border-radius: 5px;
-      padding: 11px;
-      &.el-button--text {
-        color: #424242;
-        padding: 7px 10px 0;
-        float: right;
-        border-color: transparent !important;
-        i {
-          font-size: 26px;
-        }
-      }
+
+    .jus-dispute-actions__actions-buttons {
+      border-radius: 6px;
+      padding: 12px;
+      margin-right: 8px;
     }
-    .back {
+
+    .jus-dispute-actions__collapse-button {
+      color: #424242;
+      padding: 8px 10px 0;
+      float: right;
+      border-color: transparent !important;
+      i { font-size: 26px; }
+    }
+
+    .jus-dispute-actions__back-button {
       margin-right: 20px;
       vertical-align: text-top;
     }
-    .el-button + span, span + .el-button {
-      margin-left: 10px;
-    }
   }
-  &--table {
+  &.jus-dispute-actions--table {
     background: linear-gradient(to right, rgba(246,246,246,0) 0%, rgba(246,246,246,1) 10%);
     padding: 0 20px 0 28px;
     position: absolute;
     display: flex;
+    align-items: center;
     height: 100%;
     right: 0;
     top: 0;
+
+    .jus-dispute-actions__actions-buttons {
+      margin-left: 6px;
+    }
   }
 }
 .is-disabled-input {
