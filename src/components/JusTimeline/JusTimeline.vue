@@ -23,7 +23,9 @@
             </el-link>
           </div>
           <div class="jus-timeline__header-subtitle">
-            Distribuído em {{ progress.date }}
+            <span v-if="progress.date">
+              Distribuído em {{ progress.date }}
+            </span>
           </div>
           <div class="jus-timeline__header-tags">
             <el-tag
