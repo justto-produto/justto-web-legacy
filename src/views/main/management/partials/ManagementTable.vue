@@ -479,18 +479,19 @@
       </span>
     </el-dialog>
     <el-dialog
+      v-loading="loading"
       width="65%"
       class="dialog-timeline"
       :visible.sync="disputeTimelineModal"
       @close="hideTimelineModal">
       <div
-        class="dialog-timeline__title"
-        slot="title">
-        Pesquisado em 12/10/2020 às 14:35
+        slot="title"
+        class="dialog-timeline__title">
+        <span v-if="disputeTimeline.lastUpdated">
+          Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
+        </span>
       </div>
-      <jus-timeline
-        v-if="currentDisputeId"
-        :dispute="currentDisputeId" />
+      <jus-timeline />
     </el-dialog>
   </div>
 </template>
@@ -508,6 +509,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
 import Quill from 'quill'
+import { mapGetters, mapActions } from 'vuex'
 const SizeStyle = Quill.import('attributors/style/size')
 const AlignStyle = Quill.import('attributors/style/align')
 Quill.register(AlignStyle, true)
@@ -571,6 +573,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['disputeTimeline', 'loading']),
     selectedIdsComp: {
       get() {
         return this.selectedIds
@@ -615,8 +618,9 @@ export default {
     this.$store.commit('resetDisputeQueryPage')
   },
   methods: {
+    ...mapActions(['getDisputeTimeline']),
     openTimelineModal(dispute) {
-      this.currentDisputeId = dispute.id
+      this.getDisputeTimeline(dispute.code)
       this.$nextTick(() => {
         this.disputeTimelineModal = true
       })
