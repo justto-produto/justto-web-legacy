@@ -101,11 +101,12 @@
         :sortable="false"
         label="Processo"
         min-width="100px"
+        class-name="management-table__row-code"
         prop="code"
       >
         <template slot-scope="scope">
           <el-link
-            class="proccess-code"
+            class="management-table__proccess-code"
             :underline="false"
             @click="openTimelineModal(scope.row)">
             {{ scope.row.code }}
@@ -478,7 +479,7 @@
       </span>
     </el-dialog>
     <el-dialog
-      width="70%"
+      width="65%"
       class="dialog-timeline"
       :visible.sync="disputeTimelineModal"
       @close="hideTimelineModal">
@@ -880,12 +881,21 @@ export default {
     color: #adadad;
     font-size: 1rem;
   }
+  .management-table__row-code {
+    .management-table__proccess-code {
+      .el-link--inner {
+        word-break: break-all;
+      }
+    }
+  }
 }
 .dialog-timeline {
   .dialog-timeline__title {
     text-align: center;
-    color: gray;
     padding-top: 20px;
+    font: normal normal medium 17px/22px Montserrat;
+    letter-spacing: 0px;
+    color: #ADADAD;
   }
 
   .el-dialog__body {

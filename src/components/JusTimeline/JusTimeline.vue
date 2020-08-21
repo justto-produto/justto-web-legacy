@@ -79,7 +79,7 @@ export default {
       disputeProgress: [
         {
           descricao: '1ª Instância',
-          codigo: '768279209.9874098-123768279209.9874098-123768279209.9874098-123',
+          codigo: '0010894-16.2017.8.19.0008',
           distribuicao: '10/01/2020',
           flags: ['Extinto', 'Extinto'],
           eventos: [{
@@ -138,6 +138,8 @@ export default {
           color: #424242;
           letter-spacing: 0px;
           font: normal normal bold 23px/35px Montserrat;
+
+          word-break: break-all;
         }
         .jus-timeline__header-subtitle {
           font: normal normal medium 17px/22px Montserrat;
