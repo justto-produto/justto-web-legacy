@@ -792,7 +792,7 @@ export default {
         showClose: false,
       }).then(() => {
         this.removeDispute({
-          disputeId: this.dispute.id, reason: 'DROPPED',
+          disputeId: this.dispute.id, reason: 'DISPUTE_DROPPED',
         }).then(() => {
           if (!this.tableActions) this.$router.push('/management')
         })

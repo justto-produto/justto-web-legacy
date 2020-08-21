@@ -355,7 +355,7 @@ export default {
       }
       switch (action) {
         case 'DROP_LAWSUIT':
-          params.reasonKey = 'DROPPED'
+          params.reasonKey = 'DISPUTE_DROPPED'
           params.type = 'DELETE'
           break
         case 'CHANGE_STRATEGY':

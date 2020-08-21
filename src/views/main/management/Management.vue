@@ -18,7 +18,7 @@
           class="view-management__tabs"
         >
           <el-tab-pane
-            v-if="isJusttoAdmin && workspaceProperties.PRE_NEGOTIATION"
+            v-if="isJusttoAdmin || workspaceProperties.PRE_NEGOTIATION"
             name="-1">
             <span slot="label">
               Pré-Negociação
