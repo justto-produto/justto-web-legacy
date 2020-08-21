@@ -445,6 +445,13 @@ export default {
           tooltip: 'Reiniciar disputa',
         },
         {
+          name: 'resend-messages',
+          icon: 'resend-messages',
+          condition: () => !this.tableActions,
+          action: () => this.disputeAction('resend-messages'),
+          tooltip: 'Reenviar mensagens automáticas',
+        },
+        {
           name: 'cancel-messages',
           icon: 'cancel-messages',
           condition: () => !this.tableActions && !this.isPreNegotiation,
