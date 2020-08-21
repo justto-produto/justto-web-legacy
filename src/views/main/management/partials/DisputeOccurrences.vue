@@ -90,33 +90,6 @@
               </span>
             </el-tooltip>
             <span class="occurrence-content" v-html="buildContent(occurrence)" />
-            <span class="dispute-view-occurrences__log-info">
-              <span v-text="buildHour(occurrence)" />
-              <div>•</div>
-              <el-tooltip :content="buildStatusTooltip(occurrence)">
-                <jus-icon :icon="buildStatusIcon(occurrence)" />
-              </el-tooltip>
-              <el-tooltip v-if="occurrence.merged">
-                <div slot="content">
-                  <div
-                    v-for="(merged, mergedIndex) in occurrence.merged"
-                    :key="`merged-${mergedIndex}-#${merged.id}`"
-                    class="dispute-view-occurrences__log-info-content"
-                  >
-                    Hora: {{ buildHour(merged) }}
-                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                      - Para: {{ merged.interaction.message.receiver | phoneMask }}
-                    </span>
-                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
-                      - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
-                    </span>
-                  </div>
-                </div>
-                <span>
-                  (+{{ occurrence.merged.length }})
-                </span>
-              </el-tooltip>
-            </span>
             <div v-if="canHandleUnknowParty(occurrence)" class="fast-occurrence-actions"><br>
               <span v-if="getUnknowPartys(occurrence).length === 0" class="ok">Esta pendência já foi resolvida!</span>
               <div
@@ -186,6 +159,33 @@
                 </el-tooltip>
               </span>
             </div>
+            <span v-else class="dispute-view-occurrences__log-info">
+              <span v-text="buildHour(occurrence)" />
+              <div>•</div>
+              <el-tooltip :content="buildStatusTooltip(occurrence)">
+                <jus-icon :icon="buildStatusIcon(occurrence)" />
+              </el-tooltip>
+              <el-tooltip v-if="occurrence.merged">
+                <div slot="content">
+                  <div
+                    v-for="(merged, mergedIndex) in occurrence.merged"
+                    :key="`merged-${mergedIndex}-#${merged.id}`"
+                    class="dispute-view-occurrences__log-info-content"
+                  >
+                    Hora: {{ buildHour(merged) }}
+                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
+                      - Para: {{ merged.interaction.message.receiver | phoneMask }}
+                    </span>
+                    <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
+                      - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
+                    </span>
+                  </div>
+                </div>
+                <span>
+                  (+{{ occurrence.merged.length }})
+                </span>
+              </el-tooltip>
+            </span>
           </el-card>
           <div
             v-else-if="occurrence.type !== 'NOTE'"
