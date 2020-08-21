@@ -1844,7 +1844,7 @@ export default {
     getRoleIcon: (...i) => getRoleIcon(...i),
     openRemoveDisputeDialog() {
       if (this.dispute.status === 'PRE_NEGOTIATION') {
-        this.deleteType = 'DROPPED'
+        this.deleteType = 'DISPUTE_DROPPED'
         this.$confirm('Tem certeza que deseja excluir esta disputa? Esta ação é irreversível', 'Atenção', {
           confirmButtonText: 'Excluir',
           cancelButtonText: 'Cancelar',
