@@ -35,6 +35,7 @@ export default new Vuex.Store({
   getters: {
     banksList: state => state.banksList,
     ghostMode: state => state.ghostMode,
+    loading: state => state.loading,
   },
   mutations: {
     showLoading(state) {

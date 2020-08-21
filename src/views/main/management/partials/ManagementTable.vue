@@ -19,8 +19,7 @@
       data-testid="dispute-index"
       @cell-mouse-enter="cellMouseEnter"
       @row-click="handleRowClick"
-      @selection-change="handleSelectionChange"
-    >
+      @selection-change="handleSelectionChange">
       <el-table-column
         type="selection"
         width="44px"
@@ -38,8 +37,7 @@
             trigger="hover"
             popper-class="el-popover--dark"
             @show="getMessageSummary(scope.row.lastOutboundInteraction, scope.row.id)"
-            @hide="messageSummary = {}"
-          >
+            @hide="messageSummary = {}">
             <strong>
               <jus-icon
                 :icon="getInteractionIcon(scope.row.lastOutboundInteraction)"
@@ -103,10 +101,21 @@
         :sortable="false"
         label="Processo"
         min-width="100px"
+        class-name="management-table__row-code"
         prop="code"
       >
         <template slot-scope="scope">
-          {{ scope.row.code }}
+          <el-link
+            class="management-table__proccess-code"
+            :underline="false"
+            @click="openTimelineModal(scope.row)">
+            {{ scope.row.code }}
+            <jus-icon
+              style="height: 0.75rem;"
+              icon="external-link"
+              class="data-table__dispute-link-icon"
+            />
+          </el-link>
         </template>
       </el-table-column>
       <el-table-column
@@ -420,8 +429,7 @@
       :close-on-press-escape="false"
       :show-close="false"
       :title="`Resposta ao processo ${responseRow.code}`"
-      class="management-table__response-dialog"
-    >
+      class="management-table__response-dialog">
       <div v-if="Object.keys(responseRow).length">
         Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b>.
         <br>
@@ -470,6 +478,21 @@
         </el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      v-loading="loading"
+      width="65%"
+      class="dialog-timeline"
+      :visible.sync="disputeTimelineModal"
+      @close="hideTimelineModal">
+      <div
+        slot="title"
+        class="dialog-timeline__title">
+        <span v-if="disputeTimeline.lastUpdated">
+          Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
+        </span>
+      </div>
+      <jus-timeline />
+    </el-dialog>
   </div>
 </template>
 
@@ -486,6 +509,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
 import Quill from 'quill'
+import { mapGetters, mapActions } from 'vuex'
 const SizeStyle = Quill.import('attributors/style/size')
 const AlignStyle = Quill.import('attributors/style/align')
 Quill.register(AlignStyle, true)
@@ -494,6 +518,7 @@ Quill.register(SizeStyle, true)
 export default {
   name: 'ManagementTable',
   components: {
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
     InfiniteLoading: () => import('vue-infinite-loading'),
@@ -516,6 +541,8 @@ export default {
   },
   data() {
     return {
+      currentDisputeId: null,
+      disputeTimelineModal: false,
       showEmpty: false,
       showEmptyDebounce: '',
       disputeActionsRow: 0,
@@ -546,6 +573,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['disputeTimeline', 'loading']),
     selectedIdsComp: {
       get() {
         return this.selectedIds
@@ -593,6 +621,19 @@ export default {
     this.$store.commit('resetDisputeQueryPage')
   },
   methods: {
+    ...mapActions(['getDisputeTimeline']),
+    openTimelineModal(dispute) {
+      this.getDisputeTimeline(dispute.code)
+      this.$nextTick(() => {
+        this.disputeTimelineModal = true
+      })
+    },
+    hideTimelineModal() {
+      this.diputeTimelineModal = false
+      this.$nextTick(() => {
+        this.currentDisputeId = null
+      })
+    },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
     },
@@ -846,6 +887,26 @@ export default {
     margin: 20px 0 10px;
     color: #adadad;
     font-size: 1rem;
+  }
+  .management-table__row-code {
+    .management-table__proccess-code {
+      .el-link--inner {
+        word-break: break-all;
+      }
+    }
+  }
+}
+.dialog-timeline {
+  .dialog-timeline__title {
+    text-align: center;
+    padding-top: 20px;
+    font: normal normal medium 17px/22px Montserrat;
+    letter-spacing: 0px;
+    color: #ADADAD;
+  }
+
+  .el-dialog__body {
+    margin-top: 0px;
   }
 }
 </style>

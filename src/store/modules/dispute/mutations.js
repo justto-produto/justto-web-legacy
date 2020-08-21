@@ -1,6 +1,9 @@
 import Vue from 'vue'
 
 const disputeMutations = {
+  setDisputeTimeline(state, timeline) {
+    state.timeline = timeline
+  },
   setDisputes(state, pageable) {
     state.disputes = pageable.content
     state.query.size = pageable.size
