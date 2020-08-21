@@ -188,6 +188,7 @@ const disputeActions = {
     // })
   },
   getDisputeTimeline({ commit }, disputeCode) {
+    commit('cleanDisputeTimeline')
     commit('showLoading')
     return axiosDispatcher({
       url: `/api/fusion/lawsuit/timeline/${disputeCode}`,
