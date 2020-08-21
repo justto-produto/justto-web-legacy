@@ -19,8 +19,7 @@
       data-testid="dispute-index"
       @cell-mouse-enter="cellMouseEnter"
       @row-click="handleRowClick"
-      @selection-change="handleSelectionChange"
-    >
+      @selection-change="handleSelectionChange">
       <el-table-column
         type="selection"
         width="44px"
@@ -107,6 +106,7 @@
         <template slot-scope="scope">
           <el-link
             class="proccess-code"
+            :underline="false"
             @click="openTimelineModal(scope.row)">
             {{ scope.row.code }}
             <jus-icon
@@ -428,8 +428,7 @@
       :close-on-press-escape="false"
       :show-close="false"
       :title="`Resposta ao processo ${responseRow.code}`"
-      class="management-table__response-dialog"
-    >
+      class="management-table__response-dialog">
       <div v-if="Object.keys(responseRow).length">
         Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b>.
         <br>
@@ -479,8 +478,15 @@
       </span>
     </el-dialog>
     <el-dialog
+      width="70%"
+      class="dialog-timeline"
       :visible.sync="disputeTimelineModal"
       @close="hideTimelineModal">
+      <div
+        class="dialog-timeline__title"
+        slot="title">
+        Pesquisado em 12/10/2020 às 14:35
+      </div>
       <jus-timeline
         v-if="currentDisputeId"
         :dispute="currentDisputeId" />
@@ -873,6 +879,17 @@ export default {
     margin: 20px 0 10px;
     color: #adadad;
     font-size: 1rem;
+  }
+}
+.dialog-timeline {
+  .dialog-timeline__title {
+    text-align: center;
+    color: gray;
+    padding-top: 20px;
+  }
+
+  .el-dialog__body {
+    margin-top: 0px;
   }
 }
 </style>
