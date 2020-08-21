@@ -104,23 +104,30 @@
               data-testid="dispute-infoline"
             >
               <span class="title">Processo:</span>
-              <span
+              <el-link
+                class="code"
+                @click="openTimelineModal(dispute)">
+                {{ dispute.code }}
+                <jus-icon
+                  class="icon"
+                  icon="external-link"
+                />
+              </el-link>
+              <!-- <span
                 v-if="!!getDisputeProperties.ENDERECO_DO_PROCESSO"
                 class="code"
               >
-                <a
+                <el-link
                   class="link"
-                  :href="getDisputeProperties.ENDERECO_DO_PROCESSO"
-                  target="_blank"
-                >
+                  @click="openTimelineModal(dispute)">
                   {{ dispute.code }}
                   <jus-icon
                     class="icon"
                     icon="external-link"
                   />
-                </a>
+                </el-link>
               </span>
-              <span v-else>{{ dispute.code }}</span>
+              <span v-else>{{ dispute.code }}</span> -->
             </div>
             <div
               v-if="dispute.campaign"
@@ -1530,6 +1537,21 @@
         :oabs="oabs"
       />
     </div>
+    <el-dialog
+      v-loading="loading"
+      width="65%"
+      class="dialog-timeline"
+      :visible.sync="disputeTimelineModal"
+      @close="hideTimelineModal">
+      <div
+        slot="title"
+        class="dialog-timeline__title">
+        <span v-if="disputeTimeline.lastUpdated">
+          Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
+        </span>
+      </div>
+      <jus-timeline />
+    </el-dialog>
   </div>
 </template>
 
@@ -1549,6 +1571,7 @@ export default {
     DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
   },
   props: {
     loading: {
@@ -1562,6 +1585,7 @@ export default {
   },
   data() {
     return {
+      disputeTimelineModal: false,
       overviewTab: 'general',
       namesakeList: [],
       namesakeDialogVisible: false,
@@ -1681,6 +1705,8 @@ export default {
   },
   computed: {
     ...mapGetters({
+      disputeTimeline: 'disputeTimeline',
+      timeline: 'timeline',
       getDisputeProperties: 'disputeProprieties',
       disputeStatuses: 'disputeStatuses',
     }),
@@ -1838,7 +1864,18 @@ export default {
     ...mapActions([
       'removeDispute',
       'getDisputeStatuses',
+      'getDisputeTimeline',
     ]),
+
+    openTimelineModal(dispute) {
+      this.getDisputeTimeline(dispute.code)
+      this.$nextTick(() => {
+        this.disputeTimelineModal = true
+      })
+    },
+    hideTimelineModal() {
+      this.diputeTimelineModal = false
+    },
 
     buildRoleTitle: (...i) => buildRoleTitle(...i),
     getRoleIcon: (...i) => getRoleIcon(...i),
@@ -2494,6 +2531,8 @@ export default {
   overflow: hidden;
   position: relative;
 
+  .dispute-overview-view__
+
   .dispute-overview-view__loading {
     height: 100%;
   }
@@ -2539,17 +2578,13 @@ export default {
       }
     }
     .code {
-      .link {
-        .icon {
-          height: 0.9rem;
-          display: none;
-        }
+      .icon {
+        height: 0.9rem;
+        display: none;
       }
       &:hover {
-        .link {
-          .icon {
-            display: inline;
-          }
+        .icon {
+          display: inline;
         }
       }
     }
