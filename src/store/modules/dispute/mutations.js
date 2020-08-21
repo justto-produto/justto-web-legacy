@@ -4,6 +4,12 @@ const disputeMutations = {
   setDisputeTimeline(state, timeline) {
     state.timeline = timeline
   },
+  cleanDisputeTimeline(state) {
+    state.timeline = {
+      lastUpdated: '',
+      lawsuits: [],
+    }
+  },
   setDisputes(state, pageable) {
     state.disputes = pageable.content
     state.query.size = pageable.size
