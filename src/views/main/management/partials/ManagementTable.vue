@@ -902,7 +902,8 @@ export default {
     padding-top: 20px;
     font: normal normal medium 17px/22px Montserrat;
     letter-spacing: 0px;
-    color: #ADADAD;
+    color: #424242;
+    font-weight: bold;
   }
 
   .el-dialog__body {

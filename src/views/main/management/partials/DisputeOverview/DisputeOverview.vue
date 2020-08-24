@@ -1105,8 +1105,7 @@
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="editRoleDialogVisible"
-        width="40%"
-      >
+        width="40%" >
         <span
           slot="title"
           class="el-dialog__title"
@@ -1442,8 +1441,7 @@
         :close-on-click-modal="false"
         :visible.sync="addBankDialogVisible"
         title="Adicionar conta bancária"
-        width="40%"
-      >
+        width="40%" >
         <el-form
           ref="addBankForm"
           :model="addBankForm"
@@ -1539,12 +1537,12 @@
       <el-dialog
         v-loading="loading"
         width="65%"
-        class="dialog-timeline"
+        class="dispute-overview-view__timeline"
         :visible.sync="disputeTimelineModal"
         @close="hideTimelineModal">
         <div
           slot="title"
-          class="dialog-timeline__title">
+          class="dispute-overview-view__timeline-title">
           <span v-if="disputeTimeline.lastUpdated">
             Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
           </span>
@@ -2533,6 +2531,15 @@ export default {
 
   .dispute-overview-view__loading {
     height: 100%;
+
+    .dispute-overview-view__timeline {
+      .dispute-overview-view__timeline-title {
+        text-align: center;
+        letter-spacing: 0px;
+        color: #424242;
+        font-weight: bold;
+      }
+    }
   }
 
   &__title {
