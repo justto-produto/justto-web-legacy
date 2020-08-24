@@ -129,16 +129,17 @@ export default {
         }
         .jus-timeline__header-tags {
           margin: 8px 8px auto auto;
+          display: flex;
         }
       }
 
       .jus-timeline__body {
-        // display: block;
         margin-left: -24px;
         margin-top: 24px;
 
         .jus-timeline__body-tags {
           margin: 8px 8px auto auto;
+          display: flex;
         }
       }
     }
