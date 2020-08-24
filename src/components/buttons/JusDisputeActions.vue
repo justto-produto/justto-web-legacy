@@ -447,7 +447,7 @@ export default {
         {
           name: 'resend-messages',
           icon: 'resend-messages',
-          condition: () => !this.tableActions,
+          condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('resend-messages'),
           tooltip: 'Reenviar mensagens automáticas',
         },
