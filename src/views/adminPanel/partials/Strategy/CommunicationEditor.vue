@@ -158,22 +158,34 @@ export default {
   },
   watch: {
     templateToEdit(current) {
-      if (current) this.template = current
+      if (current) {
+        this.template = current
+        if (!this.template.title) this.template.title = 'Mensagem da Justto'
+      }
     },
   },
   methods: {
     ...mapActions(['changeCommunicationTemplate']),
 
     saveTemplate() {
-      this.template.communicationType = this.communication.type
-      this.changeCommunicationTemplate({
-        template: this.template,
-        communicationId: this.templateToEdit.id,
-        strategyId: this.strategyId,
-      }).then(response => {
-        this.template.updatedAt = response.updatedAt
-        this.isVisible = false
-      })
+      console.log(this.template)
+      if (!this.template.title) {
+        this.$jusNotification({
+          type: 'warning',
+          title: 'Ops!',
+          message: 'O assunto da mensagem não pode ficar em branco.',
+        })
+      } else {
+        this.template.communicationType = this.communication.type
+        this.changeCommunicationTemplate({
+          template: this.template,
+          communicationId: this.templateToEdit.id,
+          strategyId: this.strategyId,
+        }).then(response => {
+          this.template.updatedAt = response.updatedAt
+          this.isVisible = false
+        })
+      }
     },
 
     setHtmlHeader(body) {
