@@ -893,10 +893,8 @@ export default {
         visibility: hidden;
       }
 
-      &:hover {
-        .proccess-code__icon {
-          visibility: visible;
-        }
+      &:hover .proccess-code__icon {
+        visibility: visible;
       }
 
       .el-link--inner {
