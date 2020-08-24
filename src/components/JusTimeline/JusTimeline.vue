@@ -128,20 +128,17 @@ export default {
           color: #ADADAD;
         }
         .jus-timeline__header-tags {
-          margin-top: 8px;
-          display: flex;
-          gap: 8px;
+          margin: 8px 8px auto auto;
         }
       }
 
       .jus-timeline__body {
+        // display: block;
         margin-left: -24px;
         margin-top: 24px;
 
         .jus-timeline__body-tags {
-          margin-top: 8px;
-          display: flex;
-          gap: 8px;
+          margin: 8px 8px auto auto;
         }
       }
     }
