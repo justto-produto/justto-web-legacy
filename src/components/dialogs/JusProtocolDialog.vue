@@ -712,6 +712,7 @@ export default {
         this.signers = doc.signers
         this.step = 3
         this.loading = false
+        this.document.canEdit = true
       }).catch(error => {
         this.visible = false
         this.$jusNotification({ error })
