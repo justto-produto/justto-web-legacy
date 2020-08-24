@@ -789,6 +789,7 @@ export default {
       })
     },
     dropLawsuit() {
+      this.$jusSegment('Baixa definitiva na disputa', { disputeId: this.dispute.id })
       this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
@@ -804,6 +805,7 @@ export default {
     },
     goToNegotiation() {
       this.startNegotiation(this.dispute.id)
+      this.$jusSegment('Negociação iniciada na disputa', { disputeId: this.dispute.id })
     },
     openNewTab() {
       const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })

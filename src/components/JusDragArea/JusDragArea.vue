@@ -97,9 +97,11 @@ export default {
     },
     saveFile(file) {
       this.isAttachmentLoading = true
+      const segmentLog = `Solicitação de upload do arquivo ${file.name} com tamanho de ${file.size}`
       const disputeId = this.$route.params.id
       const formData = new FormData()
       formData.append('file', file)
+
 
       return this.uploadAttachment({
         disputeId,
@@ -114,11 +116,13 @@ export default {
             message: 'Anexo(s) adicionado(s) com sucesso',
             type: 'success',
           })
+          this.$jusSegment(segmentLog, { fileName: file.name })
         })
       }).catch(error => {
         this.$emit('closeDialog')
         this.isAttachmentLoading = false
         this.$jusNotification({ error })
+        this.$jusSegment(`${segmentLog} falhou`, { fileName: file.name })
       })
     },
   },
