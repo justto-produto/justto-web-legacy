@@ -19,7 +19,14 @@
               :underline="false"
               :href="progress.url">
               {{ progress.code }}
-              <sup><i class="el-icon-link el-icon--right" /></sup>
+
+              <sup>
+                <jus-icon
+                  style="height: 0.75rem;"
+                  icon="external-link"
+                  class="data-table__dispute-link-icon"
+                />
+              </sup>
             </el-link>
           </div>
           <div class="jus-timeline__header-subtitle">
