@@ -35,13 +35,13 @@ const actions = {
         })
     })
   },
-  changePersonName({ commit }, person) {
+  changePersonName({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
-      axios.put('api/persons/' + person.id + '/name', {
-        name: person.name,
+      axios.put('api/persons/' + params.person.id + '/name', {
+        name: params.person.name,
       }).then(response => {
-        commit('setLoggedPerson', response.data)
+        if (params.isEditingLoggedPerson) commit('setLoggedPerson', response.data)
         resolve(response.data)
       }).catch(error => {
         reject(error)
