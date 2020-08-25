@@ -475,7 +475,7 @@
         </el-button>
       </span>
     </el-dialog>
-    <jus-timeline v-model="disputeTimelineModal"/>
+    <jus-timeline v-model="disputeTimelineModal" />
   </div>
 </template>
 
