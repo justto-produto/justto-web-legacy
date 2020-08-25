@@ -1,109 +1,128 @@
 <template>
-  <el-container
-    id="jus-timeline"
+  <el-dialog
     v-loading="loading"
-    class="jus-timeline">
-    <ul
-      v-if="!loading && (disputeTimeline.lawsuits || []).length"
-      class="jus-timeline__list">
-      <li class="jus-timeline__list-search">
-        <div class="jus-timeline__filter">
-          <el-input
-            v-model="searchQuery"
-            class="jus-timeline__filter-input"
-            placeholder="Filtrar"
-            size="medium"
-            prefix-icon="el-icon-search" />
-          <el-checkbox-group
-            v-if="searchQuery.length > 0"
-            v-model="showOnlyFiltered"
-            class="jus-timeline__filter-checkbox"
-            size="small">
-            <el-checkbox-button class="jus-timeline__filter-checkbox-item" >
-              <jus-icon
-                class="jus-timeline__filter-icon"
-                :icon="showOnlyFiltered ? 'filter-white' : 'filter'"
-              />
-            </el-checkbox-button>
-          </el-checkbox-group>
-        </div>
-      </li>
-      <li
-        v-for="(progress, progressIndex) in (disputeTimeline.lawsuits)"
-        :key="`progress-${progressIndex}`"
-        class="jus-timeline__list-item">
-        <div class="jus-timeline__header">
-          <div class="jus-timeline__header-title">
-            {{ progress.description || 1 }}ª Instância -
-            <el-link
-              class="jus-timeline__header-link"
-              target="_blank"
-              :underline="false"
-              :href="progress.url">
-              {{ progress.code }}
-              <sup><i class="el-icon-link el-icon--right" /></sup>
-            </el-link>
-          </div>
-          <div class="jus-timeline__header-subtitle">
-            <span v-if="progress.date">
-              Distribuído em {{ progress.date }}
-            </span>
-          </div>
-          <div class="jus-timeline__header-tags">
-            <el-tag
-              v-for="(tag, flagIndex) in progress.tags"
-              :key="`tag-evento-${flagIndex}`"
-              type="secondary"
-              size="small">
-              <strong>{{ tag }}</strong>
-            </el-tag>
-          </div>
-        </div>
-
-        <div class="jus-timeline__body">
-          <el-timeline>
-            <el-timeline-item
-              v-for="(movement, eventIndex) in progress.movements"
-              v-show="matchFilter(movement.description, searchQuery)"
-              :key="`movement-${eventIndex}`"
-              :timestamp="movement.date"
-              placement="top"
-            >
-              <div class="jus-timeline__body-movement">
-                <div
-                  class="jus-timeline__body-description"
-                  v-html="highlight(movement.description, searchQuery)"
-                />
-                <div class="jus-timeline__body-tags">
-                  <el-tag
-                    v-for="(tag, tagIndex) in (movement.tags || [])"
-                    :key="`tag-movement-${tagIndex}`"
-                    type="secondary"
-                    size="small">
-                    <strong>{{ tag }}</strong>
-                  </el-tag>
-                </div>
-              </div>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
-      </li>
-    </ul>
+    width="65%"
+    class="dialog-timeline"
+    :visible.sync="visible">
     <div
-      v-else
-      class="jus-timeline__empty" >
-      <jusIcon icon="empty-screen-filter" />
-      <span class="jus-timeline__empty-label">
-        Dados do processo indisponíveis.
+      slot="title"
+      class="dialog-timeline__title">
+      <span v-if="disputeTimeline.lastUpdated">
+        Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
       </span>
     </div>
-  </el-container>
+    <el-container
+      id="jus-timeline"
+      v-loading="loading"
+      class="jus-timeline">
+      <ul
+        v-if="!loading && (disputeTimeline.lawsuits || []).length"
+        class="jus-timeline__list">
+        <li class="jus-timeline__list-search">
+          <div class="jus-timeline__filter">
+            <el-input
+              v-model="searchQuery"
+              class="jus-timeline__filter-input"
+              placeholder="Filtrar"
+              size="medium"
+              prefix-icon="el-icon-search" />
+            <el-checkbox-group
+              v-if="searchQuery.length > 0"
+              v-model="showOnlyFiltered"
+              class="jus-timeline__filter-checkbox"
+              size="small">
+              <el-checkbox-button class="jus-timeline__filter-checkbox-item" >
+                <jus-icon
+                  class="jus-timeline__filter-icon"
+                  :icon="showOnlyFiltered ? 'filter-white' : 'filter'"
+                />
+              </el-checkbox-button>
+            </el-checkbox-group>
+          </div>
+        </li>
+        <li
+          v-for="(progress, progressIndex) in (disputeTimeline.lawsuits)"
+          :key="`progress-${progressIndex}`"
+          class="jus-timeline__list-item">
+          <div class="jus-timeline__header">
+            <div class="jus-timeline__header-title">
+              {{ progress.description || 1 }}ª Instância -
+              <el-link
+                class="jus-timeline__header-link"
+                target="_blank"
+                :underline="false"
+                :href="progress.url">
+                {{ progress.code }}
+                <sup><i class="el-icon-link el-icon--right" /></sup>
+              </el-link>
+            </div>
+            <div class="jus-timeline__header-subtitle">
+              <span v-if="progress.date">
+                Distribuído em {{ progress.date }}
+              </span>
+            </div>
+            <div class="jus-timeline__header-tags">
+              <el-tag
+                v-for="(tag, flagIndex) in progress.tags"
+                :key="`tag-evento-${flagIndex}`"
+                type="secondary"
+                size="small">
+                <strong>{{ tag }}</strong>
+              </el-tag>
+            </div>
+          </div>
+
+          <div class="jus-timeline__body">
+            <el-timeline>
+              <el-timeline-item
+                v-for="(movement, eventIndex) in progress.movements"
+                v-show="matchFilter(movement.description, searchQuery)"
+                :key="`movement-${eventIndex}`"
+                :timestamp="movement.date"
+                placement="top"
+              >
+                <div class="jus-timeline__body-movement">
+                  <div
+                    class="jus-timeline__body-description"
+                    v-html="highlight(movement.description, searchQuery)"
+                  />
+                  <div class="jus-timeline__body-tags">
+                    <el-tag
+                      v-for="(tag, tagIndex) in (movement.tags || [])"
+                      :key="`tag-movement-${tagIndex}`"
+                      type="secondary"
+                      size="small">
+                      <strong>{{ tag }}</strong>
+                    </el-tag>
+                  </div>
+                </div>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+        </li>
+      </ul>
+      <div
+        v-else
+        class="jus-timeline__empty" >
+        <jusIcon icon="empty-screen-filter" />
+        <span class="jus-timeline__empty-label">
+          Dados do processo indisponíveis.
+        </span>
+      </div>
+    </el-container>
+  </el-dialog>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  props: {
+    value: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       searchQuery: '',
@@ -115,6 +134,15 @@ export default {
       'loading',
       'disputeTimeline',
     ]),
+
+    visible: {
+      get() {
+        return this.value
+      },
+      set(value) {
+        this.$emit('input', false)
+      },
+    },
   },
   beforeDestroy() {
     this.searchQuery = ''
