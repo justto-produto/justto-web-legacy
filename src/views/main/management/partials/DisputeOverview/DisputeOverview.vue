@@ -1670,15 +1670,11 @@ export default {
       disputePartys: [
         {
           value: 'RESPONDENT',
-          label: 'Réu',
+          label: 'Advogado do réu',
         },
         {
           value: 'CLAIMANT',
-          label: 'Parte contrária',
-        },
-        {
-          value: 'IMPARTIAL',
-          label: 'Arbitro/Juiz/Mediador',
+          label: 'Advogado da parte contrária',
         },
         {
           value: 'UNKNOW',
@@ -1854,6 +1850,7 @@ export default {
       this.$nextTick(() => {
         this.disputeTimelineModal = true
       })
+      this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.dispute.id })
     },
 
     buildRoleTitle: (...i) => buildRoleTitle(...i),

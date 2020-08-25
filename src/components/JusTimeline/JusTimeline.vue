@@ -161,6 +161,15 @@ export default {
         return description.toString()
       }
     },
+    openProcessInNewTab(url, processCode) {
+      navigator.clipboard.writeText(processCode)
+      this.$jusNotification({
+        title: 'Yay!',
+        message: 'Código do processo copiado!',
+        type: 'success',
+      })
+      setTimeout(() => window.open(url), 1500)
+    },
   },
 }
 </script>

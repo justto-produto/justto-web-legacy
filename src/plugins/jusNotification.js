@@ -12,7 +12,6 @@ const NOTFOUND = 'Erro 404 (Rota não encontrada).'
 const NotificationMessage = {
   install(Vue, options) {
     Vue.prototype.$jusNotification = (config) => {
-      // debugger
       if (config.error instanceof Error) {
         if (config.error.response) {
           const message = I18n.te('error.' + config.error.response.data.code) ? I18n.t('error.' + config.error.response.data.code) : (config.error.response.data.message ? config.error.response.data.message + '.' : '')

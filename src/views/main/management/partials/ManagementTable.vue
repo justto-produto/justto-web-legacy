@@ -108,13 +108,10 @@
           <el-link
             class="management-table__proccess-code"
             :underline="false"
-            @click="openTimelineModal(scope.row)">
+            @click="openTimelineModal(scope.row)"
+          >
             {{ scope.row.code }}
-            <jus-icon
-              style="height: 0.75rem;"
-              icon="external-link"
-              class="data-table__dispute-link-icon"
-            />
+            <i class="proccess-code__icon el-icon-info" />
           </el-link>
         </template>
       </el-table-column>
@@ -613,6 +610,7 @@ export default {
       this.$nextTick(() => {
         this.disputeTimelineModal = true
       })
+      this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: this.dispute.id })
     },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
@@ -870,6 +868,14 @@ export default {
   }
   .management-table__row-code {
     .management-table__proccess-code {
+      .proccess-code__icon {
+        visibility: hidden;
+      }
+
+      &:hover .proccess-code__icon {
+        visibility: visible;
+      }
+
       .el-link--inner {
         word-break: break-all;
       }
