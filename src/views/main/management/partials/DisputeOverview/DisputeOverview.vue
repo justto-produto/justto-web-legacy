@@ -1534,21 +1534,7 @@
         :document-numbers="documentNumbers"
         :oabs="oabs"
       />
-      <el-dialog
-        v-loading="loading"
-        width="65%"
-        class="dispute-overview-view__timeline"
-        :visible.sync="disputeTimelineModal"
-        @close="hideTimelineModal">
-        <div
-          slot="title"
-          class="dispute-overview-view__timeline-title">
-          <span v-if="disputeTimeline.lastUpdated">
-            Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
-          </span>
-        </div>
-        <jus-timeline />
-      </el-dialog>
+      <jus-timeline v-model="disputeTimelineModal" />
     </div>
   </div>
 </template>
@@ -1703,8 +1689,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      disputeTimeline: 'disputeTimeline',
-      timeline: 'timeline',
       getDisputeProperties: 'disputeProprieties',
       disputeStatuses: 'disputeStatuses',
     }),
@@ -1870,9 +1854,6 @@ export default {
       this.$nextTick(() => {
         this.disputeTimelineModal = true
       })
-    },
-    hideTimelineModal() {
-      this.diputeTimelineModal = false
     },
 
     buildRoleTitle: (...i) => buildRoleTitle(...i),
