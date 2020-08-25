@@ -2,7 +2,7 @@
 [Jira][jira-link]
 
 ## Mudanças
-> Descrição das mudanças realizadas no projeto.
+Descrição das mudanças realizadas no projeto.
 
 ## Screenshot
 (Caso contenha mudanças visuais, adicione uma screenshot).
