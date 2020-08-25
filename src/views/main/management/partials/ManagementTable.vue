@@ -478,21 +478,7 @@
         </el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      v-loading="loading"
-      width="65%"
-      class="dialog-timeline"
-      :visible.sync="disputeTimelineModal"
-      @close="hideTimelineModal">
-      <div
-        slot="title"
-        class="dialog-timeline__title">
-        <span v-if="disputeTimeline.lastUpdated">
-          Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
-        </span>
-      </div>
-      <jus-timeline />
-    </el-dialog>
+    <jus-timeline v-model="disputeTimelineModal"/>
   </div>
 </template>
 
@@ -626,12 +612,6 @@ export default {
       this.getDisputeTimeline(dispute.code)
       this.$nextTick(() => {
         this.disputeTimelineModal = true
-      })
-    },
-    hideTimelineModal() {
-      this.diputeTimelineModal = false
-      this.$nextTick(() => {
-        this.currentDisputeId = null
       })
     },
     cellMouseEnter(row, column, cell, event) {
