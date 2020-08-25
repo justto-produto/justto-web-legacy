@@ -696,7 +696,13 @@ export default {
                 cancelButtonClass: 'is-plain',
                 type: 'warning',
               }).then(() => {
-                this.deleteDocument(this.dispute.id)
+                this.deleteDocument(this.dispute.id).then(() => {
+                  this.$jusNotification({
+                    type: 'success',
+                    title: 'Yay!',
+                    message: 'Documento excluido com sucesso',
+                  })
+                })
               })
             }
           })

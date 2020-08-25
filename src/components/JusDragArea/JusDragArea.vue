@@ -102,7 +102,6 @@ export default {
       const formData = new FormData()
       formData.append('file', file)
 
-
       return this.uploadAttachment({
         disputeId,
         formData,
