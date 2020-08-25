@@ -1872,6 +1872,7 @@ export default {
       this.$nextTick(() => {
         this.disputeTimelineModal = true
       })
+      this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.dispute.id })
     },
     hideTimelineModal() {
       this.diputeTimelineModal = false

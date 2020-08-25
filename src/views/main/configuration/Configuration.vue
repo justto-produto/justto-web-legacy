@@ -33,7 +33,7 @@
                   <el-input v-model="person.name">
                     <el-button
                       slot="append"
-                      @click="changeName"
+                      @click="changeName(person, true)"
                     >
                       Alterar
                     </el-button>
@@ -281,7 +281,7 @@
           <configuration-blacklist />
         </el-tab-pane>
         <el-tab-pane
-          v-if="$store.getters.isJusttoAdmin"
+          v-if="isJusttoAdmin"
           name="minute"
           class="configuration-view__minute"
         >
@@ -297,11 +297,16 @@
       <el-dialog
         v-if="currentEditMember.person"
         :close-on-click-modal="false"
-        :title="currentEditMember.person.name"
+        :title="`Editar membro ${currentEditMember.person.name}`"
         :visible.sync="dialogMember"
         width="400px"
       >
         <el-form label-position="top">
+          <el-form-item
+            v-if="isAdminProfile || isJusttoAdmin"
+            label="Nome">
+            <el-input v-model="currentEditMember.person.name" />
+          </el-form-item>
           <el-form-item label="Perfil">
             <el-select v-model="currentEditMember.profile">
               <el-option
@@ -317,11 +322,15 @@
           <el-button
             plain
             @click="dialogMember = false"
-          >Cancelar</el-button>
+          >
+            Cancelar
+          </el-button>
           <el-button
             type="primary"
-            @click="editMember"
-          >Salvar alterações</el-button>
+            @click="changeName(currentEditMember.person, false); editMember()"
+          >
+            Salvar alterações
+          </el-button>
         </span>
       </el-dialog>
       <el-dialog
@@ -402,12 +411,16 @@
           <el-button
             plain
             @click="cancelChangePassword"
-          >Cancelar</el-button>
+          >
+            Cancelar
+          </el-button>
           <el-button
             :loading="loadingUpdatePassword"
             type="primary"
             @click="updatePassword"
-          >Alterar senha</el-button>
+          >
+            Alterar senha
+          </el-button>
         </span>
       </el-dialog>
       <el-dialog
@@ -449,7 +462,9 @@
             :loading="loadingInvite"
             type="primary"
             @click="inviteTeammate"
-          >Convidar</el-button>
+          >
+            Convidar
+          </el-button>
         </span>
       </el-dialog>
     </div>
@@ -577,32 +592,24 @@ export default {
     getMembers() {
       this.$store.dispatch('getWorkspaceMembers')
     },
-    changeName() {
-      if (this.person.name) {
-        if (this.person.name.length > 2) {
-          this.$store.dispatch('changePersonName', this.person)
-            .then(response => {
-              // SEGMENT TRACK
-              this.$jusSegment('Nome do usuário alterado')
-              this.$jusNotification({
-                title: 'Yay!',
-                message: 'Nome alterado com sucesso.',
-                type: 'success',
-              })
-            }).catch(error => {
-              this.$jusNotification({ error })
+    changeName(person, isEditingLoggedPerson) {
+      if (person.name && person.name.length > 2) {
+        this.$store.dispatch('changePersonName', { person, isEditingLoggedPerson })
+          .then(response => {
+            // SEGMENT TRACK
+            this.$jusSegment('Nome do usuário alterado')
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Nome alterado com sucesso.',
+              type: 'success',
             })
-        } else {
-          this.$jusNotification({
-            title: 'Ops!',
-            message: 'Nome precisa conter mais de 3 caracteres.',
-            type: 'warning',
+          }).catch(error => {
+            this.$jusNotification({ error })
           })
-        }
       } else {
         this.$jusNotification({
           title: 'Ops!',
-          message: 'Nome não pode ficar em branco.',
+          message: 'Nome precisa conter mais de 3 caracteres.',
           type: 'warning',
         })
       }
@@ -709,6 +716,7 @@ export default {
     },
     showEditMember(member) {
       this.currentEditMember = JSON.parse(JSON.stringify(member))
+      // this.currentEditMemberName = this.currentEditMember.person.name
       this.dialogMember = true
     },
     editMember() {

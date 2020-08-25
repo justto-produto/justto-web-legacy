@@ -20,7 +20,10 @@
           <!-- <el-menu-item index="2">
             <i class="el-icon-user-solid" /> Usuários
           </el-menu-item> -->
-          <el-menu-item index="3">
+          <el-menu-item
+            v-if="['lucas@justto.com.br', 'kelvin@justto.com.br'].includes(this.$store.getters.accountEmail)"
+            index="3"
+          >
             <i class="el-icon-s-operation" /> Estratégias
           </el-menu-item>
           <!-- <el-menu-item index="4">

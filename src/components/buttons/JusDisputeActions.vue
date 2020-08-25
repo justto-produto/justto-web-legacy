@@ -611,6 +611,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      'deleteDocument',
       'disputeSetVisualized',
       'getDisputeStatuses',
       'removeDispute',
@@ -687,7 +688,24 @@ export default {
           this.doAction(action, message)
           break
         case 'renegotiate':
-          this.doAction(action, message)
+          this.doAction(action, message).then(() => {
+            if (this.dispute.hasDocument) {
+              this.$confirm('Esta disputa possui documento gerado, deseja exclui-lo?', 'Excluir documento', {
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Cancelar',
+                cancelButtonClass: 'is-plain',
+                type: 'warning',
+              }).then(() => {
+                this.deleteDocument(this.dispute.id).then(() => {
+                  this.$jusNotification({
+                    type: 'success',
+                    title: 'Yay!',
+                    message: 'Documento excluido com sucesso',
+                  })
+                })
+              })
+            }
+          })
           break
         case 'counterproposal':
           if (this.dispute.paused) {
@@ -789,6 +807,7 @@ export default {
       })
     },
     dropLawsuit() {
+      this.$jusSegment('Baixa definitiva na disputa', { disputeId: this.dispute.id })
       this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
@@ -804,6 +823,7 @@ export default {
     },
     goToNegotiation() {
       this.startNegotiation(this.dispute.id)
+      this.$jusSegment('Negociação iniciada na disputa', { disputeId: this.dispute.id })
     },
     openNewTab() {
       const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })
