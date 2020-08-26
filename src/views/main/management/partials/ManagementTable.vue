@@ -108,13 +108,10 @@
           <el-link
             class="management-table__proccess-code"
             :underline="false"
-            @click="openTimelineModal(scope.row)">
+            @click="openTimelineModal(scope.row)"
+          >
             {{ scope.row.code }}
-            <jus-icon
-              style="height: 0.75rem;"
-              icon="external-link"
-              class="data-table__dispute-link-icon"
-            />
+            <i class="proccess-code__icon el-icon-info" />
           </el-link>
         </template>
       </el-table-column>
@@ -483,10 +480,12 @@
       width="65%"
       class="dialog-timeline"
       :visible.sync="disputeTimelineModal"
-      @close="hideTimelineModal">
+      @close="hideTimelineModal"
+    >
       <div
         slot="title"
-        class="dialog-timeline__title">
+        class="dialog-timeline__title"
+      >
         <span v-if="disputeTimeline.lastUpdated">
           Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
         </span>
@@ -891,6 +890,14 @@ export default {
   }
   .management-table__row-code {
     .management-table__proccess-code {
+      .proccess-code__icon {
+        visibility: hidden;
+      }
+
+      &:hover .proccess-code__icon {
+        visibility: visible;
+      }
+
       .el-link--inner {
         word-break: break-all;
       }

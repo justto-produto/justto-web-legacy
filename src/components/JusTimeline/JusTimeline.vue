@@ -7,29 +7,36 @@
       v-if="!loading && (disputeTimeline.lawsuits || []).length"
       class="jus-timeline__list">
       <li
-        v-for="(progress, progressIndex) in (disputeTimeline.lawsuits)"
-        :key="`progress-${progressIndex}`"
+        v-for="(process, processIndex) in (disputeTimeline.lawsuits)"
+        :key="`process-${processIndex}`"
         class="jus-timeline__list-item">
         <div class="jus-timeline__header">
           <div class="jus-timeline__header-title">
-            {{ progress.description || 1 }}ª Instância -
+            {{ process.description || 1 }}ª Instância -
             <el-link
               class="jus-timeline__header-link"
               target="_blank"
               :underline="false"
-              :href="progress.url">
-              {{ progress.code }}
-              <sup><i class="el-icon-link el-icon--right" /></sup>
+              @click="openProcessInNewTab(process.url, process.code)"
+            >
+              {{ process.code }}
+              <sup>
+                <jus-icon
+                  style="height: 0.75rem;"
+                  icon="external-link"
+                  class="data-table__dispute-link-icon"
+                />
+              </sup>
             </el-link>
           </div>
           <div class="jus-timeline__header-subtitle">
-            <span v-if="progress.date">
-              Distribuído em {{ progress.date }}
+            <span v-if="process.date">
+              Distribuído em {{ process.date }}
             </span>
           </div>
           <div class="jus-timeline__header-tags">
             <el-tag
-              v-for="(tag, flagIndex) in progress.tags"
+              v-for="(tag, flagIndex) in process.tags"
               :key="`tag-evento-${flagIndex}`"
               type="secondary"
               size="small">
@@ -41,7 +48,7 @@
         <div class="jus-timeline__body">
           <el-timeline>
             <el-timeline-item
-              v-for="(movement, eventIndex) in progress.movements"
+              v-for="(movement, eventIndex) in process.movements"
               :key="`movement-${eventIndex}`"
               :timestamp="movement.date"
               placement="top"
@@ -87,6 +94,15 @@ export default {
   },
   methods: {
     ...mapActions(['showLoading', 'hideLoading']),
+    openProcessInNewTab(url, processCode) {
+      navigator.clipboard.writeText(processCode)
+      this.$jusNotification({
+        title: 'Yay!',
+        message: 'Código do processo copiado!',
+        type: 'success',
+      })
+      setTimeout(() => window.open(url), 1500)
+    },
   },
 }
 </script>

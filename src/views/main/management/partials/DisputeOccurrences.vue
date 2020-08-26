@@ -539,15 +539,11 @@ export default {
       disputePartys: [
         {
           value: 'RESPONDENT',
-          label: 'Réu',
+          label: 'Advogado do réu',
         },
         {
           value: 'CLAIMANT',
-          label: 'Parte contrária',
-        },
-        {
-          value: 'IMPARTIAL',
-          label: 'Arbitro/Juiz/Mediador',
+          label: 'Advogado da parte contrária',
         },
         {
           value: 'UNKNOW',
