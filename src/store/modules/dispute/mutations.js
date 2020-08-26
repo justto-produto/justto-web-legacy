@@ -1,14 +1,11 @@
 import Vue from 'vue'
 
 const disputeMutations = {
-  setDisputeTimeline(state, timeline) {
-    state.timeline = timeline
+  setDisputeTimeline(state, { timeline, code }) {
+    state.timeline[code] = timeline
   },
   cleanDisputeTimeline(state) {
-    state.timeline = {
-      lastUpdated: '',
-      lawsuits: [],
-    }
+    state.timeline = { }
   },
   setDisputes(state, pageable) {
     state.disputes = pageable.content

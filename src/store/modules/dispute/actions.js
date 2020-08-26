@@ -188,11 +188,13 @@ const disputeActions = {
     // })
   },
   getDisputeTimeline({ commit }, disputeCode) {
-    commit('cleanDisputeTimeline')
     commit('showLoading')
     return axiosDispatcher({
       url: `/api/fusion/lawsuit/timeline/${disputeCode}`,
-      mutation: 'setDisputeTimeline',
+    }).then(res => {
+      commit('setDisputeTimeline', { timeline: res, code: disputeCode })
+    }).catch(() => {
+      commit('setDisputeTimeline', { timeline: { lastUpdated: '', lawsuits: [] }, code: disputeCode })
     }).finally(() => commit('hideLoading'))
   },
   exportProtocols({ state }) {
