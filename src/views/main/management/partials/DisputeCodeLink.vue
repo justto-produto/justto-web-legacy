@@ -86,7 +86,7 @@ export default {
     .dispute-code__icon { visibility: hidden; }
     .el-link--inner { word-break: break-all; }
   }
-  
+
   &:hover .dispute-code__proccess-link .dispute-code__icon {
     visibility: visible;
   }
