@@ -11,7 +11,6 @@
         Pesquisado em {{ $moment(dispute.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
       </span>
     </div>
-    <!-- <pre>{{ dispute }}</pre> -->
     <el-container
       id="jus-timeline"
       v-loading="loading"
@@ -72,9 +71,10 @@
               <el-tag
                 v-for="(tag, flagIndex) in process.tags"
                 :key="`tag-evento-${flagIndex}`"
+                class="jus-timeline__tag"
                 type="secondary"
                 size="small">
-                <strong>{{ tag }}</strong>
+                {{ tag }}
               </el-tag>
             </div>
           </div>
@@ -99,7 +99,7 @@
                       :key="`tag-movement-${tagIndex}`"
                       type="secondary"
                       size="small">
-                      <strong>{{ tag }}</strong>
+                      {{ tag }}
                     </el-tag>
                   </div>
                 </div>
@@ -199,109 +199,130 @@ export default {
 .highlight {
   background-color: yellow !important;
 }
+.dialog-timeline {
+  .dialog-timeline__title {
+    font-weight: bold;
+    text-align: center;
+    padding-top: 20px;
+  }
 
-.jus-timeline {
-  background-color: transparent;
-  width: 100%;
-
-  .jus-timeline__list {
-    padding-inline-start: 8px;
+  .jus-timeline {
+    // margin-top: -30px;
+    background-color: transparent;
     width: 100%;
 
-    .jus-timeline__list-search {
-      list-style: none;
+    .jus-timeline__list {
+      padding-inline-start: 8px;
       width: 100%;
 
-      .jus-timeline__filter {
-        float: right;
-        display: flex;
-        margin: 8px 8px auto auto;
-        width: 25%;
+      .jus-timeline__list-search {
+        list-style: none;
+        width: 100%;
 
-        .jus-timeline__filter-input {
-          flex: 1;
-        }
+        .jus-timeline__filter {
+          float: right;
+          display: flex;
+          margin: 8px 8px auto auto;
+          width: 25%;
 
-        .jus-timeline__filter-checkbox {
-          margin-left: 10px;
+          .jus-timeline__filter-input {
+            flex: 1;
+          }
 
-          .jus-timeline__filter-checkbox-item {
-            .el-checkbox-button__inner {
-              .jus-timeline__filter-icon {
-                height: 1rem;
+          .jus-timeline__filter-checkbox {
+            margin-left: 10px;
+
+            .jus-timeline__filter-checkbox-item {
+              .el-checkbox-button__inner {
+                .jus-timeline__filter-icon {
+                  height: 1rem;
+                }
               }
             }
           }
-        }
 
-        .jus-timeline__filter-button {
-          span > img {
-            height: 1rem;
-          }
-          &.active {
-            background-color: #9461f7;
-          }
-        }
-      }
-    }
-
-    .jus-timeline__list-item {
-      list-style: none;
-
-      .jus-timeline__header {
-        .jus-timeline__header-title {
-          color: #424242;
-          letter-spacing: 0px;
-          font: normal normal bold 23px/35px Montserrat;
-
-          word-break: break-all;
-
-          .jus-timeline__header-link {
-            color: #424242;
-            letter-spacing: 0px;
-            font: normal normal bold 23px/35px Montserrat;
-            word-break: break-all;
-            margin-bottom: 8px;
-            &:hover {
-              color: $--color-primary;
+          .jus-timeline__filter-button {
+            span > img {
+              height: 1rem;
+            }
+            &.active {
+              background-color: #9461f7;
             }
           }
         }
-        .jus-timeline__header-subtitle {
-          font: normal normal medium 17px/22px Montserrat;
-          letter-spacing: 0px;
-          color: #ADADAD;
-        }
-        .jus-timeline__header-tags {
-          margin: 8px 8px auto auto;
-          display: flex;
-        }
       }
 
-      .jus-timeline__body {
-        margin-left: -24px;
-        margin-top: 24px;
+      .jus-timeline__list-item {
+        list-style: none;
 
-        .jus-timeline__body-tags {
-          margin: 8px 8px auto auto;
-          display: flex;
+        .jus-timeline__header {
+          .jus-timeline__header-title {
+            color: #424242;
+            letter-spacing: 0px;
+            font: normal normal bold 23px/35px Montserrat;
+
+            word-break: break-all;
+
+            .jus-timeline__header-link {
+              color: #424242;
+              letter-spacing: 0px;
+              font: normal normal bold 23px/35px Montserrat;
+              word-break: break-all;
+              margin-bottom: 8px;
+              &:hover {
+                color: $--color-primary;
+              }
+            }
+          }
+          .jus-timeline__header-subtitle {
+            font: normal normal medium 17px/22px Montserrat;
+            letter-spacing: 0px;
+            color: #ADADAD;
+          }
+          .jus-timeline__header-tags {
+            margin: 8px 8px auto auto;
+            display: flex;
+
+            .jus-timeline__tag {
+              max-width: 100%;
+              overflow-x: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+
+        .jus-timeline__body {
+          margin-left: -24px;
+          margin-top: 24px;
+
+          .jus-timeline__body-tags {
+            margin: 8px 8px auto auto;
+            display: flex;
+
+            .jus-timeline__tag {
+              max-width: 100%;
+              overflow-x: hidden;
+              text-overflow: ellipsis;
+            }
+          }
         }
       }
     }
-  }
 
-  .jus-timeline__empty {
-    margin: 32px auto;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    .jus-timeline__empty {
+      margin: 32px auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
 
-    .jus-timeline__empty-label {
-      margin-top: 24px;
-      color: $--color-text-secondary;
+      .jus-timeline__empty-label {
+        margin-top: 24px;
+        color: $--color-text-secondary;
+      }
     }
   }
 }
+
 </style>
