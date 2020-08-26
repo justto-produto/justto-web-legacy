@@ -113,21 +113,6 @@
                   icon="external-link"
                 />
               </el-link>
-              <!-- <span
-                v-if="!!getDisputeProperties.ENDERECO_DO_PROCESSO"
-                class="code"
-              >
-                <el-link
-                  class="link"
-                  @click="openTimelineModal(dispute)">
-                  {{ dispute.code }}
-                  <jus-icon
-                    class="icon"
-                    icon="external-link"
-                  />
-                </el-link>
-              </span>
-              <span v-else>{{ dispute.code }}</span> -->
             </div>
             <div
               v-if="dispute.campaign"
@@ -1534,7 +1519,11 @@
         :document-numbers="documentNumbers"
         :oabs="oabs"
       />
-      <jus-timeline v-model="disputeTimelineModal" />
+      <jus-timeline
+        v-if="disputeTimelineModal"
+        v-model="disputeTimelineModal"
+        :code="dispute.code"
+      />
     </div>
   </div>
 </template>
@@ -1837,6 +1826,8 @@ export default {
         this.deleteTypes = response
       })
     }
+    console.log('DISPUTA CARALHO', this.dispute.code)
+    this.getDisputeTimeline(this.dispute.code)
   },
   methods: {
     ...mapActions([
@@ -1846,10 +1837,7 @@ export default {
     ]),
 
     openTimelineModal(dispute) {
-      this.getDisputeTimeline(dispute.code)
-      this.$nextTick(() => {
-        this.disputeTimelineModal = true
-      })
+      this.disputeTimelineModal = true
       this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.dispute.id })
     },
 
