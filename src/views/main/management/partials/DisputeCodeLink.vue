@@ -86,6 +86,7 @@ export default {
       justify-content: space-between;
 
       .el-link--inner {
+        font-size: 12px;
         width: 100%;
         flex: 1;
         display: flex;
