@@ -108,10 +108,22 @@
           <el-link
             class="management-table__proccess-code"
             :underline="false"
+            @mouseover.native="hoverDisputeCode(scope.row.code)"
             @click="openTimelineModal(scope.row)"
           >
             {{ scope.row.code }}
-            <i class="proccess-code__icon el-icon-info" />
+            <i
+              v-if="!disputeTimeline[scope.row.code]"
+              class="proccess-code__icon el-icon-loading"
+            />
+            <i
+              v-else-if="disputeTimeline[scope.row.code].lawsuits && disputeTimeline[scope.row.code].lawsuits.length === 0"
+              class="proccess-code__icon el-icon-error"
+            />
+            <i
+              v-else
+              class="proccess-code__icon el-icon-info"
+            />
           </el-link>
         </template>
       </el-table-column>
@@ -475,7 +487,11 @@
         </el-button>
       </span>
     </el-dialog>
-    <jus-timeline v-model="disputeTimelineModal" />
+    <jus-timeline
+      v-if="currentDisputeCode"
+      v-model="disputeTimelineModal"
+      :code="currentDisputeCode"
+    />
   </div>
 </template>
 
@@ -524,7 +540,7 @@ export default {
   },
   data() {
     return {
-      currentDisputeId: null,
+      currentDisputeCode: null,
       disputeTimelineModal: false,
       showEmpty: false,
       showEmptyDebounce: '',
@@ -605,8 +621,19 @@ export default {
   },
   methods: {
     ...mapActions(['getDisputeTimeline']),
+
+    hoverDisputeCode(code) {
+      if (!this.disputeTimeline[code]) {
+        this.getDisputeTimeline(code)
+      }
+    },
+
     openTimelineModal(dispute) {
-      this.getDisputeTimeline(dispute.code)
+      const { code } = dispute
+      if (!this.disputeTimeline[code] || this.disputeTimeline[code].lawsuits.length === 0) {
+        return
+      }
+      this.currentDisputeCode = code
       this.$nextTick(() => {
         this.disputeTimelineModal = true
       })
@@ -867,13 +894,29 @@ export default {
     font-size: 1rem;
   }
   .management-table__row-code {
+    &:hover .management-table__proccess-code .proccess-code__icon {
+        visibility: visible;
+      }
     .management-table__proccess-code {
-      .proccess-code__icon {
-        visibility: hidden;
+      display: flex;
+
+      .el-link--inner {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .el-icon-loading {
+          color: #909399;
+        }
+
+        .el-icon-error {
+          color: #F56C6C;
+        }
       }
 
-      &:hover .proccess-code__icon {
-        visibility: visible;
+      .proccess-code__icon {
+        visibility: hidden;
       }
 
       .el-link--inner {
