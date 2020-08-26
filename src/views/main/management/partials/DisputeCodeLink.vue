@@ -3,21 +3,15 @@
     id="dispute-code"
     class="dispute-code"
   >
-    <el-popover
-      slot="reference"
-      class="dispute-code__popover"
+    <el-tooltip
+      class="dispute-code__tooltip"
       :content="status.text"
-      popper-class="el-popover--dark"
-      :visible-arrow="false"
-      placement="right"
-      trigger="hover"
+      placement="top"
     >
       <div
-        slot="reference"
-        class="dispute-code__popover-reference"
+        class="dispute-code__tooltip-reference"
       >
         <el-link
-          :ref="`dispute-code-${code}`"
           class="dispute-code__proccess-link"
           :underline="false"
           @mouseover.native="handleHoverEvent"
@@ -29,7 +23,7 @@
           />
         </el-link>
       </div>
-    </el-popover>
+    </el-tooltip>
   </section>
 </template>
 
@@ -79,42 +73,40 @@ export default {
   background: transparent !important;
   width: 100%;
   &:hover {
-    .dispute-code__popover .dispute-code__popover-reference .dispute-code__proccess-link .dispute-code__icon {
+    .dispute-code__tooltip .dispute-code__proccess-link .dispute-code__icon {
       visibility: visible;
     }
   }
 
-  .dispute-code__popover {
-    .dispute-code__popover-reference {
-      .dispute-code__proccess-link {
+  .dispute-code__tooltip {
+    .dispute-code__proccess-link {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .el-link--inner {
         width: 100%;
+        flex: 1;
         display: flex;
         align-items: center;
         justify-content: space-between;
 
-        .el-link--inner {
-          width: 100%;
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          .el-icon-loading {
-            color: #909399;
-          }
-
-          .el-icon-error {
-            color: #F56C6C;
-          }
+        .el-icon-loading {
+          color: #909399;
         }
 
-        .dispute-code__icon {
-          visibility: hidden;
+        .el-icon-error {
+          color: #F56C6C;
         }
+      }
 
-        .el-link--inner {
-          word-break: break-all;
-        }
+      .dispute-code__icon {
+        visibility: hidden;
+      }
+
+      .el-link--inner {
+        word-break: break-all;
       }
     }
   }
