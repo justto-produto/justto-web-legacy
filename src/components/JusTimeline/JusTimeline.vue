@@ -7,16 +7,17 @@
     <div
       slot="title"
       class="dialog-timeline__title">
-      <span v-if="disputeTimeline.lastUpdated">
-        Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
+      <span v-if="dispute.lastUpdated">
+        Pesquisado em {{ $moment(dispute.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
       </span>
     </div>
+    <!-- <pre>{{ dispute }}</pre> -->
     <el-container
       id="jus-timeline"
       v-loading="loading"
       class="jus-timeline">
       <ul
-        v-if="!loading && (disputeTimeline.lawsuits || []).length"
+        v-if="!loading && (dispute.lawsuits || []).length"
         class="jus-timeline__list">
         <li class="jus-timeline__list-search">
           <div class="jus-timeline__filter">
@@ -41,7 +42,7 @@
           </div>
         </li>
         <li
-          v-for="(process, processIndex) in (disputeTimeline.lawsuits)"
+          v-for="(process, processIndex) in (dispute.lawsuits)"
           :key="`process-${processIndex}`"
           class="jus-timeline__list-item">
           <div class="jus-timeline__header">
@@ -128,6 +129,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    code: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -140,6 +145,10 @@ export default {
       'loading',
       'disputeTimeline',
     ]),
+
+    dispute() {
+      return this.disputeTimeline[this.code]
+    },
 
     visible: {
       get() {
