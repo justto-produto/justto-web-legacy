@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 const disputeMutations = {
   setDisputeTimeline(state, { timeline, code }) {
-    state.timeline[code] = timeline
+    Vue.set(state.timeline, code, timeline)
   },
   cleanDisputeTimeline(state) {
     state.timeline = { }
