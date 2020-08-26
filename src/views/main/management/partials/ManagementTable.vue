@@ -106,26 +106,10 @@
         prop="code"
       >
         <template slot-scope="scope">
-          <el-link
-            class="management-table__proccess-code"
-            :underline="false"
-            @mouseover.native="hoverDisputeCode(scope.row.code)"
-          >
-            {{ scope.row.code }}
-
-            <i
-              v-if="!disputeTimeline[scope.row.code]"
-              class="proccess-code__icon el-icon-loading"
-            />
-            <i
-              v-else-if="disputeTimeline[scope.row.code].lawsuits && disputeTimeline[scope.row.code].lawsuits.length === 0"
-              class="proccess-code__icon el-icon-error"
-            />
-            <i
-              v-else
-              class="proccess-code__icon el-icon-info"
-            />
-          </el-link>
+          <dispute-code-link
+            :code="scope.row.code"
+            @hover="hoverDisputeCode(scope.row.code)"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -518,6 +502,7 @@ Quill.register(SizeStyle, true)
 export default {
   name: 'ManagementTable',
   components: {
+    DisputeCodeLink: () => import('./DisputeCodeLink'),
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
@@ -893,37 +878,6 @@ export default {
     margin: 20px 0 10px;
     color: #adadad;
     font-size: 1rem;
-  }
-  .management-table__row-code {
-    &:hover .management-table__proccess-code .proccess-code__icon {
-        visibility: visible;
-      }
-    .management-table__proccess-code {
-      display: flex;
-
-      .el-link--inner {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .el-icon-loading {
-          color: #909399;
-        }
-
-        .el-icon-error {
-          color: #F56C6C;
-        }
-      }
-
-      .proccess-code__icon {
-        visibility: hidden;
-      }
-
-      .el-link--inner {
-        word-break: break-all;
-      }
-    }
   }
 }
 .dialog-timeline {
