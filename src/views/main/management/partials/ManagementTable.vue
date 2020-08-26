@@ -18,6 +18,7 @@
       class="management-table el-table--disputes"
       data-testid="dispute-index"
       @cell-mouse-enter="cellMouseEnter"
+      @cell-click="openTimelineModal($event)"
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange">
       <el-table-column
@@ -109,9 +110,9 @@
             class="management-table__proccess-code"
             :underline="false"
             @mouseover.native="hoverDisputeCode(scope.row.code)"
-            @click="openTimelineModal(scope.row)"
           >
             {{ scope.row.code }}
+
             <i
               v-if="!disputeTimeline[scope.row.code]"
               class="proccess-code__icon el-icon-loading"
@@ -637,7 +638,7 @@ export default {
       this.$nextTick(() => {
         this.disputeTimelineModal = true
       })
-      this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: this.dispute.id })
+      this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: dispute.id })
     },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
@@ -701,7 +702,7 @@ export default {
       }
     },
     handleRowClick(row, column, event) {
-      if (row.id && !['IMG', 'SPAN', 'BUTTON'].includes(event.target.tagName)) {
+      if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
