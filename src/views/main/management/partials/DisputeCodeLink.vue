@@ -1,28 +1,22 @@
 <template>
   <section
     id="dispute-code"
-    class="dispute-code"
-  >
+    class="dispute-code">
     <el-tooltip
-      class="dispute-code__tooltip"
       :content="status.text"
-      placement="top"
-    >
-      <div
-        class="dispute-code__tooltip-reference"
-      >
+      placement="right">
+      <span>
         <el-link
           class="dispute-code__proccess-link"
           :underline="false"
-          @mouseover.native="handleHoverEvent"
-        >
+          @mouseover.native="handleHoverEvent">
           {{ code }}
           <i
             :class="status.icon"
             class="dispute-code__icon"
           />
         </el-link>
-      </div>
+      </span>
     </el-tooltip>
   </section>
 </template>
@@ -37,19 +31,17 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      'disputeTimeline',
-    ]),
+    ...mapGetters(['disputeTimeline']),
+
     status() {
-      let icon = ''
-      let text = ''
+      let icon, text
       if (this.disputeTimeline[this.code]) {
         if (this.disputeTimeline[this.code].lawsuits.length) {
           icon = 'el-icon-info'
           text = 'Abrir Timeline da disputa'
         } else {
           icon = 'el-icon-error'
-          text = 'Código da disputa não encontrada no TJ.'
+          text = 'Disputa não encontrada no TJ.'
         }
       } else {
         icon = 'el-icon-loading'
@@ -68,48 +60,35 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
 
 .dispute-code {
   background: transparent !important;
   width: 100%;
-  &:hover {
-    .dispute-code__tooltip .dispute-code__proccess-link .dispute-code__icon {
-      visibility: visible;
-    }
-  }
 
-  .dispute-code__tooltip {
-    .dispute-code__proccess-link {
+  .dispute-code__proccess-link {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .el-link--inner {
+      font-size: 12px;
       width: 100%;
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: space-between;
-
-      .el-link--inner {
-        font-size: 12px;
-        width: 100%;
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .el-icon-loading {
-          color: #909399;
-        }
-
-        .el-icon-error {
-          color: #F56C6C;
-        }
-      }
-
-      .dispute-code__icon {
-        visibility: hidden;
-      }
-
-      .el-link--inner {
-        word-break: break-all;
-      }
+      .el-icon-loading { color: $--color-text-secondary; }
+      .el-icon-error { color: $--color-danger; }
     }
+
+    .dispute-code__icon { visibility: hidden; }
+    .el-link--inner { word-break: break-all; }
+  }
+  
+  &:hover .dispute-code__proccess-link .dispute-code__icon {
+    visibility: visible;
   }
 }
 </style>
