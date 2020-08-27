@@ -17,11 +17,12 @@
       </div>
       <el-menu
         ref="sideMenu"
+        class="el-menu--main-menu aside__menu"
+        :class="{ teamOpen: isTeamSectionOpen }"
         :collapse-transition="false"
         :collapse="isCollapse"
         :default-active="$route.path"
         router
-        class="el-menu--main-menu"
       >
         <el-menu-item index="/">
           <jus-icon
@@ -30,11 +31,6 @@
           />
           <span slot="title">Dashboard</span>
         </el-menu-item>
-        <!-- <transition name="fade">
-          <li v-if="!isCollapse" class="el-menu__title">
-            <span>GERENCIAMENTO</span>
-          </li>
-        </transition> -->
         <el-menu-item
           index="/management"
           data-testid="menu-management"
@@ -70,8 +66,14 @@
       <div
         v-show="workspaceMembers.length && isAdminProfile"
         class="jus-team-menu__title"
+        :class="{ teamOpen: isTeamSectionOpen }"
+        @click="toggleOpenTeamSection"
       >
         TIME
+        <jus-icon
+          class="menu__title__icon"
+          :icon="isTeamSectionOpen? 'arrow-up' : 'arrow-down'"
+        />
       </div>
       <vue-perfect-scrollbar v-if="isAdminProfile">
         <jus-team-menu />
@@ -101,6 +103,7 @@ export default {
     return {
       subscriptions: [],
       isCollapse: true,
+      isTeamSectionOpen: false,
     }
   },
   computed: {
@@ -154,6 +157,9 @@ export default {
         this.subscriptions.forEach(s => this.$socket.emit('subscribe', s))
       }
     },
+    toggleOpenTeamSection() {
+      this.isTeamSectionOpen = !this.isTeamSectionOpen
+    },
   },
 }
 
@@ -198,44 +204,31 @@ export default {
   vertical-align: middle;
 }
 
-.container-header {
-  background-color: #fff;
-  box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
-  z-index: 1;
+.jus-team-menu__title {
+  cursor: pointer;
   display: flex;
-}
+  align-items: center;
+  justify-content: center;
 
-.container-search {
-  display: flex;
-  width: 100%;
-  input {
-    border: 0;
-    outline: 0;
-    height: 58px;
-    font-size: 16px;
-    opacity: .75;
-    width: 98%;
+  &.teamOpen {
+    margin-top: 0;
+  }
+
+  .menu__title__icon {
+    margin-left: 3px;
   }
 }
 
-.container-info {
-  .el-dropdown-link {
-    display: flex;
-    align-items: center;
-    margin: 8px 0;
-    cursor: pointer;
+.aside__menu {
+  li {
+    transition: all 0.3s;
   }
-}
 
-.container-info__name {
-  margin: 0 10px;
-  div {
-    white-space: nowrap;
-    font-weight: 600;
-  }
-  span {
-    font-size: 12px;
-    color: #666666;
+  &.teamOpen {
+    li {
+      overflow: hidden;
+      height: 0;
+    }
   }
 }
 </style>
