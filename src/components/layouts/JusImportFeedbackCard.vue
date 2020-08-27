@@ -146,6 +146,21 @@
       <div class="jus-import-feedback-card__switch">
         <i class="el-icon-circle-check el-input__icon--success" />
         <div class="content">
+          <div>Percentual da primeira proposta sobre a alçada máxima</div>
+          <el-slider
+            v-model="initialOfferPercentage"
+            :min="0"
+            :max="100"
+            :show-stops="true"
+            :marks="marks"
+            label="Percentual da primeira proposta sobre a alçada máxima"
+          >
+          </el-slider>
+        </div>
+      </div>
+      <div class="jus-import-feedback-card__switch">
+        <i class="el-icon-circle-check el-input__icon--success" />
+        <div class="content">
           <div>Enviar mensagens somente em horário comercial</div>
           <p>
             Deixando <b>selecionada</b> esta opção, iremos agendar o envio das mensagens somente dentro do horário comercial.
@@ -247,6 +262,18 @@ export default {
           return date < new Date()
         },
       },
+      initialOfferPercentage: 60,
+      marks: {
+        10: '10%',
+        20: '20%',
+        30: '30%',
+        40: '40%',
+        50: '50%',
+        60: '60%',
+        70: '70%',
+        80: '80%',
+        90: '90%',
+      },
     }
   },
   computed: {
@@ -330,6 +357,9 @@ export default {
     paymentDeadLine(value) {
       this.mappedCampaign.paymentDeadLine = value
     },
+    initialOfferPercentage(value) {
+      this.mappedCampaign.initialOfferPercentage = value
+    },
   },
   beforeMount() {
     const preferences = JSON.parse(localStorage.getItem('jusfeedbackpreferences')) || {}
@@ -345,6 +375,7 @@ export default {
     this.mappedCampaign.skipEnrichment = this.skipEnrichment
     this.mappedCampaign.denySavingDeposit = this.denySavingDeposit
     this.mappedCampaign.paymentDeadLine = this.paymentDeadLine
+    this.mappedCampaign.initialOfferPercentage = this.initialOfferPercentage
 
     this.campaignName = this.mappedCampaign.campaign || ''
     this.respondent = this.mappedCampaign.respondent || ''
