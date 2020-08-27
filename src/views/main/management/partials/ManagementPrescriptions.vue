@@ -100,7 +100,7 @@ export default {
       background-color: #f4effe !important;
       border-color: #d4c0fc !important;
     }
-    
+
     .management-prescriptions__filter-icon {
       display: none;
       width: 12px;

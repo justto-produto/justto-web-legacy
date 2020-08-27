@@ -1276,7 +1276,7 @@
               <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
-                  :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
+                  :content="scope.row.isMain ? 'Este número receberá mensagens automáticas' : 'Este número não recberá mensagens automáticas'"
                 >
                   <span class="dispute-overview-view__switch-main">
                     <jus-icon
@@ -1756,8 +1756,8 @@ export default {
         }
         return []
       },
-      set(bankAccountId) {
-        this.updateDisputeBankAccounts(bankAccountId)
+      set(bankAccountIds) {
+        this.updateDisputeBankAccounts(bankAccountIds)
       },
     },
     selectedRole: {
@@ -2294,13 +2294,14 @@ export default {
       }
     },
     editRoleAction() {
+      const hasNewBankAccount = this.roleForm.bankAccounts.filter(account => !account.id).length
       const roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
       delete roleToEdit.title
       this.editRoleDialogLoading = true
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
         disputeRole: roleToEdit,
-      }).then(() => {
+      }).then(response => {
         // SEGMENT TRACK
         this.$jusSegment('Editar partes da disputa', { description: `Usuário ${roleToEdit.name} alterado` })
         this.$jusNotification({
@@ -2339,6 +2340,27 @@ export default {
                 dangerouslyUseHTMLString: true,
               })
             })
+          })
+        }
+        if (hasNewBankAccount) {
+          this.$confirm('Você adicionou contas bancárias a esta parte. Deseja vincular estas contas a disputa?', 'Atenção', {
+            confirmButtonText: 'Vincular',
+            cancelButtonText: 'Cancelar',
+            type: 'warning',
+            cancelButtonClass: 'is-plain',
+          }).then(() => {
+            const bankAccounts = response.bankAccounts
+            const newBankAccounts = bankAccounts.sort((accountA, accountB) => {
+              if (accountA.createdAt > accountB.createdAt) {
+                return 1
+              } else if (accountA.createdAt < accountB.createdAt) {
+                return -1
+              } else {
+                return 0
+              }
+            }).slice(-hasNewBankAccount).map(ba => ba.id)
+            this.disputeBankAccountsIds = ([...this.disputeBankAccountsIds, ...newBankAccounts])
+            // this.updateDisputeBankAccounts(newBankAccount.id)
           })
         }
         this.editRoleDialogVisible = false
