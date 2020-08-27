@@ -137,6 +137,7 @@
             v-if="scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length"
             :document-number="scope.row.firstClaimantDocumentNumber"
             :name="scope.row.firstClaimant"
+            style="display: flex;"
           />
           {{ scope.row.firstClaimant }}
         </template>
@@ -153,6 +154,7 @@
             v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
             :document-number="scope.row.firstClaimantLawyerDocumentNumber"
             :alerts="scope.row.firstClaimantLawyerAlerts"
+            style="display: flex;"
           />
           {{ scope.row.firstClaimantLawyer }}
         </template>
