@@ -1,7 +1,8 @@
 <template>
   <section
     id="dispute-code"
-    class="dispute-code">
+    class="dispute-code"
+    @click="handleEvent('click')">
     <el-tooltip
       :content="status.text"
       placement="right">
@@ -9,8 +10,10 @@
         <el-link
           class="dispute-code__proccess-link"
           :underline="false"
-          @mouseover.native="handleHoverEvent">
-          {{ code }}
+          @mouseover.native="handleEvent('hover')">
+          <span :style="customStyle">
+            {{ code }}
+          </span>
           <i
             :class="status.icon"
             class="dispute-code__icon"
@@ -29,31 +32,49 @@ export default {
       type: String,
       required: true,
     },
+    customStyle: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   computed: {
     ...mapGetters(['disputeTimeline']),
 
     status() {
-      let icon, text
+      let res = {}
       if (this.disputeTimeline[this.code]) {
         if (this.disputeTimeline[this.code].lawsuits.length) {
-          icon = 'el-icon-info'
-          text = 'Abrir Timeline da disputa'
+          res = {
+            available: true,
+            icon: 'el-icon-info',
+            text: 'Abrir Timeline da disputa.',
+          }
         } else {
-          icon = 'el-icon-error'
-          text = 'Disputa não encontrada no TJ.'
+          res = {
+            available: false,
+            icon: 'el-icon-error',
+            text: 'Disputa não encontrada no TJ.',
+          }
         }
       } else {
-        icon = 'el-icon-loading'
-        text = 'Carregando dados da disputa.'
+        res = {
+          available: false,
+          icon: 'el-icon-loading',
+          text: 'Carregando dados da disputa.',
+        }
       }
 
-      return { icon, text }
+      return res
     },
   },
   methods: {
-    handleHoverEvent() {
-      this.$emit('hover')
+    handleEvent(event) {
+      this.$emit(event)
+    },
+    handleClick() {
+      if (this.status.available) {
+        this.$emit('click')
+      }
     },
   },
 }
