@@ -113,21 +113,6 @@
                   icon="external-link"
                 />
               </el-link>
-              <!-- <span
-                v-if="!!getDisputeProperties.ENDERECO_DO_PROCESSO"
-                class="code"
-              >
-                <el-link
-                  class="link"
-                  @click="openTimelineModal(dispute)">
-                  {{ dispute.code }}
-                  <jus-icon
-                    class="icon"
-                    icon="external-link"
-                  />
-                </el-link>
-              </span>
-              <span v-else>{{ dispute.code }}</span> -->
             </div>
             <div
               v-if="dispute.campaign"
@@ -1105,8 +1090,7 @@
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="editRoleDialogVisible"
-        width="40%"
-      >
+        width="40%" >
         <span
           slot="title"
           class="el-dialog__title"
@@ -1442,8 +1426,7 @@
         :close-on-click-modal="false"
         :visible.sync="addBankDialogVisible"
         title="Adicionar conta bancária"
-        width="40%"
-      >
+        width="40%" >
         <el-form
           ref="addBankForm"
           :model="addBankForm"
@@ -1536,21 +1519,11 @@
         :document-numbers="documentNumbers"
         :oabs="oabs"
       />
-      <el-dialog
-        v-loading="loading"
-        width="65%"
-        class="dialog-timeline"
-        :visible.sync="disputeTimelineModal"
-        @close="hideTimelineModal">
-        <div
-          slot="title"
-          class="dialog-timeline__title">
-          <span v-if="disputeTimeline.lastUpdated">
-            Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
-          </span>
-        </div>
-        <jus-timeline />
-      </el-dialog>
+      <jus-timeline
+        v-if="disputeTimelineModal"
+        v-model="disputeTimelineModal"
+        :code="dispute.code"
+      />
     </div>
   </div>
 </template>
@@ -1701,8 +1674,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      disputeTimeline: 'disputeTimeline',
-      timeline: 'timeline',
       getDisputeProperties: 'disputeProprieties',
       disputeStatuses: 'disputeStatuses',
     }),
@@ -1855,6 +1826,8 @@ export default {
         this.deleteTypes = response
       })
     }
+    console.log('DISPUTA CARALHO', this.dispute.code)
+    this.getDisputeTimeline(this.dispute.code)
   },
   methods: {
     ...mapActions([
@@ -1864,14 +1837,8 @@ export default {
     ]),
 
     openTimelineModal(dispute) {
-      this.getDisputeTimeline(dispute.code)
-      this.$nextTick(() => {
-        this.disputeTimelineModal = true
-      })
+      this.disputeTimelineModal = true
       this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.dispute.id })
-    },
-    hideTimelineModal() {
-      this.diputeTimelineModal = false
     },
 
     buildRoleTitle: (...i) => buildRoleTitle(...i),
@@ -2552,6 +2519,15 @@ export default {
 
   .dispute-overview-view__loading {
     height: 100%;
+
+    .dispute-overview-view__timeline {
+      .dispute-overview-view__timeline-title {
+        text-align: center;
+        letter-spacing: 0px;
+        color: #424242;
+        font-weight: bold;
+      }
+    }
   }
 
   &__title {
