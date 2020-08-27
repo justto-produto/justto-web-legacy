@@ -7,10 +7,20 @@
       :key="prescription.prescription"
       :type="buttonType(prescription.prescription)"
       plain
+      class="management-prescriptions__button"
       size="small"
       @click="handlePrescriptionClick(prescription.prescription)"
     >
-      {{ prescription.description | capitalize }}
+      <el-tooltip :content="`Filtrar por ${prescription.description}`">
+        <div>
+          <jus-icon
+            :class="{ 'management-prescriptions__filter-icon--selected' : hasPrescription(prescription.prescription) }"
+            class="management-prescriptions__filter-icon"
+            icon="filter"
+          />
+          {{ prescription.description | capitalize }}
+        </div>
+      </el-tooltip>
     </el-button>
     <jus-tags-filter @prescriptions:getDisputes="getDisputes" />
   </div>
@@ -65,19 +75,45 @@ export default {
   margin: 6px 192px 6px 0px;
   display: flex;
 
-  .el-button + .el-button {
-    &:focus {
+  .management-prescriptions__button {
+    vertical-align: middle;
+
+    &.el-button.is-plain:focus {
       color: #424242;
-      background: #fff;
+      background-color: #fff;
       border-color: #dcdfe6;
     }
-  }
 
-  .el-button--primary.is-plain {
-    &:focus {
+    &.el-button.is-plain:hover {
       color: #9461f7;
-      background-color: #f4effe;
-      border-color: #d4c0fc;
+      border-color: #9461f7;
+    }
+
+    &.el-button--primary.is-plain:focus {
+      color: #9461f7 !important;
+      background-color: #f4effe !important;
+      border-color: #d4c0fc !important;
+    }
+
+    &.el-button--primary.is-plain:hover {
+      color: #9461f7 !important;
+      background-color: #f4effe !important;
+      border-color: #d4c0fc !important;
+    }
+
+    .management-prescriptions__filter-icon {
+      display: none;
+      width: 12px;
+      height: 12px;
+      margin: -2px 0
+    }
+
+    &:hover .management-prescriptions__filter-icon {
+      display: inline-block;
+    }
+
+    .management-prescriptions__filter-icon--selected {
+      display: inline-block;
     }
   }
 }

@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const mutations = {
   redirectNewWorkspaceTrue(state) {
     state.redirectNewWorkspace = true
@@ -9,14 +11,19 @@ const mutations = {
     if (workspace) {
       // eslint-disable-next-line
       axios.defaults.headers.common['Workspace'] = workspace.subDomain || workspace.subdomain
-      state.subdomain = workspace.subDomain
-      state.name = workspace.name
-      state.teamName = workspace.teamName
-      state.type = workspace.type
-      state.status = workspace.status
-      state.id = workspace.id
-      state.blackList = workspace.blackList
-      state.properties = workspace.properties
+
+      const { name, teamName, type, status, id, blackList, properties } = workspace
+      Vue.set(state, {
+        ...state,
+        subdomain: workspace.subDomain,
+        name,
+        teamName,
+        type,
+        status,
+        id,
+        blackList,
+        properties,
+      })
       localStorage.setItem('jusworkspace', JSON.stringify(workspace))
     }
   },
@@ -27,16 +34,18 @@ const mutations = {
     }
   },
   clearWorkspace(state) {
-    state.id = ''
-    state.name = ''
-    state.teamName = ''
-    state.type = ''
-    state.status = ''
-    state.subdomain = ''
-    state.profile = ''
-    state.blackList = []
-    state.members = []
-    state.properties = {}
+    state = {
+      id: '',
+      name: '',
+      teamName: '',
+      type: '',
+      status: '',
+      subdomain: '',
+      profile: '',
+      blackList: [],
+      members: [],
+      properties: {},
+    }
     localStorage.removeItem('jusworkspace')
     localStorage.removeItem('jusprofile')
     localStorage.removeItem('jusperson')
