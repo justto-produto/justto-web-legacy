@@ -245,7 +245,7 @@
           />
         </div>
       </div>
-      <span
+      <div
         slot="footer"
         class="dialog-footer"
       >
@@ -273,7 +273,7 @@
           type="secondary"
           @click="backDocumentToEditing"
         >
-          Voltar documento para edição
+          Voltar para edição
         </el-button>
         <el-button
           v-if="[2, 4].includes(step)"
@@ -329,7 +329,7 @@
         >
           Visualizar
         </el-button>
-      </span>
+      </div>
     </el-dialog>
     <el-dialog
       :visible.sync="confirmChooseRecipientsVisible"
@@ -337,7 +337,7 @@
       :close-on-press-escape="false"
       :show-close="false"
       title="Confirmar partes para assinatura"
-      width="50%"
+      width="60%"
       append-to-body
     >
       <el-alert
@@ -477,7 +477,7 @@ export default {
       if ([1, 4].includes(this.step)) {
         return '85%'
       }
-      return '70%'
+      return '80%'
     },
     hasEmails() {
       let hasEmails = false
