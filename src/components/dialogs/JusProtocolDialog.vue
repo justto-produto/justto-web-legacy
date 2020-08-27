@@ -32,13 +32,13 @@
         </div>
         <!-- EDIÇÃO DE TEMPLATE -->
         <el-tooltip
-          v-if="step === 1"
+          v-if="step === 1 && !isLowHeight"
           :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'"
         >
           <i
             :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'"
             class="jus-protocol-dialog__fullscreen-icon"
-            @click="fullscreen = !fullscreen"
+            @click="changeFullscreen"
           />
         </el-tooltip>
         <div v-if="step === 1">
@@ -388,6 +388,8 @@
 <script>
 import { validateObjectEmail, validateCpf } from '@/utils/validations'
 
+const browserHeight = window.innerHeight
+
 export default {
   name: 'JusProtocolDialog',
   props: {
@@ -445,6 +447,7 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         ],
       },
+      isLowHeight: false,
     }
   },
   computed: {
@@ -522,6 +525,12 @@ export default {
         this.documentForm.document = {}
       }
     },
+  },
+  mounted() {
+    if (browserHeight < 640) {
+      this.isLowHeight = true
+      this.fullscreen = true
+    }
   },
   methods: {
     addDocument(role, formIndex) {
@@ -803,6 +812,9 @@ export default {
         })
       })
     },
+    changeFullscreen() {
+      this.fullscreen = !this.fullscreen
+    },
   },
 }
 </script>
@@ -814,6 +826,11 @@ export default {
     .el-dialog {
       .el-dialog__body {
         height: calc(100vh - 200px);
+
+        @media (max-height: 640px) {
+          margin: 10px;
+          height: calc(100vh - 120px);
+        }
       }
     }
   }
