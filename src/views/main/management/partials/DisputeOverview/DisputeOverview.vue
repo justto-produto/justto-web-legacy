@@ -104,15 +104,10 @@
               data-testid="dispute-infoline"
             >
               <span class="title">Processo:</span>
-              <el-link
-                class="code"
-                @click="openTimelineModal(dispute)">
-                {{ dispute.code }}
-                <jus-icon
-                  class="icon"
-                  icon="external-link"
-                />
-              </el-link>
+              <dispute-code-link
+                :code="dispute.code"
+                :custom-style="{ fontSize: '14px', marginLeft: '12px'}"
+                @click="openTimelineModal" />
             </div>
             <div
               v-if="dispute.campaign"
@@ -1539,7 +1534,7 @@ export default {
   name: 'DisputeOverview',
   components: {
     DisputeAttachments,
-
+    DisputeCodeLink: () => import('../DisputeCodeLink'),
     DisputeAddRole: () => import('../DisputeAddRole'),
     DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
@@ -1836,7 +1831,7 @@ export default {
       'getDisputeTimeline',
     ]),
 
-    openTimelineModal(dispute) {
+    openTimelineModal() {
       this.disputeTimelineModal = true
       this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.dispute.id })
     },
