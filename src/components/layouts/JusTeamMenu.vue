@@ -26,7 +26,17 @@ export default {
   name: 'JusTeamMenu',
   computed: {
     members() {
-      return this.$store.state.workspaceModule.members
+      const members = this.$store.state.workspaceModule.members
+
+      return members.sort((a, b) => {
+        const aName = a.person.name
+        const bName = b.person.name
+
+        if (aName < bName) { return -1 }
+        if (aName > bName) { return 1 }
+
+        return 0
+      })
     },
     activePersonsIds() {
       return this.$store.getters.disputeQuery.persons || []
