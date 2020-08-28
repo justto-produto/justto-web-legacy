@@ -15,6 +15,7 @@
       </div>
 
       <div class="strategy-card__name-area">
+        <span style="float: left; margin-right: 5px; vertical-align: center">#{{strategyData.id}}</span>
         <jus-text-editable
           :value="strategyData.name"
           type="title"
