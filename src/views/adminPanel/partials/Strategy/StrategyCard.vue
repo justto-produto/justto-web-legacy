@@ -43,7 +43,7 @@
 
     <div class="strategy-card__body">
       <div class="strategy-card__active-icon-area">
-        <el-tooltip :content="strategyData.active ? 'Estratégia ativa' : 'Estratégia inativa'">
+        <el-tooltip :content="strategyData.active ? 'Estratégia ativa' : 'Estratégia inativa. ATENÇÃO: Não estará visível para importação'">
           <i
             :class="`el-icon-${strategyData.active ? 'open' : 'turn-off'}`"
             class="strategy-card__icon"
@@ -247,6 +247,14 @@ export default {
   margin-bottom: 24px;
   padding: 24px;
   width: 100%;
+
+  .el-icon-turn-off {
+    color: $--color-danger;
+  }
+
+  .el-icon-open {
+    color: $--color-primary;
+  }
 
   &:hover {
     border: 1px solid $--color-primary;
