@@ -71,7 +71,7 @@
       >
         TIME
         <jus-icon
-          class="menu__title__icon"
+          class="title__icon"
           :icon="isTeamSectionOpen? 'arrow-up' : 'arrow-down'"
         />
       </div>
@@ -214,7 +214,7 @@ export default {
     margin-top: 0;
   }
 
-  .menu__title__icon {
+  .title__icon {
     margin-left: 3px;
   }
 }
@@ -231,4 +231,5 @@ export default {
     }
   }
 }
+
 </style>
