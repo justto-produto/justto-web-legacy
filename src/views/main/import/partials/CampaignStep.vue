@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'CampaignStep',
   components: {
@@ -110,6 +111,9 @@ export default {
       duplicatedDisputesLoading: true,
     }
   },
+  computed: {
+    ...mapGetters(['loading']),
+  },
   watch: {
     campaignIsMapped(current) {
       if (current) {
@@ -119,17 +123,31 @@ export default {
       }
     },
   },
-  beforeMount() {
+  async beforeMount() {
     if (!this.$store.getters.strategyList.length) {
-      this.$store.dispatch('showLoading')
-      this.$store.dispatch('getMyStrategies').finally(() => {
-        this.$store.dispatch('hideLoading')
-      })
+      this.showLoading()
+      for (const round in [1, 2, 3, 4]) {
+        if (this.loading) {
+          this.$store.dispatch('getMyStrategies').then(() => {
+            console.log(`TENTATIVA ${round}: OK`)
+            this.hideLoading()
+          }).catch(() => {
+            console.log(`TENTATIVA ${round}: FALHA.`)
+            console.log('Tentando nocamente.')
+          })
+        } else {
+          return
+        }
+        await new Promise((resolve) => setTimeout(resolve, 4000))
+      }
     }
 
     this.$store.dispatch('validateGeneseRunner').then(response => {
       this.duplicatedDisputes = response.disputes
     }).finally(() => (this.duplicatedDisputesLoading = false))
+  },
+  methods: {
+    ...mapActions(['showLoading', 'hideLoading']),
   },
 }
 </script>
