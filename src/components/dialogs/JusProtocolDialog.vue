@@ -2,7 +2,6 @@
   <div>
     <el-dialog
       :visible.sync="visible"
-      :title="title"
       :width="width"
       :class="{ 'jus-protocol-dialog--full': fullscreen && step === 1, 'jus-protocol-dialog--large': [1, 4].includes(step) && !fullscreen }"
       :close-on-click-modal="false"
@@ -11,6 +10,28 @@
       append-to-body
       class="jus-protocol-dialog"
     >
+      <!-- :title="title" -->
+      <div class="jus-protocol-dialog__title" slot="title">
+        <span v-if="document.signedDocument">
+          <el-link
+            target="_blank"
+            :underline="false"
+            @click="openDocumentInNewTab"
+          >
+            {{ title }}
+            <sup>
+              <jus-icon
+                style="height: 0.75rem;"
+                icon="external-link"
+                class="data-table__dispute-link-icon"
+              />
+            </sup>
+          </el-link>
+        </span>
+        <span v-else>
+          {{ title }}
+        </span>
+      </div>
       <div v-loading="loading">
         <!-- ESCOLHA DE TEMPLATE -->
         <div
@@ -524,6 +545,16 @@ export default {
     },
   },
   methods: {
+    openDocumentInNewTab() {
+      const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
+      navigator.clipboard.writeText(url)
+      this.$jusNotification({
+        title: 'Yay!',
+        message: 'URL do documento copiado!',
+        type: 'success',
+      })
+      setTimeout(() => window.open(url), 1500)
+    },
     addDocument(role, formIndex) {
       const documentForm = this.$refs['documentForm' + formIndex][0]
       documentForm.validate(valid => {
@@ -809,6 +840,11 @@ export default {
 
 <style lang="scss">
 .jus-protocol-dialog {
+  &__title {
+    span {
+      font-weight: bold;
+    }
+  }
   &--full {
     padding: 10px;
     .el-dialog {
