@@ -10,8 +10,9 @@
       append-to-body
       class="jus-protocol-dialog"
     >
-      <!-- :title="title" -->
-      <div class="jus-protocol-dialog__title" slot="title">
+      <div
+        slot="title"
+        class="jus-protocol-dialog__title">
         <span v-if="document.signedDocument">
           <el-link
             target="_blank"
