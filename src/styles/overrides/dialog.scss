@@ -32,6 +32,10 @@
   margin-top: 20px;
   margin-bottom: 10px;
   font-weight: bold;
+
+  @media (max-height: 640px) {
+    margin-top: 0;
+  }
 }
 
 .el-dialog__body {
@@ -42,4 +46,8 @@
 
 .el-dialog__footer {
   padding: 0 20px 20px;
+
+  @media (max-height: 640px) {
+    padding-bottom: 10px;
+  }
 }
