@@ -83,8 +83,8 @@
         >
           <div class="dashboard-view__graph-header">
             <div>
-              <b>Tempo médio de resposta do negociador</b>
-              <p>Referente as últimas 4 semanas.</p>
+              <b>Resumo</b>
+              <p>Referente a todo o tempo de vida da Equipe.</p>
             </div>
             <el-dropdown
               trigger="click"
@@ -94,20 +94,15 @@
                 <i class="el-icon-more" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="DISPUTE_AVG_RESPONSE_TIME">
+                <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">
                   <i class="el-icon-refresh" /> Atualizar
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <jus-chart-line
-            v-if="disputeAvgResponseTime"
-            id="disputeAvgResponseTime"
-            ref="disputeAvgResponseTime"
-            :data="disputeAvgResponseTime"
-            :options="opt"
-            annotation="Tempo ideal"
-            sufix="horas"
+          <jus-chart-card
+            v-if="disputeMonetarySummaries"
+            :data="disputeMonetarySummaries"
             class="dashboard-view__dataset"
           />
           <div
@@ -119,7 +114,7 @@
         </el-col>
         <el-col
           v-loading="loading === true || loading === 'MONITORING_DISPUTE_BY_TIME'"
-          :md="16"
+          :md="24"
           :sm="24"
           class="dashboard-view__graph"
         >
@@ -149,43 +144,6 @@
             :data="monitoringDisputeByTime"
             :options="monitoringDisputeByTimeOptions"
             filterable
-            class="dashboard-view__dataset"
-          />
-          <div
-            v-else
-            class="dashboard-view__empty"
-          >
-            {{ emptyMessage }}
-          </div>
-        </el-col>
-        <el-col
-          v-loading="loading === true || loading === 'DISPUTE_MONETARY_SUMMARIES'"
-          :md="8"
-          :sm="24"
-          class="dashboard-view__graph"
-        >
-          <div class="dashboard-view__graph-header">
-            <div>
-              <b>Resumo</b>
-              <p>Referente a todo o tempo de vida da Equipe.</p>
-            </div>
-            <el-dropdown
-              trigger="click"
-              @command="reload"
-            >
-              <span class="el-dropdown-link">
-                <i class="el-icon-more" />
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="DISPUTE_MONETARY_SUMMARIES">
-                  <i class="el-icon-refresh" /> Atualizar
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-          <jus-chart-card
-            v-if="disputeMonetarySummaries"
-            :data="disputeMonetarySummaries"
             class="dashboard-view__dataset"
           />
           <div
