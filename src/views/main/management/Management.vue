@@ -100,6 +100,24 @@
             />
             Filtrar
           </el-button>
+          <el-select
+            v-model="ufFilterValue"
+            :filter-method="ufSearch"
+            multiple
+            filterable
+            collapse-tags
+            placeholder="UF"
+            class="view-management__buttons-select"
+            @change="setUfFilter">
+            <el-option
+              v-for="state in filteredBrazilianStates"
+              :key="state.value"
+              :label="state.value"
+              :value="state.value">
+              <span>{{ state.name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ state.value }}</span>
+            </el-option>
+          </el-select>
           <el-tooltip content="Importar disputas">
             <el-button
               plain
@@ -400,7 +418,8 @@ export default {
     return {
       loadingExport: false,
       filtersVisible: false,
-      termDebounce: '',
+      termDebounce: () => {},
+      ufDebounce: () => {},
       disputeDebounce: '',
       selectedIds: [],
       importDialogVisible: false,
@@ -413,10 +432,13 @@ export default {
       columnsList: [],
       showAllNodes: false,
       isExportingProtocol: false,
+      filteredBrazilianStates: [],
+      ufFilterValue: [],
     }
   },
   computed: {
     ...mapGetters({
+      brazilianStates: 'getBrazilianStates',
       disputes: 'disputes',
       engagementLength: 'disputeNearExpirationsEngajement',
       interactionLength: 'disputeNotVisualizedInteration',
@@ -508,6 +530,8 @@ export default {
       this.filteredNodes = this.columns
       this.checkedNodes = this.columns.length
     })
+
+    this.filteredBrazilianStates = this.brazilianStates
   },
   methods: {
     ...mapActions([
@@ -517,6 +541,17 @@ export default {
       'getExportHistory',
       'getPrescriptions',
     ]),
+    ufSearch(value) {
+      this.filteredBrazilianStates = filterByTerm(value, this.brazilianStates, 'name', 'value')
+    },
+    setUfFilter(data) {
+      clearTimeout(this.ufDebounce)
+      this.ufDebounce = setTimeout(() => {
+        this.$jusSegment('Filtro por estado aplicado', { description: `Estados selecionados: ${data}` })
+        this.$store.commit('updateDisputeQuery', { key: 'uf', value: data })
+        this.getDisputes()
+      }, 800)
+    },
     changeExportType() {
       this.isExportingProtocol = !this.isExportingProtocol
     },
@@ -704,6 +739,14 @@ export default {
       width: 180px;
       vertical-align: middle;
     }
+
+    .view-management__buttons-select {
+      width: 150px;
+      .el-input {
+        width: 150px;
+      }
+    }
+
     img {
       margin: -3px 0px;
       width: 14px;

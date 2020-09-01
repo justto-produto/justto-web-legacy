@@ -17,6 +17,7 @@ import strategyModule from './modules/strategy'
 import tagModule from './modules/tag'
 import userModule from './modules/user'
 import workspaceModule from './modules/workspace'
+import brazilianStates from './brazilianStates'
 
 Vue.use(Vuex)
 
@@ -28,14 +29,15 @@ if (ghostMode) {
 export default new Vuex.Store({
   state: {
     loading: false,
-    banksList: banksList,
-    ghostMode: ghostMode,
-    statesList: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'],
+    banksList,
+    ghostMode,
+    brazilianStates,
   },
   getters: {
     banksList: state => state.banksList,
     ghostMode: state => state.ghostMode,
     loading: state => state.loading,
+    getBrazilianStates: state => state.brazilianStates,
   },
   mutations: {
     showLoading(state) {
