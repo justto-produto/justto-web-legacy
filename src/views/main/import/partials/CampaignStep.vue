@@ -129,11 +129,18 @@ export default {
       for (const round in [1, 2, 3, 4]) {
         if (this.loading) {
           this.$store.dispatch('getMyStrategies').then(() => {
-            console.log(`TENTATIVA ${round}: OK`)
+            // this.$jusSegment('Importação 3/4 Mapeamento concluido', {
+            //   fileName: this.$store.getters.importedFileName,
+            // })
             this.hideLoading()
           }).catch(() => {
-            console.log(`TENTATIVA ${round}: FALHA.`)
-            console.log('Tentando nocamente.')
+            const fileName = this.$store.getters.importedFileName
+            this.$jusSegment(`Tentativa ${round} de buscar as estratégias para a importação do arquivo ${fileName}.`)
+            this.$jusNotification({
+              type: 'info',
+              title: 'OPS',
+              message: 'Ainda trabalhando...',
+            })
           })
         } else {
           return
