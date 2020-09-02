@@ -108,7 +108,7 @@
                     v-model="role.party"
                     size="mini"
                     placeholder="Defina o polo desta parte"
-                    v-if="role.party === 'UNKNOW' && handlePartyId['party_role' + role.id]"
+                    v-if="role.party === 'UNKNOWN' && handlePartyId['party_role' + role.id]"
                     @change="setDisputeParty(role)">
                     <el-option
                       v-for="party in disputePartys"
@@ -559,7 +559,7 @@ export default {
           label: 'Advogado da parte contrária',
         },
         {
-          value: 'UNKNOW',
+          value: 'UNKNOWN',
           label: 'Desconhecido',
         },
       ],
@@ -796,7 +796,7 @@ export default {
       if (canHandleParty) {
         let dispute = this.$store.getters.dispute
         let roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
-        let filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOW')
+        let filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
         return filteredRole
       }
       return canHandleParty

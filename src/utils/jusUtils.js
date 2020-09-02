@@ -31,7 +31,7 @@ const queryBuilder = (q, command, disputesLength, noSort) => {
 }
 
 const buildRoleTitle = function(party, title) {
-  if (party === 'UNKNOW') {
+  if (party === 'UNKNOWN') {
     switch (title) {
       case 'PARTY':
         return 'Parte desconhecida'
@@ -59,7 +59,7 @@ const buildRoleTitle = function(party, title) {
 }
 
 const getRoleIcon = function(party, title) {
-  if (party === 'RESPONDENT' || party === 'UNKNOW') {
+  if (party === 'RESPONDENT' || party === 'UNKNOWN') {
     switch (title) {
       case 'NEGOTIATOR':
         return 'el-icon-service'
