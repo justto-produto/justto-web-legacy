@@ -371,7 +371,7 @@
             </div>
           </div>
           <el-tooltip
-            :disabled="!dispute.status === 'PRE_NEGOTIATION'"
+            :disabled="dispute.status !== 'PRE_NEGOTIATION'"
             content="Disputas em pré-negociação não podem ser editadas"
           >
             <div class="dispute-overview-view__actions">
@@ -487,7 +487,7 @@
                 <el-select
                   v-model="role.party"
                   placeholder="Defina o polo desta parte"
-                  v-if="role.party === 'UNKNOW'"
+                  v-if="role.party === 'UNKNOWN'"
                   @change="setDisputeParty(role)"
                 >
                   <el-option
@@ -1661,7 +1661,7 @@ export default {
           label: 'Advogado da parte contrária',
         },
         {
-          value: 'UNKNOW',
+          value: 'UNKNOWN',
           label: 'Desconhecido',
         },
       ],
@@ -2063,7 +2063,7 @@ export default {
       })
       const dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
-      this.selectedClaimantId = this.disputeClaimants ? this.disputeClaimants[0].id : ''
+      this.selectedClaimantId = this.disputeClaimants && this.disputeClaimants.length ? this.disputeClaimants[0].id : ''
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeCode = dispute.code
