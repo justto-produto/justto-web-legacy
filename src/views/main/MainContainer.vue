@@ -72,7 +72,7 @@
         TIME
         <jus-icon
           class="menu__title__icon"
-          :icon="isTeamSectionOpen? 'arrow-up' : 'arrow-down'"
+          :icon="isTeamSectionOpen ? 'arrow-up' : 'arrow-down'"
         />
       </div>
       <vue-perfect-scrollbar v-if="isAdminProfile">
