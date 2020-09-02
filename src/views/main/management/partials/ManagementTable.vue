@@ -18,6 +18,7 @@
       class="management-table el-table--disputes"
       data-testid="dispute-index"
       @cell-mouse-enter="cellMouseEnter"
+      @cell-click="openTimelineModal($event)"
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange">
       <el-table-column
@@ -105,14 +106,10 @@
         prop="code"
       >
         <template slot-scope="scope">
-          <el-link
-            class="management-table__proccess-code"
-            :underline="false"
-            @click="openTimelineModal(scope.row)"
-          >
-            {{ scope.row.code }}
-            <i class="proccess-code__icon el-icon-info" />
-          </el-link>
+          <dispute-code-link
+            :code="scope.row.code"
+            @hover="hoverDisputeCode(scope.row.code)"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -140,6 +137,7 @@
             v-if="scope.row.firstClaimantAlerts && scope.row.firstClaimantAlerts.length"
             :document-number="scope.row.firstClaimantDocumentNumber"
             :name="scope.row.firstClaimant"
+            style="display: flex;"
           />
           {{ scope.row.firstClaimant }}
         </template>
@@ -156,6 +154,7 @@
             v-if="scope.row.firstClaimantLawyerAlerts && scope.row.firstClaimantLawyerAlerts.length"
             :document-number="scope.row.firstClaimantLawyerDocumentNumber"
             :alerts="scope.row.firstClaimantLawyerAlerts"
+            style="display: flex;"
           />
           {{ scope.row.firstClaimantLawyer }}
         </template>
@@ -475,23 +474,11 @@
         </el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      v-loading="loading"
-      width="65%"
-      class="dialog-timeline"
-      :visible.sync="disputeTimelineModal"
-      @close="hideTimelineModal"
-    >
-      <div
-        slot="title"
-        class="dialog-timeline__title"
-      >
-        <span v-if="disputeTimeline.lastUpdated">
-          Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
-        </span>
-      </div>
-      <jus-timeline />
-    </el-dialog>
+    <jus-timeline
+      v-if="currentDisputeCode"
+      v-model="disputeTimelineModal"
+      :code="currentDisputeCode"
+    />
   </div>
 </template>
 
@@ -517,6 +504,7 @@ Quill.register(SizeStyle, true)
 export default {
   name: 'ManagementTable',
   components: {
+    DisputeCodeLink: () => import('./DisputeCodeLink'),
     JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
@@ -540,7 +528,7 @@ export default {
   },
   data() {
     return {
-      currentDisputeId: null,
+      currentDisputeCode: null,
       disputeTimelineModal: false,
       showEmpty: false,
       showEmptyDebounce: '',
@@ -621,18 +609,23 @@ export default {
   },
   methods: {
     ...mapActions(['getDisputeTimeline']),
+
+    hoverDisputeCode(code) {
+      if (!this.disputeTimeline[code]) {
+        this.getDisputeTimeline(code)
+      }
+    },
+
     openTimelineModal(dispute) {
-      this.getDisputeTimeline(dispute.code)
+      const { code } = dispute
+      if (!this.disputeTimeline[code] || this.disputeTimeline[code].lawsuits.length === 0) {
+        return
+      }
+      this.currentDisputeCode = code
       this.$nextTick(() => {
         this.disputeTimelineModal = true
       })
-      this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: this.dispute.id })
-    },
-    hideTimelineModal() {
-      this.diputeTimelineModal = false
-      this.$nextTick(() => {
-        this.currentDisputeId = null
-      })
+      this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: dispute.id })
     },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
@@ -696,7 +689,7 @@ export default {
       }
     },
     handleRowClick(row, column, event) {
-      if (row.id && !['IMG', 'SPAN', 'BUTTON'].includes(event.target.tagName)) {
+      if (row.id && !['IMG', 'SPAN', 'BUTTON', 'I'].includes(event.target.tagName)) {
         this.$router.push({ name: 'dispute', params: { id: row.id } })
       }
     },
@@ -888,21 +881,6 @@ export default {
     color: #adadad;
     font-size: 1rem;
   }
-  .management-table__row-code {
-    .management-table__proccess-code {
-      .proccess-code__icon {
-        visibility: hidden;
-      }
-
-      &:hover .proccess-code__icon {
-        visibility: visible;
-      }
-
-      .el-link--inner {
-        word-break: break-all;
-      }
-    }
-  }
 }
 .dialog-timeline {
   .dialog-timeline__title {
@@ -910,7 +888,8 @@ export default {
     padding-top: 20px;
     font: normal normal medium 17px/22px Montserrat;
     letter-spacing: 0px;
-    color: #ADADAD;
+    color: #424242;
+    font-weight: bold;
   }
 
   .el-dialog__body {

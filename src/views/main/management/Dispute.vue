@@ -109,6 +109,13 @@
                   (+ {{ selectedContacts.length - 1 }})
                 </span>
               </el-tooltip>
+              <el-tooltip :content="`Você está enviando um ${messageType}`">
+                <jus-icon
+                  :is-active="true"
+                  :icon="messageType"
+                  class="dispute-view__send-to-icon"
+                />
+              </el-tooltip>
             </div>
             <el-tabs
               ref="messageTab"
@@ -182,32 +189,6 @@
                         Configure um nome em seu perfil
                       </div>
                     </el-tooltip>
-                    <div v-else>
-                      <el-tooltip content="Enviar E-mail">
-                        <a
-                          href="#"
-                          data-testid="select-email"
-                          @click.prevent="setMessageType('email')"
-                        >
-                          <jus-icon
-                            :is-active="messageType === 'email'"
-                            icon="email"
-                          />
-                        </a>
-                      </el-tooltip>
-                      <el-tooltip content="Enviar Whatsapp">
-                        <a
-                          href="#"
-                          data-testid="select-whatsapp"
-                          @click.prevent="setMessageType('whatsapp')"
-                        >
-                          <jus-icon
-                            :is-active="messageType === 'whatsapp'"
-                            icon="whatsapp"
-                          />
-                        </a>
-                      </el-tooltip>
-                    </div>
                     <div>
                       <el-tooltip
                         :key="buttonKey"
@@ -766,9 +747,17 @@ export default {
     .ql-toolbar {
       display: none;
     }
+    .dispute-view__send-to {
+      display: flex;
+      align-items: center;
+    }
+    .dispute-view__send-to-icon {
+      margin-left: 8px;
+      width: 20px;
+    }
   }
   &__quill {
-    height: calc(100% - 37px);
+    height: calc(100% - 30px);
     position: relative;
     &.show-toolbar {
       .ql-toolbar {
@@ -819,18 +808,8 @@ export default {
   }
   &__send-message-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: flex-end;
-    margin-left: -2px;
-    img {
-      margin-right: 10px;
-      height: 20px;
-      vertical-align: middle;
-      &:nth-child(2) {
-        height: 19px;
-        margin-right: 11px;
-      }
-    }
     &.note {
       justify-content: flex-end;
     }
