@@ -276,6 +276,7 @@
           :disabled="loading"
           icon="el-icon-delete"
           plain
+          :size="buttonSize"
           type="danger"
           @click="deleteDocument"
         >
@@ -284,6 +285,7 @@
         <el-button
           v-if="step !== 4"
           :disabled="loading"
+          :size="buttonSize"
           plain
           @click="visible = false"
         >
@@ -292,6 +294,7 @@
         <el-button
           v-if="document.canEdit"
           :disabled="loading"
+          :size="buttonSize"
           type="secondary"
           @click="backDocumentToEditing"
         >
@@ -300,6 +303,7 @@
         <el-button
           v-if="[2, 4].includes(step)"
           :disabled="loading"
+          :size="buttonSize"
           plain
           @click="backToDocument"
         >
@@ -307,6 +311,7 @@
         </el-button>
         <el-button
           v-if="step === 1"
+          :size="buttonSize"
           :disabled="loading"
           type="primary"
           @click="step = 2, hideForms()"
@@ -315,6 +320,7 @@
         </el-button>
         <el-button
           v-if="step === 2"
+          :size="buttonSize"
           :disabled="!hasEmails || loadingChooseRecipients"
           type="primary"
           @click="confirmChooseRecipients"
@@ -324,6 +330,7 @@
         <el-button
           v-if="step === 3"
           v-loading="loadingDownload"
+          :size="buttonSize"
           icon="el-icon-download"
           type="primary"
           @click="downloadDocument"
@@ -338,6 +345,7 @@
             :disabled="loading"
             icon="el-icon-refresh-right"
             type="primary"
+            :size="buttonSize"
             @click="resendSignersNotification"
           >
             Reenviar pendentes
@@ -346,6 +354,7 @@
         <el-button
           v-if="false && step === 3"
           icon="el-icon-view"
+          :size="buttonSize"
           type="primary"
           @click="visualizePdf"
         >
@@ -409,8 +418,7 @@
 
 <script>
 import { validateObjectEmail, validateCpf } from '@/utils/validations'
-
-const browserHeight = window.innerHeight
+import { IS_SMALL_WINDOW } from '@/constants/variables'
 
 export default {
   name: 'JusProtocolDialog',
@@ -529,6 +537,10 @@ export default {
 
       return null
     },
+    buttonSize() {
+      return IS_SMALL_WINDOW ? 'mini' : false
+    },
+
   },
   watch: {
     visible(value) {
@@ -549,7 +561,7 @@ export default {
     },
   },
   mounted() {
-    if (browserHeight < 640) {
+    if (IS_SMALL_WINDOW) {
       this.isLowHeight = true
       this.fullscreen = true
     }

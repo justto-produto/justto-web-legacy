@@ -38,7 +38,7 @@
           <span class="el-dropdown-link">
             <jus-avatar-user
               :name="name"
-              size="sm"
+              :size="avatarSize"
             />
             <div class="jus-header-main__name">
               <div style="text-transform: capitalize;">
@@ -121,6 +121,8 @@
 </template>
 
 <script>
+import { IS_SMALL_WINDOW } from '@/constants/variables'
+
 export default {
   name: 'JusHeaderMain',
   components: {
@@ -157,6 +159,9 @@ export default {
       set(value) {
         this.$store.commit('setGhostMode', value)
       },
+    },
+    avatarSize() {
+      return IS_SMALL_WINDOW ? 'mini' : 'sm'
     },
   },
   beforeMount() {
@@ -257,6 +262,11 @@ export default {
   box-shadow: 0 4px 24px 0 rgba(37, 38, 94, 0.1);
   z-index: 1;
   display: flex;
+
+  @media (max-height: 680px) {
+    height: 40px !important;
+  }
+
   &__version {
     margin: 6px 20px 12px 20px;
     color: #adadad;
@@ -280,6 +290,10 @@ export default {
         height: 58px;
         font-size: 16px;
         opacity: .75;
+
+        @media (max-height: 680px) {
+          height: 40px;
+        }
       }
     }
   }
@@ -294,6 +308,10 @@ export default {
       align-items: center;
       margin: 8px 0;
       cursor: pointer;
+
+      @media (max-height: 680px) {
+        margin: 2px 0;
+      }
     }
   }
   &__name {

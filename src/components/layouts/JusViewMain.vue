@@ -97,6 +97,10 @@ export default {
       background-color: rgba(246, 245, 246, 0.89);
       margin: 20px;
     }
+
+    @media (max-height: 680px) {
+      padding: 5px;
+    }
   }
   &__main-card {
     width: 100%;
