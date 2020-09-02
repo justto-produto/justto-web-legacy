@@ -62,11 +62,10 @@
                 </sup>
               </el-link>
             </div>
-            <div class="jus-timeline__header-subtitle">
-              <span v-if="process.date">
-                Distribuído em {{ process.date }}
-              </span>
-            </div>
+            <description
+              class="jus-timeline__header-subtitle"
+              :lawsuit-dispute="process"
+            />
             <div class="jus-timeline__header-tags">
               <el-tag
                 v-for="(tag, flagIndex) in process.tags"
@@ -124,6 +123,9 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  components: {
+    description: () => import('./partials/LawsuitDescription'),
+  },
   props: {
     value: {
       type: Boolean,
