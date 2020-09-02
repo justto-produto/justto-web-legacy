@@ -83,11 +83,12 @@
           </el-tab-pane>
         </el-tabs>
         <div class="view-management__buttons">
-          <el-input
+          <!-- <el-input
             v-model="term"
             clearable
             prefix-icon="el-icon-search"
-          />
+          /> -->
+          <JusFilterButton @getDisputes="getDisputes" />
           <el-select
             v-model="ufFilterValue"
             :filter-method="ufSearch"
@@ -106,18 +107,19 @@
               <span style="float: right; color: #8492a6; font-size: 13px">{{ state.value }}</span>
             </el-option>
           </el-select>
-          <el-button
-            :plain="!hasFilters"
-            :type="hasFilters ? 'primary' : ''"
-            @click="filtersVisible = true"
-          >
-            <jus-icon
-              :is-white="hasFilters"
-              icon="filter"
-              data-testid="management-filterbtn"
-            />
-            Filtrar
-          </el-button>
+          <el-tooltip content="Filtrar disputas">
+            <el-button
+              :plain="!hasFilters"
+              :type="hasFilters ? 'primary' : ''"
+              @click="filtersVisible = true"
+            >
+              <jus-icon
+                :is-white="hasFilters"
+                icon="filter"
+                data-testid="management-filterbtn"
+              />
+            </el-button>
+          </el-tooltip>
           <el-tooltip content="Importar disputas">
             <el-button
               plain
@@ -125,11 +127,11 @@
             >
               <jus-icon
                 icon="upload-file"
-                style="width: 20px;"
+                style="width: 16px;"
               />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Exportação">
+          <el-tooltip content="Exportar">
             <el-button
               :disabled="disputes.length === 0"
               plain
@@ -412,6 +414,7 @@ export default {
     ManagementActions: () => import('./partials/ManagementActions'),
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
     JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
+    JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
     JusLoader: () => import('@/components/others/JusLoader'),
   },
   data() {
@@ -473,23 +476,23 @@ export default {
     persons() {
       return this.$store.state.disputeModule.query.persons
     },
-    term: {
-      get() {
-        return this.$store.getters.disputeQueryTerm
-      },
-      set(term) {
-        this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
-      },
-    },
+    // term: {
+    //   get() {
+    //     return this.$store.getters.disputeQueryTerm
+    //   },
+    //   set(term) {
+    //     this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
+    //   },
+    // },
   },
   watch: {
-    term(term) {
-      clearTimeout(this.termDebounce)
-      this.termDebounce = setTimeout(() => {
-        this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
-        this.getDisputes()
-      }, 800)
-    },
+    // term(term) {
+    //   clearTimeout(this.termDebounce)
+    //   this.termDebounce = setTimeout(() => {
+    //     this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
+    //     this.getDisputes()
+    //   }, 800)
+    // },
     persons() {
       this.getDisputes()
     },
