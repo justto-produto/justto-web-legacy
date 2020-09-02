@@ -1821,8 +1821,9 @@ export default {
         this.deleteTypes = response
       })
     }
-    console.log('DISPUTA CARALHO', this.dispute.code)
-    this.getDisputeTimeline(this.dispute.code)
+  },
+  mounted() {
+    this.populateTimeline()
   },
   methods: {
     ...mapActions([
@@ -1830,6 +1831,20 @@ export default {
       'getDisputeStatuses',
       'getDisputeTimeline',
     ]),
+
+    async populateTimeline() {
+      let getting = true
+      for (const round in [0, 1, 2, 3, 4]) {
+        if (getting) {
+          await new Promise(resolve => { setTimeout(resolve, round * 2000) })
+          this.getDisputeTimeline(this.dispute.code).then(() => {
+            getting = false
+          }).catch()
+        } else {
+          break
+        }
+      }
+    },
 
     openTimelineModal() {
       this.disputeTimelineModal = true
