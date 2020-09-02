@@ -97,7 +97,7 @@ export default {
       return this.lawsuitDispute
     },
     defaultMessage() {
-      return 'Não informado.'
+      return 'Não informado'
     },
   },
 }
