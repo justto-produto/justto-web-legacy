@@ -124,7 +124,7 @@
     </el-container>
   </el-dialog>
 </template>
-
+1001454-68.2020.8.26.0431
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { normalizeString } from '@/utils/jusUtils'
@@ -162,7 +162,8 @@ export default {
 
     visible: {
       get() {
-        return this.value
+        return Boolean(this.dispute.lawsuits.length && this.value)
+        // return this.value
       },
       set(value) {
         this.$emit('input', false)
