@@ -88,18 +88,6 @@
             clearable
             prefix-icon="el-icon-search"
           />
-          <el-button
-            :plain="!hasFilters"
-            :type="hasFilters ? 'primary' : ''"
-            @click="filtersVisible = true"
-          >
-            <jus-icon
-              :is-white="hasFilters"
-              icon="filter"
-              data-testid="management-filterbtn"
-            />
-            Filtrar
-          </el-button>
           <el-select
             v-model="ufFilterValue"
             :filter-method="ufSearch"
@@ -118,6 +106,18 @@
               <span style="float: right; color: #8492a6; font-size: 13px">{{ state.value }}</span>
             </el-option>
           </el-select>
+          <el-button
+            :plain="!hasFilters"
+            :type="hasFilters ? 'primary' : ''"
+            @click="filtersVisible = true"
+          >
+            <jus-icon
+              :is-white="hasFilters"
+              icon="filter"
+              data-testid="management-filterbtn"
+            />
+            Filtrar
+          </el-button>
           <el-tooltip content="Importar disputas">
             <el-button
               plain
