@@ -142,5 +142,13 @@ export default {
   &__zero-width{
     width: 0 !important;
   }
+
+  .jus-main-view__main-card {
+    .el-card__body {
+      @media (max-height: 680px) {
+        padding: 10px 10px 0 10px;
+      }
+    }
+  }
 }
 </style>

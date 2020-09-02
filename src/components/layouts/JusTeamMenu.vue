@@ -52,6 +52,10 @@ export default {
   &__title {
     text-align: center;
     margin: 80px 0 20px;
+
+    @media (max-height: 680px) {
+      margin: 40px 0 10px;
+    }
   }
   &__members {
     display: flex;

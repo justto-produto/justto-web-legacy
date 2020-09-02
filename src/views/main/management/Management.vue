@@ -817,6 +817,14 @@ export default {
     }
   }
 
+  .view-management__tabs {
+    .el-tabs__header  {
+      @media (max-height: 680px) {
+        margin: 0 0 8px;
+      }
+    }
+  }
+
 }
 .el-table {
   .finished-row {

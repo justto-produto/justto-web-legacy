@@ -1,5 +1,5 @@
 <template>
-  <div style="height: calc(100% - 114px)">
+  <div class="management-table__container">
     <jus-protocol-dialog
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id.sync="selectedDisputeId"
@@ -741,7 +741,26 @@ export default {
 </script>
 
 <style lang="scss">
+.management-table__container {
+  height: calc(100% - 114px);
+
+  @media (max-height: 680px) {
+    height: calc(100% - 93px);
+  }
+}
+
 .management-table {
+  @media (max-height: 680px) {
+    margin-bottom: 0;
+  }
+
+  th {
+    @media (max-height: 680px) {
+      padding: 2px 0 4px 0;
+      height: 100%;
+    }
+  }
+
   &__interaction-icon {
     vertical-align: middle;
     margin-right: 4px;
