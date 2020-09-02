@@ -487,7 +487,7 @@
                 <el-select
                   v-model="role.party"
                   placeholder="Defina o polo desta parte"
-                  v-if="role.party === 'UNKNOW'"
+                  v-if="role.party === 'UNKNOWN'"
                   @change="setDisputeParty(role)"
                 >
                   <el-option
@@ -1661,7 +1661,7 @@ export default {
           label: 'Advogado da parte contrária',
         },
         {
-          value: 'UNKNOW',
+          value: 'UNKNOWN',
           label: 'Desconhecido',
         },
       ],
