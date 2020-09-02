@@ -741,9 +741,30 @@ export default {
     }
 
     .view-management__buttons-select {
-      width: 150px;
+      margin: 0 8px;
+      width: 108px;
+
       .el-input {
-        width: 150px;
+        width: 108px;
+      }
+
+      .el-select__tags {
+        max-width: 88px !important;
+
+        .el-tag:first-child {
+          padding: 0 0 0 4px;
+          .el-tag__close { right: 0; }
+        }
+
+        .el-tag:last-child {
+          padding: 0 4px;
+          margin-left: 4px;
+        }
+
+        .el-select__input {
+          max-width: 20px !important;
+          margin-left: 4px !important;
+        }
       }
     }
 
