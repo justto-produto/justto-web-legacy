@@ -538,7 +538,10 @@ export default {
         type: 'CHANGE_NEGOTIATOR',
         negotiatorsId: this.disputeNegotiators,
       }
-      if (isByGroup) {
+      if (this.isSelectedAll) {
+        params.allSelected = true
+        params.disputeIds = []
+      } else if (isByGroup) {
         params.disputeIds = this.disputeNegotiatorMap[this.currentDisputeNegotiator].disputes
       } else {
         params.disputeIds = this.selectedIds
