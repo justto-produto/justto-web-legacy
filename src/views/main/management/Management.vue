@@ -622,6 +622,7 @@ export default {
     },
     handleChangeTab(tab) {
       this.$refs.managementTable.showEmpty = false
+      this.ufFilterValue = []
       this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
       this.$store.commit('setDisputeHasFilters', false)
