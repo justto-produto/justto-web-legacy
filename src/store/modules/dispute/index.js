@@ -29,6 +29,7 @@ const dispute = {
       dealDate: [],
       prescriptions: [],
       onlyFavorite: false,
+      uf: [],
       page: 1,
       size: 20,
       term: '',

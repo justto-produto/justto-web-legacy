@@ -276,7 +276,7 @@
                 v-model="filters.disputestate"
                 placeholder="Selecione uma opção"
                 @clear="clearDisputestate">
-                <el-option v-for="state in $store.state.statesList" :key="state" :value="state"/>
+                <el-option v-for="state in $store.state.brazilianStates" :key="state.value" :value="state.value"/>
               </el-select>
             </el-form-item>
           </el-col>  -->
