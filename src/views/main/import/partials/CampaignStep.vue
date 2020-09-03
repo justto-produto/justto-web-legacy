@@ -42,6 +42,51 @@
       </div>
     </el-alert>
     <el-alert
+      v-if="!strategyList.length && !loadingStrategies"
+      :closable="false"
+      type="error">
+      <div>
+        <h2>Atenção.</h2>
+        <p>
+          Estratégias não encontradas.
+          Tente novamente clicando
+          <el-button
+            type="text"
+            @click="getStrategies"
+          >
+            aqui
+          </el-button>.
+        </p>
+      </div>
+    </el-alert>
+    <el-alert
+      v-if="!strategyList.length && loadingStrategies"
+      :closable="false"
+      type="info">
+      <div class="el-loading-parent--relative">
+        <div class="el-loading-mask">
+          <div class="el-loading-spinner">
+            <svg
+              viewBox="25 25 50 50"
+              class="circular"
+            >
+              <circle
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                class="path"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2>Carregando estratégias</h2>
+        Aguarde um momento enquanto o sistema carrega as estratégias disponíveis para esta campanha.
+      </div>
+    </el-alert>
+    <el-alert
       v-if="!duplicatedDisputesLoading && duplicatedDisputes.length"
       type="error"
     >
@@ -89,6 +134,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'CampaignStep',
   components: {
@@ -108,7 +154,11 @@ export default {
     return {
       duplicatedDisputes: [],
       duplicatedDisputesLoading: true,
+      loadingStrategies: false,
     }
+  },
+  computed: {
+    ...mapGetters(['loading', 'strategyList', 'importedFileName']),
   },
   watch: {
     campaignIsMapped(current) {
@@ -119,17 +169,34 @@ export default {
       }
     },
   },
-  beforeMount() {
-    if (!this.$store.getters.strategyList.length) {
-      this.$store.dispatch('showLoading')
-      this.$store.dispatch('getMyStrategies').finally(() => {
-        this.$store.dispatch('hideLoading')
-      })
+  async beforeMount() {
+    if (!this.strategyList.length) {
+      this.getStrategies()
     }
 
     this.$store.dispatch('validateGeneseRunner').then(response => {
       this.duplicatedDisputes = response.disputes
     }).finally(() => (this.duplicatedDisputesLoading = false))
+  },
+  methods: {
+    ...mapActions(['showLoading', 'hideLoading', 'getMyStrategies']),
+    async getStrategies() {
+      this.loadingStrategies = true
+      this.showLoading()
+      for (const round in [0, 1, 2, 3, 4]) {
+        console.log('Esperando', round * 3000)
+        await new Promise((resolve) => setTimeout(resolve, round * 3000))
+        if (this.loading) {
+          this.getMyStrategies().then(this.hideLoading).catch(() => {
+            this.$jusSegment(`Tentativa ${(Number(round) + Number(1))} de buscar as estratégias para a importação do arquivo ${this.importedFileName}.`)
+          })
+        } else {
+          this.loadingStrategies = false
+          return
+        }
+      }
+      this.loadingStrategies = false
+    },
   },
 }
 </script>
