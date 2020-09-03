@@ -104,7 +104,7 @@
               :label="state.value"
               :value="state.value">
               <span>{{ state.name }}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{ state.value }}</span>
+              <span class="view-management__select-options">{{ state.value }}</span>
             </el-option>
           </el-select>
           <el-tooltip content="Filtrar disputas">
@@ -735,13 +735,13 @@ export default {
     justify-content: space-between;
   }
   &__buttons {
-    .el-input + button {
-      margin-left: 10px;
-    }
-    .el-input {
-      width: 180px;
-      vertical-align: middle;
-    }
+    // .el-input + button {
+    //   margin-left: 10px;
+    // }
+    // .el-input {
+    //   width: 180px;
+    //   vertical-align: middle;
+    // }
 
     .view-management__buttons-select {
       margin: 0 8px;
@@ -766,7 +766,7 @@ export default {
 
         .el-select__input {
           max-width: 20px !important;
-          margin-left: 4px !important;
+          margin-left: 8px !important;
         }
       }
     }
@@ -885,6 +885,13 @@ export default {
   }
 
 }
+
+.view-management__select-options {
+  float: right;
+  color: #8492a6;
+  margin: 0 16px 0 8px
+}
+
 .el-table {
   .finished-row {
     color: $--color-success;

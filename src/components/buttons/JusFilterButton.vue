@@ -84,11 +84,8 @@ export default {
 @import '@/styles/colors.scss';
 
 .jus-filter-button {
-  position: relative;
   display: inline-block;
-  // white-space: nowrap;
   .el-input {
-    position: absolute;
   }
   .el-input__inner {
     transition: width 0.5s ease, padding 0.5s ease;
