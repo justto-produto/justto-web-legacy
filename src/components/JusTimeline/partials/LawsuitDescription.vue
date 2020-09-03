@@ -11,29 +11,34 @@
 
       <div
         v-if="state.area"
-        class="lawsuit-description__info">
+        class="lawsuit-description__info"
+      >
         <strong class="lawsuit-description__info-title">Área</strong>
         <span class="lawsuit-description__info-text">{{ state.area }}</span>
       </div>
 
       <div
         v-if="state.source"
-        class="lawsuit-description__info">
+        class="lawsuit-description__info"
+      >
         <strong class="lawsuit-description__info-title">Origem</strong>
         <span class="lawsuit-description__info-text">{{ state.source }}</span>
       </div>
       <div
         v-if="!!state.urlDocuments && state.urlDocuments.length"
-        class="lawsuit-description__info">
+        class="lawsuit-description__info"
+      >
         <strong class="lawsuit-description__info-title">Documentos</strong>
         <el-link
           class="lawsuit-description__info-download"
           :href="state.urlDocuments[0]"
-          :underline="false">
+          :underline="false"
+        >
           Baixar
           <jus-icon
             class="lawsuit-description__document-download"
-            icon="download-sheet" />
+            icon="download-sheet"
+          />
         </el-link>
       </div>
     </div>
@@ -154,12 +159,12 @@ export default {
   .lawsuit-description__container-info {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
 
     .lawsuit-description__info {
       display: flex;
       flex-direction: column;
       margin-bottom: 8px;
+      width: 25%;
 
       .lawsuit-description__info-title {
         text-align: left;
@@ -173,17 +178,17 @@ export default {
         font: normal normal medium 14px/26px Montserrat;
         letter-spacing: 0px;
         color: #a3a3a3;
+      }
 
-        .lawsuit-description__info-download {
-          padding: 0px;
+      .lawsuit-description__info-download {
+        padding: 0px;
+        justify-content: flex-start;
 
-          .el-link--inner {
-            .lawsuit-description__document-download {
-              height: 16px;
-            }
+        .el-link--inner {
+          .lawsuit-description__document-download {
+            height: 16px;
           }
         }
-
       }
     }
   }
