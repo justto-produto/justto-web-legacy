@@ -62,11 +62,10 @@
                 </sup>
               </el-link>
             </div>
-            <div class="jus-timeline__header-subtitle">
-              <span v-if="process.date">
-                Distribuído em {{ process.date }}
-              </span>
-            </div>
+            <description
+              class="jus-timeline__header-subtitle"
+              :lawsuit-dispute="process"
+            />
             <div class="jus-timeline__header-tags">
               <el-tag
                 v-for="(tag, flagIndex) in process.tags"
@@ -89,10 +88,12 @@
                 placement="top"
               >
                 <div class="jus-timeline__body-movement">
-                  <div
+                  <highlight
                     class="jus-timeline__body-description"
-                    v-html="highlight(movement.description, searchQuery)"
-                  />
+                    :queries="[searchQuery]"
+                  >
+                    {{ movement.description }}
+                  </highlight>
                   <div class="jus-timeline__body-tags">
                     <el-tag
                       v-for="(tag, tagIndex) in (movement.tags || [])"
@@ -122,8 +123,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { normalizeString } from '@/utils/jusUtils'
 
 export default {
+  components: {
+    highlight: () => import('vue-text-highlight'),
+    description: () => import('./partials/LawsuitDescription'),
+  },
   props: {
     value: {
       type: Boolean,
@@ -152,7 +158,7 @@ export default {
 
     visible: {
       get() {
-        return this.value
+        return Boolean(this.dispute.lawsuits.length && this.value)
       },
       set(value) {
         this.$emit('input', false)
@@ -170,16 +176,9 @@ export default {
     },
 
     matchFilter(item, query) {
-      return (!this.showOnlyFiltered | item.toLowerCase().includes(query.toLowerCase()))
+      return (!this.showOnlyFiltered | normalizeString(item).includes(normalizeString(query)))
     },
 
-    highlight(description, query) {
-      if (query.length) {
-        return description.toString().replace(query, `<span style="background: yellow;">${query}</span>`)
-      } else {
-        return description.toString()
-      }
-    },
     openProcessInNewTab(url, processCode) {
       navigator.clipboard.writeText(processCode)
       this.$jusNotification({
@@ -207,7 +206,6 @@ export default {
   }
 
   .jus-timeline {
-    // margin-top: -30px;
     background-color: transparent;
     width: 100%;
 
