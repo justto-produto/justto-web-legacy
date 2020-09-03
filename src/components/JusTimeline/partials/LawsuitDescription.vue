@@ -17,11 +17,20 @@
       </div>
       <div class="lawsuit-description__info">
         <strong class="lawsuit-description__info-title">Documentos</strong>
-        <span class="lawsuit-description__info-text">
-          <!-- TODO: Validar pra quando não tiver dados -->
+        <el-link
+          v-if="!!state.urlDocuments && state.urlDocuments.length"
+          class="lawsuit-description__info-download"
+          :href="state.urlDocuments[0]"
+          :underline="false">
           Baixar
-          <jus-icon class="lawsuit-description__document-download" icon="download-sheet" />
-          <!-- TODO: fazer requisição do state.urlDocuments -->
+          <jus-icon
+            class="lawsuit-description__document-download"
+            icon="download-sheet" />
+        </el-link>
+        <span
+          v-else
+          class="lawsuit-description__info-download">
+          {{ defaultMessage }}
         </span>
       </div>
     </div>
@@ -37,21 +46,26 @@
             <div
               slot="title"
               class="lawsuit-description__party-name">
-              {{ party.name }}
+              {{ party.name || defaultMessage }}
             </div>
             <ul class="lawsuit-description__party-list">
               <li class="lawsuit-description__party-info">
-                Tipo: {{ party.type }}
+                Tipo: {{ party.type || defaultMessage }}
               </li>
               <li class="lawsuit-description__party-info">
-                Polo: {{ party.profile }}
+                Polo: {{ party.profile || defaultMessage }}
+              </li>
+              <li class="lawsuit-description__party-info">
+                Documento: {{ party.document || defaultMessage }}
               </li>
             </ul>
           </el-collapse-item>
         </el-collapse>
       </div>
       <div class="lawsuit-description__container-party">
-        <div class="lawsuit-description__party-title">Advogado</div>
+        <div class="lawsuit-description__party-title">
+          Advogado
+        </div>
         <el-collapse class="lawsuit-description__party-collapse">
           <el-collapse-item
             v-for="(lawyer, lawyerIndex) in state.lawyers"
@@ -104,13 +118,15 @@ export default {
 </script>
 
 <style>
-/* Com scopped o estilo não estava sobrescrevendo. */
 .el-collapse-item__header {
   height: auto;
   margin: 8px;
 }
 .el-collapse-item__content {
   padding-bottom: 0px;
+}
+.lawsuit-description__document-download {
+  height: 16px;
 }
 </style>
 
@@ -148,9 +164,16 @@ export default {
         letter-spacing: 0px;
         color: #a3a3a3;
 
-        .lawsuit-description__document-download {
-          height: 16px;
+        .lawsuit-description__info-download {
+          padding: 0px;
+
+          .el-link--inner {
+            .lawsuit-description__document-download {
+              height: 16px;
+            }
+          }
         }
+
       }
     }
   }
