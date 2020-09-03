@@ -68,10 +68,10 @@
                   filterable
                 >
                   <el-option
-                    v-for="(state, index) in $store.state.statesList"
-                    :key="`${index}-${state}`"
-                    :label="state"
-                    :value="state"
+                    v-for="state in $store.state.brazilianStates"
+                    :key="state.value"
+                    :label="state.value"
+                    :value="state.value"
                     @keyup.enter.native="searchPerson"
                   />
                 </el-select>
@@ -230,10 +230,10 @@
               @blur="addOab(newRole.personId, newRole.oabs)"
             >
               <el-option
-                v-for="(state, index) in $store.state.statesList"
-                :key="`${index}-${state}`"
-                :label="state"
-                :value="state"
+                v-for="state in $store.state.brazilianStates"
+                :key="state.value"
+                :label="state.value"
+                :value="state.value"
               />
             </el-select>
           </el-form-item>

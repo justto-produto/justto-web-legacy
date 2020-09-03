@@ -30,10 +30,10 @@
             placeholder=""
           >
             <el-option
-              v-for="state in $store.state.statesList"
-              :key="state"
-              :label="state"
-              :value="state"
+              v-for="state in $store.state.brazilianStates"
+              :key="state.value"
+              :label="state.value"
+              :value="state.value"
             />
           </el-select>
         </el-form-item>
