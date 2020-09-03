@@ -1,24 +1,32 @@
 <template>
   <el-container class="lawsuit-description">
     <div class="lawsuit-description__container-info">
-      <div class="lawsuit-description__info">
+      <div
+        v-if="state.date"
+        class="lawsuit-description__info"
+      >
         <strong class="lawsuit-description__info-title">Distribuído em</strong>
-        <span class="lawsuit-description__info-text">{{ state.date || defaultMessage }}</span>
+        <span class="lawsuit-description__info-text">{{ state.date }}</span>
       </div>
 
-      <div class="lawsuit-description__info">
+      <div
+        v-if="state.area"
+        class="lawsuit-description__info">
         <strong class="lawsuit-description__info-title">Área</strong>
-        <span class="lawsuit-description__info-text">{{ state.area || 'Não informado' }}</span>
+        <span class="lawsuit-description__info-text">{{ state.area }}</span>
       </div>
 
-      <div class="lawsuit-description__info">
+      <div
+        v-if="state.source"
+        class="lawsuit-description__info">
         <strong class="lawsuit-description__info-title">Origem</strong>
-        <span class="lawsuit-description__info-text">{{ state.source || defaultMessage }}</span>
+        <span class="lawsuit-description__info-text">{{ state.source }}</span>
       </div>
-      <div class="lawsuit-description__info">
+      <div
+        v-if="!!state.urlDocuments && state.urlDocuments.length"
+        class="lawsuit-description__info">
         <strong class="lawsuit-description__info-title">Documentos</strong>
         <el-link
-          v-if="!!state.urlDocuments && state.urlDocuments.length"
           class="lawsuit-description__info-download"
           :href="state.urlDocuments[0]"
           :underline="false">
@@ -27,16 +35,13 @@
             class="lawsuit-description__document-download"
             icon="download-sheet" />
         </el-link>
-        <span
-          v-else
-          class="lawsuit-description__info-download">
-          {{ defaultMessage }}
-        </span>
       </div>
     </div>
     <div class="lawsuit-description__container-parties">
       <div class="lawsuit-description__container-party">
-        <div class="lawsuit-description__party-title">Parte</div>
+        <div class="lawsuit-description__party-title">
+          Parte(s)
+        </div>
         <el-collapse class="lawsuit-description__party-collapse">
           <el-collapse-item
             v-for="(party, partyIndex) in state.parties"
@@ -46,17 +51,23 @@
             <div
               slot="title"
               class="lawsuit-description__party-name">
-              {{ party.name || defaultMessage }}
+              {{ party.name }}
             </div>
             <ul class="lawsuit-description__party-list">
-              <li class="lawsuit-description__party-info">
-                Tipo: {{ party.type || defaultMessage }}
+              <li
+                v-if="party.type"
+                class="lawsuit-description__party-info">
+                Tipo: {{ party.type }}
               </li>
-              <li class="lawsuit-description__party-info">
-                Polo: {{ party.profile || defaultMessage }}
+              <li
+                v-if="party.profile"
+                class="lawsuit-description__party-info">
+                Polo: {{ party.profile }}
               </li>
-              <li class="lawsuit-description__party-info">
-                Documento: {{ party.document || defaultMessage }}
+              <li
+                v-if="party.document"
+                class="lawsuit-description__party-info">
+                Documento: {{ party.document }}
               </li>
             </ul>
           </el-collapse-item>
@@ -64,7 +75,7 @@
       </div>
       <div class="lawsuit-description__container-party">
         <div class="lawsuit-description__party-title">
-          Advogado
+          Advogado(s)
         </div>
         <el-collapse class="lawsuit-description__party-collapse">
           <el-collapse-item
@@ -78,14 +89,15 @@
               {{ lawyer.name }}
             </div>
             <ul class="lawsuit-description__party-list">
-              <li class="lawsuit-description__party-info">
-                Nome: {{ lawyer.name }}
+              <li
+                v-if="lawyer.oab"
+                class="lawsuit-description__party-info">
+                OAB: {{ lawyer.oab }}
               </li>
-              <li class="lawsuit-description__party-info">
-                OAB: {{ lawyer.oab || defaultMessage }}
-              </li>
-              <li class="lawsuit-description__party-info">
-                Parte: {{ lawyer.partyName.toLowerCase() || defaultMessage }}
+              <li
+                v-if="lawyer.partyName"
+                class="lawsuit-description__party-info">
+                Parte: {{ lawyer.partyName.toLowerCase() }}
               </li>
             </ul>
           </el-collapse-item>
@@ -110,9 +122,6 @@ export default {
     state() {
       return this.lawsuitDispute
     },
-    defaultMessage() {
-      return 'Não informado'
-    },
   },
 }
 </script>
@@ -133,6 +142,7 @@ export default {
 <style lang="scss" scoped>
 
 .lawsuit-description {
+  width: 100%;
   border: solid lightgray thin;
   border-radius: 8px;
   padding: 16px;
