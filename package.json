@@ -1,8 +1,13 @@
 {
   "name": "justto-web",
-  "version": "1.10.0",
-  "private": true,
+  "version": "1.10.483",
+  "homepage": "https://app.justto.com",
   "author": "Henrique Liberato",
+  "engines": {
+    "node": "^8.11.4",
+    "npm": "^5.6.0"
+  },
+  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build && apv update build",
@@ -48,6 +53,7 @@
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.6",
     "vue-socket.io": "^3.0.7",
+    "vue-text-highlight": "^2.0.10",
     "vue-the-mask": "^0.11.1",
     "vuex": "^3.1.1"
   },
@@ -123,10 +129,5 @@
       "**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
     ],
     "testURL": "http://localhost/"
-  },
-  "engines": {
-    "node": "^8.11.4",
-    "npm": "^5.6.0"
-  },
-  "homepage": "https://app.justto.com"
+  }
 }

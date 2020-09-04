@@ -83,23 +83,43 @@
           </el-tab-pane>
         </el-tabs>
         <div class="view-management__buttons">
-          <el-input
+          <!-- <el-input
             v-model="term"
             clearable
             prefix-icon="el-icon-search"
-          />
-          <el-button
-            :plain="!hasFilters"
-            :type="hasFilters ? 'primary' : ''"
-            @click="filtersVisible = true"
-          >
-            <jus-icon
-              :is-white="hasFilters"
-              icon="filter"
-              data-testid="management-filterbtn"
-            />
-            Filtrar
-          </el-button>
+          /> -->
+          <JusFilterButton @getDisputes="getDisputes" />
+          <el-select
+            v-model="ufFilterValue"
+            :filter-method="ufSearch"
+            multiple
+            filterable
+            collapse-tags
+            placeholder="UF"
+            class="view-management__buttons-select"
+            @change="setUfFilter">
+            <el-option
+              v-for="state in filteredBrazilianStates"
+              :key="state.value"
+              :label="state.value"
+              :value="state.value">
+              <span>{{ state.name }}</span>
+              <span class="view-management__select-options">{{ state.value }}</span>
+            </el-option>
+          </el-select>
+          <el-tooltip content="Filtrar disputas">
+            <el-button
+              :plain="!hasFilters"
+              :type="hasFilters ? 'primary' : ''"
+              @click="filtersVisible = true"
+            >
+              <jus-icon
+                :is-white="hasFilters"
+                icon="filter"
+                data-testid="management-filterbtn"
+              />
+            </el-button>
+          </el-tooltip>
           <el-tooltip content="Importar disputas">
             <el-button
               plain
@@ -107,11 +127,11 @@
             >
               <jus-icon
                 icon="upload-file"
-                style="width: 20px;"
+                style="width: 16px;"
               />
             </el-button>
           </el-tooltip>
-          <el-tooltip content="Exportação">
+          <el-tooltip content="Exportar">
             <el-button
               :disabled="disputes.length === 0"
               plain
@@ -394,13 +414,15 @@ export default {
     ManagementActions: () => import('./partials/ManagementActions'),
     ManagementPrescriptions: () => import('./partials/ManagementPrescriptions'),
     JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
+    JusFilterButton: () => import('@/components/buttons/JusFilterButton'),
     JusLoader: () => import('@/components/others/JusLoader'),
   },
   data() {
     return {
       loadingExport: false,
       filtersVisible: false,
-      termDebounce: '',
+      termDebounce: () => {},
+      ufDebounce: () => {},
       disputeDebounce: '',
       selectedIds: [],
       importDialogVisible: false,
@@ -413,10 +435,13 @@ export default {
       columnsList: [],
       showAllNodes: false,
       isExportingProtocol: false,
+      filteredBrazilianStates: [],
+      ufFilterValue: [],
     }
   },
   computed: {
     ...mapGetters({
+      brazilianStates: 'getBrazilianStates',
       disputes: 'disputes',
       engagementLength: 'disputeNearExpirationsEngajement',
       interactionLength: 'disputeNotVisualizedInteration',
@@ -451,23 +476,23 @@ export default {
     persons() {
       return this.$store.state.disputeModule.query.persons
     },
-    term: {
-      get() {
-        return this.$store.getters.disputeQueryTerm
-      },
-      set(term) {
-        this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
-      },
-    },
+    // term: {
+    //   get() {
+    //     return this.$store.getters.disputeQueryTerm
+    //   },
+    //   set(term) {
+    //     this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
+    //   },
+    // },
   },
   watch: {
-    term(term) {
-      clearTimeout(this.termDebounce)
-      this.termDebounce = setTimeout(() => {
-        this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
-        this.getDisputes()
-      }, 800)
-    },
+    // term(term) {
+    //   clearTimeout(this.termDebounce)
+    //   this.termDebounce = setTimeout(() => {
+    //     this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
+    //     this.getDisputes()
+    //   }, 800)
+    // },
     persons() {
       this.getDisputes()
     },
@@ -508,6 +533,8 @@ export default {
       this.filteredNodes = this.columns
       this.checkedNodes = this.columns.length
     })
+
+    this.filteredBrazilianStates = this.brazilianStates
   },
   methods: {
     ...mapActions([
@@ -517,6 +544,17 @@ export default {
       'getExportHistory',
       'getPrescriptions',
     ]),
+    ufSearch(value) {
+      this.filteredBrazilianStates = filterByTerm(value, this.brazilianStates, 'name', 'value')
+    },
+    setUfFilter(data) {
+      clearTimeout(this.ufDebounce)
+      this.ufDebounce = setTimeout(() => {
+        this.$jusSegment('Filtro por estado aplicado', { description: `Estados selecionados: ${data}` })
+        this.$store.commit('updateDisputeQuery', { key: 'uf', value: data })
+        this.getDisputes()
+      }, 800)
+    },
     changeExportType() {
       this.isExportingProtocol = !this.isExportingProtocol
     },
@@ -584,6 +622,7 @@ export default {
     },
     handleChangeTab(tab) {
       this.$refs.managementTable.showEmpty = false
+      this.ufFilterValue = []
       this.$store.commit('clearDisputes')
       this.$store.commit('clearDisputeQueryByTab')
       this.$store.commit('setDisputeHasFilters', false)
@@ -697,13 +736,42 @@ export default {
     justify-content: space-between;
   }
   &__buttons {
-    .el-input + button {
-      margin-left: 10px;
+    // .el-input + button {
+    //   margin-left: 10px;
+    // }
+    // .el-input {
+    //   width: 180px;
+    //   vertical-align: middle;
+    // }
+
+    .view-management__buttons-select {
+      margin: 0 8px;
+      width: 108px;
+
+      .el-input {
+        width: 108px;
+      }
+
+      .el-select__tags {
+        max-width: 88px !important;
+
+        .el-tag:first-child {
+          padding: 0 0 0 4px;
+          .el-tag__close { right: 0; }
+        }
+
+        .el-tag:last-child {
+          padding: 0 4px;
+          margin-left: 4px;
+        }
+
+        .el-select__input {
+          max-width: 20px !important;
+          margin-left: 8px !important;
+        }
+      }
     }
-    .el-input {
-      width: 180px;
-      vertical-align: middle;
-    }
+
     img {
       margin: -3px 0px;
       width: 14px;
@@ -817,7 +885,22 @@ export default {
     }
   }
 
+  .view-management__tabs {
+    .el-tabs__header  {
+      @media (max-height: 680px) {
+        margin: 0 0 8px;
+      }
+    }
+  }
+
 }
+
+.view-management__select-options {
+  float: right;
+  color: #8492a6;
+  margin: 0 16px 0 8px
+}
+
 .el-table {
   .finished-row {
     color: $--color-success;

@@ -97,6 +97,10 @@ export default {
       background-color: rgba(246, 245, 246, 0.89);
       margin: 20px;
     }
+
+    @media (max-height: 680px) {
+      padding: 5px;
+    }
   }
   &__main-card {
     width: 100%;
@@ -137,6 +141,14 @@ export default {
   }
   &__zero-width{
     width: 0 !important;
+  }
+
+  .jus-main-view__main-card {
+    .el-card__body {
+      @media (max-height: 680px) {
+        padding: 10px 10px 0 10px;
+      }
+    }
   }
 }
 </style>

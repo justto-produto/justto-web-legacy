@@ -1,5 +1,9 @@
 .el-menu--main-menu {
   margin-top: 118px;
+
+  @media (max-height: 640px) {
+    margin-top: 40px;
+  }
 }
 
 .el-menu--team-menu {

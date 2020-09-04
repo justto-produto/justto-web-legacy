@@ -30,12 +30,28 @@ export default {
   name: 'JusFilterButton',
   data() {
     return {
-      term: '',
       isCollapsed: true,
       debounce: '',
     }
   },
+  computed: {
+    term: {
+      get() {
+        return this.$store.getters.disputeQueryTerm
+      },
+      set(term) {
+        this.$store.commit('updateDisputeQuery', { key: 'term', value: term })
+      },
+    },
+  },
   watch: {
+    term(term) {
+      clearTimeout(this.termDebounce)
+      this.termDebounce = setTimeout(() => {
+        this.$jusSegment('Busca de disputas na tabela do gerenciamento', { description: `Termo utilizado: ${term}` })
+        this.$emit('getDisputes')
+      }, 800)
+    },
     isCollapsed(isCollapsed) {
       if (isCollapsed) {
         this.term = ''
@@ -44,15 +60,8 @@ export default {
         this.focus()
       }
     },
-    term(term) {
-      clearTimeout(this.debounce)
-      this.debounce = setTimeout(() => {
-        this.$store.commit('setDisputeFilterTerm', term)
-      }, 800)
-    },
   },
   beforeMount() {
-    this.term = this.$store.getters.disputeFiltersTerm
     if (this.term) this.isCollapsed = false
   },
   methods: {
@@ -61,9 +70,7 @@ export default {
     },
     blur() {
       setTimeout(() => {
-        if (!this.term) {
-          this.isCollapsed = true
-        }
+        if (!this.term) this.isCollapsed = true
       }, 250)
     },
     focus() {
@@ -77,15 +84,12 @@ export default {
 @import '@/styles/colors.scss';
 
 .jus-filter-button {
-  position: relative;
   display: inline-block;
-  white-space: nowrap;
   .el-input {
-    position: absolute;
   }
   .el-input__inner {
     transition: width 0.5s ease, padding 0.5s ease;
-    width: 303px;
+    width: 180px;
     border-left: 0;
     &:hover {
       border-left: 1px solid $--color-text-regular;

@@ -104,30 +104,10 @@
               data-testid="dispute-infoline"
             >
               <span class="title">Processo:</span>
-              <el-link
-                class="code"
-                @click="openTimelineModal(dispute)">
-                {{ dispute.code }}
-                <jus-icon
-                  class="icon"
-                  icon="external-link"
-                />
-              </el-link>
-              <!-- <span
-                v-if="!!getDisputeProperties.ENDERECO_DO_PROCESSO"
-                class="code"
-              >
-                <el-link
-                  class="link"
-                  @click="openTimelineModal(dispute)">
-                  {{ dispute.code }}
-                  <jus-icon
-                    class="icon"
-                    icon="external-link"
-                  />
-                </el-link>
-              </span>
-              <span v-else>{{ dispute.code }}</span> -->
+              <dispute-code-link
+                :code="dispute.code"
+                :custom-style="{ fontSize: '14px', marginLeft: '12px'}"
+                @click="openTimelineModal" />
             </div>
             <div
               v-if="dispute.campaign"
@@ -391,7 +371,7 @@
             </div>
           </div>
           <el-tooltip
-            :disabled="!dispute.status === 'PRE_NEGOTIATION'"
+            :disabled="dispute.status !== 'PRE_NEGOTIATION'"
             content="Disputas em pré-negociação não podem ser editadas"
           >
             <div class="dispute-overview-view__actions">
@@ -507,7 +487,7 @@
                 <el-select
                   v-model="role.party"
                   placeholder="Defina o polo desta parte"
-                  v-if="role.party === 'UNKNOW'"
+                  v-if="role.party === 'UNKNOWN'"
                   @change="setDisputeParty(role)"
                 >
                   <el-option
@@ -1105,8 +1085,7 @@
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="editRoleDialogVisible"
-        width="40%"
-      >
+        width="40%" >
         <span
           slot="title"
           class="el-dialog__title"
@@ -1186,10 +1165,10 @@
                 @blur="addOab(roleForm.personId, roleForm.oabs)"
               >
                 <el-option
-                  v-for="(state, index) in $store.state.statesList"
-                  :key="`${index}-${state}`"
-                  :label="state"
-                  :value="state"
+                  v-for="state in $store.state.brazilianStates"
+                  :key="state.value"
+                  :label="state.value"
+                  :value="state.value"
                 />
               </el-select>
             </el-form-item>
@@ -1276,7 +1255,7 @@
               <template slot-scope="scope">
                 <el-tooltip
                   :open-delay="500"
-                  :content="scope.row.isMain ? 'Este e-mail receberá mensagens automáticas' : 'Este e-mail não recberá mensagens automáticas'"
+                  :content="scope.row.isMain ? 'Este número receberá mensagens automáticas' : 'Este número não recberá mensagens automáticas'"
                 >
                   <span class="dispute-overview-view__switch-main">
                     <jus-icon
@@ -1442,8 +1421,7 @@
         :close-on-click-modal="false"
         :visible.sync="addBankDialogVisible"
         title="Adicionar conta bancária"
-        width="40%"
-      >
+        width="40%" >
         <el-form
           ref="addBankForm"
           :model="addBankForm"
@@ -1536,21 +1514,11 @@
         :document-numbers="documentNumbers"
         :oabs="oabs"
       />
-      <el-dialog
-        v-loading="loading"
-        width="65%"
-        class="dialog-timeline"
-        :visible.sync="disputeTimelineModal"
-        @close="hideTimelineModal">
-        <div
-          slot="title"
-          class="dialog-timeline__title">
-          <span v-if="disputeTimeline.lastUpdated">
-            Pesquisado em {{ $moment(disputeTimeline.lastUpdated).format('DD/MM/YYYY [às] hh:mm') }}
-          </span>
-        </div>
-        <jus-timeline />
-      </el-dialog>
+      <jus-timeline
+        v-if="disputeTimelineModal"
+        v-model="disputeTimelineModal"
+        :code="dispute.code"
+      />
     </div>
   </div>
 </template>
@@ -1566,7 +1534,7 @@ export default {
   name: 'DisputeOverview',
   components: {
     DisputeAttachments,
-
+    DisputeCodeLink: () => import('../DisputeCodeLink'),
     DisputeAddRole: () => import('../DisputeAddRole'),
     DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
@@ -1686,18 +1654,14 @@ export default {
       disputePartys: [
         {
           value: 'RESPONDENT',
-          label: 'Réu',
+          label: 'Advogado do réu',
         },
         {
           value: 'CLAIMANT',
-          label: 'Parte contrária',
+          label: 'Advogado da parte contrária',
         },
         {
-          value: 'IMPARTIAL',
-          label: 'Arbitro/Juiz/Mediador',
-        },
-        {
-          value: 'UNKNOW',
+          value: 'UNKNOWN',
           label: 'Desconhecido',
         },
       ],
@@ -1705,8 +1669,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      disputeTimeline: 'disputeTimeline',
-      timeline: 'timeline',
       getDisputeProperties: 'disputeProprieties',
       disputeStatuses: 'disputeStatuses',
     }),
@@ -1760,8 +1722,8 @@ export default {
         }
         return []
       },
-      set(bankAccountId) {
-        this.updateDisputeBankAccounts(bankAccountId)
+      set(bankAccountIds) {
+        this.updateDisputeBankAccounts(bankAccountIds)
       },
     },
     selectedRole: {
@@ -1860,6 +1822,9 @@ export default {
       })
     }
   },
+  mounted() {
+    this.populateTimeline()
+  },
   methods: {
     ...mapActions([
       'removeDispute',
@@ -1867,14 +1832,23 @@ export default {
       'getDisputeTimeline',
     ]),
 
-    openTimelineModal(dispute) {
-      this.getDisputeTimeline(dispute.code)
-      this.$nextTick(() => {
-        this.disputeTimelineModal = true
-      })
+    async populateTimeline() {
+      let getting = true
+      for (const round in [0, 1, 2, 3, 4]) {
+        if (getting) {
+          await new Promise(resolve => { setTimeout(resolve, round * 2000) })
+          this.getDisputeTimeline(this.dispute.code).then(() => {
+            getting = false
+          }).catch()
+        } else {
+          break
+        }
+      }
     },
-    hideTimelineModal() {
-      this.diputeTimelineModal = false
+
+    openTimelineModal() {
+      this.disputeTimelineModal = true
+      this.$jusSegment('Linha do tempo visualizada por dentro da disputa', { disputeId: this.dispute.id })
     },
 
     buildRoleTitle: (...i) => buildRoleTitle(...i),
@@ -2104,7 +2078,7 @@ export default {
       })
       const dispute = JSON.parse(JSON.stringify(this.dispute))
       this.editDisputeDialogLoading = false
-      this.selectedClaimantId = this.disputeClaimants ? this.disputeClaimants[0].id : ''
+      this.selectedClaimantId = this.disputeClaimants && this.disputeClaimants.length ? this.disputeClaimants[0].id : ''
       this.selectedNegotiatorId = this.disputeNegotiations && this.disputeNegotiations.length > 0 ? this.disputeNegotiations[0].id : ''
       this.disputeForm.id = dispute.id
       this.disputeForm.disputeCode = dispute.code
@@ -2297,13 +2271,14 @@ export default {
       }
     },
     editRoleAction() {
+      const hasNewBankAccount = this.roleForm.bankAccounts.filter(account => !account.id).length
       const roleToEdit = JSON.parse(JSON.stringify(this.roleForm))
       delete roleToEdit.title
       this.editRoleDialogLoading = true
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
         disputeRole: roleToEdit,
-      }).then(() => {
+      }).then(response => {
         // SEGMENT TRACK
         this.$jusSegment('Editar partes da disputa', { description: `Usuário ${roleToEdit.name} alterado` })
         this.$jusNotification({
@@ -2342,6 +2317,27 @@ export default {
                 dangerouslyUseHTMLString: true,
               })
             })
+          })
+        }
+        if (hasNewBankAccount) {
+          this.$confirm('Você adicionou contas bancárias a esta parte. Deseja vincular estas contas a disputa?', 'Atenção', {
+            confirmButtonText: 'Vincular',
+            cancelButtonText: 'Cancelar',
+            type: 'warning',
+            cancelButtonClass: 'is-plain',
+          }).then(() => {
+            const bankAccounts = response.bankAccounts
+            const newBankAccounts = bankAccounts.sort((accountA, accountB) => {
+              if (accountA.createdAt > accountB.createdAt) {
+                return 1
+              } else if (accountA.createdAt < accountB.createdAt) {
+                return -1
+              } else {
+                return 0
+              }
+            }).slice(-hasNewBankAccount).map(ba => ba.id)
+            this.disputeBankAccountsIds = ([...this.disputeBankAccountsIds, ...newBankAccounts])
+            // this.updateDisputeBankAccounts(newBankAccount.id)
           })
         }
         this.editRoleDialogVisible = false
@@ -2533,6 +2529,15 @@ export default {
 
   .dispute-overview-view__loading {
     height: 100%;
+
+    .dispute-overview-view__timeline {
+      .dispute-overview-view__timeline-title {
+        text-align: center;
+        letter-spacing: 0px;
+        color: #424242;
+        font-weight: bold;
+      }
+    }
   }
 
   &__title {

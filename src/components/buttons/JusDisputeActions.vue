@@ -148,7 +148,7 @@
         placeholder="Escolha o motivo da perda"
       >
         <el-option
-          v-for="(type, index) in unsettledTypes"
+          v-for="(type, index) in disputeStatuses.UNSETTLED"
           :key="index"
           :label="type"
           :value="index"
@@ -447,7 +447,7 @@ export default {
         {
           name: 'resend-messages',
           icon: 'resend-messages',
-          condition: () => !this.tableActions,
+          condition: () => !this.tableActions && !this.isPreNegotiation,
           action: () => this.disputeAction('resend-messages'),
           tooltip: 'Reenviar mensagens automáticas',
         },
@@ -530,9 +530,6 @@ export default {
         },
       ]
     },
-    unsettledTypes() {
-      return this.disputeStatuses.UNSETTLED
-    },
     canSettled() {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED' && !this.isPreNegotiation
     },
@@ -611,8 +608,8 @@ export default {
   },
   methods: {
     ...mapActions([
+      'deleteDocument',
       'disputeSetVisualized',
-      'getDisputeStatuses',
       'removeDispute',
       'sendDisputeAction',
       'sendDisputeNote',
@@ -642,7 +639,7 @@ export default {
           if (this.isInsufficientUpperRange) {
             this.disputeAction('send-counterproposal')
           } else {
-            additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
+            additionParams = { body: { reason: this.disputeStatuses.UNSETTLED[this.unsettledType] } }
             this.doAction('unsettled', message, additionParams).then(() => {
               this.chooseUnsettledDialogVisible = false
             }).finally(() => {
@@ -687,7 +684,24 @@ export default {
           this.doAction(action, message)
           break
         case 'renegotiate':
-          this.doAction(action, message)
+          this.doAction(action, message).then(() => {
+            if (this.dispute.hasDocument) {
+              this.$confirm('Esta disputa possui documento gerado, deseja exclui-lo?', 'Excluir documento', {
+                confirmButtonText: 'Continuar',
+                cancelButtonText: 'Cancelar',
+                cancelButtonClass: 'is-plain',
+                type: 'warning',
+              }).then(() => {
+                this.deleteDocument(this.dispute.id).then(() => {
+                  this.$jusNotification({
+                    type: 'success',
+                    title: 'Yay!',
+                    message: 'Documento excluido com sucesso',
+                  })
+                })
+              })
+            }
+          })
           break
         case 'counterproposal':
           if (this.dispute.paused) {
@@ -705,7 +719,7 @@ export default {
         case 'send-counterproposal':
           if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE') {
             this.sendCounterproposal().then(() => {
-              additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
+              additionParams = { body: { reason: this.disputeStatuses.UNSETTLED[this.unsettledType] } }
               this.doAction('unsettled', message, additionParams).then(() => {
                 this.chooseUnsettledDialogVisible = false
               }).finally(() => {
@@ -789,6 +803,7 @@ export default {
       })
     },
     dropLawsuit() {
+      this.$jusSegment('Baixa definitiva na disputa', { disputeId: this.dispute.id })
       this.$confirm('Esta ação é irreversível, tem certeza que deseja continuar?', 'Baixa definitiva', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
@@ -804,6 +819,7 @@ export default {
     },
     goToNegotiation() {
       this.startNegotiation(this.dispute.id)
+      this.$jusSegment('Negociação iniciada na disputa', { disputeId: this.dispute.id })
     },
     openNewTab() {
       const routeData = this.$router.resolve({ name: 'dispute', params: { id: this.dispute.id } })

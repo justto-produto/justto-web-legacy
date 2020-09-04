@@ -2,12 +2,14 @@
   <div class="jus-team-menu">
     <div class="jus-team-menu__members">
       <a
-        v-for="member in members"
+        v-for="member in workspaceMembersSorted"
         :key="member.id + '-' + member.personId"
         class="jus-team-menu__member"
         @click.prevent="setFilterPersonId(member.person.id, member.person.name)"
       >
-        <el-tooltip :content="member.person.name">
+        <el-tooltip
+          :content="member.person.name"
+          placement="right">
           <jus-avatar-user
             :name="member.person.name"
             :active="activePersonsIds.includes(member.person.id)"
@@ -22,14 +24,18 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'JusTeamMenu',
   computed: {
-    members() {
-      return this.$store.state.workspaceModule.members
-    },
+    ...mapGetters([
+      'disputeQuery',
+      'workspaceMembersSorted',
+    ]),
+
     activePersonsIds() {
-      return this.$store.getters.disputeQuery.persons || []
+      return this.disputeQuery.persons || []
     },
   },
   methods: {
@@ -52,6 +58,10 @@ export default {
   &__title {
     text-align: center;
     margin: 80px 0 20px;
+
+    @media (max-height: 680px) {
+      margin: 40px 0 10px;
+    }
   }
   &__members {
     display: flex;

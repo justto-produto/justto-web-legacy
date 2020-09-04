@@ -108,7 +108,7 @@
                     v-model="role.party"
                     size="mini"
                     placeholder="Defina o polo desta parte"
-                    v-if="role.party === 'UNKNOW' && handlePartyId['party_role' + role.id]"
+                    v-if="role.party === 'UNKNOWN' && handlePartyId['party_role' + role.id]"
                     @change="setDisputeParty(role)">
                     <el-option
                       v-for="party in disputePartys"
@@ -225,6 +225,19 @@
                           <span v-html="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).message" />
                         </div>
                         <jus-icon :icon="buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt).icon" />
+                      </el-tooltip>
+                    </span>
+                    <span
+                      v-if="buildCommunicationType(occurrence).startsWith('SMS') && buildEmailStatus(occurrence)"
+                      class="dispute-view-occurrences__whats-status" >
+                      <el-tooltip popper-class="mw400">
+                        <div
+                          slot="content"
+                          style="max-width: 400px;text-align: justify;"
+                        >
+                          <span v-html="buildEmailStatus(occurrence).message" />
+                        </div>
+                        <jus-icon :icon="buildEmailStatus(occurrence).icon" />
                       </el-tooltip>
                     </span>
                     <span v-if="showResume(occurrence)">
@@ -539,18 +552,14 @@ export default {
       disputePartys: [
         {
           value: 'RESPONDENT',
-          label: 'Réu',
+          label: 'Advogado do réu',
         },
         {
           value: 'CLAIMANT',
-          label: 'Parte contrária',
+          label: 'Advogado da parte contrária',
         },
         {
-          value: 'IMPARTIAL',
-          label: 'Arbitro/Juiz/Mediador',
-        },
-        {
-          value: 'UNKNOW',
+          value: 'UNKNOWN',
           label: 'Desconhecido',
         },
       ],
@@ -787,7 +796,7 @@ export default {
       if (canHandleParty) {
         let dispute = this.$store.getters.dispute
         let roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
-        let filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOW')
+        let filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
         return filteredRole
       }
       return canHandleParty

@@ -2,7 +2,6 @@
   <div>
     <el-dialog
       :visible.sync="visible"
-      :title="title"
       :width="width"
       :class="{ 'jus-protocol-dialog--full': fullscreen && step === 1, 'jus-protocol-dialog--large': [1, 4].includes(step) && !fullscreen }"
       :close-on-click-modal="false"
@@ -11,6 +10,29 @@
       append-to-body
       class="jus-protocol-dialog"
     >
+      <div
+        slot="title"
+        class="jus-protocol-dialog__title">
+        <span v-if="document.signedDocument">
+          <el-link
+            target="_blank"
+            :underline="false"
+            @click="openDocumentInNewTab"
+          >
+            {{ title }}
+            <sup>
+              <jus-icon
+                style="height: 0.75rem;"
+                icon="external-link"
+                class="data-table__dispute-link-icon"
+              />
+            </sup>
+          </el-link>
+        </span>
+        <span v-else>
+          {{ title }}
+        </span>
+      </div>
       <div v-loading="loading">
         <!-- ESCOLHA DE TEMPLATE -->
         <div
@@ -32,13 +54,13 @@
         </div>
         <!-- EDIÇÃO DE TEMPLATE -->
         <el-tooltip
-          v-if="step === 1"
+          v-if="step === 1 && !isLowHeight"
           :content="fullscreen ? 'Reduzir tela' : 'Expandir tela'"
         >
           <i
             :class="fullscreen ? 'el-icon-bottom-left' : 'el-icon-top-right'"
             class="jus-protocol-dialog__fullscreen-icon"
-            @click="fullscreen = !fullscreen"
+            @click="changeFullscreen"
           />
         </el-tooltip>
         <div v-if="step === 1">
@@ -245,7 +267,7 @@
           />
         </div>
       </div>
-      <span
+      <div
         slot="footer"
         class="dialog-footer"
       >
@@ -254,6 +276,7 @@
           :disabled="loading"
           icon="el-icon-delete"
           plain
+          :size="buttonSize"
           type="danger"
           @click="deleteDocument"
         >
@@ -262,6 +285,7 @@
         <el-button
           v-if="step !== 4"
           :disabled="loading"
+          :size="buttonSize"
           plain
           @click="visible = false"
         >
@@ -275,14 +299,13 @@
             type="secondary"
             @click="backDocumentToEditing"
           >
-            Voltar
-            <!-- documento -->
-            para edição
+            Voltar para edição
           </el-button>
         </el-tooltip>
         <el-button
           v-if="[2, 4].includes(step)"
           :disabled="loading"
+          :size="buttonSize"
           plain
           @click="backToDocument"
         >
@@ -290,6 +313,7 @@
         </el-button>
         <el-button
           v-if="step === 1"
+          :size="buttonSize"
           :disabled="loading"
           type="primary"
           @click="step = 2, hideForms()"
@@ -298,6 +322,7 @@
         </el-button>
         <el-button
           v-if="step === 2"
+          :size="buttonSize"
           :disabled="!hasEmails || loadingChooseRecipients"
           type="primary"
           @click="confirmChooseRecipients"
@@ -324,21 +349,22 @@
             :disabled="loading"
             icon="el-icon-refresh-right"
             type="primary"
+            :size="buttonSize"
             @click="resendSignersNotification"
           >
             Reenviar
-            <!-- pendentes -->
           </el-button>
         </el-tooltip>
         <el-button
           v-if="false && step === 3"
           icon="el-icon-view"
+          :size="buttonSize"
           type="primary"
           @click="visualizePdf"
         >
           Visualizar
         </el-button>
-      </span>
+      </div>
     </el-dialog>
     <el-dialog
       :visible.sync="confirmChooseRecipientsVisible"
@@ -346,7 +372,7 @@
       :close-on-press-escape="false"
       :show-close="false"
       title="Confirmar partes para assinatura"
-      width="50%"
+      width="60%"
       append-to-body
     >
       <el-alert
@@ -396,6 +422,7 @@
 
 <script>
 import { validateObjectEmail, validateCpf } from '@/utils/validations'
+import { IS_SMALL_WINDOW } from '@/constants/variables'
 
 export default {
   name: 'JusProtocolDialog',
@@ -454,6 +481,7 @@ export default {
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
         ],
       },
+      isLowHeight: false,
     }
   },
   computed: {
@@ -486,7 +514,7 @@ export default {
       if ([1, 4].includes(this.step)) {
         return '85%'
       }
-      return '70%'
+      return '80%'
     },
     hasEmails() {
       let hasEmails = false
@@ -513,6 +541,10 @@ export default {
 
       return null
     },
+    buttonSize() {
+      return IS_SMALL_WINDOW ? 'mini' : false
+    },
+
   },
   watch: {
     visible(value) {
@@ -532,7 +564,23 @@ export default {
       }
     },
   },
+  mounted() {
+    if (IS_SMALL_WINDOW) {
+      this.isLowHeight = true
+      this.fullscreen = true
+    }
+  },
   methods: {
+    openDocumentInNewTab() {
+      const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
+      navigator.clipboard.writeText(url)
+      this.$jusNotification({
+        title: 'Yay!',
+        message: 'URL do documento copiado!',
+        type: 'success',
+      })
+      setTimeout(() => window.open(url), 1500)
+    },
     addDocument(role, formIndex) {
       const documentForm = this.$refs['documentForm' + formIndex][0]
       documentForm.validate(valid => {
@@ -813,17 +861,30 @@ export default {
         })
       })
     },
+    changeFullscreen() {
+      this.fullscreen = !this.fullscreen
+    },
   },
 }
 </script>
 
 <style lang="scss">
 .jus-protocol-dialog {
+  &__title {
+    span {
+      font-weight: bold;
+    }
+  }
   &--full {
     padding: 10px;
     .el-dialog {
       .el-dialog__body {
         height: calc(100vh - 200px);
+
+        @media (max-height: 640px) {
+          margin: 10px;
+          height: calc(100vh - 120px);
+        }
       }
     }
   }

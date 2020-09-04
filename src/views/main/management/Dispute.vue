@@ -109,6 +109,13 @@
                   (+ {{ selectedContacts.length - 1 }})
                 </span>
               </el-tooltip>
+              <el-tooltip :content="`Você está enviando um ${messageType}`">
+                <jus-icon
+                  :is-active="true"
+                  :icon="messageType"
+                  class="dispute-view__send-to-icon"
+                />
+              </el-tooltip>
             </div>
             <el-tabs
               ref="messageTab"
@@ -182,32 +189,6 @@
                         Configure um nome em seu perfil
                       </div>
                     </el-tooltip>
-                    <div v-else>
-                      <el-tooltip content="Enviar E-mail">
-                        <a
-                          href="#"
-                          data-testid="select-email"
-                          @click.prevent="setMessageType('email')"
-                        >
-                          <jus-icon
-                            :is-active="messageType === 'email'"
-                            icon="email"
-                          />
-                        </a>
-                      </el-tooltip>
-                      <el-tooltip content="Enviar Whatsapp">
-                        <a
-                          href="#"
-                          data-testid="select-whatsapp"
-                          @click.prevent="setMessageType('whatsapp')"
-                        >
-                          <jus-icon
-                            :is-active="messageType === 'whatsapp'"
-                            icon="whatsapp"
-                          />
-                        </a>
-                      </el-tooltip>
-                    </div>
                     <div>
                       <el-tooltip
                         :key="buttonKey"
@@ -457,12 +438,8 @@ export default {
   created() {
     this.id = this.$route.params.id.toString()
     this.fetchData()
-    if (this.disputeStatuses.UNSETTLED) {
-      this.unsettledTypes = this.disputeStatuses.UNSETTLED
-    } else {
-      this.getDisputeStatuses('UNSETTLED').then(response => {
-        this.unsettledTypes = response
-      })
+    if (!this.disputeStatuses.UNSETTLED || !Object.keys(this.disputeStatuses.UNSETTLED).length) {
+      this.getDisputeStatuses('UNSETTLED')
     }
     if (!(this.$store.getters.isJusttoAdmin && this.$store.getters.ghostMode)) {
       this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
@@ -757,7 +734,7 @@ export default {
     .el-tabs, .el-tab-pane, .el-card__body {
       height: 100%;
     }
-    .el-tabs__content, .dispute-view__send-message-box, .ql-container, .quill-editor {
+    .el-tabs__content, .dispute-view__send-message-box, .ql-container {
       height: calc(100% - 30px);
     }
     .ql-container {
@@ -766,15 +743,34 @@ export default {
     .ql-toolbar {
       display: none;
     }
+    .dispute-view__send-to {
+      display: flex;
+      align-items: center;
+    }
+    .dispute-view__send-to-icon {
+      margin-left: 8px;
+      width: 20px;
+    }
   }
   &__quill {
-    height: calc(100% - 37px);
+    height: calc(100% - 44px);
     position: relative;
     &.show-toolbar {
       .ql-toolbar {
         display: inherit;
       }
     }
+
+    .quill-editor {
+      height: calc(100% - 8px);
+      .ql-container {
+        margin-bottom: 0;
+        .ql-editor {
+          padding: 0 !important;
+        }
+      }
+    }
+
     .dispute-view__attach {
       position: absolute;
       top: 10px;
@@ -818,19 +814,10 @@ export default {
     }
   }
   &__send-message-actions {
+    margin-top: 8px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: flex-end;
-    margin-left: -2px;
-    img {
-      margin-right: 10px;
-      height: 20px;
-      vertical-align: middle;
-      &:nth-child(2) {
-        height: 19px;
-        margin-right: 11px;
-      }
-    }
     &.note {
       justify-content: flex-end;
     }

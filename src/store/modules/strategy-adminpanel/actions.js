@@ -103,9 +103,11 @@ const StrategyActions = {
     method: 'PUT',
     data: template,
   }),
+
   incrementStrategySize(state) {
     state.strategySize = state.strategySize + 10
   },
+
   clearStrategySize(state) {
     state.strategySize = state.strategyInitialSize
   },
