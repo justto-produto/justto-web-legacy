@@ -148,7 +148,7 @@
         placeholder="Escolha o motivo da perda"
       >
         <el-option
-          v-for="(type, index) in unsettledTypes"
+          v-for="(type, index) in disputeStatuses.UNSETTLED"
           :key="index"
           :label="type"
           :value="index"
@@ -530,9 +530,6 @@ export default {
         },
       ]
     },
-    unsettledTypes() {
-      return this.disputeStatuses.UNSETTLED
-    },
     canSettled() {
       return this.dispute && this.dispute.status && this.dispute.status !== 'SETTLED' && !this.isPreNegotiation
     },
@@ -613,7 +610,6 @@ export default {
     ...mapActions([
       'deleteDocument',
       'disputeSetVisualized',
-      'getDisputeStatuses',
       'removeDispute',
       'sendDisputeAction',
       'sendDisputeNote',
@@ -643,7 +639,7 @@ export default {
           if (this.isInsufficientUpperRange) {
             this.disputeAction('send-counterproposal')
           } else {
-            additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
+            additionParams = { body: { reason: this.disputeStatuses.UNSETTLED[this.unsettledType] } }
             this.doAction('unsettled', message, additionParams).then(() => {
               this.chooseUnsettledDialogVisible = false
             }).finally(() => {
@@ -723,7 +719,7 @@ export default {
         case 'send-counterproposal':
           if (this.unsettledType === 'INSUFFICIENT_UPPER_RANGE') {
             this.sendCounterproposal().then(() => {
-              additionParams = { body: { reason: this.unsettledTypes[this.unsettledType] } }
+              additionParams = { body: { reason: this.disputeStatuses.UNSETTLED[this.unsettledType] } }
               this.doAction('unsettled', message, additionParams).then(() => {
                 this.chooseUnsettledDialogVisible = false
               }).finally(() => {
