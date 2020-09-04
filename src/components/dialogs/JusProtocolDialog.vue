@@ -268,7 +268,7 @@
           Cancelar
         </el-button>
         <el-tooltip
-          v-if="document.canEdit"
+          v-if="document.canEdit && [2, 3, 4].includes(step)"
           content="Volta documento para edição.">
           <el-button
             :disabled="loading"
@@ -801,6 +801,8 @@ export default {
       }).then(() => {
         this.loading = true
         this.$store.dispatch('backDocumentToEditing', this.disputeId).then(() => {
+          this.step = 1
+          this.loading = false
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ok, seu documento voltou para faze de edição!',
