@@ -772,6 +772,7 @@ export default {
         this.step = 3
         this.loading = false
         this.document.canEdit = true
+        this.getDocument()
       }).catch(error => {
         this.visible = false
         this.$jusNotification({ error })
