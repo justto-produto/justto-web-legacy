@@ -809,8 +809,7 @@ export default {
         }).catch(error => {
           this.$jusNotification({ error })
         }).finally(() => {
-          // this.visible = false
-          this.$emit('reopen')
+          this.visible = false
         })
       })
     },
