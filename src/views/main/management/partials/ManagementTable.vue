@@ -615,7 +615,6 @@ export default {
         this.getDisputeTimeline(code)
       }
     },
-
     openTimelineModal(dispute) {
       const { code } = dispute
       if (!this.disputeTimeline[code] || this.disputeTimeline[code].lawsuits.length === 0) {
