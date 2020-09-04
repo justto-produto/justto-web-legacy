@@ -297,6 +297,7 @@
           <el-button
             :disabled="loading"
             type="secondary"
+            :size="buttonSize"
             @click="backDocumentToEditing"
           >
             Voltar para edição
@@ -336,6 +337,7 @@
             v-loading="loadingDownload"
             icon="el-icon-download"
             type="primary"
+            :size="buttonSize"
             @click="downloadDocument"
           >
             Baixar
