@@ -50,7 +50,7 @@
         placeholder="Escolha o motivo da perda"
       >
         <el-option
-          v-for="(type, index) in unsettledTypes"
+          v-for="(type, index) in disputeStatuses.UNSETTLED"
           :key="index"
           :label="type"
           :value="index"
@@ -210,7 +210,7 @@
         placeholder="Escolha o motivo da exclusão"
       >
         <el-option
-          v-for="(type, index) in deleteTypes"
+          v-for="(type, index) in disputeStatuses.ARCHIVED"
           :key="index"
           :label="type"
           :value="index"
@@ -267,9 +267,7 @@ export default {
       disputeNegotiatorMap: [],
       currentDisputeNegotiator: 0,
       allSelectedDisputes: 0,
-      unsettledTypes: [],
       unsettledType: '',
-      deleteTypes: [],
       deleteType: '',
       newStrategyId: '',
       newExpirationDate: '',
@@ -329,19 +327,11 @@ export default {
     },
   },
   created() {
-    if (this.disputeStatuses.UNSETTLED) {
-      this.unsettledTypes = this.disputeStatuses.UNSETTLED
-    } else {
-      this.getDisputeStatuses('UNSETTLED').then(response => {
-        this.unsettledTypes = response
-      })
+    if (!this.disputeStatuses.UNSETTLED || !Object.keys(this.disputeStatuses.UNSETTLED).length) {
+      this.getDisputeStatuses('UNSETTLED')
     }
-    if (this.disputeStatuses.ARCHIVED) {
-      this.deleteTypes = this.disputeStatuses.ARCHIVED
-    } else {
-      this.getDisputeStatuses('ARCHIVED').then(response => {
-        this.deleteTypes = response
-      })
+    if (!this.disputeStatuses.ARCHIVED || !Object.keys(this.disputeStatuses.ARCHIVED).length) {
+      this.getDisputeStatuses('ARCHIVED')
     }
     this.$store.dispatch('getMyStrategies')
   },
@@ -368,7 +358,7 @@ export default {
           if (this.deleteType) params.reasonKey = this.deleteType
           break
         case 'UNSETTLED':
-          if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.unsettledTypes[this.unsettledType] }
+          if (this.unsettledType) params.unsettledReasons = { [this.unsettledType]: this.disputeStatuses.UNSETTLED[this.unsettledType] }
           break
       }
       if (this.isSelectedAll) {

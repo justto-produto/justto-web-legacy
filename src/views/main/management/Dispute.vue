@@ -438,12 +438,8 @@ export default {
   created() {
     this.id = this.$route.params.id.toString()
     this.fetchData()
-    if (this.disputeStatuses.UNSETTLED) {
-      this.unsettledTypes = this.disputeStatuses.UNSETTLED
-    } else {
-      this.getDisputeStatuses('UNSETTLED').then(response => {
-        this.unsettledTypes = response
-      })
+    if (!this.disputeStatuses.UNSETTLED || !Object.keys(this.disputeStatuses.UNSETTLED).length) {
+      this.getDisputeStatuses('UNSETTLED')
     }
     if (!(this.$store.getters.isJusttoAdmin && this.$store.getters.ghostMode)) {
       this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
