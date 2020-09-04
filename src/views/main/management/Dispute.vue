@@ -438,12 +438,8 @@ export default {
   created() {
     this.id = this.$route.params.id.toString()
     this.fetchData()
-    if (this.disputeStatuses.UNSETTLED) {
-      this.unsettledTypes = this.disputeStatuses.UNSETTLED
-    } else {
-      this.getDisputeStatuses('UNSETTLED').then(response => {
-        this.unsettledTypes = response
-      })
+    if (!this.disputeStatuses.UNSETTLED || !Object.keys(this.disputeStatuses.UNSETTLED).length) {
+      this.getDisputeStatuses('UNSETTLED')
     }
     if (!(this.$store.getters.isJusttoAdmin && this.$store.getters.ghostMode)) {
       this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
@@ -738,7 +734,7 @@ export default {
     .el-tabs, .el-tab-pane, .el-card__body {
       height: 100%;
     }
-    .el-tabs__content, .dispute-view__send-message-box, .ql-container, .quill-editor {
+    .el-tabs__content, .dispute-view__send-message-box, .ql-container {
       height: calc(100% - 30px);
     }
     .ql-container {
@@ -757,13 +753,24 @@ export default {
     }
   }
   &__quill {
-    height: calc(100% - 30px);
+    height: calc(100% - 44px);
     position: relative;
     &.show-toolbar {
       .ql-toolbar {
         display: inherit;
       }
     }
+
+    .quill-editor {
+      height: calc(100% - 8px);
+      .ql-container {
+        margin-bottom: 0;
+        .ql-editor {
+          padding: 0 !important;
+        }
+      }
+    }
+
     .dispute-view__attach {
       position: absolute;
       top: 10px;
@@ -807,6 +814,7 @@ export default {
     }
   }
   &__send-message-actions {
+    margin-top: 8px;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
