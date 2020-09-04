@@ -291,15 +291,17 @@
         >
           Cancelar
         </el-button>
-        <el-button
-          v-if="document.canEdit"
-          :disabled="loading"
-          :size="buttonSize"
-          type="secondary"
-          @click="backDocumentToEditing"
-        >
-          Voltar para edição
-        </el-button>
+        <el-tooltip
+          v-if="document.canEdit && [2, 3, 4].includes(step)"
+          content="Volta documento para edição.">
+          <el-button
+            :disabled="loading"
+            type="secondary"
+            @click="backDocumentToEditing"
+          >
+            Voltar para edição
+          </el-button>
+        </el-tooltip>
         <el-button
           v-if="[2, 4].includes(step)"
           :disabled="loading"
@@ -327,16 +329,18 @@
         >
           Enviar para Assinatura
         </el-button>
-        <el-button
+        <el-tooltip
           v-if="step === 3"
-          v-loading="loadingDownload"
-          :size="buttonSize"
-          icon="el-icon-download"
-          type="primary"
-          @click="downloadDocument"
-        >
-          Baixar
-        </el-button>
+          content="Baixar minuta.">
+          <el-button
+            v-loading="loadingDownload"
+            icon="el-icon-download"
+            type="primary"
+            @click="downloadDocument"
+          >
+            Baixar
+          </el-button>
+        </el-tooltip>
         <el-tooltip
           v-if="canResendNotification && step === 3"
           content="Reenvia notificação para todos os contatos que ainda não assinaram a minuta."
@@ -348,7 +352,7 @@
             :size="buttonSize"
             @click="resendSignersNotification"
           >
-            Reenviar pendentes
+            Reenviar
           </el-button>
         </el-tooltip>
         <el-button
@@ -765,6 +769,7 @@ export default {
         this.signers = doc.signers
         this.step = 3
         this.loading = false
+        this.document.canEdit = true
       }).catch(error => {
         this.visible = false
         this.$jusNotification({ error })
@@ -844,6 +849,8 @@ export default {
       }).then(() => {
         this.loading = true
         this.$store.dispatch('backDocumentToEditing', this.disputeId).then(() => {
+          this.step = 1
+          this.loading = false
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ok, seu documento voltou para faze de edição!',
@@ -851,8 +858,6 @@ export default {
           })
         }).catch(error => {
           this.$jusNotification({ error })
-        }).finally(() => {
-          this.visible = false
         })
       })
     },
