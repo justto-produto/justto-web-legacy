@@ -4,6 +4,7 @@
       :protocol-dialog-visible.sync="protocolDialogVisible"
       :dispute-id.sync="selectedDisputeId"
       :dispute-roles.sync="selectedDisputeRoles"
+      @reopen="reopenDialog"
     />
     <el-table
       ref="disputeTable"
@@ -621,6 +622,12 @@ export default {
   },
   methods: {
     ...mapActions(['getDisputeTimeline']),
+    reopenDialog() {
+      setTimeout(() => {
+        this.protocolDialogVisible = true
+      }, 1000)
+    },
+
     openTimelineModal(dispute) {
       this.getDisputeTimeline(dispute.code)
       this.$nextTick(() => {
