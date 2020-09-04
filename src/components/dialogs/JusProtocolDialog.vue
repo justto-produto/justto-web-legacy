@@ -13,7 +13,7 @@
       <div
         slot="title"
         class="jus-protocol-dialog__title">
-        <span v-if="document.signedDocument">
+        <span v-if="document.signedDocument && [3].includes(step)">
           <el-link
             target="_blank"
             :underline="false"
@@ -123,8 +123,8 @@
               </el-form-item>
             </el-form>
             <div
-              v-for="(email, index) in role.emails"
-              :key="index"
+              v-for="(email, emailIndex) in role.emails"
+              :key="`email-${emailIndex}`"
               :class="{ 'mt10': index === 0 }"
               class="line"
             >
@@ -771,8 +771,9 @@ export default {
         this.signers = doc.signers
         this.step = 3
         this.loading = false
+        this.document.signedDocument = doc
+        this.document.signedDocumentId = doc.id
         this.document.canEdit = true
-        this.getDocument()
       }).catch(error => {
         this.visible = false
         this.$jusNotification({ error })
