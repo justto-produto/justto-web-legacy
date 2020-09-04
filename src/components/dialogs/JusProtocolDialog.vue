@@ -810,8 +810,6 @@ export default {
           })
         }).catch(error => {
           this.$jusNotification({ error })
-        }).finally(() => {
-          this.visible = false
         })
       })
     },
