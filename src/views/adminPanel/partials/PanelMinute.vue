@@ -156,13 +156,18 @@ export default {
         confirmButtonText: 'Adicionar',
         cancelButtonText: 'Cancelar',
         cancelButtonClass: 'is-plain',
-        inputPattern: /.*docs\.google\.com.*/,
+        inputPattern: /.*(drive|docs)\.google\.com.*/,
         inputErrorMessage: 'URL inválida',
         beforeClose: (action, instance, done) => {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             this.$store.dispatch('addModel', instance.inputValue).then(response => {
               this.fetchMinutes()
+              this.$jusNotification({
+                title: 'Yay!',
+                message: 'Minuta adicionada com sucesso',
+                type: 'success',
+              })
             }).catch(error => {
               console.error(error)
               this.$jusNotification({
@@ -178,12 +183,6 @@ export default {
             done()
           }
         },
-      }).then(({ value }) => {
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Minuta adicionada com sucesso',
-          type: 'success',
-        })
       })
     },
     editMinute(url) {
