@@ -463,15 +463,10 @@ const disputeActions = {
       method: 'PATCH',
     })
   },
-  disputeSetVisualized({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.patch('api/disputes/' + params.disputeId + '/visualized?visualized=' + params.visualized)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error)
-        })
+  disputeSetVisualized({ _ }, params) {
+    return axiosDispatcher({
+      url: `api/disputes/${params.disputeId}/visualized?visualized=${params.visualized}&anonymous=${params.anonymous}`,
+      method: 'PATCH',
     })
   },
   getDisputeOccurrences({ commit, state }, disputeId) {
