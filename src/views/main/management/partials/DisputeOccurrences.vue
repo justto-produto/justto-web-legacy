@@ -574,7 +574,8 @@ export default {
         if (o.type === 'NOTE') return null
         if (self.typingTab === '1' && (
           ['NOTE', 'LOG'].includes(o.type) ||
-          (o.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS', 'SCHEDULER'].includes(o.interaction.type))
+          (o.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(o.interaction.type)) ||
+          (o.interaction && o.interaction.type === 'SCHEDULER' && o.interaction.message && o.interaction.message.status !== 'FAILED')
         )) return null
         return true
       })
