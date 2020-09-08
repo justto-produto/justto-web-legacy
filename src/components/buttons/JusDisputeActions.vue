@@ -397,7 +397,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['disputeStatuses']),
+    ...mapGetters([
+      'disputeStatuses',
+      'isJusttoAdmin',
+      'ghostMode',
+    ]),
 
     collapsed: {
       get() {
@@ -796,6 +800,7 @@ export default {
       this.disputeSetVisualized({
         visualized: false,
         disputeId: this.dispute.id,
+        anonymous: false,
       }).then(() => {
         this.$router.push('/management')
       }).catch(error => {

@@ -347,6 +347,8 @@ export default {
     ...mapGetters([
       'disputeAttachments',
       'disputeStatuses',
+      'isJusttoAdmin',
+      'ghostMode',
     ]),
 
     sendMessageHeightComputed() {
@@ -441,9 +443,11 @@ export default {
     if (!this.disputeStatuses.UNSETTLED || !Object.keys(this.disputeStatuses.UNSETTLED).length) {
       this.getDisputeStatuses('UNSETTLED')
     }
-    if (!(this.$store.getters.isJusttoAdmin && this.$store.getters.ghostMode)) {
-      this.$store.dispatch('disputeSetVisualized', { visualized: true, disputeId: this.id })
-    }
+    this.disputeSetVisualized({
+      visualized: true,
+      disputeId: this.id,
+      anonymous: this.isJusttoAdmin && this.ghostMode,
+    })
   },
   mounted() {
     setTimeout(() => {
@@ -458,7 +462,10 @@ export default {
     window.removeEventListener('resize', this.updateWindowHeight)
   },
   methods: {
-    ...mapActions(['getDisputeStatuses']),
+    ...mapActions([
+      'getDisputeStatuses',
+      'disputeSetVisualized',
+    ]),
 
     updateWindowHeight() {
       this.onDrag(0, this.$refs.sectionMessages.offsetHeight - this.sendMessageHeight)
