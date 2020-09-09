@@ -179,7 +179,8 @@
     "dispute": "disputa",
     "respondentParty": "Réu",
     "respondentLawyer": "Advogado(a) do Réu",
-    "respondentNegotiator": "Negociador"
+    "respondentNegotiator": "Negociador",
+    "impartialParty": "Arbitro"
   },
   "NEGOTIATOR_REJECTED": "negada de",
   "NEGOTIATOR_PROPOSAL": "feita de",
