@@ -1151,6 +1151,7 @@
               >
                 <el-date-picker
                   v-model="roleForm.personProperties.BIRTHDAY"
+                  :disabled="!canEditBirthday"
                   :clearable="false"
                   format="dd/MM/yyyy"
                   type="date"
@@ -1159,6 +1160,7 @@
               </el-form-item>
             </el-col>
           </el-row>
+          {{ roleForm }}
           <div
             v-if="roleForm.roles && roleForm.roles.includes('LAWYER')"
             class="dispute-overview-view__oab-form"
@@ -1699,6 +1701,9 @@ export default {
       getDisputeProperties: 'disputeProprieties',
       disputeStatuses: 'disputeStatuses',
     }),
+    canEditBirthday() {
+      return this.roleForm.party === 'CLAIMANT' && this.roleForm.personType === 'NATURAL' && this.roleForm.roles && (this.roleForm.roles.includes('LAWYER') || this.roleForm.roles.includes('PARTY'))
+    },
     ufList() {
       const ufList = this.namesakeList.map(namesake => namesake.uf)
       return ufList.filter((uf, i) => uf !== null && ufList.indexOf(uf) === i)
