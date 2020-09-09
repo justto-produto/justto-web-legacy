@@ -506,11 +506,11 @@
                 <span>{{ role.documentNumber | cpfCnpjMask }}</span>
               </div>
               <div
-                v-show="role.personProperties.DATA_NASCIMENTO"
+                v-show="role.personProperties.BIRTHDAY"
                 class="dispute-overview-view__info-line"
               >
                 <span class="title">Data de nascimento:</span>
-                <span>{{ role.personProperties.DATA_NASCIMENTO }}</span>
+                <span>{{ role.personProperties.BIRTHDAY }}</span>
               </div>
               <div
                 v-show="role.phones.length"
@@ -1150,7 +1150,7 @@
                 prop="birthday"
               >
                 <el-date-picker
-                  v-model="roleForm.personProperties.DATA_NASCIMENTO"
+                  v-model="roleForm.personProperties.BIRTHDAY"
                   :clearable="false"
                   format="dd/MM/yyyy"
                   type="date"
