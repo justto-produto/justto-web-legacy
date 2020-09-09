@@ -506,6 +506,13 @@
                 <span>{{ role.documentNumber | cpfCnpjMask }}</span>
               </div>
               <div
+                v-show="role.personProperties.DATA_NASCIMENTO"
+                class="dispute-overview-view__info-line"
+              >
+                <span class="title">Data de nascimento:</span>
+                <span>{{ role.personProperties.DATA_NASCIMENTO }}</span>
+              </div>
+              <div
                 v-show="role.phones.length"
                 class="dispute-overview-view__info-line"
               >
@@ -1123,17 +1130,35 @@
               autofocus=""
             />
           </el-form-item>
-          <el-form-item
-            :rules="validateDocumentNumber"
-            label="CPF/CNPJ"
-            prop="documentNumber"
-          >
-            <el-input
-              v-model="roleForm.documentNumber"
-              v-mask="['###.###.###-##', '##.###.###/####-##']"
-              @change="documentNumberHasChanged = true"
-            />
-          </el-form-item>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item
+                :rules="validateDocumentNumber"
+                label="CPF/CNPJ"
+                prop="documentNumber"
+              >
+                <el-input
+                  v-model="roleForm.documentNumber"
+                  v-mask="['###.###.###-##', '##.###.###/####-##']"
+                  @change="documentNumberHasChanged = true"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                label="Data de nascimento"
+                prop="birthday"
+              >
+                <el-date-picker
+                  v-model="roleForm.personProperties.DATA_NASCIMENTO"
+                  :clearable="false"
+                  format="dd/MM/yyyy"
+                  type="date"
+                  value-format="yyyy-MM-dd"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <div
             v-if="roleForm.roles && roleForm.roles.includes('LAWYER')"
             class="dispute-overview-view__oab-form"
@@ -1591,7 +1616,9 @@ export default {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
       },
-      roleForm: {},
+      roleForm: {
+        personProperties: {},
+      },
       originalRole: {},
       roleRules: {
         name: [
