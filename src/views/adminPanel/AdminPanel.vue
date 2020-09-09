@@ -21,7 +21,7 @@
             <i class="el-icon-user-solid" /> Usuários
           </el-menu-item> -->
           <el-menu-item
-            v-if="['lucas@justto.com.br', 'kelvin@justto.com.br'].includes(this.$store.getters.accountEmail)"
+            v-if="havepermission.includes(accountEmail)"
             index="3"
           >
             <i class="el-icon-s-operation" /> Estratégias
@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'AdminPanel',
   components: {
@@ -116,7 +117,11 @@ export default {
       left: 12,
       right: 0,
       filterTerm: '',
+      havepermission: ['lucas@justto.com.br', 'kelvin@justto.com.br', 'aline@justto.com.br', 'helio@justto.com.br'],
     }
+  },
+  computed: {
+    ...mapGetters(['accountEmail']),
   },
   created() {
     setTimeout(function() {
