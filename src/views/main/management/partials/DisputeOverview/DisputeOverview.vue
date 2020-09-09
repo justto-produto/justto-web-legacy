@@ -1160,7 +1160,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-          {{ roleForm }}
           <div
             v-if="roleForm.roles && roleForm.roles.includes('LAWYER')"
             class="dispute-overview-view__oab-form"
