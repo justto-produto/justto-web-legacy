@@ -7,27 +7,23 @@ export class SignerModel {
     this._disputeRoleId = disputeRoleId
   }
 
-  get id() {
-    return this._id
-  }
-
   get name() {
     return this._name
   }
 
-  get emails () {
+  get emails() {
     return this._emails
   }
 
-  get defaultSigner () {
+  get defaultSigner() {
     return this._defaultSigner
   }
 
-  get disputeRoleId () {
+  get disputeRoleId() {
     return this._disputeRoleId
   }
 
-  get documentNumber () {
+  get documentNumber() {
     return this._documentNumber
   }
 }
