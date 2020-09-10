@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import router from '@/router'
 import axiosDispatcher from '@/store/axiosDispatcher.js'
 import { isJusttoUser } from '@/utils/jusUtils'
@@ -15,9 +16,13 @@ const account = {
       const token = resp.token
       // eslint-disable-next-line
       delete axios.defaults.headers.common['Authorization']
-      if (token) state.token = token
+
+      Vue.set(state, 'token', token)
+      // if (token) state.token = token
+
       // eslint-disable-next-line
       axios.defaults.headers.common['Authorization'] = token
+      localStorage.removeItem('justoken')
       localStorage.setItem('justoken', token)
     },
     logout(state) {
