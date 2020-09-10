@@ -4,6 +4,8 @@ import getters from './getters'
 
 const document = {
   state: {
+    availableSigners: [],
+    selectedSigners: []
   },
   mutations: mutations,
   actions: actions,
