@@ -81,6 +81,13 @@
             :key="index"
           >
             <span class="title">{{ role.name.toUpperCase() }}</span>
+            <span v-if="!!recipients[role.name]">
+              {{ recipients[role.name].defaultSigner }}
+              <el-switch
+                v-model="recipients[role.name].defaultSigner"
+                :active-text="`Assinante padrão ${ role.id }`"
+              />
+            </span>
             <div
               v-if="role.party"
               class="subtitle"
@@ -136,9 +143,9 @@
                 <span><input
                   v-model="recipients[role.name]"
                   :name="role.name"
-                  :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address }"
+                  :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id, defaultSigner: true }"
                   :disabled="!role.documentNumber"
-                  type="radio"
+                  type="checkbox"
                 ></span>
               </el-tooltip>
               {{ email.address }}
@@ -425,6 +432,7 @@
 <script>
 import { validateObjectEmail, validateCpf } from '@/utils/validations'
 import { IS_SMALL_WINDOW } from '@/constants/variables'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'JusProtocolDialog',
@@ -544,7 +552,7 @@ export default {
       return null
     },
     buttonSize() {
-      return IS_SMALL_WINDOW ? 'mini' : false
+      return IS_SMALL_WINDOW ? 'mini' : 'medium'
     },
 
   },
@@ -573,6 +581,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['setDocumentSigners']),
+
     openDocumentInNewTab() {
       const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
       navigator.clipboard.writeText(url)
@@ -765,7 +775,7 @@ export default {
           documentNumber: recipient.documentNumber,
         })
       }
-      this.$store.dispatch('setDocumentSigners', {
+      this.setDocumentSigners({
         disputeId: this.disputeId, recipients,
       }).then(doc => {
         this.signers = doc.signers
