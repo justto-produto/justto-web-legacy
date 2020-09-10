@@ -82,9 +82,9 @@
           >
             <span class="title">{{ role.name.toUpperCase() }}</span>
             <span v-if="!!recipients[role.name]">
-              {{ recipients[role.name].defaultSigner }}
+              {{ recipients }}
               <el-switch
-                v-model="recipients[role.name].defaultSigner"
+                v-model="defaultSigners[role.id]"
                 :active-text="`Assinante padrão ${ role.id }`"
               />
             </span>
@@ -140,13 +140,21 @@
                 :disabled="!!role.documentNumber"
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
-                <span><input
-                  v-model="recipients[role.name]"
-                  :name="role.name"
-                  :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id, defaultSigner: true }"
-                  :disabled="!role.documentNumber"
-                  type="checkbox"
-                ></span>
+                <span>
+                  <input
+                    v-model="recipients[role.name]"
+                    :name="role.name"
+                    :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id }"
+                    :disabled="!role.documentNumber"
+                    type="radio"
+                  >
+                  <!-- <el-radio
+                    v-model="recipients"
+                    :label="{ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id, defaultSigner: true }"
+                  >
+                    {{ email.address }}
+                  </el-radio> -->
+                </span>
               </el-tooltip>
               {{ email.address }}
               <el-button
@@ -452,6 +460,7 @@ export default {
   },
   data() {
     return {
+      defaultSigners: {},
       step: 0,
       loading: false,
       loadingPdf: false,
@@ -769,11 +778,12 @@ export default {
       this.confirmChooseRecipientsVisible = false
       const recipients = []
       for (const recipient of Object.values(this.recipients)) {
-        recipients.push({
+        let temp = {
           name: recipient.name,
           email: recipient.email,
           documentNumber: recipient.documentNumber,
-        })
+        }
+        recipients.push(temp)
       }
       this.setDocumentSigners({
         disputeId: this.disputeId, recipients,
