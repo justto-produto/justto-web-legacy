@@ -510,7 +510,7 @@
                 class="dispute-overview-view__info-line"
               >
                 <span class="title">Data de nascimento:</span>
-                <span>{{ role.personProperties.BIRTHDAY }}</span>
+                <span>{{ role.personProperties.BIRTHDAY | moment('DD/MM/YYYY') }}</span>
               </div>
               <div
                 v-show="role.phones.length"
