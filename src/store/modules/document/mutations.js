@@ -5,8 +5,11 @@ const mutations = {
   createFromDisputeRole(state, disputeRole) {
     state.availableSigners.push(new SignerModel(disputeRole.documentNumber, disputeRole.name, disputeRole.emails.map(e => e.address)))
   },
-  createFromDefaultSigners(state, defaulSigner) {
-    state.availableSigners.push(new SignerModel(defaulSigner.documentNumber, defaulSigner.name, [defaulSigner.email]))
+  createFromDefaultSigners(state, defaulSigners) {
+    state.availableSigners = defaulSigners.map(signer => new SignerModel(signer))
+  },
+  setSelectedSigners(state, signers) {
+    state.selectedSigners = signers.map(signer => new SignerModel(signer))
   },
 }
 

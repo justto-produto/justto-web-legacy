@@ -83,11 +83,10 @@
             :key="index"
           >
             <span class="title">{{ role.name.toUpperCase() }}</span>
-            <span v-if="!!recipients[role.name]">
-              {{ recipients }}
+            <span v-if="selectedDocuments.includes(role.documentNumber)">
               <el-switch
-                v-model="defaultSigners[role.id]"
-                :active-text="`Assinante padrão ${ role.id }`"
+                v-model="selectedSigners[selectedSigners.findIndex(el => el.name == role.name )].defaultSigner"
+                :active-text="`Assinante padrão`"
               />
             </span>
             <div
@@ -143,22 +142,15 @@
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
                 <span>
-                  <input
-                    v-model="recipients[role.name]"
-                    :name="role.name"
-                    :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id }"
+                  <el-radio
+                    :value="selectedEmails.includes(email.address) && !!role.documentNumber"
+                    :label="true"
                     :disabled="!role.documentNumber"
-                    type="radio"
-                  >
-                  <!-- <el-radio
-                    v-model="recipients"
-                    :label="{ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id, defaultSigner: true }"
-                  >
+                    @change="setSigner({ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id })">
                     {{ email.address }}
-                  </el-radio> -->
+                  </el-radio>
                 </span>
               </el-tooltip>
-              {{ email.address }}
               <el-button
                 v-if="email.canDelete"
                 size="mini"
@@ -443,7 +435,8 @@
 <script>
 import { validateObjectEmail, validateCpf } from '@/utils/validations'
 import { IS_SMALL_WINDOW } from '@/constants/variables'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import { intersection } from 'lodash'
 
 export default {
   name: 'JusProtocolDialog',
@@ -463,7 +456,7 @@ export default {
   },
   data() {
     return {
-      defaultSigners: {},
+      signersList: [],
       step: 0,
       loading: false,
       loadingPdf: false,
@@ -507,6 +500,19 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      defaultSigners: 'availableSigners',
+      selectedSigners: 'selectedSigners',
+    }),
+    selectedEmails() {
+      return (this.selectedSigners || []).map(signer => signer.email)
+    },
+    selectedNames() {
+      return (this.selectedSigners || []).map(signer => signer.name)
+    },
+    selectedDocuments() {
+      return (this.selectedSigners || []).map(signer => signer.documentNumber)
+    },
     visible: {
       get() {
         return this.protocolDialogVisible
@@ -564,7 +570,6 @@ export default {
     buttonSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'medium'
     },
-
   },
   watch: {
     visible(value) {
@@ -589,12 +594,15 @@ export default {
       this.isLowHeight = true
       this.fullscreen = true
     }
+    this.getDefaultAssigners()
   },
   methods: {
     ...mapActions([
       'getDocumentModels',
       'setDocumentSigners',
       'getDocumentByDisputeId',
+      'getDefaultAssigners',
+      'setSelectedSigners',
     ]),
 
     openDocumentInNewTab() {
@@ -682,6 +690,10 @@ export default {
         const emailIndex = this.roles[index].emails.findIndex(e => e.address === email)
         this.roles[index].emails.splice(emailIndex, 1)
       }
+      if (this.recipients[name]) {
+        delete this.recipients[name]
+        this.setSelectedSigners(this.recipients)
+      }
     },
     clearValidate(formIndex) {
       const roleform = this.$refs.roleForm
@@ -767,7 +779,9 @@ export default {
       })
     },
     confirmChooseRecipients() {
-      if (!Object.keys(this.recipients).length) {
+      const selecteds = intersection(this.roles.map(e => e.name), this.selectedNames)
+      console.log(selecteds)
+      if (!selecteds.length) {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Selecione ao menos um email.',
@@ -778,16 +792,27 @@ export default {
         this.confirmChooseRecipientsVisible = true
       }
     },
+    setSigner(signer) {
+      this.recipients[signer.name] = signer
+      this.setSelectedSigners(this.recipients)
+    },
+    getRoleByDocument(documentNumber) {
+      return this.roles.find(role => String(role.documentNumber) === String(documentNumber))
+    },
     chooseRecipients() {
-      this.loading = true
-      this.loadingChooseRecipients = true
+      // this.loading = true
+      // this.loadingChooseRecipients = true
       this.confirmChooseRecipientsVisible = false
       const recipients = []
-      for (const recipient of Object.values(this.recipients)) {
-        let temp = {
+      const documentNumbers = this.roles.map(role => role.documentNumber)
+      for (const recipient of this.selectedSigners.filter(signer => documentNumbers.includes(signer.documentNumber))) {
+        const { id } = this.getRoleByDocument(recipient.documentNumber)
+        const temp = {
           name: recipient.name,
           email: recipient.email,
           documentNumber: recipient.documentNumber,
+          disputeRoleId: id,
+          defaultSigner: recipient.defaultSigner,
         }
         recipients.push(temp)
       }
