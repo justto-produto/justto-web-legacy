@@ -22,6 +22,8 @@
     "test:server": "npx vue-cli-service test:e2e --headless --browser chrome"
   },
   "dependencies": {
+    "@fnando/cnpj": "^1.0.2",
+    "@fnando/cpf": "^1.0.2",
     "@sentry/browser": "^5.15.5",
     "@sentry/integrations": "^5.15.5",
     "@vue/ui": "^0.5.6",
