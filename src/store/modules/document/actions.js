@@ -99,6 +99,18 @@ const actions = {
   getDocumentTypes() {
     return axiosDispatcher({ url: documents + 'model/input/types' })
   },
+  getDefaultAssigners({ commit }, workspaceId) {
+    return axiosDispatcher({
+      url: 'api/office/document/signer',
+      mutation: 'createFromDefaultSigners',
+    })
+  },
+  setSelectedSigners({ commit }, signers) {
+    commit('setSelectedSigners', Object.values(signers))
+  },
+  cleanSelectedSigners({ commit }) {
+    commit('setSelectedSigners', [])
+  },
 }
 
 export default actions
