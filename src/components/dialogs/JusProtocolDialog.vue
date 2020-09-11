@@ -84,7 +84,7 @@
           >
             <span class="title">{{ role.name.toUpperCase() }}</span>
             <span
-              v-if="selectedDocuments.includes(role.documentNumber) && !selectedSigners.find(el => el.documentNumber == role.documentNumber).id"
+              v-if="role.party !== 'CLAIMANT' && selectedDocuments.includes(role.documentNumber) && !selectedSigners.find(el => el.documentNumber == role.documentNumber).id"
               class="signer-choice">
               <el-switch
                 v-model="selectedSigners[selectedSigners.findIndex(el => el.name == role.name )].defaultSigner"
@@ -148,7 +148,7 @@
                     :value="selectedEmails.includes(email.address) && !!role.documentNumber"
                     :label="true"
                     :disabled="!role.documentNumber"
-                    @change="setSigner({ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id })">
+                    @change="setSigner({ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id, party: role.party })">
                     {{ email.address }}
                   </el-radio>
                 </span>
