@@ -98,7 +98,7 @@
               {{ $t('fields.' + role.party.toLocaleLowerCase() + role.roles[0].charAt(0).toUpperCase() + role.roles[0].slice(1).toLocaleLowerCase()) }}
             </div>
             <div
-              v-if="role.documentNumber"
+              v-if="role.documentNumber && isValidCpfOrCnpj(role.documentNumber)"
               :key="formKey"
               class="subtitle"
             >
@@ -140,14 +140,14 @@
             >
               <el-tooltip
                 :key="formKey"
-                :disabled="!!role.documentNumber"
+                :disabled="!!role.documentNumber && isValidCpfOrCnpj(role.documentNumber)"
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
                 <span>
                   <el-radio
                     :value="selectedEmails.includes(email.address) && !!role.documentNumber"
                     :label="true"
-                    :disabled="!role.documentNumber"
+                    :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
                     @change="setSigner({ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id, party: role.party })">
                     {{ email.address }}
                   </el-radio>
@@ -163,7 +163,7 @@
             </div>
             <div>
               <el-tooltip
-                :disabled="!!role.documentNumber"
+                :disabled="!!role.documentNumber && isValidCpfOrCnpj(role.documentNumber)"
                 content="Cadastre o CPF da parte para adicionar um e-mail"
               >
                 <span><el-button
@@ -418,12 +418,14 @@
         class="dialog-footer"
       >
         <el-button
+          :disabled="loadingChooseRecipients"
           plain
           @click="confirmChooseRecipientsVisible = false"
         >
           Voltar
         </el-button>
         <el-button
+          :disabled="loadingChooseRecipients"
           type="primary"
           @click="chooseRecipients"
         >
@@ -439,6 +441,8 @@ import { validateObjectEmail, validateCpf } from '@/utils/validations'
 import { IS_SMALL_WINDOW } from '@/constants/variables'
 import { mapActions, mapGetters } from 'vuex'
 import { intersection } from 'lodash'
+import * as cpf from '@fnando/cpf'
+import * as cnpj from '@fnando/cnpj'
 
 export default {
   name: 'JusProtocolDialog',
@@ -609,7 +613,9 @@ export default {
       'setDocumentSigners',
       'cleanSelectedSigners',
     ]),
-
+    isValidCpfOrCnpj(value) {
+      return cpf.isValid(value) || cnpj.isValid(value)
+    },
     openDocumentInNewTab() {
       const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
       navigator.clipboard.writeText(url)
@@ -624,9 +630,13 @@ export default {
       const documentForm = this.$refs['documentForm' + formIndex][0]
       documentForm.validate(valid => {
         if (valid) {
-          role.documentNumber = this.documentForm.document[formIndex]
-          this.formKey += 1
-          this.showAddEmail(role.name, formIndex)
+          if (!!role.documentNumber && !this.isValidCpfOrCnpj(role.documentNumber)) {
+            role.documentNumber = this.documentForm.document[formIndex]
+          } else {
+            role.documentNumber = this.documentForm.document[formIndex]
+            this.formKey += 1
+            this.showAddEmail(role.name, formIndex)
+          }
         }
       })
     },
@@ -793,7 +803,20 @@ export default {
         })
         return false
       } else {
-        this.confirmChooseRecipientsVisible = true
+        new Promise((resolve, reject) => {
+          for (const recipient of Object.values(this.recipients)) {
+            console.log(recipient.documentNumber, this.isValidCpfOrCnpj(recipient.documentNumber))
+            if (!this.isValidCpfOrCnpj(recipient.documentNumber)) {
+              reject(new Error(`${recipient.name} está com o número do documento inválido`))
+            }
+          }
+          resolve()
+        }).then(() => {
+          this.confirmChooseRecipientsVisible = true
+        }).catch(error => {
+          this.$jusNotification({ error })
+          return false
+        })
       }
     },
     setSigner(signer) {
