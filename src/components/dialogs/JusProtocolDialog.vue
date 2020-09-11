@@ -406,12 +406,14 @@
         class="dialog-footer"
       >
         <el-button
+          :disabled="loadingChooseRecipients"
           plain
           @click="confirmChooseRecipientsVisible = false"
         >
           Voltar
         </el-button>
         <el-button
+          :disabled="loadingChooseRecipients"
           type="primary"
           @click="chooseRecipients"
         >
