@@ -772,7 +772,6 @@ export default {
     },
     confirmChooseRecipients() {
       const selecteds = intersection(this.roles.map(e => e.name), this.selectedNames)
-      console.log(selecteds)
       if (!selecteds.length) {
         this.$jusNotification({
           title: 'Ops!',
@@ -792,8 +791,8 @@ export default {
       return this.roles.find(role => String(role.documentNumber) === String(documentNumber))
     },
     chooseRecipients() {
-      // this.loading = true
-      // this.loadingChooseRecipients = true
+      this.loading = true
+      this.loadingChooseRecipients = true
       this.confirmChooseRecipientsVisible = false
       const recipients = []
       const documentNumbers = this.roles.map(role => role.documentNumber)
