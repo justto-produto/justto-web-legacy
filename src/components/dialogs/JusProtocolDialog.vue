@@ -8,28 +8,28 @@
       :close-on-press-escape="false"
       :show-close="false"
       append-to-body
-      class="jus-protocol-dialog"
-    >
+      class="jus-protocol-dialog">
       <div
         slot="title"
-        class="jus-protocol-dialog__title">
-        <span v-if="document.signedDocument && [3].includes(step)">
+        class="jus-protocol-dialog__header">
+        <span v-if="[3].includes(step) && document.signedDocument">
           <el-link
-            target="_blank"
             :underline="false"
-            @click="openDocumentInNewTab"
-          >
+            target="_blank"
+            class="jus-protocol-dialog__title"
+            @click="openDocumentInNewTab">
             {{ title }}
             <sup>
               <jus-icon
-                style="height: 0.75rem;"
                 icon="external-link"
-                class="data-table__dispute-link-icon"
+                class="jus-protocol-dialog__dispute-link-icon"
               />
             </sup>
           </el-link>
         </span>
-        <span v-else>
+        <span
+          v-else
+          class="jus-protocol-dialog__title">
           {{ title }}
         </span>
       </div>
@@ -43,12 +43,14 @@
             v-for="model in models"
             :key="model.id"
             plain
-            @click="selectModel({ modelId: model.id })"
+            class="model-choice__button"
+            @click="selectModel(model.id)"
           >
-            <h4>{{ model.name }}</h4>
+            <span class="model-choice__button-text">{{ model.name }}</span>
             <jus-icon
               icon="doc"
               is-active
+              class="model-choice__button-icon"
             />
           </el-button>
         </div>
@@ -271,7 +273,7 @@
         </div>
         <!-- VISUALIZAÇÃO DA MINUTA -->
         <div
-          v-if="step === 4"
+          v-if="false && step === 4"
           v-loading="loadingPdf"
         >
           <object
@@ -282,6 +284,7 @@
           />
         </div>
       </div>
+      <!-- BOTÕES DO RODAPE -->
       <div
         slot="footer"
         class="dialog-footer"
@@ -515,9 +518,7 @@ export default {
     title() {
       switch (this.step) {
         case 0:
-          if (this.models.length > 1) {
-            return 'Escolha um modelo para iniciar'
-          }
+          if (this.models.length > 1) return 'Escolha um modelo para iniciar'
           return 'Carregando...'
         case 1: return 'Visualização da Minuta'
         case 2: return 'Enviar Minuta'
@@ -590,7 +591,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setDocumentSigners']),
+    ...mapActions([
+      'getDocumentModels',
+      'setDocumentSigners',
+      'getDocumentByDisputeId',
+    ]),
 
     openDocumentInNewTab() {
       const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
@@ -600,7 +605,7 @@ export default {
         message: 'URL do documento copiado!',
         type: 'success',
       })
-      setTimeout(() => window.open(url), 1500)
+      setTimeout(() => window.open(url), 1400)
     },
     addDocument(role, formIndex) {
       const documentForm = this.$refs['documentForm' + formIndex][0]
@@ -691,7 +696,7 @@ export default {
       if (emailForm) emailForm[0].clearValidate()
     },
     getDocument() {
-      this.$store.dispatch('getDocumentByDisputeId', this.disputeId).then(document => {
+      this.getDocumentByDisputeId(this.disputeId).then(document => {
         if (document) {
           this.document = document
           if (document.signedDocument === null) {
@@ -701,7 +706,7 @@ export default {
             this.step = 3
           }
         } else {
-          this.getDocumentModels()
+          this.getModels()
         }
       }).catch(error => {
         this.visible = false
@@ -711,29 +716,30 @@ export default {
         this.loading = false
       })
     },
-    getDocumentModels() {
+    getModels() {
       this.loading = true
-      this.$store.dispatch('getDocumentModels').then(models => {
+      this.getDocumentModels().then(models => {
         this.models = models
-        if (models.length && models.length === 1) {
-          this.selectModel({ modelId: models[0].id, unique: models.length === 1 })
-        } else {
-          this.loading = false
+        const isUnique = models.length && models.length === 1
+        if (isUnique) {
+          this.selectModel(models[0].id, isUnique)
         }
       }).catch(error => {
         this.visible = false
         this.$jusNotification({ error })
+      }).finally(() => {
+        this.loading = false
       })
     },
-    selectModel(params) {
+    selectModel(modelId, isUnique) {
       this.loading = true
       this.$store.dispatch('createDocumentByModel', {
         disputeId: this.disputeId,
-        modelId: params.modelId,
+        modelId,
       }).then(doc => {
         this.document = doc
         this.step = 1
-        if (params.unique) {
+        if (isUnique) {
           const hideAlert = localStorage.getItem('jushidemodelalert')
           if (!hideAlert) {
             this.$confirm(
@@ -894,9 +900,15 @@ export default {
 
 <style lang="scss">
 .jus-protocol-dialog {
-  &__title {
-    span {
+  .jus-protocol-dialog__header {
+    padding-top: 8px;
+
+    .jus-protocol-dialog__title {
       font-weight: bold;
+      font-size: 20px;
+    }
+    .jus-protocol-dialog__dispute-link-icon {
+      width: 16px;
     }
   }
   &--full {
@@ -926,17 +938,17 @@ export default {
     right: 20px;
     cursor: pointer;
   }
-  &__model-choice {
-    margin: 30px;
+  .jus-protocol-dialog__model-choice {
+    // margin: 30px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    button {
-      width: 100%;
-      max-width: 160px;
+    .model-choice__button {
+      width: 160px;
       height: 180px;
       margin: 10px;
-      h4 {
+      .model-choice__button-text {
+        font-weight: 500;
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
@@ -944,9 +956,9 @@ export default {
         text-overflow: ellipsis;
         white-space: initial;
       }
-      img {
+      .model-choice__button-icon {
         width: 50px;
-        margin-bottom: 20px;
+        margin-top: 20px
       }
     }
   }
@@ -994,15 +1006,17 @@ export default {
       margin-left: 9px;
     }
   }
-  &__status {
+
+  .jus-protocol-dialog__status {
     display: flex;
     align-items: center;
-    padding: 40px 8px;
+    padding: 36px 8px;
     &:hover {
       background-color: #f6f6f6;
     }
   }
-  &__status-icon {
+
+  .jus-protocol-dialog__status-icon {
     color: #adadad;
     margin-left: auto;
     img {
@@ -1011,9 +1025,11 @@ export default {
       margin-bottom: 2px;
     }
   }
-  &__status-role {
+
+  .jus-protocol-dialog__status-role {
     margin-left: 10px;
   }
+
   &__confirm-recipients {
     display: flex;
     > div:last-child {
