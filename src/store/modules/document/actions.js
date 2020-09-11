@@ -106,8 +106,10 @@ const actions = {
     })
   },
   setSelectedSigners({ commit }, signers) {
-    console.log('setSelectedSigners')
     commit('setSelectedSigners', Object.values(signers))
+  },
+  cleanSelectedSigners({ commit }) {
+    commit('setSelectedSigners', [])
   },
 }
 

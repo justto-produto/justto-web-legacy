@@ -83,11 +83,13 @@
             :key="index"
           >
             <span class="title">{{ role.name.toUpperCase() }}</span>
-            <span v-if="selectedDocuments.includes(role.documentNumber)">
+            <span
+              v-if="selectedDocuments.includes(role.documentNumber) && !selectedSigners.find(el => el.documentNumber == role.documentNumber).id"
+              class="signer-choice">
               <el-switch
                 v-model="selectedSigners[selectedSigners.findIndex(el => el.name == role.name )].defaultSigner"
-                :active-text="`Assinante padrão`"
               />
+              {{ selectedSigners[selectedSigners.findIndex(el => el.name == role.name )].defaultSigner ? 'Definir como assinante padrão' : 'Não definir como assinante padrão' }}
             </span>
             <div
               v-if="role.party"
@@ -586,6 +588,8 @@ export default {
         this.roleForm.role = ''
         this.showARoleButton = false
         this.documentForm.document = {}
+      } else {
+        this.cleanSelectedSigners()
       }
     },
   },
@@ -599,10 +603,11 @@ export default {
   methods: {
     ...mapActions([
       'getDocumentModels',
-      'setDocumentSigners',
       'getDocumentByDisputeId',
       'getDefaultAssigners',
       'setSelectedSigners',
+      'setDocumentSigners',
+      'cleanSelectedSigners',
     ]),
 
     openDocumentInNewTab() {
@@ -997,6 +1002,14 @@ export default {
     .title {
       color: #adadad;
       font-weight: 700;
+    }
+    .signer-choice {
+      font-weight: bold;
+      font-size: 12px;
+
+      .el-switch {
+        margin: auto 8px;
+      }
     }
     .subtitle {
       font-weight: bold;
