@@ -79,18 +79,11 @@
         >
           <p>Escolha um endereço de email para cada parte.</p>
           <div
-            v-for="(role, index) in roles"
+            v-for="(role, index) in availableSigners"
             :key="index"
           >
             <span class="title">{{ role.name.toUpperCase() }}</span>
-            <span
-              v-if="role.party !== 'CLAIMANT' && selectedDocuments.includes(role.documentNumber) && !selectedSigners.find(el => el.documentNumber == role.documentNumber).id"
-              class="signer-choice">
-              <el-switch
-                v-model="selectedSigners[selectedSigners.findIndex(el => el.name == role.name )].defaultSigner"
-              />
-              {{ selectedSigners[selectedSigners.findIndex(el => el.name == role.name )].defaultSigner ? 'Definir como assinante padrão' : 'Não definir como assinante padrão' }}
-            </span>
+            <!-- TODO: Inserir el-switch v-model="recipients[role.name].defaultSigner" -->
             <div
               v-if="role.party"
               class="subtitle"
@@ -143,15 +136,13 @@
                 :disabled="!!role.documentNumber && isValidCpfOrCnpj(role.documentNumber)"
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
-                <span>
-                  <el-radio
-                    :value="selectedEmails.includes(email.address) && !!role.documentNumber"
-                    :label="true"
-                    :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
-                    @change="setSigner({ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id, party: role.party })">
-                    {{ email.address }}
-                  </el-radio>
-                </span>
+                <span><input
+                  v-model="recipients[role.name]"
+                  :name="role.name"
+                  :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id, defaultSigner: true }"
+                  :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
+                  type="radio"
+                ></span>
               </el-tooltip>
               <el-button
                 v-if="email.canDelete"
@@ -508,16 +499,11 @@ export default {
   computed: {
     ...mapGetters({
       defaultSigners: 'availableSigners',
-      selectedSigners: 'selectedSigners',
     }),
-    selectedEmails() {
-      return (this.selectedSigners || []).map(signer => signer.email)
-    },
-    selectedNames() {
-      return (this.selectedSigners || []).map(signer => signer.name)
-    },
-    selectedDocuments() {
-      return (this.selectedSigners || []).map(signer => signer.documentNumber)
+    availableSigners() {
+      // TODO: Evitar duplicidades
+      // TODO: Caso haja duplicados, mesclar os emails
+      return [...this.roles, ...this.defaultSigners]
     },
     visible: {
       get() {
@@ -833,12 +819,11 @@ export default {
       const recipients = []
       const documentNumbers = this.roles.map(role => role.documentNumber)
       for (const recipient of this.selectedSigners.filter(signer => documentNumbers.includes(signer.documentNumber))) {
-        const { id } = this.getRoleByDocument(recipient.documentNumber)
         const temp = {
           name: recipient.name,
           email: recipient.email,
           documentNumber: recipient.documentNumber,
-          disputeRoleId: id,
+          disputeRoleId: recipient.disputeRoleId,
           defaultSigner: recipient.defaultSigner,
         }
         recipients.push(temp)
