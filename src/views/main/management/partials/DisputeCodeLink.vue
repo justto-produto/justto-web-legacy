@@ -1,8 +1,7 @@
 <template>
   <section
     id="dispute-code"
-    class="dispute-code"
-    @click="handleEvent('click')">
+    class="dispute-code">
     <el-tooltip
       :content="status.text"
       placement="right">
@@ -11,9 +10,15 @@
           class="dispute-code__proccess-link"
           :underline="false"
           @mouseover.native="handleEvent('hover')">
-          <span :style="customStyle">
-            {{ code }}
-          </span>
+          <div :style="customStyle">
+            <span @click="handleEvent('click')">
+              {{ code }}
+            </span>
+            <i
+              class="el-icon-copy-document dispute-code__icon"
+              @click="copyProccessCode"
+            />
+          </div>
           <i
             :class="status.icon"
             class="dispute-code__icon"
@@ -75,6 +80,15 @@ export default {
       if (this.status.available) {
         this.$emit('click')
       }
+    },
+    copyProccessCode() {
+      navigator.clipboard.writeText(this.code)
+      this.$message({
+        message: 'Copiado para a área de transferência.',
+        type: 'info',
+        center: true,
+        showClose: true,
+      })
     },
   },
 }

@@ -15,8 +15,8 @@
         <span v-if="[3].includes(step) && document.signedDocument">
           <el-link
             :underline="false"
-            target="_blank"
             class="jus-protocol-dialog__title"
+            target="_blank"
             @click="openDocumentInNewTab">
             {{ title }}
             <sup>
@@ -144,6 +144,7 @@
                   type="radio"
                 ></span>
               </el-tooltip>
+              {{ email.address }}
               <el-button
                 v-if="email.canDelete"
                 size="mini"
@@ -430,10 +431,9 @@
 <script>
 import { validateObjectEmail, validateCpf } from '@/utils/validations'
 import { IS_SMALL_WINDOW } from '@/constants/variables'
-import { mapActions, mapGetters } from 'vuex'
-import { intersection } from 'lodash'
 import * as cpf from '@fnando/cpf'
 import * as cnpj from '@fnando/cnpj'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'JusProtocolDialog',
@@ -453,7 +453,6 @@ export default {
   },
   data() {
     return {
-      signersList: [],
       step: 0,
       loading: false,
       loadingPdf: false,
@@ -516,8 +515,7 @@ export default {
     title() {
       switch (this.step) {
         case 0:
-          if (this.models.length > 1) return 'Escolha um modelo para iniciar'
-          return 'Carregando...'
+          return this.models.length > 1 ? 'Escolha um modelo para iniciar' : 'Carregando...'
         case 1: return 'Visualização da Minuta'
         case 2: return 'Enviar Minuta'
         case 3:
@@ -562,6 +560,7 @@ export default {
     buttonSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'medium'
     },
+
   },
   watch: {
     visible(value) {
@@ -578,8 +577,6 @@ export default {
         this.roleForm.role = ''
         this.showARoleButton = false
         this.documentForm.document = {}
-      } else {
-        this.cleanSelectedSigners()
       }
     },
   },
@@ -588,7 +585,6 @@ export default {
       this.isLowHeight = true
       this.fullscreen = true
     }
-    this.getDefaultAssigners()
   },
   methods: {
     ...mapActions([
@@ -691,10 +687,6 @@ export default {
         const emailIndex = this.roles[index].emails.findIndex(e => e.address === email)
         this.roles[index].emails.splice(emailIndex, 1)
       }
-      if (this.recipients[name]) {
-        delete this.recipients[name]
-        this.setSelectedSigners(this.recipients)
-      }
     },
     clearValidate(formIndex) {
       const roleform = this.$refs.roleForm
@@ -745,11 +737,11 @@ export default {
       })
     },
     selectModel(modelId, isUnique) {
+      const { disputeId } = this
+
       this.loading = true
-      this.$store.dispatch('createDocumentByModel', {
-        disputeId: this.disputeId,
-        modelId,
-      }).then(doc => {
+
+      this.$store.dispatch('createDocumentByModel', { disputeId, modelId }).then(doc => {
         this.document = doc
         this.step = 1
         if (isUnique) {
@@ -780,8 +772,7 @@ export default {
       })
     },
     confirmChooseRecipients() {
-      const selecteds = intersection(this.roles.map(e => e.name), this.selectedNames)
-      if (!selecteds.length) {
+      if (!Object.keys(this.recipients).length) {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Selecione ao menos um email.',
@@ -804,13 +795,6 @@ export default {
           return false
         })
       }
-    },
-    setSigner(signer) {
-      this.recipients[signer.name] = signer
-      this.setSelectedSigners(this.recipients)
-    },
-    getRoleByDocument(documentNumber) {
-      return this.roles.find(role => String(role.documentNumber) === String(documentNumber))
     },
     chooseRecipients() {
       this.loading = true
@@ -939,7 +923,6 @@ export default {
 .jus-protocol-dialog {
   .jus-protocol-dialog__header {
     padding-top: 8px;
-
     .jus-protocol-dialog__title {
       font-weight: bold;
       font-size: 20px;
@@ -953,7 +936,6 @@ export default {
     .el-dialog {
       .el-dialog__body {
         height: calc(100vh - 200px);
-
         @media (max-height: 640px) {
           margin: 10px;
           height: calc(100vh - 120px);
@@ -1014,7 +996,6 @@ export default {
     .signer-choice {
       font-weight: bold;
       font-size: 12px;
-
       .el-switch {
         margin: auto 8px;
       }
@@ -1051,7 +1032,6 @@ export default {
       margin-left: 9px;
     }
   }
-
   .jus-protocol-dialog__status {
     display: flex;
     align-items: center;
@@ -1060,7 +1040,6 @@ export default {
       background-color: #f6f6f6;
     }
   }
-
   .jus-protocol-dialog__status-icon {
     color: #adadad;
     margin-left: auto;
@@ -1070,11 +1049,9 @@ export default {
       margin-bottom: 2px;
     }
   }
-
   .jus-protocol-dialog__status-role {
     margin-left: 10px;
   }
-
   &__confirm-recipients {
     display: flex;
     > div:last-child {
