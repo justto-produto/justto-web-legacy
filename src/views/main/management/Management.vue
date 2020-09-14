@@ -634,7 +634,7 @@ export default {
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
           break
         case '0':
-          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['ENGAGEMENT'] })
+          this.$store.commit('updateDisputeQuery', { key: 'status', value: ['IMPORTED', 'ENRICHED', 'ENGAGEMENT', 'PENDING'] })
           this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['expirationDate,asc'] })
           break
         case '1':
