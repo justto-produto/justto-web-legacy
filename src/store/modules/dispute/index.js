@@ -19,8 +19,12 @@ const dispute = {
     tab: '1',
     hasNew: false,
     query: {
-      status: ['ENGAGEMENT'],
-      sort: ['expirationDate,asc'],
+      status: ['RUNNING'],
+      sort: [
+        'visualized,asc',
+        'lastReceivedMessage,asc',
+        'expirationDate,asc',
+      ],
       campaigns: [],
       strategy: [],
       tags: [],
