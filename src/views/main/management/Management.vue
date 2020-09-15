@@ -518,9 +518,6 @@ export default {
       this.$store.commit('setDisputesTab', query.disputeTab)
     }
 
-    this.$store.commit('updateDisputeQuery', { key: 'status', value: ['RUNNING'] })
-    this.$store.commit('updateDisputeQuery', { key: 'sort', value: ['visualized,asc', 'lastReceivedMessage,asc', 'expirationDate,asc'] })
-
     this.getDisputes()
     this.getPrescriptions()
   },
