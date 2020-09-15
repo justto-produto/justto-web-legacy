@@ -82,7 +82,22 @@
             v-for="(role, index) in availableSigners"
             :key="index"
           >
-            <span class="title">{{ role.name.toUpperCase() }}</span>
+            <span class="jus-protocol-dialog__send-title">
+              {{ role.name.toUpperCase() }}
+
+              <div
+                v-if="Object.keys(recipients).includes(role.name)"
+                class="jus-protocol-dialog__send-default-signer"
+              >
+                <el-switch
+                  :disabled="isDefaultSigner(role.documentNumber)"
+                  v-model="recipients[role.name].defaultSigner"
+                />
+                {{ isDefaultSigner(role.documentNumber) ? 'Assinante padrão' : (
+                  recipients[role.name].defaultSigner ? 'Definir como assinante padrão' : 'Não definir como assinante padrão'
+                ) }}
+              </div>
+            </span>
             <!-- TODO: Inserir el-switch v-model="recipients[role.name].defaultSigner" -->
             <div
               v-if="role.party"
@@ -136,15 +151,27 @@
                 :disabled="!!role.documentNumber && isValidCpfOrCnpj(role.documentNumber)"
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
-                <span><input
-                  v-model="recipients[role.name]"
-                  :name="role.name"
-                  :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address, disputeRoleId: role.id, defaultSigner: true }"
-                  :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
-                  type="radio"
-                ></span>
+                <span>
+                  <!-- <input
+                    v-model="recipients[role.name]"
+                    :name="role.name"
+                    :value="{
+                      name: role.name,
+                      documentNumber: role.documentNumber,
+                      email: email.address,
+                      disputeRoleId: role.id,
+                      defaultSigner: true }"
+                    :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
+                    type="radio"
+                  > -->
+                  <el-radio
+                    v-model="recipients[role.name]"
+                    :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
+                    :label="generateSigner(role, email)">
+                    {{ email.address }}
+                  </el-radio>
+                </span>
               </el-tooltip>
-              {{ email.address }}
               <el-button
                 v-if="email.canDelete"
                 size="mini"
@@ -433,7 +460,8 @@ import { validateObjectEmail, validateCpf } from '@/utils/validations'
 import { IS_SMALL_WINDOW } from '@/constants/variables'
 import * as cpf from '@fnando/cpf'
 import * as cnpj from '@fnando/cnpj'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import { uniq, concat } from 'lodash'
 
 export default {
   name: 'JusProtocolDialog',
@@ -499,10 +527,29 @@ export default {
     ...mapGetters({
       defaultSigners: 'availableSigners',
     }),
+    defaultsDocuments() {
+      return this.defaultSigners.map(signer => signer.documentNumber)
+    },
     availableSigners() {
-      // TODO: Evitar duplicidades
-      // TODO: Caso haja duplicados, mesclar os emails
-      return [...this.roles, ...this.defaultSigners]
+      function getObjectByDoc(doc, list) {
+        return list.find(item => item.documentNumber === doc) || { emails: [] }
+      }
+      function concatEmails(list1, list2) {
+        return uniq(
+          concat(list1.map(e => e.address), list2.map(e => e.address))
+        ).map(e => ({ address: e }))
+      }
+
+      const docs = this.roles.map(role => role.documentNumber)
+
+      const signers = this.defaultSigners.filter(signer => !docs.includes(signer.documentNumber))
+      const roles = this.roles.map(role => {
+        return {
+          ...role,
+          emails: concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails)
+        }
+      })
+      return [...roles, ...signers]
     },
     visible: {
       get() {
@@ -585,6 +632,7 @@ export default {
       this.isLowHeight = true
       this.fullscreen = true
     }
+    this.getDefaultAssigners()
   },
   methods: {
     ...mapActions([
@@ -595,6 +643,18 @@ export default {
       'setDocumentSigners',
       'cleanSelectedSigners',
     ]),
+    generateSigner(role, email) {
+      return {
+        name: role.name,
+        documentNumber: role.documentNumber,
+        email: email.address,
+        disputeRoleId: role.id,
+        defaultSigner: true
+      }
+    },
+    isDefaultSigner(doc) {
+      return this.defaultsDocuments.includes(doc)
+    },
     isValidCpfOrCnpj(value) {
       return cpf.isValid(value) || cnpj.isValid(value)
     },
@@ -989,9 +1049,17 @@ export default {
       margin-top: -14px;
       margin-bottom: 32px;
     }
-    .title {
+    .jus-protocol-dialog__send-title {
       color: #adadad;
       font-weight: 700;
+
+      display: flex;
+      flex-direction: row;
+
+      .jus-protocol-dialog__send-default-signer {
+        margin-left: 8px;
+      }
+
     }
     .signer-choice {
       font-weight: bold;
