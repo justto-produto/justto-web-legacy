@@ -88,10 +88,11 @@
               <div
                 v-if="Object.keys(recipients).includes(role.name)"
                 class="jus-protocol-dialog__send-default-signer"
+                @click="changeDefaultSigner(role)"
               >
                 <el-switch
                   :disabled="isDefaultSigner(role.documentNumber)"
-                  v-model="recipients[role.name].defaultSigner"
+                  :value="recipients[role.name].defaultSigner"
                 />
                 {{ isDefaultSigner(role.documentNumber) ? 'Assinante padrão' : (
                   recipients[role.name].defaultSigner ? 'Definir como assinante padrão' : 'Não definir como assinante padrão'
@@ -152,22 +153,11 @@
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
                 <span>
-                  <!-- <input
-                    v-model="recipients[role.name]"
-                    :name="role.name"
-                    :value="{
-                      name: role.name,
-                      documentNumber: role.documentNumber,
-                      email: email.address,
-                      disputeRoleId: role.id,
-                      defaultSigner: true }"
-                    :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
-                    type="radio"
-                  > -->
                   <el-radio
-                    v-model="recipients[role.name]"
+                    :value="Object.keys(recipients).includes(role.name) && recipients[role.name].email === email.address"
+                    :label="true"
                     :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
-                    :label="generateSigner(role, email)">
+                    @change="setRecipientEmail(generateSigner(role, email))">
                     {{ email.address }}
                   </el-radio>
                 </span>
@@ -461,7 +451,7 @@ import { IS_SMALL_WINDOW } from '@/constants/variables'
 import * as cpf from '@fnando/cpf'
 import * as cnpj from '@fnando/cnpj'
 import { mapActions, mapGetters } from 'vuex'
-import { uniq, concat } from 'lodash'
+import { concat } from 'lodash'
 
 export default {
   name: 'JusProtocolDialog',
@@ -534,10 +524,18 @@ export default {
       function getObjectByDoc(doc, list) {
         return list.find(item => item.documentNumber === doc) || { emails: [] }
       }
+
       function concatEmails(list1, list2) {
-        return uniq(
-          concat(list1.map(e => e.address), list2.map(e => e.address))
-        ).map(e => ({ address: e }))
+        const emails = concat(list1, list2)
+        const res = []
+
+        for (const email of emails) {
+          if (res.filter(el => el.address === email.address).length < 1) {
+            res.push(email)
+          }
+        }
+
+        return res
       }
 
       const docs = this.roles.map(role => role.documentNumber)
@@ -546,7 +544,7 @@ export default {
       const roles = this.roles.map(role => {
         return {
           ...role,
-          emails: concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails)
+          emails: concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails),
         }
       })
       return [...roles, ...signers]
@@ -643,13 +641,24 @@ export default {
       'setDocumentSigners',
       'cleanSelectedSigners',
     ]),
+    changeDefaultSigner(role) {
+      const { name, documentNumber } = role
+      if (!this.isDefaultSigner(documentNumber)) {
+        this.recipients[name].defaultSigner = !this.recipients[name].defaultSigner
+        this.$forceUpdate()
+      }
+    },
+    setRecipientEmail(signer) {
+      this.recipients[signer.name] = signer
+      this.$forceUpdate()
+    },
     generateSigner(role, email) {
       return {
         name: role.name,
         documentNumber: role.documentNumber,
         email: email.address,
         disputeRoleId: role.id,
-        defaultSigner: true
+        defaultSigner: true,
       }
     },
     isDefaultSigner(doc) {
@@ -860,18 +869,10 @@ export default {
       this.loading = true
       this.loadingChooseRecipients = true
       this.confirmChooseRecipientsVisible = false
-      const recipients = []
-      const documentNumbers = this.roles.map(role => role.documentNumber)
-      for (const recipient of this.selectedSigners.filter(signer => documentNumbers.includes(signer.documentNumber))) {
-        const temp = {
-          name: recipient.name,
-          email: recipient.email,
-          documentNumber: recipient.documentNumber,
-          disputeRoleId: recipient.disputeRoleId,
-          defaultSigner: recipient.defaultSigner,
-        }
-        recipients.push(temp)
-      }
+      const recipients = Object.values(this.recipients).map(recipient => {
+        const { name, email, documentNumber, disputeRoleId, defaultSigner } = recipient
+        return { name, email, documentNumber, disputeRoleId, defaultSigner }
+      })
       this.setDocumentSigners({
         disputeId: this.disputeId, recipients,
       }).then(doc => {
