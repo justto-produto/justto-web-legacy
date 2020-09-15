@@ -9,9 +9,9 @@
         <el-link
           class="dispute-code__proccess-link"
           :underline="false"
-          @mouseover.native="handleEvent('hover')">
+          @mouseover.native="handleHover">
           <div :style="customStyle">
-            <span @click="handleEvent('click')">
+            <span @click="handleClick">
               {{ code }}
             </span>
             <i
@@ -73,12 +73,12 @@ export default {
     },
   },
   methods: {
-    handleEvent(event) {
-      this.$emit(event)
+    handleHover() {
+      this.$emit('hoverDisputeCode')
     },
     handleClick() {
       if (this.status.available) {
-        this.$emit('click')
+        this.$emit('openTimeline')
       }
     },
     copyProccessCode() {
