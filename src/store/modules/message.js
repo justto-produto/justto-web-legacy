@@ -15,32 +15,26 @@ const message = {
     },
   },
   actions: {
-    canSendWhatsapp({ commit }, phone) {
+    canSendWhatsapp({ _ }, phone) {
       return axiosDispatcher({ url: `api/messages/can-send/${phone}` })
     },
-    sendwhatsapp({ commit }, data) {
+    sendwhatsapp({ _ }, data) {
       return axiosDispatcher({
         url: 'api/messages/send/whatsapp',
         method: 'post',
         data: data,
       })
     },
-    sendemail({ commit }, data) {
+    sendemail({ _ }, data) {
       return axiosDispatcher({
         url: 'api/messages/send/email',
         method: 'post',
         data: data,
       })
     },
-    getOccurrenceMessage({ commit }, messageId) {
-      return new Promise((resolve, reject) => {
-        // eslint-disable-next-line
-        axios.get('api/messages/' + messageId)
-          .then(response => {
-            resolve(response.data)
-          }).catch(error => {
-            reject(error)
-          })
+    getOccurrenceMessage({ _ }, messageId) {
+      return axiosDispatcher({
+        url: `api/messages/${messageId}`,
       })
     },
   },
