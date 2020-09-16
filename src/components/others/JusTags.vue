@@ -45,12 +45,16 @@
             >
               <el-tag
                 :color="tag.color"
-                class="el-tag--etiqueta el-tag--etiqueta-select"
+                class="jus-tags__option el-tag--etiqueta el-tag--etiqueta-select"
               >
                 <div>
                   <i :class="`el-icon-${tag.icon}`" />
                   {{ tag.name }}
                 </div>
+                <i
+                  class="el-icon-delete"
+                  @click.stop.prevent="handleDeleteTag(tag.id)"
+                />
               </el-tag>
             </el-option>
             <div slot="empty">
@@ -155,6 +159,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'JusTags',
   data() {
@@ -211,6 +217,8 @@ export default {
     window.removeEventListener('click', this.closeOnCLick)
   },
   methods: {
+    ...mapActions(['deleteTag']),
+
     closeOnCLick(e) {
       if (!e.target.id.startsWith('idTag') && !e.target.textContent.includes('Adicionar nova etiqueta')) {
         this.visible = false
@@ -241,6 +249,27 @@ export default {
       const disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
       disputeTags.push(tag)
       this.disputeTags = disputeTags
+    },
+    handleDeleteTag(tagId) {
+      this.$confirm('Tem certeza que deseja exluir essa tag?', 'Excluír tag', {
+        type: 'warning',
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+      }).then(() => {
+        this.deleteTag(tagId).then(() => {
+          this.$jusNotification({
+            type: 'success',
+            title: 'Yay!',
+            message: 'Tag excluída com sucesso.',
+          })
+        }, () => {
+          this.$jusNotification({
+            type: 'warning',
+            title: 'Ops!',
+            message: 'Não foi possível excluir a tag',
+          })
+        })
+      })
     },
     removeTag(tagId) {
       // SEGMENT TRACK
@@ -287,6 +316,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/styles/colors.scss';
+
 .jus-tags {
   width: 100%;
   padding: 2px 3px 5px 10px;
@@ -364,6 +395,21 @@ export default {
       flex: 1 0 31%;
       margin: 2px;
     }
+  }
+}
+
+.jus-tags__option {
+  display:  flex;
+  justify-content: space-between;
+
+  .el-icon-delete {
+    margin-left: 2px;
+    visibility: hidden;
+    &:hover { font-weight: bold; }
+  }
+
+  &:hover .el-icon-delete {
+    visibility: visible;
   }
 }
 </style>
