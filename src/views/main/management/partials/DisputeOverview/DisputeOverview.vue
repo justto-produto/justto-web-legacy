@@ -107,7 +107,7 @@
               <dispute-code-link
                 :code="dispute.code"
                 :custom-style="{ fontSize: '14px', marginLeft: '12px'}"
-                @click="openTimelineModal" />
+                @openTimeline="openTimelineModal" />
             </div>
             <div
               v-if="dispute.campaign"
