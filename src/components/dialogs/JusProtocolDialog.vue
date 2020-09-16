@@ -683,11 +683,15 @@ export default {
       const documentForm = this.$refs['documentForm' + formIndex][0]
       documentForm.validate(valid => {
         if (valid) {
+          console.log(this.documentForm.document, formIndex, this.documentForm.document[formIndex])
           if (!!role.documentNumber && !this.isValidCpfOrCnpj(role.documentNumber)) {
+            this.roles[formIndex].documentNumber = this.documentForm.document[formIndex]
             role.documentNumber = this.documentForm.document[formIndex]
           } else {
             role.documentNumber = this.documentForm.document[formIndex]
+            this.roles[formIndex].documentNumber = this.documentForm.document[formIndex]
             this.formKey += 1
+            this.$forceUpdate()
             this.showAddEmail(role.name, formIndex)
           }
         }
@@ -770,8 +774,8 @@ export default {
         emailForm = this.$refs['emailForm' + formIndex]
       }
       if (roleform) roleform.clearValidate()
-      if (documentForm) documentForm[0].clearValidate()
-      if (emailForm) emailForm[0].clearValidate()
+      if (documentForm && documentForm.length) documentForm[0].clearValidate()
+      if (emailForm && emailForm.length) emailForm[0].clearValidate()
     },
     getDocument() {
       this.getDocumentByDisputeId(this.disputeId).then(document => {
