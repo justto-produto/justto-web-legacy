@@ -263,6 +263,12 @@ export default {
             title: 'Yay!',
             message: 'Tag excluída com sucesso.',
           })
+        }, () => {
+          this.$jusNotification({
+            type: 'warning',
+            title: 'Ops!',
+            message: 'Não foi possível excluir a tag',
+          })
         })
       })
     },

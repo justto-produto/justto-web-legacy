@@ -37,7 +37,7 @@ const actions = {
   },
   deleteTag({ _ }, tagId) {
     return axiosDispatcher({
-      url: `/api/disputes/tags/${tagId}`,
+      url: `/api/workspaces/tags/${tagId}`,
       method: 'DELETE',
     })
   },
