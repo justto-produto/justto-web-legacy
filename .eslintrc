@@ -6,11 +6,12 @@
   "extends": ["plugin:vue/recommended", "@vue/standard"],
   "rules": {
     "space-before-function-paren": ["error", "never"],
-    "comma-dangle": ["error", "always-multiline"],
+    "comma-dangle": ["warn", "always-multiline"],
     "no-var": "error",
     "prefer-const":"warn",
     "no-debugger": "warn",
     "standard/no-callback-literal": 0,
+    "no-trailing-spaces": "warn",
     "vue/max-attributes-per-line": [
       "warn",
       {
