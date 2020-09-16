@@ -240,7 +240,6 @@ export default {
     },
     addTag(tag) {
       // SEGMENT TRACK
-      console.log(tag)
       this.$jusSegment('Vinculação de TAG', {
         tagName: this.tagForm.name,
         tagIcon: this.tagForm.icon,
