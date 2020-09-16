@@ -163,7 +163,6 @@
                   </el-radio>
                 </span>
               </el-tooltip>
-              {{ email.address }}
               <el-button
                 v-if="email.canDelete"
                 size="mini"
@@ -611,6 +610,11 @@ export default {
 
   },
   watch: {
+    step() {
+      if (Number(this.step) === 2) {
+        this.getDefaultAssigners()
+      }
+    },
     visible(value) {
       if (value) {
         this.loading = true
