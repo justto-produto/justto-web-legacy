@@ -11,6 +11,7 @@
     "prefer-const":"warn",
     "no-debugger": "warn",
     "standard/no-callback-literal": 0,
+    "no-trailing-spaces": "warn",
     "vue/max-attributes-per-line": [
       "warn",
       {
