@@ -545,6 +545,7 @@ export default {
       const roles = this.roles.map(role => {
         return {
           ...role,
+          show: false,
           emails: concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails),
         }
       })
@@ -728,7 +729,8 @@ export default {
                 address: this.emailForm.email[role.name],
                 canDelete: true,
               })
-              this.recipients[role.name] = { name: role.name, documentNumber: role.documentNumber, email: this.emailForm.email[role.name] }
+              const email = this.emailForm.email[role.name]
+              this.recipients[role.name] = this.generateSigner(role, { address: email })
               this.emailForm.email = {}
               this.roles[index].show = false
               this.formKey += 1
@@ -738,8 +740,7 @@ export default {
       })
     },
     showAddEmail(name, formIndex) {
-      this.roles.map(r => {
-        console.log(r.name, name, r.name === name, this.formKey)
+      this.availableSigners.map(r => {
         if (r.name === name) r.show = true
         else r.show = false
       })
@@ -751,6 +752,7 @@ export default {
           emailInput.focus()
         })
       }
+      this.$forceUpdate()
     },
     removeEmail(email, name) {
       const index = this.roles.findIndex(r => r.name === name)
@@ -853,7 +855,6 @@ export default {
       } else {
         new Promise((resolve, reject) => {
           for (const recipient of Object.values(this.recipients)) {
-            console.log(recipient.documentNumber, this.isValidCpfOrCnpj(recipient.documentNumber))
             if (!this.isValidCpfOrCnpj(recipient.documentNumber)) {
               reject(new Error(`${recipient.name} está com o número do documento inválido`))
             }
@@ -890,6 +891,7 @@ export default {
       }).finally(() => {
         this.loading = false
         this.loadingChooseRecipients = false
+        this.recipients = {}
       })
     },
     resendSignersNotification() {
