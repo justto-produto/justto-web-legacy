@@ -18,7 +18,6 @@
       class="management-table el-table--disputes"
       data-testid="dispute-index"
       @cell-mouse-enter="cellMouseEnter"
-      @cell-click="openTimelineModal($event)"
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange">
       <el-table-column
@@ -108,7 +107,8 @@
         <template slot-scope="scope">
           <dispute-code-link
             :code="scope.row.code"
-            @hover="hoverDisputeCode(scope.row.code)"
+            @hoverDisputeCode="hoverDisputeCode(scope.row.code)"
+            @openTimeline="openTimelineModal(scope.row)"
           />
         </template>
       </el-table-column>

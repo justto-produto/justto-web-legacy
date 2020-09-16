@@ -163,6 +163,7 @@
                   </el-radio>
                 </span>
               </el-tooltip>
+              {{ email.address }}
               <el-button
                 v-if="email.canDelete"
                 size="mini"
@@ -632,7 +633,6 @@ export default {
       this.isLowHeight = true
       this.fullscreen = true
     }
-    this.getDefaultAssigners()
   },
   methods: {
     ...mapActions([
