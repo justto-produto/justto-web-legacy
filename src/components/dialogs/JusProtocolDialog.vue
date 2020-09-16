@@ -156,6 +156,7 @@
                   <el-radio
                     :value="Object.keys(recipients).includes(role.name) && recipients[role.name].email === email.address"
                     :label="true"
+                    :name="role.name"
                     :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
                     @change="setRecipientEmail(generateSigner(role, email))">
                     {{ email.address }}
@@ -738,6 +739,7 @@ export default {
     },
     showAddEmail(name, formIndex) {
       this.roles.map(r => {
+        console.log(r.name, name, r.name === name, this.formKey)
         if (r.name === name) r.show = true
         else r.show = false
       })
