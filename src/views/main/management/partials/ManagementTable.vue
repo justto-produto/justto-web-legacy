@@ -119,6 +119,7 @@
         <ManagementLastInteraction
           :data="scope.row"
           slot-scope="scope"
+          @update:responseBoxLoading="responseBoxLoading = $event"
         />
       </el-table-column>
       <el-table-column
@@ -303,18 +304,7 @@ export default {
       selectedDisputeId: 0,
       selectedDisputeRoles: [],
       disputeKey: 0,
-      editorOptions: {
-        placeholder: 'Escreva alguma coisa',
-        modules: {
-          toolbar: [
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ header: 1 }, { header: 2 }],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['blockquote'],
-            ['clean'],
-          ],
-        },
-      },
+      responseBoxLoading: false,
     }
   },
   computed: {

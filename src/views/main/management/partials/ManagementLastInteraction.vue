@@ -147,10 +147,7 @@
       </span>
     </el-popover>
 
-    <div>
-      <!-- {{ getLastInteraction(data.lastReceivedMessage.createAt.dateTime) }} -->
-      {{ getLastInteraction(lastInteraction(data)) }}
-    </div>
+    <div>{{ getLastInteraction(lastInteraction(data)) }}</div>
 
     <el-dialog
       :visible.sync="responseDialogVisible"
@@ -178,7 +175,7 @@
         <b>{{ responseRow.lastReceivedMessage.message.communicationType.toLowerCase() | capitalize }}</b>
         <br>
         Destinatário: <b>{{ responseRow.lastReceivedMessage.message.sender | phoneMask }}</b>
-        <br><br>
+        <br>
         <quill-editor
           v-if="responseDialogVisible"
           ref="messageEditor"
@@ -253,7 +250,20 @@ export default {
     },
   },
   computed: {
-
+    editorOptions() {
+      return {
+        placeholder: 'Escreva alguma coisa',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ header: 1 }, { header: 2 }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['blockquote'],
+            ['clean'],
+          ],
+        },
+      }
+    },
   },
   methods: {
     ...mapActions([
@@ -280,13 +290,13 @@ export default {
       let outboundInteraction = ''
 
       if (data.lastReceivedMessage && data.lastReceivedMessage.createAt) {
-        receivedMessage = data.lastReceivedMessage.createAt.dateTime || ''
+        receivedMessage = data.lastReceivedMessage.createAt.dateTime
       }
       if (data.lastNegotiatorAccess && data.lastNegotiatorAccess.createAt) {
-        negotiatorAccess = data.lastNegotiatorAccess.createAt.dateTime || ''
+        negotiatorAccess = data.lastNegotiatorAccess.createAt.dateTime
       }
       if (data.lastOutboundInteraction && data.lastOutboundInteraction.createAt) {
-        outboundInteraction = data.lastOutboundInteraction.createAt.dateTime || ''
+        outboundInteraction = data.lastOutboundInteraction.createAt.dateTime
       }
 
       if (this.$moment(receivedMessage).isAfter(negotiatorAccess) && this.$moment(receivedMessage).isAfter(outboundInteraction)) {
@@ -334,6 +344,7 @@ export default {
       if (this.message.trim().replace('\n', '') || this.richMessage.trim().replace('\n', '')) {
         const message = this.richMessage ? this.richMessage : this.message
         this.responseBoxLoading = true
+        this.$emit('update:responseBoxLoading', true)
         this.$store.dispatch('send' + dispute.lastReceivedMessage.message.communicationType.toLowerCase(), {
           to: [{ address: dispute.lastReceivedMessage.message.sender }],
           message,
@@ -341,8 +352,8 @@ export default {
         }).then(() => {
           this.message = ''
           this.richMessage = ''
-          delete this.messageCache[dispute.id]
           this.responseDialogVisible = false
+          delete this.messageCache[dispute.id]
           this.$jusNotification({
             title: 'Yay!',
             message: 'Mensagem enviada com sucesso.',
@@ -352,6 +363,7 @@ export default {
           this.$jusNotification({ error })
         }).finally(() => {
           this.responseBoxLoading = false
+          this.$emit('update:responseBoxLoading', false)
         })
       }
     },
@@ -371,6 +383,12 @@ export default {
   }
 
   .last-interactions-table__response-dialog {
+    .ql-container {
+      height: calc(100% - 40px);
+    }
+    .ql-editor {
+      height: 100%
+    }
     .quill-editor {
       background-color: #eaeaed;
       padding: 0 10px;
