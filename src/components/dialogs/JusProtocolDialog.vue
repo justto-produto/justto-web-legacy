@@ -39,20 +39,27 @@
           v-if="step === 0"
           class="jus-protocol-dialog__model-choice"
         >
-          <el-button
+          <div
             v-for="model in models"
-            :key="model.id"
-            plain
-            class="model-choice__button"
-            @click="selectModel(model.id)"
-          >
-            <span class="model-choice__button-text">{{ model.name }}</span>
-            <jus-icon
-              icon="doc"
-              is-active
-              class="model-choice__button-icon"
-            />
-          </el-button>
+            :key="model.id">
+            <el-tooltip
+              effect="dark"
+              placement="top"
+              :content="model.name">
+              <el-button
+                plain
+                class="model-choice__button"
+                @click="selectModel(model.id)"
+              >
+                <span class="model-choice__button-text">{{ model.name }}</span>
+                <jus-icon
+                  icon="doc"
+                  is-active
+                  class="model-choice__button-icon"
+                />
+              </el-button>
+            </el-tooltip>
+          </div>
         </div>
         <!-- EDIÇÃO DE TEMPLATE -->
         <el-tooltip
@@ -85,21 +92,15 @@
             <span class="jus-protocol-dialog__send-title">
               {{ role.name.toUpperCase() }}
 
-              <div
-                v-if="Object.keys(recipients).includes(role.name)"
-                class="jus-protocol-dialog__send-default-signer"
-                @click="changeDefaultSigner(role)"
-              >
-                <el-switch
-                  :disabled="isDefaultSigner(role.documentNumber)"
+              <div class="jus-protocol-dialog__send-default-signer">
+                <el-checkbox
+                  v-if="recipients[role.name] && !isDefaultSigner(role.documentNumber)"
                   :value="recipients[role.name].defaultSigner"
+                  @change="changeDefaultSigner(role)"
                 />
-                {{ isDefaultSigner(role.documentNumber) ? 'Assinante padrão' : (
-                  recipients[role.name].defaultSigner ? 'Definir como assinante padrão' : 'Não definir como assinante padrão'
-                ) }}
+                {{ getLabelSigner(role) }}
               </div>
             </span>
-            <!-- TODO: Inserir el-switch v-model="recipients[role.name].defaultSigner" -->
             <div
               v-if="role.party"
               class="subtitle"
@@ -519,7 +520,7 @@ export default {
       defaultSigners: 'availableSigners',
     }),
     defaultsDocuments() {
-      return this.defaultSigners.map(signer => signer.documentNumber)
+      return this.defaultSigners.map(signer => this.stripDoc(signer.documentNumber))
     },
     availableSigners() {
       function getObjectByDoc(doc, list) {
@@ -539,9 +540,9 @@ export default {
         return res
       }
 
-      const docs = this.roles.map(role => role.documentNumber)
+      const docs = this.roles.map(role => this.stripDoc(role.documentNumber))
 
-      const signers = this.defaultSigners.filter(signer => !docs.includes(signer.documentNumber))
+      const signers = this.defaultSigners.filter(signer => !docs.includes(this.stripDoc(signer.documentNumber)))
       const roles = this.roles.map(role => {
         return {
           ...role,
@@ -647,6 +648,25 @@ export default {
       'setDocumentSigners',
       'cleanSelectedSigners',
     ]),
+    getLabelSigner(role) {
+      const { documentNumber, name } = role
+      if (this.isDefaultSigner(documentNumber)) {
+        return 'Assinante padrão'
+      } else if (this.recipients[name]) {
+        return 'Definir como assinante padrão'
+      } else {
+        return ''
+      }
+    },
+    stripDoc(doc) {
+      if (cpf.isValid(doc)) {
+        return cpf.strip(doc)
+      } else if (cnpj.isValid(doc)) {
+        return cnpj.strip(doc)
+      } else {
+        return ''
+      }
+    },
     changeDefaultSigner(role) {
       const { name, documentNumber } = role
       if (!this.isDefaultSigner(documentNumber)) {
@@ -664,11 +684,11 @@ export default {
         documentNumber: role.documentNumber,
         email: email.address,
         disputeRoleId: role.id,
-        defaultSigner: true,
+        defaultSigner: this.isDefaultSigner(role.documentNumber),
       }
     },
     isDefaultSigner(doc) {
-      return this.defaultsDocuments.includes(doc)
+      return this.defaultsDocuments.includes(this.stripDoc(doc))
     },
     isValidCpfOrCnpj(value) {
       return cpf.isValid(value) || cnpj.isValid(value)
@@ -687,17 +707,14 @@ export default {
       const documentForm = this.$refs['documentForm' + formIndex][0]
       documentForm.validate(valid => {
         if (valid) {
-          console.log(this.documentForm.document, formIndex, this.documentForm.document[formIndex])
-          if (!!role.documentNumber && !this.isValidCpfOrCnpj(role.documentNumber)) {
-            this.roles[formIndex].documentNumber = this.documentForm.document[formIndex]
-            role.documentNumber = this.documentForm.document[formIndex]
-          } else {
-            role.documentNumber = this.documentForm.document[formIndex]
-            this.roles[formIndex].documentNumber = this.documentForm.document[formIndex]
+          if (!role.documentNumber) {
             this.formKey += 1
             this.$forceUpdate()
             this.showAddEmail(role.name, formIndex)
           }
+
+          this.roles[formIndex].documentNumber = this.stripDoc(this.documentForm.document[formIndex])
+          role.documentNumber = this.stripDoc(this.documentForm.document[formIndex])
         }
       })
     },
@@ -1035,6 +1052,8 @@ export default {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    padding: 10px;
+
     .model-choice__button {
       width: 160px;
       height: 180px;
@@ -1042,7 +1061,7 @@ export default {
       .model-choice__button-text {
         font-weight: 500;
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 6;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1062,12 +1081,17 @@ export default {
       margin-top: -14px;
       margin-bottom: 32px;
     }
+
     .jus-protocol-dialog__send-title {
       color: #adadad;
       font-weight: 700;
 
+      border-bottom: solid 1px lightgray;
+      margin-bottom: 8px;
+
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
 
       .jus-protocol-dialog__send-default-signer {
         margin-left: 8px;
