@@ -919,15 +919,15 @@ export default {
         const sendDate = message.parameters && message.parameters.SEND_DATE ? message.parameters.SEND_DATE : this.$moment(executionDateTime.dateTime).format('DD/MM/YYYY HH:mm')
         const receiverDate = message.parameters ? message.parameters.RECEIVER_DATE : ''
         const readDate = message.parameters ? message.parameters.READ_DATE : ''
-        let icon = 'status-0'
+        let icon = 'status-sent'
         let msg = `Enviado em ${sendDate}.`
         if (receiverDate) {
           msg += `<br>Recebido em ${receiverDate}.`
-          icon = 'status-1'
+          icon = 'status-recived'
         }
         if (readDate) {
           msg += `<br>Lido em ${readDate}.`
-          icon = 'status-2'
+          icon = 'status-readed'
         }
         return { icon, message: msg }
       } else if (message.status === 'CANCELED') {

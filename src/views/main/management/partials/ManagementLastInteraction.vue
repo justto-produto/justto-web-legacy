@@ -1,19 +1,20 @@
 <template>
-  <div>
+  <div class="last-interactions-table">
     <el-popover
-      v-if="!!data.lastOutboundInteraction"
       trigger="hover"
       popper-class="el-popover--dark"
       @show="getMessageSummaryHandler(data.lastOutboundInteraction, data.id)"
       @hide="messageSummary = {}">
-      <strong>
-        <jus-icon
-          :icon="getInteractionIcon(data.lastOutboundInteraction)"
-          is-white
-        />
-        Último {{ getLastInteractionTooltip(data.lastOutboundInteraction) }}
-        em {{ data.lastOutboundInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
-      </strong><br>
+      <div>
+        <strong>
+          <jus-icon
+            :icon="getInteractionIcon(data.lastOutboundInteraction)"
+            is-white
+          />
+          Último {{ getLastInteractionTooltip(data.lastOutboundInteraction) }}
+          em {{ data.lastOutboundInteraction.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+        </strong>
+      </div>
       <div v-if="data.lastOutboundInteraction.message.sender">
         De: {{ data.lastOutboundInteraction.message.sender | phoneMask }}
       </div>
@@ -41,14 +42,11 @@
         </div>
       </span>
       <jus-icon
+        :icon="`status-${data.lastOutboundInteraction.message.parameters.READ_DATE ? 'readed' : 'sent'}`"
         slot="reference"
-        :icon="'status-' + (data.lastOutboundInteraction.message.parameters.READ_DATE ? 2 : 0)"
       />
     </el-popover>
-    <span
-      v-else
-      style="color: #adadad;margin-right: 8px;font-size: 22px;vertical-align: sub;"
-    >-</span>
+
     <el-tooltip>
       <div slot="content">
         <span v-if="!!data.lastNegotiatorAccess">
@@ -72,28 +70,26 @@
       @hide="hideResponseBox(data.id)"
     >
       <div>
-        <strong>
-          <jus-icon
-            :icon="getInteractionIcon(data.lastReceivedMessage)"
-            is-white
-          />
-          {{ getLastInteractionTooltip(data.lastReceivedMessage) }}
-          recebido em
-          {{ data.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
-        </strong><br>
-        <div v-if="data.lastReceivedMessage && data.lastReceivedMessage.message">
-          <span v-if="data.lastReceivedMessage.message.sender">
-            De: {{ data.lastReceivedMessage.message.sender | phoneMask }}
-          </span>
-          <br>
-          <span
-            v-if="data.lastReceivedMessage.message.resume"
-            class="management-table__last-interaction-tooltip"
-            v-html="'Resumo: ' + data.lastReceivedMessage.message.resume + (data.lastReceivedMessage.message.resume.length > 139 ? '...' : '')"
-          />
+        <div>
+          <strong>
+            <jus-icon
+              :icon="getInteractionIcon(data.lastReceivedMessage)"
+              is-white
+            />
+            {{ getLastInteractionTooltip(data.lastReceivedMessage) }}
+            recebido em {{ data.lastReceivedMessage.createAt.dateTime | moment('DD/MM/YYYY [às] HH:mm') }}
+          </strong>
+        </div>
+        <div v-if="data.lastReceivedMessage.message.sender">
+          De: {{ data.lastReceivedMessage.message.sender | phoneMask }}
         </div>
         <div
-          class=""
+          v-if="data.lastReceivedMessage.message.resume"
+          class="last-interactions-table__last-recived-message-tooltip"
+          v-html="`Resumo: ${data.lastReceivedMessage.message.resume}${data.lastReceivedMessage.message.resume.length >= 140 ? '...' : ''}`"
+        />
+        <div
+          class="position-relative"
           style="width: 100%;text-align: right;min-width:300px"
         >
           <el-button
@@ -137,34 +133,32 @@
           </div>
         </div>
       </div>
-      <div slot="reference">
-        <span
-          class="position-relative"
-          style="vertical-align: middle;"
-        >
+      <span slot="reference">
+        <span class="position-relative">
           <jus-icon
             v-if="data.lastReceivedMessage"
             :icon="getInteractionIcon(data.lastReceivedMessage)"
-            class="management-table__interaction-icon"
           />
           <i
             v-if="!data.visualized"
-            class="management-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary"
+            class="last-interactions-table__interaction-pulse el-icon-warning el-icon-pulse el-icon-primary"
           />
         </span>
-        <span style="margin-left: 4px;">
-          {{ getLastInteraction(data.lastReceivedMessage.createAt.dateTime) }}
-        </span>
-      </div>
+      </span>
     </el-popover>
 
-        <el-dialog
+    <div>
+      <!-- {{ getLastInteraction(data.lastReceivedMessage.createAt.dateTime) }} -->
+      {{ getLastInteraction(lastInteraction(data)) }}
+    </div>
+
+    <el-dialog
       :visible.sync="responseDialogVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :show-close="false"
       :title="`Resposta ao processo ${responseRow.code}`"
-      class="management-table__response-dialog">
+      class="last-interactions-table__response-dialog">
       <div v-if="Object.keys(responseRow).length">
         Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b>.
         <br>
@@ -258,6 +252,9 @@ export default {
       required: true,
     },
   },
+  computed: {
+
+  },
   methods: {
     ...mapActions([
       'getMessageSummary',
@@ -274,6 +271,30 @@ export default {
             this.messageSummary = resume
           })
         }
+      }
+    },
+
+    lastInteraction(data) {
+      let receivedMessage = ''
+      let negotiatorAccess = ''
+      let outboundInteraction = ''
+
+      if (data.lastReceivedMessage && data.lastReceivedMessage.createAt) {
+        receivedMessage = data.lastReceivedMessage.createAt.dateTime || ''
+      }
+      if (data.lastNegotiatorAccess && data.lastNegotiatorAccess.createAt) {
+        negotiatorAccess = data.lastNegotiatorAccess.createAt.dateTime || ''
+      }
+      if (data.lastOutboundInteraction && data.lastOutboundInteraction.createAt) {
+        outboundInteraction = data.lastOutboundInteraction.createAt.dateTime || ''
+      }
+
+      if (this.$moment(receivedMessage).isAfter(negotiatorAccess) && this.$moment(receivedMessage).isAfter(outboundInteraction)) {
+        return receivedMessage
+      } else if (this.$moment(negotiatorAccess).isAfter(outboundInteraction)) {
+        return negotiatorAccess
+      } else {
+        return outboundInteraction
       }
     },
 
@@ -341,4 +362,35 @@ export default {
 <style lang="scss">
 @import '@/styles/colors.scss';
 
+.last-interactions-table {
+  .last-interactions-table__interaction-pulse {
+    position: absolute;
+    font-size: 14px;
+    bottom: -5px;
+    right: -3px;
+  }
+
+  .last-interactions-table__response-dialog {
+    .quill-editor {
+      background-color: #eaeaed;
+      padding: 0 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+      min-height: 300px;
+      height: 30vh;
+      &.show-toolbar .ql-toolbar {
+        display: inherit !important;
+      }
+    }
+    img {
+      width: 14px;
+      margin: 0 4px 0 2px;
+    }
+  }
+}
+
+.last-interactions-table__last-recived-message-tooltip {
+  display: flex;
+  word-break: break-word;
+  max-width: 400px;
+}
 </style>

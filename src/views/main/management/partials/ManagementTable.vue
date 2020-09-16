@@ -453,13 +453,6 @@ export default {
       height: 100%;
     }
   }
-
-  &__interaction-icon {
-    vertical-align: middle;
-    margin-right: 4px;
-    max-height: 18px;
-    max-width: 18px;
-  }
   &__expiration-icon {
     margin-right: 6px;
     img {
@@ -468,12 +461,6 @@ export default {
       max-height: 16px;
       max-width: 16px;
     }
-  }
-  &__interaction-pulse {
-    position: absolute;
-    font-size: 16px;
-    bottom: -5px;
-    right: -3px;
   }
   &__expiration-pulse {
     vertical-align: sub;
@@ -525,10 +512,6 @@ export default {
       border: 1px solid #9461f7;
     }
   }
-  &__last-interaction-tooltip {
-    display: flex;
-    max-width: 400px;
-  }
   &__protocol_button--step {
     &-1 {
       span:first-child {
@@ -551,22 +534,6 @@ export default {
   }
   .el-table__empty-block {
     width: auto !important;
-  }
-  &__response-dialog {
-    .quill-editor {
-      background-color: #eaeaed;
-      padding: 0 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
-      min-height: 300px;
-      height: 30vh;
-      &.show-toolbar .ql-toolbar {
-        display: inherit !important;
-      }
-    }
-    img {
-      width: 14px;
-      margin: 0 4px 0 2px;
-    }
   }
   th.hidden-actions {
     position: relative;
