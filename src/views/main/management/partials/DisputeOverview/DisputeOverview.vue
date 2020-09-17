@@ -1914,7 +1914,7 @@ export default {
       })
     },
     showNamesake(role) {
-      return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
+      return role.namesake && !role.documentNumber
     },
     showVexatious(personProperties) {
       if (personProperties.IS_VEXATIOUS_AUTHOR === 'true' || personProperties.IS_VEXATIOUS_LAWYER === 'true' || personProperties.IS_VEXATIOUS_PARTY === 'true') return true
