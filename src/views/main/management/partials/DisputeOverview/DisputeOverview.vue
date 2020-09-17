@@ -2469,18 +2469,21 @@ export default {
         type: 'warning',
         cancelButtonClass: 'is-plain',
       }).then(() => {
-        this.$store.dispatch('removeRole', {
-          disputeId: this.dispute.id,
-          roleId: role.id,
-        }).then(response => {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Pessoa removida com sucesso.',
-            type: 'success',
+        this.$emit('removeRole')
+        setTimeout(() => {
+          this.$store.dispatch('removeRole', {
+            disputeId: this.dispute.id,
+            roleId: role.id,
+          }).then(response => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Pessoa removida com sucesso.',
+              type: 'success',
+            })
+          }).catch(error => {
+            this.$jusNotification({ error })
           })
-        }).catch(error => {
-          this.$jusNotification({ error })
-        })
+        }, 4600)
       })
     },
     addBankData() {
