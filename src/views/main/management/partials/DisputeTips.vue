@@ -36,6 +36,18 @@
       </el-steps>
     </div>
     <div class="action">
+      <el-tooltip
+        v-if="document.signedDocument"
+        effect="dark"
+        content="Copiar URL de assinatura do Documento"
+        placement="top"
+      >
+        <el-button
+          icon="el-icon-copy-document"
+          type="secondary"
+          @click="copyDocumentURL()"
+        />
+      </el-tooltip>
       <el-button
         type="primary"
         @click="showProtocolDialog()"
@@ -53,6 +65,7 @@
 
 <script>
 import { getDocumentStep } from '@/utils/jusUtils'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'DisputeTips',
   components: {
@@ -62,12 +75,13 @@ export default {
     return {
       showTips: true,
       protocolDialogVisible: false,
+      document: {},
     }
   },
   computed: {
-    dispute() {
-      return this.$store.getters.dispute
-    },
+    ...mapGetters({
+      dispute: 'dispute',
+    }),
     documentStep() {
       return getDocumentStep(this.dispute.hasDocument, this.dispute.signStatus)
     },
@@ -75,11 +89,29 @@ export default {
       return ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status)
     },
   },
+  created() {
+    if (this.documentStep >= 2) {
+      this.getDocumentByDisputeId(this.dispute.id).then(document => {
+        this.document = document
+      })
+    }
+  },
   methods: {
+    ...mapActions(['getDocumentByDisputeId']),
     showProtocolDialog() {
       // SEGMENT TRACK
       this.$jusSegment('Gerenciar minuta dentro do ticket view', { disputeId: this.dispute.id })
       this.protocolDialogVisible = true
+    },
+    copyDocumentURL() {
+      const url = `https://assinador.juristas.com.br/private/documents/${this.document.signedDocument.signKey}`
+      navigator.clipboard.writeText(url)
+      this.$message({
+        message: 'Endereço para assinatura do documento copiado para área de transferência.',
+        type: 'info',
+        center: true,
+        showClose: true,
+      })
     },
   },
 }
