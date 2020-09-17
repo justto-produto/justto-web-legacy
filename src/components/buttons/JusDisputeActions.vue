@@ -1006,10 +1006,6 @@ export default {
 </script>
 
 <style lang="scss">
-.disabled {
-  cursor: not-allowed;
-}
-
 .jus-dispute-actions {
   &__choose-unsettled-dialog {
     .el-message-box__content {
