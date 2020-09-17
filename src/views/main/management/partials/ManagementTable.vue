@@ -112,7 +112,7 @@
       </el-table-column>
       <el-table-column
         v-if="tab1 || tab2"
-        label="Últimas interações"
+        label="Interações"
         min-width="140px"
         align="center"
       >
