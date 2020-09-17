@@ -3,7 +3,7 @@ import { SignerModel } from '../../../models/document/Signer.model'
 
 const mutations = {
   createFromDisputeRole(state, disputeRole) {
-    state.availableSigners.push(new SignerModel(disputeRole.documentNumber, disputeRole.name, disputeRole.emails.map(e => e.address)))
+    state.availableSigners.push(new SignerModel(disputeRole))
   },
   createFromDefaultSigners(state, defaulSigners) {
     state.availableSigners = defaulSigners.map(signer => new SignerModel(signer))

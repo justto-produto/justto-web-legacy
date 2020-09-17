@@ -39,20 +39,27 @@
           v-if="step === 0"
           class="jus-protocol-dialog__model-choice"
         >
-          <el-button
+          <div
             v-for="model in models"
-            :key="model.id"
-            plain
-            class="model-choice__button"
-            @click="selectModel(model.id)"
-          >
-            <span class="model-choice__button-text">{{ model.name }}</span>
-            <jus-icon
-              icon="doc"
-              is-active
-              class="model-choice__button-icon"
-            />
-          </el-button>
+            :key="model.id">
+            <el-tooltip
+              effect="dark"
+              placement="top"
+              :content="model.name">
+              <el-button
+                plain
+                class="model-choice__button"
+                @click="selectModel(model.id)"
+              >
+                <span class="model-choice__button-text">{{ model.name }}</span>
+                <jus-icon
+                  icon="doc"
+                  is-active
+                  class="model-choice__button-icon"
+                />
+              </el-button>
+            </el-tooltip>
+          </div>
         </div>
         <!-- EDIÇÃO DE TEMPLATE -->
         <el-tooltip
@@ -79,10 +86,21 @@
         >
           <p>Escolha um endereço de email para cada parte.</p>
           <div
-            v-for="(role, index) in roles"
+            v-for="(role, index) in availableSigners"
             :key="index"
           >
-            <span class="title">{{ role.name.toUpperCase() }}</span>
+            <span class="jus-protocol-dialog__send-title">
+              {{ role.name.toUpperCase() }}
+
+              <div class="jus-protocol-dialog__send-default-signer">
+                <el-checkbox
+                  v-if="recipients[role.name] && !isDefaultSigner(role.documentNumber)"
+                  :value="recipients[role.name].defaultSigner"
+                  @change="changeDefaultSigner(role)"
+                />
+                {{ getLabelSigner(role) }}
+              </div>
+            </span>
             <div
               v-if="role.party"
               class="subtitle"
@@ -135,15 +153,17 @@
                 :disabled="!!role.documentNumber && isValidCpfOrCnpj(role.documentNumber)"
                 content="Cadastre o CPF da parte para selecionar um e-mail"
               >
-                <span><input
-                  v-model="recipients[role.name]"
-                  :name="role.name"
-                  :value="{ name: role.name, documentNumber: role.documentNumber, email: email.address }"
-                  :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
-                  type="radio"
-                ></span>
+                <span>
+                  <el-radio
+                    :value="Object.keys(recipients).includes(role.name) && recipients[role.name].email === email.address"
+                    :label="true"
+                    :name="role.name"
+                    :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
+                    @change="setRecipientEmail(generateSigner(role, email))">
+                    {{ email.address }}
+                  </el-radio>
+                </span>
               </el-tooltip>
-              {{ email.address }}
               <el-button
                 v-if="email.canDelete"
                 size="mini"
@@ -432,7 +452,8 @@ import { validateObjectEmail, validateCpf } from '@/utils/validations'
 import { IS_SMALL_WINDOW } from '@/constants/variables'
 import * as cpf from '@fnando/cpf'
 import * as cnpj from '@fnando/cnpj'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
+import { concat } from 'lodash'
 
 export default {
   name: 'JusProtocolDialog',
@@ -495,6 +516,42 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      defaultSigners: 'availableSigners',
+    }),
+    defaultsDocuments() {
+      return this.defaultSigners.map(signer => this.stripDoc(signer.documentNumber))
+    },
+    availableSigners() {
+      function getObjectByDoc(doc, list) {
+        return list.find(item => item.documentNumber === doc) || { emails: [] }
+      }
+
+      function concatEmails(list1, list2) {
+        const emails = concat(list1, list2)
+        const res = []
+
+        for (const email of emails) {
+          if (res.filter(el => el.address === email.address).length < 1) {
+            res.push(email)
+          }
+        }
+
+        return res
+      }
+
+      const docs = this.roles.map(role => this.stripDoc(role.documentNumber))
+
+      const signers = this.defaultSigners.filter(signer => !docs.includes(this.stripDoc(signer.documentNumber)))
+      const roles = this.roles.map(role => {
+        return {
+          ...role,
+          show: false,
+          emails: concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails),
+        }
+      })
+      return [...roles, ...signers]
+    },
     visible: {
       get() {
         return this.protocolDialogVisible
@@ -554,6 +611,11 @@ export default {
 
   },
   watch: {
+    step() {
+      if (Number(this.step) === 2) {
+        this.getDefaultAssigners()
+      }
+    },
     visible(value) {
       if (value) {
         this.loading = true
@@ -586,6 +648,48 @@ export default {
       'setDocumentSigners',
       'cleanSelectedSigners',
     ]),
+    getLabelSigner(role) {
+      const { documentNumber, name } = role
+      if (this.isDefaultSigner(documentNumber)) {
+        return 'Assinante padrão'
+      } else if (this.recipients[name]) {
+        return 'Definir como assinante padrão'
+      } else {
+        return ''
+      }
+    },
+    stripDoc(doc) {
+      if (cpf.isValid(doc)) {
+        return cpf.strip(doc)
+      } else if (cnpj.isValid(doc)) {
+        return cnpj.strip(doc)
+      } else {
+        return ''
+      }
+    },
+    changeDefaultSigner(role) {
+      const { name, documentNumber } = role
+      if (!this.isDefaultSigner(documentNumber)) {
+        this.recipients[name].defaultSigner = !this.recipients[name].defaultSigner
+        this.$forceUpdate()
+      }
+    },
+    setRecipientEmail(signer) {
+      this.recipients[signer.name] = signer
+      this.$forceUpdate()
+    },
+    generateSigner(role, email) {
+      return {
+        name: role.name,
+        documentNumber: role.documentNumber,
+        email: email.address,
+        disputeRoleId: role.id,
+        defaultSigner: this.isDefaultSigner(role.documentNumber),
+      }
+    },
+    isDefaultSigner(doc) {
+      return this.defaultsDocuments.includes(this.stripDoc(doc))
+    },
     isValidCpfOrCnpj(value) {
       return cpf.isValid(value) || cnpj.isValid(value)
     },
@@ -603,13 +707,14 @@ export default {
       const documentForm = this.$refs['documentForm' + formIndex][0]
       documentForm.validate(valid => {
         if (valid) {
-          if (!!role.documentNumber && !this.isValidCpfOrCnpj(role.documentNumber)) {
-            role.documentNumber = this.documentForm.document[formIndex]
-          } else {
-            role.documentNumber = this.documentForm.document[formIndex]
+          if (!role.documentNumber) {
             this.formKey += 1
+            this.$forceUpdate()
             this.showAddEmail(role.name, formIndex)
           }
+
+          this.roles[formIndex].documentNumber = this.stripDoc(this.documentForm.document[formIndex])
+          role.documentNumber = this.stripDoc(this.documentForm.document[formIndex])
         }
       })
     },
@@ -649,7 +754,8 @@ export default {
                 address: this.emailForm.email[role.name],
                 canDelete: true,
               })
-              this.recipients[role.name] = { name: role.name, documentNumber: role.documentNumber, email: this.emailForm.email[role.name] }
+              const email = this.emailForm.email[role.name]
+              this.recipients[role.name] = this.generateSigner(role, { address: email })
               this.emailForm.email = {}
               this.roles[index].show = false
               this.formKey += 1
@@ -659,7 +765,7 @@ export default {
       })
     },
     showAddEmail(name, formIndex) {
-      this.roles.map(r => {
+      this.availableSigners.map(r => {
         if (r.name === name) r.show = true
         else r.show = false
       })
@@ -671,6 +777,7 @@ export default {
           emailInput.focus()
         })
       }
+      this.$forceUpdate()
     },
     removeEmail(email, name) {
       const index = this.roles.findIndex(r => r.name === name)
@@ -688,8 +795,8 @@ export default {
         emailForm = this.$refs['emailForm' + formIndex]
       }
       if (roleform) roleform.clearValidate()
-      if (documentForm) documentForm[0].clearValidate()
-      if (emailForm) emailForm[0].clearValidate()
+      if (documentForm && documentForm.length) documentForm[0].clearValidate()
+      if (emailForm && emailForm.length) emailForm[0].clearValidate()
     },
     getDocument() {
       this.getDocumentByDisputeId(this.disputeId).then(document => {
@@ -773,7 +880,6 @@ export default {
       } else {
         new Promise((resolve, reject) => {
           for (const recipient of Object.values(this.recipients)) {
-            console.log(recipient.documentNumber, this.isValidCpfOrCnpj(recipient.documentNumber))
             if (!this.isValidCpfOrCnpj(recipient.documentNumber)) {
               reject(new Error(`${recipient.name} está com o número do documento inválido`))
             }
@@ -791,14 +897,10 @@ export default {
       this.loading = true
       this.loadingChooseRecipients = true
       this.confirmChooseRecipientsVisible = false
-      const recipients = []
-      for (const recipient of Object.values(this.recipients)) {
-        recipients.push({
-          name: recipient.name,
-          email: recipient.email,
-          documentNumber: recipient.documentNumber,
-        })
-      }
+      const recipients = Object.values(this.recipients).map(recipient => {
+        const { name, email, documentNumber, disputeRoleId, defaultSigner } = recipient
+        return { name, email, documentNumber, disputeRoleId, defaultSigner }
+      })
       this.setDocumentSigners({
         disputeId: this.disputeId, recipients,
       }).then(doc => {
@@ -814,6 +916,7 @@ export default {
       }).finally(() => {
         this.loading = false
         this.loadingChooseRecipients = false
+        this.recipients = {}
       })
     },
     resendSignersNotification() {
@@ -949,6 +1052,8 @@ export default {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    padding: 10px;
+
     .model-choice__button {
       width: 160px;
       height: 180px;
@@ -956,7 +1061,7 @@ export default {
       .model-choice__button-text {
         font-weight: 500;
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 6;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -976,9 +1081,22 @@ export default {
       margin-top: -14px;
       margin-bottom: 32px;
     }
-    .title {
+
+    .jus-protocol-dialog__send-title {
       color: #adadad;
       font-weight: 700;
+
+      border-bottom: solid 1px lightgray;
+      margin-bottom: 8px;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .jus-protocol-dialog__send-default-signer {
+        margin-left: 8px;
+      }
+
     }
     .signer-choice {
       font-weight: bold;

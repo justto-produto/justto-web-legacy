@@ -1,8 +1,9 @@
 export class SignerModel {
+  #id
   constructor({ id, documentNumber, name, email, defaultSigner = true }) {
-    this.id = id
+    this.#id = id
     this.name = name
-    this.email = email
+    this.emails = [{ address: email }]
     this.documentNumber = documentNumber
     this._defaultSigner = defaultSigner
   }
