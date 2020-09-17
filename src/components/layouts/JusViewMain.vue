@@ -9,6 +9,7 @@
     </div> -->
     <div
       v-loading="loadingContainer"
+      :element-loading-text="loadingContainerText"
       class="jus-main-view__container"
     >
       <!-- LEFT CARD SLOT -->
@@ -65,6 +66,10 @@ export default {
     loadingContainer: {
       default: false,
       type: Boolean,
+    },
+    loadingContainerText: {
+      default: '',
+      type: String,
     },
     fullScreen: {
       default: false,

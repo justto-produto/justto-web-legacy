@@ -1,6 +1,7 @@
 <template>
   <JusViewMain
-    :loading-container="dispute && !dispute.id"
+    :loading-container="(dispute && !dispute.id) || isDeletingRole"
+    :loading-container-text="deletingRoleText"
     :right-card-collapsed="isCollapsed"
     full-screen
     right-card-width="320"
@@ -276,6 +277,7 @@
         data-testid="dispute-overview"
         @fetch-data="fetchData"
         @updateActiveRole="updateActiveRole"
+        @removeRole="removeRole"
       />
     </template>
   </JusViewMain>
@@ -341,6 +343,8 @@ export default {
           ],
         },
       },
+      isDeletingRole: false,
+      deletingRoleText: 'Por favor, aguarde enquanto apagamos a parte...',
     }
   },
   computed: {
@@ -699,6 +703,16 @@ export default {
           this.loadingTextarea = false
         })
       }
+    },
+    removeRole() {
+      this.isDeletingRole = true
+      this.deletingRoleText = 'Por favor, aguarde enquanto apagamos a parte...'
+      setTimeout(() => {
+        this.deletingRoleText = 'Estamos analisando outras disputas usando a mesma pessoa para replicar esta ação, caso seja necessário...'
+      }, 2500)
+      setTimeout(() => {
+        this.isDeletingRole = false
+      }, 4500)
     },
   },
 }
