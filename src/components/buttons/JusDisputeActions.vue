@@ -23,19 +23,21 @@
         v-if="action.condition()"
         :content="action.tooltip"
       >
-        <el-button
-          :class="{ 'disabled': action.disabled }"
-          :type="tableActions ? 'text' : ''"
-          :plain="!tableActions"
-          :data-testid="action.name"
-          class="jus-dispute-actions__actions-buttons"
-          @click="action.action()"
-        >
-          <jus-icon
-            :icon="action.icon"
-            class="jus-dispute-actions__actions-icons"
-          />
-        </el-button>
+        <span>
+          <el-button
+            :disabled="action.disabled"
+            :type="tableActions ? 'text' : ''"
+            :plain="!tableActions"
+            :data-testid="action.name"
+            class="jus-dispute-actions__actions-buttons"
+            @click="action.action()"
+          >
+            <jus-icon
+              :icon="action.icon"
+              class="jus-dispute-actions__actions-icons"
+            />
+          </el-button>
+        </span>
       </el-tooltip>
     </span>
 
@@ -668,11 +670,9 @@ export default {
           })
           break
         case 'resend-messages':
-          if (this.isInNegotiation) {
-            this.checkIsntManualStrategy(action).then(() => {
-              this.doAction(action, message)
-            })
-          }
+          this.checkIsntManualStrategy(action).then(() => {
+            this.doAction(action, message)
+          })
           break
         case 'cancel-messages':
           this.checkIsntManualStrategy(action).then(() => {
