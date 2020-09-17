@@ -277,6 +277,8 @@ const filterByTerm = function(term, array, key1, key2) {
 
 const isJusttoUser = (email = '') => email.endsWith('@justto.com.br')
 
+const getStringInitials = (string) => string.substring(0, 2).toLowerCase()
+
 export {
   buildRoleTitle,
   getRoleIcon,
@@ -295,4 +297,5 @@ export {
   queryBuilder,
   filterByTerm,
   normalizeString,
+  getStringInitials,
 }
