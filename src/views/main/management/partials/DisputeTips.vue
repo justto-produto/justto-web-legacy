@@ -90,7 +90,7 @@ export default {
     },
     hasDocumentSignURL() {
       return this.document.signedDocument && this.document.signedDocument.signKey
-    }
+    },
   },
   created() {
     if (this.documentStep >= 2) {
