@@ -277,7 +277,15 @@ const filterByTerm = function(term, array, key1, key2) {
 
 const isJusttoUser = (email = '') => email.endsWith('@justto.com.br')
 
-const getStringInitials = (string) => string.substring(0, 2).toLowerCase()
+const getStringInitials = (string) => {
+  const stringSplited = string.split(' ').filter(Boolean)
+  if (stringSplited.length >= 2) {
+    return stringSplited[0].substring(0, 1).toLowerCase() +
+      stringSplited[stringSplited.length - 1].substring(0, 1).toLowerCase()
+  } else {
+    return string.substring(0, 2).toLowerCase()
+  }
+}
 
 export {
   buildRoleTitle,
