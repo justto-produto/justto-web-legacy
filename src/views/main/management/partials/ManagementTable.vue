@@ -112,15 +112,16 @@
       </el-table-column>
       <el-table-column
         v-if="tab1 || tab2"
-        label="Última interação"
+        label="Últimas interações"
         min-width="140px"
         align="center"
       >
-        <ManagementLastInteraction
-          :data="scope.row"
-          slot-scope="scope"
-          @update:responseBoxLoading="responseBoxLoading = $event"
-        />
+        <template slot-scope="scope">
+          <ManagementLastInteraction
+            :data="scope.row"
+            @update:responseBoxLoading="responseBoxLoading = $event"
+          />
+        </template>
       </el-table-column>
       <el-table-column
         v-if="tab2"

@@ -155,27 +155,34 @@
       :close-on-press-escape="false"
       :show-close="false"
       :title="`Resposta ao processo ${responseRow.code}`"
+      append-to-body
+      modal-append-to-body
       class="last-interactions-table__response-dialog">
       <div v-if="Object.keys(responseRow).length">
-        Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b>.
-        <br>
-        Alçada máxima é de <b>{{ responseRow.disputeUpperRange | currency }}</b>
-        <br>
-        Última proposta foi de <b>{{ responseRow.lastOfferValue | currency }}</b>
-        <br>
-        <span v-if="responseRow.lastCounterOfferValue">
+        <div>
+          Negociável até <b>{{ responseRow.expirationDate.dateTime | moment('DD/MM/YY') }}</b>.
+        </div>
+        <div>
+          Alçada máxima é de <b>{{ responseRow.disputeUpperRange | currency }}</b>
+        </div>
+        <div>
+          Última proposta foi de <b>{{ responseRow.lastOfferValue | currency }}</b>
+        </div>
+        <div v-if="responseRow.lastCounterOfferValue">
           Contra proposta de <b>{{ responseRow.lastCounterOfferValue | currency }}</b>
-        </span>
-        <span v-else>
+        </div>
+        <div v-else>
           <b>Ainda não houve contraproposta</b>
-        </span>
-        <br><br>
-        Resposta via:
-        <jus-icon :icon="responseRow.lastReceivedMessage.message.communicationType.toLowerCase()" />
-        <b>{{ responseRow.lastReceivedMessage.message.communicationType.toLowerCase() | capitalize }}</b>
+        </div>
         <br>
-        Destinatário: <b>{{ responseRow.lastReceivedMessage.message.sender | phoneMask }}</b>
-        <br>
+        <div>
+          Resposta via:
+          <jus-icon :icon="responseRow.lastReceivedMessage.message.communicationType.toLowerCase()" />
+          <b>{{ responseRow.lastReceivedMessage.message.communicationType.toLowerCase() | capitalize }}</b>
+        </div>
+        <div>
+          Destinatário: <b>{{ responseRow.lastReceivedMessage.message.sender | phoneMask }}</b>
+        </div>
         <quill-editor
           v-if="responseDialogVisible"
           ref="messageEditor"
@@ -187,19 +194,18 @@
       </div>
       <span
         slot="footer"
-        class="dialog-footer"
-      >
+        class="dialog-footer">
         <el-button
           :disabled="responseBoxLoading"
           plain
-          @click="responseDialogVisible = false"
-        >Cancelar</el-button>
+          @click="responseDialogVisible = false">
+          Cancelar
+        </el-button>
         <el-button
           :loading="responseBoxLoading"
           type="primary"
           icon="el-icon-s-promotion"
-          @click="sendMessage(responseRow)"
-        >
+          @click="sendMessage(responseRow)">
           Enviar
         </el-button>
       </span>
@@ -228,9 +234,7 @@ Quill.register(SizeStyle, true)
 
 export default {
   name: 'ManagementLasrInteractions',
-  components: {
-    quillEditor,
-  },
+  components: { quillEditor },
   data() {
     return {
       message: '',
@@ -381,28 +385,23 @@ export default {
     bottom: -5px;
     right: -3px;
   }
+}
 
-  .last-interactions-table__response-dialog {
-    .ql-container {
-      height: calc(100% - 40px);
+.last-interactions-table__response-dialog {
+  .quill-editor {
+    margin-top: 8px;
+    background-color: #eaeaed;
+    padding: 0 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+    min-height: 300px;
+    height: 30vh;
+    &.show-toolbar .ql-toolbar {
+      display: inherit !important;
     }
-    .ql-editor {
-      height: 100%
-    }
-    .quill-editor {
-      background-color: #eaeaed;
-      padding: 0 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
-      min-height: 300px;
-      height: 30vh;
-      &.show-toolbar .ql-toolbar {
-        display: inherit !important;
-      }
-    }
-    img {
-      width: 14px;
-      margin: 0 4px 0 2px;
-    }
+  }
+  img {
+    width: 14px;
+    margin: 0 4px 0 2px;
   }
 }
 
