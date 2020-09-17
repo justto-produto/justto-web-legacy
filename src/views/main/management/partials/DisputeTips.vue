@@ -37,7 +37,7 @@
     </div>
     <div class="action">
       <el-tooltip
-        v-if="document.signedDocument"
+        v-if="hasDocumentSignURL"
         effect="dark"
         content="Copiar URL de assinatura do Documento"
         placement="top"
@@ -88,6 +88,9 @@ export default {
     showProtocol() {
       return ['ACCEPTED', 'CHECKOUT', 'SETTLED'].includes(this.dispute.status)
     },
+    hasDocumentSignURL() {
+      return this.document.signedDocument && this.document.signedDocument.signKey
+    }
   },
   created() {
     if (this.documentStep >= 2) {
