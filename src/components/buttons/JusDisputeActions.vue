@@ -122,8 +122,8 @@
           type="primary"
           @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)"
         >
-          Continua
-        r</el-button>
+          Continuar
+        </el-button>
       </span>
     </el-dialog>
     <el-dialog
