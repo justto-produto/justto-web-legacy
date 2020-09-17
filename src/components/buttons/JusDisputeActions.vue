@@ -24,6 +24,7 @@
         :content="action.tooltip"
       >
         <el-button
+          :class="{ 'disabled': action.disabled }"
           :type="tableActions ? 'text' : ''"
           :plain="!tableActions"
           :data-testid="action.name"
@@ -451,9 +452,10 @@ export default {
         {
           name: 'resend-messages',
           icon: 'resend-messages',
-          condition: () => !this.tableActions && !this.isPreNegotiation,
+          condition: () => this.canResendMessages,
+          disabled: !this.isInNegotiation,
           action: () => this.disputeAction('resend-messages'),
-          tooltip: 'Reenviar mensagens automáticas',
+          tooltip: (this.isInNegotiation ? 'Reenviar mensagens automáticas' : 'A disputa precisa estar em negociação para reagendar mensagens automáticas'),
         },
         {
           name: 'cancel-messages',
@@ -546,9 +548,6 @@ export default {
     canPause() {
       return this.dispute && !this.dispute.paused && !this.isPreNegotiation
     },
-    canResendMessage() {
-      return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING' && !this.isPreNegotiation
-    },
     canMarkAsNotRead() {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
     },
@@ -560,6 +559,12 @@ export default {
     },
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
+    },
+    isInNegotiation() {
+      return this.dispute.status === 'RUNNING'
+    },
+    canResendMessages() {
+      return !this.tableActions && !this.isPreNegotiation
     },
     isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : null
@@ -663,9 +668,11 @@ export default {
           })
           break
         case 'resend-messages':
-          this.checkIsntManualStrategy(action).then(() => {
-            this.doAction(action, message)
-          })
+          if (this.isInNegotiation) {
+            this.checkIsntManualStrategy(action).then(() => {
+              this.doAction(action, message)
+            })
+          }
           break
         case 'cancel-messages':
           this.checkIsntManualStrategy(action).then(() => {
@@ -999,6 +1006,10 @@ export default {
 </script>
 
 <style lang="scss">
+.disabled {
+  cursor: not-allowed;
+}
+
 .jus-dispute-actions {
   &__choose-unsettled-dialog {
     .el-message-box__content {
