@@ -73,6 +73,7 @@ import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
 import JusStatusDot from '@/components/others/JusStatusDot'
+import VueTour from 'vue-tour'
 
 import 'froala-editor/js/plugins.pkgd.min.js'
 import 'froala-editor/js/third_party/embedly.min'
@@ -88,7 +89,10 @@ Vue.component('JusViewMain', JusViewMain)
 Vue.component('JusButtonBack', JusButtonBack)
 Vue.component('JusStatusDot', JusStatusDot)
 
+require('vue-tour/dist/vue-tour.css')
+
 Vue.use(VueFroala)
+Vue.use(VueTour)
 
 // mask
 Vue.use(VueTheMask)
