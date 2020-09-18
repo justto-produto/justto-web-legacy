@@ -1781,7 +1781,8 @@ export default {
           if (dr.archived) return false
           return true
         })
-        sortedArray = sortedArray.filter(({ party, roles }) => !(party === 'RESPONDENT' && roles.includes('LAWYER')))
+        // Ocultar o advogado do reu
+        // sortedArray = sortedArray.filter(({ party, roles }) => !(party === 'RESPONDENT' && roles.includes('LAWYER')))
         return sortedArray.sort((a, b) => {
           if (a.party === b.party) {
             return (a.roles[0] > b.roles[0]) ? -1 : (a.roles[0] < b.roles[0]) ? 1 : 0
