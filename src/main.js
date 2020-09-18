@@ -3,26 +3,30 @@ import App from '@/App.vue'
 import router from './router'
 import store from './store'
 
+import '@/utils/registerServiceWorker'
+
 // plugin
 import i18n from '@/plugins/vueI18n'
-import '@/plugins/registerServiceWorker'
 import '@/plugins/axios'
+import '@/plugins/chart'
 import '@/plugins/element'
-import '@/plugins/awesomeSwiper'
-import '@/plugins/moment'
-import '@/plugins/chatScroll'
 import '@/plugins/jusNotification'
 import '@/plugins/jusSegment'
-import '@/plugins/socket'
 import '@/plugins/sentry'
-import '@/plugins/chart'
+import '@/plugins/socket'
+import '@/plugins/vueAwesomeSwiper'
+import '@/plugins/vueChatScroll'
+import '@/plugins/vueFroala'
+import '@/plugins/vueMoment'
+import '@/plugins/vueMoney'
+import '@/plugins/vueTour'
 
 // filters
 import '@/filters/capitalize'
+import '@/filters/cpfCnpj'
 import '@/filters/currency'
 import '@/filters/firstName'
-import '@/filters/cpfCnpjMask'
-import '@/filters/phoneMask'
+import '@/filters/phoneNumber'
 
 // css
 import '@/styles/core.scss'
@@ -66,42 +70,15 @@ import '@/styles/quill-editor.scss'
 import { validateWorkspace } from '@/utils/validateWorkspace'
 
 // Global components
-import VueTheMask from 'vue-the-mask'
-import money from 'v-money'
 import JusIcon from '@/components/images/JusIcon'
 import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
-import JusStatusDot from '@/components/others/JusStatusDot'
-import VueTour from 'vue-tour'
-
-import 'froala-editor/js/plugins.pkgd.min.js'
-import 'froala-editor/js/third_party/embedly.min'
-import 'froala-editor/js/third_party/font_awesome.min'
-import 'froala-editor/js/third_party/spell_checker.min'
-import 'froala-editor/js/third_party/image_tui.min'
-import 'froala-editor/css/froala_editor.pkgd.min.css'
-import VueFroala from 'vue-froala-wysiwyg'
 
 Vue.component('JusIcon', JusIcon)
 Vue.component('JusAvatarUser', JusAvatarUser)
 Vue.component('JusViewMain', JusViewMain)
 Vue.component('JusButtonBack', JusButtonBack)
-Vue.component('JusStatusDot', JusStatusDot)
-
-require('vue-tour/dist/vue-tour.css')
-
-Vue.use(VueFroala)
-Vue.use(VueTour)
-
-// mask
-Vue.use(VueTheMask)
-Vue.use(money, {
-  decimal: ',',
-  thousands: '.',
-  prefix: 'R$ ',
-  precision: 2,
-})
 
 Vue.config.productionTip = false
 

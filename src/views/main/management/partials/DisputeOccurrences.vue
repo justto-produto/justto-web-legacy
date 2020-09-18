@@ -57,7 +57,7 @@
                 <span v-html="occurrence.message" />
               </el-card>
               <div class="dispute-view-occurrences__card-info">
-                Para: {{ occurrence.receiver | phoneMask }}
+                Para: {{ occurrence.receiver | phoneNumber }}
                 <div> • </div>
                 <jus-icon :icon="occurrence.type" />
                 <div> • </div>
@@ -146,10 +146,10 @@
                     >
                       Hora: {{ buildHour(merged) }}
                       <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                        - Para: {{ merged.interaction.message.receiver | phoneMask }}
+                        - Para: {{ merged.interaction.message.receiver | phoneNumber }}
                       </span>
                       <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
-                        - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
+                        - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneNumber }})
                       </span>
                     </div>
                   </div>
@@ -174,10 +174,10 @@
                   >
                     Hora: {{ buildHour(merged) }}
                     <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                      - Para: {{ merged.interaction.message.receiver | phoneMask }}
+                      - Para: {{ merged.interaction.message.receiver | phoneNumber }}
                     </span>
                     <span v-if="merged.interaction && merged.interaction.message && merged.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
-                      - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneMask }})
+                      - Por: {{ merged.interaction.message.parameters.SENDER_NAME }} ({{ merged.interaction.message.parameters.SENDER || merged.interaction.message.sender | phoneNumber }})
                     </span>
                   </div>
                 </div>
@@ -319,16 +319,16 @@
                   •
                 </div>
                 <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.receiver && getDirection(occurrence.interaction) === 'OUTBOUND'">
-                  Para: {{ occurrence.interaction.message.receiver | phoneMask }}
+                  Para: {{ occurrence.interaction.message.receiver | phoneNumber }}
                 </span>
                 <span v-if="occurrence.interaction && occurrence.interaction.message && occurrence.interaction.message.parameters && getDirection(occurrence.interaction) === 'INBOUND'">
                   Por:
                   <span v-if="![occurrence.interaction.message.sender, occurrence.interaction.message.parameters.SENDER].includes(occurrence.interaction.message.parameters.SENDER_NAME)">
                     {{ occurrence.interaction.message.parameters.SENDER_NAME }}
-                    ({{ occurrence.interaction.message.parameters.SENDER || occurrence.interaction.message.sender | phoneMask }})
+                    ({{ occurrence.interaction.message.parameters.SENDER || occurrence.interaction.message.sender | phoneNumber }})
                   </span>
                   <span v-else>
-                    {{ occurrence.interaction.message.parameters.SENDER || occurrence.interaction.message.sender | phoneMask }}
+                    {{ occurrence.interaction.message.parameters.SENDER || occurrence.interaction.message.sender | phoneNumber }}
                   </span>
                 </span>
               </div>
@@ -454,16 +454,16 @@
                   •
                 </div>
                 <span v-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.message.receiver && getDirection(mergedOccurency.interaction) === 'OUTBOUND'">
-                  Para: {{ mergedOccurency.interaction.message.receiver | phoneMask }}
+                  Para: {{ mergedOccurency.interaction.message.receiver | phoneNumber }}
                 </span>
                 <span v-if="mergedOccurency.interaction && mergedOccurency.interaction.message && mergedOccurency.interaction.message.parameters && getDirection(mergedOccurency.interaction) === 'INBOUND'">
                   Por:
                   <span v-if="![mergedOccurency.interaction.message.sender, mergedOccurency.interaction.message.parameters.SENDER].includes(mergedOccurency.interaction.message.parameters.SENDER_NAME)">
                     {{ mergedOccurency.interaction.message.parameters.SENDER_NAME }}
-                    ({{ mergedOccurency.interaction.message.parameters.SENDER || mergedOccurency.interaction.message.sender | phoneMask }})
+                    ({{ mergedOccurency.interaction.message.parameters.SENDER || mergedOccurency.interaction.message.sender | phoneNumber }})
                   </span>
                   <span v-else>
-                    {{ mergedOccurency.interaction.message.parameters.SENDER || mergedOccurency.interaction.message.sender | phoneMask }}
+                    {{ mergedOccurency.interaction.message.parameters.SENDER || mergedOccurency.interaction.message.sender | phoneNumber }}
                   </span>
                 </span>
               </div>
