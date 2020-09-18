@@ -9,7 +9,14 @@ const account = {
     name: '',
     email: '',
     token: localStorage.getItem('justoken') || '',
-    devs: ['josewilliam@justto.com.br', 'lucas@justto.com.br', 'daniel@justto.com.br', 'gabriel@justto.com.br', 'guilherme@justto.com.br'],
+    devs: [
+      'josewilliam@justto.com.br',
+      'lucas@justto.com.br',
+      'daniel@justto.com.br',
+      'gabriel@justto.com.br',
+      'guilherme@justto.com.br'
+    ],
+    preferences: { tourSteps: {} },
   },
   mutations: {
     setToken(state, resp) {
@@ -36,6 +43,7 @@ const account = {
       if (response.name) state.name = response.name
       if (response.email) state.email = response.email
     },
+    // setUserPreferences: (state, preferences) => (state.preference = preferences),
   },
   actions: {
     myAccount() {
@@ -89,35 +97,50 @@ const account = {
       if (options && options.redirect === false) {
       } else router.push('/login')
     },
-    forgotPassword({ commit }, email) {
+    forgotPassword({ _ }, email) {
       return axiosDispatcher({
         url: `api/accounts/reset-password?email=${email}`,
         method: 'PUT',
       })
     },
-    resetPassword({ commit }, data) {
+    resetPassword({ _ }, data) {
       return axiosDispatcher({
         url: `api/accounts/new-password/${data.token}`,
         method: 'PUT',
         data: { password: data.password },
       })
     },
-    updatePassword({ commit }, form) {
+    updatePassword({ _ }, form) {
       return axiosDispatcher({
         url: 'api/accounts/my/update-password',
         method: 'POST',
         data: form,
       })
     },
-    ensureWorkspaceAccesss({ commit }, workspaceId) {
+    ensureWorkspaceAccesss({ _ }, workspaceId) {
       return axiosDispatcher({
         url: `api/accounts/workspaces/ensure-workspace-accesss/${workspaceId}`,
         method: 'PATCH',
         mutation: 'setToken',
       })
     },
+    // getUserPreferences({ state }) {
+    //   return axiosDispatcher({
+    //     url: `api/accounts/preferences/${state.id}`,
+    //     mutation: 'setUserPreferences',
+    //   })
+    // },
+    // updateUserPreferences({ state }, preference) {
+    //   return axiosDispatcher({
+    //     url: `api/accounts/preferences/${state.id}`,
+    //     method: 'PATCH',
+    //     data: preference,
+    //     mutation: 'setUserPreferences',
+    //   })
+    // },
   },
   getters: {
+    userPreferences: state => state.preferences,
     accountToken: state => state.token,
     isLoggedIn: state => !!state.token,
     accountId: state => state.id,

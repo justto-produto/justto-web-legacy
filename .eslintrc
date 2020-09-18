@@ -8,6 +8,7 @@
     "space-before-function-paren": ["error", "never"],
     "comma-dangle": ["warn", "always-multiline"],
     "no-var": "error",
+    "dot-notation": "warn",
     "prefer-const":"warn",
     "no-debugger": "warn",
     "standard/no-callback-literal": 0,
