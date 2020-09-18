@@ -582,8 +582,8 @@ export default {
     },
     hasEmails() {
       let hasEmails = false
-      if (this.roles) {
-        this.roles.map(e => {
+      if (this.availableSigners) {
+        this.availableSigners.map(e => {
           if (e.emails.length) hasEmails = true
         })
       }
