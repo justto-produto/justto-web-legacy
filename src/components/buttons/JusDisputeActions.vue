@@ -23,18 +23,21 @@
         v-if="action.condition()"
         :content="action.tooltip"
       >
-        <el-button
-          :type="tableActions ? 'text' : ''"
-          :plain="!tableActions"
-          :data-testid="action.name"
-          class="jus-dispute-actions__actions-buttons"
-          @click="action.action()"
-        >
-          <jus-icon
-            :icon="action.icon"
-            class="jus-dispute-actions__actions-icons"
-          />
-        </el-button>
+        <span>
+          <el-button
+            :disabled="action.disabled"
+            :type="tableActions ? 'text' : ''"
+            :plain="!tableActions"
+            :data-testid="action.name"
+            class="jus-dispute-actions__actions-buttons"
+            @click="action.action()"
+          >
+            <jus-icon
+              :icon="action.icon"
+              class="jus-dispute-actions__actions-icons"
+            />
+          </el-button>
+        </span>
       </el-tooltip>
     </span>
 
@@ -119,8 +122,8 @@
           type="primary"
           @click.prevent="disputeAction('send-counterproposal', updateUpperRange = true)"
         >
-          Continua
-        r</el-button>
+          Continuar
+        </el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -451,9 +454,10 @@ export default {
         {
           name: 'resend-messages',
           icon: 'resend-messages',
-          condition: () => !this.tableActions && !this.isPreNegotiation,
+          condition: () => this.canResendMessages,
+          disabled: !this.isInNegotiation,
           action: () => this.disputeAction('resend-messages'),
-          tooltip: 'Reenviar mensagens automáticas',
+          tooltip: (this.isInNegotiation ? 'Reenviar mensagens automáticas' : 'A disputa precisa estar em negociação para reagendar mensagens automáticas'),
         },
         {
           name: 'cancel-messages',
@@ -546,9 +550,6 @@ export default {
     canPause() {
       return this.dispute && !this.dispute.paused && !this.isPreNegotiation
     },
-    canResendMessage() {
-      return this.dispute && this.dispute.status && this.dispute.status === 'RUNNING' && !this.isPreNegotiation
-    },
     canMarkAsNotRead() {
       return this.dispute && this.dispute.status && !['IMPORTED', 'ENRICHED', 'ENGAGEMENT'].includes(this.dispute.status) && !this.isPreNegotiation
     },
@@ -560,6 +561,12 @@ export default {
     },
     isPreNegotiation() {
       return this.dispute.status === 'PRE_NEGOTIATION'
+    },
+    isInNegotiation() {
+      return this.dispute.status === 'RUNNING'
+    },
+    canResendMessages() {
+      return !this.tableActions && !this.isPreNegotiation
     },
     isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : null

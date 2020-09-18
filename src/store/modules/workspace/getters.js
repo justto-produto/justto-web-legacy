@@ -1,3 +1,5 @@
+import { getStringInitials } from '@/utils/jusUtils'
+
 const getters = {
   workspace: state => state,
   hasWorkspace: state => {
@@ -12,8 +14,11 @@ const getters = {
   workspaceMembersSorted: state =>
     state.members
       .sort((a, b) => {
-        if (a.person.name < b.person.name) return -1
-        else if (a.person.name > b.person.name) return 1
+        const personA = getStringInitials(a.person.name || a.person.email)
+        const personB = getStringInitials(b.person.name || b.person.email)
+
+        if (personA < personB) return -1
+        else if (personA > personB) return 1
         else return 0
       })
       .filter(r => !r.archived),

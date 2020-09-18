@@ -1781,11 +1781,8 @@ export default {
           if (dr.archived) return false
           return true
         })
-        // sortedArray = sortedArray.map(dr => {
-        //   if (dr.roleNameParty)
-        //   debugger
-        //   return dr
-        // })
+        // Ocultar o advogado do reu
+        // sortedArray = sortedArray.filter(({ party, roles }) => !(party === 'RESPONDENT' && roles.includes('LAWYER')))
         return sortedArray.sort((a, b) => {
           if (a.party === b.party) {
             return (a.roles[0] > b.roles[0]) ? -1 : (a.roles[0] < b.roles[0]) ? 1 : 0
@@ -1914,7 +1911,7 @@ export default {
       })
     },
     showNamesake(role) {
-      return role.namesake && !role.documentNumber && role.party === 'CLAIMANT'
+      return role.namesake && !role.documentNumber
     },
     showVexatious(personProperties) {
       if (personProperties.IS_VEXATIOUS_AUTHOR === 'true' || personProperties.IS_VEXATIOUS_LAWYER === 'true' || personProperties.IS_VEXATIOUS_PARTY === 'true') return true
@@ -2469,18 +2466,21 @@ export default {
         type: 'warning',
         cancelButtonClass: 'is-plain',
       }).then(() => {
-        this.$store.dispatch('removeRole', {
-          disputeId: this.dispute.id,
-          roleId: role.id,
-        }).then(response => {
-          this.$jusNotification({
-            title: 'Yay!',
-            message: 'Pessoa removida com sucesso.',
-            type: 'success',
+        this.$emit('removeRole')
+        setTimeout(() => {
+          this.$store.dispatch('removeRole', {
+            disputeId: this.dispute.id,
+            roleId: role.id,
+          }).then(response => {
+            this.$jusNotification({
+              title: 'Yay!',
+              message: 'Pessoa removida com sucesso.',
+              type: 'success',
+            })
+          }).catch(error => {
+            this.$jusNotification({ error })
           })
-        }).catch(error => {
-          this.$jusNotification({ error })
-        })
+        }, 4600)
       })
     },
     addBankData() {
