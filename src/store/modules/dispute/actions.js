@@ -465,7 +465,8 @@ const disputeActions = {
   },
   disputeSetVisualized({ _ }, params) {
     return axiosDispatcher({
-      url: `api/disputes/${params.disputeId}/visualized?visualized=${params.visualized}&anonymous=${params.anonymous}`,
+      url: `api/disputes/${params.disputeId}/visualized`,
+      params,
       method: 'PATCH',
     })
   },
