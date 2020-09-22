@@ -66,13 +66,13 @@ export default {
   components: {
     JusGrid: () => import('@/components/JusGrid/JusGrid'),
     JusUserCard: () => import('@/components/JusUserCard/JusUserCard'),
-    ContractsModal: () => import('./ContractsModal'),
+    ContractsModal: () => import('./ContractsModal')
   },
   data() {
     return {
       dialogFormVisible: false,
       formCardIsVisible: false,
-      inputValue: '',
+      inputValue: ''
     }
   },
   computed: {
@@ -83,8 +83,8 @@ export default {
       currentCustomer: 'getCurrentCustomer',
       custumerSuggestions: 'getAllCusomers',
       plans: 'getPlans',
-      workspaceId: 'workspaceId',
-    }),
+      workspaceId: 'workspaceId'
+    })
   },
   created() {
     if (this.isJusttoAdmin || this.isAdminProfile) {
@@ -102,7 +102,7 @@ export default {
                   this.$jusNotification({
                     title: 'Ops!',
                     message: 'Nenhum cliente com contratos do tipo escritório nesta workspace.',
-                    type: 'error',
+                    type: 'error'
                   })
                 })
               }
@@ -115,7 +115,7 @@ export default {
       this.$jusNotification({
         title: 'Ops!',
         message: 'Você não pode entra ai. Fale com um administrador',
-        type: 'warning',
+        type: 'warning'
       })
     }
   },
@@ -129,7 +129,7 @@ export default {
       'setCustomer',
       'setWorkspaceId',
       'unlinkCustomer',
-      'updateCustomer',
+      'updateCustomer'
     ]),
     getCustomerToRedirect() {
       return new Promise((resolve, reject) => {
@@ -175,13 +175,13 @@ export default {
       this.$confirm('Tem certeza que deseja desvincular este cliente dassa workspace?', 'Atenção', {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.unlinkCustomer(userData.id).then(() => {
           this.$jusNotification({
             type: 'success',
             title: 'Yay!',
-            message: 'Cliente desvinculado com sucesso.',
+            message: 'Cliente desvinculado com sucesso.'
           })
         })
       })
@@ -204,8 +204,8 @@ export default {
     hideFormCard() {
       this.formCardIsVisible = false
       this.inputValue = ''
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -310,7 +310,7 @@ export default {
     DisputeNegotiation: () => import('./partials/DisputeNegotiation'),
     VueDraggableResizable: () => import('vue-draggable-resizable'),
     JusDragArea,
-    quillEditor,
+    quillEditor
   },
   data() {
     return {
@@ -339,12 +339,12 @@ export default {
             [{ header: 1 }, { header: 2 }],
             [{ list: 'ordered' }, { list: 'bullet' }],
             ['blockquote'],
-            ['clean'],
-          ],
-        },
+            ['clean']
+          ]
+        }
       },
       isDeletingRole: false,
-      deletingRoleText: 'Por favor, aguarde enquanto apagamos a parte...',
+      deletingRoleText: 'Por favor, aguarde enquanto apagamos a parte...'
     }
   },
   computed: {
@@ -352,7 +352,7 @@ export default {
       'disputeAttachments',
       'disputeStatuses',
       'isJusttoAdmin',
-      'ghostMode',
+      'ghostMode'
     ]),
 
     sendMessageHeightComputed() {
@@ -396,7 +396,7 @@ export default {
     socketHeaders() {
       return {
         Authorization: this.$store.getters.accountToken,
-        Workspace: this.$store.getters.workspaceSubdomain,
+        Workspace: this.$store.getters.workspaceSubdomain
       }
     },
     recentMessages() {
@@ -424,14 +424,14 @@ export default {
       }
 
       return ''
-    },
+    }
   },
   watch: {
     '$route.params.id': function(id, oldId) {
       this.id = id.toString()
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence',
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + oldId + '/occurrence'
       })
       this.unsubscribeOccurrences(oldId)
       this.fetchData()
@@ -439,7 +439,7 @@ export default {
     },
     y(y) {
       this.sendMessageHeight = this.$refs.sectionMessages.offsetHeight - this.y
-    },
+    }
   },
   created() {
     this.id = this.$route.params.id.toString()
@@ -450,7 +450,7 @@ export default {
     this.disputeSetVisualized({
       visualized: true,
       disputeId: this.id,
-      anonymous: this.isJusttoAdmin && this.ghostMode,
+      anonymous: this.isJusttoAdmin && this.ghostMode
     })
   },
   mounted() {
@@ -516,7 +516,7 @@ export default {
         this.activeRole = Object.assign(params.activeRole, {
           invalidEmail: !params.activeRole.emails.length || !params.activeRole.emails.filter(e => e.selected === true).length,
           invalidPhone: !params.activeRole.phones.length || !params.activeRole.phones.filter(e => e.selected === true).length,
-          invalidOab: !params.activeRole.oabs.length || !params.activeRole.oabs.filter(e => e.selected === true).length,
+          invalidOab: !params.activeRole.oabs.length || !params.activeRole.oabs.filter(e => e.selected === true).length
         })
       } else {
         this.activeRole = {}
@@ -536,14 +536,14 @@ export default {
       this.$store.commit('clearDisputeOccurrences')
       this.$socket.emit('unsubscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence',
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + id + '/occurrence'
       })
     },
     fetchData() {
       this.loadingDispute = true
       this.$socket.emit('subscribe', {
         headers: this.socketHeaders,
-        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence',
+        channel: '/topic/' + this.$store.getters.workspaceSubdomain + '/' + this.$store.getters.loggedPersonId + '/dispute/' + this.id + '/occurrence'
       })
       this.$store.dispatch('getDispute', this.id).then(dispute => {
         if (!dispute || dispute.archived) this.$router.push('/management')
@@ -574,7 +574,7 @@ export default {
                 this.$jusNotification({
                   title: 'Ops!',
                   message: 'Parece que você enviou uma mensagem parecida recentemente. Devido às políticas de SPAM do WhatsApp, a mensagem não pôde ser enviada.',
-                  type: 'warning',
+                  type: 'warning'
                 })
                 reject(new Error('Mensagem similar enviada recentemente'))
               } else {
@@ -586,7 +586,7 @@ export default {
                         this.recentMessages.splice(i, 1)
                       }
                     }
-                  }, 30000)),
+                  }, 30000))
                 })
                 const lastMessage = this.recentMessages.length - 1
                 this.$store.state.messageModule.recentMessages[lastMessage].selfDestroy()
@@ -596,7 +596,7 @@ export default {
               const message = 'O envio de mensagem para este número WhatsApp não é permitido neste momento. O prazo para responder mensagens no WhatsApp é de 24 horas.<br><br>Não encontramos uma mensagem deste número nas últimas 24 horas para que você possa responder.'
               this.$alert(message, 'Ops!', {
                 dangerouslyUseHTMLString: true,
-                confirmButtonText: 'OK',
+                confirmButtonText: 'OK'
               })
               reject(new Error('Ultima mensagem recebida a mais de 24h'))
             }
@@ -618,12 +618,12 @@ export default {
           const to = []
           if (this.directContactAddress) {
             to.push({
-              address: this.directContactAddress,
+              address: this.directContactAddress
             })
           } else {
             to.push({
               roleId: this.activeRole.id,
-              contactsId: this.selectedContacts.map(c => c.id),
+              contactsId: this.selectedContacts.map(c => c.id)
             })
           }
           const externalIdentification = +new Date()
@@ -632,14 +632,14 @@ export default {
               message: this.$refs.messageEditor.quill.getText(),
               type: this.messageType,
               receiver: this.messageType === 'email' ? contact.address : contact.phone,
-              externalIdentification,
+              externalIdentification
             })
           }
           const messageData = {
             to,
             message: quillMessage,
             disputeId: this.dispute.id,
-            externalIdentification,
+            externalIdentification
           }
           if (this.messageType === 'email') messageData.attachments = this.selectedAttachments
           this.$store.dispatch('send' + this.messageType, messageData).then(() => {
@@ -653,7 +653,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: this.messageType + ' enviado com sucesso.',
-              type: 'success',
+              type: 'success'
             })
             setTimeout(function() {
               this.$refs.messageEditor.quill.deleteText(0, 9999999999)
@@ -671,14 +671,14 @@ export default {
           title: 'Ops!',
           dangerouslyUseHTMLString: true,
           message: `Selecione ao menos um contato do tipo <b>${this.messageType.toUpperCase()}</b> para envio.`,
-          type: 'warning',
+          type: 'warning'
         })
       }
     },
     addLoadingOccurrence(params) {
       this.$store.commit('addLoadingOccurrence', Object.assign({
         sender: this.$store.getters.loggedPersonName,
-        createAt: { dateTime: this.$moment() },
+        createAt: { dateTime: this.$moment() }
       }, params))
     },
     sendNote() {
@@ -687,7 +687,7 @@ export default {
         this.loadingTextarea = true
         this.$store.dispatch('sendDisputeNote', {
           note,
-          disputeId: this.dispute.id,
+          disputeId: this.dispute.id
         }).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Nova nota salva')
@@ -695,7 +695,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Nota gravada com sucesso.',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -713,8 +713,8 @@ export default {
       setTimeout(() => {
         this.isDeletingRole = false
       }, 4500)
-    },
-  },
+    }
+  }
 }
 </script>
 

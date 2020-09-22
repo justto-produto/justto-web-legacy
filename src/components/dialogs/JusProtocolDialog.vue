@@ -8,16 +8,19 @@
       :close-on-press-escape="false"
       :show-close="false"
       append-to-body
-      class="jus-protocol-dialog">
+      class="jus-protocol-dialog"
+    >
       <div
         slot="title"
-        class="jus-protocol-dialog__header">
+        class="jus-protocol-dialog__header"
+      >
         <span v-if="[3].includes(step) && document.signedDocument">
           <el-link
             :underline="false"
             class="jus-protocol-dialog__title"
             target="_blank"
-            @click="openDocumentInNewTab">
+            @click="openDocumentInNewTab"
+          >
             {{ title }}
             <sup>
               <jus-icon
@@ -29,7 +32,8 @@
         </span>
         <span
           v-else
-          class="jus-protocol-dialog__title">
+          class="jus-protocol-dialog__title"
+        >
           {{ title }}
         </span>
       </div>
@@ -41,11 +45,13 @@
         >
           <div
             v-for="model in models"
-            :key="model.id">
+            :key="model.id"
+          >
             <el-tooltip
               effect="dark"
               placement="top"
-              :content="model.name">
+              :content="model.name"
+            >
               <el-button
                 plain
                 class="model-choice__button"
@@ -159,7 +165,8 @@
                     :label="true"
                     :name="role.name"
                     :disabled="!role.documentNumber || !isValidCpfOrCnpj(role.documentNumber)"
-                    @change="setRecipientEmail(generateSigner(role, email))">
+                    @change="setRecipientEmail(generateSigner(role, email))"
+                  >
                     {{ email.address }}
                   </el-radio>
                 </span>
@@ -316,7 +323,8 @@
         </el-button>
         <el-tooltip
           v-if="document.canEdit && [2, 3, 4].includes(step)"
-          content="Volta documento para edição.">
+          content="Volta documento para edição."
+        >
           <el-button
             :disabled="loading"
             type="secondary"
@@ -355,7 +363,8 @@
         </el-button>
         <el-tooltip
           v-if="step === 3"
-          content="Baixar minuta.">
+          content="Baixar minuta."
+        >
           <el-button
             v-loading="loadingDownload"
             icon="el-icon-download"
@@ -460,16 +469,16 @@ export default {
   props: {
     protocolDialogVisible: {
       type: Boolean,
-      default: false,
+      default: false
     },
     disputeId: {
       type: Number,
-      default: 0,
+      default: 0
     },
     disputeRoles: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   data() {
     return {
@@ -489,35 +498,35 @@ export default {
       roles: [],
       showARoleButton: false,
       roleForm: {
-        role: '',
+        role: ''
       },
       roleFormRules: {
-        role: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        role: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       emailForm: {
-        email: {},
+        email: {}
       },
       emailFormRules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateObjectEmail, trigger: 'submit' },
-        ],
+          { validator: validateObjectEmail, trigger: 'submit' }
+        ]
       },
       documentForm: {
-        document: {},
+        document: {}
       },
       documentFormRules: {
         document: [
           { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        ],
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+        ]
       },
-      isLowHeight: false,
+      isLowHeight: false
     }
   },
   computed: {
     ...mapGetters({
-      defaultSigners: 'availableSigners',
+      defaultSigners: 'availableSigners'
     }),
     defaultsDocuments() {
       return this.defaultSigners.map(signer => this.stripDoc(signer.documentNumber))
@@ -547,7 +556,7 @@ export default {
         return {
           ...role,
           show: false,
-          emails: concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails),
+          emails: concatEmails(role.emails, getObjectByDoc(role.documentNumber, this.defaultSigners).emails)
         }
       })
       return [...roles, ...signers]
@@ -558,7 +567,7 @@ export default {
       },
       set(value) {
         if (!value) this.$emit('update:protocolDialogVisible', value)
-      },
+      }
     },
     title() {
       switch (this.step) {
@@ -607,7 +616,7 @@ export default {
     },
     buttonSize() {
       return IS_SMALL_WINDOW ? 'mini' : 'medium'
-    },
+    }
 
   },
   watch: {
@@ -631,7 +640,7 @@ export default {
         this.showARoleButton = false
         this.documentForm.document = {}
       }
-    },
+    }
   },
   mounted() {
     if (IS_SMALL_WINDOW) {
@@ -646,7 +655,7 @@ export default {
       'getDefaultAssigners',
       'setSelectedSigners',
       'setDocumentSigners',
-      'cleanSelectedSigners',
+      'cleanSelectedSigners'
     ]),
     getLabelSigner(role) {
       const { documentNumber, name } = role
@@ -684,7 +693,7 @@ export default {
         documentNumber: role.documentNumber,
         email: email.address,
         disputeRoleId: role.id,
-        defaultSigner: this.isDefaultSigner(role.documentNumber),
+        defaultSigner: this.isDefaultSigner(role.documentNumber)
       }
     },
     isDefaultSigner(doc) {
@@ -699,7 +708,7 @@ export default {
       this.$jusNotification({
         title: 'Yay!',
         message: 'URL do documento copiado!',
-        type: 'success',
+        type: 'success'
       })
       setTimeout(() => window.open(url), 1400)
     },
@@ -752,7 +761,7 @@ export default {
             if (index > -1) {
               this.roles[index].emails.push({
                 address: this.emailForm.email[role.name],
-                canDelete: true,
+                canDelete: true
               })
               const email = this.emailForm.email[role.name]
               this.recipients[role.name] = this.generateSigner(role, { address: email })
@@ -853,8 +862,8 @@ export default {
                 cancelButtonText: 'Não exibir mais esta mensagem',
                 cancelButtonClass: 'is-plain',
                 dangerouslyUseHTMLString: true,
-                type: 'info',
-              },
+                type: 'info'
+              }
             ).catch(() => {
               localStorage.setItem('jushidemodelalert', true)
             })
@@ -874,7 +883,7 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Selecione ao menos um email.',
-          type: 'warning',
+          type: 'warning'
         })
         return false
       } else {
@@ -902,7 +911,7 @@ export default {
         return { name, email, documentNumber, disputeRoleId, defaultSigner }
       })
       this.setDocumentSigners({
-        disputeId: this.disputeId, recipients,
+        disputeId: this.disputeId, recipients
       }).then(doc => {
         this.signers = doc.signers
         this.step = 3
@@ -922,12 +931,12 @@ export default {
     resendSignersNotification() {
       this.loading = true
       this.$store.dispatch('resendSignersNotification', {
-        disputeId: this.disputeId,
+        disputeId: this.disputeId
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Notificação reenviada com sucesso',
-          type: 'success',
+          type: 'success'
         })
       }).catch(error => {
         this.$jusNotification({ error })
@@ -947,7 +956,7 @@ export default {
       this.loadingDownload = true
       this.$store.dispatch('downloadDocument', {
         disputeId: this.disputeId,
-        name: this.document.name,
+        name: this.document.name
       }).catch(error => {
         this.$jusNotification({ error })
       }).finally(() => {
@@ -960,14 +969,14 @@ export default {
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
         type: 'warning',
-        cancelButtonClass: 'is-plain',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         this.loading = true
         this.$store.dispatch('deleteDocument', this.disputeId).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Minuta excluída com sucesso',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -986,7 +995,7 @@ export default {
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
         type: 'warning',
-        cancelButtonClass: 'is-plain',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         this.loading = true
         this.$store.dispatch('backDocumentToEditing', this.disputeId).then(() => {
@@ -995,7 +1004,7 @@ export default {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ok, seu documento voltou para faze de edição!',
-            type: 'success',
+            type: 'success'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -1004,8 +1013,8 @@ export default {
     },
     changeFullscreen() {
       this.fullscreen = !this.fullscreen
-    },
-  },
+    }
+  }
 }
 </script>
 

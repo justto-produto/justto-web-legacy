@@ -80,9 +80,6 @@
 <script>
 
 export default {
-  components: {
-    JusLogoCompany: () => import('@/components/images/JusLogoCompany'),
-  },
   data() {
     return {
       showSuccess: false,
@@ -90,17 +87,17 @@ export default {
       synced: false,
       syncForm: {
         email: '',
-        password: '',
+        password: ''
       },
       syncFormRules: {
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
         ],
         password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        ],
-      },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+        ]
+      }
     }
   },
   onCreate() {
@@ -114,7 +111,7 @@ export default {
     },
     type() {
       return this.synced ? 'success' : 'warning'
-    },
+    }
   },
   methods: {
     syncEmail() {
@@ -140,8 +137,8 @@ export default {
     },
     nextStep() {
       this.$emit('onboarding:step:next')
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -107,7 +107,8 @@
               <dispute-code-link
                 :code="dispute.code"
                 :custom-style="{ fontSize: '14px', marginLeft: '12px'}"
-                @openTimeline="openTimelineModal" />
+                @openTimeline="openTimelineModal"
+              />
             </div>
             <div
               v-if="dispute.campaign"
@@ -326,7 +327,7 @@
                   v-for="subClassification in dispute.classification.classificationDetails"
                   :key="subClassification.id"
                 >
-                  <i class="el-icon-right"/>
+                  <i class="el-icon-right" />
                   {{ subClassification.name }}
                 </div>
               </span>
@@ -485,9 +486,9 @@
                   />
                 </span>
                 <el-select
+                  v-if="role.party === 'UNKNOWN'"
                   v-model="role.party"
                   placeholder="Defina o polo desta parte"
-                  v-if="role.party === 'UNKNOWN'"
                   @change="setDisputeParty(role)"
                 >
                   <el-option
@@ -635,8 +636,8 @@
                   content="Disputas em pré-negociação não podem ser editadas"
                 >
                   <el-checkbox-group
-                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
                     v-model="disputeBankAccountsIds"
+                    :disabled="dispute.status === 'PRE_NEGOTIATION'"
                     class="dispute-overview-view__bank-checkbox"
                   >
                     <el-checkbox
@@ -1092,7 +1093,8 @@
       <el-dialog
         :close-on-click-modal="false"
         :visible.sync="editRoleDialogVisible"
-        width="40%" >
+        width="40%"
+      >
         <span
           slot="title"
           class="el-dialog__title"
@@ -1447,7 +1449,8 @@
         :close-on-click-modal="false"
         :visible.sync="addBankDialogVisible"
         title="Adicionar conta bancária"
-        width="40%" >
+        width="40%"
+      >
         <el-form
           ref="addBankForm"
           :model="addBankForm"
@@ -1565,17 +1568,17 @@ export default {
     DisputeProprieties: () => import('../DisputeProprieties'),
     JusTags: () => import('@/components/others/JusTags'),
     JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
-    JusTimeline: () => import('@/components/JusTimeline/JusTimeline'),
+    JusTimeline: () => import('@/components/JusTimeline/JusTimeline')
   },
   props: {
     loading: {
       default: false,
-      type: Boolean,
+      type: Boolean
     },
     activeRoleId: {
       default: 0,
-      type: Number,
-    },
+      type: Number
+    }
   },
   data() {
     return {
@@ -1611,31 +1614,31 @@ export default {
         moralDamage: '',
         requestedValue: '',
         externalId: '',
-        provisionedValue: '',
+        provisionedValue: ''
       },
       disputeFormRules: {
         disputeUpperRange: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        lastOfferValue: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       roleForm: {
-        personProperties: {},
+        personProperties: {}
       },
       originalRole: {},
       roleRules: {
         name: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' },
+          { validator: validateName, message: 'Nome precisa conter mais de 3 caracteres', trigger: 'blur' }
         ],
         phone: [
           { required: false, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' },
+          { validator: validatePhone, message: 'Telefone inválido', trigger: 'submit' }
         ],
         email: [
           { required: false, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', message: 'E-mail inválido', trigger: 'submit' },
+          { type: 'email', message: 'E-mail inválido', trigger: 'submit' }
         ],
         oab: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
-        state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }],
+        state: [{ required: false, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       newRoleDialogVisible: false,
       linkBankAccountLoading: false,
@@ -1655,23 +1658,23 @@ export default {
         bank: '',
         agency: '',
         number: '',
-        type: '',
+        type: ''
       },
       addBankRules: {
         name: [
-          { required: false, message: 'Campo obrigatório', trigger: 'submit' },
+          { required: false, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         email: [
-          { type: 'email', required: false, message: 'Insira um e-mail válido', trigger: 'submit' },
+          { type: 'email', required: false, message: 'Insira um e-mail válido', trigger: 'submit' }
         ],
         document: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' },
+          { validator: validateCpf, message: 'CPF/CNPJ inválido.', trigger: 'submit' }
         ],
         bank: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         agency: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         number: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
-        type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        type: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       },
       bankAccountIdstoUnlink: [],
       documentNumberHasChanged: false,
@@ -1682,23 +1685,23 @@ export default {
       disputePartys: [
         {
           value: 'RESPONDENT',
-          label: 'Advogado do réu',
+          label: 'Advogado do réu'
         },
         {
           value: 'CLAIMANT',
-          label: 'Advogado da parte contrária',
+          label: 'Advogado da parte contrária'
         },
         {
           value: 'UNKNOWN',
-          label: 'Desconhecido',
-        },
-      ],
+          label: 'Desconhecido'
+        }
+      ]
     }
   },
   computed: {
     ...mapGetters({
       getDisputeProperties: 'disputeProprieties',
-      disputeStatuses: 'disputeStatuses',
+      disputeStatuses: 'disputeStatuses'
     }),
     canEditBirthday() {
       return this.roleForm.party === 'CLAIMANT' && this.roleForm.personType === 'NATURAL' && this.roleForm.roles && (this.roleForm.roles.includes('LAWYER') || this.roleForm.roles.includes('PARTY'))
@@ -1755,11 +1758,11 @@ export default {
       },
       set(bankAccountIds) {
         this.updateDisputeBankAccounts(bankAccountIds)
-      },
+      }
     },
     selectedRole: {
       get() { return this.activeRoleId },
-      set(newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) },
+      set(newSelectedRole) { this.$emit('update:activeRoleId', newSelectedRole || 0) }
     },
     strategies() {
       return this.$store.getters.strategyList
@@ -1829,7 +1832,7 @@ export default {
     },
     isAccepted() {
       return this.dispute ? ['CHECKOUT', 'ACCEPTED', 'SETTLED', 'UNSETTLED'].includes(this.dispute.status) : false
-    },
+    }
   },
   watch: {
     activeRoleId: function(newActiveRole) {
@@ -1839,7 +1842,7 @@ export default {
       if (!newFilteredNamesakes.includes(this.selectedNamesake)) {
         this.selectedNamesake = ''
       }
-    },
+    }
   },
   created() {
     if (this.disputeStatuses.ARCHIVED) {
@@ -1857,7 +1860,7 @@ export default {
     ...mapActions([
       'removeDispute',
       'getDisputeStatuses',
-      'getDisputeTimeline',
+      'getDisputeTimeline'
     ]),
 
     async populateTimeline() {
@@ -1888,7 +1891,7 @@ export default {
           confirmButtonText: 'Excluir',
           cancelButtonText: 'Cancelar',
           type: 'warning',
-          cancelButtonClass: 'is-plain',
+          cancelButtonClass: 'is-plain'
         }).then(() => {
           this.deleteDispute()
         })
@@ -1900,7 +1903,7 @@ export default {
       this.modalLoading = true
       this.removeDispute({
         disputeId: this.dispute.id,
-        reason: this.deleteType,
+        reason: this.deleteType
       }).then(() => {
         this.$router.push('/management')
       }).catch(error => {
@@ -1960,7 +1963,7 @@ export default {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Homônimo enviado para tratamento com sucesso.',
-              type: 'success',
+              type: 'success'
             })
           })
           .catch(error => {
@@ -1983,7 +1986,7 @@ export default {
           confirmButtonText: 'Continuar',
           cancelButtonText: 'Cancelar',
           dangerouslyUseHTMLString: true,
-          cancelButtonClass: 'is-plain',
+          cancelButtonClass: 'is-plain'
         }).then(() => { this.opeNnamesakeDialog(name, personId) })
       } else {
         this.opeNnamesakeDialog(name, personId)
@@ -2049,7 +2052,7 @@ export default {
                 dangerouslyUseHTMLString: true,
                 message: 'Esta disputa não permite a vinculação de contas do tipo <b>POUPANÇA</b>.',
                 type: 'warning',
-                duration: 0,
+                duration: 0
               })
               return false
             }
@@ -2067,13 +2070,13 @@ export default {
       this.linkBankAccountLoading = true
       this.$store.dispatch(action, {
         disputeId: this.dispute.id,
-        bankAccountId,
+        bankAccountId
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           dangerouslyUseHTMLString: true,
           message: 'Conta bancária <strong>' + this.$t('bankAccount.' + action).toUpperCase() + '</strong> à disputa com sucesso.',
-          type: 'success',
+          type: 'success'
         })
         setTimeout(function() {
           this.$emit('fetch-data')
@@ -2144,14 +2147,14 @@ export default {
               this.disputeForm.lastOfferValue > this.disputeForm.disputeUpperRange
                 ? h('div', null, '- Alçada máxima está abaixo do valor proposto.') : null,
               h('br', null, null),
-              h('div', null, 'Deseja continuar?'),
+              h('div', null, 'Deseja continuar?')
             ]),
             type: 'warning',
             confirmButtonText: 'Continuar',
             confirmButtonClass: 'edit-case-confirm-button',
             cancelButtonClass: 'is-plain',
             showCancelButton: true,
-            customClass: 'edit-case-confitm-dialog',
+            customClass: 'edit-case-confitm-dialog'
           }).then(() => {
             const disputeToEdit = JSON.parse(JSON.stringify(this.dispute))
             disputeToEdit.strategyId = this.selectedStrategyId
@@ -2184,7 +2187,7 @@ export default {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Os dados foram alterados com sucesso.',
-                type: 'success',
+                type: 'success'
               })
               setTimeout(function() {
                 this.$emit('fetch-data')
@@ -2202,17 +2205,17 @@ export default {
                   confirmButtonText: onlyResendMessaged ? 'Reenviar' : 'Reiniciar',
                   cancelButtonText: 'Cancelar',
                   cancelButtonClass: 'is-plain',
-                  type: 'warning',
+                  type: 'warning'
                 }).then(() => {
                   this.$store.dispatch('sendDisputeAction', {
                     action: onlyResendMessaged ? 'resend-messages' : 'restart-engagement',
-                    disputeId: this.dispute.id,
+                    disputeId: this.dispute.id
                   }).then(() => {
                     const actionDone = onlyResendMessaged ? 'Reenvio de mensagens' : 'Reengajamento'
                     this.$jusNotification({
                       title: 'Yay!',
                       message: actionDone + ' realizado com sucesso.',
-                      type: 'success',
+                      type: 'success'
                     })
                   })
                 })
@@ -2229,7 +2232,7 @@ export default {
                   title: 'Ops!',
                   message: message,
                   type: 'warning',
-                  dangerouslyUseHTMLString: true,
+                  dangerouslyUseHTMLString: true
                 })
               } else {
                 this.$jusNotification({ error })
@@ -2282,8 +2285,8 @@ export default {
             promise.push(
               this.$store.dispatch('unlinkDisputeBankAccounts', {
                 disputeId: this.dispute.id,
-                bankAccountId: id,
-              }),
+                bankAccountId: id
+              })
             )
           }
           Promise.all(promise).then(() => {
@@ -2305,14 +2308,14 @@ export default {
       this.editRoleDialogLoading = true
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
-        disputeRole: roleToEdit,
+        disputeRole: roleToEdit
       }).then(response => {
         // SEGMENT TRACK
         this.$jusSegment('Editar partes da disputa', { description: `Usuário ${roleToEdit.name} alterado` })
         this.$jusNotification({
           title: 'Yay!',
           message: 'Os dados foram alterados com sucesso.',
-          type: 'success',
+          type: 'success'
         })
         const roleDataDifference = this.verifyChangedRoleData(this.roleForm, this.originalRole)
         if (roleDataDifference.length) {
@@ -2320,29 +2323,29 @@ export default {
             confirmButtonText: 'Reengajar',
             cancelButtonText: 'Cancelar',
             type: 'warning',
-            cancelButtonClass: 'is-plain',
+            cancelButtonClass: 'is-plain'
           }).then(() => {
             const contacts = []
             for (const contact of roleDataDifference) {
               contacts.push(
                 this.$store.dispatch('restartEngagementByContact', {
                   disputeId: this.dispute.id,
-                  contact: contact.address || contact.number,
-                }),
+                  contact: contact.address || contact.number
+                })
               )
             }
             Promise.all(contacts).then(() => {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Reengajamento realizado com sucesso.',
-                type: 'success',
+                type: 'success'
               })
             }).catch(() => {
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Parece que nem todos os contatos foram reengajados corretamente.',
                 type: 'warning',
-                dangerouslyUseHTMLString: true,
+                dangerouslyUseHTMLString: true
               })
             })
           })
@@ -2352,7 +2355,7 @@ export default {
             confirmButtonText: 'Vincular',
             cancelButtonText: 'Cancelar',
             type: 'warning',
-            cancelButtonClass: 'is-plain',
+            cancelButtonClass: 'is-plain'
           }).then(() => {
             const bankAccounts = response.bankAccounts
             const newBankAccounts = bankAccounts.sort((accountA, accountB) => {
@@ -2385,7 +2388,7 @@ export default {
     verifyChangedRoleData(editedRole, originalRole) {
       const changed = {
         newPhones: [],
-        newEmails: [],
+        newEmails: []
       }
       if (editedRole.phones.length) {
         const mappedPhones = originalRole.phones.map(phone => phone.number)
@@ -2449,7 +2452,7 @@ export default {
         if (isDuplicated < 0) {
           this.roleForm.oabs.push({
             number: this.roleForm.oab,
-            state: this.roleForm.state,
+            state: this.roleForm.state
           })
         }
         this.roleForm.oab = ''
@@ -2464,18 +2467,18 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'warning',
-        cancelButtonClass: 'is-plain',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         this.$emit('removeRole')
         setTimeout(() => {
           this.$store.dispatch('removeRole', {
             disputeId: this.dispute.id,
-            roleId: role.id,
+            roleId: role.id
           }).then(response => {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Pessoa removida com sucesso.',
-              type: 'success',
+              type: 'success'
             })
           }).catch(error => {
             this.$jusNotification({ error })
@@ -2512,17 +2515,17 @@ export default {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         dangerouslyUseHTMLString: true,
-        showClose: false,
+        showClose: false
       }).then(() => {
         this.$store.dispatch('sendDisputeAction', {
           disputeId: this.dispute.id,
-          action: 'enrich',
+          action: 'enrich'
         }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ação <b>ENRIQUECER</b> realizada com sucesso.',
             type: 'success',
-            dangerouslyUseHTMLString: true,
+            dangerouslyUseHTMLString: true
           })
         })
       })
@@ -2531,10 +2534,10 @@ export default {
       const params = {
         disputeId: this.dispute.id,
         disputeRoleId: role.id,
-        disputeParty: role.party,
+        disputeParty: role.party
       }
       this.$jusSegment('Defiido função em participante da disputa', {
-        page: this.$route.name,
+        page: this.$route.name
       })
       this.$store.dispatch('setDisputeparty', params)
         .then(() => {
@@ -2542,11 +2545,11 @@ export default {
             title: 'Yay!',
             message: 'Função definida com sucesso!',
             type: 'success',
-            dangerouslyUseHTMLString: true,
+            dangerouslyUseHTMLString: true
           })
         })
-    },
-  },
+    }
+  }
 }
 </script>
 

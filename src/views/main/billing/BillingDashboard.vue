@@ -175,7 +175,7 @@ export default {
     JusDataTable: () => import('@/components/tables/JusDataTable'),
     JusFinancialCard: () => import('@/components/JusFinancialCard/JusFinancialCard'),
     JusGrid: () => import('@/components/JusGrid/JusGrid'),
-    JusButtonBack: () => import('@/components/buttons/JusButtonBack'),
+    JusButtonBack: () => import('@/components/buttons/JusButtonBack')
   },
   data() {
     return {
@@ -188,9 +188,9 @@ export default {
         occurredDate: '',
         title: '',
         trigger: '',
-        value: '',
+        value: ''
       },
-      activeTypeFilter: '',
+      activeTypeFilter: ''
     }
   },
   computed: {
@@ -201,7 +201,7 @@ export default {
       'isAdminProfile',
       'tableLoading',
       'transactions',
-      'workspaceId',
+      'workspaceId'
     ]),
 
     filterTransactionsActionParams() {
@@ -209,7 +209,7 @@ export default {
         icon: 'eye',
         label: 'Ver lançamentos',
         trigger: 'showTransactions',
-        visible: true,
+        visible: true
       }
     },
 
@@ -218,7 +218,7 @@ export default {
         icon: 'management',
         label: 'Visualizar disputas no gerenciamento',
         trigger: 'showDisputes',
-        visible: true,
+        visible: true
       }
     },
 
@@ -227,7 +227,7 @@ export default {
         icon: 'add',
         label: 'Criar lançamento manual',
         trigger: 'addTransaction',
-        visible: this.isJusttoAdmin,
+        visible: this.isJusttoAdmin
       }
     },
 
@@ -279,23 +279,23 @@ export default {
           type: '',
           title: 'total',
           revenue,
-          total,
+          total
         },
-        actions: [this.filterTransactionsActionParams],
+        actions: [this.filterTransactionsActionParams]
       }
     },
 
     initialDateRange() {
       return [
         this.$moment(new Date()).startOf('month').format('YYYY-MM-DD'),
-        this.$moment(new Date()).endOf('month').format('YYYY-MM-DD'),
+        this.$moment(new Date()).endOf('month').format('YYYY-MM-DD')
       ]
-    },
+    }
   },
   watch: {
     workspaceId(current, _old, next) {
       if (current !== next) this.$router.push('/billing')
-    },
+    }
   },
   created() {
     this.dateRange[0] = this.initialDateRange[0]
@@ -310,7 +310,7 @@ export default {
       this.$jusNotification({
         title: 'Ops!',
         message: 'Você não pode entra ai. Fale com um administrador',
-        type: 'warning',
+        type: 'warning'
       })
     }
   },
@@ -327,7 +327,7 @@ export default {
       'setRangeDate',
       'setTerm',
       'setType',
-      'setWorkspaceId',
+      'setWorkspaceId'
     ]),
 
     filterByTerm() {
@@ -368,8 +368,8 @@ export default {
           transactionType: type,
           prescription: 'BILLING_TRANSACTION',
           disputeHasFilters: true,
-          disputeTab: 3,
-        },
+          disputeTab: 3
+        }
       })
       window.open(managementRoute.href, '_blank')
     },
@@ -399,7 +399,7 @@ export default {
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
-          message: 'Lançamento realizado com sucesso',
+          message: 'Lançamento realizado com sucesso'
         })
       }).finally(() => {
         this.modalLoading = false
@@ -413,9 +413,9 @@ export default {
           id,
           note,
           occurredDate,
-          value,
+          value
         },
-        trigger,
+        trigger
       } = evt.eventProps
 
       this.addTransactionForm = {
@@ -424,7 +424,7 @@ export default {
         occurredDate,
         title: 'Editar lançamento',
         trigger,
-        value,
+        value
       }
 
       this.addTransactionDialogVisable = true
@@ -441,7 +441,7 @@ export default {
         this.$jusNotification({
           type: 'success',
           title: 'Yay!',
-          message: 'Lançamento editado com sucesso',
+          message: 'Lançamento editado com sucesso'
         })
       }).finally(() => {
         this.modalLoading = false
@@ -452,16 +452,16 @@ export default {
     cancelTransactionAction(evt) {
       this.$prompt('Insira o motivo do cancelamento', 'Cancelar lançamento', {
         confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
+        cancelButtonText: 'Cancelar'
       }).then(({ value }) => {
         this[evt.eventProps.trigger]({
           id: evt.eventProps.customProps.id,
-          data: { reason: value },
+          data: { reason: value }
         }).then(() => {
           this.$jusNotification({
             type: 'success',
             title: 'Yay!',
-            message: 'Lançamento cancelado com sucesso',
+            message: 'Lançamento cancelado com sucesso'
           })
         }).catch(error => {
           this.$jusNotification({ error })
@@ -477,8 +477,8 @@ export default {
           $state.loaded()
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

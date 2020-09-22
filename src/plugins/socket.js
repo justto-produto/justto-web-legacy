@@ -8,7 +8,7 @@ Vue.use(new VueSocketIO({
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
-    mutationPrefix: 'SOCKET_',
+    mutationPrefix: 'SOCKET_'
   },
-  options: { path: '/websocket' },
+  options: { path: '/websocket' }
 }))

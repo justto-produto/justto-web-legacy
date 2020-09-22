@@ -5,7 +5,7 @@ const getters = {
     const datasets = state.chartsDatasets.find(cd => cd.name === chartName)
     if (datasets) return JSON.parse(JSON.stringify(datasets))
     return {}
-  },
+  }
 }
 
 export default getters

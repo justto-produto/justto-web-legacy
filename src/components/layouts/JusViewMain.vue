@@ -49,33 +49,33 @@ export default {
   props: {
     rightCardWidth: {
       default: '300',
-      type: String,
+      type: String
     },
     rightCardCollapsed: {
       default: false,
-      type: Boolean,
+      type: Boolean
     },
     leftCardWidth: {
       default: '300',
-      type: String,
+      type: String
     },
     loadingMain: {
       default: false,
-      type: Boolean,
+      type: Boolean
     },
     loadingContainer: {
       default: false,
-      type: Boolean,
+      type: Boolean
     },
     loadingContainerText: {
       default: '',
-      type: String,
+      type: String
     },
     fullScreen: {
       default: false,
-      type: Boolean,
-    },
-  },
+      type: Boolean
+    }
+  }
 }
 </script>
 

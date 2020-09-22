@@ -97,27 +97,27 @@ export default {
   props: {
     isGuest: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
       showError: false,
       profiles: [
         { label: 'Administrador', value: 'ADMINISTRATOR' },
-        { label: 'Negociador', value: 'NEGOTIATOR' },
+        { label: 'Negociador', value: 'NEGOTIATOR' }
       ],
       teamMembersForm: {
         teamMember: '',
         teamMemberType: '',
         teamMembers: [
-        ],
+        ]
       },
       teamMembersFormRules: {
         teamMember: [
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] },
-        ],
-      },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: ['submit'] }
+        ]
+      }
     }
   },
   methods: {
@@ -128,14 +128,14 @@ export default {
             this.$jusNotification({
               title: 'Ops!',
               message: 'Não é possível enviar convites a si mesmo',
-              type: 'warning',
+              type: 'warning'
             })
           } else if (!this.teamMembersForm.teamMembers.includes(this.teamMembersForm.teamMember)) {
             this.teamMembersForm.teamMembers.push(
               {
                 email: this.teamMembersForm.teamMember,
-                profile: 'NEGOTIATOR',
-              },
+                profile: 'NEGOTIATOR'
+              }
             )
           }
           this.$refs[form].resetFields()
@@ -146,7 +146,7 @@ export default {
     },
     removeTeamMember(member) {
       this.teamMembersForm.teamMembers.splice(
-        this.teamMembersForm.teamMembers.indexOf(member), 1,
+        this.teamMembersForm.teamMembers.indexOf(member), 1
       )
     },
     submitForm() {
@@ -161,8 +161,8 @@ export default {
         }).finally(() => {
           this.$store.dispatch('hideLoading')
         })
-    },
-  },
+    }
+  }
 }
 </script>
 

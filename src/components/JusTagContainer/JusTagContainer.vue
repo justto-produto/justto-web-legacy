@@ -62,30 +62,30 @@ export default {
   props: {
     options: {
       type: Array,
-      default: null,
+      default: null
     },
     isPrivate: {
       type: Boolean,
-      default: true,
+      default: true
     },
     tagList: {
       type: Array,
-      default: null,
+      default: null
     },
     canAddTag: {
       type: Boolean,
-      default: true,
+      default: true
     },
     title: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   data() {
     return {
       tags: this.tagList,
       inputVisible: false,
-      inputValue: '',
+      inputValue: ''
     }
   },
   computed: {
@@ -94,7 +94,7 @@ export default {
     },
     placeholder() {
       return this.isPrivate ? 'Nimgém pode ver essa estratégia. Associe um time ou torne-a pública.' : 'Todos os times possuem acesso a esta estratégia.'
-    },
+    }
   },
   methods: {
     suggestions(queryString, callback) {
@@ -125,8 +125,8 @@ export default {
 
     changeTags() {
       this.$emit('change', this.tags)
-    },
-  },
+    }
+  }
 }
 </script>
 

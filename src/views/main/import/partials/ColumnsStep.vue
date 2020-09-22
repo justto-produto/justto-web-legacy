@@ -233,7 +233,7 @@ export default {
       loadingTags: false,
       errorColumns: false,
       errorTags: false,
-      loading: false,
+      loading: false
     }
   },
   computed: {
@@ -243,8 +243,8 @@ export default {
       },
       set(value) {
         this.$store.commit('setImportsMap', value)
-      },
-    },
+      }
+    }
   },
   watch: {
     loading(loading) {
@@ -252,7 +252,7 @@ export default {
     },
     loadingTags(loadingTags) {
       if (!loadingTags && !this.loading) this.$store.dispatch('hideLoading')
-    },
+    }
   },
   beforeMount() {
     this.$store.dispatch('showLoading')
@@ -376,8 +376,8 @@ export default {
         }
       }
       return title
-    },
-  },
+    }
+  }
 }
 </script>
 

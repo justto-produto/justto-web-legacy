@@ -34,7 +34,7 @@ const disputeGetters = {
   },
   hasPrescription: state => (prescription) => state.query.prescriptions.includes(prescription),
   prescriptionsList: state => state.prescriptionsList,
-  partyAnalysisByDocument: state => (documentNumber) => state.partyAnalysis[documentNumber],
+  partyAnalysisByDocument: state => (documentNumber) => state.partyAnalysis[documentNumber]
 }
 
 export default disputeGetters

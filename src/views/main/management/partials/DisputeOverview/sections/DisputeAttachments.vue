@@ -105,23 +105,23 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'DisputeAttachments',
   components: {
-    JusDragArea,
+    JusDragArea
   },
   props: {
     isAccepted: {
       type: Boolean,
-      required: true,
+      required: true
     },
     disputeId: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       uploadAttacmentDialogVisable: false,
       deleteAttachmentLoading: false,
-      attachmentFilterTerm: '',
+      attachmentFilterTerm: ''
     }
   },
   computed: {
@@ -129,7 +129,7 @@ export default {
 
     filteredDisputeAttachments() {
       return filterByTerm(this.attachmentFilterTerm, this.disputeAttachments, 'name')
-    },
+    }
   },
   methods: {
     ...mapActions(['deleteAttachment', 'getDisputeAttachments']),
@@ -139,23 +139,23 @@ export default {
         content: this.isAccepted
           ? 'Você está solicitando o <b>ENRIQUECIMENTO</b> de uma disputa que já foi finalizada. Este processo irá agendar novamente as mensagens para as partes quando finalizado. Você deseja enriquecer mesmo assim?'
           : 'Tem certeza que deseja realizar esta ação?',
-        title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER',
+        title: this.isAccepted ? 'Atenção!' : 'ENRIQUECER'
       }
       this.$confirm(message.content, message.title, {
         confirmButtonText: 'Continuar',
         cancelButtonText: 'Cancelar',
         dangerouslyUseHTMLString: true,
-        showClose: false,
+        showClose: false
       }).then(() => {
         this.$store.dispatch('sendDisputeAction', {
           disputeId: this.disputeId,
-          action: 'enrich',
+          action: 'enrich'
         }).then(() => {
           this.$jusNotification({
             title: 'Yay!',
             message: 'Ação <b>ENRIQUECER</b> realizada com sucesso.',
             type: 'success',
-            dangerouslyUseHTMLString: true,
+            dangerouslyUseHTMLString: true
           })
         })
       })
@@ -166,7 +166,7 @@ export default {
       this.$jusNotification({
         title: 'Yay',
         message: 'URL copiada para o clipboard',
-        type: 'success',
+        type: 'success'
       })
     },
 
@@ -174,14 +174,14 @@ export default {
       this.deleteAttachmentLoading = true
       this.deleteAttachment({
         disputeId: attachment.disputeId,
-        documentId: attachment.id,
+        documentId: attachment.id
       }).then(() => {
         this.getDisputeAttachments(attachment.disputeId).then(() => {
           this.deleteAttachmentLoading = false
           this.$jusNotification({
             title: 'Yay!',
             message: 'Anexo removido com sucesso',
-            type: 'success',
+            type: 'success'
           })
         })
       })
@@ -193,8 +193,8 @@ export default {
 
     handleAttachmentDialogVisable() {
       this.uploadAttacmentDialogVisable = !this.uploadAttacmentDialogVisable
-    },
-  },
+    }
+  }
 }
 </script>
 

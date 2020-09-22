@@ -84,13 +84,13 @@ export default {
       checked1: false,
       checked2: false,
       checked3: false,
-      revision: false,
+      revision: false
     }
   },
   computed: {
     enriched() {
       return this.checked1 && this.checked2 && this.checked3
-    },
+    }
   },
   mounted() {
     this.startEnrichment()
@@ -114,8 +114,8 @@ export default {
       setTimeout(function() {
         self.$emit('import:step:next')
       }, 5500)
-    },
-  },
+    }
+  }
 }
 </script>
 

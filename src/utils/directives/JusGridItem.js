@@ -20,5 +20,5 @@ export const GridItem = {
 
     el.style.gridColumn = `span ${col}`
     el.style.gridRow = `span ${row}`
-  },
+  }
 }

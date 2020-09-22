@@ -36,8 +36,8 @@ export default {
       if (this.$store.state.importModule.file) {
         return this.$store.state.importModule.file.rows
       } else return 0
-    },
-  },
+    }
+  }
 }
 </script>
 

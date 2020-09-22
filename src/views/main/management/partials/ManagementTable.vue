@@ -19,7 +19,8 @@
       data-testid="dispute-index"
       @cell-mouse-enter="cellMouseEnter"
       @row-click="handleRowClick"
-      @selection-change="handleSelectionChange">
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column
         type="selection"
         width="44px"
@@ -279,21 +280,21 @@ export default {
     JusDisputeActions: () => import('@/components/buttons/JusDisputeActions'),
     JusProtocolDialog: () => import('@/components/dialogs/JusProtocolDialog'),
     InfiniteLoading: () => import('vue-infinite-loading'),
-    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert'),
+    JusVexatiousAlert: () => import('@/components/dialogs/JusVexatiousAlert')
   },
   props: {
     activeTab: {
       type: String,
-      default: '0',
+      default: '0'
     },
     selectedIds: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     loadingDisputes: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
@@ -306,7 +307,7 @@ export default {
       selectedDisputeId: 0,
       selectedDisputeRoles: [],
       disputeKey: 0,
-      responseBoxLoading: false,
+      responseBoxLoading: false
     }
   },
   computed: {
@@ -317,7 +318,7 @@ export default {
       },
       set(ids) {
         this.$emit('update:selectedIds', ids)
-      },
+      }
     },
     disputes() {
       return this.$store.getters.disputes
@@ -336,14 +337,14 @@ export default {
     },
     tab3() {
       return this.activeTab === '3'
-    },
+    }
   },
   watch: {
     disputes: {
       handler() {
         this.$refs.disputeTable.doLayout()
       },
-      deep: true,
+      deep: true
     },
     loadingDisputes(value) {
       if (!value) {
@@ -352,7 +353,7 @@ export default {
           this.showEmpty = true
         }, 2000)
       }
-    },
+    }
   },
   beforeCreate() {
     this.$store.commit('resetDisputeQueryPage')
@@ -420,8 +421,8 @@ export default {
           $state.loaded()
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

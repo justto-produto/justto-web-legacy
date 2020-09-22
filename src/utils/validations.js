@@ -95,5 +95,5 @@ export {
   validatePhone,
   validateSubdomainName,
   validateSubdomainAvailability,
-  validateObjectEmail,
+  validateObjectEmail
 }

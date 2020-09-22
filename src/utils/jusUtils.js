@@ -114,8 +114,8 @@ const fuseSearchDisputes = function(disputes, term) {
       'disputeRoles.name',
       'disputeRoles.documentNumber',
       'disputeRoles.oabs.number',
-      'campaign.strategy',
-    ],
+      'campaign.strategy'
+    ]
   })
   const list = fuse.search(term)
   return list
@@ -137,8 +137,8 @@ const fuseSearchOccurrences = function(occurrences, term) {
       'interaction.message.title',
       'interaction.message.parameters.RECEIVER_NAME',
       'interaction.message.parameters.SENDER_NAME',
-      'interaction.message.parameters.PERSON_NAME',
-    ],
+      'interaction.message.parameters.PERSON_NAME'
+    ]
   })
   const list = fuse.search(term)
   return list
@@ -305,5 +305,5 @@ export {
   queryBuilder,
   filterByTerm,
   normalizeString,
-  getStringInitials,
+  getStringInitials
 }

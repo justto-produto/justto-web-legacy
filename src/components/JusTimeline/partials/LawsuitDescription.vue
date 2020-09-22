@@ -55,23 +55,27 @@
           >
             <div
               slot="title"
-              class="lawsuit-description__party-name">
+              class="lawsuit-description__party-name"
+            >
               {{ party.name }}
             </div>
             <ul class="lawsuit-description__party-list">
               <li
                 v-if="party.type"
-                class="lawsuit-description__party-info">
+                class="lawsuit-description__party-info"
+              >
                 Tipo: {{ party.type }}
               </li>
               <li
                 v-if="party.profile"
-                class="lawsuit-description__party-info">
+                class="lawsuit-description__party-info"
+              >
                 Polo: {{ party.profile }}
               </li>
               <li
                 v-if="party.document"
-                class="lawsuit-description__party-info">
+                class="lawsuit-description__party-info"
+              >
                 Documento: {{ party.document }}
               </li>
             </ul>
@@ -90,18 +94,21 @@
           >
             <div
               slot="title"
-              class="lawsuit-description__party-name">
+              class="lawsuit-description__party-name"
+            >
               {{ lawyer.name }}
             </div>
             <ul class="lawsuit-description__party-list">
               <li
                 v-if="lawyer.oab"
-                class="lawsuit-description__party-info">
+                class="lawsuit-description__party-info"
+              >
                 OAB: {{ lawyer.oab }}
               </li>
               <li
                 v-if="lawyer.partyName"
-                class="lawsuit-description__party-info">
+                class="lawsuit-description__party-info"
+              >
                 Parte: {{ lawyer.partyName.toLowerCase() }}
               </li>
             </ul>
@@ -115,19 +122,19 @@
 <script>
 export default {
   components: {
-    jusIcon: () => import('@/components/images/JusIcon'),
+    jusIcon: () => import('@/components/images/JusIcon')
   },
   props: {
     lawsuitDispute: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     state() {
       return this.lawsuitDispute
-    },
-  },
+    }
+  }
 }
 </script>
 

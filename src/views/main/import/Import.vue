@@ -101,19 +101,19 @@ export default {
   name: 'Import',
   components: {
     InfiniteLoading,
-    JusImportDialog: () => import('@/components/dialogs/JusImportDialog'),
+    JusImportDialog: () => import('@/components/dialogs/JusImportDialog')
   },
   data() {
     return {
       importsHistory: [],
       page: 1,
-      importDialogVisible: false,
+      importDialogVisible: false
     }
   },
   computed: {
     importsHistoryPaged() {
       return this.importsHistory.slice(0, this.page * 20)
-    },
+    }
   },
   beforeMount() {
     this.$store.dispatch('getImportsHistory').then(response => {
@@ -153,8 +153,8 @@ export default {
       // SEGMENT TRACK
       this.$jusSegment('Baixar planilha modelo')
       window.open('Planilha-Modelo-Justto.xlsx', '_blank')
-    },
-  },
+    }
+  }
 }
 </script>
 

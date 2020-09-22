@@ -69,20 +69,20 @@ export default {
   components: {
     CheckLinesStep: () => import('./partials/CheckLinesStep'),
     ColumnsStep: () => import('./partials/ColumnsStep'),
-    CampaignStep: () => import('./partials/CampaignStep'),
+    CampaignStep: () => import('./partials/CampaignStep')
   },
   data() {
     return {
       uploadId: undefined,
       activeStep: 0,
       mappedCampaigns: [],
-      campaignIsMapped: false,
+      campaignIsMapped: false
     }
   },
   computed: {
     isMapped() {
       return this.campaignIsMapped
-    },
+    }
   },
   beforeCreate() {
     this.$store.commit('removeImportsMap')
@@ -96,7 +96,7 @@ export default {
         this.$store.dispatch('mapImportColumns', this.$store.state.importModule.map).then(response => {
           // SEGMENT TRACK
           this.$jusSegment('Importação 3/4 Mapeamento concluido', {
-            fileName: this.$store.getters.importedFileName,
+            fileName: this.$store.getters.importedFileName
           })
           this.mappedCampaigns = response
 
@@ -130,7 +130,7 @@ export default {
           const campaign = JSON.parse(JSON.stringify(mappedCampaign))
           campaignsTrack.push({
             name: campaign.name,
-            strategy: campaign.strategy,
+            strategy: campaign.strategy
           })
           campaign.paymentDeadLine = 'P' + campaign.paymentDeadLine + 'D'
           delete campaign.campaign
@@ -145,7 +145,7 @@ export default {
         Promise.all(promises).then(() => {
           // SEGMENT TRACK
           this.$jusSegment('Importação 4/4 Importação Concluída', {
-            fileName: this.$store.getters.importedFileName,
+            fileName: this.$store.getters.importedFileName
           })
           this.$store.dispatch('startGeneseRunner').finally(() => {
             this.$store.commit('removeImportsFile')
@@ -158,7 +158,7 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Para prosseguir você deve configurar todos os campos de todas as campanhas.',
-          type: 'warning',
+          type: 'warning'
         })
       }
       const range = this.mappedCampaigns.length - 1
@@ -167,7 +167,7 @@ export default {
         contactPartyWhenNoLowyer: this.mappedCampaigns[range].contactPartyWhenNoLowyer,
         contactPartyWhenInvalidLowyer: this.mappedCampaigns[range].contactPartyWhenInvalidLowyer,
         skipEnrichment: this.mappedCampaigns[range].skipEnrichment,
-        denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit,
+        denySavingDeposit: this.mappedCampaigns[range].denySavingDeposit
       }))
     },
     checkValidCampaign(campaign) {
@@ -192,7 +192,7 @@ export default {
       ) {
         return true
       } else return false
-    },
+    }
   },
   beforeRouteLeave(to, from, next) {
     if (to.path === '/import/loading') {
@@ -203,14 +203,14 @@ export default {
         cancelButtonText: 'Cancelar',
         title: 'Atenção!',
         type: 'warning',
-        cancelButtonClass: 'is-plain',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         next()
       })
     } else {
       next()
     }
-  },
+  }
 }
 </script>
 

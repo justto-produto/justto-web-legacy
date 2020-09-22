@@ -31,13 +31,13 @@ export default new Vuex.Store({
     loading: false,
     banksList,
     ghostMode,
-    brazilianStates,
+    brazilianStates
   },
   getters: {
     banksList: state => state.banksList,
     ghostMode: state => state.ghostMode,
     loading: state => state.loading,
-    getBrazilianStates: state => state.brazilianStates,
+    getBrazilianStates: state => state.brazilianStates
   },
   mutations: {
     showLoading(state) {
@@ -49,7 +49,7 @@ export default new Vuex.Store({
     setGhostMode(state, value) {
       state.ghostMode = value
       localStorage.setItem('jusghostmode', value)
-    },
+    }
   },
   actions: {
     showLoading({ commit }) {
@@ -57,7 +57,7 @@ export default new Vuex.Store({
     },
     hideLoading({ commit }) {
       commit('hideLoading')
-    },
+    }
   },
   modules: {
     accountModule,
@@ -75,6 +75,6 @@ export default new Vuex.Store({
     strategyModule,
     tagModule,
     userModule,
-    workspaceModule,
-  },
+    workspaceModule
+  }
 })

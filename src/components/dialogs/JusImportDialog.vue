@@ -78,14 +78,14 @@ export default {
   props: {
     dialogVisible: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
       currentStatus: 0,
       uploadedFile: null,
-      uploadError: null,
+      uploadError: null
     }
   },
   computed: {
@@ -95,7 +95,7 @@ export default {
       },
       set(visible) {
         this.$emit('update:dialogVisible', visible)
-      },
+      }
     },
     isInitial() {
       return this.currentStatus === STATUS_INITIAL
@@ -105,7 +105,7 @@ export default {
     },
     isSuccess() {
       return this.currentStatus === STATUS_SUCCESS
-    },
+    }
   },
   methods: {
     startImport() {
@@ -126,14 +126,14 @@ export default {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Arquivo em formato inválido.',
-          type: 'warning',
+          type: 'warning'
         })
       }
       if (!isLt20M) {
         this.$jusNotification({
           title: 'Ops!',
           message: 'Arquivo não pode ultrapassar 20MB.',
-          type: 'warning',
+          type: 'warning'
         })
       }
       if (isLt20M && isValid) {
@@ -177,7 +177,7 @@ export default {
       this.$jusNotification({
         title: 'Ops!',
         message: errorMessage.message,
-        type: errorMessage.type,
+        type: errorMessage.type
       })
     },
     closeDialog() {
@@ -192,8 +192,8 @@ export default {
       this.currentStatus = STATUS_INITIAL
       this.uploadedFile = null
       this.uploadError = null
-    },
-  },
+    }
+  }
 }
 </script>
 

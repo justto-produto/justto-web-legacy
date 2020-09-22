@@ -8,12 +8,12 @@ const socketModule = {
       typing: '',
       join: '',
       leave: '',
-      message: '',
-    },
+      message: ''
+    }
   },
   mutations: mutations,
   actions: actions,
-  getters: getters,
+  getters: getters
 }
 
 export default socketModule

@@ -366,17 +366,17 @@ export default {
   props: {
     visible: {
       type: Boolean,
-      default: false,
+      default: false
     },
     tabIndex: {
       type: String,
-      default: '0',
-    },
+      default: '0'
+    }
   },
   data() {
     return {
       loading: false,
-      filters: {},
+      filters: {}
       // money: {
       //   decimal: ',',
       //   thousands: '.',
@@ -390,7 +390,7 @@ export default {
       get() { return this.visible },
       set(value) {
         this.$emit('update:visible', value)
-      },
+      }
     },
     isPreNegotiation() {
       return this.tabIndex === '-1'
@@ -432,13 +432,13 @@ export default {
     interactions() {
       return [{
         key: 'WHATSAPP',
-        value: 'Whatsapp',
+        value: 'Whatsapp'
       }, {
         key: 'EMAIL',
-        value: 'Email',
+        value: 'Email'
       }, {
         key: 'NEGOTIATOR_ACCESS',
-        value: 'Sistema Justto',
+        value: 'Sistema Justto'
       }]
     },
     negotiatorsList() {
@@ -472,16 +472,16 @@ export default {
         'EXPIRED',
         'SETTLED',
         'UNSETTLED',
-        'REFUSED',
+        'REFUSED'
       ]
-    },
+    }
   },
   watch: {
     visibleFilters(value) {
       if (value) {
         this.fetchData()
       }
-    },
+    }
   },
   methods: {
     fetchData() {
@@ -490,7 +490,7 @@ export default {
         this.$store.dispatch('getCampaigns'),
         this.$store.dispatch('getMyStrategies'),
         this.$store.dispatch('getRespondents'),
-        this.$store.dispatch('getWorkspaceTags'),
+        this.$store.dispatch('getWorkspaceTags')
       ]).finally(responses => {
         this.loading = false
       })
@@ -593,8 +593,8 @@ export default {
       } else {
         this.filters.importingDate = []
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

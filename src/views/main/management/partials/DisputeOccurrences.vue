@@ -8,7 +8,8 @@
       :distance="10"
       spinner="spiral"
       direction="top"
-      @infinite="loadOccurrences" >
+      @infinite="loadOccurrences"
+    >
       <div
         slot="no-more"
         data-testid="occurences-start"
@@ -24,10 +25,12 @@
     </infinite-loading>
     <div
       v-for="(datedOccurrence, date, index) in datedOccurrences"
-      :key="`${date}-${index}`" >
+      :key="`${date}-${index}`"
+    >
       <el-card
         class="dispute-view-occurrences__date el-card--bg-info"
-        shadow="never" >
+        shadow="never"
+      >
         {{ date }}
       </el-card>
       <li
@@ -37,7 +40,8 @@
         <div class="dispute-view-occurrences__occurrence">
           <div
             v-if="!occurrence.id"
-            class="dispute-view-occurrences__interaction OUTBOUND LOADING" >
+            class="dispute-view-occurrences__interaction OUTBOUND LOADING"
+          >
             <div class="dispute-view-occurrences__avatar">
               <el-tooltip :content="occurrence.sender">
                 <jus-avatar-user
@@ -72,7 +76,8 @@
             v-else-if="occurrence.type === 'LOG' ||
               (occurrence.interaction && ['VISUALIZATION', 'CLICK', 'NEGOTIATOR_ACCESS'].includes(occurrence.interaction.type))"
             shadow="never"
-            class="dispute-view-occurrences__log el-card--bg-warning" >
+            class="dispute-view-occurrences__log el-card--bg-warning"
+          >
             <el-tooltip
               :disabled="!buildTooltip(occurrence)"
               :content="buildTooltip(occurrence)"
@@ -89,27 +94,40 @@
                 />
               </span>
             </el-tooltip>
-            <span class="occurrence-content" v-html="buildContent(occurrence)" />
-            <div v-if="canHandleUnknowParty(occurrence)" class="fast-occurrence-actions"><br>
-              <span v-if="getUnknowPartys(occurrence).length === 0" class="ok">Esta pendência já foi resolvida!</span>
+            <span
+              class="occurrence-content"
+              v-html="buildContent(occurrence)"
+            />
+            <div
+              v-if="canHandleUnknowParty(occurrence)"
+              class="fast-occurrence-actions"
+            >
+              <br>
+              <span
+                v-if="getUnknowPartys(occurrence).length === 0"
+                class="ok"
+              >Esta pendência já foi resolvida!</span>
               <div
                 v-for="role in getUnknowPartys(occurrence)"
                 :key="`role-party-${role.id}`"
-                class="fast-occurrence-actions__items">
-                <span></span>
+                class="fast-occurrence-actions__items"
+              >
+                <span />
                 <a
+                  v-if="!handlePartyId['party_role' + role.id]"
                   href="#"
                   @click="openOptionsParty(role)"
-                  v-if="!handlePartyId['party_role' + role.id]">
+                >
                   Definir polaridade de {{ role.name }}
                 </a>
                 <span class="fast-occurrence-actions__select-container">
                   <el-select
+                    v-if="role.party === 'UNKNOWN' && handlePartyId['party_role' + role.id]"
                     v-model="role.party"
                     size="mini"
                     placeholder="Defina o polo desta parte"
-                    v-if="role.party === 'UNKNOWN' && handlePartyId['party_role' + role.id]"
-                    @change="setDisputeParty(role)">
+                    @change="setDisputeParty(role)"
+                  >
                     <el-option
                       v-for="party in disputePartys"
                       :key="party.value"
@@ -119,7 +137,8 @@
                   </el-select>
                   <el-tooltip
                     v-if="handlePartyId['party_role' + role.id]"
-                    class="fast-occurrence-actions__cancel-tooltip" >
+                    class="fast-occurrence-actions__cancel-tooltip"
+                  >
                     <div slot="content">
                       Cancelar edição de polaridade de {{ role.name }}
                     </div>
@@ -127,7 +146,8 @@
                       size="mini"
                       icon="el-icon-close"
                       circle
-                      @click="closeOptionsParty(role)" />
+                      @click="closeOptionsParty(role)"
+                    />
                   </el-tooltip>
                 </span>
               </div>
@@ -159,7 +179,10 @@
                 </el-tooltip>
               </span>
             </div>
-            <span v-else class="dispute-view-occurrences__log-info">
+            <span
+              v-else
+              class="dispute-view-occurrences__log-info"
+            >
               <span v-text="buildHour(occurrence)" />
               <div>•</div>
               <el-tooltip :content="buildStatusTooltip(occurrence)">
@@ -190,7 +213,8 @@
           <div
             v-else-if="occurrence.type !== 'NOTE'"
             :class="getDirection(occurrence.interaction)"
-            class="dispute-view-occurrences__interaction">
+            class="dispute-view-occurrences__interaction"
+          >
             <div class="dispute-view-occurrences__avatar">
               <el-tooltip
                 :disabled="!buildName(occurrence)"
@@ -208,15 +232,18 @@
                 :class="(occurrence.interaction ? occurrence.interaction.type : '') + ' ' + buildCommunicationType(occurrence) + ' ' + (occurrence.interaction && occurrence.interaction.message ? occurrence.interaction.message.status : '')"
                 shadow="never"
                 class="dispute-view-occurrences__card"
-                data-testid="message-box" >
+                data-testid="message-box"
+              >
                 <div>
-                  <span >
+                  <span>
                     <span
                       :ref="getMessageRef(occurrence)"
-                      v-html="buildContent(occurrence)"/>
+                      v-html="buildContent(occurrence)"
+                    />
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('WHATSAPP') && buildWhatsappStatus(occurrence.interaction.message, occurrence.executionDateTime || occurrence.createAt)"
-                      class="dispute-view-occurrences__whats-status" >
+                      class="dispute-view-occurrences__whats-status"
+                    >
                       <el-tooltip popper-class="mw400">
                         <div
                           slot="content"
@@ -229,7 +256,8 @@
                     </span>
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('SMS') && buildEmailStatus(occurrence)"
-                      class="dispute-view-occurrences__whats-status" >
+                      class="dispute-view-occurrences__whats-status"
+                    >
                       <el-tooltip popper-class="mw400">
                         <div
                           slot="content"
@@ -249,7 +277,8 @@
                     </span>
                     <span
                       v-if="buildCommunicationType(occurrence).startsWith('EMAIL') && buildEmailStatus(occurrence)"
-                      class="dispute-view-occurrences__whats-status" >
+                      class="dispute-view-occurrences__whats-status"
+                    >
                       <el-tooltip popper-class="mw400">
                         <div
                           slot="content"
@@ -284,7 +313,8 @@
               </el-card>
               <div
                 :class="getDirection(occurrence.interaction)"
-                class="dispute-view-occurrences__card-info" >
+                class="dispute-view-occurrences__card-info"
+              >
                 <el-tooltip
                   v-if="occurrence.merged"
                   :disabled="false"
@@ -294,7 +324,8 @@
                   </div>
                   <span
                     class="dispute-view-occurrences__expand-button"
-                    @click="setActiveactiveOccurrency(occurrence)">
+                    @click="setActiveactiveOccurrency(occurrence)"
+                  >
                     (+{{ occurrence.merged.length }} )
                     <i :class="getIconIsMerged(occurrence)" />
                   </span>
@@ -335,7 +366,8 @@
             </div>
             <div
               v-if="showReply(occurrence)"
-              class="dispute-view-occurrences__side-icon" >
+              class="dispute-view-occurrences__side-icon"
+            >
               <el-tooltip content="Responder">
                 <a
                   href="#"
@@ -349,12 +381,14 @@
         </div>
         <div
           v-if="activeOccurrency.id === occurrence.id"
-          class="dispute-view-occurrences__occurrence-merged">
+          class="dispute-view-occurrences__occurrence-merged"
+        >
           <div
             v-for="(mergedOccurency, mergedOccurencyIndex) of activeOccurrency.merged"
             :key="`merged-${mergedOccurencyIndex}`"
             :class="getDirection(occurrence.interaction)"
-            class="dispute-view-occurrences__interaction dispute-view-occurrences__interaction-merged">
+            class="dispute-view-occurrences__interaction dispute-view-occurrences__interaction-merged"
+          >
             <div class="dispute-view-occurrences__avatar">
               <el-tooltip
                 :disabled="!buildName(mergedOccurency)"
@@ -372,12 +406,14 @@
                 :class="(mergedOccurency.interaction ? mergedOccurency.interaction.type : '') + ' ' + buildCommunicationType(mergedOccurency) + ' ' + (mergedOccurency.interaction && mergedOccurency.interaction.message ? mergedOccurency.interaction.message.status : '')"
                 shadow="never"
                 class="dispute-view-occurrences__card"
-                data-testid="message-box" >
+                data-testid="message-box"
+              >
                 <div>
                   <span>
                     <span
                       :ref="getMessageRef(mergedOccurency)"
-                      v-html="buildContent(mergedOccurency)" />
+                      v-html="buildContent(mergedOccurency)"
+                    />
                     <span
                       v-if="buildCommunicationType(mergedOccurency).startsWith('WHATSAPP') && buildWhatsappStatus(mergedOccurency.interaction.message, mergedOccurency.executionDateTime || mergedOccurency.createAt)"
                       class="dispute-view-occurrences__whats-status"
@@ -401,7 +437,8 @@
                     </span>
                     <span
                       v-if="buildCommunicationType(mergedOccurency).startsWith('EMAIL') && buildEmailStatus(mergedOccurency)"
-                      class="dispute-view-occurrences__whats-status" >
+                      class="dispute-view-occurrences__whats-status"
+                    >
                       <el-tooltip popper-class="mw400">
                         <div
                           slot="content"
@@ -436,7 +473,8 @@
               </el-card>
               <div
                 :class="getDirection(mergedOccurency.interaction)"
-                class="dispute-view-occurrences__card-info" >
+                class="dispute-view-occurrences__card-info"
+              >
                 <el-tooltip :content="buildStatusTooltip(mergedOccurency)">
                   <jus-icon :icon="buildStatusIcon(mergedOccurency)" />
                 </el-tooltip>
@@ -476,7 +514,8 @@
       :close-on-click-modal="false"
       :visible.sync="messageDialogVisible"
       data-testid="email-dialog"
-      width="70%">
+      width="70%"
+    >
       <span slot="title">
         <h2>Mensagem</h2>
       </span>
@@ -531,12 +570,12 @@ export default {
   props: {
     disputeId: {
       type: String,
-      default: '',
+      default: ''
     },
     typingTab: {
       type: String,
-      default: '1',
-    },
+      default: '1'
+    }
   },
   data() {
     return {
@@ -552,17 +591,17 @@ export default {
       disputePartys: [
         {
           value: 'RESPONDENT',
-          label: 'Advogado do réu',
+          label: 'Advogado do réu'
         },
         {
           value: 'CLAIMANT',
-          label: 'Advogado da parte contrária',
+          label: 'Advogado da parte contrária'
         },
         {
           value: 'UNKNOWN',
-          label: 'Desconhecido',
-        },
-      ],
+          label: 'Desconhecido'
+        }
+      ]
     }
   },
   computed: {
@@ -619,13 +658,13 @@ export default {
       } else {
         return 'getDisputeOccurrences'
       }
-    },
+    }
   },
   watch: {
     typingTab() {
       this.clearOccurrences()
       this.infiniteId += 1
-    },
+    }
   },
   mounted() {
     this.clearOccurrences()
@@ -647,17 +686,17 @@ export default {
       const params = {
         disputeId: this.disputeId,
         disputeRoleId: role.id,
-        disputeParty: role.party,
+        disputeParty: role.party
       }
       this.$jusSegment('Defiido função em participante da disputa', {
-        page: this.$route.name,
+        page: this.$route.name
       })
       this.$store.dispatch('setDisputeparty', params).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Função definida com sucesso!',
           type: 'success',
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         })
       })
     },
@@ -793,11 +832,11 @@ export default {
       return occurrence.properties && occurrence.properties.HANDLE_UNKNOW_PARTY && occurrence.properties.UNKNOW_ROLE_IDS
     },
     getUnknowPartys(occurrence) {
-      let canHandleParty = this.canHandleUnknowParty(occurrence)
+      const canHandleParty = this.canHandleUnknowParty(occurrence)
       if (canHandleParty) {
-        let dispute = this.$store.getters.dispute
-        let roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
-        let filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
+        const dispute = this.$store.getters.dispute
+        const roleIds = JSON.parse(occurrence.properties.UNKNOW_ROLE_IDS)
+        const filteredRole = dispute.disputeRoles.filter(r => roleIds.includes(r.id) && r.party === 'UNKNOWN')
         return filteredRole
       }
       return canHandleParty
@@ -944,12 +983,12 @@ export default {
       if (occurrency.interaction.message.status === 'FAILED') {
         return {
           message: occurrency.interaction.message.parameters.FAILED_SEND,
-          icon: 'alert',
+          icon: 'alert'
         }
       }
       return false
-    },
-  },
+    }
+  }
 }
 </script>
 

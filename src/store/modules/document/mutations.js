@@ -11,7 +11,7 @@ const mutations = {
   setSelectedSigners(state, signers) {
     console.log(signers)
     state.selectedSigners = signers.map(signer => new SignerModel({ ...signer, defaultSigner: signer.party !== 'CLAIMANT' }))
-  },
+  }
 }
 
 export default mutations

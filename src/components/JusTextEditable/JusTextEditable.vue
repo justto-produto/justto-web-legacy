@@ -37,24 +37,24 @@ export default {
   props: {
     value: {
       type: String,
-      default: '',
+      default: ''
     },
     type: {
       type: String,
       default: 'default',
-      validator: (val) => ['default', 'title'].includes(val),
-    },
+      validator: (val) => ['default', 'title'].includes(val)
+    }
   },
   data() {
     return {
       inputValue: this.value,
-      isEditing: false,
+      isEditing: false
     }
   },
   watch: {
     value(current) {
       this.inputValue = current
-    },
+    }
   },
   methods: {
     editionHandler(evt) {
@@ -67,15 +67,15 @@ export default {
           this.$jusNotification({
             title: 'Ops',
             type: 'warning',
-            message: 'Este campo não pode ficar vazio',
+            message: 'Este campo não pode ficar vazio'
           })
         } else {
           this.$emit('hasEdition', this.inputValue)
           this.isEditing = false
         }
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

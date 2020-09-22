@@ -38,17 +38,17 @@ export default {
   props: {
     documentNumber: {
       type: String,
-      default: '',
+      default: ''
     },
     name: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   data() {
     return {
       loading: false,
-      alerts: {},
+      alerts: {}
     }
   },
   methods: {
@@ -62,8 +62,8 @@ export default {
           this.loading = false
         })
       }
-    },
-  },
+    }
+  }
 }
 </script>
 
