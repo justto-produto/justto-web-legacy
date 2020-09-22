@@ -154,6 +154,11 @@
           </div>
         </el-col>
       </el-row>
+      <onboarding
+        v-if="isOnboardingDialogOpen"
+        :steps="steps"
+        @closeOnboarding="closeOnboardingDialog"
+      />
     </template>
   </jus-view-main>
 </template>
@@ -166,6 +171,7 @@ export default {
     JusChartBar: () => import('@/components/charts/JusChartBar'),
     JusChartCard: () => import('@/components/charts/JusChartCard'),
     JusChartTable: () => import('@/components/charts/JusChartTable'),
+    Onboarding: () => import('@/components/dialogs/Onboarding'),
   },
   data() {
     return {
@@ -177,6 +183,19 @@ export default {
         onClick: this.filter,
         maintainAspectRatio: false,
       },
+      isOnboardingDialogOpen: false,
+      steps: [
+        {
+          title: 'Olá, Tamires',
+          description: 'Conhecemos muito bem a rotina de lidar com muitos processos ao mesmo tempo. É monótono, cansativo, trabalhoso e muito propenso a erros que você acaba sendo responsabilizado(a)',
+          cta: 'Organizar meu trabalho',
+        },
+        {
+          title: 'A Justto é como sua melhor amiga!',
+          description: 'E para ajudar gerenciar e organizar seu dia-a-dia, a plataforma é a sua principal ferramenta rumo ao sucesso na resolução dos acordos.',
+          cta: 'Conhecer a plataforma',
+        },
+      ],
     }
   },
   computed: {
@@ -226,6 +245,7 @@ export default {
     },
   },
   created() {
+    this.isOnboardingDialogOpen = true
     if (!this.chartsDatasets.length) {
       this.getDashboard()
     }
@@ -348,6 +368,9 @@ export default {
         this.$store.commit('setDisputesTab', '3')
         this.$router.push('/management')
       }
+    },
+    closeOnboardingDialog() {
+      this.isOnboardingDialogOpen = false
     },
   },
 }
