@@ -5,7 +5,6 @@
     class="jus-tour">
     <template slot-scope="tour">
       <transition name="fade">
-        <!-- v-if="tour.currentStep === index" -->
         <v-step
           v-for="(step, index) of tour.steps"
           :key="index"
