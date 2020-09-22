@@ -18,6 +18,7 @@
       class="management-table el-table--disputes"
       data-testid="dispute-index"
       @cell-mouse-enter="cellMouseEnter"
+      @cell-mouse-leave="cellMouseLeave()"
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange"
     >
@@ -51,7 +52,14 @@
           v-if="scope.row.campaign"
           slot-scope="scope"
         >
-          {{ scope.row.campaign.name | capitalize }}
+          <el-tooltip
+            placement="top-start"
+            :value="actieTooltipDisputeId === scope.row.id"
+            :content="lastAccessFormated">
+            <div>
+              {{ scope.row.campaign.name | capitalize }}
+            </div>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column
@@ -307,11 +315,22 @@ export default {
       selectedDisputeId: 0,
       selectedDisputeRoles: [],
       disputeKey: 0,
-      responseBoxLoading: false
+      responseBoxLoading: false,
+      actieTooltipDisputeId: 0
     }
   },
   computed: {
-    ...mapGetters(['disputeTimeline', 'loading']),
+    ...mapGetters([
+      'disputeTimeline',
+      'loading',
+      'lastAccess'
+    ]),
+
+    lastAccessFormated() {
+      const time = this.$moment(this.lastAccess)
+      return this.lastAccess ? `Você acessou esta disputa ${time.fromNow()} - às ${time.format('hh:mm')}` : 'Ainda não sei quando você acessou esta disputa'
+    },
+
     selectedIdsComp: {
       get() {
         return this.selectedIds
@@ -359,7 +378,11 @@ export default {
     this.$store.commit('resetDisputeQueryPage')
   },
   methods: {
-    ...mapActions(['getDisputeTimeline']),
+    ...mapActions([
+      'getDisputeTimeline',
+      'getDisputeLastAccess',
+      'cleanDisputeLastAccess'
+    ]),
 
     hoverDisputeCode(code) {
       if (!this.disputeTimeline[code]) {
@@ -379,6 +402,12 @@ export default {
     },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
+      this.actieTooltipDisputeId = row.id
+      this.getDisputeLastAccess(row.id)
+    },
+    cellMouseLeave() {
+      this.actieTooltipDisputeId = 0
+      this.cleanDisputeLastAccess()
     },
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
     tableRowClassName({ row, rowIndex }) {
@@ -553,6 +582,12 @@ export default {
     color: #adadad;
     font-size: 1rem;
   }
+}
+.management-table__tooltip-last-access {
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  background-color: #e3def2;
 }
 .dialog-timeline {
   .dialog-timeline__title {
