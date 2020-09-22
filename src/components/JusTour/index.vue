@@ -5,6 +5,7 @@
     class="jus-tour">
     <template slot-scope="tour">
       <transition name="fade">
+        <!-- v-if="tour.currentStep === index" -->
         <v-step
           v-for="(step, index) of tour.steps"
           :key="index"
@@ -16,6 +17,7 @@
           :is-first="tour.isFirst"
           :is-last="tour.isLast"
           :labels="tour.labels"
+          :highlight="tour.highlight"
           class="jus-tour__step"
         >
           <div slot="header">
@@ -25,7 +27,7 @@
             slot="content"
             class="jus-tour__step-content">
             <img class="jus-tour__step-justine"/>
-            {{ step }}
+            {{ step.description }}
           </div>
           <div
             slot="actions"
@@ -59,6 +61,10 @@ export default {
     steps: {
       type: Array,
       required: true,
+    },
+    highlight: {
+      type: Boolean,
+      default: false,
     },
   },
 }

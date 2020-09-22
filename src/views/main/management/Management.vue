@@ -10,10 +10,6 @@
         :selected-ids.sync="selectedIds"
         @disputes:clear="clearSelection"
       />
-      <JusTour
-        :name="tour.name"
-        :steps="tour.steps"
-      />
       <div class="view-management__filters">
         <el-tabs
           ref="disputeTabs"
@@ -23,9 +19,10 @@
         >
           <el-tab-pane
             v-if="isJusttoAdmin || workspaceProperties.PRE_NEGOTIATION"
-            name="-1"
-            data-jus-tour="TESTE">
-            <span slot="label">
+            name="-1">
+            <span
+              slot="label"
+              data-jus-tour="TESTE">
               Pré-Negociação
               <!-- <el-badge
                 :hidden="!disputes.length"
@@ -38,7 +35,9 @@
             </span>
           </el-tab-pane>
           <el-tab-pane name="0">
-            <span slot="label">
+            <span
+              slot="label"
+              data-jus-tour="TESTE2">
               Sem resposta
               <el-badge
                 :hidden="!engagementLength"
@@ -86,6 +85,10 @@
           >
             <span slot="label">Todos</span>
           </el-tab-pane>
+          <JusTour
+            :name="tour.name"
+            :steps="tour.steps"
+          />
         </el-tabs>
         <div class="view-management__buttons">
           <!-- <el-input
@@ -527,6 +530,8 @@ export default {
 
     this.getDisputes()
     this.getPrescriptions()
+
+    this.$tours[this.tour.name].start()
   },
   mounted() {
     this.getExportColumns().then(response => {
