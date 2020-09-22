@@ -454,6 +454,12 @@ export default {
       max-width: 16px;
     }
   }
+  &__interaction-pulse {
+    position: absolute;
+    font-size: 14px;
+    bottom: -5px;
+    right: -3px;
+  }
   &__expiration-pulse {
     vertical-align: sub;
   }

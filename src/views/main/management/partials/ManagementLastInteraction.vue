@@ -147,7 +147,9 @@
       </span>
     </el-popover>
 
-    <div>{{ getLastInteraction(lastInteraction(data)) }}</div>
+    <div v-if="data.lastReceivedMessage && data.lastReceivedMessage.createAt && data.lastReceivedMessage.createAt.dateTime">
+      {{ getLastInteraction(data.lastReceivedMessage.createAt.dateTime) }}
+    </div>
 
     <el-dialog
       :visible.sync="responseDialogVisible"
@@ -285,30 +287,6 @@ export default {
             this.messageSummary = resume
           })
         }
-      }
-    },
-
-    lastInteraction(data) {
-      let receivedMessage = ''
-      let negotiatorAccess = ''
-      let outboundInteraction = ''
-
-      if (data.lastReceivedMessage && data.lastReceivedMessage.createAt) {
-        receivedMessage = data.lastReceivedMessage.createAt.dateTime
-      }
-      if (data.lastNegotiatorAccess && data.lastNegotiatorAccess.createAt) {
-        negotiatorAccess = data.lastNegotiatorAccess.createAt.dateTime
-      }
-      if (data.lastOutboundInteraction && data.lastOutboundInteraction.createAt) {
-        outboundInteraction = data.lastOutboundInteraction.createAt.dateTime
-      }
-
-      if (this.$moment(receivedMessage).isAfter(negotiatorAccess) && this.$moment(receivedMessage).isAfter(outboundInteraction)) {
-        return receivedMessage
-      } else if (this.$moment(negotiatorAccess).isAfter(outboundInteraction)) {
-        return negotiatorAccess
-      } else {
-        return outboundInteraction
       }
     },
 
