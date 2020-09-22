@@ -5,7 +5,7 @@ import store from './store'
 
 import '@/utils/registerServiceWorker'
 
-// plugin
+// PLUGINS
 import i18n from '@/plugins/vueI18n'
 import '@/plugins/axios'
 import '@/plugins/chart'
@@ -21,14 +21,14 @@ import '@/plugins/vueMoment'
 import '@/plugins/vueMoney'
 import '@/plugins/vueTour'
 
-// filters
+// FILTERS
 import '@/filters/capitalize'
 import '@/filters/cpfCnpj'
 import '@/filters/currency'
 import '@/filters/firstName'
 import '@/filters/phoneNumber'
 
-// css
+// STYLES
 import '@/styles/core.scss'
 import '@/styles/transitions.scss'
 
@@ -52,13 +52,13 @@ import '@/styles/overrides/message-box.scss'
 import '@/styles/overrides/message.scss'
 import '@/styles/overrides/notification.scss'
 import '@/styles/overrides/pagination.scss'
-import '@/styles/overrides/radio.scss'
 import '@/styles/overrides/popover.scss'
 import '@/styles/overrides/radio-group.scss'
-import '@/styles/overrides/table.scss'
+import '@/styles/overrides/radio.scss'
 import '@/styles/overrides/select.scss'
 import '@/styles/overrides/slider.scss'
 import '@/styles/overrides/steps.scss'
+import '@/styles/overrides/table.scss'
 import '@/styles/overrides/tabs.scss'
 import '@/styles/overrides/tag.scss'
 import '@/styles/overrides/tooltip.scss'
@@ -66,10 +66,10 @@ import '@/styles/overrides/upload.scss'
 import '@/styles/perfect-scroll.scss'
 import '@/styles/quill-editor.scss'
 
-// utils
+// UTILS
 import { validateWorkspace } from '@/utils/validateWorkspace'
 
-// Global components
+// GLOBAL COMPONENTS
 import JusIcon from '@/components/images/JusIcon'
 import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'

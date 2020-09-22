@@ -122,6 +122,7 @@
 
 <script>
 import { IS_SMALL_WINDOW } from '@/constants/variables'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'JusHeaderMain',
@@ -137,6 +138,8 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['ghostMode']),
+
     name() {
       return this.$store.getters.loggedPersonName
     },
@@ -154,10 +157,10 @@ export default {
     },
     ghostMode: {
       get() {
-        return this.$store.getters.ghostMode
+        return this.ghostMode
       },
       set(value) {
-        this.$store.commit('setGhostMode', value)
+        this.setGhostMode(value)
       },
     },
     avatarSize() {
@@ -168,6 +171,8 @@ export default {
     this.getMyWorkspaces()
   },
   methods: {
+    ...mapActions(['setGhostMode']),
+
     logout() {
       setTimeout(() => {
         this.$store.dispatch('logout')
