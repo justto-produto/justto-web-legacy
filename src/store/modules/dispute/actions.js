@@ -48,6 +48,15 @@ const disputeActions = {
         })
     })
   },
+  getDisputeLastAccess({ _ }, disputeId) {
+    return axiosDispatcher({
+      url: `api/disputes/${disputeId}/my-last-access`,
+      mutation: 'setLastAccess'
+    })
+  },
+  cleanDisputeLastAccess({ commit }) {
+    commit('cleanLastAccess')
+  },
   linkDisputeBankAccounts({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line

@@ -39,6 +39,7 @@ const dispute = {
       term: '',
       total: 0
     },
+    lastAccess: '',
     hasFilters: false,
     statuses: {},
     respondents: [],

@@ -189,7 +189,9 @@ const disputeMutations = {
   pushExportHistory: (state, history) => (state.exportHistory.content.push(...history.content)),
   addExportHistoryPage: (state) => (state.exportHistoryPage += 1),
   resetExportHistoryPage: (state) => (state.exportHistoryPage = 0),
-  setPrescriptionsList: (state, prescriptions) => (state.prescriptionsList = prescriptions)
+  setPrescriptionsList: (state, prescriptions) => (state.prescriptionsList = prescriptions),
+  setLastAccess: (state, lastAccess) => (state.lastAccess = lastAccess ? lastAccess.lastAccessed : ''),
+  cleanLastAccess: (state) => (state.lastAccess = '')
 }
 
 export default disputeMutations
