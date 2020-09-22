@@ -492,20 +492,35 @@
                     :name="role.name"
                   />
                 </span>
-                <el-select
-                  v-model="role.party"
-                  placeholder="Defina o polo desta parte"
-                  v-if="role.party === 'UNKNOWN' || isEditingRule"
-                  @change="setDisputeParty(role)"
-                  size="mini"
-                >
-                  <el-option
-                    v-for="party in disputePartys"
-                    :key="party.value"
-                    :label="party.label"
-                    :value="party.value"
-                  />
-                </el-select>
+                <div class="dispute-overview-view__select-role">
+                  <el-select
+                    v-model="role.party"
+                    size="mini"
+                    placeholder="Defina o polo desta parte"
+                    v-if="role.party === 'UNKNOWN' || isEditingRule"
+                    @change="setDisputeParty(role)"
+                  >
+                    <el-option
+                      v-for="party in disputePartys"
+                      :key="party.value"
+                      :label="party.label"
+                      :value="party.value"
+                    />
+                  </el-select>
+                  <el-tooltip
+                    effect="dark"
+                    content="Cancelar edição da polaridade">
+                    <el-button
+                      v-if="role.party === 'UNKNOWN' || isEditingRule"
+                      circle
+                      plain
+                      size="mini"
+                      type="danger"
+                      icon="el-icon-error"
+                      @click="handleEditRule()"
+                    />
+                  </el-tooltip>
+                </div>
               </div>
               <div
                 v-show="role.documentNumber"
@@ -2621,7 +2636,7 @@ export default {
       width: 100%;
       display: flex;
       align-items: flex-start;
-      > span:not(.jus-vexatious-alert):not(.dispute-overview-view__tooltip-edit) {
+      > span:not(.jus-vexatious-alert) {
         width: 100%;
         margin: 5px;
         word-break: break-all;
@@ -2629,6 +2644,13 @@ export default {
       }
       .jus-avatar-user {
         margin-right: 4px;
+      }
+    }
+    > .dispute-overview-view__select-role {
+      display: flex;
+      flex-direction: row;
+      > .el-button {
+        margin-left: 8px;
       }
     }
     > span .dispute-overview-view__tooltip-edit {
