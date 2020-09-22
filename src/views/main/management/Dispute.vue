@@ -468,7 +468,7 @@ export default {
   methods: {
     ...mapActions([
       'getDisputeStatuses',
-      'disputeSetVisualized',
+      'disputeSetVisualized'
     ]),
 
     updateWindowHeight() {
