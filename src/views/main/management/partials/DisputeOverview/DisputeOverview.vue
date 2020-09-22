@@ -467,17 +467,25 @@
               </el-alert>
               <div class="dispute-overview-view__info-line">
                 <span class="title">Nome completo:</span>
-                <span>
+                <div>
                   {{ role.name }}
-                </span>
+                </div>
               </div>
               <div class="dispute-overview-view__info-line">
                 <span class="title">Função:</span>
                 <span
-                  v-for="(title, title_index) in roleTitleSort(role.roles)"
-                  :key="`${title_index}-${title.index}`"
-                >
+                  v-for="(title, titleIndex) in roleTitleSort(role.roles)"
+                  :key="`${titleIndex}-${title.index}`"
+                  v-show="!isEditingRule">
                   {{ buildRoleTitle(role.party, title) }}
+                  <div @click="handleEditRule()">
+                    <el-tooltip
+                      class="dispute-overview-view__tooltip-edit"
+                      effect="dark"
+                      content="Editar polaridade">
+                      <jus-icon icon="edit" />
+                    </el-tooltip>
+                  </div>
                   <jus-vexatious-alert
                     v-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR')"
                     :document-number="role.documentNumber"
@@ -487,8 +495,9 @@
                 <el-select
                   v-model="role.party"
                   placeholder="Defina o polo desta parte"
-                  v-if="role.party === 'UNKNOWN'"
+                  v-if="role.party === 'UNKNOWN' || isEditingRule"
                   @change="setDisputeParty(role)"
+                  size="mini"
                 >
                   <el-option
                     v-for="party in disputePartys"
@@ -1579,6 +1588,7 @@ export default {
   },
   data() {
     return {
+      isEditingRule: false,
       disputeTimelineModal: false,
       overviewTab: 'general',
       namesakeList: [],
@@ -1856,9 +1866,16 @@ export default {
   methods: {
     ...mapActions([
       'removeDispute',
+      'setDisputeparty',
       'getDisputeStatuses',
       'getDisputeTimeline',
+      'getDisputeProprieties'
     ]),
+
+    handleEditRule() {
+      this.isEditingRule = !this.isEditingRule
+      this.$forceUpdate()
+    },
 
     async populateTimeline() {
       let getting = true
@@ -2253,6 +2270,7 @@ export default {
           return dr
         })
       }
+      this.isEditingRule = false
     },
     openRoleDialog(role) {
       this.bankAccountIdstoUnlink = []
@@ -2528,15 +2546,14 @@ export default {
       })
     },
     setDisputeParty(role) {
-      const params = {
-        disputeId: this.dispute.id,
-        disputeRoleId: role.id,
-        disputeParty: role.party,
-      }
       this.$jusSegment('Defiido função em participante da disputa', {
         page: this.$route.name,
       })
-      this.$store.dispatch('setDisputeparty', params)
+      this.setDisputeparty({
+        disputeId: this.dispute.id,
+        disputeRoleId: role.id,
+        disputeParty: role.party,
+      })
         .then(() => {
           this.$jusNotification({
             title: 'Yay!',
@@ -2544,6 +2561,9 @@ export default {
             type: 'success',
             dangerouslyUseHTMLString: true,
           })
+        }).finally(() => {
+          this.isEditingRule = false
+          this.getDisputeProprieties(this.dispute.id)
         })
     },
   },
@@ -2601,7 +2621,7 @@ export default {
       width: 100%;
       display: flex;
       align-items: flex-start;
-      > span:not(.jus-vexatious-alert) {
+      > span:not(.jus-vexatious-alert):not(.dispute-overview-view__tooltip-edit) {
         width: 100%;
         margin: 5px;
         word-break: break-all;
@@ -2610,6 +2630,11 @@ export default {
       .jus-avatar-user {
         margin-right: 4px;
       }
+    }
+    > span .dispute-overview-view__tooltip-edit {
+      cursor: pointer;
+      height: 1rem;
+      margin: 1px 8px !important;
     }
     .code {
       margin-left: 12px;
