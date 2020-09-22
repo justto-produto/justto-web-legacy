@@ -10,6 +10,10 @@
         :selected-ids.sync="selectedIds"
         @disputes:clear="clearSelection"
       />
+      <JusTour
+        :name="tour.name"
+        :steps="tour.steps"
+      />
       <div class="view-management__filters">
         <el-tabs
           ref="disputeTabs"
@@ -19,7 +23,8 @@
         >
           <el-tab-pane
             v-if="isJusttoAdmin || workspaceProperties.PRE_NEGOTIATION"
-            name="-1">
+            name="-1"
+            data-jus-tour="TESTE">
             <span slot="label">
               Pré-Negociação
               <!-- <el-badge
@@ -403,6 +408,7 @@
 <script>
 import { filterByTerm } from '@/utils/jusUtils'
 import { mapActions, mapGetters } from 'vuex'
+import TESTE from './tour'
 
 const defaultCheckedKeys = ['DISPUTE_CODE', 'EXTERNAL_ID', 'FIRST_CLAIMANT', 'LAWYER_PARTY_NAMES', 'RESPONDENT_NAMES', 'UPPER_RANGE', 'UPPER_RANGE_SAVING_VALUE', 'STATUS', 'CLASSIFICATION', 'DESCRIPTION']
 
@@ -419,6 +425,7 @@ export default {
   },
   data() {
     return {
+      tour: TESTE,
       loadingExport: false,
       filtersVisible: false,
       termDebounce: () => {},

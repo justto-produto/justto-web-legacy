@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from './router'
 import store from './store'
+import { validateWorkspace } from '@/utils/validateWorkspace'
 
 import '@/utils/registerServiceWorker'
 
@@ -63,18 +64,18 @@ import '@/styles/overrides/tabs.scss'
 import '@/styles/overrides/tag.scss'
 import '@/styles/overrides/tooltip.scss'
 import '@/styles/overrides/upload.scss'
+
 import '@/styles/perfect-scroll.scss'
 import '@/styles/quill-editor.scss'
-
-// UTILS
-import { validateWorkspace } from '@/utils/validateWorkspace'
 
 // GLOBAL COMPONENTS
 import JusIcon from '@/components/images/JusIcon'
 import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
+import JusTour from '@/components/JusTour'
 
+Vue.component('JusTour', JusTour)
 Vue.component('JusIcon', JusIcon)
 Vue.component('JusAvatarUser', JusAvatarUser)
 Vue.component('JusViewMain', JusViewMain)
