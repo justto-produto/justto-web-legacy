@@ -164,6 +164,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Dashboard',
   components: {
@@ -199,6 +201,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['isCompletedOnboarding']),
     selectedMemberId: {
       get() {
         return this.$store.getters.dashboardSelectedMemberId
@@ -245,12 +248,19 @@ export default {
     },
   },
   created() {
-    this.isOnboardingDialogOpen = true
     if (!this.chartsDatasets.length) {
       this.getDashboard()
     }
   },
+  mounted() {
+    this.getOnboardingStatus()
+    console.log('isCompletedOnboarding', this.isCompletedOnboarding)
+    setTimeout(() => {
+      this.isOnboardingDialogOpen = !this.isCompletedOnboarding
+    }, 1000)
+  },
   methods: {
+    ...mapActions(['getOnboardingStatus', 'setOnboardingStatus']),
     getDashboard() {
       this.loading = true
       this.$store.dispatch('getDashboard').catch(error => {
@@ -371,6 +381,7 @@ export default {
     },
     closeOnboardingDialog() {
       this.isOnboardingDialogOpen = false
+      this.setOnboardingStatus('true')
     },
   },
 }
