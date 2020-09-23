@@ -14,6 +14,9 @@ const getters = {
       return mainPhone[0] || state.loggedPerson.phones[0] || null
     }
   },
+  hasPersonName: state => {
+    return state.loggedPerson.name !== ''
+  },
 }
 
 export default getters

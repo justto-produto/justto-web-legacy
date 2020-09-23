@@ -158,11 +158,18 @@
         :is-dialog-visible="isInsertNameOpen"
         @confirm="isInsertNameOpen = false"
       />
+      <onboarding
+        v-if="isOnboardingDialogOpen"
+        :steps="steps"
+        @closeOnboarding="closeOnboardingDialog"
+      />
     </template>
   </jus-view-main>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'Dashboard',
   components: {
@@ -171,6 +178,7 @@ export default {
     JusChartCard: () => import('@/components/charts/JusChartCard'),
     JusChartTable: () => import('@/components/charts/JusChartTable'),
     InsertName: () => import('./dialogs/InsertName'),
+    Onboarding: () => import('@/components/dialogs/Onboarding'),
   },
   data() {
     return {
@@ -183,9 +191,23 @@ export default {
         maintainAspectRatio: false,
       },
       isInsertNameOpen: false,
+      isOnboardingDialogOpen: false,
+      steps: [
+        {
+          title: 'Olá, Tamires',
+          description: 'Conhecemos muito bem a rotina de lidar com muitos processos ao mesmo tempo. É monótono, cansativo, trabalhoso e muito propenso a erros que você acaba sendo responsabilizado(a)',
+          cta: 'Organizar meu trabalho',
+        },
+        {
+          title: 'A Justto é como sua melhor amiga!',
+          description: 'E para ajudar gerenciar e organizar seu dia-a-dia, a plataforma é a sua principal ferramenta rumo ao sucesso na resolução dos acordos.',
+          cta: 'Conhecer a plataforma',
+        },
+      ],
     }
   },
   computed: {
+    ...mapGetters(['isCompletedOnboarding', 'hasPersonName']),
     selectedMemberId: {
       get() {
         return this.$store.getters.dashboardSelectedMemberId
@@ -236,7 +258,22 @@ export default {
       this.getDashboard()
     }
   },
+  mounted() {
+    this.getOnboardingStatus()
+
+    if (!this.hasPersonName) {
+      this.isInsertNameOpen = true
+    } else {
+      setTimeout(() => {
+        this.isOnboardingDialogOpen = !this.isCompletedOnboarding
+      }, 1000)
+    }
+  },
   methods: {
+    ...mapActions([
+      'getOnboardingStatus',
+      'setOnboardingStatus',
+    ]),
     getDashboard() {
       this.loading = true
       this.$store.dispatch('getDashboard').catch(error => {
@@ -354,6 +391,10 @@ export default {
         this.$store.commit('setDisputesTab', '3')
         this.$router.push('/management')
       }
+    },
+    closeOnboardingDialog() {
+      this.isOnboardingDialogOpen = false
+      this.setOnboardingStatus('true')
     },
   },
 }

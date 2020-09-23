@@ -24,6 +24,8 @@
   </el-dialog>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: 'InsertName',
   props: {
@@ -37,8 +39,22 @@ export default {
       name: '',
     }
   },
+  computed: {
+    ...mapGetters(['loggedPersonId']),
+  },
   methods: {
+    ...mapActions([
+      'changePersonName',
+    ]),
     confirm() {
+      this.changePersonName({
+        person: {
+          id: this.loggedPersonId,
+          name: this.name,
+        },
+        isEditingLoggedPerson: true,
+      })
+
       this.$emit('confirm')
     },
   },
