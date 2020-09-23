@@ -41,9 +41,10 @@
           </div>
         </el-col>
         <el-col :span="8">
-          <div class="grid-content bg-purple">
-            Gif da Justtine
-          </div>
+          <img
+            class="onboarding__justtine"
+            src="@/assets/gifs/onboarding/dashboardJusttine.gif"
+          >
         </el-col>
       </el-row>
     </div>
@@ -117,13 +118,14 @@ export default {
     background: #ffffff;
     border-radius: 20px;
     box-shadow: 0px 3px 10px #00000045;
-    padding: 15px 20px;
 
     @media (max-height: 680px) {
       height: 85%;
     }
 
     .content__carousel {
+      padding: 15px 20px;
+
       .carousel__item {
         text-align: center;
         padding: 0 15px;
@@ -173,6 +175,11 @@ export default {
         }
       }
     }
+  }
+
+  &__justtine {
+    width: 100%;
+    padding: 0 20px;
   }
 }
 </style>
