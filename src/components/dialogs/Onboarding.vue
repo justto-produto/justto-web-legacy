@@ -2,7 +2,7 @@
   <div class="onboarding">
     <div class="onboarding__content">
       <el-row :gutter="24">
-        <el-col :span="16">
+        <el-col :span="16" style="height: 100%;">
           <div class="content__carousel">
             <el-carousel
               ref="carousel"
@@ -40,7 +40,7 @@
             </el-carousel>
           </div>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" style="height: 100%;">
           <img
             class="onboarding__justtine"
             src="@/assets/gifs/onboarding/dashboardJusttine.gif"
