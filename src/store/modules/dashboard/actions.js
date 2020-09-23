@@ -1,4 +1,5 @@
 import axiosDispatcher from '@/store/axiosDispatcher.js'
+import { DASHBOARD_ONBOARDING_STATUS } from '@/constants/variables'
 
 const actions = {
   getDashboard({ state, commit }, chartName) {
@@ -15,6 +16,23 @@ const actions = {
     }
     url += 'reload=true'
     return axiosDispatcher({ mutation: 'setDashboardDatasets', url })
+  },
+  getOnboardingStatus({ _ }) {
+    axiosDispatcher({
+      url: `api/accounts/my/property/${DASHBOARD_ONBOARDING_STATUS}`,
+      mutation: 'setCompletedOnboarding',
+    })
+  },
+  setOnboardingStatus({ commit }, status) {
+    axiosDispatcher({
+      url: 'api/accounts/my/property',
+      method: 'PUT',
+      data: {
+        [DASHBOARD_ONBOARDING_STATUS]: status,
+      },
+    })
+
+    commit('setCompletedOnboarding', status)
   },
 }
 
