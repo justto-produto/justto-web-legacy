@@ -154,6 +154,10 @@
           </div>
         </el-col>
       </el-row>
+      <insert-name
+        :is-dialog-visible="isInsertNameOpen"
+        @confirm="isInsertNameOpen = false"
+      />
     </template>
   </jus-view-main>
 </template>
@@ -166,6 +170,7 @@ export default {
     JusChartBar: () => import('@/components/charts/JusChartBar'),
     JusChartCard: () => import('@/components/charts/JusChartCard'),
     JusChartTable: () => import('@/components/charts/JusChartTable'),
+    InsertName: () => import('./dialogs/InsertName'),
   },
   data() {
     return {
@@ -177,6 +182,7 @@ export default {
         onClick: this.filter,
         maintainAspectRatio: false,
       },
+      isInsertNameOpen: false,
     }
   },
   computed: {
