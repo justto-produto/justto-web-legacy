@@ -476,28 +476,29 @@
                 <span
                   v-for="(title, titleIndex) in roleTitleSort(role.roles)"
                   :key="`${titleIndex}-${title.index}`"
-                  v-show="!isEditingRule">
+                  v-show="!isEditingRule"
+                  class="dispute-overview-view__info-line-description">
                   {{ buildRoleTitle(role.party, title) }}
-                  <div @click="handleEditRule()">
-                    <el-tooltip
-                      class="dispute-overview-view__tooltip-edit"
-                      effect="dark"
-                      content="Editar polaridade">
-                      <jus-icon icon="edit" />
+                  <span
+                    class="dispute-overview-view__edit-icon"
+                    @click="handleEditRule()">
+                    <el-tooltip content="Editar polaridade">
+                      <jus-icon icon="edit"/>
                     </el-tooltip>
-                  </div>
+                  </span>
                   <jus-vexatious-alert
                     v-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR')"
                     :document-number="role.documentNumber"
                     :name="role.name"
                   />
                 </span>
-                <div class="dispute-overview-view__select-role">
+                <div
+                  v-if="role.party === 'UNKNOWN' || isEditingRule"
+                  class="dispute-overview-view__select-role">
                   <el-select
                     v-model="role.party"
                     size="mini"
                     placeholder="Defina o polo desta parte"
-                    v-if="role.party === 'UNKNOWN' || isEditingRule"
                     @change="setDisputeParty(role)"
                   >
                     <el-option
@@ -507,18 +508,15 @@
                       :value="party.value"
                     />
                   </el-select>
-                  <el-tooltip
-                    effect="dark"
-                    content="Cancelar edição da polaridade">
+                  <el-tooltip content="Cancelar edição da polaridade">
                     <el-button
-                      v-if="role.party === 'UNKNOWN' || isEditingRule"
                       circle
                       plain
                       size="mini"
                       type="danger"
-                      icon="el-icon-error"
-                      @click="handleEditRule()"
-                    />
+                      @click="handleEditRule()">
+                      X
+                    </el-button>
                   </el-tooltip>
                 </div>
               </div>
@@ -2635,7 +2633,7 @@ export default {
       margin-left: 12px;
       width: 100%;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       > span:not(.jus-vexatious-alert) {
         width: 100%;
         margin: 5px;
@@ -2653,10 +2651,18 @@ export default {
         margin-left: 8px;
       }
     }
-    > span .dispute-overview-view__tooltip-edit {
+    .dispute-overview-view__info-line-description:hover  .dispute-overview-view__edit-icon{
+      visibility: visible;
+    }
+    > span .dispute-overview-view__edit-icon {
+      width: 16px !important;
+      margin: 0 !important;
+      margin-left: 8px !important;
+      display: flex;
+      align-items: center;
+      visibility: hidden;
       cursor: pointer;
-      height: 1rem;
-      margin: 1px 8px !important;
+      img { width: 16px; }
     }
     .code {
       margin-left: 12px;
