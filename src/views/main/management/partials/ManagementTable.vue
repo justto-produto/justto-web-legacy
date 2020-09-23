@@ -55,7 +55,7 @@
           <el-tooltip
             placement="top-start"
             :value="actieTooltipDisputeId === scope.row.id"
-            :content="lastAccessFormated">
+            :content="lastAccessFormated(scope.row.id)">
             <div>
               {{ scope.row.campaign.name | capitalize }}
             </div>
@@ -326,11 +326,6 @@ export default {
       'lastAccess'
     ]),
 
-    lastAccessFormated() {
-      const time = this.$moment(this.lastAccess)
-      return this.lastAccess ? `Você acessou esta disputa ${time.fromNow()} - às ${time.format('hh:mm')}` : 'Ainda não sei quando você acessou esta disputa'
-    },
-
     selectedIdsComp: {
       get() {
         return this.selectedIds
@@ -400,6 +395,14 @@ export default {
       })
       this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: dispute.id })
     },
+    lastAccessFormated(disputeId) {
+      if (this.lastAccess[disputeId]) {
+        const time = this.$moment(this.lastAccess[disputeId].date)
+        return `Você acessou esta disputa ${time.fromNow()} - às ${time.format('HH:mm')}`
+      } else {
+        return 'Ainda não sei quando você acessou esta disputa'
+      }
+    },
     cellMouseEnter(row, column, cell, event) {
       this.disputeActionsRow = row.id
       this.actieTooltipDisputeId = row.id
@@ -407,7 +410,6 @@ export default {
     },
     cellMouseLeave() {
       this.actieTooltipDisputeId = 0
-      this.cleanDisputeLastAccess()
     },
     getDocumentStep: (hasDocument, signStatus) => getDocumentStep(hasDocument, signStatus),
     tableRowClassName({ row, rowIndex }) {

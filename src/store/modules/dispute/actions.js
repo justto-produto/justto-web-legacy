@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axiosDispatcher from '@/store/axiosDispatcher.js'
 import { queryBuilder } from '@/utils/jusUtils'
+import moment from 'moment'
 
 // const FileSaver = require('file-saver')
 let removeDebounce = 0
@@ -48,13 +49,28 @@ const disputeActions = {
         })
     })
   },
-  getDisputeLastAccess({ _ }, disputeId) {
+  getDisputeLastAccess({ commit, state }, disputeId) {
+    if (state.lastAccess[disputeId]) {
+      const time1 = moment(state.lastAccess[disputeId].log)
+      const time2 = moment(new Date())
+      const dif = time2.diff(time1)
+      console.log('DIF', dif)
+      if (dif <= 3000) {
+        return
+      }
+    }
     return axiosDispatcher({
-      url: `api/disputes/${disputeId}/my-last-access`,
-      mutation: 'setLastAccess'
+      url: `api/disputes/${disputeId}/my-last-access`
+    }).then(res => {
+      if (res) {
+        commit('setLastAccess', {
+          disputeId,
+          lastAccessTime: res.lastAccessed.dateTime
+        })
+      }
     })
   },
-  cleanDisputeLastAccess({ commit }) {
+  cleanDisputeLastAccess({ commit, state }) {
     commit('cleanLastAccess')
   },
   linkDisputeBankAccounts({ commit }, params) {

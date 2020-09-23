@@ -190,8 +190,13 @@ const disputeMutations = {
   addExportHistoryPage: (state) => (state.exportHistoryPage += 1),
   resetExportHistoryPage: (state) => (state.exportHistoryPage = 0),
   setPrescriptionsList: (state, prescriptions) => (state.prescriptionsList = prescriptions),
-  setLastAccess: (state, lastAccess) => (state.lastAccess = lastAccess ? lastAccess.lastAccessed : ''),
-  cleanLastAccess: (state) => (state.lastAccess = '')
+  setLastAccess: (state, { disputeId, lastAccessTime }) => {
+    state.lastAccess[disputeId] = {
+      date: lastAccessTime,
+      log: new Date()
+    }
+    console.log(state.lastAccess)
+  }
 }
 
 export default disputeMutations
