@@ -23,15 +23,16 @@ const actions = {
       mutation: 'setCompletedOnboarding',
     })
   },
-  setOnboardingStatus({ _ }, status) {
-    return axiosDispatcher({
+  setOnboardingStatus({ commit }, status) {
+    axiosDispatcher({
       url: 'api/accounts/my/property',
       method: 'PUT',
       data: {
         [DASHBOARD_ONBOARDING_STATUS]: status,
       },
-      mutation: 'setCompletedOnboarding',
     })
+
+    commit('setCompletedOnboarding', status)
   },
 }
 

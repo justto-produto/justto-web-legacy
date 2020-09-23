@@ -254,7 +254,7 @@ export default {
   },
   mounted() {
     this.getOnboardingStatus()
-    console.log('isCompletedOnboarding', this.isCompletedOnboarding)
+
     setTimeout(() => {
       this.isOnboardingDialogOpen = !this.isCompletedOnboarding
     }, 1000)
