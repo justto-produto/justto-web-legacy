@@ -24,14 +24,6 @@
               slot="label"
               data-jus-tour="PRE_NEGOTIATION_TAB">
               Pré-Negociação
-              <!-- <el-badge
-                :hidden="!disputes.length"
-                :value="disputes.length"
-                :max="99"
-                data-testid="badge-tab-1"
-                type="primary"
-                class="el-badge--absolute"
-              /> -->
             </span>
           </el-tab-pane>
           <el-tab-pane name="0">
@@ -86,15 +78,15 @@
               Todos
             </span>
           </el-tab-pane>
-          <!-- <JusTour
-            :name="funelTour.name"
-            :steps="funelTour.steps"
-          /> -->
-          <v-tour
-            :name="funelTour.name"
-            :steps="funelTour.steps"
-          />
         </el-tabs>
+        <JusTour
+          :name="funelTour.name"
+          :steps="funelTour.steps"
+        />
+        <!-- <v-tour
+          :name="funelTour.name"
+          :steps="funelTour.steps" -->
+        />
         <div class="view-management__buttons">
           <!-- <el-input
             v-model="term"
