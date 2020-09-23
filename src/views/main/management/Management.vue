@@ -22,7 +22,7 @@
             name="-1">
             <span
               slot="label"
-              data-jus-tour="TESTE">
+              data-jus-tour="PRE_NEGOTIATION_TAB">
               Pré-Negociação
               <!-- <el-badge
                 :hidden="!disputes.length"
@@ -37,7 +37,7 @@
           <el-tab-pane name="0">
             <span
               slot="label"
-              data-jus-tour="TESTE2">
+              data-jus-tour="WITHOUT_RESPONSE_TAB">
               Sem resposta
               <el-badge
                 :hidden="!engagementLength"
@@ -50,7 +50,9 @@
             </span>
           </el-tab-pane>
           <el-tab-pane name="1">
-            <span slot="label">
+            <span
+              slot="label"
+              data-jus-tour="HAS_INTERACTION_TAB">
               Em negociação
               <el-badge
                 :hidden="!interactionLength"
@@ -62,12 +64,10 @@
               />
             </span>
           </el-tab-pane>
-          <el-tab-pane
-            name="2"
-            label="Com Interação"
-            data-testid="tab-pproposal-accepted"
-          >
-            <span slot="label">
+          <el-tab-pane name="2">
+            <span
+              slot="label"
+              data-jus-tour="PROPOSAL_ACCEPTED_TAB">
               Proposta aceita
               <el-badge
                 :hidden="!newDealsLength"
@@ -79,15 +79,20 @@
               />
             </span>
           </el-tab-pane>
-          <el-tab-pane
-            name="3"
-            label="Com Interação"
-          >
-            <span slot="label">Todos</span>
+          <el-tab-pane name="3">
+            <span
+              slot="label"
+              data-jus-tour="ALL_DISPUTES_TAB">
+              Todos
+            </span>
           </el-tab-pane>
-          <JusTour
-            :name="tour.name"
-            :steps="tour.steps"
+          <!-- <JusTour
+            :name="funelTour.name"
+            :steps="funelTour.steps"
+          /> -->
+          <v-tour
+            :name="funelTour.name"
+            :steps="funelTour.steps"
           />
         </el-tabs>
         <div class="view-management__buttons">
@@ -411,7 +416,7 @@
 <script>
 import { filterByTerm } from '@/utils/jusUtils'
 import { mapActions, mapGetters } from 'vuex'
-import TESTE from './tour'
+import FUNEL_TOUR from './tours/funelTour'
 
 const defaultCheckedKeys = ['DISPUTE_CODE', 'EXTERNAL_ID', 'FIRST_CLAIMANT', 'LAWYER_PARTY_NAMES', 'RESPONDENT_NAMES', 'UPPER_RANGE', 'UPPER_RANGE_SAVING_VALUE', 'STATUS', 'CLASSIFICATION', 'DESCRIPTION']
 
@@ -428,7 +433,6 @@ export default {
   },
   data() {
     return {
-      tour: TESTE,
       loadingExport: false,
       filtersVisible: false,
       termDebounce: () => {},
@@ -463,6 +467,9 @@ export default {
       loadingDisputes: 'loadingDisputes',
       workspaceProperties: 'workspaceProperties',
     }),
+    funelTour() {
+      return FUNEL_TOUR
+    },
     columns() {
       if (this.filterQuery || this.showAllNodes) {
         return this.columnsList
@@ -530,8 +537,6 @@ export default {
 
     this.getDisputes()
     this.getPrescriptions()
-
-    this.$tours[this.tour.name].start()
   },
   mounted() {
     this.getExportColumns().then(response => {
@@ -547,6 +552,11 @@ export default {
     })
 
     this.filteredBrazilianStates = this.brazilianStates
+
+    setTimeout(() => {
+      console.log(this.$tours)
+      this.$tours.FUNEL_TOUR.start()
+    }, 3000)
   },
   methods: {
     ...mapActions([
