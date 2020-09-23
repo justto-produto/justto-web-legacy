@@ -54,7 +54,6 @@ const disputeActions = {
       const time1 = moment(state.lastAccess[disputeId].log)
       const time2 = moment(new Date())
       const dif = time2.diff(time1)
-      console.log('DIF', dif)
       if (dif <= 3000) {
         return
       }
