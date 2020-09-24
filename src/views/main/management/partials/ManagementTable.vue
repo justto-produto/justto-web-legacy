@@ -396,7 +396,7 @@ export default {
       this.$jusSegment('Linha do tempo visualizada pelo gerenciamento', { disputeId: dispute.id })
     },
     lastAccessFormated(disputeId) {
-      if (this.lastAccess[disputeId]) {
+      if (this.lastAccess[disputeId] && this.lastAccess[disputeId].date) {
         const time = this.$moment(this.lastAccess[disputeId].date)
         return `Você acessou esta disputa ${time.fromNow()} - às ${time.format('HH:mm')}`
       } else {
