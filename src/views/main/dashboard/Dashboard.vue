@@ -259,13 +259,12 @@ export default {
       ]
     },
   },
-  created() {
-    if (!this.chartsDatasets.length) {
+  async mounted() {
+    await this.getOnboardingStatus()
+
+    if (!this.chartsDatasets.length && this.isCompletedOnboarding) {
       this.getDashboard()
     }
-  },
-  mounted() {
-    this.getOnboardingStatus()
 
     if (!this.hasPersonName) {
       this.isInsertNameOpen = true
@@ -399,6 +398,7 @@ export default {
     closeOnboardingDialog() {
       this.isOnboardingDialogOpen = false
       this.setOnboardingStatus('true')
+      this.getDashboard()
     },
     openOnboardingDialog() {
       setTimeout(() => {

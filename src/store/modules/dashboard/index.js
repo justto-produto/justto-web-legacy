@@ -12,7 +12,7 @@ const dashboardModule = {
       'MONITORING_DISPUTE_BY_TIME',
     ],
     selectedMemberId: null,
-    isCompletedOnboarding: false,
+    isCompletedOnboarding: true,
   },
   mutations: mutations,
   actions: actions,
