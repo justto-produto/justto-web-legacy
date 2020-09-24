@@ -28,8 +28,12 @@
           <div
             slot="content"
             class="jus-tour__step-content">
-            <img class="jus-tour__step-justine"/>
-            {{ step.description }}
+            <div class="jus-tour__step-justine">
+              <img src="@/assets/gifs/onboarding/dashboardJusttine.gif"/>
+            </div>
+            <div class="jus-tour__step-description">
+              {{ step.description }}
+            </div>
           </div>
           <div
             slot="actions"
@@ -103,27 +107,43 @@ export default {
   .jus-tour__step {
     border-radius: 8px;
     background-color: $--color-white;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
     filter: drop-shadow(0 3px 16px rgba(37,38,94, 0.15)) !important;
-    height: 160px;
-    
-    .jus-tour__step-justine {
-      // position: absolute;
-      // top: 50%;
-      // left: 0;
-      // transform: translateY(-50%);
-      // height: 100%;
-      // background-color: yellow;
-      // border: 12px solid $--color-primary;
-      // border-radius: 50%;
-    }
+    height: 160px !important;
+    max-height: 160px !important;
+    width: 380px !important;
+    max-width: 380px !important;
 
     .jus-tour__step-content {
       display: flex;
-      color: $--color-text-secondary;
-      font-weight: 600;
-      text-align: left;
-      font-size: 16px;
-      height: 98px;
+
+      .jus-tour__step-justine {
+        height: 95px;
+        width: 95px;
+        border: 8px solid $--color-primary;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+        margin-right: 12px;
+
+        // TODO: Refatorar esse pedacinho feio aqui
+        img {
+          position: absolute;
+          width: 160%;
+          top: -28px;
+          left: -17px;
+        }
+      }
+
+      .jus-tour__step-description {
+        color: $--color-text-secondary;
+        font-weight: 600;
+        text-align: left;
+        font-size: 16px;
+        flex: 1;
+      }
     }
 
     .jus-tour__step-actions {
