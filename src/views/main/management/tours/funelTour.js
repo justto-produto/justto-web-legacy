@@ -1,6 +1,6 @@
 export default
 {
-  name: 'FUNEL_TOUR',
+  name: 'JUS_TOUR_FUNEL',
   steps: [
     {
       title: 'Pré-negociação',

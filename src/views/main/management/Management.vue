@@ -82,10 +82,7 @@
         <JusTour
           :name="funelTour.name"
           :steps="funelTour.steps"
-        />
-        <!-- <v-tour
-          :name="funelTour.name"
-          :steps="funelTour.steps" -->
+          highlight
         />
         <div class="view-management__buttons">
           <!-- <el-input
@@ -458,6 +455,8 @@ export default {
       exportHistory: 'exportHistory',
       loadingDisputes: 'loadingDisputes',
       workspaceProperties: 'workspaceProperties',
+      userPreferences: 'userPreferences',
+      justtoTours: 'justtoTours',
     }),
     funelTour() {
       return FUNEL_TOUR
@@ -545,10 +544,13 @@ export default {
 
     this.filteredBrazilianStates = this.brazilianStates
 
-    setTimeout(() => {
-      console.log(this.$tours)
-      this.$tours.FUNEL_TOUR.start()
-    }, 3000)
+    for (const tour of this.justtoTours) {
+      if (!this.userPreferences[tour]) {
+        setTimeout(() => {
+          this.$tours[tour].start()
+        }, 1000)
+      }
+    }
   },
   methods: {
     ...mapActions([

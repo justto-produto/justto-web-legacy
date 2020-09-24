@@ -82,20 +82,13 @@ const accountActions = {
       mutation: 'setToken',
     })
   },
-  // getUserPreferences({ state }) {
-  //   return axiosDispatcher({
-  //     url: `api/accounts/preferences/${state.id}`,
-  //     mutation: 'setUserPreferences',
-  //   })
-  // },
-  // updateUserPreferences({ state }, preference) {
-  //   return axiosDispatcher({
-  //     url: `api/accounts/preferences/${state.id}`,
-  //     method: 'PATCH',
-  //     data: preference,
-  //     mutation: 'setUserPreferences',
-  //   })
-  // },
+  updateUserPreferences({ dispatch }, preference) {
+    return axiosDispatcher({
+      url: `${accountPath}/my/property/`,
+      method: 'PUT',
+      data: preference,
+    }).then(() => dispatch('myAccount'))
+  },
 }
 
 export default accountActions

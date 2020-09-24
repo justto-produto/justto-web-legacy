@@ -1,7 +1,7 @@
 import { isJusttoUser } from '@/utils/jusUtils'
 
 const accountGetters = {
-  userPreferences: state => state.preferences,
+  userPreferences: state => state.properties,
   accountToken: state => state.token,
   isLoggedIn: state => !!state.token,
   accountId: state => state.id,

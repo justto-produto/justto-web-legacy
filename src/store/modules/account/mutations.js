@@ -23,6 +23,7 @@ const accountMutations = {
     if (response.id) state.id = response.id
     if (response.name) state.name = response.name
     if (response.email) state.email = response.email
+    if (response.properties) state.properties = response.properties
   },
 }
 

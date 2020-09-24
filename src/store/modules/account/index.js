@@ -7,6 +7,7 @@ const account = {
     id: '',
     name: '',
     email: '',
+    properties: {},
     token: localStorage.getItem('justoken') || '',
     devs: [
       'josewilliam@justto.com.br',
@@ -15,7 +16,6 @@ const account = {
       'gabriel@justto.com.br',
       'guilherme@justto.com.br'
     ],
-    preferences: { tourSteps: {} },
   },
   actions,
   getters,

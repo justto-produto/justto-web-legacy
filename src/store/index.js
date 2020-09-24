@@ -22,6 +22,7 @@ import workspaceModule from './modules/workspace'
 // CONSTANTS
 import banksList from './constants/banksList'
 import brazilianStates from './constants/brazilianStates'
+import justtoTours from './constants/justtoTours'
 
 Vue.use(Vuex)
 
@@ -33,12 +34,14 @@ export default new Vuex.Store({
     banksList,
     brazilianStates,
     ghostMode,
+    justtoTours,
     loading: false,
   },
   getters: {
     banksList: state => state.banksList,
     getBrazilianStates: state => state.brazilianStates,
     ghostMode: state => state.ghostMode,
+    justtoTours: state => state.justtoTours,
     loading: state => state.loading,
   },
   mutations: {
