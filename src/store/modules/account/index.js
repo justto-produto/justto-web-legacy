@@ -1,13 +1,13 @@
-import Vue from 'vue'
-import router from '@/router'
-import axiosDispatcher from '@/store/axiosDispatcher.js'
-import { isJusttoUser } from '@/utils/jusUtils'
+import actions from './actions'
+import getters from './getters'
+import mutations from './mutations'
 
 const account = {
   state: {
     id: '',
     name: '',
     email: '',
+    properties: {},
     token: localStorage.getItem('justoken') || '',
     devs: [
       'josewilliam@justto.com.br',
@@ -16,138 +16,10 @@ const account = {
       'gabriel@justto.com.br',
       'guilherme@justto.com.br'
     ],
-    preferences: { tourSteps: {} },
   },
-  mutations: {
-    setToken(state, resp) {
-      const token = resp.token
-      // eslint-disable-next-line
-      delete axios.defaults.headers.common['Authorization']
-
-      Vue.set(state, 'token', token)
-      // if (token) state.token = token
-
-      // eslint-disable-next-line
-      axios.defaults.headers.common['Authorization'] = token
-      localStorage.removeItem('justoken')
-      localStorage.setItem('justoken', token)
-    },
-    logout(state) {
-      state.id = ''
-      state.name = ''
-      state.email = ''
-      state.token = ''
-    },
-    setUser(state, response) {
-      if (response.id) state.id = response.id
-      if (response.name) state.name = response.name
-      if (response.email) state.email = response.email
-    },
-    // setUserPreferences: (state, preferences) => (state.preference = preferences),
-  },
-  actions: {
-    myAccount() {
-      return axiosDispatcher({
-        url: 'api/accounts/my',
-        mutation: 'setUser',
-      })
-    },
-    register({ commit }, loginForm) {
-      return axiosDispatcher({
-        url: 'api/accounts/register',
-        method: 'POST',
-        data: loginForm,
-      })
-    },
-    activate({ commit }, token) {
-      return axiosDispatcher({
-        url: `api/accounts/activate/${token}`,
-        method: 'PUT',
-      })
-    },
-    login({ commit }, credentials) {
-      // eslint-disable-next-line
-      delete axios.defaults.headers.common['Workspace']
-      return axiosDispatcher({
-        url: 'api/accounts/token',
-        method: 'POST',
-        data: credentials,
-        mutation: 'setToken',
-      }).catch(() => {
-        localStorage.removeItem('justoken')
-      })
-    },
-    refreshToken({ commit }) {
-      return axiosDispatcher({
-        url: 'api/accounts/refresh-token',
-        mutation: 'setToken',
-      }).catch(() => {
-        localStorage.removeItem('justoken')
-      })
-    },
-    logout({ commit }, options) {
-      commit('logout')
-      commit('clearWorkspace')
-      commit('clearDisputes')
-      commit('clearDisputeTab')
-      commit('clearDashboard')
-      localStorage.removeItem('justoken')
-      // eslint-disable-next-line
-      delete axios.defaults.headers.common['Authorization']
-      if (options && options.redirect === false) {
-      } else router.push('/login')
-    },
-    forgotPassword({ _ }, email) {
-      return axiosDispatcher({
-        url: `api/accounts/reset-password?email=${email}`,
-        method: 'PUT',
-      })
-    },
-    resetPassword({ _ }, data) {
-      return axiosDispatcher({
-        url: `api/accounts/new-password/${data.token}`,
-        method: 'PUT',
-        data: { password: data.password },
-      })
-    },
-    updatePassword({ _ }, form) {
-      return axiosDispatcher({
-        url: 'api/accounts/my/update-password',
-        method: 'POST',
-        data: form,
-      })
-    },
-    ensureWorkspaceAccesss({ _ }, workspaceId) {
-      return axiosDispatcher({
-        url: `api/accounts/workspaces/ensure-workspace-accesss/${workspaceId}`,
-        method: 'PATCH',
-        mutation: 'setToken',
-      })
-    },
-    // getUserPreferences({ state }) {
-    //   return axiosDispatcher({
-    //     url: `api/accounts/preferences/${state.id}`,
-    //     mutation: 'setUserPreferences',
-    //   })
-    // },
-    // updateUserPreferences({ state }, preference) {
-    //   return axiosDispatcher({
-    //     url: `api/accounts/preferences/${state.id}`,
-    //     method: 'PATCH',
-    //     data: preference,
-    //     mutation: 'setUserPreferences',
-    //   })
-    // },
-  },
-  getters: {
-    userPreferences: state => state.preferences,
-    accountToken: state => state.token,
-    isLoggedIn: state => !!state.token,
-    accountId: state => state.id,
-    accountEmail: state => state.email,
-    isJusttoAdmin: state => isJusttoUser(state.email),
-    isJusttoDev: state => state.devs.indexOf(state.email) !== -1,
-  },
+  actions,
+  getters,
+  mutations,
 }
 
 export default account

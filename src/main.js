@@ -2,29 +2,34 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from './router'
 import store from './store'
+import { validateWorkspace } from '@/utils/validateWorkspace'
 
-// plugin
+import '@/utils/registerServiceWorker'
+
+// PLUGINS
 import i18n from '@/plugins/vueI18n'
-import '@/plugins/registerServiceWorker'
 import '@/plugins/axios'
+import '@/plugins/chart'
 import '@/plugins/element'
-import '@/plugins/awesomeSwiper'
-import '@/plugins/moment'
-import '@/plugins/chatScroll'
 import '@/plugins/jusNotification'
 import '@/plugins/jusSegment'
-import '@/plugins/socket'
 import '@/plugins/sentry'
-import '@/plugins/chart'
+import '@/plugins/socket'
+import '@/plugins/vueAwesomeSwiper'
+import '@/plugins/vueChatScroll'
+import '@/plugins/vueFroala'
+import '@/plugins/vueMoment'
+import '@/plugins/vueMoney'
+import '@/plugins/vueTour'
 
-// filters
+// FILTERS
 import '@/filters/capitalize'
+import '@/filters/cpfCnpj'
 import '@/filters/currency'
 import '@/filters/firstName'
-import '@/filters/cpfCnpjMask'
-import '@/filters/phoneMask'
+import '@/filters/phoneNumber'
 
-// css
+// STYLES
 import '@/styles/core.scss'
 import '@/styles/transitions.scss'
 
@@ -48,60 +53,33 @@ import '@/styles/overrides/message-box.scss'
 import '@/styles/overrides/message.scss'
 import '@/styles/overrides/notification.scss'
 import '@/styles/overrides/pagination.scss'
-import '@/styles/overrides/radio.scss'
 import '@/styles/overrides/popover.scss'
 import '@/styles/overrides/radio-group.scss'
-import '@/styles/overrides/table.scss'
+import '@/styles/overrides/radio.scss'
 import '@/styles/overrides/select.scss'
 import '@/styles/overrides/slider.scss'
 import '@/styles/overrides/steps.scss'
+import '@/styles/overrides/table.scss'
 import '@/styles/overrides/tabs.scss'
 import '@/styles/overrides/tag.scss'
 import '@/styles/overrides/tooltip.scss'
 import '@/styles/overrides/upload.scss'
+
 import '@/styles/perfect-scroll.scss'
 import '@/styles/quill-editor.scss'
 
-// utils
-import { validateWorkspace } from '@/utils/validateWorkspace'
-
-// Global components
-import VueTheMask from 'vue-the-mask'
-import money from 'v-money'
+// GLOBAL COMPONENTS
 import JusIcon from '@/components/images/JusIcon'
 import JusAvatarUser from '@/components/images/JusAvatarUser'
 import JusViewMain from '@/components/layouts/JusViewMain'
 import JusButtonBack from '@/components/buttons/JusButtonBack'
-import JusStatusDot from '@/components/others/JusStatusDot'
-import VueTour from 'vue-tour'
+import JusTour from '@/components/JusTour'
 
-import 'froala-editor/js/plugins.pkgd.min.js'
-import 'froala-editor/js/third_party/embedly.min'
-import 'froala-editor/js/third_party/font_awesome.min'
-import 'froala-editor/js/third_party/spell_checker.min'
-import 'froala-editor/js/third_party/image_tui.min'
-import 'froala-editor/css/froala_editor.pkgd.min.css'
-import VueFroala from 'vue-froala-wysiwyg'
-
+Vue.component('JusTour', JusTour)
 Vue.component('JusIcon', JusIcon)
 Vue.component('JusAvatarUser', JusAvatarUser)
 Vue.component('JusViewMain', JusViewMain)
 Vue.component('JusButtonBack', JusButtonBack)
-Vue.component('JusStatusDot', JusStatusDot)
-
-require('vue-tour/dist/vue-tour.css')
-
-Vue.use(VueFroala)
-Vue.use(VueTour)
-
-// mask
-Vue.use(VueTheMask)
-Vue.use(money, {
-  decimal: ',',
-  thousands: '.',
-  prefix: 'R$ ',
-  precision: 2,
-})
 
 Vue.config.productionTip = false
 
