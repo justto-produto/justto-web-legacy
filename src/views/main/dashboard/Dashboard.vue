@@ -154,6 +154,10 @@
           </div>
         </el-col>
       </el-row>
+      <insert-name
+        :is-dialog-visible="isInsertNameOpen"
+        @confirm="confirmInsertName"
+      />
       <onboarding
         v-if="isOnboardingDialogOpen"
         :steps="steps"
@@ -173,6 +177,7 @@ export default {
     JusChartBar: () => import('@/components/charts/JusChartBar'),
     JusChartCard: () => import('@/components/charts/JusChartCard'),
     JusChartTable: () => import('@/components/charts/JusChartTable'),
+    InsertName: () => import('./dialogs/InsertName'),
     Onboarding: () => import('@/components/dialogs/Onboarding'),
   },
   data() {
@@ -185,23 +190,16 @@ export default {
         onClick: this.filter,
         maintainAspectRatio: false,
       },
+      isInsertNameOpen: false,
       isOnboardingDialogOpen: false,
-      steps: [
-        {
-          title: 'Olá, Tamires',
-          description: 'Conhecemos muito bem a rotina de lidar com muitos processos ao mesmo tempo. É monótono, cansativo, trabalhoso e muito propenso a erros que você acaba sendo responsabilizado(a)',
-          cta: 'Organizar meu trabalho',
-        },
-        {
-          title: 'A Justto é como sua melhor amiga!',
-          description: 'E para ajudar gerenciar e organizar seu dia-a-dia, a plataforma é a sua principal ferramenta rumo ao sucesso na resolução dos acordos.',
-          cta: 'Conhecer a plataforma',
-        },
-      ],
     }
   },
   computed: {
-    ...mapGetters(['isCompletedOnboarding']),
+    ...mapGetters([
+      'isCompletedOnboarding',
+      'hasPersonName',
+      'loggedPersonName',
+    ]),
     selectedMemberId: {
       get() {
         return this.$store.getters.dashboardSelectedMemberId
@@ -246,6 +244,20 @@ export default {
         ...this.$store.state.workspaceModule.members,
       ]
     },
+    steps() {
+      return [
+        {
+          title: `Olá, ${this.loggedPersonName}`,
+          description: 'Conhecemos muito bem a rotina de lidar com muitos processos ao mesmo tempo. É monótono, cansativo, trabalhoso e muito propenso a erros que você acaba sendo responsabilizado(a)',
+          cta: 'Organizar meu trabalho',
+        },
+        {
+          title: 'A Justto é como sua melhor amiga!',
+          description: 'E para ajudar gerenciar e organizar seu dia-a-dia, a plataforma é a sua principal ferramenta rumo ao sucesso na resolução dos acordos.',
+          cta: 'Conhecer a plataforma',
+        },
+      ]
+    },
   },
   created() {
     if (!this.chartsDatasets.length) {
@@ -255,12 +267,17 @@ export default {
   mounted() {
     this.getOnboardingStatus()
 
-    setTimeout(() => {
-      this.isOnboardingDialogOpen = !this.isCompletedOnboarding
-    }, 1000)
+    if (!this.hasPersonName) {
+      this.isInsertNameOpen = true
+    } else {
+      this.openOnboardingDialog()
+    }
   },
   methods: {
-    ...mapActions(['getOnboardingStatus', 'setOnboardingStatus']),
+    ...mapActions([
+      'getOnboardingStatus',
+      'setOnboardingStatus',
+    ]),
     getDashboard() {
       this.loading = true
       this.$store.dispatch('getDashboard').catch(error => {
@@ -382,6 +399,15 @@ export default {
     closeOnboardingDialog() {
       this.isOnboardingDialogOpen = false
       this.setOnboardingStatus('true')
+    },
+    openOnboardingDialog() {
+      setTimeout(() => {
+        this.isOnboardingDialogOpen = !this.isCompletedOnboarding
+      }, 2000)
+    },
+    confirmInsertName() {
+      this.isInsertNameOpen = false
+      this.openOnboardingDialog()
     },
   },
 }
