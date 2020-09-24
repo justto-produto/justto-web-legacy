@@ -188,14 +188,14 @@ export default {
       isOnboardingDialogOpen: false,
       steps: [
         {
-          title: 'Olá, Tamires',
+          title: `Olá, ${this.loggedPersonName}`,
           description: 'Conhecemos muito bem a rotina de lidar com muitos processos ao mesmo tempo. É monótono, cansativo, trabalhoso e muito propenso a erros que você acaba sendo responsabilizado(a)',
-          cta: 'Organizar meu trabalho',
+          cta: 'Como a JUSTTO pode me ajudar nisto?',
         },
         {
-          title: 'A Justto é como sua melhor amiga!',
-          description: 'E para ajudar gerenciar e organizar seu dia-a-dia, a plataforma é a sua principal ferramenta rumo ao sucesso na resolução dos acordos.',
-          cta: 'Conhecer a plataforma',
+          title: 'Queremos ser especial para você!',
+          description: 'Vamos te ajudar nesta jornada. Você só vai focar no que precisa e é importante. Não se preocupe, tudo que é repetitivo, nós faremos por você. Você está no controle, nós somos o veículo para você fazer mais acordos...',
+          cta: 'Justtine, me mostre como faremos isso',
         },
       ],
     }
