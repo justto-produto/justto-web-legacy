@@ -18,7 +18,7 @@ const actions = {
     return axiosDispatcher({ mutation: 'setDashboardDatasets', url })
   },
   getOnboardingStatus({ _ }) {
-    axiosDispatcher({
+    return axiosDispatcher({
       url: `api/accounts/my/property/${DASHBOARD_ONBOARDING_STATUS}`,
       mutation: 'setCompletedOnboarding',
     })
