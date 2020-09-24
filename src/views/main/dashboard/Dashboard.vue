@@ -299,6 +299,10 @@ export default {
     } else {
       this.openOnboardingDialog()
     }
+
+    if (this.isCompletedOnboarding) {
+      this.openDashboardTour()
+    }
   },
   methods: {
     ...mapActions([
