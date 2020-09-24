@@ -291,9 +291,6 @@ export default {
       this.getDashboard()
     }
 
-    // this.updateUserPreferences({ [DASHBOARD_TOUR_STATUS]: false })
-    // this.setOnboardingStatus(false)
-
     if (!this.hasPersonName) {
       this.isInsertNameOpen = true
     } else {

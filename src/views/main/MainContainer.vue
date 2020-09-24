@@ -34,11 +34,11 @@
         <el-menu-item
           index="/management"
           data-testid="menu-management"
-          data-jus-tour="MANAGEMENT_MENU"
         >
           <jus-icon
             icon="management"
             class="el-menu__icon"
+            data-jus-tour="MANAGEMENT_MENU"
           />
           <span slot="title">Gerenciamento</span>
         </el-menu-item>
