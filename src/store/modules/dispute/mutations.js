@@ -86,7 +86,11 @@ const disputeMutations = {
   clearDisputeQuery(state) {
     state.query = {
       status: ['RUNNING'],
-      sort: ['visualized,asc', 'conclusionDate,asc'],
+      sort: [
+        'visualized,asc',
+        'lastReceivedMessage,asc',
+        'conclusionDate,asc'
+      ],
       campaigns: [],
       strategy: [],
       tags: [],
