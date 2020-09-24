@@ -467,36 +467,72 @@
               </el-alert>
               <div class="dispute-overview-view__info-line">
                 <span class="title">Nome completo:</span>
-                <span>
+                <div>
                   {{ role.name }}
-                </span>
+                </div>
               </div>
               <div class="dispute-overview-view__info-line">
                 <span class="title">Função:</span>
                 <span
-                  v-for="(title, title_index) in roleTitleSort(role.roles)"
-                  :key="`${title_index}-${title.index}`"
-                >
+                  v-for="(title, titleIndex) in roleTitleSort(role.roles)"
+                  :key="`${titleIndex}-${title.index}`"
+                  v-show="!isEditingRule"
+                  class="dispute-overview-view__info-line-description">
                   {{ buildRoleTitle(role.party, title) }}
+                  <span
+                    class="dispute-overview-view__edit-icon"
+                    @click="handleEditRule()">
+                    <el-tooltip content="Editar polaridade">
+                      <jus-icon icon="edit"/>
+                    </el-tooltip>
+                  </span>
                   <jus-vexatious-alert
                     v-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR')"
                     :document-number="role.documentNumber"
                     :name="role.name"
                   />
                 </span>
-                <el-select
-                  v-model="role.party"
-                  placeholder="Defina o polo desta parte"
-                  v-if="role.party === 'UNKNOWN'"
-                  @change="setDisputeParty(role)"
-                >
-                  <el-option
-                    v-for="party in disputePartys"
-                    :key="party.value"
-                    :label="party.label"
-                    :value="party.value"
-                  />
-                </el-select>
+                <div
+                  v-if="role.party !== 'UNKNOWN' && isEditingRule"
+                  class="dispute-overview-view__select-role">
+                  <el-select
+                    v-model="role.party"
+                    size="mini"
+                    placeholder="Defina o polo desta parte"
+                    @change="setDisputeParty(role)"
+                  >
+                    <el-option
+                      v-for="party in getDisputePartys(role.roles)"
+                      :key="party.value"
+                      :label="party.label"
+                      :value="party.value"
+                    />
+                  </el-select>
+                  <span
+                    class="dispute-overview-view__tooltip-cancel-edit-role"
+                    @click="handleEditRule()">
+                    <el-tooltip content="Cancelar edição da polaridade">
+                      <i class="el-icon-error"></i>
+                    </el-tooltip>
+                  </span>
+                </div>
+                <div
+                  v-else-if="role.party === 'UNKNOWN'"
+                  class="dispute-overview-view__select-role">
+                  <el-select
+                    v-model="tempRole"
+                    size="mini"
+                    placeholder="Defina o polo desta parte"
+                    @change="handleUnknowParty(role)"
+                  >
+                    <el-option
+                      v-for="(party, partyKey) in dispuesToUnknownParties"
+                      :key="`UNKNOWN-${partyKey}`"
+                      :label="party.label"
+                      :value="partyKey"
+                    />
+                  </el-select>
+                </div>
               </div>
               <div
                 v-show="role.documentNumber"
@@ -1579,6 +1615,7 @@ export default {
   },
   data() {
     return {
+      isEditingRule: false,
       disputeTimelineModal: false,
       overviewTab: 'general',
       namesakeList: [],
@@ -1679,20 +1716,37 @@ export default {
       lastOfferValueHasChanged: false,
       cityFilter: null,
       ufFilter: null,
-      disputePartys: [
+      dispuesToUnknownParties: [
         {
-          value: 'RESPONDENT',
-          label: 'Advogado do réu',
+          value: {
+            party: 'RESPONDENT',
+            roles: ['PARTY']
+          },
+          label: 'Réu',
         },
         {
-          value: 'CLAIMANT',
-          label: 'Advogado da parte contrária',
+          value: {
+            party: 'CLAIMANT',
+            roles: ['PARTY']
+          },
+          label: 'Parte contrária',
         },
         {
-          value: 'UNKNOWN',
-          label: 'Desconhecido',
+          value: {
+            party: 'RESPONDENT',
+            roles: ['LAWYER']
+          },
+          label: 'Advogado do Réu',
         },
+        {
+          value: {
+            party: 'CLAIMANT',
+            roles: ['LAWYER']
+          },
+          label: 'Advogado da Parte contrária',
+        }
       ],
+      tempRole: {}
     }
   },
   computed: {
@@ -1855,10 +1909,70 @@ export default {
   },
   methods: {
     ...mapActions([
+      'getDispute',
       'removeDispute',
+      'setDisputeparty',
       'getDisputeStatuses',
       'getDisputeTimeline',
+      'getDisputeProprieties'
     ]),
+
+    handleUnknowParty(role) {
+      const { value } = this.dispuesToUnknownParties[this.tempRole]
+      const newRole = { ...role, ...value, roles: value.roles }
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.dispute.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Os dados foram alterados com sucesso.',
+          type: 'success',
+        })
+        this.$forceUpdate()
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+    },
+
+    getDisputePartys(roles) {
+      if (roles.includes('PARTY')) {
+        return [
+          {
+            value: 'RESPONDENT',
+            label: 'Réu',
+          },
+          {
+            value: 'CLAIMANT',
+            label: 'Parte contrária',
+          }
+        ]
+      } else if (roles.includes('LAWYER')) {
+        return [
+          {
+            value: 'RESPONDENT',
+            label: 'Advogado do Réu',
+          },
+          {
+            value: 'CLAIMANT',
+            label: 'Advogado da Parte contrária',
+          }
+        ]
+      } else {
+        return [
+          {
+            value: 'RESPONDENT',
+            label: 'Negociador',
+          }
+        ]
+      }
+    },
+
+    handleEditRule() {
+      this.isEditingRule = !this.isEditingRule
+      this.$forceUpdate()
+    },
 
     async populateTimeline() {
       let getting = true
@@ -2253,6 +2367,7 @@ export default {
           return dr
         })
       }
+      this.isEditingRule = false
     },
     openRoleDialog(role) {
       this.bankAccountIdstoUnlink = []
@@ -2528,15 +2643,14 @@ export default {
       })
     },
     setDisputeParty(role) {
-      const params = {
+      this.$jusSegment('Definindo função em participante da disputa', {
+        page: this.$route.name,
+      })
+      this.setDisputeparty({
         disputeId: this.dispute.id,
         disputeRoleId: role.id,
         disputeParty: role.party,
-      }
-      this.$jusSegment('Defiido função em participante da disputa', {
-        page: this.$route.name,
       })
-      this.$store.dispatch('setDisputeparty', params)
         .then(() => {
           this.$jusNotification({
             title: 'Yay!',
@@ -2544,6 +2658,9 @@ export default {
             type: 'success',
             dangerouslyUseHTMLString: true,
           })
+        }).finally(() => {
+          this.isEditingRule = false
+          this.getDisputeProprieties(this.dispute.id)
         })
     },
   },
@@ -2610,6 +2727,32 @@ export default {
       .jus-avatar-user {
         margin-right: 4px;
       }
+    }
+    > .dispute-overview-view__select-role {
+      display: flex;
+      flex-direction: row;
+      > .dispute-overview-view__tooltip-cancel-edit-role {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        font-size: 16px;
+        color: $--color-danger;
+      }
+    }
+    .dispute-overview-view__info-line-description:hover  .dispute-overview-view__edit-icon{
+      visibility: visible;
+    }
+    > span .dispute-overview-view__edit-icon {
+      width: 16px !important;
+      margin: 0 !important;
+      margin-left: 8px !important;
+      display: flex;
+      align-items: center;
+      visibility: hidden;
+      cursor: pointer;
+      img { width: 16px; }
     }
     .code {
       margin-left: 12px;
