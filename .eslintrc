@@ -31,6 +31,7 @@
       }
     ],
     "vue/no-textarea-mustache": "error",
+    "vue/no-use-v-if-with-v-for": "warn",
     "vue/no-unused-vars": "error",
     "vue/require-valid-default-prop": "error",
     "vue/return-in-computed-property": [

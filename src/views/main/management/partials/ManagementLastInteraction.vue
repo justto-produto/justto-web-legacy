@@ -16,10 +16,10 @@
         </strong>
       </div>
       <div v-if="data.lastOutboundInteraction.message.sender">
-        De: {{ data.lastOutboundInteraction.message.sender | phoneMask }}
+        De: {{ data.lastOutboundInteraction.message.sender | phoneNumber }}
       </div>
       <div v-if="data.lastOutboundInteraction.message.receiver">
-        Para: {{ data.lastOutboundInteraction.message.receiver | phoneMask }}
+        Para: {{ data.lastOutboundInteraction.message.receiver | phoneNumber }}
       </div>
       <span v-if="data.lastOutboundInteraction.message.parameters.READ_DATE && Object.keys(messageSummary).length">
         <div v-if="messageSummary.countVisualization !== null">
@@ -81,7 +81,7 @@
           </strong>
         </div>
         <div v-if="data.lastReceivedMessage.message.sender">
-          De: {{ data.lastReceivedMessage.message.sender | phoneMask }}
+          De: {{ data.lastReceivedMessage.message.sender | phoneNumber }}
         </div>
         <div
           v-if="data.lastReceivedMessage.message.resume"
@@ -183,7 +183,7 @@
           <b>{{ responseRow.lastReceivedMessage.message.communicationType.toLowerCase() | capitalize }}</b>
         </div>
         <div>
-          Destinatário: <b>{{ responseRow.lastReceivedMessage.message.sender | phoneMask }}</b>
+          Destinatário: <b>{{ responseRow.lastReceivedMessage.message.sender | phoneNumber }}</b>
         </div>
         <quill-editor
           v-if="responseDialogVisible"
