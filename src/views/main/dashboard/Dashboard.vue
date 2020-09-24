@@ -156,7 +156,7 @@
       </el-row>
       <insert-name
         :is-dialog-visible="isInsertNameOpen"
-        @confirm="isInsertNameOpen = false"
+        @confirm="confirmInsertName"
       />
       <onboarding
         v-if="isOnboardingDialogOpen"
@@ -192,22 +192,14 @@ export default {
       },
       isInsertNameOpen: false,
       isOnboardingDialogOpen: false,
-      steps: [
-        {
-          title: 'Olá, Tamires',
-          description: 'Conhecemos muito bem a rotina de lidar com muitos processos ao mesmo tempo. É monótono, cansativo, trabalhoso e muito propenso a erros que você acaba sendo responsabilizado(a)',
-          cta: 'Organizar meu trabalho',
-        },
-        {
-          title: 'A Justto é como sua melhor amiga!',
-          description: 'E para ajudar gerenciar e organizar seu dia-a-dia, a plataforma é a sua principal ferramenta rumo ao sucesso na resolução dos acordos.',
-          cta: 'Conhecer a plataforma',
-        },
-      ],
     }
   },
   computed: {
-    ...mapGetters(['isCompletedOnboarding', 'hasPersonName']),
+    ...mapGetters([
+      'isCompletedOnboarding',
+      'hasPersonName',
+      'loggedPersonName',
+    ]),
     selectedMemberId: {
       get() {
         return this.$store.getters.dashboardSelectedMemberId
@@ -252,6 +244,20 @@ export default {
         ...this.$store.state.workspaceModule.members,
       ]
     },
+    steps() {
+      return [
+        {
+          title: `Olá, ${this.loggedPersonName}`,
+          description: 'Conhecemos muito bem a rotina de lidar com muitos processos ao mesmo tempo. É monótono, cansativo, trabalhoso e muito propenso a erros que você acaba sendo responsabilizado(a)',
+          cta: 'Organizar meu trabalho',
+        },
+        {
+          title: 'A Justto é como sua melhor amiga!',
+          description: 'E para ajudar gerenciar e organizar seu dia-a-dia, a plataforma é a sua principal ferramenta rumo ao sucesso na resolução dos acordos.',
+          cta: 'Conhecer a plataforma',
+        },
+      ]
+    },
   },
   created() {
     if (!this.chartsDatasets.length) {
@@ -264,9 +270,7 @@ export default {
     if (!this.hasPersonName) {
       this.isInsertNameOpen = true
     } else {
-      setTimeout(() => {
-        this.isOnboardingDialogOpen = !this.isCompletedOnboarding
-      }, 1000)
+      this.openOnboardingDialog()
     }
   },
   methods: {
@@ -395,6 +399,15 @@ export default {
     closeOnboardingDialog() {
       this.isOnboardingDialogOpen = false
       this.setOnboardingStatus('true')
+    },
+    openOnboardingDialog() {
+      setTimeout(() => {
+        this.isOnboardingDialogOpen = !this.isCompletedOnboarding
+      }, 2000)
+    },
+    confirmInsertName() {
+      this.isInsertNameOpen = false
+      this.openOnboardingDialog()
     },
   },
 }

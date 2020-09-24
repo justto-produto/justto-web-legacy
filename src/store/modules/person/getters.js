@@ -1,3 +1,5 @@
+import Isemail from 'isemail'
+
 const getters = {
   loggedPerson: state => state.loggedPerson,
   loggedPersonName: state => {
@@ -15,7 +17,7 @@ const getters = {
     }
   },
   hasPersonName: state => {
-    return state.loggedPerson.name !== ''
+    return !Isemail.validate(state.loggedPerson.name)
   },
 }
 
