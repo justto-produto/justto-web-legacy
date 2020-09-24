@@ -163,12 +163,18 @@
         :steps="steps"
         @closeOnboarding="closeOnboardingDialog"
       />
+      <JusTour
+        :name="dashboardTour.name"
+        :steps="dashboardTour.steps"
+        highlight
+      />
     </template>
   </jus-view-main>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import DASHBOARD_TOUR from './tour'
 
 export default {
   name: 'Dashboard',
@@ -258,6 +264,9 @@ export default {
         },
       ]
     },
+    dashboardTour() {
+      return DASHBOARD_TOUR
+    },
   },
   async mounted() {
     await this.getOnboardingStatus()
@@ -271,6 +280,8 @@ export default {
     } else {
       this.openOnboardingDialog()
     }
+
+    this.$tours[this.dashboardTour.name].start()
   },
   methods: {
     ...mapActions([
