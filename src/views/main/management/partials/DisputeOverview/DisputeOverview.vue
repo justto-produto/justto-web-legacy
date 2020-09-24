@@ -508,16 +508,13 @@
                       :value="party.value"
                     />
                   </el-select>
-                  <el-tooltip content="Cancelar edição da polaridade">
-                    <el-button
-                      circle
-                      plain
-                      size="mini"
-                      type="danger"
-                      @click="handleEditRule()">
-                      X
-                    </el-button>
-                  </el-tooltip>
+                  <span
+                    class="dispute-overview-view__tooltip-cancel-edit-role"
+                    @click="handleEditRule()">
+                    <el-tooltip content="Cancelar edição da polaridade">
+                      <i class="el-icon-error"></i>
+                    </el-tooltip>
+                  </span>
                 </div>
                 <div
                   v-else-if="role.party === 'UNKNOWN'"
@@ -2734,8 +2731,14 @@ export default {
     > .dispute-overview-view__select-role {
       display: flex;
       flex-direction: row;
-      > .el-button {
+      > .dispute-overview-view__tooltip-cancel-edit-role {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-left: 8px;
+        font-size: 16px;
+        color: $--color-danger;
       }
     }
     .dispute-overview-view__info-line-description:hover  .dispute-overview-view__edit-icon{
