@@ -1,6 +1,6 @@
 export default
 {
-  name: 'DASHBOARD',
+  name: 'DASHBOARD_TOUR',
   steps: [
     {
       title: 'Pré-negociação',

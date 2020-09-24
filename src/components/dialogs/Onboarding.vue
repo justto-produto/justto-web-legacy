@@ -96,7 +96,6 @@ export default {
       }
     },
     close() {
-      console.log('close')
       this.$emit('closeOnboarding')
     },
   },

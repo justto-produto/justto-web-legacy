@@ -167,6 +167,7 @@
         :name="dashboardTour.name"
         :steps="dashboardTour.steps"
         highlight
+        :callbacks="dashboardTourCallbacks"
       />
     </template>
   </jus-view-main>
@@ -175,6 +176,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import DASHBOARD_TOUR from './tour'
+import { DASHBOARD_TOUR_STATUS } from '@/constants/preferences'
 
 export default {
   name: 'Dashboard',
@@ -198,6 +200,9 @@ export default {
       },
       isInsertNameOpen: false,
       isOnboardingDialogOpen: false,
+      dashboardTourCallbacks: {
+        onFinish: this.dashboardTourOnFinish,
+      },
     }
   },
   computed: {
@@ -205,6 +210,7 @@ export default {
       'isCompletedOnboarding',
       'hasPersonName',
       'loggedPersonName',
+      'userPreferences',
     ]),
     selectedMemberId: {
       get() {
@@ -267,6 +273,15 @@ export default {
     dashboardTour() {
       return DASHBOARD_TOUR
     },
+    isDashboardTourCompleted() {
+      const status = this.userPreferences[DASHBOARD_TOUR_STATUS]
+
+      if (status) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
   async mounted() {
     await this.getOnboardingStatus()
@@ -275,18 +290,21 @@ export default {
       this.getDashboard()
     }
 
+    this.openDashboardTour()
+
+    // this.setOnboardingStatus('false')
+
     if (!this.hasPersonName) {
       this.isInsertNameOpen = true
     } else {
       this.openOnboardingDialog()
     }
-
-    this.$tours[this.dashboardTour.name].start()
   },
   methods: {
     ...mapActions([
       'getOnboardingStatus',
       'setOnboardingStatus',
+      'updateUserPreferences',
     ]),
     getDashboard() {
       this.loading = true
@@ -410,6 +428,7 @@ export default {
       this.isOnboardingDialogOpen = false
       this.setOnboardingStatus('true')
       this.getDashboard()
+      this.openDashboardTour()
     },
     openOnboardingDialog() {
       setTimeout(() => {
@@ -419,6 +438,13 @@ export default {
     confirmInsertName() {
       this.isInsertNameOpen = false
       this.openOnboardingDialog()
+    },
+    openDashboardTour() {
+      if (!this.isDashboardTourCompleted) {
+        setTimeout(() => {
+          this.$tours[this.dashboardTour.name].start()
+        }, 1000)
+      }
     },
   },
 }
