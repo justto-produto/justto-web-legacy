@@ -2633,7 +2633,7 @@ export default {
       margin-left: 12px;
       width: 100%;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       > span:not(.jus-vexatious-alert) {
         width: 100%;
         margin: 5px;
