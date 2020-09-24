@@ -472,28 +472,21 @@
                 </div>
               </div>
               <div class="dispute-overview-view__info-line">
-                <span class="title">Função:</span>
-                <span
-                  v-for="(title, titleIndex) in roleTitleSort(role.roles)"
-                  :key="`${titleIndex}-${title.index}`"
-                  v-show="!isEditingRule"
-                  class="dispute-overview-view__info-line-description">
-                  {{ buildRoleTitle(role.party, title) }}
+                <span class="title">
+                  Função:
                   <span
-                    class="dispute-overview-view__edit-icon"
+                    v-if="!isEditingRule && role.party !== 'UNKNOWN'"
+                    class="dispute-overview-view__edit-tooltip"
                     @click="handleEditRule()">
-                    <el-tooltip content="Editar polaridade">
+                    <el-tooltip
+                      placement="top"
+                      content="Editar polaridade">
                       <jus-icon icon="edit"/>
                     </el-tooltip>
                   </span>
-                  <jus-vexatious-alert
-                    v-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR')"
-                    :document-number="role.documentNumber"
-                    :name="role.name"
-                  />
                 </span>
                 <div
-                  v-if="role.party !== 'UNKNOWN' && isEditingRule"
+                  v-if="isEditingRule && role.party !== 'UNKNOWN'"
                   class="dispute-overview-view__select-role">
                   <el-select
                     v-model="role.party"
@@ -502,7 +495,7 @@
                     @change="setDisputeParty(role)"
                   >
                     <el-option
-                      v-for="party in getDisputePartys(role.roles)"
+                      v-for="party in disputePartys"
                       :key="party.value"
                       :label="party.label"
                       :value="party.value"
@@ -516,8 +509,21 @@
                     </el-tooltip>
                   </span>
                 </div>
+                <span
+                  v-for="(title, titleIndex) in roleTitleSort(role.roles)"
+                  :key="`${titleIndex}-${title.index}`"
+                  v-show="!isEditingRule"
+                  class="dispute-overview-view__info-line-description">
+                  {{ buildRoleTitle(role.party, title) }}
+                  <jus-vexatious-alert
+                    v-if="showVexatious(role.personProperties) && !role.roles.includes('NEGOTIATOR')"
+                    :document-number="role.documentNumber"
+                    :name="role.name"
+                  />
+                </span>
+                
                 <div
-                  v-else-if="role.party === 'UNKNOWN'"
+                  v-if="role.party === 'UNKNOWN'"
                   class="dispute-overview-view__select-role">
                   <el-select
                     v-model="tempRole"
@@ -1719,31 +1725,25 @@ export default {
       dispuesToUnknownParties: [
         {
           value: {
-            party: 'RESPONDENT',
-            roles: ['PARTY']
+            party: 'RESPONDENT'
           },
           label: 'Réu',
         },
         {
           value: {
-            party: 'CLAIMANT',
-            roles: ['PARTY']
+            party: 'CLAIMANT'
           },
           label: 'Parte contrária',
+        }
+      ],
+      disputePartys: [
+        {
+          value: 'RESPONDENT',
+          label: 'Réu',
         },
         {
-          value: {
-            party: 'RESPONDENT',
-            roles: ['LAWYER']
-          },
-          label: 'Advogado do Réu',
-        },
-        {
-          value: {
-            party: 'CLAIMANT',
-            roles: ['LAWYER']
-          },
-          label: 'Advogado da Parte contrária',
+          value: 'CLAIMANT',
+          label: 'Parte contrária',
         }
       ],
       tempRole: {}
@@ -1919,7 +1919,10 @@ export default {
 
     handleUnknowParty(role) {
       const { value } = this.dispuesToUnknownParties[this.tempRole]
-      const newRole = { ...role, ...value, roles: value.roles }
+      const newRole = {
+        ...role,
+        party: value.party,
+      }
       this.$store.dispatch('editRole', {
         disputeId: this.dispute.id,
         disputeRole: newRole
@@ -1934,39 +1937,6 @@ export default {
       }).catch(error => {
         this.$jusNotification({ error })
       })
-    },
-
-    getDisputePartys(roles) {
-      if (roles.includes('PARTY')) {
-        return [
-          {
-            value: 'RESPONDENT',
-            label: 'Réu',
-          },
-          {
-            value: 'CLAIMANT',
-            label: 'Parte contrária',
-          }
-        ]
-      } else if (roles.includes('LAWYER')) {
-        return [
-          {
-            value: 'RESPONDENT',
-            label: 'Advogado do Réu',
-          },
-          {
-            value: 'CLAIMANT',
-            label: 'Advogado da Parte contrária',
-          }
-        ]
-      } else {
-        return [
-          {
-            value: 'RESPONDENT',
-            label: 'Negociador',
-          }
-        ]
-      }
     },
 
     handleEditRule() {
@@ -2731,6 +2701,9 @@ export default {
     > .dispute-overview-view__select-role {
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
       > .dispute-overview-view__tooltip-cancel-edit-role {
         cursor: pointer;
         display: flex;
@@ -2741,18 +2714,15 @@ export default {
         color: $--color-danger;
       }
     }
-    .dispute-overview-view__info-line-description:hover  .dispute-overview-view__edit-icon{
-      visibility: visible;
-    }
     > span .dispute-overview-view__edit-icon {
-      width: 16px !important;
+      width: 10px !important;
       margin: 0 !important;
-      margin-left: 8px !important;
+      margin: auto 8px !important;
       display: flex;
       align-items: center;
       visibility: hidden;
       cursor: pointer;
-      img { width: 16px; }
+      img { width: 10px; }
     }
     .code {
       margin-left: 12px;
@@ -2790,6 +2760,16 @@ export default {
 
     .title {
       font-weight: 600;
+      .dispute-overview-view__edit-tooltip {
+        cursor: pointer;
+        visibility: hidden;
+        img {
+          height: 12px;
+        }
+      }
+      &:hover > .dispute-overview-view__edit-tooltip {
+        visibility: visible;
+      }
     }
     .bank-info {
       display: block !important
