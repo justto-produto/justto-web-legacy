@@ -45,6 +45,10 @@
             class="onboarding__justtine"
             src="@/assets/gifs/onboarding/dashboardJusttine.gif"
           >
+          <div class="onboarding__justtine-pleasure">
+            Oi, prazer, sou a Justtine!<br>
+            Estou á sua disposição.
+          </div>
         </el-col>
       </el-row>
     </div>
@@ -179,7 +183,12 @@ export default {
 
   &__justtine {
     width: 100%;
-    padding: 0 20px;
+    padding: 0 25px;
+  }
+
+  &__justtine-pleasure {
+    text-align: center;
+    color: #797979;
   }
 }
 </style>
