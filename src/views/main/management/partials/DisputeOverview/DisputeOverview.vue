@@ -493,7 +493,7 @@
                   />
                 </span>
                 <div
-                  v-if="role.party === 'UNKNOWN' || isEditingRule"
+                  v-if="role.party !== 'UNKNOWN' && isEditingRule"
                   class="dispute-overview-view__select-role">
                   <el-select
                     v-model="role.party"
@@ -502,22 +502,36 @@
                     @change="setDisputeParty(role)"
                   >
                     <el-option
-                      v-for="party in disputePartys"
+                      v-for="party in getDisputePartys(role.roles)"
                       :key="party.value"
                       :label="party.label"
                       :value="party.value"
                     />
                   </el-select>
-                  <el-tooltip content="Cancelar edição da polaridade">
-                    <el-button
-                      circle
-                      plain
-                      size="mini"
-                      type="danger"
-                      @click="handleEditRule()">
-                      X
-                    </el-button>
-                  </el-tooltip>
+                  <span
+                    class="dispute-overview-view__tooltip-cancel-edit-role"
+                    @click="handleEditRule()">
+                    <el-tooltip content="Cancelar edição da polaridade">
+                      <i class="el-icon-error"></i>
+                    </el-tooltip>
+                  </span>
+                </div>
+                <div
+                  v-else-if="role.party === 'UNKNOWN'"
+                  class="dispute-overview-view__select-role">
+                  <el-select
+                    v-model="tempRole"
+                    size="mini"
+                    placeholder="Defina o polo desta parte"
+                    @change="handleUnknowParty(role)"
+                  >
+                    <el-option
+                      v-for="(party, partyKey) in dispuesToUnknownParties"
+                      :key="`UNKNOWN-${partyKey}`"
+                      :label="party.label"
+                      :value="partyKey"
+                    />
+                  </el-select>
                 </div>
               </div>
               <div
@@ -1702,20 +1716,37 @@ export default {
       lastOfferValueHasChanged: false,
       cityFilter: null,
       ufFilter: null,
-      disputePartys: [
+      dispuesToUnknownParties: [
         {
-          value: 'RESPONDENT',
-          label: 'Advogado do réu',
+          value: {
+            party: 'RESPONDENT',
+            roles: ['PARTY']
+          },
+          label: 'Réu',
         },
         {
-          value: 'CLAIMANT',
-          label: 'Advogado da parte contrária',
+          value: {
+            party: 'CLAIMANT',
+            roles: ['PARTY']
+          },
+          label: 'Parte contrária',
         },
         {
-          value: 'UNKNOWN',
-          label: 'Desconhecido',
+          value: {
+            party: 'RESPONDENT',
+            roles: ['LAWYER']
+          },
+          label: 'Advogado do Réu',
         },
+        {
+          value: {
+            party: 'CLAIMANT',
+            roles: ['LAWYER']
+          },
+          label: 'Advogado da Parte contrária',
+        }
       ],
+      tempRole: {}
     }
   },
   computed: {
@@ -1878,12 +1909,65 @@ export default {
   },
   methods: {
     ...mapActions([
+      'getDispute',
       'removeDispute',
       'setDisputeparty',
       'getDisputeStatuses',
       'getDisputeTimeline',
       'getDisputeProprieties'
     ]),
+
+    handleUnknowParty(role) {
+      const { value } = this.dispuesToUnknownParties[this.tempRole]
+      const newRole = { ...role, ...value, roles: value.roles }
+      this.$store.dispatch('editRole', {
+        disputeId: this.dispute.id,
+        disputeRole: newRole
+      }).then(() => {
+        this.getDispute(this.dispute.id)
+        this.$jusNotification({
+          title: 'Yay!',
+          message: 'Os dados foram alterados com sucesso.',
+          type: 'success',
+        })
+        this.$forceUpdate()
+      }).catch(error => {
+        this.$jusNotification({ error })
+      })
+    },
+
+    getDisputePartys(roles) {
+      if (roles.includes('PARTY')) {
+        return [
+          {
+            value: 'RESPONDENT',
+            label: 'Réu',
+          },
+          {
+            value: 'CLAIMANT',
+            label: 'Parte contrária',
+          }
+        ]
+      } else if (roles.includes('LAWYER')) {
+        return [
+          {
+            value: 'RESPONDENT',
+            label: 'Advogado do Réu',
+          },
+          {
+            value: 'CLAIMANT',
+            label: 'Advogado da Parte contrária',
+          }
+        ]
+      } else {
+        return [
+          {
+            value: 'RESPONDENT',
+            label: 'Negociador',
+          }
+        ]
+      }
+    },
 
     handleEditRule() {
       this.isEditingRule = !this.isEditingRule
@@ -2559,7 +2643,7 @@ export default {
       })
     },
     setDisputeParty(role) {
-      this.$jusSegment('Defiido função em participante da disputa', {
+      this.$jusSegment('Definindo função em participante da disputa', {
         page: this.$route.name,
       })
       this.setDisputeparty({
@@ -2633,7 +2717,7 @@ export default {
       margin-left: 12px;
       width: 100%;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       > span:not(.jus-vexatious-alert) {
         width: 100%;
         margin: 5px;
@@ -2647,8 +2731,14 @@ export default {
     > .dispute-overview-view__select-role {
       display: flex;
       flex-direction: row;
-      > .el-button {
+      > .dispute-overview-view__tooltip-cancel-edit-role {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-left: 8px;
+        font-size: 16px;
+        color: $--color-danger;
       }
     }
     .dispute-overview-view__info-line-description:hover  .dispute-overview-view__edit-icon{
