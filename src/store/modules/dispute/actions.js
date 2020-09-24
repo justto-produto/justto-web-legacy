@@ -210,15 +210,11 @@ const disputeActions = {
       mutation: command ? 'pushExportHistory' : 'setExportHistory',
     })
   },
-  editRole({ commit }, params) {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line
-      axios.put('api/disputes/' + params.disputeId +'/dispute-roles', params.disputeRole)
-        .then(response => {
-          resolve(response.data)
-        }).catch(error => {
-          reject(error.response)
-        })
+  editRole({ _ }, { disputeId, disputeRole }) {
+    return axiosDispatcher({
+      url: `api/disputes/${disputeId}/dispute-roles`,
+      method: 'PUT',
+      data: disputeRole
     })
   },
   removeRole({ commit }, role) {
