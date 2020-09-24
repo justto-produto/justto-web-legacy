@@ -40,7 +40,7 @@
             </el-carousel>
           </div>
         </el-col>
-        <el-col :span="8" style="height: 100%;">
+        <el-col :span="8" style="height: 100%; align-items: center;">
           <img
             class="onboarding__justtine"
             src="@/assets/gifs/onboarding/dashboardJusttine.gif"
@@ -182,8 +182,7 @@ export default {
   }
 
   &__justtine {
-    width: 100%;
-    padding: 0 25px;
+    height: 90%;
   }
 
   &__justtine-pleasure {
