@@ -2,7 +2,7 @@
   <div class="onboarding">
     <div class="onboarding__content">
       <el-row :gutter="24">
-        <el-col :span="16">
+        <el-col :span="16" style="height: 100%;">
           <div class="content__carousel">
             <el-carousel
               ref="carousel"
@@ -40,10 +40,11 @@
             </el-carousel>
           </div>
         </el-col>
-        <el-col :span="8">
-          <div class="grid-content bg-purple">
-            Gif da Justtine
-          </div>
+        <el-col :span="8" style="height: 100%;">
+          <img
+            class="onboarding__justtine"
+            src="@/assets/gifs/onboarding/dashboardJusttine.gif"
+          >
         </el-col>
       </el-row>
     </div>
@@ -117,13 +118,14 @@ export default {
     background: #ffffff;
     border-radius: 20px;
     box-shadow: 0px 3px 10px #00000045;
-    padding: 15px 20px;
 
     @media (max-height: 680px) {
       height: 85%;
     }
 
     .content__carousel {
+      padding: 15px 20px;
+
       .carousel__item {
         text-align: center;
         padding: 0 15px;
@@ -173,6 +175,11 @@ export default {
         }
       }
     }
+  }
+
+  &__justtine {
+    width: 100%;
+    padding: 0 20px;
   }
 }
 </style>
