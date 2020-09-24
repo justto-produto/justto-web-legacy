@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { DASHBOARD_ONBOARDING_STATUS } from '@/constants/variables'
+import { DASHBOARD_ONBOARDING_STATUS } from '@/constants/preferences'
 
 const mutations = {
   setDashboardDatasets(state, chartsDatasets) {

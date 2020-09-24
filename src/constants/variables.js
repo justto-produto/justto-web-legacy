@@ -1,2 +1,1 @@
 export const IS_SMALL_WINDOW = window.innerHeight < 680
-export const DASHBOARD_ONBOARDING_STATUS = 'DASHBOARD_ONBOARDING_STATUS'

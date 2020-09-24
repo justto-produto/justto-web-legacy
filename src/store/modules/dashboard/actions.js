@@ -1,5 +1,5 @@
 import axiosDispatcher from '@/store/axiosDispatcher.js'
-import { DASHBOARD_ONBOARDING_STATUS } from '@/constants/variables'
+import { DASHBOARD_ONBOARDING_STATUS } from '@/constants/preferences'
 
 const actions = {
   getDashboard({ state, commit }, chartName) {
