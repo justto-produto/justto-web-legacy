@@ -25,6 +25,9 @@ const accountMutations = {
     if (response.email) state.email = response.email
     if (response.properties) state.properties = response.properties
   },
+  updateUserPreferences(state, precerence) {
+    state.properties = Object.assign(state.properties, precerence)
+  }
 }
 
 export default accountMutations

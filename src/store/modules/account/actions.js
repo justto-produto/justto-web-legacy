@@ -82,12 +82,12 @@ const accountActions = {
       mutation: 'setToken',
     })
   },
-  updateUserPreferences({ dispatch }, preference) {
+  updateUserPreferences({ commit }, preference) {
     return axiosDispatcher({
       url: `${accountPath}/my/property/`,
       method: 'PUT',
       data: preference,
-    }).then(() => dispatch('myAccount'))
+    }).then(() => commit('updateUserPreferences', preference))
   },
 }
 
