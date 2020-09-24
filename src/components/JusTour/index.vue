@@ -104,6 +104,7 @@ export default {
     border-radius: 8px;
     background-color: $--color-white;
     filter: drop-shadow(0 3px 16px rgba(37,38,94, 0.15)) !important;
+    height: 160px;
     
     .jus-tour__step-justine {
       // position: absolute;
@@ -122,6 +123,7 @@ export default {
       font-weight: 600;
       text-align: left;
       font-size: 16px;
+      height: 98px;
     }
 
     .jus-tour__step-actions {
