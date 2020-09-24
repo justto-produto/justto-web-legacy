@@ -91,6 +91,7 @@ export default {
     finishTour(finishTour) {
       this.updateUserPreferences({ [this.name]: true })
       finishTour()
+      this.$emit('finishTour')
     },
   },
 }

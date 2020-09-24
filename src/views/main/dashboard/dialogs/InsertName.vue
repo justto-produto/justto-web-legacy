@@ -55,19 +55,9 @@ export default {
         isEditingLoggedPerson: true,
       }).then(() => {
         this.$jusSegment('[Modal de nome] Nome do usuário alterado')
-        this.$jusNotification({
-          title: 'Yay!',
-          message: 'Nome informado com sucesso.',
-          type: 'success',
-        })
         this.$emit('confirm')
       }).catch(error => {
         this.$jusNotification({ error })
-        this.$jusNotification({
-          title: 'Ops!',
-          message: 'Não conseguimos cadastrar seu nome',
-          type: 'warning',
-        })
       })
     },
   },

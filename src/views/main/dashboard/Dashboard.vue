@@ -167,7 +167,7 @@
         :name="dashboardTour.name"
         :steps="dashboardTour.steps"
         highlight
-        :callbacks="dashboardTourCallbacks"
+        @finishTour="finishTour"
       />
     </template>
   </jus-view-main>
@@ -200,9 +200,6 @@ export default {
       },
       isInsertNameOpen: false,
       isOnboardingDialogOpen: false,
-      dashboardTourCallbacks: {
-        onFinish: this.dashboardTourOnFinish,
-      },
     }
   },
   computed: {
@@ -276,10 +273,14 @@ export default {
     isDashboardTourCompleted() {
       const status = this.userPreferences[DASHBOARD_TOUR_STATUS]
 
-      if (status) {
-        return true
+      if (typeof status === 'string') {
+        if (status === 'true') {
+          return true
+        } else {
+          return false
+        }
       } else {
-        return false
+        return status
       }
     },
   },
@@ -290,7 +291,8 @@ export default {
       this.getDashboard()
     }
 
-    // this.setOnboardingStatus('false')
+    // this.updateUserPreferences({ [DASHBOARD_TOUR_STATUS]: false })
+    // this.setOnboardingStatus(false)
 
     if (!this.hasPersonName) {
       this.isInsertNameOpen = true
@@ -424,14 +426,14 @@ export default {
     },
     closeOnboardingDialog() {
       this.isOnboardingDialogOpen = false
-      this.setOnboardingStatus('true')
+      this.setOnboardingStatus(true)
       this.getDashboard()
       this.openDashboardTour()
     },
     openOnboardingDialog() {
       setTimeout(() => {
         this.isOnboardingDialogOpen = !this.isCompletedOnboarding
-      }, 2000)
+      }, 500)
     },
     confirmInsertName() {
       this.isInsertNameOpen = false
@@ -443,6 +445,12 @@ export default {
           this.$tours[this.dashboardTour.name].start()
         }, 1000)
       }
+    },
+    finishTour() {
+      this.updateUserPreferences({
+        [DASHBOARD_TOUR_STATUS]: true,
+      })
+      this.$router.push({ name: 'management' })
     },
   },
 }
