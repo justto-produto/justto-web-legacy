@@ -290,8 +290,6 @@ export default {
       this.getDashboard()
     }
 
-    this.openDashboardTour()
-
     // this.setOnboardingStatus('false')
 
     if (!this.hasPersonName) {
