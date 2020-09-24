@@ -195,7 +195,6 @@ const disputeMutations = {
       date: lastAccessTime,
       log: new Date()
     }
-    console.log(state.lastAccess)
   }
 }
 

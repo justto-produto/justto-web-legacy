@@ -54,7 +54,6 @@ const disputeActions = {
       const time1 = moment(state.lastAccess[disputeId].log)
       const time2 = moment(new Date())
       const dif = time2.diff(time1)
-      console.log('DIF', dif)
       if (dif <= 3000) {
         return
       }
@@ -62,12 +61,10 @@ const disputeActions = {
     return axiosDispatcher({
       url: `api/disputes/${disputeId}/my-last-access`
     }).then(res => {
-      if (res) {
-        commit('setLastAccess', {
-          disputeId,
-          lastAccessTime: res.lastAccessed.dateTime
-        })
-      }
+      commit('setLastAccess', {
+        disputeId,
+        lastAccessTime: res ? res.lastAccessed.dateTime : ''
+      })
     })
   },
   cleanDisputeLastAccess({ commit, state }) {

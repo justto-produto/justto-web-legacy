@@ -1,13 +1,14 @@
 <template>
   <div class="last-interactions-table">
     <el-popover
+      v-if="data.lastOutboundInteraction"
       trigger="hover"
       popper-class="el-popover--dark"
       @show="getMessageSummaryHandler(data.lastOutboundInteraction, data.id)"
       @hide="messageSummary = {}"
     >
       <div>
-        <strong>
+        <strong v-if="data.lastOutboundInteraction">
           <jus-icon
             :icon="getInteractionIcon(data.lastOutboundInteraction)"
             is-white
@@ -72,7 +73,7 @@
     >
       <div>
         <div>
-          <strong>
+          <strong v-if="data.lastReceivedMessage">
             <jus-icon
               :icon="getInteractionIcon(data.lastReceivedMessage)"
               is-white
