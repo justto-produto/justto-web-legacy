@@ -59,12 +59,12 @@ export default {
   props: {
     variables: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
-      variableFilterTerm: '',
+      variableFilterTerm: ''
     }
   },
   computed: {
@@ -73,14 +73,14 @@ export default {
       for (const [key, value] of Object.entries(this.variables)) {
         convertedVariables.push({
           key,
-          value,
+          value
         })
       }
       return convertedVariables
     },
     filteredVariables() {
       return filterByTerm(this.variableFilterTerm, this.convertedVariables, 'key', 'value')
-    },
+    }
   },
   methods: {
     copyVariable(value) {
@@ -88,10 +88,10 @@ export default {
       this.$jusNotification({
         title: 'Yay',
         message: 'Variável copiada para o clipboard',
-        type: 'success',
+        type: 'success'
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

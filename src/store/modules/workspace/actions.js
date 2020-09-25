@@ -4,13 +4,13 @@ const actions = {
   myWorkspace() {
     return axiosDispatcher({
       url: 'api/workspaces/my',
-      headers: { Workspace: '' },
+      headers: { Workspace: '' }
     })
   },
   getWorkspace({ getters }) {
     return axiosDispatcher({
       url: `api/workspaces/${getters.workspaceId}`,
-      mutation: 'setWorkspace',
+      mutation: 'setWorkspace'
     })
   },
   verifyAvailability({ commit }, subdomain) {
@@ -45,7 +45,7 @@ const actions = {
         status: state.status,
         blacklist: state.blackList,
         name: params.name,
-        properties: params.properties,
+        properties: params.properties
       }).then(response => {
         commit('setWorkspace', response.data)
         resolve(response.data)
@@ -58,7 +58,7 @@ const actions = {
     return axiosDispatcher({
       url: '/api/workspaces/teamName',
       method: 'patch',
-      data,
+      data
     })
   },
   inviteTeammates({ state }, teammates) {
@@ -86,12 +86,12 @@ const actions = {
   getWorkspaceMembers({ commit, dispatch }) {
     return axiosDispatcher({
       url: 'api/workspaces/members?size=999&',
-      mutation: 'setWorkspaceMembers',
+      mutation: 'setWorkspaceMembers'
     })
   },
   getWorkspaces({ _ }) {
     return axiosDispatcher({
-      url: 'api/workspaces?size=999&',
+      url: 'api/workspaces?size=999&'
     })
   },
   removeWorkspaceMember({ commit }, id) {
@@ -144,7 +144,7 @@ const actions = {
     return axiosDispatcher({
       url: 'api/workspaces/blacklist',
       method: 'patch',
-      data: blackList,
+      data: blackList
     })
   },
   adminWorkspaces({ commit }, params) {
@@ -158,8 +158,8 @@ const actions = {
           url: params.url || `api/workspaces/${params.workspaceId || ''}`,
           method: params.method,
           params: params.params,
-          data: params.data,
-        },
+          data: params.data
+        }
       }).then(response => {
         resolve(response.data)
       }).catch(error => {
@@ -177,8 +177,8 @@ const actions = {
           url: params.url || `api/workspaces${params.workspaceId ? '/' + params.workspaceId : ''}/members/${params.userId || ''}`,
           method: params.method,
           params: params.params,
-          data: params.data,
-        },
+          data: params.data
+        }
       }
       // eslint-disable-next-line
       axios(config).then(response => {
@@ -187,7 +187,7 @@ const actions = {
         reject(error)
       })
     })
-  },
+  }
 }
 
 export default actions

@@ -170,8 +170,8 @@ export default {
       selectedTag: null,
       showForm: false,
       tagForm: {
-        name: '', color: '', icon: '',
-      },
+        name: '', color: '', icon: ''
+      }
     }
   },
   computed: {
@@ -183,7 +183,7 @@ export default {
         this.loading = true
         this.$store.dispatch('editDisputeTags', {
           disputeId: this.$store.getters.disputeId,
-          data: tags,
+          data: tags
         }).then(() => {
           this.tagForm.name = ''
           this.showForm = false
@@ -194,7 +194,7 @@ export default {
           this.loading = false
           this.visible = false
         })
-      },
+      }
     },
     workspaceTags() {
       return this.$store.getters.workspaceTags.filter(t => {
@@ -206,7 +206,7 @@ export default {
     },
     icons() {
       return this.$store.state.tagModule.icons
-    },
+    }
   },
   mounted() {
     this.tagForm.color = this.colors[0]
@@ -231,7 +231,7 @@ export default {
           tagName: this.tagForm.name,
           tagIcon: this.tagForm.icon,
           tagColor: this.tagForm.color,
-          page: this.$route.name,
+          page: this.$route.name
         })
         const disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
         disputeTags.push(this.tagForm)
@@ -244,7 +244,7 @@ export default {
         tagName: this.tagForm.name,
         tagIcon: this.tagForm.icon,
         tagColor: this.tagForm.color,
-        page: this.$route.name,
+        page: this.$route.name
       })
       const disputeTags = JSON.parse(JSON.stringify(this.disputeTags))
       disputeTags.push(tag)
@@ -254,19 +254,19 @@ export default {
       this.$confirm('Tem certeza que deseja exluir essa tag?', 'Excluír tag', {
         type: 'warning',
         confirmButtonText: 'Continuar',
-        cancelButtonText: 'Cancelar',
+        cancelButtonText: 'Cancelar'
       }).then(() => {
         this.deleteTag(tagId).then(() => {
           this.$jusNotification({
             type: 'success',
             title: 'Yay!',
-            message: 'Tag excluída com sucesso.',
+            message: 'Tag excluída com sucesso.'
           })
         }, () => {
           this.$jusNotification({
             type: 'warning',
             title: 'Ops!',
-            message: 'Não foi possível excluir a tag',
+            message: 'Não foi possível excluir a tag'
           })
         })
       })
@@ -278,7 +278,7 @@ export default {
         tagName: tagToRemove.name,
         tagIcon: tagToRemove.icon,
         tagColor: tagToRemove.color,
-        page: this.$route.name,
+        page: this.$route.name
       })
       this.disputeTags = this.disputeTags.filter(t => t.id !== tagId)
     },
@@ -310,8 +310,8 @@ export default {
       this.$store.commit('updateDisputeQuery', { key: 'tags', value: [tagId] })
       this.$store.commit('setDisputesTab', '3')
       this.$router.push('/management')
-    },
-  },
+    }
+  }
 }
 </script>
 

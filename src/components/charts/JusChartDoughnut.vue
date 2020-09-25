@@ -7,12 +7,12 @@ export default {
   props: {
     title: {
       type: String,
-      default: '',
+      default: ''
     },
     data: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   mounted() {
     const labels = this.data.slice()
@@ -23,10 +23,10 @@ export default {
           backgroundColor: [
             '#9461f7',
             '#ff9300',
-            '#f4f4f4',
-          ],
+            '#f4f4f4'
+          ]
         }],
-        labels: labels.slice(0, -1),
+        labels: labels.slice(0, -1)
       },
       {
         responsive: false,
@@ -36,8 +36,8 @@ export default {
             usePointStyle: true,
             fontSize: 9,
             fontColor: '#424242',
-            fontFamily: "'Montserrat', sans-serif",
-          },
+            fontFamily: "'Montserrat', sans-serif"
+          }
         },
         title: {
           display: true,
@@ -45,12 +45,12 @@ export default {
           fontFamily: "'Montserrat', sans-serif",
           fontStyle: 'normal',
           padding: 0,
-          fontSize: 12,
+          fontSize: 12
         },
         tooltips: {
-          enabled: false,
-        },
-      },
+          enabled: false
+        }
+      }
     )
     const title = this.title
     // eslint-disable-next-line
@@ -68,9 +68,9 @@ export default {
           ctx.fillText(text, textX, textY)
           ctx.save()
         }
-      },
+      }
     })
-  },
+  }
 }
 </script>
 

@@ -9,7 +9,7 @@ const showLoading = function() {
       lock: true,
       text: 'Nossos serviços encontram-se em manutenção diária no momento.\nRetorne entre às 7h30 e 23h.',
       background: 'rgba(0, 0, 0, 0.85)',
-      customClass: 'el-loading-mask--offline',
+      customClass: 'el-loading-mask--offline'
     })
     const newDate = new Date()
     const timeLeft = newDate.getTime() - new Date(newDate.getFullYear(), newDate.getMonth(), currentHour >= 23 ? newDate.getDay() + 1 : newDate.getDay(), 7, 30)

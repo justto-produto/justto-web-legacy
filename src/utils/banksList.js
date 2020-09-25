@@ -2,1010 +2,1010 @@ export default
 [
   {
     code: '001',
-    name: 'BANCO DO BRASIL',
+    name: 'BANCO DO BRASIL'
   },
   {
     code: '341',
-    name: 'ITAÚ',
+    name: 'ITAÚ'
   },
   {
     code: '104',
-    name: 'CAIXA ECONÔMICA FEDERAL',
+    name: 'CAIXA ECONÔMICA FEDERAL'
   },
   {
     code: '033',
-    name: 'SANTANDER',
+    name: 'SANTANDER'
   },
   {
     code: '070',
-    name: 'BRB - BANCO DE BRASÌLIA',
+    name: 'BRB - BANCO DE BRASÌLIA'
   },
   {
     code: '077',
-    name: 'BANCO INTERMEDIUM',
+    name: 'BANCO INTERMEDIUM'
   },
   {
     code: '237',
-    name: 'BRADESCO',
+    name: 'BRADESCO'
   },
   {
     code: '745',
-    name: 'CITIBANK',
+    name: 'CITIBANK'
   },
   {
     code: '422',
-    name: 'BANCO SAFRA',
+    name: 'BANCO SAFRA'
   },
   {
     code: '399',
-    name: 'BANCO HSBC',
+    name: 'BANCO HSBC'
   },
   {
     code: '756',
-    name: 'BANCOOB',
+    name: 'BANCOOB'
   },
   {
     code: '212',
-    name: 'BANCO ORIGINAL',
+    name: 'BANCO ORIGINAL'
   },
   {
     code: '002',
-    name: 'BANCO CENTRAL DO BRASIL',
+    name: 'BANCO CENTRAL DO BRASIL'
   },
   {
     code: '003',
-    name: 'BANCO DA AMAZONIA S.A',
+    name: 'BANCO DA AMAZONIA S.A'
   },
   {
     code: '004',
-    name: 'BANCO DO NORDESTE DO BRASIL S.A',
+    name: 'BANCO DO NORDESTE DO BRASIL S.A'
   },
   {
     code: '007',
-    name: 'BANCO NAC DESENV. ECO. SOCIAL S.A',
+    name: 'BANCO NAC DESENV. ECO. SOCIAL S.A'
   },
   {
     code: '008',
-    name: 'BANCO MERIDIONAL DO BRASIL',
+    name: 'BANCO MERIDIONAL DO BRASIL'
   },
   {
     code: '020',
-    name: 'BANCO DO ESTADO DE ALAGOAS S.A',
+    name: 'BANCO DO ESTADO DE ALAGOAS S.A'
   },
   {
     code: '021',
-    name: 'BANCO DO ESTADO DO ESPIRITO SANTO S.A',
+    name: 'BANCO DO ESTADO DO ESPIRITO SANTO S.A'
   },
   {
     code: '022',
-    name: 'BANCO DE CREDITO REAL DE MINAS GERAIS S.A',
+    name: 'BANCO DE CREDITO REAL DE MINAS GERAIS S.A'
   },
   {
     code: '024',
-    name: 'BANCO DO ESTADO DE PERNAMBUCO',
+    name: 'BANCO DO ESTADO DE PERNAMBUCO'
   },
   {
     code: '025',
-    name: 'BANCO ALFA S.A',
+    name: 'BANCO ALFA S.A'
   },
   {
     code: '026',
-    name: 'BANCO DO ESTADO DO ACRE S.A',
+    name: 'BANCO DO ESTADO DO ACRE S.A'
   },
   {
     code: '027',
-    name: 'BANCO DO ESTADO DE SANTA CATARINA S.A',
+    name: 'BANCO DO ESTADO DE SANTA CATARINA S.A'
   },
   {
     code: '028',
-    name: 'BANCO DO ESTADO DA BAHIA S.A',
+    name: 'BANCO DO ESTADO DA BAHIA S.A'
   },
   {
     code: '029',
-    name: 'BANCO DO ESTADO DO RIO DE JANEIRO S.A',
+    name: 'BANCO DO ESTADO DO RIO DE JANEIRO S.A'
   },
   {
     code: '030',
-    name: 'BANCO DO ESTADO DA PARAIBA S.A',
+    name: 'BANCO DO ESTADO DA PARAIBA S.A'
   },
   {
     code: '031',
-    name: 'BANCO DO ESTADO DE GOIAS S.A',
+    name: 'BANCO DO ESTADO DE GOIAS S.A'
   },
   {
     code: '032',
-    name: 'BANCO DO ESTADO DO MATO GROSSO S.A',
+    name: 'BANCO DO ESTADO DO MATO GROSSO S.A'
   },
   {
     code: '034',
-    name: 'BANCO DO ESADO DO AMAZONAS S.A',
+    name: 'BANCO DO ESADO DO AMAZONAS S.A'
   },
   {
     code: '035',
-    name: 'BANCO DO ESTADO DO CEARA S.A',
+    name: 'BANCO DO ESTADO DO CEARA S.A'
   },
   {
     code: '036',
-    name: 'BANCO DO ESTADO DO MARANHAO S.A',
+    name: 'BANCO DO ESTADO DO MARANHAO S.A'
   },
   {
     code: '037',
-    name: 'BANCO DO ESTADO DO PARA S.A',
+    name: 'BANCO DO ESTADO DO PARA S.A'
   },
   {
     code: '038',
-    name: 'BANCO DO ESTADO DO PARANA S.A',
+    name: 'BANCO DO ESTADO DO PARANA S.A'
   },
   {
     code: '039',
-    name: 'BANCO DO ESTADO DO PIAUI S.A',
+    name: 'BANCO DO ESTADO DO PIAUI S.A'
   },
   {
     code: '041',
-    name: 'BANCO DO ESTADO DO RIO GRANDE DO SUL S.A',
+    name: 'BANCO DO ESTADO DO RIO GRANDE DO SUL S.A'
   },
   {
     code: '047',
-    name: 'BANCO DO ESTADO DE SERGIPE S.A',
+    name: 'BANCO DO ESTADO DE SERGIPE S.A'
   },
   {
     code: '048',
-    name: 'BANCO DO ESTADO DE MINAS GERAIS S.A',
+    name: 'BANCO DO ESTADO DE MINAS GERAIS S.A'
   },
   {
     code: '059',
-    name: 'BANCO DO ESTADO DE RONDONIA S.A',
+    name: 'BANCO DO ESTADO DE RONDONIA S.A'
   },
   {
     code: '106',
-    name: 'BANCO ITABANCO S.A',
+    name: 'BANCO ITABANCO S.A'
   },
   {
     code: '107',
-    name: 'BANCO BBM S.A',
+    name: 'BANCO BBM S.A'
   },
   {
     code: '109',
-    name: 'BANCO CREDIBANCO S.A',
+    name: 'BANCO CREDIBANCO S.A'
   },
   {
     code: '116',
-    name: 'BANCO B.N.L DO BRASIL S.A',
+    name: 'BANCO B.N.L DO BRASIL S.A'
   },
   {
     code: '148',
-    name: 'MULTI BANCO S.A',
+    name: 'MULTI BANCO S.A'
   },
   {
     code: '151',
-    name: 'CAIXA ECONOMICA DO ESTADO DE SAO PAULO',
+    name: 'CAIXA ECONOMICA DO ESTADO DE SAO PAULO'
   },
   {
     code: '153',
-    name: 'CAIXA ECONOMICA DO ESTADO DO R.G.SUL',
+    name: 'CAIXA ECONOMICA DO ESTADO DO R.G.SUL'
   },
   {
     code: '165',
-    name: 'BANCO NORCHEM S.A',
+    name: 'BANCO NORCHEM S.A'
   },
   {
     code: '166',
-    name: 'BANCO INTER-ATLANTICO S.A',
+    name: 'BANCO INTER-ATLANTICO S.A'
   },
   {
     code: '168',
-    name: 'BANCO C.C.F. BRASIL S.A',
+    name: 'BANCO C.C.F. BRASIL S.A'
   },
   {
     code: '175',
-    name: 'CONTINENTAL BANCO S.A',
+    name: 'CONTINENTAL BANCO S.A'
   },
   {
     code: '184',
-    name: 'BBA - CREDITANSTALT S.A',
+    name: 'BBA - CREDITANSTALT S.A'
   },
   {
     code: '199',
-    name: 'BANCO FINANCIAL PORTUGUES',
+    name: 'BANCO FINANCIAL PORTUGUES'
   },
   {
     code: '200',
-    name: 'BANCO FRICRISA AXELRUD S.A',
+    name: 'BANCO FRICRISA AXELRUD S.A'
   },
   {
     code: '201',
-    name: 'BANCO AUGUSTA INDUSTRIA E COMERCIAL S.A',
+    name: 'BANCO AUGUSTA INDUSTRIA E COMERCIAL S.A'
   },
   {
     code: '204',
-    name: 'BANCO S.R.L S.A',
+    name: 'BANCO S.R.L S.A'
   },
   {
     code: '205',
-    name: 'BANCO SUL AMERICA S.A',
+    name: 'BANCO SUL AMERICA S.A'
   },
   {
     code: '206',
-    name: 'BANCO MARTINELLI S.A',
+    name: 'BANCO MARTINELLI S.A'
   },
   {
     code: '208',
-    name: 'BANCO PACTUAL S.A',
+    name: 'BANCO PACTUAL S.A'
   },
   {
     code: '210',
-    name: 'DEUTSCH SUDAMERIKANICHE BANK AG',
+    name: 'DEUTSCH SUDAMERIKANICHE BANK AG'
   },
   {
     code: '211',
-    name: 'BANCO SISTEMA S.A',
+    name: 'BANCO SISTEMA S.A'
   },
   {
     code: '213',
-    name: 'BANCO ARBI S.A',
+    name: 'BANCO ARBI S.A'
   },
   {
     code: '214',
-    name: 'BANCO DIBENS S.A',
+    name: 'BANCO DIBENS S.A'
   },
   {
     code: '215',
-    name: 'BANCO AMERICA DO SUL S.A',
+    name: 'BANCO AMERICA DO SUL S.A'
   },
   {
     code: '216',
-    name: 'BANCO REGIONAL MALCON S.A',
+    name: 'BANCO REGIONAL MALCON S.A'
   },
   {
     code: '217',
-    name: 'BANCO AGROINVEST S.A',
+    name: 'BANCO AGROINVEST S.A'
   },
   {
     code: '218',
-    name: 'BS2',
+    name: 'BS2'
   },
   {
     code: '219',
-    name: 'BANCO DE CREDITO DE SAO PAULO S.A',
+    name: 'BANCO DE CREDITO DE SAO PAULO S.A'
   },
   {
     code: '220',
-    name: 'BANCO CREFISUL',
+    name: 'BANCO CREFISUL'
   },
   {
     code: '221',
-    name: 'BANCO GRAPHUS S.A',
+    name: 'BANCO GRAPHUS S.A'
   },
   {
     code: '222',
-    name: 'BANCO AGF BRASIL S.A',
+    name: 'BANCO AGF BRASIL S.A'
   },
   {
     code: '223',
-    name: 'BANCO INTERUNION S.A',
+    name: 'BANCO INTERUNION S.A'
   },
   {
     code: '224',
-    name: 'BANCO FIBRA S.A',
+    name: 'BANCO FIBRA S.A'
   },
   {
     code: '225',
-    name: 'BANCO BRASCAN S.A',
+    name: 'BANCO BRASCAN S.A'
   },
   {
     code: '228',
-    name: 'BANCO ICATU S.A',
+    name: 'BANCO ICATU S.A'
   },
   {
     code: '229',
-    name: 'BANCO CRUZEIRO S.A',
+    name: 'BANCO CRUZEIRO S.A'
   },
   {
     code: '230',
-    name: 'BANCO BANDEIRANTES S.A',
+    name: 'BANCO BANDEIRANTES S.A'
   },
   {
     code: '231',
-    name: 'BANCO BOAVISTA S.A',
+    name: 'BANCO BOAVISTA S.A'
   },
   {
     code: '232',
-    name: 'BANCO INTERPART S.A',
+    name: 'BANCO INTERPART S.A'
   },
   {
     code: '233',
-    name: 'BANCO MAPPIN S.A',
+    name: 'BANCO MAPPIN S.A'
   },
   {
     code: '234',
-    name: 'BANCO LAVRA S.A',
+    name: 'BANCO LAVRA S.A'
   },
   {
     code: '235',
-    name: 'BANCO LIBERAL S.A',
+    name: 'BANCO LIBERAL S.A'
   },
   {
     code: '236',
-    name: 'BANCO CAMBIAL S.A',
+    name: 'BANCO CAMBIAL S.A'
   },
   {
     code: '239',
-    name: 'BANCO BANCRED S.A',
+    name: 'BANCO BANCRED S.A'
   },
   {
     code: '240',
-    name: 'BANCO DE CREDITO REAL DE MINAS GERAIS S.',
+    name: 'BANCO DE CREDITO REAL DE MINAS GERAIS S.'
   },
   {
     code: '241',
-    name: 'BANCO CLASSICO S.A',
+    name: 'BANCO CLASSICO S.A'
   },
   {
     code: '242',
-    name: 'BANCO EUROINVEST S.A',
+    name: 'BANCO EUROINVEST S.A'
   },
   {
     code: '243',
-    name: 'BANCO STOCK S.A',
+    name: 'BANCO STOCK S.A'
   },
   {
     code: '244',
-    name: 'BANCO CIDADE S.A',
+    name: 'BANCO CIDADE S.A'
   },
   {
     code: '245',
-    name: 'BANCO EMPRESARIAL S.A',
+    name: 'BANCO EMPRESARIAL S.A'
   },
   {
     code: '246',
-    name: 'BANCO ABC ROMA S.A',
+    name: 'BANCO ABC ROMA S.A'
   },
   {
     code: '247',
-    name: 'BANCO OMEGA S.A',
+    name: 'BANCO OMEGA S.A'
   },
   {
     code: '249',
-    name: 'BANCO INVESTCRED S.A',
+    name: 'BANCO INVESTCRED S.A'
   },
   {
     code: '250',
-    name: 'BANCO SCHAHIN CURY S.A',
+    name: 'BANCO SCHAHIN CURY S.A'
   },
   {
     code: '251',
-    name: 'BANCO SAO JORGE S.A',
+    name: 'BANCO SAO JORGE S.A'
   },
   {
     code: '252',
-    name: 'BANCO FININVEST S.A',
+    name: 'BANCO FININVEST S.A'
   },
   {
     code: '254',
-    name: 'BANCO PARANA BANCO S.A',
+    name: 'BANCO PARANA BANCO S.A'
   },
   {
     code: '255',
-    name: 'MILBANCO S.A',
+    name: 'MILBANCO S.A'
   },
   {
     code: '256',
-    name: 'BANCO GULVINVEST S.A',
+    name: 'BANCO GULVINVEST S.A'
   },
   {
     code: '258',
-    name: 'BANCO INDUSCRED S.A',
+    name: 'BANCO INDUSCRED S.A'
   },
   {
     code: '261',
-    name: 'BANCO VARIG S.A',
+    name: 'BANCO VARIG S.A'
   },
   {
     code: '262',
-    name: 'BANCO BOREAL S.A',
+    name: 'BANCO BOREAL S.A'
   },
   {
     code: '263',
-    name: 'BANCO CACIQUE',
+    name: 'BANCO CACIQUE'
   },
   {
     code: '264',
-    name: 'BANCO PERFORMANCE S.A',
+    name: 'BANCO PERFORMANCE S.A'
   },
   {
     code: '265',
-    name: 'BANCO FATOR S.A',
+    name: 'BANCO FATOR S.A'
   },
   {
     code: '266',
-    name: 'BANCO CEDULA S.A',
+    name: 'BANCO CEDULA S.A'
   },
   {
     code: '267',
-    name: 'BANCO BBM-COM.C.IMOB.CFI S.A',
+    name: 'BANCO BBM-COM.C.IMOB.CFI S.A'
   },
   {
     code: '275',
-    name: 'BANCO REAL S.A',
+    name: 'BANCO REAL S.A'
   },
   {
     code: '277',
-    name: 'BANCO PLANIBANC S.A',
+    name: 'BANCO PLANIBANC S.A'
   },
   {
     code: '282',
-    name: 'BANCO BRASILEIRO COMERCIAL',
+    name: 'BANCO BRASILEIRO COMERCIAL'
   },
   {
     code: '291',
-    name: 'BANCO DE CREDITO NACIONAL S.A',
+    name: 'BANCO DE CREDITO NACIONAL S.A'
   },
   {
     code: '294',
-    name: 'BCR - BANCO DE CREDITO REAL S.A',
+    name: 'BCR - BANCO DE CREDITO REAL S.A'
   },
   {
     code: '295',
-    name: 'BANCO CREDIPLAN S.A',
+    name: 'BANCO CREDIPLAN S.A'
   },
   {
     code: '300',
-    name: 'BANCO DE LA NACION ARGENTINA S.A',
+    name: 'BANCO DE LA NACION ARGENTINA S.A'
   },
   {
     code: '302',
-    name: 'BANCO DO PROGRESSO S.A',
+    name: 'BANCO DO PROGRESSO S.A'
   },
   {
     code: '303',
-    name: 'BANCO HNF S.A',
+    name: 'BANCO HNF S.A'
   },
   {
     code: '304',
-    name: 'BANCO PONTUAL S.A',
+    name: 'BANCO PONTUAL S.A'
   },
   {
     code: '308',
-    name: 'BANCO COMERCIAL BANCESA S.A',
+    name: 'BANCO COMERCIAL BANCESA S.A'
   },
   {
     code: '318',
-    name: 'BANCO B.M.G. S.A',
+    name: 'BANCO B.M.G. S.A'
   },
   {
     code: '320',
-    name: 'BANCO INDUSTRIAL E COMERCIAL',
+    name: 'BANCO INDUSTRIAL E COMERCIAL'
   },
   {
     code: '346',
-    name: 'BANCO FRANCES E BRASILEIRO S.A',
+    name: 'BANCO FRANCES E BRASILEIRO S.A'
   },
   {
     code: '347',
-    name: 'BANCO SUDAMERIS BRASIL S.A',
+    name: 'BANCO SUDAMERIS BRASIL S.A'
   },
   {
     code: '351',
-    name: 'BANCO BOZANO SIMONSEN S.A',
+    name: 'BANCO BOZANO SIMONSEN S.A'
   },
   {
     code: '353',
-    name: 'BANCO GERAL DO COMERCIO S.A',
+    name: 'BANCO GERAL DO COMERCIO S.A'
   },
   {
     code: '356',
-    name: 'ABN AMRO S.A',
+    name: 'ABN AMRO S.A'
   },
   {
     code: '366',
-    name: 'BANCO SOGERAL S.A',
+    name: 'BANCO SOGERAL S.A'
   },
   {
     code: '369',
-    name: 'PONTUAL',
+    name: 'PONTUAL'
   },
   {
     code: '370',
-    name: 'BEAL - BANCO EUROPEU PARA AMERICA LATINA',
+    name: 'BEAL - BANCO EUROPEU PARA AMERICA LATINA'
   },
   {
     code: '372',
-    name: 'BANCO ITAMARATI S.A',
+    name: 'BANCO ITAMARATI S.A'
   },
   {
     code: '375',
-    name: 'BANCO FENICIA S.A',
+    name: 'BANCO FENICIA S.A'
   },
   {
     code: '376',
-    name: 'CHASE MANHATTAN BANK S.A',
+    name: 'CHASE MANHATTAN BANK S.A'
   },
   {
     code: '388',
-    name: 'BANCO MERCANTIL DE DESCONTOS S.A',
+    name: 'BANCO MERCANTIL DE DESCONTOS S.A'
   },
   {
     code: '389',
-    name: 'BANCO MERCANTIL DO BRASIL S.A',
+    name: 'BANCO MERCANTIL DO BRASIL S.A'
   },
   {
     code: '392',
-    name: 'BANCO MERCANTIL DE SAO PAULO S.A',
+    name: 'BANCO MERCANTIL DE SAO PAULO S.A'
   },
   {
     code: '394',
-    name: 'BANCO B.M.C. S.A',
+    name: 'BANCO B.M.C. S.A'
   },
   {
     code: '409',
-    name: 'UNIBANCO - UNIAO DOS BANCOS BRASILEIROS',
+    name: 'UNIBANCO - UNIAO DOS BANCOS BRASILEIROS'
   },
   {
     code: '412',
-    name: 'BANCO NACIONAL DA BAHIA S.A',
+    name: 'BANCO NACIONAL DA BAHIA S.A'
   },
   {
     code: '415',
-    name: 'BANCO NACIONAL S.A',
+    name: 'BANCO NACIONAL S.A'
   },
   {
     code: '420',
-    name: 'BANCO NACIONAL DO NORTE S.A',
+    name: 'BANCO NACIONAL DO NORTE S.A'
   },
   {
     code: '424',
-    name: 'BANCO NOROESTE S.A',
+    name: 'BANCO NOROESTE S.A'
   },
   {
     code: '434',
-    name: 'BANCO FORTALEZA S.A',
+    name: 'BANCO FORTALEZA S.A'
   },
   {
     code: '453',
-    name: 'BANCO RURAL S.A',
+    name: 'BANCO RURAL S.A'
   },
   {
     code: '456',
-    name: 'BANCO TOKIO S.A',
+    name: 'BANCO TOKIO S.A'
   },
   {
     code: '464',
-    name: 'BANCO SUMITOMO BRASILEIRO S.A',
+    name: 'BANCO SUMITOMO BRASILEIRO S.A'
   },
   {
     code: '466',
-    name: 'BANCO MITSUBISHI BRASILEIRO S.A',
+    name: 'BANCO MITSUBISHI BRASILEIRO S.A'
   },
   {
     code: '472',
-    name: 'LLOYDS BANK PLC',
+    name: 'LLOYDS BANK PLC'
   },
   {
     code: '473',
-    name: 'BANCO FINANCIAL PORTUGUES S.A',
+    name: 'BANCO FINANCIAL PORTUGUES S.A'
   },
   {
     code: '477',
-    name: 'CITIBANK N.A',
+    name: 'CITIBANK N.A'
   },
   {
     code: '479',
-    name: 'BANCO DE BOSTON S.A',
+    name: 'BANCO DE BOSTON S.A'
   },
   {
     code: '480',
-    name: 'BANCO PORTUGUES DO ATLANTICO-BRASIL S.A',
+    name: 'BANCO PORTUGUES DO ATLANTICO-BRASIL S.A'
   },
   {
     code: '483',
-    name: 'BANCO AGRIMISA S.A',
+    name: 'BANCO AGRIMISA S.A'
   },
   {
     code: '487',
-    name: 'DEUTSCHE BANK S.A - BANCO ALEMAO',
+    name: 'DEUTSCHE BANK S.A - BANCO ALEMAO'
   },
   {
     code: '488',
-    name: 'BANCO J. P. MORGAN S.A',
+    name: 'BANCO J. P. MORGAN S.A'
   },
   {
     code: '489',
-    name: 'BANESTO BANCO URUGAUAY S.A',
+    name: 'BANESTO BANCO URUGAUAY S.A'
   },
   {
     code: '492',
-    name: 'INTERNATIONALE NEDERLANDEN BANK N.V.',
+    name: 'INTERNATIONALE NEDERLANDEN BANK N.V.'
   },
   {
     code: '493',
-    name: 'BANCO UNION S.A.C.A',
+    name: 'BANCO UNION S.A.C.A'
   },
   {
     code: '494',
-    name: 'BANCO LA REP. ORIENTAL DEL URUGUAY',
+    name: 'BANCO LA REP. ORIENTAL DEL URUGUAY'
   },
   {
     code: '495',
-    name: 'BANCO LA PROVINCIA DE BUENOS AIRES',
+    name: 'BANCO LA PROVINCIA DE BUENOS AIRES'
   },
   {
     code: '496',
-    name: 'BANCO EXTERIOR DE ESPANA S.A',
+    name: 'BANCO EXTERIOR DE ESPANA S.A'
   },
   {
     code: '498',
-    name: 'CENTRO HISPANO BANCO',
+    name: 'CENTRO HISPANO BANCO'
   },
   {
     code: '499',
-    name: 'BANCO IOCHPE S.A',
+    name: 'BANCO IOCHPE S.A'
   },
   {
     code: '501',
-    name: 'BANCO BRASILEIRO IRAQUIANO S.A',
+    name: 'BANCO BRASILEIRO IRAQUIANO S.A'
   },
   {
     code: '502',
-    name: 'BANCO SANTANDER S.A',
+    name: 'BANCO SANTANDER S.A'
   },
   {
     code: '504',
-    name: 'BANCO MULTIPLIC S.A',
+    name: 'BANCO MULTIPLIC S.A'
   },
   {
     code: '505',
-    name: 'BANCO GARANTIA S.A',
+    name: 'BANCO GARANTIA S.A'
   },
   {
     code: '600',
-    name: 'BANCO LUSO BRASILEIRO S.A',
+    name: 'BANCO LUSO BRASILEIRO S.A'
   },
   {
     code: '601',
-    name: 'BFC BANCO S.A',
+    name: 'BFC BANCO S.A'
   },
   {
     code: '602',
-    name: 'BANCO PATENTE S.A',
+    name: 'BANCO PATENTE S.A'
   },
   {
     code: '604',
-    name: 'BANCO INDUSTRIAL DO BRASIL S.A',
+    name: 'BANCO INDUSTRIAL DO BRASIL S.A'
   },
   {
     code: '607',
-    name: 'BANCO SANTOS NEVES S.A',
+    name: 'BANCO SANTOS NEVES S.A'
   },
   {
     code: '608',
-    name: 'BANCO OPEN S.A',
+    name: 'BANCO OPEN S.A'
   },
   {
     code: '610',
-    name: 'BANCO V.R. S.A',
+    name: 'BANCO V.R. S.A'
   },
   {
     code: '611',
-    name: 'BANCO PAULISTA S.A',
+    name: 'BANCO PAULISTA S.A'
   },
   {
     code: '612',
-    name: 'BANCO GUANABARA S.A',
+    name: 'BANCO GUANABARA S.A'
   },
   {
     code: '613',
-    name: 'BANCO PECUNIA S.A',
+    name: 'BANCO PECUNIA S.A'
   },
   {
     code: '616',
-    name: 'BANCO INTERPACIFICO S.A',
+    name: 'BANCO INTERPACIFICO S.A'
   },
   {
     code: '617',
-    name: 'BANCO INVESTOR S.A',
+    name: 'BANCO INVESTOR S.A'
   },
   {
     code: '618',
-    name: 'BANCO TENDENCIA S.A',
+    name: 'BANCO TENDENCIA S.A'
   },
   {
     code: '621',
-    name: 'BANCO APLICAP S.A',
+    name: 'BANCO APLICAP S.A'
   },
   {
     code: '622',
-    name: 'BANCO DRACMA S.A',
+    name: 'BANCO DRACMA S.A'
   },
   {
     code: '623',
-    name: 'BANCO PANAMERICANO S.A',
+    name: 'BANCO PANAMERICANO S.A'
   },
   {
     code: '624',
-    name: 'BANCO GENERAL MOTORS S.A',
+    name: 'BANCO GENERAL MOTORS S.A'
   },
   {
     code: '625',
-    name: 'BANCO ARAUCARIA S.A',
+    name: 'BANCO ARAUCARIA S.A'
   },
   {
     code: '626',
-    name: 'BANCO FICSA S.A',
+    name: 'BANCO FICSA S.A'
   },
   {
     code: '627',
-    name: 'BANCO DESTAK S.A',
+    name: 'BANCO DESTAK S.A'
   },
   {
     code: '628',
-    name: 'BANCO CRITERIUM S.A',
+    name: 'BANCO CRITERIUM S.A'
   },
   {
     code: '629',
-    name: 'BANCORP BANCO COML. E. DE INVESTMENTO',
+    name: 'BANCORP BANCO COML. E. DE INVESTMENTO'
   },
   {
     code: '630',
-    name: 'BANCO INTERCAP S.A',
+    name: 'BANCO INTERCAP S.A'
   },
   {
     code: '633',
-    name: 'BANCO REDIMENTO S.A',
+    name: 'BANCO REDIMENTO S.A'
   },
   {
     code: '634',
-    name: 'BANCO TRIANGULO S.A',
+    name: 'BANCO TRIANGULO S.A'
   },
   {
     code: '635',
-    name: 'BANCO DO ESTADO DO AMAPA S.A',
+    name: 'BANCO DO ESTADO DO AMAPA S.A'
   },
   {
     code: '637',
-    name: 'BANCO SOFISA S.A',
+    name: 'BANCO SOFISA S.A'
   },
   {
     code: '638',
-    name: 'BANCO PROSPER S.A',
+    name: 'BANCO PROSPER S.A'
   },
   {
     code: '639',
-    name: 'BIG S.A - BANCO IRMAOS GUIMARAES',
+    name: 'BIG S.A - BANCO IRMAOS GUIMARAES'
   },
   {
     code: '640',
-    name: 'BANCO DE CREDITO METROPOLITANO S.A',
+    name: 'BANCO DE CREDITO METROPOLITANO S.A'
   },
   {
     code: '641',
-    name: 'BANCO EXCEL ECONOMICO S.A',
+    name: 'BANCO EXCEL ECONOMICO S.A'
   },
   {
     code: '643',
-    name: 'BANCO SEGMENTO S.A',
+    name: 'BANCO SEGMENTO S.A'
   },
   {
     code: '645',
-    name: 'BANCO DO ESTADO DE RORAIMA S.A',
+    name: 'BANCO DO ESTADO DE RORAIMA S.A'
   },
   {
     code: '647',
-    name: 'BANCO MARKA S.A',
+    name: 'BANCO MARKA S.A'
   },
   {
     code: '648',
-    name: 'BANCO ATLANTIS S.A',
+    name: 'BANCO ATLANTIS S.A'
   },
   {
     code: '649',
-    name: 'BANCO DIMENSAO S.A',
+    name: 'BANCO DIMENSAO S.A'
   },
   {
     code: '650',
-    name: 'BANCO PEBB S.A',
+    name: 'BANCO PEBB S.A'
   },
   {
     code: '652',
-    name: 'BANCO FRANCES E BRASILEIRO SA',
+    name: 'BANCO FRANCES E BRASILEIRO SA'
   },
   {
     code: '653',
-    name: 'BANCO INDUSVAL S.A',
+    name: 'BANCO INDUSVAL S.A'
   },
   {
     code: '654',
-    name: 'BANCO A. J. RENNER S.A',
+    name: 'BANCO A. J. RENNER S.A'
   },
   {
     code: '655',
-    name: 'BANCO VOTORANTIM S.A',
+    name: 'BANCO VOTORANTIM S.A'
   },
   {
     code: '656',
-    name: 'BANCO MATRIX S.A',
+    name: 'BANCO MATRIX S.A'
   },
   {
     code: '657',
-    name: 'BANCO TECNICORP S.A',
+    name: 'BANCO TECNICORP S.A'
   },
   {
     code: '658',
-    name: 'BANCO PORTO REAL S.A',
+    name: 'BANCO PORTO REAL S.A'
   },
   {
     code: '702',
-    name: 'BANCO SANTOS S.A',
+    name: 'BANCO SANTOS S.A'
   },
   {
     code: '705',
-    name: 'BANCO INVESTCORP S.A',
+    name: 'BANCO INVESTCORP S.A'
   },
   {
     code: '707',
-    name: 'BANCO DAYCOVAL S.A',
+    name: 'BANCO DAYCOVAL S.A'
   },
   {
     code: '711',
-    name: 'BANCO VETOR S.A',
+    name: 'BANCO VETOR S.A'
   },
   {
     code: '713',
-    name: 'BANCO CINDAM S.A',
+    name: 'BANCO CINDAM S.A'
   },
   {
     code: '715',
-    name: 'BANCO VEGA S.A',
+    name: 'BANCO VEGA S.A'
   },
   {
     code: '718',
-    name: 'BANCO OPERADOR S.A',
+    name: 'BANCO OPERADOR S.A'
   },
   {
     code: '719',
-    name: 'BANCO PRIMUS S.A',
+    name: 'BANCO PRIMUS S.A'
   },
   {
     code: '720',
-    name: 'BANCO MAXINVEST S.A',
+    name: 'BANCO MAXINVEST S.A'
   },
   {
     code: '721',
-    name: 'BANCO CREDIBEL S.A',
+    name: 'BANCO CREDIBEL S.A'
   },
   {
     code: '722',
-    name: 'BANCO INTERIOR DE SAO PAULO S.A',
+    name: 'BANCO INTERIOR DE SAO PAULO S.A'
   },
   {
     code: '724',
-    name: 'BANCO PORTO SEGURO S.A',
+    name: 'BANCO PORTO SEGURO S.A'
   },
   {
     code: '725',
-    name: 'BANCO FINABANCO S.A',
+    name: 'BANCO FINABANCO S.A'
   },
   {
     code: '726',
-    name: 'BANCO UNIVERSAL S.A',
+    name: 'BANCO UNIVERSAL S.A'
   },
   {
     code: '728',
-    name: 'BANCO FITAL S.A',
+    name: 'BANCO FITAL S.A'
   },
   {
     code: '729',
-    name: 'BANCO FONTE S.A',
+    name: 'BANCO FONTE S.A'
   },
   {
     code: '730',
-    name: 'BANCO COMERCIAL PARAGUAYO S.A',
+    name: 'BANCO COMERCIAL PARAGUAYO S.A'
   },
   {
     code: '731',
-    name: 'BANCO GNPP S.A',
+    name: 'BANCO GNPP S.A'
   },
   {
     code: '732',
-    name: 'BANCO PREMIER S.A',
+    name: 'BANCO PREMIER S.A'
   },
   {
     code: '733',
-    name: 'BANCO NACOES S.A',
+    name: 'BANCO NACOES S.A'
   },
   {
     code: '734',
-    name: 'BANCO GERDAU S.A',
+    name: 'BANCO GERDAU S.A'
   },
   {
     code: '736',
-    name: 'BANCO UNITED S.A',
+    name: 'BANCO UNITED S.A'
   },
   {
     code: '737',
-    name: 'THECA',
+    name: 'THECA'
   },
   {
     code: '738',
-    name: 'MARADA',
+    name: 'MARADA'
   },
   {
     code: '739',
-    name: 'BGN',
+    name: 'BGN'
   },
   {
     code: '740',
-    name: 'BCN BARCLAYS',
+    name: 'BCN BARCLAYS'
   },
   {
     code: '741',
-    name: 'BRP',
+    name: 'BRP'
   },
   {
     code: '742',
-    name: 'EQUATORIAL',
+    name: 'EQUATORIAL'
   },
   {
     code: '743',
-    name: 'BANCO EMBLEMA S.A',
+    name: 'BANCO EMBLEMA S.A'
   },
   {
     code: '744',
-    name: 'THE FIRST NATIONAL BANK OF BOSTON',
+    name: 'THE FIRST NATIONAL BANK OF BOSTON'
   },
   {
     code: '746',
-    name: 'MODAL S\\A',
+    name: 'MODAL S\\A'
   },
   {
     code: '747',
-    name: 'RAIBOBANK DO BRASIL',
+    name: 'RAIBOBANK DO BRASIL'
   },
   {
     code: '748',
-    name: 'SICREDI',
+    name: 'SICREDI'
   },
   {
     code: '749',
-    name: 'BRMSANTIL SA',
+    name: 'BRMSANTIL SA'
   },
   {
     code: '750',
-    name: 'BANCO REPUBLIC NATIONAL OF NEW YORK (BRA',
+    name: 'BANCO REPUBLIC NATIONAL OF NEW YORK (BRA'
   },
   {
     code: '751',
-    name: 'DRESDNER BANK LATEINAMERIKA-BRASIL S.A',
+    name: 'DRESDNER BANK LATEINAMERIKA-BRASIL S.A'
   },
   {
     code: '752',
-    name: 'BANCO BANQUE NATIONALE DE PARIS BRASIL S',
+    name: 'BANCO BANQUE NATIONALE DE PARIS BRASIL S'
   },
   {
     code: '753',
-    name: 'BANCO COMERCIAL URUGUAI S.A',
+    name: 'BANCO COMERCIAL URUGUAI S.A'
   },
   {
     code: '755',
-    name: 'BANCO MERRILL LYNCH S.A',
+    name: 'BANCO MERRILL LYNCH S.A'
   },
   {
     code: '757',
-    name: 'BANCO KEB DO BRASIL S.A',
+    name: 'BANCO KEB DO BRASIL S.A'
   },
   {
     code: '735',
-    name: 'BANCO NEON',
+    name: 'BANCO NEON'
   },
   {
     code: '260',
-    name: 'NUBANK',
+    name: 'NUBANK'
   },
   {
     code: '102',
-    name: 'XP INVESTIMENTOS',
+    name: 'XP INVESTIMENTOS'
   },
   {
     code: '336',
-    name: 'BANCO C6 S.A',
-  },
+    name: 'BANCO C6 S.A'
+  }
 ]

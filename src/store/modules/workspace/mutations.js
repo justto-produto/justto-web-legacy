@@ -22,7 +22,7 @@ const mutations = {
         status,
         id,
         blackList,
-        properties,
+        properties
       })
       localStorage.setItem('jusworkspace', JSON.stringify(workspace))
     }
@@ -44,7 +44,7 @@ const mutations = {
       profile: '',
       blackList: [],
       members: [],
-      properties: {},
+      properties: {}
     }
     localStorage.removeItem('jusworkspace')
     localStorage.removeItem('jusprofile')
@@ -53,7 +53,7 @@ const mutations = {
   setWorkspaceMembers: (state, members) => (state.members = members.content),
   setBlackList(state, blackList) {
     if (blackList) state.blackList = blackList
-  },
+  }
 }
 
 export default mutations

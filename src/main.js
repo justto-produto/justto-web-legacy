@@ -100,7 +100,7 @@ Vue.use(money, {
   decimal: ',',
   thousands: '.',
   prefix: 'R$ ',
-  precision: 2,
+  precision: 2
 })
 
 Vue.config.productionTip = false
@@ -129,7 +129,7 @@ function initVue() {
     router,
     store,
     i18n,
-    render: h => h(App),
+    render: h => h(App)
   }).$mount('#app')
   validateWorkspace()
 }

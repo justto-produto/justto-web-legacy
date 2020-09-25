@@ -4,11 +4,11 @@ import getters from './getters'
 
 const alert = {
   state: {
-    alerts: [],
+    alerts: []
   },
   mutations: mutations,
   actions: actions,
-  getters: getters,
+  getters: getters
 }
 
 export default alert

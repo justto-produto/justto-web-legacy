@@ -19,7 +19,7 @@ const mutations = {
   setTerm: (state, term) => (state.query.term = term),
   setTableLoading: (state, tableLoading) => (state.tableLoading = tableLoading),
   addTransactionsQueryPage: (state) => (state.query.page += 1),
-  resetTransactionsQueryPage: (state) => (state.query.page = 1),
+  resetTransactionsQueryPage: (state) => (state.query.page = 1)
 }
 
 export default mutations

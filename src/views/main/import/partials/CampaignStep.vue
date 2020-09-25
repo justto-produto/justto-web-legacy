@@ -44,7 +44,8 @@
     <el-alert
       v-if="!strategyList.length && !loadingStrategies"
       :closable="false"
-      type="error">
+      type="error"
+    >
       <div>
         <h2>Atenção.</h2>
         <p>
@@ -62,7 +63,8 @@
     <el-alert
       v-if="!strategyList.length && loadingStrategies"
       :closable="false"
-      type="info">
+      type="info"
+    >
       <div class="el-loading-parent--relative">
         <div class="el-loading-mask">
           <div class="el-loading-spinner">
@@ -138,27 +140,27 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'CampaignStep',
   components: {
-    JusImportFeedbackCard: () => import('@/components/layouts/JusImportFeedbackCard'),
+    JusImportFeedbackCard: () => import('@/components/layouts/JusImportFeedbackCard')
   },
   props: {
     campaignIsMapped: {
       type: Boolean,
-      default: false,
+      default: false
     },
     mappedCampaigns: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   data() {
     return {
       duplicatedDisputes: [],
       duplicatedDisputesLoading: true,
-      loadingStrategies: false,
+      loadingStrategies: false
     }
   },
   computed: {
-    ...mapGetters(['loading', 'strategyList', 'importedFileName']),
+    ...mapGetters(['loading', 'strategyList', 'importedFileName'])
   },
   watch: {
     campaignIsMapped(current) {
@@ -167,7 +169,7 @@ export default {
           this.duplicatedDisputes = response.disputes
         }).finally(() => (this.duplicatedDisputesLoading = false))
       }
-    },
+    }
   },
   async beforeMount() {
     if (!this.strategyList.length) {
@@ -196,8 +198,8 @@ export default {
         }
       }
       this.loadingStrategies = false
-    },
-  },
+    }
+  }
 }
 </script>
 

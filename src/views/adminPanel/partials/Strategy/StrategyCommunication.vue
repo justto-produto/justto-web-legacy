@@ -65,34 +65,34 @@ export default {
   name: 'StrategyCommunication',
   components: {
     CommunicationEditor: () => import('./CommunicationEditor'),
-    CommunicationPopover: () => import('./CommunicationPopover'),
+    CommunicationPopover: () => import('./CommunicationPopover')
   },
   props: {
     triggers: {
       type: Object,
-      default: () => [],
+      default: () => []
     },
     strategyId: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       communicationToEdit: {},
       communication: {},
-      editorDialogIsVisible: false,
+      editorDialogIsVisible: false
     }
   },
   computed: {
     ...mapGetters([
-      'activeStrategy',
+      'activeStrategy'
     ]),
     summary() {
       if (this.triggers.ENGAGEMENT) {
         return {
           emails: this.triggers.ENGAGEMENT.communicationsTypeSummary ? this.triggers.ENGAGEMENT.communicationsTypeSummary.EMAIL : 0,
-          sms: this.triggers.ENGAGEMENT.communicationsTypeSummary ? this.triggers.ENGAGEMENT.communicationsTypeSummary.SMS : 0,
+          sms: this.triggers.ENGAGEMENT.communicationsTypeSummary ? this.triggers.ENGAGEMENT.communicationsTypeSummary.SMS : 0
         }
       } return { emails: 0, sms: 0 }
     },
@@ -100,13 +100,13 @@ export default {
       get() {
         return this.activeStrategy === this.strategyId
       },
-      set(val) {},
-    },
+      set(val) {}
+    }
   },
   methods: {
     ...mapActions([
       'getCommunicationTemplate',
-      'setActiveStrategy',
+      'setActiveStrategy'
     ]),
     handlePopoverClick() {
       console.log(this.openedPopover)
@@ -127,8 +127,8 @@ export default {
 
     translateRecipientName(name) {
       return this.$options.filters.capitalize(this.$t(`recipients.${name}`))
-    },
-  },
+    }
+  }
 }
 </script>
 

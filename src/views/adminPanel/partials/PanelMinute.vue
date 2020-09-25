@@ -102,7 +102,7 @@
 export default {
   name: 'PanelMinute',
   components: {
-    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard'),
+    JusVariablesCard: () => import('@/components/layouts/JusVariablesCard')
   },
   data() {
     return {
@@ -115,7 +115,7 @@ export default {
       minutes: [],
       types: {},
       fullscreen: false,
-      variableFilterTerm: '',
+      variableFilterTerm: ''
     }
   },
   computed: {
@@ -132,7 +132,7 @@ export default {
         return '100%'
       }
       return '90%'
-    },
+    }
   },
   mounted() {
     this.fetchMinutes()
@@ -166,14 +166,14 @@ export default {
               this.$jusNotification({
                 title: 'Yay!',
                 message: 'Minuta adicionada com sucesso',
-                type: 'success',
+                type: 'success'
               })
             }).catch(error => {
               console.error(error)
               this.$jusNotification({
                 title: 'Ops!',
                 message: 'Houve uma falha ao adicionar minuta. Certifique-se de que o documento adicionado é público.',
-                type: 'warning',
+                type: 'warning'
               })
             }).finally(() => {
               done()
@@ -182,7 +182,7 @@ export default {
           } else {
             done()
           }
-        },
+        }
       })
     },
     editMinute(url) {
@@ -209,12 +209,12 @@ export default {
           } else {
             done()
           }
-        },
+        }
       }).then(() => {
         this.$jusNotification({
           title: 'Yay!',
           message: 'Minuta excluída com sucesso',
-          type: 'success',
+          type: 'success'
         })
       })
     },
@@ -229,8 +229,8 @@ export default {
     },
     copy(value) {
       navigator.clipboard.writeText(`{{${value}}}`)
-    },
-  },
+    }
+  }
 }
 </script>
 

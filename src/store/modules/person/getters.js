@@ -13,7 +13,7 @@ const getters = {
       })
       return mainPhone[0] || state.loggedPerson.phones[0] || null
     }
-  },
+  }
 }
 
 export default getters

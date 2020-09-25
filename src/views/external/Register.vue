@@ -112,7 +112,7 @@ export default {
   name: 'Register',
   components: {
     JusSidenavExternal: () => import('@/components/layouts/JusSidenavExternal'),
-    JusButtonBack: () => import('@/components/buttons/JusButtonBack'),
+    JusButtonBack: () => import('@/components/buttons/JusButtonBack')
   },
   data() {
     return {
@@ -124,26 +124,26 @@ export default {
       registerForm: {
         name: '',
         email: '',
-        password: '',
+        password: ''
       },
       rules: {
         name: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
         ],
         email: [
           { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'submit' },
+          { type: 'email', required: true, message: 'Insira um e-mail válido', trigger: 'submit' }
         ],
         password: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
-        ],
-      },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' }
+        ]
+      }
     }
   },
   computed: {
     passwordType() {
       return this.showPassword ? 'text' : 'password'
-    },
+    }
   },
   beforeCreate() {
     this.$store.dispatch('logout', { redirect: false })
@@ -161,7 +161,7 @@ export default {
               // SEGMENT TRACK
               this.$jusSegment('Cadastro de novo usuário', {
                 userId: this.registerForm.email,
-                name: this.registerForm.name,
+                name: this.registerForm.name
               })
               self.showSuccess = true
               self.registerForm.name = ''
@@ -186,8 +186,8 @@ export default {
     },
     switchShowPassword() {
       this.showPassword = !this.showPassword
-    },
-  },
+    }
+  }
 }
 </script>
 

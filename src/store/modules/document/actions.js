@@ -17,7 +17,7 @@ const actions = {
   createDocumentByModel({ commit }, params) {
     return axiosDispatcher({
       url: documents + params.modelId + '/' + params.disputeId,
-      method: 'POST',
+      method: 'POST'
     })
   },
   getDocumentByDisputeId({ commit }, disputeId) {
@@ -38,55 +38,55 @@ const actions = {
     return axiosDispatcher({
       url: documents + 'signer/' + params.disputeId,
       method: 'POST',
-      data: params.recipients,
+      data: params.recipients
     })
   },
   resendSignersNotification({ commit }, params) {
     return axiosDispatcher({
       url: documents + 'resend-notification/' + params.disputeId,
-      method: 'PUT',
+      method: 'PUT'
     })
   },
   deleteDocument({ commit }, disputeId) {
     return axiosDispatcher({
       url: documents + disputeId,
-      method: 'DELETE',
+      method: 'DELETE'
     })
   },
   backDocumentToEditing({ commit }, disputeId) {
     return axiosDispatcher({
       url: `${documents}${disputeId}/back-to-editing`,
-      method: 'PATCH',
+      method: 'PATCH'
     })
   },
   addModel({ commit }, url) {
     return axiosDispatcher({
       url: documents + `model?url=${url}`,
       method: 'POST',
-      data: {},
+      data: {}
     })
   },
   editModel({ commit }, model) {
     return axiosDispatcher({
       url: documents + 'model/',
       method: 'PUT',
-      data: model,
+      data: model
     })
   },
   deleteModel({ commit }, modelId) {
     return axiosDispatcher({
       url: documents + 'model/' + modelId,
-      method: 'DELETE',
+      method: 'DELETE'
     })
   },
   downloadDocument({ commit }, params) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line
       axios.get(documents + 'download-signed/' + params.disputeId, {
-        responseType: 'arraybuffer',
+        responseType: 'arraybuffer'
       }).then(response => {
         const blob = new Blob([response.data], {
-          type: 'application/octet-stream',
+          type: 'application/octet-stream'
         })
         const fileName = params.name + '.pdf'
         FileSaver.saveAs(blob, fileName)
@@ -102,7 +102,7 @@ const actions = {
   getDefaultAssigners({ commit }, workspaceId) {
     return axiosDispatcher({
       url: 'api/office/document/signer',
-      mutation: 'createFromDefaultSigners',
+      mutation: 'createFromDefaultSigners'
     })
   },
   setSelectedSigners({ commit }, signers) {
@@ -110,7 +110,7 @@ const actions = {
   },
   cleanSelectedSigners({ commit }) {
     commit('setSelectedSigners', [])
-  },
+  }
 }
 
 export default actions

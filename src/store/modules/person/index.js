@@ -6,11 +6,11 @@ const person = JSON.parse(localStorage.getItem('jusperson')) || {}
 
 const personModule = {
   state: {
-    loggedPerson: person,
+    loggedPerson: person
   },
   mutations: mutations,
   actions: actions,
-  getters: getters,
+  getters: getters
 }
 
 export default personModule

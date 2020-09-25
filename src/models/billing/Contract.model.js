@@ -25,7 +25,7 @@ export class ContractModel {
       invoiceClosingDay = 0,
       plan,
       monthlySubscriptionFee,
-      tariffs = [],
+      tariffs = []
     }) {
     this._id = id
     this._status = status

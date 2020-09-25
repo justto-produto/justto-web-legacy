@@ -21,21 +21,21 @@ export default {
   props: {
     title: {
       type: String,
-      default: '',
+      default: ''
     },
     main: {
       type: String,
-      default: '',
+      default: ''
     },
     date: {
       type: String,
-      default: '',
+      default: ''
     },
     complement: {
       type: String,
-      default: '',
-    },
-  },
+      default: ''
+    }
+  }
 }
 </script>
 

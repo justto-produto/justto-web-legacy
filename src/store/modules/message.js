@@ -3,7 +3,7 @@ import axiosDispatcher from '@/store/axiosDispatcher.js'
 const message = {
   state: {
     recentMessages: [],
-    messageResumes: [],
+    messageResumes: []
   },
   mutations: {
     addMessageResume(state, messageResume) {
@@ -12,7 +12,7 @@ const message = {
     deleteMessageResumeByDisputeId(state, disputeId) {
       const index = state.messageResumes.findIndex(mr => mr.disputeId === disputeId)
       if (index !== -1) state.messageResumes.splice(index, 1)
-    },
+    }
   },
   actions: {
     canSendWhatsapp({ _ }, phone) {
@@ -22,28 +22,28 @@ const message = {
       return axiosDispatcher({
         url: 'api/messages/send/whatsapp',
         method: 'post',
-        data: data,
+        data: data
       })
     },
     sendemail({ _ }, data) {
       return axiosDispatcher({
         url: 'api/messages/send/email',
         method: 'post',
-        data: data,
+        data: data
       })
     },
     getOccurrenceMessage({ _ }, messageId) {
       return axiosDispatcher({
-        url: `api/messages/${messageId}`,
+        url: `api/messages/${messageId}`
       })
-    },
+    }
   },
   getters: {
     messageRecentMessages: state => state.recentMessages,
     getMessageResumeByDisputeId: state => (disputeId) => {
       return state.messageResumes.find(mr => mr.disputeId === disputeId)
-    },
-  },
+    }
+  }
 }
 
 export default message

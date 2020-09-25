@@ -39,16 +39,16 @@ export default {
   props: {
     value: {
       type: Number,
-      default: 0,
+      default: 0
     },
     vertical: {
       type: Boolean,
-      default: false,
+      default: false
     },
     object: {
       type: Object,
-      default: () => {},
-    },
+      default: () => {}
+    }
   },
   data() {
     return {
@@ -61,7 +61,7 @@ export default {
       currentY: 0,
       startPosition: 0,
       newPosition: null,
-      oldValue: this.value,
+      oldValue: this.value
     }
   },
   computed: {
@@ -94,12 +94,12 @@ export default {
     },
     wrapperStyle() {
       return this.vertical ? { bottom: this.currentPosition } : { left: this.currentPosition }
-    },
+    }
   },
   watch: {
     dragging(val) {
       this.$parent.dragging = val
-    },
+    }
   },
   methods: {
     handleMouseEnter() {
@@ -196,8 +196,8 @@ export default {
       if (!this.dragging && this.value !== this.oldValue) {
         this.oldValue = this.value
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

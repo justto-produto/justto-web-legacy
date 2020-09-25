@@ -47,16 +47,16 @@ export default {
   props: {
     data: {
       type: Object,
-      required: true,
+      required: true
     },
     actions: {
       type: Array,
-      default: null,
+      default: null
     },
     highlighted: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   computed: {
     cardTitle() {
@@ -81,7 +81,7 @@ export default {
 
     isPlural() {
       return this.data.archived.total > 1 ? 's' : ''
-    },
+    }
   },
   methods: {
     emitAction(trigger) {
@@ -89,11 +89,11 @@ export default {
         eventName: 'JusFinancialCard',
         eventProps: {
           trigger,
-          customProps: this.data,
-        },
+          customProps: this.data
+        }
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

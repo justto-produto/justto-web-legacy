@@ -13,7 +13,7 @@ const tagModule = {
       '#f39c12', // 2 laranja
       '#3498db', // 3 azul
       '#1abc9c', // 4 verde
-      '#9b59b6', //  5 roxo
+      '#9b59b6' //  5 roxo
     ],
     icons: [
       'user',
@@ -25,12 +25,12 @@ const tagModule = {
       'chat-dot-square',
       'edit',
       'star-on',
-      'success',
-    ],
+      'success'
+    ]
   },
   mutations: mutations,
   actions: actions,
-  getters: getters,
+  getters: getters
 }
 
 export default tagModule

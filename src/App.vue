@@ -12,7 +12,7 @@ export default {
   watch: {
     '$route'(to, from) {
       document.title = to.meta.title || 'Justto'
-    },
-  },
+    }
+  }
 }
 </script>

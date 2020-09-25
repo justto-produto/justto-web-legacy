@@ -54,14 +54,14 @@ export default {
         status: 'Ativo',
         contract: 'Empresa',
         plan: '8, 12, 1000',
-        workspaces: [{ name: 'Cetelem', teamName: 'Cetelem', status: 'Ativo' }, { name: 'Claro', teamName: 'Claro', status: 'Ativo' }, { name: 'Dell', teamName: 'Dell', status: 'Inativo' }],
+        workspaces: [{ name: 'Cetelem', teamName: 'Cetelem', status: 'Ativo' }, { name: 'Claro', teamName: 'Claro', status: 'Ativo' }, { name: 'Dell', teamName: 'Dell', status: 'Inativo' }]
       }, {
         name: 'Mediato',
         status: 'Inativo',
         contract: 'Escritório',
         plan: '4, 8, 500',
-        workspaces: [{ name: 'Via Varejo', teamName: 'Via Varejo', status: 'Ativo' }, { name: 'Whirepool', teamName: 'Whirepool', status: 'Inativo' }],
-      }],
+        workspaces: [{ name: 'Via Varejo', teamName: 'Via Varejo', status: 'Ativo' }, { name: 'Whirepool', teamName: 'Whirepool', status: 'Inativo' }]
+      }]
     }
   },
   computed: {
@@ -71,8 +71,8 @@ export default {
           data.name.toLowerCase().includes(this.search.toLowerCase()) ||
           data.teamName.toLowerCase().includes(this.search.toLowerCase())
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

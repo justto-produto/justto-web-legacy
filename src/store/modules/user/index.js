@@ -29,16 +29,16 @@ const UserModule = {
         name: detectBrowserName(),
         agent: navigator.userAgent,
         platform: navigator.platform,
-        vendor: navigator.vendor,
+        vendor: navigator.vendor
       },
       OS: {
-        name: detectOSName(),
-      },
-    },
+        name: detectOSName()
+      }
+    }
   },
   actions,
   getters,
-  mutations,
+  mutations
 }
 
 export default UserModule

@@ -65,7 +65,7 @@ export default {
   name: 'ImportLoading',
   data() {
     return {
-      showGif: 0,
+      showGif: 0
     }
   },
   mounted() {
@@ -90,8 +90,8 @@ export default {
           self.increaseShow()
         }, Math.floor(Math.random() * 2000))
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -114,8 +114,8 @@ const fuseSearchDisputes = function(disputes, term) {
       'disputeRoles.name',
       'disputeRoles.documentNumber',
       'disputeRoles.oabs.number',
-      'campaign.strategy',
-    ],
+      'campaign.strategy'
+    ]
   })
   const list = fuse.search(term)
   return list
@@ -137,8 +137,8 @@ const fuseSearchOccurrences = function(occurrences, term) {
       'interaction.message.title',
       'interaction.message.parameters.RECEIVER_NAME',
       'interaction.message.parameters.SENDER_NAME',
-      'interaction.message.parameters.PERSON_NAME',
-    ],
+      'interaction.message.parameters.PERSON_NAME'
+    ]
   })
   const list = fuse.search(term)
   return list
@@ -164,57 +164,65 @@ const getLastInteraction = function(lastinteractiondate) {
 }
 
 const getInteractionIcon = function(interaction) {
-  switch (interaction.type) {
-    case 'COMMUNICATION': {
-      if (interaction.message) {
-        switch (interaction.message.communicationType) {
-          case 'EMAIL': return 'email'
-          case 'EMAIL_CNA': return 'email-cna'
-          case 'SMS': return 'sms'
-          case 'CALL': return 'call'
-          case 'CHAT': return 'chat'
-          case 'TTS': return 'tts'
-          case 'DELAY': return 'delay'
-          case 'WHATSAPP': return 'whatsapp'
+  if (interaction) {
+    switch (interaction.type) {
+      case 'COMMUNICATION': {
+        if (interaction.message) {
+          switch (interaction.message.communicationType) {
+            case 'EMAIL': return 'email'
+            case 'EMAIL_CNA': return 'email-cna'
+            case 'SMS': return 'sms'
+            case 'CALL': return 'call'
+            case 'CHAT': return 'chat'
+            case 'TTS': return 'tts'
+            case 'DELAY': return 'delay'
+            case 'WHATSAPP': return 'whatsapp'
+          }
         }
+        return 'email'
       }
-      return 'email'
+      case 'VISUALIZATION': return 'eye'
+      case 'NEGOTIATOR_ACCESS': return 'justto'
+      case 'NEGOTIATOR_PROPOSAL': return 'proposal'
+      case 'NEGOTIATOR_CHECKOUT': return 'checkout'
+      case 'NEGOTIATOR_ACCEPTED': return 'accepted-negotiation'
+      case 'NEGOTIATOR_REJECTED': return 'rejected'
+      case 'CLICK': return 'click'
+      default: return 'eye'
     }
-    case 'VISUALIZATION': return 'eye'
-    case 'NEGOTIATOR_ACCESS': return 'justto'
-    case 'NEGOTIATOR_PROPOSAL': return 'proposal'
-    case 'NEGOTIATOR_CHECKOUT': return 'checkout'
-    case 'NEGOTIATOR_ACCEPTED': return 'accepted-negotiation'
-    case 'NEGOTIATOR_REJECTED': return 'rejected'
-    case 'CLICK': return 'click'
-    default: return 'eye'
+  } else {
+    return 'eye'
   }
 }
 
 const getLastInteractionTooltip = function(interaction) {
-  switch (interaction.type) {
-    case 'COMMUNICATION': {
-      if (interaction.message) {
-        switch (interaction.message.communicationType) {
-          case 'EMAIL': return 'E-mail'
-          case 'EMAIL_CNA': return 'E-mail CNA'
-          case 'SMS': return 'SMS'
-          case 'CALL': return 'Call'
-          case 'CHAT': return 'Chat'
-          case 'TTS': return 'TTS'
-          case 'WHATSAPP': return 'Whatsapp'
+  if (interaction) {
+    switch (interaction.type) {
+      case 'COMMUNICATION': {
+        if (interaction.message) {
+          switch (interaction.message.communicationType) {
+            case 'EMAIL': return 'E-mail'
+            case 'EMAIL_CNA': return 'E-mail CNA'
+            case 'SMS': return 'SMS'
+            case 'CALL': return 'Call'
+            case 'CHAT': return 'Chat'
+            case 'TTS': return 'TTS'
+            case 'WHATSAPP': return 'Whatsapp'
+          }
         }
+        return 'email'
       }
-      return 'email'
+      case 'VISUALIZATION': return 'Visualização sistema Justto'
+      case 'NEGOTIATOR_ACCESS': return 'Acesso sistema Justto'
+      case 'NEGOTIATOR_PROPOSAL': return 'Proposta de acordo'
+      case 'NEGOTIATOR_CHECKOUT': return 'Aceite de acordo'
+      case 'NEGOTIATOR_ACCEPTED': return 'Aceite de negociação'
+      case 'NEGOTIATOR_REJECTED': return 'Rejeição de acordo'
+      case 'CLICK': return 'Click na mensagem'
+      default: return 'Visualização sistema Justto'
     }
-    case 'VISUALIZATION': return 'Visualização sistema Justto'
-    case 'NEGOTIATOR_ACCESS': return 'Acesso sistema Justto'
-    case 'NEGOTIATOR_PROPOSAL': return 'Proposta de acordo'
-    case 'NEGOTIATOR_CHECKOUT': return 'Aceite de acordo'
-    case 'NEGOTIATOR_ACCEPTED': return 'Aceite de negociação'
-    case 'NEGOTIATOR_REJECTED': return 'Rejeição de acordo'
-    case 'CLICK': return 'Click na mensagem'
-    default: return 'Visualização sistema Justto'
+  } else {
+    return 'Visualização sistema Justto'
   }
 }
 
@@ -305,5 +313,5 @@ export {
   queryBuilder,
   filterByTerm,
   normalizeString,
-  getStringInitials,
+  getStringInitials
 }

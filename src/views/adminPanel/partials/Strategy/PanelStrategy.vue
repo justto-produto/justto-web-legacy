@@ -50,23 +50,23 @@ export default {
   name: 'PanelStrategy',
   components: {
     InfiniteLoading: () => import('vue-infinite-loading'),
-    StrategyCard: () => import('./StrategyCard'),
+    StrategyCard: () => import('./StrategyCard')
   },
   props: {
     filterTerm: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   data: () => ({
-    filterDebounce: null,
+    filterDebounce: null
   }),
   computed: {
     ...mapGetters({
       isJusttoDev: 'isJusttoDev',
       strategies: 'getStrategies',
       workspaces: 'getAvailableWorkspaces',
-      loading: 'getStrategiesLoadingStatus',
+      loading: 'getStrategiesLoadingStatus'
     }),
 
     strategiesContent() {
@@ -77,7 +77,7 @@ export default {
           return !strategy.name.startsWith('[TST]')
         }
       })
-    },
+    }
   },
   watch: {
     filterTerm(newValue, oldValue) {
@@ -88,7 +88,7 @@ export default {
           this.setFilterTerm(newValue)
         }, 500)
       }
-    },
+    }
   },
   beforeMount() {
     this.getAvailableWorkspace()
@@ -108,7 +108,7 @@ export default {
       'deleteStrategy',
       'incrementStrategySize',
       'clearStrategySize',
-      'setFilterTerm',
+      'setFilterTerm'
     ]),
 
     loadStrategy($state) {
@@ -127,14 +127,14 @@ export default {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancelar',
         inputValidator: (value) => !!value,
-        inputErrorMessage: 'Campo obrigatório',
+        inputErrorMessage: 'Campo obrigatório'
       }).then(({ value }) => {
         this.addStrategy({ privateStrategy: true, name: value })
           .then(() => {
             this.$jusNotification({
               title: 'Yay!',
               message: 'Estratégia criada com sucesso!',
-              type: 'success',
+              type: 'success'
             })
             this.$emit('set-filter', value)
           })
@@ -145,7 +145,7 @@ export default {
       this.$prompt('Nome da nova estratégia', 'Copiar estratégia', {
         confirmButtonText: 'Clonar',
         cancelButtonText: 'Cancelar',
-        inputValue: `${strategy.name} (Cópia)`,
+        inputValue: `${strategy.name} (Cópia)`
       }).then(({ value }) => {
         this.saveStrategyCopy(strategy, value)
       })
@@ -157,7 +157,7 @@ export default {
         confirmButtonText: 'Excluir',
         cancelButtonText: 'Cancelar',
         type: 'error',
-        cancelButtonClass: 'is-plain',
+        cancelButtonClass: 'is-plain'
       }).then(() => {
         this.deleteStrategy({ strategyId: strategy.id })
       })
@@ -173,17 +173,17 @@ export default {
 
       const strategyClone = {
         newName,
-        workspaceIds,
+        workspaceIds
       }
 
       this.cloneStrategy({
         strategyClone,
-        originId: strategy.id,
+        originId: strategy.id
       }).then(() => {
         this.$emit('set-filter', newName)
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

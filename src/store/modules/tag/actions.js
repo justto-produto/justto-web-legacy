@@ -6,14 +6,14 @@ const actions = {
     return axiosDispatcher({
       url: 'api/workspaces/tags',
       mutation: 'setWorkspaceTags',
-      params: { size: 9999, sort: 'id,asc' },
+      params: { size: 9999, sort: 'id,asc' }
     })
   },
   getDisputeTags({ _ }, disputeId) {
     return axiosDispatcher({
       url: `/api/disputes/${disputeId}/tags`,
       mutation: 'setDisputeTags',
-      params: { size: 9999, sort: 'id,desc' },
+      params: { size: 9999, sort: 'id,desc' }
     })
   },
   editDisputeTags({ _ }, params) {
@@ -21,7 +21,7 @@ const actions = {
       method: 'patch',
       url: `/api/disputes/${params.disputeId}/tags`,
       mutation: 'setDisputeTags',
-      data: params.data,
+      data: params.data
     })
   },
   getFilteredTags({ rootState }) {
@@ -32,15 +32,15 @@ const actions = {
     return axiosDispatcher({
       method: 'get',
       url: `/api/disputes/tags${queryBuilder(query)}`,
-      mutation: 'setFilteredTags',
+      mutation: 'setFilteredTags'
     })
   },
   deleteTag({ _ }, tagId) {
     return axiosDispatcher({
       url: `/api/workspaces/tags/${tagId}`,
-      method: 'DELETE',
+      method: 'DELETE'
     })
-  },
+  }
 }
 
 export default actions
