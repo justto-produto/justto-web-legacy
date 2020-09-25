@@ -76,8 +76,8 @@
                 :key="selected.id"
               >
                 <span v-if="index === 0">
-                  <span v-if="selected.number">{{ selected.number | phoneMask }}</span>
-                  <span v-else-if="selected.address">{{ selected.address | phoneMask }}</span>
+                  <span v-if="selected.number">{{ selected.number | phoneNumber }}</span>
+                  <span v-else-if="selected.address">{{ selected.address | phoneNumber }}</span>
                 </span>
               </span>
               <el-tooltip v-if="selectedContacts.length > 1">
@@ -93,7 +93,7 @@
                           is-white
                           style="width: 14px;vertical-align: top;"
                         />
-                        {{ selected.number | phoneMask }}
+                        {{ selected.number | phoneNumber }}
                       </div>
                       <div v-else-if="selected.address">
                         <jus-icon

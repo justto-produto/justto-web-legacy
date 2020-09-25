@@ -154,11 +154,30 @@
           </div>
         </el-col>
       </el-row>
+      <insert-name
+        :is-dialog-visible="isInsertNameOpen"
+        @confirm="confirmInsertName"
+      />
+      <onboarding
+        v-if="isOnboardingDialogOpen"
+        :steps="steps"
+        @closeOnboarding="closeOnboardingDialog"
+      />
+      <JusTour
+        :name="dashboardTour.name"
+        :steps="dashboardTour.steps"
+        highlight
+        @finishTour="finishTour"
+      />
     </template>
   </jus-view-main>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+import DASHBOARD_TOUR from './tour'
+import { DASHBOARD_TOUR_STATUS } from '@/constants/preferences'
+
 export default {
   name: 'Dashboard',
   components: {
@@ -166,6 +185,8 @@ export default {
     JusChartBar: () => import('@/components/charts/JusChartBar'),
     JusChartCard: () => import('@/components/charts/JusChartCard'),
     JusChartTable: () => import('@/components/charts/JusChartTable'),
+    InsertName: () => import('./dialogs/InsertName'),
+    Onboarding: () => import('@/components/dialogs/Onboarding'),
   },
   data() {
     return {
@@ -177,9 +198,17 @@ export default {
         onClick: this.filter,
         maintainAspectRatio: false,
       },
+      isInsertNameOpen: false,
+      isOnboardingDialogOpen: false,
     }
   },
   computed: {
+    ...mapGetters([
+      'isCompletedOnboarding',
+      'hasPersonName',
+      'loggedPersonName',
+      'userPreferences',
+    ]),
     selectedMemberId: {
       get() {
         return this.$store.getters.dashboardSelectedMemberId
@@ -224,13 +253,67 @@ export default {
         ...this.$store.state.workspaceModule.members,
       ]
     },
+    steps() {
+      return [
+        {
+          title: `Olá, ${this.loggedPersonName}`,
+          description: 'Conhecemos muito bem a rotina de lidar com muitos processos ao mesmo tempo. É monótono, cansativo, trabalhoso e muito propenso a erros que você acaba sendo responsabilizado(a)',
+          cta: 'Como a JUSTTO pode me ajudar nisto?',
+        },
+        {
+          title: 'Queremos ser especial para você!',
+          description: 'Vamos te ajudar nesta jornada. Você só vai focar no que precisa e é importante. Não se preocupe, tudo que é repetitivo, nós faremos por você. Você está no controle, nós somos o veículo para você fazer mais acordos...',
+          cta: 'Justtine, me mostre como faremos isso',
+        },
+      ]
+    },
+    dashboardTour() {
+      return DASHBOARD_TOUR
+    },
+    isDashboardTourCompleted() {
+      const status = this.userPreferences[DASHBOARD_TOUR_STATUS]
+
+      if (typeof status === 'string') {
+        if (status === 'true') {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return status
+      }
+    },
   },
-  created() {
-    if (!this.chartsDatasets.length) {
-      this.getDashboard()
+  async mounted() {
+    await this.getOnboardingStatus()
+
+    // this.setOnboardingStatus(false)
+    // this.updateUserPreferences({
+    //   [DASHBOARD_TOUR_STATUS]: false,
+    // })
+
+    // this.updateUserPreferences({
+    //   JUS_TOUR_FUNEL: false,
+    // })
+
+    if (!this.hasPersonName) {
+      this.isInsertNameOpen = true
+    } else {
+      this.openOnboardingDialog()
+    }
+
+    this.loadDashboard()
+
+    if (this.isCompletedOnboarding) {
+      this.openDashboardTour()
     }
   },
   methods: {
+    ...mapActions([
+      'getOnboardingStatus',
+      'setOnboardingStatus',
+      'updateUserPreferences',
+    ]),
     getDashboard() {
       this.loading = true
       this.$store.dispatch('getDashboard').catch(error => {
@@ -347,6 +430,39 @@ export default {
         this.$store.commit('setDisputeHasFilters', true)
         this.$store.commit('setDisputesTab', '3')
         this.$router.push('/management')
+      }
+    },
+    closeOnboardingDialog() {
+      this.isOnboardingDialogOpen = false
+      this.setOnboardingStatus(true)
+      this.openDashboardTour()
+      this.loadDashboard()
+    },
+    openOnboardingDialog() {
+      setTimeout(() => {
+        this.isOnboardingDialogOpen = !this.isCompletedOnboarding
+      }, 500)
+    },
+    confirmInsertName() {
+      this.isInsertNameOpen = false
+      this.openOnboardingDialog()
+    },
+    openDashboardTour() {
+      if (!this.isDashboardTourCompleted) {
+        setTimeout(() => {
+          this.$tours[this.dashboardTour.name].start()
+        }, 1000)
+      }
+    },
+    finishTour() {
+      this.updateUserPreferences({
+        [DASHBOARD_TOUR_STATUS]: true,
+      })
+      this.$router.push({ name: 'management' })
+    },
+    loadDashboard() {
+      if (!this.chartsDatasets.length && this.isCompletedOnboarding && this.isDashboardTourCompleted) {
+        this.getDashboard()
       }
     },
   },
